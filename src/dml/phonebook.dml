@@ -1,4 +1,4 @@
-package pt.ist.phonebook.domain;
+package pt.inesc-id.esw.social-software.blended-workflow;
 
 class PhoneBook;
 
