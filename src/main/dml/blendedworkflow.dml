@@ -1,30 +1,30 @@
-package pt.ist.socialsoftware.blendedworkflow;
+package pt.ist.socialsoftware.blendedworkflow.domain;
 
-class domain.MetaDataModel;
+class MetaDataModel;
 
-class domain.DataModel;
+class DataModel;
 
-class domain.DataModelInstance;
+class DataModelInstance;
 
-class domain.MetaEntity;
+class MetaEntity;
 
-class domain.Entity;
+class Entity;
 
-class domain.EntityInstance;
+class EntityInstance;
 
-class domain.MetaAttribute;
+class MetaAttribute;
 
-class domain.Attribute;
+class Attribute;
 
-class domain.AttributeInstance;
+class AttributeInstance;
 
-class domain.MetaRelation;
+class MetaRelation;
 
-class domain.Relation;
+class Relation;
 
-class domain.RelationInstance;
+class RelationInstance;
 
 relation EntityHasEntityInstance {
-  domain.Entity playsRole entity;
-  domain.EntityInstance playsRole entityInstance { multiplicity *; }
+  Entity playsRole entity;
+  EntityInstance playsRole entityInstance { multiplicity *; }
 }
