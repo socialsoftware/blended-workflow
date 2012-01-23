@@ -1,30 +1,161 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-class MetaDataModel;
+enum pt.ist.socialsoftware.blendedworkflow.domain.AttributeTemplate.AttributeType as AttributeType;
+enum pt.ist.socialsoftware.blendedworkflow.domain.RelationTemplate.RelationCardinality as RelationCardinality;
 
-class DataModel;
+class DataModelTemplate {
+	String dataModelURI; 
+	String activityModelURI;
+	String goalModelURI;
+	int instanceCounter; //= 0
+	//HashMap<String, ParameterMapping> parameterMappings = new HashMap<String, ParameterMapping>();
+}
 
-class DataModelInstance;
+class DataModelInstance {
+	String dataModelURI; // must be the same as the meta model
+	String instanceID;
+	boolean activityCaseClaimed; //= false;
+	String activityCaseInstanceID;
+	String goalCaseInstanceID; 
+	//DataModelInstance instance; // ??? so tem 1 instancia ???
+}
 
-class MetaEntity;
+class EntityTemplate {
+	String name;
+	String id;
+}
 
-class Entity;
+class Entity {
+	String name;
+	boolean singleInstance; //= false
+	int instanceCounter; //= 0
+}
 
-class EntityInstance;
+class EntityInstance {
+	//Entity parent; //relation EntityInstanceRefersToEntity
+	//DataModelInstance dataModelInstance; //= null
+	boolean isSkipped; //= false
+	boolean isDefined; //= false
+}
 
-class MetaAttribute;
+class AttributeTemplate {
+	String name;
+	AttributeType type;
+	boolean isKeyAttribute;
+	//EntityTemplate entity; //relation AttributeTemplateRefersToEntityTemplate
+}
 
-class Attribute;
+class Attribute {
+	String name;
+	AttributeType type;
+	//AttributeInstance instance;
+	//int instanceCounter //= 0
+	//Entity entity; //relation AttributeRefersToEntity
+	boolean keyAttribute;
+}
 
-class AttributeInstance;
+class AttributeInstance {
+	String value; //= null
+	//Attribute parent; //relation AttributeInstanceRefersToAttribute
+	//EntityInstance entity; //relation AttributeInstanceRefersToEntityInstance
+	boolean isSkipped; //= false
+	//DataModelInstance dataModel //= null
+}
+class RelationTemplate {
+	//EntityTemplate entityOne; //relation RelationTemplateHasEntityTemplates
+	//EntityTemplate entityTwo; //relation RelationTemplateHasEntityTemplates
+	RelationCardinality cardinalityOne;
+	RelationCardinality cardinalityTwo;
+	boolean isOneKeyEntity; //= false
+	boolean isTwoKeyEntity; //= false
+}
 
-class MetaRelation;
+class Relation {
+	//Entity entityOne; //relation RelationHasEntities
+	//Entity entityTwo; //relation RelationHasEntities
+	RelationCardinality cardinalityOne;
+	RelationCardinality cardinalityTwo;
+	boolean isOneKeyEntity;
+	boolean isTwoKeyEntity;
+}
 
-class Relation;
+class RelationInstance {
+	//Relation parent; // relation RelationInstanceRefersToRelation
+	//EntityInstance entityOne; //relation RelationInstanceHasEntityInstances
+	//EntityInstance entityTwo; //relation RelationInstanceHasEntityInstances
+}
 
-class RelationInstance;
+relation DataModelTemplateHasEntityTemplates {
+	DataModelTemplate playsRole dataModelTemplate { multiplicity 1..1; }
+	EntityTemplate playsRole entityTemplate { multiplicity 0..*; }
+}
 
-relation EntityHasEntityInstance {
-  Entity playsRole entity;
-  EntityInstance playsRole entityInstance { multiplicity *; }
+relation DataModelTemplateHasAttributeTemplates {
+	DataModelTemplate playsRole dataModelTemplate { multiplicity 1..1; }
+	AttributeTemplate playsRole attributeTemplate { multiplicity 0..*; }
+}
+
+relation DataModelTemplateHasRelationTemplates {
+	DataModelTemplate playsRole dataModelTemplate { multiplicity 1..1; }
+	RelationTemplate playsRole relationTemplate { multiplicity 0..*; }
+}
+
+relation DataModelTemplateHasDataModelInstances {
+	DataModelTemplate playsRole dataModelTemplate { multiplicity 1..1; }
+	DataModelInstance playsRole dataModelInstance { multiplicity 0..*; }
+}
+
+relation DataModelInstanceHasEntities {
+	DataModelInstance playsRole dataModelInstance { multiplicity 1..1; }
+	Entity playsRole entity { multiplicity 0..*; }
+}
+
+relation DataModelInstanceHasRelations {
+	DataModelInstance playsRole dataModelInstance { multiplicity 1..1; }
+	Relation playsRole relations { multiplicity 0..*; } //prob: with relation as var change type name?
+}
+
+relation EntityTemplateHasAttributeTemplates {
+	EntityTemplate playsRole entityTemplate { multiplicity 1..1; }
+	AttributeTemplate playsRole attributeTemplate { multiplicity 0..*; }
+}
+
+relation EntityTemplateMayHaveRelationTemplates {
+	EntityTemplate playsRole entityTemplate { multiplicity 2..2; }
+	RelationTemplate playsRole relationTemplate { multiplicity 0..*; }
+}
+
+relation EntityHasAttributes {
+	Entity playsRole entity { multiplicity 1..1; }
+	Attribute playsRole attribute { multiplicity 0..*; }
+}
+
+relation EntityMayHaveRelations {
+	Entity playsRole entity { multiplicity 2..2; }
+	Relation playsRole relations { multiplicity 0..*; } //prob: with relation as var change type name?
+}
+
+relation EntityHasEntityInstances {
+	Entity playsRole entity { multiplicity 1..1; }
+	EntityInstance playsRole entityInstance { multiplicity 0..*; }
+}
+
+relation RelationHasRelationInstances {
+	Relation playsRole relations { multiplicity 1..1; }
+	RelationInstance playsRole relationInstance { multiplicity 0..*; }
+}
+
+relation AttributeHasAttributeInstances {
+	Attribute playsRole attribute { multiplicity 1..1; }
+	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
+}
+
+relation EntityInstanceHasAttributeInstances {
+	EntityInstance playsRole entityInstance { multiplicity 1..1; }
+	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
+}
+
+relation EntityInstanceMayHaveRelationInstances {
+	EntityInstance playsRole entityInstance { multiplicity 2..2; }
+	RelationInstance playsRole relationInstance { multiplicity 0..*; }
 }
