@@ -3,71 +3,53 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 enum pt.ist.socialsoftware.blendedworkflow.domain.AttributeTemplate.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.domain.RelationTemplate.RelationCardinality as RelationCardinality;
 
-class DataModelTemplate {
+class DataModel {
 	String dataModelURI; 
 	String activityModelURI;
 	String goalModelURI;
-	int instanceCounter; //= 0
+	//int instanceCounter = 0
 	//HashMap<String, ParameterMapping> parameterMappings = new HashMap<String, ParameterMapping>();
 }
 
 class DataModelInstance {
-	String dataModelURI; // must be the same as the meta model
-	String instanceID;
+	String dataModelInstanceID;
 	boolean activityCaseClaimed; //= false;
 	String activityCaseInstanceID;
 	String goalCaseInstanceID; 
 	//DataModelInstance instance; // ??? so tem 1 instancia ???
 }
 
-class EntityTemplate {
-	String name;
-	String id;
-}
-
 class Entity {
+	String id;
 	String name;
-	boolean singleInstance; //= false
-	int instanceCounter; //= 0
+	//boolean singleInstance = false
+	//int instanceCounter= 0
 }
 
 class EntityInstance {
+	String id;
 	//Entity parent; //relation EntityInstanceRefersToEntity
 	//DataModelInstance dataModelInstance; //= null
-	boolean isSkipped; //= false
-	boolean isDefined; //= false
+	//boolean isSkipped; //= false
+	//boolean isDefined; //= false
 }
 
-class AttributeTemplate {
+class Attribute {
+	String id;
 	String name;
 	AttributeType type;
 	boolean isKeyAttribute;
 	//EntityTemplate entity; //relation AttributeTemplateRefersToEntityTemplate
 }
 
-class Attribute {
-	String name;
-	AttributeType type;
-	//AttributeInstance instance;
-	//int instanceCounter //= 0
-	//Entity entity; //relation AttributeRefersToEntity
-	boolean keyAttribute;
-}
-
 class AttributeInstance {
+	String id;
 	String value; //= null
 	//Attribute parent; //relation AttributeInstanceRefersToAttribute
 	//EntityInstance entity; //relation AttributeInstanceRefersToEntityInstance
 	boolean isSkipped; //= false
 	//DataModelInstance dataModel //= null
-}
-class RelationTemplate {
-	//EntityTemplate entityOne; //relation RelationTemplateHasEntityTemplates
-	//EntityTemplate entityTwo; //relation RelationTemplateHasEntityTemplates
-	RelationCardinality cardinalityOne;
-	RelationCardinality cardinalityTwo;
-	boolean isOneKeyEntity; //= false
-	boolean isTwoKeyEntity; //= false
+	DataState state;
 }
 
 class Relation {
@@ -85,9 +67,14 @@ class RelationInstance {
 	//EntityInstance entityTwo; //relation RelationInstanceHasEntityInstances
 }
 
-relation DataModelTemplateHasEntityTemplates {
-	DataModelTemplate playsRole dataModelTemplate { multiplicity 1..1; }
-	EntityTemplate playsRole entityTemplate { multiplicity 0..*; }
+relation DataModelHasDataModelInstances {
+	DataModel playsRole dataModel { multiplicity 1..1; }
+	DataModelInstance playsRole dataModelInstance { multiplicity 0..*; }
+}
+
+relation DataModelHasEntities {
+	DataModel playsRole dataModel { multiplicity 1..1; }
+	Entity playsRole entity { multiplicity 0..*; }
 }
 
 relation DataModelTemplateHasAttributeTemplates {
@@ -98,11 +85,6 @@ relation DataModelTemplateHasAttributeTemplates {
 relation DataModelTemplateHasRelationTemplates {
 	DataModelTemplate playsRole dataModelTemplate { multiplicity 1..1; }
 	RelationTemplate playsRole relationTemplate { multiplicity 0..*; }
-}
-
-relation DataModelTemplateHasDataModelInstances {
-	DataModelTemplate playsRole dataModelTemplate { multiplicity 1..1; }
-	DataModelInstance playsRole dataModelInstance { multiplicity 0..*; }
 }
 
 relation DataModelInstanceHasEntities {
