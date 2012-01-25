@@ -1,10 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-public class AttributeTemplate extends AttributeTemplate_Base {
+public class Attribute extends Attribute_Base {
 	
 	public enum AttributeType {STRING, NUMBER, BOOLEAN};
     
-    public  AttributeTemplate() {
+    public  Attribute() {
         super();
     }
     

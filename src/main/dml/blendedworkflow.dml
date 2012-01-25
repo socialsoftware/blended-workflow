@@ -1,13 +1,14 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-enum pt.ist.socialsoftware.blendedworkflow.domain.AttributeTemplate.AttributeType as AttributeType;
-enum pt.ist.socialsoftware.blendedworkflow.domain.RelationTemplate.RelationCardinality as RelationCardinality;
+enum pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState as DataState;
+enum pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType as AttributeType;
+enum pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality as Cardinality;
 
 class DataModel {
 	String dataModelURI; 
 	String activityModelURI;
 	String goalModelURI;
-	//int instanceCounter = 0
+	//int instanceCounter = 0;
 	//HashMap<String, ParameterMapping> parameterMappings = new HashMap<String, ParameterMapping>();
 }
 
@@ -16,22 +17,22 @@ class DataModelInstance {
 	boolean activityCaseClaimed; //= false;
 	String activityCaseInstanceID;
 	String goalCaseInstanceID; 
-	//DataModelInstance instance; // ??? so tem 1 instancia ???
+	//DataModelInstance instance;
 }
 
 class Entity {
 	String id;
 	String name;
-	//boolean singleInstance = false
-	//int instanceCounter= 0
+	//boolean singleInstance = false;
+	//int instanceCounter= 0;
 }
 
 class EntityInstance {
 	String id;
 	//Entity parent; //relation EntityInstanceRefersToEntity
 	//DataModelInstance dataModelInstance; //= null
-	//boolean isSkipped; //= false
-	//boolean isDefined; //= false
+	//boolean isSkipped = false;
+	//boolean isDefined = false;
 }
 
 class Attribute {
@@ -45,20 +46,20 @@ class Attribute {
 class AttributeInstance {
 	String id;
 	String value; //= null
+	DataState state;
 	//Attribute parent; //relation AttributeInstanceRefersToAttribute
 	//EntityInstance entity; //relation AttributeInstanceRefersToEntityInstance
-	boolean isSkipped; //= false
-	//DataModelInstance dataModel //= null
-	DataState state;
+	//boolean isSkipped = false;
+	//DataModelInstance dataModel = null;
 }
 
 class Relation {
-	//Entity entityOne; //relation RelationHasEntities
-	//Entity entityTwo; //relation RelationHasEntities
-	RelationCardinality cardinalityOne;
-	RelationCardinality cardinalityTwo;
+	Cardinality cardinalityOne;
+	Cardinality cardinalityTwo;
 	boolean isOneKeyEntity;
 	boolean isTwoKeyEntity;
+	//Entity entityOne; //relation RelationHasEntities
+	//Entity entityTwo; //relation RelationHasEntities	
 }
 
 class RelationInstance {
@@ -67,6 +68,7 @@ class RelationInstance {
 	//EntityInstance entityTwo; //relation RelationInstanceHasEntityInstances
 }
 
+//DataModel
 relation DataModelHasDataModelInstances {
 	DataModel playsRole dataModel { multiplicity 1..1; }
 	DataModelInstance playsRole dataModelInstance { multiplicity 0..*; }
@@ -77,36 +79,33 @@ relation DataModelHasEntities {
 	Entity playsRole entity { multiplicity 0..*; }
 }
 
-relation DataModelTemplateHasAttributeTemplates {
-	DataModelTemplate playsRole dataModelTemplate { multiplicity 1..1; }
-	AttributeTemplate playsRole attributeTemplate { multiplicity 0..*; }
+relation DataModelHasAttribute {
+	DataModel playsRole dataModel { multiplicity 1..1; }
+	Attribute playsRole attribute { multiplicity 0..*; }
 }
 
-relation DataModelTemplateHasRelationTemplates {
-	DataModelTemplate playsRole dataModelTemplate { multiplicity 1..1; }
-	RelationTemplate playsRole relationTemplate { multiplicity 0..*; }
+relation DataModelHasRelation {
+	DataModel playsRole dataModel { multiplicity 1..1; }
+	Relation playsRole relations { multiplicity 0..*; }
 }
 
+//DataModelInstance
 relation DataModelInstanceHasEntities {
 	DataModelInstance playsRole dataModelInstance { multiplicity 1..1; }
 	Entity playsRole entity { multiplicity 0..*; }
 }
 
-relation DataModelInstanceHasRelations {
+relation DataModelInstanceHasAttribute {
 	DataModelInstance playsRole dataModelInstance { multiplicity 1..1; }
-	Relation playsRole relations { multiplicity 0..*; } //prob: with relation as var change type name?
+	Attribute playsRole attribute { multiplicity 0..*; }
 }
 
-relation EntityTemplateHasAttributeTemplates {
-	EntityTemplate playsRole entityTemplate { multiplicity 1..1; }
-	AttributeTemplate playsRole attributeTemplate { multiplicity 0..*; }
+relation DataModelInstanceHasRelation {
+	DataModelInstance playsRole dataModelInstance { multiplicity 1..1; }
+	Relation playsRole relations { multiplicity 0..*; }
 }
 
-relation EntityTemplateMayHaveRelationTemplates {
-	EntityTemplate playsRole entityTemplate { multiplicity 2..2; }
-	RelationTemplate playsRole relationTemplate { multiplicity 0..*; }
-}
-
+//Entity
 relation EntityHasAttributes {
 	Entity playsRole entity { multiplicity 1..1; }
 	Attribute playsRole attribute { multiplicity 0..*; }
@@ -114,7 +113,7 @@ relation EntityHasAttributes {
 
 relation EntityMayHaveRelations {
 	Entity playsRole entity { multiplicity 2..2; }
-	Relation playsRole relations { multiplicity 0..*; } //prob: with relation as var change type name?
+	Relation playsRole relations { multiplicity 0..*; }
 }
 
 relation EntityHasEntityInstances {
@@ -122,16 +121,19 @@ relation EntityHasEntityInstances {
 	EntityInstance playsRole entityInstance { multiplicity 0..*; }
 }
 
+//Relation
 relation RelationHasRelationInstances {
 	Relation playsRole relations { multiplicity 1..1; }
 	RelationInstance playsRole relationInstance { multiplicity 0..*; }
 }
 
+//Atributes
 relation AttributeHasAttributeInstances {
 	Attribute playsRole attribute { multiplicity 1..1; }
 	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
 }
 
+//EntityInstance
 relation EntityInstanceHasAttributeInstances {
 	EntityInstance playsRole entityInstance { multiplicity 1..1; }
 	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
