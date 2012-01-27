@@ -1,4 +1,5 @@
-import pt.ist.socialsoftware.blendedworkflow.domain;
+import jvstm.Atomic;
+import pt.ist.socialsoftware.blendedworkflow.domain.*;
 
 public class CheckInWorkItemService {
 
@@ -10,35 +11,30 @@ WorkItem workItem;
 
 public CheckInWorkItemService (String bwInstanceID, String workItemID) {
 //	, Values values) {
-}
 	this.bwInstanceID = bwInstanceID;
 	this.workItemID = workItemID;
 //	this.values = values;
 }
 
+@Atomic
 public void execute() {
 
-	// start transaction
 	// get objects from external IDs
-	this.bwInstance = getBWInstance(bwInstanceID);
-	this.workItem = getWorkItem(bwInstance, workItemID);
-	BWSpeci
-
+	BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+	this.bwInstance = blendedWorkflow. getBWInstance(bwInstanceID);
+	
+//	this.workItem = getWorkItem(bwInstance, workItemID);
+	
 	// check if workitem is in list of enabled workitems
 	// change data instances...
 	// commit transaction
 
 }
 
-private BWInstance getBWInstance(String bwInstanceID) {
-	FROOT froot = XPTOFenixFramework.getRoot();
-	for (BWSpecification bwSpecification : froot.getBWSpecification()) {
-		for (BWInstance bwInstance : bwSpecification. getBWInstance()) {
-			if bwInstance.getID().equals(this.bwInstanceID)
-			return bwInstance;
-		}
-	}
+public BWInstance getBwInstance() {
+	return this.bwInstance;
 }
+
 
 //private getWorkItem (BWInstance bwInstance, WorkItemId workItemID) { 
 //for (BWInstance bwInstance: WorkItem.getWorkItem())

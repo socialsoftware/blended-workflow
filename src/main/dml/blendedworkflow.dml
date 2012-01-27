@@ -4,6 +4,8 @@ enum pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState as DataSta
 enum pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality as Cardinality;
 
+class BlendedWorkflow;
+
 class BWSpecification {
 	String id;
 	String name;
@@ -80,6 +82,11 @@ class RelationInstance {
 	//Relation parent; // relation RelationInstanceRefersToRelation
 	//EntityInstance entityOne; //relation RelationInstanceHasEntityInstances
 	//EntityInstance entityTwo; //relation RelationInstanceHasEntityInstances
+}
+
+relation BlendedWorkflowHasBWSpecifications {
+	BlendedWorkflow playsRole blendedWorkflow {multiplicity 1..1;}
+	BWSpecification playsRole bwSpecification {multiplicity 0..*;}
 }
 
 relation BWSpecificationHasBWInstances {
