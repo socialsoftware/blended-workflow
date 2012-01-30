@@ -3,7 +3,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 
-public class TestCreateGoalService {
+public class CreateGoalServiceTest {
 
 	@Test
 	public void test() {

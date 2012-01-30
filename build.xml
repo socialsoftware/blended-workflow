@@ -2,57 +2,54 @@
 <project basedir="." default="compile" name="blendedworkflow">
 	<description>Blended Workflow Build File</description>
 
+	<!-- Properties -->
 	<property name="application.name" value="${ant.project.name}" />
-
-	<!--
-  <property name="tomcat.home" value="/home/davidmartinho/Applications/apache-tomcat-7.0.22"/>
-  <property name="application.gwt.entrypoint" value="pt.ist.processpedia.Processpedia" />
-  <property name="application.gwt.messages" value="pt.ist.processpedia.client.Messages" />
-
-  <property name="gwt.home" value="/home/davidmartinho/Applications/gwt-2.4.0" />
-
-  <property name="sql.host" value="localhost"/>
-  <property name="sql.user" value="root"/>
-  <property name="sql.pass" value="123"/>
-  <property name="sql.driver" value="com.mysql.jdbc.Driver"/>
-  <property name="sql.db" value="${application.name}"/>
-  <property name="sql.url" value="jdbc:mysql://${sql.host}/${sql.db}"/>
-  -->
-
+	
+	<!-- The encoding of all the source files should be the same! -->
+	<property name="javac.encoding" value="UTF-8" />
+	<!-- java.file.encoding should match your terminal's encoding -->
+	<property name="java.file.encoding" value="UTF-8" />
+	
 	<property name="src.rel-dir" value="src/main" />
 	<property name="build.rel-dir" value="target" />
 	<property name="lib.rel-dir" value="lib" />
-	<!--
-  <property name="dist.rel-dir" value="dist"/>
-  <property name="eclipse.build.rel-dir" value="bin"/>
-  -->
-
+	<property name="db.rel-dir" value="db"/>
+	<property name="test-db.rel-dir" value="test-db"/>
+	<property name="test.src.rel-dir" value="src/test"/>
+	
 	<property name="java.src.rel-dir" value="${src.rel-dir}/java" />
+	<property name="java.test.src.rel-dir" value="${test.src.rel-dir}/java"/>
 	<property name="dml.src.rel-dir" value="${src.rel-dir}/dml" />
-	<!--
-  <property name="resources.src.rel-dir" value="${src.rel-dir}/resources"/>
-  <property name="webapp.src.rel-dir" value="${src.rel-dir}/webapp"/>
-  -->
-
-	<!--
-  <property name="war.target.rel-dir" value="${build.rel-dir}/war"/>
-  <property name="generated-src.build.rel-dir" value="${build.rel-dir}/src"/>
-  <property name="classes.build.rel-dir" value="${war.target.rel-dir}/WEB-INF/classes"/>
-  -->
 	<property name="generated-src.build.rel-dir" value="${build.rel-dir}/src" />
 	<property name="classes.build.rel-dir" value="${build.rel-dir}/classes" />
-	<!--
-  <property name="war.filename" value="${application.name}.war"/>
-  -->
 	<property name="dml.filename" value="${application.name}.dml" />
 	<property name="dml.rel-file" value="${dml.src.rel-dir}/${dml.filename}" />
 
-	<!-- The encoding of all the source files should be the same! -->
-	<property name="javac.encoding" value="UTF-8" />
+	<!--
+	<property name="dist.rel-dir" value="dist"/>
+	<property name="eclipse.build.rel-dir" value="bin"/>
+	<property name="resources.src.rel-dir" value="${src.rel-dir}/resources"/>
+	<property name="webapp.src.rel-dir" value="${src.rel-dir}/webapp"/>
+	<property name="war.target.rel-dir" value="${build.rel-dir}/war"/>
+	<property name="generated-src.build.rel-dir" value="${build.rel-dir}/src"/>
+	<property name="classes.build.rel-dir" value="${war.target.rel-dir}/WEB-INF/classes"/>
+	<property name="war.filename" value="${application.name}.war"/>
+	-->
+	
+	<!--
+	<property name="tomcat.home" value="/home/davidmartinho/Applications/apache-tomcat-7.0.22"/>
+	<property name="application.gwt.entrypoint" value="pt.ist.processpedia.Processpedia" />
+	<property name="application.gwt.messages" value="pt.ist.processpedia.client.Messages" />
+	<property name="gwt.home" value="/home/davidmartinho/Applications/gwt-2.4.0" />
+	<property name="sql.host" value="localhost"/>
+	<property name="sql.user" value="root"/>
+	<property name="sql.pass" value="123"/>
+	<property name="sql.driver" value="com.mysql.jdbc.Driver"/>
+	<property name="sql.db" value="${application.name}"/>
+	<property name="sql.url" value="jdbc:mysql://${sql.host}/${sql.db}"/>
+	-->
 
-	<!-- java.file.encoding should match your terminal's encoding -->
-	<property name="java.file.encoding" value="UTF-8" />
-
+	<!-- Project Classpath -->
 	<path id="project.classpath">
 		<pathelement location="${classes.build.rel-dir}" />
 		<fileset dir="${lib.rel-dir}">
@@ -62,11 +59,15 @@
 
 	<taskdef resource="pt/ist/fenixframework/dml-ant.xml" classpathref="project.classpath" />
 
+	<!-- Prepare -->
 	<target name="prepare">
 		<echo message="Preparing the project for build..." />
 		<mkdir dir="${classes.build.rel-dir}" />
+	    <mkdir dir="${db.rel-dir}"/>
+	    <mkdir dir="${test-db.rel-dir}"/>
 	</target>
-
+	
+	<!-- Generate Domain -->
 	<target name="generate-domain" depends="prepare">
 		<echo message="Generating base domain classes..." />
 		<echo message="Using: ${dml.rel-file}" />
@@ -74,7 +75,8 @@
 			<fileset file="${dml.rel-file}" />
 		</dml-domain-generator>
 	</target>
-
+	
+	<!-- Compile -->
 	<target name="compile" depends="generate-domain, prepare">
 		<echo message="Compiling sources..." />
 		<javac destdir="${classes.build.rel-dir}" debug="true" debuglevel="lines,vars,source" optimize="true" deprecation="true" verbose="false" includeantruntime="false">
@@ -85,7 +87,18 @@
 			<compilerarg line="" />
 		</javac>
 	</target>
-
+	
+	<!-- Compile Tests -->
+	<target name="compile-tests" depends="compile, instrument-classes" description="Compile the tests">
+		<javac destdir="${classes.build.rel-dir}" debug="true" debuglevel="lines,vars,source" optimize="true" deprecation="true" verbose="false" includeantruntime="false" encoding="${javac.encoding}">
+	      <classpath refid="project.classpath" />
+	      <src>
+	        <pathelement path="${java.test.src.rel-dir}"/>
+	      </src>
+		</javac>
+	</target>
+	
+	<!-- Instrument Classes -->
 	<target name="instrument-classes" depends="compile">
 		<echo message="Injecting FenixFramework Voodoo Magic..." />
 		<dml-post-processor dir="${classes.build.rel-dir}">
@@ -93,12 +106,49 @@
 			<classpath refid="project.classpath" />
 		</dml-post-processor>
 	</target>
-
+	
+	<!-- Populate -->
+	<!-- 
+	<target name="populate" depends="compile, instrument-classes" description="Populates the initial data">
+		<java classname="pt.ist.phonebook.SetupDomain" fork="false">
+			<classpath>
+				<path refid="project.classpath" />
+			</classpath>
+		</java>
+	</target>
+	-->
+	
+	<!-- Run -->
+	<!-- 
+	<target name="run" depends="compile, instrument-classes" description="Runs the program">
+		<java classname="pt.ist.phonebook.PhoneBookApplication" fork="false">
+			<classpath>
+				<path refid="project.classpath" />
+			</classpath>
+		</java>
+	</target> 
+	-->
+	
+	<!-- Test -->
+	<target name="test" depends="compile-tests" description="Run the tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.servicelayer.test.RemoveBWSpecificationServiceTest" />
+		</junit>
+	</target>
+	
+	<!-- Clean -->
 	<target name="clean" description="Cleans the compiled classes and generated sources">
 		<delete dir="${build.rel-dir}" />
 		<delete dir="${eclipse.build.rel-dir}" />
 		<delete dir="${dist.rel-dir}" />
 	</target>
-
+	
+	<!-- Clean All -->
+	<target name="clean-all" depends="clean">
+		<delete dir="${test-db.rel-dir}"/>
+		<delete dir="${db.rel-dir}"/>
+	</target>
 
 </project>

@@ -1,3 +1,4 @@
+package pt.ist.socialsoftware.blendedworkflow.blendedworkflowengine.servicelayer;
 
 public class CreateGoalService {
 	public void execute() {

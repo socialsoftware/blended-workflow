@@ -28,7 +28,7 @@ class DataModel {
 	//HashMap<String, ParameterMapping> parameterMappings = new HashMap<String, ParameterMapping>();
 }
 
-class DataModelInstance {
+class DataModelInstance extends DataModel{
 	String dataModelInstanceID;
 	boolean activityCaseClaimed; //= false;
 	String activityCaseInstanceID;
@@ -84,19 +84,40 @@ class RelationInstance {
 	//EntityInstance entityTwo; //relation RelationInstanceHasEntityInstances
 }
 
+//BlendedWorkflow
+/*
+relation BlendedWorkflowHasBWSpecifications {
+	BlendedWorkflow playsRole blendedWorkflow;
+	BWSpecification playsRole bwSpecification {multiplicity *;}
+}*/
+
+
 relation BlendedWorkflowHasBWSpecifications {
 	BlendedWorkflow playsRole blendedWorkflow {multiplicity 1..1;}
 	BWSpecification playsRole bwSpecification {multiplicity 0..*;}
 }
 
+//BWSpecification
 relation BWSpecificationHasBWInstances {
 	BWSpecification playsRole bwSpecification {multiplicity 1..1;}
 	BWInstance playsRole bwInstance {multiplicity 0..*;}
 }
 
+relation BWSpecificationHasDataModel {
+	BWSpecification playsRole bwSpecification {multiplicity 1..1;}
+	DataModel playsRole dataModel { multiplicity 1..1; }
+}
+
+//BWInstance
 relation BWInstanceHasWorkItems {
 	BWInstance playsRole bwInstance {multiplicity 1..1;}
 	WorkItem playsRole workItem {multiplicity 0..*;}
+}
+
+//WorkItem
+relation WorkItemRefersToAttributeInstances {
+	WorkItem playsRole workItem {multiplicity 0..*;}
+	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
 }
 
 //DataModel
@@ -117,22 +138,6 @@ relation DataModelHasAttribute {
 
 relation DataModelHasRelation {
 	DataModel playsRole dataModel { multiplicity 1..1; }
-	Relation playsRole relations { multiplicity 0..*; }
-}
-
-//DataModelInstance
-relation DataModelInstanceHasEntities {
-	DataModelInstance playsRole dataModelInstance { multiplicity 1..1; }
-	Entity playsRole entity { multiplicity 0..*; }
-}
-
-relation DataModelInstanceHasAttribute {
-	DataModelInstance playsRole dataModelInstance { multiplicity 1..1; }
-	Attribute playsRole attribute { multiplicity 0..*; }
-}
-
-relation DataModelInstanceHasRelation {
-	DataModelInstance playsRole dataModelInstance { multiplicity 1..1; }
 	Relation playsRole relations { multiplicity 0..*; }
 }
 
