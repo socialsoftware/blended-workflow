@@ -1,8 +1,8 @@
-package pt.ist.socialsoftware.blendedworkflow.domain;
+package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-enum pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState as DataState;
-enum pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType as AttributeType;
-enum pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality as Cardinality;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState as DataState;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType as AttributeType;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality as Cardinality;
 
 class BlendedWorkflow;
 
