@@ -85,13 +85,12 @@ class RelationInstance {
 }
 
 //BlendedWorkflow
-/*
 relation BlendedWorkflowHasBWSpecifications {
 	BlendedWorkflow playsRole blendedWorkflow;
 	BWSpecification playsRole bwSpecification {multiplicity *;}
-}*/
+}
 
-
+/*
 relation BlendedWorkflowHasBWSpecifications {
 	BlendedWorkflow playsRole blendedWorkflow {multiplicity 1..1;}
 	BWSpecification playsRole bwSpecification {multiplicity 0..*;}
@@ -163,7 +162,7 @@ relation RelationHasRelationInstances {
 	RelationInstance playsRole relationInstance { multiplicity 0..*; }
 }
 
-//Atributes
+//Attributes
 relation AttributeHasAttributeInstances {
 	Attribute playsRole attribute { multiplicity 1..1; }
 	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
@@ -178,4 +177,4 @@ relation EntityInstanceHasAttributeInstances {
 relation EntityInstanceMayHaveRelationInstances {
 	EntityInstance playsRole entityInstance { multiplicity 2..2; }
 	RelationInstance playsRole relationInstance { multiplicity 0..*; }
-}
+}*/
