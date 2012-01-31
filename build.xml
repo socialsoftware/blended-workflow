@@ -134,7 +134,7 @@
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.RemoveBWSpecificationServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CheckInWorkItemServiceTest" />
 		</junit>
 	</target>
 	

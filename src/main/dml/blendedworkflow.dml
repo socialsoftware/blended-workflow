@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState as DataState;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState as WorkItemState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality as Cardinality;
 
@@ -18,6 +19,7 @@ class BWInstance {
 
 class WorkItem {
 	String id;
+	WorkItemState state;
 }
 
 class DataModel {
@@ -86,30 +88,24 @@ class RelationInstance {
 
 //BlendedWorkflow
 relation BlendedWorkflowHasBWSpecifications {
-	BlendedWorkflow playsRole blendedWorkflow;
-	BWSpecification playsRole bwSpecification {multiplicity *;}
-}
-
-/*
-relation BlendedWorkflowHasBWSpecifications {
-	BlendedWorkflow playsRole blendedWorkflow {multiplicity 1..1;}
+	BlendedWorkflow playsRole blendedWorkflow {multiplicity 0..1;}
 	BWSpecification playsRole bwSpecification {multiplicity 0..*;}
 }
 
 //BWSpecification
 relation BWSpecificationHasBWInstances {
-	BWSpecification playsRole bwSpecification {multiplicity 1..1;}
+	BWSpecification playsRole bwSpecification {multiplicity 0..1;}
 	BWInstance playsRole bwInstance {multiplicity 0..*;}
 }
 
 relation BWSpecificationHasDataModel {
-	BWSpecification playsRole bwSpecification {multiplicity 1..1;}
-	DataModel playsRole dataModel { multiplicity 1..1; }
+	BWSpecification playsRole bwSpecification {multiplicity 0..1;}
+	DataModel playsRole dataModel { multiplicity 0..1; }
 }
 
 //BWInstance
 relation BWInstanceHasWorkItems {
-	BWInstance playsRole bwInstance {multiplicity 1..1;}
+	BWInstance playsRole bwInstance {multiplicity 0..1;}
 	WorkItem playsRole workItem {multiplicity 0..*;}
 }
 
@@ -121,60 +117,60 @@ relation WorkItemRefersToAttributeInstances {
 
 //DataModel
 relation DataModelHasDataModelInstances {
-	DataModel playsRole dataModel { multiplicity 1..1; }
+	DataModel playsRole dataModel { multiplicity 0..1; }
 	DataModelInstance playsRole dataModelInstance { multiplicity 0..*; }
 }
 
 relation DataModelHasEntities {
-	DataModel playsRole dataModel { multiplicity 1..1; }
+	DataModel playsRole dataModel { multiplicity 0..1; }
 	Entity playsRole entity { multiplicity 0..*; }
 }
 
 relation DataModelHasAttribute {
-	DataModel playsRole dataModel { multiplicity 1..1; }
+	DataModel playsRole dataModel { multiplicity 0..1; }
 	Attribute playsRole attribute { multiplicity 0..*; }
 }
 
 relation DataModelHasRelation {
-	DataModel playsRole dataModel { multiplicity 1..1; }
+	DataModel playsRole dataModel { multiplicity 0..1; }
 	Relation playsRole relations { multiplicity 0..*; }
 }
 
 //Entity
 relation EntityHasAttributes {
-	Entity playsRole entity { multiplicity 1..1; }
+	Entity playsRole entity { multiplicity 0..1; }
 	Attribute playsRole attribute { multiplicity 0..*; }
 }
 
 relation EntityMayHaveRelations {
-	Entity playsRole entity { multiplicity 2..2; }
+	Entity playsRole entity { multiplicity 0..2; }
 	Relation playsRole relations { multiplicity 0..*; }
 }
 
 relation EntityHasEntityInstances {
-	Entity playsRole entity { multiplicity 1..1; }
+	Entity playsRole entity { multiplicity 0..1; }
 	EntityInstance playsRole entityInstance { multiplicity 0..*; }
 }
 
 //Relation
 relation RelationHasRelationInstances {
-	Relation playsRole relations { multiplicity 1..1; }
+	Relation playsRole relations { multiplicity 0..1; }
 	RelationInstance playsRole relationInstance { multiplicity 0..*; }
 }
 
 //Attributes
 relation AttributeHasAttributeInstances {
-	Attribute playsRole attribute { multiplicity 1..1; }
+	Attribute playsRole attribute { multiplicity 0..1; }
 	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
 }
 
 //EntityInstance
 relation EntityInstanceHasAttributeInstances {
-	EntityInstance playsRole entityInstance { multiplicity 1..1; }
+	EntityInstance playsRole entityInstance { multiplicity 0..1; }
 	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
 }
 
 relation EntityInstanceMayHaveRelationInstances {
-	EntityInstance playsRole entityInstance { multiplicity 2..2; }
+	EntityInstance playsRole entityInstance { multiplicity 0..2; }
 	RelationInstance playsRole relationInstance { multiplicity 0..*; }
-}*/
+}

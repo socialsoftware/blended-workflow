@@ -12,17 +12,15 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	public static BlendedWorkflow getInstance() {
 		return FenixFramework.getRoot();
 	}
-/*
-	public BWInstance getBWInstance(String bwInstanceID){
-		for (BWSpecification bwSpecification : getBwSpecification()) {
-			for (BWInstance bwInstance : bwSpecification.getBwInstance()) {
+
+	public BWInstance getBWInstance(String bwInstanceID) throws BlendedWorkflowException {
+		for (BWSpecification bwSpecification : getBwSpecificationSet()) {
+			for (BWInstance bwInstance : bwSpecification.getBwInstanceSet()) {
 				if (bwInstance.getId().equals(bwInstanceID))
 					return bwInstance;
 			}
 		}
-		return null;
-	}*/
-
-
+		throw new BlendedWorkflowException("BW Instance does not exist");
+	}
 
 }
