@@ -24,16 +24,10 @@ public class CheckInWorkItemService {
 	@Atomic
 	public void execute() throws BlendedWorkflowException {
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-		this.bwInstance = blendedWorkflow.getBWInstance(bwInstanceID);
-		this.workItem = bwInstance.getWorkItem(workItemID);
-		this.workItem.getAttributeInstance();
-		
-		// obtain data
-		
-		//change data objects
-		
-		// no
-		workItem.setState(WorkItemState.COMPLETED);					
+		this.bwInstance = blendedWorkflow.getBWInstance(this.bwInstanceID);
+		this.workItem = bwInstance.getWorkItem(this.workItemID);
+		this.workItem.setAttributeValues(this.values);
+		workItem.notifyWorkItemCheckedIn();					
 	}
 
 }

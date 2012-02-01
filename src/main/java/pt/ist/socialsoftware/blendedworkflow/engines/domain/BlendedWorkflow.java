@@ -12,7 +12,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	public static BlendedWorkflow getInstance() {
 		return FenixFramework.getRoot();
 	}
-
+	
 	public BWInstance getBWInstance(String bwInstanceID) throws BlendedWorkflowException {
 		for (BWSpecification bwSpecification : getBwSpecificationSet()) {
 			for (BWInstance bwInstance : bwSpecification.getBwInstanceSet()) {

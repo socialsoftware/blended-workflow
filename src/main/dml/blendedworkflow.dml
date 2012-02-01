@@ -126,7 +126,7 @@ relation DataModelHasEntities {
 	Entity playsRole entity { multiplicity 0..*; }
 }
 
-relation DataModelHasAttribute {
+relation DataModelHasAttributes {
 	DataModel playsRole dataModel { multiplicity 0..1; }
 	Attribute playsRole attribute { multiplicity 0..*; }
 }
