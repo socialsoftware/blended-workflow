@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test;
 
 import static org.junit.Assert.*;
-import jvstm.Atomic;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -23,6 +22,10 @@ public class CheckInWorkItemServiceTest {
 	private static String BW_SPECIFICATION_NAME = "Medical Appointment";
 	private static String BW_INSTANCE_ID = "BWInstance-1.1";
 	private static String BW_INSTANCE_NAME = "John Medical Appointment";
+	private static String TASK_ID_CHECK = "TASK-C";
+	private static String TASK_NAME_CHECK = "gather information";
+	private static String TASK_ID_VIOLATED = "TASK-V";
+	private static String TASK_NAME_VIOLATED = "examine";
 	private static String WORK_ITEM_ID_CHECK = "WorkItemID_C";
 	private static String WORK_ITEM_ID_VIOLATED = "WorkItemID_V";
 
@@ -42,24 +45,33 @@ public class CheckInWorkItemServiceTest {
 		boolean committed = false;
 		try {
 			Transaction.begin();
-			
+
+			// define vars
 			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 			BWSpecification bwSpecification = new BWSpecification(BW_SPECIFICATION_ID, BW_SPECIFICATION_NAME);
-			blendedWorkflow.addBwSpecification(bwSpecification);
 			BWInstance bwInstance = new BWInstance(BW_INSTANCE_ID, BW_INSTANCE_NAME);
-			bwSpecification.addBwInstance(bwInstance);
+			Task taskC = new Task(TASK_ID_CHECK,TASK_NAME_CHECK);
+			Task taskV = new Task(TASK_ID_VIOLATED,TASK_NAME_VIOLATED);
 			WorkItem workItemCheckedIn = new WorkItem(WORK_ITEM_ID_CHECK);
 			WorkItem workItemConstraintViolated = new WorkItem(WORK_ITEM_ID_VIOLATED);
-			bwInstance.addWorkItem(workItemCheckedIn);
-			bwInstance.addWorkItem(workItemConstraintViolated);
 			workItemCheckedIn.setState(WorkItemState.ENABLED);
 			workItemConstraintViolated.setState(WorkItemState.ENABLED);
 			AttributeInstance attInstance1 = new AttributeInstance("att1");
 			AttributeInstance attInstance2 = new AttributeInstance("att2");
+
+			// relations
+			blendedWorkflow.addBwSpecification(bwSpecification);
+			bwSpecification.addBwInstance(bwInstance);
+			bwSpecification.addTask(taskC);
+			bwSpecification.addTask(taskV);
+			taskC.addWorkItem(workItemCheckedIn);
+			taskV.addWorkItem(workItemConstraintViolated);
+			bwInstance.addWorkItem(workItemCheckedIn);
+			bwInstance.addWorkItem(workItemConstraintViolated);
 			workItemCheckedIn.addAttributeInstance(attInstance1);
 			workItemCheckedIn.addAttributeInstance(attInstance2);
 			workItemConstraintViolated.addAttributeInstance(attInstance1);
-			
+
 			Transaction.commit();
 			committed = true;
 		} 
@@ -92,7 +104,7 @@ public class CheckInWorkItemServiceTest {
 			}
 		}
 	}
-	
+
 	private BWInstance getBWInstance(String bwInstanceID) throws BlendedWorkflowException {
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		return blendedWorkflow.getBWInstance(bwInstanceID);
@@ -109,7 +121,7 @@ public class CheckInWorkItemServiceTest {
 		try {
 			checkInWorkItemService.execute();
 		} catch(BlendedWorkflowException e) {		
-			fail(e.getMsg());
+			fail(e.getMessage());
 		}
 		// Assert
 		boolean committed = false;
@@ -119,12 +131,11 @@ public class CheckInWorkItemServiceTest {
 			WorkItem workItem = bwInstance.getWorkItem(WORK_ITEM_ID_CHECK);
 			assertEquals(workItem.getState(),WorkItemState.CHECKED_IN);
 			workItem = bwInstance.getWorkItem(WORK_ITEM_ID_VIOLATED);
-			System.out.println(workItem.getState());
 			assertEquals(workItem.getState(),WorkItemState.CONSTRAINT_VIOLATION);
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {
-			fail(e.getMsg());
+			fail(e.getMessage());
 		} finally {
 			if (!committed) {
 				Transaction.abort();
@@ -144,7 +155,7 @@ public class CheckInWorkItemServiceTest {
 		try {
 			checkInWorkItemService.execute();
 		} catch(BlendedWorkflowException e) {		
-			fail(e.getMsg());
+			fail(e.getMessage());
 		}
 		// Assert
 		boolean committed = false;
@@ -160,5 +171,4 @@ public class CheckInWorkItemServiceTest {
 		}
 	}
 
-	
 }

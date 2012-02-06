@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import jvstm.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.*;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.*;
 
 public class CheckInWorkItemService {
@@ -27,7 +26,7 @@ public class CheckInWorkItemService {
 		this.bwInstance = blendedWorkflow.getBWInstance(this.bwInstanceID);
 		this.workItem = bwInstance.getWorkItem(this.workItemID);
 		this.workItem.setAttributeValues(this.values);
-		workItem.notifyWorkItemCheckedIn();					
+		this.workItem.notifyWorkItemCheckedIn();					
 	}
 
 }

@@ -17,6 +17,11 @@ class BWInstance {
 	String name;
 }
 
+class Task {
+	String id;
+	String name;
+}
+
 class WorkItem {
 	String id;
 	WorkItemState state;
@@ -30,7 +35,7 @@ class DataModel {
 	//HashMap<String, ParameterMapping> parameterMappings = new HashMap<String, ParameterMapping>();
 }
 
-class DataModelInstance extends DataModel{
+class DataModelInstance extends DataModel { 
 	String dataModelInstanceID;
 	boolean activityCaseClaimed; //= false;
 	String activityCaseInstanceID;
@@ -103,9 +108,20 @@ relation BWSpecificationHasDataModel {
 	DataModel playsRole dataModel { multiplicity 0..1; }
 }
 
+relation BWSpecificationHasTasks {
+	BWSpecification playsRole bwSpecification {multiplicity 0..1;}
+	Task playsRole task { multiplicity 0..*; }
+}
+
 //BWInstance
 relation BWInstanceHasWorkItems {
 	BWInstance playsRole bwInstance {multiplicity 0..1;}
+	WorkItem playsRole workItem {multiplicity 0..*;}
+}
+
+//Task
+relation TaskHasWorkItems {
+	Task playsRole task {multiplicity 0..1;}
 	WorkItem playsRole workItem {multiplicity 0..*;}
 }
 

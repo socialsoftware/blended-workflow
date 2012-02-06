@@ -4,8 +4,12 @@ public class DataModel extends DataModel_Base {
 
 	public enum DataState {DEFINED, UNDEFINED, SKIPPED};
 
-	public DataModel() {
+	public DataModel () {
 		super();
+	}
+
+	public DataModel(String dataModelURI) {
+		setDataModelURI(dataModelURI);
 	}
 
 }

@@ -130,11 +130,13 @@
 	-->
 	
 	<!-- Test -->
-	<target name="test" depends="compile-tests" description="Run the tests">
+	<target name="test-all" depends="compile-tests" description="Run the tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CheckInWorkItemServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.SkipWorkItemServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" />
 		</junit>
 	</target>
 	
