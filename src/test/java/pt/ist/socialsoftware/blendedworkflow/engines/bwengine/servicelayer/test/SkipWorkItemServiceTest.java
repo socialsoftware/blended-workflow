@@ -49,8 +49,8 @@ public class SkipWorkItemServiceTest {
 			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 			BWSpecification bwSpecification = new BWSpecification(BW_SPECIFICATION_ID, BW_SPECIFICATION_NAME);
 			BWInstance bwInstance = new BWInstance(BW_INSTANCE_ID, BW_INSTANCE_NAME);
-			Task taskC = new Task(TASK_ID_CHECK,TASK_NAME_CHECK);
-			Task taskV = new Task(TASK_ID_VIOLATED,TASK_NAME_VIOLATED);
+			TaskInstance taskC = new TaskInstance(TASK_ID_CHECK,TASK_NAME_CHECK);
+			TaskInstance taskV = new TaskInstance(TASK_ID_VIOLATED,TASK_NAME_VIOLATED);
 			WorkItem workItemCheckedIn = new WorkItem(WORK_ITEM_ID_CHECK);
 			WorkItem workItemConstraintViolated = new WorkItem(WORK_ITEM_ID_VIOLATED);
 			workItemCheckedIn.setState(WorkItemState.ENABLED);
@@ -61,10 +61,8 @@ public class SkipWorkItemServiceTest {
 			// relations
 			blendedWorkflow.addBwSpecification(bwSpecification);
 			bwSpecification.addBwInstance(bwInstance);
-			bwSpecification.addTask(taskC);
-			bwSpecification.addTask(taskV);
-			taskC.addWorkItem(workItemCheckedIn);
-			taskV.addWorkItem(workItemConstraintViolated);
+			taskC.setWorkItem(workItemCheckedIn);
+			taskV.setWorkItem(workItemConstraintViolated);
 			bwInstance.addWorkItem(workItemCheckedIn);
 			bwInstance.addWorkItem(workItemConstraintViolated);
 			workItemCheckedIn.addAttributeInstance(attInstance1);
@@ -130,7 +128,7 @@ public class SkipWorkItemServiceTest {
 			WorkItem workItem = bwInstance.getWorkItem(WORK_ITEM_ID_CHECK);
 			assertEquals(workItem.getState(),WorkItemState.SKIPPED); // skipped workitem is skipped??
 			workItem = bwInstance.getWorkItem(WORK_ITEM_ID_VIOLATED);
-			assertEquals(workItem.getState(),WorkItemState.SKIPPED); // affected workitem is skipped??
+			assertEquals(workItem.getState(),WorkItemState.CONSTRAINT_VIOLATION); // affected workitem is skipped??
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {
@@ -138,7 +136,6 @@ public class SkipWorkItemServiceTest {
 		} finally {
 			if (!committed) {
 				Transaction.abort();
-				fail("Could not clean blended workflow");
 			}
 		}
 	}

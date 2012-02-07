@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState as DataState;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.GoalState as GoalState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState as WorkItemState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality as Cardinality;
@@ -17,14 +18,28 @@ class BWInstance {
 	String name;
 }
 
-class Task {
+class WorkItem {
+	String id;
+	WorkItemState state;
+}
+
+class TaskWorkItem extends WorkItem;
+
+class GoalWorkItem extends WorkItem;
+
+class TaskInstance {
 	String id;
 	String name;
 }
 
-class WorkItem {
+class Goal {
 	String id;
-	WorkItemState state;
+	String name;
+}
+
+class GoalInstance {
+	String id;
+	GoalState state;
 }
 
 class DataModel {
@@ -108,11 +123,6 @@ relation BWSpecificationHasDataModel {
 	DataModel playsRole dataModel { multiplicity 0..1; }
 }
 
-relation BWSpecificationHasTasks {
-	BWSpecification playsRole bwSpecification {multiplicity 0..1;}
-	Task playsRole task { multiplicity 0..*; }
-}
-
 //BWInstance
 relation BWInstanceHasWorkItems {
 	BWInstance playsRole bwInstance {multiplicity 0..1;}
@@ -120,9 +130,9 @@ relation BWInstanceHasWorkItems {
 }
 
 //Task
-relation TaskHasWorkItems {
-	Task playsRole task {multiplicity 0..1;}
-	WorkItem playsRole workItem {multiplicity 0..*;}
+relation TaskInstanceHasTaskWorkItem {
+	TaskInstance playsRole taskInstance {multiplicity 0..1;}
+	TaskWorkItem playsRole taskWorkItem {multiplicity 0..1;}
 }
 
 //WorkItem

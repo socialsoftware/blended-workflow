@@ -7,9 +7,13 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.workletinterface.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
-public class WorkItem extends WorkItem_Base {
+public abstract class WorkItem extends WorkItem_Base {
 
 	public enum WorkItemState {ENABLED, CONSTRAINT_VIOLATION, CHECKED_IN, SKIPPED, COMPLETED};
+	
+	public WorkItem() {
+		super();
+	}
 
 	public WorkItem(String workItemID) {
 		setId(workItemID);
@@ -79,5 +83,7 @@ public class WorkItem extends WorkItem_Base {
 	public void notifyWorkItemEnabled() {
 
 	}
+	
+	public abstract String getElementId();
 
 }

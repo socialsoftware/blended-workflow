@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.workletinterface;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.*;
 
 import java.io.IOException;
 import java.util.Date;
@@ -45,8 +44,8 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 	//NOTE: filter requests to not send worklet service the same workitem more than once
 	public void notifyWorkItemContraintViolation(WorkItem workItem) {
 		String caseID = workItem.getBwInstance().getId(); 
-		String taskID = workItem.getTask().getId(); 
-		String specURI = workItem.getTask().getBwSpecification().getId();
+		String taskID = workItem.getElementId(); 
+		String specURI = workItem.getBwInstance().getBwSpecification().getId();
 		String status = workItem.getState().toString();
 		String enablementTime = new Date().toString(); //define enablementTime on dml ???
 

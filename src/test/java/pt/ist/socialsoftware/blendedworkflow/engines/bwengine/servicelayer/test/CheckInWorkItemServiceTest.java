@@ -50,10 +50,10 @@ public class CheckInWorkItemServiceTest {
 			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 			BWSpecification bwSpecification = new BWSpecification(BW_SPECIFICATION_ID, BW_SPECIFICATION_NAME);
 			BWInstance bwInstance = new BWInstance(BW_INSTANCE_ID, BW_INSTANCE_NAME);
-			Task taskC = new Task(TASK_ID_CHECK,TASK_NAME_CHECK);
-			Task taskV = new Task(TASK_ID_VIOLATED,TASK_NAME_VIOLATED);
-			WorkItem workItemCheckedIn = new WorkItem(WORK_ITEM_ID_CHECK);
-			WorkItem workItemConstraintViolated = new WorkItem(WORK_ITEM_ID_VIOLATED);
+			TaskInstance taskC = new TaskInstance(TASK_ID_CHECK,TASK_NAME_CHECK);
+			TaskInstance taskV = new TaskInstance(TASK_ID_VIOLATED,TASK_NAME_VIOLATED);
+			TaskWorkItem workItemCheckedIn = new TaskWorkItem(WORK_ITEM_ID_CHECK);
+			TaskWorkItem workItemConstraintViolated = new TaskWorkItem(WORK_ITEM_ID_VIOLATED);
 			workItemCheckedIn.setState(WorkItemState.ENABLED);
 			workItemConstraintViolated.setState(WorkItemState.ENABLED);
 			AttributeInstance attInstance1 = new AttributeInstance("att1");
@@ -62,10 +62,8 @@ public class CheckInWorkItemServiceTest {
 			// relations
 			blendedWorkflow.addBwSpecification(bwSpecification);
 			bwSpecification.addBwInstance(bwInstance);
-			bwSpecification.addTask(taskC);
-			bwSpecification.addTask(taskV);
-			taskC.addWorkItem(workItemCheckedIn);
-			taskV.addWorkItem(workItemConstraintViolated);
+			taskC.setTaskWorkItem(workItemCheckedIn);
+			taskV.setTaskWorkItem(workItemConstraintViolated);
 			bwInstance.addWorkItem(workItemCheckedIn);
 			bwInstance.addWorkItem(workItemConstraintViolated);
 			workItemCheckedIn.addAttributeInstance(attInstance1);
