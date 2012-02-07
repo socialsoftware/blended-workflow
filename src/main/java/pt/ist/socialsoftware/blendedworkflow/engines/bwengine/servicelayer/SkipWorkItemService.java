@@ -25,9 +25,6 @@ public class SkipWorkItemService {
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		this.bwInstance = blendedWorkflow.getBWInstance(this.bwInstanceID);
 		this.workItem = bwInstance.getWorkItem(this.workItemID);
-		// change attributes state to skipped
-		this.workItem.setAttributeState(DataState.SKIPPED);
-		// change workItem state to skipped
 		this.workItem.notifyWorkItemSkipped();					
 	}
 }

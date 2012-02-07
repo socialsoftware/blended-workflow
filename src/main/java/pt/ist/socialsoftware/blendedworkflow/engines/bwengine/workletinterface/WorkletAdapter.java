@@ -72,7 +72,7 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 			printElement(myDocument);
 
 			// Invoke worklet gateway
-			process (wir,workItemDataElement,"ConstraintViolation");
+			process(wir,workItemDataElement,"ConstraintViolation");
 		}
 	}
 

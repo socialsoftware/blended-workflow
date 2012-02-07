@@ -25,8 +25,7 @@ public class CheckInWorkItemService {
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		this.bwInstance = blendedWorkflow.getBWInstance(this.bwInstanceID);
 		this.workItem = bwInstance.getWorkItem(this.workItemID);
-		this.workItem.setAttributeValues(this.values);
-		this.workItem.notifyWorkItemCheckedIn();					
+		this.workItem.notifyWorkItemCheckedIn(this.values);					
 	}
 
 }
