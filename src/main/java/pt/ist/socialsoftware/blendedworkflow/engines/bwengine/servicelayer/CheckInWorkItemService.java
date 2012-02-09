@@ -2,9 +2,12 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import java.util.HashMap;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+
 import jvstm.Atomic;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.*;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.*;
 
 public class CheckInWorkItemService {
 

@@ -29,6 +29,7 @@ public class CreateGoalServiceTest {
 	private static String DATA_MODEL_URI = "DATAMODEL-1";
 	private static String GOAL_ID = "GOAL-1";
 	private static String GOAL_NAME = "Diagnose";
+	private static String GOAL_CONDITION = "exists(Entity1) and exists(Attribute1)";
 	private static String ENTITY_NAME = "Person";
 	private static String ATTRIBUTE_NAME = "Age";
 
@@ -101,7 +102,7 @@ public class CreateGoalServiceTest {
 	@Test
 	public void changedWorkItemState() {
 		// Arrange
-		CreateGoalService checkInWorkItemService = new CreateGoalService(BW_INSTANCE_ID, GOAL_ID, GOAL_NAME, ENTITY_NAME, ATTRIBUTE_NAME);
+		CreateGoalService checkInWorkItemService = new CreateGoalService(BW_INSTANCE_ID, GOAL_ID, GOAL_NAME, ENTITY_NAME, ATTRIBUTE_NAME, GOAL_CONDITION);
 		// Act
 		try {
 			checkInWorkItemService.execute();
@@ -115,12 +116,12 @@ public class CreateGoalServiceTest {
 			BWInstance bwInstance = getBWInstance(BW_INSTANCE_ID);
 			BWSpecification bwSpecification = bwInstance.getBwSpecification();
 			DataModel dataModel = bwSpecification.getDataModel();
-			for (Entity ent : dataModel.getEntity()){
-				System.out.println("ID: " + ent.getId() + " |NAME: " + ent.getName());
-			}
-			for (Attribute att : dataModel.getAttribute()){
-				System.out.println("ID: " + att.getId() + " |NAME: " + att.getName());
-			}	
+//			for (Entity ent : dataModel.getEntity()){
+//				System.out.println("ID: " + ent.getId() + " |NAME: " + ent.getName());
+//			}
+//			for (Attribute att : dataModel.getAttribute()){
+//				System.out.println("ID: " + att.getId() + " |NAME: " + att.getName());
+//			}	
 			assertEquals(dataModel.getEntityCount(),1);		
 			assertEquals(dataModel.getAttributeCount(),1);
 			Transaction.commit();

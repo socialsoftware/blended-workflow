@@ -29,7 +29,7 @@ public abstract class WorkItem extends WorkItem_Base {
 		notifyWorkItemDataChanged();
 	}
 	
-	private void notifyWorkItemDataChanged() {
+	public void notifyWorkItemDataChanged() {
 		Set<WorkItem> notifyWorkItems = new HashSet<WorkItem>();
 		
 		for (AttributeInstance attributeInstance : getAttributeInstance()) {

@@ -14,9 +14,9 @@ import org.yawlfoundation.yawl.engine.YSpecificationID;
 import org.yawlfoundation.yawl.engine.interfce.SpecificationData;
 import org.yawlfoundation.yawl.engine.interfce.TaskInformation;
 import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;
-//import org.yawlfoundation.yawl.engine.interfce.interfaceA.InterfaceA_EnvironmentBasedClient;
+// import org.yawlfoundation.yawl.engine.interfce.interfaceA.InterfaceA_EnvironmentBasedClient;
 import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceBWebsideController;
-//import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceB_EnvironmentBasedClient;
+// import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceB_EnvironmentBasedClient;
 import org.yawlfoundation.yawl.util.JDOMUtil;
 
 public class WorkletAdapter extends InterfaceBWebsideController{
@@ -29,10 +29,10 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 	protected String engineUser = "blendedWorkflowService";
 	protected String enginePassword = "yBW";
 	protected String sessionHandle = null;
-	protected String engineURI = "http://localhost:8080/yawl/ib";
-	protected String bwURI = "http://localhost:8080/blendedWorkflowService/ib";
-	//private InterfaceB_EnvironmentBasedClient interfaceBClient; //we need this to do some extra work
-	//private InterfaceA_EnvironmentBasedClient interfaceAClient;
+	protected String engineURI = "http:// localhost:8080/yawl/ib";
+	protected String bwURI = "http:// localhost:8080/blendedWorkflowService/ib";
+	// private InterfaceB_EnvironmentBasedClient interfaceBClient; // we need this to do some extra work
+	// private InterfaceA_EnvironmentBasedClient interfaceAClient;
 
 	public static WorkletAdapter getInstance() {
 		if (instance == null) {
@@ -41,20 +41,19 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 		return instance;
 	}
 
-	//NOTE: filter requests to not send worklet service the same workitem more than once
 	public void notifyWorkItemContraintViolation(WorkItem workItem) {
 		String caseID = workItem.getBwInstance().getId(); 
 		String taskID = workItem.getElementId(); 
 		String specURI = workItem.getBwInstance().getBwSpecification().getId();
 		String status = workItem.getState().toString();
-		String enablementTime = new Date().toString(); //define enablementTime on dml ???
+		String enablementTime = new Date().toString();
 
 		WorkItemRecord wir = new WorkItemRecord(caseID, taskID, specURI, enablementTime, status);
 
-		String taskInfo = "taskInfo"; //TaskInformation taskInfo = getTaskInformation(wir);
-		//TaskInformation taskInfo = new TaskInformation(paramSchema, taskID, specificationID, taskName, taskDocumentation, decompositionID);
+		String taskInfo = "taskInfo"; // TaskInformation taskInfo = getTaskInformation(wir);
+		// TaskInformation taskInfo = new TaskInformation(paramSchema, taskID, specificationID, taskName, taskDocumentation, decompositionID);
 
-		//Verify connection to YAWL
+		// Verify connection to YAWL
 		if (connected()){
 
 			// Create Element and get Root
@@ -68,7 +67,7 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 			}
 
 			// Print XML Element
-			printElement(myDocument);
+			// printElement(myDocument);
 
 			// Invoke worklet gateway
 			process(wir,workItemDataElement,"ConstraintViolation");
@@ -77,7 +76,7 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 
 	public void notifyWorkItemSkippedWorkItem(WorkItem workItem) {
 		// TODO Auto-generated method stub
-		//System.out.println("@WorkletAdapter - notifyWorkItemSkippedWorkItem");
+		// System.out.println("@WorkletAdapter - notifyWorkItemSkippedWorkItem");
 	}
 
 	private void printElement(Document document) {
@@ -89,10 +88,10 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 		}
 	}
 
-	// Worklet Stub Methods
+	//  Worklet Stub Methods
 	private void process(WorkItemRecord wir, Element workItemDataElement, String string) {
 		// TODO Auto-generated method stub
-		//System.out.println("@WorkletAdapter - process");
+		// System.out.println("@WorkletAdapter - process");
 	}
 
 	/*
@@ -103,7 +102,7 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 
 	/**
 	 * Stripped from DECLARE.
-	 * @see http://www.win.tue.nl/declare/
+	 * @see http:// www.win.tue.nl/declare/
 	 *
 	 * @param external ExternalWorkItem
 	 * @param sessionHandle String
@@ -113,7 +112,7 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 	protected Element prepareReplyRootElement(WorkItemRecord wir, String taskInfo, String sessionHandle) {
 		Element replyToEngineRootDataElement;
 
-		//prepare reply root element.
+		// prepare reply root element.
 		/*SpecificationData sdata = getSpecificationData(new YSpecificationID(wir), sessionHandle);
 
     	String decompID = taskInfo.getDecompositionID();
@@ -146,18 +145,18 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 	 *  @return true if connected to the engine
 	 */
 	protected boolean connected() {
-		//        try {
-		//            // if not connected
-		//             if ((this.sessionHandle == null) || (!checkConnection(this.sessionHandle)))
-		//                this.sessionHandle = connect(this.engineUser, this.enginePassword);
-		//        }
-		//        catch (IOException ioe) {
-		//             log.error("Exception attempting to connect to engine", ioe);
-		//        }
-		//        if (!successful(this.sessionHandle)) {
-		//            log.error(JDOMUtil.strip(this.sessionHandle));
-		//        }
-		//        return (successful(this.sessionHandle)) ;
+		//         try {
+		//             //  if not connected
+		//              if ((this.sessionHandle == null) || (!checkConnection(this.sessionHandle)))
+		//                 this.sessionHandle = connect(this.engineUser, this.enginePassword);
+		//         }
+		//         catch (IOException ioe) {
+		//              log.error("Exception attempting to connect to engine", ioe);
+		//         }
+		//         if (!successful(this.sessionHandle)) {
+		//             log.error(JDOMUtil.strip(this.sessionHandle));
+		//         }
+		//         return (successful(this.sessionHandle)) ;
 		// Stub
 		return true;
 	}
