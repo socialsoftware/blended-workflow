@@ -2,15 +2,24 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 public abstract class Condition extends Condition_Base {
 
-//	public Condition() {
-//		super();
-//	}
+//	public TripleStateBool evaluate(DataObservable otherData) {
+//	return TripleStateBool.FALSE;
+//}
+//
+//public TripleStateBool evaluate() {
+//	return TripleStateBool.FALSE;
+//}
 
-//	public abstract TripleStateBool evaluate();
-//	public abstract ArrayList<DataInfo> getKeyData();
-//	public abstract ArrayList<DataInfo> getData();
-	public abstract Condition and(Condition one, Condition other);
-	public abstract Condition or(Condition one, Condition other);
-	public abstract Condition not(Condition condition);
+public Condition and(Condition one, Condition other) {
+	return new AndCondition(one, other);
+}
+
+public Condition or(Condition one, Condition other) {
+	return new OrCondition(one, other);
+}
+
+public Condition not(Condition condition) {
+	return new NotCondition(condition);
+}
 
 }

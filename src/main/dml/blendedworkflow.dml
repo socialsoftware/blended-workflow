@@ -45,17 +45,18 @@ class Goal {
 
 class Condition;
 
-class AbstractCondition extends Condition;
+class AndCondition extends Condition;
 
-class AndCondition extends AbstractCondition;
+class OrCondition extends Condition;
 
-class OrCondition extends AbstractCondition;
+class NotCondition extends Condition;
 
-class NotCondition extends AbstractCondition;
+class ExistsAttributeCondition extends Condition;
 
-class ExistsCondition extends AbstractCondition;
+class ExistsEntityCondition extends Condition;
 
-class EqualToCondition extends AbstractCondition {
+class CompareAttributeToValueCondition extends Condition {
+	String operator;
 	String value;
 }
 
@@ -261,45 +262,22 @@ relation NotConditionHasConditions {
 	Condition playsRole condition { multiplicity 0..1; }
 }
 
-// ExistsCondition
-relation ExistsConditionHasAttributes {
-	ExistsCondition playsRole existsCondition { multiplicity 0..1; }
-	Attribute playsRole attributes { multiplicity 0..*; }
+// ExistsAttributeCondition
+relation ExistsAttributeConditionHasAttributes {
+	ExistsAttributeCondition playsRole existsAttributeCondition { multiplicity 0..1; }
+	Attribute playsRole attribute { multiplicity 0..1; }
 }
 
-relation ExistsConditionHasAttributeInstances {
-	ExistsCondition playsRole existsCondition { multiplicity 0..1; }
-	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
+//ExistsEntityCondition
+relation ExistsEntityConditionHasEntities {
+	ExistsEntityCondition playsRole existsEntityCondition { multiplicity 0..1; }
+	Entity playsRole entity { multiplicity 0..1; }
 }
 
-relation ExistsConditionHasEntities {
-	ExistsCondition playsRole existsCondition { multiplicity 0..1; }
-	Entity playsRole entities { multiplicity 0..*; }
-}
 
-relation ExistsConditionHasEntityInstances {
-	ExistsCondition playsRole existsCondition { multiplicity 0..1; }
-	EntityInstance playsRole entityInstance { multiplicity 0..*; }
-}
-
-// EqualToCondition
-relation EqualToConditionHasAttributes {
-	EqualToCondition playsRole EqualToCondition { multiplicity 0..1; }
-	Attribute playsRole attributes { multiplicity 0..*; }
-}
-
-relation EqualToConditionHasAttributeInstances {
-	EqualToCondition playsRole EqualToCondition { multiplicity 0..1; }
-	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
-}
-
-relation EqualToConditionHasEntities {
-	EqualToCondition playsRole EqualToCondition { multiplicity 0..1; }
-	Entity playsRole entities { multiplicity 0..*; }
-}
-
-relation EqualToConditionHasEntityInstances {
-	EqualToCondition playsRole EqualToCondition { multiplicity 0..1; }
-	EntityInstance playsRole entityInstance { multiplicity 0..*; }
+// CompareAttributeToValueCondition
+relation CompareAttributeToValueConditionHasAttributes {
+	CompareAttributeToValueCondition playsRole compareAttributeToValueCondition { multiplicity 0..1; }
+	Attribute playsRole attribute { multiplicity 0..1; }
 }
 
