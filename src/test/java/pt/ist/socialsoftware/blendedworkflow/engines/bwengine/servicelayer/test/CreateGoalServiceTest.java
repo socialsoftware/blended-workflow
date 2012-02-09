@@ -18,6 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 public class CreateGoalServiceTest {
@@ -27,9 +28,10 @@ public class CreateGoalServiceTest {
 	private static String BW_INSTANCE_ID = "BWInstance-1.1";
 	private static String BW_INSTANCE_NAME = "John Medical Appointment";
 	private static String DATA_MODEL_URI = "DATAMODEL-1";
+	private static String GOAL_MODEL_URI = "GOALMODEL-1";
 	private static String GOAL_ID = "GOAL-1";
 	private static String GOAL_NAME = "Diagnose";
-	private static String GOAL_CONDITION = "exists(Entity1) and exists(Attribute1)";
+	private static String GOAL_CONDITION = "exists(Patient Data.Height) and exists(Patient Data.Weight)";
 	private static String ENTITY_NAME = "Person";
 	private static String ATTRIBUTE_NAME = "Age";
 
@@ -55,11 +57,13 @@ public class CreateGoalServiceTest {
 			BWSpecification bwSpecification = new BWSpecification(BW_SPECIFICATION_ID, BW_SPECIFICATION_NAME);
 			BWInstance bwInstance = new BWInstance(BW_INSTANCE_ID, BW_INSTANCE_NAME);
 			DataModel dataModel = new DataModel(DATA_MODEL_URI);
+			GoalModel goalModel = new GoalModel(GOAL_MODEL_URI);
 
 			// relations
 			blendedWorkflow.addBwSpecification(bwSpecification);
 			bwSpecification.addBwInstance(bwInstance);
 			bwSpecification.setDataModel(dataModel);
+			bwSpecification.setGoalModel(goalModel);
 
 			Transaction.commit();
 			committed = true;
@@ -116,6 +120,7 @@ public class CreateGoalServiceTest {
 			BWInstance bwInstance = getBWInstance(BW_INSTANCE_ID);
 			BWSpecification bwSpecification = bwInstance.getBwSpecification();
 			DataModel dataModel = bwSpecification.getDataModel();
+			GoalModel goalModel = bwSpecification.getGoalModel();
 //			for (Entity ent : dataModel.getEntity()){
 //				System.out.println("ID: " + ent.getId() + " |NAME: " + ent.getName());
 //			}
@@ -124,6 +129,7 @@ public class CreateGoalServiceTest {
 //			}	
 			assertEquals(dataModel.getEntityCount(),1);		
 			assertEquals(dataModel.getAttributeCount(),1);
+			assertEquals(goalModel.getGoalCount(),1);
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {

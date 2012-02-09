@@ -1,11 +1,12 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-public class ExistsCondition extends ExistsCondition_Base {
+public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
     
-    public ExistsCondition() {
+    public  ExistsAttributeCondition() {
         super();
     }
     
+//  //EXISTS.CLASS
 //	private DataModelURI dataModelURI = null;
 //	private DataNameURI data = null;
 //	private DataModelInstanceID dataModelInstanceID;

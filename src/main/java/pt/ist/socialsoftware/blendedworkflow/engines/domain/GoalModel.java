@@ -6,4 +6,7 @@ public class GoalModel extends GoalModel_Base {
         super();
     }
     
+    public  GoalModel(String id) {
+      setId(id);
+    }
 }

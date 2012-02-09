@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import jvstm.Atomic;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -33,6 +32,7 @@ public class CreateGoalService {
 		this.bwInstance = blendedWorkflow.getBWInstance(this.bwInstanceID);
 		bwSpecification = this.bwInstance.getBwSpecification();
 		dataModel = this.bwSpecification.getDataModel();
+		GoalModel goalModel = this.bwSpecification.getGoalModel();
 
 		// TODO: create data
 		Entity entity = new Entity("Entity-ID",entityName); 
@@ -42,20 +42,19 @@ public class CreateGoalService {
 		entity.addAttribute(attribute);
 		
 		// create condition
-//		String rawcondition;
-//		Condition cond = null;
-//		try {
-//			cond = ConditionFactory.createCondition(rawcondition, "this.dataModelURI", "dataModelID");
-//			//conditionInstances.put(dataModelID, cond);
-//		} catch (BlendedWorkflowException e) {
-//			System.out.println(e.getMessage());
-//		}
-//		
-
-			
-		// TODO: create goal
-//		Goal goal = new Goal ("1", goalName);
-//		goal.setCondition(cond);
+		Condition cond = null;
+		try {
+			cond = ConditionFactory.createCondition(condition, "this.dataModelURI", "dataModelID");
+			//conditionInstances.put(dataModelID, cond);
+		} catch (BlendedWorkflowException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		// create goal
+		// call goal engine service??
+		Goal goal = new Goal ("1", goalName);
+		goal.setCondition(cond);
+		goalModel.addGoal(goal);
 	}
 
 }

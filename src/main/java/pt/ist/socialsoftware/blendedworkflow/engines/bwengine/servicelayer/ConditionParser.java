@@ -1,11 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AndCondition;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.CompareAttributeToValueCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.NotCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TrueCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.EqualToCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 public class ConditionParser {
@@ -70,7 +70,7 @@ public class ConditionParser {
 		}
 		return parsedCondition;
 	}
-//	
+	
 	protected Condition parseExistsCondition() throws BlendedWorkflowException {
 		int endOfCondition = _cond.indexOf(')', _token);
 		if(endOfCondition < _token) {
@@ -78,13 +78,30 @@ public class ConditionParser {
 		}
 		
 		String existsString = _cond.substring(_token, endOfCondition+1);
+		System.out.println("1: Condicao: "+existsString); // FIXME APAGAR
 		StringBuilder elementName  = new StringBuilder();
 		int startArgs = "exists(".length();
 		parseExistsConditionArgs(existsString, startArgs, existsString.length()-1, elementName);
-		
-		Condition existsCondition = new ExistsCondition();//dataModelURI, new DataNameURI(elementName.toString()), instanceID);
+		System.out.println("2: ARGS: "+elementName.toString()); // FIXME APAGAR
+		argsPrint(elementName.toString());
+
+		Condition existsCondition = new ExistsAttributeCondition();//dataModelURI, new DataNameURI(elementName.toString()), instanceID);
 		_token = endOfCondition+1;
+		System.out.println("@ConditionParser.EXISTS: "+existsCondition.getOID()); // FIXME APAGAR
 		return existsCondition;
+	}
+	
+	// DATAMODELURI METHOD
+	private void argsPrint (String elementURI){
+		String[] elementArr = elementURI.split("\\.");
+		String ent;
+		String att = null;
+		ent = elementArr[0];
+		if(elementArr.length > 1) {
+			att = elementArr[1];
+		}
+		System.out.println("3: entity: "+ent);
+		System.out.println("4: attribute: "+att); 
 	}
 	
 	protected void parseExistsConditionArgs(String existsCondition, int startArgs, int endArgs, StringBuilder elementName) {
@@ -106,7 +123,7 @@ public class ConditionParser {
 		int startArgs = "equalTo(".length();
 		parseEqualToConditionArgs(equaltoString, startArgs, equaltoString.length()-1, elementName, elementValue);
 		
-		Condition equalToCondition = new EqualToCondition(); //(dataModelURI, new DataNameURI(elementName.toString()), instanceID, elementValue.toString());
+		Condition equalToCondition = new CompareAttributeToValueCondition(); //(dataModelURI, new DataNameURI(elementName.toString()), instanceID, elementValue.toString());
 		_token = endOfCondition+1;
 		
 		return equalToCondition;
@@ -138,7 +155,9 @@ public class ConditionParser {
 	
 	protected Condition parseAndCondition(Condition parsedCondition) throws BlendedWorkflowException {
 		_token += " and ".length();
-		return new AndCondition(parsedCondition, parseConditionType());
+		AndCondition and = new AndCondition(parsedCondition, parseConditionType());
+		System.out.println("@ConditionParser.AND: "+and.getOID()); // FIXME APAGAR
+		return and;
 	}
 	
 	protected Condition parseOrCondition(Condition parsedCondition) throws BlendedWorkflowException {

@@ -60,7 +60,7 @@ class CompareAttributeToValueCondition extends Condition {
 	String value;
 }
 
-class TrueCondition extends AbstractCondition;
+class TrueCondition extends Condition;
 
 
 class DataModel {

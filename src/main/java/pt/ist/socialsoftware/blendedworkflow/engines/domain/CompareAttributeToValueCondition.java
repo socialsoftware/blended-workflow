@@ -1,11 +1,12 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-public class EqualToCondition extends EqualToCondition_Base {
+public class CompareAttributeToValueCondition extends CompareAttributeToValueCondition_Base {
     
-    public EqualToCondition() {
+    public  CompareAttributeToValueCondition() {
         super();
     }
     
+//  //EQUALTO.CLASS
 //  private DataModelURI dataModelURI;
 //	private DataModelInstanceID dataModelInstanceID;
 //	private DataNameURI data;
