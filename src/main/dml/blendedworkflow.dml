@@ -6,16 +6,20 @@ enum pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality as Cardinality;
 
-class BlendedWorkflow;
+class BlendedWorkflow {
+	int bwSpecificationCounter;
+}
 
 class BWSpecification {
 	String id;
 	String name;
+	int bwInstanceCounter;
 }
 
 class BWInstance {
 	String id;
 	String name;
+	String activityYAWLModelURI;
 }
 
 class WorkItem {
@@ -29,16 +33,11 @@ class TaskWorkItem extends WorkItem {
 
 class GoalWorkItem extends WorkItem;
 
-class GoalModel {
-	String id;
-}
+class GoalModel;
 
-class GoalModelInstance extends GoalModel { 
-	String GoalModelInstanceId;
-}
+class GoalModelInstance extends GoalModel;
 
 class Goal {
-	String id;
 	String name;
 	GoalState state;
 }
@@ -63,68 +62,45 @@ class CompareAttributeToValueCondition extends Condition {
 class TrueCondition extends Condition;
 
 
-class DataModel {
-	String dataModelURI; 
-	String activityModelURI;
-	String goalModelURI;
-	// int instanceCounter = 0;
-	// HashMap<String, ParameterMapping> parameterMappings = new HashMap<String, ParameterMapping>();
-}
+class DataModel;
 
 class DataModelInstance extends DataModel { 
-	String dataModelInstanceID;
 	boolean activityCaseClaimed; // = false;
-	String activityCaseInstanceID;
-	String goalCaseInstanceID; 
-	// DataModelInstance instance;
 }
 
 class Entity {
-	String id;
 	String name;
-	// boolean singleInstance = false;
-	// int instanceCounter= 0;
+	int entityInstanceCounter;
 }
 
 class EntityInstance {
 	String id;
-	// Entity parent; // relation EntityInstanceRefersToEntity
-	// DataModelInstance dataModelInstance; // = null
-	// boolean isSkipped = false;
-	// boolean isDefined = false;
+	int attributeInstanceCounter;
+	int relationInstanceCounter;
 }
 
 class Attribute {
-	String id;
 	String name;
 	AttributeType type;
 	boolean isKeyAttribute;
-	// EntityTemplate entity; // relation AttributeTemplateRefersToEntityTemplate
 }
 
 class AttributeInstance {
 	String id;
 	String value; // = null
 	DataState state;
-	// Attribute parent; // relation AttributeInstanceRefersToAttribute
-	// EntityInstance entity; // relation AttributeInstanceRefersToEntityInstance
-	// boolean isSkipped = false;
-	// DataModelInstance dataModel = null;
 }
 
 class Relation {
+	String name;
 	Cardinality cardinalityOne;
 	Cardinality cardinalityTwo;
 	boolean isOneKeyEntity;
 	boolean isTwoKeyEntity;
-	// Entity entityOne; // relation RelationHasEntities
-	// Entity entityTwo; // relation RelationHasEntities	
 }
 
 class RelationInstance {
-	// Relation parent; //  relation RelationInstanceRefersToRelation
-	// EntityInstance entityOne; // relation RelationInstanceHasEntityInstances
-	// EntityInstance entityTwo; // relation RelationInstanceHasEntityInstances
+	String id;
 }
 
 // BlendedWorkflow
@@ -150,6 +126,16 @@ relation BWSpecificationHasDataModel {
 }
 
 // BWInstance
+relation BWInstanceHasGoalModelInstance {
+	BWInstance playsRole bwInstance {multiplicity 0..1;}
+	GoalModelInstance playsRole goalModelInstance {multiplicity 0..1;}
+}
+
+relation BWInstanceHasDataModelInstance {
+	BWInstance playsRole bwInstance {multiplicity 0..1;}
+	DataModelInstance playsRole dataModelInstance {multiplicity 0..1;}
+}
+
 relation BWInstanceHasWorkItems {
 	BWInstance playsRole bwInstance {multiplicity 0..1;}
 	WorkItem playsRole workItem {multiplicity 0..*;}

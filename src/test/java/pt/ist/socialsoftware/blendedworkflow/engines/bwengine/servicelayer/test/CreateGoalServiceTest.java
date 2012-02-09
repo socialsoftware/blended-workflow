@@ -106,7 +106,7 @@ public class CreateGoalServiceTest {
 	@Test
 	public void changedWorkItemState() {
 		// Arrange
-		CreateGoalService checkInWorkItemService = new CreateGoalService(BW_INSTANCE_ID, GOAL_ID, GOAL_NAME, ENTITY_NAME, ATTRIBUTE_NAME, GOAL_CONDITION);
+		CreateGoalService checkInWorkItemService = new CreateGoalService(BW_INSTANCE_ID, GOAL_ID, GOAL_NAME, GOAL_CONDITION);
 		// Act
 		try {
 			checkInWorkItemService.execute();

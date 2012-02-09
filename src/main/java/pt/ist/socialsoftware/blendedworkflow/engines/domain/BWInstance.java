@@ -4,9 +4,11 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class BWInstance extends BWInstance_Base {
 
-	public BWInstance(String id, String name) {
+	public BWInstance(BWSpecification bwSpecification, String id, String name) throws BlendedWorkflowException {
 		setId(id);
 		setName(name);
+		setBwSpecification(bwSpecification);
+		setGoalModelInstance(bwSpecification.getGoalModel().cloneGoalModel());
 	}
 	
 	public WorkItem getWorkItem(String WorkItemID) throws BlendedWorkflowException {
