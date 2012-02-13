@@ -1,7 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.workletinterface;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.*;
-
 import java.io.IOException;
 import java.util.Date;
 
@@ -11,13 +9,16 @@ import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 
 import org.yawlfoundation.yawl.engine.YSpecificationID;
-import org.yawlfoundation.yawl.engine.interfce.SpecificationData;
 import org.yawlfoundation.yawl.engine.interfce.TaskInformation;
 import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;
-// import org.yawlfoundation.yawl.engine.interfce.interfaceA.InterfaceA_EnvironmentBasedClient;
 import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceBWebsideController;
-// import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceB_EnvironmentBasedClient;
-import org.yawlfoundation.yawl.util.JDOMUtil;
+//import org.yawlfoundation.yawl.engine.interfce.SpecificationData;
+//import org.yawlfoundation.yawl.engine.interfce.interfaceA.InterfaceA_EnvironmentBasedClient;
+//import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceB_EnvironmentBasedClient;
+//import org.yawlfoundation.yawl.util.JDOMUtil;
+
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 
 public class WorkletAdapter extends InterfaceBWebsideController{
 
@@ -31,8 +32,8 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 	protected String sessionHandle = null;
 	protected String engineURI = "http:// localhost:8080/yawl/ib";
 	protected String bwURI = "http:// localhost:8080/blendedWorkflowService/ib";
-	// private InterfaceB_EnvironmentBasedClient interfaceBClient; // we need this to do some extra work
-	// private InterfaceA_EnvironmentBasedClient interfaceAClient;
+//	private InterfaceB_EnvironmentBasedClient interfaceBClient; // we need this to do some extra work
+//	private InterfaceA_EnvironmentBasedClient interfaceAClient;
 
 	public static WorkletAdapter getInstance() {
 		if (instance == null) {
@@ -43,40 +44,32 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 
 	public void notifyWorkItemContraintViolation(WorkItem workItem) {
 		String caseID = workItem.getBwInstance().getId(); 
-		String taskID = workItem.getElementId(); 
-		String specURI = workItem.getBwInstance().getBwSpecification().getId();
+		String taskID = workItem.getElementId();
+		String specURI = workItem.getBwInstance().getBwSpecification().getName();
 		String status = workItem.getState().toString();
 		String enablementTime = new Date().toString();
 
 		WorkItemRecord wir = new WorkItemRecord(caseID, taskID, specURI, enablementTime, status);
 
 		String taskInfo = "taskInfo"; // TaskInformation taskInfo = getTaskInformation(wir);
-		// TaskInformation taskInfo = new TaskInformation(paramSchema, taskID, specificationID, taskName, taskDocumentation, decompositionID);
 
-		// Verify connection to YAWL
 		if (connected()){
-
-			// Create Element and get Root
 			Element root = prepareReplyRootElement(wir, taskInfo, sessionHandle);
 			Element workItemDataElement = new Element(root.getName());
 			Document myDocument = new Document(workItemDataElement);
 
-			// Get Attributes
-			for (AttributeInstance attributeInstance : workItem.getAttributeInstance()) {
+			for (AttributeInstance attributeInstance : workItem.getAttributeInstances()) {
 				workItemDataElement.addContent(new Element(attributeInstance.getId()).addContent(attributeInstance.getValue()));
 			}
 
-			// Print XML Element
-			// printElement(myDocument);
+			printElement(myDocument);
 
-			// Invoke worklet gateway
 			process(wir,workItemDataElement,"ConstraintViolation");
 		}
 	}
 
 	public void notifyWorkItemSkippedWorkItem(WorkItem workItem) {
 		// TODO Auto-generated method stub
-		// System.out.println("@WorkletAdapter - notifyWorkItemSkippedWorkItem");
 	}
 
 	private void printElement(Document document) {
@@ -88,17 +81,10 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 		}
 	}
 
-	//  Worklet Stub Methods
+	// Worklet Stub Methods
 	private void process(WorkItemRecord wir, Element workItemDataElement, String string) {
 		// TODO Auto-generated method stub
-		// System.out.println("@WorkletAdapter - process");
 	}
-
-	/*
-	 * -------------------------------------------
-	 * YAWL METHODS
-	 * -------------------------------------------
-	 */
 
 	/**
 	 * Stripped from DECLARE.
@@ -113,16 +99,15 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 		Element replyToEngineRootDataElement;
 
 		// prepare reply root element.
-		/*SpecificationData sdata = getSpecificationData(new YSpecificationID(wir), sessionHandle);
-
-    	String decompID = taskInfo.getDecompositionID();
-    	if (sdata.usesSimpleRootData()) {
-    		replyToEngineRootDataElement = new Element("data");
-    	}
-    	else {
-    		replyToEngineRootDataElement = new Element(decompID);
-    	}*/
-		// Stub
+//		SpecificationData sdata = getSpecificationData(new YSpecificationID(wir), sessionHandle);
+//
+//    	String decompID = taskInfo.getDecompositionID();
+//    	if (sdata.usesSimpleRootData()) {
+//    		replyToEngineRootDataElement = new Element("data");
+//    	}
+//    	else {
+//    		replyToEngineRootDataElement = new Element(decompID);
+//    	}
 		replyToEngineRootDataElement = new Element("BW-WORKLET");
 		return replyToEngineRootDataElement;
 	}
@@ -145,19 +130,18 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 	 *  @return true if connected to the engine
 	 */
 	protected boolean connected() {
-		//         try {
-		//             //  if not connected
-		//              if ((this.sessionHandle == null) || (!checkConnection(this.sessionHandle)))
-		//                 this.sessionHandle = connect(this.engineUser, this.enginePassword);
-		//         }
-		//         catch (IOException ioe) {
-		//              log.error("Exception attempting to connect to engine", ioe);
-		//         }
-		//         if (!successful(this.sessionHandle)) {
-		//             log.error(JDOMUtil.strip(this.sessionHandle));
-		//         }
-		//         return (successful(this.sessionHandle)) ;
-		// Stub
+//		try {
+//			//  if not connected
+//			if ((this.sessionHandle == null) || (!checkConnection(this.sessionHandle)))
+//				this.sessionHandle = connect(this.engineUser, this.enginePassword);
+//		}
+//		catch (IOException ioe) {
+//			log.error("Exception attempting to connect to engine", ioe);
+//		}
+//		if (!successful(this.sessionHandle)) {
+//			log.error(JDOMUtil.strip(this.sessionHandle));
+//		}
+//		return (successful(this.sessionHandle)) ;
 		return true;
 	}
 

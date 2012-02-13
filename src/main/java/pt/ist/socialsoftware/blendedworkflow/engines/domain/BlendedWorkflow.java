@@ -12,15 +12,24 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	public static BlendedWorkflow getInstance() {
 		return FenixFramework.getRoot();
 	}
-	
-	public BWInstance getBWInstance(String bwInstanceID) throws BlendedWorkflowException {
-		for (BWSpecification bwSpecification : getBwSpecificationSet()) {
-			for (BWInstance bwInstance : bwSpecification.getBwInstanceSet()) {
-				if (bwInstance.getId().equals(bwInstanceID))
+
+	public BWSpecification getBWSpecification(String name) throws BlendedWorkflowException {
+		for (BWSpecification bwSpecification : getBwSpecifications()) {
+			if (bwSpecification.getName().equals(name))
+				return bwSpecification;
+		}
+		throw new BlendedWorkflowException("Exception @BlendedWorkflow: The BWSpecification name: " + name + " does not exist.");
+
+	}
+
+	public BWInstance getBWInstance(String id) throws BlendedWorkflowException {
+		for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
+			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
+				if (bwInstance.getId().equals(id))
 					return bwInstance;
 			}
 		}
-		throw new BlendedWorkflowException("BW Instance does not exist");
+		throw new BlendedWorkflowException("Exception @BWInstance: The BWInstance id: " + id + "does not exist.");
 	}
 
 }

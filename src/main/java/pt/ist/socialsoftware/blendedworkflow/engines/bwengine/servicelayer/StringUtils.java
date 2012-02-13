@@ -15,10 +15,10 @@ import org.jdom.input.SAXBuilder;
 public class StringUtils {
 
 	private static Logger _log = Logger.getLogger(StringUtils.class);
-	
-	//so that anyone instantiate the class
+
+	// so that anyone instantiate the class
 	private StringUtils() {}
-	
+
 	/**
 	 * Transforms a file into a String.
 	 * Copied from YAWL.
@@ -28,10 +28,10 @@ public class StringUtils {
 	 */
 	public static String fileToString(String filename) {
 		File file = new File(filename);
-		
+
 		return fileToString(file);
 	}
-	
+
 	/**
 	 * Transforms a file into a String.
 	 * Copied from YAWL.
@@ -41,34 +41,34 @@ public class StringUtils {
 	 */
 	public static String fileToString(File file) {		
 		try {
-		if (!file.exists()) {
-        	_log.info("File does not exist");
-        	file.createNewFile();
-        }
-        
-        	int bufsize = (int) file.length();
-        	FileInputStream fis = new FileInputStream(file) ;
+			if (!file.exists()) {
+				_log.info("File does not exist");
+				file.createNewFile();
+			}
 
-        	// read into buffered byte stream - to preserve UTF-8
-        	BufferedInputStream inStream = new BufferedInputStream(fis);
-        	ByteArrayOutputStream outStream = new ByteArrayOutputStream(bufsize);
-        	byte[] buffer = new byte[bufsize];
+			int bufsize = (int) file.length();
+			FileInputStream fis = new FileInputStream(file) ;
 
-        	// read chunks from the input stream and write them out
-        	int bytesRead = 0;
-        	while ((bytesRead = inStream.read(buffer, 0, bufsize)) > 0) {
-        		outStream.write(buffer, 0, bytesRead);
-        	}
-        	outStream.flush();
+			// read into buffered byte stream - to preserve UTF-8
+			BufferedInputStream inStream = new BufferedInputStream(fis);
+			ByteArrayOutputStream outStream = new ByteArrayOutputStream(bufsize);
+			byte[] buffer = new byte[bufsize];
 
-        	// convert the bytes to a UTF-8 string
-        	return outStream.toString("UTF-8");
-        }
-        catch (Exception e) {
-        	return null;
-        }
+			// read chunks from the input stream and write them out
+			int bytesRead = 0;
+			while ((bytesRead = inStream.read(buffer, 0, bufsize)) > 0) {
+				outStream.write(buffer, 0, bytesRead);
+			}
+			outStream.flush();
+
+			// convert the bytes to a UTF-8 string
+			return outStream.toString("UTF-8");
+		}
+		catch (Exception e) {
+			return null;
+		}
 	}
-	
+
 	public static String bufferToString(ByteArrayOutputStream buffer) {
 		try {
 			buffer.flush();
@@ -77,7 +77,7 @@ public class StringUtils {
 			return null;
 		}
 	}
-	
+
 	public static Document stringToDoc(String string) {
 		SAXBuilder _builder = new SAXBuilder("org.apache.xerces.parsers.SAXParser");
 
