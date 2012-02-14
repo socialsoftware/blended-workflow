@@ -11,15 +11,6 @@ public abstract class WorkItem extends WorkItem_Base {
 
 	public enum WorkItemState {ENABLED, CONSTRAINT_VIOLATION, CHECKED_IN, SKIPPED, COMPLETED};
 
-	public WorkItem() {
-		super();
-		setWorkItemCounter(0);
-	}
-
-	public int getNewWorkItemId() {
-		setWorkItemCounter(getWorkItemCounter()+1);
-		return getWorkItemCounter();
-	}
 
 	public void notifyWorkItemCheckedIn(HashMap<String, String> values) {
 		setAttributeValues(values);

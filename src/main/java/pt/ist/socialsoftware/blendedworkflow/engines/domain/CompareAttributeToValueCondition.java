@@ -18,4 +18,26 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		return new CompareAttributeToValueCondition(attribute) ;
 	}
 
+	@Override
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem) {
+		Entity entity = getAttribute().getEntity();
+		
+		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
+		
+		// Should evolve when a entity allows more than one instance
+		EntityInstance entityInstance = entity.getFirstEntityInstance();
+		if (entityInstance != null) {
+			for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
+				if (attributeInstance.getAttribute().equals(getAttribute())) {
+					goalWorkItem.addAttributeInstances(attributeInstance);
+				}
+			}
+		} else {
+			entityInstance = new EntityInstance(dataModelInstance, entity);
+			AttributeInstance attributeInstance = new AttributeInstance(getAttribute(), entityInstance);
+			goalWorkItem.addAttributeInstances(attributeInstance);
+		}				
+
+	}
+
 }

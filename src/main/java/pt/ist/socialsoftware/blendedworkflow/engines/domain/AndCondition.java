@@ -17,8 +17,13 @@ public class AndCondition extends AndCondition_Base {
 
 	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
-		System.out.println("**********AND");
 		return new AndCondition(getConditionOne().cloneCondition(goalModelInstance), getConditionTwo().cloneCondition(goalModelInstance));
+	}
+
+	@Override
+	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
+		getConditionOne().assignAttributeInstances(goalWorkItem);
+		getConditionTwo().assignAttributeInstances(goalWorkItem);
 	}
 	
 

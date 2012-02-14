@@ -7,7 +7,7 @@ public class Relation extends Relation_Base {
 	public enum Cardinality {MANY, ZERO_OR_ONE, ONE}
 
 	public Relation(DataModel dataModel, String name, Entity entityOne, Entity entityTwo, Cardinality cardinalityOne, Cardinality cardinalityTwo, boolean isOneKeyEntity, boolean isTwoKeyEntity) throws BlendedWorkflowException {
-		checkUniqueRelationName(dataModel,name);
+		checkUniqueRelationName(entityOne, entityTwo, name);
 		setDataModel(dataModel);
 		setName(name);
 		addEntities(entityOne);
@@ -18,12 +18,16 @@ public class Relation extends Relation_Base {
 		setIsTwoKeyEntity(isTwoKeyEntity);
 	}
 
-	private void checkUniqueRelationName(DataModel dataModel, String name) throws BlendedWorkflowException {
-		for (Relation relation : dataModel.getRelations()) {
-			if (relation.getName().equals(name)) {
+	private void checkUniqueRelationName(Entity entityOne, Entity entityTwo, String name) throws BlendedWorkflowException {
+		for (Relation relation : entityOne.getRelations()) {
+			if (isInRelation(entityTwo, relation) && relation.getName().equals(name)) {
 				throw new BlendedWorkflowException("Exception @Relation: The Relation name: " + name + "already exists.");
 			}
 		}
+	}
+
+	private boolean isInRelation(Entity entityTwo, Relation relation) {
+		return relation.getEntityOne().equals(entityTwo) || relation.getEntityTwo().equals(entityTwo);
 	}
 
 	public void cloneRelation(DataModelInstance dataModelInstance, Entity entityOne, Entity entityTwo) throws BlendedWorkflowException {

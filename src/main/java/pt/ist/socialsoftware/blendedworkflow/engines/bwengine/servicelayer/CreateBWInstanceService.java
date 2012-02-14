@@ -40,7 +40,7 @@ public class CreateBWInstanceService {
 
 			// AttributeInstances
 			for (Attribute attribute : entity.getAttributes()) {
-				AttributeInstance newAttributeInstance = new AttributeInstance(attribute, newEntityInstance.getNewAttributeInstanceId());
+				AttributeInstance newAttributeInstance = new AttributeInstance(attribute, newEntityInstance);
 
 				// FIXME Associate workitem with data
 				System.out.println("Attribute \"" + attribute.getName() + "\" gots " + attribute.getAttributeInstancesCount() + " instances, the last was created with the id \"" + newAttributeInstance.getId() + "\"");
@@ -63,8 +63,8 @@ public class CreateBWInstanceService {
 			relationEntityOne = dataModelInstance.getEntity(relation.getEntityOne().getName()); // Relation EntityOne
 			relationEntityTwo = dataModelInstance.getEntity(relation.getEntityTwo().getName()); // Relation EntityTwo
 
-			relationEntityInstanceOne = relationEntityOne.getEntityInstance(); // EntityInstanceOne
-			relationEntityInstanceTwo = relationEntityTwo.getEntityInstance(); // EntityInstanceTwo
+			relationEntityInstanceOne = relationEntityOne.getFirstEntityInstance(); // EntityInstanceOne
+			relationEntityInstanceTwo = relationEntityTwo.getFirstEntityInstance(); // EntityInstanceTwo
 
 			RelationInstance newRelationInstance = new RelationInstance(relation, relationEntityInstanceOne, relationEntityInstanceTwo, newEntityInstance.getNewRelationInstanceId());
 			System.out.println("Relation \"" + relation.getName() + "\" gots " + relation.getRelationInstancesCount() + " instances, the last was created with the id \"" + newRelationInstance.getId() + "\"");
@@ -86,9 +86,10 @@ public class CreateBWInstanceService {
 			if (workItem.getId().equals("Diagnose.1")) { 
 				workItem.addAttributeInstances(attributeInstanceHackName);
 			}
-			if (workItem.getId().equals("Examine.1")) {
+			if (workItem.getId().equals("Examine.2")) {
 				workItem.addAttributeInstances(attributeInstanceHackAge);
 			}
+			System.out.println(workItem.getAttributeInstancesCount());
 		}
 	}
 

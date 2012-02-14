@@ -14,4 +14,9 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		return new ExistsAttributeCondition(attribute) ;
 	}
 
+	@Override
+	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
+		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute());
+	}
+
 }

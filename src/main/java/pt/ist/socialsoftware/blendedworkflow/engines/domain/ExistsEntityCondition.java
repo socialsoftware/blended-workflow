@@ -17,4 +17,10 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 		return new ExistsEntityCondition(entity);
 	}
 
+	@Override
+	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -16,4 +16,6 @@ public abstract class Condition extends Condition_Base {
 	
 	abstract Condition cloneCondition(GoalModelInstance goalModelInstance);
 
+	abstract void assignAttributeInstances(GoalWorkItem goalWorkItem);
+
 }

@@ -33,7 +33,7 @@ public class Entity extends Entity_Base {
 	}
 
 	// Used by CreateBWInstanceService - only 1 instance exists
-	public EntityInstance getEntityInstance () {
+	public EntityInstance getFirstEntityInstance () {
 		return getEntityInstances().get(0);
 	}
 
@@ -43,6 +43,22 @@ public class Entity extends Entity_Base {
 				return attribute;
 		}
 		return null;
+	}
+
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute) {
+		
+		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
+		
+		if (getEntityInstances().isEmpty()) {
+			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
+			entityInstance.assignAttributeInstances(goalWorkItem, attribute);
+		}
+		else {
+			for (EntityInstance entityInstance : getEntityInstances()) {
+				entityInstance.assignAttributeInstances(goalWorkItem, attribute);
+			}
+			
+		}
 	}
 
 }

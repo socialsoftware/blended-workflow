@@ -15,7 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipW
 public class SkipWorkItemServiceTest {
 
 	private static String BW_INSTANCE_ID = "Medical Appointment.1";
-	private static String GOAL_WORKITEM_SK = "Examine.1";
+	private static String GOAL_WORKITEM_SK = "Examine.2";
 
 	static {
 		if(FenixFramework.getConfig()==null) {

@@ -4,9 +4,10 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public class AttributeInstance extends AttributeInstance_Base {
 
-	public AttributeInstance(Attribute attribute, String id) {
+	public AttributeInstance(Attribute attribute, EntityInstance entityInstance) {
+		setEntityInstance(entityInstance);
 		setAttribute(attribute);
-		setId(getAttribute().getName() + "." + id);
+		setId(getAttribute().getName() + "." + entityInstance.getNewAttributeInstanceId());
 		setState(DataState.UNDEFINED);
 		setValue("");
 	}

@@ -41,6 +41,7 @@ public class CreateGoalService {
 
 		Condition newGoalCondition = ConditionFactory.createCondition(dataModelInstance, condition);
 		new Goal(this.goalModelInstance, this.parentGoal, this.goalName, newGoalCondition);
+		this.goalModelInstance.getEnabledWorkItems();
 
 		System.out.println("Actual Enabled WorkItems:");
 		for (WorkItem workItem : this.bwInstance.getWorkItems()) {

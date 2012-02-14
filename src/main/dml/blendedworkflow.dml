@@ -18,11 +18,11 @@ class BWSpecification {
 class BWInstance {
 	String id;
 	String activityYAWLModelURI;
+	Integer workItemCounter;
 }
 
 class WorkItem {
 	String id;
-	Integer workItemCounter;
 	WorkItemState state;
 }
 
@@ -57,9 +57,6 @@ class CompareAttributeToValueCondition extends Condition {
 	String operator;
 	String value;
 }
-
-class TrueCondition extends Condition;
-
 
 class DataModel;
 

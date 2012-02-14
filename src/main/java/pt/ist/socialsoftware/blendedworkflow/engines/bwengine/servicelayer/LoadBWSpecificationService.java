@@ -43,7 +43,7 @@ public class LoadBWSpecificationService {
 		Condition goalDiagnoseCondition = ConditionFactory.createCondition(dataModel, goalDiagnoseConditionString);
 		new Goal(goalModel, goalCure, "Diagnose", goalDiagnoseCondition);
 
-		String goalExamineConditionString = "existsEntity(Medic).not() or existsEntity(Patient)";
+		String goalExamineConditionString = "existsAttribute(Medic.Age)";
 		Condition goalExamineCondition = ConditionFactory.createCondition(dataModel, goalExamineConditionString);
 		new Goal(goalModel, goalCure, "Examine", goalExamineCondition);
 

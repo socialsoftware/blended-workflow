@@ -27,4 +27,5 @@ public class Attribute extends Attribute_Base {
 		new Attribute(dataModelInstance, getName(), entity, getType(), getIsKeyAttribute());
 	}
 
+
 }

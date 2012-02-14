@@ -7,11 +7,17 @@ public class BWInstance extends BWInstance_Base {
 	public BWInstance(BWSpecification bwSpecification) throws BlendedWorkflowException {
 		setBwSpecification(bwSpecification);
 		setId(getBwSpecification().getName() + "." + getBwSpecification().getNewBWInstanceId()); //Id: BWSpecificationName.#
+		setWorkItemCounter(0);
 		setDataModelInstance(bwSpecification.getDataModel().cloneDataModel());
 		
 		GoalModelInstance goalModelInstance = new GoalModelInstance();
 		setGoalModelInstance(goalModelInstance);
 		bwSpecification.getGoalModel().cloneGoalModel(goalModelInstance);
+	}
+	
+	public Integer getNewWorkItemId() {
+		setWorkItemCounter(getWorkItemCounter()+1);
+		return getWorkItemCounter();
 	}
 
 	public WorkItem getWorkItem(String id) throws BlendedWorkflowException {

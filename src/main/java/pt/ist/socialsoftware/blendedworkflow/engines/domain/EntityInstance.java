@@ -19,4 +19,19 @@ public class EntityInstance extends EntityInstance_Base {
 		return getRelationInstanceCounter().toString();
 	}
 
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute) {
+		if (getAttributeInstances().isEmpty()) {
+			AttributeInstance attributeInstance = new AttributeInstance(attribute, this);
+			goalWorkItem.addAttributeInstances(attributeInstance);
+		}
+		else {
+			for (AttributeInstance attributeInstance : getAttributeInstances()) {
+				if (attributeInstance.getAttribute().equals(attribute)) {
+					goalWorkItem.addAttributeInstances(attributeInstance);
+				}
+			}
+		}				
+		
+	}
+
 }
