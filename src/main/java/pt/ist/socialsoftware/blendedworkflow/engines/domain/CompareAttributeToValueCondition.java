@@ -10,4 +10,12 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		setAttribute(attribute);
 	}
 
+	@Override
+	Condition cloneCondition(GoalModelInstance goalModelInstance) {
+		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
+		Entity entity = dataModelInstance.getEntity(getAttribute().getEntity().getName());
+		Attribute attribute = entity.getAttribute(getAttribute().getName());
+		return new CompareAttributeToValueCondition(attribute) ;
+	}
+
 }

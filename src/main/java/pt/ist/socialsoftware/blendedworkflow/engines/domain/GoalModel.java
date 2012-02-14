@@ -4,8 +4,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class GoalModel extends GoalModel_Base {
 
-	public GoalModelInstance cloneGoalModel() throws BlendedWorkflowException {
-		GoalModelInstance newGoalModelInstance = new GoalModelInstance();
+	public void cloneGoalModel(GoalModelInstance newGoalModelInstance) throws BlendedWorkflowException {
 		for (Goal goal : getGoals()) {
 			goal.cloneGoal(newGoalModelInstance);
 		}
@@ -15,6 +14,5 @@ public class GoalModel extends GoalModel_Base {
 				newGoalModelInstance.getGoal(goal.getName()).addSubGoals(newGoalModelInstance.getGoal(subgoal.getName()));
 			}
 		}
-		return newGoalModelInstance;
 	}
 }

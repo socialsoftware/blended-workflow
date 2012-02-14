@@ -6,4 +6,9 @@ public class TrueCondition extends TrueCondition_Base {
 		super();
 	}
 
+	@Override
+	Condition cloneCondition(GoalModelInstance goalModelInstance) {
+		return new TrueCondition();
+	}
+
 }

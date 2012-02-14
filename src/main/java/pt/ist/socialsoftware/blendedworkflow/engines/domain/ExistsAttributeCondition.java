@@ -6,4 +6,12 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		setAttribute(attribute);
 	}
 
+	@Override
+	Condition cloneCondition(GoalModelInstance goalModelInstance) {
+		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
+		Entity entity = dataModelInstance.getEntity(getAttribute().getEntity().getName());
+		Attribute attribute = entity.getAttribute(getAttribute().getName());
+		return new ExistsAttributeCondition(attribute) ;
+	}
+
 }

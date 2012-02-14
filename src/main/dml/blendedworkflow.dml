@@ -243,20 +243,20 @@ relation NotConditionHasConditions {
 
 // ExistsAttributeCondition
 relation ExistsAttributeConditionHasAttributes {
-	ExistsAttributeCondition playsRole existsAttributeCondition { multiplicity 0..1; }
+	ExistsAttributeCondition playsRole existsAttributeCondition { multiplicity 0..*; }
 	Attribute playsRole attribute { multiplicity 0..1; }
 }
 
 //ExistsEntityCondition
 relation ExistsEntityConditionHasEntities {
-	ExistsEntityCondition playsRole existsEntityCondition { multiplicity 0..1; }
+	ExistsEntityCondition playsRole existsEntityCondition { multiplicity 0..*; }
 	Entity playsRole entity { multiplicity 0..1; }
 }
 
 
 // CompareAttributeToValueCondition
 relation CompareAttributeToValueConditionHasAttributes {
-	CompareAttributeToValueCondition playsRole compareAttributeToValueCondition { multiplicity 0..1; }
+	CompareAttributeToValueCondition playsRole compareAttributeToValueCondition { multiplicity 0..*; }
 	Attribute playsRole attribute { multiplicity 0..1; }
 }
 

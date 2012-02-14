@@ -37,13 +37,13 @@ public class LoadBWSpecificationService {
 		GoalModel goalModel = bwSpecification.getGoalModel();
 		String goalCureConditionString = "existsEntity(Nurse) or existsAttribute(Medic.Age.NUMBER.true)";
 		Condition goalCureCondition = ConditionFactory.createCondition(dataModel, goalCureConditionString);
-		Goal goalCure = new Goal(goalModel, "Cure", goalCureCondition);
+		Goal goalCure = new Goal(goalModel, "Cure", goalCureCondition); 
 
 		String goalDiagnoseConditionString = "existsEntity(Medic)";
 		Condition goalDiagnoseCondition = ConditionFactory.createCondition(dataModel, goalDiagnoseConditionString);
 		new Goal(goalModel, goalCure, "Diagnose", goalDiagnoseCondition);
 
-		String goalExamineConditionString = "existsEntity(Patient)";
+		String goalExamineConditionString = "existsEntity(Medic).not() or existsEntity(Patient)";
 		Condition goalExamineCondition = ConditionFactory.createCondition(dataModel, goalExamineConditionString);
 		new Goal(goalModel, goalCure, "Examine", goalExamineCondition);
 
@@ -60,8 +60,10 @@ public class LoadBWSpecificationService {
 		for (Relation relation : dataModel.getRelations()) {
 			System.out.println("Relation \"" + relation.getName() + "\" created.");
 		}
-		for (Goal goal : goalModel.getGoals())
+		for (Goal goal : goalModel.getGoals()) {
 			System.out.println("Goal \"" + goal.getName() + "\" has " + goal.getSubGoals().size() + " subgoals.");
+		System.out.println("Condition " + goal.getCondition().getClass());
+		}
 	}
 
 }

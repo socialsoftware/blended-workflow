@@ -24,7 +24,7 @@ public class DataModel extends DataModel_Base {
 		return newDataModelInstance;
 	}
 
-	public Entity getEntity(String name) throws BlendedWorkflowException {
+	public Entity getEntity(String name) {
 		for (Entity entity : getEntities()) {
 			if (entity.getName().equals(name)) {
 				return entity;
@@ -33,13 +33,13 @@ public class DataModel extends DataModel_Base {
 		return null; // Needed by ConditionParser to create new Entity
 	}
 
-	public Attribute getAttribute(String name) throws BlendedWorkflowException {
-		for (Attribute attribute : getAttributes()) {
-			if (attribute.getName().equals(name)) {
-				return attribute;
-			}
-		}
-		return null; // Needed by ConditionParser to create new Attribute
-	}
+//	public Attribute getAttribute(String name) {
+//		for (Attribute attribute : getAttributes()) {
+//			if (attribute.getName().equals(name)) {
+//				return attribute;
+//			}
+//		}
+//		return null; // Needed by ConditionParser to create new Attribute
+//	}
 
 }

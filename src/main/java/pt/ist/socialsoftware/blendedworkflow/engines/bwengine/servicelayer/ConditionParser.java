@@ -10,6 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.NotCondition;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.OrCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
@@ -106,8 +107,8 @@ public class ConditionParser {
 		else 
 			entity = new Entity(dataModel, elementArr[0]);
 
-		if (dataModel.getAttribute(elementArr[1]) != null)
-			return dataModel.getAttribute(elementArr[1]);
+		if (entity.getAttribute(elementArr[1]) != null)
+			return entity.getAttribute(elementArr[1]);
 		else {
 			if (elementArr[2].equals("BOOLEAN"))
 				type = AttributeType.BOOLEAN;
@@ -204,7 +205,7 @@ public class ConditionParser {
 
 	protected Condition parseOrCondition(Condition parsedCondition) throws BlendedWorkflowException {
 		_token += " or ".length();
-		return new AndCondition(parsedCondition, parseConditionType());
+		return new OrCondition(parsedCondition, parseConditionType());
 	}
 
 }

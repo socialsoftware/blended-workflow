@@ -13,5 +13,7 @@ public abstract class Condition extends Condition_Base {
 	public Condition not(Condition condition) {
 		return new NotCondition(condition);
 	}
+	
+	abstract Condition cloneCondition(GoalModelInstance goalModelInstance);
 
 }

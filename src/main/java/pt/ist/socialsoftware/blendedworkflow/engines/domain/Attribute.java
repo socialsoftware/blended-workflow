@@ -7,7 +7,7 @@ public class Attribute extends Attribute_Base {
 	public enum AttributeType {BOOLEAN, NUMBER, STRING};
 
 	public Attribute(DataModel dataModel, String name, Entity entity, AttributeType type, boolean isKeyAttribute) throws BlendedWorkflowException {
-		checkUniqueAttributeName(dataModel,name);
+		checkUniqueAttributeName(entity,name);
 		setDataModel(dataModel);
 		setName(name);
 		setEntity(entity);
@@ -15,8 +15,8 @@ public class Attribute extends Attribute_Base {
 		setIsKeyAttribute(isKeyAttribute);
 	}
 
-	private void checkUniqueAttributeName(DataModel dataModel, String name) throws BlendedWorkflowException {
-		for (Attribute attribute : dataModel.getAttributes()) {
+	private void checkUniqueAttributeName(Entity entity, String name) throws BlendedWorkflowException {
+		for (Attribute attribute : entity.getAttributes()) {
 			if (attribute.getName().equals(name)) {
 				throw new BlendedWorkflowException("Exception @Attribute: The Attribute name: " + name + "already exists.");
 			}

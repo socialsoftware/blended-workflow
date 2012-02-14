@@ -6,4 +6,9 @@ public class NotCondition extends NotCondition_Base {
 		setCondition(condition);
 	}
 
+	@Override
+	Condition cloneCondition(GoalModelInstance goalModelInstance) {
+		return new NotCondition(getCondition().cloneCondition(goalModelInstance));
+	}
+
 }

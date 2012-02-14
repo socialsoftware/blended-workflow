@@ -37,4 +37,12 @@ public class Entity extends Entity_Base {
 		return getEntityInstances().get(0);
 	}
 
+	public Attribute getAttribute(String name) {
+		for (Attribute attribute : getAttributes()) {
+			if (attribute.getName().equals(name))
+				return attribute;
+		}
+		return null;
+	}
+
 }

@@ -32,7 +32,14 @@ public class Goal extends Goal_Base {
 	}
 
 	public void cloneGoal(GoalModelInstance goalModelInstance) throws BlendedWorkflowException {
-		new Goal(goalModelInstance, getName(), getCondition());
+		Condition newCondition = null;
+		Condition condition = getCondition();
+		System.out.println("OLD: " + condition.getClass());
+		if (condition != null) {
+			newCondition = condition.cloneCondition(goalModelInstance);
+		}
+		System.out.println("NEW: " + newCondition.getClass());
+		new Goal(goalModelInstance, getName(), newCondition);
 	}
 
 	public void checkState(BWInstance bwInstance) {
@@ -41,7 +48,7 @@ public class Goal extends Goal_Base {
 		if (getState() != GoalState.ENABLED) {
 			if (getSubGoalsCount() > 0) { 
 				for (Goal goal : getSubGoals()) {
-					if (goal.getState() == GoalState.ACHIEVED) { // FIXME ONLY GOAL ACHIEVED
+					if (goal.getState() == GoalState.ACHIEVED) {
 						subgoalsAchievedCount++;
 					}
 				}
