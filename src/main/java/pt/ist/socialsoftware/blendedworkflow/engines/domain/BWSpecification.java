@@ -10,6 +10,8 @@ public class BWSpecification extends BWSpecification_Base {
 		setDataModel(new DataModel());
 		setGoalModel(new GoalModel());
 		setBwInstanceCounter(0);
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		blendedWorkflow.addBwSpecifications(this);
 
 	}
 
@@ -21,7 +23,7 @@ public class BWSpecification extends BWSpecification_Base {
 			}
 		}
 	}
-	
+
 	public int getNewBWInstanceId() {
 		setBwInstanceCounter(getBwInstanceCounter()+1);
 		return getBwInstanceCounter();

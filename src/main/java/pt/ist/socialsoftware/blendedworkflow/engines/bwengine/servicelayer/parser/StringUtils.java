@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
+package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

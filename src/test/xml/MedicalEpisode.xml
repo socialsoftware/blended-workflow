@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bw:BlendedWorkflowSchema xmlns:bw="http://www.example.org/BWSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/BWSchema BWSchema.xsd " uri="MedicalEpisodeBP">
+	<bw:CaseInfo>
+		<bw:specificationName>Medical Appointment</bw:specificationName>
+	</bw:CaseInfo>
+	<bw:DataModel>
+		<bw:Entity>
+			<bw:Name>Patient</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Name</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>true</bw:isKey>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Address</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>false</bw:isKey>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>PhoneNumber</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>false</bw:isKey>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Gender</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>false</bw:isKey>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Entity>
+			<bw:Name>Episode</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Closed</bw:Name>
+				<bw:Type>BOOLEAN</bw:Type>
+				<bw:isKey>false</bw:isKey>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Entity>
+			<bw:Name>Patient Data</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Height</bw:Name>
+				<bw:Type>NUMBER</bw:Type>
+				<bw:isKey>false</bw:isKey>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Weight</bw:Name>
+				<bw:Type>NUMBER</bw:Type>
+				<bw:isKey>false</bw:isKey>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Physical Report</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>false</bw:isKey>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Physical Examination</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>false</bw:isKey>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Medical Examination</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>true</bw:isKey>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Entity>
+			<bw:Name>Prescription</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Recipe</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>true</bw:isKey>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Entity>
+			<bw:Name>Medical Report</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Report</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>true</bw:isKey>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Closed</bw:Name>
+				<bw:Type>BOOLEAN</bw:Type>
+				<bw:isKey>false</bw:isKey>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Relation>
+			<bw:Name>Patient 1-1 Episode</bw:Name>
+			<bw:EntityOne>
+				<bw:EntityName>Patient</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>true</bw:isEntityKey>
+			</bw:EntityOne>
+			<bw:EntityTwo>
+				<bw:EntityName>Episode</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityTwo>
+		</bw:Relation>
+		<bw:Relation>
+			<bw:Name>Episode 1-0* Patient Data</bw:Name>
+			<bw:EntityOne>
+				<bw:EntityName>Episode</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityOne>
+			<bw:EntityTwo>
+				<bw:EntityName>Patient Data</bw:EntityName>
+				<bw:EntityCardinality>ZERO_OR_ONE</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityTwo>
+		</bw:Relation>
+		<bw:Relation>
+			<bw:Name>Episode 1-1 Medical Report</bw:Name>
+			<bw:EntityOne>
+				<bw:EntityName>Episode</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityOne>
+			<bw:EntityTwo>
+				<bw:EntityName>Medical Report</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>true</bw:isEntityKey>
+			</bw:EntityTwo>
+		</bw:Relation>
+		<bw:Relation>
+			<bw:Name>Episode 1-* Prescription</bw:Name>
+			<bw:EntityOne>
+				<bw:EntityName>Episode</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityOne>
+			<bw:EntityTwo>
+				<bw:EntityName>Prescription</bw:EntityName>
+				<bw:EntityCardinality>MANY</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityTwo>
+		</bw:Relation>
+	</bw:DataModel>
+	<bw:GoalModel>
+		<bw:RootGoal>
+			<bw:Name>Diagnose Patient</bw:Name>
+			<bw:Condition>existsEntity(Patient) and existsEntity(Medical Report) and compareAttributeTo(Medical Report.Closed,=.true)</bw:Condition>
+		</bw:RootGoal>
+		<bw:Goal>
+			<bw:Name>Observe Patient</bw:Name>
+			<bw:Condition>existsEntity(Episode) and existsEntity(Patient) and existsAttribute(Patient Data.Medical Examination)</bw:Condition>
+			<bw:ParentName>Diagnose Patient</bw:ParentName>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Write Medical Report</bw:Name>
+			<bw:Condition>existsAttribute(Medical Report.Report)</bw:Condition>
+			<bw:ParentName>Diagnose Patient</bw:ParentName>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Collect Data</bw:Name>
+			<bw:Condition>existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight)</bw:Condition>
+			<bw:ParentName>Observe Patient</bw:ParentName>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Physical Examination</bw:Name>
+			<bw:Condition>existsAttribute(Patient Data.Physical Report) and existsAttribute(Patient Data.Physical Examination)</bw:Condition>
+			<bw:ParentName>Observe Patient</bw:ParentName>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Prescribe</bw:Name>
+			<bw:Condition>existsAttribute(Prescription.Recipe)</bw:Condition>
+			<bw:ParentName>Write Medical Report</bw:ParentName>
+		</bw:Goal>
+	</bw:GoalModel>
+</bw:BlendedWorkflowSchema>

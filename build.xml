@@ -13,7 +13,7 @@
 	<property name="src.rel-dir" value="src/main" />
 	<property name="build.rel-dir" value="target" />
 	<property name="lib.rel-dir" value="lib" />
-	<property name="db.rel-dir" value="db"/>
+	<!-- <property name="db.rel-dir" value="db"/> -->
 	<property name="test-db.rel-dir" value="test-db"/>
 	<property name="test.src.rel-dir" value="src/test"/>
 	
@@ -63,7 +63,7 @@
 	<target name="prepare">
 		<echo message="Preparing the project for build..." />
 		<mkdir dir="${classes.build.rel-dir}" />
-	    <mkdir dir="${db.rel-dir}"/>
+		<!-- <mkdir dir="${db.rel-dir}"/> -->
 	    <mkdir dir="${test-db.rel-dir}"/>
 	</target>
 	
@@ -129,20 +129,20 @@
 	</target> 
 	-->
 	
-	<!-- Test -->
-	<target name="test-all" depends="clean-all, compile-tests" description="Run the tests">
+	<!-- Test All-->
+	<target name="test-all" depends="compile-tests" description="Run the tests">
+		<echo message="Testing all services..." />
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.LoadBWSpecificationServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateBWInstanceServiceTest" />
-			<!--
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CheckInWorkItemServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.SkipWorkItemServiceTest" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" />	-->
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" /> 
 		</junit>
 	</target>
-	
+
 	<!-- Clean -->
 	<target name="clean" description="Cleans the compiled classes and generated sources">
 		<delete dir="${build.rel-dir}" />
@@ -153,7 +153,7 @@
 	<!-- Clean All -->
 	<target name="clean-all" depends="clean">
 		<delete dir="${test-db.rel-dir}"/>
-		<delete dir="${db.rel-dir}"/>
+		<!-- <delete dir="${db.rel-dir}"/> -->
 	</target>
 
 </project>

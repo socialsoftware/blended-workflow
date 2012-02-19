@@ -9,18 +9,13 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
-		
-		System.out.println("999999999- "+ getEntity().getName());
 		Entity entity = dataModelInstance.getEntity(getEntity().getName());
-		
-		System.out.println("999999999- "+ entity.getName());
 		return new ExistsEntityCondition(entity);
 	}
 
 	@Override
 	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
-		// TODO Auto-generated method stub
-		
+		getEntity().assignAllAttributeInstances(goalWorkItem, getEntity());
 	}
 
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bw:BlendedWorkflowSchema xmlns:bw="http://www.example.org/BWSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/BWSchema BWSchema.xsd " uri="MedicalEpisodeBP">
+	<bw:CaseInfo>
+		<bw:specificationName>Medical Appointment</bw:specificationName>
+		<bw:instanceID>Medical Appointment.1</bw:instanceID>
+	</bw:CaseInfo>
+	<bw:GoalModel>
+		<bw:Goal>
+			<bw:Name>Second Opinion</bw:Name>
+			<bw:Condition>existsEntity(Second Opinion) and existsAttribute(Second Opinion.Report.STRING.true)</bw:Condition>
+			<bw:ParentName>Write Medical Report</bw:ParentName>
+		</bw:Goal>
+	</bw:GoalModel>
+</bw:BlendedWorkflowSchema>

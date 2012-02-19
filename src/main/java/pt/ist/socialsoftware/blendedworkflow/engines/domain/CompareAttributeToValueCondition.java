@@ -2,12 +2,14 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 public class CompareAttributeToValueCondition extends CompareAttributeToValueCondition_Base {
 
-	public CompareAttributeToValueCondition() {
+	public CompareAttributeToValueCondition(){
 		super();
 	}
 
-	public CompareAttributeToValueCondition(Attribute attribute) {
+	public CompareAttributeToValueCondition(Attribute attribute, String operator, String value) {
 		setAttribute(attribute);
+		setOperator(operator);
+		setValue(value);
 	}
 
 	@Override
@@ -15,29 +17,11 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttribute().getEntity().getName());
 		Attribute attribute = entity.getAttribute(getAttribute().getName());
-		return new CompareAttributeToValueCondition(attribute) ;
+		return new CompareAttributeToValueCondition(attribute, getOperator(), getValue()) ;
 	}
 
 	@Override
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem) {
-		Entity entity = getAttribute().getEntity();
-		
-		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
-		
-		// Should evolve when a entity allows more than one instance
-		EntityInstance entityInstance = entity.getFirstEntityInstance();
-		if (entityInstance != null) {
-			for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
-				if (attributeInstance.getAttribute().equals(getAttribute())) {
-					goalWorkItem.addAttributeInstances(attributeInstance);
-				}
-			}
-		} else {
-			entityInstance = new EntityInstance(dataModelInstance, entity);
-			AttributeInstance attributeInstance = new AttributeInstance(getAttribute(), entityInstance);
-			goalWorkItem.addAttributeInstances(attributeInstance);
-		}				
-
+		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute());
 	}
-
 }

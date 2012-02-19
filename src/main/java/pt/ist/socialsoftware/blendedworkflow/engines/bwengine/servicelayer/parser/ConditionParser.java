@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
+package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
@@ -36,8 +36,8 @@ public class ConditionParser {
 		Condition finalCondition = null;
 		if(_cond.startsWith("existsAttribute(") || _cond.startsWith("existsEntity(") || _cond.startsWith("compareAttributeTo(")) {
 			finalCondition = parseConditionType();
-//		} else if(_cond.startsWith("true")){
-//			return new TrueCondition();
+			//		} else if(_cond.startsWith("true")){
+			//			return new TrueCondition();
 		} else {
 			throw new BlendedWorkflowException("Exception @ConditionParser: The condition " + _cond + " is invalid.");
 		}
@@ -98,31 +98,9 @@ public class ConditionParser {
 
 		String[] elementArr = elementName.toString().split("\\.");
 
-		Entity entity;
-		AttributeType type;
-		boolean iskeyAttribute;
-		if (dataModel.getEntity(elementArr[0]) != null)
-			entity = dataModel.getEntity(elementArr[0]);
-		else 
-			entity = new Entity(dataModel, elementArr[0]);
+		Entity entity = parseEntity(elementArr);
+		return parseAttribute(elementArr, entity);
 
-		if (entity.getAttribute(elementArr[1]) != null)
-			return entity.getAttribute(elementArr[1]);
-		else {
-			if (elementArr[2].equals("BOOLEAN"))
-				type = AttributeType.BOOLEAN;
-			else if (elementArr[2].equals("NUMBER"))
-				type = AttributeType.NUMBER;
-			else
-				type = AttributeType.STRING;
-		}
-
-		if (elementArr[3].equals("true"))
-			iskeyAttribute = true;
-		else
-			iskeyAttribute = false;
-
-		return new Attribute(dataModel, elementArr[1], entity, type, iskeyAttribute);
 	}
 
 	protected Condition parseExistsEntityCondition() throws BlendedWorkflowException {
@@ -152,7 +130,6 @@ public class ConditionParser {
 			return new Entity(dataModel, elementName.toString());
 	}
 
-	// TODO
 	protected Condition parseCompareAttributeToCondition() throws BlendedWorkflowException {
 		int endOfCondition = _cond.indexOf(')', _token);
 
@@ -162,24 +139,55 @@ public class ConditionParser {
 
 		String compareAttributeToString = _cond.substring(_token, endOfCondition+1);
 		StringBuilder elementName = new StringBuilder();
-		StringBuilder elementValue = new StringBuilder();
+		StringBuilder elementTo = new StringBuilder();
 		int startArgs = "compareAttributeTo(".length();
-		parseCompareAttributeConditionArgs(compareAttributeToString, startArgs, compareAttributeToString.length()-1, elementName, elementValue);
 
-		Condition compareAttributeToCondition = new CompareAttributeToValueCondition(); // TODO ADD ATTRIBUTE TO CONDITION
+		Attribute attribute;
+		String operator;
+		String value;
+		//parseCompareAttributeConditionArgs(compareAttributeToString, startArgs, compareAttributeToString.length()-1, elementName, elementTo, attribute, operator, value);
+
+		// FIXME REFACTOR
+		int endArgs = compareAttributeToString.length()-1;
+		int subToken = compareAttributeToString.indexOf(',', startArgs);
+
+		// Parse Entity and Attribute
+		elementName.append(compareAttributeToString.substring(startArgs, subToken));
+		String[] elementArr = elementName.toString().split("\\.");
+		Entity entity = parseEntity(elementArr);
+		attribute = parseAttribute(elementArr, entity);
+
+		// Parse Operator and Value
+		elementTo.append(compareAttributeToString.substring(subToken+1, endArgs).trim());
+		String[] toArr = elementTo.toString().split("\\.");
+		operator = toArr[0];
+		value = toArr[1];
+		// FIXME REFACTOR
+
+		CompareAttributeToValueCondition compareAttributeToCondition = new CompareAttributeToValueCondition(attribute, operator, value);
 		_token = endOfCondition+1;
 
 		return compareAttributeToCondition;
 	}
 
-	// TODO
-	protected void parseCompareAttributeConditionArgs(String compareAttributeToString, int startArgs, int endArgs, StringBuilder elementName, StringBuilder elementValue) {
+	protected void parseCompareAttributeConditionArgs(String compareAttributeToString, int startArgs, int endArgs, StringBuilder elementName, StringBuilder elementTo, Attribute attribute, String operator, String value) throws BlendedWorkflowException {
 		if(startArgs > endArgs) return;
 
 		int subToken = compareAttributeToString.indexOf(',', startArgs);
 
+		// Parse Entity and Attribute
 		elementName.append(compareAttributeToString.substring(startArgs, subToken));
-		elementValue.append(compareAttributeToString.substring(subToken+1, endArgs).trim());
+
+		String[] elementArr = elementName.toString().split("\\.");
+		Entity entity = parseEntity(elementArr);
+		attribute = parseAttribute(elementArr, entity);
+
+		// Parse Operator and Value
+		elementTo.append(compareAttributeToString.substring(subToken+1, endArgs).trim());
+		String[] toArr = elementTo.toString().split("\\.");
+
+		operator = toArr[0];
+		value = toArr[1];
 	}
 
 	protected Condition parseNotCondition(Condition typeCondition) {
@@ -205,6 +213,37 @@ public class ConditionParser {
 	protected Condition parseOrCondition(Condition parsedCondition) throws BlendedWorkflowException {
 		_token += " or ".length();
 		return new OrCondition(parsedCondition, parseConditionType());
+	}
+
+	private Entity parseEntity(String[] elementArr) throws BlendedWorkflowException {
+		Entity entity;
+		if (dataModel.getEntity(elementArr[0]) != null)
+			entity = dataModel.getEntity(elementArr[0]);
+		else 
+			entity = new Entity(dataModel, elementArr[0]);
+		return entity;
+	}
+
+	private Attribute parseAttribute(String[] elementArr, Entity entity) throws BlendedWorkflowException {
+		AttributeType type;
+		boolean iskeyAttribute;
+		if (entity.getAttribute(elementArr[1]) != null)
+			return entity.getAttribute(elementArr[1]);
+		else {
+			if (elementArr[2].equals("BOOLEAN"))
+				type = AttributeType.BOOLEAN;
+			else if (elementArr[2].equals("NUMBER"))
+				type = AttributeType.NUMBER;
+			else
+				type = AttributeType.STRING;
+
+			if (elementArr[3].equals("true"))
+				iskeyAttribute = true;
+			else
+				iskeyAttribute = false;
+
+			return new Attribute(dataModel, elementArr[1], entity, type, iskeyAttribute); 
+		}
 	}
 
 }

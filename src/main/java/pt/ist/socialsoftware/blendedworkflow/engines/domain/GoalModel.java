@@ -15,4 +15,13 @@ public class GoalModel extends GoalModel_Base {
 			}
 		}
 	}
+
+	public Goal getGoal(String name) throws BlendedWorkflowException {
+		for (Goal goal : getGoals()) {
+			if (goal.getName().equals(name)) {
+				return goal;
+			}
+		}
+		throw new BlendedWorkflowException("Exception @GoalModel: The Goal name: " + name + " does not exist.");
+	}
 }

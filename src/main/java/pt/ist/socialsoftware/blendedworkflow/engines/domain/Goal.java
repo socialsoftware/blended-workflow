@@ -34,11 +34,9 @@ public class Goal extends Goal_Base {
 	public void cloneGoal(GoalModelInstance goalModelInstance) throws BlendedWorkflowException {
 		Condition newCondition = null;
 		Condition condition = getCondition();
-		System.out.println("OLD: " + condition.getClass());
 		if (condition != null) {
 			newCondition = condition.cloneCondition(goalModelInstance);
 		}
-		System.out.println("NEW: " + newCondition.getClass());
 		new Goal(goalModelInstance, getName(), newCondition);
 	}
 
@@ -55,20 +53,12 @@ public class Goal extends Goal_Base {
 				if (getSubGoalsCount() == subgoalsAchievedCount) { // SubGoals achieved
 					setState(GoalState.ENABLED);
 					new GoalWorkItem(bwInstance, this);
-					// TODO
-					// get goal data through condition
-					// if data instance exists
-					// add it to workitem
-					// else
-					// create instance
-					// associate data with workitem
 				}
 			}
 			else { // No SubGoals
 				if (getState() == GoalState.DEACTIVATED) {
 					setState(GoalState.ENABLED);
 					new GoalWorkItem(bwInstance, this);
-					// TODO
 				}
 			}
 		}

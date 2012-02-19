@@ -9,7 +9,6 @@ public class AttributeInstance extends AttributeInstance_Base {
 		setAttribute(attribute);
 		setId(getAttribute().getName() + "." + entityInstance.getNewAttributeInstanceId());
 		setState(DataState.UNDEFINED);
-		setValue("");
 	}
 
 	@Override

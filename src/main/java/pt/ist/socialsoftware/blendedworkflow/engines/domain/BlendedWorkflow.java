@@ -29,7 +29,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 					return bwInstance;
 			}
 		}
-		throw new BlendedWorkflowException("Exception @BWInstance: The BWInstance id: " + id + "does not exist.");
+		throw new BlendedWorkflowException("Exception @BlendedWorkflow: The BWInstance id: " + id + " does not exist.");
 	}
 
 }

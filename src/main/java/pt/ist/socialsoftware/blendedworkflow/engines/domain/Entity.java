@@ -46,19 +46,37 @@ public class Entity extends Entity_Base {
 	}
 
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute) {
-		
 		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
-		
+
 		if (getEntityInstances().isEmpty()) {
 			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
 			entityInstance.assignAttributeInstances(goalWorkItem, attribute);
 		}
 		else {
-			for (EntityInstance entityInstance : getEntityInstances()) {
+			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
 				entityInstance.assignAttributeInstances(goalWorkItem, attribute);
 			}
-			
 		}
 	}
+
+	public void assignAllAttributeInstances(GoalWorkItem goalWorkItem, Entity entity) {
+		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
+
+		if (getEntityInstances().isEmpty()) {
+			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
+			for (Attribute attribute : getAttributes()) {
+				entityInstance.assignAttributeInstances(goalWorkItem, attribute);
+			}
+		}
+		else {
+			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
+				for (Attribute attribute : getAttributes()) {
+					entityInstance.assignAttributeInstances(goalWorkItem, attribute);
+				}
+			}
+		}
+	}
+
+
 
 }

@@ -1,12 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.workletinterface;
 
 import java.io.IOException;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.jdom.Document;
+//import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
+//import org.jdom.output.XMLOutputter;
 
 import org.yawlfoundation.yawl.engine.YSpecificationID;
 import org.yawlfoundation.yawl.engine.interfce.TaskInformation;
@@ -17,7 +16,6 @@ import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceBWebsideContr
 //import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceB_EnvironmentBasedClient;
 //import org.yawlfoundation.yawl.util.JDOMUtil;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 
 public class WorkletAdapter extends InterfaceBWebsideController{
@@ -43,48 +41,47 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 	}
 
 	public void notifyWorkItemContraintViolation(WorkItem workItem) {
-		String caseID = workItem.getBwInstance().getId(); 
-		String taskID = workItem.getElementId();
-		String specURI = workItem.getBwInstance().getBwSpecification().getName();
-		String status = workItem.getState().toString();
-		String enablementTime = new Date().toString();
-
-		WorkItemRecord wir = new WorkItemRecord(caseID, taskID, specURI, enablementTime, status);
-
-		String taskInfo = "taskInfo"; // TaskInformation taskInfo = getTaskInformation(wir);
-
-		if (connected()){
-			Element root = prepareReplyRootElement(wir, taskInfo, sessionHandle);
-			Element workItemDataElement = new Element(root.getName());
-			Document myDocument = new Document(workItemDataElement);
-
-			for (AttributeInstance attributeInstance : workItem.getAttributeInstances()) {
-				workItemDataElement.addContent(new Element(attributeInstance.getId()).addContent(attributeInstance.getValue()));
-			}
-
-			printElement(myDocument);
-
-			process(wir,workItemDataElement,"ConstraintViolation");
-		}
+//		System.out.println("Worklet Notified.");
+//		String caseID = workItem.getBwInstance().getId(); 
+//		String taskID = workItem.getElementId();
+//		String specURI = workItem.getBwInstance().getBwSpecification().getName();
+//		String status = workItem.getState().toString();
+//		String enablementTime = new Date().toString();
+//
+//		WorkItemRecord wir = new WorkItemRecord(caseID, taskID, specURI, enablementTime, status);
+//
+//		String taskInfo = "taskInfo"; // TaskInformation taskInfo = getTaskInformation(wir);
+//
+//		if (connected()){
+//			Element root = prepareReplyRootElement(wir, taskInfo, sessionHandle);
+//			Element workItemDataElement = new Element(root.getName());
+//			Document myDocument = new Document(workItemDataElement);
+//
+//			for (AttributeInstance attributeInstance : workItem.getAttributeInstances()) {
+//				workItemDataElement.addContent(new Element(attributeInstance.getId()).addContent(attributeInstance.getValue()));
+//			}
+//
+//			printElement(myDocument);
+//
+//			process(wir,workItemDataElement,"ConstraintViolation");
+//		}
 	}
 
 	public void notifyWorkItemSkippedWorkItem(WorkItem workItem) {
-		// TODO Auto-generated method stub
 	}
 
-	private void printElement(Document document) {
-		try {
-			XMLOutputter outputter = new XMLOutputter();
-			outputter.output(document, System.out);
-		} catch (java.io.IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void printElement(Document document) {
+//		try {
+//			XMLOutputter outputter = new XMLOutputter();
+//			outputter.output(document, System.out);
+//		} catch (java.io.IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	// Worklet Stub Methods
-	private void process(WorkItemRecord wir, Element workItemDataElement, String string) {
-		// TODO Auto-generated method stub
-	}
+//	private void process(WorkItemRecord wir, Element workItemDataElement, String string) {
+//	}
 
 	/**
 	 * Stripped from DECLARE.

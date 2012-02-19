@@ -24,7 +24,7 @@ public class BWInstance extends BWInstance_Base {
 		for (WorkItem workItem : getWorkItems())
 			if (workItem.getId().equals(id))
 				return workItem;
-		throw new BlendedWorkflowException("Exception @WorkItem: The WorkItem id: " + id + "does not exist.");
+		throw new BlendedWorkflowException("Exception @BWInstance: The WorkItem id: " + id + " does not exist.");
 	}
 
 }

@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
+package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;

@@ -5,28 +5,32 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.HashMap;
-//import java.util.Set;
+import java.util.Set;
 
 import pt.ist.fenixframework.Config;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.pstm.Transaction;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.*;
-//import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.*;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser.StringUtils;
 
 public class CheckInWorkItemServiceTest {
 
-//	private static String BW_SPECIFICATION_NAME = "Medical Appointment";
-//	private static String TASK_INFORMATION_C = "TASK-C";
-//	private static String TASK_INFORMATION_V = "TASK-V";
-//	private static String WORK_ITEM_ID_CHECK = "WorkItemID_C";
-//	private static String WORK_ITEM_ID_VIOLATED = "WorkItemID_V";
-	
-	private static String BW_INSTANCE_ID = "Medical Appointment.1";
-	private static String GOAL_WORKITEM_CI = "Diagnose.1";
+	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode.xml";
+	private static String CREATE_BWINSTANCE_INPUT_DATA = "src/test/xml/MedicalEpisodeCreateBWInstanceInput.xml";
+	private static String INPUT_DATA = "src/test/xml/MedicalEpisodeCheckInInput.xml";
+	private static String BWINSTANCE_ID = "Medical Appointment.1";
+	private static String GOAL_WORKITEM_CI = "Prescribe.3";
 
 	static {
 		if(FenixFramework.getConfig()==null) {
@@ -41,68 +45,51 @@ public class CheckInWorkItemServiceTest {
 
 	@Before
 	public void setUp() {
-//		boolean committed = false;
-//		try {
-//			Transaction.begin();
-//
-//			// define vars
-//			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-//			BWSpecification bwSpecification = new BWSpecification(BW_SPECIFICATION_NAME);
-//			BWInstance bwInstance = new BWInstance(bwSpecification);
-//			TaskWorkItem workItemCheckedIn = new TaskWorkItem(bwInstance, TASK_INFORMATION_C);
-//			TaskWorkItem workItemConstraintViolated = new TaskWorkItem(bwInstance, TASK_INFORMATION_V);
-//			workItemCheckedIn.setState(WorkItemState.ENABLED);
-//			workItemConstraintViolated.setState(WorkItemState.ENABLED);
-//			AttributeInstance attInstance1 = new AttributeInstance("att1");
-//			AttributeInstance attInstance2 = new AttributeInstance("att2");
-//
-//			// relations
-//			blendedWorkflow.addBwSpecifications(bwSpecification);
-//			bwInstance.addWorkItems(workItemCheckedIn);
-//			bwInstance.addWorkItems(workItemConstraintViolated);
-//			workItemCheckedIn.addAttributeInstances(attInstance1);
-//			workItemCheckedIn.addAttributeInstances(attInstance2);
-//			workItemConstraintViolated.addAttributeInstances(attInstance1);
-//
-//			Transaction.commit();
-//			committed = true;
-//		} 
-//		catch (Exception e) {
-//			fail(e.getMessage());
-//		}
-//		finally {
-//			if (!committed) 
-//			{
-//				Transaction.abort();
-//				fail("Could not add new bw specification: " + BW_SPECIFICATION_NAME);
-//			}
-//		}
+		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
+		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_INPUT_DATA);
+
+		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(dataModelString);
+		CreateBWInstanceService createBWInstanceService = new CreateBWInstanceService(createBWInstanceInputString);
+		try {
+			loadBWSpecificationService.execute();
+			createBWInstanceService.execute();
+			
+			// FIXME Change Workitem state to ENABLED because worklet is not verifying conditions
+			Transaction.begin();
+			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+			BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+			WorkItem workItem = bwInstance.getWorkItem(GOAL_WORKITEM_CI);
+			workItem.setState(WorkItemState.ENABLED);
+			Transaction.commit();
+			
+		} catch(BlendedWorkflowException e) {		
+			fail(e.getMessage());
+		}
 	}
 
 	@After
 	public void tearDown() {
-//		boolean committed = false;
-//		try {
-//			Transaction.begin();
-//			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-//			Set<BWSpecification> allBWSpecifications = blendedWorkflow.getBwSpecificationsSet();
-//			allBWSpecifications.clear();
-//			Transaction.commit();
-//			committed = true;
-//		} finally {
-//			if (!committed) {
-//				Transaction.abort();
-//				fail("Could not clean blended workflow");
-//			}
-//		}
+		boolean committed = false;
+		try {
+			Transaction.begin();
+			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+			Set<BWSpecification> allBWSpecifications = blendedWorkflow.getBwSpecificationsSet();
+			allBWSpecifications.clear();
+			Transaction.commit();
+			committed = true;
+		} finally {
+			if (!committed) {
+				Transaction.abort();
+				fail("CheckInWorkItemServiceTest failed @TearDown.");
+			}
+		}
 	}
 
 	@Test
 	public void checkInWorkItemService() {
-		HashMap<String,String> values = new HashMap<String,String>();
-		values.put("Name.1","Ana");
-		CheckInWorkItemService checkInWorkItemService = new CheckInWorkItemService(BW_INSTANCE_ID, GOAL_WORKITEM_CI, values);
-		try {
+		String checkInWorkItemInputString = StringUtils.fileToString(INPUT_DATA);
+		CheckInWorkItemService checkInWorkItemService = new CheckInWorkItemService(checkInWorkItemInputString);
+		try {			
 			checkInWorkItemService.execute();
 		} catch(BlendedWorkflowException e) {		
 			fail(e.getMessage());
@@ -110,49 +97,25 @@ public class CheckInWorkItemServiceTest {
 		boolean committed = false;
 		try {
 			Transaction.begin();
-			assertEquals(true, true);
-//			BWInstance bwInstance = getBWInstance(BW_INSTANCE_ID);
-//			WorkItem workItem = bwInstance.getWorkItem(TASK_INFORMATION_C + ".1");
-//			assertEquals(workItem.getState(),WorkItemState.CHECKED_IN);
-//			workItem = bwInstance.getWorkItem(WORK_ITEM_ID_VIOLATED);
-//			assertEquals(workItem.getState(),WorkItemState.CONSTRAINT_VIOLATION);
+			
+			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+			BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+			WorkItem workItem = bwInstance.getWorkItem(GOAL_WORKITEM_CI);
+
+			assertEquals(WorkItemState.CHECKED_IN, workItem.getState());
+			for (AttributeInstance attributeInstance : workItem.getAttributeInstances()) {
+				assertEquals(DataState.DEFINED, attributeInstance.getState());
+			}
+
 			Transaction.commit();
 			committed = true;
-//		} catch (BlendedWorkflowException e) {
-//			fail(e.getMessage());
+		} catch (BlendedWorkflowException e) {
+			fail(e.getMessage());
 		} finally {
 			if (!committed) {
 				Transaction.abort();
-				fail("Test: CheckInWorkItemService failed.");
 			}
 		}
 	}
-
-//	@Test(expected=BlendedWorkflowException.class)
-//	public void nonExistentBWInstance() throws BlendedWorkflowException {
-//		HashMap<String,String> values = new HashMap<String,String>();
-//		values.put("att1","value1");
-//		values.put("att2","value2");
-//		// Arrange
-//		CheckInWorkItemService checkInWorkItemService = new CheckInWorkItemService(BW_INSTANCE_ID,WORK_ITEM_ID_CHECK,values);
-//		// Act
-//		try {
-//			checkInWorkItemService.execute();
-//		} catch(BlendedWorkflowException e) {		
-//			fail(e.getMessage());
-//		}
-//		// Assert
-//		boolean committed = false;
-//		try {
-//			Transaction.begin();
-//			getBWInstance("non Exist");
-//			Transaction.commit();
-//			committed = true;
-//		} finally {
-//			if (!committed) {
-//				Transaction.abort();
-//			}
-//		}
-//	}
-
+	
 }

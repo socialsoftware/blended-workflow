@@ -20,18 +20,17 @@ public class EntityInstance extends EntityInstance_Base {
 	}
 
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute) {
-		if (getAttributeInstances().isEmpty()) {
+		boolean exists = false;
+		for (AttributeInstance attributeInstance : getAttributeInstances()) {
+			if (attributeInstance.getAttribute().equals(attribute)) {
+				goalWorkItem.addAttributeInstances(attributeInstance);
+				exists = true;
+			}
+		}
+		if (!exists) {
 			AttributeInstance attributeInstance = new AttributeInstance(attribute, this);
 			goalWorkItem.addAttributeInstances(attributeInstance);
-		}
-		else {
-			for (AttributeInstance attributeInstance : getAttributeInstances()) {
-				if (attributeInstance.getAttribute().equals(attribute)) {
-					goalWorkItem.addAttributeInstances(attributeInstance);
-				}
-			}
-		}				
-		
+		}	
 	}
 
 }
