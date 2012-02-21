@@ -1,6 +1,9 @@
-package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.workletinterface;
+package pt.ist.socialsoftware.blendedworkflow.adapters;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 //import org.jdom.Document;
@@ -24,7 +27,7 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 	private static WorkletAdapter instance;
 
 	private static Logger log;
-
+		
 	// required data for interfacing with the engine
 	protected String engineUser = "blendedWorkflowService";
 	protected String enginePassword = "yBW";
@@ -42,21 +45,22 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 	}
 
 	public void notifyWorkItemContraintViolation(WorkItem workItem) {
-		if (workItem.getState() == WorkItemState.CONSTRAINT_VIOLATION) { // TODO: Created condition=false
-			workItem.notifyEnabled();
-		}
-		else if (workItem.getState() == WorkItemState.CHECKED_IN || workItem.getState() == WorkItemState.SKIPPED) { // TODO: checkIn or Skipped condition=true
-			workItem.notifyCompleted();	
-		}
+//		if (workItem.getState() == WorkItemState.CONSTRAINT_VIOLATION) { // TODO: Created condition=false
+//			workItem.notifyEnabled();
+//		}
+//		else if (workItem.getState() == WorkItemState.CHECKED_IN || workItem.getState() == WorkItemState.SKIPPED) { // TODO: checkIn or Skipped condition=true
+//			workItem.notifyCompleted();	
+//		}
 		
-//		String caseID = workItem.getBwInstance().getId(); 
-//		String taskID = workItem.getElementId();
-//		String specURI = workItem.getBwInstance().getBwSpecification().getName();
-//		String status = workItem.getState().toString();
-//		String enablementTime = new Date().toString();
-//
-//		WorkItemRecord wir = new WorkItemRecord(caseID, taskID, specURI, enablementTime, status);
-//
+		String caseID = workItem.getBwInstance().getId(); 
+		String taskID = workItem.getElementId();
+		String specURI = workItem.getBwInstance().getBwSpecification().getName();
+		String status = workItem.getState().toString();
+		// TODO: To be confirmed what is the required time
+		String enablementTime = new Date().toString();
+
+		WorkItemRecord wir = new WorkItemRecord(caseID, taskID, specURI, enablementTime, status);
+		
 //		String taskInfo = "taskInfo"; // TaskInformation taskInfo = getTaskInformation(wir);
 //
 //		if (connected()){
@@ -148,5 +152,6 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 //		return (successful(this.sessionHandle)) ;
 		return true;
 	}
+
 
 }

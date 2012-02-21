@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.workletinterface.WorkletAdapter;
+import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal.GoalState;
 
 public class GoalWorkItem extends GoalWorkItem_Base {
@@ -22,7 +22,6 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	@Override
 	public void notifyEnabled() {
 		setState(WorkItemState.ENABLED);
-		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
 	}
 
 	@Override
@@ -31,6 +30,16 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		getGoal().setState(GoalState.ACHIEVED);
 		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
 	}
+
+	@Override
+	public void notifySkipped() {
+		setState(WorkItemState.SKIPPED);
+		getGoal().setState(GoalState.SKIPPED);
+		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
+	}
+
+	@Override
+	public void notifyPreTask() {}
 
 
 

@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser;
+package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser;
+package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;

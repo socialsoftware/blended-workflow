@@ -4,7 +4,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class Goal extends Goal_Base {
 
-	public enum GoalState {DEACTIVATED, ENABLED, ACHIEVED};
+	public enum GoalState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
 
 	public Goal(GoalModel goalModel, String name, Condition condition) throws BlendedWorkflowException {
 		checkUniqueGoalName(goalModel, name);
@@ -46,7 +46,7 @@ public class Goal extends Goal_Base {
 		if (getState() == GoalState.DEACTIVATED) {
 			if (getSubGoalsCount() > 0) { 
 				for (Goal goal : getSubGoals()) {
-					if (goal.getState() == GoalState.ACHIEVED) {
+					if ( (goal.getState() == GoalState.ACHIEVED) && (goal.getState() == GoalState.SKIPPED)) {
 						subgoalsAchievedCount++;
 					}
 				}

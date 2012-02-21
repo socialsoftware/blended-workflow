@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.workletinterface.WorkletAdapter;
+import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public abstract class WorkItem extends WorkItem_Base {
 
-	public enum WorkItemState {ENABLED, CONSTRAINT_VIOLATION, CHECKED_IN, SKIPPED, COMPLETED};
+	public enum WorkItemState {PRE_CONSTRAINT, PRE_TASK, ENABLED, CONSTRAINT_VIOLATION, CHECKED_IN, SKIPPED, COMPLETED};
 
 
 	public void notifyWorkItemCheckedIn(HashMap<String, String> values) {
@@ -30,9 +30,9 @@ public abstract class WorkItem extends WorkItem_Base {
 		notifyWorkItemDataChanged();
 	}
 
-	public void notifyWorkItemDataChanged() {
+	private void notifyWorkItemDataChanged() {
 		Set<WorkItem> notifyWorkItems = new HashSet<WorkItem>();
-		for (AttributeInstance attributeInstance : getAttributeInstances()) {
+		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
 			for (WorkItem workItem : attributeInstance.getWorkItems()) {
 				if (workItem != this) {
 					notifyWorkItems.add(workItem);
@@ -53,7 +53,7 @@ public abstract class WorkItem extends WorkItem_Base {
 	}
 
 	private void setAttributeValues(HashMap<String, String> values) {
-		for (AttributeInstance attributeInstance : getAttributeInstances()) {
+		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
 			if (values.containsKey(attributeInstance.getId())) {
 				attributeInstance.setValue(values.get(attributeInstance.getId()));
 			}
@@ -61,7 +61,7 @@ public abstract class WorkItem extends WorkItem_Base {
 	}
 
 	private void setAttributesSkipped() {
-		for (AttributeInstance attributeInstance : getAttributeInstances()) {
+		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
 			if (attributeInstance.getState() == DataState.UNDEFINED) {
 				attributeInstance.setState(DataState.SKIPPED);
 			}
@@ -73,6 +73,10 @@ public abstract class WorkItem extends WorkItem_Base {
 
 	public abstract void notifyCompleted();
 
+	public abstract void notifySkipped();
+
 	public abstract String getElementId();
+
+	public abstract void notifyPreTask();
 
 }

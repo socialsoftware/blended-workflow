@@ -140,7 +140,12 @@ relation BWInstanceHasWorkItems {
 // WorkItem
 relation WorkItemRefersToAttributeInstances {
 	WorkItem playsRole workItems {multiplicity 0..*;}
-	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
+	AttributeInstance playsRole contraintViolationAttributeInstances { multiplicity 0..*; }
+}
+
+relation TaskWorkItemHasAttributteInstances {
+	TaskWorkItem playsRole taskWorkItems {multiplicity 0..*;}
+	AttributeInstance playsRole preConstraintAttributeInstances { multiplicity 0..*; }
 }
 
 // Goal Model

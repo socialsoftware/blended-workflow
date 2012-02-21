@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser;
+package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
@@ -148,7 +148,7 @@ public class PrintBWSpecification {
 		System.out.println("WorkItems");
 		System.out.println("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
-			System.out.println("WorkItem \"" + workitem.getId() + "\" is " + workitem.getState() + " and is associated with " + workitem.getAttributeInstancesCount() + " attributeInstances.");
+			System.out.println("WorkItem \"" + workitem.getId() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
 		}
 	}
 	
@@ -158,9 +158,9 @@ public class PrintBWSpecification {
 		System.out.println("WorkItems");
 		System.out.println("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
-			System.out.println("WorkItem \"" + workitem.getId() + "\" is " + workitem.getState() + " and is associated with " + workitem.getAttributeInstancesCount() + " attributeInstances.");
-			if (workitem.getAttributeInstancesCount()>0) {
-				for (AttributeInstance attributeInstance : workitem.getAttributeInstances()) {
+			System.out.println("WorkItem \"" + workitem.getId() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
+			if (workitem.getContraintViolationAttributeInstancesCount()>0) {
+				for (AttributeInstance attributeInstance : workitem.getContraintViolationAttributeInstances()) {
 					System.out.println("AttributeInstance \"" + attributeInstance.getId() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");					}
 			}
 		}

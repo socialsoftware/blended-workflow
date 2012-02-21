@@ -1,12 +1,14 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
+
 public class TaskWorkItem extends TaskWorkItem_Base {
 
 	public TaskWorkItem(BWInstance bwInstance, String taskInstanceId) {
 		setBwInstance(bwInstance);
 		setTaskInstanceId(taskInstanceId);
 		setId(getTaskInstanceId() + "." + bwInstance.getNewWorkItemId()); //Id: TaskInstanceId.#
-		setState(WorkItemState.ENABLED);
+		setState(WorkItemState.PRE_CONSTRAINT);
 	}
 
 	@Override
@@ -16,14 +18,25 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 
 	@Override
 	public void notifyEnabled() {
-		// TODO Auto-generated method stub
-		
+		setState(WorkItemState.ENABLED);
+		WorkListManager.getInstance().notifyEnabledWorkItem(this);
 	}
 
 	@Override
 	public void notifyCompleted() {
-		// TODO Auto-generated method stub
+		setState(WorkItemState.COMPLETED);
 		
+	}
+
+	@Override
+	public void notifySkipped() {
+		setState(WorkItemState.SKIPPED);
+	}
+
+	@Override
+	public void notifyPreTask() {
+		setState(WorkItemState.PRE_TASK);
+		WorkListManager.getInstance().notifyEnabledWorkItem(this);
 	}
 
 }
