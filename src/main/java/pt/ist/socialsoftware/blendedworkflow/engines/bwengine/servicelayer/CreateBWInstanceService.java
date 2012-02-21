@@ -10,7 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parse
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
+//import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 //import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 //import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 //import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
@@ -42,8 +42,7 @@ public class CreateBWInstanceService {
 //		createRelationInstances(dataModelInstance);
 
 		// FIXME GoalWorkItems should not be created in this service
-		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-		goalModelInstance.getEnabledWorkItems();
+		bwInstance.getGoalModelInstance().getEnabledWorkItems();
 	}
 
 	private void inputDataConverter() throws BlendedWorkflowException {

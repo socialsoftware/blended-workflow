@@ -43,7 +43,7 @@ public class Goal extends Goal_Base {
 	public void checkState(BWInstance bwInstance) {
 		int subgoalsAchievedCount = 0;
 
-		if (getState() != GoalState.ENABLED) {
+		if (getState() == GoalState.DEACTIVATED) {
 			if (getSubGoalsCount() > 0) { 
 				for (Goal goal : getSubGoals()) {
 					if (goal.getState() == GoalState.ACHIEVED) {

@@ -69,9 +69,9 @@ public abstract class WorkItem extends WorkItem_Base {
 	}
 
 	// to be redefined for each kind of work item, either goal or activity
-	public void notifyWorkItemEnabled() {
+	public abstract void notifyEnabled();
 
-	}
+	public abstract void notifyCompleted();
 
 	public abstract String getElementId();
 

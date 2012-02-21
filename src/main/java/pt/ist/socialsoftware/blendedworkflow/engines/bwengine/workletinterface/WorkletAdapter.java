@@ -17,6 +17,7 @@ import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceBWebsideContr
 //import org.yawlfoundation.yawl.util.JDOMUtil;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 
 public class WorkletAdapter extends InterfaceBWebsideController{
 
@@ -41,7 +42,13 @@ public class WorkletAdapter extends InterfaceBWebsideController{
 	}
 
 	public void notifyWorkItemContraintViolation(WorkItem workItem) {
-//		System.out.println("Worklet Notified.");
+		if (workItem.getState() == WorkItemState.CONSTRAINT_VIOLATION) { // TODO: Created condition=false
+			workItem.notifyEnabled();
+		}
+		else if (workItem.getState() == WorkItemState.CHECKED_IN || workItem.getState() == WorkItemState.SKIPPED) { // TODO: checkIn or Skipped condition=true
+			workItem.notifyCompleted();	
+		}
+		
 //		String caseID = workItem.getBwInstance().getId(); 
 //		String taskID = workItem.getElementId();
 //		String specURI = workItem.getBwInstance().getBwSpecification().getName();

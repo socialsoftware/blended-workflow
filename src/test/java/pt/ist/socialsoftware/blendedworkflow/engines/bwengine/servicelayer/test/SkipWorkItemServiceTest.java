@@ -22,13 +22,21 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipWorkItemService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser.PrintBWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser.StringUtils;
 
 public class SkipWorkItemServiceTest {
 
-	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode.xml";
-	private static String CREATE_BWINSTANCE_INPUT_DATA = "src/test/xml/MedicalEpisodeCreateBWInstanceInput.xml";
-	private static String INPUT_DATA = "src/test/xml/MedicalEpisodeSkipInput.xml";
+	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
+	private static String CREATE_BWINSTANCE_XML = "src/test/xml/MedicalEpisode/CreateBWInstanceInput.xml";
+	private static String SKIP_COLLECTDATA_XML = "src/test/xml/MedicalEpisode/SkipCollectData.xml";
+	private static String SKIP_PHYSICALEXAMINATION_XML = "src/test/xml/MedicalEpisode/SkipPhysicalExamination.xml";
+	private static String SKIP_PRESCRIBE_XML = "src/test/xml/MedicalEpisode/SkipPrescribe.xml";
+	private static String SKIP_OBSERVEPATIENT_XML = "src/test/xml/MedicalEpisode/SkipObservePatient.xml";
+	private static String SKIP_WRITEMEDICALREPORT_XML = "src/test/xml/MedicalEpisode/SkipWriteMedicalReport.xml";
+	private static String SKIP_DIAGNOSEPATIENT_XML = "src/test/xml/MedicalEpisode/SkipDiagnosePatient.xml";
+
+	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String GOAL_WORKITEM_SK = "Prescribe.3";
 
@@ -46,7 +54,7 @@ public class SkipWorkItemServiceTest {
 	@Before
 	public void setUp() {
 		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_INPUT_DATA);
+		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_XML);
 
 		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(dataModelString);
 		CreateBWInstanceService createBWInstanceService = new CreateBWInstanceService(createBWInstanceInputString);
@@ -55,12 +63,12 @@ public class SkipWorkItemServiceTest {
 			createBWInstanceService.execute();
 
 			// FIXME Change Workitem state to ENABLED because worklet is not verifying conditions
-			Transaction.begin();
-			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-			BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-			WorkItem workItem = bwInstance.getWorkItem(GOAL_WORKITEM_SK);
-			workItem.setState(WorkItemState.ENABLED);
-			Transaction.commit();
+//			Transaction.begin();
+//			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+//			BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+//			WorkItem workItem = bwInstance.getWorkItem(GOAL_WORKITEM_SK);
+//			workItem.setState(WorkItemState.ENABLED);
+//			Transaction.commit();
 
 		} catch(BlendedWorkflowException e) {		
 			fail(e.getMessage());
@@ -86,8 +94,8 @@ public class SkipWorkItemServiceTest {
 	}
 
 	@Test
-	public void skipWorkItemService() {
-		String skipWorkItemInputString = StringUtils.fileToString(INPUT_DATA);
+	public void skipOneWorkItem() {
+		String skipWorkItemInputString = StringUtils.fileToString(SKIP_PRESCRIBE_XML);
 		SkipWorkItemService skipWorkItemService = new SkipWorkItemService(skipWorkItemInputString);
 		try {
 			skipWorkItemService.execute();
@@ -102,10 +110,63 @@ public class SkipWorkItemServiceTest {
 			BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
 			WorkItem workItem = bwInstance.getWorkItem(GOAL_WORKITEM_SK);
 
-			assertEquals(WorkItemState.SKIPPED, workItem.getState());
+//			assertEquals(WorkItemState.SKIPPED, workItem.getState());
+			assertEquals(WorkItemState.COMPLETED, workItem.getState());
+
 			for (AttributeInstance attributeInstance : workItem.getAttributeInstances()) {
 				assertEquals(DataState.SKIPPED, attributeInstance.getState());
 			}
+
+			Transaction.commit();
+			committed = true;
+		} catch (BlendedWorkflowException e) {
+			fail(e.getMessage());
+		} finally {
+			if (!committed) {
+				Transaction.abort();
+			}
+		}
+	}
+
+	@Test
+	public void skipAllWorkItems() {
+		String skipWorkItemInputString = StringUtils.fileToString(SKIP_COLLECTDATA_XML);
+		SkipWorkItemService skipWorkItemService = new SkipWorkItemService(skipWorkItemInputString);
+		String skipWorkItemInputString2 = StringUtils.fileToString(SKIP_PHYSICALEXAMINATION_XML);
+		SkipWorkItemService skipWorkItemService2 = new SkipWorkItemService(skipWorkItemInputString2);
+		String skipWorkItemInputString3 = StringUtils.fileToString(SKIP_PRESCRIBE_XML);
+		SkipWorkItemService skipWorkItemService3 = new SkipWorkItemService(skipWorkItemInputString3);
+		String skipWorkItemInputString4 = StringUtils.fileToString(SKIP_OBSERVEPATIENT_XML);
+		SkipWorkItemService skipWorkItemService4 = new SkipWorkItemService(skipWorkItemInputString4);
+		String skipWorkItemInputString5 = StringUtils.fileToString(SKIP_WRITEMEDICALREPORT_XML);
+		SkipWorkItemService skipWorkItemService5 = new SkipWorkItemService(skipWorkItemInputString5);
+		String skipWorkItemInputString6 = StringUtils.fileToString(SKIP_DIAGNOSEPATIENT_XML);
+		SkipWorkItemService skipWorkItemService6 = new SkipWorkItemService(skipWorkItemInputString6);
+		try {
+			skipWorkItemService.execute();
+			skipWorkItemService2.execute();
+			skipWorkItemService3.execute();
+			skipWorkItemService4.execute();
+			skipWorkItemService5.execute();
+			skipWorkItemService6.execute();
+		} catch(BlendedWorkflowException e) {		
+			fail(e.getMessage());
+		}
+		boolean committed = false;
+		try {
+			Transaction.begin();
+
+			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+			BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+
+			for (WorkItem workItem : bwInstance.getWorkItems()) {
+				assertEquals(WorkItemState.COMPLETED, workItem.getState());
+				for (AttributeInstance attributeInstance : workItem.getAttributeInstances()) {
+					assertEquals(DataState.SKIPPED, attributeInstance.getState());
+				}
+			}
+
+//			PrintBWSpecification.all(BWSPECIFICATION_NAME);
 
 			Transaction.commit();
 			committed = true;

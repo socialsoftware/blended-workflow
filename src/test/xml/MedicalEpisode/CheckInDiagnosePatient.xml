@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bw:BlendedWorkflowSchema xmlns:bw="http://www.example.org/BWSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/BWSchema BWSchema.xsd " uri="MedicalEpisodeBP">
+	<bw:CaseInfo>
+		<bw:specificationName>Medical Appointment</bw:specificationName>
+		<bw:instanceID>Medical Appointment.1</bw:instanceID>
+		<bw:workitemID>Diagnose Patient.6</bw:workitemID>
+	</bw:CaseInfo>
+	<bw:AttributeInstances>
+		<bw:AttributeInstance>
+			<bw:ID>Name.1</bw:ID>
+			<bw:value>John Doe</bw:value>
+		</bw:AttributeInstance>
+		<bw:AttributeInstance>
+			<bw:ID>Address.2</bw:ID>
+			<bw:value>Avenue 123</bw:value>
+		</bw:AttributeInstance>
+		<bw:AttributeInstance>
+			<bw:ID>PhoneNumber.3</bw:ID>
+			<bw:value>5555-000-000</bw:value>
+		</bw:AttributeInstance>
+		<bw:AttributeInstance>
+			<bw:ID>Gender.4</bw:ID>
+			<bw:value>male</bw:value>
+		</bw:AttributeInstance>
+		<bw:AttributeInstance>
+			<bw:ID>Report.1</bw:ID>
+			<bw:value>healthy</bw:value>
+		</bw:AttributeInstance>
+		<bw:AttributeInstance>
+			<bw:ID>Closed.2</bw:ID>
+			<bw:value>true</bw:value>
+		</bw:AttributeInstance>
+	</bw:AttributeInstances>
+</bw:BlendedWorkflowSchema>

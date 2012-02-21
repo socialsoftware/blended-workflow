@@ -28,8 +28,6 @@ public class SkipWorkItemService {
 		inputDataConverter();
 
 		this.workItem.notifyWorkItemSkipped();
-		
-//		PrintBWSpecification.workItems(this.bwInstance.getBwSpecification().getName());
 	}
 
 	private void inputDataConverter() throws BlendedWorkflowException {

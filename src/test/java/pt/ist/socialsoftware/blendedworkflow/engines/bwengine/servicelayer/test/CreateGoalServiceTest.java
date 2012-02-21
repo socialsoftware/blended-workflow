@@ -19,14 +19,19 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser.PrintBWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser.StringUtils;
 
 public class CreateGoalServiceTest {
-
-	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode.xml";
-	private static String CREATE_BWINSTANCE_INPUT_DATA = "src/test/xml/MedicalEpisodeCreateBWInstanceInput.xml";
-	private static String INPUT_DATA = "src/test/xml/MedicalEpisodeCreateGoalInput.xml";
+	
+	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
+	private static String CREATE_BWINSTANCE_XML = "src/test/xml/MedicalEpisode/CreateBWInstanceInput.xml";
+	private static String CREATE_GOAL_SECONDOPINION_XML = "src/test/xml/MedicalEpisode/CreateGoalSecondOpinion.xml";
+	
+	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
+	private static String SECONDOPINION_ID = "Second Opinion.4";
+	private static String SECONDOPINION_NAME = "Second Opinion";
 
 	static {
 		if(FenixFramework.getConfig()==null) {
@@ -42,7 +47,7 @@ public class CreateGoalServiceTest {
 	@Before
 	public void setUp() {
 		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_INPUT_DATA);
+		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_XML);
 
 		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(dataModelString);
 		CreateBWInstanceService createBWInstanceService = new CreateBWInstanceService(createBWInstanceInputString);
@@ -73,8 +78,8 @@ public class CreateGoalServiceTest {
 	}
 
 	@Test
-	public void createGoalService() {
-		String createGoalInputString = StringUtils.fileToString(INPUT_DATA);
+	public void createGoalSecondOpinion() {
+		String createGoalInputString = StringUtils.fileToString(CREATE_GOAL_SECONDOPINION_XML);
 		CreateGoalService createGoalService = new CreateGoalService(createGoalInputString);
 		try {
 			createGoalService.execute();
@@ -90,6 +95,10 @@ public class CreateGoalServiceTest {
 			GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
 			assertEquals(7, goalModelInstance.getGoalsCount()); // Created 6 Goals on Load +1
+			assertEquals(SECONDOPINION_NAME, goalModelInstance.getGoal(SECONDOPINION_NAME).getName());
+			assertEquals(SECONDOPINION_ID, bwInstance.getWorkItem(SECONDOPINION_ID).getId());
+			
+//			PrintBWSpecification.all(BWSPECIFICATION_NAME);
 
 			Transaction.commit();
 			committed = true;

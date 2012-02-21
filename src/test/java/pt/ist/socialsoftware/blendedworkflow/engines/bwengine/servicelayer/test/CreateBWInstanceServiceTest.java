@@ -18,13 +18,16 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser.PrintBWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 
 public class CreateBWInstanceServiceTest {
 
-	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode.xml";
-	private static String INPUT_DATA = "src/test/xml/MedicalEpisodeCreateBWInstanceInput.xml";
+	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
+	private static String CREATE_BWINSTANCE_XML = "src/test/xml/MedicalEpisode/CreateBWInstanceInput.xml";
+	
+	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 
 	static {
@@ -69,8 +72,8 @@ public class CreateBWInstanceServiceTest {
 	}
 
 	@Test
-	public void createBWInstanceService() {
-		String createBWInstanceInputString = StringUtils.fileToString(INPUT_DATA);
+	public void createBWInstance() {
+		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_XML);
 		CreateBWInstanceService createBWInstanceService = new CreateBWInstanceService(createBWInstanceInputString);
 		try {
 			createBWInstanceService.execute();
@@ -91,7 +94,9 @@ public class CreateBWInstanceServiceTest {
 			assertEquals(4, dataModelInstance.getRelationsCount());
 			assertEquals(6, goalModelInstance.getGoalsCount());
 
-			assertEquals(3, bwInstance.getWorkItemsCount()); // FIXME should not done here
+			assertEquals(3, bwInstance.getWorkItemsCount());
+			
+//			PrintBWSpecification.all(BWSPECIFICATION_NAME);
 
 			Transaction.commit();
 			committed = true;

@@ -33,8 +33,6 @@ public class CheckInWorkItemService {
 		inputDataConverter();
 
 		this.workItem.notifyWorkItemCheckedIn(this.values);
-		
-//		PrintBWSpecification.workItems(this.bwInstance.getBwSpecification().getName());
 	}
 
 	private void inputDataConverter() throws BlendedWorkflowException {

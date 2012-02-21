@@ -17,11 +17,13 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser.PrintBWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.parser.StringUtils;
 
 public class LoadBWSpecificationServiceTest {
 	
-	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode.xml";
+	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
+	
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 
 	static {
@@ -58,7 +60,7 @@ public class LoadBWSpecificationServiceTest {
 	}
 
 	@Test
-	public void loadBWSpecificationService() {
+	public void loadBWSpecification() {
 		String loadBWSpecificationInputString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 		
 		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(loadBWSpecificationInputString);
@@ -80,6 +82,8 @@ public class LoadBWSpecificationServiceTest {
 			assertEquals(13, dataModel.getAttributesCount());
 			assertEquals(4, dataModel.getRelationsCount());
 			assertEquals(6, goalModel.getGoalsCount());
+			
+//			PrintBWSpecification.all(BWSPECIFICATION_NAME);
 			
 			Transaction.commit();
 			committed = true;

@@ -14,4 +14,16 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		return getTaskInstanceId();
 	}
 
+	@Override
+	public void notifyEnabled() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyCompleted() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -31,6 +31,7 @@ public class CreateGoalService {
 		inputDataConverter();
 
 		new GoalModelFactory().parseXMLNewGoal(dataModelInstance, goalModelInstance, this.xml);
+		goalModelInstance.getEnabledWorkItems();
 	}
 
 	private void inputDataConverter () throws BlendedWorkflowException {

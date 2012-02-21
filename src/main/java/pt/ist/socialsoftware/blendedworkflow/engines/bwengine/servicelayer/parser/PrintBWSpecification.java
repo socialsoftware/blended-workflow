@@ -37,7 +37,7 @@ public class PrintBWSpecification {
 		goalModelTemplate(bwSpecificationName);
 		goalModelType(bwSpecificationName);
 		dataModelInstances(bwSpecificationName);
-		workItems(bwSpecificationName);
+		workItemsWithAttributtes(bwSpecificationName);
 	}
 
 	private static void init(String bwSpecificationName) throws BlendedWorkflowException {
@@ -100,7 +100,7 @@ public class PrintBWSpecification {
 		System.out.println("GoalModel Template");
 		System.out.println("----------------------------------------------------------");
 		for (Goal goal : goalModel.getGoals()) {
-			System.out.println("Goal \"" + goal.getName() + "\" has " + goal.getSubGoals().size() + " subgoals.");
+			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
 			System.out.println("Condition " + goal.getCondition().getClass());
 		}
 	}
@@ -111,7 +111,7 @@ public class PrintBWSpecification {
 		System.out.println("GoalModel Type");
 		System.out.println("----------------------------------------------------------");
 		for (Goal goal : goalModelInstance.getGoals()) {
-			System.out.println("Goal \"" + goal.getName() + "\" has " + goal.getSubGoals().size() + " subgoals.");
+			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
 			System.out.println("Condition " + goal.getCondition().getClass());
 		}
 	}
@@ -143,6 +143,16 @@ public class PrintBWSpecification {
 	}	
 
 	public static void workItems(String bwSpecificationName) throws BlendedWorkflowException {
+		init(bwSpecificationName);
+		System.out.println("**************************************************************");
+		System.out.println("WorkItems");
+		System.out.println("----------------------------------------------------------");
+		for (WorkItem workitem : bwInstance.getWorkItems()) {
+			System.out.println("WorkItem \"" + workitem.getId() + "\" is " + workitem.getState() + " and is associated with " + workitem.getAttributeInstancesCount() + " attributeInstances.");
+		}
+	}
+	
+	public static void workItemsWithAttributtes(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
 		System.out.println("**************************************************************");
 		System.out.println("WorkItems");

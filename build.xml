@@ -142,6 +142,36 @@
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" /> 
 		</junit>
 	</target>
+	
+	<!-- Test CheckIn-->
+	<target name="test-checkIn" depends="compile-tests" description="Run the tests">
+		<echo message="Testing all services..." />
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CheckInWorkItemServiceTest" />
+		</junit>
+	</target>
+	
+	<!-- Test Skip-->
+	<target name="test-skip" depends="compile-tests" description="Run the tests">
+		<echo message="Testing all services..." />
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.SkipWorkItemServiceTest" />
+		</junit>
+	</target>
+	
+	<!-- Test CreateGoal-->
+	<target name="test-createGoal" depends="compile-tests" description="Run the tests">
+		<echo message="Testing all services..." />
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" />
+		</junit>
+	</target>
 
 	<!-- Clean -->
 	<target name="clean" description="Cleans the compiled classes and generated sources">
