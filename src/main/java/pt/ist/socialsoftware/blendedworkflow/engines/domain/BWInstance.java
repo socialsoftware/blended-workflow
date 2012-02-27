@@ -13,6 +13,10 @@ public class BWInstance extends BWInstance_Base {
 		GoalModelInstance goalModelInstance = new GoalModelInstance();
 		setGoalModelInstance(goalModelInstance);
 		bwSpecification.getGoalModel().cloneGoalModel(goalModelInstance);
+		
+		TaskModelInstance taskModelInstance = new TaskModelInstance();
+		setTaskModelInstance(taskModelInstance);
+		bwSpecification.getTaskModel().cloneTaskModel(taskModelInstance);
 	}
 	
 	public Integer getNewWorkItemId() {

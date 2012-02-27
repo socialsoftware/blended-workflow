@@ -17,9 +17,17 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttribute().getEntity().getName());
 		Attribute attribute = entity.getAttribute(getAttribute().getName());
-		return new CompareAttributeToValueCondition(attribute, getOperator(), getValue()) ;
+		return new CompareAttributeToValueCondition(attribute, getOperator(), getValue());
 	}
 
+	@Override
+	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
+		Entity entity = dataModelInstance.getEntity(getAttribute().getEntity().getName());
+		Attribute attribute = entity.getAttribute(getAttribute().getName());
+		return new CompareAttributeToValueCondition(attribute, getOperator(), getValue());
+	}
+	
 	@Override
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem) {
 		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute());

@@ -51,6 +51,8 @@ public class Entity extends Entity_Base {
 		if (getEntityInstances().isEmpty()) {
 			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
 			entityInstance.assignAttributeInstances(goalWorkItem, attribute);
+
+			createRelationInstances(dataModelInstance, entityInstance);
 		}
 		else {
 			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
@@ -67,6 +69,8 @@ public class Entity extends Entity_Base {
 			for (Attribute attribute : getAttributes()) {
 				entityInstance.assignAttributeInstances(goalWorkItem, attribute);
 			}
+
+			createRelationInstances(dataModelInstance, entityInstance);
 		}
 		else {
 			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
@@ -77,6 +81,34 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-
+	private void createRelationInstances(DataModelInstance dataModelInstance, EntityInstance entityInstance) {
+		Entity relationEntityTwo = null;
+		EntityInstance relationEntityInstanceTwo = null;
+		// Relation Type Exists?
+		if (this.getRelationsCount() > 0) { 
+			for (Relation relation : this.getRelations()) {
+				// Get the other relation entity
+				for (Entity entity : relation.getEntities()) {
+					if (!this.getName().equals(entity.getName())) {
+						relationEntityTwo = entity; // entity2
+					}
+				}
+				// Relations instances already exists?
+				if (relation.getRelationInstances().isEmpty()) {
+					if (relationEntityTwo.getEntityInstances().isEmpty()){
+						relationEntityInstanceTwo = new EntityInstance(dataModelInstance, relationEntityTwo);
+					}
+					else {
+						for (EntityInstance entityInstance1 : relationEntityTwo.getEntityInstances()) { //FIXME only 1 entityInstance
+							relationEntityInstanceTwo = entityInstance1;
+						}
+					}
+					// Create Relation Instance and re-call the method for the 2 entity
+					new RelationInstance(relation, entityInstance, relationEntityInstanceTwo, entityInstance.getNewRelationInstanceId());
+					relationEntityTwo.createRelationInstances(dataModelInstance, relationEntityInstanceTwo);
+				}
+			}
+		}
+	}
 
 }

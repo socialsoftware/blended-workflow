@@ -123,6 +123,8 @@ public class CheckInWorkItemServiceTest {
 			for (AttributeInstance attributeInstance : workItem.getContraintViolationAttributeInstances()) {
 				assertEquals(DataState.DEFINED, attributeInstance.getState());
 			}
+			
+//			PrintBWSpecification.workItemsWithAttributtes(BWSPECIFICATION_NAME);
 
 			Transaction.commit();
 			committed = true;

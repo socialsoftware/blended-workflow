@@ -11,9 +11,17 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttribute().getEntity().getName());
 		Attribute attribute = entity.getAttribute(getAttribute().getName());
-		return new ExistsAttributeCondition(attribute) ;
+		return new ExistsAttributeCondition(attribute);
 	}
 
+	@Override
+	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
+		Entity entity = dataModelInstance.getEntity(getAttribute().getEntity().getName());
+		Attribute attribute = entity.getAttribute(getAttribute().getName());
+		return new ExistsAttributeCondition(attribute);
+	}
+	
 	@Override
 	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
 		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute());

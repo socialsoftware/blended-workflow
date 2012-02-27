@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState as DataState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal.GoalState as GoalState;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState as TaskState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState as WorkItemState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality as Cardinality;
@@ -41,6 +42,17 @@ class Goal {
 	GoalState state;
 }
 
+class TaskModel;
+
+class TaskModelInstance extends TaskModel {
+	boolean taskCaseClaimed; // = false;
+}
+
+class Task {
+	String name;
+	TaskState state;
+}
+
 class Condition;
 
 class AndCondition extends Condition;
@@ -61,7 +73,6 @@ class CompareAttributeToValueCondition extends Condition {
 class DataModel;
 
 class DataModelInstance extends DataModel { 
-	boolean activityCaseClaimed; // = false;
 }
 
 class Entity {
@@ -83,7 +94,7 @@ class Attribute {
 
 class AttributeInstance {
 	String id;
-	String value; // = null
+	String value;
 	DataState state;
 }
 
@@ -116,6 +127,11 @@ relation BWSpecificationHasGoalModel {
 	GoalModel playsRole goalModel { multiplicity 0..1; }
 }
 
+relation BWSpecificationHasTaskModel {
+	BWSpecification playsRole bwSpecification {multiplicity 0..1;}
+	TaskModel playsRole taskModel { multiplicity 0..1; }
+}
+
 relation BWSpecificationHasDataModel {
 	BWSpecification playsRole bwSpecification {multiplicity 0..1;}
 	DataModel playsRole dataModel { multiplicity 0..1; }
@@ -125,6 +141,11 @@ relation BWSpecificationHasDataModel {
 relation BWInstanceHasGoalModelInstance {
 	BWInstance playsRole bwInstance {multiplicity 0..1;}
 	GoalModelInstance playsRole goalModelInstance {multiplicity 0..1;}
+}
+
+relation BWInstanceHasTaskModelInstance {
+	BWInstance playsRole bwInstance {multiplicity 0..1;}
+	TaskModelInstance playsRole taskModelInstance {multiplicity 0..1;}
 }
 
 relation BWInstanceHasDataModelInstance {
@@ -170,6 +191,30 @@ relation GoalHasGoalWorkItem {
 	GoalWorkItem playsRole goalWorkItem { multiplicity 0..1; }
 }
 
+// Task Model
+relation TaskModelHasGoals {
+	TaskModel playsRole taskModel { multiplicity 0..1; }
+	Task playsRole tasks { multiplicity 0..*; }
+}
+
+// Task
+relation TaskHasPreCondition {
+	Task playsRole taskPreCondition { multiplicity 0..1; }
+	Condition playsRole preConstraint { multiplicity 0..1; }
+}
+
+relation TaskHasPostCondition {
+	Task playsRole taskPosCondition { multiplicity 0..1; }
+	Condition playsRole postConstraint { multiplicity 0..1; }
+}
+
+relation TaskHasGoalWorkItem {
+	Task playsRole task { multiplicity 0..1; }
+	TaskWorkItem playsRole taskWorkItem { multiplicity 0..1; }
+}
+
+
+// DataModel
 relation DataModelHasEntities {
 	DataModel playsRole dataModel { multiplicity 0..1; }
 	Entity playsRole entities { multiplicity 0..*; }

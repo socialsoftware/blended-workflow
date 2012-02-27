@@ -18,13 +18,13 @@ import jvstm.Atomic;
 public class CheckInWorkItemService {
 
 	private String xml;
-	private BlendedWorkflow blendedWorkflow;
 	private BWInstance bwInstance;
 	private WorkItem workItem;
 	private HashMap<String, String> values;
 
 	public CheckInWorkItemService (String xml) {
 		this.xml = xml;
+		this.values = new HashMap<String, String>();
 	}
 
 	@Atomic
@@ -35,7 +35,7 @@ public class CheckInWorkItemService {
 	}
 
 	private void inputDataConverter() throws BlendedWorkflowException {
-		this.blendedWorkflow = BlendedWorkflow.getInstance();
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		Document doc = StringUtils.stringToDoc(this.xml);
 
 		Element root = doc.getRootElement();

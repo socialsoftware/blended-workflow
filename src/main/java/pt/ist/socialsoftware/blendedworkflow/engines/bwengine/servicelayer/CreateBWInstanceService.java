@@ -41,7 +41,6 @@ public class CreateBWInstanceService {
 //		createEntityAndAttributesInstances(dataModelInstance);
 //		createRelationInstances(dataModelInstance);
 
-		// FIXME GoalWorkItems should not be created in this service
 		bwInstance.getGoalModelInstance().getEnabledWorkItems();
 	}
 

@@ -62,7 +62,6 @@ public class SkipWorkItemServiceTest {
 			loadBWSpecificationService.execute();
 			createBWInstanceService.execute();
 
-			// FIXME Change Workitem state to ENABLED because worklet is not verifying conditions
 			Transaction.begin();
 			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 			BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
@@ -166,7 +165,7 @@ public class SkipWorkItemServiceTest {
 //				}
 //			}
 //
-////			PrintBWSpecification.all(BWSPECIFICATION_NAME);
+//          PrintBWSpecification.all(BWSPECIFICATION_NAME);
 //
 //			Transaction.commit();
 //			committed = true;

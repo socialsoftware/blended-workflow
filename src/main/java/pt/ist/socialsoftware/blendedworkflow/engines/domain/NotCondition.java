@@ -10,6 +10,11 @@ public class NotCondition extends NotCondition_Base {
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		return new NotCondition(getCondition().cloneCondition(goalModelInstance));
 	}
+
+	@Override
+	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+		return new NotCondition(getCondition().cloneCondition(taskModelInstance));
+	}
 	
 	@Override
 	void assignAttributeInstances(GoalWorkItem goalWorkItem) {

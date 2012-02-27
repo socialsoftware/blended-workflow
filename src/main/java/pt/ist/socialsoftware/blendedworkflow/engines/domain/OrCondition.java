@@ -19,10 +19,16 @@ public class OrCondition extends OrCondition_Base {
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		return new OrCondition(getConditionOne().cloneCondition(goalModelInstance), getConditionTwo().cloneCondition(goalModelInstance));
 	}
+	
+	@Override
+	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+		return new OrCondition(getConditionOne().cloneCondition(taskModelInstance), getConditionTwo().cloneCondition(taskModelInstance));
+	}
 
 	@Override
 	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
 		getConditionOne().assignAttributeInstances(goalWorkItem);
 		getConditionTwo().assignAttributeInstances(goalWorkItem);
 	}
+
 }

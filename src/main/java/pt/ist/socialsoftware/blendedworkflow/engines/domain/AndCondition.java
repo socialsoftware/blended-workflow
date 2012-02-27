@@ -21,10 +21,15 @@ public class AndCondition extends AndCondition_Base {
 	}
 
 	@Override
+	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+		return new AndCondition(getConditionOne().cloneCondition(taskModelInstance), getConditionTwo().cloneCondition(taskModelInstance));
+	}
+	
+	@Override
 	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
 		getConditionOne().assignAttributeInstances(goalWorkItem);
 		getConditionTwo().assignAttributeInstances(goalWorkItem);
 	}
-	
 
+	
 }

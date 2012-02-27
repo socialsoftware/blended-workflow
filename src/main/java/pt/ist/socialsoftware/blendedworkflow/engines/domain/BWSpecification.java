@@ -8,6 +8,7 @@ public class BWSpecification extends BWSpecification_Base {
 		checkUniqueBWSpecificationName(name);
 		setName(name);
 		setDataModel(new DataModel());
+		setTaskModel(new TaskModel());
 		setGoalModel(new GoalModel());
 		setBwInstanceCounter(0);
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();

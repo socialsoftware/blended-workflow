@@ -14,6 +14,13 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 
 	@Override
+	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
+		Entity entity = dataModelInstance.getEntity(getEntity().getName());
+		return new ExistsEntityCondition(entity);
+	}
+	
+	@Override
 	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
 		getEntity().assignAllAttributeInstances(goalWorkItem, getEntity());
 	}
