@@ -7,6 +7,7 @@ import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class HandleTaskPreConditionEventService {
 
@@ -30,7 +31,7 @@ public class HandleTaskPreConditionEventService {
 		} else if (this.type.equals("SKIPPED")) {
 			taskWorkItem.notifyPreTask();
 		} else {
-			throw new BlendedWorkflowException("Precondition is FALSE");
+			throw new BlendedWorkflowException(BlendedWorkflowError.FALSE_PRE_CONSTRAIN);
 		}
 
 	}

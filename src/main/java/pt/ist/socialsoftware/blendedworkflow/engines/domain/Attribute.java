@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class Attribute extends Attribute_Base {
 
@@ -18,7 +19,7 @@ public class Attribute extends Attribute_Base {
 	private void checkUniqueAttributeName(Entity entity, String name) throws BlendedWorkflowException {
 		for (Attribute attribute : entity.getAttributes()) {
 			if (attribute.getName().equals(name)) {
-				throw new BlendedWorkflowException("Exception @Attribute: The Attribute name: " + name + "already exists.");
+				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_ATTRIBUTE_NAME, name);
 			}
 		}
 	}

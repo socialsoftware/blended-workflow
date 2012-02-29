@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class TaskModel extends TaskModel_Base {
     
@@ -16,7 +17,7 @@ public class TaskModel extends TaskModel_Base {
 				return task;
 			}
 		}
-		throw new BlendedWorkflowException("Exception @TaskModel: The Task name: " + name + " does not exist.");
+		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_TASK_NAME, name);
 	}
     
 }

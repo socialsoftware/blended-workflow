@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class BWInstance extends BWInstance_Base {
 
@@ -28,7 +29,7 @@ public class BWInstance extends BWInstance_Base {
 		for (WorkItem workItem : getWorkItems())
 			if (workItem.getId().equals(id))
 				return workItem;
-		throw new BlendedWorkflowException("Exception @BWInstance: The WorkItem id: " + id + " does not exist.");
+		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_WORKITEM_ID, id);
 	}
 
 }

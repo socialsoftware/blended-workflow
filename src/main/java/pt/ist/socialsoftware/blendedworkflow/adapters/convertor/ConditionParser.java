@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsEntityConditio
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.NotCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.OrCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class ConditionParser {
 
@@ -24,7 +25,7 @@ public class ConditionParser {
 
 	public ConditionParser(DataModel dataModel, String condition) throws BlendedWorkflowException {
 		if(condition == null || condition.equals("")) {
-			throw new BlendedWorkflowException("Exception @ConditionParser: The condition string is empty.");
+			throw new BlendedWorkflowException(BlendedWorkflowError.EMPTY_CONDITION_STRING);
 		}
 		this.dataModel = dataModel;
 		_cond = condition;
@@ -39,7 +40,7 @@ public class ConditionParser {
 			//		} else if(_cond.startsWith("true")){
 			//			return new TrueCondition();
 		} else {
-			throw new BlendedWorkflowException("Exception @ConditionParser: The condition " + _cond + " is invalid.");
+			throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 
 		return continueParseCondition(finalCondition);
@@ -50,7 +51,7 @@ public class ConditionParser {
 			if(_cond.startsWith(" and ", _token) || _cond.startsWith(" or ", _token)) {
 				parsedCondition = parseConditionJoiner(parsedCondition);
 			} else {
-				throw new BlendedWorkflowException("Exception @ConditionParser: The condition " + _cond + " is invalid.");
+				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 			}
 		}
 		return parsedCondition;
@@ -79,7 +80,7 @@ public class ConditionParser {
 	protected Condition parseExistsAttributeCondition() throws BlendedWorkflowException {
 		int endOfCondition = _cond.indexOf(')', _token);
 		if(endOfCondition < _token) {
-			throw new BlendedWorkflowException("Exception @ConditionParser: The condition " + _cond + " is invalid.");
+			throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 		String existsAttributeString = _cond.substring(_token, endOfCondition+1);
 		StringBuilder elementName  = new StringBuilder();
@@ -92,7 +93,7 @@ public class ConditionParser {
 	}
 
 	protected Attribute parseExistsAttributeConditionArgs(String existsAttributeCondition, int startArgs, int endArgs, StringBuilder elementName) throws BlendedWorkflowException {
-		if(startArgs > endArgs) throw new BlendedWorkflowException("Exception @ConditionParser: The existsEntityCondition does not have arguments.");
+		if(startArgs > endArgs) throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, existsAttributeCondition);
 
 		elementName.append(existsAttributeCondition.substring(startArgs, endArgs));
 
@@ -106,7 +107,7 @@ public class ConditionParser {
 	protected Condition parseExistsEntityCondition() throws BlendedWorkflowException {
 		int endOfCondition = _cond.indexOf(')', _token);
 		if(endOfCondition < _token) {
-			throw new BlendedWorkflowException("Exception @ConditionParser: The condition " + _cond + " is invalid.");
+			throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 
 		String existsEntityString = _cond.substring(_token, endOfCondition+1);
@@ -120,7 +121,7 @@ public class ConditionParser {
 	}
 
 	protected Entity parseExistsEntityConditionArgs(String existsEntityCondition, int startArgs, int endArgs, StringBuilder elementName) throws BlendedWorkflowException {
-		if(startArgs > endArgs) throw new BlendedWorkflowException("Exception @ConditionParser: The existsEntityCondition does not have arguments.");
+		if(startArgs > endArgs) throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, existsEntityCondition);
 
 		elementName.append(existsEntityCondition.substring(startArgs, endArgs));
 
@@ -134,7 +135,7 @@ public class ConditionParser {
 		int endOfCondition = _cond.indexOf(')', _token);
 
 		if(endOfCondition < _token) {
-			throw new BlendedWorkflowException("Exception @ConditionParser: The condition " + _cond + " is invalid.");
+			throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 
 		String compareAttributeToString = _cond.substring(_token, endOfCondition+1);
@@ -201,7 +202,7 @@ public class ConditionParser {
 		} else if(_cond.startsWith(" or ", _token)) {
 			return parseOrCondition(parsedCondition);
 		} else {
-			throw new BlendedWorkflowException("Exception @ConditionParser: The condition " + _cond + " is invalid.");
+			throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 	}
 

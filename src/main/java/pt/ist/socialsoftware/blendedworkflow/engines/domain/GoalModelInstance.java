@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class GoalModelInstance extends GoalModelInstance_Base {
 
@@ -20,7 +21,7 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 				return goal;
 			}
 		}
-		throw new BlendedWorkflowException("Exception @GoalModelInstance: The Goal name: " + name + " does not exist.");
+		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_GOAL_NAME, name);
 	}
 
 }

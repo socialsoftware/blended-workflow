@@ -4,6 +4,10 @@
 	xsi:schemaLocation="http://www.example.org/BWSchema BWSchema.xsd " uri="MedicalEpisodeBP">
 	<bw:CaseInfo>
 		<bw:specificationName>Medical Appointment</bw:specificationName>
+		<bw:creator>Davide Passinhas</bw:creator>
+		<bw:description>A simple process of a medical appointment.</bw:description>
+		<bw:version>1.0</bw:version>
+		<bw:identifier>UID_92fe0366-d6c6-42ec-9786-408f2b5c36c6</bw:identifier>
 	</bw:CaseInfo>
 	<bw:DataModel>
 		<bw:Entity>
@@ -170,4 +174,41 @@
 			<bw:ParentName>Write Medical Report</bw:ParentName>
 		</bw:Goal>
 	</bw:GoalModel>
+	<bw:TaskModel>
+		<bw:Task>
+			<bw:Name>Check-in Patient</bw:Name>
+			<bw:PreCondition>existsEntity(Patient)</bw:PreCondition>
+			<bw:PostCondition>existsEntity(Patient) and existsEntity(Episode)</bw:PostCondition>
+			<bw:FlowType>root</bw:FlowType>
+		</bw:Task>
+		<bw:Task>
+			<bw:Name>Physical Examination</bw:Name>
+			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
+			<bw:PostCondition>existsAttribute(Patient Data.Physical Report) and existsAttribute(Patient Data.Physical Examination)</bw:PostCondition>
+			<bw:FlowType>none</bw:FlowType>
+			<bw:PreviousTaskName>Check-in Patient</bw:PreviousTaskName>
+		</bw:Task>
+		<bw:Task>
+			<bw:Name>Collect Data</bw:Name>
+			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
+			<bw:PostCondition>existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight)</bw:PostCondition>
+			<bw:FlowType>none</bw:FlowType>
+			<bw:PreviousTaskName>Check-in Patient</bw:PreviousTaskName>
+		</bw:Task>
+		<bw:Task>
+			<bw:Name>Doctor Appointment</bw:Name>
+			<bw:PreCondition>existsEntity(Episode) and existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight) and existsAttribute(Patient Data.Physical Report)</bw:PreCondition>
+			<bw:PostCondition>existsEntity(Prescription) and existsEntity(Medical Report) and compareAttributeTo(Medical Report.Closed,=.true) and existsAttribute(Patient Data.Medical Examination)</bw:PostCondition>
+			<bw:FlowType>and-join</bw:FlowType>
+			<bw:PreviousTaskName1>Physical Examination</bw:PreviousTaskName1>
+			<bw:PreviousTaskName2>Collect Data</bw:PreviousTaskName2>
+		</bw:Task>
+		<bw:Task>
+			<bw:Name>Check-out Patient</bw:Name>
+			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
+			<bw:PostCondition>compareAttributeTo(Episode.Closed,=.true)</bw:PostCondition>
+			<bw:FlowType>none</bw:FlowType>
+			<bw:PreviousTaskName>Doctor Appointment</bw:PreviousTaskName>
+		</bw:Task>
+	</bw:TaskModel>
 </bw:BlendedWorkflowSchema>

@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class Task extends Task_Base {
 	
@@ -18,7 +19,7 @@ public class Task extends Task_Base {
 	private void checkUniqueTaskName(TaskModel taskModel, String name) throws BlendedWorkflowException {
 		for (Task task : taskModel.getTasks()) {
 			if (task.getName().equals(name)) {
-				throw new BlendedWorkflowException("Exception @Task: The Task name: " + name + "already exists.");
+				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_TASK_NAME, name);
 			}
 		}
 	}

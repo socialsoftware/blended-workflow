@@ -14,6 +14,9 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
@@ -23,9 +26,11 @@ public class PrintBWSpecification {
 	private static BWSpecification bwSpecification;
 	private static DataModel dataModelTemplate;
 	private static GoalModel goalModel;
+	private static TaskModel taskModel;
 	private static BWInstance bwInstance;
 	private static DataModelInstance dataModelInstance;
 	private static GoalModelInstance goalModelInstance;
+	private static TaskModelInstance taskModelInstance;
 
 	private PrintBWSpecification() {}
 
@@ -36,6 +41,8 @@ public class PrintBWSpecification {
 		dataModelType(bwSpecificationName);
 		goalModelTemplate(bwSpecificationName);
 		goalModelType(bwSpecificationName);
+		taskModelTemplate(bwSpecificationName);
+		taskModelType(bwSpecificationName);
 		dataModelInstances(bwSpecificationName);
 		workItemsWithAttributtes(bwSpecificationName);
 	}
@@ -45,10 +52,12 @@ public class PrintBWSpecification {
 		bwSpecification = blendedWorkflow.getBWSpecification(bwSpecificationName);
 		dataModelTemplate = bwSpecification.getDataModel();
 		goalModel = bwSpecification.getGoalModel();
+		taskModel = bwSpecification.getTaskModel();
 
 		bwInstance = blendedWorkflow.getBWInstance(bwSpecificationName + ".1"); // FIXME only 1 instance
 		dataModelInstance = bwInstance.getDataModelInstance();
 		goalModelInstance = bwInstance.getGoalModelInstance();
+		taskModelInstance = bwInstance.getTaskModelInstance();
 	}
 
 	public static void bwInstances(String bwSpecificationName) throws BlendedWorkflowException {
@@ -113,6 +122,28 @@ public class PrintBWSpecification {
 		for (Goal goal : goalModelInstance.getGoals()) {
 			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
 			System.out.println("Condition " + goal.getCondition().getClass());
+		}
+	}
+	
+	public static void taskModelTemplate(String bwSpecificationName) throws BlendedWorkflowException {
+		init(bwSpecificationName);
+		System.out.println("**************************************************************");
+		System.out.println("TaskModel Template");
+		System.out.println("----------------------------------------------------------");
+		for (Task task : taskModel.getTasks()) {
+			System.out.println("Task \"" + task.getName() + "\" is \"" + task.getState() + "\".");
+			System.out.println("Pre Condition " + task.getPreConstraint().getClass() + " Post Condition " + task.getPostConstraint().getClass());
+		}
+	}
+
+	public static void taskModelType(String bwSpecificationName) throws BlendedWorkflowException {
+		init(bwSpecificationName);
+		System.out.println("**************************************************************");
+		System.out.println("TaskModel Type");
+		System.out.println("----------------------------------------------------------");
+		for (Task task : taskModelInstance.getTasks()) {
+			System.out.println("Task \"" + task.getName() + "\" is \"" + task.getState() + "\".");
+			System.out.println("Pre Condition " + task.getPreConstraint().getClass() + " Post Condition " + task.getPostConstraint().getClass());
 		}
 	}
 

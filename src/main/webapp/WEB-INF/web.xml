@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>blendedWorkflowService</display-name>
+	
+	<context-param>
+		<description>Vaadin production mode</description>
+		<param-name>productionMode</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>InterfaceBWebSideController</param-name>
+		<param-value>pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter</param-value>
+	</context-param>
+	<context-param>
+    	<param-name>InterfaceB_BackEnd</param-name>   
+ 		<param-value>http://localhost:8080/yawl/ib</param-value>
+	</context-param>
+	
+	<filter>
+        <filter-name>CharsetFilter</filter-name>
+        <filter-class>org.yawlfoundation.yawl.util.CharsetFilter</filter-class>
+          <init-param>
+            <param-name>requestEncoding</param-name>
+            <param-value>UTF-8</param-value>
+          </init-param>
+    </filter>
+
+    <filter-mapping>
+    	<filter-name>CharsetFilter</filter-name>
+    	<url-pattern>/*</url-pattern>
+    </filter-mapping>
+	
+	<servlet>
+		<servlet-name>Blendedworkflowservice Application</servlet-name>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<description>Vaadin application class to start</description>
+			<param-name>application</param-name>
+			<param-value>pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapterTestInterface</param-value>
+		</init-param>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>bwServlet</servlet-name>
+		<servlet-class>org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceB_EnvironmentBasedServer</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>Blendedworkflowservice Application</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>bwServlet</servlet-name>
+		<url-pattern>/ib</url-pattern>
+	</servlet-mapping>
+
+	<listener>
+		<listener-class>pt.ist.socialsoftware.blendedworkflow.adapters.ApplicationServletContextListener</listener-class>
+	</listener>
+	
+	<welcome-file-list>
+		<welcome-file>index.htm</welcome-file>
+	</welcome-file-list>
+</web-app>

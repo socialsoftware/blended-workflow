@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.*;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
 
@@ -18,8 +19,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 			if (bwSpecification.getName().equals(name))
 				return bwSpecification;
 		}
-		throw new BlendedWorkflowException("Exception @BlendedWorkflow: The BWSpecification name: " + name + " does not exist.");
-
+		throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_SPECIFICATION_NAME, name);
 	}
 
 	public BWInstance getBWInstance(String id) throws BlendedWorkflowException {
@@ -29,7 +29,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 					return bwInstance;
 			}
 		}
-		throw new BlendedWorkflowException("Exception @BlendedWorkflow: The BWInstance id: " + id + " does not exist.");
+		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_CASE_ID, id);
 	}
 
 }

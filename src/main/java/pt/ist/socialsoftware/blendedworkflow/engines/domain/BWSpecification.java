@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class BWSpecification extends BWSpecification_Base {
 
@@ -20,7 +21,7 @@ public class BWSpecification extends BWSpecification_Base {
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		for (BWSpecification bwSpecification : blendedWorkflow.getBwSpecifications()) {
 			if (bwSpecification.getName().equals(name)) {
-				throw new BlendedWorkflowException("Exception @BWSpecification: The BWSpecification name: " + name + "already exists.");
+				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_SPECIFICATION_NAME, name);
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class DataModelInstance extends DataModelInstance_Base {
 
@@ -16,7 +17,7 @@ public class DataModelInstance extends DataModelInstance_Base {
 				}
 			}
 		}
-		throw new BlendedWorkflowException("Exception @DataModelInstance: The EntityInstance id: " + id + " does not exist.");
+		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_ENTITY_INSTANCE, id);
 	}
 
 }

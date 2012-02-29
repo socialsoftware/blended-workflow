@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class Relation extends Relation_Base {
 
@@ -21,7 +22,7 @@ public class Relation extends Relation_Base {
 	private void checkUniqueRelationName(Entity entityOne, Entity entityTwo, String name) throws BlendedWorkflowException {
 		for (Relation relation : entityOne.getRelations()) {
 			if (isInRelation(entityTwo, relation) && relation.getName().equals(name)) {
-				throw new BlendedWorkflowException("Exception @Relation: The Relation name: " + name + "already exists.");
+				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_RELATION_NAME, name);
 			}
 		}
 	}

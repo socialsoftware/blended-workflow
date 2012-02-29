@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class Goal extends Goal_Base {
 
@@ -26,7 +27,7 @@ public class Goal extends Goal_Base {
 	private void checkUniqueGoalName(GoalModel goalModel, String name) throws BlendedWorkflowException {
 		for (Goal goal : goalModel.getGoals()) {
 			if (goal.getName().equals(name)) {
-				throw new BlendedWorkflowException("Exception @Goal: The Goal name: " + name + "already exists.");
+				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_GOAL_NAME, name);
 			}
 		}
 	}

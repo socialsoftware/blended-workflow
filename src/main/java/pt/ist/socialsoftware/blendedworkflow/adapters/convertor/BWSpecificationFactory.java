@@ -7,6 +7,7 @@ import org.jdom.Namespace;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 
@@ -35,7 +36,9 @@ public class BWSpecificationFactory {
 		GoalModel goalModel = bwSpecification.getGoalModel();
 		new GoalModelFactory().parseXMLGoalModel(dataModel, goalModel, specificationXML);
 
-		// TODO Activity Model
+		// Task Model
+		TaskModel taskModel = bwSpecification.getTaskModel();
+		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, specificationXML);
 
 		// TODO Conditions Model - Worklet
 	}

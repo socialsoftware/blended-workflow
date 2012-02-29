@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class Entity extends Entity_Base {
 
@@ -15,7 +16,7 @@ public class Entity extends Entity_Base {
 	private void checkUniqueEntityName(DataModel dataModel, String name) throws BlendedWorkflowException {
 		for (Entity entity : dataModel.getEntities()) {
 			if (entity.getName().equals(name)) {
-				throw new BlendedWorkflowException("Exception @Entity: The Entity name: " + name + "already exists.");
+				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_ENTITY_NAME, name);
 			}
 		}
 	}
