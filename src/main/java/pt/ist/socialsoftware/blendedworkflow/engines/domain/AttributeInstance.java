@@ -7,7 +7,7 @@ public class AttributeInstance extends AttributeInstance_Base {
 	public AttributeInstance(Attribute attribute, EntityInstance entityInstance) {
 		setEntityInstance(entityInstance);
 		setAttribute(attribute);
-		setId(getAttribute().getName() + "." + entityInstance.getNewAttributeInstanceId());
+		setID(getAttribute().getName() + "." + entityInstance.getNewAttributeInstanceID());
 		setState(DataState.UNDEFINED);
 	}
 

@@ -101,8 +101,7 @@ public class YAWLAdapterTestInterface extends Application {
         	public void buttonClick(ClickEvent event) {
         		try {
         			String spec = StringUtils.fileToString(YAWL_SPEC_FILENAME);
-    				specID = SpecUtils.getYAWLSpecificationIDFromSpec(spec).getIdentifier();
-        			YAWLAdapter.getInstance().loadSpecification(specID, spec, true);
+        			YAWLAdapter.getInstance().loadSpecification(spec);
         			results.setValue("Load Specification - Sucesso!");
         		}
         		catch (Exception e) {
@@ -148,7 +147,7 @@ public class YAWLAdapterTestInterface extends Application {
         		try {
         			String spec = StringUtils.fileToString(YAWL_SPEC_FILENAME);
     				specID = SpecUtils.getYAWLSpecificationIDFromSpec(spec).getIdentifier();
-        			caseInstanceID = YAWLAdapter.getInstance().launchCase(specID, true);
+        			caseInstanceID = YAWLAdapter.getInstance().launchCase(specID);
         			results.setValue("Launch Specification - Sucesso!");
         		}
         		catch (Exception e) {
@@ -170,18 +169,18 @@ public class YAWLAdapterTestInterface extends Application {
         	}
         }));
         
-        workitemButtons.addComponent(new Button("Get Enabled Workitems",
-        		new Button.ClickListener() {
-        	public void buttonClick(ClickEvent event) {
-        		try {
-        			YAWLAdapter.getInstance().notifyActiveTasks(caseInstanceID);
-        			results.setValue("Get Enabled Workitems - Sucesso!");
-        		}
-        		catch (Exception e) {
-        			results.setValue("Get Enabled Workitems - Fail!");
-        		}
-        	}
-        }));
+//        workitemButtons.addComponent(new Button("Get Enabled Workitems",
+//        		new Button.ClickListener() {
+//        	public void buttonClick(ClickEvent event) {
+//        		try {
+//        			YAWLAdapter.getInstance().notifyActiveTasks(caseInstanceID);
+//        			results.setValue("Get Enabled Workitems - Sucesso!");
+//        		}
+//        		catch (Exception e) {
+//        			results.setValue("Get Enabled Workitems - Fail!");
+//        		}
+//        	}
+//        }));
         
         workitemButtons.addComponent(new Button("CheckIn Workitem",
         		new Button.ClickListener() {

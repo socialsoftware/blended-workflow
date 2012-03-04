@@ -4,16 +4,16 @@ import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class TaskWorkItem extends TaskWorkItem_Base {
 
-	public TaskWorkItem(BWInstance bwInstance, String taskInstanceId) {
+	public TaskWorkItem(BWInstance bwInstance, String taskInstanceID) {
 		setBwInstance(bwInstance);
-		setTaskInstanceId(taskInstanceId);
-		setId(getTaskInstanceId() + "." + bwInstance.getNewWorkItemId()); //Id: TaskInstanceId.#
+		setTaskInstanceID(taskInstanceID);
+		setID(getTaskInstanceID() + "." + bwInstance.getNewWorkItemID()); //Id: TaskInstanceId.#
 		setState(WorkItemState.PRE_CONSTRAINT);
 	}
 
 	@Override
-	public String getElementId() {
-		return getTaskInstanceId();
+	public String getElementID() {
+		return getTaskInstanceID();
 	}
 
 	@Override

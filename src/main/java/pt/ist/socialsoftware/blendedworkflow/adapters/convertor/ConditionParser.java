@@ -11,6 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsAttributeCondi
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.NotCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.OrCondition;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
@@ -37,8 +38,8 @@ public class ConditionParser {
 		Condition finalCondition = null;
 		if(_cond.startsWith("existsAttribute(") || _cond.startsWith("existsEntity(") || _cond.startsWith("compareAttributeTo(")) {
 			finalCondition = parseConditionType();
-			//		} else if(_cond.startsWith("true")){
-			//			return new TrueCondition();
+		} else if(_cond.startsWith("true")){
+			return new TrueCondition();
 		} else {
 			throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}

@@ -4,7 +4,7 @@ public class RelationInstance extends RelationInstance_Base {
 
 	public RelationInstance(Relation relation, EntityInstance entityInstanceOne, EntityInstance entityInstanceTwo, String id) {
 		setRelationType(relation);
-		setId(getRelationType().getName() + "." + id);
+		setID(getRelationType().getName() + "." + id);
 		addEntityInstances(entityInstanceOne);
 		addEntityInstances(entityInstanceTwo);
 	}

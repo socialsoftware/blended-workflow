@@ -105,7 +105,7 @@ public class Entity extends Entity_Base {
 						}
 					}
 					// Create Relation Instance and re-call the method for the 2 entity
-					new RelationInstance(relation, entityInstance, relationEntityInstanceTwo, entityInstance.getNewRelationInstanceId());
+					new RelationInstance(relation, entityInstance, relationEntityInstanceTwo, entityInstance.getNewRelationInstanceID());
 					relationEntityTwo.createRelationInstances(dataModelInstance, relationEntityInstanceTwo);
 				}
 			}

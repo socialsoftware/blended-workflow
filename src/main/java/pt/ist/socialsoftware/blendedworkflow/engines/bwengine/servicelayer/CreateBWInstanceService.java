@@ -5,11 +5,13 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import jvstm.Atomic;
+import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
 //import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 //import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 //import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
@@ -35,12 +37,15 @@ public class CreateBWInstanceService {
 		// Get BWSpecification and clone it
 		inputDataConverter();
 		BWInstance bwInstance = new BWInstance(this.bwSpecification);
-
-		// Create DataModel Instances
-//		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-//		createEntityAndAttributesInstances(dataModelInstance);
-//		createRelationInstances(dataModelInstance);
-
+		
+		// Launch case on YAWL
+//		TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
+//		String yawlSpecificationID = taskModelInstance.getYawlSpecficationID();
+//		String yawlCaseID = YAWLAdapter.getInstance().launchCase(yawlSpecificationID);
+//		taskModelInstance.setYawlCaseID(yawlCaseID);
+		
+		// Get Enabled Workitems;
+//		YAWLAdapter.getInstance().notifyActiveTasks();
 		bwInstance.getGoalModelInstance().getEnabledWorkItems();
 	}
 
@@ -54,33 +59,4 @@ public class CreateBWInstanceService {
 
 		this.bwSpecification = blendedWorkflow.getBWSpecification(caseInfo.getChildText("specificationName", bwNamespace));
 	}
-
-//	private void createEntityAndAttributesInstances(DataModelInstance dataModelInstance) {
-//		EntityInstance newEntityInstance = null;
-//
-//		for (Entity entity : dataModelInstance.getEntities()) {
-//			newEntityInstance = new EntityInstance(dataModelInstance, entity);
-//			for (Attribute attribute : entity.getAttributes()) {
-//				new AttributeInstance(attribute, newEntityInstance);
-//			}
-//		}
-//	}
-//
-//	private void createRelationInstances(DataModelInstance dataModelInstance) {
-//		Entity relationEntityOne;
-//		Entity relationEntityTwo;
-//		EntityInstance relationEntityInstanceOne;
-//		EntityInstance relationEntityInstanceTwo;
-//
-//		for (Relation relation : dataModelInstance.getRelations()) {
-//			relationEntityOne = dataModelInstance.getEntity(relation.getEntityOne().getName()); // Relation EntityOne
-//			relationEntityTwo = dataModelInstance.getEntity(relation.getEntityTwo().getName()); // Relation EntityTwo
-//
-//			relationEntityInstanceOne = relationEntityOne.getFirstEntityInstance(); // EntityInstanceOne
-//			relationEntityInstanceTwo = relationEntityTwo.getFirstEntityInstance(); // EntityInstanceTwo
-//
-//			new RelationInstance(relation, relationEntityInstanceOne, relationEntityInstanceTwo, relationEntityInstanceOne.getNewRelationInstanceId());
-//		}
-//	}
-
 }

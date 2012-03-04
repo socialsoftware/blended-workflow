@@ -4,11 +4,14 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
+import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 
 public class BWSpecificationFactory {
@@ -40,7 +43,19 @@ public class BWSpecificationFactory {
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, specificationXML);
 
-		// TODO Conditions Model - Worklet
+		// Create YAWL Specification and Load on the engine. FIXME: Create/Parse YAWL specification from taskModel.
+//		try {
+//		String yawlSpecificationFileName = specificationName.getChildText("yawlSpecificationFILENAME", bwNamespace);
+//		String yawlSpecification = StringUtils.fileToString(yawlSpecificationFileName);
+//		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlSpecification).getIdentifier();
+//		taskModel.setYawlSpecficationID(yawlSpecficationID);
+//		}
+//		catch (BlendedWorkflowException bwe) {
+//			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
+//		}
+		
+		// Create Worklet Rules
+//		WorkletAdapter.getInstance().loadRDRTrees();
 	}
 
 }

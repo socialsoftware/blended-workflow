@@ -66,7 +66,7 @@ public class PrintBWSpecification {
 		System.out.println("BWInstances:");
 		System.out.println("----------------------------------------------------------");
 		System.out.println(bwSpecification.getName() + " has " + bwSpecification.getBwInstancesCount() + " instance." );
-		System.out.println(bwInstance.getId());
+		System.out.println(bwInstance.getID());
 	}
 
 	public static void dataModelTemplate(String bwSpecificationName) throws BlendedWorkflowException {
@@ -156,9 +156,9 @@ public class PrintBWSpecification {
 			System.out.println("Entity \"" + entity.getName() + "\" has " + entity.getEntityInstancesCount() + " instances.");
 			if (entity.getEntityInstancesCount()>0) {
 				for (EntityInstance entityInstance : entity.getEntityInstances()) {
-					System.out.println("EntityInstance \"" + entityInstance.getId() + "\" is associated with " + entityInstance.getAttributeInstancesCount() + " AttributesInstances.");
+					System.out.println("EntityInstance \"" + entityInstance.getID() + "\" is associated with " + entityInstance.getAttributeInstancesCount() + " AttributesInstances.");
 					for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
-						System.out.println("AttributeInstance \"" + attributeInstance.getId() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");					}
+						System.out.println("AttributeInstance \"" + attributeInstance.getID() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");					}
 				}
 			}
 			System.out.println("----------------------------------------------------------");
@@ -167,7 +167,7 @@ public class PrintBWSpecification {
 			System.out.println("Relation \"" + relation.getName() + "\" has " + relation.getRelationInstancesCount() + " instances.");
 			if(relation.getRelationInstancesCount()>0) {
 				for (RelationInstance relationInstance : relation.getRelationInstances()) {
-					System.out.println("RelationInstance \"" + relationInstance.getId() + "\"");
+					System.out.println("RelationInstance \"" + relationInstance.getID() + "\"");
 				}
 			}
 		}
@@ -179,7 +179,7 @@ public class PrintBWSpecification {
 		System.out.println("WorkItems");
 		System.out.println("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
-			System.out.println("WorkItem \"" + workitem.getId() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
+			System.out.println("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
 		}
 	}
 	
@@ -189,10 +189,10 @@ public class PrintBWSpecification {
 		System.out.println("WorkItems");
 		System.out.println("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
-			System.out.println("WorkItem \"" + workitem.getId() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
+			System.out.println("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
 			if (workitem.getContraintViolationAttributeInstancesCount()>0) {
 				for (AttributeInstance attributeInstance : workitem.getContraintViolationAttributeInstances()) {
-					System.out.println("AttributeInstance \"" + attributeInstance.getId() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");					}
+					System.out.println("AttributeInstance \"" + attributeInstance.getID() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");					}
 			}
 		}
 	}

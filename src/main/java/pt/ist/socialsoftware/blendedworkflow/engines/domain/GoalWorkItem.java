@@ -8,14 +8,14 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	public GoalWorkItem(BWInstance bwInstance, Goal goal) {
 		setBwInstance(bwInstance);
 		setGoal(goal);
-		setId(goal.getName() + "." + bwInstance.getNewWorkItemId()); // Id: GoalName.#
+		setID(goal.getName() + "." + bwInstance.getNewWorkItemID()); // Id: GoalName.#
 		goal.getCondition().assignAttributeInstances(this);
 		setState(WorkItemState.CONSTRAINT_VIOLATION);
 		WorkletAdapter.getInstance().notifyWorkItemContraintViolation(this);
 	}
 
 	@Override
-	public String getElementId() {
+	public String getElementID() {
 		return getGoal().getName();
 	}
 

@@ -25,7 +25,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	public BWInstance getBWInstance(String id) throws BlendedWorkflowException {
 		for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
 			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
-				if (bwInstance.getId().equals(id))
+				if (bwInstance.getID().equals(id))
 					return bwInstance;
 			}
 		}

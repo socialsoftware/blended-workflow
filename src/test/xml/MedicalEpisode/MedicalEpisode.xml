@@ -8,6 +8,7 @@
 		<bw:description>A simple process of a medical appointment.</bw:description>
 		<bw:version>1.0</bw:version>
 		<bw:identifier>UID_92fe0366-d6c6-42ec-9786-408f2b5c36c6</bw:identifier>
+		<bw:yawlSpecificationFILENAME>src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml</bw:yawlSpecificationFILENAME>
 	</bw:CaseInfo>
 	<bw:DataModel>
 		<bw:Entity>
@@ -177,7 +178,7 @@
 	<bw:TaskModel>
 		<bw:Task>
 			<bw:Name>Check-in Patient</bw:Name>
-			<bw:PreCondition>existsEntity(Patient)</bw:PreCondition>
+			<bw:PreCondition>true</bw:PreCondition>
 			<bw:PostCondition>existsEntity(Patient) and existsEntity(Episode)</bw:PostCondition>
 			<bw:FlowType>root</bw:FlowType>
 		</bw:Task>

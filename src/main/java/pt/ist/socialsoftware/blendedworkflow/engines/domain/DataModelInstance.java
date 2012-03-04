@@ -12,7 +12,7 @@ public class DataModelInstance extends DataModelInstance_Base {
 	public EntityInstance getEntityInstance(String id) throws BlendedWorkflowException {
 		for (Entity entity : getEntities()) {
 			for (EntityInstance entityInstance : entity.getEntityInstances()) {
-				if (entityInstance.getId().equals(id)) {
+				if (entityInstance.getID().equals(id)) {
 					return entityInstance;
 				}
 			}

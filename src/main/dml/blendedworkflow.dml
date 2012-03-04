@@ -17,18 +17,18 @@ class BWSpecification {
 }
 
 class BWInstance {
-	String id;
+	String ID;
 	String activityYAWLModelURI;
 	Integer workItemCounter;
 }
 
 class WorkItem {
-	String id;
+	String ID;
 	WorkItemState state;
 }
 
 class TaskWorkItem extends WorkItem {
-	String taskInstanceId;
+	String taskInstanceID;
 }
 
 class GoalWorkItem extends WorkItem;
@@ -42,9 +42,12 @@ class Goal {
 	GoalState state;
 }
 
-class TaskModel;
+class TaskModel {
+	String yawlSpecficationID;
+}
 
 class TaskModelInstance extends TaskModel {
+	String yawlCaseID;
 	boolean taskCaseClaimed; // = false;
 }
 
@@ -70,6 +73,8 @@ class CompareAttributeToValueCondition extends Condition {
 	String value;
 }
 
+class TrueCondition extends Condition;
+
 class DataModel;
 
 class DataModelInstance extends DataModel { 
@@ -81,7 +86,7 @@ class Entity {
 }
 
 class EntityInstance {
-	String id;
+	String ID;
 	Integer attributeInstanceCounter;
 	Integer relationInstanceCounter;
 }
@@ -93,7 +98,7 @@ class Attribute {
 }
 
 class AttributeInstance {
-	String id;
+	String ID;
 	String value;
 	DataState state;
 }
@@ -107,7 +112,7 @@ class Relation {
 }
 
 class RelationInstance {
-	String id;
+	String ID;
 }
 
 // BlendedWorkflow

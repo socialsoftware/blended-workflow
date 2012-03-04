@@ -28,7 +28,7 @@ public class Task extends Task_Base {
 		Condition newPreCondition = null;
 		Condition preCondition = getPreConstraint();
 		Condition newPostCondition = null;
-		Condition postCondition = getPreConstraint();
+		Condition postCondition = getPostConstraint();
 		if (preCondition != null && postCondition != null) {
 			newPreCondition = preCondition.cloneCondition(taskModelInstance);
 			newPostCondition = postCondition.cloneCondition(taskModelInstance);

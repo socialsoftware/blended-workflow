@@ -54,8 +54,8 @@ public abstract class WorkItem extends WorkItem_Base {
 
 	private void setAttributeValues(HashMap<String, String> values) {
 		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
-			if (values.containsKey(attributeInstance.getId())) {
-				attributeInstance.setValue(values.get(attributeInstance.getId()));
+			if (values.containsKey(attributeInstance.getID())) {
+				attributeInstance.setValue(values.get(attributeInstance.getID()));
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public abstract class WorkItem extends WorkItem_Base {
 
 	public abstract void notifySkipped();
 
-	public abstract String getElementId();
+	public abstract String getElementID();
 
 	public abstract void notifyPreTask();
 

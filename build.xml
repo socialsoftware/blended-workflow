@@ -106,28 +106,6 @@
 		</dml-post-processor>
 	</target>
 	
-	<!-- Populate -->
-	<!-- 
-	<target name="populate" depends="compile, instrument-classes" description="Populates the initial data">
-		<java classname="pt.ist.phonebook.SetupDomain" fork="false">
-			<classpath>
-				<path refid="project.classpath" />
-			</classpath>
-		</java>
-	</target>
-	-->
-	
-	<!-- Run -->
-	<!-- 
-	<target name="run" depends="compile, instrument-classes" description="Runs the program">
-		<java classname="pt.ist.phonebook.PhoneBookApplication" fork="false">
-			<classpath>
-				<path refid="project.classpath" />
-			</classpath>
-		</java>
-	</target> 
-	-->
-	
 	<target name="war" depends="compile">
 		<war destfile="target/blendedWorkflowService.war" webxml="src/main/webapp/WEB-INF/web.xml">
 			<fileset dir="src/main/webapp"/>
@@ -147,12 +125,12 @@
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateBWInstanceServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CheckInWorkItemServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.SkipWorkItemServiceTest" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" /> 
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" />
 		</junit>
 	</target>
 	
-	<!-- Test CheckIn-->
-	<target name="test-load" depends="compile-tests" description="Run the tests">
+	<!-- Test Load -->
+	<target name="test-load" depends="compile-tests">
 		<echo message="Testing all services..." />
 		<junit>
 			<classpath refid="project.classpath" />
@@ -161,8 +139,8 @@
 		</junit>
 	</target>
 		
-	<!-- Test CheckIn-->
-	<target name="test-createBW" depends="compile-tests" description="Run the tests">
+	<!-- Test CreateBW -->
+	<target name="test-createBW" depends="compile-tests">
 		<echo message="Testing all services..." />
 		<junit>
 			<classpath refid="project.classpath" />
@@ -172,7 +150,7 @@
 	</target>
 	
 	<!-- Test CheckIn-->
-	<target name="test-checkIn" depends="compile-tests" description="Run the tests">
+	<target name="test-checkIn" depends="compile-tests">
 		<echo message="Testing all services..." />
 		<junit>
 			<classpath refid="project.classpath" />
@@ -181,8 +159,8 @@
 		</junit>
 	</target>
 	
-	<!-- Test Skip-->
-	<target name="test-skip" depends="compile-tests" description="Run the tests">
+	<!-- Test Skip -->
+	<target name="test-skip" depends="compile-tests">
 		<echo message="Testing all services..." />
 		<junit>
 			<classpath refid="project.classpath" />
@@ -191,8 +169,8 @@
 		</junit>
 	</target>
 	
-	<!-- Test CreateGoal-->
-	<target name="test-createGoal" depends="compile-tests" description="Run the tests">
+	<!-- Test CreateGoal -->
+	<target name="test-createGoal" depends="compile-tests">
 		<echo message="Testing all services..." />
 		<junit>
 			<classpath refid="project.classpath" />
@@ -202,19 +180,19 @@
 	</target>
 
 	<!-- Clean -->
-	<target name="clean" description="Cleans the compiled classes and generated sources">
+	<target name="clean">
 		<delete dir="${build.rel-dir}" />
 		<delete dir="${eclipse.build.rel-dir}" />
 		<delete dir="${dist.rel-dir}" />
 	</target>
 	
 	<!-- Clean All -->
-	<target name="clean-all" depends="clean">
+	<target name="clean-all" depends="clean" description="Cleans the compiled classes and generated sources">
 		<delete dir="${test-db.rel-dir}"/>
-		<!-- <delete dir="${db.rel-dir}"/> -->
+		<delete dir="${db.rel-dir}"/>
 	</target>
 	
 	<!-- tomcat -->
-	<property name="tomcat.home" value="C:/Users/User/Desktop/apache-tomcat-7.0.26"/>
+	<property name="tomcat.home"  value="C:/Users/User/Desktop/apache-tomcat-7.0.26"/>	
 	
 </project>

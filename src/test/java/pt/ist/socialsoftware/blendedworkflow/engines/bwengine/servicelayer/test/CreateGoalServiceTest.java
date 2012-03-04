@@ -96,7 +96,7 @@ public class CreateGoalServiceTest {
 
 			assertEquals(7, goalModelInstance.getGoalsCount()); // Created 6 Goals on Load +1
 			assertEquals(SECONDOPINION_NAME, goalModelInstance.getGoal(SECONDOPINION_NAME).getName());
-			assertEquals(SECONDOPINION_ID, bwInstance.getWorkItem(SECONDOPINION_ID).getId());
+			assertEquals(SECONDOPINION_ID, bwInstance.getWorkItem(SECONDOPINION_ID).getID());
 			
 //			PrintBWSpecification.all(BWSPECIFICATION_NAME);
 
