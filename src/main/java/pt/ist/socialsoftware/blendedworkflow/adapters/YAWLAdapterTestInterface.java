@@ -9,6 +9,7 @@ import org.yawlfoundation.yawl.engine.interfce.SpecificationData;
 
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.SpecUtils;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
@@ -52,7 +53,7 @@ public class YAWLAdapterTestInterface extends Application {
         		new Button.ClickListener() {
         	public void buttonClick(ClickEvent event) {
         		try {
-        			YAWLAdapter.getInstance().connectYAWL();
+        			BlendedWorkflow.getInstance().getYawlAdapter().connectYAWL();
 					results.setValue("Connect to Yawl - Sucesso!");
         		}
         		catch (Exception e) {
@@ -65,7 +66,7 @@ public class YAWLAdapterTestInterface extends Application {
         		new Button.ClickListener() {
         	public void buttonClick(ClickEvent event) {
         		try {
-        			YAWLAdapter.getInstance().disconnectYAWL();
+        			BlendedWorkflow.getInstance().getYawlAdapter().disconnectYAWL();
         			results.setValue("Disconnect to Yawl - Sucesso!");
         		}
         		catch (Exception e) {
@@ -80,11 +81,11 @@ public class YAWLAdapterTestInterface extends Application {
         		try {
         			
     				log.debug("Clients Registered:");
-        			for (YExternalClient client : YAWLAdapter.getInstance().getClientAccounts()) {
+        			for (YExternalClient client : BlendedWorkflow.getInstance().getYawlAdapter().getClientAccounts()) {
         				log.debug(client.getUserName());
         			}
     				log.debug("Services Registered:");
-        			for (YAWLServiceReference service : YAWLAdapter.getInstance().getRegisteredServices()) {
+        			for (YAWLServiceReference service : BlendedWorkflow.getInstance().getYawlAdapter().getRegisteredServices()) {
         				log.debug(service.getURI());
         			}
 
@@ -101,7 +102,7 @@ public class YAWLAdapterTestInterface extends Application {
         	public void buttonClick(ClickEvent event) {
         		try {
         			String spec = StringUtils.fileToString(YAWL_SPEC_FILENAME);
-        			YAWLAdapter.getInstance().loadSpecification(spec);
+        			BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(spec);
         			results.setValue("Load Specification - Sucesso!");
         		}
         		catch (Exception e) {
@@ -114,7 +115,7 @@ public class YAWLAdapterTestInterface extends Application {
         		new Button.ClickListener() {
         	public void buttonClick(ClickEvent event) {
         		try {
-        			YAWLAdapter.getInstance().unloadSpecification(specID);
+        			BlendedWorkflow.getInstance().getYawlAdapter().unloadSpecification(specID);
         			results.setValue(" Unload Specification - Sucesso!");
         		}
         		catch (Exception e) {
@@ -129,7 +130,7 @@ public class YAWLAdapterTestInterface extends Application {
         		try {
         			
        				log.debug("Loaded Specifications: ");
-        			for (SpecificationData specification : YAWLAdapter.getInstance().getLoadedSpecs()) {
+        			for (SpecificationData specification : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedSpecs()) {
         				log.debug(specification.getName());
         			}
         		
@@ -147,7 +148,7 @@ public class YAWLAdapterTestInterface extends Application {
         		try {
         			String spec = StringUtils.fileToString(YAWL_SPEC_FILENAME);
     				specID = SpecUtils.getYAWLSpecificationIDFromSpec(spec).getIdentifier();
-        			caseInstanceID = YAWLAdapter.getInstance().launchCase(specID);
+        			caseInstanceID = BlendedWorkflow.getInstance().getYawlAdapter().launchCase(specID);
         			results.setValue("Launch Specification - Sucesso!");
         		}
         		catch (Exception e) {
@@ -160,7 +161,7 @@ public class YAWLAdapterTestInterface extends Application {
         		new Button.ClickListener() {
         	public void buttonClick(ClickEvent event) {
         		try {
-        			YAWLAdapter.getInstance().cancelCase(caseInstanceID);
+        			BlendedWorkflow.getInstance().getYawlAdapter().cancelCase(caseInstanceID);
         			results.setValue("Cancel Case - Sucesso!");
         		}
         		catch (Exception e) {
@@ -173,7 +174,7 @@ public class YAWLAdapterTestInterface extends Application {
 //        		new Button.ClickListener() {
 //        	public void buttonClick(ClickEvent event) {
 //        		try {
-//        			YAWLAdapter.getInstance().notifyActiveTasks(caseInstanceID);
+//        			BlendedWorkflow.getInstance().getYawlAdapter().notifyActiveTasks(caseInstanceID);
 //        			results.setValue("Get Enabled Workitems - Sucesso!");
 //        		}
 //        		catch (Exception e) {
@@ -186,7 +187,7 @@ public class YAWLAdapterTestInterface extends Application {
         		new Button.ClickListener() {
         	public void buttonClick(ClickEvent event) {
         		try {
-        			YAWLAdapter.getInstance().connectYAWL();
+        			BlendedWorkflow.getInstance().getYawlAdapter().connectYAWL();
         			results.setValue("CheckIn Workitem - Sucesso!");
         		}
         		catch (Exception e) {
@@ -199,7 +200,7 @@ public class YAWLAdapterTestInterface extends Application {
         		new Button.ClickListener() {
         	public void buttonClick(ClickEvent event) {
         		try {
-        			YAWLAdapter.getInstance().connectYAWL();
+        			BlendedWorkflow.getInstance().getYawlAdapter().connectYAWL();
         			results.setValue("CheckOut Workitem - Sucesso!");
         		}
         		catch (Exception e) {

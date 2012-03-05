@@ -16,7 +16,7 @@ public abstract class WorkItem extends WorkItem_Base {
 		setAttributeValues(values);
 		if (getState() == WorkItemState.ENABLED) {
 			setState(WorkItemState.CHECKED_IN);
-			WorkletAdapter.getInstance().notifyWorkItemContraintViolation(this);
+			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
 		}	
 		notifyWorkItemDataChanged();
 	}
@@ -25,7 +25,7 @@ public abstract class WorkItem extends WorkItem_Base {
 		setAttributesSkipped();
 		if (getState() == WorkItemState.ENABLED) {
 			setState(WorkItemState.SKIPPED);
-			WorkletAdapter.getInstance().notifyWorkItemContraintViolation(this);
+			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
 		}
 		notifyWorkItemDataChanged();
 	}
@@ -48,7 +48,7 @@ public abstract class WorkItem extends WorkItem_Base {
 	private void notifyDataChange() {
 		if (getState() == WorkItemState.ENABLED) {
 			setState(WorkItemState.CONSTRAINT_VIOLATION);
-			WorkletAdapter.getInstance().notifyWorkItemContraintViolation(this);
+			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
 		}
 	}
 

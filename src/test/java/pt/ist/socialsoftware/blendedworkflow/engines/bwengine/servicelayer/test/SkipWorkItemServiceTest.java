@@ -24,6 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipWorkItemService;
+import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 
 public class SkipWorkItemServiceTest {
 
@@ -40,19 +41,10 @@ public class SkipWorkItemServiceTest {
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String GOAL_WORKITEM_SK = "Prescribe.3";
 
-	static {
-		if(FenixFramework.getConfig()==null) {
-			FenixFramework.initialize(new Config() {{
-				dbAlias="test-db";
-				domainModelPath="src/main/dml/blendedworkflow.dml";
-				repositoryType=RepositoryType.BERKELEYDB;
-				rootClass=BlendedWorkflow.class;
-			}});
-		}
-	}
-
 	@Before
 	public void setUp() {
+		Bootstrap.init();
+
 		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_XML);
 
@@ -76,20 +68,7 @@ public class SkipWorkItemServiceTest {
 
 	@After
 	public void tearDown() {
-		boolean committed = false;
-		try {
-			Transaction.begin();
-			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-			Set<BWSpecification> allBWSpecifications = blendedWorkflow.getBwSpecificationsSet();
-			allBWSpecifications.clear();
-			Transaction.commit();
-			committed = true;
-		} finally {
-			if (!committed) {
-				Transaction.abort();
-				fail("SkipWorkItemServiceTest failed @TearDown.");
-			}
-		}
+		Bootstrap.clean();
 	}
 
 	@Test

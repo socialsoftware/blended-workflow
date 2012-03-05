@@ -48,7 +48,6 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 	protected String bwURI = "http://localhost:8081/blendedWorkflowService/ib";
 
 	private static Logger log;
-	private static YAWLAdapter instance;
 
 	private InterfaceB_EnvironmentBasedClient interfaceBClient;
 	private InterfaceA_EnvironmentBasedClient interfaceAClient;
@@ -67,13 +66,6 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		super.setUpInterfaceBClient(this.engineIbURI);
 		
 		connectYAWL();
-	}
-
-	public static YAWLAdapter getInstance() throws BlendedWorkflowException {
-		if(instance == null) {
-			instance = new YAWLAdapter();
-		}
-		return instance;
 	}
 	
 	// YAWL Connection

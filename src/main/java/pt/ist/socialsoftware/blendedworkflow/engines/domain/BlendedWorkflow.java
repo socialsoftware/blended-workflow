@@ -1,18 +1,19 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
+import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.*;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
-
-	public BlendedWorkflow() {
-		super();
-	}
+	
+	private YAWLAdapter yawlAdapter = null;
+	private WorkletAdapter workletAdapter = null;
 
 	public static BlendedWorkflow getInstance() {
 		return FenixFramework.getRoot();
-	}
+	}	
 
 	public BWSpecification getBWSpecification(String name) throws BlendedWorkflowException {
 		for (BWSpecification bwSpecification : getBwSpecifications()) {
@@ -30,6 +31,28 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 			}
 		}
 		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_CASE_ID, id);
+	}
+
+	public YAWLAdapter getYawlAdapter() throws BlendedWorkflowException {
+		if (yawlAdapter == null) {
+			yawlAdapter = new YAWLAdapter();
+		}
+		return yawlAdapter;
+	}
+
+	public void setYawlAdapter(YAWLAdapter yawlAdapter) {
+		this.yawlAdapter = yawlAdapter;
+	}
+
+	public WorkletAdapter getWorkletAdapter() {
+		if (workletAdapter == null) {
+			workletAdapter = new WorkletAdapter();
+		}
+		return workletAdapter;
+	}
+
+	public void setWorkletAdapter(WorkletAdapter workletAdapter) {
+		this.workletAdapter = workletAdapter;
 	}
 
 }

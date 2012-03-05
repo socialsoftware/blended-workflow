@@ -5,62 +5,68 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.lib.legacy.ClassImposteriser;
 
-import java.util.Set;
+import junit.framework.JUnit4TestAdapter;
 
-import pt.ist.fenixframework.Config;
-import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.pstm.Transaction;
-import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.PrintBWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
+import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 
+@RunWith(JMock.class)
 public class LoadBWSpecificationServiceTest {
+	
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(LoadBWSpecificationServiceTest.class);
+	}
+	
+	private Mockery context = new Mockery() {
+		{
+			setImposteriser(ClassImposteriser.INSTANCE);
+		}
+	};
+	
+	private YAWLAdapter yawlAdapter = null;
 	
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
 	
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 
-	static {
-		if(FenixFramework.getConfig()==null) {
-			FenixFramework.initialize(new Config() {{
-				dbAlias="test-db";
-				domainModelPath="src/main/dml/blendedworkflow.dml";
-				repositoryType=RepositoryType.BERKELEYDB;
-				rootClass=BlendedWorkflow.class;
-			}});
-		}
-	}
-
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
+		Bootstrap.init();
+		yawlAdapter = context.mock(YAWLAdapter.class);
+		
+		Transaction.begin();
+		BlendedWorkflow.getInstance().setYawlAdapter(yawlAdapter);
+		Transaction.commit();
 	}
 
 	@After
-	public void tearDown() throws Exception {
-		boolean committed = false;
-		try {
-			Transaction.begin();
-			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-			Set<BWSpecification> allBWSpecifications = blendedWorkflow.getBwSpecificationsSet();
-			allBWSpecifications.clear();
-			Transaction.commit();
-			committed = true;
-		} finally {
-			if (!committed) {
-				Transaction.abort();
-				fail("LoadBWSpecificationServiceTest failed @TearDown.");
-			}
-		}
+	public void tearDown() {
+		Bootstrap.clean();
 	}
 
 	@Test
-	public void loadBWSpecification() {
+	public void loadBWSpecification() throws BlendedWorkflowException {
+		context.checking(new Expectations() {
+			{
+				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+			}
+		});
+		
 		String loadBWSpecificationInputString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 		
 		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(loadBWSpecificationInputString);

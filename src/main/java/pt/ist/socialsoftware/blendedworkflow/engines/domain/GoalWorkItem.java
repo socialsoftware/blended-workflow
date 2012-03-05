@@ -11,7 +11,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		setID(goal.getName() + "." + bwInstance.getNewWorkItemID()); // Id: GoalName.#
 		goal.getCondition().assignAttributeInstances(this);
 		setState(WorkItemState.CONSTRAINT_VIOLATION);
-		WorkletAdapter.getInstance().notifyWorkItemContraintViolation(this);
+		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
+import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 
 public class CreateBWInstanceServiceTest {
 
@@ -30,19 +31,9 @@ public class CreateBWInstanceServiceTest {
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 
-	static {
-		if(FenixFramework.getConfig()==null) {
-			FenixFramework.initialize(new Config() {{
-				dbAlias="test-db";
-				domainModelPath="src/main/dml/blendedworkflow.dml";
-				repositoryType=RepositoryType.BERKELEYDB;
-				rootClass=BlendedWorkflow.class;
-			}});
-		}
-	}
-
 	@Before
 	public void setUp() throws Exception {
+		Bootstrap.init();
 		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 
 		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(dataModelString);
@@ -55,20 +46,7 @@ public class CreateBWInstanceServiceTest {
 
 	@After
 	public void tearDown() throws Exception {
-		boolean committed = false;
-		try {
-			Transaction.begin();
-			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-			Set<BWSpecification> allBWSpecifications = blendedWorkflow.getBwSpecificationsSet();
-			allBWSpecifications.clear();
-			Transaction.commit();
-			committed = true;
-		} finally {
-			if (!committed) {
-				Transaction.abort();
-				fail("CreateBWInstanceServiceTest failed @TearDown.");
-			}
-		}
+		Bootstrap.clean();
 	}
 
 	@Test

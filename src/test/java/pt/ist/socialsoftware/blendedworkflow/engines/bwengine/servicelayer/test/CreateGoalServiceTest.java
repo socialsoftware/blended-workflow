@@ -21,6 +21,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
+import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 
 public class CreateGoalServiceTest {
 	
@@ -33,19 +34,10 @@ public class CreateGoalServiceTest {
 	private static String SECONDOPINION_ID = "Second Opinion.4";
 	private static String SECONDOPINION_NAME = "Second Opinion";
 
-	static {
-		if(FenixFramework.getConfig()==null) {
-			FenixFramework.initialize(new Config() {{
-				dbAlias="test-db";
-				domainModelPath="src/main/dml/blendedworkflow.dml";
-				repositoryType=RepositoryType.BERKELEYDB;
-				rootClass=BlendedWorkflow.class;
-			}});
-		}
-	}
 
 	@Before
 	public void setUp() {
+		Bootstrap.init();
 		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_XML);
 
@@ -61,20 +53,7 @@ public class CreateGoalServiceTest {
 
 	@After
 	public void tearDown() {
-		boolean committed = false;
-		try {
-			Transaction.begin();
-			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-			Set<BWSpecification> allBWSpecifications = blendedWorkflow.getBwSpecificationsSet();
-			allBWSpecifications.clear();
-			Transaction.commit();
-			committed = true;
-		} finally {
-			if (!committed) {
-				Transaction.abort();
-				fail("CreateGoalServiceTest failed @TearDown.");
-			}
-		}
+		Bootstrap.clean();
 	}
 
 	@Test

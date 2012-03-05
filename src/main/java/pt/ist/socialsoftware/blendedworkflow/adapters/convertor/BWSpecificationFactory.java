@@ -7,6 +7,7 @@ import org.jdom.Namespace;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
@@ -42,6 +43,8 @@ public class BWSpecificationFactory {
 		// Task Model
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, specificationXML);
+		
+		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification("test");
 
 		// Create YAWL Specification and Load on the engine. FIXME: Create/Parse YAWL specification from taskModel.
 //		try {

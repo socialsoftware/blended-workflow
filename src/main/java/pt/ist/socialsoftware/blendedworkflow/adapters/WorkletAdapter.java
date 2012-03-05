@@ -6,16 +6,10 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 
 public class WorkletAdapter {
 
-	private static WorkletAdapter instance;
-
-	private static Logger log;
+	private Logger log;
 		
-	public static WorkletAdapter getInstance() {
-		if (instance == null) {
-			log = Logger.getLogger("bwServicelogger");
-			return new WorkletAdapter();
-		}
-		return instance;
+	public WorkletAdapter() {
+		log = Logger.getLogger("bwServicelogger");
 	}
 
 	public void notifyWorkItemContraintViolation(WorkItem workItem) {
