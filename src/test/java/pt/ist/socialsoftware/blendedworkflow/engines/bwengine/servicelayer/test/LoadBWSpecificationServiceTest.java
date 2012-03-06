@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
 
 import junit.framework.JUnit4TestAdapter;
@@ -21,34 +22,33 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 
 @RunWith(JMock.class)
 public class LoadBWSpecificationServiceTest {
-	
+
+	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
+	private static String BWSPECIFICATION_NAME = "Medical Appointment";
+
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(LoadBWSpecificationServiceTest.class);
 	}
-	
+
 	private Mockery context = new Mockery() {
 		{
 			setImposteriser(ClassImposteriser.INSTANCE);
+			setThreadingPolicy(new Synchroniser());
 		}
 	};
-	
+
 	private YAWLAdapter yawlAdapter = null;
-	
-	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
-	
-	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 
 	@Before
 	public void setUp() {
 		Bootstrap.init();
 		yawlAdapter = context.mock(YAWLAdapter.class);
-		
+
 		Transaction.begin();
 		BlendedWorkflow.getInstance().setYawlAdapter(yawlAdapter);
 		Transaction.commit();
@@ -66,9 +66,9 @@ public class LoadBWSpecificationServiceTest {
 				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
 			}
 		});
-		
+
 		String loadBWSpecificationInputString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		
+
 		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(loadBWSpecificationInputString);
 		try {
 			loadBWSpecificationService.execute();
@@ -78,19 +78,17 @@ public class LoadBWSpecificationServiceTest {
 		boolean committed = false;
 		try {
 			Transaction.begin();
-			
+
 			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 			BWSpecification bwSpecification = blendedWorkflow.getBWSpecification(BWSPECIFICATION_NAME);
 			DataModel dataModel = bwSpecification.getDataModel();
 			GoalModel goalModel = bwSpecification.getGoalModel();
-			
+
 			assertEquals(5, dataModel.getEntitiesCount());
 			assertEquals(13, dataModel.getAttributesCount());
 			assertEquals(4, dataModel.getRelationsCount());
 			assertEquals(6, goalModel.getGoalsCount());
-			
-//			PrintBWSpecification.all(BWSPECIFICATION_NAME);
-			
+
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {

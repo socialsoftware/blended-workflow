@@ -2,20 +2,25 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test
 
 import static org.junit.Assert.*;
 
-import java.util.Set;
+import junit.framework.JUnit4TestAdapter;
 
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.lib.concurrent.Synchroniser;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import pt.ist.fenixframework.Config;
-import pt.ist.fenixframework.FenixFramework;
+import org.junit.runner.RunWith;
+
 import pt.ist.fenixframework.pstm.Transaction;
 
-import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.PrintBWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
+import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
@@ -26,24 +31,54 @@ import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadB
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 
+@RunWith(JMock.class)
 public class SkipWorkItemServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
 	private static String CREATE_BWINSTANCE_XML = "src/test/xml/MedicalEpisode/CreateBWInstanceInput.xml";
-	private static String SKIP_COLLECTDATA_XML = "src/test/xml/MedicalEpisode/SkipCollectData.xml";
-	private static String SKIP_PHYSICALEXAMINATION_XML = "src/test/xml/MedicalEpisode/SkipPhysicalExamination.xml";
+//	private static String SKIP_COLLECTDATA_XML = "src/test/xml/MedicalEpisode/SkipCollectData.xml";
+//	private static String SKIP_PHYSICALEXAMINATION_XML = "src/test/xml/MedicalEpisode/SkipPhysicalExamination.xml";
 	private static String SKIP_PRESCRIBE_XML = "src/test/xml/MedicalEpisode/SkipPrescribe.xml";
-	private static String SKIP_OBSERVEPATIENT_XML = "src/test/xml/MedicalEpisode/SkipObservePatient.xml";
-	private static String SKIP_WRITEMEDICALREPORT_XML = "src/test/xml/MedicalEpisode/SkipWriteMedicalReport.xml";
-	private static String SKIP_DIAGNOSEPATIENT_XML = "src/test/xml/MedicalEpisode/SkipDiagnosePatient.xml";
+//	private static String SKIP_OBSERVEPATIENT_XML = "src/test/xml/MedicalEpisode/SkipObservePatient.xml";
+//	private static String SKIP_WRITEMEDICALREPORT_XML = "src/test/xml/MedicalEpisode/SkipWriteMedicalReport.xml";
+//	private static String SKIP_DIAGNOSEPATIENT_XML = "src/test/xml/MedicalEpisode/SkipDiagnosePatient.xml";
 
-	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String GOAL_WORKITEM_SK = "Prescribe.3";
+	private static String YAWLCASE_ID = "yawlCaseID";
+
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(SkipWorkItemServiceTest.class);
+	}
+
+	private Mockery context = new Mockery() {
+		{
+			setImposteriser(ClassImposteriser.INSTANCE);
+			setThreadingPolicy(new Synchroniser());
+		}
+	};
+
+	private YAWLAdapter yawlAdapter = null;
+	private WorkletAdapter workletAdapter = null;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws BlendedWorkflowException {
 		Bootstrap.init();
+
+		yawlAdapter = context.mock(YAWLAdapter.class);
+		workletAdapter = context.mock(WorkletAdapter.class);
+		context.checking(new Expectations() {
+			{
+				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
+				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
+			}
+		});
+
+		Transaction.begin();
+		BlendedWorkflow.getInstance().setYawlAdapter(yawlAdapter);
+		BlendedWorkflow.getInstance().setWorkletAdapter(workletAdapter);
+		Transaction.commit();
 
 		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_XML);
@@ -89,7 +124,7 @@ public class SkipWorkItemServiceTest {
 			WorkItem workItem = bwInstance.getWorkItem(GOAL_WORKITEM_SK);
 
 			assertEquals(WorkItemState.SKIPPED, workItem.getState());
-//			assertEquals(WorkItemState.COMPLETED, workItem.getState());
+			//			assertEquals(WorkItemState.COMPLETED, workItem.getState());
 
 			for (AttributeInstance attributeInstance : workItem.getContraintViolationAttributeInstances()) {
 				assertEquals(DataState.SKIPPED, attributeInstance.getState());
@@ -144,7 +179,7 @@ public class SkipWorkItemServiceTest {
 //				}
 //			}
 //
-//          PrintBWSpecification.all(BWSPECIFICATION_NAME);
+//			PrintBWSpecification.all(BWSPECIFICATION_NAME);
 //
 //			Transaction.commit();
 //			committed = true;

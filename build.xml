@@ -129,9 +129,8 @@
 		</junit>
 	</target>
 	
-	<!-- Test Load -->
-	<target name="test-load" depends="compile-tests">
-		<echo message="Testing all services..." />
+	<!-- Test LoadBWSpecification -->
+	<target name="test-loadBWSpecification" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -139,9 +138,8 @@
 		</junit>
 	</target>
 		
-	<!-- Test CreateBW -->
-	<target name="test-createBW" depends="compile-tests">
-		<echo message="Testing all services..." />
+	<!-- Test CreateBWInstance -->
+	<target name="test-createBWInstance" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -149,9 +147,8 @@
 		</junit>
 	</target>
 	
-	<!-- Test CheckIn-->
-	<target name="test-checkIn" depends="compile-tests">
-		<echo message="Testing all services..." />
+	<!-- Test CheckInWorkItem-->
+	<target name="test-checkInWorkItem" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -159,9 +156,8 @@
 		</junit>
 	</target>
 	
-	<!-- Test Skip -->
-	<target name="test-skip" depends="compile-tests">
-		<echo message="Testing all services..." />
+	<!-- Test SkipWorkItem -->
+	<target name="test-skipWorkItem" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -171,7 +167,6 @@
 	
 	<!-- Test CreateGoal -->
 	<target name="test-createGoal" depends="compile-tests">
-		<echo message="Testing all services..." />
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
