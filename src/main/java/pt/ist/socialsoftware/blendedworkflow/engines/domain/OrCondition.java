@@ -30,5 +30,11 @@ public class OrCondition extends OrCondition_Base {
 		getConditionOne().assignAttributeInstances(goalWorkItem);
 		getConditionTwo().assignAttributeInstances(goalWorkItem);
 	}
+	
+	@Override
+	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
+		getConditionOne().assignAttributeInstances(taskWorkItem, conditionType);
+		getConditionTwo().assignAttributeInstances(taskWorkItem, conditionType);
+	}
 
 }

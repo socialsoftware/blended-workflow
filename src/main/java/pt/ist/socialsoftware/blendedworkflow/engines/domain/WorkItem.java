@@ -75,8 +75,6 @@ public abstract class WorkItem extends WorkItem_Base {
 
 	public abstract void notifySkipped();
 
-	public abstract String getElementID();
-
 	public abstract void notifyPreTask();
 
 }

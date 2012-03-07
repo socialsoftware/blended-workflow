@@ -15,11 +15,6 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	}
 
 	@Override
-	public String getElementID() {
-		return getGoal().getName();
-	}
-
-	@Override
 	public void notifyEnabled() {
 		setState(WorkItemState.ENABLED);
 	}

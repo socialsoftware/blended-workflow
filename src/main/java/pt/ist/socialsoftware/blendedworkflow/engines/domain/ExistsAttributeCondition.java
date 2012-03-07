@@ -23,8 +23,13 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	}
 	
 	@Override
-	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem) {
 		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute());
+	}
+	
+	@Override
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
+		getAttribute().getEntity().assignAttributeInstances(taskWorkItem,getAttribute(), conditionType);
 	}
 
 }

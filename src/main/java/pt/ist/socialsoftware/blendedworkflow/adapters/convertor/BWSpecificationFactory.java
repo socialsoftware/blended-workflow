@@ -4,8 +4,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
-import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
@@ -43,19 +41,20 @@ public class BWSpecificationFactory {
 		// Task Model
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, specificationXML);
-		
-		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification("test");
 
-		// Create YAWL Specification and Load on the engine. FIXME: Create/Parse YAWL specification from taskModel.
-//		try {
-//		String yawlSpecificationFileName = specificationName.getChildText("yawlSpecificationFILENAME", bwNamespace);
-//		String yawlSpecification = StringUtils.fileToString(yawlSpecificationFileName);
-//		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlSpecification).getIdentifier();
-//		taskModel.setYawlSpecficationID(yawlSpecficationID);
-//		}
-//		catch (BlendedWorkflowException bwe) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
-//		}
+		// Load YAWL Specification on the engine
+		try {
+		String yawlSpecificationFileName = specificationName.getChildText("yawlSpecificationFILENAME", bwNamespace);
+		String yawlSpecification = StringUtils.fileToString(yawlSpecificationFileName);
+
+		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(yawlSpecification);
+		
+		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlSpecification).getIdentifier();
+		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
+		}
+		catch (BlendedWorkflowException bwe) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
+		}
 		
 		// Create Worklet Rules
 //		WorkletAdapter.getInstance().loadRDRTrees();

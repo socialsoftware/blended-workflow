@@ -81,6 +81,42 @@ public class Entity extends Entity_Base {
 			}
 		}
 	}
+	
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, String conditionType) {
+		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
+
+		if (getEntityInstances().isEmpty()) {
+			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
+			entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
+
+			createRelationInstances(dataModelInstance, entityInstance);
+		}
+		else {
+			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
+				entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
+			}
+		}
+	}
+
+	public void assignAllAttributeInstances(TaskWorkItem taskWorkItem, Entity entity, String conditionType) {
+		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
+
+		if (getEntityInstances().isEmpty()) {
+			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
+			for (Attribute attribute : getAttributes()) {
+				entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
+			}
+
+			createRelationInstances(dataModelInstance, entityInstance);
+		}
+		else {
+			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
+				for (Attribute attribute : getAttributes()) {
+					entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
+				}
+			}
+		}
+	}
 
 	private void createRelationInstances(DataModelInstance dataModelInstance, EntityInstance entityInstance) {
 		Entity relationEntityTwo = null;

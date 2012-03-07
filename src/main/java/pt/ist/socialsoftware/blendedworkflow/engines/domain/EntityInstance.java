@@ -33,4 +33,28 @@ public class EntityInstance extends EntityInstance_Base {
 		}	
 	}
 
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, String conditionType) {
+		boolean exists = false;
+		for (AttributeInstance attributeInstance : getAttributeInstances()) {
+			if (attributeInstance.getAttribute().equals(attribute)) {
+				if (conditionType.equals("pre")) {
+					taskWorkItem.addPreConstraintAttributeInstances(attributeInstance);
+				}
+				if (conditionType.equals("post")) {
+					taskWorkItem.addContraintViolationAttributeInstances(attributeInstance);
+				}
+				exists = true;
+			}
+		}
+		if (!exists) {
+			AttributeInstance attributeInstance = new AttributeInstance(attribute, this);
+			if (conditionType.equals("pre")) {
+				taskWorkItem.addPreConstraintAttributeInstances(attributeInstance);
+			}
+			if (conditionType.equals("post")) {
+				taskWorkItem.addContraintViolationAttributeInstances(attributeInstance);
+			}
+		}	
+	}
+
 }

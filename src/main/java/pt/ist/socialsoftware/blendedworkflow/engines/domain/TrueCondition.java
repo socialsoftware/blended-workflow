@@ -17,7 +17,9 @@ public class TrueCondition extends TrueCondition_Base {
 	}
 	
 	@Override
-	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
-	}
+	void assignAttributeInstances(GoalWorkItem goalWorkItem) {}
+	
+	@Override
+	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {}
     
 }

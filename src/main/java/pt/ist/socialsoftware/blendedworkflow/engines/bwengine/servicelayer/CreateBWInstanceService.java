@@ -5,21 +5,12 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import jvstm.Atomic;
-import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
+
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
-//import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
-//import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-//import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
-//import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-//import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-//import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
-//import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
-//import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 public class CreateBWInstanceService {
@@ -39,13 +30,12 @@ public class CreateBWInstanceService {
 		BWInstance bwInstance = new BWInstance(this.bwSpecification);
 		
 		// Launch case on YAWL
-//		TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
-//		String yawlSpecificationID = taskModelInstance.getYawlSpecficationID();
-//		String yawlCaseID = YAWLAdapter.getInstance().launchCase(yawlSpecificationID);
-//		taskModelInstance.setYawlCaseID(yawlCaseID);
+		BWSpecification bwSpecification = bwInstance.getBwSpecification();
+		String yawlSpecificationID = bwSpecification.getYawlSpecficationID();
+		String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter().launchCase(yawlSpecificationID);
+		bwInstance.setYawlCaseID(yawlCaseID);
 		
 		// Get Enabled Workitems;
-//		YAWLAdapter.getInstance().notifyActiveTasks();
 		bwInstance.getGoalModelInstance().getEnabledWorkItems();
 	}
 

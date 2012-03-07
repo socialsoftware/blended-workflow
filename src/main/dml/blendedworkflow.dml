@@ -13,12 +13,13 @@ class BlendedWorkflow {
 
 class BWSpecification {
 	String name;
+	String yawlSpecficationID;
 	Integer bwInstanceCounter;
 }
 
 class BWInstance {
 	String ID;
-	String activityYAWLModelURI;
+	String yawlCaseID;
 	Integer workItemCounter;
 }
 
@@ -27,9 +28,7 @@ class WorkItem {
 	WorkItemState state;
 }
 
-class TaskWorkItem extends WorkItem {
-	String taskInstanceID;
-}
+class TaskWorkItem extends WorkItem;
 
 class GoalWorkItem extends WorkItem;
 
@@ -42,14 +41,9 @@ class Goal {
 	GoalState state;
 }
 
-class TaskModel {
-	String yawlSpecficationID;
-}
+class TaskModel;
 
-class TaskModelInstance extends TaskModel {
-	String yawlCaseID;
-	boolean taskCaseClaimed; // = false;
-}
+class TaskModelInstance extends TaskModel;
 
 class Task {
 	String name;

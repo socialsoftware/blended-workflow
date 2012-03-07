@@ -1,19 +1,20 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class TaskWorkItem extends TaskWorkItem_Base {
 
-	public TaskWorkItem(BWInstance bwInstance, String taskInstanceID) {
+	public TaskWorkItem(BWInstance bwInstance, Task task) {
 		setBwInstance(bwInstance);
-		setTaskInstanceID(taskInstanceID);
-		setID(getTaskInstanceID() + "." + bwInstance.getNewWorkItemID()); //Id: TaskInstanceId.#
-		setState(WorkItemState.PRE_CONSTRAINT);
-	}
-
-	@Override
-	public String getElementID() {
-		return getTaskInstanceID();
+		setTask(task);
+		setID(task.getName() + "." + bwInstance.getNewWorkItemID()); //Id: TaskName.#
+		setState(WorkItemState.ENABLED);
+		task.setState(TaskState.ENABLED);
+		task.getPreConstraint().assignAttributeInstances(this, "pre");
+		task.getPostConstraint().assignAttributeInstances(this, "post");
+		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
 	}
 
 	@Override

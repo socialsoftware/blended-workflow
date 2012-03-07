@@ -32,4 +32,9 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem) {
 		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute());
 	}
+	
+	@Override
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
+		getAttribute().getEntity().assignAttributeInstances(taskWorkItem,getAttribute(), conditionType);
+	}
 }
