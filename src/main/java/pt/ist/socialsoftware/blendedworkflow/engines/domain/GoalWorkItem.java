@@ -33,9 +33,4 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
 	}
 
-	@Override
-	public void notifyPreTask() {}
-
-
-
 }

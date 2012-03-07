@@ -10,6 +10,7 @@ import org.yawlfoundation.yawl.engine.interfce.SpecificationData;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.SpecUtils;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
@@ -24,13 +25,19 @@ public class YAWLAdapterTestInterface extends Application {
 	private static Logger log = Logger.getLogger("bwServicelogger");
 	
 	// Inputs
-	private static String YAWL_SPEC_FILENAME = "C:/Users/User/Desktop/CreditRatingProcess.yawl";
-	private static String specID ="CreditRatingProcess.ywl";
+	private static String YAWL_SPEC_FILENAME = "C:/Users/User/Desktop/MedicalEpisode.yawl.xml";
+	private static String specID ="";
 	private String caseInstanceID ="";
+	YAWLAdapter yawlAdapter = null;
 
 	
 	@Override
 	public void init() {
+		try {
+		yawlAdapter= new YAWLAdapter();
+		} catch(BlendedWorkflowException e) {
+			log.info(e.getMessage());
+		}
 		final Window main = new Window("Blended Workflow Service");
 		setMainWindow(main);
 		
@@ -49,43 +56,43 @@ public class YAWLAdapterTestInterface extends Application {
         main.addComponent(results);
 	
 		// Registration Buttons
-        registrationButtons.addComponent(new Button("Connect to Yawl",
-        		new Button.ClickListener() {
-        	public void buttonClick(ClickEvent event) {
-        		try {
-        			BlendedWorkflow.getInstance().getYawlAdapter().connectYAWL();
-					results.setValue("Connect to Yawl - Sucesso!");
-        		}
-        		catch (Exception e) {
-					results.setValue("Connect to Yawl - Fail!");
-				}
-        	}
-        }));
+//        registrationButtons.addComponent(new Button("Connect to Yawl",
+//        		new Button.ClickListener() {
+//        	public void buttonClick(ClickEvent event) {
+//        		try {
+//        			BlendedWorkflow.getInstance().getYawlAdapter().connectYAWL();
+//					results.setValue("Connect to Yawl - Sucesso!");
+//        		}
+//        		catch (Exception e) {
+//					results.setValue("Connect to Yawl - Fail!");
+//				}
+//        	}
+//        }));
 
-        registrationButtons.addComponent(new Button("Disconnect to Yawl",
-        		new Button.ClickListener() {
-        	public void buttonClick(ClickEvent event) {
-        		try {
-        			BlendedWorkflow.getInstance().getYawlAdapter().disconnectYAWL();
-        			results.setValue("Disconnect to Yawl - Sucesso!");
-        		}
-        		catch (Exception e) {
-        			results.setValue("Disconnect to Yawl - Fail!");
-        		}
-        	}
-        }));
-        
+//        registrationButtons.addComponent(new Button("Disconnect to Yawl",
+//        		new Button.ClickListener() {
+//        	public void buttonClick(ClickEvent event) {
+//        		try {
+//        			BlendedWorkflow.getInstance().getYawlAdapter().disconnectYAWL();
+//        			results.setValue("Disconnect to Yawl - Sucesso!");
+//        		}
+//        		catch (Exception e) {
+//        			results.setValue("Disconnect to Yawl - Fail!");
+//        		}
+//        	}
+//        }));
+//        
         registrationButtons.addComponent(new Button("Get Connection State",
         		new Button.ClickListener() {
         	public void buttonClick(ClickEvent event) {
         		try {
         			
     				log.debug("Clients Registered:");
-        			for (YExternalClient client : BlendedWorkflow.getInstance().getYawlAdapter().getClientAccounts()) {
+        			for (YExternalClient client : yawlAdapter.getClientAccounts()) {
         				log.debug(client.getUserName());
         			}
     				log.debug("Services Registered:");
-        			for (YAWLServiceReference service : BlendedWorkflow.getInstance().getYawlAdapter().getRegisteredServices()) {
+        			for (YAWLServiceReference service : yawlAdapter.getRegisteredServices()) {
         				log.debug(service.getURI());
         			}
 
@@ -102,7 +109,7 @@ public class YAWLAdapterTestInterface extends Application {
         	public void buttonClick(ClickEvent event) {
         		try {
         			String spec = StringUtils.fileToString(YAWL_SPEC_FILENAME);
-        			BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(spec);
+        			yawlAdapter.loadSpecification(spec);
         			results.setValue("Load Specification - Sucesso!");
         		}
         		catch (Exception e) {
@@ -111,18 +118,18 @@ public class YAWLAdapterTestInterface extends Application {
         	}
         }));
         
-        loadButtons.addComponent(new Button("Unload Specification",
-        		new Button.ClickListener() {
-        	public void buttonClick(ClickEvent event) {
-        		try {
-        			BlendedWorkflow.getInstance().getYawlAdapter().unloadSpecification(specID);
-        			results.setValue(" Unload Specification - Sucesso!");
-        		}
-        		catch (Exception e) {
-        			results.setValue("Unload Specification - Fail!");
-        		}
-        	}
-        }));
+//        loadButtons.addComponent(new Button("Unload Specification",
+//        		new Button.ClickListener() {
+//        	public void buttonClick(ClickEvent event) {
+//        		try {
+//        			BlendedWorkflow.getInstance().getYawlAdapter().unloadSpecification(specID);
+//        			results.setValue(" Unload Specification - Sucesso!");
+//        		}
+//        		catch (Exception e) {
+//        			results.setValue("Unload Specification - Fail!");
+//        		}
+//        	}
+//        }));
         
         loadButtons.addComponent(new Button("Get Loaded Specifications",
         		new Button.ClickListener() {
@@ -130,7 +137,7 @@ public class YAWLAdapterTestInterface extends Application {
         		try {
         			
        				log.debug("Loaded Specifications: ");
-        			for (SpecificationData specification : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedSpecs()) {
+        			for (SpecificationData specification : yawlAdapter.getLoadedSpecs()) {
         				log.debug(specification.getName());
         			}
         		
@@ -148,7 +155,7 @@ public class YAWLAdapterTestInterface extends Application {
         		try {
         			String spec = StringUtils.fileToString(YAWL_SPEC_FILENAME);
     				specID = SpecUtils.getYAWLSpecificationIDFromSpec(spec).getIdentifier();
-        			caseInstanceID = BlendedWorkflow.getInstance().getYawlAdapter().launchCase(specID);
+        			caseInstanceID = yawlAdapter.launchCase(specID);
         			results.setValue("Launch Specification - Sucesso!");
         		}
         		catch (Exception e) {
@@ -157,56 +164,56 @@ public class YAWLAdapterTestInterface extends Application {
         	}
         }));
         
-        launchButtons.addComponent(new Button("Cancel Case",
-        		new Button.ClickListener() {
-        	public void buttonClick(ClickEvent event) {
-        		try {
-        			BlendedWorkflow.getInstance().getYawlAdapter().cancelCase(caseInstanceID);
-        			results.setValue("Cancel Case - Sucesso!");
-        		}
-        		catch (Exception e) {
-        			results.setValue("Cancel Case - Fail!");
-        		}
-        	}
-        }));
-        
-//        workitemButtons.addComponent(new Button("Get Enabled Workitems",
+//        launchButtons.addComponent(new Button("Cancel Case",
 //        		new Button.ClickListener() {
 //        	public void buttonClick(ClickEvent event) {
 //        		try {
-//        			BlendedWorkflow.getInstance().getYawlAdapter().notifyActiveTasks(caseInstanceID);
-//        			results.setValue("Get Enabled Workitems - Sucesso!");
+//        			BlendedWorkflow.getInstance().getYawlAdapter().cancelCase(caseInstanceID);
+//        			results.setValue("Cancel Case - Sucesso!");
 //        		}
 //        		catch (Exception e) {
-//        			results.setValue("Get Enabled Workitems - Fail!");
+//        			results.setValue("Cancel Case - Fail!");
 //        		}
 //        	}
 //        }));
         
-        workitemButtons.addComponent(new Button("CheckIn Workitem",
+        workitemButtons.addComponent(new Button("Get Enabled Workitems",
         		new Button.ClickListener() {
         	public void buttonClick(ClickEvent event) {
         		try {
-        			BlendedWorkflow.getInstance().getYawlAdapter().connectYAWL();
-        			results.setValue("CheckIn Workitem - Sucesso!");
+        			yawlAdapter.notifyActiveTasks(caseInstanceID);
+        			results.setValue("Get Enabled Workitems - Sucesso!");
         		}
         		catch (Exception e) {
-        			results.setValue("CheckIn Workitem - Fail!");
+        			results.setValue("Get Enabled Workitems - Fail!");
         		}
         	}
         }));
         
-        workitemButtons.addComponent(new Button("CheckOut Workitem",
-        		new Button.ClickListener() {
-        	public void buttonClick(ClickEvent event) {
-        		try {
-        			BlendedWorkflow.getInstance().getYawlAdapter().connectYAWL();
-        			results.setValue("CheckOut Workitem - Sucesso!");
-        		}
-        		catch (Exception e) {
-        			results.setValue("CheckOut Workitem - Fail!");
-        		}
-        	}
-        }));
+//        workitemButtons.addComponent(new Button("CheckIn Workitem",
+//        		new Button.ClickListener() {
+//        	public void buttonClick(ClickEvent event) {
+//        		try {
+//        			BlendedWorkflow.getInstance().getYawlAdapter().connectYAWL();
+//        			results.setValue("CheckIn Workitem - Sucesso!");
+//        		}
+//        		catch (Exception e) {
+//        			results.setValue("CheckIn Workitem - Fail!");
+//        		}
+//        	}
+//        }));
+//        
+//        workitemButtons.addComponent(new Button("CheckOut Workitem",
+//        		new Button.ClickListener() {
+//        	public void buttonClick(ClickEvent event) {
+//        		try {
+//        			BlendedWorkflow.getInstance().getYawlAdapter().connectYAWL();
+//        			results.setValue("CheckOut Workitem - Sucesso!");
+//        		}
+//        		catch (Exception e) {
+//        			results.setValue("CheckOut Workitem - Fail!");
+//        		}
+//        	}
+//        }));
 	}
 }

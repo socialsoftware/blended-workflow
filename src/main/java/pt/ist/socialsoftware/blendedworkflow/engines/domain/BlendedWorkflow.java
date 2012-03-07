@@ -23,14 +23,24 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 		throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_SPECIFICATION_NAME, name);
 	}
 
-	public BWInstance getBWInstance(String id) throws BlendedWorkflowException {
+	public BWInstance getBWInstance(String ID) throws BlendedWorkflowException {
 		for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
 			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
-				if (bwInstance.getID().equals(id))
+				if (bwInstance.getID().equals(ID))
 					return bwInstance;
 			}
 		}
-		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_CASE_ID, id);
+		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_CASE_ID, ID);
+	}
+	
+	public BWInstance getYAWLBWInstance(String yawlCaseID) throws BlendedWorkflowException {
+		for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
+			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
+				if (bwInstance.getYawlCaseID().equals(yawlCaseID))
+					return bwInstance;
+			}
+		}
+		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_CASE_ID, yawlCaseID);
 	}
 
 	public YAWLAdapter getYawlAdapter() throws BlendedWorkflowException {

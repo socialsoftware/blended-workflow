@@ -127,6 +127,7 @@
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.SkipWorkItemServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.HandleEnabledTaskWorkItemServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.HandleTaskPreActivityServiceTest" />
 		</junit>
 	</target>
 	
@@ -175,12 +176,21 @@
 		</junit>
 	</target>
 	
-	<!-- Test CreateGoal -->
+	<!-- Test Enabled Task -->
 	<target name="test-enabledTaskWorkItem" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.HandleEnabledTaskWorkItemServiceTest" />
+		</junit>
+	</target>
+	
+	<!-- Test Pre-Activity -->
+	<target name="test-preActivity" depends="compile-tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.HandleTaskPreActivityServiceTest" />
 		</junit>
 	</target>
 

@@ -55,7 +55,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 	private ArrayList<YSpecificationID> loadedActivitySpecs = new ArrayList<YSpecificationID>(); // spec UUID
 //	private ArrayList<YSpecificationID> loadedGoalSpecs = new ArrayList<YSpecificationID>();
 //	private HashMap<WorkItemRecord, WorkItemRecord> activeWorkItems = new HashMap<WorkItemRecord, WorkItemRecord>(); //key = old wir (before checkout), value = new wir (after checkout)
-//	private ArrayList<WorkItemRecord> enabledWorkItems = new ArrayList<WorkItemRecord>();
+	private ArrayList<WorkItemRecord> enabledWorkItems = new ArrayList<WorkItemRecord>();
 
 	public YAWLAdapter() throws BlendedWorkflowException{
 		super();
@@ -528,27 +528,28 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 //
 //
 //	// Aux
-//	public void notifyActiveTasks(String caseInstanceID) {
-//		List<WorkItemRecord> liveWorkItems = getLiveWorkItems(caseInstanceID);
-//
-//		if(liveWorkItems != null) {
-//			for (WorkItemRecord workItemRecord : liveWorkItems) {
-//				if(!this.enabledWorkItems.contains(workItemRecord)) {
-//					handleEnabledWorkItemEvent(workItemRecord);
-//				}
-//			}
-//		}
-//	}
-//
-//
-//	protected List<WorkItemRecord> getLiveWorkItems(String caseInstanceID) {
-//		try {
-//			return this.interfaceBClient.getWorkItemsForCase(caseInstanceID, this.sessionHandle);
-//		} catch (IOException e) {
-//			log.error("Could not get the live work items");
-//		}
-//		return null;
-//	}
+	public void notifyActiveTasks(String caseInstanceID) {
+		List<WorkItemRecord> liveWorkItems = getLiveWorkItems(caseInstanceID);
+
+		if(liveWorkItems != null) {
+			for (WorkItemRecord workItemRecord : liveWorkItems) {
+				if(!this.enabledWorkItems.contains(workItemRecord)) {
+					log.info("importante: " + workItemRecord.getTaskName() + "«»" + workItemRecord.getTaskID());
+					handleEnabledWorkItemEvent(workItemRecord);
+				}
+			}
+		}
+	}
+
+
+	protected List<WorkItemRecord> getLiveWorkItems(String caseInstanceID) {
+		try {
+			return this.interfaceBClient.getWorkItemsForCase(caseInstanceID, this.sessionHandle);
+		} catch (IOException e) {
+			log.error("Could not get the live work items");
+		}
+		return null;
+	}
 //
 //
 //	public TaskInformation getTaskInformation(WorkItemRecord workItemRecord) {

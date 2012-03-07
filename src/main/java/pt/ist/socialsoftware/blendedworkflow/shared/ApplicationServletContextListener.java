@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.adapters;
+package pt.ist.socialsoftware.blendedworkflow.shared;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

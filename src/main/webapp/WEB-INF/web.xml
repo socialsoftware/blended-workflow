@@ -34,7 +34,17 @@
     </filter-mapping>
 	
 	<servlet>
-		<servlet-name>Blendedworkflowservice Application</servlet-name>
+		<servlet-name>bwPresentation</servlet-name>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<description>Vaadin application class to start</description>
+			<param-name>application</param-name>
+			<param-value>pt.ist.socialsoftware.blendedworkflow.worklistmanager.BWPresentation</param-value>
+		</init-param>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>yawlAdapterTest</servlet-name>
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<description>Vaadin application class to start</description>
@@ -50,7 +60,7 @@
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>Blendedworkflowservice Application</servlet-name>
+		<servlet-name>yawlAdapterTest</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
@@ -59,7 +69,7 @@
 	</servlet-mapping>
 
 	<listener>
-		<listener-class>pt.ist.socialsoftware.blendedworkflow.adapters.ApplicationServletContextListener</listener-class>
+		<listener-class>pt.ist.socialsoftware.blendedworkflow.shared.ApplicationServletContextListener</listener-class>
 	</listener>
 	
 	<welcome-file-list>

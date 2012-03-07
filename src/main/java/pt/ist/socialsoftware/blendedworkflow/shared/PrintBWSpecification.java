@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
+package pt.ist.socialsoftware.blendedworkflow.shared;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;

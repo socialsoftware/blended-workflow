@@ -34,10 +34,4 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		setState(WorkItemState.SKIPPED);
 	}
 
-	@Override
-	public void notifyPreTask() {
-		setState(WorkItemState.PRE_TASK);
-		WorkListManager.getInstance().notifyEnabledWorkItem(this);
-	}
-
 }
