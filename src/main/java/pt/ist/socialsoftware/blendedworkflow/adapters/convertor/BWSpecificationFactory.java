@@ -11,6 +11,8 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
+import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
+import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 
 public class BWSpecificationFactory {

@@ -11,6 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class TaskModelFactory {
 	

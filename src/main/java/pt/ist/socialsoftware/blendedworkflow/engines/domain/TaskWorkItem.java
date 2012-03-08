@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class TaskWorkItem extends TaskWorkItem_Base {

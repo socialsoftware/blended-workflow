@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
+package pt.ist.socialsoftware.blendedworkflow.shared;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

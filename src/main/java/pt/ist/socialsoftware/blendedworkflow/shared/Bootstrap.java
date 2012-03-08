@@ -13,8 +13,20 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 public class Bootstrap {
 
 	private static boolean notInitialized = true;
-
+	
 	public static void init() {
+		if (notInitialized)  {
+			FenixFramework.initialize(new Config() {{
+				dbAlias="db";
+				domainModelPath="src/main/dml/blendedworkflow.dml";
+				repositoryType=RepositoryType.BERKELEYDB;
+				rootClass=BlendedWorkflow.class;
+			}});
+		}
+		notInitialized = false;
+	}
+
+	public static void initTestDB() {
 		if (notInitialized)  {
 			FenixFramework.initialize(new Config() {{
 				dbAlias="test-db";
@@ -26,7 +38,7 @@ public class Bootstrap {
 		notInitialized = false;
 	}
 	
-	public static void clean() {
+	public static void cleanTestDB() {
 		boolean committed = false;
 		try {
 			Transaction.begin();
@@ -38,7 +50,7 @@ public class Bootstrap {
 		} finally {
 			if (!committed) {
 				Transaction.abort();
-				fail("Clean database");
+				fail("Clean test database.");
 			}
 		}
 	}

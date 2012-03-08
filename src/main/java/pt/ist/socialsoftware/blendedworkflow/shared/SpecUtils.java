@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
+package pt.ist.socialsoftware.blendedworkflow.shared;
 
 import org.jdom.Attribute;
 import org.jdom.Document;

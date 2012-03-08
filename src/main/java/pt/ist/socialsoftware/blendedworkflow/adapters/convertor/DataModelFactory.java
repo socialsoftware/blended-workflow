@@ -13,6 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeT
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class DataModelFactory {
 

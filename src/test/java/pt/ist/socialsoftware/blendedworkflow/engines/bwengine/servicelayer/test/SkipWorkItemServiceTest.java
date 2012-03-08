@@ -18,7 +18,6 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
-import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -30,6 +29,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.Creat
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
+import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 @RunWith(JMock.class)
 public class SkipWorkItemServiceTest {
@@ -63,7 +63,7 @@ public class SkipWorkItemServiceTest {
 
 	@Before
 	public void setUp() throws BlendedWorkflowException {
-		Bootstrap.init();
+		Bootstrap.initTestDB();
 
 		yawlAdapter = context.mock(YAWLAdapter.class);
 		workletAdapter = context.mock(WorkletAdapter.class);
@@ -103,7 +103,7 @@ public class SkipWorkItemServiceTest {
 
 	@After
 	public void tearDown() {
-		Bootstrap.clean();
+		Bootstrap.cleanTestDB();
 	}
 
 	@Test

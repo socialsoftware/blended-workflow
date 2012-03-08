@@ -1,16 +1,13 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.yawlfoundation.yawl.authentication.YExternalClient;
 import org.yawlfoundation.yawl.elements.YAWLServiceReference;
 import org.yawlfoundation.yawl.engine.interfce.SpecificationData;
 
-import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.SpecUtils;
-import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
+import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
@@ -19,7 +16,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings("serial")
 public class YAWLAdapterTestInterface extends Application {
 	
 	private static Logger log = Logger.getLogger("bwServicelogger");

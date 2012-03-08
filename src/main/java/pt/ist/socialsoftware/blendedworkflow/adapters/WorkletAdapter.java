@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.HandleCompletedWorkItemFromWorkletService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.HandleEnabledTaskWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.HandleTaskPreActivityService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
@@ -72,13 +73,13 @@ public class WorkletAdapter {
 		String result = ""; // TODO get evaluation result
 
 		if (!yawlEnabledWorkItems.contains(wir)){ // PreConstrain
-			if (result.equals("true")) {
+			if (result.equals("TRUE")) {
 				new HandleEnabledTaskWorkItemService(bwInstance, taskName).execute();
 			}
-			else if (result.equals("skipped")) {
+			else if (result.equals("SKIPPED")) {
 				new HandleTaskPreActivityService(bwInstance, taskName).execute();
 
-			} else if (result.equals("false")) {
+			} else if (result.equals("FALSE")) {
 				throw new BlendedWorkflowException(BlendedWorkflowError.FALSE_PRE_CONSTRAIN);
 			}
 		}
@@ -86,13 +87,13 @@ public class WorkletAdapter {
 			TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
 			TaskWorkItem taskWorkItem = taskModelInstance.getTask(taskName).getTaskWorkItem();
 			
-			if (result.equals("true")) {
-				taskWorkItem.notifyCompleted();
+			if (result.equals("TRUE")) {
+				new HandleCompletedWorkItemFromWorkletService(taskWorkItem, "TRUE").execute();
 			}
-			else if (result.equals("skipped")) {
-				taskWorkItem.notifySkipped();
+			else if (result.equals("SKIPPED")) {
+				new HandleCompletedWorkItemFromWorkletService(taskWorkItem, "SKIPPED").execute();
 
-			} else if (result.equals("false")) {
+			} else if (result.equals("FALSE")) {
 				new HandleEnabledTaskWorkItemService(bwInstance, taskName).execute();
 			}
 		}

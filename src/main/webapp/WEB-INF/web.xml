@@ -39,7 +39,7 @@
 		<init-param>
 			<description>Vaadin application class to start</description>
 			<param-name>application</param-name>
-			<param-value>pt.ist.socialsoftware.blendedworkflow.worklistmanager.BWPresentation</param-value>
+			<param-value>pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation</param-value>
 		</init-param>
 	</servlet>
 	
@@ -60,7 +60,7 @@
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>yawlAdapterTest</servlet-name>
+		<servlet-name>bwPresentation</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>

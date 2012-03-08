@@ -18,7 +18,6 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
-import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
@@ -35,9 +34,8 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.HandleTaskPreActivityService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.HandleEnabledTaskWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
-import pt.ist.socialsoftware.blendedworkflow.shared.PrintBWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 @RunWith(JMock.class)
 public class HandleTaskPreActivityServiceTest {
@@ -46,7 +44,7 @@ public class HandleTaskPreActivityServiceTest {
 	private static String CREATE_BWINSTANCE_XML = "src/test/xml/MedicalEpisode/CreateBWInstanceInput.xml";
 
 	private static String YAWLCASE_ID = "yawlCaseID";
-	private static String BWSPECIFICATION_NAME = "Medical Appointment";
+//	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String ENABLED_TASK_NAME = "Doctor Appointment";
 
@@ -66,7 +64,7 @@ public class HandleTaskPreActivityServiceTest {
 
 	@Before
 	public void setUp() throws BlendedWorkflowException {
-		Bootstrap.init();
+		Bootstrap.initTestDB();
 
 		yawlAdapter = context.mock(YAWLAdapter.class);
 		workletAdapter = context.mock(WorkletAdapter.class);
@@ -115,7 +113,7 @@ public class HandleTaskPreActivityServiceTest {
 
 	@After
 	public void tearDown() {
-		Bootstrap.clean();
+		Bootstrap.cleanTestDB();
 	}
 
 	@Test
@@ -148,8 +146,6 @@ public class HandleTaskPreActivityServiceTest {
 			for (AttributeInstance attributeInstance : workItem.getContraintViolationAttributeInstances()) {
 				assertEquals(DataState.UNDEFINED, attributeInstance.getState());
 			}
-			
-			PrintBWSpecification.all(BWSPECIFICATION_NAME);
 			
 			Transaction.commit();
 			committed = true;

@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal.GoalState;
 
 public class GoalWorkItem extends GoalWorkItem_Base {

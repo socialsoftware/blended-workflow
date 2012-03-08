@@ -16,7 +16,6 @@ import junit.framework.JUnit4TestAdapter;
 
 import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
-import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
@@ -24,6 +23,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
+import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 @RunWith(JMock.class)
 public class LoadBWSpecificationServiceTest {
@@ -46,7 +46,7 @@ public class LoadBWSpecificationServiceTest {
 
 	@Before
 	public void setUp() {
-		Bootstrap.init();
+		Bootstrap.initTestDB();
 		yawlAdapter = context.mock(YAWLAdapter.class);
 
 		Transaction.begin();
@@ -56,7 +56,7 @@ public class LoadBWSpecificationServiceTest {
 
 	@After
 	public void tearDown() {
-		Bootstrap.clean();
+		Bootstrap.cleanTestDB();
 	}
 
 	@Test

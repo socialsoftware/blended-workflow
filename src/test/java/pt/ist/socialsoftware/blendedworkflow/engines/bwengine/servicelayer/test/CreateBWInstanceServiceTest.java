@@ -17,7 +17,6 @@ import junit.framework.JUnit4TestAdapter;
 import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
-import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
@@ -28,6 +27,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
+import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 @RunWith(JMock.class)
 public class CreateBWInstanceServiceTest {
@@ -53,7 +53,7 @@ public class CreateBWInstanceServiceTest {
 
 	@Before
 	public void setUp() throws BlendedWorkflowException {
-		Bootstrap.init();
+		Bootstrap.initTestDB();
 
 		yawlAdapter = context.mock(YAWLAdapter.class);
 		workletAdapter = context.mock(WorkletAdapter.class);
@@ -78,9 +78,8 @@ public class CreateBWInstanceServiceTest {
 
 	@After
 	public void tearDown() throws Exception {
-		Bootstrap.clean();
+		Bootstrap.cleanTestDB();
 	}
-
 
 	@Test
 	public void createOneBWInstance() {

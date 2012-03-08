@@ -4,6 +4,7 @@
 
 	<!-- Properties -->
 	<property name="application.name" value="${ant.project.name}" />
+	<property name="tomcat.home"  value="C:/Users/User/Desktop/apache-tomcat-7.0.26"/>
 	
 	<!-- The encoding of all the source files should be the same! -->
 	<property name="javac.encoding" value="UTF-8" />
@@ -13,7 +14,7 @@
 	<property name="src.rel-dir" value="src/main" />
 	<property name="build.rel-dir" value="target" />
 	<property name="lib.rel-dir" value="lib" />
-	<!-- <property name="db.rel-dir" value="db"/> -->
+	<property name="db.rel-dir" value="db"/>
 	<property name="test-db.rel-dir" value="test-db"/>
 	<property name="test.src.rel-dir" value="src/test"/>
 	
@@ -62,7 +63,7 @@
 	<target name="prepare">
 		<echo message="Preparing the project for build..." />
 		<mkdir dir="${classes.build.rel-dir}" />
-		<!-- <mkdir dir="${db.rel-dir}"/> -->
+		<mkdir dir="${db.rel-dir}"/>
 	    <mkdir dir="${test-db.rel-dir}"/>
 	</target>
 	
@@ -106,7 +107,7 @@
 		</dml-post-processor>
 	</target>
 	
-	<target name="war" depends="compile">
+	<target name="war" depends="compile" description="Create .war file.">
 		<war destfile="target/blendedWorkflowService.war" webxml="src/main/webapp/WEB-INF/web.xml">
 			<fileset dir="src/main/webapp"/>
 			<lib dir="lib"/>
@@ -128,6 +129,7 @@
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.HandleEnabledTaskWorkItemServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.HandleTaskPreActivityServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.HandleCompletedWorkItemFromWorkletServiceTest" />
 		</junit>
 	</target>
 	
@@ -193,6 +195,15 @@
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.HandleTaskPreActivityServiceTest" />
 		</junit>
 	</target>
+	
+	<!-- Test LoadBWSpecification -->
+	<target name="test-workletCompleted" depends="compile-tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.HandleCompletedWorkItemFromWorkletServiceTest" />
+		</junit>
+	</target>
 
 	<!-- Clean -->
 	<target name="clean">
@@ -206,8 +217,5 @@
 		<delete dir="${test-db.rel-dir}"/>
 		<delete dir="${db.rel-dir}"/>
 	</target>
-	
-	<!-- tomcat -->
-	<property name="tomcat.home"  value="C:/Users/User/Desktop/apache-tomcat-7.0.26"/>	
 	
 </project>

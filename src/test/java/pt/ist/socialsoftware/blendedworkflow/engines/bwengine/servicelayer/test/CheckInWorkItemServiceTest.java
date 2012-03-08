@@ -18,7 +18,6 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
-import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -30,6 +29,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.Check
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
+import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 @RunWith(JMock.class)
 public class CheckInWorkItemServiceTest {
@@ -65,7 +65,7 @@ public class CheckInWorkItemServiceTest {
 
 	@Before
 	public void setUp() throws BlendedWorkflowException {
-		Bootstrap.init();
+		Bootstrap.initTestDB();
 		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_XML);
 
@@ -108,7 +108,7 @@ public class CheckInWorkItemServiceTest {
 
 	@After
 	public void tearDown() {
-		Bootstrap.clean();
+		Bootstrap.cleanTestDB();
 	}
 
 	@Test
