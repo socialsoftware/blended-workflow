@@ -4,51 +4,41 @@
 
 	<!-- Properties -->
 	<property name="application.name" value="${ant.project.name}" />
-	<property name="tomcat.home"  value="C:/Users/User/Desktop/apache-tomcat-7.0.26"/>
-	
-	<!-- The encoding of all the source files should be the same! -->
-	<property name="javac.encoding" value="UTF-8" />
-	<!-- java.file.encoding should match your terminal's encoding -->
-	<property name="java.file.encoding" value="UTF-8" />
+	<property name="tomcat.home" value="C:/Users/User/Desktop/apache-tomcat-7.0.26"/>
 	
 	<property name="src.rel-dir" value="src/main" />
 	<property name="build.rel-dir" value="target" />
 	<property name="lib.rel-dir" value="lib" />
 	<property name="db.rel-dir" value="db"/>
-	<property name="test-db.rel-dir" value="test-db"/>
 	<property name="test.src.rel-dir" value="src/test"/>
-	
+	<property name="test-db.rel-dir" value="test-db"/>
+	<property name="dist.rel-dir" value="dist"/>
+	<property name="eclipse.build.rel-dir" value="bin"/>	
+
 	<property name="java.src.rel-dir" value="${src.rel-dir}/java" />
 	<property name="java.test.src.rel-dir" value="${test.src.rel-dir}/java"/>
 	<property name="dml.src.rel-dir" value="${src.rel-dir}/dml" />
+	<property name="webapp.src.rel-dir" value="${src.rel-dir}/webapp"/>
+	<property name="config.src.rel-dir" value="${src.rel-dir}/config"/>
+	
 	<property name="generated-src.build.rel-dir" value="${build.rel-dir}/src" />
-	<property name="classes.build.rel-dir" value="${build.rel-dir}/classes" />
+	<property name="war.target.rel-dir" value="${build.rel-dir}/war"/>
+	<property name="classes.build.rel-dir" value="${war.target.rel-dir}/WEB-INF/classes"/>
+	
+	<property name="war.filename" value="${application.name}.war"/>
+	<property name="build.properties.filename" value="build.properties" />
 	<property name="dml.filename" value="${application.name}.dml" />
 	<property name="dml.rel-file" value="${dml.src.rel-dir}/${dml.filename}" />
-
-	<!--
-	<property name="dist.rel-dir" value="dist"/>
-	<property name="eclipse.build.rel-dir" value="bin"/>
-	<property name="resources.src.rel-dir" value="${src.rel-dir}/resources"/>
-	<property name="webapp.src.rel-dir" value="${src.rel-dir}/webapp"/>
-	<property name="war.target.rel-dir" value="${build.rel-dir}/war"/>
-	<property name="generated-src.build.rel-dir" value="${build.rel-dir}/src"/>
-	<property name="classes.build.rel-dir" value="${war.target.rel-dir}/WEB-INF/classes"/>
-	<property name="war.filename" value="${application.name}.war"/>
-	-->
+	<property name="build.properties.rel-dir" value="${config.src.rel-dir}/${build.properties.filename}"/>
 	
-	<!--
-	<property name="application.gwt.entrypoint" value="pt.ist.processpedia.Processpedia" />
-	<property name="application.gwt.messages" value="pt.ist.processpedia.client.Messages" />
-	<property name="gwt.home" value="/home/davidmartinho/Applications/gwt-2.4.0" />
-	<property name="sql.host" value="localhost"/>
-	<property name="sql.user" value="root"/>
-	<property name="sql.pass" value="123"/>
-	<property name="sql.driver" value="com.mysql.jdbc.Driver"/>
-	<property name="sql.db" value="${application.name}"/>
-	<property name="sql.url" value="jdbc:mysql://${sql.host}/${sql.db}"/>
-	-->
-
+	<property file="${build.properties.rel-dir}" />
+	
+	<!-- The encoding of all the source files should be the same! -->
+	<property name="javac.encoding" value="UTF-8" />
+	
+	<!-- java.file.encoding should match your terminal's encoding -->
+	<property name="java.file.encoding" value="UTF-8" />
+	
 	<!-- Project Classpath -->
 	<path id="project.classpath">
 		<pathelement location="${classes.build.rel-dir}" />
@@ -63,6 +53,7 @@
 	<target name="prepare">
 		<echo message="Preparing the project for build..." />
 		<mkdir dir="${classes.build.rel-dir}" />
+		<mkdir dir="${test-classes.build.rel-dir}" />
 		<mkdir dir="${db.rel-dir}"/>
 	    <mkdir dir="${test-db.rel-dir}"/>
 	</target>
@@ -77,7 +68,7 @@
 	</target>
 	
 	<!-- Compile -->
-	<target name="compile" depends="generate-domain, prepare">
+	<target name="compile" depends="generate-domain, prepare" description="Compile the main">
 		<echo message="Compiling sources..." />
 		<javac destdir="${classes.build.rel-dir}" debug="true" debuglevel="lines,vars,source" optimize="true" deprecation="true" verbose="false" includeantruntime="false">
 			<classpath refid="project.classpath" />
@@ -89,7 +80,7 @@
 	</target>
 	
 	<!-- Compile Tests -->
-	<target name="compile-tests" depends="compile, instrument-classes" description="Compile the tests">
+	<target name="compile-tests" depends="compile, prepare" description="Compile the tests">
 		<javac destdir="${classes.build.rel-dir}" debug="true" debuglevel="lines,vars,source" optimize="true" deprecation="true" verbose="false" includeantruntime="false" encoding="${javac.encoding}">
 	      <classpath refid="project.classpath" />
 	      <src>
@@ -107,13 +98,29 @@
 		</dml-post-processor>
 	</target>
 	
-	<target name="war" depends="compile" description="Create .war file.">
-		<war destfile="target/blendedWorkflowService.war" webxml="src/main/webapp/WEB-INF/web.xml">
-			<fileset dir="src/main/webapp"/>
-			<lib dir="lib"/>
-			<classes dir="target/classes"/>
-			<classes dir="src"/>
-		</war>
+	<target name="prepare-war" depends="instrument-classes" description="Copies the libs and classes to the WEB-INF folder">
+		<copy file="${dml.rel-file}" todir="${classes.build.rel-dir}"/>
+		<copy file="${build.properties.rel-dir}" todir="${classes.build.rel-dir}"/>
+	    <copy todir="${war.target.rel-dir}" >
+	    	<fileset dir="${webapp.src.rel-dir}" includes="**"/>
+	    </copy>
+		<copy todir="${war.target.rel-dir}/WEB-INF/lib" >
+	  		<fileset dir="${lib.rel-dir}" includes="**">
+	  		</fileset>
+	  	</copy>
+	</target>
+	
+	<target name="war" depends="prepare-war" description="Create a war file">
+		<zip destfile="${dist.rel-dir}/${war.filename}" basedir="${war.target.rel-dir}"/>
+	</target>
+	
+	<!-- Clean -->
+	<target name="clean" description="Cleans the compiled classes and generated sources">
+		<delete dir="${build.rel-dir}" />
+		<delete dir="${eclipse.build.rel-dir}" />
+		<delete dir="${dist.rel-dir}" />
+		<delete dir="${test-db.rel-dir}"/>
+		<delete dir="${db.rel-dir}"/>
 	</target>
 	
 	<!-- Test All-->
@@ -203,19 +210,6 @@
 			<formatter type="brief" usefile="false" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.HandleCompletedWorkItemFromWorkletServiceTest" />
 		</junit>
-	</target>
-
-	<!-- Clean -->
-	<target name="clean">
-		<delete dir="${build.rel-dir}" />
-		<delete dir="${eclipse.build.rel-dir}" />
-		<delete dir="${dist.rel-dir}" />
-	</target>
-	
-	<!-- Clean All -->
-	<target name="clean-all" depends="clean" description="Cleans the compiled classes and generated sources">
-		<delete dir="${test-db.rel-dir}"/>
-		<delete dir="${db.rel-dir}"/>
 	</target>
 	
 </project>
