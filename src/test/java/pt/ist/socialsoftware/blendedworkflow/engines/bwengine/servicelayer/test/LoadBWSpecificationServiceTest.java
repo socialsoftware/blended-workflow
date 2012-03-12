@@ -56,7 +56,7 @@ public class LoadBWSpecificationServiceTest {
 
 	@After
 	public void tearDown() {
-		Bootstrap.cleanTestDB();
+		Bootstrap.clean();
 	}
 
 	@Test

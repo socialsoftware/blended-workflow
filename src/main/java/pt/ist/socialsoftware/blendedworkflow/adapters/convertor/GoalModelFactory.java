@@ -42,24 +42,4 @@ public class GoalModelFactory {
 			new Goal(goalModel, parentGoal, goalName, goalCondition);
 		}
 	}
-
-	public void parseXMLNewGoal(DataModel dataModel, GoalModel goalModel, String specificationXML) throws BlendedWorkflowException {
-		Document doc = StringUtils.stringToDoc(specificationXML);
-
-		Element root = doc.getRootElement();
-		Namespace bwNamespace = root.getNamespace();
-
-		Element goalModelXML = root.getChild("GoalModel", bwNamespace);
-
-		List<?> goals = goalModelXML.getChildren("Goal", bwNamespace);
-		for (Object goal : goals) {
-			Element goalXML = (Element) goal;
-
-			String goalName = goalXML.getChildText("Name", bwNamespace);
-			String goalConditionString = goalXML.getChildText("Condition", bwNamespace);
-			Condition goalCondition = ConditionFactory.createCondition(dataModel, goalConditionString);
-			Goal parentGoal = goalModel.getGoal(goalXML.getChildText("ParentName", bwNamespace)); 
-			new Goal(goalModel, parentGoal, goalName, goalCondition);
-		}
-	}
 }

@@ -20,6 +20,7 @@ import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
@@ -38,10 +39,9 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 public class HandleEnabledTaskWorkItemServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
-	private static String CREATE_BWINSTANCE_XML = "src/test/xml/MedicalEpisode/CreateBWInstanceInput.xml";
 
 	private static String YAWLCASE_ID = "yawlCaseID";
-//	private static String BWSPECIFICATION_NAME = "Medical Appointment";
+	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String ENABLED_TASK_NAME = "Check-in Patient";
 
@@ -79,21 +79,18 @@ public class HandleEnabledTaskWorkItemServiceTest {
 		Transaction.commit();
 
 		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_XML);
-
-		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(dataModelString);
-		CreateBWInstanceService createBWInstanceService = new CreateBWInstanceService(createBWInstanceInputString);
-		try {
-			loadBWSpecificationService.execute();
-			createBWInstanceService.execute();
-		} catch(BlendedWorkflowException e) {		
-			fail(e.getMessage());
-		}
+		new LoadBWSpecificationService(dataModelString).execute();
+		
+		Transaction.begin();
+		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
+		Transaction.commit();
+		
+		new CreateBWInstanceService(bwSpecification).execute();
 	}
 
 	@After
 	public void tearDown() {
-		Bootstrap.cleanTestDB();
+		Bootstrap.clean();
 	}
 
 	@Test

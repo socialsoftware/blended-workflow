@@ -17,6 +17,7 @@ import junit.framework.JUnit4TestAdapter;
 import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
@@ -33,9 +34,10 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 public class CreateBWInstanceServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
-	private static String CREATE_BWINSTANCE_XML = "src/test/xml/MedicalEpisode/CreateBWInstanceInput.xml";
-	private static String BWINSTANCE_ID = "Medical Appointment.1";
+
 	private static String YAWLCASE_ID = "yawlCaseID";
+	private static String BWSPECIFICATION_NAME = "Medical Appointment";
+	private static String BWINSTANCE_ID = "Medical Appointment.1";
 
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(CreateBWInstanceServiceTest.class);
@@ -68,21 +70,16 @@ public class CreateBWInstanceServiceTest {
 		Transaction.commit();
 
 		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(dataModelString);
-		try {
-			loadBWSpecificationService.execute();
-		} catch(BlendedWorkflowException e) {		
-			fail(e.getMessage());
-		}
+		new LoadBWSpecificationService(dataModelString).execute();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		Bootstrap.cleanTestDB();
+		Bootstrap.clean();
 	}
 
 	@Test
-	public void createOneBWInstance() {
+	public void createOneBWInstance() throws BlendedWorkflowException {
 		context.checking(new Expectations() {
 			{
 				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
@@ -90,13 +87,9 @@ public class CreateBWInstanceServiceTest {
 			}
 		});
 
-		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_XML);
-		CreateBWInstanceService createBWInstanceService = new CreateBWInstanceService(createBWInstanceInputString);
-		try {
-			createBWInstanceService.execute();
-		} catch(BlendedWorkflowException e) {		
-			fail(e.getMessage());
-		}
+		BWSpecification bwSpecification = getBWSpecification(BWSPECIFICATION_NAME);
+		new CreateBWInstanceService(bwSpecification).execute();
+
 		boolean committed = false;
 		try {
 			Transaction.begin();
@@ -112,7 +105,6 @@ public class CreateBWInstanceServiceTest {
 			assertEquals(4, dataModelInstance.getRelationsCount());
 			assertEquals(6, goalModelInstance.getGoalsCount());
 			assertEquals(5, taskModelInstance.getTasksCount());
-
 			assertEquals(3, bwInstance.getWorkItemsCount());
 			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
 
@@ -125,6 +117,13 @@ public class CreateBWInstanceServiceTest {
 				Transaction.abort();
 			}
 		}
+	}
+
+	private BWSpecification getBWSpecification(String name) throws BlendedWorkflowException {
+		Transaction.begin();
+		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(name);
+		Transaction.commit();
+		return bwSpecification;
 	}
 
 }

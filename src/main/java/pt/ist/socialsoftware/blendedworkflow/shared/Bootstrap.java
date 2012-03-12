@@ -13,7 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 public class Bootstrap {
 
 	private static boolean notInitialized = true;
-
+	
 	public static void init() {
 		if (notInitialized)  {
 			FenixFramework.initialize(new Config() {{
@@ -37,8 +37,8 @@ public class Bootstrap {
 		}
 		notInitialized = false;
 	}
-
-	public static void cleanTestDB() {
+	
+	public static void clean() {
 		boolean committed = false;
 		try {
 			Transaction.begin();
@@ -50,7 +50,7 @@ public class Bootstrap {
 		} finally {
 			if (!committed) {
 				Transaction.abort();
-				fail("Clean test database.");
+				fail("Clean database.");
 			}
 		}
 	}

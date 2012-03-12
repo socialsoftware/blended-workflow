@@ -21,6 +21,7 @@ import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
@@ -41,10 +42,9 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 public class HandleTaskPreActivityServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
-	private static String CREATE_BWINSTANCE_XML = "src/test/xml/MedicalEpisode/CreateBWInstanceInput.xml";
 
 	private static String YAWLCASE_ID = "yawlCaseID";
-//	private static String BWSPECIFICATION_NAME = "Medical Appointment";
+	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String ENABLED_TASK_NAME = "Doctor Appointment";
 
@@ -82,38 +82,32 @@ public class HandleTaskPreActivityServiceTest {
 		Transaction.commit();
 
 		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		String createBWInstanceInputString = StringUtils.fileToString(CREATE_BWINSTANCE_XML);
+		new LoadBWSpecificationService(dataModelString).execute();
 
-		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(dataModelString);
-		CreateBWInstanceService createBWInstanceService = new CreateBWInstanceService(createBWInstanceInputString);
-		try {
-			loadBWSpecificationService.execute();
-			createBWInstanceService.execute();
-			
-			Transaction.begin();
+		Transaction.begin();
+		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
+		Transaction.commit();
 
-			// Get Task preCondition AttributesInstances and change state to SKIPPED
-			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-			BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-			DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-			Entity entity = dataModelInstance.getEntity("Patient Data");
-					
-			for (Attribute attribute : entity.getAttributes()) {
-				if (!attribute.getName().equals("Medical Examination")) {
-					attribute.getAttributeInstances().get(0).setState(DataState.SKIPPED);
-				}
+		new CreateBWInstanceService(bwSpecification).execute();
+
+		Transaction.begin();
+		// Get Task preCondition AttributesInstances and change state to SKIPPED
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		Entity entity = dataModelInstance.getEntity("Patient Data");
+
+		for (Attribute attribute : entity.getAttributes()) {
+			if (!attribute.getName().equals("Medical Examination")) {
+				attribute.getAttributeInstances().get(0).setState(DataState.SKIPPED);
 			}
-
-			Transaction.commit();
-			
-		} catch(BlendedWorkflowException e) {		
-			fail(e.getMessage());
 		}
+		Transaction.commit();	
 	}
 
 	@After
 	public void tearDown() {
-		Bootstrap.cleanTestDB();
+		Bootstrap.clean();
 	}
 
 	@Test
@@ -122,7 +116,7 @@ public class HandleTaskPreActivityServiceTest {
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
 		Transaction.commit();
-		
+
 		HandleTaskPreActivityService handleTaskPreActivityService = new HandleTaskPreActivityService(bwInstance, ENABLED_TASK_NAME);
 		try {
 			handleTaskPreActivityService.execute();
@@ -132,7 +126,7 @@ public class HandleTaskPreActivityServiceTest {
 		boolean committed = false;
 		try {
 			Transaction.begin();
-			
+
 			TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
 			Task task = taskModelInstance.getTask(ENABLED_TASK_NAME);
 			TaskWorkItem workItem = task.getTaskWorkItem();
@@ -141,12 +135,12 @@ public class HandleTaskPreActivityServiceTest {
 			assertEquals(WorkItemState.PRE_TASK, workItem.getState());
 
 			assertEquals(4, workItem.getPreConstraintAttributeInstancesCount());
-			
+
 			assertEquals(4, workItem.getContraintViolationAttributeInstancesCount());
 			for (AttributeInstance attributeInstance : workItem.getContraintViolationAttributeInstances()) {
 				assertEquals(DataState.UNDEFINED, attributeInstance.getState());
 			}
-			
+
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {
