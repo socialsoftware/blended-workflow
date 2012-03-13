@@ -262,6 +262,55 @@ public class BWPresentation extends Application {
 //	public String getSelectedGoalID() {
 //		return this.goalList.getValue().toString();
 //	}
+	
+	
+	/************************
+	 * TEST 
+	 ************************/
+	
+//	final Window main = new Window("FF Test");
+//	setMainWindow(main);
+//
+//	final TextField results = new TextField("ADD:");
+//	results.setWidth("100%");
+//	main.addComponent(results);
+//
+//	final TextField resultsc = new TextField("Count:", "...");
+//	resultsc.setWidth("100%");
+//	main.addComponent(resultsc);
+//
+//	Bootstrap.init();
+//
+//	Button adminPanel = new Button("Add BW Spec");
+//	adminPanel.addListener(new ClickListener() {
+//
+//		@Override
+//		public void buttonClick(ClickEvent event) {
+//			Transaction.begin();
+//			try {
+//				BlendedWorkflow.getInstance().addBwSpecifications(new BWSpecification(results.getValue().toString()));
+//				getMainWindow().showNotification("AYE YEAH!");
+//			} catch (BlendedWorkflowException e) {
+//				getMainWindow().showNotification("OH NO... Já existe");
+//			}
+//			Transaction.commit();
+//		}
+//	});
+//	main.addComponent(adminPanel);
+//
+//	Button x = new Button("Count of BW Spec");
+//	x.addListener(new ClickListener() {
+//
+//		@Override
+//		public void buttonClick(ClickEvent event) {
+//			Transaction.begin();
+//			resultsc.setValue(BlendedWorkflow.getInstance().getBwSpecificationsCount());
+//			getMainWindow().showNotification("AYE YEAH!");
+//			Transaction.commit();
+//		}
+//	});
+//	main.addComponent(x);
+	
 }
 
 

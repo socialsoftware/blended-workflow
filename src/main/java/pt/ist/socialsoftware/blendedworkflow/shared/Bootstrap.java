@@ -18,7 +18,7 @@ public class Bootstrap {
 		if (notInitialized)  {
 			FenixFramework.initialize(new Config() {{
 				dbAlias="db";
-				domainModelPath="src/main/dml/blendedworkflow.dml";
+				domainModelPath="/blendedworkflow.dml";
 				repositoryType=RepositoryType.BERKELEYDB;
 				rootClass=BlendedWorkflow.class;
 			}});

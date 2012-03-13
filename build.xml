@@ -97,15 +97,6 @@
 		</dml-post-processor>
 	</target>
 	
-	<!-- Run -->
-	<target name="run" depends="compile, instrument-classes" description="Runs the program">  
-		<java classname="pt.ist.socialsoftware.blendedworkflow.shared.Main" fork="true">  
-			<classpath>  
-				<path refid="project.classpath" />  
-			</classpath>  
-		</java>  
-	</target>  
-	
 	<!-- Clean -->
 	<target name="clean" description="Cleans the compiled classes and generated sources">
 		<delete dir="${build.rel-dir}" />
