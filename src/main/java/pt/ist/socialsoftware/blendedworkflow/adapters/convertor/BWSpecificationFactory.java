@@ -10,8 +10,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
-import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 
@@ -22,9 +20,9 @@ public class BWSpecificationFactory {
 		return true;
 	}
 
-	public static void createBWSpecification(String specificationXML) throws BlendedWorkflowException {
+	public static void createBWSpecification(String bwXML, String yawlXML) throws BlendedWorkflowException {
 		// BWSpecification Name
-		Document doc = StringUtils.stringToDoc(specificationXML);
+		Document doc = StringUtils.stringToDoc(bwXML);
 
 		Element root = doc.getRootElement();
 		Namespace bwNamespace = root.getNamespace();
@@ -34,29 +32,31 @@ public class BWSpecificationFactory {
 
 		// Data Model
 		DataModel dataModel = bwSpecification.getDataModel();
-		new DataModelFactory().parseXMLDataModel(dataModel, specificationXML);
+		new DataModelFactory().parseXMLDataModel(dataModel, bwXML);
 
 		// Goal Model
 		GoalModel goalModel = bwSpecification.getGoalModel();
-		new GoalModelFactory().parseXMLGoalModel(dataModel, goalModel, specificationXML);
+		new GoalModelFactory().parseXMLGoalModel(dataModel, goalModel, bwXML);
 
 		// Task Model
 		TaskModel taskModel = bwSpecification.getTaskModel();
-		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, specificationXML);
+		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, bwXML);
+		
+		BlendedWorkflow.getInstance().getBwManager().notifyLoadedBWSpecification(bwSpecification);
 
 		// Load YAWL Specification on the engine
-		try {
-		String yawlSpecificationFileName = specificationName.getChildText("yawlSpecificationFILENAME", bwNamespace);
-		String yawlSpecification = StringUtils.fileToString(yawlSpecificationFileName);
-
-		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(yawlSpecification);
-		
-		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlSpecification).getIdentifier();
-		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
-		}
-		catch (BlendedWorkflowException bwe) {
-			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
-		}
+//		try {
+//		String yawlSpecificationFileName = specificationName.getChildText("yawlSpecificationFILENAME", bwNamespace);
+//		String yawlSpecification = StringUtils.fileToString(yawlSpecificationFileName);
+//
+//		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(yawlSpecification);
+//		
+//		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlSpecification).getIdentifier();
+//		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
+//		}
+//		catch (BlendedWorkflowException bwe) {
+//			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
+//		}
 		
 		// Create Worklet Rules
 //		WorkletAdapter.getInstance().loadRDRTrees();

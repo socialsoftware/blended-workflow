@@ -32,6 +32,10 @@ class TaskWorkItem extends WorkItem;
 
 class GoalWorkItem extends WorkItem;
 
+class WorkItemArgument {
+	String value;
+}
+
 class GoalModel;
 
 class GoalModelInstance extends GoalModel;
@@ -158,14 +162,30 @@ relation BWInstanceHasWorkItems {
 }
 
 // WorkItem
-relation WorkItemRefersToAttributeInstances {
+relation WorkItemRefersToConstraintViolationAttributeInstances {
 	WorkItem playsRole workItems {multiplicity 0..*;}
 	AttributeInstance playsRole contraintViolationAttributeInstances { multiplicity 0..*; }
 }
 
-relation TaskWorkItemHasAttributteInstances {
+relation TaskWorkItemRefersPreConstraintAttributteInstances {
 	TaskWorkItem playsRole taskWorkItems {multiplicity 0..*;}
 	AttributeInstance playsRole preConstraintAttributeInstances { multiplicity 0..*; }
+}
+
+// WorkItemArgument
+relation WorkItemHasPreConstrainWorkItemArguments {
+	WorkItem playsRole preConstrainWorkItem {multiplicity 0..1;}
+	WorkItemArgument playsRole preConstrainWorkItemArguments { multiplicity 0..*; }
+}
+
+relation WorkItemHasConstrainViolationWorkItemArguments {
+	WorkItem playsRole constrainViolationWorkItem {multiplicity 0..1;}
+	WorkItemArgument playsRole constrainViolationWorkItemArguments { multiplicity 0..*; }
+}
+
+relation WorkItemArgumentRefersAttributteInstances {
+	WorkItemArgument playsRole workItemArgument {multiplicity 0..*;}
+	AttributeInstance playsRole attributeInstance { multiplicity 0..1; }
 }
 
 // Goal Model

@@ -6,15 +6,16 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class LoadBWSpecificationService {
 
-	private String xml;
+	private String bwXML;
+	private String yawlXML;
 
-	public LoadBWSpecificationService(String xml) {
-		this.xml = xml;
+	public LoadBWSpecificationService(String bwXML, String yawlXML) {
+		this.bwXML = bwXML;
+		this.yawlXML = yawlXML;
 	}
 
 	@Atomic
 	public void execute() throws BlendedWorkflowException {
-		BWSpecificationFactory.createBWSpecification(this.xml);
+		BWSpecificationFactory.createBWSpecification(this.bwXML, this.yawlXML);
 	}
-
 }

@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState;
-import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class TaskWorkItem extends TaskWorkItem_Base {
 
@@ -13,13 +13,45 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		task.setState(TaskState.ENABLED);
 		task.getPreConstraint().assignAttributeInstances(this, "pre");
 		task.getPostConstraint().assignAttributeInstances(this, "post");
+		createPreConstrainWorkItemArguments();
+		createConstrainViolationWorkItemArguments();
 		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
+		addConstrainViolationWorkItemArguments();
+	}
+	
+	private void createPreConstrainWorkItemArguments() {
+		for (AttributeInstance attributeInstance : getPreConstraintAttributeInstances()) {
+			WorkItemArgument workItemArgument = new WorkItemArgument(attributeInstance, null);
+			addPreConstrainWorkItemArguments(workItemArgument);
+		}
+	}
+	
+	private void createConstrainViolationWorkItemArguments() {
+		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
+			WorkItemArgument workItemArgument = new WorkItemArgument(attributeInstance, null);
+			addConstrainViolationWorkItemArguments(workItemArgument);
+		}
+	}
+	
+	private void addPreConstrainWorkItemArguments() {
+		for (AttributeInstance attributeInstance : getPreConstraintAttributeInstances()) {
+			if (attributeInstance.getState() == DataState.SKIPPED) {
+				addPreConstrainWorkItemArguments(new WorkItemArgument(attributeInstance, ""));
+			}
+		}
+	}
+	
+	private void addConstrainViolationWorkItemArguments() {
+		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
+			addConstrainViolationWorkItemArguments(new WorkItemArgument(attributeInstance, ""));
+		}
 	}
 
 	@Override
 	public void notifyEnabled() {
+		getTask().setState(TaskState.ENABLED);
 		setState(WorkItemState.ENABLED);
-		WorkListManager.getInstance().notifyEnabledWorkItem(this);
+		BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
 	}
 
 	@Override
@@ -31,6 +63,29 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 	@Override
 	public void notifySkipped() {
 		setState(WorkItemState.SKIPPED);
+	}
+	
+	public void notifyPreConstrain() {
+		setState(WorkItemState.PRE_CONSTRAINT);
+		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
+	}
+	
+	public void notifyPreTask() {
+		setState(WorkItemState.PRE_TASK);
+		addPreConstrainWorkItemArguments();
+		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
+	}
+	
+	@Override
+	public void notifyPending() {
+		getTask().setState(TaskState.DEACTIVATED);
+		setState(WorkItemState.PENDING);
+	}
+
+	@Override
+	public void notifyConstrainViolation() {
+		setState(WorkItemState.CONSTRAINT_VIOLATION);
+		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
 	}
 
 }

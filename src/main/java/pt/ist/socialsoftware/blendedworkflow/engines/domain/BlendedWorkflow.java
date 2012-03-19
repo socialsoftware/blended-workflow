@@ -3,13 +3,17 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
+import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.*;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
+import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
 	
 	private YAWLAdapter yawlAdapter = null;
 	private WorkletAdapter workletAdapter = null;
+	private WorkListManager workListManager = null;
+	private BWManager bwManager = null;
 
 	public static BlendedWorkflow getInstance() {
 		return FenixFramework.getRoot();
@@ -63,6 +67,28 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 
 	public void setWorkletAdapter(WorkletAdapter workletAdapter) {
 		this.workletAdapter = workletAdapter;
+	}
+	
+	public WorkListManager getWorkListManager() {
+		if (workListManager == null) {
+			workListManager = new WorkListManager();
+		}
+		return workListManager;
+	}
+
+	public void setWorkListManager(WorkListManager workListManager) {
+		this.workListManager = workListManager;
+	}
+	
+	public BWManager getBwManager() {
+		if (bwManager == null) {
+			bwManager = new BWManager();
+		}
+		return bwManager;
+	}
+
+	public void setBwManager(BWManager bwManager) {
+		this.bwManager = bwManager;
 	}
 
 }

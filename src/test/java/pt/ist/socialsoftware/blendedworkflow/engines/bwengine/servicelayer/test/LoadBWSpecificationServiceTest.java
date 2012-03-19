@@ -16,6 +16,7 @@ import junit.framework.JUnit4TestAdapter;
 
 import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
+import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
@@ -29,6 +30,8 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 public class LoadBWSpecificationServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
+	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml";
+	
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 
 	public static junit.framework.Test suite() {
@@ -43,14 +46,17 @@ public class LoadBWSpecificationServiceTest {
 	};
 
 	private YAWLAdapter yawlAdapter = null;
+	private BWManager bwManager = null;
 
 	@Before
 	public void setUp() {
 		Bootstrap.initTestDB();
 		yawlAdapter = context.mock(YAWLAdapter.class);
+		bwManager = context.mock(BWManager.class);
 
 		Transaction.begin();
 		BlendedWorkflow.getInstance().setYawlAdapter(yawlAdapter);
+		BlendedWorkflow.getInstance().setBwManager(bwManager);
 		Transaction.commit();
 	}
 
@@ -63,18 +69,14 @@ public class LoadBWSpecificationServiceTest {
 	public void loadBWSpecification() throws BlendedWorkflowException {
 		context.checking(new Expectations() {
 			{
-				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+//				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
 			}
 		});
 
-		String loadBWSpecificationInputString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-
-		LoadBWSpecificationService loadBWSpecificationService = new LoadBWSpecificationService(loadBWSpecificationInputString);
-		try {
-			loadBWSpecificationService.execute();
-		} catch(BlendedWorkflowException e) {		
-			fail(e.getMessage());
-		}
+		String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
+		String yawlSpecificationString = StringUtils.fileToString(ACTIVITY_FILENAME);
+		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).execute();
 		boolean committed = false;
 		try {
 			Transaction.begin();

@@ -6,11 +6,9 @@ import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.HandleCompletedWorkItemFromWorkletService;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.HandleEnabledTaskWorkItemService;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.HandleTaskPreActivityService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
@@ -19,7 +17,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class WorkletAdapter {
 
-	// Worklet Types
+	// FIXME Worklet Types
 	public enum RuleType {ItemPreconstrain, ItemConstraintViolation}
 	class RDRNode {}
 
@@ -35,11 +33,6 @@ public class WorkletAdapter {
 	public void notifyWorkItemContraintViolation(WorkItem workItem) {
 		//TODO:
 		log.info("notifyWorkItemContraintViolation");
-	}
-
-	public void notifyWorkItemSkippedWorkItem(WorkItem workItem) {
-		//TODO:
-		log.info("notifyWorkItemSkippedWorkItem");
 	}
 
 	public void loadRDRtrees() {
@@ -69,36 +62,40 @@ public class WorkletAdapter {
 	// WorkletGateway Methods
 	void exceptionRaisedEvent(WorkItemRecord wir, Element wirData, RuleType ruleType) throws BlendedWorkflowException {
 		BWInstance bwInstance = BlendedWorkflow.getInstance().getYAWLBWInstance(wir.getCaseID());
-		String taskName = wir.getTaskName();
-		String result = ""; // TODO get evaluation result
+		TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
 
+		String taskName = wir.getTaskName();
+		Task task = taskModelInstance.getTask(taskName);
+		String result = ""; // TODO get evaluation result
+		TaskWorkItem taskWorkItem = null;
 		if (!yawlEnabledWorkItems.contains(wir)){ // PreConstrain
+
 			if (result.equals("TRUE")) {
-				new HandleEnabledTaskWorkItemService(bwInstance, taskName).execute();
+				taskWorkItem = new TaskWorkItem(bwInstance, task);
+				taskWorkItem.notifyPreConstrain();
 			}
 			else if (result.equals("SKIPPED")) {
-				new HandleTaskPreActivityService(bwInstance, taskName).execute();
-
+				taskWorkItem = new TaskWorkItem(bwInstance, task);
+				taskWorkItem.notifyPreTask();
 			} else if (result.equals("FALSE")) {
 				throw new BlendedWorkflowException(BlendedWorkflowError.FALSE_PRE_CONSTRAIN);
 			}
 		}
 		else { // PostConstrain
-			TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
-			TaskWorkItem taskWorkItem = taskModelInstance.getTask(taskName).getTaskWorkItem();
+			taskWorkItem = taskModelInstance.getTask(taskName).getTaskWorkItem();
 			
 			if (result.equals("TRUE")) {
-				new HandleCompletedWorkItemFromWorkletService(taskWorkItem, "TRUE").execute();
+				taskWorkItem.notifyCompleted();
 			}
 			else if (result.equals("SKIPPED")) {
-				new HandleCompletedWorkItemFromWorkletService(taskWorkItem, "SKIPPED").execute();
+				taskWorkItem.notifySkipped();
 
 			} else if (result.equals("FALSE")) {
-				new HandleEnabledTaskWorkItemService(bwInstance, taskName).execute();
+				taskWorkItem.notifyEnabled();
 			}
 		}
 	}
-
+	
 	void process(String caseID, String specID, String taskID, String itemID, Element element, RuleType ruleType) {}
 
 	void addNode(String specID, String taskID, RuleType ruleType, RDRNode rdrNode) {}
@@ -106,5 +103,4 @@ public class WorkletAdapter {
 	void RdrNode(int id, RDRNode pParent, RDRNode pTrueChild, RDRNode pFalseChild, String pCondition, Element pConclusion, Element pCornerStone) {}
 
 	void RdrConclusion(Element conc) {} 
-
 }

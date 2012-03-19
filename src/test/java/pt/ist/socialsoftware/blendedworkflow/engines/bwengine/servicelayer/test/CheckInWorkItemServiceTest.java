@@ -2,8 +2,6 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -20,31 +18,40 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
+import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
+import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 @RunWith(JMock.class)
 public class CheckInWorkItemServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
+	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml";
 
-	private static String YAWLCASE_ID = "yawlCaseID";
+//	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String GOALWORKITEM_PRESCRIBE_ID = "Prescribe.3";
 	private static String GOALWORKITEM_COLLECTDATA_ID = "Collect Data.1";
 	private static String GOALWORKITEM_PHYSICALEXAMINATION_ID = "Physical Examination.2";
+	
+	private static String GOALWORKITEM_PRESCRIBE_INPUT_ATT1 = "Recipe";
+	private static String GOALWORKITEM_PRESCRIBE_INPUT_VALUE1 = "Aspirin";
 
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(CheckInWorkItemServiceTest.class);
@@ -59,6 +66,8 @@ public class CheckInWorkItemServiceTest {
 
 	private YAWLAdapter yawlAdapter = null;
 	private WorkletAdapter workletAdapter = null;
+	private BWManager bwManager = null;
+	private WorkListManager workListManager = null;
 
 	@Before
 	public void setUp() throws BlendedWorkflowException {
@@ -66,27 +75,37 @@ public class CheckInWorkItemServiceTest {
 
 		yawlAdapter = context.mock(YAWLAdapter.class);
 		workletAdapter = context.mock(WorkletAdapter.class);
+		bwManager = context.mock(BWManager.class);
+		workListManager = context.mock(WorkListManager.class);
 		context.checking(new Expectations() {
 			{
-				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
-				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
+//				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+//				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
 				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
+				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
+				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
+				allowing(workListManager).notifySkippedWorkItem(with(any(WorkItem.class)));
+				allowing(workListManager).notifyEnabledWorkItem(with(any(WorkItem.class)));
+				allowing(workListManager).notifyCompletedWorkItem(with(any(WorkItem.class)));
 			}
 		});
 
 		Transaction.begin();
 		BlendedWorkflow.getInstance().setYawlAdapter(yawlAdapter);
 		BlendedWorkflow.getInstance().setWorkletAdapter(workletAdapter);
+		BlendedWorkflow.getInstance().setBwManager(bwManager);
+		BlendedWorkflow.getInstance().setWorkListManager(workListManager);
 		Transaction.commit();
 
-		String dataModelString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		new LoadBWSpecificationService(dataModelString).execute();
+		String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
+		String yawlSpecificationString = StringUtils.fileToString(ACTIVITY_FILENAME);
+		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).execute();
 
 		Transaction.begin();
 		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
 		Transaction.commit();
 
-		new CreateBWInstanceService(bwSpecification).execute();
+		new CreateBWInstanceService(bwSpecification.getOID()).execute();
 
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
@@ -108,19 +127,20 @@ public class CheckInWorkItemServiceTest {
 	@Test
 	public void checkInOneWorkItem() throws BlendedWorkflowException {
 		WorkItem workItem = getWorkItem(GOALWORKITEM_PRESCRIBE_ID);
-		HashMap<String, String> values = new HashMap<String, String>();
-		values.put("Recipe.1", "Aspirin");
-		new CheckInWorkItemService(workItem, values).execute();
-
+		long workItemOID = workItem.getOID();
+		AttributeInstance attributeInstance = getAttributeInstance(GOALWORKITEM_PRESCRIBE_INPUT_ATT1);
+		setWorkItemArgumentValue(workItem, attributeInstance, GOALWORKITEM_PRESCRIBE_INPUT_VALUE1);
+		
+		new CheckInWorkItemService(workItemOID).execute();
 		boolean committed = false;
 		try {
 			Transaction.begin();
 
 			assertEquals(WorkItemState.CHECKED_IN, workItem.getState());
-			for (AttributeInstance attributeInstance : workItem.getContraintViolationAttributeInstances()) {
-				assertEquals(DataState.DEFINED, attributeInstance.getState());
+			for (AttributeInstance attInstance : workItem.getContraintViolationAttributeInstances()) {
+				assertEquals(DataState.DEFINED, attInstance.getState());
 			}
-
+			
 			Transaction.commit();
 			committed = true;
 		} finally {
@@ -137,6 +157,31 @@ public class CheckInWorkItemServiceTest {
 		WorkItem workItem = bwInstance.getWorkItem(ID);
 		Transaction.commit();
 		return workItem;
+	}
+	
+	private AttributeInstance getAttributeInstance(String name) throws BlendedWorkflowException {
+		Transaction.begin();
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		AttributeInstance attributeInstance = null;
+		for (Attribute attribute : dataModelInstance.getAttributes()) {
+			if (attribute.getName().equals(name)) {
+				attributeInstance = attribute.getAttributeInstances().get(0); // FIXME:
+			}
+		}
+		Transaction.commit();
+		return attributeInstance;
+	}
+	
+	private void setWorkItemArgumentValue(WorkItem workItem,AttributeInstance attributeInstance, String value) {
+		Transaction.begin();
+		for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
+			if (workItemArgument.getAttributeInstance().getID().equals(attributeInstance.getID())) {
+				workItemArgument.setValue(value);
+			}
+		}
+		Transaction.commit();
 	}
 
 }

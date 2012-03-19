@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
@@ -53,15 +54,37 @@ public class Goal extends Goal_Base {
 				}
 				if (getSubGoalsCount() == subgoalsAchievedCount) { // SubGoals achieved
 					setState(GoalState.ENABLED);
-					new GoalWorkItem(bwInstance, this);
+					if (!getParentGoal().equals(null) && getParentGoal().getState().equals(GoalState.ENABLED)) {
+						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.PENDING)) {
+							getParentGoal().getGoalWorkItem().notifyConstrainViolation();
+						}
+					}
+					else {
+						new GoalWorkItem(bwInstance, this);
+					}
 				}
 			}
 			else { // No SubGoals
 				if (getState() == GoalState.DEACTIVATED) {
 					setState(GoalState.ENABLED);
-					new GoalWorkItem(bwInstance, this);
+					if (!getParentGoal().equals(null) && getParentGoal().getState().equals(GoalState.ENABLED)) {
+						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.PENDING)) {
+							getParentGoal().getGoalWorkItem().notifyConstrainViolation();
+						}
+					}
+					else {
+						new GoalWorkItem(bwInstance, this);
+					}
 				}
 			}
+		}
+	}
+
+	public void updateParentGoal() {
+		Goal parentGoal = getParentGoal();
+		if (parentGoal.getState().equals(GoalState.ENABLED)) {
+			parentGoal.setState(GoalState.DEACTIVATED);
+			parentGoal.getGoalWorkItem().notifyPending();
 		}
 	}
 

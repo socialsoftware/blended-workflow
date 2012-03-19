@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,11 +7,10 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public abstract class WorkItem extends WorkItem_Base {
 
-	public enum WorkItemState {PRE_CONSTRAINT, PRE_TASK, ENABLED, CONSTRAINT_VIOLATION, CHECKED_IN, SKIPPED, COMPLETED};
+	public enum WorkItemState {PRE_CONSTRAINT, PRE_TASK, ENABLED, CONSTRAINT_VIOLATION, PENDING, CHECKED_IN, SKIPPED, COMPLETED};
 
-
-	public void notifyWorkItemCheckedIn(HashMap<String, String> values) {
-		setAttributeValues(values);
+	public void notifyWorkItemCheckedIn() {
+		setAttributeValues();
 		if (getState() == WorkItemState.ENABLED) {
 			setState(WorkItemState.CHECKED_IN);
 			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
@@ -20,6 +18,7 @@ public abstract class WorkItem extends WorkItem_Base {
 		notifyWorkItemDataChanged();
 	}
 
+	
 	public void notifyWorkItemSkipped() {
 		setAttributesSkipped();
 		if (getState() == WorkItemState.ENABLED) {
@@ -51,11 +50,18 @@ public abstract class WorkItem extends WorkItem_Base {
 		}
 	}
 
-	private void setAttributeValues(HashMap<String, String> values) {
-		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
-			if (values.containsKey(attributeInstance.getID())) {
-				attributeInstance.setValue(values.get(attributeInstance.getID()));
+	private void setAttributeValues() {
+		// Add pre-activity data
+		if (getPreConstrainWorkItemArgumentsCount() > 0) {
+			for (WorkItemArgument workItemArgument : getPreConstrainWorkItemArguments()) {
+
+				workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
 			}
+		}
+		
+		// Add constrainViolation data
+		for (WorkItemArgument workItemArgument : getConstrainViolationWorkItemArguments()) {
+			workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
 		}
 	}
 
@@ -73,5 +79,9 @@ public abstract class WorkItem extends WorkItem_Base {
 	public abstract void notifyCompleted();
 
 	public abstract void notifySkipped();
+	
+	public abstract void notifyPending();
+	
+	public abstract void notifyConstrainViolation();
 
 }
