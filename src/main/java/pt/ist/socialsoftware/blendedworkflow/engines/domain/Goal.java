@@ -8,18 +8,20 @@ public class Goal extends Goal_Base {
 
 	public enum GoalState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
 
-	public Goal(GoalModel goalModel, String name, Condition condition) throws BlendedWorkflowException {
+	public Goal(GoalModel goalModel, String name, String description, Condition condition) throws BlendedWorkflowException {
 		checkUniqueGoalName(goalModel, name);
 		setGoalModel(goalModel);
 		setName(name);
+		setDescription(description);
 		setCondition(condition);
 		setState(GoalState.DEACTIVATED);
 	}
 
-	public Goal(GoalModel goalModel, Goal parentGoal, String name, Condition condition) throws BlendedWorkflowException {
+	public Goal(GoalModel goalModel, Goal parentGoal, String name,String description, Condition condition) throws BlendedWorkflowException {
 		checkUniqueGoalName(goalModel, name);
 		setGoalModel(goalModel);
 		setName(name);
+		setDescription(description);
 		setCondition(condition);
 		setParentGoal(parentGoal);
 		setState(GoalState.DEACTIVATED);
@@ -39,7 +41,7 @@ public class Goal extends Goal_Base {
 		if (condition != null) {
 			newCondition = condition.cloneCondition(goalModelInstance);
 		}
-		new Goal(goalModelInstance, getName(), newCondition);
+		new Goal(goalModelInstance, getName(), getDescription(), newCondition);
 	}
 
 	public void checkState(BWInstance bwInstance) {

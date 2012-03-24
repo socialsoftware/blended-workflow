@@ -29,6 +29,7 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 	private ComboBox bwInstances = new ComboBox("BWInstances");
 	private TextField name = new TextField("Goal Name");
 	private ComboBox parentGoal = new ComboBox("Parent Goal");
+	private TextField description = new TextField("Description");
 	private TextArea condition = new TextArea("Goal Condition"); 
 
 	public NewGoalForm() {
@@ -48,6 +49,7 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
         
 		addComponent(bwInstances);
 		addComponent(name);
+		addComponent(description);
 		addComponent(parentGoal);
 		addComponent(condition);
 
@@ -61,10 +63,11 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 				try {
 					long bwInstanceOID = (Long) bwInstances.getValue();
 					String goalName = (String) name.getValue();
+					String goalDescription = (String) name.getDescription();
 					long parentGoalID = (Long) parentGoal.getValue();
 					String goalCondition = (String) condition.getValue();
 					
-					new CreateGoalService(bwInstanceOID, goalName, parentGoalID, goalCondition).execute();
+					new CreateGoalService(bwInstanceOID, goalName, goalDescription, parentGoalID, goalCondition).execute();
 				}
 				catch (java.lang.NullPointerException jle) {
 					getApplication().getMainWindow().showNotification("Please fill all fields");
@@ -113,7 +116,7 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance().getBwSpecifications()) {
 			for (BWInstance bwInstance : bwSpecification.getBwInstances()) {
 				this.bwInstances.addItem(bwInstance.getOID());
-				this.bwInstances.setItemCaption(bwInstance.getOID(), bwInstance.getID());
+				this.bwInstances.setItemCaption(bwInstance.getOID(), bwInstance.getName());
 			}
 		}
 	}

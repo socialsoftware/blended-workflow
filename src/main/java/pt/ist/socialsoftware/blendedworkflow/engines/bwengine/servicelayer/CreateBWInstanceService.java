@@ -12,15 +12,17 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 public class CreateBWInstanceService {
 
 	private BWSpecification bwSpecification;
+	private String name;
 
-	public CreateBWInstanceService(long bwSpecificationOID) {
+	public CreateBWInstanceService(long bwSpecificationOID, String name) {
 		this.bwSpecification = AbstractDomainObject.fromOID(bwSpecificationOID);
+		this.name = name;
 	}
 
 	@Atomic
 	public void execute() throws BlendedWorkflowException {
 		// Get BWSpecification and clone it
-		BWInstance bwInstance = new BWInstance(this.bwSpecification);
+		BWInstance bwInstance = new BWInstance(this.bwSpecification, name);
 		
 		// Launch case on YAWL
 //		BWSpecification bwSpecification = bwInstance.getBwSpecification();

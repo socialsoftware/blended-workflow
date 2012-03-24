@@ -28,12 +28,13 @@ public class TaskModelFactory {
 			Element taskXML = (Element) task;
 
 			String taskName = taskXML.getChildText("Name", bwNamespace);
+			String taskDescription = taskXML.getChildText("description", bwNamespace);
 			String taskPreConditionString = taskXML.getChildText("PreCondition", bwNamespace);
 			Condition taskPreCondition = ConditionFactory.createCondition(dataModel, taskPreConditionString);
 			String taskPostConditionString = taskXML.getChildText("PostCondition", bwNamespace);
 			Condition taskPostCondition = ConditionFactory.createCondition(dataModel, taskPostConditionString);
 			
-			new Task(taskModel, taskName, taskPreCondition, taskPostCondition);
+			new Task(taskModel, taskName, taskDescription, taskPreCondition, taskPostCondition);
 		}
 	}
 

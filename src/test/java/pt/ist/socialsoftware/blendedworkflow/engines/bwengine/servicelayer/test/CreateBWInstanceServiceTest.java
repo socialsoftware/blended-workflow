@@ -102,7 +102,7 @@ public class CreateBWInstanceServiceTest {
 		});
 
 		BWSpecification bwSpecification = getBWSpecification(BWSPECIFICATION_NAME);
-		new CreateBWInstanceService(bwSpecification.getOID()).execute();
+		new CreateBWInstanceService(bwSpecification.getOID(),"").execute();
 
 		boolean committed = false;
 		try {

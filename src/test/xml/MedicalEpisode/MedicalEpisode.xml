@@ -3,8 +3,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.example.org/BWSchema BWSchema.xsd " uri="MedicalEpisodeBP">
 	<bw:CaseInfo>
-		<bw:specificationName>Medical Appointment</bw:specificationName>
-		<bw:creator>Davide Passinhas</bw:creator>
+		<bw:name>Medical Appointment</bw:name>
+		<bw:author>Davide Passinhas</bw:author>
 		<bw:description>A simple process of a medical appointment.</bw:description>
 		<bw:version>1.0</bw:version>
 		<bw:identifier>UID_92fe0366-d6c6-42ec-9786-408f2b5c36c6</bw:identifier>
@@ -147,30 +147,36 @@
 	<bw:GoalModel>
 		<bw:RootGoal>
 			<bw:Name>Diagnose Patient</bw:Name>
+			<bw:description>Diagnose the Patient</bw:description>
 			<bw:Condition>existsEntity(Patient) and existsEntity(Medical Report) and compareAttributeTo(Medical Report.Closed,=.true)</bw:Condition>
 		</bw:RootGoal>
 		<bw:Goal>
 			<bw:Name>Observe Patient</bw:Name>
+			<bw:description>Observe the Patient</bw:description>
 			<bw:Condition>existsEntity(Episode) and existsEntity(Patient) and existsAttribute(Patient Data.Medical Examination)</bw:Condition>
 			<bw:ParentName>Diagnose Patient</bw:ParentName>
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Name>Write Medical Report</bw:Name>
+			<bw:description>Write the Patient Medical Report</bw:description>
 			<bw:Condition>existsAttribute(Medical Report.Report)</bw:Condition>
 			<bw:ParentName>Diagnose Patient</bw:ParentName>
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Name>Collect Data</bw:Name>
+			<bw:description>Collect the Patient height and weight</bw:description>
 			<bw:Condition>existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight)</bw:Condition>
 			<bw:ParentName>Observe Patient</bw:ParentName>
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Name>Physical Examination</bw:Name>
+			<bw:description>Physical Examine the Patient and write the physical report</bw:description>
 			<bw:Condition>existsAttribute(Patient Data.Physical Report) and existsAttribute(Patient Data.Physical Examination)</bw:Condition>
 			<bw:ParentName>Observe Patient</bw:ParentName>
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Name>Prescribe</bw:Name>
+			<bw:description>Prescribe the Patient some drugs</bw:description>
 			<bw:Condition>existsAttribute(Prescription.Recipe)</bw:Condition>
 			<bw:ParentName>Write Medical Report</bw:ParentName>
 		</bw:Goal>
@@ -178,12 +184,14 @@
 	<bw:TaskModel>
 		<bw:Task>
 			<bw:Name>Check-in Patient</bw:Name>
+			<bw:description>Check-in the Patient</bw:description>
 			<bw:PreCondition>true</bw:PreCondition>
 			<bw:PostCondition>existsEntity(Patient) and existsEntity(Episode)</bw:PostCondition>
 			<bw:FlowType>root</bw:FlowType>
 		</bw:Task>
 		<bw:Task>
 			<bw:Name>Physical Examination</bw:Name>
+			<bw:description>Physical Examine the Patient and write the physical report</bw:description>
 			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
 			<bw:PostCondition>existsAttribute(Patient Data.Physical Report) and existsAttribute(Patient Data.Physical Examination)</bw:PostCondition>
 			<bw:FlowType>none</bw:FlowType>
@@ -191,6 +199,7 @@
 		</bw:Task>
 		<bw:Task>
 			<bw:Name>Collect Data</bw:Name>
+			<bw:description>Collect the Patient height and weight</bw:description>
 			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
 			<bw:PostCondition>existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight)</bw:PostCondition>
 			<bw:FlowType>none</bw:FlowType>
@@ -198,6 +207,7 @@
 		</bw:Task>
 		<bw:Task>
 			<bw:Name>Doctor Appointment</bw:Name>
+			<bw:description>Patient doctor appointment</bw:description>
 			<bw:PreCondition>existsEntity(Episode) and existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight) and existsAttribute(Patient Data.Physical Report)</bw:PreCondition>
 			<bw:PostCondition>existsEntity(Prescription) and existsEntity(Medical Report) and compareAttributeTo(Medical Report.Closed,=.true) and existsAttribute(Patient Data.Medical Examination)</bw:PostCondition>
 			<bw:FlowType>and-join</bw:FlowType>
@@ -206,6 +216,7 @@
 		</bw:Task>
 		<bw:Task>
 			<bw:Name>Check-out Patient</bw:Name>
+			<bw:description>Check-out the Patient</bw:description>
 			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
 			<bw:PostCondition>compareAttributeTo(Episode.Closed,=.true)</bw:PostCondition>
 			<bw:FlowType>none</bw:FlowType>

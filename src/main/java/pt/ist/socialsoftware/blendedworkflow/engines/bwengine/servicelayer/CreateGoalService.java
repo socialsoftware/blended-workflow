@@ -10,6 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
@@ -18,12 +19,14 @@ public class CreateGoalService {
 	private BWInstance bwInstance;
 	private Goal parentGoal;
 	private String name;
+	private String description;
 	private String condition;
 
-	public CreateGoalService (long bwInstanceOID, String name, long parentGoalOID,  String condition) {
+	public CreateGoalService (long bwInstanceOID, String name, String description, long parentGoalOID,  String condition) {
 		this.bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		this.parentGoal = AbstractDomainObject.fromOID(parentGoalOID);
 		this.name = name;
+		this.description = description;
 		this.condition = condition;
 	}
 
@@ -33,12 +36,13 @@ public class CreateGoalService {
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
 		Condition goalCondition = ConditionFactory.createCondition(dataModelInstance, condition);
-		Goal newGoal = new Goal(goalModelInstance, parentGoal, name, goalCondition);
+		Goal newGoal = new Goal(goalModelInstance, parentGoal, name, description, goalCondition);
 
 		newGoal.updateParentGoal();
 		
 		goalModelInstance.getEnabledWorkItems();
 		
+		bwInstance.getLog().addLogRecords(new LogRecord("Date","Goal Created", name, "Author"));
 		// FIXME;
 		for (WorkItem workItem : bwInstance.getWorkItems()) {
 			if (workItem.getID().equals(name+"."+ bwInstance.getWorkItemsCount())) {

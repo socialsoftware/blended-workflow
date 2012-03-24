@@ -22,7 +22,7 @@ public class BWManager {
 	}
 
 	public void notifyCreatedBWInstance(BWInstance bwInstance) {
-		getBwPresentation().addBWInstance(bwInstance.getOID(), bwInstance.getID());
+		getBwPresentation().addBWInstance(bwInstance.getOID(), bwInstance.getName());
 	}
 
 	public void updateBWPresentation() {

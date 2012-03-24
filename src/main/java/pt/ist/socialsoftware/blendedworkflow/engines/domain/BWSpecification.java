@@ -1,13 +1,23 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class BWSpecification extends BWSpecification_Base {
 
-	public BWSpecification(String name) throws BlendedWorkflowException {
+	public BWSpecification(String name, String author, String description) throws BlendedWorkflowException {
 		checkUniqueBWSpecificationName(name);
 		setName(name);
+		setAuthor(author);
+		setDescription(description);
+	
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		setCreationDate(dateFormat.format(Calendar.getInstance().getTime()));
+		
 		setDataModel(new DataModel());
 		setTaskModel(new TaskModel());
 		setGoalModel(new GoalModel());

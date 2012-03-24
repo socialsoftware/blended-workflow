@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
@@ -21,7 +22,8 @@ public class CheckInWorkItemService {
 		
 		// FIXME:
 		this.workItem.notifyWorkItemCheckedIn();
-		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(workItem); 
+		this.workItem.getBwInstance().getLog().addLogRecords(new LogRecord("Date","CheckIn", this.workItem.getID(), "Author"));
+		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this.workItem); 
 	}
 
 }

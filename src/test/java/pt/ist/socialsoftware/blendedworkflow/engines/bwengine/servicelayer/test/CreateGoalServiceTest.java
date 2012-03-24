@@ -46,6 +46,7 @@ public class CreateGoalServiceTest {
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String SECONDOPINION_ID = "Second Opinion.4";
 	private static String SECONDOPINION_NAME = "Second Opinion";
+	private static String SECONDOPINION_DESCRIPTION = "Other doctor opinion.";
 	private static String SECONDOPINION_CONDITION = "existsEntity(Second Opinion) and existsAttribute(Second Opinion.Report.STRING.true)";
 	private static String SECONDOPINION_PARENTGOAL_NAME_1 = "Write Medical Report";
 	private static String SECONDOPINION_PARENTGOAL_NAME_2 = "Prescribe";
@@ -102,7 +103,7 @@ public class CreateGoalServiceTest {
 		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
 		Transaction.commit();
 
-		new CreateBWInstanceService(bwSpecification.getOID()).execute();
+		new CreateBWInstanceService(bwSpecification.getOID(),"").execute();
 	}
 
 	@After
@@ -121,7 +122,7 @@ public class CreateGoalServiceTest {
 		long parentGoalOID = parentGoal.getOID();
 		Transaction.commit();
 
-		new CreateGoalService(bwInstanceOID, SECONDOPINION_NAME, parentGoalOID, SECONDOPINION_CONDITION).execute();
+		new CreateGoalService(bwInstanceOID, SECONDOPINION_NAME, SECONDOPINION_DESCRIPTION, parentGoalOID, SECONDOPINION_CONDITION).execute();
 
 		boolean committed = false;
 		try {
@@ -154,7 +155,7 @@ public class CreateGoalServiceTest {
 		long parentGoalOID = parentGoal.getOID();
 		Transaction.commit();
 
-		new CreateGoalService(bwInstanceOID, SECONDOPINION_NAME, parentGoalOID, SECONDOPINION_CONDITION).execute();
+		new CreateGoalService(bwInstanceOID, SECONDOPINION_NAME, SECONDOPINION_DESCRIPTION,  parentGoalOID, SECONDOPINION_CONDITION).execute();
 
 		boolean committed = false;
 		try {

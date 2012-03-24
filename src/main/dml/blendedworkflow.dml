@@ -13,14 +13,28 @@ class BlendedWorkflow {
 
 class BWSpecification {
 	String name;
+	String author;
+	String description;
+	String creationDate;
 	String yawlSpecficationID;
 	Integer bwInstanceCounter;
 }
 
 class BWInstance {
 	String ID;
+	String name;
+	String creationDate;
 	String yawlCaseID;
 	Integer workItemCounter;
+}
+
+class Log;
+
+class LogRecord {
+	String date;
+	String value;
+	String action;
+	String author;
 }
 
 class WorkItem {
@@ -42,6 +56,7 @@ class GoalModelInstance extends GoalModel;
 
 class Goal {
 	String name;
+	String description;
 	GoalState state;
 }
 
@@ -51,6 +66,7 @@ class TaskModelInstance extends TaskModel;
 
 class Task {
 	String name;
+	String description;
 	TaskState state;
 }
 
@@ -85,6 +101,7 @@ class Entity {
 
 class EntityInstance {
 	String ID;
+	DataState state;
 	Integer attributeInstanceCounter;
 	Integer relationInstanceCounter;
 }
@@ -159,6 +176,22 @@ relation BWInstanceHasDataModelInstance {
 relation BWInstanceHasWorkItems {
 	BWInstance playsRole bwInstance {multiplicity 0..1;}
 	WorkItem playsRole workItems {multiplicity 0..*;}
+}
+
+// Log
+relation BWSpecificationHasLog {
+	BWSpecification playsRole bwSpecification {multiplicity 0..1;}
+	Log playsRole log {multiplicity 0..1;}
+}
+
+relation BWInstanceHasLog {
+	BWInstance playsRole bwInstance {multiplicity 0..1;}
+	Log playsRole log {multiplicity 0..1;}
+}
+
+relation LogHasLogRecords {
+	Log playsRole log {multiplicity 0..1;}
+	LogRecord playsRole logRecords {multiplicity 0..*;}
 }
 
 // WorkItem

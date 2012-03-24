@@ -1,11 +1,15 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class BWInstance extends BWInstance_Base {
 
-	public BWInstance(BWSpecification bwSpecification) throws BlendedWorkflowException {
+	public BWInstance(BWSpecification bwSpecification, String name) throws BlendedWorkflowException {
 		setBwSpecification(bwSpecification);
 		setID(getBwSpecification().getName() + "." + getBwSpecification().getNewBWInstanceId()); //Id: BWSpecificationName.#
 		setWorkItemCounter(0);
@@ -18,6 +22,11 @@ public class BWInstance extends BWInstance_Base {
 		TaskModelInstance taskModelInstance = new TaskModelInstance();
 		setTaskModelInstance(taskModelInstance);
 		bwSpecification.getTaskModel().cloneTaskModel(taskModelInstance);
+		
+		setName(name);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		setCreationDate(dateFormat.format(Calendar.getInstance().getTime()));
+		setLog(new Log());
 	}
 	
 	public Integer getNewWorkItemID() {

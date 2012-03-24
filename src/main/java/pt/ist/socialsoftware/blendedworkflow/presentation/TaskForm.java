@@ -4,7 +4,7 @@ import jvstm.Atomic;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
@@ -20,17 +20,17 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-public class GoalForm extends VerticalLayout {
+public class TaskForm extends VerticalLayout {
 
-	private long goalWorkItemOID;
+	private long taskWorkItemOID;
 	VerticalLayout data = new VerticalLayout();
 	
-	public GoalForm(final long workItemOID) {
+	public TaskForm(final long workItemOID) {
 		
 		setMargin(true);
 		setSpacing(true);
 		
-		this.goalWorkItemOID = workItemOID;
+		this.taskWorkItemOID = workItemOID;
 		
 		addComponent(data);
 		getOutputData();
@@ -55,13 +55,13 @@ public class GoalForm extends VerticalLayout {
 				}
 
 				try {
-					new CheckInWorkItemService(goalWorkItemOID).execute();
+					new CheckInWorkItemService(taskWorkItemOID).execute();
 				} catch (BlendedWorkflowException bwe) {
 					getApplication().getMainWindow().showNotification(bwe.getError().toString(), Notification.TYPE_ERROR_MESSAGE);
 				}
 
-				getApplication().getMainWindow().showNotification("Goal accomplished", Notification.TYPE_TRAY_NOTIFICATION);
-				getApplication().getMainWindow().removeWindow(GoalForm.this.getWindow());
+				getApplication().getMainWindow().showNotification("Task accomplished", Notification.TYPE_TRAY_NOTIFICATION);
+				getApplication().getMainWindow().removeWindow(TaskForm.this.getWindow());
 			}
 		});
 		footer.addComponent(submitButton);
@@ -70,7 +70,7 @@ public class GoalForm extends VerticalLayout {
 		cancelButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(GoalForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(TaskForm.this.getWindow());
 			}
 		});
 		footer.addComponent(cancelButton);
@@ -81,14 +81,14 @@ public class GoalForm extends VerticalLayout {
 
 	@Atomic
 	private void setWorkItemArgumentValue(int index, String value) {
-		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
-		goalWorkItem.getConstrainViolationWorkItemArguments().get(index).setValue(value);
+		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
+		taskWorkItem.getConstrainViolationWorkItemArguments().get(index).setValue(value);
 	}
 	
 	@Atomic
 	private void getOutputData() {
-		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
-		for (WorkItemArgument workItemArgument : goalWorkItem.getConstrainViolationWorkItemArguments()) {
+		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
+		for (WorkItemArgument workItemArgument : taskWorkItem.getConstrainViolationWorkItemArguments()) {
 			Attribute attribute = workItemArgument.getAttributeInstance().getAttribute();
 			addTextBox(attribute.getName());
 		}

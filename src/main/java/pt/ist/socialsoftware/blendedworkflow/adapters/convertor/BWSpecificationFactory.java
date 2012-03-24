@@ -26,9 +26,13 @@ public class BWSpecificationFactory {
 
 		Element root = doc.getRootElement();
 		Namespace bwNamespace = root.getNamespace();
-		Element specificationName = root.getChild("CaseInfo", bwNamespace);
+		Element caseInfo = root.getChild("CaseInfo", bwNamespace);
 
-		BWSpecification bwSpecification = new BWSpecification(specificationName.getChildText("specificationName", bwNamespace));
+		String name = caseInfo.getChildText("name", bwNamespace);
+		String author = caseInfo.getChildText("author", bwNamespace);
+		String description = caseInfo.getChildText("description", bwNamespace);
+		
+		BWSpecification bwSpecification = new BWSpecification(name, author, description);
 
 		// Data Model
 		DataModel dataModel = bwSpecification.getDataModel();

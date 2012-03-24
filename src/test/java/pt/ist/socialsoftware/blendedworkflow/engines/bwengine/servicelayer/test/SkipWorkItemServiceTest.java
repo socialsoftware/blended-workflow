@@ -96,7 +96,7 @@ public class SkipWorkItemServiceTest {
 		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
 		Transaction.commit();
 
-		new CreateBWInstanceService(bwSpecification.getOID()).execute();
+		new CreateBWInstanceService(bwSpecification.getOID(),"").execute();
 
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
