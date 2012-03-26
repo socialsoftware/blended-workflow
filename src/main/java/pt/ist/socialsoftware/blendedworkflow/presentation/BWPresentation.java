@@ -33,7 +33,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -85,13 +85,13 @@ public class BWPresentation extends Application {
 	private ListSelect taskList = new ListSelect();
 	private Table taskInfoTable = new Table("Task Information:");
 	private Property.ValueChangeListener taskListListener;
-	private ComboBox taskListFilter = new ComboBox("Filter");
+	private NativeSelect taskListFilter = new NativeSelect();
 
 	// GoalViewTab
 	private ListSelect goalList = new ListSelect();
 	private Table goalInfoTable = new Table("Goal Information:");
 	private Property.ValueChangeListener goalListListener;
-	private ComboBox goalListFilter = new ComboBox("Filter");
+	private NativeSelect goalListFilter = new NativeSelect();
 
 	@Override
 	public void init() {
@@ -650,9 +650,10 @@ public class BWPresentation extends Application {
 	public void generateNewGoalWindow() {
 		Window newGoalWindow = new Window("New Goal");
 		newGoalWindow.setContent(new NewGoalForm());
-		newGoalWindow.setWidth("40%");
-		newGoalWindow.setHeight("60%");
 		newGoalWindow.center();
+		newGoalWindow.setClosable(false);
+		newGoalWindow.setDraggable(false);
+		newGoalWindow.setResizable(false);
 		getMainWindow().addWindow(newGoalWindow);
 	}
 
