@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Upload;
@@ -25,7 +26,6 @@ public class LoadForm extends VerticalLayout {
 		setMargin(true);
 		setWidth("320px");
 		setHeight("200px");
-
 
 		// Load activity specification (upload)
 		Upload uploadActivity = new Upload("Upload the activity specification here:", this.activitySpecReceiver);
@@ -58,7 +58,7 @@ public class LoadForm extends VerticalLayout {
 					}
 				}
 				catch (BlendedWorkflowException bwe) {
-					getApplication().getMainWindow().showNotification(bwe.getError().toString(), Notification.TYPE_ERROR_MESSAGE);
+					getApplication().getMainWindow().showNotification(bwe.getError().toString() + " - " + bwe.getMessage(), Notification.TYPE_ERROR_MESSAGE);
 				}
 				catch (java.lang.NullPointerException jle) {
 					getApplication().getMainWindow().showNotification("Please upload both specifications", Notification.TYPE_ERROR_MESSAGE);
@@ -79,6 +79,7 @@ public class LoadForm extends VerticalLayout {
 		addComponent(uploadActivity);
 		addComponent(uploadBW);
 		addComponent(submitPanel);
+		setComponentAlignment(submitPanel, Alignment.BOTTOM_CENTER);
 	}
 
 }

@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
@@ -17,8 +18,8 @@ public class LaunchForm extends VerticalLayout {
 	public LaunchForm(final long bwSpecificationOID) {
 		setMargin(true);
 		
-		setWidth("300px");
-		setHeight("200px");
+		setWidth("200px");
+		setHeight("100px");
 		
 		final TextField nameTf = new TextField("Name");
 		addComponent(nameTf);
@@ -53,9 +54,10 @@ public class LaunchForm extends VerticalLayout {
 				getApplication().getMainWindow().removeWindow(LaunchForm.this.getWindow());
 			}
 		});
-		submitPanel.addComponent(cancel);
 		
+		submitPanel.addComponent(cancel);
 		addComponent(submitPanel);
+		setComponentAlignment(submitPanel, Alignment.BOTTOM_CENTER);
 
 	}
 

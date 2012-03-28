@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.ArrayList;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
@@ -7,7 +9,7 @@ public class Task extends Task_Base {
 	
 	public enum TaskState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
     
-    public Task(TaskModel taskModel, String name, String description, Condition preConstrain,Condition postConstrain) throws BlendedWorkflowException {
+    public Task(TaskModel taskModel, String name, String description, Condition preConstrain,Condition postConstrain, String previous) throws BlendedWorkflowException {
 		checkUniqueTaskName(taskModel, name);
 		setTaskModel(taskModel);
 		setName(name);
@@ -15,6 +17,7 @@ public class Task extends Task_Base {
 		setPostConstraint(postConstrain);
 		setState(TaskState.DEACTIVATED);
 		setDescription(description);
+		setPrevious(previous);
     }
     
 	private void checkUniqueTaskName(TaskModel taskModel, String name) throws BlendedWorkflowException {
@@ -34,7 +37,57 @@ public class Task extends Task_Base {
 			newPreCondition = preCondition.cloneCondition(taskModelInstance);
 			newPostCondition = postCondition.cloneCondition(taskModelInstance);
 		}
-		new Task(taskModelInstance, getName(), getDescription(), newPreCondition, newPostCondition);
+		new Task(taskModelInstance, getName(), getDescription(), newPreCondition, newPostCondition, getPrevious());
+	}
+	
+	public String getPostConstraintData () {
+		String dataString = getPostConstraint().getData();
+		String r ="";
+		
+		String[] elementArr = dataString.split("\\.");
+		ArrayList<String> result = new ArrayList<String>();
+		for (int i = 0; i < elementArr.length ; i++) {
+			String element = elementArr[i];
+			if (!result.contains(element)) {
+				result.add(element);
+			}
+		}
+		
+		if (result.size() == 1) {
+			r += result.get(0);
+		}
+		else {
+			for (int i = 0; i < result.size()-1 ; i++) {
+				r += result.get(i) + ", ";
+			}
+			r += result.get(result.size()-1);
+		}
+		return r;
+	}
+	
+	public String getPreConstraintData () {
+		String dataString = getPreConstraint().getData();		
+		String r ="";
+		
+		String[] elementArr = dataString.split("\\.");
+		ArrayList<String> result = new ArrayList<String>();
+		for (int i = 0; i < elementArr.length ; i++) {
+			String element = elementArr[i];
+			if (!result.contains(element)) {
+				result.add(element);
+			}
+		}
+		
+		if (result.size() == 1) {
+			r += result.get(0);
+		}
+		else {
+			for (int i = 0; i < result.size()-1 ; i++) {
+				r += result.get(i) + ", ";
+			}
+			r += result.get(result.size()-1);
+		}
+		return r;
 	}
     
 }

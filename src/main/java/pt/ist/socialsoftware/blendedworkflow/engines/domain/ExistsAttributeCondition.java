@@ -31,5 +31,10 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	public void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
 		getAttribute().getEntity().assignAttributeInstances(taskWorkItem,getAttribute(), conditionType);
 	}
+	
+	@Override
+	String getData() {
+		return getAttribute().getEntity().getName();
+	}
 
 }

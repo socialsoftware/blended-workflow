@@ -34,7 +34,18 @@ public class TaskModelFactory {
 			String taskPostConditionString = taskXML.getChildText("PostCondition", bwNamespace);
 			Condition taskPostCondition = ConditionFactory.createCondition(dataModel, taskPostConditionString);
 			
-			new Task(taskModel, taskName, taskDescription, taskPreCondition, taskPostCondition);
+			String flowType = taskXML.getChildText("FlowType", bwNamespace);
+			
+			String previousTask ="";
+			if (flowType.equals("none")) {
+				previousTask = taskXML.getChildText("PreviousTaskName", bwNamespace);
+			}
+			else {
+				String previousTask1 = taskXML.getChildText("PreviousTaskName1", bwNamespace);
+				String previousTask2 = taskXML.getChildText("PreviousTaskName2", bwNamespace);
+				previousTask = previousTask1 + ", " + previousTask2;
+			}
+			new Task(taskModel, taskName, taskDescription, taskPreCondition, taskPostCondition, previousTask);
 		}
 	}
 

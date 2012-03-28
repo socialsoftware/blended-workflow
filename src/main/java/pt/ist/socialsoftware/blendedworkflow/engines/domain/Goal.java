@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.ArrayList;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
@@ -88,6 +90,46 @@ public class Goal extends Goal_Base {
 			parentGoal.setState(GoalState.DEACTIVATED);
 			parentGoal.getGoalWorkItem().notifyPending();
 		}
+	}
+	
+	public String getConditionData() {
+		String dataString = getCondition().getData();
+		String r ="";
+		
+		String[] elementArr = dataString.split("\\.");
+		ArrayList<String> result = new ArrayList<String>();
+		for (int i = 0; i < elementArr.length ; i++) {
+			String element = elementArr[i];
+			if (!result.contains(element)) {
+				result.add(element);
+			}
+		}
+		
+		if (result.size() == 1) {
+			r += result.get(0);
+		}
+		else {
+			for (int i = 0; i < result.size()-1 ; i++) {
+				r += result.get(i) + ", ";
+			}
+			r += result.get(result.size()-1);
+		}
+		return r;
+	}
+	
+	public String getSubGoalsData() {
+		String r = "";
+		Boolean first = true;
+		for (Goal subGoal : getSubGoals()) {
+			String subGoalDataString = subGoal.getConditionData();
+			if (first) {
+				r += subGoalDataString;
+			}
+			else {
+				r += ", " + subGoalDataString;
+			}
+		}
+		return r;
 	}
 
 }

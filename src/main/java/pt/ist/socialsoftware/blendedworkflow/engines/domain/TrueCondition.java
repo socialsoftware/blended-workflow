@@ -21,5 +21,10 @@ public class TrueCondition extends TrueCondition_Base {
 	
 	@Override
 	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {}
+	
+	@Override
+	String getData() {
+		return "";
+	}
     
 }

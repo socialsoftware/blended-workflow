@@ -68,6 +68,7 @@ class Task {
 	String name;
 	String description;
 	TaskState state;
+	String previous;
 }
 
 class Condition;
@@ -260,11 +261,10 @@ relation TaskHasPostCondition {
 	Condition playsRole postConstraint { multiplicity 0..1; }
 }
 
-relation TaskHasGoalWorkItem {
+relation TaskHasTaskWorkItem {
 	Task playsRole task { multiplicity 0..1; }
 	TaskWorkItem playsRole taskWorkItem { multiplicity 0..1; }
 }
-
 
 // DataModel
 relation DataModelHasEntities {

@@ -25,6 +25,11 @@ public class NotCondition extends NotCondition_Base {
 	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
 		getCondition().assignAttributeInstances(taskWorkItem, conditionType);
 	}
+	
+	@Override
+	String getData() {
+		return getCondition().getData();
+	}
 
 
 }

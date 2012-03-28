@@ -37,4 +37,9 @@ public class AndCondition extends AndCondition_Base {
 		getConditionTwo().assignAttributeInstances(taskWorkItem, conditionType);
 	}
 	
+	@Override
+	String getData() {
+		return getConditionOne().getData() +"." + getConditionTwo().getData();
+	}
+	
 }

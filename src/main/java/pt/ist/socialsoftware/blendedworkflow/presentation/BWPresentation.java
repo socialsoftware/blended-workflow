@@ -116,7 +116,7 @@ public class BWPresentation extends Application {
 	private void initMainWindow(String name) {
 		// init and populate database
 		Bootstrap.init(BWPresentation.this);		
-		Bootstrap.populate();
+//		Bootstrap.populate();
 
 		username = name;
 		Label welcome = new Label("Welcome " + username + "   ");
@@ -212,14 +212,13 @@ public class BWPresentation extends Application {
 			}
 		});
 
-		bwSpecInfoTable.setWidth("400px");
-		bwSpecInfoTable.setHeight("130px");
 		bwSpecInfoTable.addContainerProperty("Name", String.class,  null);
 		bwSpecInfoTable.addContainerProperty("Value",  String.class,  null);
 
 		bwSpecJobsInfoTable.addContainerProperty("Name", String.class, "");
 		bwSpecJobsInfoTable.addContainerProperty("Description", String.class, "");
-		bwSpecJobsInfoTable.addContainerProperty("Related Data", String.class, "");
+		bwSpecJobsInfoTable.addContainerProperty("Input Data", String.class, "");
+		bwSpecJobsInfoTable.addContainerProperty("Output Data", String.class, "");
 
 		Button bwSpecificationLoadBtn = new Button("Load");
 		bwSpecificationLoadBtn.addListener(new ClickListener() {
@@ -252,10 +251,10 @@ public class BWPresentation extends Application {
 			}
 		});
 
-		bwSpecInfoTable.setWidth("300px");
-		bwSpecInfoTable.setHeight("130px");
+		bwSpecInfoTable.setWidth("400px");
+		bwSpecInfoTable.setHeight("150px");
 		bwSpecJobsInfoTable.setWidth("800px");
-		bwSpecJobsInfoTable.setHeight("260px");
+		bwSpecJobsInfoTable.setHeight("240px");
 
 		bwSpecBtnLayout.setSpacing(true);
 		bwSpecBtnLayout.setMargin(true);
@@ -492,14 +491,10 @@ public class BWPresentation extends Application {
 			}
 		});
 
-		goalList.setWidth("300px");
-		goalList.setHeight("450px");
 		goalList.setImmediate(true);
 		goalList.setNullSelectionAllowed(false);
 		initGoalListListener();
 
-		goalInfoTable.setWidth("400px");
-		goalInfoTable.setHeight("170px");
 		goalInfoTable.addContainerProperty("Name", String.class,  null);
 		goalInfoTable.addContainerProperty("Value",  String.class,  null);
 
@@ -546,13 +541,19 @@ public class BWPresentation extends Application {
 		});
 
 		// Layouts - configurations
+		goalList.setWidth("300px");
+		goalList.setHeight("450px");
+		goalInfoTable.setWidth("450px");
+		goalInfoTable.setHeight("155px");
+		
+		
 		bwInstancesBtnLayout.setSpacing(true);
 		bwInstancesBtnLayout.setMargin(true);
 		bwInstancesBtnLayout.addComponent(goalExecuteBtn);
 		bwInstancesBtnLayout.addComponent(goalSkipBtn);
 		bwInstancesBtnLayout.addComponent(goalCreateBtn);
 		bwInstancesBtnLayout.addComponent(goalListFilter);
-
+		
 		infoVL.setMargin(true);
 		infoVL.setSpacing(true);
 		infoVL.addComponent(goalInfoTable);
@@ -742,19 +743,21 @@ public class BWPresentation extends Application {
 		bwSpecInfoTable.addItem(new Object[] {"Description", bwSpecification.getDescription()}, new Integer(5));
 
 		// BW Tasks/Goals
-		Object tasks = bwSpecJobsInfoTable.addItem(new Object[] {"Tasks","", "" }, null);
-		Object goals = bwSpecJobsInfoTable.addItem(new Object[] {"Goals", "", "" }, null);
+		Object tasks = bwSpecJobsInfoTable.addItem(new Object[] {"Tasks","", "", ""}, null);
+		Object goals = bwSpecJobsInfoTable.addItem(new Object[] {"Goals", "", "", ""}, null);
+		
+
 
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		for (Task task : taskModel.getTasks()) {    	
-			Object task1 = bwSpecJobsInfoTable.addItem(new Object[] {task.getName(), task.getDescription(), "task.getData()"}, null);
+			Object task1 = bwSpecJobsInfoTable.addItem(new Object[] {task.getName(), task.getDescription(), task.getPreConstraintData(), task.getPostConstraintData()}, null);
 			bwSpecJobsInfoTable.setParent(task1, tasks);
 			bwSpecJobsInfoTable.setChildrenAllowed(task1, false);
 		}
 
 		GoalModel goalModel = bwSpecification.getGoalModel();
 		for (Goal goal : goalModel.getGoals()) {
-			Object goal1 = bwSpecJobsInfoTable.addItem(new Object[] {goal.getName(), goal.getDescription(), "goal.getData()"}, null);
+			Object goal1 = bwSpecJobsInfoTable.addItem(new Object[] {goal.getName(), goal.getDescription(), goal.getSubGoalsData(), goal.getConditionData()}, null);
 			bwSpecJobsInfoTable.setParent(goal1, goals);
 			bwSpecJobsInfoTable.setChildrenAllowed(goal1, false);
 		}
@@ -808,7 +811,7 @@ public class BWPresentation extends Application {
 		for (Entity entity : dataModelInstance.getEntities()) {
 			Object entityItem = entitydetailsTreetable.addItem(new Object[] {entity.getName(),"",""}, null);
 			for (EntityInstance entityInstance : entity.getEntityInstances()) {
-				Object entityInstanceItem = entitydetailsTreetable.addItem(new Object[] {entityInstance.getID(),"",""}, null);
+				Object entityInstanceItem = entitydetailsTreetable.addItem(new Object[] {entityInstance.getID(),"",entityInstance.getState()}, null);
 				entitydetailsTreetable.setParent(entityInstanceItem, entityItem);
 				for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
 					Object attributeInstanceItem = entitydetailsTreetable.addItem(new Object[] {attributeInstance.getAttribute().getName(), attributeInstance.getValue(), attributeInstance.getState()}, null);
@@ -869,8 +872,7 @@ public class BWPresentation extends Application {
 		taskInfoTable.addItem(new Object[] {"Description", task.getDescription()}, new Integer(2));
 		taskInfoTable.addItem(new Object[] {"Input Data", inputData}, new Integer(3));
 		taskInfoTable.addItem(new Object[] {"Output Data", outputData}, new Integer(4));
-		//		taskInfoTable.addItem(new Object[] {"Previous Task","???"}, new Integer(5));
-		//		taskInfoTable.addItem(new Object[] {"Next Task","???"}, new Integer(5));
+		taskInfoTable.addItem(new Object[] {"Previous Task",task.getPrevious()}, new Integer(5));
 	}
 
 	@Atomic

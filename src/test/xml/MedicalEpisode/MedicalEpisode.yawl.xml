@@ -293,7 +293,7 @@
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
         <defaultValue>false</defaultValue>
       </outputParam>
-      <yawlService id="http://localhost:8081/blendedWorkflowService/ib" />
+      <yawlService id="http://localhost:8081/blendedworkflow/ib" />
       <externalInteraction>manual</externalInteraction>
     </decomposition>
     <decomposition id="Check-in_Patient" xsi:type="WebServiceGatewayFactsType">
@@ -303,7 +303,7 @@
         <type>patient</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
       </outputParam>
-      <yawlService id="http://localhost:8081/blendedWorkflowService/ib" />
+      <yawlService id="http://localhost:8081/blendedworkflow/ib" />
       <externalInteraction>manual</externalInteraction>
     </decomposition>
     <decomposition id="Collect_Data" xsi:type="WebServiceGatewayFactsType">
@@ -319,7 +319,7 @@
         <type>adminPatData</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
       </outputParam>
-      <yawlService id="http://localhost:8081/blendedWorkflowService/ib" />
+      <yawlService id="http://localhost:8081/blendedworkflow/ib" />
       <externalInteraction>manual</externalInteraction>
     </decomposition>
     <decomposition id="Doctor_appointment" xsi:type="WebServiceGatewayFactsType">
@@ -371,7 +371,7 @@
         <type>prescription</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
       </outputParam>
-      <yawlService id="http://localhost:8081/blendedWorkflowService/ib" />
+      <yawlService id="http://localhost:8081/blendedworkflow/ib" />
       <externalInteraction>manual</externalInteraction>
     </decomposition>
     <decomposition id="Physical_Examination" xsi:type="WebServiceGatewayFactsType">
@@ -387,7 +387,7 @@
         <type>nursePatData</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
       </outputParam>
-      <yawlService id="http://localhost:8081/blendedWorkflowService/ib" />
+      <yawlService id="http://localhost:8081/blendedworkflow/ib" />
       <externalInteraction>manual</externalInteraction>
     </decomposition>
   </specification>

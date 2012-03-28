@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+
 public class EntityInstance extends EntityInstance_Base {
 
 	public EntityInstance(DataModelInstance dataModelInstance, Entity entity) {
@@ -7,8 +9,9 @@ public class EntityInstance extends EntityInstance_Base {
 		setID(entity.getName() + "." + entity.getNewEntityInstanceId()); // Id: EntityName.#
 		setAttributeInstanceCounter(0);
 		setRelationInstanceCounter(0);
+		setState(DataState.UNDEFINED);
 	}
-
+	
 	public String getNewAttributeInstanceID () {
 		setAttributeInstanceCounter(getAttributeInstanceCounter()+1);
 		return getAttributeInstanceCounter().toString();

@@ -45,8 +45,8 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 		// Properties
 		setMargin(true);
 		setSpacing(false);
-		setHeight("450px");
-		setWidth("590px");
+		setHeight("400px");
+		setWidth("560px");
 
 		dataHL.setSpacing(true);
 		submitPanel.setSpacing(true);
@@ -97,7 +97,7 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 				try {
 					long bwInstanceOID = (Long) bwInstances.getValue();
 					String goalName = (String) name.getValue();
-					String goalDescription = (String) name.getDescription();
+					String goalDescription = (String) description.getValue();
 					long parentGoalID = (Long) parentGoal.getValue();
 					String goalCondition = createCondition();
 					new CreateGoalService(bwInstanceOID, goalName, goalDescription, parentGoalID, goalCondition).execute();

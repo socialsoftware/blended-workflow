@@ -38,7 +38,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 	protected String sessionHandle = null;
 	protected String engineIaURI = "http://localhost:8080/yawl/ia";
 	protected String engineIbURI = "http://localhost:8080/yawl/ib";
-	protected String bwURI = "http://localhost:8081/blendedWorkflowService/ib";
+	protected String bwURI = "http://localhost:8081/blendedworkflow/ib";
 
 	private static Logger log;
 
@@ -106,7 +106,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		}
 		catch (IOException ioe) {
 			log.error("addRegisteredService", ioe);
-			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
+			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_REGISTER_SERVICE);
 		}
 	}
 
@@ -118,7 +118,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		}
 		catch (IOException ioe) {
 			log.error("removeRegisteredService()", ioe);
-			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
+			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_REMOVE_SERVICE);
 		}
 	}
 
@@ -136,7 +136,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		}
 		catch (IOException ioe) {
 			log.error("addClientAccount", ioe);
-			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
+			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_REGISTER_CLIENT);
 		}
 	}
 
@@ -147,7 +147,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		}
 		catch (IOException ioe) {
 			log.error("removeClientAccount", ioe);
-			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
+			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_REMOVE_CLIENT);
 		}
 	}
 
@@ -170,7 +170,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		for (SpecificationData specificationData : getLoadedSpecs()) {
 			if(specificationData.getID().equals(ySpecificationID)) {
 				log.info("Specification already loaded. Not loading again.");
-				throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
+				throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_LOAD_SPECIFICATION , "Specification already loaded. Not loading again.");
 			}
 		}
 		
@@ -184,12 +184,12 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 				}
 				else {
 					log.error("Specification " + ySpecificationID.getIdentifier() + " was not correctly uploaded.");
-					throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
+					throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_LOAD_SPECIFICATION , "Sucess False");
 				}
 			} 		
 		} catch(IOException ioe) {
 			log.error("IOException: Specification " + ySpecificationID.getIdentifier() + " was not correctly uploaded");
-			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
+			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_LOAD_SPECIFICATION, "IOException");
 		}
 	}
 

@@ -10,6 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 
@@ -49,19 +50,11 @@ public class BWSpecificationFactory {
 		BlendedWorkflow.getInstance().getBwManager().notifyLoadedBWSpecification(bwSpecification);
 
 		// Load YAWL Specification on the engine
-//		try {
-//		String yawlSpecificationFileName = specificationName.getChildText("yawlSpecificationFILENAME", bwNamespace);
-//		String yawlSpecification = StringUtils.fileToString(yawlSpecificationFileName);
-//
-//		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(yawlSpecification);
+//		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(yawlXML);
 //		
-//		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlSpecification).getIdentifier();
+//		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlXML).getIdentifier();
 //		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
-//		}
-//		catch (BlendedWorkflowException bwe) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.YAWL_ADAPTER);
-//		}
-		
+
 		// Create Worklet Rules
 //		WorkletAdapter.getInstance().loadRDRTrees();
 	}

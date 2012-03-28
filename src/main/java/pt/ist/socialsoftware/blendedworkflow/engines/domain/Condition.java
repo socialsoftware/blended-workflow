@@ -22,4 +22,6 @@ public abstract class Condition extends Condition_Base {
 	
 	abstract void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType);
 
+	abstract String getData();
+
 }

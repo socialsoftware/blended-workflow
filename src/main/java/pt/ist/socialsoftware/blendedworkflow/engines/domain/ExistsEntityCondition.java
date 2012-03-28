@@ -29,5 +29,10 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	public void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
 		getEntity().assignAllAttributeInstances(taskWorkItem, getEntity(), conditionType);
 	}
+	
+	@Override
+	String getData() {
+		return getEntity().getName();
+	}
 
 }

@@ -7,6 +7,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import jvstm.Atomic;
 
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Tree;
@@ -35,7 +36,7 @@ public class DataModelTree extends VerticalLayout {
 
 		// Properties
 		setMargin(true);
-		setWidth("500px");
+		setWidth("400px");
 		setSpacing(true);
 
 		treetable.setWidth("100%");
@@ -99,6 +100,7 @@ public class DataModelTree extends VerticalLayout {
 		footer.addComponent(submitButton);
 		footer.addComponent(cancelButton);
 		addComponent(footer);
+		setComponentAlignment(footer, Alignment.BOTTOM_CENTER);
 		
 		// Populate
 		getDataModel(bwInstanceOID);

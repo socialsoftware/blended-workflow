@@ -36,5 +36,10 @@ public class OrCondition extends OrCondition_Base {
 		getConditionOne().assignAttributeInstances(taskWorkItem, conditionType);
 		getConditionTwo().assignAttributeInstances(taskWorkItem, conditionType);
 	}
+	
+	@Override
+	String getData() {
+		return getConditionOne().getData() +"." + getConditionTwo().getData();
+	}
 
 }
