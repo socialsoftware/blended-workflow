@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -223,9 +224,14 @@ public class WorkletAdapter  { //extends WorkletEventListener {
 				// Cornerstone data
 				String cornerStr = "<cornerstone>";
 
-				List<Entity> entities = goal.getEntities();
-				List<Attribute> attributes = goal.getAttributes();
-
+				Set<Entity> entities = goal.getCondition().getEntities();
+				Set<Attribute> attributes = goal.getCondition().getAttributes();
+				
+				// remove nulls
+				if (entities.contains(null))
+					entities.remove(null);
+				if (attributes.contains(null))
+					attributes.remove(null);
 				// remove attributes that already exist in entities
 				for (Attribute attribute : attributes) {
 					Entity entity = attribute.getEntity();

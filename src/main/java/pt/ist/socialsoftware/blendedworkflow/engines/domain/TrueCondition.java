@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.Set;
+
 public class TrueCondition extends TrueCondition_Base {
     
     public TrueCondition() {
@@ -33,13 +35,13 @@ public class TrueCondition extends TrueCondition_Base {
 	}
 	
 	@Override
-	public String getEntities() {
-		return "null";
+	public Set<Entity> getEntities() {
+		return null;
 	}
 	
 	@Override
-	public String getAttributes() {
-		return "null";
+	public Set<Attribute> getAttributes() {
+		return null;
 	}
     
 }

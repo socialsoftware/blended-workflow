@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.Set;
+
 public class AndCondition extends AndCondition_Base {
 
 	public AndCondition(Condition one, Condition two) {
@@ -48,13 +50,19 @@ public class AndCondition extends AndCondition_Base {
 	}
 	
 	@Override
-	public String getEntities() {
-		return getConditionOne().getEntities() + "." + getConditionTwo().getEntities();
+	public Set<Entity> getEntities() {
+		Set<Entity> entitiesOne = getConditionOne().getEntities();
+		Set<Entity> entitiesTwo = getConditionTwo().getEntities();
+		entitiesOne.addAll(entitiesTwo);
+		return entitiesOne;
 	}
 	
 	@Override
-	public String getAttributes() {
-		return getConditionOne().getAttributes() + "." + getConditionTwo().getAttributes();
+	public Set<Attribute> getAttributes() {
+		Set<Attribute> attributesOne = getConditionOne().getAttributes();
+		Set<Attribute> attributesTwo = getConditionTwo().getAttributes();
+		attributesOne.addAll(attributesTwo);
+		return attributesOne;
 	}
 	
 }

@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 
 	public ExistsEntityCondition(Entity entity) {
@@ -41,13 +44,15 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 	
 	@Override
-	public String getEntities() {
-		return getEntity().getOID() +"";
+	public Set<Entity> getEntities() {
+		Set<Entity> entity = new HashSet<Entity>();
+		entity.add(getEntity());
+		return entity;
 	}
 	
 	@Override
-	public String getAttributes() {
-		return "null";
+	public Set<Attribute> getAttributes() {
+		return null;
 	}
 
 }

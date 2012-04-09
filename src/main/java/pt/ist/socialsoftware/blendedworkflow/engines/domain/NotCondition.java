@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.Set;
+
 public class NotCondition extends NotCondition_Base {
 
 	public NotCondition(Condition condition) {
@@ -37,13 +39,13 @@ public class NotCondition extends NotCondition_Base {
 	}
 	
 	@Override
-	public String getEntities() {
-		return "null";
+	public Set<Entity> getEntities() {
+		return null;
 	}
 	
 	@Override
-	public String getAttributes() {
-		return "null";
+	public Set<Attribute> getAttributes() {
+		return null;
 	}
 
 

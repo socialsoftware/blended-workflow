@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class CompareAttributeToValueCondition extends CompareAttributeToValueCondition_Base {
 
 	public CompareAttributeToValueCondition(){
@@ -49,13 +52,15 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	}
 	
 	@Override
-	public String getEntities() {
-		return "null";
+	public Set<Entity> getEntities() {
+		return null;
 	}
 	
 	@Override
-	public String getAttributes() {
-		return getAttribute().getOID() +"";
+	public Set<Attribute> getAttributes() {
+		Set<Attribute> attribute = new HashSet<Attribute>();
+		attribute.add(getAttribute());
+		return attribute;
 	}
 	
 }

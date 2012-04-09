@@ -1,9 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
@@ -134,36 +132,36 @@ public class Goal extends Goal_Base {
 		return r;
 	}
 
-	public List<Entity> getEntities() {
-		ArrayList<Entity> entities = new ArrayList<Entity>();
-		
-		String dataString = getCondition().getEntities();
-		String[] elementArr = dataString.split("\\.");
-		
-		for (int i = 0; i < elementArr.length ; i++) {
-			String element = elementArr[i];
-			if (!entities.contains(element) && !element.equals("null")) {
-				Entity entity = AbstractDomainObject.fromOID(new Long(element));
-				entities.add(entity);
-			}
-		}
-		return entities;
-	}
-
-	public List<Attribute> getAttributes() {
-		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
-		
-		String dataString = getCondition().getAttributes();
-		String[] elementArr = dataString.split("\\.");
-		
-		for (int i = 0; i < elementArr.length ; i++) {
-			String element = elementArr[i];
-			if (!attributes.contains(element) && !element.equals("null")) {
-				Attribute entity = AbstractDomainObject.fromOID(new Long(element));
-				attributes.add(entity);
-			}
-		}
-		return attributes;
-	}
+//	public List<Entity> getEntities() {
+//		ArrayList<Entity> entities = new ArrayList<Entity>();
+//		
+//		String dataString = getCondition().getEntities();
+//		String[] elementArr = dataString.split("\\.");
+//		
+//		for (int i = 0; i < elementArr.length ; i++) {
+//			String element = elementArr[i];
+//			if (!entities.contains(element) && !element.equals("null")) {
+//				Entity entity = AbstractDomainObject.fromOID(new Long(element));
+//				entities.add(entity);
+//			}
+//		}
+//		return entities;
+//	}
+//
+//	public List<Attribute> getAttributes() {
+//		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+//		
+//		String dataString = getCondition().getAttributes();
+//		String[] elementArr = dataString.split("\\.");
+//		
+//		for (int i = 0; i < elementArr.length ; i++) {
+//			String element = elementArr[i];
+//			if (!attributes.contains(element) && !element.equals("null")) {
+//				Attribute entity = AbstractDomainObject.fromOID(new Long(element));
+//				attributes.add(entity);
+//			}
+//		}
+//		return attributes;
+//	}
 
 }

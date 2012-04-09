@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.Set;
+
 public abstract class Condition extends Condition_Base {
 
 	public Condition and(Condition one, Condition other) {
@@ -26,8 +28,8 @@ public abstract class Condition extends Condition_Base {
 
 	public abstract String getString();
 
-	public abstract String getEntities();
+	public abstract Set<Entity> getEntities();
 
-	public abstract String getAttributes();
+	public abstract Set<Attribute> getAttributes();
 
 }
