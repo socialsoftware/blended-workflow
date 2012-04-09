@@ -3,3 +3,4 @@
 target
 bin
 dist
+src/main/config/build.properties
