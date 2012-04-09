@@ -87,5 +87,10 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		setState(WorkItemState.CONSTRAINT_VIOLATION);
 		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
 	}
+	
+	@Override
+	public String getJobName() {
+		return getTask().getName();
+	}
 
 }

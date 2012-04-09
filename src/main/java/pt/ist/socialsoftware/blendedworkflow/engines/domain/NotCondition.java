@@ -30,6 +30,21 @@ public class NotCondition extends NotCondition_Base {
 	String getData() {
 		return getCondition().getData();
 	}
+	
+	@Override
+	public String getString() {
+		return getCondition() + ".not()";
+	}
+	
+	@Override
+	public String getEntities() {
+		return "null";
+	}
+	
+	@Override
+	public String getAttributes() {
+		return "null";
+	}
 
 
 }

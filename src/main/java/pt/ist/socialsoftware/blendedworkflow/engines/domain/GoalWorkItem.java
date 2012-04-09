@@ -50,5 +50,10 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		setState(WorkItemState.CONSTRAINT_VIOLATION);
 		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
 	}
+	
+	@Override
+	public String getJobName() {
+		return getGoal().getName();
+	}
 
 }

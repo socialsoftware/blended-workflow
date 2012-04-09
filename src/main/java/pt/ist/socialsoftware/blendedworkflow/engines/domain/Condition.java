@@ -24,4 +24,10 @@ public abstract class Condition extends Condition_Base {
 
 	abstract String getData();
 
+	public abstract String getString();
+
+	public abstract String getEntities();
+
+	public abstract String getAttributes();
+
 }

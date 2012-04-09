@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
+import java.io.IOException;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -10,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
@@ -56,7 +59,13 @@ public class BWSpecificationFactory {
 //		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
 
 		// Create Worklet Rules
-//		WorkletAdapter.getInstance().loadRDRTrees();
+//		BlendedWorkflow.getInstance().getWorkletAdapter().loadRDRSet(bwSpecification);
+//		try {
+//			BlendedWorkflow.getInstance().getWorkletAdapter().loadOrganizeConcert();
+//		} catch (IOException e) {
+//			new BlendedWorkflowException (BlendedWorkflowError.FALSE_PRE_CONSTRAIN);
+//		}
+
 	}
 
 }

@@ -30,6 +30,8 @@
 	<property name="war.filename" value="${application.name}.war"/>
 	<property name="build.properties.filename" value="build.properties" />
 	<property name="build.properties.rel-dir" value="${config.src.rel-dir}/${build.properties.filename}"/>
+	<property name="log.properties.filename" value="log4j.properties" />
+	<property name="log.properties.rel-dir" value="${config.src.rel-dir}/${log.properties.filename}"/>
 	<property name="medical.episode.rel-dir" value="${test.src.rel-dir}/xml/MedicalEpisode"/>
 	
 	<property file="${build.properties.rel-dir}" />
@@ -102,7 +104,7 @@
 	<target name="clean" description="Cleans the compiled classes and generated sources">
 		<delete dir="${build.rel-dir}" />
 		<delete dir="${eclipse.build.rel-dir}" />
-		<delete dir="${dist.rel-dir}" />
+		<!--  <delete dir="${dist.rel-dir}" /> -->
 		<delete dir="${test-db.rel-dir}"/>
 		<delete dir="${db.rel-dir}"/>
 	</target>
@@ -110,7 +112,8 @@
 	<!-- Prepare War -->
 	<target name="prepare-war" depends="compile, instrument-classes">
 		<copy file="${dml.rel-file}" todir="${classes.build.rel-dir}"/>
-			<copy file="${build.properties.rel-dir}" todir="${classes.build.rel-dir}"/>
+		<copy file="${build.properties.rel-dir}" todir="${classes.build.rel-dir}"/>
+		<copy file="${log.properties.rel-dir}" todir="${classes.build.rel-dir}"/>
 				<copy todir="${war.target.rel-dir}" >
 					<fileset dir="${webapp.src.rel-dir}" includes="**"/>
 				</copy>

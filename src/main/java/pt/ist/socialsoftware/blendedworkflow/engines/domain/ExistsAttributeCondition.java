@@ -36,5 +36,20 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	String getData() {
 		return getAttribute().getEntity().getName();
 	}
+	
+	@Override
+	public String getString() {
+		return "existsAttribute(" + getAttribute().getEntity().getName() + "." + getAttribute().getName() +")";
+	}
+	
+	@Override
+	public String getEntities() {
+		return "null";
+	}
+	
+	@Override
+	public String getAttributes() {
+		return getAttribute().getOID() +"";
+	}
 
 }

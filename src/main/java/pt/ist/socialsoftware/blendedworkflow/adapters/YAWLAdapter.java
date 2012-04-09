@@ -100,8 +100,17 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 	public void addBWService() throws BlendedWorkflowException {
 		try {
 			if (connected()) {
-				YAWLServiceReference service = new YAWLServiceReference(bwURI,null,engineUser,enginePassword,engineDoco);
-				this.interfaceAClient.addYAWLService(service, sessionHandle);
+				
+				Boolean registered = false;
+				for (YAWLServiceReference yawlServiceReference : this.interfaceAClient.getRegisteredYAWLServices(sessionHandle)) {
+					if (yawlServiceReference.getServiceName().equals(engineUser)) {
+						registered = true;
+					}
+				}
+				if (!registered) {
+					YAWLServiceReference service = new YAWLServiceReference(bwURI,null,engineUser,enginePassword,engineDoco);
+					this.interfaceAClient.addYAWLService(service, sessionHandle);
+				}
 			}
 		}
 		catch (IOException ioe) {
@@ -132,7 +141,15 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 	// BW Client Application
 	public void addBWClientAccount() throws BlendedWorkflowException {
 		try {
-			this.interfaceAClient.addClientAccount(engineUser, enginePassword, engineDoco, connect(this.engineAdminUser, this.engineAdminPassword));
+			Boolean registered = false;
+			for (YExternalClient yExternalClient : this.interfaceAClient.getClientAccounts(connect(this.engineAdminUser, this.engineAdminPassword))) {
+				if (yExternalClient.getUserName().equals(engineUser)) {
+					registered = true;
+				}
+			}
+			if (!registered) {
+				this.interfaceAClient.addClientAccount(engineUser, enginePassword, engineDoco, connect(this.engineAdminUser, this.engineAdminPassword));
+			}
 		}
 		catch (IOException ioe) {
 			log.error("addClientAccount", ioe);

@@ -9,6 +9,7 @@ import jvstm.Atomic;
 import pt.ist.fenixframework.Config;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapterTestInterface;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -54,6 +55,15 @@ public class Bootstrap {
 		}});
 
 		setBWPresentation(bwPresentation);
+	}
+	
+	public static void init() {
+		FenixFramework.initialize(new Config() {{
+			dbAlias = PropertiesManager.getProperty("dbAlias");
+			domainModelPath = PropertiesManager.getProperty("dml.filename");
+			repositoryType = RepositoryType.BERKELEYDB;
+			rootClass = BlendedWorkflow.class;
+		}});
 	}
 
 	public static void initTestDB() {

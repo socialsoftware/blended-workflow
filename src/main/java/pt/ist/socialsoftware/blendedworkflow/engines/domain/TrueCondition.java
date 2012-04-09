@@ -26,5 +26,20 @@ public class TrueCondition extends TrueCondition_Base {
 	String getData() {
 		return "";
 	}
+	
+	@Override
+	public String getString() {
+		return "true";
+	}
+	
+	@Override
+	public String getEntities() {
+		return "null";
+	}
+	
+	@Override
+	public String getAttributes() {
+		return "null";
+	}
     
 }

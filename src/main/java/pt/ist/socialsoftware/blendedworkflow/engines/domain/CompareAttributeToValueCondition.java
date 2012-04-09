@@ -42,4 +42,20 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	String getData() {
 		return getAttribute().getEntity().getName();
 	}
+	
+	@Override
+	public String getString() {
+		return "compareAttributeTo(" + getAttribute().getEntity().getName() + "." + getAttribute().getName() + "," + getOperator() + "." + getValue() +")";
+	}
+	
+	@Override
+	public String getEntities() {
+		return "null";
+	}
+	
+	@Override
+	public String getAttributes() {
+		return getAttribute().getOID() +"";
+	}
+	
 }

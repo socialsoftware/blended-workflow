@@ -41,5 +41,20 @@ public class OrCondition extends OrCondition_Base {
 	String getData() {
 		return getConditionOne().getData() +"." + getConditionTwo().getData();
 	}
+	
+	@Override
+	public String getString() {
+		return getConditionOne().getString() + " or " + getConditionTwo().getString();
+	}
+	
+	@Override
+	public String getEntities() {
+		return getConditionOne().getEntities() + "." + getConditionTwo().getEntities();
+	}
+	
+	@Override
+	public String getAttributes() {
+		return getConditionOne().getAttributes() + "." + getConditionTwo().getAttributes();
+	}
 
 }

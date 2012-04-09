@@ -19,7 +19,7 @@ public class LaunchForm extends VerticalLayout {
 		setMargin(true);
 		
 		setWidth("200px");
-		setHeight("100px");
+		setHeight("130px");
 		
 		final TextField nameTf = new TextField("Name");
 		addComponent(nameTf);

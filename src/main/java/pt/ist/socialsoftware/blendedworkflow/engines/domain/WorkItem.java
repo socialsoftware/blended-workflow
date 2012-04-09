@@ -83,5 +83,7 @@ public abstract class WorkItem extends WorkItem_Base {
 	public abstract void notifyPending();
 	
 	public abstract void notifyConstrainViolation();
+	
+	public abstract String getJobName();
 
 }

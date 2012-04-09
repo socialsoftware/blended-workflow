@@ -42,4 +42,19 @@ public class AndCondition extends AndCondition_Base {
 		return getConditionOne().getData() +"." + getConditionTwo().getData();
 	}
 	
+	@Override
+	public String getString() {
+		return getConditionOne().getString() + " and " + getConditionTwo().getString();
+	}
+	
+	@Override
+	public String getEntities() {
+		return getConditionOne().getEntities() + "." + getConditionTwo().getEntities();
+	}
+	
+	@Override
+	public String getAttributes() {
+		return getConditionOne().getAttributes() + "." + getConditionTwo().getAttributes();
+	}
+	
 }

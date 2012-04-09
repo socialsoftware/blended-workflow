@@ -9,6 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipW
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
@@ -115,7 +116,7 @@ public class BWPresentation extends Application {
 
 	private void initMainWindow(String name) {
 		// init and populate database
-		Bootstrap.init(BWPresentation.this);		
+//		Bootstrap.init(BWPresentation.this);
 //		Bootstrap.populate();
 
 		username = name;
