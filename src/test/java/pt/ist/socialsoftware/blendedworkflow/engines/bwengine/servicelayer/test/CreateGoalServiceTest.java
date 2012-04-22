@@ -41,7 +41,7 @@ public class CreateGoalServiceTest {
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
 	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml";
 
-	//	private static String YAWLCASE_ID = "yawlCaseID";
+	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String SECONDOPINION_ID = "Second Opinion.4";
@@ -77,8 +77,9 @@ public class CreateGoalServiceTest {
 		workListManager = context.mock(WorkListManager.class);
 		context.checking(new Expectations() {
 			{
-				//				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
-				//				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
+				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
+				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
 				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
@@ -169,7 +170,7 @@ public class CreateGoalServiceTest {
 			assertEquals(SECONDOPINION_ID, workItem.getID());
 
 			assertEquals(GoalState.DEACTIVATED, parentGoal.getState());
-			assertEquals(WorkItemState.PENDING, parentGoal.getGoalWorkItem().getState());
+			assertEquals(WorkItemState.GOAL_PENDING, parentGoal.getGoalWorkItem().getState());
 
 			Transaction.commit();
 			committed = true;

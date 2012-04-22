@@ -1,89 +1,112 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-
 public abstract class WorkItem extends WorkItem_Base {
 
-	public enum WorkItemState {PRE_CONSTRAINT, PRE_TASK, ENABLED, CONSTRAINT_VIOLATION, PENDING, CHECKED_IN, SKIPPED, COMPLETED};
+	public enum WorkItemState {PRE_TASK, PRE_FALSE, CONSTRAINT_VIOLATION, ENABLED, GOAL_PENDING, CHECKED_IN, SKIPPED, 
+		COMPLETED, RE_ACTIVATED};
 
-	public void notifyWorkItemCheckedIn() {
-		setAttributeValues();
-		if (getState() == WorkItemState.ENABLED) {
-			setState(WorkItemState.CHECKED_IN);
-			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
-		}	
-		notifyWorkItemDataChanged();
-	}
-
+	/******************************
+	 * State Change Notifications *
+	 ******************************/
 	
-	public void notifyWorkItemSkipped() {
-		setAttributesSkipped();
-		if (getState() == WorkItemState.ENABLED) {
-			setState(WorkItemState.SKIPPED);
-			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
-		}
-		notifyWorkItemDataChanged();
-	}
-
-	private void notifyWorkItemDataChanged() {
-		Set<WorkItem> notifyWorkItems = new HashSet<WorkItem>();
-		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
-			for (WorkItem workItem : attributeInstance.getWorkItems()) {
-				if (workItem != this) {
-					notifyWorkItems.add(workItem);
-				}
-			}
-		}
-		for (WorkItem workItem : notifyWorkItems) {
-			workItem.notifyDataChange();
-		}
-
-	}
-
-	private void notifyDataChange() {
-		if (getState() == WorkItemState.ENABLED) {
-			setState(WorkItemState.CONSTRAINT_VIOLATION);
-			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
-		}
-	}
-
-	private void setAttributeValues() {
-		// Add pre-activity data
-		if (getPreConstrainWorkItemArgumentsCount() > 0) {
-			for (WorkItemArgument workItemArgument : getPreConstrainWorkItemArguments()) {
-
-				workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
-			}
-		}
-		
-		// Add constrainViolation data
-		for (WorkItemArgument workItemArgument : getConstrainViolationWorkItemArguments()) {
-			workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
-		}
-	}
-
-	private void setAttributesSkipped() {
-		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
-			if (attributeInstance.getState() == DataState.UNDEFINED) {
-				attributeInstance.setState(DataState.SKIPPED);
-			}
-		}
-	}
-
-	// to be redefined for each kind of work item, either goal or activity
-	public abstract void notifyEnabled();
-
-	public abstract void notifyCompleted();
-
-	public abstract void notifySkipped();
+	/**
+	 * Notify a TaskWorkItem if its PreConstraint = SKIPPED
+	 */
+	public abstract void notifyPreTask();
 	
-	public abstract void notifyPending();
+	/**
+	 * Notify a TaskWorkItem if its PreConstraint = FALSE
+	 */
+	public abstract void notifyPreFalse();
 	
+	/**
+	 * Notify a TaskWorkItem if its PreConstraint = TRUE
+	 * Notify a GoalWorkItem when it is created
+	 * Notify a WorkItem if there is a Data change event
+	 */
 	public abstract void notifyConstrainViolation();
 	
-	public abstract String getJobName();
+	/**
+	 * Notify a TaskWorkItem if its PostConstraint = FALSE
+	 * Notify a GoalWorkItem if its Condition is False
+	 */
+	public abstract void notifyEnabled();
+	
+	/**
+	 * Notify a Parent GoalWorkItem if a new subGoal is created
+	 */
+	public abstract void notifyPending();
+	
+	/**
+	 * Notify a WorkItem if there is a CheckIn event
+	 */
+	public void notifyCheckedIn() {
+		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
+			setState(WorkItemState.CHECKED_IN);
+		}
+		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
+	}
+	
+	/**
+	 * Notify a WorkItem if there is a Skip event
+	 */
+	public void notifySkip() {
+		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
+			setState(WorkItemState.CHECKED_IN);
+		}
+		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
+	}
+	
+	/**
+	 * Notify a TaskWorkItem if its PostConstraint = TRUE
+	 * Notify a GoalWorkItem if its Condition is TRUE
+	 */
+	public abstract void notifyCompleted();
 
+	/**
+	 * Notify a WorkItem if there is a Skip event
+	 * Notify a TaskWorkItem if its PostConstraint = SKIPPED
+	 * Notify a GoalWorkItem if its Condition is SKIPPED
+	 */
+	public abstract void notifySkipped();
+	
+	/**
+	 * Notify a GoalWorkItem if it is ReActivated
+	 */
+	public abstract void notifyReActivated();
+	
+	/***********************************
+	 * Commit WorkItemArguments values *
+	 ***********************************/
+
+	/**
+	 * Commits the new data to the dataModel.
+	 */
+	public abstract void setAttributeValues();
+	
+	/**
+	 * Commits the new data as SKIPPED to the dataModel.
+	 */
+	public abstract void setAttributeSkipped();
+	
+	/*****************************
+	 * Data Change Notifications *
+	 *****************************/
+
+	/**
+	 * Get all affected WorkItems an notifies then to reevaluate their conditions.
+	 */
+	public abstract void notifyWorkItemDataChanged(Boolean isPreTask);
+	
+	/**
+	 * Notify a WorkItem of a Data change.
+	 */
+	public void notifyDataChange() {
+		if (getState() == WorkItemState.ENABLED) {
+			notifyConstrainViolation();
+		} else if (getState() == WorkItemState.PRE_TASK) {
+			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPreConstraint((TaskWorkItem) this);
+		}
+	}
+	
 }

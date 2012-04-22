@@ -4,7 +4,10 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class TaskModel extends TaskModel_Base {
-    
+
+	/**
+	 * Clone the TaskModel
+	 */
 	public void cloneTaskModel(TaskModelInstance newTaskModelInstance) throws BlendedWorkflowException {
 		for (Task task : getTasks()) {
 			task.cloneTask(newTaskModelInstance);
@@ -19,5 +22,5 @@ public class TaskModel extends TaskModel_Base {
 		}
 		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_TASK_NAME, name);
 	}
-    
+
 }

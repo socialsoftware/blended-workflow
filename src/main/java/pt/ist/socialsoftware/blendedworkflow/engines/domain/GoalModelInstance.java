@@ -5,10 +5,9 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class GoalModelInstance extends GoalModelInstance_Base {
 
-	public GoalModelInstance(){
-		super();
-	}
-
+	/**
+	 * Check goalTree to get enabled WorkItems
+	 */
 	public void getEnabledWorkItems() {
 		for (Goal goal : getGoals()) {
 			goal.checkState(getBwInstance());

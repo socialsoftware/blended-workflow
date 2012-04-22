@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import jvstm.Atomic;
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
@@ -55,6 +57,7 @@ import com.vaadin.ui.Window.Notification;
 public class BWPresentation extends Application {
 
 	private String username = "";
+	private Logger log = Logger.getLogger("BWPresentation");
 
 	// Main Window
 	private final Window mainWindow = new Window("Blended Workflow");
@@ -93,9 +96,31 @@ public class BWPresentation extends Application {
 	private Table goalInfoTable = new Table("Goal Information:");
 	private Property.ValueChangeListener goalListListener;
 	private NativeSelect goalListFilter = new NativeSelect();
+	
+	private Application bwPresentation;
 
 	@Override
 	public void init() {
+		bwPresentation = this;
+		
+		// Init and populate database
+		if (!Bootstrap.isInitialized()) {
+			Bootstrap.init();
+			registerBWPresentation();
+			Bootstrap.populate();
+		}
+		registerBWPresentation();
+		initLoginWindow();
+	}
+
+	private void registerBWPresentation() {
+		Transaction.begin();
+		BlendedWorkflow.getInstance().getBwManager().setBwPresentation(BWPresentation.this);
+		BlendedWorkflow.getInstance().getWorkListManager().setBwPresentation(BWPresentation.this);
+		Transaction.commit();
+	}
+	
+	private void initLoginWindow() {
 		setTheme("reindeermods");
 		setMainWindow(mainWindow);
 
@@ -111,16 +136,20 @@ public class BWPresentation extends Application {
 
 		generateLoginForm();
 		mainWindow.addComponent(toolbar);
-
 	}
 
 	private void initMainWindow(String name) {
-		// init and populate database
-//		Bootstrap.init(BWPresentation.this);
-//		Bootstrap.populate();
+		String init="FirstLogin: ";
+		if (Bootstrap.isInitialized()) {
+			init = "SecondOrMoreLogin: ";
+			}
+			Transaction.begin();
+			BlendedWorkflow.getInstance().getBwManager().updateBWPresentation();
+			BlendedWorkflow.getInstance().getWorkListManager().updateBWPresentation();
+			Transaction.commit();
 
-		username = name;
-		Label welcome = new Label("Welcome " + username + "   ");
+		username += name;
+		Label welcome = new Label(init + "Welcome " + username + "   ");
 		welcome.addStyleName("h3");
 		Label splitter = new Label("|");
 		Label splitter2 = new Label("|");
@@ -159,38 +188,55 @@ public class BWPresentation extends Application {
 		logout.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getMainWindow().showNotification("This feature is still to implement", Notification.TYPE_WARNING_MESSAGE);
+				bwPresentation.close();
+				Bootstrap.setFirstRun();
+				initLoginWindow();
 			}
 		});
 
 		right.setSizeUndefined();
 		right.addStyleName("right");
 		right.addComponent(welcome);
-		right.addComponent(bwManagerBtn);
-		right.addComponent(splitter);
-		right.addComponent(wManagerBtn);
-		right.addComponent(splitter2);
-		right.addComponent(logout);
-		toolbar.addComponent(right);
-
-		// BWManager Tab
-		VerticalLayout bwManagerVL = initBWSpecTab();
-		VerticalLayout bwInstancesVL = initBWInstancesTab();
-		VerticalLayout bwInstancesDataVL = initBWInstanceDataTab();
-		VerticalLayout bwTaskViewVL = initTaskViewTab();
-		VerticalLayout bwGoalViewVL = initGoalViewTab();
-
+		
 		this.bwTabSheet = new TabSheet();
 		this.bwTabSheet.setHeight("100%");
 		this.bwTabSheet.setWidth("100%");
-		bwSpecTab = this.bwTabSheet.addTab(bwManagerVL, "BW Specifications");
-		bwInstanceTab = this.bwTabSheet.addTab(bwInstancesVL, "BW Instances");
-		bwDataTab = this.bwTabSheet.addTab(bwInstancesDataVL, "Data Model");
-		taskViewTab = this.bwTabSheet.addTab(bwTaskViewVL, "Task View");
-		goalViewTab = this.bwTabSheet.addTab(bwGoalViewVL, "Goal View");
-
-		taskViewTab.setEnabled(false);
-		goalViewTab.setEnabled(false);
+		
+		// BWManager Tab
+		if (username.equals("User")) {
+			right.addComponent(bwManagerBtn);
+			right.addComponent(splitter);
+			
+			VerticalLayout bwManagerVL = initBWSpecTab();
+			VerticalLayout bwInstancesVL = initBWInstancesTab();
+			VerticalLayout bwInstancesDataVL = initBWInstanceDataTab();
+			
+			bwSpecTab = this.bwTabSheet.addTab(bwManagerVL, "BW Specifications");
+			bwInstanceTab = this.bwTabSheet.addTab(bwInstancesVL, "BW Instances");
+			bwDataTab = this.bwTabSheet.addTab(bwInstancesDataVL, "Data Model");
+		} else {
+			right.addComponent(bwManagerBtn);
+			right.addComponent(splitter);
+			right.addComponent(wManagerBtn);
+			right.addComponent(splitter2);
+			
+			VerticalLayout bwManagerVL = initBWSpecTab();
+			VerticalLayout bwInstancesVL = initBWInstancesTab();
+			VerticalLayout bwInstancesDataVL = initBWInstanceDataTab();
+			VerticalLayout bwTaskViewVL = initTaskViewTab();
+			VerticalLayout bwGoalViewVL = initGoalViewTab();
+			
+			bwSpecTab = this.bwTabSheet.addTab(bwManagerVL, "BW Specifications");
+			bwInstanceTab = this.bwTabSheet.addTab(bwInstancesVL, "BW Instances");
+			bwDataTab = this.bwTabSheet.addTab(bwInstancesDataVL, "Data Model");
+			taskViewTab = this.bwTabSheet.addTab(bwTaskViewVL, "Task View");
+			goalViewTab = this.bwTabSheet.addTab(bwGoalViewVL, "Goal View");
+			taskViewTab.setEnabled(false);
+			goalViewTab.setEnabled(false);
+		}
+		
+		right.addComponent(logout);
+		toolbar.addComponent(right);
 
 		mainWindow.addComponent(this.bwTabSheet);
 	}
@@ -233,7 +279,7 @@ public class BWPresentation extends Application {
 		specificationUnLoadBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				// TODO: BWPresentation UnLoad
+				// TODO: UnLoad
 				getMainWindow().showNotification("Not Yet Implemented");
 			}
 		});
@@ -314,7 +360,7 @@ public class BWPresentation extends Application {
 		bwInstanceCancelBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				//TODO: BWPresentation Cancel
+				//TODO: Cancel
 				getMainWindow().showNotification("Not Yet Implemented");
 			}
 		});
@@ -416,12 +462,10 @@ public class BWPresentation extends Application {
 		taskList.setNullSelectionAllowed(false);
 		initTaskListListener();
 
-		Table bwInfoTable = new Table("Task Information:");
+		taskInfoTable = new Table("Task Information:");
 
-		bwInfoTable.setWidth("100%");
-		bwInfoTable.setHeight("130px");
-		bwInfoTable.addContainerProperty("Name", String.class,  null);
-		bwInfoTable.addContainerProperty("Value",  String.class,  null);
+		taskInfoTable.addContainerProperty("Name", String.class,  null);
+		taskInfoTable.addContainerProperty("Value",  String.class,  null);
 
 		Button taskExecuteBtn = new Button("Execute");
 		taskExecuteBtn.addListener(new ClickListener() {
@@ -429,7 +473,23 @@ public class BWPresentation extends Application {
 			public void buttonClick(ClickEvent event) {
 				try {
 					long workItemOID = (Long) taskList.getValue();
-					generateTaskForm(workItemOID);
+					
+					TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(workItemOID);
+					Transaction.begin();
+					Boolean isPreTask = false;
+					if (taskWorkItem.getState().equals(WorkItemState.PRE_TASK)) {
+						isPreTask = true;
+					}
+					Transaction.commit();
+					if (isPreTask) {
+						log.info("BWPresentation: execute PreTask");
+						generatePreTaskForm(workItemOID);
+					} else {
+						log.info("BWPresentation: execute normal Task");
+						generateTaskForm(workItemOID);
+					}
+					
+					
 				} catch (java.lang.NullPointerException jle) {
 					getMainWindow().showNotification("Please select a workItem to execute");
 				}
@@ -462,7 +522,7 @@ public class BWPresentation extends Application {
 
 		infoVL.setMargin(true);
 		infoVL.setSpacing(true);
-		infoVL.addComponent(bwInfoTable);
+		infoVL.addComponent(taskInfoTable);
 
 		infoHL.addComponent(taskList);
 		infoHL.addComponent(infoVL);
@@ -472,6 +532,9 @@ public class BWPresentation extends Application {
 		bwInstancesVL.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
 		bwInstancesVL.addComponent(bwInstancesBtnLayout);
 		bwInstancesVL.setComponentAlignment(bwInstancesBtnLayout, Alignment.TOP_LEFT);
+		
+		taskInfoTable.setWidth("450px");
+		taskInfoTable.setHeight("155px");
 
 		return bwInstancesVL;
 	}
@@ -633,6 +696,14 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(loginWindow);		
 	}
 
+	public void generatePreTaskForm(long workItemOID) {
+		Window taskWindow = new Window("");
+		taskWindow.setContent(new PreTaskForm(workItemOID));
+		taskWindow.setWidth("30%");
+		taskWindow.center();
+		getMainWindow().addWindow(taskWindow);		
+	}
+	
 	public void generateTaskForm(long workItemOID) {
 		Window taskWindow = new Window("");
 		taskWindow.setContent(new TaskForm(workItemOID));
@@ -698,15 +769,16 @@ public class BWPresentation extends Application {
 	}
 
 	protected void updateTaskList(long bwInstanceOID) {
+		log.info("updateTaskList");
 		this.taskList.removeListener(taskListListener);
 		this.taskList.removeAllItems();
 
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		Transaction.begin();
 		for (WorkItem workItem : bwInstance.getWorkItems()) {
-			if (workItem.getClass().equals(TaskWorkItem.class) && workItem.getState().equals(WorkItemState.CONSTRAINT_VIOLATION)) {
-				this.taskList.addItem(workItem.getOID());
-				this.taskList.setItemCaption(workItem.getOID(), workItem.getID());
+			if (workItem.getClass().equals(TaskWorkItem.class) && (workItem.getState().equals(WorkItemState.ENABLED) ||
+					workItem.getState().equals(WorkItemState.PRE_TASK))) {
+				addTaskWorkItem(workItem.getOID(), workItem.getID());
 			}
 		}
 		Transaction.commit();
@@ -714,19 +786,19 @@ public class BWPresentation extends Application {
 	}
 
 	protected void updateGoalList(long bwInstanceOID) {
+		log.info("updateGoalList");
 		this.goalList.removeListener(goalListListener);
 		this.goalList.removeAllItems();
 		initGoalListListener();
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		Transaction.begin();
 		for (WorkItem workItem : bwInstance.getWorkItems()) {
-			if (workItem.getClass().equals(GoalWorkItem.class) && workItem.getState().equals(WorkItemState.CONSTRAINT_VIOLATION)) {
-				this.goalList.addItem(workItem.getOID());
-				this.goalList.setItemCaption(workItem.getOID(), workItem.getID());
+			if (workItem.getClass().equals(GoalWorkItem.class) && workItem.getState().equals(WorkItemState.ENABLED)) {
+				addGoalWorkItem(workItem.getOID(), workItem.getID());
 			}
 		}
 		Transaction.commit();
-
+		initGoalListListener();
 	}
 
 
@@ -740,7 +812,7 @@ public class BWPresentation extends Application {
 		bwSpecInfoTable.addItem(new Object[] {"Name",bwSpecification.getName()}, new Integer(1));
 		bwSpecInfoTable.addItem(new Object[] {"Author", bwSpecification.getAuthor()}, new Integer(2));
 		bwSpecInfoTable.addItem(new Object[] {"Creation Date", bwSpecification.getCreationDate()}, new Integer(3));
-		bwSpecInfoTable.addItem(new Object[] {"Active Instances", bwSpecification.getBwInstanceCounter()}, new Integer(4));
+		bwSpecInfoTable.addItem(new Object[] {"Created Instances", bwSpecification.getBwInstanceCounter()}, new Integer(4));
 		bwSpecInfoTable.addItem(new Object[] {"Description", bwSpecification.getDescription()}, new Integer(5));
 
 		// BW Tasks/Goals
@@ -751,14 +823,14 @@ public class BWPresentation extends Application {
 
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		for (Task task : taskModel.getTasks()) {    	
-			Object task1 = bwSpecJobsInfoTable.addItem(new Object[] {task.getName(), task.getDescription(), task.getPreConstraintData(), task.getPostConstraintData()}, null);
+			Object task1 = bwSpecJobsInfoTable.addItem(new Object[] {task.getName(), task.getDescription(), task.getConstraintData(true), task.getConstraintData(false)}, null);
 			bwSpecJobsInfoTable.setParent(task1, tasks);
 			bwSpecJobsInfoTable.setChildrenAllowed(task1, false);
 		}
 
 		GoalModel goalModel = bwSpecification.getGoalModel();
 		for (Goal goal : goalModel.getGoals()) {
-			Object goal1 = bwSpecJobsInfoTable.addItem(new Object[] {goal.getName(), goal.getDescription(), goal.getSubGoalsData(), goal.getConditionData()}, null);
+			Object goal1 = bwSpecJobsInfoTable.addItem(new Object[] {goal.getName(), goal.getDescription(), goal.getSubGoalsData(), goal.getConstraintData()}, null);
 			bwSpecJobsInfoTable.setParent(goal1, goals);
 			bwSpecJobsInfoTable.setChildrenAllowed(goal1, false);
 		}
@@ -776,13 +848,13 @@ public class BWPresentation extends Application {
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
 		for (Task task : taskModelInstance.getTasks()) {
-			if (task.getState().equals(TaskState.ACHIEVED)) {
+			if (task.getState().equals(TaskState.ACHIEVED) || task.getState().equals(TaskState.SKIPPED)) {
 				executedTasksCount++;
 			}
 		}
 
 		for (Goal goal : goalModelInstance.getGoals()) {
-			if (goal.getState().equals(GoalState.ACHIEVED)) {
+			if (goal.getState().equals(GoalState.ACHIEVED) || goal.getState().equals(GoalState.SKIPPED)) {
 				achievedGoalsCount++;
 			}
 		}
@@ -874,6 +946,8 @@ public class BWPresentation extends Application {
 		taskInfoTable.addItem(new Object[] {"Input Data", inputData}, new Integer(3));
 		taskInfoTable.addItem(new Object[] {"Output Data", outputData}, new Integer(4));
 		taskInfoTable.addItem(new Object[] {"Previous Task",task.getPrevious()}, new Integer(5));
+		
+		taskInfoTable.setWidth("100%");
 	}
 
 	@Atomic
@@ -932,10 +1006,15 @@ public class BWPresentation extends Application {
 			}
 			outputIndex++;
 		}
+		
+		String parentGoal = "None";
+		if (goal.getParentGoal() != null) {
+			parentGoal = goal.getParentGoal().getName();
+		}
 
 		goalInfoTable.addItem(new Object[] {"Name", goal.getName()}, new Integer(1));
 		goalInfoTable.addItem(new Object[] {"Description", goal.getDescription()}, new Integer(2));
-		goalInfoTable.addItem(new Object[] {"Parent Goal", goal.getParentGoal().getName()}, new Integer(3));
+		goalInfoTable.addItem(new Object[] {"Parent Goal", parentGoal}, new Integer(3));
 		goalInfoTable.addItem(new Object[] {"Sub Goals", subGoals}, new Integer(4));
 		goalInfoTable.addItem(new Object[] {"Input Data", inputData}, new Integer(5));
 		goalInfoTable.addItem(new Object[] {"Output Data", outputData}, new Integer(6));

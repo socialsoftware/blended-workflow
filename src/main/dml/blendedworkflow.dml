@@ -48,6 +48,7 @@ class GoalWorkItem extends WorkItem;
 
 class WorkItemArgument {
 	String value;
+	DataState state;
 }
 
 class GoalModel;
@@ -197,12 +198,12 @@ relation LogHasLogRecords {
 
 // WorkItem
 relation WorkItemRefersToConstraintViolationAttributeInstances {
-	WorkItem playsRole workItems {multiplicity 0..*;}
+	WorkItem playsRole contraintViolationWorkItems {multiplicity 0..*;}
 	AttributeInstance playsRole contraintViolationAttributeInstances { multiplicity 0..*; }
 }
 
 relation TaskWorkItemRefersPreConstraintAttributteInstances {
-	TaskWorkItem playsRole taskWorkItems {multiplicity 0..*;}
+	TaskWorkItem playsRole preConstraintTaskWorkItems {multiplicity 0..*;}
 	AttributeInstance playsRole preConstraintAttributeInstances { multiplicity 0..*; }
 }
 

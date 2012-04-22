@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,18 +43,8 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	}
 	
 	@Override
-	String getData() {
-		return getAttribute().getEntity().getName();
-	}
-	
-	@Override
-	public String getString() {
-		return "compareAttributeTo(" + getAttribute().getEntity().getName() + "." + getAttribute().getName() + "," + getOperator() + "." + getValue() +")";
-	}
-	
-	@Override
 	public Set<Entity> getEntities() {
-		return null;
+		return new HashSet<Entity>();
 	}
 	
 	@Override
@@ -63,4 +54,27 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		return attribute;
 	}
 	
+	@Override
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		HashMap<Attribute, String> result = new HashMap<Attribute, String>();
+		result.put(getAttribute(), getValue());
+		return result;
+	}
+	
+	@Override
+	public String getRdrCondition(String type) {
+		String condition = "";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		String joiner = " | ";
+		if (type.equals("DEFINED"))
+			joiner = " & ";
+			
+		condition += entityName + "_" + attributeName + "_State = " + type + joiner;
+		condition += entityName + "_" + attributeName + " " + getOperator() + " " + getValue();
+		
+		return condition;
+	}
+
 }

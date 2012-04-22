@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.HashMap;
 import java.util.Set;
 
 public class OrCondition extends OrCondition_Base {
@@ -40,16 +41,6 @@ public class OrCondition extends OrCondition_Base {
 	}
 	
 	@Override
-	String getData() {
-		return getConditionOne().getData() +"." + getConditionTwo().getData();
-	}
-	
-	@Override
-	public String getString() {
-		return getConditionOne().getString() + " or " + getConditionTwo().getString();
-	}
-	
-	@Override
 	public Set<Entity> getEntities() {
 		Set<Entity> entitiesOne = getConditionOne().getEntities();
 		Set<Entity> entitiesTwo = getConditionTwo().getEntities();
@@ -63,6 +54,19 @@ public class OrCondition extends OrCondition_Base {
 		Set<Attribute> attributesTwo = getConditionTwo().getAttributes();
 		attributesOne.addAll(attributesTwo);
 		return attributesOne;
+	}
+	
+	@Override
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		HashMap<Attribute, String> attributesOne = getConditionOne().getcompareConditionValues();
+		HashMap<Attribute, String> attributesTwo = getConditionTwo().getcompareConditionValues();
+		attributesOne.putAll(attributesTwo);
+		return attributesOne;
+	}
+	
+	@Override
+	public String getRdrCondition(String type) {
+		return getConditionOne().getRdrCondition(type) + " | " + getConditionTwo().getRdrCondition(type);
 	}
 
 }

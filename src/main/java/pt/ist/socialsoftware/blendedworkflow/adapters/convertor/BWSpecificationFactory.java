@@ -1,7 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
-import java.io.IOException;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -12,17 +10,10 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
-
 public class BWSpecificationFactory {
-
-	public static boolean isBWSpecificationValid(String rawSpecification) {
-		//TODO blended workflow specification checker
-		return true;
-	}
 
 	public static void createBWSpecification(String bwXML, String yawlXML) throws BlendedWorkflowException {
 		// BWSpecification Name
@@ -49,23 +40,25 @@ public class BWSpecificationFactory {
 		// Task Model
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, bwXML);
-		
-		BlendedWorkflow.getInstance().getBwManager().notifyLoadedBWSpecification(bwSpecification);
 
 		// Load YAWL Specification on the engine
-//		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(yawlXML);
-//		
-//		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlXML).getIdentifier();
-//		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
+		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(yawlXML);
+		
+		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlXML).getIdentifier();
+		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
 
 		// Create Worklet Rules
-//		BlendedWorkflow.getInstance().getWorkletAdapter().loadRDRSet(bwSpecification);
+		BlendedWorkflow.getInstance().getWorkletAdapter().loadRdrSet(bwSpecification);
+//		BlendedWorkflow.getInstance().getWorkletAdapter().evaluateTest();
+		
+		// FIXME: OrganizeConcert Test
 //		try {
 //			BlendedWorkflow.getInstance().getWorkletAdapter().loadOrganizeConcert();
 //		} catch (IOException e) {
 //			new BlendedWorkflowException (BlendedWorkflowError.FALSE_PRE_CONSTRAIN);
 //		}
-
+		
+		BlendedWorkflow.getInstance().getBwManager().notifyLoadedBWSpecification(bwSpecification);
 	}
 
 }

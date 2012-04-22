@@ -8,5 +8,4 @@ public class RelationInstance extends RelationInstance_Base {
 		addEntityInstances(entityInstanceOne);
 		addEntityInstances(entityInstanceTwo);
 	}
-
 }

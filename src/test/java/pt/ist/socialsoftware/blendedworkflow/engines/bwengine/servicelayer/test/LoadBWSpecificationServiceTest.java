@@ -15,6 +15,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import junit.framework.JUnit4TestAdapter;
 
 import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
@@ -46,16 +47,19 @@ public class LoadBWSpecificationServiceTest {
 	};
 
 	private YAWLAdapter yawlAdapter = null;
+	private WorkletAdapter workletAdapter = null;
 	private BWManager bwManager = null;
 
 	@Before
 	public void setUp() {
 		Bootstrap.initTestDB();
 		yawlAdapter = context.mock(YAWLAdapter.class);
+		workletAdapter = context.mock(WorkletAdapter.class);
 		bwManager = context.mock(BWManager.class);
 
 		Transaction.begin();
 		BlendedWorkflow.getInstance().setYawlAdapter(yawlAdapter);
+		BlendedWorkflow.getInstance().setWorkletAdapter(workletAdapter);
 		BlendedWorkflow.getInstance().setBwManager(bwManager);
 		Transaction.commit();
 	}
@@ -69,7 +73,8 @@ public class LoadBWSpecificationServiceTest {
 	public void loadBWSpecification() throws BlendedWorkflowException {
 		context.checking(new Expectations() {
 			{
-//				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
 			}
 		});

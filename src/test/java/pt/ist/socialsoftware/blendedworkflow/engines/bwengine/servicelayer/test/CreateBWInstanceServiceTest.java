@@ -38,7 +38,7 @@ public class CreateBWInstanceServiceTest {
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
 	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml";
 
-//	private static String YAWLCASE_ID = "yawlCaseID";
+	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 
@@ -68,7 +68,8 @@ public class CreateBWInstanceServiceTest {
 		workListManager = context.mock(WorkListManager.class);
 		context.checking(new Expectations() {
 			{
-//				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
 			}
 		});
@@ -94,7 +95,7 @@ public class CreateBWInstanceServiceTest {
 	public void createOneBWInstance() throws BlendedWorkflowException {
 		context.checking(new Expectations() {
 			{
-//				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
+				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
 				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				allowing(workListManager).notifyEnabledWorkItem(with(any(WorkItem.class)));
@@ -119,8 +120,8 @@ public class CreateBWInstanceServiceTest {
 			assertEquals(4, dataModelInstance.getRelationsCount());
 			assertEquals(6, goalModelInstance.getGoalsCount());
 			assertEquals(5, taskModelInstance.getTasksCount());
-//			assertEquals(3, bwInstance.getWorkItemsCount());
-//			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
+			assertEquals(3, bwInstance.getWorkItemsCount());
+			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
 
 			Transaction.commit();
 			committed = true;

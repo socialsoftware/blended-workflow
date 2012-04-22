@@ -19,6 +19,9 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 		return FenixFramework.getRoot();
 	}	
 
+	/*******************************
+	 * Getters and Setters
+	 *******************************/
 	public BWSpecification getBWSpecification(String name) throws BlendedWorkflowException {
 		for (BWSpecification bwSpecification : getBwSpecifications()) {
 			if (bwSpecification.getName().equals(name))
@@ -37,7 +40,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_CASE_ID, ID);
 	}
 	
-	public BWInstance getYAWLBWInstance(String yawlCaseID) throws BlendedWorkflowException {
+	public BWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID) throws BlendedWorkflowException {
 		for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
 			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
 				if (bwInstance.getYawlCaseID().equals(yawlCaseID))

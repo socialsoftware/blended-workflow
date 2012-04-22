@@ -17,5 +17,6 @@ public class AttributeInstance extends AttributeInstance_Base {
 			setState(DataState.DEFINED);
 		}
 		super.setValue(value);
+		getEntityInstance().checkState();
 	}
 }

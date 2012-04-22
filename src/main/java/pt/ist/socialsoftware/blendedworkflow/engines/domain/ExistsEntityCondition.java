@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,16 +35,6 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 	
 	@Override
-	String getData() {
-		return getEntity().getName();
-	}
-	
-	@Override
-	public String getString() {
-		return "existsEntity(" + getEntity().getName() +")";
-	}
-	
-	@Override
 	public Set<Entity> getEntities() {
 		Set<Entity> entity = new HashSet<Entity>();
 		entity.add(getEntity());
@@ -52,7 +43,39 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	
 	@Override
 	public Set<Attribute> getAttributes() {
-		return null;
+		return new HashSet<Attribute>();
+	}
+	
+	@Override
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		return new HashMap<Attribute, String>();
+	}
+	
+	@Override
+	public String getRdrCondition(String type) {
+		String condition = "";
+		String entityName = getEntity().getName().replaceAll(" ", "");
+		
+		int attributteCount = 0;
+		for (Attribute attribute : getEntity().getAttributes()) {
+			//if (attribute.getIsKeyAttribute()) { // FIXME: Episode
+
+			String joiner = " | ";
+			if (type.equals("DEFINED"))
+				joiner = " & ";
+			
+			if (attributteCount < getEntity().getAttributes().size()-1) {
+				String attributeName = attribute.getName().replaceAll(" ", "");
+				condition += entityName + "_" + attributeName + "_State = " + type + joiner;
+			}
+			else {
+				String attributeName = attribute.getName().replaceAll(" ", "");
+				condition += entityName + "_" + attributeName + "_State = " + type;
+			}
+			attributteCount++;
+			//}
+		}
+		return condition;
 	}
 
 }

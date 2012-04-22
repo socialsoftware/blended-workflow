@@ -119,6 +119,7 @@
 				</copy>
 		<copy todir="${war.target.rel-dir}/WEB-INF/lib" >
 			<fileset dir="${lib.rel-dir}" includes="**">
+		        <exclude name="servlet-api-2.5.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${classes.build.rel-dir}/BWSpecifications/MedicalEpisode" >

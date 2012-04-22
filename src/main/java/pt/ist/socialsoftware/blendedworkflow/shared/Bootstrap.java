@@ -4,59 +4,41 @@ import static org.junit.Assert.fail;
 
 import java.util.Set;
 
-import jvstm.Atomic;
-
 import pt.ist.fenixframework.Config;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.pstm.Transaction;
-import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapterTestInterface;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
 
 public class Bootstrap {
 
-	private static boolean initialized = false;
 	private static boolean notInitialized = true;
-
-	public static void checkState(BWPresentation bwPresentation) {
-		Config config = FenixFramework.getConfig();
-
-		if (config != null) {
-			initialized = true;
-		}
-
-		if (initialized) {
-//			Transaction.begin();
-//			BlendedWorkflow.getInstance().getBwManager().setBwPresentation(bwPresentation);
-//			BlendedWorkflow.getInstance().getWorkListManager().setBwPresentation(bwPresentation);
-//			BlendedWorkflow.getInstance().getBwManager().updateBWPresentation();
-//			BlendedWorkflow.getInstance().getWorkListManager().updateBWPresentation();
-//			Transaction.commit();
-		}
-		else {	
-//			Bootstrap.init(bwPresentation);
-//			System.out.println("not initialized");
-//			Transaction.begin();
-//			BlendedWorkflow.getInstance().getBwManager().setBwPresentation(bwPresentation);
-//			BlendedWorkflow.getInstance().getWorkListManager().setBwPresentation(bwPresentation);
-//			Transaction.commit();
-		}
+	private static boolean firstRun = true;
+	
+	/**
+	 * FIXME: Move to OrganizationalManager: Manage Login count 
+	 */
+	public static void setFirstRun() {
+		Bootstrap.firstRun = false;
 	}
 
-	public static void init(BWPresentation bwPresentation) {
-		FenixFramework.initialize(new Config() {{
-			dbAlias = PropertiesManager.getProperty("dbAlias");
-			domainModelPath = PropertiesManager.getProperty("dml.filename");
-			repositoryType = RepositoryType.BERKELEYDB;
-			rootClass = BlendedWorkflow.class;
-		}});
-
-		setBWPresentation(bwPresentation);
+	/**
+	 * Check if the database is initialized.
+	 * @return
+	 */
+	public static Boolean isInitialized() {
+		Config config = FenixFramework.getConfig();
+		if (config == null || firstRun) {
+			return false;
+		} else 
+			return true;
 	}
 	
+	/**
+	 * Initializes the Database.
+	 */
 	public static void init() {
 		FenixFramework.initialize(new Config() {{
 			dbAlias = PropertiesManager.getProperty("dbAlias");
@@ -66,6 +48,9 @@ public class Bootstrap {
 		}});
 	}
 
+	/**
+	 * Initializes the Test Database.
+	 */
 	public static void initTestDB() {
 		if (notInitialized)  {
 			FenixFramework.initialize(new Config() {{
@@ -78,6 +63,9 @@ public class Bootstrap {
 		notInitialized = false;
 	}
 
+	/**
+	 * Clean the created Database.
+	 */
 	public static void clean() {
 		boolean committed = false;
 		try {
@@ -95,6 +83,9 @@ public class Bootstrap {
 		}
 	}
 
+	/**
+	 * Populate the DataBase with the MedicalEpisode Specification.
+	 */
 	public static void populate() {
 		String bwXML = StringUtils.fileToString(PropertiesManager.getProperty("medical.xml"));
 		String yawlXML = StringUtils.fileToString(PropertiesManager.getProperty("medical.yawl"));
@@ -103,12 +94,6 @@ public class Bootstrap {
 		} catch (BlendedWorkflowException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Atomic
-	private static void setBWPresentation(BWPresentation bwPresentation) {
-		BlendedWorkflow.getInstance().getBwManager().setBwPresentation(bwPresentation);
-		BlendedWorkflow.getInstance().getWorkListManager().setBwPresentation(bwPresentation);
 	}
 
 }

@@ -26,7 +26,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -43,7 +42,7 @@ public class CheckInWorkItemServiceTest {
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
 	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml";
 
-//	private static String YAWLCASE_ID = "yawlCaseID";
+	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String GOALWORKITEM_PRESCRIBE_ID = "Prescribe.3";
@@ -79,8 +78,9 @@ public class CheckInWorkItemServiceTest {
 		workListManager = context.mock(WorkListManager.class);
 		context.checking(new Expectations() {
 			{
-//				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
-//				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
+				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
+				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
 				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
@@ -137,8 +137,9 @@ public class CheckInWorkItemServiceTest {
 			Transaction.begin();
 
 			assertEquals(WorkItemState.CHECKED_IN, workItem.getState());
-			for (AttributeInstance attInstance : workItem.getContraintViolationAttributeInstances()) {
-				assertEquals(DataState.DEFINED, attInstance.getState());
+			
+			for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
+				assertEquals(GOALWORKITEM_PRESCRIBE_INPUT_VALUE1, workItemArgument.getValue());
 			}
 			
 			Transaction.commit();

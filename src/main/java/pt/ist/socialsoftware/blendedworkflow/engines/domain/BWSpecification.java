@@ -14,17 +14,16 @@ public class BWSpecification extends BWSpecification_Base {
 		setName(name);
 		setAuthor(author);
 		setDescription(description);
-	
+
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		setCreationDate(dateFormat.format(Calendar.getInstance().getTime()));
-		
+
 		setDataModel(new DataModel());
 		setTaskModel(new TaskModel());
 		setGoalModel(new GoalModel());
 		setBwInstanceCounter(0);
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		blendedWorkflow.addBwSpecifications(this);
-
 	}
 
 	private void checkUniqueBWSpecificationName(String name) throws BlendedWorkflowException {

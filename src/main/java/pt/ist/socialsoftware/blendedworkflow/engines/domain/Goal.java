@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -10,6 +10,9 @@ public class Goal extends Goal_Base {
 
 	public enum GoalState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
 
+	/**
+	 * Create the GoalTree root Goal.
+	 */
 	public Goal(GoalModel goalModel, String name, String description, Condition condition) throws BlendedWorkflowException {
 		checkUniqueGoalName(goalModel, name);
 		setGoalModel(goalModel);
@@ -17,8 +20,12 @@ public class Goal extends Goal_Base {
 		setDescription(description);
 		setCondition(condition);
 		setState(GoalState.DEACTIVATED);
+		setParentGoal(null);
 	}
 
+	/**
+	 * Create a Goal.
+	 */
 	public Goal(GoalModel goalModel, Goal parentGoal, String name,String description, Condition condition) throws BlendedWorkflowException {
 		checkUniqueGoalName(goalModel, name);
 		setGoalModel(goalModel);
@@ -46,20 +53,69 @@ public class Goal extends Goal_Base {
 		new Goal(goalModelInstance, getName(), getDescription(), newCondition);
 	}
 
+	/**
+	 * Get the Goal condition data to use in the use interface.
+	 * @return a string with the condition data entities.
+	 */
+	public String getConstraintData() {
+		Set<Entity> entities = getCondition().getEntities();
+		Set<Attribute> attributes = getCondition().getAttributes();
+		String dataString = "";
+
+		// Add Attribute entities
+		for (Attribute attribute : attributes) {
+			entities.add(attribute.getEntity());
+		}
+
+		// Create String
+		int count = 0;
+		for (Entity entity : entities) {
+			if (entities.size() == 1 || count < entities.size()-1) {
+				dataString += entity.getName();
+			} else {
+				dataString += entity.getName() + ", ";
+			}
+			count++;
+		}
+		return dataString;
+	}
+
+	/**
+	 * Get the subGoals conditions data to use in the use interface.
+	 * @return a string with the condition data entities.
+	 */
+	public String getSubGoalsData() {
+		String dataString = "";
+		Boolean first = true;
+		for (Goal subGoal : getSubGoals()) {
+			String subGoalDataString = subGoal.getConstraintData();
+			if (first) {
+				dataString += subGoalDataString;
+			}
+			else {
+				dataString += ", " + subGoalDataString;
+			}
+		}
+		return dataString;
+	}
+
+	/**********************
+	 * Check Goals to create new WorkItems.
+	 **********************/
 	public void checkState(BWInstance bwInstance) {
 		int subgoalsAchievedCount = 0;
 
 		if (getState() == GoalState.DEACTIVATED) {
 			if (getSubGoalsCount() > 0) { 
 				for (Goal goal : getSubGoals()) {
-					if ( (goal.getState() == GoalState.ACHIEVED) && (goal.getState() == GoalState.SKIPPED)) {
+					if ( (goal.getState() == GoalState.ACHIEVED) || (goal.getState() == GoalState.SKIPPED)) {
 						subgoalsAchievedCount++;
 					}
 				}
 				if (getSubGoalsCount() == subgoalsAchievedCount) { // SubGoals achieved
 					setState(GoalState.ENABLED);
-					if (!getParentGoal().equals(null) && getParentGoal().getState().equals(GoalState.ENABLED)) {
-						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.PENDING)) {
+					if (getParentGoal() != null && getParentGoal().getState().equals(GoalState.ENABLED)) {
+						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
 							getParentGoal().getGoalWorkItem().notifyConstrainViolation();
 						}
 					}
@@ -72,7 +128,7 @@ public class Goal extends Goal_Base {
 				if (getState() == GoalState.DEACTIVATED) {
 					setState(GoalState.ENABLED);
 					if (!getParentGoal().equals(null) && getParentGoal().getState().equals(GoalState.ENABLED)) {
-						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.PENDING)) {
+						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
 							getParentGoal().getGoalWorkItem().notifyConstrainViolation();
 						}
 					}
@@ -91,77 +147,5 @@ public class Goal extends Goal_Base {
 			parentGoal.getGoalWorkItem().notifyPending();
 		}
 	}
-	
-	public String getConditionData() {
-		String dataString = getCondition().getData();
-		String r ="";
-		
-		String[] elementArr = dataString.split("\\.");
-		ArrayList<String> result = new ArrayList<String>();
-		for (int i = 0; i < elementArr.length ; i++) {
-			String element = elementArr[i];
-			if (!result.contains(element)) {
-				result.add(element);
-			}
-		}
-		
-		if (result.size() == 1) {
-			r += result.get(0);
-		}
-		else {
-			for (int i = 0; i < result.size()-1 ; i++) {
-				r += result.get(i) + ", ";
-			}
-			r += result.get(result.size()-1);
-		}
-		return r;
-	}
-	
-	public String getSubGoalsData() {
-		String r = "";
-		Boolean first = true;
-		for (Goal subGoal : getSubGoals()) {
-			String subGoalDataString = subGoal.getConditionData();
-			if (first) {
-				r += subGoalDataString;
-			}
-			else {
-				r += ", " + subGoalDataString;
-			}
-		}
-		return r;
-	}
-
-//	public List<Entity> getEntities() {
-//		ArrayList<Entity> entities = new ArrayList<Entity>();
-//		
-//		String dataString = getCondition().getEntities();
-//		String[] elementArr = dataString.split("\\.");
-//		
-//		for (int i = 0; i < elementArr.length ; i++) {
-//			String element = elementArr[i];
-//			if (!entities.contains(element) && !element.equals("null")) {
-//				Entity entity = AbstractDomainObject.fromOID(new Long(element));
-//				entities.add(entity);
-//			}
-//		}
-//		return entities;
-//	}
-//
-//	public List<Attribute> getAttributes() {
-//		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
-//		
-//		String dataString = getCondition().getAttributes();
-//		String[] elementArr = dataString.split("\\.");
-//		
-//		for (int i = 0; i < elementArr.length ; i++) {
-//			String element = elementArr[i];
-//			if (!attributes.contains(element) && !element.equals("null")) {
-//				Attribute entity = AbstractDomainObject.fromOID(new Long(element));
-//				attributes.add(entity);
-//			}
-//		}
-//		return attributes;
-//	}
 
 }

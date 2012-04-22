@@ -10,7 +10,6 @@ public class Entity extends Entity_Base {
 		setDataModel(dataModel);
 		setName(name);
 		setEntityInstanceCounter(0);
-
 	}
 
 	private void checkUniqueEntityName(DataModel dataModel, String name) throws BlendedWorkflowException {
@@ -28,24 +27,9 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-	public int getNewEntityInstanceId () {
-		setEntityInstanceCounter(getEntityInstanceCounter()+1);
-		return getEntityInstanceCounter();
-	}
-
-	// Used by CreateBWInstanceService - only 1 instance exists
-	public EntityInstance getFirstEntityInstance () {
-		return getEntityInstances().get(0);
-	}
-
-	public Attribute getAttribute(String name) {
-		for (Attribute attribute : getAttributes()) {
-			if (attribute.getName().equals(name))
-				return attribute;
-		}
-		return null;
-	}
-
+	/**
+	 * Create and assign EntityInstances and AttributesInstances to Workitems
+	 */
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute) {
 		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
 
@@ -58,6 +42,22 @@ public class Entity extends Entity_Base {
 		else {
 			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
 				entityInstance.assignAttributeInstances(goalWorkItem, attribute);
+			}
+		}
+	}
+	
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, String conditionType) {
+		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
+
+		if (getEntityInstances().isEmpty()) {
+			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
+			entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
+
+			createRelationInstances(dataModelInstance, entityInstance);
+		}
+		else {
+			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
+				entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 			}
 		}
 	}
@@ -78,22 +78,6 @@ public class Entity extends Entity_Base {
 				for (Attribute attribute : getAttributes()) {
 					entityInstance.assignAttributeInstances(goalWorkItem, attribute);
 				}
-			}
-		}
-	}
-	
-	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, String conditionType) {
-		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
-
-		if (getEntityInstances().isEmpty()) {
-			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
-			entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
-
-			createRelationInstances(dataModelInstance, entityInstance);
-		}
-		else {
-			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
-				entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 			}
 		}
 	}
@@ -146,6 +130,19 @@ public class Entity extends Entity_Base {
 				}
 			}
 		}
+	}
+	
+	public int getNewEntityInstanceId () {
+		setEntityInstanceCounter(getEntityInstanceCounter()+1);
+		return getEntityInstanceCounter();
+	}
+
+	public Attribute getAttribute(String name) {
+		for (Attribute attribute : getAttributes()) {
+			if (attribute.getName().equals(name))
+				return attribute;
+		}
+		return null;
 	}
 
 }

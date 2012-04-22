@@ -27,6 +27,19 @@ public class Attribute extends Attribute_Base {
 	public void cloneAttribute(DataModelInstance dataModelInstance, Entity entity) throws BlendedWorkflowException {
 		new Attribute(dataModelInstance, getName(), entity, getType(), getIsKeyAttribute());
 	}
-
+	
+	/**
+	 * Gets a string with an instance of the AttributeType. Used by the WorkletAdapter to create the tasks/goals cornerstone data
+	 */
+	public String getAttributeType() {
+		String value = "string";
+		if (this.getType().equals(AttributeType.BOOLEAN)) {
+			value = "true";
+		}
+		else if (this.getType().equals(AttributeType.NUMBER)) {
+			value = "0";
+		}
+		return value;
+	}
 
 }

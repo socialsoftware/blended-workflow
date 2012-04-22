@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
@@ -40,54 +40,40 @@ public class Task extends Task_Base {
 		new Task(taskModelInstance, getName(), getDescription(), newPreCondition, newPostCondition, getPrevious());
 	}
 	
-	public String getPostConstraintData () {
-		String dataString = getPostConstraint().getData();
-		String r ="";
+	/**
+	 * Get the Task condition data to use in the use interface.
+	 * @return a string with the condition data entities.
+	 */
+	public String getConstraintData(Boolean isPreConstraint) {
+		Set<Entity> entities;
+		Set<Attribute> attributes;
+		String dataString = "";
 		
-		String[] elementArr = dataString.split("\\.");
-		ArrayList<String> result = new ArrayList<String>();
-		for (int i = 0; i < elementArr.length ; i++) {
-			String element = elementArr[i];
-			if (!result.contains(element)) {
-				result.add(element);
-			}
+		// Get Condition Data
+		if (isPreConstraint) {
+			entities = getPreConstraint().getEntities();
+			attributes = getPreConstraint().getAttributes();
+		} else {
+			entities = getPostConstraint().getEntities();
+			attributes = getPostConstraint().getAttributes();
 		}
-		
-		if (result.size() == 1) {
-			r += result.get(0);
-		}
-		else {
-			for (int i = 0; i < result.size()-1 ; i++) {
-				r += result.get(i) + ", ";
-			}
-			r += result.get(result.size()-1);
-		}
-		return r;
-	}
-	
-	public String getPreConstraintData () {
-		String dataString = getPreConstraint().getData();		
-		String r ="";
-		
-		String[] elementArr = dataString.split("\\.");
-		ArrayList<String> result = new ArrayList<String>();
-		for (int i = 0; i < elementArr.length ; i++) {
-			String element = elementArr[i];
-			if (!result.contains(element)) {
-				result.add(element);
-			}
+
+		// Add Attribute entities
+		for (Attribute attribute : attributes) {
+			entities.add(attribute.getEntity());
 		}
 		
-		if (result.size() == 1) {
-			r += result.get(0);
-		}
-		else {
-			for (int i = 0; i < result.size()-1 ; i++) {
-				r += result.get(i) + ", ";
+		// Create String
+		int count = 0;
+		for (Entity entity : entities) {
+			if (entities.size() == 1 || count < entities.size()-1) {
+				dataString += entity.getName();
+			} else {
+				dataString += entity.getName() + ", ";
 			}
-			r += result.get(result.size()-1);
+			count++;
 		}
-		return r;
+		return dataString;
 	}
     
 }

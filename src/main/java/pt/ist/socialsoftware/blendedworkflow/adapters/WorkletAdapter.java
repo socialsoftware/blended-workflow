@@ -1,32 +1,29 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.yawlfoundation.yawl.engine.YSpecificationID;
 import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;
 import org.yawlfoundation.yawl.util.JDOMUtil;
-import org.yawlfoundation.yawl.worklet.rdr.RdrMarshal;
 import org.yawlfoundation.yawl.worklet.rdr.RdrNode;
 import org.yawlfoundation.yawl.worklet.rdr.RuleType;
-import org.yawlfoundation.yawl.worklet.support.WorkletEventListener;
 import org.yawlfoundation.yawl.worklet.support.WorkletGatewayClient;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
@@ -36,335 +33,746 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
-import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
-import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
+import pt.ist.socialsoftware.blendedworkflow.shared.PropertiesManager;
 
-@SuppressWarnings("serial")
-public class WorkletAdapter  { //extends WorkletEventListener {
-	
-	private ArrayList<WorkItemRecord> yawlEnabledWorkItems = new ArrayList<WorkItemRecord>(); 	// FIXME not persistent
-	private ArrayList<YSpecificationID> loadedActivitySpecs = new ArrayList<YSpecificationID>(); // spec UUID
+/**
+ * TODO: Clean and Test.
+ * @author Davide Passinhas
+ *
+ */
+public class WorkletAdapter {
+
 	private WorkletGatewayClient client= new WorkletGatewayClient();
 	private String handle = null;
 	private Logger log;
-	private WorkletAdapterTestInterface wati;
-
+	
+	protected String engineAdminUser = PropertiesManager.getProperty("yawl.AdminUser");
+	protected String engineAdminPassword = PropertiesManager.getProperty("yawl.AdminPassword");
+	protected String workletGateway = PropertiesManager.getProperty("worklet.gateway");
+	
+	
+	private YSpecificationID yawlSpecID = new YSpecificationID(null, "0.1", "A101");
+	
+	private ConcurrentHashMap<String, WorkItemRecord> yawlEnabledWIR = new ConcurrentHashMap<String,WorkItemRecord>();
+	private ConcurrentHashMap<WorkItemRecord, String> yawlPreWIR = new ConcurrentHashMap<WorkItemRecord, String>();
+	private ConcurrentHashMap<WorkItemRecord, String> yawlPosWIR = new ConcurrentHashMap<WorkItemRecord, String>();
+	
 	public WorkletAdapter() {
-		log = Logger.getLogger("bwServicelogger");
+		log = Logger.getLogger("WorkletAdpater");
 		registerWorkletListener();
 	}
 	
-	public WorkletAdapter(WorkletAdapterTestInterface wati) {
-		log = Logger.getLogger("bwServicelogger");
-		this.wati = wati;
-		registerWorkletListener();
-	}
-	
-	// Register WorkletListener
-	public boolean registerWorkletListener(){
-		WorkletGatewayClient client= new WorkletGatewayClient();
-		try{
-			String url="http://localhost:8081/blendedworkflow/wl";
-			this.handle=client.connect("admin","YAWL");
-			client.addListener(url,handle);
-			log.info("WorkletAdapater: Register Worklet Listener: Sucess!");
-			return true;
+	/**
+	 * Evaluate GoalWorkitem condition or Process TaskWorkitem postCondition
+	 */
+	public void notifyWorkItemContraintViolation(WorkItem workItem) {
+		log.info("notifyWorkItemContraintViolation for workitem: " + workItem.getID());
+		try {
+		if (workItem.getClass().equals(GoalWorkItem.class)) {
+			GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
+			evaluate(goalWorkItem);
 		}
-		catch(IOException ioe){
-			log.info("WorkletAdapater: Register Worklet Listener: Exception: " + ioe.getMessage());
+		else {
+			TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
+//			process(taskWorkItem);
+			evaluatePos(taskWorkItem);
 		}
-		log.info("WorkletAdapater: Register Worklet Listener: Failed!");
-		return false;
+		} catch (BlendedWorkflowException bwe) {
+			log.info("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
+		}
 	}
 	
-	public boolean successful(String message) {
-		return ((message != null) && (message.length() > 0) && (!(message.contains("<failure>"))));
+	/**
+	 * Evaluate TaskWorkitem preCondition
+	 */
+	public void notifyWorkItemPreConstraint(TaskWorkItem workItem) {
+		log.info("notifyWorkItemPreConstraint for workitem: " + workItem.getID());
+		try {
+			TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
+			evaluatePre(taskWorkItem);
+		} catch (BlendedWorkflowException bwe) {
+			log.info("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
+		}
 	}
 	
-	/***********************
-	 * TestMethods
-	 ***********************/
-	public void loadOrganizeConcert () throws IOException {
-		registerWorkletListener();
-		log.info("loadOrganizeConcert");
-		String yawlfilename = "C:/Users/User/git/blended-workflow/dist/OrganiseConcert.yawl";
-		String yawlString = StringUtils.fileToString(yawlfilename);
-		YSpecificationID ySpecificationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlString);
-		
-		String cornerStr= "<cornerstone><VenueCost>100000.00</VenueCost><VenueName>ANZ Stadium</VenueName><Seating>25000</Seating></cornerstone>";
-		Element eCornerstone = JDOMUtil.stringToElement(cornerStr);
-		
-		// Task Pre condition
-		String concStr1 = "<conclusion>null</conclusion>";
-		Element eConclusion1 = JDOMUtil.stringToElement(concStr1);
-		RdrNode node1 = new RdrNode("True", eConclusion1, eCornerstone);
-		client.addNode(ySpecificationID, "BookStadium", RuleType.ItemPreconstraint, node1, handle);
-		
-		// Task Constrain violation
-		String concStr2 = "<conclusion><_1><action>complete</action><target>workitem</target></_1></conclusion>";
-		Element eConclusion2 = JDOMUtil.stringToElement(concStr2);
-		RdrNode node2 = new RdrNode("VenueName = Benfica", eConclusion2, eCornerstone);
-		client.addNode(ySpecificationID, "BookStadium", RuleType.ItemConstraintViolation, node2, handle);
-		
-		log.info("loadOrganizeConcert: evaluate pre-test");
-		evaluateTaskTrue();
-		evaluateTaskFalse();
-	}
-	
-	public String evaluateWIRTrue(WorkItemRecord wir) throws IOException {
-		String dataStr0= "<cornerstone><VenueName>Benfica</VenueName><Seating>25000</Seating><TicketsSold>0</TicketsSold><TicketCost>90</TicketCost><Patient /></cornerstone>";
-		Element data0 = JDOMUtil.stringToElement(dataStr0);
-		String concTrue0 = client.evaluate(wir, data0, RuleType.ItemConstraintViolation, handle);
-		log.info("WorkletAdapater: evaluateWIR: Result=True? " + concTrue0); //successful(concTrue0));
-		return "Sucesso";
-	}
-	
-	public String evaluateWIRFalse(WorkItemRecord wir) throws IOException {
-		String dataStr0= "<cornerstone><VenueName>ANZ Stadium</VenueName><Seating>25000</Seating><TicketsSold>0</TicketsSold><TicketCost>90</TicketCost><Patient /></cornerstone>";
-		Element data0 = JDOMUtil.stringToElement(dataStr0);
-		String concTrue0 = client.evaluate(wir, data0, RuleType.ItemConstraintViolation, handle);
-		log.info("WorkletAdapater: evaluateWIR: Result=False? " + concTrue0); //successful(concTrue0));
-		return "Sucesso";
-	}
-	
-	public String evaluateTaskTrue() throws IOException {
-		String yawlfilename = "C:/Users/User/git/blended-workflow/dist/OrganiseConcert.yawl";
-		String yawlString = StringUtils.fileToString(yawlfilename);
-		YSpecificationID ySpecificationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlString);
-		
-		String dataStr0= "<cornerstone><VenueName>Benfica</VenueName><Seating>25000</Seating><TicketsSold>0</TicketsSold><TicketCost>90</TicketCost><Patient /></cornerstone>";
-		Element data0 = JDOMUtil.stringToElement(dataStr0);
-		String concTrue0 = client.evaluate(ySpecificationID,"BookStadium",data0,RuleType.ItemConstraintViolation,handle);
-		
-		log.info("WorkletAdapater: evaluatetestTrue: Result=True? " + concTrue0); //successful(concTrue0));
-		return "Sucesso";
-	}
-	
-	public String evaluateTaskFalse() throws IOException {
-		String yawlfilename = "C:/Users/User/git/blended-workflow/dist/OrganiseConcert.yawl";
-		String yawlString = StringUtils.fileToString(yawlfilename);
-		YSpecificationID ySpecificationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlString);
-		
-		String dataStr0= "<cornerstone><VenueName>ANZ Stadium</VenueName><Seating>25000</Seating><TicketsSold>0</TicketsSold><TicketCost>90</TicketCost><Patient /></cornerstone>";
-		Element data0 = JDOMUtil.stringToElement(dataStr0);
-		String concTrue0 = client.evaluate(ySpecificationID, "BookStadium",data0,RuleType.ItemConstraintViolation,handle);
-		
-		log.info("WorkletAdapater: evaluatetestFalse: Result=False? " + concTrue0); //successful(concTrue0));
-		return "Sucesso";
-	}
+	/**
+	 * Create new TaskWorkitem according to preCondition evaluation result
+	 */
+	public void notifyNewTaskWorkItem (WorkItemRecord wir, String result) {
+		log.info("notifyNewTaskWorkItem for workitem: " + wir + " with preConstraint = " + result);
+		// Add new WorkItemRecord
+//		this.yawlEnabledWorkItems.add(wir);
 
-	public int getWorkItems () {
-		return this.yawlEnabledWorkItems.size();
-	}
-	
-	/*******************************
-	 * TODO: WorkletAdapter methods
-	 *******************************/
-	public void notifyNewTaskWorkItem (WorkItemRecord wir, String conditionResult)  { //throws BlendedWorkflowException {
-		this.yawlEnabledWorkItems.add(wir);
-
+		// Create TaskWorkitem
 		TaskWorkItem taskWorkItem = null;
 		try {
-			BWInstance bwInstance = BlendedWorkflow.getInstance().getYAWLBWInstance(wir.getCaseID());
+			BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstanceFromYAWLCaseID(wir.getCaseID());
 			TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
 
-			String taskName = wir.getTaskName();
+			String taskName = wir.getTaskName().replaceAll("_", " ");
 			Task task = taskModelInstance.getTask(taskName);
 			taskWorkItem = new TaskWorkItem(bwInstance, task);
 		} catch (BlendedWorkflowException bwe) {
-			log.info("WorkletAdapater: notifyNewTaskWorkItem: exception" + bwe.getMessage()); //FIXME: do something
+			log.info("notifyNewTaskWorkItem: exception: " + bwe.getError());
 		}
 
-		if (conditionResult.equals("TRUE")) {
-			taskWorkItem.notifyPreConstrain();
-		} else if (conditionResult.equals("SKIPPED")) {
+		// Notify
+		if (result.equals("TRUE")) {
+			taskWorkItem.notifyConstrainViolation();
+		} else if (result.equals("SKIPPED")) {
 			taskWorkItem.notifyPreTask();
 		} else {
-			//throw new BlendedWorkflowException(BlendedWorkflowError.FALSE_PRE_CONSTRAIN); //FIXME:
+			taskWorkItem.notifyPreFalse();
 		}
-		
-		// FIXME: Test: evaluate all
-		log.info("WorkletAdapater: new workitem arrived. Testing...");
-		try {
-			evaluateWIRTrue(wir); // FAIL: <failure>No rules found for parameters</failure>
-			evaluateWIRFalse(wir); // FAIL: <failure>No rules found for parameters</failure>
-			evaluateTaskTrue(); // OK: <conclusion><_1><action>complete</action><target>workitem</target></_1>
-			evaluateTaskFalse(); // OK: <failure>No rule was satisfied for data parameters</failure>
-		} catch (Exception e) {
-			log.info(e.getMessage());
-		}
-		log.info("WorkletAdapater: test end.");
 	}
 	
-	public void loadRDRSet(BWSpecification bwSpecification) {
+	/**
+	 * Process ConstrainViolation evaluation result
+	 */
+	public void notifyConstraintViolationResult(WorkItemRecord wir, GoalWorkItem goalWorkitem, String result) {
+		// Get WorkItem
+		WorkItem workItem = null;
+		if (wir != null) {
+			log.info("notifyConstraintViolationResult for TaskWorkitem: " + wir + " with postConstraint = " + result);
+			
+			// Remove completed WorkItemRecord
+//			if (result.equals("TRUE")) {
+//				this.yawlEnabledWorkItems.remove(wir);
+//			}
+
+			try {
+				BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstanceFromYAWLCaseID(wir.getCaseID());
+				TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
+				String taskName = wir.getTaskName().replaceAll("_", " ");
+				workItem = taskModelInstance.getTask(taskName).getTaskWorkItem();
+			} catch (BlendedWorkflowException bwe) {
+				log.info("WorkletAdapter: notifyConstrainViolationResult Exception: " + bwe.getError());
+			}
+		} else {
+			workItem = goalWorkitem;
+			log.info("notifyConstraintViolationResult for GoalWorkitem: " + goalWorkitem.getID() + " with constraint = " + result);
+		}
+
+		// Notify
+		if (result.equals("TRUE")) {
+			workItem.notifyCompleted();
+		} else if (result.equals("SKIPPED")) {
+			workItem.notifySkipped();
+		} else {
+			workItem.notifyEnabled();
+		}
+	}
+	
+	/*
+	 * Create and Load a specification RdrSet
+	 */
+	public void loadRdrSet(BWSpecification bwSpecification) throws BlendedWorkflowException {
+		log.info("loadRdrSet for BWSpecification: " + bwSpecification.getName());
+
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		GoalModel goalModel = bwSpecification.getGoalModel();
 
 		// YAWLSpecID
-		String yawlCaseID = bwSpecification.getYawlSpecficationID(); // FIXME: check value
-		YSpecificationID yawlSpecID = null;
-		for (YSpecificationID ySpecificationID : this.loadedActivitySpecs) {
-			if(ySpecificationID.getIdentifier().equals(yawlCaseID)) {
-				yawlSpecID = ySpecificationID;
-				break;
-			}
-		}
-
-		// Create task rdrset
-		for (Task task : taskModel.getTasks()) {
-			// TODO:
-		}
-
-		// Create goal rdrset
-		try {
-			for (Goal goal : goalModel.getGoals()) {
-				// GoalName
-				String goalName = "Goal_" + goal.getName();
-
-				// Cornerstone data
-				String cornerStr = "<cornerstone>";
-
-				Set<Entity> entities = goal.getCondition().getEntities();
-				Set<Attribute> attributes = goal.getCondition().getAttributes();
-				
-				// remove nulls
-				if (entities.contains(null))
-					entities.remove(null);
-				if (attributes.contains(null))
-					attributes.remove(null);
-				// remove attributes that already exist in entities
-				for (Attribute attribute : attributes) {
-					Entity entity = attribute.getEntity();
-					if (entities.contains(entity)) {
-						attributes.remove(attribute);
-					}
-				}
-
-				// XMLString
-				for (Entity entity : entities) {
-					String entityName = entity.getName();
-					cornerStr += "<" + entityName + ">";
-					for (Attribute attribute : entity.getAttributes()) {
-						String attributeName = attribute.getName();
-						String value = "";
-						if (attribute.getType().equals(AttributeType.BOOLEAN)) {
-							value = "false";
-						}
-						else if (attribute.getType().equals(AttributeType.NUMBER)) {
-							value = "0";
-						} else {
-							value = " ";
-						}
-
-						cornerStr += "<" + attributeName + "_State" + ">" + "UNDEFINED" + "</" + attributeName + "_State" + ">";
-						cornerStr += "<" + attributeName + ">" + value + "</" + attributeName + ">";
-					}
-					cornerStr +=  "</" + entityName + ">";
-				}
-
-				for (Attribute attribute : attributes) {
-					String entityName = attribute.getEntity().getName();
-					cornerStr += "<" + entityName + ">";
-					String attributeName = attribute.getName();
-					String value = "";
-					if (attribute.getType().equals(AttributeType.BOOLEAN)) {
-						value = "false";
-					}
-					else if (attribute.getType().equals(AttributeType.NUMBER)) {
-						value = "0";
-					} else {
-						value = " ";
-					}
-
-					cornerStr += "<" + attributeName + "_State" + ">" + "UNDEFINED" + "</" + attributeName + "_State" + ">";
-					cornerStr += "<" + attributeName + ">" + value + "</" + attributeName + ">";
-
-					cornerStr +=  "</" + entityName + ">";
-				}
-				cornerStr += "<cornerstone>";
-				Element eCornerstone = JDOMUtil.stringToElement(cornerStr);
-
-				// Conclusion
-				String concStr = "<conclusion><_1>";
-				concStr = "<action>" + "complete" + "</action>"; //FIXME: skip?
-				concStr = "<target>" + "workitem" + "</target>";
-				concStr += "</_1></conclusion>";
-				Element eConclusion = JDOMUtil.stringToElement(concStr);
-
-				// Condition
-				String condition = goal.getCondition().getString(); // FIXME: return converted string for RDR
-
-				// add node
-				RdrNode node = new RdrNode(condition, eConclusion, eCornerstone);
-				String newNodeXML = client.addNode(yawlSpecID, goalName, RuleType.ItemConstraintViolation, node, handle);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	// FIXME: return depends if there is tripleState or not
-	public String evaluate(WorkItem workItem) throws IOException {
-		// YAWLSpecID
-		String yawlCaseID = workItem.getBwInstance().getYawlCaseID();
-		YSpecificationID yawlSpecID = null;
-		for (YSpecificationID ySpecificationID : this.loadedActivitySpecs) {
-			if(ySpecificationID.getIdentifier().equals(yawlCaseID)) {
-				yawlSpecID = ySpecificationID;
-				break;
-			}
-		}
-
-		// Task/Goal Name
-		String jobName ="";
-		if (workItem.getClass().equals(GoalWorkItem.class)) {
-			jobName = "Goal_" + workItem.getJobName();
-		}
-		else {
-			jobName = workItem.getJobName();
-		}
-
-		// Data
-		String dataStr = "<data>";
-		for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
-
-			String attributeName = workItemArgument.getAttributeInstance().getAttribute().getName();
-			DataState attributeState = workItemArgument.getAttributeInstance().getState();
-			String value = workItemArgument.getValue();
-
-			dataStr += "<" + attributeName + "_State" + ">" + attributeState + "</" + attributeName + "_State" + ">";
-			dataStr += "<" + attributeName + ">" + value + "</" + attributeName + ">";
-
-		}
-		dataStr+="</data>";
-		Element data = JDOMUtil.stringToElement(dataStr);
-
-		String conclusion = client.evaluate(yawlSpecID, jobName, data ,RuleType.ItemConstraintViolation, handle);
-		return successful(conclusion) +"";
-	}
-
-	public void notifyWorkItemContraintViolation(WorkItem workItem){
-		log.info("notifyWorkItemContraintViolation");
-//		try {
-//			// prepare
-//
-//			// TODO: evaluate
-//			String result = evaluate(workItem);
-//
-//			// parse result
-//			if (result.equals("true")) {
-//				workItem.notifyCompleted();
+//		String yawlCaseID = bwSpecification.getYawlSpecficationID();
+//		YSpecificationID yawlSpecID = null;
+//		for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedActivitySpecs()) {
+//			if(ySpecificationID.getIdentifier().equals(yawlCaseID)) {
+//				yawlSpecID = ySpecificationID;
+//				break;
 //			}
-//			else if (result.equals("skipped")) {
-//				workItem.notifySkipped();
-//
-//			} else if (result.equals("false")) {
-//				workItem.notifyEnabled();
-//			}
-//
-//		} catch (Exception e) {
 //		}
+		
+		Boolean firstTask = true;
+		String condition = null;
+		Element eConclusion = null;
+		Element eCornerstone = null;
+		log.info("Tasks");
+		// Create task RdrSet
+		for (Task task : taskModel.getTasks()) {
+			String taskName = task.getName().replaceAll(" ", "_");
+			log.info(taskName);
+			
+			// PreConstraintTree
+//			log.info("Pre:");
+			if (firstTask) {
+				// True Node
+				eCornerstone = getCornerstoneData(task, null, true, "NULL");
+				condition = task.getPreConstraint().getRdrCondition("DEFINED");
+				eConclusion = createRdrConclusion("NULL");
+				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+				firstTask = false;
+//				log.info(condition);
+//				log.info(JDOMUtil.elementToString(eCornerstone));
+
+			} else {
+				// Undefined Node
+				eCornerstone = getCornerstoneData(task, null, true, "UNDEFINED");
+				condition = task.getPreConstraint().getRdrCondition("UNDEFINED");
+				eConclusion = createRdrConclusion("FALSE");
+				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+//				log.info(condition);
+//				log.info(JDOMUtil.elementToString(eCornerstone));
+				
+				// Skipped Node
+				eCornerstone = getCornerstoneData(task, null, true, "SKIPPED");
+				condition = task.getPreConstraint().getRdrCondition("SKIPPED");
+				eConclusion = createRdrConclusion("SKIPPED");
+				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+//				log.info(condition);
+//				log.info(JDOMUtil.elementToString(eCornerstone));
+				
+				// Defined Node
+				eCornerstone = getCornerstoneData(task, null, true, "DEFINED");
+				condition = task.getPreConstraint().getRdrCondition("DEFINED");
+				eConclusion = createRdrConclusion("TRUE");
+				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+				log.info(condition);
+//				log.info(JDOMUtil.elementToString(eCornerstone));
+			}
+			
+			// PostConstraintTree
+//			log.info("Post:");
+			
+			// Undefined Node
+			eCornerstone = getCornerstoneData(task, null, false, "UNDEFINED");
+			condition = task.getPostConstraint().getRdrCondition("UNDEFINED");
+			eConclusion = createRdrConclusion("FALSE");
+			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+//			log.info(condition);
+//			log.info(JDOMUtil.elementToString(eCornerstone));
+			
+			// Skipped Node
+			eCornerstone = getCornerstoneData(task, null, false, "SKIPPED");
+			condition = task.getPostConstraint().getRdrCondition("SKIPPED");
+			eConclusion = createRdrConclusion("SKIPPED");
+			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+//			log.info(condition);
+//			log.info(JDOMUtil.elementToString(eCornerstone));
+			
+			// Defined Node
+			eCornerstone = getCornerstoneData(task, null, false, "DEFINED");
+			condition = task.getPostConstraint().getRdrCondition("DEFINED");
+			eConclusion = createRdrConclusion("TRUE");
+			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+//			log.info(condition);
+//			log.info(JDOMUtil.elementToString(eCornerstone));
+
+		}
+		
+		log.info("Goals");
+		// Create goal RdrSet
+		for (Goal goal : goalModel.getGoals()) {
+			String goalName = "GOAL_" + goal.getName().replaceAll(" ", "_");
+			log.info(goalName);
+			
+			// Undefined Node
+			eCornerstone = getCornerstoneData(null, goal, false, "UNDEFINED");
+			condition = goal.getCondition().getRdrCondition("UNDEFINED");
+			eConclusion = createRdrConclusion("FALSE");
+			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+//			log.info(condition);
+			
+			// Skipped Node
+			eCornerstone = getCornerstoneData(null, goal, false, "SKIPPED");
+			condition = goal.getCondition().getRdrCondition("SKIPPED");
+			eConclusion = createRdrConclusion("SKIPPED");
+			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+//			log.info(condition);
+			
+			// Defined Node
+			eCornerstone = getCornerstoneData(null, goal, false, "DEFINED");
+			condition = goal.getCondition().getRdrCondition("DEFINED");
+			eConclusion = createRdrConclusion("TRUE");
+			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+//			log.info(condition);
+		}
+//		evaluateTest();
 	}
 	
+	/*******************************
+	 * Support methods
+	 *******************************/
+	/*
+	 * Register WorkletListener
+	 */
+	public boolean registerWorkletListener(){
+		WorkletGatewayClient client= new WorkletGatewayClient();
+		try{
+			this.handle=client.connect(engineAdminUser, engineAdminPassword);
+			client.addListener(workletGateway,handle);
+			log.info("Register Worklet Listener: Sucess!");
+			return true;
+		}
+		catch(IOException ioe){
+			log.info("Register Worklet Listener: Exception: " + ioe.getMessage());
+		}
+		log.info("Register Worklet Listener: Failed!");
+		return false;
+	}
+	
+	/*
+	 * Get Conditions Data
+	 */
+	private Element getCornerstoneData(Task task, Goal goal, Boolean isPreCondition, String type) {
+		String cornerStr = "<cornerstone>";
+		Set<Entity> entities;
+		Set<Attribute> attributes;
+		HashMap<Attribute, String> attributesValues;
+		
+		// Get Condition Data
+		if (task == null) {
+			entities = goal.getCondition().getEntities();
+			attributes = goal.getCondition().getAttributes();
+			attributesValues = goal.getCondition().getcompareConditionValues();
+		}
+		else if (task != null && isPreCondition) {
+			entities = task.getPreConstraint().getEntities();
+			attributes = task.getPreConstraint().getAttributes();
+			attributesValues = task.getPreConstraint().getcompareConditionValues();
+		} 
+		else {
+			entities = task.getPostConstraint().getEntities();
+			attributes = task.getPostConstraint().getAttributes();
+			attributesValues = task.getPostConstraint().getcompareConditionValues();
+		}
+		
+		// Remove attributes that already exist in entities
+		for (Attribute attribute : attributes) {
+			Entity entity = attribute.getEntity();
+			if (entities.contains(entity) && !attributesValues.containsKey(attribute)) {
+				attributes.remove(attribute);
+			}
+		}
+
+		// Parse complete entities
+		for (Entity entity : entities) {
+			String entityName = entity.getName().replaceAll(" ", "");
+			
+			for (Attribute attribute : entity.getAttributes()) {
+				String attributeName = attribute.getName().replaceAll(" ", "");
+//				String value = attribute.getAttributeType();
+
+				cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + type + "</" + entityName + "_" + attributeName + "_State" + ">";
+//				cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
+			}
+		}
+
+		// Parse single attributes
+		for (Attribute attribute : attributes) {
+			String entityName = attribute.getEntity().getName().replaceAll(" ", "");
+			String attributeName = attribute.getName().replaceAll(" ", "");
+			String value = attributesValues.get(attribute);
+			
+			cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + type + "</" + entityName + "_" + attributeName + "_State" + ">";
+			cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
+		}
+		cornerStr += "</cornerstone>";
+		Element eCornerstone = JDOMUtil.stringToElement(cornerStr);
+		return eCornerstone;
+	}
+
+	/*
+	 * Create a RdrConclusion
+	 */
+	private Element createRdrConclusion(String type) {
+		String concStr = null;
+		Element eConclusion = null;
+		String action = "false";
+		
+		if (type.equals("NULL")) {
+			concStr = "<conclusion>null</conclusion>";
+			eConclusion = JDOMUtil.stringToElement(concStr);
+			return eConclusion;
+		} else if (type.equals("TRUE")) {
+			action = "complete";
+		} else if (type.equals("SKIPPED")) {
+			action = "fail";
+		}
+		concStr = "<conclusion><_1>";
+		concStr += "<action>" + action + "</action>";
+		concStr += "<target>" + "workitem" + "</target>";
+		concStr += "</_1></conclusion>";
+		eConclusion = JDOMUtil.stringToElement(concStr);
+		return eConclusion;
+	}
+	
+	/*
+	 * Add a node to a RdrTree
+	 */
+	private void addNode(YSpecificationID yawlSpecID, String name, String condition, Element eCornerstone, Element eConclusion, RuleType ruleType) throws BlendedWorkflowException {
+		try {
+			RdrNode node = new RdrNode(condition, eConclusion, eCornerstone);
+			client.addNode(yawlSpecID, name, ruleType, node, handle);
+		} catch (IOException e) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_ADDNODE);
+		}
+	}
+	
+	/*
+	 * Get user submitted data
+	 */
+	private Element getEvaluationData(TaskWorkItem taskWorkItem, GoalWorkItem goalWorkItem) {
+		// Get Workitem
+		WorkItem workItem= null;
+		if (taskWorkItem == null) {
+			workItem = goalWorkItem;
+		}
+		else {
+			workItem = taskWorkItem;
+		} 
+		
+		// Get Workitem data
+		String cornerStr = "<cornerstone>";
+		for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
+			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
+			String entityName = attributeInstance.getEntityInstance().getEntity().getName().replaceAll(" ", "");
+			String attributeName = attributeInstance.getAttribute().getName().replaceAll(" ", "");
+			String value = workItemArgument.getValue();
+			DataState state = workItemArgument.getState();
+
+			cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + state + "</" + entityName + "_" + attributeName + "_State" + ">";
+			cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
+		}
+		cornerStr += "</cornerstone>";
+		Element eCornerstone = JDOMUtil.stringToElement(cornerStr);
+		return eCornerstone;
+	}
+	
+	/**
+	 * TODO: Merge Get user submitted data
+	 */
+	private Element getEvaluationDataPre(TaskWorkItem taskWorkItem) {
+		// Get Workitem
+		WorkItem workItem = taskWorkItem;
+		
+		// Get Workitem data
+		String cornerStr = "<cornerstone>";
+		for (WorkItemArgument workItemArgument : workItem.getPreConstrainWorkItemArguments()) {
+			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
+			String entityName = attributeInstance.getEntityInstance().getEntity().getName().replaceAll(" ", "");
+			String attributeName = attributeInstance.getAttribute().getName().replaceAll(" ", "");
+			String value = workItemArgument.getValue();
+			DataState state = workItemArgument.getState();
+
+			cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + state + "</" + entityName + "_" + attributeName + "_State" + ">";
+			cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
+		}
+		cornerStr += "</cornerstone>";
+		Element eCornerstone = JDOMUtil.stringToElement(cornerStr);
+		return eCornerstone;
+	}
+
+	/**
+	 * TODO: Merge Evaluate a goal condition
+	 */
+	public void evaluate(GoalWorkItem goalWorkItem) throws BlendedWorkflowException {
+		log.info("evaluate constraint for GoalWorkItem: " + goalWorkItem.getID());
+
+		// YAWLSpecID
+//		String yawlSpecificationID = goalWorkItem.getBwInstance().getBwSpecification().getYawlSpecficationID();
+//		YSpecificationID yawlSpecID = null;
+//
+//		for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedActivitySpecs()) {
+//			if(ySpecificationID.getIdentifier().equals(yawlSpecificationID)) {
+//				yawlSpecID = ySpecificationID;
+//				break;
+//			}
+//		}
+
+		// Goal Name
+		String goalName = "GOAL_" + goalWorkItem.getGoal().getName().replaceAll(" ", "_");
+
+		// Evaluation Data
+		Element eData = getEvaluationData(null, goalWorkItem);
+		log.info("With data: " + JDOMUtil.elementToString(eData));
+
+		// Evaluate
+		String conclusion = null;
+		try {
+			conclusion = client.evaluate(yawlSpecID, goalName, eData, RuleType.ItemConstraintViolation,handle);
+		} catch (IOException e) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+		}
+
+		log.info("Conclusion" + conclusion);
+
+		// Parse result
+		if (parseConclusion(conclusion).equals("TRUE")) {
+			notifyConstraintViolationResult(null, goalWorkItem, "TRUE");
+		} else if (parseConclusion(conclusion).equals("FALSE")) {
+			notifyConstraintViolationResult(null, goalWorkItem, "FALSE");
+		} else {
+			notifyConstraintViolationResult(null, goalWorkItem, "SKIPPED");
+		}
+	}
+	
+	/**
+	 * Process a task postCondition
+	 */
+	public void process(TaskWorkItem taskWorkItem) throws BlendedWorkflowException {
+		log.info("process postConstraint for TaskWorkItem: " + taskWorkItem.getID());
+		
+		// Evaluation Data
+		Element eData = getEvaluationData(taskWorkItem, null);
+		
+		// Get WorkItemRecord
+//		WorkItemRecord workItemRecord = null;
+		String taskName = taskWorkItem.getTask().getName();
+		
+		WorkItemRecord workItemRecord = yawlEnabledWIR.get(taskName);
+		
+//		for (WorkItemRecord wir : this.yawlEnabledWorkItems) {
+//			if (wir.getTaskName().equals(taskName)) {
+//				workItemRecord = wir;
+//			}
+//		}
+		
+		log.info("with data: " + JDOMUtil.elementToString(eData));
+		
+		String result = null;
+		// Process
+		try {
+			 result = client.process(workItemRecord, eData, RuleType.ItemConstraintViolation, handle);
+		} catch (IOException e) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_PROCESS);
+		}
+		log.info("Process Result: " + result);
+	}
+	
+	/**
+	 * Parse RdrConclusion
+	 */
+	public String parseConclusion(String conclusion) {
+		if (conclusion.contains("complete"))
+			return "TRUE";
+		if (conclusion.contains("false") ) 
+			return "FALSE";
+		if (conclusion.contains("failure"))
+			return "SUCESS";
+		else 
+			return "SKIPPED";
+	}
+	
+	/**
+	 * TODO: Merge Evaluate a goal condition
+	 */
+	public void evaluatePre(TaskWorkItem taskWorkItem) throws BlendedWorkflowException {
+		log.info("evaluate Preconstraint for TaskWorkItem: " + taskWorkItem.getID());
+
+		// YAWLSpecID
+//		String yawlSpecificationID = taskWorkItem.getBwInstance().getBwSpecification().getYawlSpecficationID();
+//		YSpecificationID yawlSpecID = null;
+//
+//		for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedActivitySpecs()) {
+//			if(ySpecificationID.getIdentifier().equals(yawlSpecificationID)) {
+//				yawlSpecID = ySpecificationID;
+//				break;
+//			}
+//		}
+
+		// Goal Name
+		String taskName = taskWorkItem.getTask().getName().replaceAll(" ", "_");
+
+		// Evaluation Data
+		Element eData = getEvaluationDataPre(taskWorkItem);
+		log.info("With data: " + JDOMUtil.elementToString(eData));
+
+		// Evaluate
+		String conclusion = null;
+		try {
+			conclusion = client.evaluate(yawlSpecID, taskName, eData, RuleType.ItemPreconstraint,handle);
+		} catch (IOException e) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+		}
+
+//		log.info("Conclusion" + conclusion);
+
+		// Parse result
+		if (parseConclusion(conclusion).equals("TRUE") || parseConclusion(conclusion).equals("SUCESS")) {
+			taskWorkItem.notifyConstrainViolation();
+		} else if (parseConclusion(conclusion).equals("FALSE")) {
+			taskWorkItem.notifyPreFalse();
+		} else {
+			taskWorkItem.notifyPreTask();
+		}
+	}
+	
+	/**
+	 * TODO: Merge Evaluate a pos condition
+	 */
+	public void evaluatePos(TaskWorkItem taskWorkItem) throws BlendedWorkflowException {
+		log.info("evaluate Postconstraint for TaskWorkItem: " + taskWorkItem.getID());
+
+		// YAWLSpecID
+//		String yawlSpecificationID = taskWorkItem.getBwInstance().getBwSpecification().getYawlSpecficationID();
+//		YSpecificationID yawlSpecID = null;
+//
+//		for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedActivitySpecs()) {
+//			if(ySpecificationID.getIdentifier().equals(yawlSpecificationID)) {
+//				yawlSpecID = ySpecificationID;
+//				break;
+//			}
+//		}
+
+		// Goal Name
+		String taskName = taskWorkItem.getTask().getName().replaceAll(" ", "_");
+
+		// Evaluation Data
+		Element eData = getEvaluationData(taskWorkItem, null);
+		log.info("With data: " + JDOMUtil.elementToString(eData));
+
+		// Evaluate
+		String conclusion = null;
+		try {
+			conclusion = client.evaluate(yawlSpecID, taskName, eData, RuleType.ItemConstraintViolation,handle);
+		} catch (IOException e) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+		}
+
+		log.info("Conclusion" + conclusion);
+
+		// Parse result
+		if (parseConclusion(conclusion).equals("TRUE")) {
+			taskWorkItem.notifyCompleted();
+		} else if (parseConclusion(conclusion).equals("FALSE") || parseConclusion(conclusion).equals("SUCESS")) {
+			taskWorkItem.notifyEnabled();
+		} else {
+			taskWorkItem.notifySkipped();
+		}
+	}
+	
+	/******************
+	 * TODO: Test
+	 ******************/
+	/**
+	 * Add a new WorkItemRecord
+	 */
+	void addWorkItemRecord(WorkItemRecord wir, String result, Boolean isNew) {
+		if (isNew) {
+			yawlPreWIR.put(wir, result);
+		} else {
+			yawlPosWIR.put(wir, result);
+		}
+	}
+	
+	/**
+	 * Get the new WorkItemRecords created by YAWL
+	 */
+	int getNewWorkItems () {
+		int count = 0;
+		Iterator<?> it = yawlPreWIR.keySet().iterator();
+		while(it.hasNext()) {
+			WorkItemRecord wir= (WorkItemRecord) it.next();
+			String result= yawlPreWIR.get(wir);
+			notifyNewTaskWorkItem(wir, result);
+			yawlPreWIR.remove(wir);
+			yawlEnabledWIR.put(wir.getTaskName().replace("_", " "), wir);
+			count++;
+		}
+		return count;
+	}
+	
+	/**
+	 * Get the evaluated WorkItemRecords
+	 */
+	int getConstrainViolationWorkItems () {
+		int count = 0;
+		Iterator<?> it = yawlPreWIR.keySet().iterator();
+		while(it.hasNext()) {
+			WorkItemRecord wir= (WorkItemRecord) it.next();
+			String result= yawlPreWIR.get(wir);
+			notifyNewTaskWorkItem(wir, result);
+			yawlPosWIR.remove(wir);
+			yawlEnabledWIR.put(wir.getTaskName().replace("_", " "), wir);
+			count++;
+		}
+		return count;
+	}
+	
+	//test
+	/**
+	 * Evaluate a goal condition
+	 */
+	public void evaluateTest() throws BlendedWorkflowException {
+		log.info("evaluate Postconstraint test: ");
+
+		// Goal Name
+		String taskName = "Check-in_Patient";
+
+		String data;
+		Element eData;
+		// Evaluation Data
+		data = "<cornerstone>" +
+				"<Patient_Name_State>UNDEFINED</Patient_Name_State>" +
+				"<Patient_Name>null</Patient_Name>" +
+				"<Patient_Address_State>UNDEFINED</Patient_Address_State>" +
+				"<Patient_Address>null</Patient_Address>" +
+				"<Patient_PhoneNumber_State>UNDEFINED</Patient_PhoneNumber_State>" +
+				"<Patient_PhoneNumber>null</Patient_PhoneNumber>" +
+				"<Patient_Gender_State>UNDEFINED</Patient_Gender_State>" +
+				"<Patient_Gender>null</Patient_Gender>" +
+				"<Episode_Closed_State>UNDEFINED</Episode_Closed_State>" +
+				"<Episode_Closed>null</Episode_Closed>" + 
+				"</cornerstone>";
+		eData = JDOMUtil.stringToElement(data);
+
+		// Evaluate
+		String conclusion = null;
+		try {
+			conclusion = client.evaluate(yawlSpecID, taskName, eData, RuleType.ItemConstraintViolation,handle);
+		} catch (IOException e) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+		}
+		log.info("1ºConclusion" + conclusion);
+		
+		// Evaluation Data
+		data = "<cornerstone>" +
+				"<Patient_Name_State>SKIPPED</Patient_Name_State>" +
+				"<Patient_Name>null</Patient_Name>" +
+				"<Patient_Address_State>SKIPPED</Patient_Address_State>" +
+				"<Patient_Address>null</Patient_Address>" +
+				"<Patient_PhoneNumber_State>SKIPPED</Patient_PhoneNumber_State>" +
+				"<Patient_PhoneNumber>null</Patient_PhoneNumber>" +
+				"<Patient_Gender_State>SKIPPED</Patient_Gender_State>" +
+				"<Patient_Gender>null</Patient_Gender>" +
+				"<Episode_Closed_State>SKIPPED</Episode_Closed_State>" +
+				"<Episode_Closed>null</Episode_Closed>" + 
+				"</cornerstone>";
+		eData = JDOMUtil.stringToElement(data);
+
+		// Evaluate
+		conclusion = null;
+		try {
+			conclusion = client.evaluate(yawlSpecID, taskName, eData, RuleType.ItemConstraintViolation,handle);
+		} catch (IOException e) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+		}
+		log.info("2ºConclusion" + conclusion);
+		
+		// Evaluation Data
+		data = "<cornerstone>" +
+				"<Patient_Name_State>DEFINED</Patient_Name_State>" +
+				"<Patient_Name>john</Patient_Name>" +
+				"<Patient_Address_State>DEFINED</Patient_Address_State>" +
+				"<Patient_Address>adress</Patient_Address>" +
+				"<Patient_PhoneNumber_State>DEFINED</Patient_PhoneNumber_State>" +
+				"<Patient_PhoneNumber>21654</Patient_PhoneNumber>" +
+				"<Patient_Gender_State>DEFINED</Patient_Gender_State>" +
+				"<Patient_Gender>male</Patient_Gender>" +
+				"<Episode_Closed_State>DEFINED</Episode_Closed_State>" +
+				"<Episode_Closed>false</Episode_Closed>" + 
+				"</cornerstone>";
+		eData = JDOMUtil.stringToElement(data);
+
+		// Evaluate
+		conclusion = null;
+		try {
+			conclusion = client.evaluate(yawlSpecID, taskName, eData, RuleType.ItemConstraintViolation,handle);
+		} catch (IOException e) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+		}
+		log.info("3ºConclusion" + conclusion);
+		
+	}
+
 }

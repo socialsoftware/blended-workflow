@@ -19,11 +19,10 @@ import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -40,7 +39,7 @@ public class SkipWorkItemServiceTest {
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
 	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml";
 
-//	private static String YAWLCASE_ID = "yawlCaseID";
+	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String GOALWORKITEM_PRESCRIBE_ID = "Prescribe.3";
@@ -71,8 +70,9 @@ public class SkipWorkItemServiceTest {
 		workListManager = context.mock(WorkListManager.class);
 		context.checking(new Expectations() {
 			{
-//				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
-//				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
+				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
+				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
+				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
 				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
@@ -122,9 +122,9 @@ public class SkipWorkItemServiceTest {
 		try {
 			Transaction.begin();
 
-			assertEquals(WorkItemState.SKIPPED, workItem.getState());
-			for (AttributeInstance attributeInstance : workItem.getContraintViolationAttributeInstances()) {
-				assertEquals(DataState.SKIPPED, attributeInstance.getState());
+			assertEquals(WorkItemState.CHECKED_IN, workItem.getState());
+			for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
+				assertEquals(null, workItemArgument.getValue());
 			}
 
 			Transaction.commit();

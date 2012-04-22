@@ -6,6 +6,9 @@ public class DataModel extends DataModel_Base {
 
 	public enum DataState {DEFINED, UNDEFINED, SKIPPED}
 
+	/**
+	 * Clone the DataModel.
+	 */
 	public DataModelInstance cloneDataModel() throws BlendedWorkflowException {
 		DataModelInstance newDataModelInstance = new DataModelInstance();
 		Entity relationEntityOne;
@@ -15,7 +18,7 @@ public class DataModel extends DataModel_Base {
 			entity.cloneEntity(newDataModelInstance);
 		}
 
-		// Get relation -> Get new Entities -> clone with new Entities
+		// Get relation -> Get new Entities -> Clone with new Entities
 		for (Relation relation : getRelations()) { 
 			relationEntityOne = newDataModelInstance.getEntity(relation.getEntityOne().getName());
 			relationEntityTwo = newDataModelInstance.getEntity(relation.getEntityTwo().getName());
@@ -32,14 +35,5 @@ public class DataModel extends DataModel_Base {
 		}
 		return null; // Needed by ConditionParser to create new Entity
 	}
-
-//	public Attribute getAttribute(String name) {
-//		for (Attribute attribute : getAttributes()) {
-//			if (attribute.getName().equals(name)) {
-//				return attribute;
-//			}
-//		}
-//		return null; // Needed by ConditionParser to create new Attribute
-//	}
 
 }

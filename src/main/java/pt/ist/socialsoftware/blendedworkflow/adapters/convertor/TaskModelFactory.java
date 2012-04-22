@@ -39,11 +39,13 @@ public class TaskModelFactory {
 			String previousTask ="";
 			if (flowType.equals("none")) {
 				previousTask = taskXML.getChildText("PreviousTaskName", bwNamespace);
+			} else if (flowType.equals("root")) {
+				previousTask ="";
 			}
 			else {
 				String previousTask1 = taskXML.getChildText("PreviousTaskName1", bwNamespace);
 				String previousTask2 = taskXML.getChildText("PreviousTaskName2", bwNamespace);
-				previousTask = previousTask1 + ", " + previousTask2;
+				previousTask = previousTask1 + "," + previousTask2;
 			}
 			new Task(taskModel, taskName, taskDescription, taskPreCondition, taskPostCondition, previousTask);
 		}

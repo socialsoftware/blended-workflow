@@ -27,12 +27,12 @@ public class Relation extends Relation_Base {
 		}
 	}
 
-	private boolean isInRelation(Entity entityTwo, Relation relation) {
-		return relation.getEntityOne().equals(entityTwo) || relation.getEntityTwo().equals(entityTwo);
-	}
-
 	public void cloneRelation(DataModelInstance dataModelInstance, Entity entityOne, Entity entityTwo) throws BlendedWorkflowException {
 		new Relation(dataModelInstance, getName(), entityOne, entityTwo, getCardinalityOne(), getCardinalityTwo(), getIsOneKeyEntity(), getIsTwoKeyEntity());
+	}
+
+	private boolean isInRelation(Entity entityTwo, Relation relation) {
+		return relation.getEntityOne().equals(entityTwo) || relation.getEntityTwo().equals(entityTwo);
 	}
 
 	public Entity getEntityOne () {

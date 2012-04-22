@@ -1,16 +1,18 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
+import org.apache.log4j.Logger;
+
 import jvstm.Atomic;
 
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 public class CreateBWInstanceService {
 
+	private static Logger log = Logger.getLogger("CreateBWInstanceService");
 	private BWSpecification bwSpecification;
 	private String name;
 
@@ -21,22 +23,19 @@ public class CreateBWInstanceService {
 
 	@Atomic
 	public void execute() throws BlendedWorkflowException {
+		log.info("Create BWInstance for BWSpecification " + this.bwSpecification.getName() + " with name " + name);
+		
 		// Get BWSpecification and clone it
 		BWInstance bwInstance = new BWInstance(this.bwSpecification, name);
 		
 		// Launch case on YAWL
-//		BWSpecification bwSpecification = bwInstance.getBwSpecification();
-//		String yawlSpecificationID = bwSpecification.getYawlSpecficationID();
-//		String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter().launchCase(yawlSpecificationID);
-//		bwInstance.setYawlCaseID(yawlCaseID);
+		BWSpecification bwSpecification = bwInstance.getBwSpecification();
+		String yawlSpecificationID = bwSpecification.getYawlSpecficationID();
+		String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter().launchCase(yawlSpecificationID);
+		bwInstance.setYawlCaseID(yawlCaseID);
 		
-		// Get Enabled Workitems;
 		BlendedWorkflow.getInstance().getBwManager().notifyCreatedBWInstance(bwInstance);
-
 		bwInstance.getGoalModelInstance().getEnabledWorkItems();
-		
-		for (WorkItem workItem : bwInstance.getWorkItems()) {
-			BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(workItem);
-		}
+		bwInstance.getTaskModelInstance().getEnabledWorkItems();
 	}
 }

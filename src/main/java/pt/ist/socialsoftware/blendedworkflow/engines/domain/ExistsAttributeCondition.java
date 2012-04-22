@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,18 +37,8 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	}
 	
 	@Override
-	String getData() {
-		return getAttribute().getEntity().getName();
-	}
-	
-	@Override
-	public String getString() {
-		return "existsAttribute(" + getAttribute().getEntity().getName() + "." + getAttribute().getName() +")";
-	}
-	
-	@Override
 	public Set<Entity> getEntities() {
-		return null;
+		return new HashSet<Entity>();
 	}
 	
 	@Override
@@ -55,6 +46,21 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		Set<Attribute> attribute = new HashSet<Attribute>();
 		attribute.add(getAttribute());
 		return attribute;
+	}
+	
+	@Override
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		return new HashMap<Attribute, String>();
+	}
+	
+	@Override
+	public String getRdrCondition(String type) {
+		String condition = "";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		condition += entityName + "_" + attributeName + "_State = " + type;
+		return condition;
 	}
 
 }

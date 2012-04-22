@@ -5,6 +5,9 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class GoalModel extends GoalModel_Base {
 
+	/**
+	 * Clone the GoalModel tree
+	 */
 	public void cloneGoalModel(GoalModelInstance newGoalModelInstance) throws BlendedWorkflowException {
 		for (Goal goal : getGoals()) {
 			goal.cloneGoal(newGoalModelInstance);

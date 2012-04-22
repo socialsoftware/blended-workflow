@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public class EntityInstance extends EntityInstance_Base {
-
+	
 	public EntityInstance(DataModelInstance dataModelInstance, Entity entity) {
 		setEntity(entity);
 		setID(entity.getName() + "." + entity.getNewEntityInstanceId()); // Id: EntityName.#
@@ -12,16 +12,9 @@ public class EntityInstance extends EntityInstance_Base {
 		setState(DataState.UNDEFINED);
 	}
 	
-	public String getNewAttributeInstanceID () {
-		setAttributeInstanceCounter(getAttributeInstanceCounter()+1);
-		return getAttributeInstanceCounter().toString();
-	}
-
-	public String getNewRelationInstanceID () {
-		setRelationInstanceCounter(getRelationInstanceCounter()+1);
-		return getRelationInstanceCounter().toString();
-	}
-
+	/**
+	 * Create and assign EntityInstances and AttributesInstances to Workitems
+	 */
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute) {
 		boolean exists = false;
 		for (AttributeInstance attributeInstance : getAttributeInstances()) {
@@ -58,6 +51,39 @@ public class EntityInstance extends EntityInstance_Base {
 				taskWorkItem.addContraintViolationAttributeInstances(attributeInstance);
 			}
 		}	
+	}
+	
+	public String getNewAttributeInstanceID () {
+		setAttributeInstanceCounter(getAttributeInstanceCounter()+1);
+		return getAttributeInstanceCounter().toString();
+	}
+
+	public String getNewRelationInstanceID () {
+		setRelationInstanceCounter(getRelationInstanceCounter()+1);
+		return getRelationInstanceCounter().toString();
+	}
+
+	/**
+	 * Check if all key AttributeInstanceseevaluate are DEFINED
+	 */
+	public void checkState() {
+		int keyAttributesTotal = 0;
+		int keyAttributesDefined = 0;
+		for (AttributeInstance attributeInstance : getAttributeInstances()) {
+			// Count total of key Attributes
+			if (attributeInstance.getAttribute().getIsKeyAttribute() == true) {
+				keyAttributesTotal++;
+			}
+			
+			// Count total of key Attributes defined
+			if (attributeInstance.getAttribute().getIsKeyAttribute() == true && attributeInstance.getState() == DataState.DEFINED) {
+				keyAttributesDefined++;
+			}
+		}
+
+		if (keyAttributesDefined == keyAttributesTotal) {
+			setState(DataState.DEFINED);
+		}
 	}
 
 }

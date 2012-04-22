@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 public class TrueCondition extends TrueCondition_Base {
@@ -25,23 +27,23 @@ public class TrueCondition extends TrueCondition_Base {
 	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {}
 	
 	@Override
-	String getData() {
-		return "";
-	}
-	
-	@Override
-	public String getString() {
-		return "true";
-	}
-	
-	@Override
 	public Set<Entity> getEntities() {
-		return null;
+		return new HashSet<Entity>();
 	}
 	
 	@Override
 	public Set<Attribute> getAttributes() {
-		return null;
+		return new HashSet<Attribute>();
 	}
-    
+	
+	@Override
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		return new HashMap<Attribute, String>();
+	}
+
+	@Override
+	public String getRdrCondition(String type) {
+		return "True";
+	}
+
 }
