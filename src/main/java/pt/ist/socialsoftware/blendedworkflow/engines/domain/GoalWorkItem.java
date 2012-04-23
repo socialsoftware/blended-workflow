@@ -39,13 +39,15 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	/**
 	 * Update ConstrainViolation WorkItem Arguments with new Data.
 	 */
-	private void updateConstrainViolationWorkItemArguments() {
+	public void updateConstrainViolationWorkItemArguments() {
 		for (WorkItemArgument workItemArgument : getConstrainViolationWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			workItemArgument.setValue(attributeInstance.getValue());
 			workItemArgument.setState(attributeInstance.getState());
 		}
 	}
+	
+	public void updatePreConstrainWorkItemArguments() {}
 	
 	/******************************
 	 * State Change Notifications *
@@ -159,6 +161,8 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		}
 		
 		for (WorkItem workItem : notifyWorkItems) {
+			workItem.updatePreConstrainWorkItemArguments();
+			workItem.updateConstrainViolationWorkItemArguments();
 			workItem.notifyDataChange();
 		}
 	}

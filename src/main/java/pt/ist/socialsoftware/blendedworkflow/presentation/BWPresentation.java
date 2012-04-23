@@ -139,17 +139,13 @@ public class BWPresentation extends Application {
 	}
 
 	private void initMainWindow(String name) {
-		String init="FirstLogin: ";
-		if (Bootstrap.isInitialized()) {
-			init = "SecondOrMoreLogin: ";
-			}
-			Transaction.begin();
-			BlendedWorkflow.getInstance().getBwManager().updateBWPresentation();
-			BlendedWorkflow.getInstance().getWorkListManager().updateBWPresentation();
-			Transaction.commit();
+		Transaction.begin();
+		BlendedWorkflow.getInstance().getBwManager().updateBWPresentation();
+		BlendedWorkflow.getInstance().getWorkListManager().updateBWPresentation();
+		Transaction.commit();
 
 		username += name;
-		Label welcome = new Label(init + "Welcome " + username + "   ");
+		Label welcome = new Label("Welcome " + username + "   ");
 		welcome.addStyleName("h3");
 		Label splitter = new Label("|");
 		Label splitter2 = new Label("|");
@@ -189,7 +185,6 @@ public class BWPresentation extends Application {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				bwPresentation.close();
-				Bootstrap.setFirstRun();
 				initLoginWindow();
 			}
 		});
@@ -697,7 +692,7 @@ public class BWPresentation extends Application {
 	}
 
 	public void generatePreTaskForm(long workItemOID) {
-		Window taskWindow = new Window("");
+		Window taskWindow = new Window("Pre Task Form");
 		taskWindow.setContent(new PreTaskForm(workItemOID));
 		taskWindow.setWidth("30%");
 		taskWindow.center();
@@ -705,7 +700,7 @@ public class BWPresentation extends Application {
 	}
 	
 	public void generateTaskForm(long workItemOID) {
-		Window taskWindow = new Window("");
+		Window taskWindow = new Window("Task Form");
 		taskWindow.setContent(new TaskForm(workItemOID));
 		taskWindow.setWidth("30%");
 		taskWindow.center();
@@ -713,7 +708,7 @@ public class BWPresentation extends Application {
 	}
 
 	public void generateGoalForm(long workItemOID) {
-		Window goalWindow = new Window("");
+		Window goalWindow = new Window("Goal Form");
 		goalWindow.setContent(new GoalForm(workItemOID));
 		goalWindow.setWidth("30%");
 		goalWindow.center();
@@ -721,7 +716,7 @@ public class BWPresentation extends Application {
 	}
 
 	public void generateNewGoalWindow() {
-		Window newGoalWindow = new Window("New Goal");
+		Window newGoalWindow = new Window("New Goal Form");
 		newGoalWindow.setContent(new NewGoalForm());
 		newGoalWindow.center();
 		newGoalWindow.setClosable(false);
@@ -1020,6 +1015,16 @@ public class BWPresentation extends Application {
 		goalInfoTable.addItem(new Object[] {"Output Data", outputData}, new Integer(6));
 
 		goalInfoTable.setWidth("100%");
+	}
+
+	public void addUser(long oid, String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addRole(long oid, String name) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

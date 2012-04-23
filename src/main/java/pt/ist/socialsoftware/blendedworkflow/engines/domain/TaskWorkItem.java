@@ -43,7 +43,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 	/**
 	 * Update PreConstraint WorkItem Arguments with new Data.
 	 */
-	private void updatePreConstrainWorkItemArguments() {
+	public void updatePreConstrainWorkItemArguments() {
 		for (WorkItemArgument workItemArgument : getPreConstrainWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			workItemArgument.setValue(attributeInstance.getValue());
@@ -64,7 +64,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 	/**
 	 * Update ConstrainViolation WorkItem Arguments with new Data.
 	 */
-	private void updateConstrainViolationWorkItemArguments() {
+	public void updateConstrainViolationWorkItemArguments() {
 		for (WorkItemArgument workItemArgument : getConstrainViolationWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			workItemArgument.setValue(attributeInstance.getValue());
@@ -254,6 +254,8 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		}
 		
 		for (WorkItem workItem : notifyWorkItems) {
+			workItem.updatePreConstrainWorkItemArguments();
+			workItem.updateConstrainViolationWorkItemArguments();
 			workItem.notifyDataChange();
 		}
 	}

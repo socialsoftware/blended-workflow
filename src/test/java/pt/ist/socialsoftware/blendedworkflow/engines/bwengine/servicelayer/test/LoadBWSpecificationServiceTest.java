@@ -31,7 +31,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 public class LoadBWSpecificationServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
-	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml";
+	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl";
 	
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 
@@ -96,6 +96,9 @@ public class LoadBWSpecificationServiceTest {
 			assertEquals(4, dataModel.getRelationsCount());
 			assertEquals(6, goalModel.getGoalsCount());
 
+			assertEquals(0,BlendedWorkflow.getInstance().getOrganizationalModel().getRolesCount());
+			assertEquals(0,BlendedWorkflow.getInstance().getOrganizationalModel().getUsersCount());
+			
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {

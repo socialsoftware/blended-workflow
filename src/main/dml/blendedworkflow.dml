@@ -11,6 +11,46 @@ class BlendedWorkflow {
 	Integer bwSpecificationCounter;
 }
 
+class OrganizationalModel;
+
+class Role {
+	String name;
+	String description;
+	Boolean bwManagerAcess;
+	Boolean organizationalManagerAcess;
+	Boolean worklistManagerAcess;
+}
+
+class User {
+	String name;
+	String ID;
+	String password;
+	String notes;
+}
+
+// OrganizationalModel
+relation BlendedWorkflowHasOrganizationalModel {
+	BlendedWorkflow playsRole blendedWorkflow {multiplicity 0..1;}
+	OrganizationalModel playsRole organizationalModel {multiplicity 0..1;}
+}
+
+relation OrganizationalModelHasRoles {
+	OrganizationalModel playsRole organizationalModel {multiplicity 0..1;}
+	Role playsRole roles {multiplicity 0..*;}
+}
+
+relation OrganizationalModelHasUsers {
+	OrganizationalModel playsRole organizationalModel {multiplicity 0..1;}
+	User playsRole users {multiplicity 0..*;}
+}
+
+relation UserHasRoles {
+	User playsRole users {multiplicity 0..*;}
+	Role playsRole roles {multiplicity 0..*;}
+}
+
+
+
 class BWSpecification {
 	String name;
 	String author;

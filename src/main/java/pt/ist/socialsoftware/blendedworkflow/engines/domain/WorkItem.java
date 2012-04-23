@@ -109,4 +109,7 @@ public abstract class WorkItem extends WorkItem_Base {
 		}
 	}
 	
+	public abstract void updatePreConstrainWorkItemArguments();
+	public abstract void updateConstrainViolationWorkItemArguments();
+	
 }

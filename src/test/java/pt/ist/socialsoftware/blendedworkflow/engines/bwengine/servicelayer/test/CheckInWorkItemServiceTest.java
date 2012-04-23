@@ -25,6 +25,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
@@ -40,7 +41,7 @@ import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 public class CheckInWorkItemServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
-	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml";
+	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl";
 
 	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
@@ -82,6 +83,7 @@ public class CheckInWorkItemServiceTest {
 				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
 				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
 				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
+				allowing(workletAdapter).notifyWorkItemPreConstraint(with(any(TaskWorkItem.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
 				allowing(workListManager).notifySkippedWorkItem(with(any(WorkItem.class)));

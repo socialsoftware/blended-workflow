@@ -64,11 +64,12 @@ public class EntityInstance extends EntityInstance_Base {
 	}
 
 	/**
-	 * Check if all key AttributeInstanceseevaluate are DEFINED
+	 * Check if all key AttributeInstanceseevaluate are DEFINED or SKIPPED
 	 */
 	public void checkState() {
 		int keyAttributesTotal = 0;
 		int keyAttributesDefined = 0;
+		int keyAttributesSkipped = 0;
 		for (AttributeInstance attributeInstance : getAttributeInstances()) {
 			// Count total of key Attributes
 			if (attributeInstance.getAttribute().getIsKeyAttribute() == true) {
@@ -78,12 +79,18 @@ public class EntityInstance extends EntityInstance_Base {
 			// Count total of key Attributes defined
 			if (attributeInstance.getAttribute().getIsKeyAttribute() == true && attributeInstance.getState() == DataState.DEFINED) {
 				keyAttributesDefined++;
+
+			// Count total of key Attributes skipped
+			} else if (attributeInstance.getAttribute().getIsKeyAttribute() == true && attributeInstance.getState() == DataState.SKIPPED) {
+				keyAttributesSkipped++;
 			}
 		}
 
 		if (keyAttributesDefined == keyAttributesTotal) {
 			setState(DataState.DEFINED);
-		}
+		} else if (keyAttributesSkipped == keyAttributesTotal) {
+			setState(DataState.SKIPPED);
+		} 
 	}
 
 }

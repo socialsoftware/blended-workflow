@@ -24,6 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
@@ -36,7 +37,7 @@ import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 public class CreateBWInstanceServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
-	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml";
+	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl";
 
 	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
@@ -97,6 +98,7 @@ public class CreateBWInstanceServiceTest {
 			{
 				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
 				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
+				allowing(workletAdapter).notifyWorkItemPreConstraint(with(any(TaskWorkItem.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				allowing(workListManager).notifyEnabledWorkItem(with(any(WorkItem.class)));
 			}
@@ -120,7 +122,7 @@ public class CreateBWInstanceServiceTest {
 			assertEquals(4, dataModelInstance.getRelationsCount());
 			assertEquals(6, goalModelInstance.getGoalsCount());
 			assertEquals(5, taskModelInstance.getTasksCount());
-			assertEquals(3, bwInstance.getWorkItemsCount());
+			assertEquals(4, bwInstance.getWorkItemsCount());
 			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
 
 			Transaction.commit();

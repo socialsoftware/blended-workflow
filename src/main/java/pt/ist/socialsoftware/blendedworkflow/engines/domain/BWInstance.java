@@ -11,7 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class BWInstance extends BWInstance_Base {
 
-	private Logger log = Logger.getLogger("bwServicelogger");
+	private Logger log = Logger.getLogger("BWInstance");
 	
 	/**
 	 * Create a new BWInstance, and clones the Data, Task and Goal models from its parent BWSpecification

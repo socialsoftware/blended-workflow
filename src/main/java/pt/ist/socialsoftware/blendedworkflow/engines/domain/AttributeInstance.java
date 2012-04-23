@@ -19,4 +19,14 @@ public class AttributeInstance extends AttributeInstance_Base {
 		super.setValue(value);
 		getEntityInstance().checkState();
 	}
+
+	@Override
+	public void setState(DataState state) {
+		if (state.equals(DataState.UNDEFINED)) {
+			super.setState(state);
+		} else {
+			super.setState(state);
+			getEntityInstance().checkState();
+		}
+	}
 }

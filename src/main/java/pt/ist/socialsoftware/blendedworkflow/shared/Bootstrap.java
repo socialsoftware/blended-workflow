@@ -10,27 +10,20 @@ import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.OrganizationalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 public class Bootstrap {
 
 	private static boolean notInitialized = true;
-	private static boolean firstRun = true;
 	
-	/**
-	 * FIXME: Move to OrganizationalManager: Manage Login count 
-	 */
-	public static void setFirstRun() {
-		Bootstrap.firstRun = false;
-	}
-
 	/**
 	 * Check if the database is initialized.
 	 * @return
 	 */
 	public static Boolean isInitialized() {
 		Config config = FenixFramework.getConfig();
-		if (config == null || firstRun) {
+		if (config == null) {
 			return false;
 		} else 
 			return true;
@@ -46,6 +39,7 @@ public class Bootstrap {
 			repositoryType = RepositoryType.BERKELEYDB;
 			rootClass = BlendedWorkflow.class;
 		}});
+		createOraganizationalManager();
 	}
 
 	/**
@@ -61,6 +55,7 @@ public class Bootstrap {
 			}});
 		}
 		notInitialized = false;
+		createOraganizationalManager();
 	}
 
 	/**
@@ -94,6 +89,12 @@ public class Bootstrap {
 		} catch (BlendedWorkflowException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void createOraganizationalManager() {
+		Transaction.begin();
+		new OrganizationalModel();
+		Transaction.commit();
 	}
 
 }

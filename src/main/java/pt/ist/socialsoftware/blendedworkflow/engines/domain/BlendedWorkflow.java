@@ -14,7 +14,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	private WorkletAdapter workletAdapter = null;
 	private WorkListManager workListManager = null;
 	private BWManager bwManager = null;
-
+	
 	public static BlendedWorkflow getInstance() {
 		return FenixFramework.getRoot();
 	}	
