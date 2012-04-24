@@ -39,6 +39,14 @@ public abstract class Condition extends Condition_Base {
 	 * @param type the type of the condition (DEFINED, UNDEFINED or SKIPPED)
 	 * @return a string with the condition
 	 */
-	public abstract String getRdrCondition(String type);
+//	public abstract String getRdrCondition(String type);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract String getRdrTrueCondition();
+	public abstract String getRdrFalseCondition();
+	public abstract String getRdrSkippedCondition();
 
 }

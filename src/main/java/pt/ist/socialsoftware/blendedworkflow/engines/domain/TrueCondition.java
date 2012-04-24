@@ -41,8 +41,26 @@ public class TrueCondition extends TrueCondition_Base {
 		return new HashMap<Attribute, String>();
 	}
 
+//	@Override
+//	public String getRdrCondition(String type) {
+//		return "True";
+//	}
+	
+	/**
+	 * TO TEST
+	 */
 	@Override
-	public String getRdrCondition(String type) {
+	public String getRdrTrueCondition() { 
+		return "True";
+	}
+
+	@Override
+	public String getRdrFalseCondition() { 
+		return "True";
+	}
+
+	@Override
+	public String getRdrSkippedCondition() { 
 		return "True";
 	}
 

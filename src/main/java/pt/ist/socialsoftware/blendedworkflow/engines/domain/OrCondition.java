@@ -64,9 +64,40 @@ public class OrCondition extends OrCondition_Base {
 		return attributesOne;
 	}
 	
+//	@Override
+//	public String getRdrCondition(String type) {
+//		return getConditionOne().getRdrCondition(type) + " | " + getConditionTwo().getRdrCondition(type);
+//	}
+	
+	/**
+	 * OR | T | F | S
+	 * --------------
+	 *  T | T | T | T
+	 * --------------
+	 *  F | T | F | F
+	 * --------------
+	 *  S | T | F | S
+	 */
 	@Override
-	public String getRdrCondition(String type) {
-		return getConditionOne().getRdrCondition(type) + " | " + getConditionTwo().getRdrCondition(type);
+	public String getRdrTrueCondition() {
+		String condition = "((" + getConditionOne().getRdrTrueCondition() + " | " + getConditionTwo().getRdrTrueCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrTrueCondition() + " | " + getConditionTwo().getRdrFalseCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrTrueCondition() + " | " + getConditionTwo().getRdrSkippedCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrFalseCondition() + " | " + getConditionTwo().getRdrTrueCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrSkippedCondition() + " | " + getConditionTwo().getRdrTrueCondition() + "))";
+		return condition;
 	}
 
+	@Override
+	public String getRdrFalseCondition() {
+		String condition = "((" + getConditionOne().getRdrFalseCondition() + " | " + getConditionTwo().getRdrFalseCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrFalseCondition() + " | " + getConditionTwo().getRdrSkippedCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrSkippedCondition() + " | " + getConditionTwo().getRdrFalseCondition() + "))";
+		return condition;
+	}
+
+	@Override
+	public String getRdrSkippedCondition() {
+		return "(" + getConditionOne().getRdrSkippedCondition() + " | " + getConditionTwo().getRdrSkippedCondition() + ")";
+	}
 }

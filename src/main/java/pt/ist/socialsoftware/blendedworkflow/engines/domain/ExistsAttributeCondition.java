@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+
 public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 
 	public ExistsAttributeCondition(Attribute attribute) {
@@ -53,14 +55,49 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		return new HashMap<Attribute, String>();
 	}
 	
+//	@Override
+//	public String getRdrCondition(String type) {
+//		String condition = "";
+//		String attributeName = getAttribute().getName().replaceAll(" ", "");
+//		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+//		
+//		condition += entityName + "_" + attributeName + "_State = " + type;
+//		return condition;
+//	}
+	
+	/**
+	 * TO TEST
+	 */
 	@Override
-	public String getRdrCondition(String type) {
-		String condition = "";
+	public String getRdrTrueCondition() {
+		String condition = "(";
 		String attributeName = getAttribute().getName().replaceAll(" ", "");
 		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
 		
-		condition += entityName + "_" + attributeName + "_State = " + type;
+		condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + ")";
 		return condition;
 	}
+	
+	@Override
+	public String getRdrFalseCondition() {
+		String condition = "(";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + ")";
+		return condition;
+	}
+	
+	@Override
+	public String getRdrSkippedCondition() {
+		String condition = "(";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
+		return condition;
+	}
+	
+	
 
 }

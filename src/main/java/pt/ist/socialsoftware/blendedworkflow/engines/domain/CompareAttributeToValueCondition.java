@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+
 public class CompareAttributeToValueCondition extends CompareAttributeToValueCondition_Base {
 
 	public CompareAttributeToValueCondition(){
@@ -61,19 +63,59 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		return result;
 	}
 	
+//	@Override
+//	public String getRdrCondition(String type) {
+//		String condition = "";
+//		String attributeName = getAttribute().getName().replaceAll(" ", "");
+//		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+//		
+//		String joiner = " | ";
+//		if (type.equals("DEFINED"))
+//			joiner = " & ";
+//			
+//		condition += entityName + "_" + attributeName + "_State = " + type + joiner;
+//		condition += entityName + "_" + attributeName + " " + getOperator() + " " + getValue();
+//		
+//		return condition;
+//	}
+	
+	/**
+	 * TO TEST
+	 */
 	@Override
-	public String getRdrCondition(String type) {
-		String condition = "";
+	public String getRdrTrueCondition() {
+		String condition = "(";
 		String attributeName = getAttribute().getName().replaceAll(" ", "");
 		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
 		
-		String joiner = " | ";
-		if (type.equals("DEFINED"))
-			joiner = " & ";
-			
-		condition += entityName + "_" + attributeName + "_State = " + type + joiner;
-		condition += entityName + "_" + attributeName + " " + getOperator() + " " + getValue();
+		condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + " & ";
+		condition += entityName + "_" + attributeName + " " + getOperator() + " " + getValue() + ")";
+		return condition;
+	}
+	
+	@Override
+	public String getRdrFalseCondition() {
+		String condition = "((";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
 		
+		condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + ") | ";
+		condition += "((" + entityName + "_" + attributeName + "_State = " + DataState.DEFINED + ") & ";
+		condition += "(!(" + entityName + "_" + attributeName + " " + getOperator() + " " + getValue() + "))))";
+		
+//		condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + " | ";
+//		condition += "(" + entityName + "_" + attributeName + "_State = " + DataState.DEFINED + " & ";
+//		condition += "!(" + entityName + "_" + attributeName + " " + getOperator() + " " + getValue() + ")))"; //! does not work
+		return condition;
+	}
+	
+	@Override
+	public String getRdrSkippedCondition() {
+		String condition = "(";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
 		return condition;
 	}
 

@@ -64,13 +64,45 @@ public class AndCondition extends AndCondition_Base {
 		return attributesOne;
 	}
 	
+//	@Override
+//	public String getRdrCondition(String type) {
+//		if (type == "DEFINED") {
+//			return getConditionOne().getRdrCondition(type) + " & " + getConditionTwo().getRdrCondition(type);
+//		} else {
+//			return getConditionOne().getRdrCondition(type) + " | " + getConditionTwo().getRdrCondition(type);
+//		}
+//	}
+	
+	/**
+	 * AND| T | F | S   
+	 * --------------
+	 *  T | T | F | S
+	 * --------------
+	 *  F | F | F | S
+	 * --------------
+	 *  S | S | S | S
+	 */
 	@Override
-	public String getRdrCondition(String type) {
-		if (type == "DEFINED") {
-			return getConditionOne().getRdrCondition(type) + " & " + getConditionTwo().getRdrCondition(type);
-		} else {
-			return getConditionOne().getRdrCondition(type) + " | " + getConditionTwo().getRdrCondition(type);
-		}
+	public String getRdrTrueCondition() {
+		return "(" + getConditionOne().getRdrTrueCondition() + " & " + getConditionTwo().getRdrTrueCondition() + ")";
+	}
+
+	@Override
+	public String getRdrFalseCondition() {
+		String condition = "((" + getConditionOne().getRdrTrueCondition() + " & " + getConditionTwo().getRdrFalseCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrTrueCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrFalseCondition() + "))";
+		return condition;
+	}
+
+	@Override
+	public String getRdrSkippedCondition() {
+		String condition = "((" + getConditionOne().getRdrTrueCondition() + " & " + getConditionTwo().getRdrSkippedCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrSkippedCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrSkippedCondition() + " & " + getConditionTwo().getRdrTrueCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrSkippedCondition() + " & " + getConditionTwo().getRdrFalseCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrSkippedCondition() + " & " + getConditionTwo().getRdrSkippedCondition() + "))";
+		return condition;
 	}
 	
 }

@@ -44,9 +44,29 @@ public class NotCondition extends NotCondition_Base {
 		return new HashMap<Attribute, String>();
 	}
 	
+//	@Override
+//	public String getRdrCondition(String type) {
+//		return "(! " + getCondition() + ")";
+//	}
+	
+	/**
+	 * TO TEST
+	 */
 	@Override
-	public String getRdrCondition(String type) {
-		return "! " + getCondition(); // FIXME: not tested.
+	public String getRdrTrueCondition() { 
+		return getCondition().getRdrFalseCondition();
 	}
+
+	@Override
+	public String getRdrFalseCondition() { 
+		return getCondition().getRdrTrueCondition();
+	}
+
+	@Override
+	public String getRdrSkippedCondition() { 
+		return getCondition().getRdrSkippedCondition();
+	}
+
+	
 
 }
