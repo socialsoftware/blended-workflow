@@ -6,12 +6,14 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.OrganizationalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
 
 public class OrganizationalManager {
-	
+
 	private Logger log = Logger.getLogger("OrganizationalManager");
 	protected BWPresentation bwPresentation = null;
+	User activeUser = null;
 
 	public BWPresentation getBwPresentation() {
 		return bwPresentation;
@@ -20,8 +22,8 @@ public class OrganizationalManager {
 	public void setBwPresentation(BWPresentation bwPresentation) {
 		this.bwPresentation = bwPresentation;
 	}
-	
-	
+
+
 	/**
 	 * Notify the BWPresentation of created Roles.
 	 * @param role The created Role.
@@ -56,9 +58,30 @@ public class OrganizationalManager {
 
 	/**
 	 * TODO: OrganizationalManager:checkPermissions
+	 * @throws BlendedWorkflowException 
 	 */
-	void checkPermissions() {
-		log.info("Check permissions for user: ");
+	public Boolean loginUser(String userID, String userPassword) {
+		log.info("Check permissions for user:" + userID + " pass:" + userPassword);
+		OrganizationalModel organizationalModel = BlendedWorkflow.getInstance().getOrganizationalModel();
+		Boolean valid = false;
+		for (User user : organizationalModel.getUsers()) {
+			if (user.getID().equals(userID) && user.getPassword().equals(userPassword)) {
+				this.activeUser = user;
+				log.info("OK!");
+				valid = true;
+			}
+		}
+
+		if (!valid) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public User getActiveUser() {
+		log.info("getActiveUser");
+		return this.activeUser;
 	}
 
 }

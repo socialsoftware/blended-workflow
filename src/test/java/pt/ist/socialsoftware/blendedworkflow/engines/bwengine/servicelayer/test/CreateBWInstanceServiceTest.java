@@ -42,6 +42,7 @@ public class CreateBWInstanceServiceTest {
 	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
+	private static String USER_ID = "BlendedWorkflow";
 
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(CreateBWInstanceServiceTest.class);
@@ -105,7 +106,7 @@ public class CreateBWInstanceServiceTest {
 		});
 
 		BWSpecification bwSpecification = getBWSpecification(BWSPECIFICATION_NAME);
-		new CreateBWInstanceService(bwSpecification.getOID(),"").execute();
+		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).execute();
 
 		boolean committed = false;
 		try {

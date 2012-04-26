@@ -6,9 +6,11 @@ import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
@@ -26,7 +28,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class GoalForm extends VerticalLayout {
-
+	
 	private long goalWorkItemOID;
 	VerticalLayout data = new VerticalLayout();
 
@@ -62,6 +64,12 @@ public class GoalForm extends VerticalLayout {
 						workItemAttributeIndex++;
 					}
 				}
+				
+				Transaction.begin();
+				GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
+				User activeUser = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
+				goalWorkItem.setUser(activeUser);
+				Transaction.commit();
 
 				try {
 					new CheckInWorkItemService(goalWorkItemOID).execute();

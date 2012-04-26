@@ -28,29 +28,6 @@ class User {
 	String notes;
 }
 
-// OrganizationalModel
-relation BlendedWorkflowHasOrganizationalModel {
-	BlendedWorkflow playsRole blendedWorkflow {multiplicity 0..1;}
-	OrganizationalModel playsRole organizationalModel {multiplicity 0..1;}
-}
-
-relation OrganizationalModelHasRoles {
-	OrganizationalModel playsRole organizationalModel {multiplicity 0..1;}
-	Role playsRole roles {multiplicity 0..*;}
-}
-
-relation OrganizationalModelHasUsers {
-	OrganizationalModel playsRole organizationalModel {multiplicity 0..1;}
-	User playsRole users {multiplicity 0..*;}
-}
-
-relation UserHasRoles {
-	User playsRole users {multiplicity 0..*;}
-	Role playsRole roles {multiplicity 0..*;}
-}
-
-
-
 class BWSpecification {
 	String name;
 	String author;
@@ -58,6 +35,8 @@ class BWSpecification {
 	String creationDate;
 	String yawlSpecficationID;
 	Integer bwInstanceCounter;
+	String UID;
+	String version;
 }
 
 class BWInstance {
@@ -110,6 +89,8 @@ class Task {
 	String description;
 	TaskState state;
 	String previous;
+	String joinCode;
+	String splitCode;
 }
 
 class Condition;
@@ -286,12 +267,17 @@ relation GoalHasGoalWorkItem {
 }
 
 // Task Model
-relation TaskModelHasGoals {
+relation TaskModelHasTasks {
 	TaskModel playsRole taskModel { multiplicity 0..1; }
 	Task playsRole tasks { multiplicity 0..*; }
 }
 
 // Task
+relation TaskHasNextTask {
+	Task playsRole task { multiplicity 0..*; }
+	Task playsRole nextTasks { multiplicity 0..*; }
+}
+
 relation TaskHasPreCondition {
 	Task playsRole taskPreCondition { multiplicity 0..1; }
 	Condition playsRole preConstraint { multiplicity 0..1; }
@@ -398,5 +384,61 @@ relation ExistsEntityConditionHasEntities {
 relation CompareAttributeToValueConditionHasAttributes {
 	CompareAttributeToValueCondition playsRole compareAttributeToValueCondition { multiplicity 0..*; }
 	Attribute playsRole attribute { multiplicity 0..1; }
+}
+
+//OrganizationalModel
+relation BlendedWorkflowHasOrganizationalModel {
+	BlendedWorkflow playsRole blendedWorkflow {multiplicity 0..1;}
+	OrganizationalModel playsRole organizationalModel {multiplicity 0..1;}
+}
+
+relation OrganizationalModelHasRoles {
+	OrganizationalModel playsRole organizationalModel {multiplicity 0..1;}
+	Role playsRole roles {multiplicity 0..*;}
+}
+
+relation OrganizationalModelHasUsers {
+	OrganizationalModel playsRole organizationalModel {multiplicity 0..1;}
+	User playsRole users {multiplicity 0..*;}
+}
+
+relation BWInstanceHasUser {
+	BWInstance playsRole bwInstance {multiplicity 0..1;}
+	User playsRole user {multiplicity 0..1;}
+}
+
+relation UserHasRoles {
+	User playsRole users {multiplicity 0..*;}
+	Role playsRole role {multiplicity 0..1;}
+}
+
+relation TaskHasRoles {
+	Task playsRole tasks {multiplicity 0..*;}
+	Role playsRole role {multiplicity 0..1;}
+}
+
+relation TaskHasUsers {
+	Task playsRole tasks {multiplicity 0..*;}
+	User playsRole user {multiplicity 0..1;}
+}
+
+relation GoalHasRoles {
+	Goal playsRole goals {multiplicity 0..*;}
+	Role playsRole role {multiplicity 0..1;}
+}
+
+relation GoalHasUsers {
+	Goal playsRole goals {multiplicity 0..*;}
+	User playsRole user {multiplicity 0..1;}
+}
+
+relation WorkItemHasRoles {
+	WorkItem playsRole workItems {multiplicity 0..*;}
+	Role playsRole role {multiplicity 0..1;}
+}
+
+relation WorkItemHasUsers {
+	WorkItem playsRole workItems {multiplicity 0..*;}
+	User playsRole user {multiplicity 0..1;}
 }
 

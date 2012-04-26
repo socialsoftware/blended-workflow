@@ -1,6 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
+import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 import com.vaadin.ui.Alignment;
@@ -33,7 +35,13 @@ public class LaunchForm extends VerticalLayout {
 			public void buttonClick(ClickEvent event) {
 				try {
 					String name = (String) nameTf.getValue();
-					new CreateBWInstanceService(bwSpecificationOID,name).execute();
+					String activeUserID = "";
+					
+					Transaction.begin();
+					activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
+					Transaction.commit();
+					
+					new CreateBWInstanceService(bwSpecificationOID, name, activeUserID).execute();
 					getApplication().getMainWindow().showNotification("Blended Workflow Instance created", Notification.TYPE_TRAY_NOTIFICATION);
 					getApplication().getMainWindow().removeWindow(LaunchForm.this.getWindow());
 				}

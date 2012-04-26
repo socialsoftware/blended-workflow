@@ -16,6 +16,8 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
@@ -57,7 +59,10 @@ import com.vaadin.ui.Window.Notification;
 public class BWPresentation extends Application {
 
 	private String username = "";
+	private User user = null;
 	private Logger log = Logger.getLogger("BWPresentation");
+	private Boolean bwManagerAcess = false;
+	private Boolean worklistManagerAcess = false;
 
 	// Main Window
 	private final Window mainWindow = new Window("Blended Workflow");
@@ -139,29 +144,34 @@ public class BWPresentation extends Application {
 	}
 
 	private void initMainWindow(String name) {
-		Transaction.begin();
-		BlendedWorkflow.getInstance().getBwManager().updateBWPresentation();
-		BlendedWorkflow.getInstance().getWorkListManager().updateBWPresentation();
-		Transaction.commit();
-
-		username += name;
-		Label welcome = new Label("Welcome " + username + "   ");
+		log.info("initMainWindow");
+		this.username = name + "   ";
+		
+		getMainWindow().showNotification("Welcome " + this.username);
+		Label welcome = new Label("Welcome " + this.username + "   ");
 		welcome.addStyleName("h3");
+
 		Label splitter = new Label("|");
 		Label splitter2 = new Label("|");
 
+		
+		
 		bwManagerBtn.addStyleName("borderless");
 		bwManagerBtn.setEnabled(false);
 		bwManagerBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				bwManagerBtn.setEnabled(false);
-				wManagerBtn.setEnabled(true);
+				log.info("bwmanager pressed");
 				bwSpecTab.setEnabled(true);
 				bwInstanceTab.setEnabled(true);
 				bwDataTab.setEnabled(true);
-				taskViewTab.setEnabled(false);
-				goalViewTab.setEnabled(false);
+				
+				if (worklistManagerAcess) {
+					wManagerBtn.setEnabled(true);
+					taskViewTab.setEnabled(false);
+					goalViewTab.setEnabled(false);
+				}
 			}
 		});
 
@@ -169,13 +179,16 @@ public class BWPresentation extends Application {
 		wManagerBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				bwManagerBtn.setEnabled(true);
 				wManagerBtn.setEnabled(false);
-				bwSpecTab.setEnabled(false);
-				bwInstanceTab.setEnabled(false);
-				bwDataTab.setEnabled(false);
 				taskViewTab.setEnabled(true);
 				goalViewTab.setEnabled(true);
+
+				if (bwManagerAcess) {
+					bwManagerBtn.setEnabled(true);
+					bwSpecTab.setEnabled(false);
+					bwInstanceTab.setEnabled(false);
+					bwDataTab.setEnabled(false);
+				}
 			}
 		});
 
@@ -197,38 +210,53 @@ public class BWPresentation extends Application {
 		this.bwTabSheet.setHeight("100%");
 		this.bwTabSheet.setWidth("100%");
 		
-		// BWManager Tab
-		if (username.equals("User")) {
+		// Role Manager
+		Transaction.begin();
+		user = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
+		log.info("initMainWindow:user" + user);
+		Role userRole = user.getRole();
+		log.info("initMainWindow:user" + userRole);
+		if (userRole.getBwManagerAcess()) {
+			log.info("getBwManagerAcess");
 			right.addComponent(bwManagerBtn);
 			right.addComponent(splitter);
-			
 			VerticalLayout bwManagerVL = initBWSpecTab();
 			VerticalLayout bwInstancesVL = initBWInstancesTab();
 			VerticalLayout bwInstancesDataVL = initBWInstanceDataTab();
-			
 			bwSpecTab = this.bwTabSheet.addTab(bwManagerVL, "BW Specifications");
 			bwInstanceTab = this.bwTabSheet.addTab(bwInstancesVL, "BW Instances");
 			bwDataTab = this.bwTabSheet.addTab(bwInstancesDataVL, "Data Model");
-		} else {
-			right.addComponent(bwManagerBtn);
-			right.addComponent(splitter);
+			BlendedWorkflow.getInstance().getBwManager().updateBWPresentation();
+			bwManagerAcess = true;
+//			bwSpecTab.setEnabled(true);
+//			bwInstanceTab.setEnabled(true);
+//			bwDataTab.setEnabled(true);
+		}
+		if (userRole.getOrganizationalManagerAcess()) {
+			log.info("getOrganizationalManagerAcess");
+			//TODO:
+		}
+		if (userRole.getWorklistManagerAcess()) {
+			log.info("getWorklistManagerAcess");
 			right.addComponent(wManagerBtn);
 			right.addComponent(splitter2);
-			
-			VerticalLayout bwManagerVL = initBWSpecTab();
-			VerticalLayout bwInstancesVL = initBWInstancesTab();
-			VerticalLayout bwInstancesDataVL = initBWInstanceDataTab();
 			VerticalLayout bwTaskViewVL = initTaskViewTab();
 			VerticalLayout bwGoalViewVL = initGoalViewTab();
 			
-			bwSpecTab = this.bwTabSheet.addTab(bwManagerVL, "BW Specifications");
-			bwInstanceTab = this.bwTabSheet.addTab(bwInstancesVL, "BW Instances");
-			bwDataTab = this.bwTabSheet.addTab(bwInstancesDataVL, "Data Model");
 			taskViewTab = this.bwTabSheet.addTab(bwTaskViewVL, "Task View");
 			goalViewTab = this.bwTabSheet.addTab(bwGoalViewVL, "Goal View");
-			taskViewTab.setEnabled(false);
-			goalViewTab.setEnabled(false);
+			if (bwManagerAcess) {
+				taskViewTab.setEnabled(false);
+				goalViewTab.setEnabled(false);
+			} else {
+				taskViewTab.setEnabled(true);
+				goalViewTab.setEnabled(true);
+			}
+
+			BlendedWorkflow.getInstance().getWorkListManager().updateBWPresentation();
+			worklistManagerAcess = true;
 		}
+		Transaction.commit();
 		
 		right.addComponent(logout);
 		toolbar.addComponent(right);
@@ -497,6 +525,12 @@ public class BWPresentation extends Application {
 			public void buttonClick(ClickEvent event) {
 				try {
 					long workItemOID = (Long) taskList.getValue();
+					Transaction.begin();
+					TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(workItemOID);
+					User activeUser = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
+					taskWorkItem.setUser(activeUser);
+					Transaction.commit();
+					
 					new SkipWorkItemService(workItemOID).execute();
 					removeTaskWorkItem(workItemOID);
 					getMainWindow().showNotification("WorkItem Skipped", Notification.TYPE_TRAY_NOTIFICATION);
@@ -580,6 +614,13 @@ public class BWPresentation extends Application {
 			public void buttonClick(ClickEvent event) {
 				try {
 					long workItemOID = (Long) goalList.getValue();
+				
+					Transaction.begin();
+					GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(workItemOID);
+					User activeUser = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
+					goalWorkItem.setUser(activeUser);
+					Transaction.commit();
+					
 					new SkipWorkItemService(workItemOID).execute();
 					removeGoalWorkItem(workItemOID);
 					getMainWindow().showNotification("WorkItem skipped", Notification.TYPE_TRAY_NOTIFICATION);
@@ -673,9 +714,19 @@ public class BWPresentation extends Application {
 		login.setHeight("300px");
 		login.addListener(new LoginForm.LoginListener() {
 			public void onLogin(LoginEvent event) {
-				getMainWindow().showNotification("Welcome " + event.getLoginParameter("username"));
-				getMainWindow().removeWindow(loginWindow);
-				initMainWindow(event.getLoginParameter("username"));
+				Transaction.begin();
+				String userID = event.getLoginParameter("username");
+				String userPassword = event.getLoginParameter("password");
+				
+				if (BlendedWorkflow.getInstance().getOrganizationalManager().loginUser(userID, userPassword)) {
+					Transaction.commit();
+					getMainWindow().removeWindow(loginWindow);
+					initMainWindow(event.getLoginParameter("username"));
+				} else {
+					getMainWindow().showNotification("Username or Password incorrect.", Notification.TYPE_WARNING_MESSAGE);
+				}
+				
+				
 			}
 		});
 		vlogin.addComponent(login);
@@ -856,7 +907,7 @@ public class BWPresentation extends Application {
 
 		// Info
 		bwInstanceInfoTable.addItem(new Object[] {"Name", bwInstance.getName()}, new Integer(1));
-		bwInstanceInfoTable.addItem(new Object[] {"Launched by", username}, new Integer(2));
+		bwInstanceInfoTable.addItem(new Object[] {"Launched by", bwInstance.getUser().getID()}, new Integer(2));
 		bwInstanceInfoTable.addItem(new Object[] {"Creation Date", bwInstance.getCreationDate()}, new Integer(3));
 		bwInstanceInfoTable.addItem(new Object[] {"Executed Tasks", executedTasksCount + " of " + taskModelInstance.getTasksCount()}, new Integer(4));
 		bwInstanceInfoTable.addItem(new Object[] {"Achieved Goals", achievedGoalsCount + " of " + goalModelInstance.getGoalsCount()}, new Integer(5));

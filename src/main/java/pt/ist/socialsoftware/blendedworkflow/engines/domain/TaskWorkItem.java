@@ -28,6 +28,9 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		
 		createPreConstrainWorkItemArguments();
 		createConstrainViolationWorkItemArguments();
+		
+		setRole(task.getRole());
+		setUser(task.getUser());
 	}
 
 	/**
@@ -113,6 +116,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 
 	@Override
 	public void notifyCompleted() {
+		log.info("TaskWorkitem:notifyCompleted:BEGIN");
 		log.info("TaskWorkitem " + getID() + " is now in COMPLETED state");
 		if (getState() == WorkItemState.CHECKED_IN || getState() == WorkItemState.CONSTRAINT_VIOLATION) {
 			setState(WorkItemState.COMPLETED);
@@ -121,14 +125,19 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		setAttributeValues();
 		
 		String date = dateFormat.format(Calendar.getInstance().getTime());
-		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Completed", "[TASK] " + getID(), "Author"));
+		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Completed", "[TASK] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 		
+//		BlendedWorkflow.getInstance().getWorkletAdapter().addCompletedWorkItemRecord(this);
+//		BlendedWorkflow.getInstance().getWorkletAdapter().createNewTaskWorkItems();
+//		BlendedWorkflow.getInstance().getWorkletAdapter().processNewTaskWorkItems();
+		// Test proposes only
 		try {
 			getBwInstance().getTaskModelInstance().getEnabledWorkItems();
 		} catch (BlendedWorkflowException e) {
 			log.info("notifyCompleted exc" + e.getMessage());
 		}
+		log.info("TaskWorkitem:notifyCompleted:END");
 	}
 
 	@Override
@@ -141,9 +150,14 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		setAttributeSkipped();
 		
 		String date = dateFormat.format(Calendar.getInstance().getTime());
-		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Skipped", "[TASK] " + getID(), "Author"));
+		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Skipped", "[TASK] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
 		
+//		BlendedWorkflow.getInstance().getWorkletAdapter().addCompletedWorkItemRecord(this);
+		
+//		BlendedWorkflow.getInstance().getWorkletAdapter().createNewTaskWorkItems();
+//		BlendedWorkflow.getInstance().getWorkletAdapter().processNewTaskWorkItems();
+		// Test proposes only
 		try {
 			getBwInstance().getTaskModelInstance().getEnabledWorkItems();
 		} catch (BlendedWorkflowException e) {
@@ -217,15 +231,15 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 				// Check preconditions
 				for (WorkItem workItem : attributeInstance.getPreConstraintTaskWorkItems()) {
 					log.info(workItem.getID());
-					if (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK)) {
-						log.info("affected");
+					if (!workItem.equals(this) && (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
+						log.info("affected " + workItem.getID());
 						notifyWorkItems.add(workItem);
 					}
 				}
 				
 				// Goalconditions and pos conditions
 				for (WorkItem workItem : attributeInstance.getContraintViolationWorkItems()) {
-					if (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK)) {
+					if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
 						log.info("affected" + workItem.getID());
 						notifyWorkItems.add(workItem);
 					}
@@ -239,7 +253,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 			
 			// Check preconditions
 			for (WorkItem workItem : attributeInstance.getPreConstraintTaskWorkItems()) {
-				if (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK)) {
+				if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
 					notifyWorkItems.add(workItem);
 					log.info("affected" + workItem.getID());
 				}
@@ -247,8 +261,9 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 			
 			// Goalconditions and pos conditions
 			for (WorkItem workItem : attributeInstance.getContraintViolationWorkItems()) {
-				if (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK)) {
+				if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
 					notifyWorkItems.add(workItem);
+					log.info("affected" + workItem.getID());
 				}
 			}
 		}

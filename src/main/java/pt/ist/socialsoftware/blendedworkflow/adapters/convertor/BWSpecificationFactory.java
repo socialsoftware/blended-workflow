@@ -15,7 +15,8 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class BWSpecificationFactory {
 
-	public static void createBWSpecification(String bwXML, String yawlXML) throws BlendedWorkflowException {
+	// FIXME: remove yawl param
+	public static void createBWSpecification(String bwXML, String yawl) throws BlendedWorkflowException {
 		// BWSpecification Name
 		Document doc = StringUtils.stringToDoc(bwXML);
 
@@ -26,8 +27,10 @@ public class BWSpecificationFactory {
 		String name = caseInfo.getChildText("name", bwNamespace);
 		String author = caseInfo.getChildText("author", bwNamespace);
 		String description = caseInfo.getChildText("description", bwNamespace);
+		String version = caseInfo.getChildText("version", bwNamespace);
+		String identifier = caseInfo.getChildText("identifier", bwNamespace);
 		
-		BWSpecification bwSpecification = new BWSpecification(name, author, description);
+		BWSpecification bwSpecification = new BWSpecification(name, author, description, version, identifier);
 
 		// Data Model
 		DataModel dataModel = bwSpecification.getDataModel();
@@ -40,6 +43,9 @@ public class BWSpecificationFactory {
 		// Task Model
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, bwXML);
+		
+		// Create YAWL Specification
+		String yawlXML = new YAWLSpecificationFactory().parseYAWLSpecificationFactory(bwSpecification);
 
 		// Load YAWL Specification on the engine
 		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(yawlXML);
@@ -48,16 +54,9 @@ public class BWSpecificationFactory {
 		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
 
 		// Create Worklet Rules
-		BlendedWorkflow.getInstance().getWorkletAdapter().loadRdrSet(bwSpecification);
-//		BlendedWorkflow.getInstance().getWorkletAdapter().evaluateTest();
+//		BlendedWorkflow.getInstance().getWorkletAdapter().loadRdrSet(bwSpecification); // test only
 		
-		// FIXME: OrganizeConcert Test
-//		try {
-//			BlendedWorkflow.getInstance().getWorkletAdapter().loadOrganizeConcert();
-//		} catch (IOException e) {
-//			new BlendedWorkflowException (BlendedWorkflowError.FALSE_PRE_CONSTRAIN);
-//		}
-		
+		// Notify BWManager
 		BlendedWorkflow.getInstance().getBwManager().notifyLoadedBWSpecification(bwSpecification);
 	}
 

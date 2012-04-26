@@ -29,17 +29,26 @@ public class Attribute extends Attribute_Base {
 	}
 	
 	/**
-	 * Gets a string with an instance of the AttributeType. Used by the WorkletAdapter to create the tasks/goals cornerstone data
+	 * FIXME: Boolean
 	 */
-	public String getAttributeType() {
-		String value = "string";
-		if (this.getType().equals(AttributeType.BOOLEAN)) {
-			value = "true";
+	public String getYAWLAttributeType() {
+		if (this.getType().equals(AttributeType.NUMBER)) {
+			return "double";
+		} 
+		else {
+			return "string";
 		}
-		else if (this.getType().equals(AttributeType.NUMBER)) {
-			value = "0";
-		}
-		return value;
 	}
+	
+	public String getYAWLAttributeValue() {
+		if (this.getType().equals(AttributeType.NUMBER)) {
+			return "0";
+		} 
+		else {
+			return "string";
+		}
+	}
+	
+	
 
 }

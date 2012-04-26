@@ -9,11 +9,13 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class BWSpecification extends BWSpecification_Base {
 
-	public BWSpecification(String name, String author, String description) throws BlendedWorkflowException {
+	public BWSpecification(String name, String author, String description, String version, String UID) throws BlendedWorkflowException {
 		checkUniqueBWSpecificationName(name);
 		setName(name);
 		setAuthor(author);
 		setDescription(description);
+		setVersion(version);
+		setUID(UID);
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		setCreationDate(dateFormat.format(Calendar.getInstance().getTime()));

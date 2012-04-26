@@ -21,6 +21,7 @@ public class Goal extends Goal_Base {
 		setCondition(condition);
 		setState(GoalState.DEACTIVATED);
 		setParentGoal(null);
+		BlendedWorkflow.getInstance().getOrganizationalModel().setDefault(this);
 	}
 
 	/**

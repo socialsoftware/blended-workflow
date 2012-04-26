@@ -36,6 +36,9 @@ public class TaskModelFactory {
 			
 			String flowType = taskXML.getChildText("FlowType", bwNamespace);
 			
+			String joinCode = taskXML.getChildText("JoinCode", bwNamespace);
+			String splitCode = taskXML.getChildText("SplitCode", bwNamespace);
+			
 			String previousTask ="";
 			if (flowType.equals("none")) {
 				previousTask = taskXML.getChildText("PreviousTaskName", bwNamespace);
@@ -47,7 +50,21 @@ public class TaskModelFactory {
 				String previousTask2 = taskXML.getChildText("PreviousTaskName2", bwNamespace);
 				previousTask = previousTask1 + "," + previousTask2;
 			}
-			new Task(taskModel, taskName, taskDescription, taskPreCondition, taskPostCondition, previousTask);
+			new Task(taskModel, taskName, taskDescription, taskPreCondition, taskPostCondition, previousTask, joinCode, splitCode);
+		}
+		
+		// Add nextTasks
+		for (Object task : tasks) {
+			Element taskXML = (Element) task;
+			int nextTaskCount = Integer.parseInt(taskXML.getChildText("NextTaskCount", bwNamespace));
+			String currentTaskName = taskXML.getChildText("Name", bwNamespace);
+			Task currentTask = taskModel.getTask(currentTaskName);
+			for (int i = 0; i < nextTaskCount ; i++) {
+				String nextTaskNameXML = "NextTaskName" + (i+1);
+				String nextTaskName = taskXML.getChildText(nextTaskNameXML, bwNamespace);
+				Task nextTask = taskModel.getTask(nextTaskName);
+				currentTask.addNextTasks(nextTask);
+			}
 		}
 	}
 

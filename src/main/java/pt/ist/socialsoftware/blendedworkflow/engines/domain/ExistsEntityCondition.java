@@ -45,7 +45,11 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	
 	@Override
 	public Set<Attribute> getAttributes() {
-		return new HashSet<Attribute>();
+		Set<Attribute> attributes = new HashSet<Attribute>();
+		for (Attribute attribute : getEntity().getAttributes()) {
+			attributes.add(attribute);
+		}
+		return attributes;
 	}
 	
 	@Override

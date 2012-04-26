@@ -7,8 +7,7 @@
 		<bw:author>Davide Passinhas</bw:author>
 		<bw:description>A simple process of a medical appointment.</bw:description>
 		<bw:version>1.0</bw:version>
-		<bw:identifier>UID_92fe0366-d6c6-42ec-9786-408f2b5c36c6</bw:identifier>
-		<bw:yawlSpecificationFILENAME>src/test/xml/MedicalEpisode/MedicalEpisode.yawl.xml</bw:yawlSpecificationFILENAME>
+		<bw:identifier>UID_3213f8b4-5757-4674-a6a2-415aa191ca91</bw:identifier>
 	</bw:CaseInfo>
 	<bw:DataModel>
 		<bw:Entity>
@@ -188,6 +187,12 @@
 			<bw:PreCondition>true</bw:PreCondition>
 			<bw:PostCondition>existsEntity(Patient) and existsEntity(Episode)</bw:PostCondition>
 			<bw:FlowType>root</bw:FlowType>
+			<bw:JoinCode>xor</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
+			
+			<bw:NextTaskCount>2</bw:NextTaskCount>
+			<bw:NextTaskName1>Physical Examination</bw:NextTaskName1>
+			<bw:NextTaskName2>Collect Data</bw:NextTaskName2>
 		</bw:Task>
 		<bw:Task>
 			<bw:Name>Physical Examination</bw:Name>
@@ -195,7 +200,11 @@
 			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
 			<bw:PostCondition>existsAttribute(Patient Data.Physical Report) and existsAttribute(Patient Data.Physical Examination)</bw:PostCondition>
 			<bw:FlowType>none</bw:FlowType>
+			<bw:JoinCode>xor</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
 			<bw:PreviousTaskName>Check-in Patient</bw:PreviousTaskName>
+			<bw:NextTaskCount>1</bw:NextTaskCount>
+			<bw:NextTaskName1>Doctor Appointment</bw:NextTaskName1>
 		</bw:Task>
 		<bw:Task>
 			<bw:Name>Collect Data</bw:Name>
@@ -203,7 +212,11 @@
 			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
 			<bw:PostCondition>existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight)</bw:PostCondition>
 			<bw:FlowType>none</bw:FlowType>
+			<bw:JoinCode>xor</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
 			<bw:PreviousTaskName>Check-in Patient</bw:PreviousTaskName>
+			<bw:NextTaskCount>1</bw:NextTaskCount>
+			<bw:NextTaskName1>Doctor Appointment</bw:NextTaskName1>
 		</bw:Task>
 		<bw:Task>
 			<bw:Name>Doctor Appointment</bw:Name>
@@ -211,8 +224,12 @@
 			<bw:PreCondition>existsEntity(Episode) and existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight) and existsAttribute(Patient Data.Physical Report)</bw:PreCondition>
 			<bw:PostCondition>existsEntity(Prescription) and existsEntity(Medical Report) and compareAttributeTo(Medical Report.Closed,=.true) and existsAttribute(Patient Data.Medical Examination)</bw:PostCondition>
 			<bw:FlowType>and-join</bw:FlowType>
+			<bw:JoinCode>and</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
 			<bw:PreviousTaskName1>Physical Examination</bw:PreviousTaskName1>
 			<bw:PreviousTaskName2>Collect Data</bw:PreviousTaskName2>
+			<bw:NextTaskCount>1</bw:NextTaskCount>
+			<bw:NextTaskName1>Check-out Patient</bw:NextTaskName1>
 		</bw:Task>
 		<bw:Task>
 			<bw:Name>Check-out Patient</bw:Name>
@@ -220,7 +237,10 @@
 			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
 			<bw:PostCondition>compareAttributeTo(Episode.Closed,=.true)</bw:PostCondition>
 			<bw:FlowType>none</bw:FlowType>
+			<bw:JoinCode>xor</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
 			<bw:PreviousTaskName>Doctor Appointment</bw:PreviousTaskName>
+			<bw:NextTaskCount>0</bw:NextTaskCount>
 		</bw:Task>
 	</bw:TaskModel>
 </bw:BlendedWorkflowSchema>

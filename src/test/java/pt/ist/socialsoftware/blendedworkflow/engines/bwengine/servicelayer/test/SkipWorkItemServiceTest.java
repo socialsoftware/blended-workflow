@@ -44,6 +44,8 @@ public class SkipWorkItemServiceTest {
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String GOALWORKITEM_PRESCRIBE_ID = "Prescribe.3";
+	
+	private static String USER_ID = "BlendedWorkflow";
 
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(SkipWorkItemServiceTest.class);
@@ -98,7 +100,7 @@ public class SkipWorkItemServiceTest {
 		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
 		Transaction.commit();
 
-		new CreateBWInstanceService(bwSpecification.getOID(),"").execute();
+		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).execute();
 
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();

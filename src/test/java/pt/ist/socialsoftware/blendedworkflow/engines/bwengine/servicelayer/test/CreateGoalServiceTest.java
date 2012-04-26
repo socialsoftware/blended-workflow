@@ -51,6 +51,7 @@ public class CreateGoalServiceTest {
 	private static String SECONDOPINION_CONDITION = "existsEntity(Second Opinion) and existsAttribute(Second Opinion.Report.STRING.true)";
 	private static String SECONDOPINION_PARENTGOAL_NAME_1 = "Write Medical Report";
 	private static String SECONDOPINION_PARENTGOAL_NAME_2 = "Prescribe";
+	private static String USER_ID = "BlendedWorkflow";
 
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(CreateGoalServiceTest.class);
@@ -106,7 +107,7 @@ public class CreateGoalServiceTest {
 		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
 		Transaction.commit();
 
-		new CreateBWInstanceService(bwSpecification.getOID(),"").execute();
+		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).execute();
 	}
 
 	@After

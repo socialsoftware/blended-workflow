@@ -6,6 +6,7 @@ import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.*;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
+import pt.ist.socialsoftware.blendedworkflow.organizationalmanager.OrganizationalManager;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
@@ -14,6 +15,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	private WorkletAdapter workletAdapter = null;
 	private WorkListManager workListManager = null;
 	private BWManager bwManager = null;
+	private OrganizationalManager organizationalManager = null;
 	
 	public static BlendedWorkflow getInstance() {
 		return FenixFramework.getRoot();
@@ -92,6 +94,17 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 
 	public void setBwManager(BWManager bwManager) {
 		this.bwManager = bwManager;
+	}
+	
+	public OrganizationalManager getOrganizationalManager() {
+		if (organizationalManager == null) {
+			organizationalManager = new OrganizationalManager();
+		}
+		return organizationalManager;
+	}
+
+	public void setOrganizationalManager(OrganizationalManager organizationalManager) {
+		this.organizationalManager = organizationalManager;
 	}
 
 }

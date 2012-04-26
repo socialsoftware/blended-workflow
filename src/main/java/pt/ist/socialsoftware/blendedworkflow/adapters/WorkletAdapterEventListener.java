@@ -11,7 +11,7 @@ import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 import org.yawlfoundation.yawl.worklet.support.WorkletEventListener;
 
 /**
- * TODO: Clean and Test.
+ * TODO: Test.
  * @author Davide Passinhas
  *
  */
@@ -24,55 +24,64 @@ public class WorkletAdapterEventListener extends WorkletEventListener{
 
 	@Override
 	public void itemLevelExceptionEvent(WorkItemRecord wir, Element caseData, RdrNode rdrNode, RuleType ruleType) {
-		log.info(ruleType + " for wir: " + wir + " was "  + parseConclusion(rdrNode));
-		log.info("Data"+ JDOMUtil.elementToString(wir.getDataList()));
-
+		log.info("WAEL:itemLevelExceptionEvent:BEGIN" + Thread.currentThread().getId());
+//		log.info(ruleType + " for wir: " + wir + " was "  + parseConclusion(rdrNode));
+//		log.info("Data: "+ JDOMUtil.elementToString(caseData));
+//		
+//		ThreadPool.getThreadExecutor().execute(Thread.currentThread());
+//		
 //		Transaction.begin();
-//		if (ruleType.equals(RuleType.ItemPreconstraint)) {
-//			if (parseConclusion(rdrNode).equals("TRUE")) {
-//				BlendedWorkflow.getInstance().getWorkletAdapter().notifyNewTaskWorkItem(wir, "TRUE");
-//			} else if (parseConclusion(rdrNode).equals("FALSE")) {
-//				BlendedWorkflow.getInstance().getWorkletAdapter().notifyNewTaskWorkItem(wir, "FALSE");
+//		Boolean isworkItemCompleted = BlendedWorkflow.getInstance().getWorkletAdapter().isWorkItemCompleted(wir);
+//		if (!isworkItemCompleted) {
+//			if (ruleType.equals(RuleType.ItemPreconstraint)) {
+//				if (parseConclusion(rdrNode).equals("TRUE")) {
+//					BlendedWorkflow.getInstance().getWorkletAdapter().addNewWorkItemRecord(wir, "TRUE", true);
+//				} else if (parseConclusion(rdrNode).equals("FALSE")) {
+//					BlendedWorkflow.getInstance().getWorkletAdapter().addNewWorkItemRecord(wir, "FALSE", true);
+//				} else if (parseConclusion(rdrNode).equals("SKIPPED")) {
+//					BlendedWorkflow.getInstance().getWorkletAdapter().addNewWorkItemRecord(wir, "SKIPPED", true);
+//				} else {
+//					log.error(ruleType + " for wir: " + wir + " failed.");
+//				}
+////				BlendedWorkflow.getInstance().getWorkletAdapter().createNewTaskWorkItems();				
+////				BlendedWorkflow.getInstance().getWorkletAdapter().processNewTaskWorkItems();
+//			} else if (ruleType.equals(RuleType.ItemConstraintViolation)) {
+//				if (parseConclusion(rdrNode).equals("TRUE")) {
+//					BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "TRUE");
+//				} else if (parseConclusion(rdrNode).equals("FALSE")) {
+//					BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "FALSE");
+//				} else if (parseConclusion(rdrNode).equals("SKIPPED")) {
+//					BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "SKIPPED");
+//				} else {
+//					log.error(ruleType + " for wir: " + wir + " failed.");
+//				}
 //			} else {
-//				BlendedWorkflow.getInstance().getWorkletAdapter().notifyNewTaskWorkItem(wir, "SKIPPED");
-//			}
-//		} else if (ruleType.equals(RuleType.ItemConstraintViolation)) {
-//			if (parseConclusion(rdrNode).equals("TRUE")) {
-//				BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "TRUE");
-//			} else if (parseConclusion(rdrNode).equals("FALSE")) {
-//				BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "FALSE");
-//			} else {
-//				BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "SKIPPED");
+//				log.info(ruleType + " for wir: " + wir + " was "  + parseConclusion(rdrNode) + " do nothing...");
 //			}
 //		}
+//		else {
+//			log.info(ruleType + " for wir: " + wir + " was "  + parseConclusion(rdrNode) + " already completed...");
+//		}
+//		log.info("WAEL:itemLevelExceptionEvent:END");
 //		Transaction.commit();		
 	}
 
 	/**
-	 * ItemPreconstraint: No PreConstrain (i.e First Task)
+	 * ItemPreconstraint: No PreConstrain (i.e First Task only)
 	 */
 	@Override
 	public void constraintSuccessEvent(String caseID, WorkItemRecord wir, Element caseData, RuleType ruleType) {
 		log.info(ruleType + " for wir: " + wir + " succeeded!");
-		
+//		ThreadPool.getThreadExecutor().execute(Thread.currentThread());
+//		log.info("Data: "+ JDOMUtil.elementToString(caseData));
+//
 //		if (ruleType.equals(RuleType.ItemPreconstraint)) {
 //			Transaction.begin();
-//			BlendedWorkflow.getInstance().getWorkletAdapter().addWorkItemRecord(wir, "TRUE", true);
+//			BlendedWorkflow.getInstance().getWorkletAdapter().addNewWorkItemRecord(wir, "TRUE", true);
 //			Transaction.commit();
-//		} else if (ruleType.equals(RuleType.ItemConstraintViolation)) {
-//			Transaction.begin();
-//			BlendedWorkflow.getInstance().getWorkletAdapter().addWorkItemRecord(wir, "FALSE", false);
-//			Transaction.commit();
+//		} else {
+//			log.error(ruleType + " for wir: " + wir + " succeeded.");
 //		}
-		
-		//test
-//		Transaction.begin();
-//		try {
-//			BlendedWorkflow.getInstance().getWorkletAdapter().processWIRTrueMA(wir);
-//		} catch (IOException e) {
-//			log.info("fail process");
-//		}
-//		Transaction.commit();
 	}
 
 	@Override
@@ -85,18 +94,20 @@ public class WorkletAdapterEventListener extends WorkletEventListener{
 	public void shutdown() {
 		log.info("WorkletService shutdown.");
 	}
-	
+
 	/*******************************
 	 * Support methods
 	 *******************************/
 	public String parseConclusion(RdrNode rdrNode) {
 		String conclusion = JDOMUtil.elementToString(rdrNode.getConclusion());
-		if (conclusion.contains("complete"))
+		if (conclusion.contains("complete") || conclusion.contains("TRUE"))
 			return "TRUE";
-		if (conclusion.contains("false") || conclusion.contains("failure"))
+		if (conclusion.contains("FALSE"))
 			return "FALSE";
-		else 
+		else if (conclusion.contains("SKIPPED"))
 			return "SKIPPED";
+		else
+			return "FAIL";
 	}
 
 }

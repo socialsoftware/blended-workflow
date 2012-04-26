@@ -24,6 +24,9 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		goal.getCondition().assignAttributeInstances(this);
 		createConstrainViolationWorkItemArguments();
 		notifyConstrainViolation();
+		
+		setRole(goal.getRole());
+		setUser(goal.getUser());
 	}
 
 	/**
@@ -93,7 +96,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		setAttributeValues();
 
 		String date = dateFormat.format(Calendar.getInstance().getTime());
-		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Completed", "[GOAL] " + getID(), "Author"));
+		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Completed", "[GOAL] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this); 
 		
 		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
@@ -109,7 +112,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		setAttributeSkipped();
 		
 		String date = dateFormat.format(Calendar.getInstance().getTime());
-		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Skipped", "[GOAL] " + getID(), "Author"));
+		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Skipped", "[GOAL] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
 		
 		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
@@ -154,11 +157,13 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		// Get WorkItems affected by ConstraintViolation attributesInstances values
 		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
 			for (WorkItem workItem : attributeInstance.getContraintViolationWorkItems()) {
-				if (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK)) {
+				if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
 					notifyWorkItems.add(workItem);
 				}
 			}
 		}
+		
+		// TODO: pre
 		
 		for (WorkItem workItem : notifyWorkItems) {
 			workItem.updatePreConstrainWorkItemArguments();

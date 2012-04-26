@@ -52,6 +52,7 @@ public class CheckInWorkItemServiceTest {
 	
 	private static String GOALWORKITEM_PRESCRIBE_INPUT_ATT1 = "Recipe";
 	private static String GOALWORKITEM_PRESCRIBE_INPUT_VALUE1 = "Aspirin";
+	private static String USER_ID = "BlendedWorkflow";
 
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(CheckInWorkItemServiceTest.class);
@@ -107,7 +108,7 @@ public class CheckInWorkItemServiceTest {
 		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
 		Transaction.commit();
 
-		new CreateBWInstanceService(bwSpecification.getOID(),"").execute();
+		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).execute();
 
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();

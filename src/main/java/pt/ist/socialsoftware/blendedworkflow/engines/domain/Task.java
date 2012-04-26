@@ -9,7 +9,7 @@ public class Task extends Task_Base {
 	
 	public enum TaskState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
     
-    public Task(TaskModel taskModel, String name, String description, Condition preConstrain,Condition postConstrain, String previous) throws BlendedWorkflowException {
+    public Task(TaskModel taskModel, String name, String description, Condition preConstrain,Condition postConstrain, String previous, String joinCode, String splitCode) throws BlendedWorkflowException {
 		checkUniqueTaskName(taskModel, name);
 		setTaskModel(taskModel);
 		setName(name);
@@ -18,6 +18,11 @@ public class Task extends Task_Base {
 		setState(TaskState.DEACTIVATED);
 		setDescription(description);
 		setPrevious(previous);
+		
+		setJoinCode(joinCode);
+		setSplitCode(splitCode);
+		
+		BlendedWorkflow.getInstance().getOrganizationalModel().setDefault(this);
     }
     
 	private void checkUniqueTaskName(TaskModel taskModel, String name) throws BlendedWorkflowException {
@@ -37,7 +42,7 @@ public class Task extends Task_Base {
 			newPreCondition = preCondition.cloneCondition(taskModelInstance);
 			newPostCondition = postCondition.cloneCondition(taskModelInstance);
 		}
-		new Task(taskModelInstance, getName(), getDescription(), newPreCondition, newPostCondition, getPrevious());
+		new Task(taskModelInstance, getName(), getDescription(), newPreCondition, newPostCondition, getPrevious(), getJoinCode(), getSplitCode());
 	}
 	
 	/**
