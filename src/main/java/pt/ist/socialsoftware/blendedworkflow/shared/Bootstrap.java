@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.shared;
 
 import static org.junit.Assert.fail;
 
+import java.util.Calendar;
 import java.util.Set;
 
 import pt.ist.fenixframework.Config;
@@ -13,7 +14,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.OrganizationalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 public class Bootstrap {
 
@@ -34,14 +34,15 @@ public class Bootstrap {
 	/**
 	 * Initializes the Database.
 	 */
+	// PropertiesManager.getProperty("dbAlias");
 	public static void init() {
 		FenixFramework.initialize(new Config() {{
-			dbAlias = PropertiesManager.getProperty("dbAlias");
+			dbAlias = "C:/Users/User/Desktop/bwdb/" + (((Calendar.getInstance().getTime() +"").replaceAll(" ", "")).replaceAll(":", "")); // FIXME: Test proposes only.
 			domainModelPath = PropertiesManager.getProperty("dml.filename");
 			repositoryType = RepositoryType.BERKELEYDB;
 			rootClass = BlendedWorkflow.class;
 		}});
-		createOraganizationalManager();
+		createOraganizationalModel();
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class Bootstrap {
 			}});
 		}
 		notInitialized = false;
-		createOraganizationalManager();
+		createOraganizationalModel();
 	}
 
 	/**
@@ -86,14 +87,15 @@ public class Bootstrap {
 	public static void populate() {
 		String bwXML = StringUtils.fileToString(PropertiesManager.getProperty("medical.xml"));
 		String yawlXML = StringUtils.fileToString(PropertiesManager.getProperty("medical.yawl"));
-		try {
-			new LoadBWSpecificationService(bwXML, yawlXML).execute();
-		} catch (BlendedWorkflowException e) {
-			e.printStackTrace();
-		}
+		
+		Transaction.begin();
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+		LoadBWSpecificationService service = new LoadBWSpecificationService(bwXML, yawlXML);
+		bwExecutorService.runTask(service);
+		Transaction.commit();
 	}
 	
-	public static void createOraganizationalManager() {
+	public static void createOraganizationalModel() {
 		Transaction.begin();
 		new OrganizationalModel();
 		

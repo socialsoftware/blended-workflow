@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Atomic;
 import jvstm.Transaction;
 
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
@@ -81,7 +80,7 @@ public class PreTaskForm extends VerticalLayout {
 		footer.addComponent(cancelButton);
 
 		addComponent(footer);
-		setComponentAlignment(footer, Alignment.BOTTOM_RIGHT);
+		setComponentAlignment(footer, Alignment.MIDDLE_CENTER);
 	}
 
 	private void setWorkItemArgumentValue(int index, String value) {
@@ -92,8 +91,8 @@ public class PreTaskForm extends VerticalLayout {
 		Transaction.commit();
 	}
 
-	@Atomic
 	private void getOutputData() {
+		Transaction.begin();
 		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
 
 		Entity previousEntity = null;
@@ -118,6 +117,7 @@ public class PreTaskForm extends VerticalLayout {
 			}
 			previousEntity = entity;
 		}
+		Transaction.commit();
 	}
 
 	protected void addCheckBox(String attributeName) {

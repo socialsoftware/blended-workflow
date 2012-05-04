@@ -2,11 +2,15 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import java.util.Set;
 
+//import org.apache.log4j.Logger;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class Goal extends Goal_Base {
+
+//	private Logger log = Logger.getLogger("Goal");
 
 	public enum GoalState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
 
@@ -21,7 +25,6 @@ public class Goal extends Goal_Base {
 		setCondition(condition);
 		setState(GoalState.DEACTIVATED);
 		setParentGoal(null);
-		BlendedWorkflow.getInstance().getOrganizationalModel().setDefault(this);
 	}
 
 	/**
@@ -51,7 +54,9 @@ public class Goal extends Goal_Base {
 		if (condition != null) {
 			newCondition = condition.cloneCondition(goalModelInstance);
 		}
-		new Goal(goalModelInstance, getName(), getDescription(), newCondition);
+		Goal newGoal = new Goal(goalModelInstance, getName(), getDescription(), newCondition);
+		newGoal.setUser(getUser());
+		newGoal.setRole(getRole());
 	}
 
 	/**

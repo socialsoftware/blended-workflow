@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.adapters;
+package pt.ist.socialsoftware.blendedworkflow.adapters.test;
 
 import org.apache.log4j.Logger;
 

@@ -18,26 +18,26 @@ public class SpecificationReceiver implements Receiver, FailedListener, Succeede
 	protected BWPresentation bwPresentation = null;
 	protected ByteArrayOutputStream buffer;
 	private String specInString = null;
-	
+
 	public SpecificationReceiver(BWPresentation bwPresentation) {
 		this.bwPresentation = bwPresentation;
 	}
-	
+
 	public String getSpecInString() {
 		return this.specInString;
 	}
-	
+
 	@Override
 	public OutputStream receiveUpload(String filename, String mimeType) {
 		this.buffer = new ByteArrayOutputStream();
-		
+
 		return buffer;
 	}
 
 	@Override
 	public void uploadSucceeded(SucceededEvent event) {
 		this.specInString = StringUtils.bufferToString(buffer);
-		
+
 		if(specInString == null) {
 			this.bwPresentation.getMainWindow().showNotification("Submition of " + event.getFilename() + " failed", Notification.TYPE_ERROR_MESSAGE);
 			return;
@@ -46,9 +46,9 @@ public class SpecificationReceiver implements Receiver, FailedListener, Succeede
 			this.bwPresentation.getMainWindow().showNotification("Submition of " + event.getFilename() + " successful");
 			return;
 		}
-			
+
 	}
-	
+
 	@Override
 	public void uploadFailed(FailedEvent event) {
 		this.bwPresentation.getMainWindow().showNotification("Upload of " + event.getFilename() + " failed", Notification.TYPE_ERROR_MESSAGE);

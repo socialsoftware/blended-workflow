@@ -18,11 +18,8 @@ public class Task extends Task_Base {
 		setState(TaskState.DEACTIVATED);
 		setDescription(description);
 		setPrevious(previous);
-		
 		setJoinCode(joinCode);
 		setSplitCode(splitCode);
-		
-		BlendedWorkflow.getInstance().getOrganizationalModel().setDefault(this);
     }
     
 	private void checkUniqueTaskName(TaskModel taskModel, String name) throws BlendedWorkflowException {
@@ -42,8 +39,12 @@ public class Task extends Task_Base {
 			newPreCondition = preCondition.cloneCondition(taskModelInstance);
 			newPostCondition = postCondition.cloneCondition(taskModelInstance);
 		}
-		new Task(taskModelInstance, getName(), getDescription(), newPreCondition, newPostCondition, getPrevious(), getJoinCode(), getSplitCode());
+		Task newTask = new Task(taskModelInstance, getName(), getDescription(), newPreCondition, newPostCondition, getPrevious(), getJoinCode(), getSplitCode());
+		newTask.setUser(getUser());
+		newTask.setRole(getRole());
 	}
+	
+	
 	
 	/**
 	 * Get the Task condition data to use in the use interface.
@@ -71,10 +72,13 @@ public class Task extends Task_Base {
 		// Create String
 		int count = 0;
 		for (Entity entity : entities) {
-			if (entities.size() == 1 || count < entities.size()-1) {
+			if  (entities.size() == 1) {
 				dataString += entity.getName();
+			}
+			else if (count < entities.size()-1) {
+				dataString += entity.getName() + ", ";;
 			} else {
-				dataString += entity.getName() + ", ";
+				dataString += entity.getName();
 			}
 			count++;
 		}

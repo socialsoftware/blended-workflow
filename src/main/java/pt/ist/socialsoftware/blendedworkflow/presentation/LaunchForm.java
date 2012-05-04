@@ -1,9 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import jvstm.Transaction;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -16,19 +14,19 @@ import com.vaadin.ui.Window.Notification;
 
 @SuppressWarnings("serial")
 public class LaunchForm extends VerticalLayout {
-	
+
 	public LaunchForm(final long bwSpecificationOID) {
 		setMargin(true);
-		
-		setWidth("200px");
+
+		setWidth("280px");
 		setHeight("130px");
-		
-		final TextField nameTf = new TextField("Name");
+
+		final TextField nameTf = new TextField("Please insert a name for the BWInstance:");
 		addComponent(nameTf);
-		
+
 		HorizontalLayout submitPanel = new HorizontalLayout();
 		submitPanel.setSpacing(true);
-		
+
 		Button bwInstanceCreateBtn = new Button("Launch");
 		bwInstanceCreateBtn.addListener(new ClickListener() {
 			@Override
@@ -36,25 +34,22 @@ public class LaunchForm extends VerticalLayout {
 				try {
 					String name = (String) nameTf.getValue();
 					String activeUserID = "";
-					
+
 					Transaction.begin();
 					activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
+					BlendedWorkflow.getInstance().getBwManager().createBWInstance(bwSpecificationOID, name, activeUserID);
 					Transaction.commit();
-					
-					new CreateBWInstanceService(bwSpecificationOID, name, activeUserID).execute();
+
 					getApplication().getMainWindow().showNotification("Blended Workflow Instance created", Notification.TYPE_TRAY_NOTIFICATION);
 					getApplication().getMainWindow().removeWindow(LaunchForm.this.getWindow());
 				}
 				catch (java.lang.NullPointerException jle) {
-					getApplication().getMainWindow().showNotification("Please fill all fields");
-				}
-				catch (BlendedWorkflowException bwe) {
-					getApplication().getMainWindow().showNotification(bwe.getError().toString(), Notification.TYPE_ERROR_MESSAGE);
+					getApplication().getMainWindow().showNotification("Please fill all fields.");
 				}
 			}
 		});
 		submitPanel.addComponent(bwInstanceCreateBtn);
-		
+
 		Button cancel = new Button("Cancel");
 		cancel.addListener(new Button.ClickListener() {
 			@Override
@@ -62,11 +57,10 @@ public class LaunchForm extends VerticalLayout {
 				getApplication().getMainWindow().removeWindow(LaunchForm.this.getWindow());
 			}
 		});
-		
+
 		submitPanel.addComponent(cancel);
 		addComponent(submitPanel);
 		setComponentAlignment(submitPanel, Alignment.BOTTOM_CENTER);
-
 	}
 
 }

@@ -1,17 +1,16 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Atomic;
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
@@ -67,11 +66,14 @@ public class TaskForm extends VerticalLayout {
 					}
 				}
 
-				try {
-					new CheckInWorkItemService(taskWorkItemOID).execute();
-				} catch (BlendedWorkflowException bwe) {
-					getApplication().getMainWindow().showNotification(bwe.getError().toString(), Notification.TYPE_ERROR_MESSAGE);
-				}
+				Transaction.begin();
+				TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
+				User activeUser = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
+				taskWorkItem.setUser(activeUser);
+				Transaction.commit();
+				Transaction.begin();
+				BlendedWorkflow.getInstance().getWorkListManager().checkInWorkItem(taskWorkItemOID);
+				Transaction.commit();
 
 				getApplication().getMainWindow().showNotification("Task accomplished", Notification.TYPE_TRAY_NOTIFICATION);
 				getApplication().getMainWindow().removeWindow(TaskForm.this.getWindow());
@@ -89,7 +91,7 @@ public class TaskForm extends VerticalLayout {
 		footer.addComponent(cancelButton);
 
 		addComponent(footer);
-		setComponentAlignment(footer, Alignment.BOTTOM_RIGHT);
+		setComponentAlignment(footer, Alignment.MIDDLE_CENTER);
 	}
 
 	private void setWorkItemArgumentValue(int index, String value) {
@@ -100,8 +102,8 @@ public class TaskForm extends VerticalLayout {
 		Transaction.commit();
 	}
 
-	@Atomic
 	private void getInputData() {
+		Transaction.begin();
 		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
 
 		Entity previousEntity = null;
@@ -140,10 +142,12 @@ public class TaskForm extends VerticalLayout {
 			posAttribute = false;
 			previousEntity = entity;
 		}
+		Transaction.commit();
 	}
 
-	@Atomic
 	private void getOutputData() {
+		Transaction.begin();
+
 		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
 
 		Entity previousEntity = null;
@@ -168,6 +172,8 @@ public class TaskForm extends VerticalLayout {
 			}
 			previousEntity = entity;
 		}
+		Transaction.commit();
+
 	}
 
 	protected void addCheckBox(String attributeName, Boolean isPreData, String value) {

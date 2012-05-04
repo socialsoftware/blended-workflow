@@ -80,24 +80,24 @@ public class OrCondition extends OrCondition_Base {
 	 */
 	@Override
 	public String getRdrTrueCondition() {
-		String condition = "((" + getConditionOne().getRdrTrueCondition() + " | " + getConditionTwo().getRdrTrueCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrTrueCondition() + " | " + getConditionTwo().getRdrFalseCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrTrueCondition() + " | " + getConditionTwo().getRdrSkippedCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrFalseCondition() + " | " + getConditionTwo().getRdrTrueCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrSkippedCondition() + " | " + getConditionTwo().getRdrTrueCondition() + "))";
+		String condition = "((" + getConditionOne().getRdrTrueCondition() + " & " + getConditionTwo().getRdrTrueCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrTrueCondition() + " & " + getConditionTwo().getRdrFalseCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrTrueCondition() + " & " + getConditionTwo().getRdrSkippedCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrTrueCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrSkippedCondition() + " & " + getConditionTwo().getRdrTrueCondition() + "))";
 		return condition;
 	}
 
 	@Override
 	public String getRdrFalseCondition() {
-		String condition = "((" + getConditionOne().getRdrFalseCondition() + " | " + getConditionTwo().getRdrFalseCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrFalseCondition() + " | " + getConditionTwo().getRdrSkippedCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrSkippedCondition() + " | " + getConditionTwo().getRdrFalseCondition() + "))";
+		String condition = "((" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrFalseCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrSkippedCondition() + ") | ";
+		condition += "(" + getConditionOne().getRdrSkippedCondition() + " & " + getConditionTwo().getRdrFalseCondition() + "))";
 		return condition;
 	}
 
 	@Override
 	public String getRdrSkippedCondition() {
-		return "(" + getConditionOne().getRdrSkippedCondition() + " | " + getConditionTwo().getRdrSkippedCondition() + ")";
+		return "(" + getConditionOne().getRdrSkippedCondition() + " & " + getConditionTwo().getRdrSkippedCondition() + ")";
 	}
 }

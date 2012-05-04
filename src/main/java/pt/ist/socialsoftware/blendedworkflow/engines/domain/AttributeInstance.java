@@ -9,15 +9,20 @@ public class AttributeInstance extends AttributeInstance_Base {
 		setAttribute(attribute);
 		setID(getAttribute().getName() + "." + entityInstance.getNewAttributeInstanceID());
 		setState(DataState.UNDEFINED);
+		super.setValue("$UNDEFINED$");
 	}
 
 	@Override
 	public void setValue(String value) {
-		if (!getState().equals(DataState.DEFINED)) {
-			setState(DataState.DEFINED);
+		if (value.equals("$UNDEFINED$") || value.equals("$SKIPPED$")) {
+			super.setValue(value);
+		} else {
+			if (!getState().equals(DataState.DEFINED)) {
+				setState(DataState.DEFINED);
+			}
+			super.setValue(value);
+			getEntityInstance().checkState(); 
 		}
-		super.setValue(value);
-		getEntityInstance().checkState();
 	}
 
 	@Override

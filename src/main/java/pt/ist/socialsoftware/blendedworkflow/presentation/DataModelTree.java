@@ -1,11 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
+import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import jvstm.Atomic;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -21,14 +21,14 @@ import com.vaadin.event.Action;
 public class DataModelTree extends VerticalLayout {
 
 	protected final Tree treetable = new Tree("Data Model");
-	
+
 	private NewGoalForm parentWindow;
 	private String dataRelation;
 
 	private static final Action ADD_ENTITY_ACTION = new Action("Add Entity");
 	private static final Action ADD_ATTRIBUTE_ACTION = new Action("Add Attribute");
 	private static final Action ADD_RELATION_ACTION = new Action("Add Relation");
-	
+
 	public DataModelTree(final NewGoalForm parent, final long bwInstanceOID, final String relation) {
 		parentWindow = parent;
 		dataRelation = relation;
@@ -101,13 +101,13 @@ public class DataModelTree extends VerticalLayout {
 		footer.addComponent(cancelButton);
 		addComponent(footer);
 		setComponentAlignment(footer, Alignment.BOTTOM_CENTER);
-		
+
 		// Populate
 		getDataModel(bwInstanceOID);
 	}
 
-	@Atomic
 	public void getDataModel(long bwInstanceOID) {
+		Transaction.begin();
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		for (Entity entity : dataModelInstance.getEntities()) {
@@ -121,6 +121,7 @@ public class DataModelTree extends VerticalLayout {
 			}
 			treetable.expandItemsRecursively(entityName);
 		}
+		Transaction.commit();
 	}
 
 	protected void showNewEntityWindow(long bwInstanceOID) {
@@ -155,7 +156,7 @@ public class DataModelTree extends VerticalLayout {
 		treetable.removeAllItems();
 		getDataModel(bwInstanceOID);
 	}
-	
+
 	public void finalize(String data, String dataType, Boolean isNot, String constrain) {
 		this.parentWindow.addDataToTable(this.dataRelation, data, dataType, constrain, isNot);
 	}

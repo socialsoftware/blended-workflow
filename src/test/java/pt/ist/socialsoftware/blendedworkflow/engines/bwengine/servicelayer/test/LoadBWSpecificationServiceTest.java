@@ -70,7 +70,7 @@ public class LoadBWSpecificationServiceTest {
 	}
 
 	@Test
-	public void loadBWSpecification() throws BlendedWorkflowException {
+	public void loadBWSpecification() throws Exception {
 		context.checking(new Expectations() {
 			{
 				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
@@ -81,23 +81,22 @@ public class LoadBWSpecificationServiceTest {
 
 		String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 		String yawlSpecificationString = StringUtils.fileToString(ACTIVITY_FILENAME);
-		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).execute();
+		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).call();
 		boolean committed = false;
 		try {
 			Transaction.begin();
-
 			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 			BWSpecification bwSpecification = blendedWorkflow.getBWSpecification(BWSPECIFICATION_NAME);
 			DataModel dataModel = bwSpecification.getDataModel();
 			GoalModel goalModel = bwSpecification.getGoalModel();
 
 			assertEquals(5, dataModel.getEntitiesCount());
-			assertEquals(13, dataModel.getAttributesCount());
+			assertEquals(14, dataModel.getAttributesCount());
 			assertEquals(4, dataModel.getRelationsCount());
 			assertEquals(6, goalModel.getGoalsCount());
 
-			assertEquals(0,BlendedWorkflow.getInstance().getOrganizationalModel().getRolesCount());
-			assertEquals(0,BlendedWorkflow.getInstance().getOrganizationalModel().getUsersCount());
+			assertEquals(3,BlendedWorkflow.getInstance().getOrganizationalModel().getRolesCount());
+			assertEquals(4,BlendedWorkflow.getInstance().getOrganizationalModel().getUsersCount());
 			
 			Transaction.commit();
 			committed = true;

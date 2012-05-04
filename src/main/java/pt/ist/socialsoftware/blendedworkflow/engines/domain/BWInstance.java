@@ -19,6 +19,8 @@ public class BWInstance extends BWInstance_Base {
 	public BWInstance(BWSpecification bwSpecification, String name, User user) throws BlendedWorkflowException {
 		setBwSpecification(bwSpecification);
 		setID(getBwSpecification().getName() + "." + getBwSpecification().getNewBWInstanceId()); //Id: BWSpecificationName.#
+		setUser(user);
+		
 		setWorkItemCounter(0);
 		setDataModelInstance(bwSpecification.getDataModel().cloneDataModel());
 
@@ -34,8 +36,6 @@ public class BWInstance extends BWInstance_Base {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		setCreationDate(dateFormat.format(Calendar.getInstance().getTime()));
 		setLog(new Log());
-		
-		setUser(user);
 		
 		log.info("BWInstance: created BWInstance with id: " + getID());
 	}

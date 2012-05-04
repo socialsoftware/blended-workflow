@@ -1,10 +1,11 @@
-package pt.ist.socialsoftware.blendedworkflow.adapters;
+package pt.ist.socialsoftware.blendedworkflow.adapters.test;
 
 import org.apache.log4j.Logger;
 import org.yawlfoundation.yawl.authentication.YExternalClient;
 import org.yawlfoundation.yawl.elements.YAWLServiceReference;
 import org.yawlfoundation.yawl.engine.interfce.SpecificationData;
 
+import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;

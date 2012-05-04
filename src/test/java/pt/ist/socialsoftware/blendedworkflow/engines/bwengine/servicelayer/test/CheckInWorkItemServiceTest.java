@@ -71,7 +71,7 @@ public class CheckInWorkItemServiceTest {
 	private WorkListManager workListManager = null;
 
 	@Before
-	public void setUp() throws BlendedWorkflowException {
+	public void setUp() throws Exception {
 		Bootstrap.initTestDB();
 
 		yawlAdapter = context.mock(YAWLAdapter.class);
@@ -102,13 +102,13 @@ public class CheckInWorkItemServiceTest {
 
 		String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 		String yawlSpecificationString = StringUtils.fileToString(ACTIVITY_FILENAME);
-		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).execute();
+		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).call();
 
 		Transaction.begin();
 		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
 		Transaction.commit();
 
-		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).execute();
+		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).call();
 
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
@@ -128,13 +128,13 @@ public class CheckInWorkItemServiceTest {
 	}
 
 	@Test
-	public void checkInOneWorkItem() throws BlendedWorkflowException {
+	public void checkInOneWorkItem() throws Exception {
 		WorkItem workItem = getWorkItem(GOALWORKITEM_PRESCRIBE_ID);
 		long workItemOID = workItem.getOID();
 		AttributeInstance attributeInstance = getAttributeInstance(GOALWORKITEM_PRESCRIBE_INPUT_ATT1);
 		setWorkItemArgumentValue(workItem, attributeInstance, GOALWORKITEM_PRESCRIBE_INPUT_VALUE1);
 		
-		new CheckInWorkItemService(workItemOID).execute();
+		new CheckInWorkItemService(workItemOID).call();
 		boolean committed = false;
 		try {
 			Transaction.begin();

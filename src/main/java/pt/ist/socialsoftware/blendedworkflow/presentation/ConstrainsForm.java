@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -11,7 +12,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class ConstrainsForm extends VerticalLayout{
-	
+
 	private final CheckBox isNot = new CheckBox("False?");
 	private final TextField valueTf = new TextField("Value");
 	private final NativeSelect typeNS = new NativeSelect("Operator");
@@ -31,10 +32,10 @@ public class ConstrainsForm extends VerticalLayout{
 		typeNS.addItem("=");
 		typeNS.addItem("!=");
 		typeNS.setValue("");
-		
+
 		HorizontalLayout consPanel = new HorizontalLayout();
 		consPanel.setSpacing(true);
-		
+
 		HorizontalLayout submitPanel = new HorizontalLayout();
 		submitPanel.setSpacing(true);
 
@@ -46,7 +47,7 @@ public class ConstrainsForm extends VerticalLayout{
 					Boolean isKeyAttribute = (Boolean) isNot.getValue();
 					String type = (String) typeNS.getValue();
 					String value = (String) valueTf.getValue();
-					
+
 					String constrain = type + "." + value;
 					if (type.equals("")) {
 						constrain = "";
@@ -73,7 +74,7 @@ public class ConstrainsForm extends VerticalLayout{
 				getApplication().getMainWindow().removeWindow(ConstrainsForm.this.getWindow());
 			}
 		});
-		
+
 		addComponent(isNot);
 		consPanel.addComponent(typeNS);
 		consPanel.addComponent(valueTf);
@@ -81,6 +82,7 @@ public class ConstrainsForm extends VerticalLayout{
 		submitPanel.addComponent(bwInstanceCreateBtn);
 		submitPanel.addComponent(cancel);
 		addComponent(submitPanel);
+		setComponentAlignment(submitPanel, Alignment.MIDDLE_CENTER);
 	}
 }
 

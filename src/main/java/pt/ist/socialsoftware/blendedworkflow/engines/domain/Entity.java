@@ -68,6 +68,7 @@ public class Entity extends Entity_Base {
 		if (getEntityInstances().isEmpty()) {
 			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
 			for (Attribute attribute : getAttributes()) {
+				if (attribute.getIsKeyAttribute())
 				entityInstance.assignAttributeInstances(goalWorkItem, attribute);
 			}
 
@@ -76,6 +77,7 @@ public class Entity extends Entity_Base {
 		else {
 			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
 				for (Attribute attribute : getAttributes()) {
+					if (attribute.getIsKeyAttribute())
 					entityInstance.assignAttributeInstances(goalWorkItem, attribute);
 				}
 			}
@@ -88,6 +90,7 @@ public class Entity extends Entity_Base {
 		if (getEntityInstances().isEmpty()) {
 			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
 			for (Attribute attribute : getAttributes()) {
+				if (attribute.getIsKeyAttribute())
 				entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 			}
 
@@ -96,6 +99,7 @@ public class Entity extends Entity_Base {
 		else {
 			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
 				for (Attribute attribute : getAttributes()) {
+					if (attribute.getIsKeyAttribute())
 					entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 				}
 			}

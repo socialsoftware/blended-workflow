@@ -3,14 +3,12 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import java.util.Iterator;
 
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import jvstm.Atomic;
+import jvstm.Transaction;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -100,14 +98,18 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 					String goalDescription = (String) description.getValue();
 					long parentGoalID = (Long) parentGoal.getValue();
 					String goalCondition = createCondition();
-					new CreateGoalService(bwInstanceOID, goalName, goalDescription, parentGoalID, goalCondition).execute();
+					String activeUserID = "";
+
+					Transaction.begin();
+					activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
+					BlendedWorkflow.getInstance().getWorkListManager().createGoal(bwInstanceOID, goalName, goalDescription, parentGoalID, goalCondition, activeUserID);
+					Transaction.commit();
+
 					getApplication().getMainWindow().showNotification("Goal created successfully", Notification.TYPE_TRAY_NOTIFICATION);
 					getApplication().getMainWindow().removeWindow(NewGoalForm.this.getWindow());
 				} catch (java.lang.NullPointerException jle) {
 					getApplication().getMainWindow().showNotification("Please fill all the fields");
-				} catch (BlendedWorkflowException bwe) {
-					getApplication().getMainWindow().showNotification(bwe.getError().toString(), Notification.TYPE_ERROR_MESSAGE);
-				}
+				} 
 
 			}
 		});
@@ -148,23 +150,27 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 		getGoals(bwInstance);
 	}
 
-	@Atomic
 	private void getGoals(BWInstance bwInstance) {
+		Transaction.begin();
+
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		for (Goal goal : goalModelInstance.getGoals()) {
 			this.parentGoal.addItem(goal.getOID());
 			this.parentGoal.setItemCaption(goal.getOID(), goal.getName());
 		}
+
+		Transaction.commit();
 	}
 
-	@Atomic
 	private void getBWInstances() {
+		Transaction.begin();
 		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance().getBwSpecifications()) {
 			for (BWInstance bwInstance : bwSpecification.getBwInstances()) {
 				this.bwInstances.addItem(bwInstance.getOID());
 				this.bwInstances.setItemCaption(bwInstance.getOID(), bwInstance.getName());
 			}
 		}
+		Transaction.commit();
 	}
 
 	public String createCondition() {

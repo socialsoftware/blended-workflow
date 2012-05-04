@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
+import java.util.concurrent.Callable;
+
 import org.apache.log4j.Logger;
 
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
@@ -10,7 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
-public class CreateBWInstanceService {
+public class CreateBWInstanceService implements Callable<String> {
 
 	private static Logger log = Logger.getLogger("CreateBWInstanceService");
 	private BWSpecification bwSpecification;
@@ -23,12 +25,11 @@ public class CreateBWInstanceService {
 		this.userID = userID;
 	}
 
-	public void execute() throws BlendedWorkflowException {
-		// Create BWInstance
+	@Override
+	public String call() throws Exception {
+		log.info("Start");
 		Transaction.begin();
-//		ThreadPool.getThreadExecutor().execute(Thread.currentThread());
-		log.info("Create BWInstance for BWSpecification " + this.bwSpecification.getName() + " with name " + name);
-		
+		try {
 		// GetUser
 		User user = BlendedWorkflow.getInstance().getOrganizationalModel().getUser(userID);
 		
@@ -40,21 +41,18 @@ public class CreateBWInstanceService {
 		String yawlSpecificationID = bwSpecification.getYawlSpecficationID();
 		String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter().launchCase(yawlSpecificationID);
 		bwInstance.setYawlCaseID(yawlCaseID);
-		log.info("Created BWInstance:" + bwInstance.getID() + " YAWL:" + bwInstance.getYawlCaseID());
-		Transaction.commit();
 		
 		// Create GoalWorkItems and TaskWorkItems
-		Transaction.begin();
 		BlendedWorkflow.getInstance().getBwManager().notifyCreatedBWInstance(bwInstance);
-		bwInstance.getGoalModelInstance().getEnabledWorkItems();
-//		BlendedWorkflow.getInstance().getWorkletAdapter().createNewTaskWorkItems();
-		Transaction.commit();
 		
-		// Notify TaskWorkItems
-//		Transaction.begin();
-//		BlendedWorkflow.getInstance().getWorkletAdapter().processNewTaskWorkItems();
-//		// Test proposes only
-//		bwInstance.getTaskModelInstance().getEnabledWorkItems();
-//		Transaction.commit();
+		bwInstance.getGoalModelInstance().getEnabledWorkItems();
+		bwInstance.getTaskModelInstance().getEnabledWorkItems(); // Test proposes only
+		
+		} catch (BlendedWorkflowException bwe) {
+			BlendedWorkflow.getInstance().getBwManager().notifyException(bwe.getError());
+		}
+		Transaction.commit();
+		log.info("END");
+		return "CreateBWInstanceService:Sucess";
 	}
 }

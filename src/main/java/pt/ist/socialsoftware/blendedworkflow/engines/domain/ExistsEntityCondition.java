@@ -47,7 +47,9 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	public Set<Attribute> getAttributes() {
 		Set<Attribute> attributes = new HashSet<Attribute>();
 		for (Attribute attribute : getEntity().getAttributes()) {
-			attributes.add(attribute);
+			if (attribute.getIsKeyAttribute()) {
+				attributes.add(attribute);
+			}
 		}
 		return attributes;
 	}
@@ -98,65 +100,39 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 		String condition = "(";
 		String entityName = getEntity().getName().replaceAll(" ", "");
 		
-		int attributteCount = 0;
+//		int attributteCount = 0;
+		
+		Boolean first = true;
+		
 		for (Attribute attribute : getEntity().getAttributes()) {
-			//if (attribute.getIsKeyAttribute()) { // FIXME: In MedicalEpisode there is Entities with no keyAttributes!
+			if (attribute.getIsKeyAttribute()) {
 
-			if (attributteCount < getEntity().getAttributes().size()-1) {
-				String attributeName = attribute.getName().replaceAll(" ", "");
-				condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + " & ";
+				if (first) {
+					String attributeName = attribute.getName().replaceAll(" ", "");
+					condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED;
+					first = false;
+				} else {
+					String attributeName = attribute.getName().replaceAll(" ", "");
+					condition += " & " + entityName + "_" + attributeName + "_State = " + DataState.DEFINED;
+				}
+				
+//				if (attributteCount < getEntity().getAttributes().size()-1) {
+//					String attributeName = attribute.getName().replaceAll(" ", "");
+//					condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + " & ";
+//				}
+//				else {
+//					String attributeName = attribute.getName().replaceAll(" ", "");
+//					condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + ")";
+//				}
+//				attributteCount++;
 			}
-			else {
-				String attributeName = attribute.getName().replaceAll(" ", "");
-				condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + ")";
-			}
-			attributteCount++;
-			//}
 		}
+		condition += ")";
 		return condition;
 	}
 
 	@Override
 	public String getRdrFalseCondition() {
-//		String trueCondition = "(";
-//		String entityName = getEntity().getName().replaceAll(" ", "");
-//		
-//		int attributteCount = 0;
-//		for (Attribute attribute : getEntity().getAttributes()) {
-//			//if (attribute.getIsKeyAttribute()) { // FIXME: In MedicalEpisode there is Entities with no keyAttributes!
-//
-//			if (attributteCount < getEntity().getAttributes().size()-1) {
-//				String attributeName = attribute.getName().replaceAll(" ", "");
-//				trueCondition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + " | ";
-//			}
-//			else {
-//				String attributeName = attribute.getName().replaceAll(" ", "");
-//				trueCondition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + ")";
-//			}
-//			attributteCount++;
-//			//}
-//		}
-//		
-//		String skipCondition = "(";
-//		entityName = getEntity().getName().replaceAll(" ", "");
-//		
-//		attributteCount = 0;
-//		for (Attribute attribute : getEntity().getAttributes()) {
-//			//if (attribute.getIsKeyAttribute()) { // FIXME: In MedicalEpisode there is Entities with no keyAttributes!
-//
-//			if (attributteCount < getEntity().getAttributes().size()-1) {
-//				String attributeName = attribute.getName().replaceAll(" ", "");
-//				skipCondition += entityName + "_" + attributeName + "_State != " + DataState.SKIPPED + " & ";
-//			}
-//			else {
-//				String attributeName = attribute.getName().replaceAll(" ", "");
-//				skipCondition += entityName + "_" + attributeName + "_State != " + DataState.SKIPPED + ")";
-//			}
-//			attributteCount++;
-//			//}
-//		}
-//		return "(" + trueCondition + " & " + skipCondition + ")";
-		
 		return "((!" + getRdrTrueCondition() + ") & (!" + getRdrSkippedCondition() + "))";
 	}
 
@@ -164,22 +140,31 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	public String getRdrSkippedCondition() {
 		String condition = "(";
 		String entityName = getEntity().getName().replaceAll(" ", "");
+		Boolean first = true;
 		
-		int attributteCount = 0;
 		for (Attribute attribute : getEntity().getAttributes()) {
-			//if (attribute.getIsKeyAttribute()) { // FIXME: In MedicalEpisode there is Entities with no keyAttributes!
+			if (attribute.getIsKeyAttribute()) {
+				
+				if (first) {
+					String attributeName = attribute.getName().replaceAll(" ", "");
+					condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED;
+					first = false;
+				} else {
+					String attributeName = attribute.getName().replaceAll(" ", "");
+					condition += " | " + entityName + "_" + attributeName + "_State = " + DataState.SKIPPED;
+				}
 
-			if (attributteCount < getEntity().getAttributes().size()-1) {
-				String attributeName = attribute.getName().replaceAll(" ", "");
-				condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + " | ";
+//				if (attributteCount < getEntity().getAttributes().size()-1) {
+//					String attributeName = attribute.getName().replaceAll(" ", "");
+//					condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + " | ";
+//				}
+//				else {
+//					String attributeName = attribute.getName().replaceAll(" ", "");
+//					condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
+//				}
 			}
-			else {
-				String attributeName = attribute.getName().replaceAll(" ", "");
-				condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
-			}
-			attributteCount++;
-			//}
 		}
+		condition += ")";
 		return condition;
 	}
 

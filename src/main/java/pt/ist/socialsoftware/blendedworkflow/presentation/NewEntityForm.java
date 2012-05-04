@@ -1,12 +1,13 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Atomic;
+import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
@@ -22,9 +23,9 @@ public class NewEntityForm extends VerticalLayout{
 		setMargin(true);
 
 		setWidth("300px");
-		setHeight("200px");
+		setHeight("120px");
 
-		final TextField nameTf = new TextField("Name");
+		final TextField nameTf = new TextField("Entity name:");
 		addComponent(nameTf);
 
 		HorizontalLayout submitPanel = new HorizontalLayout();
@@ -61,13 +62,15 @@ public class NewEntityForm extends VerticalLayout{
 		submitPanel.addComponent(cancel);
 
 		addComponent(submitPanel);
+		setComponentAlignment(submitPanel, Alignment.MIDDLE_CENTER);
 	}
-	
-	@Atomic
+
 	public void addEntity(long BwInstanceOID, String name) throws BlendedWorkflowException {
+		Transaction.begin();
 		BWInstance bwInstance = AbstractDomainObject.fromOID(BwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 		new Entity(dataModel, name);
+		Transaction.commit();
 	}
 
 }

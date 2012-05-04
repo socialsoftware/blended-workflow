@@ -1,9 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Atomic;
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -12,7 +10,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
@@ -28,7 +25,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class GoalForm extends VerticalLayout {
-	
+
 	private long goalWorkItemOID;
 	VerticalLayout data = new VerticalLayout();
 
@@ -64,20 +61,15 @@ public class GoalForm extends VerticalLayout {
 						workItemAttributeIndex++;
 					}
 				}
-				
+
 				Transaction.begin();
 				GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
 				User activeUser = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
 				goalWorkItem.setUser(activeUser);
 				Transaction.commit();
-
-				try {
-					new CheckInWorkItemService(goalWorkItemOID).execute();
-				} catch (BlendedWorkflowException bwe) {
-					getApplication().getMainWindow().showNotification(bwe.getError().toString(), Notification.TYPE_ERROR_MESSAGE);
-				} catch (IndexOutOfBoundsException j) {
-					getApplication().getMainWindow().showNotification(j.getMessage(), Notification.TYPE_ERROR_MESSAGE);
-				}
+				Transaction.begin();
+				BlendedWorkflow.getInstance().getWorkListManager().checkInWorkItem(goalWorkItemOID);
+				Transaction.commit();
 
 				getApplication().getMainWindow().showNotification("Goal accomplished", Notification.TYPE_TRAY_NOTIFICATION);
 				getApplication().getMainWindow().removeWindow(GoalForm.this.getWindow());
@@ -95,7 +87,7 @@ public class GoalForm extends VerticalLayout {
 		footer.addComponent(cancelButton);
 
 		addComponent(footer);
-		setComponentAlignment(footer, Alignment.BOTTOM_RIGHT);
+		setComponentAlignment(footer, Alignment.MIDDLE_CENTER);
 	}
 
 	private void setWorkItemArgumentValue(int index, String value) {
@@ -106,8 +98,8 @@ public class GoalForm extends VerticalLayout {
 		Transaction.commit();
 	}
 
-	@Atomic
 	private void getOutputData() {
+		Transaction.begin();
 		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
 
 		Entity previousEntity = null;
@@ -131,7 +123,8 @@ public class GoalForm extends VerticalLayout {
 				addTextBox(attribute.getName());
 			}
 			previousEntity = entity;
-		}		
+		}
+		Transaction.commit();
 	}
 
 	protected void addCheckBox(String attributeName) {

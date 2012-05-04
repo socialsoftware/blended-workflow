@@ -40,22 +40,12 @@ public abstract class WorkItem extends WorkItem_Base {
 	/**
 	 * Notify a WorkItem if there is a CheckIn event
 	 */
-	public void notifyCheckedIn() {
-		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
-			setState(WorkItemState.CHECKED_IN);
-		}
-		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
-	}
+	public abstract void notifyCheckedIn(); 
 	
 	/**
 	 * Notify a WorkItem if there is a Skip event
 	 */
-	public void notifySkip() {
-		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
-			setState(WorkItemState.CHECKED_IN);
-		}
-		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
-	}
+	public abstract void notifySkip(); 
 	
 	/**
 	 * Notify a TaskWorkItem if its PostConstraint = TRUE

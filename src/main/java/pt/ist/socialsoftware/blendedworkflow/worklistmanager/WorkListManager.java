@@ -2,13 +2,20 @@ package pt.ist.socialsoftware.blendedworkflow.worklistmanager;
 
 import org.apache.log4j.Logger;
 
+import com.vaadin.ui.Window.Notification;
+
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
+import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 
 public class WorkListManager {
 
@@ -28,7 +35,7 @@ public class WorkListManager {
 	 * @param workItem The enabled WorkItem (i.e. State = ENABLED or PRE_TASK).
 	 */
 	public void notifyEnabledWorkItem(WorkItem workItem) {
-		log.info("WorkItem " + workItem.getID() + " is now enabled.");
+		log.info("WorkItem " + workItem.getID() + " is now enabled. with OID" + workItem.getOID());
 		if (workItem.getClass().equals(GoalWorkItem.class)) {
 			getBwPresentation().addGoalWorkItem(workItem.getOID(), workItem.getID());
 		}
@@ -83,7 +90,6 @@ public class WorkListManager {
 	 * Update the BWPresentation with all the active WorkItems.
 	 */
 	public void updateBWPresentation() {
-		log.info("Update BWPresentation.");
 		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance().getBwSpecifications()) {
 			for (BWInstance bwInstance : bwSpecification.getBwInstances()) {
 				for (WorkItem workItem : bwInstance.getWorkItems()) {
@@ -92,6 +98,28 @@ public class WorkListManager {
 				}
 			}
 		}
+	}
+	
+	public void checkInWorkItem(long workItemOID){
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+		CheckInWorkItemService service = new CheckInWorkItemService(workItemOID);
+		bwExecutorService.runTask(service);
+	}
+	
+	public void skipWorkItem(long workItemOID){
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+		SkipWorkItemService service = new SkipWorkItemService(workItemOID);
+		bwExecutorService.runTask(service);
+	}
+	
+	public void createGoal(long bwInstanceOID, String goalName, String goalDescription, long parentGoalID, String goalCondition, String userID){
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+		CreateGoalService service = new CreateGoalService(bwInstanceOID, goalName, goalDescription, parentGoalID, goalCondition, userID);
+		bwExecutorService.runTask(service);
+	}
+	
+	public void notifyException(BlendedWorkflowError bwe) {
+		getBwPresentation().getMainWindow().showNotification(bwe.toString(), Notification.TYPE_ERROR_MESSAGE);
 	}
 
 }

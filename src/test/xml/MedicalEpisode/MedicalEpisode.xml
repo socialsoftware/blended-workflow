@@ -36,6 +36,11 @@
 		<bw:Entity>
 			<bw:Name>Episode</bw:Name>
 			<bw:Attribute>
+				<bw:Name>Date</bw:Name>
+				<bw:Type>String</bw:Type>
+				<bw:isKey>true</bw:isKey>
+			</bw:Attribute>
+			<bw:Attribute>
 				<bw:Name>Closed</bw:Name>
 				<bw:Type>BOOLEAN</bw:Type>
 				<bw:isKey>false</bw:isKey>
@@ -147,12 +152,12 @@
 		<bw:RootGoal>
 			<bw:Name>Diagnose Patient</bw:Name>
 			<bw:description>Diagnose the Patient</bw:description>
-			<bw:Condition>existsEntity(Patient) and existsEntity(Medical Report) and compareAttributeTo(Medical Report.Closed,=.true)</bw:Condition>
+			<bw:Condition>existsEntity(Patient) and existsEntity(Medical Report) and compareAttributeTo(Medical Report.Closed,=.true) and compareAttributeTo(Episode.Closed,=.true)</bw:Condition>
 		</bw:RootGoal>
 		<bw:Goal>
 			<bw:Name>Observe Patient</bw:Name>
 			<bw:description>Observe the Patient</bw:description>
-			<bw:Condition>existsEntity(Episode) and existsEntity(Patient) and existsAttribute(Patient Data.Medical Examination)</bw:Condition>
+			<bw:Condition>existsEntity(Episode) and existsEntity(Patient) and existsAttribute(Patient.Gender) and existsAttribute(Patient.Address) and existsAttribute(Patient.PhoneNumber) and existsAttribute(Patient Data.Medical Examination)</bw:Condition>
 			<bw:ParentName>Diagnose Patient</bw:ParentName>
 		</bw:Goal>
 		<bw:Goal>
@@ -185,7 +190,7 @@
 			<bw:Name>Check-in Patient</bw:Name>
 			<bw:description>Check-in the Patient</bw:description>
 			<bw:PreCondition>true</bw:PreCondition>
-			<bw:PostCondition>existsEntity(Patient) and existsEntity(Episode)</bw:PostCondition>
+			<bw:PostCondition>existsEntity(Episode) and existsEntity(Patient) and existsAttribute(Patient.Gender) and existsAttribute(Patient.Address) and existsAttribute(Patient.PhoneNumber)</bw:PostCondition>
 			<bw:FlowType>root</bw:FlowType>
 			<bw:JoinCode>xor</bw:JoinCode>
 			<bw:SplitCode>and</bw:SplitCode>

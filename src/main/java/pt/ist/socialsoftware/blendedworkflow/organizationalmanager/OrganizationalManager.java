@@ -23,7 +23,6 @@ public class OrganizationalManager {
 		this.bwPresentation = bwPresentation;
 	}
 
-
 	/**
 	 * Notify the BWPresentation of created Roles.
 	 * @param role The created Role.
@@ -46,7 +45,6 @@ public class OrganizationalManager {
 	 * Update the BWPresentation with all Roles and Users created.
 	 */
 	public void updateBWPresentation() {
-		log.info("Update BWPresentation.");
 		OrganizationalModel organizationalModel = BlendedWorkflow.getInstance().getOrganizationalModel();
 		for (Role role : organizationalModel.getRoles()) {
 			notifyCreatedRole(role);
@@ -61,13 +59,11 @@ public class OrganizationalManager {
 	 * @throws BlendedWorkflowException 
 	 */
 	public Boolean loginUser(String userID, String userPassword) {
-		log.info("Check permissions for user:" + userID + " pass:" + userPassword);
 		OrganizationalModel organizationalModel = BlendedWorkflow.getInstance().getOrganizationalModel();
 		Boolean valid = false;
 		for (User user : organizationalModel.getUsers()) {
 			if (user.getID().equals(userID) && user.getPassword().equals(userPassword)) {
 				this.activeUser = user;
-				log.info("OK!");
 				valid = true;
 			}
 		}
@@ -80,7 +76,6 @@ public class OrganizationalManager {
 	}
 
 	public User getActiveUser() {
-		log.info("getActiveUser");
 		return this.activeUser;
 	}
 

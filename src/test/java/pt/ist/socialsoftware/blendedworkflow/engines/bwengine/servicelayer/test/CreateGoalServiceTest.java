@@ -28,7 +28,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
@@ -45,10 +44,12 @@ public class CreateGoalServiceTest {
 	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
+//	private static String SECONDOPINION_ID = "Second Opinion.4";
 	private static String SECONDOPINION_ID = "Second Opinion.5";
 	private static String SECONDOPINION_NAME = "Second Opinion";
 	private static String SECONDOPINION_DESCRIPTION = "Other doctor opinion.";
-	private static String SECONDOPINION_CONDITION = "existsEntity(Second Opinion) and existsAttribute(Second Opinion.Report.STRING.true)";
+	private static String SECONDOPINION_CONDITION = "existsEntity(Episode)";
+//	private static String SECONDOPINION_CONDITION = "existsEntity(Second Opinion) and existsAttribute(Second Opinion.Report.STRING.true)";
 	private static String SECONDOPINION_PARENTGOAL_NAME_1 = "Write Medical Report";
 	private static String SECONDOPINION_PARENTGOAL_NAME_2 = "Prescribe";
 	private static String USER_ID = "BlendedWorkflow";
@@ -70,7 +71,7 @@ public class CreateGoalServiceTest {
 	private WorkListManager workListManager = null;
 
 	@Before
-	public void setUp() throws BlendedWorkflowException {
+	public void setUp() throws Exception {
 		Bootstrap.initTestDB();
 
 		yawlAdapter = context.mock(YAWLAdapter.class);
@@ -84,6 +85,7 @@ public class CreateGoalServiceTest {
 				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
 				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
 				allowing(workletAdapter).notifyWorkItemPreConstraint(with(any(TaskWorkItem.class)));
+				allowing(workletAdapter).addGoal(with(any(BWInstance.class)), with(any(Goal.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
 				allowing(workListManager).notifySkippedWorkItem(with(any(WorkItem.class)));
@@ -101,13 +103,13 @@ public class CreateGoalServiceTest {
 
 		String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 		String yawlSpecificationString = StringUtils.fileToString(ACTIVITY_FILENAME);
-		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).execute();
+		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).call();
 
 		Transaction.begin();
 		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
 		Transaction.commit();
 
-		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).execute();
+		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).call();
 	}
 
 	@After
@@ -116,7 +118,7 @@ public class CreateGoalServiceTest {
 	}
 
 	@Test
-	public void createGoalWithoutAffectingParentGoal() throws BlendedWorkflowException {
+	public void createGoalWithoutAffectingParentGoal() throws Exception {
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
@@ -126,7 +128,7 @@ public class CreateGoalServiceTest {
 		long parentGoalOID = parentGoal.getOID();
 		Transaction.commit();
 
-		new CreateGoalService(bwInstanceOID, SECONDOPINION_NAME, SECONDOPINION_DESCRIPTION, parentGoalOID, SECONDOPINION_CONDITION).execute();
+		new CreateGoalService(bwInstanceOID, SECONDOPINION_NAME, SECONDOPINION_DESCRIPTION, parentGoalOID, SECONDOPINION_CONDITION, USER_ID).call();
 
 		boolean committed = false;
 		try {
@@ -149,7 +151,7 @@ public class CreateGoalServiceTest {
 	}
 
 	@Test
-	public void createGoalAffectingParentGoal() throws BlendedWorkflowException {
+	public void createGoalAffectingParentGoal() throws Exception {
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
@@ -159,7 +161,7 @@ public class CreateGoalServiceTest {
 		long parentGoalOID = parentGoal.getOID();
 		Transaction.commit();
 
-		new CreateGoalService(bwInstanceOID, SECONDOPINION_NAME, SECONDOPINION_DESCRIPTION,  parentGoalOID, SECONDOPINION_CONDITION).execute();
+		new CreateGoalService(bwInstanceOID, SECONDOPINION_NAME, SECONDOPINION_DESCRIPTION,  parentGoalOID, SECONDOPINION_CONDITION, USER_ID).call();
 
 		boolean committed = false;
 		try {

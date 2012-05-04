@@ -403,7 +403,7 @@ relation OrganizationalModelHasUsers {
 }
 
 relation BWInstanceHasUser {
-	BWInstance playsRole bwInstance {multiplicity 0..1;}
+	BWInstance playsRole bwInstance {multiplicity 0..*;}
 	User playsRole user {multiplicity 0..1;}
 }
 

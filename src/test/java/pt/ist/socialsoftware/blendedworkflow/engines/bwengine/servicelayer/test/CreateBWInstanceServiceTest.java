@@ -61,7 +61,7 @@ public class CreateBWInstanceServiceTest {
 	private WorkListManager workListManager = null;
 
 	@Before
-	public void setUp() throws BlendedWorkflowException {
+	public void setUp() throws Exception {
 		Bootstrap.initTestDB();
 
 		yawlAdapter = context.mock(YAWLAdapter.class);
@@ -85,7 +85,7 @@ public class CreateBWInstanceServiceTest {
 
 		String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
 		String yawlSpecificationString = StringUtils.fileToString(ACTIVITY_FILENAME);
-		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).execute();
+		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).call();
 	}
 
 	@After
@@ -94,7 +94,7 @@ public class CreateBWInstanceServiceTest {
 	}
 
 	@Test
-	public void createOneBWInstance() throws BlendedWorkflowException {
+	public void createOneBWInstance() throws Exception {
 		context.checking(new Expectations() {
 			{
 				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
@@ -106,7 +106,7 @@ public class CreateBWInstanceServiceTest {
 		});
 
 		BWSpecification bwSpecification = getBWSpecification(BWSPECIFICATION_NAME);
-		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).execute();
+		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).call();
 
 		boolean committed = false;
 		try {
@@ -119,11 +119,12 @@ public class CreateBWInstanceServiceTest {
 			TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
 
 			assertEquals(5, dataModelInstance.getEntitiesCount());
-			assertEquals(13, dataModelInstance.getAttributesCount());
+			assertEquals(14, dataModelInstance.getAttributesCount());
 			assertEquals(4, dataModelInstance.getRelationsCount());
 			assertEquals(6, goalModelInstance.getGoalsCount());
 			assertEquals(5, taskModelInstance.getTasksCount());
-			assertEquals(4, bwInstance.getWorkItemsCount());
+			assertEquals(4, bwInstance.getWorkItemsCount()); // With Tasks
+//			assertEquals(3, bwInstance.getWorkItemsCount()); // Without Tasks
 			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
 
 			Transaction.commit();

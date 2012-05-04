@@ -2,12 +2,10 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
-import jvstm.Atomic;
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
@@ -30,7 +28,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 
 import com.vaadin.Application;
@@ -60,7 +57,7 @@ public class BWPresentation extends Application {
 
 	private String username = "";
 	private User user = null;
-	private Logger log = Logger.getLogger("BWPresentation");
+//	private Logger log = Logger.getLogger("BWPresentation");
 	private Boolean bwManagerAcess = false;
 	private Boolean worklistManagerAcess = false;
 
@@ -88,7 +85,7 @@ public class BWPresentation extends Application {
 
 	// DataModelTab
 	private ListSelect dataList = new ListSelect();
-	private TreeTable entitydetailsTreetable = new TreeTable("Jobs Executed:");
+	private TreeTable entitydetailsTreetable = new TreeTable("Data Model:");
 
 	// TaskViewTab
 	private ListSelect taskList = new ListSelect();
@@ -104,10 +101,12 @@ public class BWPresentation extends Application {
 	
 	private Application bwPresentation;
 
+	/**
+	 * Initialize the Application.
+	 */
 	@Override
 	public void init() {
 		bwPresentation = this;
-		
 		// Init and populate database
 		if (!Bootstrap.isInitialized()) {
 			Bootstrap.init();
@@ -117,14 +116,20 @@ public class BWPresentation extends Application {
 		registerBWPresentation();
 		initLoginWindow();
 	}
-
+	
+	/**
+	 * Register the BWPresentation with the BWManager and WorklistManager.
+	 */
 	private void registerBWPresentation() {
 		Transaction.begin();
 		BlendedWorkflow.getInstance().getBwManager().setBwPresentation(BWPresentation.this);
 		BlendedWorkflow.getInstance().getWorkListManager().setBwPresentation(BWPresentation.this);
 		Transaction.commit();
 	}
-	
+
+	/******************************
+	 * Windows.
+	 ******************************/
 	private void initLoginWindow() {
 		setTheme("reindeermods");
 		setMainWindow(mainWindow);
@@ -144,7 +149,6 @@ public class BWPresentation extends Application {
 	}
 
 	private void initMainWindow(String name) {
-		log.info("initMainWindow");
 		this.username = name + "   ";
 		
 		getMainWindow().showNotification("Welcome " + this.username);
@@ -154,15 +158,12 @@ public class BWPresentation extends Application {
 		Label splitter = new Label("|");
 		Label splitter2 = new Label("|");
 
-		
-		
 		bwManagerBtn.addStyleName("borderless");
 		bwManagerBtn.setEnabled(false);
 		bwManagerBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				bwManagerBtn.setEnabled(false);
-				log.info("bwmanager pressed");
 				bwSpecTab.setEnabled(true);
 				bwInstanceTab.setEnabled(true);
 				bwDataTab.setEnabled(true);
@@ -213,11 +214,8 @@ public class BWPresentation extends Application {
 		// Role Manager
 		Transaction.begin();
 		user = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
-		log.info("initMainWindow:user" + user);
 		Role userRole = user.getRole();
-		log.info("initMainWindow:user" + userRole);
 		if (userRole.getBwManagerAcess()) {
-			log.info("getBwManagerAcess");
 			right.addComponent(bwManagerBtn);
 			right.addComponent(splitter);
 			VerticalLayout bwManagerVL = initBWSpecTab();
@@ -233,11 +231,9 @@ public class BWPresentation extends Application {
 //			bwDataTab.setEnabled(true);
 		}
 		if (userRole.getOrganizationalManagerAcess()) {
-			log.info("getOrganizationalManagerAcess");
-			//TODO:
+			//TODO: OrganizationalTab
 		}
 		if (userRole.getWorklistManagerAcess()) {
-			log.info("getWorklistManagerAcess");
 			right.addComponent(wManagerBtn);
 			right.addComponent(splitter2);
 			VerticalLayout bwTaskViewVL = initTaskViewTab();
@@ -264,6 +260,9 @@ public class BWPresentation extends Application {
 		mainWindow.addComponent(this.bwTabSheet);
 	}
 
+	/******************************
+	 * Main Window Tabs.
+	 ******************************/
 	private VerticalLayout initBWSpecTab() {
 		VerticalLayout bwSpecVL = new VerticalLayout();
 		HorizontalLayout infoHL = new HorizontalLayout();
@@ -321,7 +320,7 @@ public class BWPresentation extends Application {
 			}
 		});
 
-		bwSpecInfoTable.setWidth("400px");
+		bwSpecInfoTable.setWidth("500px");
 		bwSpecInfoTable.setHeight("150px");
 		bwSpecJobsInfoTable.setWidth("800px");
 		bwSpecJobsInfoTable.setHeight("240px");
@@ -505,10 +504,8 @@ public class BWPresentation extends Application {
 					}
 					Transaction.commit();
 					if (isPreTask) {
-						log.info("BWPresentation: execute PreTask");
 						generatePreTaskForm(workItemOID);
 					} else {
-						log.info("BWPresentation: execute normal Task");
 						generateTaskForm(workItemOID);
 					}
 					
@@ -531,18 +528,21 @@ public class BWPresentation extends Application {
 					taskWorkItem.setUser(activeUser);
 					Transaction.commit();
 					
-					new SkipWorkItemService(workItemOID).execute();
+					Transaction.begin();
+					BlendedWorkflow.getInstance().getWorkListManager().skipWorkItem(workItemOID);
+					Transaction.commit();
 					removeTaskWorkItem(workItemOID);
-					getMainWindow().showNotification("WorkItem Skipped", Notification.TYPE_TRAY_NOTIFICATION);
+//					getMainWindow().showNotification("WorkItem Skipped", Notification.TYPE_TRAY_NOTIFICATION);
 				} catch (java.lang.NullPointerException jle) {
 					getMainWindow().showNotification("Please select a workItem to skip");
-				} catch (BlendedWorkflowException bwe) {
-					getMainWindow().showNotification(bwe.getError().toString(), Notification.TYPE_ERROR_MESSAGE);
 				}
 			}
 		});
 
 		// Layouts - configurations
+		taskInfoTable.setWidth("500px");
+		taskInfoTable.setHeight("135px");
+		
 		bwInstancesBtnLayout.setSpacing(true);
 		bwInstancesBtnLayout.setMargin(true);
 		bwInstancesBtnLayout.addComponent(taskExecuteBtn);
@@ -562,8 +562,7 @@ public class BWPresentation extends Application {
 		bwInstancesVL.addComponent(bwInstancesBtnLayout);
 		bwInstancesVL.setComponentAlignment(bwInstancesBtnLayout, Alignment.TOP_LEFT);
 		
-		taskInfoTable.setWidth("450px");
-		taskInfoTable.setHeight("155px");
+
 
 		return bwInstancesVL;
 	}
@@ -621,13 +620,14 @@ public class BWPresentation extends Application {
 					goalWorkItem.setUser(activeUser);
 					Transaction.commit();
 					
-					new SkipWorkItemService(workItemOID).execute();
+					Transaction.begin();
+					BlendedWorkflow.getInstance().getWorkListManager().skipWorkItem(workItemOID);
+					Transaction.commit();
+					
 					removeGoalWorkItem(workItemOID);
 					getMainWindow().showNotification("WorkItem skipped", Notification.TYPE_TRAY_NOTIFICATION);
 				} catch (java.lang.NullPointerException jle) {
 					getMainWindow().showNotification("Please select a workItem to skip");
-				} catch (BlendedWorkflowException bwe) {
-					getMainWindow().showNotification(bwe.getError().toString(), Notification.TYPE_ERROR_MESSAGE);
 				}
 			}
 		});
@@ -643,7 +643,7 @@ public class BWPresentation extends Application {
 		// Layouts - configurations
 		goalList.setWidth("300px");
 		goalList.setHeight("450px");
-		goalInfoTable.setWidth("450px");
+		goalInfoTable.setWidth("500px");
 		goalInfoTable.setHeight("155px");
 		
 		
@@ -670,6 +670,9 @@ public class BWPresentation extends Application {
 		return bwInstancesVL;
 	}
 
+	/******************************
+	 * Listeners
+	 ******************************/
 	private void initTaskListListener() {
 		taskList.addListener(taskListListener = new Property.ValueChangeListener() {
 			public void valueChange(ValueChangeEvent event) {
@@ -688,8 +691,11 @@ public class BWPresentation extends Application {
 		});
 	}
 
+	/******************************
+	 * Forms generators.
+	 ******************************/
 	public void generateLoadForm() {
-		Window loadWindow = new Window("Load");
+		Window loadWindow = new Window("Load a BWSpecification");
 		loadWindow.setContent(new LoadForm(BWPresentation.this));
 		loadWindow.center();
 		loadWindow.setClosable(false);
@@ -699,7 +705,7 @@ public class BWPresentation extends Application {
 	}
 	
 	public void generateLaunchForm(long bwSpecificationOID) {
-		Window launchWindow = new Window("Launch");
+		Window launchWindow = new Window("Launch a BWInstance");
 		launchWindow.setContent(new LaunchForm(bwSpecificationOID));
 		launchWindow.center();
 		launchWindow.setClosable(false);
@@ -776,6 +782,9 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(newGoalWindow);
 	}
 
+	/********************************************
+	 * BWPresentation Data changes methods
+	 ********************************************/
 	public void addBWSpecification(long OID, String name) {
 		this.loadedList.addItem(OID);
 		this.loadedList.setItemCaption(OID, name);
@@ -802,6 +811,14 @@ public class BWPresentation extends Application {
 		this.taskList.setItemCaption(OID, ID);
 	}
 
+	public void addUser(long oid, String name) {
+		// TODO Auto-generated method stub
+	}
+
+	public void addRole(long oid, String name) {
+		// TODO Auto-generated method stub
+	}
+
 	public void removeGoalWorkItem(long OID) {
 		this.goalList.removeListener(goalListListener);
 		this.goalList.removeItem(OID);
@@ -814,8 +831,7 @@ public class BWPresentation extends Application {
 		initTaskListListener();
 	}
 
-	protected void updateTaskList(long bwInstanceOID) {
-		log.info("updateTaskList");
+	public void updateTaskList(long bwInstanceOID) {
 		this.taskList.removeListener(taskListListener);
 		this.taskList.removeAllItems();
 
@@ -831,8 +847,7 @@ public class BWPresentation extends Application {
 		initTaskListListener();
 	}
 
-	protected void updateGoalList(long bwInstanceOID) {
-		log.info("updateGoalList");
+	public void updateGoalList(long bwInstanceOID) {
 		this.goalList.removeListener(goalListListener);
 		this.goalList.removeAllItems();
 		initGoalListListener();
@@ -847,9 +862,8 @@ public class BWPresentation extends Application {
 		initGoalListListener();
 	}
 
-
-	@Atomic
 	public void updateBWSpecificationInfo(long OID) {
+		Transaction.begin();
 		bwSpecInfoTable.removeAllItems();
 		bwSpecJobsInfoTable.removeAllItems();
 		BWSpecification bwSpecification = AbstractDomainObject.fromOID(OID);
@@ -880,12 +894,16 @@ public class BWPresentation extends Application {
 			bwSpecJobsInfoTable.setParent(goal1, goals);
 			bwSpecJobsInfoTable.setChildrenAllowed(goal1, false);
 		}
+		
+		Transaction.commit();
+
 	}
 
-	@Atomic
 	public void updateBWInstanceInfo(long OID) {
+		Transaction.begin();
 		bwInstanceInfoTable.removeAllItems();
 		bwInstanceJobsInfoTable.removeAllItems();
+		
 		BWInstance bwInstance = AbstractDomainObject.fromOID(OID);
 		int executedTasksCount = 0;
 		int achievedGoalsCount = 0;
@@ -918,10 +936,12 @@ public class BWPresentation extends Application {
 			bwInstanceJobsInfoTable.addItem(new Object[] {logRecord.getDate(), logRecord.getAction(), logRecord.getValue(), logRecord.getAuthor()}, new Integer(jobIndex));
 			jobIndex++;
 		}
+		
+		Transaction.commit();
 	}
 
-	@Atomic
 	public void updateBWInstanceDataInfo(long OID) {
+		Transaction.begin();
 		entitydetailsTreetable.removeAllItems();
 
 		BWInstance bwInstance = AbstractDomainObject.fromOID(OID);
@@ -933,17 +953,20 @@ public class BWPresentation extends Application {
 				Object entityInstanceItem = entitydetailsTreetable.addItem(new Object[] {entityInstance.getID(),"",entityInstance.getState()}, null);
 				entitydetailsTreetable.setParent(entityInstanceItem, entityItem);
 				for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
-					Object attributeInstanceItem = entitydetailsTreetable.addItem(new Object[] {attributeInstance.getAttribute().getName(), attributeInstance.getValue(), attributeInstance.getState()}, null);
+					String value =" ";
+					if (attributeInstance.getValue() != "$UNDEFINED$" && attributeInstance.getValue() != "$SKIPPED$")
+						value = attributeInstance.getValue();
+					Object attributeInstanceItem = entitydetailsTreetable.addItem(new Object[] {attributeInstance.getAttribute().getName(), value, attributeInstance.getState()}, null);
 					entitydetailsTreetable.setParent(attributeInstanceItem, entityInstanceItem);
 					entitydetailsTreetable.setChildrenAllowed(attributeInstanceItem, false);
 				}
 			}
 		}
-
+		Transaction.commit();
 	}
 
-	@Atomic
 	public void updateTaskView(long OID) {
+		Transaction.begin();
 		taskInfoTable.removeAllItems();
 		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(OID);
 		Task task = taskWorkItem.getTask();
@@ -993,15 +1016,17 @@ public class BWPresentation extends Application {
 		taskInfoTable.addItem(new Object[] {"Output Data", outputData}, new Integer(4));
 		taskInfoTable.addItem(new Object[] {"Previous Task",task.getPrevious()}, new Integer(5));
 		
-		taskInfoTable.setWidth("100%");
+//		taskInfoTable.setWidth("100%");
+		Transaction.commit();
+
 	}
 
-	@Atomic
 	public void updateGoalView(long OID) {
+		Transaction.begin();
 		goalInfoTable.removeAllItems();
 		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(OID);
 		Goal goal = goalWorkItem.getGoal();
-
+		
 		String inputData = "None";
 		String subGoals ="None";
 		int inputIndex = 0;
@@ -1065,18 +1090,8 @@ public class BWPresentation extends Application {
 		goalInfoTable.addItem(new Object[] {"Input Data", inputData}, new Integer(5));
 		goalInfoTable.addItem(new Object[] {"Output Data", outputData}, new Integer(6));
 
-		goalInfoTable.setWidth("100%");
-	}
-
-	public void addUser(long oid, String name) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void addRole(long oid, String name) {
-		// TODO Auto-generated method stub
-		
+//		goalInfoTable.setWidth("100%");
+		Transaction.commit();
 	}
 
 }
-

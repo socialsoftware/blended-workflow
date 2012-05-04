@@ -15,8 +15,8 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class BWSpecificationFactory {
 
-	// FIXME: remove yawl param
-	public static void createBWSpecification(String bwXML, String yawl) throws BlendedWorkflowException {
+	// FIXME: Remove YAWL argument
+	public static void createBWSpecification(String bwXML, String yawlXML2) throws BlendedWorkflowException {
 		// BWSpecification Name
 		Document doc = StringUtils.stringToDoc(bwXML);
 
@@ -46,7 +46,7 @@ public class BWSpecificationFactory {
 		
 		// Create YAWL Specification
 		String yawlXML = new YAWLSpecificationFactory().parseYAWLSpecificationFactory(bwSpecification);
-
+		
 		// Load YAWL Specification on the engine
 		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(yawlXML);
 		
@@ -54,7 +54,8 @@ public class BWSpecificationFactory {
 		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
 
 		// Create Worklet Rules
-//		BlendedWorkflow.getInstance().getWorkletAdapter().loadRdrSet(bwSpecification); // test only
+		BlendedWorkflow.getInstance().getWorkletAdapter(); // Test proposes only.
+//		BlendedWorkflow.getInstance().getWorkletAdapter().loadRdrSet(bwSpecification); //FIXME: Disabled to run tests.
 		
 		// Notify BWManager
 		BlendedWorkflow.getInstance().getBwManager().notifyLoadedBWSpecification(bwSpecification);

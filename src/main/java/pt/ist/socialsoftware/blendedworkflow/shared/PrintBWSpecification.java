@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.shared;
 
+import org.apache.log4j.Logger;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
@@ -21,6 +23,8 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 public class PrintBWSpecification {
+	
+	private static Logger log = Logger.getLogger("PrintBWSpecification");
 
 	private static BlendedWorkflow blendedWorkflow;
 	private static BWSpecification bwSpecification;
@@ -62,112 +66,116 @@ public class PrintBWSpecification {
 
 	public static void bwInstances(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
-		System.out.println("**************************************************************");
-		System.out.println("BWInstances:");
-		System.out.println("----------------------------------------------------------");
-		System.out.println(bwSpecification.getName() + " has " + bwSpecification.getBwInstancesCount() + " instance." );
-		System.out.println(bwInstance.getID());
+		log.info("**************************************************************");
+		log.info("BWInstances:");
+		log.info("----------------------------------------------------------");
+		log.info(bwSpecification.getName() + " has " + bwSpecification.getBwInstancesCount() + " instance." );
+		log.info(bwInstance.getID());
 	}
 
 	public static void dataModelTemplate(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
-		System.out.println("**************************************************************");
-		System.out.println("DataModel Template");
-		System.out.println("----------------------------------------------------------");
+		log.info("**************************************************************");
+		log.info("DataModel Template");
+		log.info("----------------------------------------------------------");
 		for (Entity entity : dataModelTemplate.getEntities()) {
-			System.out.println("Entity \"" + entity.getName() + "\"");
+			log.info("Entity \"" + entity.getName() + "\"");
 			for (Attribute attribute : entity.getAttributes()) {
-				System.out.println("Attribute \"" + attribute.getName() + "\"");
+				log.info("Attribute \"" + attribute.getName() + "\"");
 			}
-			System.out.println("----------------------------------------------------------");
+			log.info("----------------------------------------------------------");
 		}
 		for (Relation relation : dataModelTemplate.getRelations()) {
-			System.out.println("Relation \"" + relation.getName() + "\"");
+			log.info("Relation \"" + relation.getName() + "\"");
 		}
 	}
 
 	public static void dataModelType(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
-		System.out.println("**************************************************************");
-		System.out.println("DataModel Type");
-		System.out.println("----------------------------------------------------------");
+		log.info("**************************************************************");
+		log.info("DataModel Type");
+		log.info("----------------------------------------------------------");
 		for (Entity entity : dataModelInstance.getEntities()) {
-			System.out.println("Entity \"" + entity.getName() + "\"");
+			log.info("Entity \"" + entity.getName() + "\"");
 			for (Attribute attribute : entity.getAttributes()) {
-				System.out.println("Attribute \"" + attribute.getName() + "\"");
+				log.info("Attribute \"" + attribute.getName() + "\"");
 			}
-			System.out.println("----------------------------------------------------------");
+			log.info("----------------------------------------------------------");
 		}
 		for (Relation relation : dataModelInstance.getRelations()) {
-			System.out.println("Relation \"" + relation.getName() + "\"");
+			log.info("Relation \"" + relation.getName() + "\"");
 		}
 	}
 
 	public static void goalModelTemplate(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
-		System.out.println("**************************************************************");
-		System.out.println("GoalModel Template");
-		System.out.println("----------------------------------------------------------");
+		log.info("**************************************************************");
+		log.info("GoalModel Template");
+		log.info("----------------------------------------------------------");
 		for (Goal goal : goalModel.getGoals()) {
-			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
-			System.out.println("Condition " + goal.getCondition().getClass());
+			log.info("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
+//			log.info("Condition " + goal.getCondition().getClass());
+			log.info("User: " + goal.getUser() + " Role:" + goal.getRole());
 		}
 	}
 
 	public static void goalModelType(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
-		System.out.println("**************************************************************");
-		System.out.println("GoalModel Type");
-		System.out.println("----------------------------------------------------------");
+		log.info("**************************************************************");
+		log.info("GoalModel Type");
+		log.info("----------------------------------------------------------");
 		for (Goal goal : goalModelInstance.getGoals()) {
-			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
-			System.out.println("Condition " + goal.getCondition().getClass());
+			log.info("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
+//			log.info("Condition " + goal.getCondition().getClass());
+			log.info("User: " + goal.getUser() + " Role:" + goal.getRole());
 		}
 	}
 	
 	public static void taskModelTemplate(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
-		System.out.println("**************************************************************");
-		System.out.println("TaskModel Template");
-		System.out.println("----------------------------------------------------------");
+		log.info("**************************************************************");
+		log.info("TaskModel Template");
+		log.info("----------------------------------------------------------");
 		for (Task task : taskModel.getTasks()) {
-			System.out.println("Task \"" + task.getName() + "\" is \"" + task.getState() + "\".");
-			System.out.println("Pre Condition " + task.getPreConstraint().getClass() + " Post Condition " + task.getPostConstraint().getClass());
+			log.info("Task \"" + task.getName() + "\" is \"" + task.getState() + "\".");
+			log.info("Pre Condition " + task.getPreConstraint().getClass() + " Post Condition " + task.getPostConstraint().getClass());
+			log.info("User: " + task.getUser() + " Role:" + task.getRole());
 		}
 	}
 
 	public static void taskModelType(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
-		System.out.println("**************************************************************");
-		System.out.println("TaskModel Type");
-		System.out.println("----------------------------------------------------------");
+		log.info("**************************************************************");
+		log.info("TaskModel Type");
+		log.info("----------------------------------------------------------");
 		for (Task task : taskModelInstance.getTasks()) {
-			System.out.println("Task \"" + task.getName() + "\" is \"" + task.getState() + "\".");
-			System.out.println("Pre Condition " + task.getPreConstraint().getClass() + " Post Condition " + task.getPostConstraint().getClass());
+			log.info("Task \"" + task.getName() + "\" is \"" + task.getState() + "\".");
+			log.info("Pre Condition " + task.getPreConstraint().getClass() + " Post Condition " + task.getPostConstraint().getClass());
+			log.info("User: " + task.getUser() + " Role:" + task.getRole());
 		}
 	}
 
 	public static void dataModelInstances(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
-		System.out.println("**************************************************************");
-		System.out.println("DataModel Instance");
-		System.out.println("----------------------------------------------------------");
+		log.info("**************************************************************");
+		log.info("DataModel Instance");
+		log.info("----------------------------------------------------------");
 		for (Entity entity : dataModelInstance.getEntities()) {
-			System.out.println("Entity \"" + entity.getName() + "\" has " + entity.getEntityInstancesCount() + " instances.");
+			log.info("Entity \"" + entity.getName() + "\" has " + entity.getEntityInstancesCount() + " instances.");
 			if (entity.getEntityInstancesCount()>0) {
 				for (EntityInstance entityInstance : entity.getEntityInstances()) {
-					System.out.println("EntityInstance \"" + entityInstance.getID() + "\" is associated with " + entityInstance.getAttributeInstancesCount() + " AttributesInstances.");
+					log.info("EntityInstance \"" + entityInstance.getID() + "\" is associated with " + entityInstance.getAttributeInstancesCount() + " AttributesInstances.");
 					for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
-						System.out.println("AttributeInstance \"" + attributeInstance.getID() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");					}
+						log.info("AttributeInstance \"" + attributeInstance.getID() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");					}
 				}
 			}
-			System.out.println("----------------------------------------------------------");
+			log.info("----------------------------------------------------------");
 		}
 		for (Relation relation : dataModelInstance.getRelations()) {
-			System.out.println("Relation \"" + relation.getName() + "\" has " + relation.getRelationInstancesCount() + " instances.");
+			log.info("Relation \"" + relation.getName() + "\" has " + relation.getRelationInstancesCount() + " instances.");
 			if(relation.getRelationInstancesCount()>0) {
 				for (RelationInstance relationInstance : relation.getRelationInstances()) {
-					System.out.println("RelationInstance \"" + relationInstance.getID() + "\"");
+					log.info("RelationInstance \"" + relationInstance.getID() + "\"");
 				}
 			}
 		}
@@ -175,24 +183,24 @@ public class PrintBWSpecification {
 
 	public static void workItems(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
-		System.out.println("**************************************************************");
-		System.out.println("WorkItems");
-		System.out.println("----------------------------------------------------------");
+		log.info("**************************************************************");
+		log.info("WorkItems");
+		log.info("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
-			System.out.println("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
+			log.info("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
 		}
 	}
 	
 	public static void workItemsWithAttributtes(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
-		System.out.println("**************************************************************");
-		System.out.println("WorkItems");
-		System.out.println("----------------------------------------------------------");
+		log.info("**************************************************************");
+		log.info("WorkItems");
+		log.info("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
-			System.out.println("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
+			log.info("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
 			if (workitem.getContraintViolationAttributeInstancesCount()>0) {
 				for (AttributeInstance attributeInstance : workitem.getContraintViolationAttributeInstances()) {
-					System.out.println("AttributeInstance \"" + attributeInstance.getID() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");					}
+					log.info("AttributeInstance \"" + attributeInstance.getID() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");					}
 			}
 		}
 	}

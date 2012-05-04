@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Atomic;
+import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
@@ -9,6 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -22,23 +23,23 @@ import com.vaadin.ui.Window.Notification;
 
 @SuppressWarnings("serial")
 public class NewRelationForm extends VerticalLayout{
-	
-	private Table relations = new Table("Existing Relations");
-	private NativeSelect otherEntity = new NativeSelect();
-	private NativeSelect cardinality = new NativeSelect();
-	private CheckBox isOtherKey = new CheckBox("The other Entity is a key Entity to this one");
-	private CheckBox isThisKey = new CheckBox("This Entity is key to the other one");
-	
+
+	private Table relations = new Table("Existing Relations:");
+	private NativeSelect otherEntity = new NativeSelect("Other Entity:");
+	private NativeSelect cardinality = new NativeSelect("Relation cardinality:");
+	private CheckBox isOtherKey = new CheckBox("The other Entity is a key Entity to this one?");
+	private CheckBox isThisKey = new CheckBox("This Entity is key to the other one?");
+
 	public NewRelationForm(DataModelTree parent, final long bwInstanceOID, final String entityName) {
 		setMargin(true);
 
 		setWidth("530px");
 		setHeight("480px");
 
-		final TextField nameTf = new TextField("Name");
+		final TextField nameTf = new TextField("Relation name:");
 
 		otherEntity.setNullSelectionAllowed(false);
-		
+
 		cardinality.setNullSelectionAllowed(false);
 		cardinality.addItem("1 to 0..1");
 		cardinality.addItem("1 to *");
@@ -49,7 +50,7 @@ public class NewRelationForm extends VerticalLayout{
 		cardinality.addItem("* to 1");
 		cardinality.addItem("* to 0..1");
 		cardinality.addItem("* to *");
-		
+
 		relations.setWidth("500px");
 		relations.setHeight("130px");
 		relations.addContainerProperty("Name",  String.class,  null);
@@ -58,10 +59,10 @@ public class NewRelationForm extends VerticalLayout{
 		relations.addContainerProperty("Cardinality",  String.class,  null);
 		relations.addContainerProperty("is One Key?",  String.class,  null);
 		relations.addContainerProperty("is Two Key?",  String.class,  null);
-		
+
 		getRelations(bwInstanceOID, entityName);
 		getEntities(bwInstanceOID, entityName);
-		
+
 		HorizontalLayout submitPanel = new HorizontalLayout();
 		submitPanel.setSpacing(true);
 
@@ -75,9 +76,9 @@ public class NewRelationForm extends VerticalLayout{
 					String card = (String) cardinality.getValue();
 					Boolean isOne = (Boolean) isThisKey.getValue();
 					Boolean isTwo = (Boolean) isOtherKey.getValue();
-					
+
 					addRelation(bwInstanceOID, name, entityName, secondEntityName, card, isOne, isTwo);
-					
+
 					getApplication().getMainWindow().showNotification("New Relation created", Notification.TYPE_TRAY_NOTIFICATION);
 					getApplication().getMainWindow().removeWindow(NewRelationForm.this.getWindow());
 				} catch (java.lang.NullPointerException jle) {
@@ -96,7 +97,7 @@ public class NewRelationForm extends VerticalLayout{
 				getApplication().getMainWindow().removeWindow(NewRelationForm.this.getWindow());
 			}
 		});
-		
+
 		addComponent(relations);
 		addComponent(nameTf);
 		addComponent(otherEntity);
@@ -106,13 +107,14 @@ public class NewRelationForm extends VerticalLayout{
 		submitPanel.addComponent(bwInstanceCreateBtn);
 		submitPanel.addComponent(cancel);
 		addComponent(submitPanel);
+		setComponentAlignment(submitPanel, Alignment.MIDDLE_CENTER);
 	}
-	
-	@Atomic
+
 	private void getRelations(long bwInstanceOID, String entityName) {
+		Transaction.begin();
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
-		
+
 		int relationIndex = 1;
 		for (Relation relation : dataModel.getRelations()) {
 			Entity entityOne = relation.getEntityOne();
@@ -123,30 +125,31 @@ public class NewRelationForm extends VerticalLayout{
 				String card = parseCardinalityToString(relation.getCardinalityOne()) + " to " + parseCardinalityToString(relation.getCardinalityTwo());
 				Boolean isOne = relation.getIsOneKeyEntity();
 				Boolean isTwo = relation.getIsTwoKeyEntity();
-				
+
 				this.relations.addItem(new Object[] {name, entityOne.getName(),entityTwo.getName(), card, isOne, isTwo}, new Integer(relationIndex));
 				relationIndex++;
 			}
 		}
-
+		Transaction.commit();	
 	}
-	
-	@Atomic
+
 	private void getEntities(long bwInstanceOID, String entityName) {
+		Transaction.begin();
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
-		
+
 		for (Entity entity : dataModel.getEntities()) {
 			if (!entity.getName().equals(entityName)) {
 				this.otherEntity.addItem(entity.getName());
 			}
 		}
+		Transaction.commit();
 	}
 
-	@Atomic
 	public void addRelation(long bwInstanceOID, String name, String entityOneName, 
 			String entityTwoName, String cardinality, Boolean isOneKeyEntity, Boolean isTwoKeyEntity) throws BlendedWorkflowException {
 
+		Transaction.begin();
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
@@ -157,6 +160,8 @@ public class NewRelationForm extends VerticalLayout{
 		Cardinality cardinalityTwo = parseOtherCardinality(cardinality);
 
 		new Relation(dataModel, name, entityOne, entityTwo, cardinalityOne, cardinalityTwo, isOneKeyEntity, isTwoKeyEntity);
+
+		Transaction.commit();
 	}
 
 	private String parseCardinalityToString(Cardinality card) {
@@ -168,7 +173,7 @@ public class NewRelationForm extends VerticalLayout{
 			return "*";
 		}
 	}
-	
+
 	private Cardinality parseThisCardinality(String card) {
 		if(card.equals("1 to 0..1")) {
 			return Cardinality.ONE;
@@ -191,7 +196,7 @@ public class NewRelationForm extends VerticalLayout{
 		}
 		return null;
 	}
-	
+
 	private Cardinality parseOtherCardinality(String card) {
 		if(card.equals("1 to 0..1")) {
 			return Cardinality.ZERO_OR_ONE;

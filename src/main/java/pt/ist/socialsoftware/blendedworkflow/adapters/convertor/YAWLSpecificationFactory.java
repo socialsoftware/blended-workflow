@@ -3,6 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 import java.util.HashMap;
 import java.util.Set;
 
+//import org.yawlfoundation.yawl.util.JDOMUtil;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
@@ -34,6 +36,8 @@ public class YAWLSpecificationFactory {
 		yawlSpecification += processControlElements();
 		yawlSpecification += inputOutputParam();
 		yawlSpecification += footer();
+		
+//		JDOMUtil.documentToFile(JDOMUtil.stringToDocument(yawlSpecification), "C:/Users/User/Desktop/yawl.xml");
 
 		return yawlSpecification;
 	}

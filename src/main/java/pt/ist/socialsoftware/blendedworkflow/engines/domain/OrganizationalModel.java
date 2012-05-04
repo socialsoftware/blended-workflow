@@ -2,6 +2,9 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import org.apache.log4j.Logger;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
+
 public class OrganizationalModel extends OrganizationalModel_Base {
     
 	private Logger log = Logger.getLogger("OrganizationalModel");
@@ -11,41 +14,23 @@ public class OrganizationalModel extends OrganizationalModel_Base {
 		blendedWorkflow.setOrganizationalModel(this);
 		log.info("OrganizationalModel created.");
     }
-    
-    public void setDefault(Task task) {
-    	for (Role role : getRoles()) {
-    		if (role.getName().equals("Admin")) {
-    			task.setRole(role);
-    		}
-    	}
-    	
-    	for (User user : getUsers()) {
-    		if (user.getID().equals("BlendedWorkflow")) {
-    			task.setUser(user);
-    		}
-    	}
-    }
-    
-    public void setDefault(Goal goal) {
-    	for (Role role : getRoles()) {
-    		if (role.getName().equals("Admin")) {
-    			goal.setRole(role);
-    		}
-    	}
-    	
-    	for (User user : getUsers()) {
-    		if (user.getID().equals("BlendedWorkflow")) {
-    			goal.setUser(user);
-    		}
-    	}
-    }
 
-	public User getUser(String userID) {
+	public User getUser(String userID) throws BlendedWorkflowException {
     	for (User user : getUsers()) {
     		if (user.getID().equals(userID)) {
     			return user;
     		}
     	}
-    	return null;
+    	throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_USER);
 	}
+	
+	public Role getRole(String roleName) throws BlendedWorkflowException {
+    	for (Role role : getRoles()) {
+    		if (role.getName().equals(roleName)) {
+    			return role;
+    		}
+    	}
+    	throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_ROLE);
+	}
+	
 }

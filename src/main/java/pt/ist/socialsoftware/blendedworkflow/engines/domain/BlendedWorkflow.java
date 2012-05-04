@@ -7,6 +7,7 @@ import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.*;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.organizationalmanager.OrganizationalManager;
+import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
@@ -17,13 +18,12 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	private BWManager bwManager = null;
 	private OrganizationalManager organizationalManager = null;
 	
+	private BWExecutorService bwExecutorService = null;
+	
 	public static BlendedWorkflow getInstance() {
 		return FenixFramework.getRoot();
 	}	
 
-	/*******************************
-	 * Getters and Setters
-	 *******************************/
 	public BWSpecification getBWSpecification(String name) throws BlendedWorkflowException {
 		for (BWSpecification bwSpecification : getBwSpecifications()) {
 			if (bwSpecification.getName().equals(name))
@@ -105,6 +105,17 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 
 	public void setOrganizationalManager(OrganizationalManager organizationalManager) {
 		this.organizationalManager = organizationalManager;
+	}
+	
+	public BWExecutorService getBWExecutorService() {
+		if (bwExecutorService == null) {
+			bwExecutorService = new BWExecutorService();
+		}
+		return bwExecutorService;
+	}
+	
+	public void setBWExecutorService(BWExecutorService bwExecutorService) {
+		this.bwExecutorService = bwExecutorService;
 	}
 
 }
