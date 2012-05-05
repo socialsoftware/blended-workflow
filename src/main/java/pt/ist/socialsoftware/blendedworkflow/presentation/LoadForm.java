@@ -59,11 +59,11 @@ public class LoadForm extends VerticalLayout {
 						getApplication().getMainWindow().removeWindow(LoadForm.this.getWindow());
 					}
 					else {
-						getApplication().getMainWindow().showNotification("Activity or Blended Workflow Specification missing");
+						getApplication().getMainWindow().showNotification("Blended Workflow Specification missing");
 					}
 				}
 				catch (java.lang.NullPointerException jle) {
-					getApplication().getMainWindow().showNotification("Please upload both specifications", Notification.TYPE_ERROR_MESSAGE);
+					getApplication().getMainWindow().showNotification("Please upload a Blended Workflow Specifications", Notification.TYPE_ERROR_MESSAGE);
 				}
 			}
 		});

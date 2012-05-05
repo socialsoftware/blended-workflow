@@ -91,13 +91,13 @@ public class BWPresentation extends Application {
 	private ListSelect taskList = new ListSelect();
 	private Table taskInfoTable = new Table("Task Information:");
 	private Property.ValueChangeListener taskListListener;
-	private NativeSelect taskListFilter = new NativeSelect();
+//	private NativeSelect taskListFilter = new NativeSelect();
 
 	// GoalViewTab
 	private ListSelect goalList = new ListSelect();
 	private Table goalInfoTable = new Table("Goal Information:");
 	private Property.ValueChangeListener goalListListener;
-	private NativeSelect goalListFilter = new NativeSelect();
+//	private NativeSelect goalListFilter = new NativeSelect();
 	
 	private Application bwPresentation;
 
@@ -239,8 +239,8 @@ public class BWPresentation extends Application {
 			VerticalLayout bwTaskViewVL = initTaskViewTab();
 			VerticalLayout bwGoalViewVL = initGoalViewTab();
 			
-			taskViewTab = this.bwTabSheet.addTab(bwTaskViewVL, "Task View");
-			goalViewTab = this.bwTabSheet.addTab(bwGoalViewVL, "Goal View");
+			taskViewTab = this.bwTabSheet.addTab(bwTaskViewVL, "Worklist");
+			goalViewTab = this.bwTabSheet.addTab(bwGoalViewVL, "Goal Manager");
 			if (bwManagerAcess) {
 				taskViewTab.setEnabled(false);
 				goalViewTab.setEnabled(false);
@@ -469,13 +469,13 @@ public class BWPresentation extends Application {
 		HorizontalLayout bwInstancesBtnLayout = new HorizontalLayout();
 
 		// Components
-		taskListFilter.setNullSelectionAllowed(false);
-		taskListFilter.addListener(new Property.ValueChangeListener() {
-			public void valueChange(ValueChangeEvent event) {
-				long workItemOID = (Long) taskListFilter.getValue();
-				updateTaskList(workItemOID);
-			}
-		});
+//		taskListFilter.setNullSelectionAllowed(false);
+//		taskListFilter.addListener(new Property.ValueChangeListener() {
+//			public void valueChange(ValueChangeEvent event) {
+//				long workItemOID = (Long) taskListFilter.getValue();
+//				updateTaskList(workItemOID);
+//			}
+//		});
 
 		taskList.setWidth("300px");
 		taskList.setHeight("450px");
@@ -488,8 +488,16 @@ public class BWPresentation extends Application {
 
 		taskInfoTable.addContainerProperty("Name", String.class,  null);
 		taskInfoTable.addContainerProperty("Value",  String.class,  null);
+		
+		// goal
+		goalList.setImmediate(true);
+		goalList.setNullSelectionAllowed(false);
+		initGoalListListener();
 
-		Button taskExecuteBtn = new Button("Execute");
+		goalInfoTable.addContainerProperty("Name", String.class,  null);
+		goalInfoTable.addContainerProperty("Value",  String.class,  null);
+
+		Button taskExecuteBtn = new Button("Execute Task");
 		taskExecuteBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -516,7 +524,7 @@ public class BWPresentation extends Application {
 			}
 		});
 
-		Button taskSkipBtn = new Button("Skip");
+		Button taskSkipBtn = new Button("Skip Task");
 		taskSkipBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -538,63 +546,9 @@ public class BWPresentation extends Application {
 				}
 			}
 		});
-
-		// Layouts - configurations
-		taskInfoTable.setWidth("500px");
-		taskInfoTable.setHeight("135px");
 		
-		bwInstancesBtnLayout.setSpacing(true);
-		bwInstancesBtnLayout.setMargin(true);
-		bwInstancesBtnLayout.addComponent(taskExecuteBtn);
-		bwInstancesBtnLayout.addComponent(taskSkipBtn);
-		bwInstancesBtnLayout.addComponent(taskListFilter);
-
-		infoVL.setMargin(true);
-		infoVL.setSpacing(true);
-		infoVL.addComponent(taskInfoTable);
-
-		infoHL.addComponent(taskList);
-		infoHL.addComponent(infoVL);
-		infoHL.setComponentAlignment(taskList, Alignment.TOP_LEFT);
-
-		bwInstancesVL.addComponent(infoHL);
-		bwInstancesVL.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
-		bwInstancesVL.addComponent(bwInstancesBtnLayout);
-		bwInstancesVL.setComponentAlignment(bwInstancesBtnLayout, Alignment.TOP_LEFT);
-		
-
-
-		return bwInstancesVL;
-	}
-
-	private VerticalLayout initGoalViewTab() {
-		// Layouts
-		VerticalLayout bwInstancesVL = new VerticalLayout();
-		HorizontalLayout infoHL = new HorizontalLayout();
-		VerticalLayout infoVL = new VerticalLayout();
-		HorizontalLayout bwInstancesBtnLayout = new HorizontalLayout();
-
-		// Components
-		goalListFilter.setNullSelectionAllowed(false);
-		goalListFilter.addListener(new Property.ValueChangeListener() {
-			public void valueChange(ValueChangeEvent event) {
-				long bwInstanceOID = (Long) goalListFilter.getValue();
-				updateGoalList(bwInstanceOID);
-			}
-		});
-
-		goalList.setImmediate(true);
-		goalList.setNullSelectionAllowed(false);
-		initGoalListListener();
-
-		goalInfoTable.addContainerProperty("Name", String.class,  null);
-		goalInfoTable.addContainerProperty("Value",  String.class,  null);
-
-		// Goal buttons
-		HorizontalLayout goalBtnLayout = new HorizontalLayout();
-		goalBtnLayout.setSpacing(true);
-
-		Button goalExecuteBtn = new Button("Achieve");
+		// goal
+		Button goalExecuteBtn = new Button("Achieve Goal");
 		goalExecuteBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -607,7 +561,7 @@ public class BWPresentation extends Application {
 			}
 		});
 
-		Button goalSkipBtn = new Button("Skip");
+		Button goalSkipBtn = new Button("Skip Goal");
 		goalSkipBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -632,7 +586,7 @@ public class BWPresentation extends Application {
 			}
 		});
 
-		Button goalCreateBtn = new Button("Create");
+		Button goalCreateBtn = new Button("Create New Goal");
 		goalCreateBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -641,32 +595,152 @@ public class BWPresentation extends Application {
 		});
 
 		// Layouts - configurations
+//		taskInfoTable.setWidth("500px");
+//		taskInfoTable.setHeight("135px");
+		
+		//NEW
+		taskInfoTable.setWidth("692px");
+		taskInfoTable.setHeight("135px");
+		
+		//goal
 		goalList.setWidth("300px");
 		goalList.setHeight("450px");
-		goalInfoTable.setWidth("500px");
+		goalInfoTable.setWidth("692px");
 		goalInfoTable.setHeight("155px");
-		
 		
 		bwInstancesBtnLayout.setSpacing(true);
 		bwInstancesBtnLayout.setMargin(true);
+		bwInstancesBtnLayout.addComponent(taskExecuteBtn);
+		bwInstancesBtnLayout.addComponent(taskSkipBtn);
+
+		Label labelspace = new Label("");
+		labelspace.setWidth("800px");
+		bwInstancesBtnLayout.addComponent(labelspace);
+
 		bwInstancesBtnLayout.addComponent(goalExecuteBtn);
 		bwInstancesBtnLayout.addComponent(goalSkipBtn);
 		bwInstancesBtnLayout.addComponent(goalCreateBtn);
-		bwInstancesBtnLayout.addComponent(goalListFilter);
 		
+//		bwInstancesBtnLayout.addComponent(taskListFilter);
+
 		infoVL.setMargin(true);
 		infoVL.setSpacing(true);
+		infoVL.addComponent(taskInfoTable);
 		infoVL.addComponent(goalInfoTable);
 
-		infoHL.addComponent(goalList);
+		infoHL.addComponent(taskList);
 		infoHL.addComponent(infoVL);
-		infoHL.setComponentAlignment(goalList, Alignment.TOP_LEFT);
-
+		infoHL.addComponent(goalList);
+		infoHL.setComponentAlignment(taskList, Alignment.TOP_LEFT);
+		infoHL.setComponentAlignment(goalList, Alignment.TOP_RIGHT);
+		
 		bwInstancesVL.addComponent(infoHL);
 		bwInstancesVL.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
 		bwInstancesVL.addComponent(bwInstancesBtnLayout);
 		bwInstancesVL.setComponentAlignment(bwInstancesBtnLayout, Alignment.TOP_LEFT);
 
+		return bwInstancesVL;
+	}
+
+	private VerticalLayout initGoalViewTab() {
+		// Layouts
+		VerticalLayout bwInstancesVL = new VerticalLayout();
+//		HorizontalLayout infoHL = new HorizontalLayout();
+//		VerticalLayout infoVL = new VerticalLayout();
+//		HorizontalLayout bwInstancesBtnLayout = new HorizontalLayout();
+
+		// Components
+//		goalListFilter.setNullSelectionAllowed(false);
+//		goalListFilter.addListener(new Property.ValueChangeListener() {
+//			public void valueChange(ValueChangeEvent event) {
+//				long bwInstanceOID = (Long) goalListFilter.getValue();
+//				updateGoalList(bwInstanceOID);
+//			}
+//		});
+
+//		goalList.setImmediate(true);
+//		goalList.setNullSelectionAllowed(false);
+//		initGoalListListener();
+//
+//		goalInfoTable.addContainerProperty("Name", String.class,  null);
+//		goalInfoTable.addContainerProperty("Value",  String.class,  null);
+
+//		// Goal buttons
+//		HorizontalLayout goalBtnLayout = new HorizontalLayout();
+//		goalBtnLayout.setSpacing(true);
+//
+//		Button goalExecuteBtn = new Button("Achieve");
+//		goalExecuteBtn.addListener(new ClickListener() {
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				try {
+//					long workItemOID = (Long) goalList.getValue();
+//					generateGoalForm(workItemOID);
+//				} catch (java.lang.NullPointerException jle) {
+//					getMainWindow().showNotification("Please select a workItem to achieve");
+//				}
+//			}
+//		});
+//
+//		Button goalSkipBtn = new Button("Skip");
+//		goalSkipBtn.addListener(new ClickListener() {
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				try {
+//					long workItemOID = (Long) goalList.getValue();
+//				
+//					Transaction.begin();
+//					GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(workItemOID);
+//					User activeUser = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
+//					goalWorkItem.setUser(activeUser);
+//					Transaction.commit();
+//					
+//					Transaction.begin();
+//					BlendedWorkflow.getInstance().getWorkListManager().skipWorkItem(workItemOID);
+//					Transaction.commit();
+//					
+//					removeGoalWorkItem(workItemOID);
+//					getMainWindow().showNotification("WorkItem skipped", Notification.TYPE_TRAY_NOTIFICATION);
+//				} catch (java.lang.NullPointerException jle) {
+//					getMainWindow().showNotification("Please select a workItem to skip");
+//				}
+//			}
+//		});
+//
+//		Button goalCreateBtn = new Button("Create");
+//		goalCreateBtn.addListener(new ClickListener() {
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				generateNewGoalWindow();
+//			}
+//		});
+
+		// Layouts - configurations
+//		goalList.setWidth("300px");
+//		goalList.setHeight("450px");
+//		goalInfoTable.setWidth("500px");
+//		goalInfoTable.setHeight("155px");
+//		
+//		bwInstancesBtnLayout.setSpacing(true);
+//		bwInstancesBtnLayout.setMargin(true);
+//		bwInstancesBtnLayout.addComponent(goalExecuteBtn);
+//		bwInstancesBtnLayout.addComponent(goalSkipBtn);
+//		bwInstancesBtnLayout.addComponent(goalCreateBtn);
+//		bwInstancesBtnLayout.addComponent(goalListFilter);
+//		
+//		infoVL.setMargin(true);
+//		infoVL.setSpacing(true);
+//		infoVL.addComponent(goalInfoTable);
+//
+//		infoHL.addComponent(goalList);
+//		infoHL.addComponent(infoVL);
+//		infoHL.setComponentAlignment(goalList, Alignment.TOP_LEFT);
+//
+//		bwInstancesVL.addComponent(infoHL);
+//		bwInstancesVL.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
+//		bwInstancesVL.addComponent(bwInstancesBtnLayout);
+//		bwInstancesVL.setComponentAlignment(bwInstancesBtnLayout, Alignment.TOP_LEFT);
+//
 		return bwInstancesVL;
 	}
 
@@ -795,20 +869,22 @@ public class BWPresentation extends Application {
 		this.launchedList.setItemCaption(OID, name);
 		this.dataList.addItem(OID);
 		this.dataList.setItemCaption(OID, name);
-		this.taskListFilter.addItem(OID);
-		this.taskListFilter.setItemCaption(OID, name);
-		this.goalListFilter.addItem(OID);
-		this.goalListFilter.setItemCaption(OID, name);
+//		this.taskListFilter.addItem(OID);
+//		this.taskListFilter.setItemCaption(OID, name);
+//		this.goalListFilter.addItem(OID);
+//		this.goalListFilter.setItemCaption(OID, name);
 	}
 
 	public void addGoalWorkItem(long OID, String ID) {
 		this.goalList.addItem(OID);
-		this.goalList.setItemCaption(OID, ID);
+		this.goalList.setItemCaption(OID, "[GOAL] " + ID);
+		this.goalList.attach();
 	}
 
 	public void addTaskWorkItem(long OID, String ID) {
 		this.taskList.addItem(OID);
-		this.taskList.setItemCaption(OID, ID);
+		this.taskList.setItemCaption(OID, "[TASK] " + ID);
+		this.taskList.attach();
 	}
 
 	public void addUser(long oid, String name) {
@@ -822,12 +898,14 @@ public class BWPresentation extends Application {
 	public void removeGoalWorkItem(long OID) {
 		this.goalList.removeListener(goalListListener);
 		this.goalList.removeItem(OID);
+		this.goalInfoTable.removeAllItems();
 		initGoalListListener();
 	}
 
 	public void removeTaskWorkItem(long OID) {
 		this.taskList.removeListener(taskListListener);
 		this.taskList.removeItem(OID);
+		this.taskInfoTable.removeAllItems();
 		initTaskListListener();
 	}
 
