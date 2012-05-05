@@ -14,15 +14,11 @@ public class ProcessConstrainSucessEvent implements Callable<String> {
 
 	private static Logger log = Logger.getLogger("ConstrainSucessEventTask");
 
-//	private String caseID;
 	private WorkItemRecord wir;
-//	private Element caseData;
 	private RuleType ruleType;
 
 	public ProcessConstrainSucessEvent(String caseID, WorkItemRecord wir, Element caseData, RuleType ruleType) {
-//		this.caseID = caseID;
 		this.wir = wir;
-//		this.caseData = caseData;
 		this.ruleType = ruleType;
 	}
 
@@ -35,8 +31,11 @@ public class ProcessConstrainSucessEvent implements Callable<String> {
 			BlendedWorkflow.getInstance().getWorkletAdapter().notifyNewTaskWorkItem(wir, "TRUE");
 			Transaction.commit();
 		} else {
-			log.error(ruleType + " for wir: " + wir + " succeeded.");
+			Transaction.begin();
+			BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "FALSE");
+			Transaction.commit();
 		}
+		
 		log.info("End for WorkItemRecord: " + wir);
 		return "ConstrainSucessEventTask:Sucess";
 	}

@@ -69,7 +69,7 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 		String conclusion = JDOMUtil.elementToString(rdrNode.getConclusion());
 		if (conclusion.contains("SKIPPED"))
 			return "SKIPPED";
-		else if (conclusion.contains("FALSE"))
+		else if (conclusion.contains("FALSE") || conclusion.contains("UNDEFINED"))
 			return "FALSE";
 		else if (conclusion.contains("complete") || conclusion.contains("TRUE"))
 			return "TRUE";

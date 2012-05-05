@@ -1,11 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;
-import org.yawlfoundation.yawl.util.JDOMUtil;
 import org.yawlfoundation.yawl.worklet.rdr.RdrNode;
 import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 import org.yawlfoundation.yawl.worklet.support.WorkletEventListener;
@@ -18,8 +18,11 @@ import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 public class WorkletAdapterEventListener extends WorkletEventListener{
 
 	private static Logger log = Logger.getLogger("WorkletAdapterEventListener");
+	private ConcurrentHashMap<String, Boolean> startedCases;
 
-	public void WorkletEventListener() {}
+	public void WorkletEventListener() {
+		startedCases = new ConcurrentHashMap<String, Boolean>();
+	}
 
 	/**
 	 * Receive and process ItemPreconstraint and ItemConstraintViolation events.
@@ -43,14 +46,29 @@ public class WorkletAdapterEventListener extends WorkletEventListener{
 	@Override
 	public void constraintSuccessEvent(String caseID, WorkItemRecord wir, Element caseData, RuleType ruleType) {
 		log.info("ConstraintSuccessEvent for WorkItemRecord: " + wir + " begin.");
-//		log.info("caseData");
-//		log.info(JDOMUtil.elementToString(caseData));
+//		
 //		Transaction.begin();
-//		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-//		ProcessConstrainSucessEvent task = new ProcessConstrainSucessEvent(caseID, wir, caseData, ruleType);
-//		bwExecutorService.runTask(task);
+//		if (ruleType.equals(RuleType.ItemPreconstraint)) {
+			// First Task with no precondition
+//			if (!startedCases.containsKey(caseID)) {
+//				startedCases.put(caseID, true);
+				
+//				BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+//				ProcessConstrainSucessEvent task = new ProcessConstrainSucessEvent(caseID, wir, caseData, ruleType);
+//				bwExecutorService.runTask(task);
+				
+//			} else {
+//				log.info("PreCondition was False");
+//			}
+//		} else {
+//	
+//			BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+//			ProcessConstrainSucessEvent task = new ProcessConstrainSucessEvent(caseID, wir, caseData, ruleType);
+//			bwExecutorService.runTask(task);
+//
+//		}
 //		Transaction.commit();
-		
+
 		log.info("ConstraintSuccessEvent for WorkItemRecord: " + wir + " end.");
 	}
 

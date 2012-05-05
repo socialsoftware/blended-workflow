@@ -3,6 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.util.HashMap;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+
 public class OrCondition extends OrCondition_Base {
 
 	public OrCondition(Condition one, Condition two) {
@@ -99,5 +101,28 @@ public class OrCondition extends OrCondition_Base {
 	@Override
 	public String getRdrSkippedCondition() {
 		return "(" + getConditionOne().getRdrSkippedCondition() + " & " + getConditionTwo().getRdrSkippedCondition() + ")";
+	}
+	
+	/**
+	 * NEW
+	 */
+	@Override
+	public String getRdrUndefinedConditionNEW() {
+		return "(" + getConditionOne().getRdrUndefinedConditionNEW() + " & " + getConditionTwo().getRdrUndefinedConditionNEW() + ")";
+	}
+
+	@Override
+	public String getRdrSkippedConditionNEW() {
+		return "(" + getConditionOne().getRdrSkippedConditionNEW() + " & " + getConditionTwo().getRdrSkippedConditionNEW() + ")";
+	}
+
+	@Override
+	public String getRdrTrueConditionNEW() {
+		return "(" + getConditionOne().getRdrTrueConditionNEW() + " | " + getConditionTwo().getRdrTrueConditionNEW() + ")";
+	}
+
+	@Override
+	public String getRdrFalseConditionNEW() {
+		return "(" + getConditionOne().getRdrFalseConditionNEW() + " | " + getConditionTwo().getRdrFalseConditionNEW() + ")";
 	}
 }

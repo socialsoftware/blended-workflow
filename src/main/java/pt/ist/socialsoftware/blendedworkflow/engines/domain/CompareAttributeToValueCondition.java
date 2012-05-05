@@ -118,5 +118,45 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
 		return condition;
 	}
+	
+	
+	
+	/**
+	 * NEW
+	 */
+	@Override
+	public String getRdrUndefinedConditionNEW() {
+		String condition = "(";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + ")";
+		return condition;
+	}
+
+	@Override
+	public String getRdrSkippedConditionNEW() {
+		String condition = "(";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
+		return condition;
+	}
+
+	@Override
+	public String getRdrTrueConditionNEW() {
+		String condition = "(";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		condition += entityName + "_" + attributeName + " " + getOperator() + " " + getValue() + ")";
+		return condition;
+	}
+
+	@Override
+	public String getRdrFalseConditionNEW() {
+		return "(!" + getRdrTrueConditionNEW() + ")";
+	}
 
 }

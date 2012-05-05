@@ -167,5 +167,87 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 		condition += ")";
 		return condition;
 	}
+	
+	
+	/**
+	 * NEW
+	 */
+	@Override
+	public String getRdrUndefinedConditionNEW() {
+		String condition = "(";
+		String entityName = getEntity().getName().replaceAll(" ", "");
+		Boolean first = true;
+		
+		for (Attribute attribute : getEntity().getAttributes()) {
+			if (attribute.getIsKeyAttribute()) {
+				
+				if (first) {
+					String attributeName = attribute.getName().replaceAll(" ", "");
+					condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED;
+					first = false;
+				} else {
+					String attributeName = attribute.getName().replaceAll(" ", "");
+					condition += " | " + entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED;
+				}
+
+			}
+		}
+		condition += ")";
+		return condition;
+	}
+
+	@Override
+	public String getRdrSkippedConditionNEW() {
+		String condition = "(";
+		String entityName = getEntity().getName().replaceAll(" ", "");
+		Boolean first = true;
+		
+		for (Attribute attribute : getEntity().getAttributes()) {
+			if (attribute.getIsKeyAttribute()) {
+				
+				if (first) {
+					String attributeName = attribute.getName().replaceAll(" ", "");
+					condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED;
+					first = false;
+				} else {
+					String attributeName = attribute.getName().replaceAll(" ", "");
+					condition += " | " + entityName + "_" + attributeName + "_State = " + DataState.SKIPPED;
+				}
+			}
+		}
+		condition += ")";
+		return condition;
+	}
+
+	@Override
+	public String getRdrTrueConditionNEW() {
+		String condition = "(";
+		String entityName = getEntity().getName().replaceAll(" ", "");
+		
+		Boolean first = true;
+		
+		for (Attribute attribute : getEntity().getAttributes()) {
+			if (attribute.getIsKeyAttribute()) {
+
+				if (first) {
+					String attributeName = attribute.getName().replaceAll(" ", "");
+					condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED;
+					first = false;
+				} else {
+					String attributeName = attribute.getName().replaceAll(" ", "");
+					condition += " & " + entityName + "_" + attributeName + "_State = " + DataState.DEFINED;
+				}
+				
+			}
+		}
+		condition += ")";
+		return condition;
+	}
+
+	@Override
+	public String getRdrFalseConditionNEW() {
+		return "(FALSE_NODE = FALSE)";
+	}
+
 
 }

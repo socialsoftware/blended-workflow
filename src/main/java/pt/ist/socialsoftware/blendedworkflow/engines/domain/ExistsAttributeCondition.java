@@ -99,5 +99,44 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	}
 	
 	
+	/**
+	 * NEW
+	 */
+	@Override
+	public String getRdrUndefinedConditionNEW() {
+		String condition = "(";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + ")";
+		return condition;
+	}
+
+	@Override
+	public String getRdrSkippedConditionNEW() {
+		String condition = "(";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
+		return condition;
+	}
+
+	@Override
+	public String getRdrTrueConditionNEW() {
+		String condition = "(";
+		String attributeName = getAttribute().getName().replaceAll(" ", "");
+		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		
+		condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + ")";
+		return condition;
+	}
+
+	@Override
+	public String getRdrFalseConditionNEW() {
+		return "(FALSE_NODE = FALSE)";
+	}
+
+	
 
 }

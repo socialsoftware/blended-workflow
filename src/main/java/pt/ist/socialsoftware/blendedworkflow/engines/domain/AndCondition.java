@@ -105,4 +105,28 @@ public class AndCondition extends AndCondition_Base {
 		return condition;
 	}
 	
+	/**
+	 * NEW
+	 */
+	@Override
+	public String getRdrUndefinedConditionNEW() {
+		return "(" + getConditionOne().getRdrUndefinedConditionNEW() + " | " + getConditionTwo().getRdrUndefinedConditionNEW() + ")";
+	}
+
+	@Override
+	public String getRdrSkippedConditionNEW() {
+		return "(" + getConditionOne().getRdrSkippedConditionNEW() + " | " + getConditionTwo().getRdrSkippedConditionNEW() + ")";
+	}
+
+	@Override
+	public String getRdrTrueConditionNEW() {
+		return "(" + getConditionOne().getRdrTrueConditionNEW() + " & " + getConditionTwo().getRdrTrueConditionNEW() + ")";
+	}
+
+	@Override
+	public String getRdrFalseConditionNEW() {
+		return "(" + getConditionOne().getRdrFalseConditionNEW() + " & " + getConditionTwo().getRdrFalseConditionNEW() + ")";
+	}
+	
+	
 }

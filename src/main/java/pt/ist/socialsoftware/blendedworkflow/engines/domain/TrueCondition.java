@@ -64,4 +64,29 @@ public class TrueCondition extends TrueCondition_Base {
 		return "True";
 	}
 
+	/**
+	 * NEW
+	 */
+	@Override
+	public String getRdrUndefinedConditionNEW() {
+		return "True";
+	}
+
+	@Override
+	public String getRdrSkippedConditionNEW() {
+		return "True";
+	}
+
+	@Override
+	public String getRdrTrueConditionNEW() {
+		return "True";
+	}
+
+	@Override
+	public String getRdrFalseConditionNEW() {
+		return "True";
+	}
+	
+	
+
 }

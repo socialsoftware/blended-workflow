@@ -100,6 +100,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		updatePreConstrainWorkItemArguments();
 		updateConstrainViolationWorkItemArguments();
 		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
+		log.info("TaskWorkitem " + getID() + " is now in ConstrainViolation state -end");
 	}
 
 	@Override

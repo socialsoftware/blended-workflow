@@ -48,5 +48,13 @@ public abstract class Condition extends Condition_Base {
 	public abstract String getRdrTrueCondition();
 	public abstract String getRdrFalseCondition();
 	public abstract String getRdrSkippedCondition();
-
+	
+	/**
+	 * 
+	 * NEW
+	 */
+	public abstract String getRdrUndefinedConditionNEW();
+	public abstract String getRdrSkippedConditionNEW();
+	public abstract String getRdrTrueConditionNEW();
+	public abstract String getRdrFalseConditionNEW();
 }
