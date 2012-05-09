@@ -137,7 +137,7 @@ public class PreTaskForm extends VerticalLayout {
 	}
 
 	public void generateTaskForm(long workItemOID) {
-		Window taskWindow = new Window("");
+		Window taskWindow = new Window("Task Form");
 		taskWindow.setContent(new TaskForm(workItemOID));
 		taskWindow.setWidth("30%");
 		taskWindow.center();

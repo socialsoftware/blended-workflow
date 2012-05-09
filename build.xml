@@ -204,4 +204,31 @@
 		</junit>
 	</target>
 	
+	<!-- Test CreateGoalInstance -->
+	<target name="test-1" depends="compile-tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalInstanceServiceTest" />
+		</junit>
+	</target>
+	
+	<!-- Test CreateGoalInstance -->
+	<target name="test-2" depends="compile-tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.ReDoGoalInstanceServiceTest" />
+		</junit>
+	</target>
+	
+	<!-- Test CreateGoalInstance -->
+	<target name="test-3" depends="compile-tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.DisableConditionServiceTest" />
+		</junit>
+	</target>
+	
 </project>

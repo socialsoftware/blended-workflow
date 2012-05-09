@@ -72,10 +72,23 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
 	@Override
 	public void notifyEnabled() {
-		log.info("GoalWorkitem " + getID() + " is now in Enabled state");
-		getGoal().setState(GoalState.ENABLED);
-		setState(WorkItemState.ENABLED);
-		BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
+
+		int countSubGoals = 0;
+		for (Goal subGoal : getGoal().getSubGoals()) {
+			if (subGoal.getState().equals(GoalState.ACHIEVED))
+				countSubGoals++;
+		}
+		
+		if (countSubGoals == getGoal().getSubGoalsCount()) {
+			log.info("GoalWorkitem " + getID() + " is now in Enabled state");
+			getGoal().setState(GoalState.ENABLED);
+			setState(WorkItemState.ENABLED);
+			BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
+		} else {
+			log.info("GoalWorkitem " + getID() + " is now in Pending state");
+			setState(WorkItemState.GOAL_PENDING);
+			getGoal().setState(GoalState.DEACTIVATED);
+		}
 	}
 	
 	@Override
@@ -98,7 +111,8 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Completed", "[GOAL] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 
-		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
+		getBwInstance().getGoalModelInstance().checkPedingWorkItems();
+//		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
 	}
 
 	@Override
@@ -115,7 +129,8 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Skipped", "[GOAL] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
 
-		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
+		getBwInstance().getGoalModelInstance().checkPedingWorkItems();
+//		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
 	}
 	
 	@Override

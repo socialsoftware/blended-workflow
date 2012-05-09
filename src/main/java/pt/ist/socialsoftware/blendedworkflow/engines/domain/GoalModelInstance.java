@@ -23,4 +23,10 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_GOAL_NAME, name);
 	}
 
+	public void checkPedingWorkItems() {
+		for (Goal goal : getGoals()) {
+			goal.checkPending(getBwInstance());
+		}
+	}
+
 }

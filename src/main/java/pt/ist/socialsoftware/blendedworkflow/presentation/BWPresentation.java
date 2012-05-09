@@ -1,6 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 //import org.apache.log4j.Logger;
 
@@ -35,7 +38,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -91,12 +93,14 @@ public class BWPresentation extends Application {
 	private ListSelect taskList = new ListSelect();
 	private Table taskInfoTable = new Table("Task Information:");
 	private Property.ValueChangeListener taskListListener;
-//	private NativeSelect taskListFilter = new NativeSelect();
-
-	// GoalViewTab
 	private ListSelect goalList = new ListSelect();
 	private Table goalInfoTable = new Table("Goal Information:");
 	private Property.ValueChangeListener goalListListener;
+//	private NativeSelect taskListFilter = new NativeSelect();
+
+	// GoalViewTab
+	private ListSelect goalBWInstanceList = new ListSelect();
+	private TreeTable goalTable = new TreeTable("Goals");
 //	private NativeSelect goalListFilter = new NativeSelect();
 	
 	private Application bwPresentation;
@@ -272,12 +276,15 @@ public class BWPresentation extends Application {
 		loadedList.setWidth("300px");
 		loadedList.setHeight("450px");
 		loadedList.setImmediate(true);
-		loadedList.setNullSelectionAllowed(false);
 
 		loadedList.addListener(new Property.ValueChangeListener() {
 			public void valueChange(ValueChangeEvent event) {
+				if (loadedList.getValue() == null) {
+					bwSpecInfoTable.removeAllItems();
+					bwSpecJobsInfoTable.removeAllItems();
+				} else {
 				long bwSpecificationOID = (Long) loadedList.getValue();
-				updateBWSpecificationInfo(bwSpecificationOID);
+				updateBWSpecificationInfo(bwSpecificationOID); }
 			}
 		});
 
@@ -358,11 +365,14 @@ public class BWPresentation extends Application {
 		launchedList.setHeight("450px");
 
 		launchedList.setImmediate(true);
-		launchedList.setNullSelectionAllowed(false);
 		launchedList.addListener(new Property.ValueChangeListener() {
 			public void valueChange(ValueChangeEvent event) {
+				if (launchedList.getValue() == null) {
+					bwInstanceInfoTable.removeAllItems();
+					bwInstanceJobsInfoTable.removeAllItems();
+				} else {
 				long bwInstanceOID = (Long) launchedList.getValue();
-				updateBWInstanceInfo(bwInstanceOID);
+				updateBWInstanceInfo(bwInstanceOID); }
 			}
 		});
 
@@ -425,12 +435,15 @@ public class BWPresentation extends Application {
 		dataList.setHeight("450px");
 
 		dataList.setImmediate(true);
-		dataList.setNullSelectionAllowed(false);
 
 		dataList.addListener(new Property.ValueChangeListener() {
 			public void valueChange(ValueChangeEvent event) {
+				if (dataList.getValue() == null) {
+					entitydetailsTreetable.removeAllItems();
+				} else {
 				long bwSpecificationOID = (Long) dataList.getValue();
 				updateBWInstanceDataInfo(bwSpecificationOID);
+				}
 			}
 		});
 
@@ -469,7 +482,6 @@ public class BWPresentation extends Application {
 		HorizontalLayout bwInstancesBtnLayout = new HorizontalLayout();
 
 		// Components
-//		taskListFilter.setNullSelectionAllowed(false);
 //		taskListFilter.addListener(new Property.ValueChangeListener() {
 //			public void valueChange(ValueChangeEvent event) {
 //				long workItemOID = (Long) taskListFilter.getValue();
@@ -481,7 +493,6 @@ public class BWPresentation extends Application {
 		taskList.setHeight("450px");
 
 		taskList.setImmediate(true);
-		taskList.setNullSelectionAllowed(false);
 		initTaskListListener();
 
 		taskInfoTable = new Table("Task Information:");
@@ -491,7 +502,6 @@ public class BWPresentation extends Application {
 		
 		// goal
 		goalList.setImmediate(true);
-		goalList.setNullSelectionAllowed(false);
 		initGoalListListener();
 
 		goalInfoTable.addContainerProperty("Name", String.class,  null);
@@ -586,14 +596,7 @@ public class BWPresentation extends Application {
 			}
 		});
 
-		Button goalCreateBtn = new Button("Create New Goal");
-		goalCreateBtn.addListener(new ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				generateNewGoalWindow();
-			}
-		});
-
+		
 		// Layouts - configurations
 //		taskInfoTable.setWidth("500px");
 //		taskInfoTable.setHeight("135px");
@@ -614,12 +617,11 @@ public class BWPresentation extends Application {
 		bwInstancesBtnLayout.addComponent(taskSkipBtn);
 
 		Label labelspace = new Label("");
-		labelspace.setWidth("800px");
+		labelspace.setWidth("850px");
 		bwInstancesBtnLayout.addComponent(labelspace);
 
 		bwInstancesBtnLayout.addComponent(goalExecuteBtn);
 		bwInstancesBtnLayout.addComponent(goalSkipBtn);
-		bwInstancesBtnLayout.addComponent(goalCreateBtn);
 		
 //		bwInstancesBtnLayout.addComponent(taskListFilter);
 
@@ -644,104 +646,81 @@ public class BWPresentation extends Application {
 
 	private VerticalLayout initGoalViewTab() {
 		// Layouts
-		VerticalLayout bwInstancesVL = new VerticalLayout();
-//		HorizontalLayout infoHL = new HorizontalLayout();
-//		VerticalLayout infoVL = new VerticalLayout();
-//		HorizontalLayout bwInstancesBtnLayout = new HorizontalLayout();
+		VerticalLayout goalManagerVL = new VerticalLayout();
+		HorizontalLayout infoHL = new HorizontalLayout();
+		VerticalLayout infoVL = new VerticalLayout();
+		HorizontalLayout goalManagerBtnLayout = new HorizontalLayout();
 
 		// Components
-//		goalListFilter.setNullSelectionAllowed(false);
-//		goalListFilter.addListener(new Property.ValueChangeListener() {
-//			public void valueChange(ValueChangeEvent event) {
-//				long bwInstanceOID = (Long) goalListFilter.getValue();
-//				updateGoalList(bwInstanceOID);
-//			}
-//		});
+		goalBWInstanceList.setWidth("300px");
+		goalBWInstanceList.setHeight("450px");
+		goalBWInstanceList.setImmediate(true);
 
-//		goalList.setImmediate(true);
-//		goalList.setNullSelectionAllowed(false);
-//		initGoalListListener();
-//
-//		goalInfoTable.addContainerProperty("Name", String.class,  null);
-//		goalInfoTable.addContainerProperty("Value",  String.class,  null);
+		goalBWInstanceList.addListener(new Property.ValueChangeListener() {
+			public void valueChange(ValueChangeEvent event) {
+				if (goalBWInstanceList.getValue() == null) {
+					goalTable.removeAllItems();
+				} else {
+					long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+					updateGoalTreeInfo(bwInstanceOID);
+				}
+			}
+		});
 
-//		// Goal buttons
-//		HorizontalLayout goalBtnLayout = new HorizontalLayout();
-//		goalBtnLayout.setSpacing(true);
-//
-//		Button goalExecuteBtn = new Button("Achieve");
-//		goalExecuteBtn.addListener(new ClickListener() {
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				try {
-//					long workItemOID = (Long) goalList.getValue();
-//					generateGoalForm(workItemOID);
-//				} catch (java.lang.NullPointerException jle) {
-//					getMainWindow().showNotification("Please select a workItem to achieve");
-//				}
-//			}
-//		});
-//
-//		Button goalSkipBtn = new Button("Skip");
-//		goalSkipBtn.addListener(new ClickListener() {
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				try {
-//					long workItemOID = (Long) goalList.getValue();
-//				
-//					Transaction.begin();
-//					GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(workItemOID);
-//					User activeUser = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
-//					goalWorkItem.setUser(activeUser);
-//					Transaction.commit();
-//					
-//					Transaction.begin();
-//					BlendedWorkflow.getInstance().getWorkListManager().skipWorkItem(workItemOID);
-//					Transaction.commit();
-//					
-//					removeGoalWorkItem(workItemOID);
-//					getMainWindow().showNotification("WorkItem skipped", Notification.TYPE_TRAY_NOTIFICATION);
-//				} catch (java.lang.NullPointerException jle) {
-//					getMainWindow().showNotification("Please select a workItem to skip");
-//				}
-//			}
-//		});
-//
-//		Button goalCreateBtn = new Button("Create");
-//		goalCreateBtn.addListener(new ClickListener() {
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				generateNewGoalWindow();
-//			}
-//		});
+		goalTable.setWidth("500px");
+		goalTable.setHeight("400px");
+		goalTable.addContainerProperty("Goal", String.class, "");
+		goalTable.addContainerProperty("WorkItems Created", String.class, "");
+		
+		// Goal buttons
+		Button goalActivateBtn = new Button("Activate Goal");
+		goalActivateBtn.addListener(new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				generateActivateGoalWindow();
+			}
+		});
+
+		Button goalReDoBtn = new Button("ReDo Goal");
+		goalReDoBtn.addListener(new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				generateReDoGoalWindow();
+			}
+		});
+
+		Button goalCreateBtn = new Button("Create New Goal");
+		goalCreateBtn.addListener(new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				generateNewGoalWindow();
+			}
+		});
+
 
 		// Layouts - configurations
-//		goalList.setWidth("300px");
-//		goalList.setHeight("450px");
-//		goalInfoTable.setWidth("500px");
-//		goalInfoTable.setHeight("155px");
-//		
-//		bwInstancesBtnLayout.setSpacing(true);
-//		bwInstancesBtnLayout.setMargin(true);
-//		bwInstancesBtnLayout.addComponent(goalExecuteBtn);
-//		bwInstancesBtnLayout.addComponent(goalSkipBtn);
-//		bwInstancesBtnLayout.addComponent(goalCreateBtn);
-//		bwInstancesBtnLayout.addComponent(goalListFilter);
-//		
-//		infoVL.setMargin(true);
-//		infoVL.setSpacing(true);
-//		infoVL.addComponent(goalInfoTable);
-//
-//		infoHL.addComponent(goalList);
-//		infoHL.addComponent(infoVL);
-//		infoHL.setComponentAlignment(goalList, Alignment.TOP_LEFT);
-//
-//		bwInstancesVL.addComponent(infoHL);
-//		bwInstancesVL.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
-//		bwInstancesVL.addComponent(bwInstancesBtnLayout);
-//		bwInstancesVL.setComponentAlignment(bwInstancesBtnLayout, Alignment.TOP_LEFT);
-//
-		return bwInstancesVL;
+		goalManagerBtnLayout.setSpacing(true);
+		goalManagerBtnLayout.setMargin(true);
+
+		infoVL.setMargin(true);
+		infoVL.setSpacing(true);
+		infoVL.addComponent(goalTable);
+		infoVL.setComponentAlignment(goalTable, Alignment.TOP_LEFT);
+
+		infoHL.addComponent(goalBWInstanceList);
+		infoHL.addComponent(infoVL);
+		infoHL.setComponentAlignment(goalBWInstanceList, Alignment.TOP_LEFT);
+		
+		goalManagerBtnLayout.addComponent(goalActivateBtn);
+		goalManagerBtnLayout.addComponent(goalReDoBtn);
+		goalManagerBtnLayout.addComponent(goalCreateBtn);
+
+		goalManagerVL.addComponent(infoHL);
+		goalManagerVL.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
+		goalManagerVL.addComponent(goalManagerBtnLayout);
+		goalManagerVL.setComponentAlignment(goalManagerBtnLayout, Alignment.TOP_LEFT);
+
+		return goalManagerVL;
 	}
 
 	/******************************
@@ -750,8 +729,11 @@ public class BWPresentation extends Application {
 	private void initTaskListListener() {
 		taskList.addListener(taskListListener = new Property.ValueChangeListener() {
 			public void valueChange(ValueChangeEvent event) {
+				if (taskList.getValue() == null) {
+					taskInfoTable.removeAllItems();
+				} else {
 				long workItemOID = (Long) taskList.getValue();
-				updateTaskView(workItemOID);
+				updateTaskView(workItemOID); }
 			}
 		});
 	}
@@ -759,8 +741,12 @@ public class BWPresentation extends Application {
 	private void initGoalListListener() {
 		goalList.addListener(goalListListener = new Property.ValueChangeListener() {
 			public void valueChange(ValueChangeEvent event) {
-				long workItemOID = (Long) goalList.getValue();
-				updateGoalView(workItemOID);
+				if (goalList.getValue() == null) {
+					goalInfoTable.removeAllItems();
+				} else {
+					long workItemOID = (Long) goalList.getValue();
+					updateGoalView(workItemOID);
+				}
 			}
 		});
 	}
@@ -845,7 +831,27 @@ public class BWPresentation extends Application {
 		goalWindow.center();
 		getMainWindow().addWindow(goalWindow);		
 	}
-
+	
+	public void generateActivateGoalWindow() {
+		Window newGoalWindow = new Window("Activate Goal");
+		newGoalWindow.setContent(new ActivateGoalForm());
+		newGoalWindow.center();
+		newGoalWindow.setClosable(false);
+		newGoalWindow.setDraggable(false);
+		newGoalWindow.setResizable(false);
+		getMainWindow().addWindow(newGoalWindow);
+	}
+	
+	public void generateReDoGoalWindow() {
+		Window newGoalWindow = new Window("Redo Goal");
+		newGoalWindow.setContent(new RedoGoalForm());
+		newGoalWindow.center();
+		newGoalWindow.setClosable(false);
+		newGoalWindow.setDraggable(false);
+		newGoalWindow.setResizable(false);
+		getMainWindow().addWindow(newGoalWindow);
+	}
+	
 	public void generateNewGoalWindow() {
 		Window newGoalWindow = new Window("New Goal Form");
 		newGoalWindow.setContent(new NewGoalForm());
@@ -869,6 +875,8 @@ public class BWPresentation extends Application {
 		this.launchedList.setItemCaption(OID, name);
 		this.dataList.addItem(OID);
 		this.dataList.setItemCaption(OID, name);
+		this.goalBWInstanceList.addItem(OID);
+		this.goalBWInstanceList.setItemCaption(OID, name);
 //		this.taskListFilter.addItem(OID);
 //		this.taskListFilter.setItemCaption(OID, name);
 //		this.goalListFilter.addItem(OID);
@@ -1040,6 +1048,45 @@ public class BWPresentation extends Application {
 				}
 			}
 		}
+		Transaction.commit();
+	}
+	
+	public void updateGoalTreeInfo(long OID) {
+		Transaction.begin();
+		goalTable.removeAllItems();
+
+		BWInstance bwInstance = AbstractDomainObject.fromOID(OID);
+		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+		
+		// Add Goals
+		HashMap<Goal, Object> addedGoals = new HashMap<Goal, Object>();
+		for (Goal goal : goalModelInstance.getGoals()) {
+			int timesExecuted = 0;
+			if (goal.getGoalWorkItem() != null) {
+				timesExecuted = 1;
+			}
+			
+			Object goalItem = goalTable.addItem(new Object[] {goal.getName(), timesExecuted}, null);
+			addedGoals.put(goal, goalItem);
+		}
+		
+		// Goal Relations
+		for (Goal goal : goalModelInstance.getGoals()) {
+			if (goal.getParentGoal() != null) {
+				Object goalObject = addedGoals.get(goal);
+				Object parentGoalObject = addedGoals.get(goal.getParentGoal());
+				goalTable.setParent(goalObject, parentGoalObject);
+				if (goal.getSubGoalsCount() == 0) {
+					goalTable.setChildrenAllowed(goalObject, false);
+				}
+			}
+		}
+		
+		Iterator<Entry<Goal, Object>> itr = addedGoals.entrySet().iterator();
+		while(itr.hasNext()) {
+			goalTable.setCollapsed(itr.next(), false);
+		}
+
 		Transaction.commit();
 	}
 

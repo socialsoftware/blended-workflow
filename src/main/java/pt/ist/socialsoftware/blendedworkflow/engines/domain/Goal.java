@@ -11,6 +11,10 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 public class Goal extends Goal_Base {
 
 //	private Logger log = Logger.getLogger("Goal");
+	
+	public Goal(){
+		super();
+	}
 
 	public enum GoalState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
 
@@ -154,4 +158,25 @@ public class Goal extends Goal_Base {
 		}
 	}
 
+	public void checkPending(BWInstance bwInstance) {
+//		int subgoalsAchievedCount = 0;
+
+		if (getGoalWorkItem() != null) {
+			if (getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
+				getGoalWorkItem().notifyEnabled();
+			}
+		}
+	}
+	
+//				for (Goal goal : getSubGoals()) {
+//					if ((goal.getState() == GoalState.ACHIEVED) || (goal.getState() == GoalState.SKIPPED)) {
+//						subgoalsAchievedCount++;
+//					}
+//				}
+//				if (getSubGoalsCount() == subgoalsAchievedCount) {
+//					getGoalWorkItem().notifyEnabled();
+//				}
+//			}
+//		}
+//	}
 }

@@ -5,7 +5,9 @@ import org.apache.log4j.Logger;
 import com.vaadin.ui.Window.Notification;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalInstanceService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateNewGoalService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.RedoGoalService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
@@ -114,12 +116,32 @@ public class WorkListManager {
 	
 	public void createGoal(long bwInstanceOID, String goalName, String goalDescription, long parentGoalID, String goalCondition, String userID){
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		CreateGoalService service = new CreateGoalService(bwInstanceOID, goalName, goalDescription, parentGoalID, goalCondition, userID);
+		CreateNewGoalService service = new CreateNewGoalService(bwInstanceOID, goalName, goalDescription, parentGoalID, goalCondition, userID);
 		bwExecutorService.runTask(service);
 	}
 	
 	public void notifyException(BlendedWorkflowError bwe) {
 		getBwPresentation().getMainWindow().showNotification(bwe.toString(), Notification.TYPE_ERROR_MESSAGE);
+	}
+
+	public void notifyReEnabledWorkItem(GoalWorkItem workItem) {
+		log.info("WorkItem " + workItem.getID() + " is now re-enabled. with OID" + workItem.getOID());
+		getBwPresentation().addGoalWorkItem(workItem.getOID(), workItem.getID() + "(ReEnabled)");
+	}
+
+	public void createGoalInstance(long bwInstanceOID, long parentGoalID) {
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+		CreateGoalInstanceService service = new CreateGoalInstanceService(bwInstanceOID, parentGoalID);
+		bwExecutorService.runTask(service);
+	}
+
+	public void redoGoal(long bwInstanceOID, long goalOID, String userID) {
+		log.info("REDO" + bwInstanceOID + "-" + goalOID);
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+		log.info("REDO" + bwExecutorService);
+		RedoGoalService service = new RedoGoalService(bwInstanceOID, goalOID, userID);
+		log.info("REDO" + service);
+		bwExecutorService.runTask(service);
 	}
 
 }

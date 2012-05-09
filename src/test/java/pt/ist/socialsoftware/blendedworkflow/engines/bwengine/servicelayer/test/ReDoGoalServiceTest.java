@@ -2,8 +2,6 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test
 
 import static org.junit.Assert.*;
 
-import junit.framework.JUnit4TestAdapter;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -14,29 +12,33 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import junit.framework.JUnit4TestAdapter;
+
 import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal.GoalState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateNewGoalService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 @RunWith(JMock.class)
-public class CreateGoalServiceTest {
+public class ReDoGoalServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
 	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl";
@@ -44,18 +46,16 @@ public class CreateGoalServiceTest {
 	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
-//	private static String SECONDOPINION_ID = "Second Opinion.4";
-	private static String SECONDOPINION_ID = "Second Opinion.5";
-	private static String SECONDOPINION_NAME = "Second Opinion";
-	private static String SECONDOPINION_DESCRIPTION = "Other doctor opinion.";
-	private static String SECONDOPINION_CONDITION = "existsEntity(Episode)";
-//	private static String SECONDOPINION_CONDITION = "existsEntity(Second Opinion) and existsAttribute(Second Opinion.Report.STRING.true)";
-	private static String SECONDOPINION_PARENTGOAL_NAME_1 = "Write Medical Report";
-	private static String SECONDOPINION_PARENTGOAL_NAME_2 = "Prescribe";
+	private static String GOALWORKITEM_PRESCRIBE_ID = "Prescribe.3";
+	private static String GOALWORKITEM_COLLECTDATA_ID = "Collect Data.1";
+	private static String GOALWORKITEM_PHYSICALEXAMINATION_ID = "Physical Examination.2";
+	
+	private static String GOALWORKITEM_PRESCRIBE_INPUT_ATT1 = "Recipe";
+	private static String GOALWORKITEM_PRESCRIBE_INPUT_VALUE1 = "Aspirin";
 	private static String USER_ID = "BlendedWorkflow";
 
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(CreateGoalServiceTest.class);
+		return new JUnit4TestAdapter(ReDoGoalServiceTest.class);
 	}
 
 	private Mockery context = new Mockery() {
@@ -85,12 +85,11 @@ public class CreateGoalServiceTest {
 				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
 				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
 				allowing(workletAdapter).notifyWorkItemPreConstraint(with(any(TaskWorkItem.class)));
-				allowing(workletAdapter).addGoal(with(any(BWInstance.class)), with(any(Goal.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
 				allowing(workListManager).notifySkippedWorkItem(with(any(WorkItem.class)));
 				allowing(workListManager).notifyEnabledWorkItem(with(any(WorkItem.class)));
-				allowing(workListManager).notifyPendingWorkItem(with(any(WorkItem.class)));
+				allowing(workListManager).notifyCompletedWorkItem(with(any(WorkItem.class)));
 			}
 		});
 
@@ -110,6 +109,17 @@ public class CreateGoalServiceTest {
 		Transaction.commit();
 
 		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).call();
+
+		Transaction.begin();
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+		WorkItem workItem = bwInstance.getWorkItem(GOALWORKITEM_COLLECTDATA_ID);
+		workItem.setState(WorkItemState.ENABLED);
+		workItem = bwInstance.getWorkItem(GOALWORKITEM_PHYSICALEXAMINATION_ID);
+		workItem.setState(WorkItemState.ENABLED);
+		workItem = bwInstance.getWorkItem(GOALWORKITEM_PRESCRIBE_ID);
+		workItem.setState(WorkItemState.ENABLED);
+		Transaction.commit();
 	}
 
 	@After
@@ -118,29 +128,23 @@ public class CreateGoalServiceTest {
 	}
 
 	@Test
-	public void createGoalWithoutAffectingParentGoal() throws Exception {
-		Transaction.begin();
-		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-		long bwInstanceOID = bwInstance.getOID();
-		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-		Goal parentGoal = goalModelInstance.getGoal(SECONDOPINION_PARENTGOAL_NAME_1);
-		long parentGoalOID = parentGoal.getOID();
-		Transaction.commit();
-
-		new CreateNewGoalService(bwInstanceOID, SECONDOPINION_NAME, SECONDOPINION_DESCRIPTION, parentGoalOID, SECONDOPINION_CONDITION, USER_ID).call();
-
+	public void checkInOneWorkItem() throws Exception {
+		WorkItem workItem = getWorkItem(GOALWORKITEM_PRESCRIBE_ID);
+		long workItemOID = workItem.getOID();
+		AttributeInstance attributeInstance = getAttributeInstance(GOALWORKITEM_PRESCRIBE_INPUT_ATT1);
+		setWorkItemArgumentValue(workItem, attributeInstance, GOALWORKITEM_PRESCRIBE_INPUT_VALUE1);
+		
+		new CheckInWorkItemService(workItemOID).call();
 		boolean committed = false;
 		try {
 			Transaction.begin();
 
-			Goal secondOpinion = goalModelInstance.getGoal(SECONDOPINION_NAME);
-			WorkItem workItem = bwInstance.getWorkItem(SECONDOPINION_ID);
-
-			assertEquals(7, goalModelInstance.getGoalsCount()); // Created 6 Goals on Load +1
-			assertEquals(SECONDOPINION_NAME, secondOpinion.getName());
-			assertEquals(SECONDOPINION_ID, workItem.getID());
-
+			assertEquals(WorkItemState.CHECKED_IN, workItem.getState());
+			
+			for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
+				assertEquals(GOALWORKITEM_PRESCRIBE_INPUT_VALUE1, workItemArgument.getValue());
+			}
+			
 			Transaction.commit();
 			committed = true;
 		} finally {
@@ -150,39 +154,38 @@ public class CreateGoalServiceTest {
 		}
 	}
 
-	@Test
-	public void createGoalAffectingParentGoal() throws Exception {
+	private WorkItem getWorkItem(String ID) throws BlendedWorkflowException {
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-		long bwInstanceOID = bwInstance.getOID();
-		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-		Goal parentGoal = goalModelInstance.getGoal(SECONDOPINION_PARENTGOAL_NAME_2);
-		long parentGoalOID = parentGoal.getOID();
+		WorkItem workItem = bwInstance.getWorkItem(ID);
 		Transaction.commit();
-
-		new CreateNewGoalService(bwInstanceOID, SECONDOPINION_NAME, SECONDOPINION_DESCRIPTION,  parentGoalOID, SECONDOPINION_CONDITION, USER_ID).call();
-
-		boolean committed = false;
-		try {
-			Transaction.begin();
-
-			Goal secondOpinion = goalModelInstance.getGoal(SECONDOPINION_NAME);
-			WorkItem workItem = bwInstance.getWorkItem(SECONDOPINION_ID);
-
-			assertEquals(7, goalModelInstance.getGoalsCount()); // Created 6 Goals on Load +1
-			assertEquals(SECONDOPINION_NAME, secondOpinion.getName());
-			assertEquals(SECONDOPINION_ID, workItem.getID());
-
-			assertEquals(GoalState.DEACTIVATED, parentGoal.getState());
-			assertEquals(WorkItemState.GOAL_PENDING, parentGoal.getGoalWorkItem().getState());
-
-			Transaction.commit();
-			committed = true;
-		} finally {
-			if (!committed) {
-				Transaction.abort();
+		return workItem;
+	}
+	
+	private AttributeInstance getAttributeInstance(String name) throws BlendedWorkflowException {
+		Transaction.begin();
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		AttributeInstance attributeInstance = null;
+		for (Attribute attribute : dataModelInstance.getAttributes()) {
+			if (attribute.getName().equals(name)) {
+				attributeInstance = attribute.getAttributeInstances().get(0); // FIXME:
 			}
 		}
+		Transaction.commit();
+		return attributeInstance;
 	}
+	
+	private void setWorkItemArgumentValue(WorkItem workItem,AttributeInstance attributeInstance, String value) {
+		Transaction.begin();
+		for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
+			if (workItemArgument.getAttributeInstance().getID().equals(attributeInstance.getID())) {
+				workItemArgument.setValue(value);
+			}
+		}
+		Transaction.commit();
+	}
+
 }

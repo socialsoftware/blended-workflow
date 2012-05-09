@@ -21,7 +21,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
-public class CreateGoalService implements Callable<String> {
+public class CreateNewGoalService implements Callable<String> {
 
 	private static Logger log = Logger.getLogger("CreateGoalService");
 	private BWInstance bwInstance;
@@ -31,7 +31,7 @@ public class CreateGoalService implements Callable<String> {
 	private String condition;
 	private String userID;
 
-	public CreateGoalService (long bwInstanceOID, String name, String description, long parentGoalOID, String condition,  String userID) {
+	public CreateNewGoalService (long bwInstanceOID, String name, String description, long parentGoalOID, String condition,  String userID) {
 		this.bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		this.parentGoal = AbstractDomainObject.fromOID(parentGoalOID);
 		this.name = name;
@@ -63,8 +63,8 @@ public class CreateGoalService implements Callable<String> {
 			BlendedWorkflow.getInstance().getWorkletAdapter().addGoal(bwInstance, newGoal);
 			
 			// Evaluate WorkItems State
-			newGoal.updateParentGoal();
-			goalModelInstance.getEnabledWorkItems();
+//			newGoal.updateParentGoal();
+//			goalModelInstance.getEnabledWorkItems();
 
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			String date = dateFormat.format(Calendar.getInstance().getTime());

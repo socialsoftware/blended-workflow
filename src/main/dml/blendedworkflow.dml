@@ -11,42 +11,6 @@ class BlendedWorkflow {
 	Integer bwSpecificationCounter;
 }
 
-////NEW
-//class AchieveGoal { // == Goal; Goal to superclass
-//}
-//
-//class MaintainGoal {
-//}
-//
-//class ForAllCondition extends Condition {
-//}
-//
-//relation GoalHasEntity {
-//	Goal playsRole contextGoals {multiplicity 0..*;}
-//	Entity playsRole entityContext {multiplicity 0..1;}
-//}
-//
-//relation GoalWorkItemHasEntityInstances {
-//	GoalWorkItem playsRole contextGoalWorkItem {multiplicity 0..*;}
-//	EntityInstance playsRole entityInstanceContext {multiplicity 0..1;}
-//}
-//
-//relation AchieveGoalHasSucessCondition {
-//	AchieveGoal playsRole achieveGoal {multiplicity 0..1;}
-//	Condition playsRole successCondition {multiplicity 0..1;}
-//}
-//
-//relation AchieveGoalHasActivateCondition {
-//	AchieveGoal playsRole achieveGoal {multiplicity 0..1;}
-//	Condition playsRole activateCondition {multiplicity 0..*;}
-//}
-//
-//relation MaintainGoalHasMaintainCondition {
-//	MaintainGoal playsRole achieveGoal {multiplicity 0..1;}
-//	Condition playsRole maintainCondition {multiplicity 0..1;}
-//}
-///NEW
-
 class OrganizationalModel;
 
 class Role {
@@ -148,10 +112,12 @@ class CompareAttributeToValueCondition extends Condition {
 
 class TrueCondition extends Condition;
 
+class ForAllCondition extends Condition {
+}
+
 class DataModel;
 
-class DataModelInstance extends DataModel { 
-}
+class DataModelInstance extends DataModel;
 
 class Entity {
 	String name;
@@ -478,3 +444,31 @@ relation WorkItemHasUsers {
 	User playsRole user {multiplicity 0..1;}
 }
 
+//NEWGoalModel Relations
+relation GoalHasEntity {
+	Goal playsRole goalContext {multiplicity 0..*;}
+	Entity playsRole entityContext {multiplicity 0..1;}
+}
+
+relation GoalWorkItemHasEntityInstances {
+	GoalWorkItem playsRole goalWorkItemContext {multiplicity 0..*;}
+	EntityInstance playsRole entityInstanceContext {multiplicity 0..1;}
+}
+
+class AchieveGoal extends Goal;
+class MaintainGoal extends Goal;
+
+relation AchieveGoalHasSucessCondition {
+	AchieveGoal playsRole successConditionAchieveGoal {multiplicity 0..1;}
+	Condition playsRole successCondition {multiplicity 0..1;}
+}
+
+relation AchieveGoalHasActivateConditions {
+	AchieveGoal playsRole activateConditionsAchieveGoal {multiplicity 0..1;}
+	Condition playsRole activateConditions {multiplicity 0..*;}
+}
+
+relation MaintainGoalHasMaintainCondition {
+	MaintainGoal playsRole maintainConditionAchieveGoal {multiplicity 0..1;}
+	Condition playsRole maintainCondition {multiplicity 0..1;}
+}
