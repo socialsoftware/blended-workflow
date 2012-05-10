@@ -60,7 +60,7 @@ public class CreateNewGoalService implements Callable<String> {
 			newGoal.setRole(defaultRole);
 			
 			// Add  the Goal to BWSpecification the WorkletService RdrSet
-			BlendedWorkflow.getInstance().getWorkletAdapter().addGoal(bwInstance, newGoal);
+//			BlendedWorkflow.getInstance().getWorkletAdapter().addGoal(bwInstance, newGoal);
 			
 			// Evaluate WorkItems State
 //			newGoal.updateParentGoal();

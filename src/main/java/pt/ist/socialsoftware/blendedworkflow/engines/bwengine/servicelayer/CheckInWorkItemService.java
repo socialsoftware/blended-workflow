@@ -8,6 +8,7 @@ import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.shared.PrintBWSpecification;
 
 public class CheckInWorkItemService implements Callable<String> {
 
@@ -24,6 +25,7 @@ public class CheckInWorkItemService implements Callable<String> {
 		Transaction.begin();		
 		this.workItem.notifyCheckedIn();
 		Transaction.commit();
+//		PrintBWSpecification.workItems(workItem.getBwInstance().getBwSpecification().getName());
 		log.info("END");
 		return "CheckInWorkItemService:Sucess";
 	}

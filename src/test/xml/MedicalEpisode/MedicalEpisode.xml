@@ -152,36 +152,48 @@
 		<bw:RootGoal>
 			<bw:Name>Diagnose Patient</bw:Name>
 			<bw:description>Diagnose the Patient</bw:description>
-			<bw:Condition>existsEntity(Patient) and existsEntity(Medical Report) and compareAttributeTo(Medical Report.Closed,=.true) and compareAttributeTo(Episode.Closed,=.true)</bw:Condition>
+			<bw:SucessCondition>existsEntity(Patient) and existsEntity(Medical Report) and compareAttributeTo(Medical Report.Closed,=.true) and compareAttributeTo(Episode.Closed,=.true)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>true</bw:ActivateCondition1>
 		</bw:RootGoal>
 		<bw:Goal>
 			<bw:Name>Observe Patient</bw:Name>
 			<bw:description>Observe the Patient</bw:description>
-			<bw:Condition>existsEntity(Episode) and existsEntity(Patient) and existsAttribute(Patient.Gender) and existsAttribute(Patient.Address) and existsAttribute(Patient.PhoneNumber) and existsAttribute(Patient Data.Medical Examination)</bw:Condition>
+			<bw:SucessCondition>existsEntity(Episode) and existsEntity(Patient) and existsAttribute(Patient.Gender) and existsAttribute(Patient.Address) and existsAttribute(Patient.PhoneNumber) and existsAttribute(Patient Data.Medical Examination)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>true</bw:ActivateCondition1>
 			<bw:ParentName>Diagnose Patient</bw:ParentName>
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Name>Write Medical Report</bw:Name>
 			<bw:description>Write the Patient Medical Report</bw:description>
-			<bw:Condition>existsAttribute(Medical Report.Report)</bw:Condition>
+			<bw:SucessCondition>existsAttribute(Medical Report.Report)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>existsAttribute(Prescription.Recipe)</bw:ActivateCondition1>
 			<bw:ParentName>Diagnose Patient</bw:ParentName>
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Name>Collect Data</bw:Name>
 			<bw:description>Collect the Patient height and weight</bw:description>
-			<bw:Condition>existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight)</bw:Condition>
+			<bw:SucessCondition>existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>true</bw:ActivateCondition1>
 			<bw:ParentName>Observe Patient</bw:ParentName>
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Name>Physical Examination</bw:Name>
 			<bw:description>Physical Examine the Patient and write the physical report</bw:description>
-			<bw:Condition>existsAttribute(Patient Data.Physical Report) and existsAttribute(Patient Data.Physical Examination)</bw:Condition>
+			<bw:SucessCondition>existsAttribute(Patient Data.Physical Report) and existsAttribute(Patient Data.Physical Examination)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>true</bw:ActivateCondition1>
 			<bw:ParentName>Observe Patient</bw:ParentName>
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Name>Prescribe</bw:Name>
 			<bw:description>Prescribe the Patient some drugs</bw:description>
-			<bw:Condition>existsAttribute(Prescription.Recipe)</bw:Condition>
+			<bw:SucessCondition>existsAttribute(Prescription.Recipe)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>true</bw:ActivateCondition1>
 			<bw:ParentName>Write Medical Report</bw:ParentName>
 		</bw:Goal>
 	</bw:GoalModel>

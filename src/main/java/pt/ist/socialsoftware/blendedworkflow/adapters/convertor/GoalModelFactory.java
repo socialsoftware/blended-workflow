@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -34,12 +35,25 @@ public class GoalModelFactory {
 		Element rootGoalXML = goalModelXML.getChild("RootGoal", bwNamespace);
 		String rootGoalName = rootGoalXML.getChildText("Name", bwNamespace);
 		String rootGoalDescription = rootGoalXML.getChildText("description", bwNamespace);
-		String rootGoalConditionString = rootGoalXML.getChildText("Condition", bwNamespace);
+		
+		String rootGoalConditionString = rootGoalXML.getChildText("SucessCondition", bwNamespace);
 		rootGoalConditionString = ConditionFactory.getRelationDependencies(dataModel, rootGoalConditionString);
 		Condition rootGoalCondition = ConditionFactory.createCondition(dataModel, rootGoalConditionString);
+		
 		AchieveGoal rootGoal = new AchieveGoal(goalModel, rootGoalName, rootGoalDescription, rootGoalCondition);
 		rootGoal.setUser(defaultUser);
 		rootGoal.setRole(defaultRole);
+		
+		// Activate Conditions
+		int activateConditionCount = Integer.parseInt(rootGoalXML.getChildText("ActivateConditionCount", bwNamespace));
+		for (int i = 0; i < activateConditionCount ; i++) {
+			String activateConditionXML = "ActivateCondition" + (i+1);
+			String activateConditionString = rootGoalXML.getChildText(activateConditionXML, bwNamespace);
+			activateConditionString = ConditionFactory.getRelationDependencies(dataModel, activateConditionString);
+			Condition activateCondition = ConditionFactory.createCondition(dataModel, activateConditionString);
+			rootGoal.addActivateConditions(activateCondition);
+		}
+		
 
 		List<?> goals = goalModelXML.getChildren("Goal", bwNamespace);
 		for (Object goal : goals) {
@@ -47,13 +61,26 @@ public class GoalModelFactory {
 
 			String goalName = goalXML.getChildText("Name", bwNamespace);
 			String goalDescription = goalXML.getChildText("description", bwNamespace);
-			String goalConditionString = goalXML.getChildText("Condition", bwNamespace);
+			
+			String goalConditionString = goalXML.getChildText("SucessCondition", bwNamespace);
 			goalConditionString =ConditionFactory.getRelationDependencies(dataModel, goalConditionString);
 			Condition goalCondition = ConditionFactory.createCondition(dataModel, goalConditionString);
+			
 			AchieveGoal parentGoal = goalModel.getGoal(goalXML.getChildText("ParentName", bwNamespace)); 
 			AchieveGoal newGoal = new AchieveGoal(goalModel, parentGoal, goalName, goalDescription, goalCondition);
 			newGoal.setUser(defaultUser);
 			newGoal.setRole(defaultRole);
+			
+			// Activate Conditions
+			activateConditionCount = Integer.parseInt(goalXML.getChildText("ActivateConditionCount", bwNamespace));
+			for (int i = 0; i < activateConditionCount ; i++) {
+				String activateConditionXML = "ActivateCondition" + (i+1);
+				String activateConditionString = goalXML.getChildText(activateConditionXML, bwNamespace);
+				activateConditionString = ConditionFactory.getRelationDependencies(dataModel, activateConditionString);
+				Condition activateCondition = ConditionFactory.createCondition(dataModel, activateConditionString);
+				newGoal.addActivateConditions(activateCondition);
+			}
+			
 		}
 	}
 }

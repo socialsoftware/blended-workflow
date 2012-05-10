@@ -24,7 +24,9 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 	}
 
 	public void checkPedingWorkItems() {
+		System.out.println("X");
 		for (AchieveGoal goal : getAchieveGoals()) {
+			System.out.println("X1");
 			goal.checkPending(getBwInstance());
 		}
 	}

@@ -114,7 +114,8 @@ public class PrintBWSpecification {
 		System.out.println("----------------------------------------------------------");
 		for (AchieveGoal goal : goalModel.getAchieveGoals()) {
 			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
-//			System.out.println("Condition " + goal.getCondition().getClass());
+			System.out.println("ActivateCondition " + goal.getActivateConditionsCount());
+			System.out.println("SucessCondition " + goal.getSucessCondition());
 			System.out.println("User: " + goal.getUser() + " Role:" + goal.getRole());
 		}
 	}
@@ -126,7 +127,8 @@ public class PrintBWSpecification {
 		System.out.println("----------------------------------------------------------");
 		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
-//			System.out.println("Condition " + goal.getCondition().getClass());
+			System.out.println("ActivateCondition " + goal.getActivateConditionsCount());
+			System.out.println("SucessCondition " + goal.getSucessCondition());
 			System.out.println("User: " + goal.getUser() + " Role:" + goal.getRole());
 		}
 	}

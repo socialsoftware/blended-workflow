@@ -27,7 +27,14 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		goal.getSucessCondition().assignAttributeInstances(this);
 		
 		createConstrainViolationWorkItemArguments();
-		notifyConstrainViolation();
+		
+		// FIXME: not all conditions may apply
+		for (Condition activateCondition : goal.getActivateConditions()){
+			addActivateConditions(activateCondition);
+		}
+		setSucessCondition(goal.getSucessCondition());
+		
+		evaluate(true);
 	}
 
 	/**
@@ -58,10 +65,14 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	 ******************************/
 	
 	@Override
-	public void notifyPreTask() {}
+	public void notifyPreTask() {
+		//TODO: PREGOAL
+	}
 	
 	@Override
-	public void notifyPreFalse() {}
+	public void notifyPreFalse() {
+		log.info("Goal ActivateCondition is FALSE");
+	}
 	
 	@Override
 	public void notifyConstrainViolation() {
@@ -69,32 +80,49 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		setState(WorkItemState.CONSTRAINT_VIOLATION);
 		updateConstrainViolationWorkItemArguments();
 //		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this); //FIXME
-		evaluate();
+		evaluate(false);
 	}
 
-	private void evaluate() {
-		for (WorkItemArgument w : this.getConstrainViolationWorkItemArguments()){
-			AttributeInstance a = w.getAttributeInstance();
-			String v = w.getValue();
-			DataState s = w.getState();
-			System.out.println("AI" + a.getID() + " V:" + v + " S:" + s);
-		}
-		
-		
-		TripleStateBool result = getAchieveGoal().getSucessCondition().evaluate(this);
-		System.out.println("evaluate result for " + this.getID() + " = " + result);
-		if (result.equals(TripleStateBool.TRUE)) {
-			notifyCompleted();
-		} else if (result.equals(TripleStateBool.SKIPPED)) {
-			notifySkipped();
+	public void evaluate(Boolean isActivateCondition) {
+		TripleStateBool result = null;
+		TripleStateBool activateConditionJointResult = TripleStateBool.TRUE;
+		if (isActivateCondition) {
+			System.out.println("1");
+			for (Condition activateCondition : getActivateConditions()) {
+				result = activateCondition.evaluate(this);
+				if (result.equals(TripleStateBool.SKIPPED)) {
+					System.out.println("2");
+					activateConditionJointResult = TripleStateBool.SKIPPED;
+					break;
+				} else if (result.equals(TripleStateBool.FALSE)) {
+					System.out.println("3");
+					activateConditionJointResult = TripleStateBool.FALSE;
+					break;
+				} 
+			}
+			System.out.println("ActivateCondition Evaluate result for " + this.getID() + " was " + result);
+			if (activateConditionJointResult.equals(TripleStateBool.TRUE)) {
+				notifyConstrainViolation();
+			} else if (activateConditionJointResult.equals(TripleStateBool.SKIPPED)) {
+				notifyPreTask();
+			} else {
+				notifyPreFalse();
+			}
 		} else {
-			notifyEnabled();
+			result = getSucessCondition().evaluate(this);
+			System.out.println("SucessCondition Evaluate result for " + this.getID() + " was " + result);
+			if (result.equals(TripleStateBool.TRUE)) {
+				notifyCompleted();
+			} else if (result.equals(TripleStateBool.SKIPPED)) {
+				notifySkipped();
+			} else {
+				notifyEnabled();
+			}
 		}
 	}
 
 	@Override
 	public void notifyEnabled() {
-
 		int countSubGoals = 0;
 		for (AchieveGoal subGoal : getAchieveGoal().getSubGoals()) {
 			if (subGoal.getState().equals(GoalState.ACHIEVED))
@@ -111,6 +139,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 			setState(WorkItemState.GOAL_PENDING);
 			getAchieveGoal().setState(GoalState.DEACTIVATED);
 		}
+		System.out.println("notifyEnabled");
 	}
 	
 	@Override
@@ -133,7 +162,9 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Completed", "[GOAL] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 
+		System.out.println("CP");
 		getBwInstance().getGoalModelInstance().checkPedingWorkItems();
+		System.out.println("CP-end");
 //		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
 	}
 
@@ -228,7 +259,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_GOAL ||  getState() == WorkItemState.RE_ACTIVATED) {
 			setState(WorkItemState.CHECKED_IN);
 		}
-		evaluate();
+		evaluate(false);
 	}
 
 }

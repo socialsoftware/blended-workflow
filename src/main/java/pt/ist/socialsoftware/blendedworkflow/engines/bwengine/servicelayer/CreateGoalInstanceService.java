@@ -36,11 +36,11 @@ public class CreateGoalInstanceService implements Callable<String> {
 	private void generateGoalWorkItems(BWInstance bwInstance, AchieveGoal goal) {
 		if (goal.getGoalWorkItem() == null) {
 			new GoalWorkItem(bwInstance, goal);
+			// TODO: add conditions
 		}
 		
 		for (AchieveGoal subGoal : goal.getSubGoals()) {
 			generateGoalWorkItems(bwInstance, subGoal);
 		}		
 	}
-
 }

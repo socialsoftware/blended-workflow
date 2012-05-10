@@ -53,14 +53,19 @@ public class AchieveGoal extends AchieveGoal_Base {
 	}
 
 	public void cloneGoal(GoalModelInstance goalModelInstance) throws BlendedWorkflowException {
-		Condition newCondition = null;
+		Condition newSucessCondition = null;
 		Condition condition = getSucessCondition();
 		if (condition != null) {
-			newCondition = condition.cloneCondition(goalModelInstance);
+			newSucessCondition = condition.cloneCondition(goalModelInstance);
 		}
-		AchieveGoal newGoal = new AchieveGoal(goalModelInstance, getName(), getDescription(), newCondition);
+		AchieveGoal newGoal = new AchieveGoal(goalModelInstance, getName(), getDescription(), newSucessCondition);
 		newGoal.setUser(getUser());
 		newGoal.setRole(getRole());
+		
+		for (Condition activateCondition: getActivateConditions()) {
+			Condition newActivateCondition = activateCondition.cloneCondition(goalModelInstance);
+			newGoal.addActivateConditions(newActivateCondition);
+		}		
 	}
 
 	/**
@@ -160,10 +165,12 @@ public class AchieveGoal extends AchieveGoal_Base {
 
 	public void checkPending(BWInstance bwInstance) {
 //		int subgoalsAchievedCount = 0;
-
+		System.out.println("X3");
 		if (getGoalWorkItem() != null) {
 			if (getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
-				getGoalWorkItem().notifyEnabled();
+				System.out.println("checkPending-evaluate pending");
+				getGoalWorkItem().evaluate(true);
+//				getGoalWorkItem().notifyEnabled();
 			}
 		}
 	}
