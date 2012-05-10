@@ -12,7 +12,7 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
@@ -23,7 +23,7 @@ public class RedoGoalService implements Callable<String> {
 
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private BWInstance bwInstance;
-	private Goal goal;
+	private AchieveGoal goal;
 	private String userID;
 
 	public RedoGoalService(long bwInstanceOID, long goalOID, String userID) {
@@ -40,7 +40,7 @@ public class RedoGoalService implements Callable<String> {
 		GoalWorkItem goalWorkItem = goal.getGoalWorkItem();
 		if (goalWorkItem.getState().equals(WorkItemState.SKIPPED) || goalWorkItem.getState().equals(WorkItemState.COMPLETED)) {
 			goalWorkItem.updateConstrainViolationWorkItemArguments();
-			goalWorkItem.setState(WorkItemState.ENABLED);
+			goalWorkItem.setState(WorkItemState.RE_ACTIVATED);
 			
 			String date = dateFormat.format(Calendar.getInstance().getTime());
 			this.bwInstance.getLog().addLogRecords(new LogRecord(date, "ReEnabled", "[GOAL] " + this.goal.getName(), this.userID));

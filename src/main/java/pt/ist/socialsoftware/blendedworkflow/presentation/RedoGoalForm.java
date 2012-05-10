@@ -1,10 +1,12 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
+import org.apache.log4j.Logger;
+
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import jvstm.Transaction;
 
@@ -23,6 +25,7 @@ public class RedoGoalForm extends VerticalLayout implements Property.ValueChange
 
 	private NativeSelect bwInstances = new NativeSelect("BWInstance");
 	private NativeSelect parentGoal = new NativeSelect("Goal to Activate:");
+	private Logger log = Logger.getLogger("WorklistManager");
 	
 	public RedoGoalForm() {
 
@@ -50,11 +53,12 @@ public class RedoGoalForm extends VerticalLayout implements Property.ValueChange
 				try {
 					long bwInstanceOID = (Long) bwInstances.getValue();
 					long parentGoalOID = (Long) parentGoal.getValue();
-					
-					String activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
+					log.info("REDOSubmit" + bwInstanceOID + "-" + parentGoalOID);
 					Transaction.begin();
+					String activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
+					log.info("REDOSubmit" + activeUserID);
 					BlendedWorkflow.getInstance().getWorkListManager().redoGoal(bwInstanceOID, parentGoalOID, activeUserID);
-					
+					log.info("REDOSubmit" + "BlendedWorkflow.getInstance().getWorkListManager()");
 					Transaction.commit();
 					
 					getApplication().getMainWindow().showNotification("Goal ReActivated successfully", Notification.TYPE_TRAY_NOTIFICATION);
@@ -100,7 +104,7 @@ public class RedoGoalForm extends VerticalLayout implements Property.ValueChange
 	private void getGoals(BWInstance bwInstance) {
 		Transaction.begin();
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-		for (Goal goal : goalModelInstance.getGoals()) {
+		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 			if (goal.getGoalWorkItem() != null) {
 			this.parentGoal.addItem(goal.getOID());
 			this.parentGoal.setItemCaption(goal.getOID(), goal.getName());}

@@ -4,7 +4,7 @@ import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import jvstm.Transaction;
 
@@ -99,7 +99,7 @@ public class ActivateGoalForm extends VerticalLayout implements Property.ValueCh
 	private void getGoals(BWInstance bwInstance) {
 		Transaction.begin();
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-		for (Goal goal : goalModelInstance.getGoals()) {
+		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 			this.parentGoal.addItem(goal.getOID());
 			this.parentGoal.setItemCaption(goal.getOID(), goal.getName());
 		}

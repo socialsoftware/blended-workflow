@@ -27,6 +27,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -139,7 +140,7 @@ public class CheckInWorkItemServiceTest {
 		try {
 			Transaction.begin();
 
-			assertEquals(WorkItemState.CHECKED_IN, workItem.getState());
+			assertEquals(WorkItemState.COMPLETED, workItem.getState());
 			
 			for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
 				assertEquals(GOALWORKITEM_PRESCRIBE_INPUT_VALUE1, workItemArgument.getValue());
@@ -183,6 +184,7 @@ public class CheckInWorkItemServiceTest {
 		for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
 			if (workItemArgument.getAttributeInstance().getID().equals(attributeInstance.getID())) {
 				workItemArgument.setValue(value);
+				workItemArgument.setState(DataState.DEFINED);
 			}
 		}
 		Transaction.commit();

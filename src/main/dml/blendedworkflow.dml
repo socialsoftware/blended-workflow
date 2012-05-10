@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState as DataState;
-enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal.GoalState as GoalState;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal.GoalState as GoalState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState as TaskState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState as WorkItemState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType as AttributeType;
@@ -74,11 +74,13 @@ class GoalModel;
 
 class GoalModelInstance extends GoalModel;
 
-class Goal {
+class AchieveGoal {
 	String name;
 	String description;
 	GoalState state;
 }
+
+class MaintainGoal;
 
 class TaskModel;
 
@@ -225,8 +227,8 @@ relation WorkItemRefersToConstraintViolationAttributeInstances {
 	AttributeInstance playsRole contraintViolationAttributeInstances { multiplicity 0..*; }
 }
 
-relation TaskWorkItemRefersPreConstraintAttributteInstances {
-	TaskWorkItem playsRole preConstraintTaskWorkItems {multiplicity 0..*;}
+relation WorkItemRefersPreConstraintAttributteInstances {
+	WorkItem playsRole preConstraintWorkItems {multiplicity 0..*;}
 	AttributeInstance playsRole preConstraintAttributeInstances { multiplicity 0..*; }
 }
 
@@ -247,26 +249,37 @@ relation WorkItemArgumentRefersAttributteInstances {
 }
 
 // Goal Model
-relation GoalModelHasGoals {
+relation GoalModelHasAchieveGoals {
 	GoalModel playsRole goalModel { multiplicity 0..1; }
-	Goal playsRole goals { multiplicity 0..*; }
+	AchieveGoal playsRole achieveGoals { multiplicity 0..*; }
 }
 
-// Goal
-relation GoalHasGoals {
-	Goal playsRole parentGoal { multiplicity 0..1; }
-	Goal playsRole subGoals { multiplicity 0..*; }
+relation GoalModelHasMaintainGoals {
+	GoalModel playsRole goalModel { multiplicity 0..1; }
+	MaintainGoal playsRole maintainGoals { multiplicity 0..*; }
 }
 
-relation GoalHasCondition {
-	Goal playsRole goal { multiplicity 0..1; }
-	Condition playsRole condition { multiplicity 0..1; }
+// AchieveGoal
+relation AchieveGoalHasGoals {
+	AchieveGoal playsRole parentGoal { multiplicity 0..1; }
+	AchieveGoal playsRole subGoals { multiplicity 0..*; }
 }
 
-relation GoalHasGoalWorkItem {
-	Goal playsRole goal { multiplicity 0..1; }
+relation AchieveGoalHasSucessCondition {
+	AchieveGoal playsRole achieveGoal { multiplicity 0..1; }
+	Condition playsRole sucessCondition { multiplicity 0..1; }
+}
+
+relation AchieveGoalHasActivateConditions {
+	AchieveGoal playsRole activateConditionsAchieveGoal {multiplicity 0..1;}
+	Condition playsRole activateConditions {multiplicity 0..*;}
+}
+
+relation AchieveGoalHasGoalWorkItem {
+	AchieveGoal playsRole achieveGoal { multiplicity 0..1; }
 	GoalWorkItem playsRole goalWorkItem { multiplicity 0..1; }
 }
+
 
 // Task Model
 relation TaskModelHasTasks {
@@ -381,7 +394,6 @@ relation ExistsEntityConditionHasEntities {
 	Entity playsRole entity { multiplicity 0..1; }
 }
 
-
 // CompareAttributeToValueCondition
 relation CompareAttributeToValueConditionHasAttributes {
 	CompareAttributeToValueCondition playsRole compareAttributeToValueCondition { multiplicity 0..*; }
@@ -424,13 +436,13 @@ relation TaskHasUsers {
 	User playsRole user {multiplicity 0..1;}
 }
 
-relation GoalHasRoles {
-	Goal playsRole goals {multiplicity 0..*;}
+relation AchieveGoalHasRoles {
+	AchieveGoal playsRole achieveGoals {multiplicity 0..*;}
 	Role playsRole role {multiplicity 0..1;}
 }
 
-relation GoalHasUsers {
-	Goal playsRole goals {multiplicity 0..*;}
+relation AchieveGoalHasUsers {
+	AchieveGoal playsRole achieveGoals {multiplicity 0..*;}
 	User playsRole user {multiplicity 0..1;}
 }
 
@@ -445,8 +457,8 @@ relation WorkItemHasUsers {
 }
 
 //NEWGoalModel Relations
-relation GoalHasEntity {
-	Goal playsRole goalContext {multiplicity 0..*;}
+relation AchieveGoalHasEntity {
+	AchieveGoal playsRole achieveGoalContext {multiplicity 0..*;}
 	Entity playsRole entityContext {multiplicity 0..1;}
 }
 
@@ -455,20 +467,17 @@ relation GoalWorkItemHasEntityInstances {
 	EntityInstance playsRole entityInstanceContext {multiplicity 0..1;}
 }
 
-class AchieveGoal extends Goal;
-class MaintainGoal extends Goal;
-
-relation AchieveGoalHasSucessCondition {
-	AchieveGoal playsRole successConditionAchieveGoal {multiplicity 0..1;}
-	Condition playsRole successCondition {multiplicity 0..1;}
-}
-
-relation AchieveGoalHasActivateConditions {
-	AchieveGoal playsRole activateConditionsAchieveGoal {multiplicity 0..1;}
-	Condition playsRole activateConditions {multiplicity 0..*;}
-}
-
 relation MaintainGoalHasMaintainCondition {
 	MaintainGoal playsRole maintainConditionAchieveGoal {multiplicity 0..1;}
 	Condition playsRole maintainCondition {multiplicity 0..1;}
+}
+
+relation GoalWorkItemHasActivateCondition {
+	GoalWorkItem playsRole activateConditionGoalWorkItem {multiplicity 0..1;}
+	Condition playsRole activateConditions {multiplicity 0..*;}
+}
+
+relation GoalWorkItemHasSucessCondition {
+	GoalWorkItem playsRole sucessConditionGoalWorkItem {multiplicity 0..1;}
+	Condition playsRole sucessCondition {multiplicity 0..1;}
 }

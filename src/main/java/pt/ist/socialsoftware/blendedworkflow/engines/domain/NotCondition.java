@@ -3,10 +3,17 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.util.HashMap;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
+
 public class NotCondition extends NotCondition_Base {
 
 	public NotCondition(Condition condition) {
 		setCondition(condition);
+	}
+	
+	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
+		return getCondition().evaluate(goalWorkItem).NOT();
 	}
 
 	@Override

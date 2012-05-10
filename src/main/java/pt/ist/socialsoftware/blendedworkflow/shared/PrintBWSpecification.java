@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.shared;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
@@ -11,7 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
@@ -24,7 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class PrintBWSpecification {
 	
-	private static Logger log = Logger.getLogger("PrintBWSpecification");
+//	private static Logger log = Logger.getLogger("PrintBWSpecification");
 
 	private static BlendedWorkflow blendedWorkflow;
 	private static BWSpecification bwSpecification;
@@ -112,7 +112,7 @@ public class PrintBWSpecification {
 		System.out.println("**************************************************************");
 		System.out.println("GoalModel Template");
 		System.out.println("----------------------------------------------------------");
-		for (Goal goal : goalModel.getGoals()) {
+		for (AchieveGoal goal : goalModel.getAchieveGoals()) {
 			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
 //			System.out.println("Condition " + goal.getCondition().getClass());
 			System.out.println("User: " + goal.getUser() + " Role:" + goal.getRole());
@@ -124,7 +124,7 @@ public class PrintBWSpecification {
 		System.out.println("**************************************************************");
 		System.out.println("GoalModel Type");
 		System.out.println("----------------------------------------------------------");
-		for (Goal goal : goalModelInstance.getGoals()) {
+		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
 //			System.out.println("Condition " + goal.getCondition().getClass());
 			System.out.println("User: " + goal.getUser() + " Role:" + goal.getRole());

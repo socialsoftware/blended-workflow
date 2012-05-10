@@ -9,7 +9,7 @@ import org.jdom.Namespace;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
@@ -37,7 +37,7 @@ public class GoalModelFactory {
 		String rootGoalConditionString = rootGoalXML.getChildText("Condition", bwNamespace);
 		rootGoalConditionString = ConditionFactory.getRelationDependencies(dataModel, rootGoalConditionString);
 		Condition rootGoalCondition = ConditionFactory.createCondition(dataModel, rootGoalConditionString);
-		Goal rootGoal = new Goal(goalModel, rootGoalName, rootGoalDescription, rootGoalCondition);
+		AchieveGoal rootGoal = new AchieveGoal(goalModel, rootGoalName, rootGoalDescription, rootGoalCondition);
 		rootGoal.setUser(defaultUser);
 		rootGoal.setRole(defaultRole);
 
@@ -50,8 +50,8 @@ public class GoalModelFactory {
 			String goalConditionString = goalXML.getChildText("Condition", bwNamespace);
 			goalConditionString =ConditionFactory.getRelationDependencies(dataModel, goalConditionString);
 			Condition goalCondition = ConditionFactory.createCondition(dataModel, goalConditionString);
-			Goal parentGoal = goalModel.getGoal(goalXML.getChildText("ParentName", bwNamespace)); 
-			Goal newGoal = new Goal(goalModel, parentGoal, goalName, goalDescription, goalCondition);
+			AchieveGoal parentGoal = goalModel.getGoal(goalXML.getChildText("ParentName", bwNamespace)); 
+			AchieveGoal newGoal = new AchieveGoal(goalModel, parentGoal, goalName, goalDescription, goalCondition);
 			newGoal.setUser(defaultUser);
 			newGoal.setRole(defaultRole);
 		}

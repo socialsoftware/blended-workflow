@@ -5,11 +5,29 @@ import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 
 	public ExistsEntityCondition(Entity entity) {
 		setEntity(entity);
+	}
+	
+	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
+		for (WorkItemArgument workItemArgument : goalWorkItem.getConstrainViolationWorkItemArguments()) {
+			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+			Attribute conditionAttribute = getEntity().getAttribute(workItemAttribute.getName());
+			
+			if (conditionAttribute != null && conditionAttribute.getIsKeyAttribute()) {
+				if (workItemArgument.getState().equals(DataState.SKIPPED)) {
+					return TripleStateBool.SKIPPED;
+				} else if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
+					return TripleStateBool.FALSE;
+				}
+			}
+		}
+		return TripleStateBool.TRUE;
 	}
 
 	@Override

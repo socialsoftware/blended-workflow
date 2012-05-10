@@ -4,12 +4,61 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class CompareAttributeToValueCondition extends CompareAttributeToValueCondition_Base {
 
 	public CompareAttributeToValueCondition(){
 		super();
+	}
+	
+	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
+		for (WorkItemArgument workItemArgument : goalWorkItem.getConstrainViolationWorkItemArguments()) {
+			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+			Attribute conditionAttribute = getAttribute();
+			if (workItemAttribute == conditionAttribute) {
+				if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
+					return TripleStateBool.FALSE;	
+				} else if (workItemArgument.getState().equals(DataState.SKIPPED)) {
+					return TripleStateBool.SKIPPED;
+				} else {
+					if (evaluateComparation(workItemArgument)) {
+						return TripleStateBool.TRUE;
+					} else {
+						return TripleStateBool.FALSE;
+					}
+				}
+			}
+		}
+		return TripleStateBool.FALSE;
+	}
+
+	private boolean evaluateComparation(WorkItemArgument workItemArgument) {
+
+		// Equals (=)
+		if (getOperator().equals("=")) {
+			if (getAttribute().getType().equals(AttributeType.NUMBER)) {
+				if (workItemArgument.getValue() == getValue()) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				if (workItemArgument.getValue().equals(getValue())) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} 
+		
+		else {
+			System.out.println("Exception");
+			return false;	
+		}
 	}
 
 	public CompareAttributeToValueCondition(Attribute attribute, String operator, String value) {

@@ -2,7 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 public abstract class WorkItem extends WorkItem_Base {
 
-	public enum WorkItemState {PRE_TASK, PRE_FALSE, CONSTRAINT_VIOLATION, ENABLED, GOAL_PENDING, CHECKED_IN, SKIPPED, 
+	public enum WorkItemState {PRE_TASK, PRE_GOAL, PRE_FALSE, CONSTRAINT_VIOLATION, ENABLED, GOAL_PENDING, CHECKED_IN, SKIPPED, 
 		COMPLETED, RE_ACTIVATED};
 
 	/******************************
@@ -41,11 +41,6 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Notify a WorkItem if there is a CheckIn event
 	 */
 	public abstract void notifyCheckedIn(); 
-	
-	/**
-	 * Notify a WorkItem if there is a Skip event
-	 */
-	public abstract void notifySkip(); 
 	
 	/**
 	 * Notify a TaskWorkItem if its PostConstraint = TRUE

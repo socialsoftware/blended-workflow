@@ -121,9 +121,9 @@ public class CreateBWInstanceServiceTest {
 			assertEquals(5, dataModelInstance.getEntitiesCount());
 			assertEquals(14, dataModelInstance.getAttributesCount());
 			assertEquals(4, dataModelInstance.getRelationsCount());
-			assertEquals(6, goalModelInstance.getGoalsCount());
+			assertEquals(6, goalModelInstance.getAchieveGoalsCount());
 			assertEquals(5, taskModelInstance.getTasksCount());
-			assertEquals(4, bwInstance.getWorkItemsCount()); // With Tasks
+			assertEquals(1, bwInstance.getWorkItemsCount()); // With Tasks
 //			assertEquals(3, bwInstance.getWorkItemsCount()); // Without Tasks
 			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
 

@@ -8,7 +8,7 @@ import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 
 public class CreateGoalInstanceService implements Callable<String> {
@@ -16,7 +16,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 	private static Logger log = Logger.getLogger("CreateGoalInstanceService");
 	
 	private BWInstance bwInstance;
-	private Goal goal;
+	private AchieveGoal goal;
 
 	public CreateGoalInstanceService (long bwInstanceOID, long goalOID) {
 		this.bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
@@ -33,12 +33,12 @@ public class CreateGoalInstanceService implements Callable<String> {
 		return "CreateGoalInstanceService:Sucess";
 	}
 	
-	private void generateGoalWorkItems(BWInstance bwInstance, Goal goal) {
+	private void generateGoalWorkItems(BWInstance bwInstance, AchieveGoal goal) {
 		if (goal.getGoalWorkItem() == null) {
 			new GoalWorkItem(bwInstance, goal);
 		}
 		
-		for (Goal subGoal : goal.getSubGoals()) {
+		for (AchieveGoal subGoal : goal.getSubGoals()) {
 			generateGoalWorkItems(bwInstance, subGoal);
 		}		
 	}

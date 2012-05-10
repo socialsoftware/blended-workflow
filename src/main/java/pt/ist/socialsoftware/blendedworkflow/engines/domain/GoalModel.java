@@ -9,19 +9,19 @@ public class GoalModel extends GoalModel_Base {
 	 * Clone the GoalModel tree
 	 */
 	public void cloneGoalModel(GoalModelInstance newGoalModelInstance) throws BlendedWorkflowException {
-		for (Goal goal : getGoals()) {
+		for (AchieveGoal goal : getAchieveGoals()) {
 			goal.cloneGoal(newGoalModelInstance);
 		}
 
-		for (Goal goal : getGoals()) {
-			for (Goal subgoal : goal.getSubGoals()) {
+		for (AchieveGoal goal : getAchieveGoals()) {
+			for (AchieveGoal subgoal : goal.getSubGoals()) {
 				newGoalModelInstance.getGoal(goal.getName()).addSubGoals(newGoalModelInstance.getGoal(subgoal.getName()));
 			}
 		}
 	}
 
-	public Goal getGoal(String name) throws BlendedWorkflowException {
-		for (Goal goal : getGoals()) {
+	public AchieveGoal getGoal(String name) throws BlendedWorkflowException {
+		for (AchieveGoal goal : getAchieveGoals()) {
 			if (goal.getName().equals(name)) {
 				return goal;
 			}

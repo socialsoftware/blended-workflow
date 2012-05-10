@@ -236,7 +236,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		if (isPreTask) {
 			for (AttributeInstance attributeInstance : getPreConstraintAttributeInstances()) {
 				// Check preconditions
-				for (WorkItem workItem : attributeInstance.getPreConstraintTaskWorkItems()) {
+				for (WorkItem workItem : attributeInstance.getPreConstraintWorkItems()) {
 					if (!workItem.equals(this) && (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
 						notifyWorkItems.add(workItem);
 					}
@@ -254,7 +254,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		// Get WorkItems affected by ConstraintViolation attributesInstances values
 		for (AttributeInstance attributeInstance : getContraintViolationAttributeInstances()) {
 			// Check preconditions
-			for (WorkItem workItem : attributeInstance.getPreConstraintTaskWorkItems()) {
+			for (WorkItem workItem : attributeInstance.getPreConstraintWorkItems()) {
 				if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
 					notifyWorkItems.add(workItem);
 				}
@@ -276,14 +276,6 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 	
 	@Override
 	public void notifyCheckedIn() {
-		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
-			setState(WorkItemState.CHECKED_IN);
-		}
-		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
-	}
-
-	@Override
-	public void notifySkip() {
 		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
 			setState(WorkItemState.CHECKED_IN);
 		}

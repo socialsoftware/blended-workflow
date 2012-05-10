@@ -14,7 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
@@ -25,7 +25,7 @@ public class CreateNewGoalService implements Callable<String> {
 
 	private static Logger log = Logger.getLogger("CreateGoalService");
 	private BWInstance bwInstance;
-	private Goal parentGoal;
+	private AchieveGoal parentGoal;
 	private String name;
 	private String description;
 	private String condition;
@@ -53,7 +53,7 @@ public class CreateNewGoalService implements Callable<String> {
 			Condition goalCondition = ConditionFactory.createCondition(dataModelInstance, goalConditionDependencies);
 			
 			// Create Goal
-			Goal newGoal = new Goal(goalModelInstance, parentGoal, name, description, goalCondition);
+			AchieveGoal newGoal = new AchieveGoal(goalModelInstance, parentGoal, name, description, goalCondition);
 			User defaultUser = BlendedWorkflow.getInstance().getOrganizationalModel().getUser("BlendedWorkflow");
 			Role defaultRole = BlendedWorkflow.getInstance().getOrganizationalModel().getRole("Admin");
 			newGoal.setUser(defaultUser);

@@ -23,8 +23,8 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+//import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
@@ -155,112 +155,9 @@ public class WorkletAdapter {
 	 * @param bwSpecification the BWSpecification.
 	 * @throws BlendedWorkflowException
 	 */
-	public void loadRdrSet2(BWSpecification bwSpecification) throws BlendedWorkflowException {
-		log.info("loadrdrd");
-
-		TaskModel taskModel = bwSpecification.getTaskModel();
-		GoalModel goalModel = bwSpecification.getGoalModel();
-
-		// Get the YAWLSpecID
-		String yawlCaseID = bwSpecification.getYawlSpecficationID();
-		YSpecificationID yawlSpecID = null;
-		for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedActivitySpecs()) {
-			if(ySpecificationID.getIdentifier().equals(yawlCaseID)) {
-				yawlSpecID = ySpecificationID;
-				break;
-			}
-		}
-
-		Boolean firstTask = true;
-		String condition = null;
-		Element eConclusion = null;
-		Element eCornerstone = null;
-
-		// Create Tasks RdrSet
-		for (Task task : taskModel.getTasks()) {
-			String taskName = task.getName().replaceAll(" ", "_");
-
-			// PreConstraintTree
-			if (firstTask) {
-				// True Node
-				eCornerstone = getCornerstoneData(task, null, true, "NULL");
-				condition = task.getPreConstraint().getRdrTrueCondition();
-				eConclusion = createRdrConclusion("NULL", true);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
-				firstTask = false;
-			} else {
-				// Undefined Node
-				eCornerstone = getCornerstoneData(task, null, true, "UNDEFINED");
-				condition = task.getPreConstraint().getRdrFalseCondition();
-				eConclusion = createRdrConclusion("FALSE", true);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
-
-				// Skipped Node
-				eCornerstone = getCornerstoneData(task, null, true, "SKIPPED");
-				condition = task.getPreConstraint().getRdrSkippedCondition();
-				eConclusion = createRdrConclusion("SKIPPED", true);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
-
-				// Defined Node
-				eCornerstone = getCornerstoneData(task, null, true, "DEFINED");
-				condition = task.getPreConstraint().getRdrTrueCondition();
-				eConclusion = createRdrConclusion("TRUE", true);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
-			}
-
-			// PostConstraintTree
-			// Undefined Node
-			eCornerstone = getCornerstoneData(task, null, false, "UNDEFINED");
-			condition = task.getPostConstraint().getRdrFalseCondition();
-			eConclusion = createRdrConclusion("FALSE", false);
-			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-
-			// Skipped Node
-			eCornerstone = getCornerstoneData(task, null, false, "SKIPPED");
-			condition = task.getPostConstraint().getRdrSkippedCondition();
-			eConclusion = createRdrConclusion("SKIPPED", false);
-			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-
-			// Defined Node
-			eCornerstone = getCornerstoneData(task, null, false, "DEFINED");
-			condition = task.getPostConstraint().getRdrTrueCondition();
-			eConclusion = createRdrConclusion("TRUE", false);
-			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-		}
-
-		// Create Goals RdrSet
-		for (Goal goal : goalModel.getGoals()) {
-			String goalName = "GOAL_" + goal.getName().replaceAll(" ", "_");
-
-			// Undefined Node
-			eCornerstone = getCornerstoneData(null, goal, false, "UNDEFINED");
-			condition = goal.getCondition().getRdrFalseCondition();
-			eConclusion = createRdrConclusion("FALSE", false);
-			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-
-			// Skipped Node
-			eCornerstone = getCornerstoneData(null, goal, false, "SKIPPED");
-			condition = goal.getCondition().getRdrSkippedCondition();
-			eConclusion = createRdrConclusion("SKIPPED", false);
-			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-
-			// Defined Node
-			eCornerstone = getCornerstoneData(null, goal, false, "DEFINED");
-			condition = goal.getCondition().getRdrTrueCondition();
-			eConclusion = createRdrConclusion("TRUE", false);
-			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-		}
-		
-		//test
-//		evaluate();
-		
-	}
-	
 	public void loadRdrSet(BWSpecification bwSpecification) throws BlendedWorkflowException {
-		log.info("Test load novo");
-
 		TaskModel taskModel = bwSpecification.getTaskModel();
-		GoalModel goalModel = bwSpecification.getGoalModel();
+//		GoalModel goalModel = bwSpecification.getGoalModel();
 
 		// Get the YAWLSpecID
 		String yawlCaseID = bwSpecification.getYawlSpecficationID();
@@ -342,36 +239,33 @@ public class WorkletAdapter {
 		}
 
 		// Create Goals RdrSet
-		for (Goal goal : goalModel.getGoals()) {
-			String goalName = "GOAL_" + goal.getName().replaceAll(" ", "_");
-
-			// Undefined Node
-			eCornerstone = getCornerstoneData(null, goal, false, "UNDEFINED");
-			condition = goal.getCondition().getRdrUndefinedConditionNEW();
-			eConclusion = createRdrConclusion("UNDEFINED", false);
-			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-
-			// Skipped Node
-			eCornerstone = getCornerstoneData(null, goal, false, "SKIPPED");
-			condition = goal.getCondition().getRdrSkippedConditionNEW();
-			eConclusion = createRdrConclusion("SKIPPED", false);
-			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-
-			// True Node
-			eCornerstone = getCornerstoneData(null, goal, false, "DEFINED");
-			condition = goal.getCondition().getRdrTrueConditionNEW();
-			eConclusion = createRdrConclusion("TRUE", false);
-			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-			
-			// False Node
-			eCornerstone = getCornerstoneData(null, goal, false, "DEFINED");
-			condition = goal.getCondition().getRdrFalseConditionNEW();
-			eConclusion = createRdrConclusion("FALSE", false);
-			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-		}
-		
-		//test
-//		evaluate();
+//		for (AchieveGoal goal : goalModel.getAchieveGoals()) {
+//			String goalName = "GOAL_" + goal.getName().replaceAll(" ", "_");
+//
+//			// Undefined Node
+//			eCornerstone = getCornerstoneData(null, goal, false, "UNDEFINED");
+//			condition = goal.getSucessCondition().getRdrUndefinedConditionNEW();
+//			eConclusion = createRdrConclusion("UNDEFINED", false);
+//			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+//
+//			// Skipped Node
+//			eCornerstone = getCornerstoneData(null, goal, false, "SKIPPED");
+//			condition = goal.getSucessCondition().getRdrSkippedConditionNEW();
+//			eConclusion = createRdrConclusion("SKIPPED", false);
+//			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+//
+//			// True Node
+//			eCornerstone = getCornerstoneData(null, goal, false, "DEFINED");
+//			condition = goal.getSucessCondition().getRdrTrueConditionNEW();
+//			eConclusion = createRdrConclusion("TRUE", false);
+//			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+//			
+//			// False Node
+//			eCornerstone = getCornerstoneData(null, goal, false, "DEFINED");
+//			condition = goal.getSucessCondition().getRdrFalseConditionNEW();
+//			eConclusion = createRdrConclusion("FALSE", false);
+//			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+//		}
 	}
 
 	/*******************************
@@ -403,7 +297,7 @@ public class WorkletAdapter {
 	 * @param type the type of CornerstoneData, i.e DEFINED, UNDEFINED or SKIPPED.
 	 * @return an ELement with the cornerstoneData.
 	 */
-	private Element getCornerstoneData(Task task, Goal goal, Boolean isPreCondition, String type) {
+	private Element getCornerstoneData(Task task, AchieveGoal goal, Boolean isPreCondition, String type) {
 		String cornerStr = "<cornerstone>";
 		Set<Entity> entities;
 		Set<Attribute> attributes;
@@ -411,9 +305,9 @@ public class WorkletAdapter {
 
 		// Get Condition Data
 		if (task == null) {
-			entities = goal.getCondition().getEntities();
-			attributes = goal.getCondition().getAttributes();
-			attributesValues = goal.getCondition().getcompareConditionValues();
+			entities = goal.getSucessCondition().getEntities();
+			attributes = goal.getSucessCondition().getAttributes();
+			attributesValues = goal.getSucessCondition().getcompareConditionValues();
 		}
 		else if (task != null && isPreCondition) {
 			entities = task.getPreConstraint().getEntities();
@@ -481,59 +375,6 @@ public class WorkletAdapter {
 		return eCornerstone;
 	}
 
-	/**
-	 * Creates a RdrConclusion.
-	 * @param type the type of the RdrConclusion, i.e TRUE, FALSE, SKIPPED or NULL.
-	 * @param isPreCondition
-	 * @return an Element with the RdrConclusion.
-	 */
-	private Element createRdrConclusion2(String type, Boolean isPreCondition) {
-		String concStr = null;
-		Element eConclusion = null;
-		String action = "";
-		Boolean constrainVilationSkip = false;
-
-		if (type.equals("NULL")) {
-			concStr = "<conclusion>null</conclusion>";
-			eConclusion = JDOMUtil.stringToElement(concStr);
-			return eConclusion;
-		} else if (isPreCondition) {
-			if (type.equals("TRUE")) {
-				action = "TRUE";
-			} else if (type.equals("FALSE")) {
-				action = "FALSE";
-			} else {
-				action = "SKIPPED";
-			}
-		} else {
-			if (type.equals("TRUE")) {
-				action = "complete";
-			} else if (type.equals("FALSE")) {
-				action = "FALSE";
-			} else {
-				action = "complete";
-				constrainVilationSkip = true;
-			}
-		}
-
-		concStr = "<conclusion><_1>";
-		concStr += "<action>" + action + "</action>";
-		concStr += "<target>" + "workitem" + "</target>";
-		concStr += "</_1>";
-		
-		if (constrainVilationSkip) {
-			concStr += "<_2>";
-			concStr += "<action>" + "SKIPPED" + "</action>";
-			concStr += "<target>" + "workitem" + "</target>";
-			concStr += "</_2>";
-		}
-		
-		concStr += "</conclusion>";
-		
-		eConclusion = JDOMUtil.stringToElement(concStr);
-		return eConclusion;
-	}
-	
 	private Element createRdrConclusion(String type, Boolean isPreCondition) {
 		String concStr = null;
 		Element eConclusion = null;
@@ -592,7 +433,7 @@ public class WorkletAdapter {
 	 * @param goal the Goal.
 	 * @throws BlendedWorkflowException
 	 */
-	public void addGoal(BWInstance bwInstance, Goal goal) throws BlendedWorkflowException {
+	public void addGoal(BWInstance bwInstance, AchieveGoal goal) throws BlendedWorkflowException {
 		// YAWLSpecID
 		String yawlSpecificationID = bwInstance.getBwSpecification().getYawlSpecficationID();
 		YSpecificationID yawlSpecID = null;
@@ -607,19 +448,19 @@ public class WorkletAdapter {
 
 		// Undefined Node
 		Element eCornerstone = getCornerstoneData(null, goal, false, "UNDEFINED");
-		String condition = goal.getCondition().getRdrFalseCondition();
+		String condition = goal.getSucessCondition().getRdrFalseCondition();
 		Element eConclusion = createRdrConclusion("FALSE", false);
 		addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
 
 		// Skipped Node
 		eCornerstone = getCornerstoneData(null, goal, false, "SKIPPED");
-		condition = goal.getCondition().getRdrSkippedCondition();
+		condition = goal.getSucessCondition().getRdrSkippedCondition();
 		eConclusion = createRdrConclusion("SKIPPED", false);
 		addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
 
 		// Defined Node
 		eCornerstone = getCornerstoneData(null, goal, false, "DEFINED");
-		condition = goal.getCondition().getRdrTrueCondition();
+		condition = goal.getSucessCondition().getRdrTrueCondition();
 		eConclusion = createRdrConclusion("TRUE", false);
 		addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
 	}
@@ -799,7 +640,7 @@ public class WorkletAdapter {
 				eData = getEvaluationData(taskWorkItem, null, false);
 			}
 		} else {
-			name = "GOAL_" + goalWorkItem.getGoal().getName().replaceAll(" ", "_");
+			name = "GOAL_" + goalWorkItem.getAchieveGoal().getName().replaceAll(" ", "_");
 			eData = getEvaluationData(null, goalWorkItem, false);
 		}
 		
@@ -845,758 +686,5 @@ public class WorkletAdapter {
 		}
 	}
 	
-//	
-//	public void evaluate() throws BlendedWorkflowException {
-//		String name;
-//		RuleType ruleType = RuleType.ItemConstraintViolation;
-//		Element eData;
-//		String conclusion;
-//		String cs;
-//
-//		name = "Check-in_Patient";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>" + 
-//				"<Patient_Name_State>UNDEFINED</Patient_Name_State>"+ 
-//				"<Patient_Name>$UNDEFINED$</Patient_Name>"+
-//				"<Episode_Date_State>UNDEFINED</Episode_Date_State>"+
-//				"<Episode_Date>$UNDEFINED$</Episode_Date>"+
-//				"<MedicalReport_Report_State>UNDEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$UNDEFINED$</MedicalReport_Report>"+
-//				"<Episode_Closed_State>UNDEFINED</Episode_Closed_State>"+
-//				"<Episode_Closed>$UNDEFINED$</Episode_Closed>"+
-//				"<Patient_PhoneNumber_State>UNDEFINED</Patient_PhoneNumber_State>"+"" +
-//				"<Patient_PhoneNumber>$UNDEFINED$</Patient_PhoneNumber>"+"" +
-//				"<Patient_Address_State>UNDEFINED</Patient_Address_State>"+
-//				"<Patient_Address>$UNDEFINED$</Patient_Address>"+
-//				"<Patient_Gender_State>UNDEFINED</Patient_Gender_State>"+
-//				"<Patient_Gender>$UNDEFINED$</Patient_Gender>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND=" + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>" + 
-//				"<Patient_Name_State>DEFINED</Patient_Name_State>"+ 
-//				"<Patient_Name>$DEFINED$</Patient_Name>"+
-//				"<Episode_Date_State>DEFINED</Episode_Date_State>"+
-//				"<Episode_Date>$DEFINED$</Episode_Date>"+
-//				"<MedicalReport_Report_State>DEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$DEFINED$</MedicalReport_Report>"+
-//				"<Episode_Closed_State>DEFINED</Episode_Closed_State>"+
-//				"<Episode_Closed>$DEFINED$</Episode_Closed>"+
-//				"<Patient_PhoneNumber_State>DEFINED</Patient_PhoneNumber_State>"+"" +
-//				"<Patient_PhoneNumber>$DEFINED$</Patient_PhoneNumber>"+"" +
-//				"<Patient_Address_State>DEFINED</Patient_Address_State>"+
-//				"<Patient_Address>$DEFINED$</Patient_Address>"+
-//				"<Patient_Gender_State>DEFINED</Patient_Gender_State>"+
-//				"<Patient_Gender>$DEFINED$</Patient_Gender>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE=" + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>" + 
-//				"<Patient_Name_State>SKIPPED</Patient_Name_State>"+ 
-//				"<Patient_Name>$SKIPPED$</Patient_Name>"+
-//				"<Episode_Date_State>SKIPPED</Episode_Date_State>"+
-//				"<Episode_Date>$SKIPPED$</Episode_Date>"+
-//				"<MedicalReport_Report_State>SKIPPED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$SKIPPED$</MedicalReport_Report>"+
-//				"<Episode_Closed_State>SKIPPED</Episode_Closed_State>"+
-//				"<Episode_Closed>$SKIPPED$</Episode_Closed>"+
-//				"<Patient_PhoneNumber_State>SKIPPED</Patient_PhoneNumber_State>"+"" +
-//				"<Patient_PhoneNumber>$SKIPPED$</Patient_PhoneNumber>"+"" +
-//				"<Patient_Address_State>SKIPPED</Patient_Address_State>"+
-//				"<Patient_Address>$SKIPPED$</Patient_Address>"+
-//				"<Patient_Gender_State>SKIPPED</Patient_Gender_State>"+
-//				"<Patient_Gender>$SKIPPED$</Patient_Gender>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP=" + parseConclusion(conclusion));
-//
-//		name = "Physical_Examination";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<PatientData_PhysicalReport_State>UNDEFINED</PatientData_PhysicalReport_State>"+
-//				"<PatientData_PhysicalReport>$UNDEFINED$</PatientData_PhysicalReport>"+
-//				"<PatientData_PhysicalExamination_State>UNDEFINED</PatientData_PhysicalExamination_State>"+
-//				"<PatientData_PhysicalExamination>$UNDEFINED$</PatientData_PhysicalExamination>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND = " + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<PatientData_PhysicalReport_State>DEFINED</PatientData_PhysicalReport_State>"+
-//				"<PatientData_PhysicalReport>$DEFINED$</PatientData_PhysicalReport>"+
-//				"<PatientData_PhysicalExamination_State>DEFINED</PatientData_PhysicalExamination_State>"+
-//				"<PatientData_PhysicalExamination>$DEFINED$</PatientData_PhysicalExamination>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE=" + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<PatientData_PhysicalReport_State>SKIPPED</PatientData_PhysicalReport_State>"+
-//				"<PatientData_PhysicalReport>$SKIPPED$</PatientData_PhysicalReport>"+
-//				"<PatientData_PhysicalExamination_State>SKIPPED</PatientData_PhysicalExamination_State>"+
-//				"<PatientData_PhysicalExamination>$SKIPPED$</PatientData_PhysicalExamination>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP=" + parseConclusion(conclusion));
-//
-//		name = "Collect_Data";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<PatientData_Height_State>UNDEFINED</PatientData_Height_State>"+
-//				"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
-//				"<PatientData_Weight_State>UNDEFINED</PatientData_Weight_State>"+
-//				"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND=" + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<PatientData_Height_State>DEFINED</PatientData_Height_State>"+
-//				"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
-//				"<PatientData_Weight_State>DEFINED</PatientData_Weight_State>"+
-//				"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE=" + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<PatientData_Height_State>SKIPPED</PatientData_Height_State>"+
-//				"<PatientData_Height>$SKIPPED$</PatientData_Height>"+
-//				"<PatientData_Weight_State>SKIPPED</PatientData_Weight_State>"+
-//				"<PatientData_Weight>$SKIPPED$</PatientData_Weight>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP=" + parseConclusion(conclusion));
-//
-//		name = "Doctor_Appointment";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<MedicalReport_Report_State>UNDEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$UNDEFINED$</MedicalReport_Report>"+
-//				"<Prescription_Recipe_State>UNDEFINED</Prescription_Recipe_State>"+
-//				"<Prescription_Recipe>$UNDEFINED$</Prescription_Recipe>"+
-//				"<MedicalReport_Closed_State>UNDEFINED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>$UNDEFINED$</MedicalReport_Closed>"+
-//				"<PatientData_MedicalExamination_State>UNDEFINED</PatientData_MedicalExamination_State>"+
-//				"<PatientData_MedicalExamination>$UNDEFINED$</PatientData_MedicalExamination>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND=" + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<MedicalReport_Report_State>DEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$DEFINED$</MedicalReport_Report>"+
-//				"<Prescription_Recipe_State>DEFINED</Prescription_Recipe_State>"+
-//				"<Prescription_Recipe>$DEFINED$</Prescription_Recipe>"+
-//				"<MedicalReport_Closed_State>DEFINED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>true</MedicalReport_Closed>"+
-//				"<PatientData_MedicalExamination_State>DEFINED</PatientData_MedicalExamination_State>"+
-//				"<PatientData_MedicalExamination>$DEFINED$</PatientData_MedicalExamination>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE=" + parseConclusion(conclusion));
-//
-//		// DEF False
-//		cs = "<cornerstone>"+
-//				"<MedicalReport_Report_State>DEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$DEFINED$</MedicalReport_Report>"+
-//				"<Prescription_Recipe_State>DEFINED</Prescription_Recipe_State>"+
-//				"<Prescription_Recipe>$DEFINED$</Prescription_Recipe>"+
-//				"<MedicalReport_Closed_State>DEFINED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>false</MedicalReport_Closed>"+
-//				"<PatientData_MedicalExamination_State>DEFINED</PatientData_MedicalExamination_State>"+
-//				"<PatientData_MedicalExamination>$DEFINED$</PatientData_MedicalExamination>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("DEF FALSE=" + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<MedicalReport_Report_State>SKIPPED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$SKIPPED$</MedicalReport_Report>"+
-//				"<Prescription_Recipe_State>SKIPPED</Prescription_Recipe_State>"+
-//				"<Prescription_Recipe>$SKIPPED$</Prescription_Recipe>"+
-//				"<MedicalReport_Closed_State>SKIPPED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>$SKIPPED$</MedicalReport_Closed>"+
-//				"<PatientData_MedicalExamination_State>SKIPPED</PatientData_MedicalExamination_State>"+
-//				"<PatientData_MedicalExamination>$SKIPPED$</PatientData_MedicalExamination>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP=" + parseConclusion(conclusion));
-//
-//		name = "Check-out_Patient";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<Episode_Closed_State>UNDEFINED</Episode_Closed_State>"+
-//				"<Episode_Closed>$UNDEFINED$</Episode_Closed>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND = " + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<Episode_Closed_State>DEFINED</Episode_Closed_State>"+
-//				"<Episode_Closed>true</Episode_Closed>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE = " + parseConclusion(conclusion));
-//
-//		// DEF False
-//		cs = "<cornerstone>"+
-//				"<Episode_Closed_State>DEFINED</Episode_Closed_State>"+
-//				"<Episode_Closed>false</Episode_Closed>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("DEF FALSE=" + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<Episode_Closed_State>SKIPPED</Episode_Closed_State>"+
-//				"<Episode_Closed>$SKIPPED$</Episode_Closed>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP = " + parseConclusion(conclusion));
-//
-//		///goals
-//		name = "GOAL_Collect_Data";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<PatientData_Height_State>UNDEFINED</PatientData_Height_State>"+
-//				"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
-//				"<PatientData_Weight_State>UNDEFINED</PatientData_Weight_State>"+
-//				"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND = " + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<PatientData_Height_State>DEFINED</PatientData_Height_State>"+
-//				"<PatientData_Height>$DEFINED$</PatientData_Height>"+
-//				"<PatientData_Weight_State>DEFINED</PatientData_Weight_State>"+
-//				"<PatientData_Weight>$DEFINED$</PatientData_Weight>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE = " + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<PatientData_Height_State>SKIPPED</PatientData_Height_State>"+
-//				"<PatientData_Height>$SKIPPED$</PatientData_Height>"+
-//				"<PatientData_Weight_State>SKIPPED</PatientData_Weight_State>"+
-//				"<PatientData_Weight>$SKIPPED$</PatientData_Weight>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP = " + parseConclusion(conclusion));
-//
-//		//////////
-//		name = "GOAL_Diagnose_Patient";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<Patient_Name_State>UNDEFINED</Patient_Name_State>"+
-//				"<Patient_Name>$UNDEFINED$</Patient_Name>"+
-//				"<MedicalReport_Report_State>UNDEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$UNDEFINED$</MedicalReport_Report>"+
-//				"<Patient_PhoneNumber_State>UNDEFINED</Patient_PhoneNumber_State>"+
-//				"<Patient_PhoneNumber>$UNDEFINED$</Patient_PhoneNumber>"+
-//				"<Patient_Address_State>UNDEFINED</Patient_Address_State>"+
-//				"<Patient_Address>$UNDEFINED$</Patient_Address>"+
-//				"<MedicalReport_Closed_State>UNDEFINED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>$UNDEFINED$</MedicalReport_Closed>"+
-//				"<Patient_Gender_State>UNDEFINED</Patient_Gender_State>"+
-//				"<Patient_Gender>$UNDEFINED$</Patient_Gender>"+
-//				"<Episode_Closed_State>UNDEFINED</Episode_Closed_State>"+
-//				"<Episode_Closed>$UNDEFINED$</Episode_Closed>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND = " + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<Patient_Name_State>DEFINED</Patient_Name_State>"+
-//				"<Patient_Name>$DEFINED$</Patient_Name>"+
-//				"<MedicalReport_Report_State>DEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$DEFINED$</MedicalReport_Report>"+
-//				"<Patient_PhoneNumber_State>DEFINED</Patient_PhoneNumber_State>"+
-//				"<Patient_PhoneNumber>$DEFINED$</Patient_PhoneNumber>"+
-//				"<Patient_Address_State>DEFINED</Patient_Address_State>"+
-//				"<Patient_Address>$DEFINED$</Patient_Address>"+
-//				"<MedicalReport_Closed_State>DEFINED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>true</MedicalReport_Closed>"+
-//				"<Patient_Gender_State>DEFINED</Patient_Gender_State>"+
-//				"<Patient_Gender>$DEFINED$</Patient_Gender>"+
-//				"<Episode_Closed_State>DEFINED</Episode_Closed_State>"+
-//				"<Episode_Closed>true</Episode_Closed>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE = " + parseConclusion(conclusion));
-//
-//		// DEF FALSE
-//		cs = "<cornerstone>"+
-//				"<Patient_Name_State>DEFINED</Patient_Name_State>"+
-//				"<Patient_Name>$DEFINED$</Patient_Name>"+
-//				"<MedicalReport_Report_State>DEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$DEFINED$</MedicalReport_Report>"+
-//				"<Patient_PhoneNumber_State>DEFINED</Patient_PhoneNumber_State>"+
-//				"<Patient_PhoneNumber>$DEFINED$</Patient_PhoneNumber>"+
-//				"<Patient_Address_State>DEFINED</Patient_Address_State>"+
-//				"<Patient_Address>$DEFINED$</Patient_Address>"+
-//				"<MedicalReport_Closed_State>DEFINED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>false</MedicalReport_Closed>"+
-//				"<Patient_Gender_State>DEFINED</Patient_Gender_State>"+
-//				"<Patient_Gender>$DEFINED$</Patient_Gender>"+
-//				"<Episode_Closed_State>DEFINED</Episode_Closed_State>"+
-//				"<Episode_Closed>false</Episode_Closed>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("DEF FALSE=" + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<Patient_Name_State>SKIPPED</Patient_Name_State>"+
-//				"<Patient_Name>$SKIPPED$</Patient_Name>"+
-//				"<MedicalReport_Report_State>SKIPPED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$SKIPPED$</MedicalReport_Report>"+
-//				"<Patient_PhoneNumber_State>SKIPPED</Patient_PhoneNumber_State>"+
-//				"<Patient_PhoneNumber>$SKIPPED$</Patient_PhoneNumber>"+
-//				"<Patient_Address_State>SKIPPED</Patient_Address_State>"+
-//				"<Patient_Address>$SKIPPED$</Patient_Address>"+
-//				"<MedicalReport_Closed_State>SKIPPED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>$SKIPPED$</MedicalReport_Closed>"+
-//				"<Patient_Gender_State>SKIPPED</Patient_Gender_State>"+
-//				"<Patient_Gender>$SKIPPED$</Patient_Gender>"+
-//				"<Episode_Closed_State>SKIPPED</Episode_Closed_State>"+
-//				"<Episode_Closed>$SKIPPED$</Episode_Closed>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP = " + parseConclusion(conclusion));
-//
-//		name = "GOAL_Observe_Patient";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<Patient_Name_State>UNDEFINED</Patient_Name_State>"+
-//				"<Patient_Name>$UNDEFINED$</Patient_Name>"+
-//				"<Episode_Date_State>UNDEFINED</Episode_Date_State>"+
-//				"<Episode_Date>$UNDEFINED$</Episode_Date>"+
-//				"<MedicalReport_Report_State>UNDEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$UNDEFINED$</MedicalReport_Report>"+
-//				"<Episode_Closed_State>UNDEFINED</Episode_Closed_State>"+
-//				"<Episode_Closed>$UNDEFINED$</Episode_Closed>"+
-//				"<Patient_PhoneNumber_State>UNDEFINED</Patient_PhoneNumber_State>"+
-//				"<Patient_PhoneNumber>$UNDEFINED$</Patient_PhoneNumber>"+
-//				"<Patient_Address_State>UNDEFINED</Patient_Address_State>"+
-//				"<Patient_Address>$UNDEFINED$</Patient_Address>"+
-//				"<MedicalReport_Closed_State>UNDEFINED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>$UNDEFINED$</MedicalReport_Closed>"+
-//				"<PatientData_MedicalExamination_State>UNDEFINED</PatientData_MedicalExamination_State>"+
-//				"<PatientData_MedicalExamination>$UNDEFINED$</PatientData_MedicalExamination>"+
-//				"<Patient_Gender_State>UNDEFINED</Patient_Gender_State>"+
-//				"<Patient_Gender>$UNDEFINED$</Patient_Gender>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND = " + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<Patient_Name_State>DEFINED</Patient_Name_State>"+
-//				"<Patient_Name>$DEFINED$</Patient_Name>"+
-//				"<Episode_Date_State>DEFINED</Episode_Date_State>"+
-//				"<Episode_Date>$DEFINED$</Episode_Date>"+
-//				"<MedicalReport_Report_State>DEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$DEFINED$</MedicalReport_Report>"+
-//				"<Episode_Closed_State>DEFINED</Episode_Closed_State>"+
-//				"<Episode_Closed>$DEFINED$</Episode_Closed>"+
-//				"<Patient_PhoneNumber_State>DEFINED</Patient_PhoneNumber_State>"+
-//				"<Patient_PhoneNumber>$DEFINED$</Patient_PhoneNumber>"+
-//				"<Patient_Address_State>DEFINED</Patient_Address_State>"+
-//				"<Patient_Address>$DEFINED$</Patient_Address>"+
-//				"<MedicalReport_Closed_State>DEFINED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>$DEFINED$</MedicalReport_Closed>"+
-//				"<PatientData_MedicalExamination_State>DEFINED</PatientData_MedicalExamination_State>"+
-//				"<PatientData_MedicalExamination>$DEFINED$</PatientData_MedicalExamination>"+
-//				"<Patient_Gender_State>DEFINED</Patient_Gender_State>"+
-//				"<Patient_Gender>$DEFINED$</Patient_Gender>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE = " + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<Patient_Name_State>SKIPPED</Patient_Name_State>"+
-//				"<Patient_Name>$SKIPPED$</Patient_Name>"+
-//				"<Episode_Date_State>SKIPPED</Episode_Date_State>"+
-//				"<Episode_Date>$SKIPPED$</Episode_Date>"+
-//				"<MedicalReport_Report_State>SKIPPED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$SKIPPED$</MedicalReport_Report>"+
-//				"<Episode_Closed_State>SKIPPED</Episode_Closed_State>"+
-//				"<Episode_Closed>$SKIPPED$</Episode_Closed>"+
-//				"<Patient_PhoneNumber_State>SKIPPED</Patient_PhoneNumber_State>"+
-//				"<Patient_PhoneNumber>$SKIPPED$</Patient_PhoneNumber>"+
-//				"<Patient_Address_State>SKIPPED</Patient_Address_State>"+
-//				"<Patient_Address>$SKIPPED$</Patient_Address>"+
-//				"<MedicalReport_Closed_State>SKIPPED</MedicalReport_Closed_State>"+
-//				"<MedicalReport_Closed>$SKIPPED$</MedicalReport_Closed>"+
-//				"<PatientData_MedicalExamination_State>SKIPPED</PatientData_MedicalExamination_State>"+
-//				"<PatientData_MedicalExamination>$SKIPPED$</PatientData_MedicalExamination>"+
-//				"<Patient_Gender_State>SKIPPED</Patient_Gender_State>"+
-//				"<Patient_Gender>$SKIPPED$</Patient_Gender>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP = " + parseConclusion(conclusion));
-//
-//		name = "GOAL_Write_Medical_Report";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<MedicalReport_Report_State>UNDEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$UNDEFINED$</MedicalReport_Report>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND = " + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<MedicalReport_Report_State>DEFINED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$DEFINED$</MedicalReport_Report>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE = " + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<MedicalReport_Report_State>SKIPPED</MedicalReport_Report_State>"+
-//				"<MedicalReport_Report>$SKIPPED$</MedicalReport_Report>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP = " + parseConclusion(conclusion));
-//
-//		name = "GOAL_Physical_Examination";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<PatientData_PhysicalReport_State>UNDEFINED</PatientData_PhysicalReport_State>"+
-//				"<PatientData_PhysicalReport>$UNDEFINED$</PatientData_PhysicalReport>"+
-//				"<PatientData_PhysicalExamination_State>UNDEFINED</PatientData_PhysicalExamination_State>"+
-//				"<PatientData_PhysicalExamination>$UNDEFINED$</PatientData_PhysicalExamination>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND = " + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<PatientData_PhysicalReport_State>DEFINED</PatientData_PhysicalReport_State>"+
-//				"<PatientData_PhysicalReport>$DEFINED$</PatientData_PhysicalReport>"+
-//				"<PatientData_PhysicalExamination_State>DEFINED</PatientData_PhysicalExamination_State>"+
-//				"<PatientData_PhysicalExamination>$DEFINED$</PatientData_PhysicalExamination>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE = " + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<PatientData_PhysicalReport_State>SKIPPED</PatientData_PhysicalReport_State>"+
-//				"<PatientData_PhysicalReport>$SKIPPED$</PatientData_PhysicalReport>"+
-//				"<PatientData_PhysicalExamination_State>SKIPPED</PatientData_PhysicalExamination_State>"+
-//				"<PatientData_PhysicalExamination>$SKIPPED$</PatientData_PhysicalExamination>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP = " + parseConclusion(conclusion));
-//
-//		name = "GOAL_Prescribe";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<Prescription_Recipe_State>UNDEFINED</Prescription_Recipe_State>"+
-//				"<Prescription_Recipe>$UNDEFINED$</Prescription_Recipe>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND = " + parseConclusion(conclusion));
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<Prescription_Recipe_State>DEFINED</Prescription_Recipe_State>"+
-//				"<Prescription_Recipe>$DEFINED$</Prescription_Recipe>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE = " + parseConclusion(conclusion));
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<Prescription_Recipe_State>SKIPPED</Prescription_Recipe_State>"+
-//				"<Prescription_Recipe>$SKIPPED$</Prescription_Recipe>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP = " + parseConclusion(conclusion));
-//	}
-
 
 }

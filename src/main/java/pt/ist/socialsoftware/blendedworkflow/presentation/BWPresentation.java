@@ -16,10 +16,10 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal.GoalState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
@@ -975,7 +975,7 @@ public class BWPresentation extends Application {
 		}
 
 		GoalModel goalModel = bwSpecification.getGoalModel();
-		for (Goal goal : goalModel.getGoals()) {
+		for (AchieveGoal goal : goalModel.getAchieveGoals()) {
 			Object goal1 = bwSpecJobsInfoTable.addItem(new Object[] {goal.getName(), goal.getDescription(), goal.getSubGoalsData(), goal.getConstraintData()}, null);
 			bwSpecJobsInfoTable.setParent(goal1, goals);
 			bwSpecJobsInfoTable.setChildrenAllowed(goal1, false);
@@ -1003,7 +1003,7 @@ public class BWPresentation extends Application {
 			}
 		}
 
-		for (Goal goal : goalModelInstance.getGoals()) {
+		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 			if (goal.getState().equals(GoalState.ACHIEVED) || goal.getState().equals(GoalState.SKIPPED)) {
 				achievedGoalsCount++;
 			}
@@ -1014,7 +1014,7 @@ public class BWPresentation extends Application {
 		bwInstanceInfoTable.addItem(new Object[] {"Launched by", bwInstance.getUser().getID()}, new Integer(2));
 		bwInstanceInfoTable.addItem(new Object[] {"Creation Date", bwInstance.getCreationDate()}, new Integer(3));
 		bwInstanceInfoTable.addItem(new Object[] {"Executed Tasks", executedTasksCount + " of " + taskModelInstance.getTasksCount()}, new Integer(4));
-		bwInstanceInfoTable.addItem(new Object[] {"Achieved Goals", achievedGoalsCount + " of " + goalModelInstance.getGoalsCount()}, new Integer(5));
+		bwInstanceInfoTable.addItem(new Object[] {"Achieved Goals", achievedGoalsCount + " of " + goalModelInstance.getAchieveGoalsCount()}, new Integer(5));
 
 		// JobInfo
 		int jobIndex = 1;
@@ -1059,8 +1059,8 @@ public class BWPresentation extends Application {
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		
 		// Add Goals
-		HashMap<Goal, Object> addedGoals = new HashMap<Goal, Object>();
-		for (Goal goal : goalModelInstance.getGoals()) {
+		HashMap<AchieveGoal, Object> addedGoals = new HashMap<AchieveGoal, Object>();
+		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 			int timesExecuted = 0;
 			if (goal.getGoalWorkItem() != null) {
 				timesExecuted = 1;
@@ -1071,7 +1071,7 @@ public class BWPresentation extends Application {
 		}
 		
 		// Goal Relations
-		for (Goal goal : goalModelInstance.getGoals()) {
+		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 			if (goal.getParentGoal() != null) {
 				Object goalObject = addedGoals.get(goal);
 				Object parentGoalObject = addedGoals.get(goal.getParentGoal());
@@ -1082,7 +1082,7 @@ public class BWPresentation extends Application {
 			}
 		}
 		
-		Iterator<Entry<Goal, Object>> itr = addedGoals.entrySet().iterator();
+		Iterator<Entry<AchieveGoal, Object>> itr = addedGoals.entrySet().iterator();
 		while(itr.hasNext()) {
 			goalTable.setCollapsed(itr.next(), false);
 		}
@@ -1150,7 +1150,7 @@ public class BWPresentation extends Application {
 		Transaction.begin();
 		goalInfoTable.removeAllItems();
 		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(OID);
-		Goal goal = goalWorkItem.getGoal();
+		AchieveGoal goal = goalWorkItem.getAchieveGoal();
 		
 		String inputData = "None";
 		String subGoals ="None";
@@ -1158,7 +1158,7 @@ public class BWPresentation extends Application {
 		int subGoalIndex = 0;
 		ArrayList<Entity> inputEntities = new ArrayList<Entity>();
 
-		for (Goal subGoal : goal.getSubGoals()) {
+		for (AchieveGoal subGoal : goal.getSubGoals()) {
 			for (AttributeInstance attributeInstance : subGoal.getGoalWorkItem().getContraintViolationAttributeInstances()) {
 				Entity entity = attributeInstance.getAttribute().getEntity();
 				if (!inputEntities.contains(entity)) {

@@ -3,11 +3,19 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.util.HashMap;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
+
 public class ForAllCondition extends ForAllCondition_Base {
     
     public  ForAllCondition() {
         super();
     }
+    
+	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {

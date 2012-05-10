@@ -126,7 +126,7 @@ public class SkipWorkItemServiceTest {
 		try {
 			Transaction.begin();
 
-			assertEquals(WorkItemState.CHECKED_IN, workItem.getState());
+			assertEquals(WorkItemState.SKIPPED, workItem.getState());
 			for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
 				assertEquals("$SKIPPED$", workItemArgument.getValue());
 			}

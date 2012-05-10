@@ -3,10 +3,14 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.util.HashMap;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
+
 public abstract class Condition extends Condition_Base {
 
 	public enum ConditionType {PRE_CONSTRAINT, CONSTRAINT_VIOLATION};
 	public enum ConditionResult {TRUE, FALSE, SKIPPED};
+	
+	public abstract TripleStateBool evaluate(GoalWorkItem goalWorkItem);
 	
 	public Condition and(Condition one, Condition other) {
 		return new AndCondition(one, other);

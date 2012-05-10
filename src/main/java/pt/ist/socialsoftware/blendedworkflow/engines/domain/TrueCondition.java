@@ -4,11 +4,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
+
 public class TrueCondition extends TrueCondition_Base {
     
     public TrueCondition() {
         super();
     }
+    
+	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
+		return TripleStateBool.TRUE;
+	}
     
 	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {

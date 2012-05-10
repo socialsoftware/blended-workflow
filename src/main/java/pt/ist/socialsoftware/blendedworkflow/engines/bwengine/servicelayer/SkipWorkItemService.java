@@ -28,7 +28,7 @@ public class SkipWorkItemService implements Callable<String> {
 			workItemArgument.setValue("$SKIPPED$");
 		}
 
-		this.workItem.notifySkip();
+		this.workItem.notifyCheckedIn();
 		Transaction.commit();
 		log.info("END");
 		return "SkipWorkItemService:Sucess";

@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+//import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -10,18 +10,18 @@ import org.yawlfoundation.yawl.worklet.rdr.RdrNode;
 import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 import org.yawlfoundation.yawl.worklet.support.WorkletEventListener;
 
-import pt.ist.fenixframework.pstm.Transaction;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
+//import pt.ist.fenixframework.pstm.Transaction;
+//import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+//import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 
 @SuppressWarnings("serial")
 public class WorkletAdapterEventListener extends WorkletEventListener{
 
 	private static Logger log = Logger.getLogger("WorkletAdapterEventListener");
-	private ConcurrentHashMap<String, Boolean> startedCases;
+//	private ConcurrentHashMap<String, Boolean> startedCases;
 
 	public void WorkletEventListener() {
-		startedCases = new ConcurrentHashMap<String, Boolean>();
+//		startedCases = new ConcurrentHashMap<String, Boolean>();
 	}
 
 	/**

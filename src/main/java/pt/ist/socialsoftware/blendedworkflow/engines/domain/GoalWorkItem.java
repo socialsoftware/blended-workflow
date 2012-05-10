@@ -9,21 +9,22 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal.GoalState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal.GoalState;
+import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class GoalWorkItem extends GoalWorkItem_Base {
 	
 	private Logger log = Logger.getLogger("GoalWorkItem");
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-	public GoalWorkItem(BWInstance bwInstance, Goal goal) {
+	public GoalWorkItem(BWInstance bwInstance, AchieveGoal goal) {
 		log.info("New GoalWorkitem for goal " + goal.getName());
 		setBwInstance(bwInstance);
-		setGoal(goal);
+		setAchieveGoal(goal);
 		setRole(goal.getRole());
 		setUser(goal.getUser());
 		setID(goal.getName() + "." + bwInstance.getNewWorkItemID()); // Id: GoalName.#
-		goal.getCondition().assignAttributeInstances(this);
+		goal.getSucessCondition().assignAttributeInstances(this);
 		
 		createConstrainViolationWorkItemArguments();
 		notifyConstrainViolation();
@@ -67,27 +68,48 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		log.info("GoalWorkitem " + getID() + " is now in ConstrainViolation state");
 		setState(WorkItemState.CONSTRAINT_VIOLATION);
 		updateConstrainViolationWorkItemArguments();
-		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
+//		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this); //FIXME
+		evaluate();
+	}
+
+	private void evaluate() {
+		for (WorkItemArgument w : this.getConstrainViolationWorkItemArguments()){
+			AttributeInstance a = w.getAttributeInstance();
+			String v = w.getValue();
+			DataState s = w.getState();
+			System.out.println("AI" + a.getID() + " V:" + v + " S:" + s);
+		}
+		
+		
+		TripleStateBool result = getAchieveGoal().getSucessCondition().evaluate(this);
+		System.out.println("evaluate result for " + this.getID() + " = " + result);
+		if (result.equals(TripleStateBool.TRUE)) {
+			notifyCompleted();
+		} else if (result.equals(TripleStateBool.SKIPPED)) {
+			notifySkipped();
+		} else {
+			notifyEnabled();
+		}
 	}
 
 	@Override
 	public void notifyEnabled() {
 
 		int countSubGoals = 0;
-		for (Goal subGoal : getGoal().getSubGoals()) {
+		for (AchieveGoal subGoal : getAchieveGoal().getSubGoals()) {
 			if (subGoal.getState().equals(GoalState.ACHIEVED))
 				countSubGoals++;
 		}
 		
-		if (countSubGoals == getGoal().getSubGoalsCount()) {
+		if (countSubGoals == getAchieveGoal().getSubGoalsCount()) {
 			log.info("GoalWorkitem " + getID() + " is now in Enabled state");
-			getGoal().setState(GoalState.ENABLED);
+			getAchieveGoal().setState(GoalState.ENABLED);
 			setState(WorkItemState.ENABLED);
 			BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
 		} else {
 			log.info("GoalWorkitem " + getID() + " is now in Pending state");
 			setState(WorkItemState.GOAL_PENDING);
-			getGoal().setState(GoalState.DEACTIVATED);
+			getAchieveGoal().setState(GoalState.DEACTIVATED);
 		}
 	}
 	
@@ -95,7 +117,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	public void notifyPending() {
 		log.info("GoalWorkitem " + getID() + " is now in Pending state");
 		setState(WorkItemState.GOAL_PENDING);
-		getGoal().setState(GoalState.DEACTIVATED);
+		getAchieveGoal().setState(GoalState.DEACTIVATED);
 		BlendedWorkflow.getInstance().getWorkListManager().notifyPendingWorkItem(this);
 	}
 
@@ -104,7 +126,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		log.info("GoalWorkitem " + getID() + " is now in Completed state");
 		if (getState() == WorkItemState.CHECKED_IN || getState() == WorkItemState.CONSTRAINT_VIOLATION) {
 			setState(WorkItemState.COMPLETED);
-			getGoal().setState(GoalState.ACHIEVED);
+			getAchieveGoal().setState(GoalState.ACHIEVED);
 		}	
 		setAttributeValues();
 		String date = dateFormat.format(Calendar.getInstance().getTime());
@@ -120,7 +142,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		log.info("GoalWorkitem " + getID() + " is now in Skipped state");
 		if (getState() == WorkItemState.CHECKED_IN || getState() == WorkItemState.CONSTRAINT_VIOLATION) {
 			setState(WorkItemState.SKIPPED);
-			getGoal().setState(GoalState.SKIPPED);
+			getAchieveGoal().setState(GoalState.SKIPPED);
 		}	
 		
 		setAttributeSkipped();
@@ -203,18 +225,10 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	
 	@Override
 	public void notifyCheckedIn() {
-		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
+		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_GOAL ||  getState() == WorkItemState.RE_ACTIVATED) {
 			setState(WorkItemState.CHECKED_IN);
 		}
-		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
-	}
-
-	@Override
-	public void notifySkip() {
-		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
-			setState(WorkItemState.CHECKED_IN);
-		}
-		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
+		evaluate();
 	}
 
 }

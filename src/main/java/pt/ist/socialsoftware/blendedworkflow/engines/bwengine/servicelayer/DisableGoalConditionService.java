@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 
 public class DisableGoalConditionService implements Callable<String> {
@@ -15,9 +15,9 @@ public class DisableGoalConditionService implements Callable<String> {
 	private static Logger log = Logger.getLogger("CreateGoalInstanceService");
 	
 	private BWInstance bwInstance;
-	private Goal goal;
+	private AchieveGoal goal;
 
-	public DisableGoalConditionService (BWInstance bwInstance, Goal goal) {
+	public DisableGoalConditionService (BWInstance bwInstance, AchieveGoal goal) {
 		this.bwInstance = bwInstance;
 		this.goal = goal;
 	}
@@ -32,14 +32,14 @@ public class DisableGoalConditionService implements Callable<String> {
 		return "CreateGoalInstanceService:Sucess";
 	}
 	
-	private void generateGoalWorkItems(BWInstance bwInstance, Goal goal) {
+	private void generateGoalWorkItems(BWInstance bwInstance, AchieveGoal goal) {
 		System.out.println("generateGoalWorkItems" + goal.getName());
 		if (goal.getGoalWorkItem() == null) {
 			new GoalWorkItem(bwInstance, goal);
 			System.out.println("goal" + goal.getName());
 		}
 		
-		for (Goal subGoal : goal.getSubGoals()) {
+		for (AchieveGoal subGoal : goal.getSubGoals()) {
 			generateGoalWorkItems(bwInstance, subGoal);
 		}		
 		

@@ -3,13 +3,17 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.util.HashMap;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class OrCondition extends OrCondition_Base {
 
 	public OrCondition(Condition one, Condition two) {
 		addConditions(one);
 		addConditions(two);
+	}
+	
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
+		return getConditionOne().evaluate(goalWorkItem).OR(getConditionTwo().evaluate(goalWorkItem));
 	}
 	
 	public Condition getConditionOne(){
