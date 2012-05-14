@@ -97,8 +97,8 @@ public class TaskForm extends VerticalLayout {
 	private void setWorkItemArgumentValue(int index, String value) {
 		Transaction.begin();
 		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
-		taskWorkItem.getConstrainViolationWorkItemArguments().get(index).setValue(value);
-		taskWorkItem.getConstrainViolationWorkItemArguments().get(index).setState(DataState.DEFINED);
+		taskWorkItem.getOutputWorkItemArguments().get(index).setValue(value);
+		taskWorkItem.getOutputWorkItemArguments().get(index).setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
@@ -109,13 +109,13 @@ public class TaskForm extends VerticalLayout {
 		Entity previousEntity = null;
 		Boolean first = true;
 		Boolean posAttribute = false;
-		for (WorkItemArgument preWorkItemArgument : taskWorkItem.getPreConstrainWorkItemArguments()) {
+		for (WorkItemArgument preWorkItemArgument : taskWorkItem.getInputWorkItemArguments()) {
 			AttributeInstance preAttributeInstance = preWorkItemArgument.getAttributeInstance();
 			Attribute attribute = preAttributeInstance.getAttribute();
 			Entity entity = attribute.getEntity();
 			String value = preWorkItemArgument.getValue();
 
-			for (WorkItemArgument posWorkItemArgument: taskWorkItem.getConstrainViolationWorkItemArguments()) {
+			for (WorkItemArgument posWorkItemArgument: taskWorkItem.getOutputWorkItemArguments()) {
 				AttributeInstance posAttributeInstance = posWorkItemArgument.getAttributeInstance();
 				if (preAttributeInstance.equals(posAttributeInstance)) {
 					posAttribute = true;
@@ -152,7 +152,7 @@ public class TaskForm extends VerticalLayout {
 
 		Entity previousEntity = null;
 		Boolean first = true;
-		for (WorkItemArgument workItemArgument : taskWorkItem.getConstrainViolationWorkItemArguments()) {
+		for (WorkItemArgument workItemArgument : taskWorkItem.getOutputWorkItemArguments()) {
 			Attribute attribute = workItemArgument.getAttributeInstance().getAttribute();
 			Entity entity = attribute.getEntity();
 

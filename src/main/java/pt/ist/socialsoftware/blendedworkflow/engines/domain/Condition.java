@@ -7,7 +7,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public abstract class Condition extends Condition_Base {
 
-	public enum ConditionType {PRE_CONSTRAINT, CONSTRAINT_VIOLATION};
+	public enum ConditionType {PRE_CONSTRAINT, CONSTRAINT_VIOLATION, ACTIVATE, SUCESS, MAINTAIN};
 	public enum ConditionResult {TRUE, FALSE, SKIPPED};
 	
 	public abstract TripleStateBool evaluate(GoalWorkItem goalWorkItem);
@@ -28,7 +28,7 @@ public abstract class Condition extends Condition_Base {
 	
 	abstract Condition cloneCondition(TaskModelInstance taskModelInstance);
 
-	abstract void assignAttributeInstances(GoalWorkItem goalWorkItem);
+	public abstract void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType);
 	
 	abstract void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType);
 
@@ -61,4 +61,8 @@ public abstract class Condition extends Condition_Base {
 	public abstract String getRdrSkippedConditionNEW();
 	public abstract String getRdrTrueConditionNEW();
 	public abstract String getRdrFalseConditionNEW();
+	
+	
+	public abstract String toString();
+	public abstract Boolean existExistEntity();
 }

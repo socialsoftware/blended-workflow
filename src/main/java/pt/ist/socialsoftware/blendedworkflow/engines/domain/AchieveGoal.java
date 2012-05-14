@@ -21,7 +21,7 @@ public class AchieveGoal extends AchieveGoal_Base {
 	/**
 	 * Create the GoalTree root Goal.
 	 */
-	public AchieveGoal(GoalModel goalModel, String name, String description, Condition condition) throws BlendedWorkflowException {
+	public AchieveGoal(GoalModel goalModel, String name, String description, Condition condition, Entity context) throws BlendedWorkflowException {
 		checkUniqueGoalName(goalModel, name);
 		setGoalModel(goalModel);
 		setName(name);
@@ -29,12 +29,13 @@ public class AchieveGoal extends AchieveGoal_Base {
 		setSucessCondition(condition);
 		setState(GoalState.DEACTIVATED);
 		setParentGoal(null);
+		setEntityContext(context);
 	}
 
 	/**
 	 * Create a Goal.
 	 */
-	public AchieveGoal(GoalModel goalModel, AchieveGoal parentGoal, String name,String description, Condition condition) throws BlendedWorkflowException {
+	public AchieveGoal(GoalModel goalModel, AchieveGoal parentGoal, String name,String description, Condition condition, Entity context) throws BlendedWorkflowException {
 		checkUniqueGoalName(goalModel, name);
 		setGoalModel(goalModel);
 		setName(name);
@@ -42,10 +43,16 @@ public class AchieveGoal extends AchieveGoal_Base {
 		setSucessCondition(condition);
 		setParentGoal(parentGoal);
 		setState(GoalState.DEACTIVATED);
+		setEntityContext(context);
 	}
 
 	private void checkUniqueGoalName(GoalModel goalModel, String name) throws BlendedWorkflowException {
 		for (AchieveGoal goal : goalModel.getAchieveGoals()) {
+			if (goal.getName().equals(name)) {
+				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_GOAL_NAME, name);
+			}
+		}
+		for (MaintainGoal goal : goalModel.getMaintainGoals()) {
 			if (goal.getName().equals(name)) {
 				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_GOAL_NAME, name);
 			}
@@ -58,7 +65,18 @@ public class AchieveGoal extends AchieveGoal_Base {
 		if (condition != null) {
 			newSucessCondition = condition.cloneCondition(goalModelInstance);
 		}
-		AchieveGoal newGoal = new AchieveGoal(goalModelInstance, getName(), getDescription(), newSucessCondition);
+		
+		// Get EntityTypeContext from Template
+		BWInstance bwInstance = goalModelInstance.getBwInstance();
+		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		Entity newEntityContext = null;
+		for (Entity entity : dataModelInstance.getEntities()) {
+			if (getEntityContext().getName().equals(entity.getName())) {
+				newEntityContext = entity;
+			}
+		}
+		
+		AchieveGoal newGoal = new AchieveGoal(goalModelInstance, getName(), getDescription(), newSucessCondition, newEntityContext);
 		newGoal.setUser(getUser());
 		newGoal.setRole(getRole());
 		
@@ -117,64 +135,67 @@ public class AchieveGoal extends AchieveGoal_Base {
 	/**********************
 	 * Check Goals to create new WorkItems.
 	 **********************/
-	public void checkState(BWInstance bwInstance) {
-		int subgoalsAchievedCount = 0;
-
-		if (getState() == GoalState.DEACTIVATED) {
-			if (getSubGoalsCount() > 0) { 
-				for (AchieveGoal goal : getSubGoals()) {
-					if ( (goal.getState() == GoalState.ACHIEVED) || (goal.getState() == GoalState.SKIPPED)) {
-						subgoalsAchievedCount++;
-					}
-				}
-				if (getSubGoalsCount() == subgoalsAchievedCount) { // SubGoals achieved
-					setState(GoalState.ENABLED);
-					if (getParentGoal() != null && getParentGoal().getState().equals(GoalState.ENABLED)) {
-						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
-							getParentGoal().getGoalWorkItem().notifyConstrainViolation();
-						}
-					}
-					else {
-						new GoalWorkItem(bwInstance, this);
-					}
-				}
-			}
-			else { // No SubGoals
-				if (getState() == GoalState.DEACTIVATED) {
-					setState(GoalState.ENABLED);
-					if (!getParentGoal().equals(null) && getParentGoal().getState().equals(GoalState.ENABLED)) {
-						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
-							getParentGoal().getGoalWorkItem().notifyConstrainViolation();
-						}
-					}
-					else {
-						new GoalWorkItem(bwInstance, this);
-					}
-				}
-			}
-		}
-	}
-
-	public void updateParentGoal() {
-		AchieveGoal parentGoal = getParentGoal();
-		if (parentGoal.getState().equals(GoalState.ENABLED)) {
-			parentGoal.setState(GoalState.DEACTIVATED);
-			parentGoal.getGoalWorkItem().notifyPending();
-		}
-	}
+//	public void checkState(BWInstance bwInstance) {
+//		int subgoalsAchievedCount = 0;
+//
+//		if (getState() == GoalState.DEACTIVATED) {
+//			if (getSubGoalsCount() > 0) { 
+//				for (AchieveGoal goal : getSubGoals()) {
+//					if ( (goal.getState() == GoalState.ACHIEVED) || (goal.getState() == GoalState.SKIPPED)) {
+//						subgoalsAchievedCount++;
+//					}
+//				}
+//				if (getSubGoalsCount() == subgoalsAchievedCount) { // SubGoals achieved
+//					setState(GoalState.ENABLED);
+//					if (getParentGoal() != null && getParentGoal().getState().equals(GoalState.ENABLED)) {
+//						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
+//							getParentGoal().getGoalWorkItem().notifyConstrainViolation();
+//						}
+//					}
+//					else {
+//						new GoalWorkItem(bwInstance, this);
+//					}
+//				}
+//			}
+//			else { // No SubGoals
+//				if (getState() == GoalState.DEACTIVATED) {
+//					setState(GoalState.ENABLED);
+//					if (!getParentGoal().equals(null) && getParentGoal().getState().equals(GoalState.ENABLED)) {
+//						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
+//							getParentGoal().getGoalWorkItem().notifyConstrainViolation();
+//						}
+//					}
+//					else {
+//						new GoalWorkItem(bwInstance, this);
+//					}
+//				}
+//			}
+//		}
+//	}
+//
+//	public void updateParentGoal() {
+//		AchieveGoal parentGoal = getParentGoal();
+//		if (parentGoal.getState().equals(GoalState.ENABLED)) {
+//			parentGoal.setState(GoalState.DEACTIVATED);
+//			parentGoal.getGoalWorkItem().notifyPending();
+//		}
+//	}
 
 	public void checkPending(BWInstance bwInstance) {
-//		int subgoalsAchievedCount = 0;
-		System.out.println("X3");
-		if (getGoalWorkItem() != null) {
-			if (getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
-				System.out.println("checkPending-evaluate pending");
-				getGoalWorkItem().evaluate(true);
-//				getGoalWorkItem().notifyEnabled();
+//		System.out.println("checkPending1");
+		if (getGoalWorkItems() != null) {
+//			System.out.println("checkPending2");
+			for (GoalWorkItem goalWorkItem : getGoalWorkItems()) {
+				if (goalWorkItem.getState().equals(WorkItemState.GOAL_PENDING)) {
+//					System.out.println("checkPending3");
+					goalWorkItem.evaluate(true);
+					//getGoalWorkItem().notifyEnabled();
+				}
 			}
 		}
 	}
-	
+		
+//		int subgoalsAchievedCount = 0;	
 //				for (Goal goal : getSubGoals()) {
 //					if ((goal.getState() == GoalState.ACHIEVED) || (goal.getState() == GoalState.SKIPPED)) {
 //						subgoalsAchievedCount++;

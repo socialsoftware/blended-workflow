@@ -80,7 +80,10 @@ class AchieveGoal {
 	GoalState state;
 }
 
-class MaintainGoal;
+class MaintainGoal {
+	String name;
+	String description;
+}
 
 class TaskModel;
 
@@ -222,25 +225,25 @@ relation LogHasLogRecords {
 }
 
 // WorkItem
-relation WorkItemRefersToConstraintViolationAttributeInstances {
+relation WorkItemRefersToOutputAttributeInstances {
 	WorkItem playsRole contraintViolationWorkItems {multiplicity 0..*;}
-	AttributeInstance playsRole contraintViolationAttributeInstances { multiplicity 0..*; }
+	AttributeInstance playsRole outputAttributeInstances { multiplicity 0..*; }
 }
 
-relation WorkItemRefersPreConstraintAttributteInstances {
+relation WorkItemRefersInputAttributteInstances {
 	WorkItem playsRole preConstraintWorkItems {multiplicity 0..*;}
-	AttributeInstance playsRole preConstraintAttributeInstances { multiplicity 0..*; }
+	AttributeInstance playsRole inputAttributeInstances { multiplicity 0..*; }
 }
 
 // WorkItemArgument
-relation WorkItemHasPreConstrainWorkItemArguments {
-	WorkItem playsRole preConstrainWorkItem {multiplicity 0..1;}
-	WorkItemArgument playsRole preConstrainWorkItemArguments { multiplicity 0..*; }
+relation WorkItemHasInputWorkItemArguments {
+	WorkItem playsRole inputWorkItem {multiplicity 0..1;}
+	WorkItemArgument playsRole inputWorkItemArguments { multiplicity 0..*; }
 }
 
-relation WorkItemHasConstrainViolationWorkItemArguments {
-	WorkItem playsRole constrainViolationWorkItem {multiplicity 0..1;}
-	WorkItemArgument playsRole constrainViolationWorkItemArguments { multiplicity 0..*; }
+relation WorkItemHasOutputWorkItemArguments {
+	WorkItem playsRole outputWorkItem {multiplicity 0..1;}
+	WorkItemArgument playsRole outputWorkItemArguments { multiplicity 0..*; }
 }
 
 relation WorkItemArgumentRefersAttributteInstances {
@@ -277,7 +280,7 @@ relation AchieveGoalHasActivateConditions {
 
 relation AchieveGoalHasGoalWorkItem {
 	AchieveGoal playsRole achieveGoal { multiplicity 0..1; }
-	GoalWorkItem playsRole goalWorkItem { multiplicity 0..1; }
+	GoalWorkItem playsRole goalWorkItems { multiplicity 0..*; }
 }
 
 
@@ -462,6 +465,11 @@ relation AchieveGoalHasEntity {
 	Entity playsRole entityContext {multiplicity 0..1;}
 }
 
+relation MaintainGoalHasEntity {
+	MaintainGoal playsRole maintainGoalContext {multiplicity 0..*;}
+	Entity playsRole maintainGoalEntityContext {multiplicity 0..1;}
+}
+
 relation GoalWorkItemHasEntityInstances {
 	GoalWorkItem playsRole goalWorkItemContext {multiplicity 0..*;}
 	EntityInstance playsRole entityInstanceContext {multiplicity 0..1;}
@@ -473,11 +481,11 @@ relation MaintainGoalHasMaintainCondition {
 }
 
 relation GoalWorkItemHasActivateCondition {
-	GoalWorkItem playsRole activateConditionGoalWorkItem {multiplicity 0..1;}
+	GoalWorkItem playsRole activateConditionGoalWorkItem {multiplicity 0..*;}
 	Condition playsRole activateConditions {multiplicity 0..*;}
 }
 
 relation GoalWorkItemHasSucessCondition {
-	GoalWorkItem playsRole sucessConditionGoalWorkItem {multiplicity 0..1;}
+	GoalWorkItem playsRole sucessConditionGoalWorkItem {multiplicity 0..*;}
 	Condition playsRole sucessCondition {multiplicity 0..1;}
 }

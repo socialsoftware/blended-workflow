@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
@@ -101,8 +102,9 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 					String activeUserID = "";
 
 					Transaction.begin();
+					ArrayList<String> s = new ArrayList<String>(); //FIXME
 					activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
-					BlendedWorkflow.getInstance().getWorkListManager().createGoal(bwInstanceOID, goalName, goalDescription, parentGoalID, goalCondition, activeUserID);
+					BlendedWorkflow.getInstance().getWorkListManager().createGoal(bwInstanceOID, goalName, goalDescription, parentGoalID,  goalCondition, s, 3, activeUserID); 
 					Transaction.commit();
 
 					getApplication().getMainWindow().showNotification("Goal created successfully", Notification.TYPE_TRAY_NOTIFICATION);

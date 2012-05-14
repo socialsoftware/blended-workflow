@@ -93,8 +93,8 @@ public class GoalForm extends VerticalLayout {
 	private void setWorkItemArgumentValue(int index, String value) {
 		Transaction.begin();
 		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
-		goalWorkItem.getConstrainViolationWorkItemArguments().get(index).setValue(value);
-		goalWorkItem.getConstrainViolationWorkItemArguments().get(index).setState(DataState.DEFINED);
+		goalWorkItem.getOutputWorkItemArguments().get(index).setValue(value);
+		goalWorkItem.getOutputWorkItemArguments().get(index).setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
@@ -104,7 +104,7 @@ public class GoalForm extends VerticalLayout {
 
 		Entity previousEntity = null;
 		Boolean first = true;
-		for (WorkItemArgument workItemArgument : goalWorkItem.getConstrainViolationWorkItemArguments()) {
+		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
 			Attribute attribute = workItemArgument.getAttributeInstance().getAttribute();
 			Entity entity = attribute.getEntity();
 

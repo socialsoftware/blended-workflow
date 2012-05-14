@@ -189,7 +189,7 @@ public class PrintBWSpecification {
 		System.out.println("WorkItems");
 		System.out.println("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
-			System.out.println("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
+			System.out.println("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState() + " and is associated with " + workitem.getOutputAttributeInstancesCount() + " attributeInstances.");
 		}
 	}
 	
@@ -199,10 +199,20 @@ public class PrintBWSpecification {
 		System.out.println("WorkItems");
 		System.out.println("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
-			System.out.println("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState() + " and is associated with " + workitem.getContraintViolationAttributeInstancesCount() + " attributeInstances.");
-			if (workitem.getContraintViolationAttributeInstancesCount()>0) {
-				for (AttributeInstance attributeInstance : workitem.getContraintViolationAttributeInstances()) {
-					System.out.println("AttributeInstance \"" + attributeInstance.getID() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");					}
+			System.out.println("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState());
+			
+			System.out.println("Input: Associated with " + workitem.getInputAttributeInstancesCount() + " attributeInstances.");
+			if (workitem.getInputAttributeInstancesCount()>0) {
+				for (AttributeInstance attributeInstance : workitem.getInputAttributeInstances()) {
+					System.out.println("EI" + attributeInstance.getEntityInstance().getID() + "AttributeInstance \"" + attributeInstance.getID() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");
+				}
+			}
+			
+			System.out.println("Output: Associated with " + workitem.getOutputAttributeInstancesCount() + " attributeInstances.");
+			if (workitem.getOutputAttributeInstancesCount()>0) {
+				for (AttributeInstance attributeInstance : workitem.getOutputAttributeInstances()) {
+					System.out.println("EI: " + attributeInstance.getEntityInstance().getID() + " AttributeInstance \"" + attributeInstance.getID() + "\" with value \"" + attributeInstance.getValue() + "\" and state " + attributeInstance.getState() + ".");
+				}
 			}
 		}
 	}

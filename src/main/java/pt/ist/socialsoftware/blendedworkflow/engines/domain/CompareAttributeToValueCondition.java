@@ -16,7 +16,7 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	
 	@Override
 	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
-		for (WorkItemArgument workItemArgument : goalWorkItem.getConstrainViolationWorkItemArguments()) {
+		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
 			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 			Attribute conditionAttribute = getAttribute();
 			if (workItemAttribute == conditionAttribute) {
@@ -84,8 +84,8 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	}
 	
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem) {
-		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute());
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute(), conditionType);
 	}
 	
 	@Override
@@ -207,5 +207,16 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	public String getRdrFalseConditionNEW() {
 		return "(!" + getRdrTrueConditionNEW() + ")";
 	}
+	
+	@Override
+	public String toString() {
+		return "compareAttributeTo(" + getAttribute().getName() + " " + getOperator() + " " + getValue();
+	}
+	
+	@Override
+	public Boolean existExistEntity() {
+		return false;
+	}
+
 
 }

@@ -1,7 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import org.apache.log4j.Logger;
-
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
@@ -29,7 +27,7 @@ public class NewAttributeForm extends VerticalLayout{
 	private final NativeSelect typeNS = new NativeSelect("Type:");
 	private final CheckBox isKeyCB = new CheckBox("Key Attribute:");
 	
-	private Logger log = Logger.getLogger("NewAttributeForm");
+//	private Logger log = Logger.getLogger("NewAttributeForm");
 
 	public NewAttributeForm(final DataModelTree parent, final long bwInstanceOID, final String entityName) {
 		setMargin(true);
@@ -90,8 +88,6 @@ public class NewAttributeForm extends VerticalLayout{
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 		Entity entity = dataModel.getEntity(entityName);
 
-		// FIXME:
-		log.info("NAF: type: " + typeString);
 		AttributeType type;
 		if (typeString.equals("String")) {
 			type = AttributeType.STRING;

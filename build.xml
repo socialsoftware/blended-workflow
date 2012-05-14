@@ -109,6 +109,11 @@
 		<delete dir="${db.rel-dir}"/>
 	</target>
 	
+	<!-- Clean -->
+	<target name="clean-test" description="Cleans the compiled classes and generated sources">
+		<delete dir="${test-db.rel-dir}"/>
+	</target>
+	
 	<!-- Prepare War -->
 	<target name="prepare-war" depends="compile, instrument-classes">
 		<copy file="${dml.rel-file}" todir="${classes.build.rel-dir}"/>
@@ -145,22 +150,26 @@
 		<copy file="${dist.rel-dir}/${war.filename}" todir="${tomcat.home}/webapps"/>
 	</target>
 	
-	<!-- Test All-->
-	<target name="test-all" depends="compile-tests" description="Run the tests">
+	<!-- Test All -->
+	<target name="test:All" depends="compile-tests" description="Run the tests">
 		<echo message="Testing all services..." />
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.LoadBWSpecificationServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateBWInstanceServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalInstanceServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.DisableGoalConditionServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.EnableGoalWorkItemsServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CheckInWorkItemServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.SkipWorkItemServiceTest" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.RedoGoalWorkItemServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateNewGoalServiceTest" />
 		</junit>
 	</target>
 	
 	<!-- Test LoadBWSpecification -->
-	<target name="test-loadBWSpecification" depends="compile-tests">
+	<target name="test-1:LoadBWSpecification" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -169,7 +178,7 @@
 	</target>
 		
 	<!-- Test CreateBWInstance -->
-	<target name="test-createBWInstance" depends="compile-tests">
+	<target name="test-2:CreateBWInstance" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -177,8 +186,35 @@
 		</junit>
 	</target>
 	
+	<!-- Test CreateGoalInstance -->
+	<target name="test-3:CreateGoalInstance" depends="compile-tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalInstanceServiceTest" />
+		</junit>
+	</target>
+	
+	<!-- Test DisableCondition -->
+	<target name="test-4:DisableGoalCondition" depends="compile-tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.DisableGoalConditionServiceTest" />
+		</junit>
+	</target>
+	
+	<!-- Test DisableCondition -->
+	<target name="test-5:EnableGoalWorkItems" depends="compile-tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.EnableGoalWorkItemsServiceTest" />
+		</junit>
+	</target>
+	
 	<!-- Test CheckInWorkItem-->
-	<target name="test-checkInWorkItem" depends="compile-tests">
+	<target name="test-6:CheckInWorkItem" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -187,7 +223,7 @@
 	</target>
 	
 	<!-- Test SkipWorkItem -->
-	<target name="test-skipWorkItem" depends="compile-tests">
+	<target name="test-7:SkipWorkItem" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -195,40 +231,22 @@
 		</junit>
 	</target>
 	
+	<!-- Test RedoGoalWorkItem -->
+	<target name="test-8:RedoGoalWorkItem" depends="compile-tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.RedoGoalWorkItemServiceTest" />
+		</junit>
+	</target>
+	
 	<!-- Test CreateGoal -->
-	<target name="test-createGoal" depends="compile-tests">
+	<target name="test-9:CreateNewGoal" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateNewGoalServiceTest" />
 		</junit>
 	</target>
-	
-	<!-- Test CreateGoalInstance -->
-	<target name="test-1" depends="compile-tests">
-		<junit>
-			<classpath refid="project.classpath" />
-			<formatter type="brief" usefile="false" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalInstanceServiceTest" />
-		</junit>
-	</target>
-	
-	<!-- Test CreateGoalInstance -->
-	<target name="test-2" depends="compile-tests">
-		<junit>
-			<classpath refid="project.classpath" />
-			<formatter type="brief" usefile="false" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.ReDoGoalInstanceServiceTest" />
-		</junit>
-	</target>
-	
-	<!-- Test CreateGoalInstance -->
-	<target name="test-3" depends="compile-tests">
-		<junit>
-			<classpath refid="project.classpath" />
-			<formatter type="brief" usefile="false" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.DisableConditionServiceTest" />
-		</junit>
-	</target>
-	
+		
 </project>

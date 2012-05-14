@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 public abstract class WorkItem extends WorkItem_Base {
 
 	public enum WorkItemState {PRE_TASK, PRE_GOAL, PRE_FALSE, CONSTRAINT_VIOLATION, ENABLED, GOAL_PENDING, CHECKED_IN, SKIPPED, 
-		COMPLETED, RE_ACTIVATED};
+		COMPLETED, RE_ACTIVATED, ACTIVATED};
 
 	/******************************
 	 * State Change Notifications *
@@ -91,10 +91,14 @@ public abstract class WorkItem extends WorkItem_Base {
 			notifyConstrainViolation();
 		} else if (getState() == WorkItemState.PRE_TASK) {
 			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPreConstraint((TaskWorkItem) this);
+		} else if (getState() == WorkItemState.PRE_TASK) {
+			((GoalWorkItem)this).evaluate(true);
 		}
 	}
 	
-	public abstract void updatePreConstrainWorkItemArguments();
-	public abstract void updateConstrainViolationWorkItemArguments();
+	public abstract void createInputWorkItemArguments();
+	public abstract void updateInputWorkItemArguments();
+	public abstract void createOutputWorkItemArguments();
+	public abstract void updateOutputWorkItemArguments();
 	
 }

@@ -15,18 +15,26 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	
 	@Override
 	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
-		for (WorkItemArgument workItemArgument : goalWorkItem.getConstrainViolationWorkItemArguments()) {
+//		System.out.println("evaluate for " + goalWorkItem.getID());
+		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
+//			System.out.println("workItemArgument" + workItemArgument.getAttributeInstance().getID());
+//			System.out.println("value" + workItemArgument.getValue());
+//			System.out.println("state" + workItemArgument.getState());
+			
 			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 			Attribute conditionAttribute = getEntity().getAttribute(workItemAttribute.getName());
 			
 			if (conditionAttribute != null && conditionAttribute.getIsKeyAttribute()) {
 				if (workItemArgument.getState().equals(DataState.SKIPPED)) {
+//					System.out.println("SKIPPED");
 					return TripleStateBool.SKIPPED;
 				} else if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
+//					System.out.println("FALSE");
 					return TripleStateBool.FALSE;
 				}
 			}
 		}
+//		System.out.println("TRUE");
 		return TripleStateBool.TRUE;
 	}
 
@@ -45,8 +53,8 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 	
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem) {
-		getEntity().assignAllAttributeInstances(goalWorkItem, getEntity());
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		getEntity().assignAllAttributeInstances(goalWorkItem, getEntity(), conditionType);
 	}
 	
 	@Override
@@ -84,7 +92,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 //		
 //		int attributteCount = 0;
 //		for (Attribute attribute : getEntity().getAttributes()) {
-//			//if (attribute.getIsKeyAttribute()) { // FIXME: Episode
+//			//if (attribute.getIsKeyAttribute()) {
 //
 //			String joiner = " | ";
 //			if (type.equals("DEFINED"))
@@ -265,6 +273,16 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	@Override
 	public String getRdrFalseConditionNEW() {
 		return "(FALSE_NODE = FALSE)";
+	}
+	
+	@Override
+	public String toString() {
+		return "existsEntity(" + getEntity().getName() +")";
+	}
+	
+	@Override
+	public Boolean existExistEntity() {
+		return true;
 	}
 
 

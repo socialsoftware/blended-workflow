@@ -206,7 +206,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		}
 	}
 
-	// TODO: UnloadSpecification
+	// TODO:FutureImplementation: UnloadSpecification
 	public void unloadSpecification(String specID) throws BlendedWorkflowException {
 //		if(specID == null) {
 //			log.error("Cannot unload the specification. The specification is null");
@@ -236,7 +236,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 //				if(successful(result)) {
 //					this.loadedActivitySpecs.remove(ySpecID);
 //				} else {
-//					// TODO: Verify code
+//					// TODO:BERNADO Verify code
 //					// If does not succeed, it may mean there are active cases
 //					// Get the case id from the work items
 //					Collection<WorkItemRecord> workItemRecordCollection = this.activeWorkItems.values();
@@ -246,7 +246,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 //						if(workItemRecord.getSpecIdentifier().equals(specID)) {
 //							caseID = workItemRecord.getCaseID();
 //							// cancel the case
-//							this.interfaceBClient.cancelCase(caseID, this.sessionHandle); //FIXME brute force: I don't know if it worked.
+//							this.interfaceBClient.cancelCase(caseID, this.sessionHandle); //FIXME:BERNADO brute force: I don't know if it worked.
 //						}
 //					}
 //
@@ -260,7 +260,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 //						}
 //					}
 //					// Unload the specification
-//					this.interfaceAClient.unloadSpecification(ySpecID, this.sessionHandle); //FIXME brute force: I don't know if it worked.
+//					this.interfaceAClient.unloadSpecification(ySpecID, this.sessionHandle); //FIXME:BERNADO brute force: I don't know if it worked.
 //				}
 //			} else {
 //				log.error("Could not connect to YAWL engine");
@@ -322,7 +322,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 
 		try {
 			// Get the case data
-			String caseData = null; //FIXME: I have to get this but don't know from here
+			String caseData = null; //FIXME:BERNADO I have to get this but don't know from here
 
 			// Build the case logger
 			YLogDataItem logData = new YLogDataItem("service", "name", "blendedWorkflowService", "string");
@@ -345,7 +345,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		return null;
 	}
 
-	// TODO: CancelCase
+	// TODO:FutureImplementation: CancelCase
 	public void cancelCase(String caseID){
 //		try {
 //			this.interfaceBClient.cancelCase(caseID, sessionHandle);

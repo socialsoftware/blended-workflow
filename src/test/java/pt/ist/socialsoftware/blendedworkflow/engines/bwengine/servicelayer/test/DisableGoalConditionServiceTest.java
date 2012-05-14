@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test
 
 import static org.junit.Assert.*;
 
+import junit.framework.JUnit4TestAdapter;
+
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -12,33 +14,30 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import junit.framework.JUnit4TestAdapter;
-
 import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalInstanceService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.DisableGoalConditionService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 @RunWith(JMock.class)
-public class ReDoGoalServiceTest {
+public class DisableGoalConditionServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
 	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl";
@@ -46,16 +45,12 @@ public class ReDoGoalServiceTest {
 	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
-	private static String GOALWORKITEM_PRESCRIBE_ID = "Prescribe.3";
-	private static String GOALWORKITEM_COLLECTDATA_ID = "Collect Data.1";
-	private static String GOALWORKITEM_PHYSICALEXAMINATION_ID = "Physical Examination.2";
 	
-	private static String GOALWORKITEM_PRESCRIBE_INPUT_ATT1 = "Recipe";
-	private static String GOALWORKITEM_PRESCRIBE_INPUT_VALUE1 = "Aspirin";
+	private static String GOAL_NAME_1 = "Add Patient";
 	private static String USER_ID = "BlendedWorkflow";
 
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(ReDoGoalServiceTest.class);
+		return new JUnit4TestAdapter(DisableGoalConditionServiceTest.class);
 	}
 
 	private Mockery context = new Mockery() {
@@ -85,11 +80,12 @@ public class ReDoGoalServiceTest {
 				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
 				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
 				allowing(workletAdapter).notifyWorkItemPreConstraint(with(any(TaskWorkItem.class)));
+				allowing(workletAdapter).addGoal(with(any(BWInstance.class)), with(any(AchieveGoal.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
 				allowing(workListManager).notifySkippedWorkItem(with(any(WorkItem.class)));
 				allowing(workListManager).notifyEnabledWorkItem(with(any(WorkItem.class)));
-				allowing(workListManager).notifyCompletedWorkItem(with(any(WorkItem.class)));
+				allowing(workListManager).notifyPendingWorkItem(with(any(WorkItem.class)));
 			}
 		});
 
@@ -109,17 +105,6 @@ public class ReDoGoalServiceTest {
 		Transaction.commit();
 
 		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).call();
-
-		Transaction.begin();
-		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-		WorkItem workItem = bwInstance.getWorkItem(GOALWORKITEM_COLLECTDATA_ID);
-		workItem.setState(WorkItemState.ENABLED);
-		workItem = bwInstance.getWorkItem(GOALWORKITEM_PHYSICALEXAMINATION_ID);
-		workItem.setState(WorkItemState.ENABLED);
-		workItem = bwInstance.getWorkItem(GOALWORKITEM_PRESCRIBE_ID);
-		workItem.setState(WorkItemState.ENABLED);
-		Transaction.commit();
 	}
 
 	@After
@@ -128,23 +113,56 @@ public class ReDoGoalServiceTest {
 	}
 
 	@Test
-	public void checkInOneWorkItem() throws Exception {
-		WorkItem workItem = getWorkItem(GOALWORKITEM_PRESCRIBE_ID);
-		long workItemOID = workItem.getOID();
-		AttributeInstance attributeInstance = getAttributeInstance(GOALWORKITEM_PRESCRIBE_INPUT_ATT1);
-		setWorkItemArgumentValue(workItem, attributeInstance, GOALWORKITEM_PRESCRIBE_INPUT_VALUE1);
+	public void createOneGoalInstance() throws Exception {
+		Transaction.begin();
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+		long bwInstanceOID = bwInstance.getOID();
+
+		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
+		long parentGoalOID = parentGoal.getOID();
+		Transaction.commit();
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
 		
-		new CheckInWorkItemService(workItemOID).call();
+		// Verify that all workItems have 1 ActivateCondition
 		boolean committed = false;
 		try {
 			Transaction.begin();
-
-			assertEquals(WorkItemState.CHECKED_IN, workItem.getState());
-			
-			for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
-				assertEquals(GOALWORKITEM_PRESCRIBE_INPUT_VALUE1, workItemArgument.getValue());
+			assertEquals(3, bwInstance.getWorkItemsCount());
+			for (WorkItem workItem : bwInstance.getWorkItems()) {
+				if (workItem.getClass().equals(GoalWorkItem.class))
+					assertEquals(1, ((GoalWorkItem) workItem).getActivateConditionsCount());
 			}
-			
+			Transaction.commit();
+			committed = true;
+		} finally {
+			if (!committed) {
+				Transaction.abort();
+			}
+		}
+		
+		// Remove the first WorkItem ActivateCondition
+		Transaction.begin();
+		GoalWorkItem firstGoalWorkItem = (GoalWorkItem) bwInstance.getWorkItems().get(0);
+		Condition firstActivateCondition = firstGoalWorkItem.getActivateConditions().get(0);
+		long firstGoalWorkItemOID = firstGoalWorkItem.getOID();
+		long firstActivateConditionOID = firstActivateCondition.getOID();
+		Transaction.commit();
+		new DisableGoalConditionService(firstGoalWorkItemOID, firstActivateConditionOID).call();
+
+		// Verify that only the first WorkItem has no ActivateConditions
+		committed = false;
+		try {
+			Transaction.begin();
+			for (WorkItem workItem : bwInstance.getWorkItems()) {
+				if (workItem.getOID() == firstGoalWorkItemOID) {
+					assertEquals(0, ((GoalWorkItem) workItem).getActivateConditionsCount());
+				} else {
+					assertEquals(1, ((GoalWorkItem) workItem).getActivateConditionsCount());
+				}
+			}
+
 			Transaction.commit();
 			committed = true;
 		} finally {
@@ -153,39 +171,4 @@ public class ReDoGoalServiceTest {
 			}
 		}
 	}
-
-	private WorkItem getWorkItem(String ID) throws BlendedWorkflowException {
-		Transaction.begin();
-		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-		WorkItem workItem = bwInstance.getWorkItem(ID);
-		Transaction.commit();
-		return workItem;
-	}
-	
-	private AttributeInstance getAttributeInstance(String name) throws BlendedWorkflowException {
-		Transaction.begin();
-		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-		AttributeInstance attributeInstance = null;
-		for (Attribute attribute : dataModelInstance.getAttributes()) {
-			if (attribute.getName().equals(name)) {
-				attributeInstance = attribute.getAttributeInstances().get(0); // FIXME:
-			}
-		}
-		Transaction.commit();
-		return attributeInstance;
-	}
-	
-	private void setWorkItemArgumentValue(WorkItem workItem,AttributeInstance attributeInstance, String value) {
-		Transaction.begin();
-		for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
-			if (workItemArgument.getAttributeInstance().getID().equals(attributeInstance.getID())) {
-				workItemArgument.setValue(value);
-			}
-		}
-		Transaction.commit();
-	}
-
 }

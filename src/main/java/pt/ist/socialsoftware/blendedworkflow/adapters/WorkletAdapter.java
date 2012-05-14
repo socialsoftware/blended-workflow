@@ -497,15 +497,15 @@ public class WorkletAdapter {
 		List<WorkItemArgument> workItemArguments = null;
 		if (taskWorkItem == null) {
 			workItem = goalWorkItem;
-			workItemArguments = workItem.getConstrainViolationWorkItemArguments();
+			workItemArguments = workItem.getOutputWorkItemArguments();
 		}
 		else {
 			workItem = taskWorkItem;
 			if (isPreCondition) {
-				workItemArguments = workItem.getPreConstrainWorkItemArguments();
+				workItemArguments = workItem.getInputWorkItemArguments();
 			}
 			else {
-				workItemArguments = workItem.getConstrainViolationWorkItemArguments();
+				workItemArguments = workItem.getOutputWorkItemArguments();
 			}
 		}
 

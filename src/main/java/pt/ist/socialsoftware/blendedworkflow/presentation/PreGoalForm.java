@@ -5,7 +5,7 @@ import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
@@ -24,19 +24,19 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
 
 @SuppressWarnings("serial")
-public class PreTaskForm extends VerticalLayout {
+public class PreGoalForm extends VerticalLayout {
 
-	private long taskWorkItemOID;
+	private long goalWorkItemOID;
 	VerticalLayout data = new VerticalLayout();
 
-	public PreTaskForm(final long workItemOID) {
+	public PreGoalForm(final long workItemOID) {
 		setMargin(true);
 		setSpacing(true);
 
-		this.taskWorkItemOID = workItemOID;
+		this.goalWorkItemOID = workItemOID;
 
 		addComponent(data);
-		getOutputData();
+		getInputData();
 
 		HorizontalLayout footer = new HorizontalLayout();
 		footer.setMargin(true);
@@ -62,9 +62,9 @@ public class PreTaskForm extends VerticalLayout {
 					}
 				}
 
-				generateTaskForm(workItemOID);
-				getApplication().getMainWindow().showNotification("PreTask accomplished", Notification.TYPE_TRAY_NOTIFICATION);
-				getApplication().getMainWindow().removeWindow(PreTaskForm.this.getWindow());
+				generateGoalForm(workItemOID);
+				getApplication().getMainWindow().showNotification("PreGoal accomplished", Notification.TYPE_TRAY_NOTIFICATION);
+				getApplication().getMainWindow().removeWindow(PreGoalForm.this.getWindow());
 
 			}
 		});
@@ -74,7 +74,7 @@ public class PreTaskForm extends VerticalLayout {
 		cancelButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(PreTaskForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(PreGoalForm.this.getWindow());
 			}
 		});
 		footer.addComponent(cancelButton);
@@ -85,19 +85,19 @@ public class PreTaskForm extends VerticalLayout {
 
 	private void setWorkItemArgumentValue(int index, String value) {
 		Transaction.begin();
-		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
-		taskWorkItem.getInputWorkItemArguments().get(index).setValue(value);
-		taskWorkItem.getInputWorkItemArguments().get(index).setState(DataState.DEFINED);
+		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
+		goalWorkItem.getInputWorkItemArguments().get(index).setValue(value);
+		goalWorkItem.getInputWorkItemArguments().get(index).setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
-	private void getOutputData() {
+	private void getInputData() {
 		Transaction.begin();
-		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
+		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
 
 		Entity previousEntity = null;
 		Boolean first = true;
-		for (WorkItemArgument workItemArgument : taskWorkItem.getInputWorkItemArguments()) {
+		for (WorkItemArgument workItemArgument : goalWorkItem.getInputWorkItemArguments()) {
 			Attribute attribute = workItemArgument.getAttributeInstance().getAttribute();
 			Entity entity = attribute.getEntity();
 
@@ -136,12 +136,12 @@ public class PreTaskForm extends VerticalLayout {
 		data.addComponent(l);
 	}
 
-	public void generateTaskForm(long workItemOID) {
-		Window taskWindow = new Window("Task Form");
-		taskWindow.setContent(new TaskForm(workItemOID));
-		taskWindow.setWidth("30%");
-		taskWindow.center();
-		getApplication().getMainWindow().addWindow(taskWindow);		
+	public void generateGoalForm(long workItemOID) {
+		Window goalWindow = new Window("Goal Form");
+		goalWindow.setContent(new GoalForm(workItemOID));
+		goalWindow.setWidth("30%");
+		goalWindow.center();
+		getApplication().getMainWindow().addWindow(goalWindow);		
 	}
 }
 

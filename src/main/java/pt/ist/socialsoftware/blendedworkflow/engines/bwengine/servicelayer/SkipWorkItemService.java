@@ -23,7 +23,7 @@ public class SkipWorkItemService implements Callable<String> {
 	public String call() throws Exception {
 		log.info("Start");
 		Transaction.begin();
-		for (WorkItemArgument workItemArgument : this.workItem.getConstrainViolationWorkItemArguments()) {
+		for (WorkItemArgument workItemArgument : this.workItem.getOutputWorkItemArguments()) {
 			workItemArgument.setState(DataState.SKIPPED);
 			workItemArgument.setValue("$SKIPPED$");
 		}

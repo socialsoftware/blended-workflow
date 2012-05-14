@@ -28,7 +28,8 @@ public class TrueCondition extends TrueCondition_Base {
 	}
 	
 	@Override
-	void assignAttributeInstances(GoalWorkItem goalWorkItem) {}
+	public
+	void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {}
 	
 	@Override
 	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {}
@@ -92,6 +93,16 @@ public class TrueCondition extends TrueCondition_Base {
 	@Override
 	public String getRdrFalseConditionNEW() {
 		return "True";
+	}
+	
+	@Override
+	public String toString() {
+		return "True";
+	}
+	
+	@Override
+	public Boolean existExistEntity() {
+		return false;
 	}
 	
 	

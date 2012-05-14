@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public class EntityInstance extends EntityInstance_Base {
@@ -15,18 +16,31 @@ public class EntityInstance extends EntityInstance_Base {
 	/**
 	 * Create and assign EntityInstances and AttributesInstances to Workitems
 	 */
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute) {
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute, ConditionType conditionType) {
+		
 		boolean exists = false;
 		for (AttributeInstance attributeInstance : getAttributeInstances()) {
 			if (attributeInstance.getAttribute().equals(attribute)) {
-				goalWorkItem.addContraintViolationAttributeInstances(attributeInstance);
+				if (conditionType.equals(ConditionType.SUCESS)) {
+					goalWorkItem.addOutputAttributeInstances(attributeInstance);
+				} else {
+//					System.out.println("addInputAttributeInstances: " + attributeInstance.getEntityInstance().getID());
+					goalWorkItem.addInputAttributeInstances(attributeInstance);
+				}
 				exists = true;
 			}
 		}
+
 		if (!exists) {
 			AttributeInstance attributeInstance = new AttributeInstance(attribute, this);
-			goalWorkItem.addContraintViolationAttributeInstances(attributeInstance);
-		}	
+			if (conditionType.equals(ConditionType.SUCESS)) {
+				goalWorkItem.addOutputAttributeInstances(attributeInstance);
+			} else {
+//				System.out.println("addInputAttributeInstances: " + attributeInstance.getEntityInstance().getID());
+				goalWorkItem.addInputAttributeInstances(attributeInstance);
+			}
+			
+		}		
 	}
 
 	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, String conditionType) {
@@ -34,10 +48,10 @@ public class EntityInstance extends EntityInstance_Base {
 		for (AttributeInstance attributeInstance : getAttributeInstances()) {
 			if (attributeInstance.getAttribute().equals(attribute)) {
 				if (conditionType.equals("pre")) {
-					taskWorkItem.addPreConstraintAttributeInstances(attributeInstance);
+					taskWorkItem.addInputAttributeInstances(attributeInstance);
 				}
 				if (conditionType.equals("post")) {
-					taskWorkItem.addContraintViolationAttributeInstances(attributeInstance);
+					taskWorkItem.addOutputAttributeInstances(attributeInstance);
 				}
 				exists = true;
 			}
@@ -45,10 +59,10 @@ public class EntityInstance extends EntityInstance_Base {
 		if (!exists) {
 			AttributeInstance attributeInstance = new AttributeInstance(attribute, this);
 			if (conditionType.equals("pre")) {
-				taskWorkItem.addPreConstraintAttributeInstances(attributeInstance);
+				taskWorkItem.addInputAttributeInstances(attributeInstance);
 			}
 			if (conditionType.equals("post")) {
-				taskWorkItem.addContraintViolationAttributeInstances(attributeInstance);
+				taskWorkItem.addOutputAttributeInstances(attributeInstance);
 			}
 		}	
 	}
@@ -91,6 +105,15 @@ public class EntityInstance extends EntityInstance_Base {
 		} else if (keyAttributesSkipped == keyAttributesTotal) {
 			setState(DataState.SKIPPED);
 		} 
+	}
+
+	public AttributeInstance getAttributeInstance(String ID) {
+		for (AttributeInstance attributeInstance : getAttributeInstances()) {
+			if (attributeInstance.getID().equals(ID)) {
+				return attributeInstance;
+			}
+		}
+		return null;
 	}
 
 }

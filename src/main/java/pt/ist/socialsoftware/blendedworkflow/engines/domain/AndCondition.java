@@ -35,9 +35,10 @@ public class AndCondition extends AndCondition_Base {
 	}
 	
 	@Override
-	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
-		getConditionOne().assignAttributeInstances(goalWorkItem);
-		getConditionTwo().assignAttributeInstances(goalWorkItem);
+	public
+	void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		getConditionOne().assignAttributeInstances(goalWorkItem, conditionType);
+		getConditionTwo().assignAttributeInstances(goalWorkItem, conditionType);
 	}
 	
 	@Override
@@ -132,6 +133,16 @@ public class AndCondition extends AndCondition_Base {
 	@Override
 	public String getRdrFalseConditionNEW() {
 		return "(" + getConditionOne().getRdrFalseConditionNEW() + " & " + getConditionTwo().getRdrFalseConditionNEW() + ")";
+	}
+
+	@Override
+	public String toString() {
+		return getConditionOne().toString() + " and " + getConditionTwo().toString();
+	}
+
+	@Override
+	public Boolean existExistEntity() {
+		return getConditionOne().existExistEntity() || getConditionTwo().existExistEntity();
 	}
 	
 	

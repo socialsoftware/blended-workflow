@@ -36,13 +36,13 @@ public class BWSpecificationFactory {
 		DataModel dataModel = bwSpecification.getDataModel();
 		new DataModelFactory().parseXMLDataModel(dataModel, bwXML);
 
-		// Goal Model
-		GoalModel goalModel = bwSpecification.getGoalModel();
-		new GoalModelFactory().parseXMLGoalModel(dataModel, goalModel, bwXML);
-
 		// Task Model
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, bwXML);
+		
+		// Goal Model
+		GoalModel goalModel = bwSpecification.getGoalModel();
+		new GoalModelFactory().parseXMLGoalModel(dataModel, goalModel, bwXML);
 		
 		// Create YAWL Specification
 		String yawlXML = new YAWLSpecificationFactory().parseYAWLSpecificationFactory(bwSpecification);

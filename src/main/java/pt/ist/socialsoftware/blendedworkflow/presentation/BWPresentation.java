@@ -308,7 +308,7 @@ public class BWPresentation extends Application {
 		specificationUnLoadBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				// TODO: UnLoad
+				// TODO:FutureImplementation: UnLoad
 				getMainWindow().showNotification("Not Yet Implemented");
 			}
 		});
@@ -392,7 +392,7 @@ public class BWPresentation extends Application {
 		bwInstanceCancelBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				//TODO: Cancel
+				//TODO:FutureImplementation: Cancel
 				getMainWindow().showNotification("Not Yet Implemented");
 			}
 		});
@@ -564,9 +564,21 @@ public class BWPresentation extends Application {
 			public void buttonClick(ClickEvent event) {
 				try {
 					long workItemOID = (Long) goalList.getValue();
-					generateGoalForm(workItemOID);
+					
+					GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(workItemOID);
+					Transaction.begin();
+					Boolean isPreGoal = false;
+					if (goalWorkItem.getState().equals(WorkItemState.PRE_GOAL)) {
+						isPreGoal = true;
+					}
+					Transaction.commit();
+					if (isPreGoal) {
+						generatePreGoalForm(workItemOID);
+					} else {
+						generateGoalForm(workItemOID);
+					}
 				} catch (java.lang.NullPointerException jle) {
-					getMainWindow().showNotification("Please select a workItem to achieve");
+					getMainWindow().showNotification("Please select a workItem to execute");
 				}
 			}
 		});
@@ -697,7 +709,6 @@ public class BWPresentation extends Application {
 			}
 		});
 
-
 		// Layouts - configurations
 		goalManagerBtnLayout.setSpacing(true);
 		goalManagerBtnLayout.setMargin(true);
@@ -823,6 +834,14 @@ public class BWPresentation extends Application {
 		taskWindow.center();
 		getMainWindow().addWindow(taskWindow);		
 	}
+	
+	public void generatePreGoalForm(long workItemOID) {
+		Window goalWindow = new Window("Pre Goal Form");
+		goalWindow.setContent(new PreGoalForm(workItemOID));
+		goalWindow.setWidth("30%");
+		goalWindow.center();
+		getMainWindow().addWindow(goalWindow);		
+	}
 
 	public void generateGoalForm(long workItemOID) {
 		Window goalWindow = new Window("Goal Form");
@@ -861,7 +880,7 @@ public class BWPresentation extends Application {
 		newGoalWindow.setResizable(false);
 		getMainWindow().addWindow(newGoalWindow);
 	}
-
+	
 	/********************************************
 	 * BWPresentation Data changes methods
 	 ********************************************/
@@ -896,11 +915,11 @@ public class BWPresentation extends Application {
 	}
 
 	public void addUser(long oid, String name) {
-		// TODO Auto-generated method stub
+		// TODO:FutureImplementation: addUser
 	}
 
 	public void addRole(long oid, String name) {
-		// TODO Auto-generated method stub
+		// TODO:FutureImplementation: addRole
 	}
 
 	public void removeGoalWorkItem(long OID) {
@@ -940,7 +959,8 @@ public class BWPresentation extends Application {
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		Transaction.begin();
 		for (WorkItem workItem : bwInstance.getWorkItems()) {
-			if (workItem.getClass().equals(GoalWorkItem.class) && workItem.getState().equals(WorkItemState.ENABLED)) {
+			if (workItem.getClass().equals(GoalWorkItem.class) && (workItem.getState().equals(WorkItemState.ENABLED) ||
+					workItem.getState().equals(WorkItemState.PRE_GOAL))) {
 				addGoalWorkItem(workItem.getOID(), workItem.getID());
 			}
 		}
@@ -1061,11 +1081,7 @@ public class BWPresentation extends Application {
 		// Add Goals
 		HashMap<AchieveGoal, Object> addedGoals = new HashMap<AchieveGoal, Object>();
 		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
-			int timesExecuted = 0;
-			if (goal.getGoalWorkItem() != null) {
-				timesExecuted = 1;
-			}
-			
+			int timesExecuted = goal.getGoalWorkItemsCount();			
 			Object goalItem = goalTable.addItem(new Object[] {goal.getName(), timesExecuted}, null);
 			addedGoals.put(goal, goalItem);
 		}
@@ -1099,7 +1115,7 @@ public class BWPresentation extends Application {
 		String inputData = "";
 		int inputIndex = 0;
 		ArrayList<Entity> inputEntities = new ArrayList<Entity>();
-		for (AttributeInstance attributeInstance : taskWorkItem.getPreConstraintAttributeInstances()) {
+		for (AttributeInstance attributeInstance : taskWorkItem.getInputAttributeInstances()) {
 			Entity entity = attributeInstance.getAttribute().getEntity();
 			if (!inputEntities.contains(entity)) {
 				inputEntities.add(entity);
@@ -1118,7 +1134,7 @@ public class BWPresentation extends Application {
 		String outputData = "";
 		int outputIndex = 0;
 		ArrayList<Entity> outputEntities = new ArrayList<Entity>();
-		for (AttributeInstance attributeInstance : taskWorkItem.getContraintViolationAttributeInstances()) {
+		for (AttributeInstance attributeInstance : taskWorkItem.getOutputAttributeInstances()) {
 			Entity entity = attributeInstance.getAttribute().getEntity();
 			if (!outputEntities.contains(entity)) {
 				outputEntities.add(entity);
@@ -1159,12 +1175,14 @@ public class BWPresentation extends Application {
 		ArrayList<Entity> inputEntities = new ArrayList<Entity>();
 
 		for (AchieveGoal subGoal : goal.getSubGoals()) {
-			for (AttributeInstance attributeInstance : subGoal.getGoalWorkItem().getContraintViolationAttributeInstances()) {
-				Entity entity = attributeInstance.getAttribute().getEntity();
-				if (!inputEntities.contains(entity)) {
-					inputEntities.add(entity);
-				}
-			}
+			
+			// TODO: GoalInputData
+//			for (AttributeInstance attributeInstance : subGoal.getGoalWorkItem().getContraintViolationAttributeInstances()) {
+//				Entity entity = attributeInstance.getAttribute().getEntity();
+//				if (!inputEntities.contains(entity)) {
+//					inputEntities.add(entity);
+//				}
+//			}
 			if (subGoalIndex == 0) {
 				subGoals = subGoal.getName();
 			}
@@ -1187,7 +1205,7 @@ public class BWPresentation extends Application {
 		String outputData = "";
 		int outputIndex = 0;
 		ArrayList<Entity> outputEntities = new ArrayList<Entity>();
-		for (AttributeInstance attributeInstance : goalWorkItem.getContraintViolationAttributeInstances()) {
+		for (AttributeInstance attributeInstance : goalWorkItem.getOutputAttributeInstances()) {
 			Entity entity = attributeInstance.getAttribute().getEntity();
 			if (!outputEntities.contains(entity)) {
 				outputEntities.add(entity);

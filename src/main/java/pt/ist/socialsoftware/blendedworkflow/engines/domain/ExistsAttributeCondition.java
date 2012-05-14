@@ -15,7 +15,7 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	
 	@Override
 	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
-		for (WorkItemArgument workItemArgument : goalWorkItem.getConstrainViolationWorkItemArguments()) {
+		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
 			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 			Attribute conditionAttribute = getAttribute();
 
@@ -47,8 +47,8 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	}
 	
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem) {
-		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute());
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute(), conditionType);
 	}
 	
 	@Override
@@ -155,6 +155,15 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		return "(FALSE_NODE = FALSE)";
 	}
 
+	@Override
+	public String toString() {
+		return "existsAttribute(" + getAttribute().getEntity().getName() + "." +getAttribute().getName() +")";
+	}
 	
+	@Override
+	public Boolean existExistEntity() {
+		return false;
+	}
+
 
 }

@@ -4,46 +4,32 @@ import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 
+import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 
 public class DisableGoalConditionService implements Callable<String> {
 
-	private static Logger log = Logger.getLogger("CreateGoalInstanceService");
+	private static Logger log = Logger.getLogger("DisableGoalConditionService");
 	
-	private BWInstance bwInstance;
-	private AchieveGoal goal;
+	private GoalWorkItem goalWorkItem;
+	private Condition condition;
 
-	public DisableGoalConditionService (BWInstance bwInstance, AchieveGoal goal) {
-		this.bwInstance = bwInstance;
-		this.goal = goal;
+	public DisableGoalConditionService (long workItemOID, long conditionOID) {
+		this.goalWorkItem = AbstractDomainObject.fromOID(workItemOID);;
+		this.condition = AbstractDomainObject.fromOID(conditionOID);
 	}
 	
 	@Override
 	public String call() throws Exception {
 		log.info("Start");
 		Transaction.begin();
-		generateGoalWorkItems(this.bwInstance, this.goal);
+		this.goalWorkItem.removeActivateConditions(condition);
 		Transaction.commit();
 		log.info("END");
 		return "CreateGoalInstanceService:Sucess";
-	}
-	
-	private void generateGoalWorkItems(BWInstance bwInstance, AchieveGoal goal) {
-		System.out.println("generateGoalWorkItems" + goal.getName());
-		if (goal.getGoalWorkItem() == null) {
-			new GoalWorkItem(bwInstance, goal);
-			System.out.println("goal" + goal.getName());
-		}
-		
-		for (AchieveGoal subGoal : goal.getSubGoals()) {
-			generateGoalWorkItems(bwInstance, subGoal);
-		}		
-		
-		
 	}
 
 }

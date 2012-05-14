@@ -27,8 +27,9 @@ public class NotCondition extends NotCondition_Base {
 	}
 	
 	@Override
-	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
-		getCondition().assignAttributeInstances(goalWorkItem);
+	public
+	void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		getCondition().assignAttributeInstances(goalWorkItem, conditionType);
 	}
 	
 	@Override
@@ -95,6 +96,16 @@ public class NotCondition extends NotCondition_Base {
 	@Override
 	public String getRdrFalseConditionNEW() {
 		return "True";
+	}
+	
+	@Override
+	public String toString() {
+		return "!(" + getCondition().toString() + ")";
+	}
+	
+	@Override
+	public Boolean existExistEntity() {
+		return false;
 	}
 
 	

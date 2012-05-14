@@ -11,7 +11,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.shared.PrintBWSpecification;
 
 public class CreateBWInstanceService implements Callable<String> {
 
@@ -47,7 +46,7 @@ public class CreateBWInstanceService implements Callable<String> {
 		BlendedWorkflow.getInstance().getBwManager().notifyCreatedBWInstance(bwInstance);
 		
 //		bwInstance.getGoalModelInstance().getEnabledWorkItems();
-		bwInstance.getTaskModelInstance().getEnabledWorkItems(); // Test proposes only
+//		bwInstance.getTaskModelInstance().getEnabledWorkItems(); // Test proposes only
 		
 //		PrintBWSpecification.all(this.bwSpecification.getName());
 		

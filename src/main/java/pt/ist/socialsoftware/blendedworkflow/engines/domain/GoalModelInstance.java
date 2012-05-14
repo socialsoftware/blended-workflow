@@ -8,11 +8,11 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 	/**
 	 * Check goalTree to get enabled WorkItems
 	 */
-	public void getEnabledWorkItems() {
-		for (AchieveGoal goal : getAchieveGoals()) {
-			goal.checkState(getBwInstance());
-		}
-	}
+//	public void getEnabledWorkItems() {
+//		for (AchieveGoal goal : getAchieveGoals()) {
+//			goal.checkState(getBwInstance());
+//		}
+//	}
 
 	public AchieveGoal getGoal(String name) throws BlendedWorkflowException {
 		for (AchieveGoal goal : getAchieveGoals()) {
@@ -24,9 +24,8 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 	}
 
 	public void checkPedingWorkItems() {
-		System.out.println("X");
+//		System.out.println("Passo 3- checkPedingWorkItems");
 		for (AchieveGoal goal : getAchieveGoals()) {
-			System.out.println("X1");
 			goal.checkPending(getBwInstance());
 		}
 	}

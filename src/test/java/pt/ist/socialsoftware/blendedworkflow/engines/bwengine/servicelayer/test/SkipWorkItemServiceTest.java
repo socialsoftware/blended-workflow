@@ -19,15 +19,21 @@ import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalInstanceService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.EnableGoalWorkItemsService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
@@ -43,7 +49,21 @@ public class SkipWorkItemServiceTest {
 	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
-	private static String GOALWORKITEM_PRESCRIBE_ID = "Prescribe.3";
+//	private static String GOALWORKITEM_PRESCRIBE_ID = "Prescribe.3";
+	
+	private static String GOAL_NAME_1 = "Add Patient";
+	private static String GOALWORKITEM_ID_1 = "Add Patient.1";
+	private static String GOALWORKITEM_ID_2 = "Add Gender.2";
+	private static String GOALWORKITEM_ID_3 = "Add Address.3";
+
+	private static String ENTITY_1_NAME = "Patient";
+	private static String ENTITYINSTANCE_1_ID = "Patient.1";
+
+	private static String ENTITYINSTANCE_1_ATT_1_ID = "Name.1";
+	private static String ENTITYINSTANCE_1_ATT_2_ID = "Gender.2";
+	private static String ENTITYINSTANCE_1_ATT_3_ID = "Address.3";
+	private static String UNDEFINED_VALUE = "$UNDEFINED$";
+	private static String SKIPPED_VALUE = "$SKIPPED$";
 	
 	private static String USER_ID = "BlendedWorkflow";
 
@@ -101,35 +121,141 @@ public class SkipWorkItemServiceTest {
 		Transaction.commit();
 
 		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).call();
-
-		Transaction.begin();
-		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-		WorkItem workItem = bwInstance.getWorkItem(GOALWORKITEM_PRESCRIBE_ID);
-		workItem.setState(WorkItemState.ENABLED);
-		Transaction.commit();
 	}
 
 	@After
 	public void tearDown() {
 		Bootstrap.clean();
 	}
-
+	
 	@Test
 	public void skipOneWorkItem() throws Exception {
-		
-		WorkItem workItem = getWorkItem(GOALWORKITEM_PRESCRIBE_ID);
-		long workItemOID = workItem.getOID();
-		new SkipWorkItemService(workItemOID).call();
+		Transaction.begin();
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+		long bwInstanceOID = bwInstance.getOID();
+		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
+		long parentGoalOID = parentGoal.getOID();
+		Transaction.commit();
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+		new EnableGoalWorkItemsService(bwInstanceOID).call();
+
+		//WorkItem3 - AddAdress
+		Transaction.begin();
+		WorkItem workItem3 = bwInstance.getWorkItem(GOALWORKITEM_ID_3);
+		long workItem3OID = workItem3.getOID();
+		Transaction.commit();
+		new SkipWorkItemService(workItem3OID).call();
 
 		boolean committed = false;
 		try {
 			Transaction.begin();
-
-			assertEquals(WorkItemState.SKIPPED, workItem.getState());
-			for (WorkItemArgument workItemArgument : workItem.getConstrainViolationWorkItemArguments()) {
-				assertEquals("$SKIPPED$", workItemArgument.getValue());
+			WorkItem workItem2 = bwInstance.getWorkItem(GOALWORKITEM_ID_2);
+			WorkItem workItem1 = bwInstance.getWorkItem(GOALWORKITEM_ID_1);
+			EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+			AttributeInstance attributeInstance1 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_1_ID);
+			AttributeInstance attributeInstance2 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_2_ID);
+			AttributeInstance attributeInstance3 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_3_ID);
+			
+			//WorkItem1 - AddPatient
+			assertEquals(WorkItemState.GOAL_PENDING, workItem1.getState());
+			for (WorkItemArgument workItemArgument : workItem1.getOutputWorkItemArguments()) {
+				assertEquals(UNDEFINED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.UNDEFINED, workItemArgument.getState());
 			}
+			assertEquals(UNDEFINED_VALUE, attributeInstance1.getValue());
+			assertEquals(DataState.UNDEFINED, attributeInstance1.getState());
+
+			//WorkItem2 - AddGender
+			assertEquals(WorkItemState.ENABLED, workItem2.getState());
+			for (WorkItemArgument workItemArgument : workItem2.getOutputWorkItemArguments()) {
+				assertEquals(UNDEFINED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.UNDEFINED, workItemArgument.getState());
+			}
+			assertEquals(UNDEFINED_VALUE, attributeInstance2.getValue());
+			assertEquals(DataState.UNDEFINED, attributeInstance2.getState());
+
+			//WorkItem3 - AddAdress
+			assertEquals(WorkItemState.SKIPPED, workItem3.getState());
+			for (WorkItemArgument workItemArgument : workItem3.getOutputWorkItemArguments()) {
+				assertEquals(SKIPPED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.SKIPPED, workItemArgument.getState());
+			}
+			assertEquals(SKIPPED_VALUE, attributeInstance3.getValue());
+			assertEquals(DataState.SKIPPED, attributeInstance3.getState());
+
+			Transaction.commit();
+			committed = true;
+		} finally {
+			if (!committed) {
+				Transaction.abort();
+			}
+		}
+	}
+	
+	@Test
+	public void skipTwoWorkItems() throws Exception {
+		Transaction.begin();
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+		long bwInstanceOID = bwInstance.getOID();
+		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
+		long parentGoalOID = parentGoal.getOID();
+		Transaction.commit();
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+		new EnableGoalWorkItemsService(bwInstanceOID).call();
+
+		//WorkItem3 - AddAdress
+		Transaction.begin();
+		WorkItem workItem3 = bwInstance.getWorkItem(GOALWORKITEM_ID_3);
+		long workItem3OID = workItem3.getOID();
+		Transaction.commit();
+		new SkipWorkItemService(workItem3OID).call();
+
+		//WorkItem2 - AddGender
+		Transaction.begin();
+		WorkItem workItem2 = bwInstance.getWorkItem(GOALWORKITEM_ID_2);
+		long workItem2OID = workItem2.getOID();
+		Transaction.commit();
+		new SkipWorkItemService(workItem2OID).call();
+
+		boolean committed = false;
+		try {
+			Transaction.begin();
+			WorkItem workItem1 = bwInstance.getWorkItem(GOALWORKITEM_ID_1);
+			EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+			AttributeInstance attributeInstance1 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_1_ID);
+			AttributeInstance attributeInstance2 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_2_ID);
+			AttributeInstance attributeInstance3 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_3_ID);
+			
+			//WorkItem1 - AddPatient
+//			assertEquals(WorkItemState.PRE_GOAL, workItem1.getState()); //FIXME: PREGOAL REMOVE GOALSTATE Completly
+			for (WorkItemArgument workItemArgument : workItem1.getOutputWorkItemArguments()) {
+				assertEquals(UNDEFINED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.UNDEFINED, workItemArgument.getState());
+			}
+			assertEquals(UNDEFINED_VALUE, attributeInstance1.getValue());
+			assertEquals(DataState.UNDEFINED, attributeInstance1.getState());
+
+			//WorkItem2 - AddGender
+			assertEquals(WorkItemState.SKIPPED, workItem2.getState());
+			for (WorkItemArgument workItemArgument : workItem2.getOutputWorkItemArguments()) {
+				assertEquals(SKIPPED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.SKIPPED, workItemArgument.getState());
+			}
+			assertEquals(SKIPPED_VALUE, attributeInstance2.getValue());
+			assertEquals(DataState.SKIPPED, attributeInstance2.getState());
+
+			//WorkItem3 - AddAdress
+			assertEquals(WorkItemState.SKIPPED, workItem3.getState());
+			for (WorkItemArgument workItemArgument : workItem3.getOutputWorkItemArguments()) {
+				assertEquals(SKIPPED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.SKIPPED, workItemArgument.getState());
+			}
+			assertEquals(SKIPPED_VALUE, attributeInstance3.getValue());
+			assertEquals(DataState.SKIPPED, attributeInstance3.getState());
 
 			Transaction.commit();
 			committed = true;
@@ -140,13 +266,82 @@ public class SkipWorkItemServiceTest {
 		}
 	}
 
-	private WorkItem getWorkItem(String ID) throws BlendedWorkflowException {
+	@Test
+	public void skipAllWorkItems() throws Exception {
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-		WorkItem workItem = bwInstance.getWorkItem(ID);
+		long bwInstanceOID = bwInstance.getOID();
+		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
+		long parentGoalOID = parentGoal.getOID();
 		Transaction.commit();
-		return workItem;
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+		new EnableGoalWorkItemsService(bwInstanceOID).call();
+
+		//WorkItem3 - AddAdress
+		Transaction.begin();
+		WorkItem workItem3 = bwInstance.getWorkItem(GOALWORKITEM_ID_3);
+		long workItem3OID = workItem3.getOID();
+		Transaction.commit();
+		new SkipWorkItemService(workItem3OID).call();
+
+		//WorkItem2 - AddGender
+		Transaction.begin();
+		WorkItem workItem2 = bwInstance.getWorkItem(GOALWORKITEM_ID_2);
+		long workItem2OID = workItem2.getOID();
+		Transaction.commit();
+		new SkipWorkItemService(workItem2OID).call();
+
+		//WorkItem1 - AddPatient
+		Transaction.begin();
+		WorkItem workItem1 = bwInstance.getWorkItem(GOALWORKITEM_ID_1);
+		long workItem1OID = workItem1.getOID();
+		Transaction.commit();
+		new SkipWorkItemService(workItem1OID).call();
+
+		boolean committed = false;
+		try {
+			Transaction.begin();
+			EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+			AttributeInstance attributeInstance1 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_1_ID);
+			AttributeInstance attributeInstance2 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_2_ID);
+			AttributeInstance attributeInstance3 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_3_ID);
+			
+			//WorkItem1 - AddPatient
+			assertEquals(WorkItemState.SKIPPED, workItem1.getState());
+			for (WorkItemArgument workItemArgument : workItem1.getOutputWorkItemArguments()) {
+				assertEquals(SKIPPED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.SKIPPED, workItemArgument.getState());
+			}
+			assertEquals(SKIPPED_VALUE, attributeInstance1.getValue());
+			assertEquals(DataState.SKIPPED, attributeInstance1.getState());
+
+			//WorkItem2 - AddGender
+			assertEquals(WorkItemState.SKIPPED, workItem2.getState());
+			for (WorkItemArgument workItemArgument : workItem2.getOutputWorkItemArguments()) {
+				assertEquals(SKIPPED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.SKIPPED, workItemArgument.getState());
+			}
+			assertEquals(SKIPPED_VALUE, attributeInstance2.getValue());
+			assertEquals(DataState.SKIPPED, attributeInstance2.getState());
+
+			//WorkItem3 - AddAdress
+			assertEquals(WorkItemState.SKIPPED, workItem3.getState());
+			for (WorkItemArgument workItemArgument : workItem3.getOutputWorkItemArguments()) {
+				assertEquals(SKIPPED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.SKIPPED, workItemArgument.getState());
+			}
+			assertEquals(SKIPPED_VALUE, attributeInstance3.getValue());
+			assertEquals(DataState.SKIPPED, attributeInstance3.getState());
+			
+			Transaction.commit();
+			committed = true;
+		} finally {
+			if (!committed) {
+				Transaction.abort();
+			}
+		}
 	}
 
 }

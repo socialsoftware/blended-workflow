@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.Callable;
 
@@ -15,6 +16,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
@@ -29,14 +31,18 @@ public class CreateNewGoalService implements Callable<String> {
 	private String name;
 	private String description;
 	private String condition;
+	private ArrayList<String> activateConditions;
+	private Entity entityContext;
 	private String userID;
 
-	public CreateNewGoalService (long bwInstanceOID, String name, String description, long parentGoalOID, String condition,  String userID) {
+	public CreateNewGoalService (long bwInstanceOID, String name, String description, long parentGoalOID, String condition, ArrayList<String> activateConditions, long entityOID, String userID) {
 		this.bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		this.parentGoal = AbstractDomainObject.fromOID(parentGoalOID);
 		this.name = name;
 		this.description = description;
 		this.condition = condition;
+		this.activateConditions = activateConditions;
+		this.entityContext = AbstractDomainObject.fromOID(entityOID);
 		this.userID = userID;
 	}
 	
@@ -53,11 +59,19 @@ public class CreateNewGoalService implements Callable<String> {
 			Condition goalCondition = ConditionFactory.createCondition(dataModelInstance, goalConditionDependencies);
 			
 			// Create Goal
-			AchieveGoal newGoal = new AchieveGoal(goalModelInstance, parentGoal, name, description, goalCondition);
+			AchieveGoal newGoal = new AchieveGoal(goalModelInstance, parentGoal, name, description, goalCondition, entityContext);
 			User defaultUser = BlendedWorkflow.getInstance().getOrganizationalModel().getUser("BlendedWorkflow");
 			Role defaultRole = BlendedWorkflow.getInstance().getOrganizationalModel().getRole("Admin");
 			newGoal.setUser(defaultUser);
 			newGoal.setRole(defaultRole);
+			
+			//Add activate conditions
+			for (String activateConditionString : this.activateConditions) {
+				String activateConditionDependencies = ConditionFactory.getRelationDependencies(dataModelInstance, activateConditionString);
+				Condition activateCondition = ConditionFactory.createCondition(dataModelInstance, activateConditionDependencies);
+				newGoal.addActivateConditions(activateCondition);
+			}
+
 			
 			// Add  the Goal to BWSpecification the WorkletService RdrSet
 //			BlendedWorkflow.getInstance().getWorkletAdapter().addGoal(bwInstance, newGoal);

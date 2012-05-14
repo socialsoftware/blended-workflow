@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
@@ -30,25 +31,35 @@ public class Entity extends Entity_Base {
 	/**
 	 * Create and assign EntityInstances and AttributesInstances to Workitems
 	 */
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute) {
-		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
-
-		if (getEntityInstances().isEmpty()) {
-			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
-			entityInstance.assignAttributeInstances(goalWorkItem, attribute);
-
-			createRelationInstances(dataModelInstance, entityInstance);
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute, ConditionType conditionType) {
+		EntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
+		Entity entityContext = entityInstanceContext.getEntity();
+		
+//		System.out.println(this.getOID() + "-" + entityContext.getOID());
+		if (this.equals(entityContext)) {
+			entityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
+		} else {
+			// TODO: inferir qual e a instancia
+			System.out.println("TODO: inferir qual e a instancia");
 		}
-		else {
-			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
-				entityInstance.assignAttributeInstances(goalWorkItem, attribute);
-			}
-		}
+		
+		
+//		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
+//		if (getEntityInstances().isEmpty()) {
+//			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
+//			entityInstance.assignAttributeInstances(goalWorkItem, attribute, conditionType);
+//
+//			createRelationInstances(dataModelInstance, entityInstance);
+//		}
+//		else {
+//			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
+//				entityInstance.assignAttributeInstances(goalWorkItem, attribute, conditionType);
+//			}
+//		}
 	}
 	
 	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, String conditionType) {
 		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
-
 		if (getEntityInstances().isEmpty()) {
 			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
 			entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
@@ -62,26 +73,41 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-	public void assignAllAttributeInstances(GoalWorkItem goalWorkItem, Entity entity) {
-		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
-
-		if (getEntityInstances().isEmpty()) {
-			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
-			for (Attribute attribute : getAttributes()) {
-				if (attribute.getIsKeyAttribute())
-				entityInstance.assignAttributeInstances(goalWorkItem, attribute);
-			}
-
-			createRelationInstances(dataModelInstance, entityInstance);
-		}
-		else {
-			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
-				for (Attribute attribute : getAttributes()) {
-					if (attribute.getIsKeyAttribute())
-					entityInstance.assignAttributeInstances(goalWorkItem, attribute);
+	public void assignAllAttributeInstances(GoalWorkItem goalWorkItem, Entity entity, ConditionType conditionType) {
+		EntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
+		Entity entityContext = entityInstanceContext.getEntity();
+		
+//		System.out.println(this.getOID() + "-" + entityContext.getOID());
+		if (this.equals(entityContext)) {
+			for (Attribute attribute : entityContext.getAttributes()) {
+				if (attribute.getIsKeyAttribute()) {
+					entityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
 				}
 			}
+		} else {
+			// TODO: inferir qual e a instancia
+			System.out.println("TODO: inferir qual e a instancia");
 		}
+		
+		
+//		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
+//		if (getEntityInstances().isEmpty()) {
+//			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
+//			for (Attribute attribute : getAttributes()) {
+//				if (attribute.getIsKeyAttribute())
+//				entityInstance.assignAttributeInstances(goalWorkItem, attribute, conditionType);
+//			}
+//
+//			createRelationInstances(dataModelInstance, entityInstance);
+//		}
+//		else {
+//			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
+//				for (Attribute attribute : getAttributes()) {
+//					if (attribute.getIsKeyAttribute())
+//					entityInstance.assignAttributeInstances(goalWorkItem, attribute, conditionType);
+//				}
+//			}
+//		}
 	}
 
 	public void assignAllAttributeInstances(TaskWorkItem taskWorkItem, Entity entity, String conditionType) {
@@ -145,6 +171,15 @@ public class Entity extends Entity_Base {
 		for (Attribute attribute : getAttributes()) {
 			if (attribute.getName().equals(name))
 				return attribute;
+		}
+		return null;
+	}
+
+	public EntityInstance getEntityInstance(String ID) {
+		for (EntityInstance entityInstance : getEntityInstances()) {
+			if (entityInstance.getID().equals(ID)) {
+				return entityInstance;
+			}
 		}
 		return null;
 	}

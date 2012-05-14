@@ -19,13 +19,19 @@ import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
@@ -42,10 +48,20 @@ public class CreateGoalInstanceServiceTest {
 	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
-	
-	private static String GOAL_NAME_1 = "Write Medical Report";
-//	private static String GOAL_NAME_2 = "Prescribe";
-//	private static String GOAL_NAME_3 = "Diagnose Patient";
+
+	private static String GOAL_NAME_1 = "Add Patient";
+
+	private static String GOALWORKITEM_ID_1 = "Add Patient.1";
+	private static String GOALWORKITEM_ID_2 = "Add Gender.2";
+	private static String GOALWORKITEM_ID_3 = "Add Address.3";
+	private static String GOALWORKITEM_ID_4 = "Add Patient.4";
+	private static String GOALWORKITEM_ID_5 = "Add Gender.5";
+	private static String GOALWORKITEM_ID_6 = "Add Address.6";
+
+	private static String ENTITY_1_NAME = "Patient";
+	private static String ENTITYINSTANCE_1_ID = "Patient.1";
+	private static String ENTITYINSTANCE_2_ID = "Patient.2";
+
 	private static String USER_ID = "BlendedWorkflow";
 
 	public static junit.framework.Test suite() {
@@ -112,7 +128,7 @@ public class CreateGoalInstanceServiceTest {
 	}
 
 	@Test
-	public void test1() throws Exception {
+	public void createOneGoalInstance() throws Exception {
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
@@ -123,14 +139,57 @@ public class CreateGoalInstanceServiceTest {
 		long parentGoalOID = parentGoal.getOID();
 		Transaction.commit();
 
-		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID).call();
-		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID).call();
-		
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+
 		boolean committed = false;
 		try {
 			Transaction.begin();
-			
-			assertEquals(2, bwInstance.getWorkItemsCount());
+
+			GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_1);
+			GoalWorkItem goalWorkItem2 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_2);
+			GoalWorkItem goalWorkItem3 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_3);
+			EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+
+			assertEquals(3, bwInstance.getWorkItemsCount());
+			for (WorkItem workItem : bwInstance.getWorkItems()) {
+				assertEquals(WorkItemState.ACTIVATED, workItem.getState());
+			}
+
+			// GoalWorkItem1
+			assertEquals(0, goalWorkItem1.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem1.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem1.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem1.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem1.getInputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem1.getOutputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+
+			// GoalWorkItem2
+			assertEquals(0, goalWorkItem2.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem2.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem2.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem2.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem2.getInputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem2.getOutputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+
+			// GoalWorkItem3
+			assertEquals(0, goalWorkItem3.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem3.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem3.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem3.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem3.getInputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem3.getOutputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
 
 			Transaction.commit();
 			committed = true;
@@ -141,39 +200,200 @@ public class CreateGoalInstanceServiceTest {
 		}
 	}
 
-//	@Test
-//	public void createGoalAffectingParentGoal() throws Exception {
-//		Transaction.begin();
-//		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-//		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-//		long bwInstanceOID = bwInstance.getOID();
-//		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-//		Goal parentGoal = goalModelInstance.getGoal(SECONDOPINION_PARENTGOAL_NAME_2);
-//		long parentGoalOID = parentGoal.getOID();
-//		Transaction.commit();
-//
-//		new CreateGoalService(bwInstanceOID, SECONDOPINION_NAME, SECONDOPINION_DESCRIPTION,  parentGoalOID, SECONDOPINION_CONDITION, USER_ID).call();
-//
-//		boolean committed = false;
-//		try {
-//			Transaction.begin();
-//
-//			Goal secondOpinion = goalModelInstance.getGoal(SECONDOPINION_NAME);
-//			WorkItem workItem = bwInstance.getWorkItem(SECONDOPINION_ID);
-//
-//			assertEquals(7, goalModelInstance.getGoalsCount()); // Created 6 Goals on Load +1
-//			assertEquals(SECONDOPINION_NAME, secondOpinion.getName());
-//			assertEquals(SECONDOPINION_ID, workItem.getID());
-//
-//			assertEquals(GoalState.DEACTIVATED, parentGoal.getState());
-//			assertEquals(WorkItemState.GOAL_PENDING, parentGoal.getGoalWorkItem().getState());
-//
-//			Transaction.commit();
-//			committed = true;
-//		} finally {
-//			if (!committed) {
-//				Transaction.abort();
-//			}
-//		}
-//	}
+	@Test
+	public void createTwoDiferentGoalInstance() throws Exception {
+		Transaction.begin();
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+		long bwInstanceOID = bwInstance.getOID();
+
+		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
+		long parentGoalOID = parentGoal.getOID();
+		Transaction.commit();
+
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+
+
+		boolean committed = false;
+		try {
+			Transaction.begin();
+			GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_1);
+			GoalWorkItem goalWorkItem2 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_2);
+			GoalWorkItem goalWorkItem3 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_3);
+			GoalWorkItem goalWorkItem4 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_4);
+			GoalWorkItem goalWorkItem5 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_5);
+			GoalWorkItem goalWorkItem6 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_6);
+			EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+			EntityInstance entityInstance2 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_2_ID);
+
+			assertEquals(6, bwInstance.getWorkItemsCount());
+			for (WorkItem workItem : bwInstance.getWorkItems()) {
+				assertEquals(WorkItemState.ACTIVATED, workItem.getState());
+			}
+			
+			// Test first call workItems with entityInstance1
+			// GoalWorkItem1
+			assertEquals(0, goalWorkItem1.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem1.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem1.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem1.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem1.getInputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem1.getOutputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+
+			// GoalWorkItem2
+			assertEquals(0, goalWorkItem2.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem2.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem2.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem2.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem2.getInputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem2.getOutputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+
+			// GoalWorkItem3
+			assertEquals(0, goalWorkItem3.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem3.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem3.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem3.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem3.getInputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem3.getOutputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			
+			// Test second call workItems with entityInstance2
+			// GoalWorkItem4
+			assertEquals(0, goalWorkItem4.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem4.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem4.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem4.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem5.getInputAttributeInstances()) {
+				assertEquals(entityInstance2, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem5.getOutputAttributeInstances()) {
+				assertEquals(entityInstance2, attributeInstance.getEntityInstance());
+			}
+
+			// GoalWorkItem5
+			assertEquals(0, goalWorkItem5.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem5.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem5.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem5.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem5.getInputAttributeInstances()) {
+				assertEquals(entityInstance2, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem5.getOutputAttributeInstances()) {
+				assertEquals(entityInstance2, attributeInstance.getEntityInstance());
+			}
+
+			// GoalWorkItem6
+			assertEquals(0, goalWorkItem6.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem6.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem6.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem6.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem6.getInputAttributeInstances()) {
+				assertEquals(entityInstance2, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem6.getOutputAttributeInstances()) {
+				assertEquals(entityInstance2, attributeInstance.getEntityInstance());
+			}
+
+			Transaction.commit();
+			committed = true;
+		} finally {
+			if (!committed) {
+				Transaction.abort();
+			}
+		}
+	}
+
+	@Test
+	public void createTwoEqualGoalInstance() throws Exception {
+		Transaction.begin();
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
+		long bwInstanceOID = bwInstance.getOID();
+
+		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
+		long goalOID = parentGoal.getOID();
+		Transaction.commit();
+
+		new CreateGoalInstanceService(bwInstanceOID, goalOID, null).call();
+
+		Transaction.begin();
+		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		Entity entity = dataModelInstance.getEntity(ENTITY_1_NAME);
+		EntityInstance entityInstance = entity.getEntityInstances().get(0);
+		long entityInstanceOID = entityInstance.getOID();
+		Transaction.commit();
+		new CreateGoalInstanceService(bwInstanceOID, goalOID, entityInstanceOID).call();
+
+		boolean committed = false;
+		try {
+			Transaction.begin();
+			GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_1);
+			GoalWorkItem goalWorkItem2 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_2);
+			GoalWorkItem goalWorkItem3 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_3);
+			EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+
+			assertEquals(3, bwInstance.getWorkItemsCount());
+			for (WorkItem workItem : bwInstance.getWorkItems()) {
+				assertEquals(WorkItemState.ACTIVATED, workItem.getState());
+			}
+
+			// GoalWorkItem1
+			assertEquals(0, goalWorkItem1.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem1.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem1.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem1.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem1.getInputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem1.getOutputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+
+			// GoalWorkItem2
+			assertEquals(0, goalWorkItem2.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem2.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem2.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem2.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem2.getInputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem2.getOutputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+
+			// GoalWorkItem3
+			assertEquals(0, goalWorkItem3.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem3.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem3.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem3.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem3.getInputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem3.getOutputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+
+			Transaction.commit();
+			committed = true;
+		} finally {
+			if (!committed) {
+				Transaction.abort();
+			}
+		}
+	}
+
 }

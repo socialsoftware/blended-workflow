@@ -10,9 +10,10 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -40,9 +41,13 @@ public class GoalModelFactory {
 		rootGoalConditionString = ConditionFactory.getRelationDependencies(dataModel, rootGoalConditionString);
 		Condition rootGoalCondition = ConditionFactory.createCondition(dataModel, rootGoalConditionString);
 		
-		AchieveGoal rootGoal = new AchieveGoal(goalModel, rootGoalName, rootGoalDescription, rootGoalCondition);
+		String entityContextName = rootGoalXML.getChildText("Context", bwNamespace);
+		Entity entityContext = dataModel.getEntity(entityContextName);
+		
+		AchieveGoal rootGoal = new AchieveGoal(goalModel, rootGoalName, rootGoalDescription, rootGoalCondition, entityContext);
 		rootGoal.setUser(defaultUser);
 		rootGoal.setRole(defaultRole);
+
 		
 		// Activate Conditions
 		int activateConditionCount = Integer.parseInt(rootGoalXML.getChildText("ActivateConditionCount", bwNamespace));
@@ -66,8 +71,11 @@ public class GoalModelFactory {
 			goalConditionString =ConditionFactory.getRelationDependencies(dataModel, goalConditionString);
 			Condition goalCondition = ConditionFactory.createCondition(dataModel, goalConditionString);
 			
+			entityContextName = goalXML.getChildText("Context", bwNamespace);
+			entityContext = dataModel.getEntity(entityContextName);
+			
 			AchieveGoal parentGoal = goalModel.getGoal(goalXML.getChildText("ParentName", bwNamespace)); 
-			AchieveGoal newGoal = new AchieveGoal(goalModel, parentGoal, goalName, goalDescription, goalCondition);
+			AchieveGoal newGoal = new AchieveGoal(goalModel, parentGoal, goalName, goalDescription, goalCondition, entityContext);
 			newGoal.setUser(defaultUser);
 			newGoal.setRole(defaultRole);
 			
@@ -81,6 +89,24 @@ public class GoalModelFactory {
 				newGoal.addActivateConditions(activateCondition);
 			}
 			
+		}
+		
+		// MaintainGoals
+		List<?> maintainGoals = goalModelXML.getChildren("MaintainGoal", bwNamespace);
+		for (Object goal : maintainGoals) {
+			Element goalXML = (Element) goal;
+
+			String goalName = goalXML.getChildText("Name", bwNamespace);
+			String goalDescription = goalXML.getChildText("description", bwNamespace);
+			
+			String goalConditionString = goalXML.getChildText("MaintainCondition", bwNamespace);
+			goalConditionString = ConditionFactory.getRelationDependencies(dataModel, goalConditionString);
+			Condition goalCondition = ConditionFactory.createCondition(dataModel, goalConditionString);
+			
+			entityContextName = goalXML.getChildText("Context", bwNamespace);
+			entityContext = dataModel.getEntity(entityContextName);
+			
+			new MaintainGoal(goalModel, goalName, goalDescription, goalCondition, entityContext);
 		}
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
+//TODO:CLASS:ForAllCondition
 public class ForAllCondition extends ForAllCondition_Base {
     
     public  ForAllCondition() {
@@ -13,93 +14,85 @@ public class ForAllCondition extends ForAllCondition_Base {
     
 	@Override
 	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	Condition cloneCondition(TaskModelInstance taskModelInstance) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	void assignAttributeInstances(GoalWorkItem goalWorkItem) {
-		// TODO Auto-generated method stub
-		
+	public
+	void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 	}
 
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem,
-			String conditionType) {
-		// TODO Auto-generated method stub
-		
+	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
 	}
 
 	@Override
 	public Set<Entity> getEntities() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Set<Attribute> getAttributes() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public HashMap<Attribute, String> getcompareConditionValues() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getRdrTrueCondition() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getRdrFalseCondition() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getRdrSkippedCondition() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getRdrUndefinedConditionNEW() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getRdrSkippedConditionNEW() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getRdrTrueConditionNEW() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getRdrFalseConditionNEW() {
-		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		return "ForALL?";
+	}
     
+	@Override
+	public Boolean existExistEntity() {
+		return false;
+	}
 }
