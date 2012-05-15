@@ -245,7 +245,7 @@ public class CreateGoalInstanceServiceTest {
 			for (AttributeInstance attributeInstance : goalWorkItem1.getOutputAttributeInstances()) {
 				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
 			}
-
+			
 			// GoalWorkItem2
 			assertEquals(0, goalWorkItem2.getInputAttributeInstancesCount());
 			assertEquals(0, goalWorkItem2.getInputWorkItemArgumentsCount());
@@ -306,6 +306,13 @@ public class CreateGoalInstanceServiceTest {
 			for (AttributeInstance attributeInstance : goalWorkItem6.getOutputAttributeInstances()) {
 				assertEquals(entityInstance2, attributeInstance.getEntityInstance());
 			}
+			
+			assertEquals(1, goalWorkItem1.getActivateConditionsCount());
+			assertEquals(1, goalWorkItem2.getActivateConditionsCount());
+			assertEquals(1, goalWorkItem3.getActivateConditionsCount());
+			assertEquals(1, goalWorkItem4.getActivateConditionsCount());
+			assertEquals(1, goalWorkItem5.getActivateConditionsCount());
+			assertEquals(1, goalWorkItem6.getActivateConditionsCount());
 
 			Transaction.commit();
 			committed = true;

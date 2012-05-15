@@ -1,7 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
+import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class GoalModelInstance extends GoalModelInstance_Base {
 
@@ -24,10 +27,29 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 	}
 
 	public void checkPedingWorkItems() {
-//		System.out.println("Passo 3- checkPedingWorkItems");
 		for (AchieveGoal goal : getAchieveGoals()) {
 			goal.checkPending(getBwInstance());
 		}
+	}
+	
+	public TripleStateBool evaluateMaintainGoals(GoalWorkItem goalWorkItem) {
+		//TODO: evaluate only affected maintainGoals
+		ConditionType conditionType;
+		if (goalWorkItem.getState().equals(WorkItemState.PRE_GOAL)) {
+			conditionType = ConditionType.ACTIVATE;
+		} else {
+			conditionType = ConditionType.SUCESS;
+		}
+		
+		for (MaintainGoal maintainGoal : getMaintainGoals()) {
+			TripleStateBool result = maintainGoal.getMaintainCondition().evaluate(goalWorkItem, conditionType);
+			if (result == TripleStateBool.FALSE) {
+				return TripleStateBool.FALSE;
+			} else 	if (result == TripleStateBool.SKIPPED) {
+				return TripleStateBool.SKIPPED;
+			} 
+		}
+		return TripleStateBool.TRUE;
 	}
 
 }

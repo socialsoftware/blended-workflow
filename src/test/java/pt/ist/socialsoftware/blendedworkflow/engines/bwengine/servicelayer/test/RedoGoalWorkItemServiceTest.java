@@ -104,6 +104,7 @@ public class RedoGoalWorkItemServiceTest {
 				allowing(workListManager).notifyEnabledWorkItem(with(any(WorkItem.class)));
 				allowing(workListManager).notifyReEnabledWorkItem(with(any(GoalWorkItem.class)));
 				allowing(workListManager).notifyCompletedWorkItem(with(any(WorkItem.class)));
+				allowing(workListManager).notifyPendingWorkItem(with(any(WorkItem.class)));
 			}
 		});
 
@@ -170,7 +171,7 @@ public class RedoGoalWorkItemServiceTest {
 		assertEquals(DataState.DEFINED, attributeInstance3.getState());
 		Transaction.commit();
 		
-		new RedoGoalWorkItemService(bwInstanceOID, workItem3OID, USER_ID).call();
+		new RedoGoalWorkItemService(workItem3OID, USER_ID).call();
 		
 		Transaction.begin();
 		workItem3 = bwInstance.getWorkItem(GOALWORKITEM_ID_3);
@@ -238,7 +239,7 @@ public class RedoGoalWorkItemServiceTest {
 		assertEquals(DataState.SKIPPED, attributeInstance3.getState());
 		Transaction.commit();
 		
-		new RedoGoalWorkItemService(bwInstanceOID, workItem3OID, USER_ID).call();
+		new RedoGoalWorkItemService(workItem3OID, USER_ID).call();
 		
 		Transaction.begin();
 		workItem3 = bwInstance.getWorkItem(GOALWORKITEM_ID_3);

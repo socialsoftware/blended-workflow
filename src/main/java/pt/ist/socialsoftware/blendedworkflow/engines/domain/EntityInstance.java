@@ -24,7 +24,6 @@ public class EntityInstance extends EntityInstance_Base {
 				if (conditionType.equals(ConditionType.SUCESS)) {
 					goalWorkItem.addOutputAttributeInstances(attributeInstance);
 				} else {
-//					System.out.println("addInputAttributeInstances: " + attributeInstance.getEntityInstance().getID());
 					goalWorkItem.addInputAttributeInstances(attributeInstance);
 				}
 				exists = true;
@@ -36,7 +35,6 @@ public class EntityInstance extends EntityInstance_Base {
 			if (conditionType.equals(ConditionType.SUCESS)) {
 				goalWorkItem.addOutputAttributeInstances(attributeInstance);
 			} else {
-//				System.out.println("addInputAttributeInstances: " + attributeInstance.getEntityInstance().getID());
 				goalWorkItem.addInputAttributeInstances(attributeInstance);
 			}
 			

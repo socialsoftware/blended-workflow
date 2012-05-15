@@ -58,7 +58,7 @@ public class PrintBWSpecification {
 		goalModel = bwSpecification.getGoalModel();
 		taskModel = bwSpecification.getTaskModel();
 
-		bwInstance = blendedWorkflow.getBWInstance(bwSpecificationName + ".1"); // FIXME only 1 instance
+		bwInstance = blendedWorkflow.getBWInstance(bwSpecificationName + ".1"); //TODO: only 1 instance
 		dataModelInstance = bwInstance.getDataModelInstance();
 		goalModelInstance = bwInstance.getGoalModelInstance();
 		taskModelInstance = bwInstance.getTaskModelInstance();
@@ -113,7 +113,7 @@ public class PrintBWSpecification {
 		System.out.println("GoalModel Template");
 		System.out.println("----------------------------------------------------------");
 		for (AchieveGoal goal : goalModel.getAchieveGoals()) {
-			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
+			System.out.println("Goal \"" + goal.getName() + "\" has \"" + goal.getGoalWorkItemsCount() + "\"WorkItems and has " + goal.getSubGoals().size() + " subgoals.");
 			System.out.println("ActivateCondition " + goal.getActivateConditionsCount());
 			System.out.println("SucessCondition " + goal.getSucessCondition());
 			System.out.println("User: " + goal.getUser() + " Role:" + goal.getRole());
@@ -126,7 +126,7 @@ public class PrintBWSpecification {
 		System.out.println("GoalModel Type");
 		System.out.println("----------------------------------------------------------");
 		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
-			System.out.println("Goal \"" + goal.getName() + "\" is \"" + goal.getState() + "\" has " + goal.getSubGoals().size() + " subgoals.");
+			System.out.println("Goal \"" + goal.getName() + "\" has \"" + goal.getGoalWorkItemsCount() + "\"WorkItems and has " + goal.getSubGoals().size() + " subgoals.");
 			System.out.println("ActivateCondition " + goal.getActivateConditionsCount());
 			System.out.println("SucessCondition " + goal.getSucessCondition());
 			System.out.println("User: " + goal.getUser() + " Role:" + goal.getRole());

@@ -16,7 +16,7 @@ public class AchieveGoal extends AchieveGoal_Base {
 //		super();
 //	}
 
-	public enum GoalState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
+//	public enum GoalState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
 
 	/**
 	 * Create the GoalTree root Goal.
@@ -27,7 +27,6 @@ public class AchieveGoal extends AchieveGoal_Base {
 		setName(name);
 		setDescription(description);
 		setSucessCondition(condition);
-		setState(GoalState.DEACTIVATED);
 		setParentGoal(null);
 		setEntityContext(context);
 	}
@@ -42,7 +41,6 @@ public class AchieveGoal extends AchieveGoal_Base {
 		setDescription(description);
 		setSucessCondition(condition);
 		setParentGoal(parentGoal);
-		setState(GoalState.DEACTIVATED);
 		setEntityContext(context);
 	}
 
@@ -182,14 +180,10 @@ public class AchieveGoal extends AchieveGoal_Base {
 //	}
 
 	public void checkPending(BWInstance bwInstance) {
-//		System.out.println("checkPending1");
 		if (getGoalWorkItems() != null) {
-//			System.out.println("checkPending2");
 			for (GoalWorkItem goalWorkItem : getGoalWorkItems()) {
 				if (goalWorkItem.getState().equals(WorkItemState.GOAL_PENDING)) {
-//					System.out.println("checkPending3");
 					goalWorkItem.evaluate(true);
-					//getGoalWorkItem().notifyEnabled();
 				}
 			}
 		}

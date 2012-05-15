@@ -12,8 +12,8 @@ public class AndCondition extends AndCondition_Base {
 		addConditions(two);
 	}
 	
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
-		return getConditionOne().evaluate(goalWorkItem).AND(getConditionTwo().evaluate(goalWorkItem));
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return getConditionOne().evaluate(goalWorkItem, conditionType).AND(getConditionTwo().evaluate(goalWorkItem, conditionType));
 	}
 	
 	public Condition getConditionOne(){

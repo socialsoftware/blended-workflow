@@ -1,10 +1,14 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import org.apache.log4j.Logger;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class Entity extends Entity_Base {
+	
+	private static Logger log = Logger.getLogger("Entity");
 
 	public Entity(DataModel dataModel, String name) throws BlendedWorkflowException {
 		checkUniqueEntityName(dataModel,name);
@@ -35,12 +39,24 @@ public class Entity extends Entity_Base {
 		EntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
 		Entity entityContext = entityInstanceContext.getEntity();
 		
-//		System.out.println(this.getOID() + "-" + entityContext.getOID());
 		if (this.equals(entityContext)) {
 			entityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
 		} else {
-			// TODO: inferir qual e a instancia
-			System.out.println("TODO: inferir qual e a instancia");
+			log.error("Condition Context is diferent from Goal Context.");
+			for (RelationInstance relationInstance : entityInstanceContext.getRelationInstances()) {
+				//Relation EntityOne = than check EntityTwo
+				if (relationInstance.getEntityOne() == entityInstanceContext) {
+					if (relationInstance.getEntityTwo().getEntity() == this){
+						relationInstance.getEntityTwo().assignAttributeInstances(goalWorkItem, attribute, conditionType);
+					}
+				}
+				//Relation EntityTwo = than check EntityOne
+				if (relationInstance.getEntityTwo() == entityInstanceContext) {
+					if (relationInstance.getEntityOne().getEntity() == this){
+						relationInstance.getEntityOne().assignAttributeInstances(goalWorkItem, attribute, conditionType);
+					}
+				}
+			}
 		}
 		
 		
@@ -52,7 +68,7 @@ public class Entity extends Entity_Base {
 //			createRelationInstances(dataModelInstance, entityInstance);
 //		}
 //		else {
-//			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
+//			for (EntityInstance entityInstance : getEntityInstances()) { // only 1 entityInstance
 //				entityInstance.assignAttributeInstances(goalWorkItem, attribute, conditionType);
 //			}
 //		}
@@ -67,7 +83,7 @@ public class Entity extends Entity_Base {
 			createRelationInstances(dataModelInstance, entityInstance);
 		}
 		else {
-			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME only 1 entityInstance
+			for (EntityInstance entityInstance : getEntityInstances()) { //FIXME: only 1 entityInstance
 				entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 			}
 		}
@@ -77,7 +93,6 @@ public class Entity extends Entity_Base {
 		EntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
 		Entity entityContext = entityInstanceContext.getEntity();
 		
-//		System.out.println(this.getOID() + "-" + entityContext.getOID());
 		if (this.equals(entityContext)) {
 			for (Attribute attribute : entityContext.getAttributes()) {
 				if (attribute.getIsKeyAttribute()) {
@@ -85,10 +100,30 @@ public class Entity extends Entity_Base {
 				}
 			}
 		} else {
-			// TODO: inferir qual e a instancia
-			System.out.println("TODO: inferir qual e a instancia");
+			log.error("Condition Context is diferent from Goal Context.");
+			for (RelationInstance relationInstance : entityInstanceContext.getRelationInstances()) {
+				//Relation EntityOne = than check EntityTwo
+				if (relationInstance.getEntityOne() == entityInstanceContext) {
+					if (relationInstance.getEntityTwo().getEntity() == this){
+						for (Attribute attribute : entityContext.getAttributes()) {
+							if (attribute.getIsKeyAttribute()) {
+								relationInstance.getEntityTwo().assignAttributeInstances(goalWorkItem, attribute, conditionType);
+							}
+						}
+					}
+				}
+				//Relation EntityTwo = than check EntityOne
+				if (relationInstance.getEntityTwo() == entityInstanceContext) {
+					if (relationInstance.getEntityOne().getEntity() == this){
+						for (Attribute attribute : entityContext.getAttributes()) {
+							if (attribute.getIsKeyAttribute()) {
+								relationInstance.getEntityOne().assignAttributeInstances(goalWorkItem, attribute, conditionType);
+							}
+						}
+					}
+				}
+			}
 		}
-		
 		
 //		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
 //		if (getEntityInstances().isEmpty()) {

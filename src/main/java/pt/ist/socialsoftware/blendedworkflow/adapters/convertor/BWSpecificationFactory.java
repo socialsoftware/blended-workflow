@@ -54,8 +54,7 @@ public class BWSpecificationFactory {
 		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
 
 		// Create Worklet Rules
-//		BlendedWorkflow.getInstance().getWorkletAdapter(); // Test proposes only.
-		BlendedWorkflow.getInstance().getWorkletAdapter().loadRdrSet(bwSpecification); //FIXME: Disabled to run tests.
+		BlendedWorkflow.getInstance().getWorkletAdapter().loadRdrSet(bwSpecification);
 		
 		// Notify BWManager
 		BlendedWorkflow.getInstance().getBwManager().notifyLoadedBWSpecification(bwSpecification);

@@ -12,8 +12,8 @@ public class NotCondition extends NotCondition_Base {
 	}
 	
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
-		return getCondition().evaluate(goalWorkItem).NOT();
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return getCondition().evaluate(goalWorkItem, conditionType).NOT();
 	}
 
 	@Override

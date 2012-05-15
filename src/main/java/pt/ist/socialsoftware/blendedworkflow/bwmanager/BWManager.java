@@ -4,11 +4,17 @@ import org.apache.log4j.Logger;
 
 import com.vaadin.ui.Window.Notification;
 
+import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
@@ -55,21 +61,38 @@ public class BWManager {
 			}
 		}
 	}
-	
+
 	public void loadBWSpecification(String bwXML){
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
 		LoadBWSpecificationService service = new LoadBWSpecificationService(bwXML, "yawlXML");
 		bwExecutorService.runTask(service);
 	}
-	
+
 	public void createBWInstance(long bwSpecificationOID, String name, String userID){
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
 		CreateBWInstanceService service = new CreateBWInstanceService(bwSpecificationOID, name, userID);
 		bwExecutorService.runTask(service);
 	}
-	
+
 	public void notifyException(BlendedWorkflowError bwe) {
 		getBwPresentation().getMainWindow().showNotification(bwe.toString(), Notification.TYPE_ERROR_MESSAGE);
+	}
+
+	public void addRelationInstance(long bwInstanceOID, long e1OID, long e2OID) {
+		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+		EntityInstance e1 = AbstractDomainObject.fromOID(e1OID);
+		EntityInstance e2 = AbstractDomainObject.fromOID(e2OID);
+		Entity entity1 = e1.getEntity();
+		Entity entity2 = e2.getEntity();
+
+		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		for (Relation relation : dataModelInstance.getRelations()) {
+			Entity one = relation.getEntityOne();
+			Entity two = relation.getEntityTwo();
+			if ((one.equals(entity1) && two.equals(entity2)) || (one.equals(entity2) && two.equals(entity1))) {
+				new RelationInstance(relation, e1, e2, e1.getNewRelationInstanceID());
+			}
+		}		
 	}
 
 }

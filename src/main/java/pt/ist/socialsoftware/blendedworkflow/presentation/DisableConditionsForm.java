@@ -23,13 +23,10 @@ public class DisableConditionsForm extends VerticalLayout {
 
 	protected final Tree treetable = new Tree("Achieve Goals");
 
-//	private ActivateGoalForm parentWindow;
-//	private String dataRelation;
 //	private Logger log = Logger.getLogger("DCF");
 	private static final Action DISABLE_CONDITION_ACTION = new Action("Disable Condition");
 
 	public DisableConditionsForm(final ActivateGoalForm parent, final long bwInstanceOID) {
-//		parentWindow = parent;
 		HorizontalLayout footer = new HorizontalLayout();
 
 		// Properties
@@ -48,6 +45,8 @@ public class DisableConditionsForm extends VerticalLayout {
 					// remove condition
 					Long ConditionOID = (Long) target;
 					Long workItemOID = (Long) treetable.getParent(ConditionOID);
+					
+					ConditionOID = ConditionOID - workItemOID;
 					Transaction.begin();
 					BlendedWorkflow.getInstance().getWorkListManager().disableWorkItemCondition(workItemOID, ConditionOID);
 					Transaction.commit();
@@ -69,6 +68,7 @@ public class DisableConditionsForm extends VerticalLayout {
 		submitButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
+				getApplication().getMainWindow().showNotification("" + bwInstanceOID);
 				Transaction.begin();
 				BlendedWorkflow.getInstance().getWorkListManager().enableGoalWorkItemsService(bwInstanceOID);
 				Transaction.commit();
@@ -100,8 +100,9 @@ public class DisableConditionsForm extends VerticalLayout {
 				treetable.addItem(wOID);
 				treetable.setItemCaption(wOID, goalWorkItemID);
 				treetable.setParent(wOID,goalName);
+
 				for (Condition activateCondition : goalWorkItem.getActivateConditions()) {
-					long OID = activateCondition.getOID();
+					long OID = activateCondition.getOID() + wOID; //FIXME: Show only workItems of the selected Entityinstance.
 					String activateConditionString = activateCondition.toString();
 					
 					treetable.addItem(OID);

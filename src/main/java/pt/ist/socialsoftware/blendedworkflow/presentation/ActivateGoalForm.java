@@ -23,11 +23,13 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-public class ActivateGoalForm extends VerticalLayout implements Property.ValueChangeListener {
+public class ActivateGoalForm extends VerticalLayout {//implements Property.ValueChangeListener {
 
 	private NativeSelect bwInstances = new NativeSelect("BWInstance");
 	private NativeSelect parentGoal = new NativeSelect("Goal to Activate:");
 	private NativeSelect entityInstanceContext = new NativeSelect("EntityInstance Context:");
+	
+//	private static Logger log = Logger.getLogger("ActivateGoalForm");
 	
 	public ActivateGoalForm() {
 
@@ -44,9 +46,32 @@ public class ActivateGoalForm extends VerticalLayout implements Property.ValueCh
 		dataHL.setSpacing(true);
 		submitPanel.setSpacing(true);
 
-		bwInstances.setNullSelectionAllowed(false);
 		bwInstances.setImmediate(true);
-		bwInstances.addListener(this);
+		bwInstances.addListener(new Property.ValueChangeListener() {
+			public void valueChange(ValueChangeEvent event) {
+				if (bwInstances.getValue() == null) {
+					parentGoal.removeAllItems();
+					entityInstanceContext.removeAllItems();
+				} else {
+					long bwInstanceOID = (Long) bwInstances.getValue();
+					BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+					getGoals(bwInstance);
+				}
+			}
+		});
+		
+		parentGoal.setImmediate(true);
+		parentGoal.addListener(new Property.ValueChangeListener() {
+			public void valueChange(ValueChangeEvent event) {
+				if (parentGoal.getValue() == null) {
+					entityInstanceContext.removeAllItems();
+				} else {
+					long bwInstanceOID = (Long) bwInstances.getValue();
+					long goalOID = (Long) parentGoal.getValue();
+					updateEntityInstancesInfo(bwInstanceOID, goalOID);
+				}
+			}
+		});
 
 		Button submit = new Button("Submit");
 		submit.addListener(new Button.ClickListener() {
@@ -80,17 +105,6 @@ public class ActivateGoalForm extends VerticalLayout implements Property.ValueCh
 		});
 
 		// Layout
-		parentGoal.addListener(new Property.ValueChangeListener() {
-			public void valueChange(ValueChangeEvent event) {
-				if (parentGoal.getValue() == null) {
-				} else {
-				long bwInstanceOID = (Long) bwInstances.getValue();
-				long goalOID = (Long) parentGoal.getValue();
-				updateEntityInstancesInfo(bwInstanceOID, goalOID); 
-				}
-			}
-		});
-		
 		addComponent(bwInstances);
 		addComponent(parentGoal);
 		addComponent(entityInstanceContext);
@@ -106,13 +120,6 @@ public class ActivateGoalForm extends VerticalLayout implements Property.ValueCh
 		// Populate
 		getBWInstances();
 	}
-
-	// Update Goals depending on selected bwInstance
-	public void valueChange(ValueChangeEvent event) {
-		long bwInstanceOID = (Long) bwInstances.getValue();
-		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
-		getGoals(bwInstance);
-	}
 	
 	private void updateEntityInstancesInfo(long bwInstanceOID, long goalOID) {
 		Transaction.begin();
@@ -120,7 +127,7 @@ public class ActivateGoalForm extends VerticalLayout implements Property.ValueCh
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		AchieveGoal goal = AbstractDomainObject.fromOID(goalOID);
 		Entity goalContext = goal.getEntityContext();
-		
+
 		for (Entity entity : dataModelInstance.getEntities()) {
 			if (entity.equals(goalContext)) {
 				for (EntityInstance entityInstance : entity.getEntityInstances()) {

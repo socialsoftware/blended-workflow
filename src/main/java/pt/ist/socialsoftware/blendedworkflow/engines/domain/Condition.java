@@ -10,7 +10,7 @@ public abstract class Condition extends Condition_Base {
 	public enum ConditionType {PRE_CONSTRAINT, CONSTRAINT_VIOLATION, ACTIVATE, SUCESS, MAINTAIN};
 	public enum ConditionResult {TRUE, FALSE, SKIPPED};
 	
-	public abstract TripleStateBool evaluate(GoalWorkItem goalWorkItem);
+	public abstract TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType);
 	
 	public Condition and(Condition one, Condition other) {
 		return new AndCondition(one, other);

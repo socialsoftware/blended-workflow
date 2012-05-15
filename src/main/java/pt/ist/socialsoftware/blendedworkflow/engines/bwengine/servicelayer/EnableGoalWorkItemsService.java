@@ -31,9 +31,7 @@ public class EnableGoalWorkItemsService implements Callable<String> {
 		
 		for (WorkItem workItem : this.bwInstance.getWorkItems()) {
 			if (workItem.getClass().equals(GoalWorkItem.class) && workItem.getState().equals(WorkItemState.ACTIVATED)) {
-				GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
-//				System.out.println("CreateInput for :"  + workItem.getID() + " AC: " + goalWorkItem.getActivateConditionsCount() + " SC: " + goalWorkItem.getSucessCondition().getOID());
-				
+				GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;				
 				for (Condition activateCondition : goalWorkItem.getActivateConditions()) {
 					activateCondition.assignAttributeInstances(goalWorkItem, ConditionType.ACTIVATE);
 				}

@@ -7,6 +7,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import jvstm.Transaction;
 
 import com.vaadin.ui.Alignment;
@@ -20,12 +21,12 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-public class RedoGoalForm extends VerticalLayout implements Property.ValueChangeListener {
+public class RedoGoalForm extends VerticalLayout {
 
 	private NativeSelect bwInstances = new NativeSelect("BWInstance");
-	private NativeSelect parentGoal = new NativeSelect("Goal to REDO:");
-	private NativeSelect workItems = new NativeSelect("Completed/Skipped GoalWorkItemss:");
-//	private Logger log = Logger.getLogger("WorklistManager");
+	private NativeSelect parentGoal = new NativeSelect("Goal:");
+	private NativeSelect workItems = new NativeSelect("Completed or Skipped GoalWorkItems:");
+//	private Logger log = Logger.getLogger("RedoGoalForm");
 	
 	public RedoGoalForm() {
 
@@ -42,21 +43,42 @@ public class RedoGoalForm extends VerticalLayout implements Property.ValueChange
 		dataHL.setSpacing(true);
 		submitPanel.setSpacing(true);
 
-		bwInstances.setNullSelectionAllowed(false);
 		bwInstances.setImmediate(true);
-		bwInstances.addListener(this);
+		bwInstances.addListener(new Property.ValueChangeListener() {
+			public void valueChange(ValueChangeEvent event) {
+				if (bwInstances.getValue() == null) {
+					parentGoal.removeAllItems();
+					workItems.removeAllItems();
+				} else {
+					long bwInstanceOID = (Long) bwInstances.getValue();
+					BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+					getGoals(bwInstance);
+				}
+			}
+		});
+		
+		parentGoal.setImmediate(true);
+		parentGoal.addListener(new Property.ValueChangeListener() {
+			public void valueChange(ValueChangeEvent event) {
+				if (parentGoal.getValue() == null) {
+					workItems.removeAllItems();
+				} else {
+					long bwInstanceOID = (Long) bwInstances.getValue();
+					long goalOID = (Long) parentGoal.getValue();
+					updateWorkItemsInfo(bwInstanceOID, goalOID); 
+				}
+			}
+		});
 
 		Button submit = new Button("Submit");
 		submit.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					long bwInstanceOID = (Long) bwInstances.getValue();
-//					long parentGoalOID = (Long) parentGoal.getValue();
-					long workItemlOID = (Long) parentGoal.getValue();
+					long workItemlOID = (Long) workItems.getValue();
 					Transaction.begin();
 					String activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
-					BlendedWorkflow.getInstance().getWorkListManager().redoGoal(bwInstanceOID, workItemlOID, activeUserID);
+					BlendedWorkflow.getInstance().getWorkListManager().redoGoal(workItemlOID, activeUserID);
 					Transaction.commit();
 					
 					getApplication().getMainWindow().showNotification("Goal ReActivated successfully", Notification.TYPE_TRAY_NOTIFICATION);
@@ -81,17 +103,7 @@ public class RedoGoalForm extends VerticalLayout implements Property.ValueChange
 		addComponent(parentGoal);
 		addComponent(workItems);
 		
-		parentGoal.addListener(new Property.ValueChangeListener() {
-			public void valueChange(ValueChangeEvent event) {
-				if (parentGoal.getValue() == null) {
-					workItems.removeAllItems();
-				} else {
-					long bwInstanceOID = (Long) bwInstances.getValue();
-					long goalOID = (Long) parentGoal.getValue();
-					updateWorkItemsInfo(bwInstanceOID, goalOID); 
-				}
-			}
-		});
+
 
 		dataHL.addComponent(dataVL);
 		addComponent(dataHL);
@@ -105,13 +117,6 @@ public class RedoGoalForm extends VerticalLayout implements Property.ValueChange
 		getBWInstances();
 	}
 
-	// Update Goals depending on selected bwInstance
-	public void valueChange(ValueChangeEvent event) {
-		long bwInstanceOID = (Long) bwInstances.getValue();
-		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
-		getGoals(bwInstance);
-	}
-
 	private void getGoals(BWInstance bwInstance) {
 		Transaction.begin();
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
@@ -123,20 +128,22 @@ public class RedoGoalForm extends VerticalLayout implements Property.ValueChange
 		Transaction.commit();
 	}
 	
-	private void updateWorkItemsInfo(long bwInstanceOID, long goalOIDs) {
+	private void updateWorkItemsInfo(long bwInstanceOID, long goalOID) {
+		this.workItems.removeAllItems();
 //		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
-		AchieveGoal goal = AbstractDomainObject.fromOID(bwInstanceOID);
+		AchieveGoal goal = AbstractDomainObject.fromOID(goalOID);
 		
 		Transaction.begin();
 		for (GoalWorkItem goalWorkItem : goal.getGoalWorkItems()) {
-			this.parentGoal.addItem(goalWorkItem.getOID());
-			this.parentGoal.setItemCaption(goalWorkItem.getOID(), goalWorkItem.getID());
-			//TODO: Give workitem data information
+			if (goalWorkItem.getState().equals(WorkItemState.COMPLETED) || goalWorkItem.getState().equals(WorkItemState.SKIPPED)) {
+				this.workItems.addItem(goalWorkItem.getOID());
+				this.workItems.setItemCaption(goalWorkItem.getOID(), goalWorkItem.getID());
+				//TODO: Give workitem data information
+			}
 		}
 		Transaction.commit();
 	}
 	
-
 	private void getBWInstances() {
 		Transaction.begin();
 		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance().getBwSpecifications()) {

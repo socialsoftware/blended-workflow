@@ -13,7 +13,7 @@ public class TrueCondition extends TrueCondition_Base {
     }
     
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return TripleStateBool.TRUE;
 	}
     

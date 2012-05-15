@@ -3,12 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
@@ -32,48 +28,6 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		createOutputWorkItemArguments();
 	}
 
-	/**
-	 * Copy the Task PreConstraint AttributesInstances to its PreConstraint WorkItem Arguments.
-	 */
-	public void createInputWorkItemArguments() {
-		for (AttributeInstance attributeInstance : getInputAttributeInstances()) {
-			WorkItemArgument workItemArgument = new WorkItemArgument(attributeInstance, attributeInstance.getValue(), attributeInstance.getState());
-			addInputWorkItemArguments(workItemArgument);
-		}
-	}
-	
-	/**
-	 * Update PreConstraint WorkItem Arguments with new Data.
-	 */
-	public void updateInputWorkItemArguments() {
-		for (WorkItemArgument workItemArgument : getInputWorkItemArguments()) {
-			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
-			workItemArgument.setValue(attributeInstance.getValue());
-			workItemArgument.setState(attributeInstance.getState());
-		}
-	}
-	
-	/**
-	 * Copy the Task PostConstraint AttributesInstances to its ConstrainViolation WorkItem Arguments.
-	 */
-	public void createOutputWorkItemArguments() {
-		for (AttributeInstance attributeInstance : getOutputAttributeInstances()) {
-			WorkItemArgument workItemArgument = new WorkItemArgument(attributeInstance, attributeInstance.getValue(), attributeInstance.getState());
-			addOutputWorkItemArguments(workItemArgument);
-		}
-	}
-	
-	/**
-	 * Update ConstrainViolation WorkItem Arguments with new Data.
-	 */
-	public void updateOutputWorkItemArguments() {
-		for (WorkItemArgument workItemArgument : getOutputWorkItemArguments()) {
-			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
-			workItemArgument.setValue(attributeInstance.getValue());
-			workItemArgument.setState(attributeInstance.getState());
-		}
-	}
-
 	/******************************
 	 * State Change Notifications *
 	 ******************************/
@@ -88,9 +42,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 
 	@Override
 	public void notifyPreFalse() {
-		log.info("TaskWorkitem " + getID() + " is now in PreFalse state");
-		setState(WorkItemState.PRE_FALSE);
-		// Should not happen!
+		log.error("TaskWorkitem " + getID() + " is now in PreFalse state");
 	}
 
 	@Override
@@ -100,7 +52,6 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		updateInputWorkItemArguments();
 		updateOutputWorkItemArguments();
 		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
-		log.info("TaskWorkitem " + getID() + " is now in ConstrainViolation state -end");
 	}
 
 	@Override
@@ -159,121 +110,6 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 	@Override
 	public void notifyReActivated() {}
 	
-	/***********************************
-	 * Commit WorkItemArguments values *
-	 ***********************************/
-	
-	@Override
-	public void setAttributeValues() {
-		Boolean modified = false;
-		Boolean isPreTask = false;
-		// Add PreConstrain data
-		for (WorkItemArgument workItemArgument : getInputWorkItemArguments()) {
-
-			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
-			if (!attributeInstance.getState().equals(DataState.DEFINED)) {
-				workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
-				isPreTask = true;
-				modified = true;
-			}
-			else if (attributeInstance.getValue() != workItemArgument.getValue()) {
-				workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
-				isPreTask = true;
-				modified = true;
-			}
-		}
-
-		// Add ConstrainViolation data
-		for (WorkItemArgument workItemArgument : getOutputWorkItemArguments()) {
-			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
-			if (!attributeInstance.getState().equals(DataState.DEFINED)) {
-				workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
-				modified = true;
-			}
-			else if (attributeInstance.getValue() != workItemArgument.getValue()) {
-				workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
-				modified = true;
-			}
-		}
-		
-		if (modified) {
-		notifyWorkItemDataChanged(isPreTask);
-		}
-	}
-	
-	@Override
-	public void setAttributeSkipped() {
-		Boolean isPreTask = false;
-		Boolean modified = false;
-		// Add PreConstrain data
-		for (WorkItemArgument workItemArgument : getInputWorkItemArguments()) {
-			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
-			if (attributeInstance.getState() == DataState.UNDEFINED) {
-				attributeInstance.setState(DataState.SKIPPED);
-				isPreTask = true;
-				modified = true;
-			}
-		}
-
-		// Add ConstrainViolation data
-		for (WorkItemArgument workItemArgument : getOutputWorkItemArguments()) {
-			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
-			if (attributeInstance.getState() == DataState.UNDEFINED) {
-				attributeInstance.setState(DataState.SKIPPED);
-				attributeInstance.setValue("$SKIPPED$");
-				modified = true;
-			}
-		}
-		if (modified) {
-		notifyWorkItemDataChanged(isPreTask);
-		}
-	}
-	
-	@Override
-	public void notifyWorkItemDataChanged(Boolean isPreTask) {
-		Set<WorkItem> notifyWorkItems = new HashSet<WorkItem>();
-		// If PRE_TASK: Get WorkItems affected by PreConstraint attributesInstances new values
-		if (isPreTask) {
-			for (AttributeInstance attributeInstance : getInputAttributeInstances()) {
-				// Check preconditions
-				for (WorkItem workItem : attributeInstance.getPreConstraintWorkItems()) {
-					if (!workItem.equals(this) && (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK) || workItem.getState().equals(WorkItemState.PRE_GOAL))) {
-						notifyWorkItems.add(workItem);
-					}
-				}
-				// Goalconditions and pos conditions
-				for (WorkItem workItem : attributeInstance.getContraintViolationWorkItems()) {
-					if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK) || workItem.getState().equals(WorkItemState.PRE_GOAL))) {
-						notifyWorkItems.add(workItem);
-					}
-				}
-				
-			}
-		}
-		
-		// Get WorkItems affected by ConstraintViolation attributesInstances values
-		for (AttributeInstance attributeInstance : getOutputAttributeInstances()) {
-			// Check preconditions
-			for (WorkItem workItem : attributeInstance.getPreConstraintWorkItems()) {
-				if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
-					notifyWorkItems.add(workItem);
-				}
-			}
-			// Goalconditions and pos conditions
-			for (WorkItem workItem : attributeInstance.getContraintViolationWorkItems()) {
-				if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
-					notifyWorkItems.add(workItem);
-				}
-			}
-		}
-		
-		for (WorkItem workItem : notifyWorkItems) {
-			workItem.updateInputWorkItemArguments();
-			workItem.updateOutputWorkItemArguments();
-			workItem.notifyDataChange();
-		}
-	}
-	
 	@Override
 	public void notifyCheckedIn() {
 		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
@@ -281,5 +117,4 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		}
 		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
 	}
-
 }

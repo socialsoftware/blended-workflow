@@ -12,8 +12,8 @@ public class OrCondition extends OrCondition_Base {
 		addConditions(two);
 	}
 	
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
-		return getConditionOne().evaluate(goalWorkItem).OR(getConditionTwo().evaluate(goalWorkItem));
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return getConditionOne().evaluate(goalWorkItem, conditionType).OR(getConditionTwo().evaluate(goalWorkItem, conditionType));
 	}
 	
 	public Condition getConditionOne(){

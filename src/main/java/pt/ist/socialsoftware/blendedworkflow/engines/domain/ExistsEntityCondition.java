@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
@@ -14,27 +15,26 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 	
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
-//		System.out.println("evaluate for " + goalWorkItem.getID());
-		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
-//			System.out.println("workItemArgument" + workItemArgument.getAttributeInstance().getID());
-//			System.out.println("value" + workItemArgument.getValue());
-//			System.out.println("state" + workItemArgument.getState());
-			
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		//TODO: evaluate relations.
+		List<WorkItemArgument> arguments = null;
+		if (conditionType.equals(ConditionType.ACTIVATE)) {
+			arguments = goalWorkItem.getInputWorkItemArguments();
+		} else if (conditionType.equals(ConditionType.SUCESS)) {
+			arguments = goalWorkItem.getOutputWorkItemArguments();
+		}
+		
+		for (WorkItemArgument workItemArgument : arguments) {
 			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 			Attribute conditionAttribute = getEntity().getAttribute(workItemAttribute.getName());
-			
 			if (conditionAttribute != null && conditionAttribute.getIsKeyAttribute()) {
 				if (workItemArgument.getState().equals(DataState.SKIPPED)) {
-//					System.out.println("SKIPPED");
 					return TripleStateBool.SKIPPED;
 				} else if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
-//					System.out.println("FALSE");
 					return TripleStateBool.FALSE;
 				}
 			}
 		}
-//		System.out.println("TRUE");
 		return TripleStateBool.TRUE;
 	}
 

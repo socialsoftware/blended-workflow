@@ -237,11 +237,32 @@
 			<bw:ParentName>Add Patient</bw:ParentName>
 			<bw:Context>Patient</bw:Context>
 		</bw:Goal>
+		<bw:Goal>
+			<bw:Type>Achieve</bw:Type>
+			<bw:Name>Add Episode</bw:Name>
+			<bw:description>Add Episode</bw:description>
+			<bw:SucessCondition>existsEntity(Episode)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>true</bw:ActivateCondition1>
+			<bw:ParentName>Diagnose Patient</bw:ParentName>
+			<bw:Context>Episode</bw:Context>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Type>Achieve</bw:Type>
+			<bw:Name>Create Medical Report</bw:Name>
+			<bw:description>Create Medical Report</bw:description>
+			<bw:SucessCondition>existsEntity(Medical Report)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>true</bw:ActivateCondition1>
+			<bw:ParentName>Diagnose Patient</bw:ParentName>
+			<bw:Context>Medical Report</bw:Context>
+		</bw:Goal>
+		
 		<bw:MaintainGoal>
 			<bw:Type>Maintain</bw:Type>
 			<bw:Name>MaintainTest</bw:Name>
 			<bw:description>MaintainTest</bw:description>
-			<bw:MaintainCondition>compareAttributeTo(Patient.Gender,=.m)</bw:MaintainCondition>
+			<bw:MaintainCondition>true</bw:MaintainCondition>
 			<bw:Context>Patient</bw:Context>
 		</bw:MaintainGoal>
 		

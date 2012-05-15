@@ -19,7 +19,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
@@ -1012,10 +1011,10 @@ public class BWPresentation extends Application {
 		
 		BWInstance bwInstance = AbstractDomainObject.fromOID(OID);
 		int executedTasksCount = 0;
-		int achievedGoalsCount = 0;
+//		int achievedGoalsCount = 0;
 
 		TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
-		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+//		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
 		for (Task task : taskModelInstance.getTasks()) {
 			if (task.getState().equals(TaskState.ACHIEVED) || task.getState().equals(TaskState.SKIPPED)) {
@@ -1023,18 +1022,19 @@ public class BWPresentation extends Application {
 			}
 		}
 
-		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
-			if (goal.getState().equals(GoalState.ACHIEVED) || goal.getState().equals(GoalState.SKIPPED)) {
-				achievedGoalsCount++;
-			}
-		}
+		// FIXME: state
+//		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
+//			if (goal.getState().equals(GoalState.ACHIEVED) || goal.getState().equals(GoalState.SKIPPED)) {
+//				achievedGoalsCount++;
+//			}
+//		}
 
 		// Info
 		bwInstanceInfoTable.addItem(new Object[] {"Name", bwInstance.getName()}, new Integer(1));
 		bwInstanceInfoTable.addItem(new Object[] {"Launched by", bwInstance.getUser().getID()}, new Integer(2));
 		bwInstanceInfoTable.addItem(new Object[] {"Creation Date", bwInstance.getCreationDate()}, new Integer(3));
 		bwInstanceInfoTable.addItem(new Object[] {"Executed Tasks", executedTasksCount + " of " + taskModelInstance.getTasksCount()}, new Integer(4));
-		bwInstanceInfoTable.addItem(new Object[] {"Achieved Goals", achievedGoalsCount + " of " + goalModelInstance.getAchieveGoalsCount()}, new Integer(5));
+//		bwInstanceInfoTable.addItem(new Object[] {"Achieved Goals", achievedGoalsCount + " of " + goalModelInstance.getAchieveGoalsCount()}, new Integer(5));
 
 		// JobInfo
 		int jobIndex = 1;

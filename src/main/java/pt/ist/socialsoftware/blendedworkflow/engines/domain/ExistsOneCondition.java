@@ -5,12 +5,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-//TODO:CLASS:ForAllCondition
-public class ForAllCondition extends ForAllCondition_Base {
-    
-    public  ForAllCondition() {
-        super();
-    }
+public class ExistsOneCondition extends ExistsOneCondition_Base {
     
 	@Override
 	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {

@@ -148,7 +148,7 @@ public class CreateNewGoalServiceTest {
 		try {
 			Transaction.begin();
 
-			assertEquals(10, goalModelInstance.getAchieveGoalsCount());
+			assertEquals(12, goalModelInstance.getAchieveGoalsCount());
 			AchieveGoal newGoal = goalModelInstance.getGoal(NEWGOAL_NAME);
 			assertEquals(NEWGOAL_NAME, newGoal.getName());
 			assertEquals(NEWGOAL_DESCRIPTION, newGoal.getDescription());

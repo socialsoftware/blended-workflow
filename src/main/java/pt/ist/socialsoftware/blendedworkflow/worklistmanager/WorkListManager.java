@@ -139,10 +139,10 @@ public class WorkListManager {
 		bwExecutorService.runTask(service);
 	}
 
-	public void redoGoal(long bwInstanceOID, long workItemOID, String userID) {
+	public void redoGoal(long workItemOID, String userID) {
 		log.info("Redo GoalWorkItem: " + workItemOID);
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		RedoGoalWorkItemService service = new RedoGoalWorkItemService(bwInstanceOID, workItemOID, userID);
+		RedoGoalWorkItemService service = new RedoGoalWorkItemService(workItemOID, userID);
 		bwExecutorService.runTask(service);
 	}
 	

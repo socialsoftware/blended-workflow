@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
@@ -15,8 +16,15 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	}
 	
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem) {
-		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		List<WorkItemArgument> arguments = null;
+		if (conditionType.equals(ConditionType.ACTIVATE)) {
+			arguments = goalWorkItem.getInputWorkItemArguments();
+		} else if (conditionType.equals(ConditionType.SUCESS)) {
+			arguments = goalWorkItem.getOutputWorkItemArguments();
+		}		
+		
+		for (WorkItemArgument workItemArgument : arguments) {
 			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 			Attribute conditionAttribute = getAttribute();
 			if (workItemAttribute == conditionAttribute) {
@@ -56,7 +64,7 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		} 
 		
 		else {
-			System.out.println("Exception");
+			System.out.println("TODO: Other operators");
 			return false;	
 		}
 	}

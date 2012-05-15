@@ -38,7 +38,6 @@ public class GoalModelFactory {
 		String rootGoalDescription = rootGoalXML.getChildText("description", bwNamespace);
 		
 		String rootGoalConditionString = rootGoalXML.getChildText("SucessCondition", bwNamespace);
-		rootGoalConditionString = ConditionFactory.getRelationDependencies(dataModel, rootGoalConditionString);
 		Condition rootGoalCondition = ConditionFactory.createCondition(dataModel, rootGoalConditionString);
 		
 		String entityContextName = rootGoalXML.getChildText("Context", bwNamespace);
@@ -54,7 +53,6 @@ public class GoalModelFactory {
 		for (int i = 0; i < activateConditionCount ; i++) {
 			String activateConditionXML = "ActivateCondition" + (i+1);
 			String activateConditionString = rootGoalXML.getChildText(activateConditionXML, bwNamespace);
-			activateConditionString = ConditionFactory.getRelationDependencies(dataModel, activateConditionString);
 			Condition activateCondition = ConditionFactory.createCondition(dataModel, activateConditionString);
 			rootGoal.addActivateConditions(activateCondition);
 		}
@@ -68,7 +66,6 @@ public class GoalModelFactory {
 			String goalDescription = goalXML.getChildText("description", bwNamespace);
 			
 			String goalConditionString = goalXML.getChildText("SucessCondition", bwNamespace);
-			goalConditionString =ConditionFactory.getRelationDependencies(dataModel, goalConditionString);
 			Condition goalCondition = ConditionFactory.createCondition(dataModel, goalConditionString);
 			
 			entityContextName = goalXML.getChildText("Context", bwNamespace);
@@ -84,7 +81,6 @@ public class GoalModelFactory {
 			for (int i = 0; i < activateConditionCount ; i++) {
 				String activateConditionXML = "ActivateCondition" + (i+1);
 				String activateConditionString = goalXML.getChildText(activateConditionXML, bwNamespace);
-				activateConditionString = ConditionFactory.getRelationDependencies(dataModel, activateConditionString);
 				Condition activateCondition = ConditionFactory.createCondition(dataModel, activateConditionString);
 				newGoal.addActivateConditions(activateCondition);
 			}
@@ -100,7 +96,6 @@ public class GoalModelFactory {
 			String goalDescription = goalXML.getChildText("description", bwNamespace);
 			
 			String goalConditionString = goalXML.getChildText("MaintainCondition", bwNamespace);
-			goalConditionString = ConditionFactory.getRelationDependencies(dataModel, goalConditionString);
 			Condition goalCondition = ConditionFactory.createCondition(dataModel, goalConditionString);
 			
 			entityContextName = goalXML.getChildText("Context", bwNamespace);

@@ -105,6 +105,7 @@ public class CheckInWorkItemServiceTest {
 				allowing(workListManager).notifySkippedWorkItem(with(any(WorkItem.class)));
 				allowing(workListManager).notifyEnabledWorkItem(with(any(WorkItem.class)));
 				allowing(workListManager).notifyCompletedWorkItem(with(any(WorkItem.class)));
+				allowing(workListManager).notifyPendingWorkItem(with(any(WorkItem.class)));
 			}
 		});
 

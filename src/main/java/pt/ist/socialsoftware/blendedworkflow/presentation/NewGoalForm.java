@@ -8,6 +8,8 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import jvstm.Transaction;
 
@@ -32,11 +34,18 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 	private TextField name = new TextField("Goal Name");
 	private NativeSelect parentGoal = new NativeSelect("Parent Goal");
 	private TextField description = new TextField("Description");
+	private NativeSelect conditionType = new NativeSelect("Condition Type");
 	private NativeSelect relationType = new NativeSelect("Relation Type");
-	private Table requiredData = new Table("Required Data");
+	private NativeSelect entityContext = new NativeSelect("Entity Context");
+	private Table requiredData = new Table("Create Condition:");
+	private Table conditionsTable= new Table("Conditions Created");
+	
+	private String sucessCondition = "";
+	private ArrayList<String> activateCondition = new ArrayList<String>();
 
 	public NewGoalForm() {
 
+		
 		HorizontalLayout dataHL = new HorizontalLayout();
 		VerticalLayout dataVL = new VerticalLayout();
 		HorizontalLayout submitPanel = new HorizontalLayout();
@@ -44,8 +53,8 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 		// Properties
 		setMargin(true);
 		setSpacing(false);
-		setHeight("400px");
-		setWidth("560px");
+		setHeight("600px");
+		setWidth("570px");
 
 		dataHL.setSpacing(true);
 		submitPanel.setSpacing(true);
@@ -55,8 +64,17 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 		bwInstances.addListener(this);
 
 		parentGoal.setNullSelectionAllowed(false);
-
+		parentGoal.setEnabled(true);
+		
+		conditionType.setNullSelectionAllowed(false);
+		conditionType.setEnabled(true);
+		
+		conditionType.addItem("Activate");
+		conditionType.addItem("Success");
+		conditionType.setEnabled(true);
+		
 		relationType.setNullSelectionAllowed(false);
+		relationType.setImmediate(true);
 		relationType.addItem("and");
 		relationType.addItem("or");
 		relationType.setEnabled(false);
@@ -68,8 +86,13 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 		requiredData.addContainerProperty("Type",  String.class,  null);
 		requiredData.addContainerProperty("Constrain",  String.class,  null);
 		requiredData.addContainerProperty("Not?",  Boolean.class,  null);
+		
+		conditionsTable.setWidth("400px");
+		conditionsTable.setHeight("130px");
+		conditionsTable.addContainerProperty("Type", String.class,  null);
+		conditionsTable.addContainerProperty("Condition",  String.class,  null);
 
-		Button addData = new Button("Add");
+		Button addData = new Button("Add Data");
 		addData.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -88,6 +111,23 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 
 			}
 		});
+		
+		Button finishCondition = new Button("Finish Condition");
+		finishCondition.addListener(new Button.ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				String type = (String) conditionType.getValue();
+				if (type.equals("Success")) {
+					sucessCondition = createCondition();
+					addDataToConditionTable("Sucess", sucessCondition);
+				} else {
+					String newActivateCondition = createCondition();
+					activateCondition.add(createCondition());
+					addDataToConditionTable("Activate", newActivateCondition);
+				}
+				requiredData.removeAllItems();
+			}
+		});
 
 		Button submit = new Button("Submit");
 		submit.addListener(new Button.ClickListener() {
@@ -98,17 +138,18 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 					String goalName = (String) name.getValue();
 					String goalDescription = (String) description.getValue();
 					long parentGoalID = (Long) parentGoal.getValue();
-					String goalCondition = createCondition();
+					long entityOID = (Long) entityContext.getValue();
 					String activeUserID = "";
-
-					Transaction.begin();
-					ArrayList<String> s = new ArrayList<String>(); //FIXME
-					activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
-					BlendedWorkflow.getInstance().getWorkListManager().createGoal(bwInstanceOID, goalName, goalDescription, parentGoalID,  goalCondition, s, 3, activeUserID); 
-					Transaction.commit();
-
-					getApplication().getMainWindow().showNotification("Goal created successfully", Notification.TYPE_TRAY_NOTIFICATION);
-					getApplication().getMainWindow().removeWindow(NewGoalForm.this.getWindow());
+					if (sucessCondition == "" || activateCondition.size() == 0) {
+						getApplication().getMainWindow().showNotification("Please create at least one Activate and one Sucess Conditions.");
+					} else {
+						Transaction.begin();
+						activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
+						BlendedWorkflow.getInstance().getWorkListManager().createGoal(bwInstanceOID, goalName, goalDescription, parentGoalID,  sucessCondition, activateCondition, entityOID, activeUserID); 
+						Transaction.commit();
+						getApplication().getMainWindow().showNotification("Goal created successfully", Notification.TYPE_TRAY_NOTIFICATION);
+						getApplication().getMainWindow().removeWindow(NewGoalForm.this.getWindow());
+					}
 				} catch (java.lang.NullPointerException jle) {
 					getApplication().getMainWindow().showNotification("Please fill all the fields");
 				} 
@@ -125,16 +166,21 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 		});
 
 		// Layout
+		dataVL.addComponent(conditionType);
+		dataVL.addComponent(relationType);
+		dataVL.addComponent(addData);
+		dataVL.addComponent(finishCondition);
+		
+		dataHL.addComponent(requiredData);
+		dataHL.addComponent(dataVL);
+		
 		addComponent(bwInstances);
 		addComponent(name);
 		addComponent(description);
 		addComponent(parentGoal);
-
-		dataVL.addComponent(relationType);
-		dataVL.addComponent(addData);
-		dataHL.addComponent(requiredData);
-		dataHL.addComponent(dataVL);
+		addComponent(entityContext);
 		addComponent(dataHL);
+		addComponent(conditionsTable);
 
 		submitPanel.addComponent(submit);
 		submitPanel.addComponent(cancel);
@@ -153,14 +199,21 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 	}
 
 	private void getGoals(BWInstance bwInstance) {
+		this.parentGoal.removeAllItems();
+		this.entityContext.removeAllItems();
+		
 		Transaction.begin();
-
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 			this.parentGoal.addItem(goal.getOID());
 			this.parentGoal.setItemCaption(goal.getOID(), goal.getName());
 		}
-
+		
+		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		for (Entity entity : dataModelInstance.getEntities()) {
+			this.entityContext.addItem(entity.getOID());
+			this.entityContext.setItemCaption(entity.getOID(), entity.getName());
+		}
 		Transaction.commit();
 	}
 
@@ -212,6 +265,9 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 				condition += ".not()";
 			}
 		}
+		if (condition == "") {
+			condition = "true";
+		}
 		return condition;
 	}
 
@@ -223,6 +279,11 @@ public class NewGoalForm extends VerticalLayout implements Property.ValueChangeL
 		}
 		int index = requiredData.getItemIds().size();
 		requiredData.addItem(new Object[] {relation, data, type, constrain, isNot}, new Integer(index+1));
+	}
+	
+	public void addDataToConditionTable(String conditionType, String condition) {
+		int index = conditionsTable.getItemIds().size();
+		conditionsTable.addItem(new Object[] {conditionType, condition}, new Integer(index+1));
 	}
 
 	// generate dataModelWindow

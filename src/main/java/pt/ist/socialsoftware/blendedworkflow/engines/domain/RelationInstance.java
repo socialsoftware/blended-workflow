@@ -8,4 +8,12 @@ public class RelationInstance extends RelationInstance_Base {
 		addEntityInstances(entityInstanceOne);
 		addEntityInstances(entityInstanceTwo);
 	}
+	
+	public EntityInstance getEntityOne () {
+		return getEntityInstances().get(0);
+	}
+
+	public EntityInstance getEntityTwo () {
+		return getEntityInstances().get(1);
+	}
 }
