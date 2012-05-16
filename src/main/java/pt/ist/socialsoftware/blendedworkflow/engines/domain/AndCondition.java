@@ -12,10 +12,6 @@ public class AndCondition extends AndCondition_Base {
 		addConditions(two);
 	}
 	
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		return getConditionOne().evaluate(goalWorkItem, conditionType).AND(getConditionTwo().evaluate(goalWorkItem, conditionType));
-	}
-	
 	public Condition getConditionOne(){
 		return getConditions().get(0);
 	}
@@ -143,6 +139,19 @@ public class AndCondition extends AndCondition_Base {
 	@Override
 	public Boolean existExistEntity() {
 		return getConditionOne().existExistEntity() || getConditionTwo().existExistEntity();
+	}
+
+	/******************************
+	 * Evaluate
+	 ******************************/
+	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return getConditionOne().evaluateWithWorkItem(goalWorkItem, conditionType).AND(getConditionTwo().evaluateWithWorkItem(goalWorkItem, conditionType));
+	}
+	
+	@Override
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
+		return getConditionOne().evaluateWithDataModel(entityInstance).AND(getConditionTwo().evaluateWithDataModel(entityInstance));
+
 	}
 	
 	

@@ -94,7 +94,7 @@ public class LoadBWSpecificationServiceTest {
 			assertEquals(14, dataModel.getAttributesCount());
 			assertEquals(4, dataModel.getRelationsCount());
 			assertEquals(11, goalModel.getAchieveGoalsCount());
-			assertEquals(1, goalModel.getMaintainGoalsCount());
+			assertEquals(3, goalModel.getMaintainGoalsCount());
 
 			assertEquals(3,BlendedWorkflow.getInstance().getOrganizationalModel().getRolesCount());
 			assertEquals(4,BlendedWorkflow.getInstance().getOrganizationalModel().getUsersCount());

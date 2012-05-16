@@ -9,8 +9,11 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsOneCondition;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.ForAllCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.NotCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.OrCondition;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
@@ -36,7 +39,8 @@ public class ConditionParser {
 
 	public Condition parseCondition() throws BlendedWorkflowException {
 		Condition finalCondition = null;
-		if(_cond.startsWith("existsAttribute(") || _cond.startsWith("existsEntity(") || _cond.startsWith("compareAttributeTo(")) {
+		if(_cond.startsWith("existsAttribute(") || _cond.startsWith("existsEntity(") || _cond.startsWith("compareAttributeTo(") ||
+				_cond.startsWith("existsOne[") || _cond.startsWith("forAll[")) {
 			finalCondition = parseConditionType();
 		} else if(_cond.startsWith("true")){
 			return new TrueCondition();
@@ -67,6 +71,10 @@ public class ConditionParser {
 			parsedCondition = parseExistsEntityCondition();
 		} else if(_cond.startsWith("compareAttributeTo(", _token)) {
 			parsedCondition = parseCompareAttributeToCondition();
+		} else if(_cond.startsWith("existsOne[", _token)) {
+			parsedCondition = parseExistsOneCondition();
+		} else if(_cond.startsWith("forAll[", _token)) {
+			parsedCondition = parseForAllCondition();
 		} else {
 			return null;
 		}
@@ -192,6 +200,66 @@ public class ConditionParser {
 		value = toArr[1];
 	}
 
+	protected Condition parseForAllCondition() throws BlendedWorkflowException {
+		int endOfCondition = _cond.indexOf(']', _token);
+
+		if(endOfCondition < _token) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
+		}
+		String forAllString = _cond.substring(_token, endOfCondition+1);
+		StringBuilder relationString = new StringBuilder();
+		StringBuilder subConditionString = new StringBuilder();
+		int startArgs = "forAll[".length();
+
+		int endArgs = forAllString.length()-1;
+		int subToken = forAllString.indexOf(',', startArgs);
+
+		// Parse Entity and Relation
+		relationString.append(forAllString.substring(startArgs, subToken));
+		String[] elementArr = relationString.toString().split("\\.");
+		Entity entity = parseEntity(elementArr);
+		Relation relation = parseRelation(elementArr[1]);
+		// Parse condition
+		subConditionString.append(forAllString.substring(subToken+1, endArgs).trim());
+		
+		String subCondition = subConditionString.toString().replaceAll("]", "");
+		Condition newCondition = new ConditionParser(dataModel, subCondition).parseCondition();
+		
+		ForAllCondition forAllCondition = new ForAllCondition(relation, entity, newCondition);
+		_token = endOfCondition+1;
+		return forAllCondition;
+	}
+	
+	protected Condition parseExistsOneCondition() throws BlendedWorkflowException {
+		int endOfCondition = _cond.indexOf(']', _token);
+
+		if(endOfCondition < _token) {
+			throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
+		}
+		String exitsOneString = _cond.substring(_token, endOfCondition+1);
+		StringBuilder relationString = new StringBuilder();
+		StringBuilder subConditionString = new StringBuilder();
+		int startArgs = "existsOne[".length();
+
+		int endArgs = exitsOneString.length()-1;
+		int subToken = exitsOneString.indexOf(',', startArgs);
+
+		// Parse Entity and Relation
+		relationString.append(exitsOneString.substring(startArgs, subToken));
+		String[] elementArr = relationString.toString().split("\\.");
+		Entity entity = parseEntity(elementArr);
+		Relation relation = parseRelation(elementArr[1]);
+		// Parse condition
+		subConditionString.append(exitsOneString.substring(subToken+1, endArgs).trim());
+		
+		String subCondition = subConditionString.toString().replaceAll("]", "");
+		Condition newCondition = new ConditionParser(dataModel, subCondition).parseCondition();
+		
+		ExistsOneCondition existOneCondition = new ExistsOneCondition(relation, entity, newCondition);
+		_token = endOfCondition+1;
+		return existOneCondition;
+	}
+	
 	protected Condition parseNotCondition(Condition typeCondition) {
 		_token += ".not()".length();
 		return new NotCondition(typeCondition);
@@ -225,6 +293,17 @@ public class ConditionParser {
 			entity = new Entity(dataModel, elementArr[0]);
 		return entity;
 	}
+	
+	private Relation parseRelation(String relationName) throws BlendedWorkflowException {
+		Relation relation;
+		if (dataModel.getRelation(relationName) != null)
+			relation = dataModel.getRelation(relationName);
+		else 
+			throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_CONDITION_STRING);
+		return relation;
+	}
+	
+	
 
 	private Attribute parseAttribute(String[] elementArr, Entity entity) throws BlendedWorkflowException {
 		AttributeType type;

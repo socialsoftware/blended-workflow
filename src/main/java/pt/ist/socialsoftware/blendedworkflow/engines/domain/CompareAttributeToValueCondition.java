@@ -5,76 +5,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class CompareAttributeToValueCondition extends CompareAttributeToValueCondition_Base {
 
-	public CompareAttributeToValueCondition(){
-		super();
-	}
+	private static Logger log = Logger.getLogger("CompareAttributeToValueCondition");
 	
-	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		List<WorkItemArgument> arguments = null;
-		if (conditionType.equals(ConditionType.ACTIVATE)) {
-			arguments = goalWorkItem.getInputWorkItemArguments();
-		} else if (conditionType.equals(ConditionType.SUCESS)) {
-			arguments = goalWorkItem.getOutputWorkItemArguments();
-		}		
-		
-		for (WorkItemArgument workItemArgument : arguments) {
-			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
-			Attribute conditionAttribute = getAttribute();
-			if (workItemAttribute == conditionAttribute) {
-				if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
-					return TripleStateBool.FALSE;	
-				} else if (workItemArgument.getState().equals(DataState.SKIPPED)) {
-					return TripleStateBool.SKIPPED;
-				} else {
-					if (evaluateComparation(workItemArgument)) {
-						return TripleStateBool.TRUE;
-					} else {
-						return TripleStateBool.FALSE;
-					}
-				}
-			}
-		}
-		return TripleStateBool.FALSE;
-	}
-
-	private boolean evaluateComparation(WorkItemArgument workItemArgument) {
-
-		// Equals (=)
-		if (getOperator().equals("=")) {
-			if (getAttribute().getType().equals(AttributeType.NUMBER)) {
-				if (workItemArgument.getValue() == getValue()) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				if (workItemArgument.getValue().equals(getValue())) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		} 
-		
-		else {
-			System.out.println("TODO: Other operators");
-			return false;	
-		}
-	}
-
 	public CompareAttributeToValueCondition(Attribute attribute, String operator, String value) {
 		setAttribute(attribute);
 		setOperator(operator);
 		setValue(value);
 	}
-
+	
 	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
@@ -177,7 +124,6 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	}
 	
 	
-	
 	/**
 	 * NEW
 	 */
@@ -218,13 +164,121 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	
 	@Override
 	public String toString() {
-		return "compareAttributeTo(" + getAttribute().getName() + " " + getOperator() + " " + getValue();
+		return "compareAttributeTo(" + getAttribute().getName() + " " + getOperator() + " " + getValue() +")";
 	}
 	
 	@Override
 	public Boolean existExistEntity() {
 		return false;
 	}
+	
+	/******************************
+	 * Evaluate
+	 ******************************/
+	@Override
+	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		List<WorkItemArgument> arguments = null;
+		if (conditionType.equals(ConditionType.ACTIVATE)) {
+			arguments = goalWorkItem.getInputWorkItemArguments();
+		} else if (conditionType.equals(ConditionType.SUCESS)) {
+			arguments = goalWorkItem.getOutputWorkItemArguments();
+		}		
+		
+		for (WorkItemArgument workItemArgument : arguments) {
+			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+			Attribute conditionAttribute = getAttribute();
+			if (workItemAttribute == conditionAttribute) {
+				if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
+					return TripleStateBool.FALSE;	
+				} else if (workItemArgument.getState().equals(DataState.SKIPPED)) {
+					return TripleStateBool.SKIPPED;
+				} else {
+					if (evaluateComparation(workItemArgument.getValue())) {
+						return TripleStateBool.TRUE;
+					} else {
+						return TripleStateBool.FALSE;
+					}
+				}
+			}
+		}
+		return TripleStateBool.FALSE;
+	}
 
-
+	@Override
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
+		for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
+			if (attributeInstance.getAttribute().equals(getAttribute())) {
+				if (attributeInstance.getState().equals(DataState.UNDEFINED)) {
+					return TripleStateBool.FALSE;
+				} else if (attributeInstance.getState().equals(DataState.SKIPPED)) {
+					return TripleStateBool.SKIPPED;
+				} else {
+					if (evaluateComparation(attributeInstance.getValue())) {
+						return TripleStateBool.TRUE;
+					} else {
+						return TripleStateBool.FALSE;
+					}
+				}				
+			}
+		}
+		return null;
+	}
+	
+	private boolean evaluateComparation(String evaluateValue) {
+		if (((getAttribute().getType().equals(AttributeType.STRING) || 
+				(getAttribute().getType().equals(AttributeType.BOOLEAN)) && getOperator().equals("=")))) {
+			if (evaluateValue.equals(getValue())) {
+				return true;
+			} else {
+				return false;
+			}
+		} else if (getAttribute().getType().equals(AttributeType.NUMBER)) {
+			Integer value = Integer.parseInt(evaluateValue);
+			Integer conditionValue =  Integer.parseInt(getValue());
+			if (getOperator().equals("<")) {
+				if (value < conditionValue) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (getOperator().equals("<=")) {
+				if (value <= conditionValue) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (getOperator().equals("=")) {
+				if (value == conditionValue) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (getOperator().equals(">")) {
+				if (value > conditionValue) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (getOperator().equals(">=")) {
+				if (value >= conditionValue) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (getOperator().equals("!=")) {
+				if (value != conditionValue) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				log.info("Invalid operator for Number type.");
+				return false;
+			}
+		} else {
+			log.info("Invalid operator for String or Boolean type.");
+			return false;
+		}
+	}
+	
 }

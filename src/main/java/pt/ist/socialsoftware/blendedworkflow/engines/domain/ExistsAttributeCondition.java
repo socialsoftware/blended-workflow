@@ -15,30 +15,6 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	}
 	
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		List<WorkItemArgument> arguments = null;
-		if (conditionType.equals(ConditionType.ACTIVATE)) {
-			arguments = goalWorkItem.getInputWorkItemArguments();
-		} else if (conditionType.equals(ConditionType.SUCESS)) {
-			arguments = goalWorkItem.getOutputWorkItemArguments();
-		}
-		
-		for (WorkItemArgument workItemArgument : arguments) {
-			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
-			Attribute conditionAttribute = getAttribute();
-
-			if (workItemAttribute == conditionAttribute) {
-				if (workItemArgument.getState().equals(DataState.SKIPPED)) {
-					return TripleStateBool.SKIPPED;
-				} else if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
-					return TripleStateBool.FALSE;
-				}
-			}
-		}
-		return TripleStateBool.TRUE;
-	}
-
-	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttribute().getEntity().getName());
@@ -173,5 +149,45 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		return false;
 	}
 
-
+	/******************************
+	 * Evaluate
+	 ******************************/
+	@Override
+	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		List<WorkItemArgument> arguments = null;
+		if (conditionType.equals(ConditionType.ACTIVATE)) {
+			arguments = goalWorkItem.getInputWorkItemArguments();
+		} else if (conditionType.equals(ConditionType.SUCESS)) {
+			arguments = goalWorkItem.getOutputWorkItemArguments();
+		}
+		
+		for (WorkItemArgument workItemArgument : arguments) {
+			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+			Attribute conditionAttribute = getAttribute();
+			if (workItemAttribute == conditionAttribute) {
+				if (workItemArgument.getState().equals(DataState.SKIPPED)) {
+					return TripleStateBool.SKIPPED;
+				} else if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
+					return TripleStateBool.FALSE;
+				}
+			}
+		}
+		return TripleStateBool.TRUE;
+	}
+	
+	@Override
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
+		for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
+			Attribute attribute = attributeInstance.getAttribute();
+			Attribute conditionAttribute = getAttribute();
+			if (attribute == conditionAttribute) {
+				if (attributeInstance.getState().equals(DataState.SKIPPED)) {
+					return TripleStateBool.SKIPPED;
+				} else if (attributeInstance.getState().equals(DataState.UNDEFINED)) {
+					return TripleStateBool.FALSE;
+				}
+			}
+		}
+		return TripleStateBool.TRUE;
+	}
 }

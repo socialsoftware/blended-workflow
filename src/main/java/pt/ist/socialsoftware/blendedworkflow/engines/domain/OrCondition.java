@@ -12,10 +12,6 @@ public class OrCondition extends OrCondition_Base {
 		addConditions(two);
 	}
 	
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		return getConditionOne().evaluate(goalWorkItem, conditionType).OR(getConditionTwo().evaluate(goalWorkItem, conditionType));
-	}
-	
 	public Condition getConditionOne(){
 		return getConditions().get(0);
 	}
@@ -139,5 +135,17 @@ public class OrCondition extends OrCondition_Base {
 	@Override
 	public Boolean existExistEntity() {
 		return getConditionOne().existExistEntity() || getConditionTwo().existExistEntity();
+	}
+
+	/******************************
+	 * Evaluate
+	 ******************************/
+	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return getConditionOne().evaluateWithWorkItem(goalWorkItem, conditionType).OR(getConditionTwo().evaluateWithWorkItem(goalWorkItem, conditionType));
+	}
+	
+	@Override
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
+		return getConditionOne().evaluateWithDataModel(entityInstance).OR(getConditionTwo().evaluateWithDataModel(entityInstance));
 	}
 }

@@ -10,11 +10,6 @@ public class NotCondition extends NotCondition_Base {
 	public NotCondition(Condition condition) {
 		setCondition(condition);
 	}
-	
-	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		return getCondition().evaluate(goalWorkItem, conditionType).NOT();
-	}
 
 	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
@@ -107,7 +102,19 @@ public class NotCondition extends NotCondition_Base {
 	public Boolean existExistEntity() {
 		return false;
 	}
-
 	
+	/******************************
+	 * Evaluate
+	 ******************************/
+	@Override
+	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return getCondition().evaluateWithWorkItem(goalWorkItem, conditionType).NOT();
+	}
+
+	@Override
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

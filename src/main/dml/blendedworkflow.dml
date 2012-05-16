@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState as DataState;
-//enum pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal.GoalState as GoalState;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.GoalState as GoalState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState as TaskState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState as WorkItemState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType as AttributeType;
@@ -82,6 +82,7 @@ class AchieveGoal {
 class MaintainGoal {
 	String name;
 	String description;
+	GoalState state;
 }
 
 class TaskModel;
@@ -502,10 +503,30 @@ relation ForAllConditionConditionHasRelationRole {
 	RelationRole playsRole relationRole { multiplicity 0..1; }
 }
 
+relation ForAllConditionConditionConditionHasEntity {
+	ForAllCondition playsRole forAllCondition { multiplicity 0..1; }
+	Entity playsRole forAllEntity { multiplicity 0..1; }
+}
+
+relation ForAllConditionConditionConditionHasRelation {
+	ForAllCondition playsRole forAllCondition { multiplicity 0..1; }
+	Relation playsRole forAllRelation { multiplicity 0..1; }
+}
+
 //ExistsOne
-relation ExistsOneConditionConditionHasRelationRole {
+relation ExistsOneConditionHasCondition {
 	ExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
-	RelationRole playsRole relationRole { multiplicity 0..1; }
+	Condition playsRole condition { multiplicity 0..1; }
+}
+
+relation ExistsOneConditionConditionHasEntity {
+	ExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
+	Entity playsRole existsOneEntity { multiplicity 0..1; }
+}
+
+relation ExistsOneConditionConditionHasRelation {
+	ExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
+	Relation playsRole existsOneRelation { multiplicity 0..1; }
 }
 
 //RelationRole

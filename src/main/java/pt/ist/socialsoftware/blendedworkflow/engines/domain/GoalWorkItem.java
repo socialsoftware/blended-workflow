@@ -159,7 +159,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
 			if (isActivateCondition) {
 				for (Condition activateCondition : getActivateConditions()) {
-					result = activateCondition.evaluate(this, ConditionType.ACTIVATE);
+					result = activateCondition.evaluateWithWorkItem(this, ConditionType.ACTIVATE);
 					if (result.equals(TripleStateBool.FALSE)) {
 						activateConditionJointResult = TripleStateBool.FALSE;
 						break;
@@ -177,7 +177,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 					notifyPreFalse();
 				}
 			} else {
-				result = getSucessCondition().evaluate(this, ConditionType.SUCESS);
+				result = getSucessCondition().evaluateWithWorkItem(this, ConditionType.SUCESS);
 				TripleStateBool maintainConditionsResult = getBwInstance().getGoalModelInstance().evaluateMaintainGoals(this);
 				result = result.AND(maintainConditionsResult);
 				log.info("SucessCondition Evaluate result for " + this.getID() + " was " + result);

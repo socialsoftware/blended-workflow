@@ -13,11 +13,6 @@ public class TrueCondition extends TrueCondition_Base {
     }
     
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		return TripleStateBool.TRUE;
-	}
-    
-	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		return new TrueCondition();
 	}
@@ -49,11 +44,6 @@ public class TrueCondition extends TrueCondition_Base {
 		return new HashMap<Attribute, String>();
 	}
 
-//	@Override
-//	public String getRdrCondition(String type) {
-//		return "True";
-//	}
-	
 	/**
 	 * TO TEST
 	 */
@@ -103,6 +93,19 @@ public class TrueCondition extends TrueCondition_Base {
 	@Override
 	public Boolean existExistEntity() {
 		return false;
+	}
+
+	/******************************
+	 * Evaluate
+	 ******************************/
+	@Override
+	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return TripleStateBool.TRUE;
+	}
+	
+	@Override
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
+		return TripleStateBool.TRUE;
 	}
 	
 	

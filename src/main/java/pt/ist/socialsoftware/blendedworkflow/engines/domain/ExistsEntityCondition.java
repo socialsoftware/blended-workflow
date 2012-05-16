@@ -15,30 +15,6 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 	
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		//TODO: evaluate relations.
-		List<WorkItemArgument> arguments = null;
-		if (conditionType.equals(ConditionType.ACTIVATE)) {
-			arguments = goalWorkItem.getInputWorkItemArguments();
-		} else if (conditionType.equals(ConditionType.SUCESS)) {
-			arguments = goalWorkItem.getOutputWorkItemArguments();
-		}
-		
-		for (WorkItemArgument workItemArgument : arguments) {
-			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
-			Attribute conditionAttribute = getEntity().getAttribute(workItemAttribute.getName());
-			if (conditionAttribute != null && conditionAttribute.getIsKeyAttribute()) {
-				if (workItemArgument.getState().equals(DataState.SKIPPED)) {
-					return TripleStateBool.SKIPPED;
-				} else if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
-					return TripleStateBool.FALSE;
-				}
-			}
-		}
-		return TripleStateBool.TRUE;
-	}
-
-	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getEntity().getName());
@@ -283,6 +259,84 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	@Override
 	public Boolean existExistEntity() {
 		return true;
+	}
+
+	/******************************
+	 * Evaluate
+	 ******************************/
+	@Override
+	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		EntityInstance workItemEntityInstance = null;
+		List<WorkItemArgument> arguments = null;
+		TripleStateBool finalResult = TripleStateBool.TRUE;
+		if (conditionType.equals(ConditionType.ACTIVATE)) {
+			arguments = goalWorkItem.getInputWorkItemArguments();
+		} else if (conditionType.equals(ConditionType.SUCESS)) {
+			arguments = goalWorkItem.getOutputWorkItemArguments();
+		}
+		
+		// Exists Entity
+		for (WorkItemArgument workItemArgument : arguments) {
+			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+			Attribute conditionAttribute = getEntity().getAttribute(workItemAttribute.getName());
+			if (conditionAttribute != null && conditionAttribute.getIsKeyAttribute()) {
+				workItemEntityInstance = workItemArgument.getAttributeInstance().getEntityInstance();
+				
+				if (workItemArgument.getState().equals(DataState.SKIPPED)) {
+					finalResult = finalResult.AND(TripleStateBool.SKIPPED);
+				} else if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
+					finalResult = finalResult.AND(TripleStateBool.FALSE);
+				} else {
+					finalResult = finalResult.AND(TripleStateBool.TRUE);
+				}
+			}
+		}
+		
+		//Exists Entity Key Relations
+		for (RelationInstance relationInstance : workItemEntityInstance.getRelationInstances()) {
+			EntityInstance one = relationInstance.getEntityOne();
+			EntityInstance two = relationInstance.getEntityTwo();
+			if (workItemEntityInstance.equals(one) && relationInstance.getRelationType().getIsTwoKeyEntity()) {
+				finalResult = finalResult.AND(evaluateWithDataModel(two));
+			} else if (workItemEntityInstance.equals(two) && relationInstance.getRelationType().getIsOneKeyEntity()){
+				finalResult = finalResult.AND(evaluateWithDataModel(one));
+			}
+		}
+		
+		return finalResult;
+	}
+	
+	@Override
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
+		TripleStateBool finalResult = TripleStateBool.TRUE;
+		
+		// Exists Entity
+		for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
+			if (attributeInstance.getAttribute().getIsKeyAttribute()) {
+				TripleStateBool attributeResult;
+				if (attributeInstance.getState().equals(DataState.DEFINED)) {
+					attributeResult = TripleStateBool.TRUE;
+				} else if (attributeInstance.getState().equals(DataState.SKIPPED)) {
+					attributeResult = TripleStateBool.SKIPPED;
+				} else {
+					attributeResult = TripleStateBool.FALSE;
+				}
+				finalResult = finalResult.AND(attributeResult);
+			}
+		}
+		
+		//Exists Entity Key Relations
+		for (RelationInstance relationInstance : entityInstance.getRelationInstances()) {
+			EntityInstance one = relationInstance.getEntityOne();
+			EntityInstance two = relationInstance.getEntityTwo();
+			if (entityInstance.equals(one) && relationInstance.getRelationType().getIsTwoKeyEntity()) {
+				finalResult = finalResult.AND(evaluateWithDataModel(two));
+			} else if (entityInstance.equals(two) && relationInstance.getRelationType().getIsOneKeyEntity()){
+				finalResult = finalResult.AND(evaluateWithDataModel(one));
+			}
+		}
+		
+		return finalResult;
 	}
 
 

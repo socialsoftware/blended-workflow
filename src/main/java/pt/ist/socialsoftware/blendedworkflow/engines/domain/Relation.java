@@ -35,12 +35,22 @@ public class Relation extends Relation_Base {
 		return relation.getEntityOne().equals(entityTwo) || relation.getEntityTwo().equals(entityTwo);
 	}
 
-	public Entity getEntityOne () {
+	public Entity getEntityOne() {
 		return getEntities().get(0);
 	}
 
-	public Entity getEntityTwo () {
+	public Entity getEntityTwo() {
 		return getEntities().get(1);
 	}
+	
+	public Entity getEntity (Entity entity) {
+		if (entity.equals(getEntityOne())) {
+			return getEntityOne();
+		} else {
+			return getEntityTwo();
+		}
+	}
+	
+	
 
 }

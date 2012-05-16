@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
@@ -34,20 +33,24 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 	
 	public TripleStateBool evaluateMaintainGoals(GoalWorkItem goalWorkItem) {
 		//TODO: evaluate only affected maintainGoals
-		ConditionType conditionType;
-		if (goalWorkItem.getState().equals(WorkItemState.PRE_GOAL)) {
-			conditionType = ConditionType.ACTIVATE;
-		} else {
-			conditionType = ConditionType.SUCESS;
-		}
+//		ConditionType conditionType;
+//		if (goalWorkItem.getState().equals(WorkItemState.PRE_GOAL)) {
+//			conditionType = ConditionType.ACTIVATE;
+//		} else {
+//			conditionType = ConditionType.SUCESS;
+//		}
 		
+		Entity goalContext = goalWorkItem.getAchieveGoal().getEntityContext();
 		for (MaintainGoal maintainGoal : getMaintainGoals()) {
-			TripleStateBool result = maintainGoal.getMaintainCondition().evaluate(goalWorkItem, conditionType);
-			if (result == TripleStateBool.FALSE) {
-				return TripleStateBool.FALSE;
-			} else 	if (result == TripleStateBool.SKIPPED) {
-				return TripleStateBool.SKIPPED;
-			} 
+			Entity maintainGoalContext = maintainGoal.getMaintainGoalEntityContext();
+			if (maintainGoalContext.equals(goalContext) && maintainGoal.getState().equals(GoalState.ENABLED)) {
+				TripleStateBool result = maintainGoal.getMaintainCondition().evaluateWithDataModel(null);
+				if (result == TripleStateBool.FALSE) {
+					return TripleStateBool.FALSE;
+				} else 	if (result == TripleStateBool.SKIPPED) {
+					return TripleStateBool.SKIPPED;
+				} 
+			}
 		}
 		return TripleStateBool.TRUE;
 	}

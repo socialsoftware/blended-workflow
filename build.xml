@@ -151,7 +151,7 @@
 	</target>
 	
 	<!-- Test All -->
-	<target name="test:All" depends="compile-tests" description="Run the tests">
+	<target name="test-service:All" depends="compile-tests" description="Run the tests">
 		<echo message="Testing all services..." />
 		<junit>
 			<classpath refid="project.classpath" />
@@ -169,7 +169,7 @@
 	</target>
 	
 	<!-- Test LoadBWSpecification -->
-	<target name="test-1:LoadBWSpecification" depends="compile-tests">
+	<target name="test-service-1:LoadBWSpecification" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -178,7 +178,7 @@
 	</target>
 		
 	<!-- Test CreateBWInstance -->
-	<target name="test-2:CreateBWInstance" depends="compile-tests">
+	<target name="test-service-2:CreateBWInstance" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -187,7 +187,7 @@
 	</target>
 	
 	<!-- Test CreateGoalInstance -->
-	<target name="test-3:CreateGoalInstance" depends="compile-tests">
+	<target name="test-service-3:CreateGoalInstance" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -196,7 +196,7 @@
 	</target>
 	
 	<!-- Test DisableCondition -->
-	<target name="test-4:DisableGoalCondition" depends="compile-tests">
+	<target name="test-service-4:DisableGoalCondition" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -205,7 +205,7 @@
 	</target>
 	
 	<!-- Test DisableCondition -->
-	<target name="test-5:EnableGoalWorkItems" depends="compile-tests">
+	<target name="test-service-5:EnableGoalWorkItems" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -214,7 +214,7 @@
 	</target>
 	
 	<!-- Test CheckInWorkItem-->
-	<target name="test-6:CheckInWorkItem" depends="compile-tests">
+	<target name="test-service-6:CheckInWorkItem" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -223,7 +223,7 @@
 	</target>
 	
 	<!-- Test SkipWorkItem -->
-	<target name="test-7:SkipWorkItem" depends="compile-tests">
+	<target name="test-service-7:SkipWorkItem" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -232,7 +232,7 @@
 	</target>
 	
 	<!-- Test RedoGoalWorkItem -->
-	<target name="test-8:RedoGoalWorkItem" depends="compile-tests">
+	<target name="test-service-8:RedoGoalWorkItem" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -241,11 +241,40 @@
 	</target>
 	
 	<!-- Test CreateGoal -->
-	<target name="test-9:CreateNewGoal" depends="compile-tests">
+	<target name="test-service-9:CreateNewGoal" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateNewGoalServiceTest" />
+		</junit>
+	</target>
+	
+	<!-- Test ForAllCondition -->
+	<target name="test-domain-1:ForAllCondition" depends="compile-tests">
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.domain.test.ForAllConditionTest" />
+		</junit>
+	</target>
+	
+	<!-- Test ExistsOneCondition -->
+		<target name="test-domain-2:ExistsOneCondition" depends="compile-tests">
+			<junit>
+				<classpath refid="project.classpath" />
+				<formatter type="brief" usefile="false" />
+				<test name="pt.ist.socialsoftware.blendedworkflow.engines.domain.test.ExistsOneConditionTest" />
+			</junit>
+		</target>
+	
+	<!-- Test All Domain -->
+	<target name="test-domain:All" depends="compile-tests" description="Run the Domain tests">
+		<echo message="Testing all services..." />
+		<junit>
+			<classpath refid="project.classpath" />
+			<formatter type="brief" usefile="false" />
+				<test name="pt.ist.socialsoftware.blendedworkflow.engines.domain.test.ForAllConditionTest" />
+				<test name="pt.ist.socialsoftware.blendedworkflow.engines.domain.test.ExistsOneConditionTest" />
 		</junit>
 	</target>
 		

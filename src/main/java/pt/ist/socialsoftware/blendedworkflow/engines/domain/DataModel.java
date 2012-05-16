@@ -36,4 +36,13 @@ public class DataModel extends DataModel_Base {
 		return null; // Needed by ConditionParser to create new Entity
 	}
 
+	public Relation getRelation(String name) {
+		for (Relation relation : getRelations()) {
+			if (relation.getName().equals(name)) {
+				return relation;
+			}
+		}
+		return null; // Needed by ConditionParser to create new Entity
+	}
+
 }

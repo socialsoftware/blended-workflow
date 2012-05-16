@@ -16,7 +16,7 @@ public class AchieveGoal extends AchieveGoal_Base {
 //		super();
 //	}
 
-//	public enum GoalState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
+
 
 	/**
 	 * Create the GoalTree root Goal.

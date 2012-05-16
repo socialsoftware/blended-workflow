@@ -16,4 +16,12 @@ public class RelationInstance extends RelationInstance_Base {
 	public EntityInstance getEntityTwo () {
 		return getEntityInstances().get(1);
 	}
+	
+	public EntityInstance getEntityInstance (Entity entity) {
+		if (entity.equals(getEntityOne().getEntity())) {
+			return getEntityOne();
+		} else {
+			return getEntityTwo();
+		}
+	}
 }
