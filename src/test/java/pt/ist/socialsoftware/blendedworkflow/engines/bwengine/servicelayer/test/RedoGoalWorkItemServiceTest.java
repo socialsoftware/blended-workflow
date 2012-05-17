@@ -54,7 +54,7 @@ public class RedoGoalWorkItemServiceTest {
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 
 	private static String GOAL_NAME_1 = "Add Patient";
-	private static String GOALWORKITEM_ID_3 = "Add Address.3";
+	private static String GOALWORKITEM_ID_3 = "Add Address.4";
 
 	private static String ENTITY_1_NAME = "Patient";
 	private static String ENTITYINSTANCE_1_ID = "Patient.1";
@@ -140,16 +140,17 @@ public class RedoGoalWorkItemServiceTest {
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
 		long parentGoalOID = parentGoal.getOID();
+		EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+		long entityInstance1OID = entityInstance1.getOID();
 		Transaction.commit();
 
-		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, entityInstance1OID).call();
 		new EnableGoalWorkItemsService(bwInstanceOID).call();
 
 		//WorkItem3 - AddAdress with ENTITYINSTANCE_1_ATT_3_VALUE_1
 		Transaction.begin();
 		WorkItem workItem3 = bwInstance.getWorkItem(GOALWORKITEM_ID_3);
 		long workItem3OID = workItem3.getOID();
-		EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
 		AttributeInstance attributeInstance3 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_3_ID);
 		for (WorkItemArgument workItemArgument : workItem3.getOutputWorkItemArguments()) {
 			if (workItemArgument.getAttributeInstance().getID().equals(attributeInstance3.getID())) {
@@ -214,9 +215,12 @@ public class RedoGoalWorkItemServiceTest {
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
 		long parentGoalOID = parentGoal.getOID();
+		
+		EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+		long entityInstance1OID = entityInstance1.getOID();
 		Transaction.commit();
 
-		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, entityInstance1OID).call();
 		new EnableGoalWorkItemsService(bwInstanceOID).call();
 
 		//WorkItem3 - AddAdress with ENTITYINSTANCE_1_ATT_3_VALUE_1
@@ -228,7 +232,6 @@ public class RedoGoalWorkItemServiceTest {
 
 		Transaction.begin();
 		//WorkItem3 - AddAdress with ENTITYINSTANCE_1_ATT_3_VALUE_1
-		EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
 		AttributeInstance attributeInstance3 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_3_ID);
 		assertEquals(WorkItemState.SKIPPED, workItem3.getState());
 		for (WorkItemArgument workItemArgument : workItem3.getOutputWorkItemArguments()) {

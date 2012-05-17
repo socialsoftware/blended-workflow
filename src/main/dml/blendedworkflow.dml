@@ -335,10 +335,7 @@ relation EntityHasAttributes {
 	Attribute playsRole attributes { multiplicity 0..*; }
 }
 
-relation EntityMayHaveRelations {
-	Entity playsRole entities { multiplicity 0..*; } //FIXME 0..2
-	Relation playsRole relations { multiplicity 0..*; }
-}
+
 
 relation EntityHasEntityInstances {
 	Entity playsRole entity { multiplicity 0..1; }
@@ -363,10 +360,40 @@ relation EntityInstanceHasAttributeInstances {
 	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
 }
 
+//FIXME
+relation EntityMayHaveRelations {
+	Relation playsRole relations { multiplicity 0..*; }
+	Entity playsRole entities { multiplicity 0..*; } //FIXME 0..2
+}
+/*
 relation EntityInstanceMayHaveRelationInstances {
 	EntityInstance playsRole entityInstances { multiplicity 0..*; } //FIXME 0..2
 	RelationInstance playsRole relationInstances { multiplicity 0..*; }
+}*/
+
+//NEW
+/*
+relation EntityMayBeRelationEntityOne {
+	Entity playsRole entityOne { multiplicity 0..1; }
+	Relation playsRole entityOneRelationInstances { multiplicity 0..*; }
 }
+
+relation EntityMayBeRelationEntityTwo {
+	Entity playsRole entityTwo { multiplicity 0..1; }
+	Relation playsRole entityTwoRelationInstances { multiplicity 0..*; }
+}*/
+
+relation EntityInstanceMayBeRelationEntityOne {
+	EntityInstance playsRole entityInstanceOne { multiplicity 0..1; }
+	RelationInstance playsRole entityInstanceOneRelationInstances { multiplicity 0..*; }
+}
+
+relation EntityInstanceMayBeRelationEntityTwo {
+	EntityInstance playsRole entityInstanceTwo { multiplicity 0..1; }
+	RelationInstance playsRole entityInstanceTwoRelationInstances { multiplicity 0..*; }
+}
+
+
 
 // Conditions
 // AndCondition

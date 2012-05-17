@@ -175,9 +175,13 @@ public class PrintBWSpecification {
 		}
 		for (Relation relation : dataModelInstance.getRelations()) {
 			System.out.println("Relation \"" + relation.getName() + "\" has " + relation.getRelationInstancesCount() + " instances.");
+			System.out.println("E1 \"" + relation.getEntityOne().getName() + "\"");
+			System.out.println("E2 \"" + relation.getEntityTwo().getName() + "\"");
 			if(relation.getRelationInstancesCount()>0) {
 				for (RelationInstance relationInstance : relation.getRelationInstances()) {
 					System.out.println("RelationInstance \"" + relationInstance.getID() + "\"");
+//					System.out.println("EI1 \"" + relationInstance.getEntityOne().getID() + "\""); //FIXME
+//					System.out.println("EI2 \"" + relationInstance.getEntityTwo().getID() + "\"");
 				}
 			}
 		}

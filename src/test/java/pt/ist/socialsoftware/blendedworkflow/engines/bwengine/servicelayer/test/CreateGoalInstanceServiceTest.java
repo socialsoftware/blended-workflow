@@ -51,12 +51,12 @@ public class CreateGoalInstanceServiceTest {
 
 	private static String GOAL_NAME_1 = "Add Patient";
 
-	private static String GOALWORKITEM_ID_1 = "Add Patient.1";
-	private static String GOALWORKITEM_ID_2 = "Add Gender.2";
-	private static String GOALWORKITEM_ID_3 = "Add Address.3";
-	private static String GOALWORKITEM_ID_4 = "Add Patient.4";
-	private static String GOALWORKITEM_ID_5 = "Add Gender.5";
-	private static String GOALWORKITEM_ID_6 = "Add Address.6";
+	private static String GOALWORKITEM_ID_1 = "Add Patient.2";
+	private static String GOALWORKITEM_ID_2 = "Add Gender.3";
+	private static String GOALWORKITEM_ID_3 = "Add Address.4";
+	private static String GOALWORKITEM_ID_4 = "Add Patient.5";
+	private static String GOALWORKITEM_ID_5 = "Add Gender.6";
+	private static String GOALWORKITEM_ID_6 = "Add Address.7";
 
 	private static String ENTITY_1_NAME = "Patient";
 	private static String ENTITYINSTANCE_1_ID = "Patient.1";
@@ -137,9 +137,12 @@ public class CreateGoalInstanceServiceTest {
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
 		long parentGoalOID = parentGoal.getOID();
+		
+		EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+		long entityInstance1OID = entityInstance1.getOID();
 		Transaction.commit();
 
-		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, entityInstance1OID).call();
 
 		boolean committed = false;
 		try {
@@ -148,11 +151,12 @@ public class CreateGoalInstanceServiceTest {
 			GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_1);
 			GoalWorkItem goalWorkItem2 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_2);
 			GoalWorkItem goalWorkItem3 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_3);
-			EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
 
-			assertEquals(3, bwInstance.getWorkItemsCount());
+			assertEquals(4, bwInstance.getWorkItemsCount());
 			for (WorkItem workItem : bwInstance.getWorkItems()) {
-				assertEquals(WorkItemState.ACTIVATED, workItem.getState());
+				if (workItem.getClass().equals(GoalWorkItem.class)) {
+					assertEquals(WorkItemState.ACTIVATED, workItem.getState());
+				}
 			}
 
 			// GoalWorkItem1
@@ -210,9 +214,11 @@ public class CreateGoalInstanceServiceTest {
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
 		long parentGoalOID = parentGoal.getOID();
+		EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+		long entityInstance1OID = entityInstance1.getOID();
 		Transaction.commit();
 
-		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, entityInstance1OID).call();
 		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
 
 
@@ -225,14 +231,14 @@ public class CreateGoalInstanceServiceTest {
 			GoalWorkItem goalWorkItem4 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_4);
 			GoalWorkItem goalWorkItem5 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_5);
 			GoalWorkItem goalWorkItem6 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_6);
-			EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
 			EntityInstance entityInstance2 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_2_ID);
 
-			assertEquals(6, bwInstance.getWorkItemsCount());
+			assertEquals(7, bwInstance.getWorkItemsCount());
 			for (WorkItem workItem : bwInstance.getWorkItems()) {
-				assertEquals(WorkItemState.ACTIVATED, workItem.getState());
+				if (workItem.getClass().equals(GoalWorkItem.class)) 
+					assertEquals(WorkItemState.ACTIVATED, workItem.getState());
 			}
-			
+
 			// Test first call workItems with entityInstance1
 			// GoalWorkItem1
 			assertEquals(0, goalWorkItem1.getInputAttributeInstancesCount());
@@ -333,14 +339,16 @@ public class CreateGoalInstanceServiceTest {
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
 		long goalOID = parentGoal.getOID();
+		
+		EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+		long entityInstance1OID = entityInstance1.getOID();
 		Transaction.commit();
-
-		new CreateGoalInstanceService(bwInstanceOID, goalOID, null).call();
+		new CreateGoalInstanceService(bwInstanceOID, goalOID, entityInstance1OID).call();
 
 		Transaction.begin();
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(ENTITY_1_NAME);
-		EntityInstance entityInstance = entity.getEntityInstances().get(0);
+		EntityInstance entityInstance = entity.getEntityInstance(ENTITYINSTANCE_1_ID);
 		long entityInstanceOID = entityInstance.getOID();
 		Transaction.commit();
 		new CreateGoalInstanceService(bwInstanceOID, goalOID, entityInstanceOID).call();
@@ -348,13 +356,14 @@ public class CreateGoalInstanceServiceTest {
 		boolean committed = false;
 		try {
 			Transaction.begin();
+			
 			GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_1);
 			GoalWorkItem goalWorkItem2 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_2);
 			GoalWorkItem goalWorkItem3 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_3);
-			EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
-
-			assertEquals(3, bwInstance.getWorkItemsCount());
+			
+			assertEquals(4, bwInstance.getWorkItemsCount());
 			for (WorkItem workItem : bwInstance.getWorkItems()) {
+				if (workItem.getClass().equals(GoalWorkItem.class)) 
 				assertEquals(WorkItemState.ACTIVATED, workItem.getState());
 			}
 

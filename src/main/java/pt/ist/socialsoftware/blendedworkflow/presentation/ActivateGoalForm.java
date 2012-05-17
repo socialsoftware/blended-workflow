@@ -163,7 +163,7 @@ public class ActivateGoalForm extends VerticalLayout {//implements Property.Valu
 	// generate dataModelWindow
 	protected void showDataModelTreeWindow(long bwInstanceOID) {
 		Window dataModel = new Window("Disable Conditions Form");
-		dataModel.setContent(new DisableConditionsForm(this, bwInstanceOID));
+		dataModel.setContent(new ManageAchieveGoalsConditionsForm(this, bwInstanceOID));
 		dataModel.center();
 		dataModel.setClosable(false);
 		dataModel.setResizable(false);

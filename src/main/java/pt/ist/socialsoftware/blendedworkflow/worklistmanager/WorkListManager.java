@@ -9,7 +9,7 @@ import com.vaadin.ui.Window.Notification;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateNewGoalService;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.DisableGoalConditionService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.ManageGoalConditionService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.EnableGoalWorkItemsService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.RedoGoalWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.SkipWorkItemService;
@@ -17,6 +17,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
@@ -146,9 +147,15 @@ public class WorkListManager {
 		bwExecutorService.runTask(service);
 	}
 	
-	public void disableWorkItemCondition(long workitemOID, long conditionOID) {
+	public void manageGoalCondition(long workitemOID, long conditionOID) {
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		DisableGoalConditionService service = new DisableGoalConditionService(workitemOID, conditionOID);
+		ManageGoalConditionService service = new ManageGoalConditionService(workitemOID, conditionOID);
+		bwExecutorService.runTask(service);
+	}
+	
+	public void manageGoalCondition(long maintainGoalOID, GoalState state) {
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+		ManageGoalConditionService service = new ManageGoalConditionService(maintainGoalOID, state);
 		bwExecutorService.runTask(service);
 	}
 

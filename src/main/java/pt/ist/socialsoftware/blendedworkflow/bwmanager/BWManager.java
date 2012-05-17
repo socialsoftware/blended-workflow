@@ -78,6 +78,7 @@ public class BWManager {
 		getBwPresentation().getMainWindow().showNotification(bwe.toString(), Notification.TYPE_ERROR_MESSAGE);
 	}
 
+	//FIXME: relation order
 	public void addRelationInstance(long bwInstanceOID, long e1OID, long e2OID) {
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		EntityInstance e1 = AbstractDomainObject.fromOID(e1OID);

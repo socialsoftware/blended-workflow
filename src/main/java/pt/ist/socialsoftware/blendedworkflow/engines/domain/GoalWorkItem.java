@@ -76,6 +76,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
 	@Override
 	public void notifyCompleted() {
+
 		log.info("GoalWorkitem " + getID() + " is now in Completed state");
 		if (getState() == WorkItemState.CHECKED_IN || getState() == WorkItemState.CONSTRAINT_VIOLATION) {
 			setState(WorkItemState.COMPLETED);
@@ -178,9 +179,11 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 				}
 			} else {
 				result = getSucessCondition().evaluateWithWorkItem(this, ConditionType.SUCESS);
-				TripleStateBool maintainConditionsResult = getBwInstance().getGoalModelInstance().evaluateMaintainGoals(this);
-				result = result.AND(maintainConditionsResult);
 				log.info("SucessCondition Evaluate result for " + this.getID() + " was " + result);
+				TripleStateBool maintainConditionsResult = getBwInstance().getGoalModelInstance().evaluateMaintainGoals(this);
+				log.info("MAINTAIN Evaluate result for " + this.getID() + " was " + maintainConditionsResult);
+				result = result.AND(maintainConditionsResult);
+				
 				if (result.equals(TripleStateBool.TRUE)) {
 					notifyCompleted();
 				} else if (result.equals(TripleStateBool.SKIPPED)) {

@@ -293,12 +293,16 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 		}
 		
 		//Exists Entity Key Relations
-		for (RelationInstance relationInstance : workItemEntityInstance.getRelationInstances()) {
-			EntityInstance one = relationInstance.getEntityOne();
-			EntityInstance two = relationInstance.getEntityTwo();
-			if (workItemEntityInstance.equals(one) && relationInstance.getRelationType().getIsTwoKeyEntity()) {
+		for (RelationInstance relationInstance : workItemEntityInstance.getEntityInstanceOneRelationInstances()) {
+			if (relationInstance.getRelationType().getIsTwoKeyEntity()) {
+				EntityInstance two = relationInstance.getEntityInstanceTwo();
 				finalResult = finalResult.AND(evaluateWithDataModel(two));
-			} else if (workItemEntityInstance.equals(two) && relationInstance.getRelationType().getIsOneKeyEntity()){
+			}
+		}
+		
+		for (RelationInstance relationInstance : workItemEntityInstance.getEntityInstanceTwoRelationInstances()) {
+			if (relationInstance.getRelationType().getIsOneKeyEntity()) {
+				EntityInstance one = relationInstance.getEntityInstanceOne();
 				finalResult = finalResult.AND(evaluateWithDataModel(one));
 			}
 		}
@@ -325,13 +329,16 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 			}
 		}
 		
-		//Exists Entity Key Relations
-		for (RelationInstance relationInstance : entityInstance.getRelationInstances()) {
-			EntityInstance one = relationInstance.getEntityOne();
-			EntityInstance two = relationInstance.getEntityTwo();
-			if (entityInstance.equals(one) && relationInstance.getRelationType().getIsTwoKeyEntity()) {
+		for (RelationInstance relationInstance : entityInstance.getEntityInstanceOneRelationInstances()) {
+			if (relationInstance.getRelationType().getIsTwoKeyEntity()) {
+				EntityInstance two = relationInstance.getEntityInstanceTwo();
 				finalResult = finalResult.AND(evaluateWithDataModel(two));
-			} else if (entityInstance.equals(two) && relationInstance.getRelationType().getIsOneKeyEntity()){
+			}
+		}
+		
+		for (RelationInstance relationInstance : entityInstance.getEntityInstanceTwoRelationInstances()) {
+			if (relationInstance.getRelationType().getIsOneKeyEntity()) {
+				EntityInstance one = relationInstance.getEntityInstanceOne();
 				finalResult = finalResult.AND(evaluateWithDataModel(one));
 			}
 		}

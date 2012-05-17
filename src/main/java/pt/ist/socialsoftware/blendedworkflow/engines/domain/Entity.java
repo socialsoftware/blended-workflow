@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -8,7 +8,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class Entity extends Entity_Base {
 	
-	private static Logger log = Logger.getLogger("Entity");
+//	private static Logger log = Logger.getLogger("Entity");
 
 	public Entity(DataModel dataModel, String name) throws BlendedWorkflowException {
 		checkUniqueEntityName(dataModel,name);
@@ -42,21 +42,22 @@ public class Entity extends Entity_Base {
 		if (this.equals(entityContext)) {
 			entityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
 		} else {
-			log.error("Condition Context is diferent from Goal Context.");
-			for (RelationInstance relationInstance : entityInstanceContext.getRelationInstances()) {
-				//Relation EntityOne = than check EntityTwo
-				if (relationInstance.getEntityOne() == entityInstanceContext) {
-					if (relationInstance.getEntityTwo().getEntity() == this){
-						relationInstance.getEntityTwo().assignAttributeInstances(goalWorkItem, attribute, conditionType);
-					}
-				}
-				//Relation EntityTwo = than check EntityOne
-				if (relationInstance.getEntityTwo() == entityInstanceContext) {
-					if (relationInstance.getEntityOne().getEntity() == this){
-						relationInstance.getEntityOne().assignAttributeInstances(goalWorkItem, attribute, conditionType);
-					}
-				}
-			}
+			//FIXME
+//			log.error("Condition Context is diferent from Goal Context.");
+//			for (RelationInstance relationInstance : entityInstanceContext.getRelationInstances()) {
+//				//Relation EntityOne = than check EntityTwo
+//				if (relationInstance.getEntityOne() == entityInstanceContext) {
+//					if (relationInstance.getEntityTwo().getEntity() == this){
+//						relationInstance.getEntityTwo().assignAttributeInstances(goalWorkItem, attribute, conditionType);
+//					}
+//				}
+//				//Relation EntityTwo = than check EntityOne
+//				if (relationInstance.getEntityTwo() == entityInstanceContext) {
+//					if (relationInstance.getEntityOne().getEntity() == this){
+//						relationInstance.getEntityOne().assignAttributeInstances(goalWorkItem, attribute, conditionType);
+//					}
+//				}
+//			}
 		}
 		
 		
@@ -100,29 +101,30 @@ public class Entity extends Entity_Base {
 				}
 			}
 		} else {
-			log.error("Condition Context is diferent from Goal Context.");
-			for (RelationInstance relationInstance : entityInstanceContext.getRelationInstances()) {
-				//Relation EntityOne = than check EntityTwo
-				if (relationInstance.getEntityOne() == entityInstanceContext) {
-					if (relationInstance.getEntityTwo().getEntity() == this){
-						for (Attribute attribute : entityContext.getAttributes()) {
-							if (attribute.getIsKeyAttribute()) {
-								relationInstance.getEntityTwo().assignAttributeInstances(goalWorkItem, attribute, conditionType);
-							}
-						}
-					}
-				}
-				//Relation EntityTwo = than check EntityOne
-				if (relationInstance.getEntityTwo() == entityInstanceContext) {
-					if (relationInstance.getEntityOne().getEntity() == this){
-						for (Attribute attribute : entityContext.getAttributes()) {
-							if (attribute.getIsKeyAttribute()) {
-								relationInstance.getEntityOne().assignAttributeInstances(goalWorkItem, attribute, conditionType);
-							}
-						}
-					}
-				}
-			}
+			//FIXME
+//			log.error("Condition Context is diferent from Goal Context.");
+//			for (RelationInstance relationInstance : entityInstanceContext.getRelationInstances()) {
+//				//Relation EntityOne = than check EntityTwo
+//				if (relationInstance.getEntityOne() == entityInstanceContext) {
+//					if (relationInstance.getEntityTwo().getEntity() == this){
+//						for (Attribute attribute : entityContext.getAttributes()) {
+//							if (attribute.getIsKeyAttribute()) {
+//								relationInstance.getEntityTwo().assignAttributeInstances(goalWorkItem, attribute, conditionType);
+//							}
+//						}
+//					}
+//				}
+//				//Relation EntityTwo = than check EntityOne
+//				if (relationInstance.getEntityTwo() == entityInstanceContext) {
+//					if (relationInstance.getEntityOne().getEntity() == this){
+//						for (Attribute attribute : entityContext.getAttributes()) {
+//							if (attribute.getIsKeyAttribute()) {
+//								relationInstance.getEntityOne().assignAttributeInstances(goalWorkItem, attribute, conditionType);
+//							}
+//						}
+//					}
+//				}
+//			}
 		}
 		
 //		DataModelInstance dataModelInstance = goalWorkItem.getBwInstance().getDataModelInstance();
@@ -190,7 +192,19 @@ public class Entity extends Entity_Base {
 						}
 					}
 					// Create Relation Instance and re-call the method for the 2 entity
-					new RelationInstance(relation, entityInstance, relationEntityInstanceTwo, entityInstance.getNewRelationInstanceID());
+					EntityInstance relationInstanceOne;
+					EntityInstance relationInstanceTwo;
+					
+					//TODO:test
+					if (entityInstance.getEntity().equals(relation.getEntityOne())) {
+						relationInstanceOne = entityInstance;
+						relationInstanceTwo = relationEntityInstanceTwo;
+					} else {
+						relationInstanceOne = relationEntityInstanceTwo;
+						relationInstanceTwo = entityInstance;
+					}
+					
+					new RelationInstance(relation, relationInstanceOne, relationInstanceTwo, relationInstanceOne.getNewRelationInstanceID());
 					relationEntityTwo.createRelationInstances(dataModelInstance, relationEntityInstanceTwo);
 				}
 			}

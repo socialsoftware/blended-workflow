@@ -104,7 +104,7 @@
 	<target name="clean" description="Cleans the compiled classes and generated sources">
 		<delete dir="${build.rel-dir}" />
 		<delete dir="${eclipse.build.rel-dir}" />
-		<!--  <delete dir="${dist.rel-dir}" /> -->
+		<delete dir="${dist.rel-dir}" />
 		<delete dir="${test-db.rel-dir}"/>
 		<delete dir="${db.rel-dir}"/>
 	</target>
@@ -159,7 +159,7 @@
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.LoadBWSpecificationServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateBWInstanceServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalInstanceServiceTest" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.DisableGoalConditionServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.ManageGoalConditionServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.EnableGoalWorkItemsServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CheckInWorkItemServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.SkipWorkItemServiceTest" />
@@ -196,11 +196,11 @@
 	</target>
 	
 	<!-- Test DisableCondition -->
-	<target name="test-service-4:DisableGoalCondition" depends="compile-tests">
+	<target name="test-service-4:ManageGoalCondition" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.DisableGoalConditionServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.ManageGoalConditionServiceTest" />
 		</junit>
 	</target>
 	
@@ -249,8 +249,17 @@
 		</junit>
 	</target>
 	
+	<!-- Test ExistsOneCondition -->
+		<target name="test-domain-1:DataModel" depends="compile-tests">
+			<junit>
+				<classpath refid="project.classpath" />
+				<formatter type="brief" usefile="false" />
+				<test name="pt.ist.socialsoftware.blendedworkflow.engines.domain.test.DataModelTest" />
+			</junit>
+		</target>
+	
 	<!-- Test ForAllCondition -->
-	<target name="test-domain-1:ForAllCondition" depends="compile-tests">
+	<target name="test-domain-2:ForAllCondition" depends="compile-tests">
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
@@ -259,7 +268,7 @@
 	</target>
 	
 	<!-- Test ExistsOneCondition -->
-		<target name="test-domain-2:ExistsOneCondition" depends="compile-tests">
+		<target name="test-domain-3:ExistsOneCondition" depends="compile-tests">
 			<junit>
 				<classpath refid="project.classpath" />
 				<formatter type="brief" usefile="false" />
@@ -273,6 +282,7 @@
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
+				<test name="pt.ist.socialsoftware.blendedworkflow.engines.domain.test.DataModelTest" />
 				<test name="pt.ist.socialsoftware.blendedworkflow.engines.domain.test.ForAllConditionTest" />
 				<test name="pt.ist.socialsoftware.blendedworkflow.engines.domain.test.ExistsOneConditionTest" />
 		</junit>

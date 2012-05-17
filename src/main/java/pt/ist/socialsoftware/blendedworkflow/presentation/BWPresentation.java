@@ -707,6 +707,19 @@ public class BWPresentation extends Application {
 				generateNewGoalWindow();
 			}
 		});
+		
+		Button disableMaintainGoalsBtn = new Button("Manage MaintainGoals");
+		disableMaintainGoalsBtn.addListener(new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				Long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+				if (bwInstanceOID == null) {
+					getMainWindow().showNotification("Please select one specification.");
+				} else {
+					generateNewDisableMaintainGoalsWindow(bwInstanceOID);
+				}
+			}
+		});
 
 		// Layouts - configurations
 		goalManagerBtnLayout.setSpacing(true);
@@ -724,7 +737,8 @@ public class BWPresentation extends Application {
 		goalManagerBtnLayout.addComponent(goalActivateBtn);
 		goalManagerBtnLayout.addComponent(goalReDoBtn);
 		goalManagerBtnLayout.addComponent(goalCreateBtn);
-
+		goalManagerBtnLayout.addComponent(disableMaintainGoalsBtn);
+		
 		goalManagerVL.addComponent(infoHL);
 		goalManagerVL.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
 		goalManagerVL.addComponent(goalManagerBtnLayout);
@@ -873,6 +887,16 @@ public class BWPresentation extends Application {
 	public void generateNewGoalWindow() {
 		Window newGoalWindow = new Window("New Goal Form");
 		newGoalWindow.setContent(new NewGoalForm());
+		newGoalWindow.center();
+		newGoalWindow.setClosable(false);
+		newGoalWindow.setDraggable(false);
+		newGoalWindow.setResizable(false);
+		getMainWindow().addWindow(newGoalWindow);
+	}
+	
+	public void generateNewDisableMaintainGoalsWindow(long bwInstanceOID ) {
+		Window newGoalWindow = new Window("Enable/Disable MaintainGoals");
+		newGoalWindow.setContent(new ManageMaintainGoalsConditionsForm(bwInstanceOID));
 		newGoalWindow.center();
 		newGoalWindow.setClosable(false);
 		newGoalWindow.setDraggable(false);

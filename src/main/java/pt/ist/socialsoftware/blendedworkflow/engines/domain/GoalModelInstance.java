@@ -1,6 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+//import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.GoalState;
+//import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
@@ -32,7 +34,7 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 	}
 	
 	public TripleStateBool evaluateMaintainGoals(GoalWorkItem goalWorkItem) {
-		//TODO: evaluate only affected maintainGoals
+		//TODO: Evaluate maintain on preCondition?
 //		ConditionType conditionType;
 //		if (goalWorkItem.getState().equals(WorkItemState.PRE_GOAL)) {
 //			conditionType = ConditionType.ACTIVATE;
@@ -40,19 +42,22 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 //			conditionType = ConditionType.SUCESS;
 //		}
 		
+		TripleStateBool finalResult = TripleStateBool.TRUE;
 		Entity goalContext = goalWorkItem.getAchieveGoal().getEntityContext();
 		for (MaintainGoal maintainGoal : getMaintainGoals()) {
 			Entity maintainGoalContext = maintainGoal.getMaintainGoalEntityContext();
 			if (maintainGoalContext.equals(goalContext) && maintainGoal.getState().equals(GoalState.ENABLED)) {
+
 				TripleStateBool result = maintainGoal.getMaintainCondition().evaluateWithDataModel(null);
+//				System.out.println("|"+ goalWorkItem.getID() + "|" + result + "$" + maintainGoal.getMaintainCondition());
 				if (result == TripleStateBool.FALSE) {
-					return TripleStateBool.FALSE;
+					finalResult = finalResult.AND(TripleStateBool.FALSE);
 				} else 	if (result == TripleStateBool.SKIPPED) {
-					return TripleStateBool.SKIPPED;
+					finalResult = finalResult.AND(TripleStateBool.SKIPPED);
 				} 
 			}
 		}
-		return TripleStateBool.TRUE;
+		return finalResult;
 	}
 
 }

@@ -30,14 +30,14 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalInstanceService;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.DisableGoalConditionService;
+import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.ManageGoalConditionService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 @RunWith(JMock.class)
-public class DisableGoalConditionServiceTest {
+public class ManageGoalConditionServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
 	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl";
@@ -47,10 +47,11 @@ public class DisableGoalConditionServiceTest {
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	
 	private static String GOAL_NAME_1 = "Add Patient";
+	private static String GOALWORKITEM_ID_1 = "Add Patient.2";
 	private static String USER_ID = "BlendedWorkflow";
 
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(DisableGoalConditionServiceTest.class);
+		return new JUnit4TestAdapter(ManageGoalConditionServiceTest.class);
 	}
 
 	private Mockery context = new Mockery() {
@@ -129,7 +130,7 @@ public class DisableGoalConditionServiceTest {
 		boolean committed = false;
 		try {
 			Transaction.begin();
-			assertEquals(3, bwInstance.getWorkItemsCount());
+			assertEquals(4, bwInstance.getWorkItemsCount());
 			for (WorkItem workItem : bwInstance.getWorkItems()) {
 				if (workItem.getClass().equals(GoalWorkItem.class))
 					assertEquals(1, ((GoalWorkItem) workItem).getActivateConditionsCount());
@@ -144,22 +145,24 @@ public class DisableGoalConditionServiceTest {
 		
 		// Remove the first WorkItem ActivateCondition
 		Transaction.begin();
-		GoalWorkItem firstGoalWorkItem = (GoalWorkItem) bwInstance.getWorkItems().get(0);
-		Condition firstActivateCondition = firstGoalWorkItem.getActivateConditions().get(0);
+		GoalWorkItem firstGoalWorkItem = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_1);
+		Condition firstActivateCondition = firstGoalWorkItem.getActivateConditions().get(0); //FIRST
 		long firstGoalWorkItemOID = firstGoalWorkItem.getOID();
 		long firstActivateConditionOID = firstActivateCondition.getOID();
 		Transaction.commit();
-		new DisableGoalConditionService(firstGoalWorkItemOID, firstActivateConditionOID).call();
+		new ManageGoalConditionService(firstGoalWorkItemOID, firstActivateConditionOID).call();
 
 		// Verify that only the first WorkItem has no ActivateConditions
 		committed = false;
 		try {
 			Transaction.begin();
 			for (WorkItem workItem : bwInstance.getWorkItems()) {
-				if (workItem.getOID() == firstGoalWorkItemOID) {
-					assertEquals(0, ((GoalWorkItem) workItem).getActivateConditionsCount());
-				} else {
-					assertEquals(1, ((GoalWorkItem) workItem).getActivateConditionsCount());
+				if (workItem.getClass().equals(GoalWorkItem.class)) {
+					if (workItem.getOID() == firstGoalWorkItemOID) {
+						assertEquals(0, ((GoalWorkItem) workItem).getActivateConditionsCount());
+					} else {
+						assertEquals(1, ((GoalWorkItem) workItem).getActivateConditionsCount());
+					}
 				}
 			}
 

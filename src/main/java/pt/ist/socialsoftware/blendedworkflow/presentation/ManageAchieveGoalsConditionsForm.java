@@ -19,19 +19,18 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.event.Action;
 
 @SuppressWarnings("serial")
-public class DisableConditionsForm extends VerticalLayout {
+public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 
 	protected final Tree treetable = new Tree("Achieve Goals");
 
-//	private Logger log = Logger.getLogger("DCF");
 	private static final Action DISABLE_CONDITION_ACTION = new Action("Disable Condition");
 
-	public DisableConditionsForm(final ActivateGoalForm parent, final long bwInstanceOID) {
+	public ManageAchieveGoalsConditionsForm(final ActivateGoalForm parent, final long bwInstanceOID) {
 		HorizontalLayout footer = new HorizontalLayout();
 
 		// Properties
 		setMargin(true);
-		setWidth("400px");
+		setWidth("500px");
 		setSpacing(true);
 
 		treetable.setWidth("100%");
@@ -48,9 +47,8 @@ public class DisableConditionsForm extends VerticalLayout {
 					
 					ConditionOID = ConditionOID - workItemOID;
 					Transaction.begin();
-					BlendedWorkflow.getInstance().getWorkListManager().disableWorkItemCondition(workItemOID, ConditionOID);
+					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(workItemOID, ConditionOID);
 					Transaction.commit();
-					getApplication().getMainWindow().showNotification("remove condition service wi: " + workItemOID + " cond:" + target);
 					refreshTree(bwInstanceOID);
 				} 
 			}
@@ -68,11 +66,10 @@ public class DisableConditionsForm extends VerticalLayout {
 		submitButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().showNotification("" + bwInstanceOID);
 				Transaction.begin();
 				BlendedWorkflow.getInstance().getWorkListManager().enableGoalWorkItemsService(bwInstanceOID);
 				Transaction.commit();
-				getApplication().getMainWindow().removeWindow(DisableConditionsForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(ManageAchieveGoalsConditionsForm.this.getWindow());
 			}
 		});
 
@@ -113,6 +110,7 @@ public class DisableConditionsForm extends VerticalLayout {
 				treetable.expandItemsRecursively(goalName);
 			}
 		}
+		setWidth("100%");
 		Transaction.commit();
 	}
 

@@ -46,9 +46,7 @@ public class CreateBWInstanceService implements Callable<String> {
 		BlendedWorkflow.getInstance().getBwManager().notifyCreatedBWInstance(bwInstance);
 		
 //		bwInstance.getGoalModelInstance().getEnabledWorkItems();
-//		bwInstance.getTaskModelInstance().getEnabledWorkItems(); // Test proposes only
-		
-//		PrintBWSpecification.all(this.bwSpecification.getName());
+		bwInstance.getTaskModelInstance().getEnabledWorkItems(); // Test proposes only
 		
 		} catch (BlendedWorkflowException bwe) {
 			BlendedWorkflow.getInstance().getBwManager().notifyException(bwe.getError());

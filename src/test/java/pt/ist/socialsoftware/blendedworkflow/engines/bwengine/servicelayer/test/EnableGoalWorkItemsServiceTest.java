@@ -49,9 +49,9 @@ public class EnableGoalWorkItemsServiceTest {
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	
 	private static String GOAL_NAME_1 = "Add Patient";
-	private static String GOALWORKITEM_ID_1 = "Add Patient.1";
-	private static String GOALWORKITEM_ID_2 = "Add Gender.2";
-	private static String GOALWORKITEM_ID_3 = "Add Address.3";
+	private static String GOALWORKITEM_ID_1 = "Add Patient.2";
+	private static String GOALWORKITEM_ID_2 = "Add Gender.3";
+	private static String GOALWORKITEM_ID_3 = "Add Address.4";
 	
 	private static String ENTITY_1_NAME = "Patient";
 	private static String ENTITYINSTANCE_1_ID = "Patient.1";
@@ -131,19 +131,21 @@ public class EnableGoalWorkItemsServiceTest {
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		AchieveGoal parentGoal = goalModelInstance.getGoal(GOAL_NAME_1);
 		long parentGoalOID = parentGoal.getOID();
+		
+		EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+		long entityInstance1OID = entityInstance1.getOID();
 		Transaction.commit();
-		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, null).call();
+		new CreateGoalInstanceService(bwInstanceOID, parentGoalOID, entityInstance1OID).call();
 		new EnableGoalWorkItemsService(bwInstanceOID).call();
 		
 		boolean committed = false;
 		try {
 			Transaction.begin();
-			assertEquals(3, bwInstance.getWorkItemsCount());
+			assertEquals(4, bwInstance.getWorkItemsCount());
 			
 			GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_1);
 			GoalWorkItem goalWorkItem2 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_2);
 			GoalWorkItem goalWorkItem3 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_3);
-			EntityInstance entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
 
 			// GoalWorkItem1
 			assertEquals(WorkItemState.GOAL_PENDING, goalWorkItem1.getState());

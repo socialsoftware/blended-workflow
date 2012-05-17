@@ -105,7 +105,7 @@ public class ForAllConditionTest {
 	public void tearDown() {
 		Bootstrap.clean();
 	}
-
+/*
 	@Test
 	public void evaluateToFalse() throws BlendedWorkflowException {
 		Transaction.begin();
@@ -156,7 +156,7 @@ public class ForAllConditionTest {
 		assertEquals(TripleStateBool.SKIPPED, forAllCondition.evaluateWithDataModel(null));
 		
 		Transaction.commit();
-	}
+	}*/
 	
 	@Test
 	public void evaluateToTrue() throws BlendedWorkflowException {

@@ -98,7 +98,7 @@ public class LoadBWSpecificationServiceTest {
 
 			assertEquals(3,BlendedWorkflow.getInstance().getOrganizationalModel().getRolesCount());
 			assertEquals(4,BlendedWorkflow.getInstance().getOrganizationalModel().getUsersCount());
-			
+				
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {

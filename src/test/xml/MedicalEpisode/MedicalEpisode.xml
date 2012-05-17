@@ -239,7 +239,7 @@
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Type>Achieve</bw:Type>
-			<bw:Name>Add Episode</bw:Name>
+			<bw:Name>Create Episode</bw:Name>
 			<bw:description>Add Episode</bw:description>
 			<bw:SucessCondition>existsEntity(Episode)</bw:SucessCondition>
 			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
@@ -260,26 +260,25 @@
 		
 		<bw:MaintainGoal>
 			<bw:Type>Maintain</bw:Type>
-			<bw:Name>MaintainTest</bw:Name>
+			<bw:Name>MaintainTrue</bw:Name>
 			<bw:description>MaintainTest</bw:description>
 			<bw:MaintainCondition>true</bw:MaintainCondition>
 			<bw:Context>Patient</bw:Context>
 		</bw:MaintainGoal>
 		<bw:MaintainGoal>
 			<bw:Type>Maintain</bw:Type>
-			<bw:Name>MaintainTest2</bw:Name>
+			<bw:Name>MaintainForAll</bw:Name>
 			<bw:description>MaintainTest2</bw:description>
 			<bw:MaintainCondition>forAll[Patient.Patient 1-1 Episode,existsEntity(Patient)]</bw:MaintainCondition>
 			<bw:Context>Episode</bw:Context>
 		</bw:MaintainGoal>
 		<bw:MaintainGoal>
 			<bw:Type>Maintain</bw:Type>
-			<bw:Name>MaintainTest3</bw:Name>
+			<bw:Name>MaintainExistsOne</bw:Name>
 			<bw:description>MaintainTest3</bw:description>
-			<bw:MaintainCondition>existsOne[Patient.Patient 1-1 Episode,compareAttributeTo(Patient.Name,=.john)]</bw:MaintainCondition>
+			<bw:MaintainCondition>existsOne[Patient.Patient 1-1 Episode,compareAttributeTo(Patient.Name,=.John)]</bw:MaintainCondition>
 			<bw:Context>Episode</bw:Context>
 		</bw:MaintainGoal>
-		
 	</bw:GoalModel>
 	<bw:TaskModel>
 		<bw:Task>

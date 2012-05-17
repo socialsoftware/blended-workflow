@@ -124,10 +124,11 @@ public class CreateBWInstanceServiceTest {
 			assertEquals(11, goalModelInstance.getAchieveGoalsCount());
 			assertEquals(3, goalModelInstance.getMaintainGoalsCount());
 			assertEquals(5, taskModelInstance.getTasksCount());
-			assertEquals(0, bwInstance.getWorkItemsCount()); // 1 with tasks active 
+			assertEquals(1, bwInstance.getWorkItemsCount()); // 1 with tasks active 
 			
 			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
 
+//			PrintBWSpecification.all(BWSPECIFICATION_NAME);
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {

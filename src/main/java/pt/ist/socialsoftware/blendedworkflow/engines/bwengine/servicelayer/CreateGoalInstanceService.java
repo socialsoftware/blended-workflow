@@ -13,7 +13,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 
 public class CreateGoalInstanceService implements Callable<String> {
@@ -96,23 +95,24 @@ public class CreateGoalInstanceService implements Callable<String> {
 			if (subEntityContext.equals(parentEntityContext)) {
 				subGoalEntityContext = parentEntityInstanceContext;
 			} else {
-				log.info("SubGoal context diferent than its parentGoal.");
-				//FIXME: EntityInstance Relation must exist!
-				for (RelationInstance relationInstance : parentEntityInstanceContext.getRelationInstances()) {
-					
-					//Relation EntityOne = than check EntityTwo
-					if (relationInstance.getEntityOne() == parentEntityInstanceContext) {
-						if (relationInstance.getEntityTwo().getEntity() == subEntityContext){
-							subGoalEntityContext = relationInstance.getEntityTwo();
-						}
-					}
-					//Relation EntityTwo = than check EntityOne
-					if (relationInstance.getEntityTwo() == parentEntityInstanceContext) {
-						if (relationInstance.getEntityOne().getEntity() == subEntityContext){
-							subGoalEntityContext = relationInstance.getEntityOne();
-						}
-					}
-				}
+				//FIXME
+//				log.info("SubGoal context diferent than its parentGoal.");
+//				//FIXME: EntityInstance Relation must exist!
+//				for (RelationInstance relationInstance : parentEntityInstanceContext.getRelationInstances()) {
+//					
+//					//Relation EntityOne = than check EntityTwo
+//					if (relationInstance.getEntityOne() == parentEntityInstanceContext) {
+//						if (relationInstance.getEntityTwo().getEntity() == subEntityContext){
+//							subGoalEntityContext = relationInstance.getEntityTwo();
+//						}
+//					}
+//					//Relation EntityTwo = than check EntityOne
+//					if (relationInstance.getEntityTwo() == parentEntityInstanceContext) {
+//						if (relationInstance.getEntityOne().getEntity() == subEntityContext){
+//							subGoalEntityContext = relationInstance.getEntityOne();
+//						}
+//					}
+//				}
 			}
 			
 			// Recursive call for subgoals
