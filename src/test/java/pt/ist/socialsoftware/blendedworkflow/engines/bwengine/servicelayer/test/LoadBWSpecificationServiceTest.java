@@ -22,6 +22,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
@@ -89,12 +90,14 @@ public class LoadBWSpecificationServiceTest {
 			BWSpecification bwSpecification = blendedWorkflow.getBWSpecification(BWSPECIFICATION_NAME);
 			DataModel dataModel = bwSpecification.getDataModel();
 			GoalModel goalModel = bwSpecification.getGoalModel();
+			TaskModel taskModel = bwSpecification.getTaskModel();
 
-			assertEquals(5, dataModel.getEntitiesCount());
-			assertEquals(14, dataModel.getAttributesCount());
-			assertEquals(4, dataModel.getRelationsCount());
+			assertEquals(6, dataModel.getEntitiesCount());
+			assertEquals(17, dataModel.getAttributesCount());
+			assertEquals(5, dataModel.getRelationsCount());
 			assertEquals(11, goalModel.getAchieveGoalsCount());
-			assertEquals(3, goalModel.getMaintainGoalsCount());
+			assertEquals(1, goalModel.getMaintainGoalsCount());
+			assertEquals(6, taskModel.getTasksCount());
 
 			assertEquals(3,BlendedWorkflow.getInstance().getOrganizationalModel().getRolesCount());
 			assertEquals(4,BlendedWorkflow.getInstance().getOrganizationalModel().getUsersCount());

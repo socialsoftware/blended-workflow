@@ -24,15 +24,11 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
@@ -40,7 +36,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.Creat
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.EnableGoalWorkItemsService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.ManageGoalConditionService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
@@ -56,34 +51,37 @@ public class CheckInWorkItemServiceTest {
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 
 	private static String GOAL_NAME_1 = "Add Patient";
-	private static String GOAL_NAME_2 = "Create Medical Report";
-	private static String GOAL_NAME_3 = "Create Episode";
-	private static String MAINTAIN_GOAL_NAME_1 = "MaintainExistsOne";
+//	private static String GOAL_NAME_2 = "Write Medical Report";
+//	private static String GOAL_NAME_3 = "Create Episode";
+//	private static String MAINTAIN_GOAL_NAME_1 = "MaintainExistsOne";
 	private static String GOALWORKITEM_ID_1 = "Add Patient.2";
 	private static String GOALWORKITEM_ID_2 = "Add Gender.3";
 	private static String GOALWORKITEM_ID_3 = "Add Address.4";
-	private static String GOALWORKITEM_ID_4 = "Create Medical Report.5";
-	private static String GOALWORKITEM_ID_5 = "Create Episode.6";
+	private static String GOALWORKITEM_ID_4 = "Add PhoneNumber.5";
+//	private static String GOALWORKITEM_ID_4 = "Write Medical Report.5";
+//	private static String GOALWORKITEM_ID_5 = "Create Episode.6";
 
 	private static String ENTITY_1_NAME = "Patient";
 	private static String ENTITYINSTANCE_1_ID = "Patient.1";
 	private static String ENTITYINSTANCE_1_ATT_1_ID = "Name.1";
 	private static String ENTITYINSTANCE_1_ATT_2_ID = "Gender.2";
 	private static String ENTITYINSTANCE_1_ATT_3_ID = "Address.3";
+	private static String ENTITYINSTANCE_1_ATT_4_ID = "PhoneNumber.4";
 	private static String ENTITYINSTANCE_1_ATT_1_VALUE_TRUE = "John";
-	private static String ENTITYINSTANCE_1_ATT_1_VALUE_FALSE = "Mary";
+//	private static String ENTITYINSTANCE_1_ATT_1_VALUE_FALSE = "Mary";
 	private static String ENTITYINSTANCE_1_ATT_2_VALUE = "male";
 	private static String ENTITYINSTANCE_1_ATT_3_VALUE = "Lisbon";
+	private static String ENTITYINSTANCE_1_ATT_4_VALUE = "555-555-555";
 	
-	private static String ENTITY_2_NAME = "Medical Report";
-	private static String ENTITYINSTANCE_2_ID = "Medical Report.1";
-	private static String ENTITYINSTANCE_2_ATT_1_ID = "Report.1";
-	private static String ENTITYINSTANCE_2_ATT_1_VALUE = "OK!";
+//	private static String ENTITY_2_NAME = "Medical Report";
+//	private static String ENTITYINSTANCE_2_ID = "Medical Report.1";
+//	private static String ENTITYINSTANCE_2_ATT_1_ID = "Report.1";
+//	private static String ENTITYINSTANCE_2_ATT_1_VALUE = "OK!";
 	
-	private static String ENTITY_3_NAME = "Episode";
-	private static String ENTITYINSTANCE_3_ID = "Episode.1";
-	private static String ENTITYINSTANCE_3_ATT_1_ID = "Date.1";
-	private static String ENTITYINSTANCE_3_ATT_1_VALUE = "00-00-0000";
+//	private static String ENTITY_3_NAME = "Episode";
+//	private static String ENTITYINSTANCE_3_ID = "Episode.1";
+//	private static String ENTITYINSTANCE_3_ATT_1_ID = "Date.1";
+//	private static String ENTITYINSTANCE_3_ATT_1_VALUE = "00-00-0000";
 
 	private static String UNDEFINED_VALUE = "$UNDEFINED$";
 
@@ -151,7 +149,7 @@ public class CheckInWorkItemServiceTest {
 	public void tearDown() {
 		Bootstrap.clean();
 	}
-
+/*
 	@Test
 	public void checkInOneWorkItem() throws Exception {
 		Transaction.begin();
@@ -187,9 +185,13 @@ public class CheckInWorkItemServiceTest {
 			Transaction.begin();
 			WorkItem workItem1 = bwInstance.getWorkItem(GOALWORKITEM_ID_1);
 			WorkItem workItem2 = bwInstance.getWorkItem(GOALWORKITEM_ID_2);
+			
 			AttributeInstance attributeInstance1 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_1_ID);
 			AttributeInstance attributeInstance2 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_2_ID);
 			attributeInstance3 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_3_ID);
+			
+			WorkItem workItem4 = bwInstance.getWorkItem(GOALWORKITEM_ID_4);
+			AttributeInstance attributeInstance4 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_4_ID);
 			
 			//WorkItem1 - AddPatient
 			assertEquals(WorkItemState.GOAL_PENDING, workItem1.getState());
@@ -199,7 +201,6 @@ public class CheckInWorkItemServiceTest {
 			}
 			assertEquals(UNDEFINED_VALUE, attributeInstance1.getValue());
 			assertEquals(DataState.UNDEFINED, attributeInstance1.getState());
-			
 			
 			//WorkItem2 - AddGender
 			assertEquals(WorkItemState.ENABLED, workItem2.getState());
@@ -218,6 +219,15 @@ public class CheckInWorkItemServiceTest {
 			}
 			assertEquals(ENTITYINSTANCE_1_ATT_3_VALUE, attributeInstance3.getValue());
 			assertEquals(DataState.DEFINED, attributeInstance3.getState());
+			
+			//WorkItem4 
+			assertEquals(WorkItemState.ENABLED, workItem4.getState());
+			for (WorkItemArgument workItemArgument : workItem4.getOutputWorkItemArguments()) {
+				assertEquals(UNDEFINED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.UNDEFINED, workItemArgument.getState());
+			}
+			assertEquals(UNDEFINED_VALUE, attributeInstance4.getValue());
+			assertEquals(DataState.UNDEFINED, attributeInstance4.getState());
 
 			Transaction.commit();
 			committed = true;
@@ -226,10 +236,10 @@ public class CheckInWorkItemServiceTest {
 				Transaction.abort();
 			}
 		}
-	}
+	}*/
 
 	@Test
-	public void checkInTwoWorkItems() throws Exception {
+	public void checkAllSubGoalWorkItems() throws Exception {
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
@@ -272,10 +282,27 @@ public class CheckInWorkItemServiceTest {
 		}
 		Transaction.commit();
 		new CheckInWorkItemService(workItem2OID).call();
+		
+		//WorkItem4
+		Transaction.begin();
+		entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+		WorkItem workItem4 = bwInstance.getWorkItem(GOALWORKITEM_ID_4);
+		long workItem4OID = workItem4.getOID();
+		AttributeInstance attributeInstance4 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_4_ID);
+		for (WorkItemArgument workItemArgument : workItem4.getOutputWorkItemArguments()) {
+			if (workItemArgument.getAttributeInstance().getID().equals(attributeInstance4.getID())) {
+				workItemArgument.setValue(ENTITYINSTANCE_1_ATT_4_VALUE);
+				workItemArgument.setState(DataState.DEFINED);
+			}
+		}
+		
+		Transaction.commit();
+		new CheckInWorkItemService(workItem4OID).call();
 
 		boolean committed = false;
 		try {
 			Transaction.begin();
+			
 			WorkItem workItem1 = bwInstance.getWorkItem(GOALWORKITEM_ID_1);
 			AttributeInstance attributeInstance1 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_1_ID);
 			attributeInstance2 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_2_ID);
@@ -307,7 +334,16 @@ public class CheckInWorkItemServiceTest {
 			}
 			assertEquals(ENTITYINSTANCE_1_ATT_3_VALUE, attributeInstance3.getValue());
 			assertEquals(DataState.DEFINED, attributeInstance3.getState());
-
+			
+			// WorkItem4
+			assertEquals(WorkItemState.COMPLETED, workItem4.getState());
+			for (WorkItemArgument workItemArgument : workItem4.getOutputWorkItemArguments()) {
+				assertEquals(ENTITYINSTANCE_1_ATT_4_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.DEFINED, workItemArgument.getState());
+			}
+			assertEquals(ENTITYINSTANCE_1_ATT_4_VALUE, attributeInstance4.getValue());
+			assertEquals(DataState.DEFINED, attributeInstance4.getState());
+			
 			Transaction.commit();
 			committed = true;
 		} finally {
@@ -360,6 +396,21 @@ public class CheckInWorkItemServiceTest {
 		}
 		Transaction.commit();
 		new CheckInWorkItemService(workItem2OID).call();
+		
+		//WorkItem4
+		Transaction.begin();
+		entityInstance1 = bwInstance.getDataModelInstance().getEntity(ENTITY_1_NAME).getEntityInstance(ENTITYINSTANCE_1_ID);
+		WorkItem workItem4 = bwInstance.getWorkItem(GOALWORKITEM_ID_4);
+		long workItem4OID = workItem4.getOID();
+		AttributeInstance attributeInstance4 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_4_ID);
+		for (WorkItemArgument workItemArgument : workItem4.getOutputWorkItemArguments()) {
+			if (workItemArgument.getAttributeInstance().getID().equals(attributeInstance4.getID())) {
+				workItemArgument.setValue(ENTITYINSTANCE_1_ATT_4_VALUE);
+				workItemArgument.setState(DataState.DEFINED);
+			}
+		}
+		Transaction.commit();
+		new CheckInWorkItemService(workItem4OID).call();
 
 		//WorkItem1 - AddPatient
 		Transaction.begin();
@@ -405,6 +456,15 @@ public class CheckInWorkItemServiceTest {
 			}
 			assertEquals(ENTITYINSTANCE_1_ATT_3_VALUE, attributeInstance3.getValue());
 			assertEquals(DataState.DEFINED, attributeInstance3.getState());
+			
+			// WorkItem4
+			assertEquals(WorkItemState.COMPLETED, workItem4.getState());
+			for (WorkItemArgument workItemArgument : workItem4.getOutputWorkItemArguments()) {
+				assertEquals(ENTITYINSTANCE_1_ATT_4_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.DEFINED, workItemArgument.getState());
+			}
+			assertEquals(ENTITYINSTANCE_1_ATT_4_VALUE, attributeInstance4.getValue());
+			assertEquals(DataState.DEFINED, attributeInstance4.getState());
 
 			Transaction.commit();
 			committed = true;
@@ -414,7 +474,7 @@ public class CheckInWorkItemServiceTest {
 			}
 		}
 	}
-
+/*
 	@Test
 	public void maintainConditionsValueIsTrue() throws Exception {
 		Transaction.begin();
@@ -933,6 +993,6 @@ public class CheckInWorkItemServiceTest {
 				Transaction.abort();
 			}
 		}
-	}
+	}*/
 
 }

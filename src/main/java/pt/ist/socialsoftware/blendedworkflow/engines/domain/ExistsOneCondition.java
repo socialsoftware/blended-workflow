@@ -114,11 +114,11 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
 	}
 	
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance invalid) {
+	public TripleStateBool evaluateWithDataModel(EntityInstance invalid, GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		TripleStateBool result = TripleStateBool.FALSE;
 		for (RelationInstance relationInstance : getExistsOneRelation().getRelationInstances()) {
 			EntityInstance entityInstance = relationInstance.getEntityInstance(getExistsOneEntity());
-			result = result.OR(getCondition().evaluateWithDataModel(entityInstance));
+			result = result.OR(getCondition().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
 		}
 		return result;
 	}

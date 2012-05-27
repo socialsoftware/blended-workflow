@@ -52,6 +52,7 @@ public class EnableGoalWorkItemsServiceTest {
 	private static String GOALWORKITEM_ID_1 = "Add Patient.2";
 	private static String GOALWORKITEM_ID_2 = "Add Gender.3";
 	private static String GOALWORKITEM_ID_3 = "Add Address.4";
+	private static String GOALWORKITEM_ID_4 = "Add PhoneNumber.5";
 	
 	private static String ENTITY_1_NAME = "Patient";
 	private static String ENTITYINSTANCE_1_ID = "Patient.1";
@@ -141,11 +142,12 @@ public class EnableGoalWorkItemsServiceTest {
 		boolean committed = false;
 		try {
 			Transaction.begin();
-			assertEquals(4, bwInstance.getWorkItemsCount());
+			assertEquals(5, bwInstance.getWorkItemsCount());
 			
 			GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_1);
 			GoalWorkItem goalWorkItem2 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_2);
 			GoalWorkItem goalWorkItem3 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_3);
+			GoalWorkItem goalWorkItem4 = (GoalWorkItem) bwInstance.getWorkItem(GOALWORKITEM_ID_4);
 
 			// GoalWorkItem1
 			assertEquals(WorkItemState.GOAL_PENDING, goalWorkItem1.getState());
@@ -183,6 +185,19 @@ public class EnableGoalWorkItemsServiceTest {
 				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
 			}
 			for (AttributeInstance attributeInstance : goalWorkItem3.getOutputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			
+			// GoalWorkItem4
+			assertEquals(WorkItemState.ENABLED, goalWorkItem4.getState());
+			assertEquals(0, goalWorkItem4.getInputAttributeInstancesCount());
+			assertEquals(0, goalWorkItem4.getInputWorkItemArgumentsCount());
+			assertEquals(1, goalWorkItem4.getOutputAttributeInstancesCount());
+			assertEquals(1, goalWorkItem4.getOutputWorkItemArgumentsCount());
+			for (AttributeInstance attributeInstance : goalWorkItem4.getInputAttributeInstances()) {
+				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
+			}
+			for (AttributeInstance attributeInstance : goalWorkItem4.getOutputAttributeInstances()) {
 				assertEquals(entityInstance1, attributeInstance.getEntityInstance());
 			}
 			

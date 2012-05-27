@@ -176,12 +176,18 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	}
 	
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
 			Attribute attribute = attributeInstance.getAttribute();
 			Attribute conditionAttribute = getAttribute();
+		
 			if (attribute == conditionAttribute) {
-				if (attributeInstance.getState().equals(DataState.SKIPPED)) {
+				DataState state = getWorkItemState(attributeInstance, goalWorkItem, conditionType);
+				if (state == null) {
+					state = attributeInstance.getState();
+				}		
+				
+				if (state.equals(DataState.SKIPPED)) {
 					return TripleStateBool.SKIPPED;
 				} else if (attributeInstance.getState().equals(DataState.UNDEFINED)) {
 					return TripleStateBool.FALSE;
@@ -190,4 +196,23 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		}
 		return TripleStateBool.TRUE;
 	}
+	
+	private DataState getWorkItemState(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
+//		List<WorkItemArgument> arguments = null;
+//		if (conditionType.equals(ConditionType.ACTIVATE)) {
+//			arguments = goalWorkItem.getInputWorkItemArguments();
+//		} else if (conditionType.equals(ConditionType.SUCESS)) {
+//			arguments = goalWorkItem.getOutputWorkItemArguments();
+//		}
+//		for (WorkItemArgument workItemArgument : arguments) {
+		if (goalWorkItem != null) {
+		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
+			if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
+				return workItemArgument.getState();
+			}
+		}
+		}
+		return null;
+	}
+
 }

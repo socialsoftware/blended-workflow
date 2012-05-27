@@ -3,9 +3,12 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class AndCondition extends AndCondition_Base {
+	private Logger log = Logger.getLogger("OOOOOOO");
 
 	public AndCondition(Condition one, Condition two) {
 		addConditions(one);
@@ -149,8 +152,10 @@ public class AndCondition extends AndCondition_Base {
 	}
 	
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
-		return getConditionOne().evaluateWithDataModel(entityInstance).AND(getConditionTwo().evaluateWithDataModel(entityInstance));
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		log.info(getConditionOne() + " -AND1" + getConditionOne().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
+		log.info(getConditionTwo() +" -AND2" + getConditionTwo().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
+		return getConditionOne().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType).AND(getConditionTwo().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
 
 	}
 	

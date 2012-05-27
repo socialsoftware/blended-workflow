@@ -17,6 +17,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	private WorkListManager workListManager = null;
 	private BWManager bwManager = null;
 	private OrganizationalManager organizationalManager = null;
+	private String today = "1";
 	
 	private BWExecutorService bwExecutorService = null;
 	
@@ -116,6 +117,14 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	
 	public void setBWExecutorService(BWExecutorService bwExecutorService) {
 		this.bwExecutorService = bwExecutorService;
+	}
+
+	public String getToday() {
+		return today;
+	}
+
+	public void setToday(String today) {
+		this.today = today;
 	}
 
 }

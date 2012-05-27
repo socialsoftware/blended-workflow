@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.bwmanager;
 
+import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 
 import com.vaadin.ui.Window.Notification;
@@ -78,22 +80,45 @@ public class BWManager {
 		getBwPresentation().getMainWindow().showNotification(bwe.toString(), Notification.TYPE_ERROR_MESSAGE);
 	}
 
-	//FIXME: relation order
+	//FIXME: relation order infinite loop, add only if do not exists
 	public void addRelationInstance(long bwInstanceOID, long e1OID, long e2OID) {
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+
 		EntityInstance e1 = AbstractDomainObject.fromOID(e1OID);
 		EntityInstance e2 = AbstractDomainObject.fromOID(e2OID);
 		Entity entity1 = e1.getEntity();
 		Entity entity2 = e2.getEntity();
-
-		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		boolean exists = false;
+		
+		//Check if relation instance already exists
 		for (Relation relation : dataModelInstance.getRelations()) {
-			Entity one = relation.getEntityOne();
-			Entity two = relation.getEntityTwo();
-			if ((one.equals(entity1) && two.equals(entity2)) || (one.equals(entity2) && two.equals(entity1))) {
-				new RelationInstance(relation, e1, e2, e1.getNewRelationInstanceID());
+			for (RelationInstance relationInstance : relation.getRelationInstances()) {
+				EntityInstance one = relationInstance.getEntityInstanceOne();
+				EntityInstance two = relationInstance.getEntityInstanceTwo();
+				if (one.equals(e1) && two.equals(e2) || one.equals(e2) && two.equals(e1)) {
+					exists = true;
+					break;
+				}
 			}
-		}		
+		}
+		
+		//Do not exists create
+		if (!exists) {
+			for (Relation relation : dataModelInstance.getRelations()) {
+				Entity one = relation.getEntityOne();
+				Entity two = relation.getEntityTwo();
+				if ((one.equals(entity1) && two.equals(entity2)) ) {
+					new RelationInstance(relation, e1, e2, e1.getNewRelationInstanceID());
+				} else if (one.equals(entity2) && two.equals(entity1)) {
+					new RelationInstance(relation, e2, e1, e2.getNewRelationInstanceID());
+				}
+			}
+		}
+	}
+
+	public void notifyNeededEntityInstances(EntityInstance entityContext, HashMap<Entity, Relation> neededEntityInstances) {
+		getBwPresentation().generateAddSubGoalsContextWindow(entityContext, neededEntityInstances);
 	}
 
 }

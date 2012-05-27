@@ -13,11 +13,21 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class ConstrainsForm extends VerticalLayout{
 
-	private final CheckBox isNot = new CheckBox("False?");
+	private final CheckBox isNotCB = new CheckBox("False?");
 	private final TextField valueTf = new TextField("Value");
 	private final NativeSelect typeNS = new NativeSelect("Operator");
+	private final CheckBox forAllCB = new CheckBox("ForAll?");
+	private final CheckBox existsOneCB = new CheckBox("ExistsOne?");
+	
+//	private Logger log = Logger.getLogger("ConstrainsForm");
+	private String selectedType;
+	private String relationName;
 
-	public ConstrainsForm(final DataModelTree parent,final String data, final String dataType) {
+
+	public ConstrainsForm(final DataModelTree parent, final String entity, final String attribute, final String relation, final String type) {
+		selectedType = type;
+		relationName = relation;
+		
 		setMargin(true);
 
 		setWidth("300px");
@@ -32,6 +42,8 @@ public class ConstrainsForm extends VerticalLayout{
 		typeNS.addItem("=");
 		typeNS.addItem("!=");
 		typeNS.setValue("");
+		
+		forAllCB.setValue(true);
 
 		HorizontalLayout consPanel = new HorizontalLayout();
 		consPanel.setSpacing(true);
@@ -44,19 +56,9 @@ public class ConstrainsForm extends VerticalLayout{
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					Boolean isKeyAttribute = (Boolean) isNot.getValue();
-					String type = (String) typeNS.getValue();
-					String value = (String) valueTf.getValue();
+					String condition = createCondition(entity, attribute);
 
-					String constrain = type + "." + value;
-					if (type.equals("")) {
-						constrain = "";
-					}
-					else {
-						constrain = type + "." + value;
-					}
-
-					parent.finalize(data, dataType, isKeyAttribute, constrain);
+					parent.finalize(condition);
 					getApplication().getMainWindow().showNotification("Data Selected sucessfully");
 					getApplication().getMainWindow().removeWindow(parent.getWindow());
 					getApplication().getMainWindow().removeWindow(ConstrainsForm.this.getWindow());
@@ -65,6 +67,7 @@ public class ConstrainsForm extends VerticalLayout{
 					getApplication().getMainWindow().showNotification("Constrains null");
 				}
 			}
+
 		});
 
 		Button cancel = new Button("Cancel");
@@ -75,14 +78,82 @@ public class ConstrainsForm extends VerticalLayout{
 			}
 		});
 
-		addComponent(isNot);
-		consPanel.addComponent(typeNS);
-		consPanel.addComponent(valueTf);
+		addComponent(isNotCB);
+		
+		if (type.equals("Attribute") || type.equals("RelationAttribute")) {
+			consPanel.addComponent(typeNS);
+			consPanel.addComponent(valueTf);
+		}
+		
+		if (type.equals("RelationEntity") || type.equals("RelationAttribute")) {
+			addComponent(forAllCB);
+			addComponent(existsOneCB);
+		}
+
 		addComponent(consPanel);
 		submitPanel.addComponent(bwInstanceCreateBtn);
 		submitPanel.addComponent(cancel);
 		addComponent(submitPanel);
 		setComponentAlignment(submitPanel, Alignment.MIDDLE_CENTER);
 	}
+	
+	private String createCondition(String entity, String attribute) {
+		//createCondition
+		String condition = "";
+
+		String isNot ="";
+		String data ="";
+		String dataType ="";
+		String constrain ="";
+		String relation ="";
+		
+		//data
+		if (selectedType.equals("Entity") || selectedType.equals("RelationEntity")) {
+			data = entity;
+			dataType = "Entity";
+		} else {
+			data = entity + "." + attribute;
+			dataType = "Attribute";
+		}
+		
+		//Is not
+		Boolean isNotBool = (Boolean) isNotCB.getValue();
+		if (isNotBool == true) {
+			isNot = ".not()";
+		}
+		
+		//Constrains
+		String opType = (String) typeNS.getValue();
+		String value = (String) valueTf.getValue();
+		if (opType.equals("") || value.equals("")) {
+			constrain = "";
+		}
+		else {
+			constrain = opType + "." + value;
+		}
+		
+		// Condition Type
+		if (constrain.equals("")) {
+			condition += "exists" + dataType + "(" + data + ")" + isNot;
+		}
+		else {
+			condition += "compare" + dataType + "To("+ data + "," + constrain + ")" + isNot;
+		}
+		
+		// relation
+		if (selectedType.equals("RelationEntity") || selectedType.equals("RelationAttribute")) {
+			Boolean isForAllBool = (Boolean) forAllCB.getValue();
+			if (isForAllBool == true) {
+				relation = "forAll[";
+			} else {
+				relation = "existsOne(";
+			}
+			relation += entity + "." + relationName + ",";
+			condition = relation + condition + "]";
+
+		}
+		return condition;
+	}
+	
 }
 

@@ -68,5 +68,5 @@ public abstract class Condition extends Condition_Base {
 	 * Evaluate
 	 ******************************/
 	public abstract TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType);
-	public abstract TripleStateBool evaluateWithDataModel(EntityInstance entityInstance);
+	public abstract TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType);
 }

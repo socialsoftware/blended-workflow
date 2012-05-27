@@ -34,7 +34,7 @@ public class ManageGoalConditionService implements Callable<String> {
 	}
 	
 	/**
-	 * 
+	 * Enable/Disable BWInstance MaintainGoal Conditions.
 	 * @param maintainGoalOID
 	 */
 	public ManageGoalConditionService (long maintainGoalOID, GoalState state) {
@@ -50,7 +50,19 @@ public class ManageGoalConditionService implements Callable<String> {
 		Transaction.begin();
 		
 		if (this.maintainGoal == null) {
-			this.goalWorkItem.removeActivateConditions(condition);	
+			
+			for (Condition activateCondition : this.goalWorkItem.getActivateConditions()) {
+				if (activateCondition.equals(condition)) {
+					this.goalWorkItem.removeActivateConditions(condition);	
+				}
+			}
+			
+			for (Condition maintainCondition : this.goalWorkItem.getMaintainConditions()) {
+				if (maintainCondition.equals(condition)) {
+					this.goalWorkItem.removeMaintainConditions(condition);	
+				}
+			}
+			
 		} else {
 			this.maintainGoal.setState(this.state);
 		}

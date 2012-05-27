@@ -154,7 +154,7 @@ public class GoalForm extends VerticalLayout {
 		Entity goalContext = goalWorkItem.getAchieveGoal().getEntityContext();
 		
 		if (goalWorkItem.getSucessCondition().existExistEntity()) {
-			addLabel("Relations Entities:");
+			
 			for (Relation relation : goalContext.getRelations()) {
 				Entity one = relation.getEntityOne();
 				Entity two = relation.getEntityTwo();

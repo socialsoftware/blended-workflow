@@ -514,6 +514,11 @@ relation GoalWorkItemHasActivateCondition {
 	Condition playsRole activateConditions {multiplicity 0..*;}
 }
 
+relation GoalWorkItemHasMaintainConditions {
+	GoalWorkItem playsRole maintainConditionGoalWorkItem {multiplicity 0..*;}
+	Condition playsRole maintainConditions {multiplicity 0..*;}
+}
+
 relation GoalWorkItemHasSucessCondition {
 	GoalWorkItem playsRole sucessConditionGoalWorkItem {multiplicity 0..*;}
 	Condition playsRole sucessCondition {multiplicity 0..1;}
@@ -531,12 +536,12 @@ relation ForAllConditionConditionHasRelationRole {
 }
 
 relation ForAllConditionConditionConditionHasEntity {
-	ForAllCondition playsRole forAllCondition { multiplicity 0..1; }
+	ForAllCondition playsRole forAllCondition { multiplicity 0..*; }
 	Entity playsRole forAllEntity { multiplicity 0..1; }
 }
 
 relation ForAllConditionConditionConditionHasRelation {
-	ForAllCondition playsRole forAllCondition { multiplicity 0..1; }
+	ForAllCondition playsRole forAllCondition { multiplicity 0..*; }
 	Relation playsRole forAllRelation { multiplicity 0..1; }
 }
 

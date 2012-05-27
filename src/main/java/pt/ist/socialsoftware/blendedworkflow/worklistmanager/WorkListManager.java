@@ -43,11 +43,12 @@ public class WorkListManager {
 	 */
 	public void notifyEnabledWorkItem(WorkItem workItem) {
 		log.info("WorkItem " + workItem.getID() + " is now enabled. with OID" + workItem.getOID());
+		String bwInstanceName = workItem.getBwInstance().getName() + ".";
 		if (workItem.getClass().equals(GoalWorkItem.class)) {
-			getBwPresentation().addGoalWorkItem(workItem.getOID(), workItem.getID());
+			getBwPresentation().addGoalWorkItem(workItem.getOID(), bwInstanceName + workItem.getID());
 		}
 		else {
-			getBwPresentation().addTaskWorkItem(workItem.getOID(), workItem.getID());
+			getBwPresentation().addTaskWorkItem(workItem.getOID(), bwInstanceName + workItem.getID());
 		}
 	}
 
@@ -131,7 +132,8 @@ public class WorkListManager {
 
 	public void notifyReEnabledWorkItem(GoalWorkItem workItem) {
 		log.info("WorkItem " + workItem.getID() + " is now re-enabled. with OID" + workItem.getOID());
-		getBwPresentation().addGoalWorkItem(workItem.getOID(), workItem.getID() + "(ReEnabled)");
+		String bwInstanceName = workItem.getBwInstance().getName() + ".";
+		getBwPresentation().addGoalWorkItem(workItem.getOID(), bwInstanceName + workItem.getID() + "(ReEnabled)");
 	}
 
 	public void createGoalInstance(long bwInstanceOID, long parentGoalID, Long context) {
@@ -163,6 +165,11 @@ public class WorkListManager {
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
 		EnableGoalWorkItemsService service = new EnableGoalWorkItemsService(bwInstanceOID);
 		bwExecutorService.runTask(service);
+	}
+
+	public void notifyWorkItemState(WorkItem workItem) {
+		String message = "WorkItem: " + workItem.getID() + " activate condition failed.";
+		getBwPresentation().getMainWindow().showNotification(message, Notification.TYPE_ERROR_MESSAGE);
 	}
 
 }

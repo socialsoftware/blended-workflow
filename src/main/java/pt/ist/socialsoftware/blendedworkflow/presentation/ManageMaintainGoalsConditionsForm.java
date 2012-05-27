@@ -87,10 +87,10 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 		setComponentAlignment(footer, Alignment.BOTTOM_CENTER);
 
 		// Populate
-		getDataModel(bwInstanceOID);
+		getMaintainGoals(bwInstanceOID);
 	}
 
-	public void getDataModel(long bwInstanceOID) {
+	public void getMaintainGoals(long bwInstanceOID) {
 		Transaction.begin();
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
@@ -116,7 +116,7 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 
 	public void refreshTree(long bwInstanceOID) {
 		treetable.removeAllItems();
-		getDataModel(bwInstanceOID);
+		getMaintainGoals(bwInstanceOID);
 	}
 
 }

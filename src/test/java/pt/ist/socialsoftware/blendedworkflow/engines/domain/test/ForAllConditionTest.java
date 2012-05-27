@@ -165,7 +165,7 @@ public class ForAllConditionTest {
 		//TRUE and TRUE
 		entityInstance2_1Att1.setState(DataState.DEFINED);
 		entityInstance2_2Att1.setState(DataState.DEFINED);
-		assertEquals(TripleStateBool.TRUE, forAllCondition.evaluateWithDataModel(null));
+		assertEquals(TripleStateBool.TRUE, forAllCondition.evaluateWithDataModel(null, null, null));
 	
 		Transaction.commit();
 	}

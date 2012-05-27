@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
+import org.apache.log4j.Logger;
+
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
@@ -8,6 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -30,7 +33,7 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 
 		// Properties
 		setMargin(true);
-		setWidth("500px");
+//		setWidth("500px");
 		setSpacing(true);
 
 		treetable.setWidth("100%");
@@ -43,8 +46,7 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 				if (action == DISABLE_CONDITION_ACTION) {
 					// remove condition
 					Long ConditionOID = (Long) target;
-					Long workItemOID = (Long) treetable.getParent(ConditionOID);
-					
+					Long workItemOID = (Long) treetable.getParent(treetable.getParent(ConditionOID));
 					ConditionOID = ConditionOID - workItemOID;
 					Transaction.begin();
 					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(workItemOID, ConditionOID);
@@ -87,29 +89,63 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		
+		int activateConditionCount = 0;
+		int maintainConditionCount = 500;
+		String activateConditionCaption = "Activate Conditions:";
+		String maintainConditionCaption = "Maintain Conditions:";
 		for (AchieveGoal achieveGoal : goalModelInstance.getAchieveGoals()) {
-			String goalName = achieveGoal.getName();
-			treetable.addItem(goalName);
 			
+			boolean existsActivatedWorkItem = false;
 			for (GoalWorkItem goalWorkItem : achieveGoal.getGoalWorkItems()) {
-				long wOID = goalWorkItem.getOID();
-				String goalWorkItemID = goalWorkItem.getID();
-				treetable.addItem(wOID);
-				treetable.setItemCaption(wOID, goalWorkItemID);
-				treetable.setParent(wOID,goalName);
-
-				for (Condition activateCondition : goalWorkItem.getActivateConditions()) {
-					long OID = activateCondition.getOID() + wOID; //FIXME: Show only workItems of the selected Entityinstance.
-					String activateConditionString = activateCondition.toString();
-					
-					treetable.addItem(OID);
-					treetable.setItemCaption(OID, activateConditionString);
-					treetable.setParent(OID,wOID);
-					treetable.setChildrenAllowed(OID, false);
+				if (goalWorkItem.getState().equals(WorkItemState.ACTIVATED)) {
+					existsActivatedWorkItem = true;
 				}
-				treetable.expandItemsRecursively(goalName);
+			}
+			if (existsActivatedWorkItem) {
+				String goalName = achieveGoal.getName();
+				treetable.addItem(goalName);
+				for (GoalWorkItem goalWorkItem : achieveGoal.getGoalWorkItems()) {
+					if (goalWorkItem.getState().equals(WorkItemState.ACTIVATED)) {
+						long wOID = goalWorkItem.getOID();
+						String goalWorkItemID = goalWorkItem.getID();
+						treetable.addItem(wOID);
+						treetable.setItemCaption(wOID, goalWorkItemID);
+						treetable.setParent(wOID,goalName);
+
+						treetable.addItem(activateConditionCount);
+						treetable.setItemCaption(activateConditionCount, activateConditionCaption);
+						treetable.setParent(activateConditionCount,wOID);
+						for (Condition activateCondition : goalWorkItem.getActivateConditions()) {
+							long OID = activateCondition.getOID() + wOID;
+							String activateConditionString = activateCondition.toString();
+
+							treetable.addItem(OID);
+							treetable.setItemCaption(OID, activateConditionString);
+							treetable.setParent(OID,activateConditionCount);
+							treetable.setChildrenAllowed(OID, false);
+						}
+
+						treetable.addItem(maintainConditionCount);
+						treetable.setItemCaption(maintainConditionCount, maintainConditionCaption);
+						treetable.setParent(maintainConditionCount,wOID);
+						for (Condition maintainCondition : goalWorkItem.getMaintainConditions()) {
+							long OID = maintainCondition.getOID() + wOID;
+							String maintainConditionString = maintainCondition.toString();
+
+							treetable.addItem(OID);
+							treetable.setItemCaption(OID, maintainConditionString);
+							treetable.setParent(OID,maintainConditionCount);
+							treetable.setChildrenAllowed(OID, false);
+						}
+						
+						activateConditionCount++;
+						maintainConditionCount++;
+						treetable.expandItemsRecursively(goalName);
+					}
+				}
 			}
 		}
+
 		setWidth("100%");
 		Transaction.commit();
 	}

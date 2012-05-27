@@ -29,7 +29,7 @@ public class NewAttributeForm extends VerticalLayout{
 	
 //	private Logger log = Logger.getLogger("NewAttributeForm");
 
-	public NewAttributeForm(final DataModelTree parent, final long bwInstanceOID, final String entityName) {
+	public NewAttributeForm(final AllDataModelTree parent, final long bwInstanceOID, final String entityName) {
 		setMargin(true);
 
 		setWidth("300px");

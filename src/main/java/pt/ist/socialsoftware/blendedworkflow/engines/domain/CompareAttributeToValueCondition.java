@@ -14,7 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class CompareAttributeToValueCondition extends CompareAttributeToValueCondition_Base {
 
-	private static Logger log = Logger.getLogger("CompareAttributeToValueCondition");
+	private static Logger log = Logger.getLogger("????????");
 	
 	public CompareAttributeToValueCondition(Attribute attribute, String operator, String value) {
 		setAttribute(attribute);
@@ -164,7 +164,7 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	
 	@Override
 	public String toString() {
-		return "compareAttributeTo(" + getAttribute().getName() + " " + getOperator() + " " + getValue() +")";
+		return "compareAttributeTo(" + getAttribute().getEntity().getName() + "." + getAttribute().getName() + " " + getOperator() + " " + getValue() +")";
 	}
 	
 	@Override
@@ -177,59 +177,143 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	 ******************************/
 	@Override
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		log.info("evaluateWithWorkItem: |" + goalWorkItem.getID() + "|" + conditionType);
 		List<WorkItemArgument> arguments = null;
 		if (conditionType.equals(ConditionType.ACTIVATE)) {
 			arguments = goalWorkItem.getInputWorkItemArguments();
 		} else if (conditionType.equals(ConditionType.SUCESS)) {
 			arguments = goalWorkItem.getOutputWorkItemArguments();
 		}		
-		
+		log.info("WorkItemArgumentCount:" + arguments.size());
+
 		for (WorkItemArgument workItemArgument : arguments) {
+			
 			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 			Attribute conditionAttribute = getAttribute();
+			log.info("workItemAttribute:" + workItemAttribute.getName() + "|conditionAttribute:" + conditionAttribute.getName());
 			if (workItemAttribute == conditionAttribute) {
+				log.info("state:" + workItemArgument.getState());
 				if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
+					log.info("CA final result:" + TripleStateBool.FALSE);
 					return TripleStateBool.FALSE;	
 				} else if (workItemArgument.getState().equals(DataState.SKIPPED)) {
+					log.info("CA final result:" + TripleStateBool.SKIPPED);
 					return TripleStateBool.SKIPPED;
 				} else {
+					log.info("value:" + workItemArgument.getValue());
 					if (evaluateComparation(workItemArgument.getValue())) {
+						log.info("AQUI final result:" + TripleStateBool.TRUE);
 						return TripleStateBool.TRUE;
 					} else {
+						log.info("CA final result:" + TripleStateBool.FALSE);
 						return TripleStateBool.FALSE;
 					}
 				}
 			}
 		}
+		log.info("CA final result:" + TripleStateBool.FALSE);
 		return TripleStateBool.FALSE;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
-		for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
-			if (attributeInstance.getAttribute().equals(getAttribute())) {
-				if (attributeInstance.getState().equals(DataState.UNDEFINED)) {
-					return TripleStateBool.FALSE;
-				} else if (attributeInstance.getState().equals(DataState.SKIPPED)) {
-					return TripleStateBool.SKIPPED;
-				} else {
-					if (evaluateComparation(attributeInstance.getValue())) {
-						return TripleStateBool.TRUE;
-					} else {
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		if (entityInstance == null) {
+			return evaluateWithWorkItem(goalWorkItem, conditionType);
+		} 
+		
+		else {
+			log.info("evaluateWithDataModel: |" + entityInstance.getID() + "|" + goalWorkItem.getID() + "|" + conditionType);
+			for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
+				
+				if (attributeInstance.getAttribute().equals(getAttribute())) {
+					log.info("attrbuteIns" + attributeInstance.getID());
+					DataState state = getWorkItemState(attributeInstance, goalWorkItem, conditionType);
+					if (state == null) {
+						state = attributeInstance.getState();
+					}	
+					log.info("state:" + state);
+					if (state.equals(DataState.UNDEFINED)) {
 						return TripleStateBool.FALSE;
+					} else if (state.equals(DataState.SKIPPED)) {
+						return TripleStateBool.SKIPPED;
+					} else {
+						String value = getWorkItemValue(attributeInstance, goalWorkItem, conditionType);
+						if (value == null) {
+							value = attributeInstance.getValue();
+						}	
+						log.info("value:" + value);
+						log.info("evaluateComparation(value):" + evaluateComparation(value));
+						if (evaluateComparation(value)) {
+							return TripleStateBool.TRUE;
+						} else {
+							return TripleStateBool.FALSE;
+						}
 					}
-				}				
+				}
 			}
+			return TripleStateBool.FALSE;
 		}
+	}
+	
+	
+	private String getWorkItemValue(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
+//		List<WorkItemArgument> arguments = null;
+//		if (conditionType.equals(ConditionType.ACTIVATE)) {
+//			arguments = goalWorkItem.getInputWorkItemArguments();
+//		} else if (conditionType.equals(ConditionType.SUCESS)) {
+//			arguments = goalWorkItem.getOutputWorkItemArguments();
+//		}
+//		for (WorkItemArgument workItemArgument : arguments) {
+		if (goalWorkItem != null) {
+		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
+			if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
+				return workItemArgument.getValue();
+			}
+		} }
 		return null;
 	}
 	
+	private DataState getWorkItemState(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
+//		List<WorkItemArgument> arguments = null;
+//		if (conditionType.equals(ConditionType.ACTIVATE)) {
+//			arguments = goalWorkItem.getInputWorkItemArguments();
+//		} else if (conditionType.equals(ConditionType.SUCESS)) {
+//			arguments = goalWorkItem.getOutputWorkItemArguments();
+//		}
+//		for (WorkItemArgument workItemArgument : arguments) {
+		if (goalWorkItem != null) {
+		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
+			if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
+				return workItemArgument.getState();
+			}
+		} }
+		return null;
+	}
+
+	
 	private boolean evaluateComparation(String evaluateValue) {
+		String conditionValueString = getValue();
+		
+		if (conditionValueString.equals("$TODAY$")) {
+			conditionValueString = BlendedWorkflow.getInstance().getToday();
+		}		
+//		log.info("evaluateValue: " + evaluateValue + " with" + conditionValueString);
 		if (((getAttribute().getType().equals(AttributeType.STRING) || 
-				(getAttribute().getType().equals(AttributeType.BOOLEAN)) && getOperator().equals("=")))) {
-			if (evaluateValue.equals(getValue())) {
-				return true;
+				(getAttribute().getType().equals(AttributeType.BOOLEAN))))) {
+			if (getOperator().equals("=")) {
+				if (evaluateValue.equals(conditionValueString)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else 	if (getOperator().equals("!=")) {
+				if (!evaluateValue.equals(conditionValueString)) {
+					return true;
+				} else {
+					return false;
+				}
 			} else {
+//				log.info("Invalid operator for String or Boolean type.");
 				return false;
 			}
 		} else if (getAttribute().getType().equals(AttributeType.NUMBER)) {
@@ -272,11 +356,11 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 					return false;
 				}
 			} else {
-				log.info("Invalid operator for Number type.");
+//				log.info("Invalid operator for Number type.");
 				return false;
 			}
 		} else {
-			log.info("Invalid operator for String or Boolean type.");
+//			log.info("Invalid operator for String or Boolean type.");
 			return false;
 		}
 	}

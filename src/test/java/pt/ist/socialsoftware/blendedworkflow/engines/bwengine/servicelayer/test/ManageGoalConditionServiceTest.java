@@ -130,7 +130,7 @@ public class ManageGoalConditionServiceTest {
 		boolean committed = false;
 		try {
 			Transaction.begin();
-			assertEquals(4, bwInstance.getWorkItemsCount());
+			assertEquals(5, bwInstance.getWorkItemsCount());
 			for (WorkItem workItem : bwInstance.getWorkItems()) {
 				if (workItem.getClass().equals(GoalWorkItem.class))
 					assertEquals(1, ((GoalWorkItem) workItem).getActivateConditionsCount());

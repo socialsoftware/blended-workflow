@@ -30,7 +30,7 @@ public class NewRelationForm extends VerticalLayout{
 	private CheckBox isOtherKey = new CheckBox("The other Entity is a key Entity to this one?");
 	private CheckBox isThisKey = new CheckBox("This Entity is key to the other one?");
 
-	public NewRelationForm(DataModelTree parent, final long bwInstanceOID, final String entityName) {
+	public NewRelationForm(AllDataModelTree parent, final long bwInstanceOID, final String entityName) {
 		setMargin(true);
 
 		setWidth("530px");

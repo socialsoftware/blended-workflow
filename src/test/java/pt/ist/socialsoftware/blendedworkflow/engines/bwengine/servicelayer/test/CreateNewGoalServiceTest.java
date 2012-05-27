@@ -46,12 +46,12 @@ public class CreateNewGoalServiceTest {
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	
-	private static String NEWGOAL_NAME = "Add PhoneNumber";
-	private static String NEWGOAL_DESCRIPTION = "Add the Patient PhoneNumber.";
-	private static String NEWGOAL_SUCESS_CONDITION = "existsAttribute(Patient.PhoneNumber)";
+	private static String NEWGOAL_NAME = "Second Opinion";
+	private static String NEWGOAL_DESCRIPTION = "Medical Episode Second Opinion";
+	private static String NEWGOAL_SUCESS_CONDITION = "existsEntity(Episode)";
 	private static String NEWGOAL_ACTIVATE_CONDITION = "true";
-	private static String NEWGOAL_PARENTGOAL_NAME = "Add Patient";
-	private static String ENTITY_NAME = "Patient";
+	private static String NEWGOAL_PARENTGOAL_NAME = "Create Episode";
+	private static String ENTITY_NAME = "Episode";
 	
 //	private static String SECONDOPINION_ID = "Second Opinion.4";
 //	private static String SECONDOPINION_ID = "Second Opinion.5";
@@ -148,7 +148,7 @@ public class CreateNewGoalServiceTest {
 		try {
 			Transaction.begin();
 
-			assertEquals(12, goalModelInstance.getAchieveGoalsCount());
+			assertEquals(14, goalModelInstance.getAchieveGoalsCount());
 			AchieveGoal newGoal = goalModelInstance.getGoal(NEWGOAL_NAME);
 			assertEquals(NEWGOAL_NAME, newGoal.getName());
 			assertEquals(NEWGOAL_DESCRIPTION, newGoal.getDescription());

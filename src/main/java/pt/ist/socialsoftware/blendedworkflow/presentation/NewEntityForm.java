@@ -19,7 +19,7 @@ import com.vaadin.ui.Window.Notification;
 @SuppressWarnings("serial")
 public class NewEntityForm extends VerticalLayout{
 
-	public NewEntityForm(final DataModelTree parent, final long bwInstanceOID) {
+	public NewEntityForm(final AllDataModelTree parent, final long bwInstanceOID) {
 		setMargin(true);
 
 		setWidth("300px");

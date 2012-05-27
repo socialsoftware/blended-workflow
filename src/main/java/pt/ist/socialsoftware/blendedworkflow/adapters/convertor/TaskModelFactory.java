@@ -36,11 +36,11 @@ public class TaskModelFactory {
 			String taskName = taskXML.getChildText("Name", bwNamespace);
 			String taskDescription = taskXML.getChildText("description", bwNamespace);
 			String taskPreConditionString = taskXML.getChildText("PreCondition", bwNamespace);
-			taskPreConditionString = ConditionFactory.getRelationDependencies(dataModel, taskPreConditionString);
+//			taskPreConditionString = ConditionFactory.getRelationDependencies(dataModel, taskPreConditionString);
 			
 			Condition taskPreCondition = ConditionFactory.createCondition(dataModel, taskPreConditionString);
 			String taskPostConditionString = taskXML.getChildText("PostCondition", bwNamespace);
-			taskPostConditionString = ConditionFactory.getRelationDependencies(dataModel, taskPostConditionString);
+//			taskPostConditionString = ConditionFactory.getRelationDependencies(dataModel, taskPostConditionString);
 			Condition taskPostCondition = ConditionFactory.createCondition(dataModel, taskPostConditionString);
 			
 			String flowType = taskXML.getChildText("FlowType", bwNamespace);

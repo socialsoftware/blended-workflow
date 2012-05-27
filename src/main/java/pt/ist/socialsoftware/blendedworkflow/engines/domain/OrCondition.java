@@ -145,7 +145,7 @@ public class OrCondition extends OrCondition_Base {
 	}
 	
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
-		return getConditionOne().evaluateWithDataModel(entityInstance).OR(getConditionTwo().evaluateWithDataModel(entityInstance));
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return getConditionOne().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType).OR(getConditionTwo().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
 	}
 }

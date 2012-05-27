@@ -7,6 +7,7 @@ import java.util.Calendar;
 import org.apache.log4j.Logger;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class GoalWorkItem extends GoalWorkItem_Base {
@@ -25,6 +26,12 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		
 		for (Condition activateCondition : goal.getActivateConditions()){
 			addActivateConditions(activateCondition);
+		}
+		
+		for (MaintainGoal maintainGoal : bwInstance.getGoalModelInstance().getMaintainGoals()){
+			if (goal.getEntityContext().equals(maintainGoal.getMaintainGoalEntityContext())) {
+				addMaintainConditions(maintainGoal.getMaintainCondition());	
+			}
 		}
 		
 		setSucessCondition(goal.getSucessCondition());
@@ -48,6 +55,8 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	@Override
 	public void notifyPreFalse() {
 		log.error("GoalWorkitem " + getID() + " is now in PreFalse state");
+		setState(WorkItemState.PRE_FALSE);
+		BlendedWorkflow.getInstance().getWorkListManager().notifyWorkItemState(this);
 	}
 	
 	@Override
@@ -178,9 +187,32 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 					notifyPreFalse();
 				}
 			} else {
+				log.info("TestArguments" + this.getID());
+				for (WorkItemArgument wa : getOutputWorkItemArguments()) {
+					log.info("wa"+ wa.getValue() + wa.getState());
+				}
+
 				result = getSucessCondition().evaluateWithWorkItem(this, ConditionType.SUCESS);
 				log.info("SucessCondition Evaluate result for " + this.getID() + " was " + result);
-				TripleStateBool maintainConditionsResult = getBwInstance().getGoalModelInstance().evaluateMaintainGoals(this);
+				
+				//FIXME:
+				TripleStateBool maintainConditionsResult = TripleStateBool.TRUE;
+				log.info("1"+ maintainConditionsResult);
+				Boolean und = false;
+				for (Condition maintainCondition : getMaintainConditions()) {
+					for (WorkItemArgument wa2: getOutputWorkItemArguments()) {
+						if (wa2.getState().equals(DataState.UNDEFINED)) {
+							und = true;
+						}
+					}
+					if (!und) {
+						TripleStateBool m = maintainCondition.evaluateWithDataModel(null, this, ConditionType.SUCESS);
+						log.info("2"+ m);
+						maintainConditionsResult = maintainConditionsResult.AND(m);
+						log.info("3"+ maintainConditionsResult);
+					}
+				}
+				
 				log.info("MAINTAIN Evaluate result for " + this.getID() + " was " + maintainConditionsResult);
 				result = result.AND(maintainConditionsResult);
 				

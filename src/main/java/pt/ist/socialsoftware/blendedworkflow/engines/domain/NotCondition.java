@@ -112,7 +112,7 @@ public class NotCondition extends NotCondition_Base {
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -1,11 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
-//import org.apache.log4j.Logger;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
@@ -17,6 +14,8 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
@@ -24,6 +23,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
@@ -35,6 +35,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.event.Action;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
@@ -99,8 +100,15 @@ public class BWPresentation extends Application {
 
 	// GoalViewTab
 	private ListSelect goalBWInstanceList = new ListSelect();
-	private TreeTable goalTable = new TreeTable("Goals");
+	private TreeTable goalTable = new TreeTable("Achieve Goals");
 //	private NativeSelect goalListFilter = new NativeSelect();
+	private TreeTable goalWorkItemTree = new TreeTable("GoalWorkItems");
+	private Table maintainGoalsTree = new Table("Maintain Goals");
+	private static final Action ACTIVATE_GOAL_ACTION = new Action("Activate Goal");
+	private static final Action REDO_GOAL_ACTION = new Action("Redo GoalWorkItem");
+	private static final Action NEW_GOAL_ACTION = new Action("Create New Goal");
+	private static final Action ENABLE_CONDITION_ACTION = new Action("Enable Condition");
+	private static final Action DISABLE_CONDITION_ACTION = new Action("Disable Condition");
 	
 	private Application bwPresentation;
 
@@ -153,9 +161,9 @@ public class BWPresentation extends Application {
 
 	private void initMainWindow(String name) {
 		this.username = name + "   ";
-		
+		DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
 		getMainWindow().showNotification("Welcome " + this.username);
-		Label welcome = new Label("Welcome " + this.username + "   ");
+		Label welcome = new Label(dateFormatter.format(new java.util.Date()) + "  Welcome " + this.username + "   ");
 		welcome.addStyleName("h3");
 
 		Label splitter = new Label("|");
@@ -671,55 +679,79 @@ public class BWPresentation extends Application {
 			public void valueChange(ValueChangeEvent event) {
 				if (goalBWInstanceList.getValue() == null) {
 					goalTable.removeAllItems();
+					maintainGoalsTree.removeAllItems();
 				} else {
-					long bwInstanceOID = (Long) goalBWInstanceList.getValue();
-					updateGoalTreeInfo(bwInstanceOID);
+					updateGoalTreeInfo();
 				}
 			}
 		});
 
-		goalTable.setWidth("500px");
-		goalTable.setHeight("400px");
+		goalTable.setWidth("450px");
+		goalTable.setHeight("190px");
+		goalTable.addContainerProperty("OID", Long.class, "");
 		goalTable.addContainerProperty("Goal", String.class, "");
-		goalTable.addContainerProperty("WorkItems Created", String.class, "");
+		goalTable.setVisibleColumns(new Object[] {"Goal"});
+		
+		goalTable.addActionHandler(new Action.Handler() {
+			public void handleAction(Action action, Object sender, Object target) {
+				long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+				if (action == ACTIVATE_GOAL_ACTION) {
+					Long goalOID = (Long)  goalTable.getContainerProperty(target, "OID").getValue();
+					generateActivateGoalWindow(bwInstanceOID, goalOID);
+//					updateGoalTreeInfo();
+				} else {
+					Long goalOID = (Long)  goalTable.getContainerProperty(target, "OID").getValue();
+					generateNewGoalWindow(bwInstanceOID, goalOID);
+//					updateGoalTreeInfo();
+				}
+			}
+
+			public Action[] getActions(Object target, Object sender) {
+				if (target == null) {
+					return new Action[]{};
+				} else {
+					return new Action[]{ACTIVATE_GOAL_ACTION, NEW_GOAL_ACTION};
+				}
+			}
+		});
 		
 		// Goal buttons
-		Button goalActivateBtn = new Button("Activate Goal");
-		goalActivateBtn.addListener(new ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				generateActivateGoalWindow();
-			}
-		});
-
-		Button goalReDoBtn = new Button("ReDo Goal");
-		goalReDoBtn.addListener(new ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				generateReDoGoalWindow();
-			}
-		});
-
-		Button goalCreateBtn = new Button("Create New Goal");
-		goalCreateBtn.addListener(new ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				generateNewGoalWindow();
-			}
-		});
-		
-		Button disableMaintainGoalsBtn = new Button("Manage MaintainGoals");
-		disableMaintainGoalsBtn.addListener(new ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				Long bwInstanceOID = (Long) goalBWInstanceList.getValue();
-				if (bwInstanceOID == null) {
-					getMainWindow().showNotification("Please select one specification.");
-				} else {
-					generateNewDisableMaintainGoalsWindow(bwInstanceOID);
-				}
-			}
-		});
+//		Button goalActivateBtn = new Button("Activate Goal");
+//		goalActivateBtn.addListener(new ClickListener() {
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				generateActivateGoalWindow();
+//			}
+//		});
+//
+//		Button goalReDoBtn = new Button("ReDo Goal");
+//		goalReDoBtn.addListener(new ClickListener() {
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				generateReDoGoalWindow();
+//			}
+//		});
+//
+//		Button goalCreateBtn = new Button("Create New Goal");
+//		goalCreateBtn.addListener(new ClickListener() {
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				generateNewGoalWindow();
+//			}
+//		});
+//		
+//		Button disableMaintainGoalsBtn = new Button("Manage MaintainGoals");
+//		disableMaintainGoalsBtn.addListener(new ClickListener() {
+//			@Override
+//			public void buttonClick(ClickEvent event) {
+//				Long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+//				if (bwInstanceOID == null) {
+//					getMainWindow().showNotification("Please select one specification.");
+//				} else {
+//					generateNewDisableMaintainGoalsWindow(bwInstanceOID);
+//				}
+//			}
+//		});
 
 		// Layouts - configurations
 		goalManagerBtnLayout.setSpacing(true);
@@ -729,21 +761,114 @@ public class BWPresentation extends Application {
 		infoVL.setSpacing(true);
 		infoVL.addComponent(goalTable);
 		infoVL.setComponentAlignment(goalTable, Alignment.TOP_LEFT);
-
+		
 		infoHL.addComponent(goalBWInstanceList);
 		infoHL.addComponent(infoVL);
 		infoHL.setComponentAlignment(goalBWInstanceList, Alignment.TOP_LEFT);
 		
-		goalManagerBtnLayout.addComponent(goalActivateBtn);
-		goalManagerBtnLayout.addComponent(goalReDoBtn);
-		goalManagerBtnLayout.addComponent(goalCreateBtn);
-		goalManagerBtnLayout.addComponent(disableMaintainGoalsBtn);
+		//Maintain
+		VerticalLayout novo = new VerticalLayout();
+		novo.setMargin(true);
+		novo.setSpacing(true);
+		
+		//WorkItems
+		goalWorkItemTree.addContainerProperty("OID", Long.class,  null);
+		goalWorkItemTree.addContainerProperty("GoalWorkItems", String.class,  null);
+		goalWorkItemTree.addContainerProperty("State", String.class,  null);
+		
+		goalWorkItemTree.setWidth("400px");
+		goalWorkItemTree.setHeight("410px");
+		novo.addComponent(goalWorkItemTree);
+		novo.setComponentAlignment(goalWorkItemTree, Alignment.TOP_LEFT);
+		goalWorkItemTree.setVisibleColumns(new Object[] {"GoalWorkItems", "State"});
+		goalWorkItemTree.addActionHandler(new Action.Handler() {
+			public void handleAction(Action action, Object sender, Object target) {
+				if (action == REDO_GOAL_ACTION) {
+					Long workItemlOID = (Long) goalWorkItemTree.getContainerProperty(target, "OID").getValue();
+			       	Transaction.begin();
+					String activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
+					BlendedWorkflow.getInstance().getWorkListManager().redoGoal(workItemlOID, activeUserID);
+					Transaction.commit();
+					updateGoalTreeInfo();
+				} else if (action == DISABLE_CONDITION_ACTION) {
+					// remove condition
+					Long workItemlOID = (Long) goalWorkItemTree.getContainerProperty(target, "OID").getValue();
+					updateGoalTreeInfo();
+					generateManageGoalWorkItemsConditionsWindows(workItemlOID);
+				}
+			}
+
+			public Action[] getActions(Object target, Object sender) {
+				if (target == null) {
+					return new Action[]{};
+				} else {
+					String workItemState = (String) goalWorkItemTree.getContainerProperty(target, "State").getValue();
+					if (workItemState.equals("PRE_FALSE") || workItemState.equals("ENABLED")) {
+						return new Action[]{DISABLE_CONDITION_ACTION};
+					} else {
+						return new Action[]{REDO_GOAL_ACTION};
+					}
+				}
+			}
+		});
+		
+		maintainGoalsTree.addContainerProperty("OID", Long.class,  null);
+		maintainGoalsTree.addContainerProperty("Goal", String.class,  null);
+		maintainGoalsTree.addContainerProperty("State", String.class,  null);
+//		maintainGoalsTree.addContainerProperty("Condition", String.class,  null);
+		maintainGoalsTree.setImmediate(true);
+		maintainGoalsTree.setWidth("450px");
+		maintainGoalsTree.setHeight("190px");
+		maintainGoalsTree.setVisibleColumns(new Object[] {"Goal","State"});
+		infoVL.addComponent(maintainGoalsTree);
+		infoVL.setComponentAlignment(maintainGoalsTree, Alignment.TOP_LEFT);
+
+		maintainGoalsTree.addActionHandler(new Action.Handler() {
+			public void handleAction(Action action, Object sender, Object target) {
+				if (action == DISABLE_CONDITION_ACTION) { //contr
+					// remove condition
+					Long goalOID = (Long) maintainGoalsTree.getContainerProperty(target, "OID").getValue();
+			       
+					Transaction.begin();
+					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, GoalState.DEACTIVATED);
+					Transaction.commit();
+					updateGoalTreeInfo();
+				} else {
+					// remove condition
+					Long goalOID = (Long) maintainGoalsTree.getContainerProperty(target, "OID").getValue();
+					Transaction.begin();
+					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, GoalState.ENABLED);
+					Transaction.commit();
+					updateGoalTreeInfo();
+				}
+			}
+
+			public Action[] getActions(Object target, Object sender) {
+				if (target == null) {
+					return new Action[]{};
+				} else {
+					String state = maintainGoalsTree.getContainerProperty(target, "State").toString();
+					if (state == "ENABLED") {
+						return new Action[]{DISABLE_CONDITION_ACTION};
+					} else {
+						return new Action[]{ENABLE_CONDITION_ACTION};
+					}
+				}
+			}
+		});
+		
+		infoHL.addComponent(novo);
+		
+//		goalManagerBtnLayout.addComponent(goalActivateBtn);
+//		goalManagerBtnLayout.addComponent(goalReDoBtn);
+//		goalManagerBtnLayout.addComponent(goalCreateBtn);
+//		goalManagerBtnLayout.addComponent(disableMaintainGoalsBtn);
 		
 		goalManagerVL.addComponent(infoHL);
 		goalManagerVL.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
 		goalManagerVL.addComponent(goalManagerBtnLayout);
 		goalManagerVL.setComponentAlignment(goalManagerBtnLayout, Alignment.TOP_LEFT);
-
+		
 		return goalManagerVL;
 	}
 
@@ -864,9 +989,9 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(goalWindow);		
 	}
 	
-	public void generateActivateGoalWindow() {
+	public void generateActivateGoalWindow(long bwInstanceOID, long goalOID) {
 		Window newGoalWindow = new Window("Activate Goal");
-		newGoalWindow.setContent(new ActivateGoalForm());
+		newGoalWindow.setContent(new ActivateGoalForm(bwInstanceOID, goalOID));
 		newGoalWindow.center();
 		newGoalWindow.setClosable(false);
 		newGoalWindow.setDraggable(false);
@@ -884,9 +1009,19 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(newGoalWindow);
 	}
 	
-	public void generateNewGoalWindow() {
+	public void generateNewGoalWindow(long bwInstanceOID, long goalOID) {
 		Window newGoalWindow = new Window("New Goal Form");
-		newGoalWindow.setContent(new NewGoalForm());
+		newGoalWindow.setContent(new NewGoalForm(bwInstanceOID, goalOID));
+		newGoalWindow.center();
+		newGoalWindow.setClosable(false);
+		newGoalWindow.setDraggable(false);
+		newGoalWindow.setResizable(false);
+		getMainWindow().addWindow(newGoalWindow);
+	}
+	
+	public void generateAddSubGoalsContextWindow(EntityInstance entityContext, HashMap<Entity, Relation> neededEntityInstances) {
+		Window newGoalWindow = new Window("SubGoals Context");
+		newGoalWindow.setContent(new NewAddSubGoalsContextForm(entityContext, neededEntityInstances));
 		newGoalWindow.center();
 		newGoalWindow.setClosable(false);
 		newGoalWindow.setDraggable(false);
@@ -897,6 +1032,16 @@ public class BWPresentation extends Application {
 	public void generateNewDisableMaintainGoalsWindow(long bwInstanceOID ) {
 		Window newGoalWindow = new Window("Enable/Disable MaintainGoals");
 		newGoalWindow.setContent(new ManageMaintainGoalsConditionsForm(bwInstanceOID));
+		newGoalWindow.center();
+		newGoalWindow.setClosable(false);
+		newGoalWindow.setDraggable(false);
+		newGoalWindow.setResizable(false);
+		getMainWindow().addWindow(newGoalWindow);
+	}
+	
+	public void generateManageGoalWorkItemsConditionsWindows(long workItemOID ) {
+		Window newGoalWindow = new Window("Enable/Disable WorkItem Conditions");
+		newGoalWindow.setContent(new ManageGoalWorkItemsConditionsForm(workItemOID));
 		newGoalWindow.center();
 		newGoalWindow.setClosable(false);
 		newGoalWindow.setDraggable(false);
@@ -1095,18 +1240,19 @@ public class BWPresentation extends Application {
 		Transaction.commit();
 	}
 	
-	public void updateGoalTreeInfo(long OID) {
+	public void updateGoalTreeInfo() {
+		long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+		goalTable.setVisibleColumns(new Object[] {"OID", "Goal"});
 		Transaction.begin();
 		goalTable.removeAllItems();
 
-		BWInstance bwInstance = AbstractDomainObject.fromOID(OID);
+		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		
 		// Add Goals
 		HashMap<AchieveGoal, Object> addedGoals = new HashMap<AchieveGoal, Object>();
-		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
-			int timesExecuted = goal.getGoalWorkItemsCount();			
-			Object goalItem = goalTable.addItem(new Object[] {goal.getName(), timesExecuted}, null);
+		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {	
+			Object goalItem = goalTable.addItem(new Object[] {goal.getOID(), goal.getName()}, null);
 			addedGoals.put(goal, goalItem);
 		}
 		
@@ -1122,12 +1268,13 @@ public class BWPresentation extends Application {
 			}
 		}
 		
-		Iterator<Entry<AchieveGoal, Object>> itr = addedGoals.entrySet().iterator();
-		while(itr.hasNext()) {
-			goalTable.setCollapsed(itr.next(), false);
-		}
-
 		Transaction.commit();
+		goalTable.setVisibleColumns(new Object[] {"Goal"});
+		
+		//maintain
+		getMaintainGoalTree();
+		//workitem
+		getGoalWorkItemsTree();
 	}
 
 	public void updateTaskView(long OID) {
@@ -1259,6 +1406,50 @@ public class BWPresentation extends Application {
 
 //		goalInfoTable.setWidth("100%");
 		Transaction.commit();
+	}
+
+	public void getMaintainGoalTree() {
+		maintainGoalsTree.removeAllItems();
+		long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+		maintainGoalsTree.setVisibleColumns(new Object[] {"OID","Goal","State"});
+   
+		Transaction.begin();
+		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+
+		for (MaintainGoal achieveGoal : goalModelInstance.getMaintainGoals()) {
+			long goalOID = achieveGoal.getOID();
+			String goalName = achieveGoal.getName();
+			String state = achieveGoal.getState().toString();
+//			String conditionName = achieveGoal.getMaintainCondition().toString();
+	        maintainGoalsTree.addItem(new Object[] {goalOID, goalName, state}, null);
+		}
+		Transaction.commit();
+		maintainGoalsTree.setVisibleColumns(new Object[] {"Goal","State"});
+	}
+	
+	public void getGoalWorkItemsTree() {
+		goalWorkItemTree.removeAllItems();
+		long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+		goalWorkItemTree.setVisibleColumns(new Object[] {"OID","GoalWorkItems", "State"});
+   
+		Transaction.begin();
+		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+
+		for (WorkItem workItem : bwInstance.getWorkItems()) {
+			if (workItem.getClass().equals(GoalWorkItem.class) && (workItem.getState().equals(WorkItemState.COMPLETED)
+					|| workItem.getState().equals(WorkItemState.SKIPPED)
+					|| workItem.getState().equals(WorkItemState.PRE_FALSE)
+					|| workItem.getState().equals(WorkItemState.ENABLED))){
+				long workItemOID = workItem.getOID();
+				String workItemID = workItem.getID();
+				String workItemState = workItem.getState().toString();
+				goalWorkItemTree.addItem(new Object[] {workItemOID, workItemID, workItemState}, null);
+				
+			}
+		}
+		Transaction.commit();
+		goalWorkItemTree.setVisibleColumns(new Object[] {"GoalWorkItems", "State"});
 	}
 
 }

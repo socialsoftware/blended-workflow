@@ -5,11 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 
+	private Logger log = Logger.getLogger("ExistsEntityCondition");
+
+	
 	public ExistsEntityCondition(Entity entity) {
 		setEntity(entity);
 	}
@@ -296,14 +301,14 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 		for (RelationInstance relationInstance : workItemEntityInstance.getEntityInstanceOneRelationInstances()) {
 			if (relationInstance.getRelationType().getIsTwoKeyEntity()) {
 				EntityInstance two = relationInstance.getEntityInstanceTwo();
-				finalResult = finalResult.AND(evaluateWithDataModel(two));
+				finalResult = finalResult.AND(evaluateWithDataModel(two, goalWorkItem, conditionType));
 			}
 		}
 		
 		for (RelationInstance relationInstance : workItemEntityInstance.getEntityInstanceTwoRelationInstances()) {
 			if (relationInstance.getRelationType().getIsOneKeyEntity()) {
 				EntityInstance one = relationInstance.getEntityInstanceOne();
-				finalResult = finalResult.AND(evaluateWithDataModel(one));
+				finalResult = finalResult.AND(evaluateWithDataModel(one, goalWorkItem, conditionType));
 			}
 		}
 		
@@ -311,39 +316,65 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 	
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance) {
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		TripleStateBool finalResult = TripleStateBool.TRUE;
 		
+		log.info("evaluateWithDataModel:" + entityInstance.getID() + goalWorkItem.getID());
 		// Exists Entity
 		for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
 			if (attributeInstance.getAttribute().getIsKeyAttribute()) {
 				TripleStateBool attributeResult;
-				if (attributeInstance.getState().equals(DataState.DEFINED)) {
+				
+				DataState state = getWorkItemState(attributeInstance, goalWorkItem, conditionType);
+				log.info("state:" + state);
+				if (state == null) {
+					state = attributeInstance.getState();
+				}				
+				
+				if (state.equals(DataState.DEFINED)) {
 					attributeResult = TripleStateBool.TRUE;
-				} else if (attributeInstance.getState().equals(DataState.SKIPPED)) {
+				} else if (state.equals(DataState.SKIPPED)) {
 					attributeResult = TripleStateBool.SKIPPED;
 				} else {
 					attributeResult = TripleStateBool.FALSE;
 				}
+			
 				finalResult = finalResult.AND(attributeResult);
 			}
 		}
-		
+		/*
 		for (RelationInstance relationInstance : entityInstance.getEntityInstanceOneRelationInstances()) {
 			if (relationInstance.getRelationType().getIsTwoKeyEntity()) {
 				EntityInstance two = relationInstance.getEntityInstanceTwo();
-				finalResult = finalResult.AND(evaluateWithDataModel(two));
+				finalResult = finalResult.AND(evaluateWithDataModel(two, goalWorkItem, conditionType));
 			}
 		}
 		
 		for (RelationInstance relationInstance : entityInstance.getEntityInstanceTwoRelationInstances()) {
 			if (relationInstance.getRelationType().getIsOneKeyEntity()) {
 				EntityInstance one = relationInstance.getEntityInstanceOne();
-				finalResult = finalResult.AND(evaluateWithDataModel(one));
+				finalResult = finalResult.AND(evaluateWithDataModel(one, goalWorkItem, conditionType));
 			}
 		}
-		
+		*/
 		return finalResult;
+	}
+	
+	private DataState getWorkItemState(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
+//		List<WorkItemArgument> arguments = null;
+//		if (conditionType.equals(ConditionType.ACTIVATE)) {
+//			arguments = goalWorkItem.getInputWorkItemArguments();
+//		} else if (conditionType.equals(ConditionType.SUCESS)) {
+//			arguments = goalWorkItem.getOutputWorkItemArguments();
+//		}
+//		for (WorkItemArgument workItemArgument : arguments) {
+		if (goalWorkItem != null) {
+		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
+			if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
+				return workItemArgument.getState();
+			}
+		} }
+		return null;
 	}
 
 

@@ -17,7 +17,7 @@ public class TaskModelInstance extends TaskModelInstance_Base {
 	
 	public void getEnabledWorkItems() throws BlendedWorkflowException {
 		for (Task task : getTasks()) {
-			if (task.getName().equals("Check-in Patient") && task.getState().equals(TaskState.DEACTIVATED)) {
+			if (task.getName().equals("Booking") && task.getState().equals(TaskState.DEACTIVATED)) {
 				TaskWorkItem taskWorkItem = new TaskWorkItem(getBwInstance(), task);
 				taskWorkItem.notifyEnabled();
 			} else

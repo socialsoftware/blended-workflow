@@ -3,12 +3,16 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public abstract class WorkItem extends WorkItem_Base {
 
 	public enum WorkItemState {PRE_TASK, PRE_GOAL, PRE_FALSE, CONSTRAINT_VIOLATION, ENABLED, GOAL_PENDING, CHECKED_IN, SKIPPED, 
 		COMPLETED, RE_ACTIVATED, ACTIVATED};
+
+	private static Logger log = Logger.getLogger("WorkItem");
 
 	/******************************
 	 * State Change Notifications *
@@ -209,6 +213,7 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Copy the Task PreConstraint AttributesInstances to its PreConstraint WorkItem Arguments.
 	 */
 	public void createInputWorkItemArguments() {
+//		log.info("createInputWorkItemArguments" + getInputAttributeInstancesCount());
 		for (AttributeInstance attributeInstance : getInputAttributeInstances()) {
 			WorkItemArgument workItemArgument = new WorkItemArgument(attributeInstance, attributeInstance.getValue(), attributeInstance.getState());
 			addInputWorkItemArguments(workItemArgument);
@@ -219,6 +224,7 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Update PreConstraint WorkItem Arguments with new Data.
 	 */
 	public void updateInputWorkItemArguments() {
+//		log.info("updateInputWorkItemArguments" + getInputAttributeInstancesCount());
 		for (WorkItemArgument workItemArgument : getInputWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			workItemArgument.setValue(attributeInstance.getValue());
@@ -230,6 +236,7 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Copy the Goal AttributesInstances to its ConstrainViolation WorkItem Arguments.
 	 */
 	public void createOutputWorkItemArguments() {
+//		log.info("createOutputWorkItemArguments" + getOutputAttributeInstancesCount());
 		for (AttributeInstance attributeInstance : getOutputAttributeInstances()) {
 			WorkItemArgument workItemArgument = new WorkItemArgument(attributeInstance, attributeInstance.getValue(), attributeInstance.getState());
 			addOutputWorkItemArguments(workItemArgument);
@@ -240,6 +247,7 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Update ConstrainViolation WorkItem Arguments with new Data.
 	 */
 	public void updateOutputWorkItemArguments() {
+//		log.info("updateOutputWorkItemArguments" + getOutputAttributeInstancesCount());
 		for (WorkItemArgument workItemArgument : getOutputWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			workItemArgument.setValue(attributeInstance.getValue());

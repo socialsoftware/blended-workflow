@@ -4,9 +4,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ForAllCondition extends ForAllCondition_Base {
+	
+	private Logger log = Logger.getLogger("ForAllCondition");
     
     public ForAllCondition(Relation relation, Entity entity, Condition condition) {
     	setForAllEntity(entity);
@@ -110,16 +114,29 @@ public class ForAllCondition extends ForAllCondition_Base {
 	 ******************************/
 	@Override
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		return null;
+		TripleStateBool result = TripleStateBool.TRUE;
+		log.info("EvaluateWithDataModel");
+		log.info("RelationInstancesCount = " + getForAllRelation().getRelationInstancesCount());
+		for (RelationInstance relationInstance : getForAllRelation().getRelationInstances()) {
+			EntityInstance entityInstance = relationInstance.getEntityInstance(getForAllEntity());
+			log.info("entityInstance()" + entityInstance.getID());
+			result = result.AND(getCondition().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
+		}
+		log.info("FORALL final result:" + result);
+		return result;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance invalid) {
+	public TripleStateBool evaluateWithDataModel(EntityInstance invalid, GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		TripleStateBool result = TripleStateBool.TRUE;
+		log.info("EvaluateWithDataModel");
+		log.info("RelationInstancesCount = " + getForAllRelation().getRelationInstancesCount());
 		for (RelationInstance relationInstance : getForAllRelation().getRelationInstances()) {
 			EntityInstance entityInstance = relationInstance.getEntityInstance(getForAllEntity());
-			result = result.AND(getCondition().evaluateWithDataModel(entityInstance));
+			log.info("entityInstance()" + entityInstance.getID());
+			result = result.AND(getCondition().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
 		}
+		log.info("FORALL final result:" + result);
 		return result;
 	}
 }

@@ -132,8 +132,8 @@ public class Bootstrap {
 		blenededWorkflow.setRole(admin);
 		
 		//User:Davide
-		userName = "Davide Passinhas";
-		userID = "Davide";
+		userName = "Doctor";
+		userID = "Doctor";
 		userPassword = "12345";
 		userNotes = "Admin of the system.";
 		User davide = new User(userName, userID, userPassword, userNotes);

@@ -28,7 +28,7 @@ public class EnableGoalWorkItemsService implements Callable<String> {
 	public String call() throws Exception {
 		log.info("Start");
 		Transaction.begin();
-		
+	
 		for (WorkItem workItem : this.bwInstance.getWorkItems()) {
 			if (workItem.getClass().equals(GoalWorkItem.class) && workItem.getState().equals(WorkItemState.ACTIVATED)) {
 				GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;				
@@ -38,7 +38,11 @@ public class EnableGoalWorkItemsService implements Callable<String> {
 				
 				goalWorkItem.createInputWorkItemArguments();
 				goalWorkItem.updateInputWorkItemArguments();
+				
+				goalWorkItem.updateOutputWorkItemArguments();
 				goalWorkItem.evaluate(true);
+				
+				
 			}
 		}
 		

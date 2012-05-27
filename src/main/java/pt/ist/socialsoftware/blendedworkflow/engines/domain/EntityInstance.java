@@ -1,10 +1,13 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import org.apache.log4j.Logger;
+
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public class EntityInstance extends EntityInstance_Base {
-	
+	private static Logger log = Logger.getLogger("++++++++++++++++>");
+
 	public EntityInstance(DataModelInstance dataModelInstance, Entity entity) {
 		setEntity(entity);
 		setID(entity.getName() + "." + entity.getNewEntityInstanceId()); // Id: EntityName.#
@@ -17,13 +20,15 @@ public class EntityInstance extends EntityInstance_Base {
 	 * Create and assign EntityInstances and AttributesInstances to Workitems
 	 */
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute, ConditionType conditionType) {
-		
+		log.info("AssignAttributeInstances: for Att: " + attribute.getName() + " CT:" + conditionType + " GW:" + goalWorkItem.getID());
 		boolean exists = false;
 		for (AttributeInstance attributeInstance : getAttributeInstances()) {
 			if (attributeInstance.getAttribute().equals(attribute)) {
 				if (conditionType.equals(ConditionType.SUCESS)) {
+					log.info("addOutputAttributeInstances:" + attributeInstance.getID());
 					goalWorkItem.addOutputAttributeInstances(attributeInstance);
 				} else {
+					log.info("addInputAttributeInstances:" + attributeInstance.getID());
 					goalWorkItem.addInputAttributeInstances(attributeInstance);
 				}
 				exists = true;
@@ -43,13 +48,29 @@ public class EntityInstance extends EntityInstance_Base {
 
 	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, String conditionType) {
 		boolean exists = false;
+		boolean existsOne = false;
 		for (AttributeInstance attributeInstance : getAttributeInstances()) {
 			if (attributeInstance.getAttribute().equals(attribute)) {
 				if (conditionType.equals("pre")) {
-					taskWorkItem.addInputAttributeInstances(attributeInstance);
+
+					for (AttributeInstance ai : taskWorkItem.getInputAttributeInstances()) {
+						if (attributeInstance.getID().equals(ai.getID())) {
+							existsOne = true;
+						}
+					}
+					if (!existsOne) {
+						taskWorkItem.addInputAttributeInstances(attributeInstance);
+					}
 				}
 				if (conditionType.equals("post")) {
-					taskWorkItem.addOutputAttributeInstances(attributeInstance);
+					for (AttributeInstance ai : taskWorkItem.getOutputAttributeInstances()) {
+						if (attributeInstance.getID().equals(ai.getID())) {
+							existsOne = true;
+						}
+					}
+					if (!existsOne) {
+						taskWorkItem.addOutputAttributeInstances(attributeInstance);
+					}
 				}
 				exists = true;
 			}

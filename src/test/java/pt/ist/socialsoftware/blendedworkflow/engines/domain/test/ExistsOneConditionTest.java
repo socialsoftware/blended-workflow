@@ -115,13 +115,13 @@ public class ExistsOneConditionTest {
 		Transaction.begin();
 		entityInstance2_1Att1.setState(DataState.UNDEFINED);
 		entityInstance2_2Att1.setState(DataState.UNDEFINED);
-		assertEquals(TripleStateBool.FALSE, existsOneCondition.evaluateWithDataModel(null));
+		assertEquals(TripleStateBool.FALSE, existsOneCondition.evaluateWithDataModel(null, null, null));
 		
 		entityInstance2_1Att1.setValue(CONDITION_VALUE_FALSE);
 		entityInstance2_1Att1.setState(DataState.DEFINED);
 		entityInstance2_2Att1.setValue(CONDITION_VALUE_FALSE);
 		entityInstance2_2Att1.setState(DataState.DEFINED);
-		assertEquals(TripleStateBool.FALSE, existsOneCondition.evaluateWithDataModel(null));
+		assertEquals(TripleStateBool.FALSE, existsOneCondition.evaluateWithDataModel(null, null, null));
 		Transaction.commit();
 	}
 	
@@ -132,18 +132,18 @@ public class ExistsOneConditionTest {
 		entityInstance2_1Att1.setState(DataState.DEFINED);
 		entityInstance2_2Att1.setValue(CONDITION_VALUE_FALSE);
 		entityInstance2_2Att1.setState(DataState.DEFINED);
-		assertEquals(TripleStateBool.TRUE, existsOneCondition.evaluateWithDataModel(null));
+		assertEquals(TripleStateBool.TRUE, existsOneCondition.evaluateWithDataModel(null, null, null));
 		
 		entityInstance2_1Att1.setValue(CONDITION_VALUE_FALSE);
 		entityInstance2_1Att1.setState(DataState.DEFINED);
 		entityInstance2_2Att1.setValue(CONDITION_VALUE_TRUE);
 		entityInstance2_2Att1.setState(DataState.DEFINED);
-		assertEquals(TripleStateBool.TRUE, existsOneCondition.evaluateWithDataModel(null));
+		assertEquals(TripleStateBool.TRUE, existsOneCondition.evaluateWithDataModel(null, null, null));
 		
 		entityInstance2_1Att1.setState(DataState.SKIPPED);
 		entityInstance2_2Att1.setValue(CONDITION_VALUE_TRUE);
 		entityInstance2_2Att1.setState(DataState.DEFINED);
-		assertEquals(TripleStateBool.TRUE, existsOneCondition.evaluateWithDataModel(null));
+		assertEquals(TripleStateBool.TRUE, existsOneCondition.evaluateWithDataModel(null, null, null));
 		Transaction.commit();
 	}
 }

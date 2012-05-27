@@ -55,6 +55,7 @@ public class SkipWorkItemServiceTest {
 	private static String GOALWORKITEM_ID_1 = "Add Patient.2";
 	private static String GOALWORKITEM_ID_2 = "Add Gender.3";
 	private static String GOALWORKITEM_ID_3 = "Add Address.4";
+	private static String GOALWORKITEM_ID_4 = "Add PhoneNumber.5";
 
 	private static String ENTITY_1_NAME = "Patient";
 	private static String ENTITYINSTANCE_1_ID = "Patient.1";
@@ -62,6 +63,7 @@ public class SkipWorkItemServiceTest {
 	private static String ENTITYINSTANCE_1_ATT_1_ID = "Name.1";
 	private static String ENTITYINSTANCE_1_ATT_2_ID = "Gender.2";
 	private static String ENTITYINSTANCE_1_ATT_3_ID = "Address.3";
+	private static String ENTITYINSTANCE_1_ATT_4_ID = "PhoneNumber.4";
 	private static String ENTITYINSTANCE_1_ATT_1_VALUE = "John";
 	private static String ENTITYINSTANCE_1_ATT_2_VALUE = "male";
 	private static String ENTITYINSTANCE_1_ATT_3_VALUE = "Lisbon";
@@ -160,11 +162,13 @@ public class SkipWorkItemServiceTest {
 		boolean committed = false;
 		try {
 			Transaction.begin();
+			WorkItem workItem4 = bwInstance.getWorkItem(GOALWORKITEM_ID_4);
 			WorkItem workItem2 = bwInstance.getWorkItem(GOALWORKITEM_ID_2);
 			WorkItem workItem1 = bwInstance.getWorkItem(GOALWORKITEM_ID_1);
 			AttributeInstance attributeInstance1 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_1_ID);
 			AttributeInstance attributeInstance2 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_2_ID);
 			AttributeInstance attributeInstance3 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_3_ID);
+			AttributeInstance attributeInstance4 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_4_ID);
 			
 			//WorkItem1 - AddPatient
 			assertEquals(WorkItemState.GOAL_PENDING, workItem1.getState());
@@ -183,6 +187,15 @@ public class SkipWorkItemServiceTest {
 			}
 			assertEquals(UNDEFINED_VALUE, attributeInstance2.getValue());
 			assertEquals(DataState.UNDEFINED, attributeInstance2.getState());
+			
+			//WorkItem4 - AddPhoneNUmber
+			assertEquals(WorkItemState.ENABLED, workItem4.getState());
+			for (WorkItemArgument workItemArgument : workItem4.getOutputWorkItemArguments()) {
+				assertEquals(UNDEFINED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.UNDEFINED, workItemArgument.getState());
+			}
+			assertEquals(UNDEFINED_VALUE, attributeInstance4.getValue());
+			assertEquals(DataState.UNDEFINED, attributeInstance4.getState());
 
 			//WorkItem3 - AddAdress
 			assertEquals(WorkItemState.SKIPPED, workItem3.getState());
@@ -203,7 +216,7 @@ public class SkipWorkItemServiceTest {
 	}
 	
 	@Test
-	public void skipTwoWorkItems() throws Exception {
+	public void skipSubGoalsWorkItems() throws Exception {
 		Transaction.begin();
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
@@ -231,7 +244,13 @@ public class SkipWorkItemServiceTest {
 		long workItem2OID = workItem2.getOID();
 		Transaction.commit();
 		new SkipWorkItemService(workItem2OID).call();
-
+		
+		Transaction.begin();
+		WorkItem workItem4 = bwInstance.getWorkItem(GOALWORKITEM_ID_4);
+		long workItem4OID = workItem4.getOID();
+		Transaction.commit();
+		new SkipWorkItemService(workItem4OID).call();
+		
 		boolean committed = false;
 		try {
 			Transaction.begin();
@@ -239,6 +258,7 @@ public class SkipWorkItemServiceTest {
 			AttributeInstance attributeInstance1 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_1_ID);
 			AttributeInstance attributeInstance2 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_2_ID);
 			AttributeInstance attributeInstance3 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_3_ID);
+			AttributeInstance attributeInstance4 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_4_ID);
 			
 			//WorkItem1 - AddPatient
 			assertEquals(WorkItemState.PRE_GOAL, workItem1.getState());
@@ -266,6 +286,15 @@ public class SkipWorkItemServiceTest {
 			}
 			assertEquals(SKIPPED_VALUE, attributeInstance3.getValue());
 			assertEquals(DataState.SKIPPED, attributeInstance3.getState());
+			
+			//WorkItem4 - AddPhoneNUmber
+			assertEquals(WorkItemState.SKIPPED, workItem4.getState());
+			for (WorkItemArgument workItemArgument : workItem4.getOutputWorkItemArguments()) {
+				assertEquals(SKIPPED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.SKIPPED, workItemArgument.getState());
+			}
+			assertEquals(SKIPPED_VALUE, attributeInstance4.getValue());
+			assertEquals(DataState.SKIPPED, attributeInstance4.getState());
 
 			Transaction.commit();
 			committed = true;
@@ -306,6 +335,12 @@ public class SkipWorkItemServiceTest {
 		Transaction.commit();
 		new SkipWorkItemService(workItem2OID).call();
 
+		Transaction.begin();
+		WorkItem workItem4 = bwInstance.getWorkItem(GOALWORKITEM_ID_4);
+		long workItem4OID = workItem4.getOID();
+		Transaction.commit();
+		new SkipWorkItemService(workItem4OID).call();
+		
 		//WorkItem1 - AddPatient
 		Transaction.begin();
 		WorkItem workItem1 = bwInstance.getWorkItem(GOALWORKITEM_ID_1);
@@ -319,6 +354,7 @@ public class SkipWorkItemServiceTest {
 			AttributeInstance attributeInstance1 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_1_ID);
 			AttributeInstance attributeInstance2 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_2_ID);
 			AttributeInstance attributeInstance3 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_3_ID);
+			AttributeInstance attributeInstance4 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_4_ID);
 			
 			//WorkItem1 - AddPatient
 			assertEquals(WorkItemState.SKIPPED, workItem1.getState());
@@ -346,6 +382,15 @@ public class SkipWorkItemServiceTest {
 			}
 			assertEquals(SKIPPED_VALUE, attributeInstance3.getValue());
 			assertEquals(DataState.SKIPPED, attributeInstance3.getState());
+			
+			//WorkItem4 - AddPhoneNUmber
+			assertEquals(WorkItemState.SKIPPED, workItem4.getState());
+			for (WorkItemArgument workItemArgument : workItem4.getOutputWorkItemArguments()) {
+				assertEquals(SKIPPED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.SKIPPED, workItemArgument.getState());
+			}
+			assertEquals(SKIPPED_VALUE, attributeInstance4.getValue());
+			assertEquals(DataState.SKIPPED, attributeInstance4.getState());
 			
 			Transaction.commit();
 			committed = true;
@@ -387,12 +432,19 @@ public class SkipWorkItemServiceTest {
 		Transaction.commit();
 		new SkipWorkItemService(workItem2OID).call();
 		
+		Transaction.begin();
+		WorkItem workItem4 = bwInstance.getWorkItem(GOALWORKITEM_ID_4);
+		long workItem4OID = workItem4.getOID();
+		Transaction.commit();
+		new SkipWorkItemService(workItem4OID).call();
+		
 		//WorkItem1 - AddPatient
 		Transaction.begin();
 		WorkItem workItem1 = bwInstance.getWorkItem(GOALWORKITEM_ID_1);
 		AttributeInstance attributeInstance1 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_1_ID);
 		AttributeInstance attributeInstance2 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_2_ID);
 		AttributeInstance attributeInstance3 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_3_ID);
+		AttributeInstance attributeInstance4 = entityInstance1.getAttributeInstance(ENTITYINSTANCE_1_ATT_4_ID);
 		long workItem1OID = workItem1.getOID();
 		
 		// PreGoal
@@ -442,12 +494,21 @@ public class SkipWorkItemServiceTest {
 				assertEquals(DataState.SKIPPED, workItemArgument.getState());
 			}
 			
+			//WorkItem4 - AddPhoneNUmber
+			assertEquals(WorkItemState.SKIPPED, workItem4.getState());
+			for (WorkItemArgument workItemArgument : workItem4.getOutputWorkItemArguments()) {
+				assertEquals(SKIPPED_VALUE, workItemArgument.getValue());
+				assertEquals(DataState.SKIPPED, workItemArgument.getState());
+			}
+			
 			assertEquals(ENTITYINSTANCE_1_ATT_1_VALUE, attributeInstance1.getValue());
 			assertEquals(DataState.DEFINED, attributeInstance1.getState());
 			assertEquals(ENTITYINSTANCE_1_ATT_2_VALUE, attributeInstance2.getValue());
 			assertEquals(DataState.DEFINED, attributeInstance2.getState());
 			assertEquals(ENTITYINSTANCE_1_ATT_3_VALUE, attributeInstance3.getValue());
 			assertEquals(DataState.DEFINED, attributeInstance3.getState());
+			assertEquals(SKIPPED_VALUE, attributeInstance4.getValue());
+			assertEquals(DataState.SKIPPED, attributeInstance4.getState());
 
 			Transaction.commit();
 			committed = true;

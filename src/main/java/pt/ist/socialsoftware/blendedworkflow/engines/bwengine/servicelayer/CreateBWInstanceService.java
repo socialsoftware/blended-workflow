@@ -6,11 +6,17 @@ import org.apache.log4j.Logger;
 
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.shared.PrintBWSpecification;
 
 public class CreateBWInstanceService implements Callable<String> {
 
@@ -45,8 +51,13 @@ public class CreateBWInstanceService implements Callable<String> {
 		// Create GoalWorkItems and TaskWorkItems
 		BlendedWorkflow.getInstance().getBwManager().notifyCreatedBWInstance(bwInstance);
 		
+		// Create Patients
+		populatePatients(bwInstance);
+		
 //		bwInstance.getGoalModelInstance().getEnabledWorkItems();
-		bwInstance.getTaskModelInstance().getEnabledWorkItems(); // Test proposes only
+		bwInstance.getTaskModelInstance().getEnabledWorkItems(); // Test proposes only //FIXME
+		
+		PrintBWSpecification.dataModelInstances("Medical Appointment");
 		
 		} catch (BlendedWorkflowException bwe) {
 			BlendedWorkflow.getInstance().getBwManager().notifyException(bwe.getError());
@@ -54,5 +65,34 @@ public class CreateBWInstanceService implements Callable<String> {
 		Transaction.commit();
 		log.info("END");
 		return "CreateBWInstanceService:Sucess";
+	}
+	
+	private void populatePatients(BWInstance bwInstance) {
+		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		
+		//PatientType
+		Entity patient = dataModelInstance.getEntity("Patient");
+		Attribute name = patient.getAttribute("Name");
+		Attribute age = patient.getAttribute("Age");
+		Attribute heartProblems = patient.getAttribute("Heart Problems");
+		
+		//Patient.1
+		EntityInstance patient1 = new EntityInstance(dataModelInstance, patient);
+		AttributeInstance patient1Name = new AttributeInstance(name, patient1);
+		patient1Name.setValue("Davide Passinhas");
+		AttributeInstance patient1Age = new AttributeInstance(age, patient1);
+		patient1Age.setValue("23");
+		AttributeInstance patient1HeartProblems = new AttributeInstance(heartProblems, patient1);
+		patient1HeartProblems.setValue("true");
+		
+		//Patient.2
+		EntityInstance patient2 = new EntityInstance(dataModelInstance, patient);
+		AttributeInstance patient2Name = new AttributeInstance(name, patient2);
+		patient2Name.setValue("David Martinho");
+		AttributeInstance patient2Age = new AttributeInstance(age, patient2);
+		patient2Age.setValue("26");
+		AttributeInstance patient2HeartProblems = new AttributeInstance(heartProblems, patient2);
+		patient2HeartProblems.setValue("false");
+
 	}
 }
