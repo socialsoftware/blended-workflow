@@ -44,44 +44,23 @@ public class TrueCondition extends TrueCondition_Base {
 		return new HashMap<Attribute, String>();
 	}
 
-	/**
-	 * TO TEST
-	 */
 	@Override
-	public String getRdrTrueCondition() { 
+	public String getRdrUndefinedCondition() {
 		return "True";
 	}
 
 	@Override
-	public String getRdrFalseCondition() { 
+	public String getRdrSkippedCondition() {
 		return "True";
 	}
 
 	@Override
-	public String getRdrSkippedCondition() { 
-		return "True";
-	}
-
-	/**
-	 * NEW
-	 */
-	@Override
-	public String getRdrUndefinedConditionNEW() {
+	public String getRdrTrueCondition() {
 		return "True";
 	}
 
 	@Override
-	public String getRdrSkippedConditionNEW() {
-		return "True";
-	}
-
-	@Override
-	public String getRdrTrueConditionNEW() {
-		return "True";
-	}
-
-	@Override
-	public String getRdrFalseConditionNEW() {
+	public String getRdrFalseCondition() {
 		return "True";
 	}
 	

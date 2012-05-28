@@ -63,7 +63,7 @@ public class BWPresentation extends Application {
 	private Boolean bwManagerAcess = false;
 	private Boolean worklistManagerAcess = false;
 
-	// Main Window
+	//Main Window
 	private final Window mainWindow = new Window("Blended Workflow");
 	private final Window loginWindow = new Window("Login");
 	private final LoginForm login = new LoginForm();
@@ -75,21 +75,21 @@ public class BWPresentation extends Application {
 	private Button bwManagerBtn = new Button("BW Manager");
 	private Button wManagerBtn = new Button("Worklist Manager");
 
-	// BWSpecTab
+	//BWSpecTab
 	private ListSelect loadedList = new ListSelect();
 	private Table bwSpecInfoTable = new Table("Basic Information:");
 	private TreeTable bwSpecJobsInfoTable = new TreeTable("Tasks/Goals:");
 
-	// BWInstanceTab
+	//BWInstanceTab
 	private ListSelect launchedList = new ListSelect();
 	private Table bwInstanceInfoTable = new Table("Basic Information:");
 	private Table bwInstanceJobsInfoTable = new Table("Jobs Executed:");
 
-	// DataModelTab
+	//DataModelTab
 	private ListSelect dataList = new ListSelect();
 	private TreeTable entitydetailsTreetable = new TreeTable("Data Model:");
 
-	// TaskViewTab
+	//TaskViewTab
 	private ListSelect taskList = new ListSelect();
 	private Table taskInfoTable = new Table("Task Information:");
 	private Property.ValueChangeListener taskListListener;
@@ -98,11 +98,11 @@ public class BWPresentation extends Application {
 	private Property.ValueChangeListener goalListListener;
 //	private NativeSelect taskListFilter = new NativeSelect();
 
-	// GoalViewTab
+	//GoalViewTab
 	private ListSelect goalBWInstanceList = new ListSelect();
 	private TreeTable goalTable = new TreeTable("Achieve Goals");
 //	private NativeSelect goalListFilter = new NativeSelect();
-	private TreeTable goalWorkItemTree = new TreeTable("GoalWorkItems");
+	private Table goalWorkItemTree = new Table("GoalWorkItems");
 	private Table maintainGoalsTree = new Table("Maintain Goals");
 	private static final Action ACTIVATE_GOAL_ACTION = new Action("Activate Goal");
 	private static final Action REDO_GOAL_ACTION = new Action("Redo GoalWorkItem");
@@ -118,7 +118,7 @@ public class BWPresentation extends Application {
 	@Override
 	public void init() {
 		bwPresentation = this;
-		// Init and populate database
+		//Init and populate database
 		if (!Bootstrap.isInitialized()) {
 			Bootstrap.init();
 			registerBWPresentation();
@@ -222,7 +222,7 @@ public class BWPresentation extends Application {
 		this.bwTabSheet.setHeight("100%");
 		this.bwTabSheet.setWidth("100%");
 		
-		// Role Manager
+		//Role Manager
 		Transaction.begin();
 		user = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
 		Role userRole = user.getRole();
@@ -315,7 +315,7 @@ public class BWPresentation extends Application {
 		specificationUnLoadBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				// TODO:FutureImplementation: UnLoad
+				//TODO:FutureImplementation: UnLoad
 				getMainWindow().showNotification("Not Yet Implemented");
 			}
 		});
@@ -361,13 +361,13 @@ public class BWPresentation extends Application {
 	}
 
 	private VerticalLayout initBWInstancesTab() {
-		// Layouts
+		//Layouts
 		VerticalLayout bwInstancesVL = new VerticalLayout();
 		HorizontalLayout infoHL = new HorizontalLayout();
 		VerticalLayout infoVL = new VerticalLayout();
 		HorizontalLayout bwInstancesBtnLayout = new HorizontalLayout();
 
-		// Components
+		//Components
 		launchedList.setWidth("300px");
 		launchedList.setHeight("450px");
 
@@ -406,7 +406,7 @@ public class BWPresentation extends Application {
 
 
 
-		// Layouts - configurations
+		//Layouts - configurations
 		bwInstancesBtnLayout.setSpacing(true);
 		bwInstancesBtnLayout.setMargin(true);
 		bwInstancesBtnLayout.addComponent(bwInstanceCancelBtn);
@@ -431,13 +431,13 @@ public class BWPresentation extends Application {
 	}
 
 	private VerticalLayout initBWInstanceDataTab() {
-		// Layouts
+		//Layouts
 		VerticalLayout bwInstancesVL = new VerticalLayout();
 		HorizontalLayout infoHL = new HorizontalLayout();
 		VerticalLayout infoVL = new VerticalLayout();
 		HorizontalLayout bwInstancesBtnLayout = new HorizontalLayout();
 
-		// Components
+		//Components
 		dataList.setWidth("300px");
 		dataList.setHeight("450px");
 
@@ -460,7 +460,7 @@ public class BWPresentation extends Application {
 		entitydetailsTreetable.addContainerProperty("Value", String.class, "");
 		entitydetailsTreetable.addContainerProperty("State", String.class, "");
 
-		// Layouts - configurations
+		//Layouts - configurations
 		bwInstancesBtnLayout.setSpacing(true);
 		bwInstancesBtnLayout.setMargin(true);
 
@@ -482,13 +482,13 @@ public class BWPresentation extends Application {
 	}
 
 	private VerticalLayout initTaskViewTab() {
-		// Layouts
+		//Layouts
 		VerticalLayout bwInstancesVL = new VerticalLayout();
 		HorizontalLayout infoHL = new HorizontalLayout();
 		VerticalLayout infoVL = new VerticalLayout();
 		HorizontalLayout bwInstancesBtnLayout = new HorizontalLayout();
 
-		// Components
+		//Components
 //		taskListFilter.addListener(new Property.ValueChangeListener() {
 //			public void valueChange(ValueChangeEvent event) {
 //				long workItemOID = (Long) taskListFilter.getValue();
@@ -507,7 +507,7 @@ public class BWPresentation extends Application {
 		taskInfoTable.addContainerProperty("Name", String.class,  null);
 		taskInfoTable.addContainerProperty("Value",  String.class,  null);
 		
-		// goal
+		//goal
 		goalList.setImmediate(true);
 		initGoalListListener();
 
@@ -556,15 +556,13 @@ public class BWPresentation extends Application {
 					Transaction.begin();
 					BlendedWorkflow.getInstance().getWorkListManager().skipWorkItem(workItemOID);
 					Transaction.commit();
-					removeTaskWorkItem(workItemOID);
-//					getMainWindow().showNotification("WorkItem Skipped", Notification.TYPE_TRAY_NOTIFICATION);
 				} catch (java.lang.NullPointerException jle) {
 					getMainWindow().showNotification("Please select a workItem to skip");
 				}
 			}
 		});
 		
-		// goal
+		//goal
 		Button goalExecuteBtn = new Button("Achieve Goal");
 		goalExecuteBtn.addListener(new ClickListener() {
 			@Override
@@ -607,8 +605,6 @@ public class BWPresentation extends Application {
 					BlendedWorkflow.getInstance().getWorkListManager().skipWorkItem(workItemOID);
 					Transaction.commit();
 					
-					removeGoalWorkItem(workItemOID);
-					getMainWindow().showNotification("WorkItem skipped", Notification.TYPE_TRAY_NOTIFICATION);
 				} catch (java.lang.NullPointerException jle) {
 					getMainWindow().showNotification("Please select a workItem to skip");
 				}
@@ -616,7 +612,7 @@ public class BWPresentation extends Application {
 		});
 
 		
-		// Layouts - configurations
+		//Layouts - configurations
 //		taskInfoTable.setWidth("500px");
 //		taskInfoTable.setHeight("135px");
 		
@@ -664,13 +660,13 @@ public class BWPresentation extends Application {
 	}
 
 	private VerticalLayout initGoalViewTab() {
-		// Layouts
+		//Layouts
 		VerticalLayout goalManagerVL = new VerticalLayout();
 		HorizontalLayout infoHL = new HorizontalLayout();
 		VerticalLayout infoVL = new VerticalLayout();
 		HorizontalLayout goalManagerBtnLayout = new HorizontalLayout();
 
-		// Components
+		//Components
 		goalBWInstanceList.setWidth("300px");
 		goalBWInstanceList.setHeight("450px");
 		goalBWInstanceList.setImmediate(true);
@@ -715,45 +711,7 @@ public class BWPresentation extends Application {
 			}
 		});
 		
-		// Goal buttons
-//		Button goalActivateBtn = new Button("Activate Goal");
-//		goalActivateBtn.addListener(new ClickListener() {
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				generateActivateGoalWindow();
-//			}
-//		});
-//
-//		Button goalReDoBtn = new Button("ReDo Goal");
-//		goalReDoBtn.addListener(new ClickListener() {
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				generateReDoGoalWindow();
-//			}
-//		});
-//
-//		Button goalCreateBtn = new Button("Create New Goal");
-//		goalCreateBtn.addListener(new ClickListener() {
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				generateNewGoalWindow();
-//			}
-//		});
-//		
-//		Button disableMaintainGoalsBtn = new Button("Manage MaintainGoals");
-//		disableMaintainGoalsBtn.addListener(new ClickListener() {
-//			@Override
-//			public void buttonClick(ClickEvent event) {
-//				Long bwInstanceOID = (Long) goalBWInstanceList.getValue();
-//				if (bwInstanceOID == null) {
-//					getMainWindow().showNotification("Please select one specification.");
-//				} else {
-//					generateNewDisableMaintainGoalsWindow(bwInstanceOID);
-//				}
-//			}
-//		});
-
-		// Layouts - configurations
+		//Layouts - configurations
 		goalManagerBtnLayout.setSpacing(true);
 		goalManagerBtnLayout.setMargin(true);
 
@@ -791,7 +749,7 @@ public class BWPresentation extends Application {
 					Transaction.commit();
 					updateGoalTreeInfo();
 				} else if (action == DISABLE_CONDITION_ACTION) {
-					// remove condition
+					//remove condition
 					Long workItemlOID = (Long) goalWorkItemTree.getContainerProperty(target, "OID").getValue();
 					updateGoalTreeInfo();
 					generateManageGoalWorkItemsConditionsWindows(workItemlOID);
@@ -815,7 +773,6 @@ public class BWPresentation extends Application {
 		maintainGoalsTree.addContainerProperty("OID", Long.class,  null);
 		maintainGoalsTree.addContainerProperty("Goal", String.class,  null);
 		maintainGoalsTree.addContainerProperty("State", String.class,  null);
-//		maintainGoalsTree.addContainerProperty("Condition", String.class,  null);
 		maintainGoalsTree.setImmediate(true);
 		maintainGoalsTree.setWidth("450px");
 		maintainGoalsTree.setHeight("190px");
@@ -825,8 +782,8 @@ public class BWPresentation extends Application {
 
 		maintainGoalsTree.addActionHandler(new Action.Handler() {
 			public void handleAction(Action action, Object sender, Object target) {
-				if (action == DISABLE_CONDITION_ACTION) { //contr
-					// remove condition
+				if (action == DISABLE_CONDITION_ACTION) {
+					//remove condition
 					Long goalOID = (Long) maintainGoalsTree.getContainerProperty(target, "OID").getValue();
 			       
 					Transaction.begin();
@@ -834,7 +791,7 @@ public class BWPresentation extends Application {
 					Transaction.commit();
 					updateGoalTreeInfo();
 				} else {
-					// remove condition
+					//remove condition
 					Long goalOID = (Long) maintainGoalsTree.getContainerProperty(target, "OID").getValue();
 					Transaction.begin();
 					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, GoalState.ENABLED);
@@ -858,11 +815,6 @@ public class BWPresentation extends Application {
 		});
 		
 		infoHL.addComponent(novo);
-		
-//		goalManagerBtnLayout.addComponent(goalActivateBtn);
-//		goalManagerBtnLayout.addComponent(goalReDoBtn);
-//		goalManagerBtnLayout.addComponent(goalCreateBtn);
-//		goalManagerBtnLayout.addComponent(disableMaintainGoalsBtn);
 		
 		goalManagerVL.addComponent(infoHL);
 		goalManagerVL.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
@@ -1055,6 +1007,7 @@ public class BWPresentation extends Application {
 	public void addBWSpecification(long OID, String name) {
 		this.loadedList.addItem(OID);
 		this.loadedList.setItemCaption(OID, name);
+//		getMainWindow().showNotification("Blended Workflow Specification " + name +" loaded", Notification.TYPE_TRAY_NOTIFICATION);
 	}
 
 	public void addBWInstance(long OID, String name) {
@@ -1068,39 +1021,52 @@ public class BWPresentation extends Application {
 //		this.taskListFilter.setItemCaption(OID, name);
 //		this.goalListFilter.addItem(OID);
 //		this.goalListFilter.setItemCaption(OID, name);
+		getMainWindow().showNotification("Blended Workflow Instance " + name + " created", Notification.TYPE_TRAY_NOTIFICATION);
 	}
 
 	public void addGoalWorkItem(long OID, String ID) {
-		this.goalList.addItem(OID);
-		this.goalList.setItemCaption(OID, "[GOAL] " + ID);
-		this.goalList.attach();
+		if (this.goalList.getItem(OID) != null) {
+			getMainWindow().showNotification("[GOAL] " + ID + " Sucess Condition Failed!", Notification.TYPE_ERROR_MESSAGE);
+		}
+		else {
+			this.goalList.addItem(OID);
+			this.goalList.setItemCaption(OID, "[GOAL] " + ID);
+			this.goalList.attach();
+		}
 	}
 
 	public void addTaskWorkItem(long OID, String ID) {
-		this.taskList.addItem(OID);
-		this.taskList.setItemCaption(OID, "[TASK] " + ID);
-		this.taskList.attach();
+		if (this.taskList.getItem(OID) != null) {
+			getMainWindow().showNotification("[TASK] " + ID + " Post-Condition Failed!", Notification.TYPE_ERROR_MESSAGE);
+		}
+		else {
+			this.taskList.addItem(OID);
+			this.taskList.setItemCaption(OID, "[TASK] " + ID);
+			this.taskList.attach();
+		}
 	}
 
 	public void addUser(long oid, String name) {
-		// TODO:FutureImplementation: addUser
+		//TODO:FutureImplementation: addUser
 	}
 
 	public void addRole(long oid, String name) {
-		// TODO:FutureImplementation: addRole
+		//TODO:FutureImplementation: addRole
 	}
 
-	public void removeGoalWorkItem(long OID) {
+	public void removeGoalWorkItem(long OID, String ID, String state) {
 		this.goalList.removeListener(goalListListener);
 		this.goalList.removeItem(OID);
 		this.goalInfoTable.removeAllItems();
+		getMainWindow().showNotification(ID + " is " + state, Notification.TYPE_TRAY_NOTIFICATION);
 		initGoalListListener();
 	}
 
-	public void removeTaskWorkItem(long OID) {
+	public void removeTaskWorkItem(long OID, String ID, String state) {
 		this.taskList.removeListener(taskListListener);
 		this.taskList.removeItem(OID);
 		this.taskInfoTable.removeAllItems();
+		getMainWindow().showNotification(ID + " is " + state, Notification.TYPE_TRAY_NOTIFICATION);
 		initTaskListListener();
 	}
 
@@ -1142,14 +1108,14 @@ public class BWPresentation extends Application {
 		bwSpecJobsInfoTable.removeAllItems();
 		BWSpecification bwSpecification = AbstractDomainObject.fromOID(OID);
 
-		// BW Info
+		//BW Info
 		bwSpecInfoTable.addItem(new Object[] {"Name",bwSpecification.getName()}, new Integer(1));
 		bwSpecInfoTable.addItem(new Object[] {"Author", bwSpecification.getAuthor()}, new Integer(2));
 		bwSpecInfoTable.addItem(new Object[] {"Creation Date", bwSpecification.getCreationDate()}, new Integer(3));
 		bwSpecInfoTable.addItem(new Object[] {"Created Instances", bwSpecification.getBwInstanceCounter()}, new Integer(4));
 		bwSpecInfoTable.addItem(new Object[] {"Description", bwSpecification.getDescription()}, new Integer(5));
 
-		// BW Tasks/Goals
+		//BW Tasks/Goals
 		Object tasks = bwSpecJobsInfoTable.addItem(new Object[] {"Tasks","", "", ""}, null);
 		Object goals = bwSpecJobsInfoTable.addItem(new Object[] {"Goals", "", "", ""}, null);
 		
@@ -1164,7 +1130,7 @@ public class BWPresentation extends Application {
 
 		GoalModel goalModel = bwSpecification.getGoalModel();
 		for (AchieveGoal goal : goalModel.getAchieveGoals()) {
-			Object goal1 = bwSpecJobsInfoTable.addItem(new Object[] {goal.getName(), goal.getDescription(), goal.getSubGoalsData(), goal.getConstraintData()}, null);
+			Object goal1 = bwSpecJobsInfoTable.addItem(new Object[] {goal.getName(), goal.getDescription(),  goal.getPreConstraintData(), goal.getConstraintData()}, null);
 			bwSpecJobsInfoTable.setParent(goal1, goals);
 			bwSpecJobsInfoTable.setChildrenAllowed(goal1, false);
 		}
@@ -1191,21 +1157,20 @@ public class BWPresentation extends Application {
 			}
 		}
 
-		// FIXME: state
+		//FIXME: state
 //		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 //			if (goal.getState().equals(GoalState.ACHIEVED) || goal.getState().equals(GoalState.SKIPPED)) {
 //				achievedGoalsCount++;
 //			}
 //		}
 
-		// Info
+		//Info
 		bwInstanceInfoTable.addItem(new Object[] {"Name", bwInstance.getName()}, new Integer(1));
 		bwInstanceInfoTable.addItem(new Object[] {"Launched by", bwInstance.getUser().getID()}, new Integer(2));
 		bwInstanceInfoTable.addItem(new Object[] {"Creation Date", bwInstance.getCreationDate()}, new Integer(3));
 		bwInstanceInfoTable.addItem(new Object[] {"Executed Tasks", executedTasksCount + " of " + taskModelInstance.getTasksCount()}, new Integer(4));
-//		bwInstanceInfoTable.addItem(new Object[] {"Achieved Goals", achievedGoalsCount + " of " + goalModelInstance.getAchieveGoalsCount()}, new Integer(5));
 
-		// JobInfo
+		//JobInfo
 		int jobIndex = 1;
 		for (LogRecord logRecord : bwInstance.getLog().getLogRecords()) {
 			bwInstanceJobsInfoTable.addItem(new Object[] {logRecord.getDate(), logRecord.getAction(), logRecord.getValue(), logRecord.getAuthor()}, new Integer(jobIndex));
@@ -1249,14 +1214,14 @@ public class BWPresentation extends Application {
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		
-		// Add Goals
+		//Add Goals
 		HashMap<AchieveGoal, Object> addedGoals = new HashMap<AchieveGoal, Object>();
 		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {	
 			Object goalItem = goalTable.addItem(new Object[] {goal.getOID(), goal.getName()}, null);
 			addedGoals.put(goal, goalItem);
 		}
 		
-		// Goal Relations
+		//Goal Relations
 		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 			if (goal.getParentGoal() != null) {
 				Object goalObject = addedGoals.get(goal);
@@ -1321,7 +1286,7 @@ public class BWPresentation extends Application {
 			outputIndex++;
 		}
 
-		// Populate Data
+		//Populate Data
 		taskInfoTable.addItem(new Object[] {"Name",task.getName()}, new Integer(1));
 		taskInfoTable.addItem(new Object[] {"Description", task.getDescription()}, new Integer(2));
 		taskInfoTable.addItem(new Object[] {"Input Data", inputData}, new Integer(3));
@@ -1347,7 +1312,7 @@ public class BWPresentation extends Application {
 
 		for (AchieveGoal subGoal : goal.getSubGoals()) {
 			
-			// TODO: GoalInputData
+			//TODO: GoalInputData
 //			for (AttributeInstance attributeInstance : subGoal.getGoalWorkItem().getContraintViolationAttributeInstances()) {
 //				Entity entity = attributeInstance.getAttribute().getEntity();
 //				if (!inputEntities.contains(entity)) {
@@ -1421,7 +1386,6 @@ public class BWPresentation extends Application {
 			long goalOID = achieveGoal.getOID();
 			String goalName = achieveGoal.getName();
 			String state = achieveGoal.getState().toString();
-//			String conditionName = achieveGoal.getMaintainCondition().toString();
 	        maintainGoalsTree.addItem(new Object[] {goalOID, goalName, state}, null);
 		}
 		Transaction.commit();

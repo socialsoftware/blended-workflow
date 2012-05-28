@@ -33,7 +33,7 @@ public class DataModel extends DataModel_Base {
 				return entity;
 			}
 		}
-		return null; // Needed by ConditionParser to create new Entity
+		return null;
 	}
 
 	public Relation getRelation(String name) {
@@ -42,7 +42,7 @@ public class DataModel extends DataModel_Base {
 				return relation;
 			}
 		}
-		return null; // Needed by ConditionParser to create new Entity
+		return null;
 	}
 
 }

@@ -79,7 +79,7 @@ public class NewRelationForm extends VerticalLayout{
 
 					addRelation(bwInstanceOID, name, entityName, secondEntityName, card, isOne, isTwo);
 
-					getApplication().getMainWindow().showNotification("New Relation created", Notification.TYPE_TRAY_NOTIFICATION);
+					getApplication().getMainWindow().showNotification("New Relation " + name + " created", Notification.TYPE_TRAY_NOTIFICATION);
 					getApplication().getMainWindow().removeWindow(NewRelationForm.this.getWindow());
 				} catch (java.lang.NullPointerException jle) {
 					getApplication().getMainWindow().showNotification("Please fill all fields");

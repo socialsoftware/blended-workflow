@@ -1,7 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import org.apache.log4j.Logger;
-
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
@@ -33,10 +31,10 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 
 		// Properties
 		setMargin(true);
-//		setWidth("500px");
+		setWidth("1000px");
 		setSpacing(true);
 
-		treetable.setWidth("100%");
+//		treetable.setWidth("100%");
 		treetable.setSelectable(true);
 
 		footer.setSpacing(true);
@@ -146,7 +144,7 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 			}
 		}
 
-		setWidth("100%");
+//		setWidth("100%");
 		Transaction.commit();
 	}
 

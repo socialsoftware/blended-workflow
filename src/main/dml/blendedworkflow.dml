@@ -160,7 +160,7 @@ class RelationInstance {
 	String ID;
 }
 
-class RelationRole;
+//class RelationRole;
 
 // BlendedWorkflow
 relation BlendedWorkflowHasBWSpecifications {
@@ -530,10 +530,10 @@ relation ForAllConditionConditionHasCondition {
 	Condition playsRole condition { multiplicity 0..1; }
 }
 
-relation ForAllConditionConditionHasRelationRole {
-	ForAllCondition playsRole forAllCondition { multiplicity 0..1; }
-	RelationRole playsRole relationRole { multiplicity 0..1; }
-}
+//relation ForAllConditionConditionHasRelationRole {
+//	ForAllCondition playsRole forAllCondition { multiplicity 0..1; }
+//	RelationRole playsRole relationRole { multiplicity 0..1; }
+//}
 
 relation ForAllConditionConditionConditionHasEntity {
 	ForAllCondition playsRole forAllCondition { multiplicity 0..*; }
@@ -562,13 +562,13 @@ relation ExistsOneConditionConditionHasRelation {
 }
 
 //RelationRole
-relation RelationRoleHasRelation {
-	RelationRole playsRole relationRole {multiplicity 0..1;}
-	Relation playsRole relationRoleRelation {multiplicity 0..1;}
-}
-
-relation RelationRoleHasEntity {
-	RelationRole playsRole relationRole {multiplicity 0..1;}
-	Entity playsRole entity {multiplicity 0..1;}
-}
+//relation RelationRoleHasRelation {
+//	RelationRole playsRole relationRole {multiplicity 0..1;}
+//	Relation playsRole relationRoleRelation {multiplicity 0..1;}
+//}
+//
+//relation RelationRoleHasEntity {
+//	RelationRole playsRole relationRole {multiplicity 0..1;}
+//	Entity playsRole entity {multiplicity 0..1;}
+//}
 

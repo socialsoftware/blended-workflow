@@ -3,12 +3,9 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.util.HashMap;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class AndCondition extends AndCondition_Base {
-	private Logger log = Logger.getLogger("OOOOOOO");
 
 	public AndCondition(Condition one, Condition two) {
 		addConditions(one);
@@ -70,24 +67,16 @@ public class AndCondition extends AndCondition_Base {
 		return attributesOne;
 	}
 	
-//	@Override
-//	public String getRdrCondition(String type) {
-//		if (type == "DEFINED") {
-//			return getConditionOne().getRdrCondition(type) + " & " + getConditionTwo().getRdrCondition(type);
-//		} else {
-//			return getConditionOne().getRdrCondition(type) + " | " + getConditionTwo().getRdrCondition(type);
-//		}
-//	}
-	
-	/**
-	 * AND| T | F | S   
-	 * --------------
-	 *  T | T | F | S
-	 * --------------
-	 *  F | F | F | S
-	 * --------------
-	 *  S | S | S | S
-	 */
+	@Override
+	public String getRdrUndefinedCondition() {
+		return "(" + getConditionOne().getRdrUndefinedCondition() + " | " + getConditionTwo().getRdrUndefinedCondition() + ")";
+	}
+
+	@Override
+	public String getRdrSkippedCondition() {
+		return "(" + getConditionOne().getRdrSkippedCondition() + " | " + getConditionTwo().getRdrSkippedCondition() + ")";
+	}
+
 	@Override
 	public String getRdrTrueCondition() {
 		return "(" + getConditionOne().getRdrTrueCondition() + " & " + getConditionTwo().getRdrTrueCondition() + ")";
@@ -95,43 +84,7 @@ public class AndCondition extends AndCondition_Base {
 
 	@Override
 	public String getRdrFalseCondition() {
-		String condition = "((" + getConditionOne().getRdrTrueCondition() + " & " + getConditionTwo().getRdrFalseCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrTrueCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrFalseCondition() + "))";
-		return condition;
-	}
-
-	@Override
-	public String getRdrSkippedCondition() {
-		String condition = "((" + getConditionOne().getRdrTrueCondition() + " & " + getConditionTwo().getRdrSkippedCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrSkippedCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrSkippedCondition() + " & " + getConditionTwo().getRdrTrueCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrSkippedCondition() + " & " + getConditionTwo().getRdrFalseCondition() + ") | ";
-		condition += "(" + getConditionOne().getRdrSkippedCondition() + " & " + getConditionTwo().getRdrSkippedCondition() + "))";
-		return condition;
-	}
-	
-	/**
-	 * NEW
-	 */
-	@Override
-	public String getRdrUndefinedConditionNEW() {
-		return "(" + getConditionOne().getRdrUndefinedConditionNEW() + " | " + getConditionTwo().getRdrUndefinedConditionNEW() + ")";
-	}
-
-	@Override
-	public String getRdrSkippedConditionNEW() {
-		return "(" + getConditionOne().getRdrSkippedConditionNEW() + " | " + getConditionTwo().getRdrSkippedConditionNEW() + ")";
-	}
-
-	@Override
-	public String getRdrTrueConditionNEW() {
-		return "(" + getConditionOne().getRdrTrueConditionNEW() + " & " + getConditionTwo().getRdrTrueConditionNEW() + ")";
-	}
-
-	@Override
-	public String getRdrFalseConditionNEW() {
-		return "(" + getConditionOne().getRdrFalseConditionNEW() + " & " + getConditionTwo().getRdrFalseConditionNEW() + ")";
+		return "(" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrFalseCondition() + ")";
 	}
 
 	@Override
@@ -153,8 +106,6 @@ public class AndCondition extends AndCondition_Base {
 	
 	@Override
 	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		log.info(getConditionOne() + " -AND1" + getConditionOne().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
-		log.info(getConditionTwo() +" -AND2" + getConditionTwo().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
 		return getConditionOne().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType).AND(getConditionTwo().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
 
 	}

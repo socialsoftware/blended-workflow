@@ -4,18 +4,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ForAllCondition extends ForAllCondition_Base {
-	
-	private Logger log = Logger.getLogger("ForAllCondition");
-    
+	    
     public ForAllCondition(Relation relation, Entity entity, Condition condition) {
     	setForAllEntity(entity);
     	setForAllRelation(relation);
-//    	setRelationRole(new RelationRole(relation, entity));
     	setCondition(condition);
     }
 
@@ -73,14 +68,8 @@ public class ForAllCondition extends ForAllCondition_Base {
 		return false;
 	}
     
-	//TODO: WorkletService
 	@Override
-	public String getRdrTrueCondition() {
-		return null;
-	}
-
-	@Override
-	public String getRdrFalseCondition() {
+	public String getRdrUndefinedCondition() {
 		return null;
 	}
 
@@ -90,22 +79,12 @@ public class ForAllCondition extends ForAllCondition_Base {
 	}
 
 	@Override
-	public String getRdrUndefinedConditionNEW() {
+	public String getRdrTrueCondition() {
 		return null;
 	}
 
 	@Override
-	public String getRdrSkippedConditionNEW() {
-		return null;
-	}
-
-	@Override
-	public String getRdrTrueConditionNEW() {
-		return null;
-	}
-
-	@Override
-	public String getRdrFalseConditionNEW() {
+	public String getRdrFalseCondition() {
 		return null;
 	}
 	
@@ -115,28 +94,20 @@ public class ForAllCondition extends ForAllCondition_Base {
 	@Override
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		TripleStateBool result = TripleStateBool.TRUE;
-		log.info("EvaluateWithDataModel");
-		log.info("RelationInstancesCount = " + getForAllRelation().getRelationInstancesCount());
 		for (RelationInstance relationInstance : getForAllRelation().getRelationInstances()) {
 			EntityInstance entityInstance = relationInstance.getEntityInstance(getForAllEntity());
-			log.info("entityInstance()" + entityInstance.getID());
 			result = result.AND(getCondition().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
 		}
-		log.info("FORALL final result:" + result);
 		return result;
 	}
 
 	@Override
 	public TripleStateBool evaluateWithDataModel(EntityInstance invalid, GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		TripleStateBool result = TripleStateBool.TRUE;
-		log.info("EvaluateWithDataModel");
-		log.info("RelationInstancesCount = " + getForAllRelation().getRelationInstancesCount());
 		for (RelationInstance relationInstance : getForAllRelation().getRelationInstances()) {
 			EntityInstance entityInstance = relationInstance.getEntityInstance(getForAllEntity());
-			log.info("entityInstance()" + entityInstance.getID());
 			result = result.AND(getCondition().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
 		}
-		log.info("FORALL final result:" + result);
 		return result;
 	}
 }

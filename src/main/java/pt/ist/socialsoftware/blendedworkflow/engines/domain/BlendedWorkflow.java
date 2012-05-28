@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.text.DateFormat;
+
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
@@ -11,13 +13,13 @@ import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
-	
+	DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
 	private YAWLAdapter yawlAdapter = null;
 	private WorkletAdapter workletAdapter = null;
 	private WorkListManager workListManager = null;
 	private BWManager bwManager = null;
 	private OrganizationalManager organizationalManager = null;
-	private String today = "1";
+	private String today = dateFormatter.format(new java.util.Date());
 	
 	private BWExecutorService bwExecutorService = null;
 	

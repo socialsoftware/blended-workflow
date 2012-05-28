@@ -11,7 +11,6 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
     public ExistsOneCondition(Relation relation, Entity entity, Condition condition) {
     	setExistsOneEntity(entity);
     	setExistsOneRelation(relation);
-//    	setRelationRole(new RelationRole(relation, entity));
     	setCondition(condition);
     }
 	
@@ -69,7 +68,16 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
 		return false;
 	}
 	
-	//TODO: WorkletService
+	@Override
+	public String getRdrUndefinedCondition() {
+		return null;
+	}
+
+	@Override
+	public String getRdrSkippedCondition() {
+		return null;
+	}
+
 	@Override
 	public String getRdrTrueCondition() {
 		return null;
@@ -80,37 +88,17 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
 		return null;
 	}
 
-	@Override
-	public String getRdrSkippedCondition() {
-		return null;
-	}
-
-	@Override
-	public String getRdrUndefinedConditionNEW() {
-		return null;
-	}
-
-	@Override
-	public String getRdrSkippedConditionNEW() {
-		return null;
-	}
-
-	@Override
-	public String getRdrTrueConditionNEW() {
-		return null;
-	}
-
-	@Override
-	public String getRdrFalseConditionNEW() {
-		return null;
-	}
-
 	/******************************
 	 * Evaluate
 	 ******************************/
 	@Override
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		return null;
+		TripleStateBool result = TripleStateBool.FALSE;
+		for (RelationInstance relationInstance : getExistsOneRelation().getRelationInstances()) {
+			EntityInstance entityInstance = relationInstance.getEntityInstance(getExistsOneEntity());
+			result = result.OR(getCondition().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
+		}
+		return result;
 	}
 	
 	@Override

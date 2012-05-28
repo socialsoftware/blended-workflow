@@ -3,16 +3,12 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public abstract class WorkItem extends WorkItem_Base {
 
 	public enum WorkItemState {PRE_TASK, PRE_GOAL, PRE_FALSE, CONSTRAINT_VIOLATION, ENABLED, GOAL_PENDING, CHECKED_IN, SKIPPED, 
 		COMPLETED, RE_ACTIVATED, ACTIVATED};
-
-	private static Logger log = Logger.getLogger("WorkItem");
 
 	/******************************
 	 * State Change Notifications *
@@ -80,7 +76,7 @@ public abstract class WorkItem extends WorkItem_Base {
 		Boolean modified = false;
 		Boolean isPreTask = false;
 		
-		// Add PreConstrain data
+		//Add PreConstrain data
 		for (WorkItemArgument workItemArgument : getInputWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			if (!attributeInstance.getState().equals(DataState.DEFINED)) {
@@ -95,7 +91,7 @@ public abstract class WorkItem extends WorkItem_Base {
 			}
 		}
 		
-		// Add ConstrainViolation data
+		//Add ConstrainViolation data
 		for (WorkItemArgument workItemArgument : getOutputWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			if (!attributeInstance.getState().equals(DataState.DEFINED)) {
@@ -120,7 +116,7 @@ public abstract class WorkItem extends WorkItem_Base {
 		Boolean isPreTask = false;
 		Boolean modified = false;
 		
-		// Add PreConstrain data
+		//Add PreConstrain data
 		for (WorkItemArgument workItemArgument : getInputWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			if (attributeInstance.getState() == DataState.UNDEFINED) {
@@ -130,7 +126,7 @@ public abstract class WorkItem extends WorkItem_Base {
 			}
 		}
 		
-		// Add ConstrainViolation data
+		//Add ConstrainViolation data
 		for (WorkItemArgument workItemArgument : getOutputWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			if (attributeInstance.getState() == DataState.UNDEFINED) {
@@ -154,18 +150,18 @@ public abstract class WorkItem extends WorkItem_Base {
 	 */
 	public void notifyWorkItemDataChanged(Boolean isPreTask) {
 		Set<WorkItem> notifyWorkItems = new HashSet<WorkItem>();
-		// If PRE_TASK: Get WorkItems affected by PreConstraint attributesInstances new values
+		//If PRE_TASK: Get WorkItems affected by PreConstraint attributesInstances new values
 		if (isPreTask) {
 			for (AttributeInstance attributeInstance : getInputAttributeInstances()) {
-				// Check preconditions
+				//Check preconditions
 				for (WorkItem workItem : attributeInstance.getPreConstraintWorkItems()) {
-					if (!workItem.equals(this) && (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK) || workItem.getState().equals(WorkItemState.PRE_GOAL))) {
+					if (!workItem.equals(this) && (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK) || workItem.getState().equals(WorkItemState.PRE_GOAL) || workItem.getState().equals(WorkItemState.PRE_FALSE))) {
 						notifyWorkItems.add(workItem);
 					}
 				}
-				// Goalconditions and pos conditions
+				//Goalconditions and pos conditions
 				for (WorkItem workItem : attributeInstance.getContraintViolationWorkItems()) {
-					if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK) || workItem.getState().equals(WorkItemState.PRE_GOAL))) {
+					if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK) || workItem.getState().equals(WorkItemState.PRE_GOAL) || workItem.getState().equals(WorkItemState.PRE_FALSE))) {
 						notifyWorkItems.add(workItem);
 					}
 				}
@@ -173,17 +169,17 @@ public abstract class WorkItem extends WorkItem_Base {
 			}
 		}
 		
-		// Get WorkItems affected by ConstraintViolation attributesInstances values
+		//Get WorkItems affected by ConstraintViolation attributesInstances values
 		for (AttributeInstance attributeInstance : getOutputAttributeInstances()) {
-			// Check preconditions
+			//Check preconditions
 			for (WorkItem workItem : attributeInstance.getPreConstraintWorkItems()) {
-				if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
+				if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK) || workItem.getState().equals(WorkItemState.PRE_FALSE))) {
 					notifyWorkItems.add(workItem);
 				}
 			}
-			// Goalconditions and pos conditions
+			//Goalconditions and pos conditions
 			for (WorkItem workItem : attributeInstance.getContraintViolationWorkItems()) {
-				if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK))) {
+				if (!workItem.equals(this) & (workItem.getState().equals(WorkItemState.ENABLED) || workItem.getState().equals(WorkItemState.PRE_TASK) || workItem.getState().equals(WorkItemState.PRE_FALSE))) {
 					notifyWorkItems.add(workItem);
 				}
 			}
@@ -213,7 +209,6 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Copy the Task PreConstraint AttributesInstances to its PreConstraint WorkItem Arguments.
 	 */
 	public void createInputWorkItemArguments() {
-//		log.info("createInputWorkItemArguments" + getInputAttributeInstancesCount());
 		for (AttributeInstance attributeInstance : getInputAttributeInstances()) {
 			WorkItemArgument workItemArgument = new WorkItemArgument(attributeInstance, attributeInstance.getValue(), attributeInstance.getState());
 			addInputWorkItemArguments(workItemArgument);
@@ -224,7 +219,6 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Update PreConstraint WorkItem Arguments with new Data.
 	 */
 	public void updateInputWorkItemArguments() {
-//		log.info("updateInputWorkItemArguments" + getInputAttributeInstancesCount());
 		for (WorkItemArgument workItemArgument : getInputWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			workItemArgument.setValue(attributeInstance.getValue());
@@ -236,7 +230,6 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Copy the Goal AttributesInstances to its ConstrainViolation WorkItem Arguments.
 	 */
 	public void createOutputWorkItemArguments() {
-//		log.info("createOutputWorkItemArguments" + getOutputAttributeInstancesCount());
 		for (AttributeInstance attributeInstance : getOutputAttributeInstances()) {
 			WorkItemArgument workItemArgument = new WorkItemArgument(attributeInstance, attributeInstance.getValue(), attributeInstance.getState());
 			addOutputWorkItemArguments(workItemArgument);
@@ -247,13 +240,10 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Update ConstrainViolation WorkItem Arguments with new Data.
 	 */
 	public void updateOutputWorkItemArguments() {
-//		log.info("updateOutputWorkItemArguments" + getOutputAttributeInstancesCount());
 		for (WorkItemArgument workItemArgument : getOutputWorkItemArguments()) {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			workItemArgument.setValue(attributeInstance.getValue());
 			workItemArgument.setState(attributeInstance.getState());
 		}
 	}
-	
-	
 }

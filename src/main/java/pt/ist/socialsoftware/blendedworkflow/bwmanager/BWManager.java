@@ -63,24 +63,37 @@ public class BWManager {
 			}
 		}
 	}
+	
+	/**
+	 * Show Exception.
+	 */
+	public void notifyException(BlendedWorkflowError bwe) {
+		getBwPresentation().getMainWindow().showNotification(bwe.toString(), Notification.TYPE_ERROR_MESSAGE);
+	}
 
+	
+	/**
+	 * LoadSpecification Service.
+	 */
 	public void loadBWSpecification(String bwXML){
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
 		LoadBWSpecificationService service = new LoadBWSpecificationService(bwXML, "yawlXML");
 		bwExecutorService.runTask(service);
 	}
 
+	/**
+	 * Create BWInstance Service.
+	 */
 	public void createBWInstance(long bwSpecificationOID, String name, String userID){
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
 		CreateBWInstanceService service = new CreateBWInstanceService(bwSpecificationOID, name, userID);
 		bwExecutorService.runTask(service);
 	}
 
-	public void notifyException(BlendedWorkflowError bwe) {
-		getBwPresentation().getMainWindow().showNotification(bwe.toString(), Notification.TYPE_ERROR_MESSAGE);
-	}
-
-	//FIXME: relation order infinite loop, add only if do not exists
+	/**
+	 * TODO: Test/Refactor.
+	 * Create a RelationInstance.
+	 */
 	public void addRelationInstance(long bwInstanceOID, long e1OID, long e2OID) {
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
@@ -103,7 +116,7 @@ public class BWManager {
 			}
 		}
 		
-		//Do not exists create
+		//Create only if no previous RelationInstance exists
 		if (!exists) {
 			for (Relation relation : dataModelInstance.getRelations()) {
 				Entity one = relation.getEntityOne();

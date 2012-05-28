@@ -60,7 +60,6 @@ public class DataModelTree extends VerticalLayout {
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == ADD_ATTRIBUTE_ACTION) {
 					String entityName = treetable.getItemCaption(target).toString();
-					getApplication().getMainWindow().showNotification(entityName);
 					showNewAttributeWindow(bwInstanceOID, entityName);
 				} else if (action == ADD_ENTITY_ACTION) {
 					showNewEntityWindow(bwInstanceOID);
@@ -85,7 +84,6 @@ public class DataModelTree extends VerticalLayout {
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == ADD_ATTRIBUTE_ACTION) {
 					String entityName = treetable.getItemCaption(target).toString();
-					getApplication().getMainWindow().showNotification(entityName);
 					showNewAttributeWindow(bwInstanceOID, entityName);
 				} else if (action == ADD_ENTITY_ACTION) {
 					showNewEntityWindow(bwInstanceOID);

@@ -1,11 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
-import java.util.ArrayList;
-
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 public class ConditionFactory {
@@ -14,6 +10,10 @@ public class ConditionFactory {
 		return new ConditionParser(dataModel, condInString).parseCondition();
 	}
 	
+	/**
+	 * Legacy: Add missing Relation dependencies to conditions.
+	 */
+	/*
 	public static String getRelationDependencies(DataModel dataModel, String originalCondition) {
 		String resultingCondition = originalCondition;
 		ArrayList<Entity> relationEntities = new ArrayList<Entity>();
@@ -80,5 +80,6 @@ public class ConditionFactory {
 		return resultingCondition;
 		
 	}
+	*/
 
 }

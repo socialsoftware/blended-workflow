@@ -41,8 +41,6 @@ public class EnableGoalWorkItemsService implements Callable<String> {
 				
 				goalWorkItem.updateOutputWorkItemArguments();
 				goalWorkItem.evaluate(true);
-				
-				
 			}
 		}
 		

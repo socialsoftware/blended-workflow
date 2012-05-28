@@ -1,7 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import org.apache.log4j.Logger;
-
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
@@ -48,7 +46,6 @@ public class AllDataModelTree extends VerticalLayout {
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == ADD_ATTRIBUTE_ACTION) {
 					String entityName = treetable.getItemCaption(target).toString();
-					getApplication().getMainWindow().showNotification(entityName);
 					showNewAttributeWindow(bwInstanceOID, entityName);
 				} else if (action == ADD_ENTITY_ACTION) {
 					showNewEntityWindow(bwInstanceOID);

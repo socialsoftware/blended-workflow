@@ -34,7 +34,8 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 		setMargin(true);
 		setSpacing(true);
 
-		treetable.setWidth("100%");
+		setWidth("1000px");
+//		treetable.setWidth("100%");
 		treetable.setSelectable(true);
 
 		footer.setSpacing(true);
@@ -126,8 +127,8 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 			treetable.setChildrenAllowed(OID, false);
 		}
 
-		treetable.setWidth("100%");
-		setWidth("100%");
+//		treetable.setWidth("100%");
+//		setWidth("100%");
 		Transaction.commit();
 	}
 

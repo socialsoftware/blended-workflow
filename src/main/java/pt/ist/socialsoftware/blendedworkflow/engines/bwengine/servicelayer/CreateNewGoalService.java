@@ -54,44 +54,30 @@ public class CreateNewGoalService implements Callable<String> {
 			DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 			GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
-			// Create Condition
-//			String goalConditionDependencies = ConditionFactory.getRelationDependencies(dataModelInstance, condition);
+			//Create Condition
 			Condition goalCondition = ConditionFactory.createCondition(dataModelInstance, condition);
 			log.info("goalCondition:" + goalCondition);
 			
-			// Create Goal
+			//Create Goal
 			AchieveGoal newGoal = new AchieveGoal(goalModelInstance, parentGoal, name, description, goalCondition, entityContext);
 			User defaultUser = BlendedWorkflow.getInstance().getOrganizationalModel().getUser("BlendedWorkflow");
 			Role defaultRole = BlendedWorkflow.getInstance().getOrganizationalModel().getRole("Admin");
 			newGoal.setUser(defaultUser);
 			newGoal.setRole(defaultRole);
-			log.info("newGoal:" + newGoal.getName());
 			
 			//Add activate conditions
-			log.info("this.activateConditions:" + this.activateConditions.size());
 			for (String activateConditionString : this.activateConditions) {
-				log.info("activateConditionString:" + activateConditionString);
-//				String activateConditionDependencies = ConditionFactory.getRelationDependencies(dataModelInstance, activateConditionString);
 				Condition activateCondition = ConditionFactory.createCondition(dataModelInstance, activateConditionString);
 				newGoal.addActivateConditions(activateCondition);
 			}
 
-			
-			// Add  the Goal to BWSpecification the WorkletService RdrSet
-//			BlendedWorkflow.getInstance().getWorkletAdapter().addGoal(bwInstance, newGoal);
-			
-			// Evaluate WorkItems State
-//			newGoal.updateParentGoal();
-//			goalModelInstance.getEnabledWorkItems();
-
-			
+			BlendedWorkflow.getInstance().getWorkListManager().notifyNewGoalCreated(newGoal);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			String date = dateFormat.format(Calendar.getInstance().getTime());
-			log.info("date:" + date);
 			bwInstance.getLog().addLogRecords(new LogRecord(date, "Goal Created", "[GOAL] " + name, userID));		
 			
 		} catch (BlendedWorkflowException bwe) {
-			log.info("Exception");
+			log.error(bwe.getError());
 			BlendedWorkflow.getInstance().getWorkListManager().notifyException(bwe.getError());
 		}
 		Transaction.commit();

@@ -27,8 +27,6 @@ public class NewAttributeForm extends VerticalLayout{
 	private final NativeSelect typeNS = new NativeSelect("Type:");
 	private final CheckBox isKeyCB = new CheckBox("Key Attribute:");
 	
-//	private Logger log = Logger.getLogger("NewAttributeForm");
-
 	public NewAttributeForm(final AllDataModelTree parent, final long bwInstanceOID, final String entityName) {
 		setMargin(true);
 
@@ -53,7 +51,7 @@ public class NewAttributeForm extends VerticalLayout{
 					String type = (String) typeNS.getValue();
 					Boolean isKeyAttribute = (Boolean) isKeyCB.getValue();
 					addAttribute(bwInstanceOID, name, entityName, type, isKeyAttribute);
-					getApplication().getMainWindow().showNotification("New Attribute created", Notification.TYPE_TRAY_NOTIFICATION);
+					getApplication().getMainWindow().showNotification("New Attribute  " + name +" created", Notification.TYPE_TRAY_NOTIFICATION);
 					parent.refreshTree(bwInstanceOID);
 					getApplication().getMainWindow().removeWindow(NewAttributeForm.this.getWindow());
 				} catch (java.lang.NullPointerException jle) {

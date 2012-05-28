@@ -20,7 +20,7 @@ public class SpecUtils {
 		
 		Element root = doc.getRootElement();
 		
-		// get the identifier child
+		//get the identifier child
 		Element specification = root.getChild("specification", root.getNamespace());
 		Element identifier = specification.getChild("metaData", specification.getNamespace()).getChild("identifier", specification.getNamespace());
 		

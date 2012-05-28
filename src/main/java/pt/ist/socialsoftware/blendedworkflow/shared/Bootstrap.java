@@ -34,7 +34,7 @@ public class Bootstrap {
 	/**
 	 * Initializes the Database.
 	 */
-	// PropertiesManager.getProperty("dbAlias");
+	//FIXME: PropertiesManager.getProperty("dbAlias");
 	public static void init() {
 		FenixFramework.initialize(new Config() {{
 			dbAlias = "C:/Users/User/Desktop/bwdb/" + (((Calendar.getInstance().getTime() +"").replaceAll(" ", "")).replaceAll(":", "")); // FIXME: Test proposes only.

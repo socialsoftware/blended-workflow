@@ -44,8 +44,6 @@ public class Task extends Task_Base {
 		newTask.setRole(getRole());
 	}
 	
-	
-	
 	/**
 	 * Get the Task condition data to use in the use interface.
 	 * @return a string with the condition data entities.
@@ -55,7 +53,7 @@ public class Task extends Task_Base {
 		Set<Attribute> attributes;
 		String dataString = "";
 		
-		// Get Condition Data
+		//Get Condition Data
 		if (isPreConstraint) {
 			entities = getPreConstraint().getEntities();
 			attributes = getPreConstraint().getAttributes();
@@ -64,12 +62,12 @@ public class Task extends Task_Base {
 			attributes = getPostConstraint().getAttributes();
 		}
 
-		// Add Attribute entities
+		//Add Attribute entities
 		for (Attribute attribute : attributes) {
 			entities.add(attribute.getEntity());
 		}
 		
-		// Create String
+		//Create String
 		int count = 0;
 		for (Entity entity : entities) {
 			if  (entities.size() == 1) {

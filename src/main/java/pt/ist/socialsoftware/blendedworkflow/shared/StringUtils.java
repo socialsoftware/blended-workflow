@@ -16,7 +16,7 @@ public class StringUtils {
 
 	private static Logger _log = Logger.getLogger(StringUtils.class);
 
-	// so that anyone instantiate the class
+	//So that anyone instantiate the class
 	private StringUtils() {}
 
 	/**
@@ -49,19 +49,19 @@ public class StringUtils {
 			int bufsize = (int) file.length();
 			FileInputStream fis = new FileInputStream(file) ;
 
-			// read into buffered byte stream - to preserve UTF-8
+			//read into buffered byte stream - to preserve UTF-8
 			BufferedInputStream inStream = new BufferedInputStream(fis);
 			ByteArrayOutputStream outStream = new ByteArrayOutputStream(bufsize);
 			byte[] buffer = new byte[bufsize];
 
-			// read chunks from the input stream and write them out
+			//read chunks from the input stream and write them out
 			int bytesRead = 0;
 			while ((bytesRead = inStream.read(buffer, 0, bufsize)) > 0) {
 				outStream.write(buffer, 0, bytesRead);
 			}
 			outStream.flush();
 
-			// convert the bytes to a UTF-8 string
+			//convert the bytes to a UTF-8 string
 			return outStream.toString("UTF-8");
 		}
 		catch (Exception e) {

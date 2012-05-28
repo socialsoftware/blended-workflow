@@ -10,7 +10,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Window.Notification;
 
 @SuppressWarnings("serial")
 public class LaunchForm extends VerticalLayout {
@@ -39,8 +38,6 @@ public class LaunchForm extends VerticalLayout {
 					activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
 					BlendedWorkflow.getInstance().getBwManager().createBWInstance(bwSpecificationOID, name, activeUserID);
 					Transaction.commit();
-
-					getApplication().getMainWindow().showNotification("Blended Workflow Instance created", Notification.TYPE_TRAY_NOTIFICATION);
 					getApplication().getMainWindow().removeWindow(LaunchForm.this.getWindow());
 				}
 				catch (java.lang.NullPointerException jle) {

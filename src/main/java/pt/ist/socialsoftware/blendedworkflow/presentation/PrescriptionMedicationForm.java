@@ -1,7 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import org.apache.log4j.Logger;
-
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
@@ -11,8 +9,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -26,9 +22,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class PrescriptionMedicationForm extends VerticalLayout {
-
-	private static Logger log = Logger.getLogger("XXXXXXXXXXXXXXX");
-
+	
 	HorizontalLayout footer = new HorizontalLayout();
 	private Label pmL = new Label("Prescription Medication");
 	private TextField numberTF = new TextField("Number");
@@ -92,19 +86,7 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 
 				//Add to parentWindowsTable and close
 				parent.prescriptionMedication(number, name, quantity, heartImpact);
-				getApplication().getMainWindow().showNotification("Medical Prescription Successfully added!");
-				
-				Transaction.begin();
-				for (Relation relation : dataModelInstance.getRelations()) {
-					for (RelationInstance relationInstance : relation.getRelationInstances()) {
-						log.info("RelationInstance \"" + relationInstance.getID() + "\"");
-						log.info("EI1 \"" + relationInstance.getEntityInstanceOne().getID() + "\"");
-						log.info("EI2 \"" + relationInstance.getEntityInstanceTwo().getID() + "\"");
-					}
-				}
-				log.info("**************************************************************");
-				Transaction.commit();
-				
+				getApplication().getMainWindow().showNotification("Medical Prescription " + name + " Successfully added!");
 				
 				getApplication().getMainWindow().removeWindow(PrescriptionMedicationForm.this.getWindow());
 			}

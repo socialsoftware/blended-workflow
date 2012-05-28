@@ -37,7 +37,7 @@ public class MaintainGoal extends MaintainGoal_Base {
 			newMaintainCondition = condition.cloneCondition(goalModelInstance);
 		}
 		
-		// Get EntityTypeContext from Template
+		//Get EntityTypeContext from Template
 		BWInstance bwInstance = goalModelInstance.getBwInstance();
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		Entity newEntityContext = null;

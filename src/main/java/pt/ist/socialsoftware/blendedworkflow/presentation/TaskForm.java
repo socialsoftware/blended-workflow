@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-//import java.text.DateFormat;
-//import java.util.Date;
+import java.text.DateFormat;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
@@ -18,26 +17,24 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
-//import com.vaadin.data.Property;
-//import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.NativeSelect;
-//import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class TaskForm extends VerticalLayout {
+	DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
 
 	private long taskWorkItemOID;
 	VerticalLayout preData = new VerticalLayout();
@@ -49,34 +46,10 @@ public class TaskForm extends VerticalLayout {
 	private Label mpL = new Label("Medical Prescription (Optional)");
 	private TextField medicalPrescriptionTF = new TextField("Description");
 	private Boolean first = true;
-
-//	private PopupDateField datetime;
 	 
 	public TaskForm(final long workItemOID) {
 		setMargin(true);
 		setSpacing(true);
-
-		//NEW
-//		datetime = new PopupDateField("Please select the starting time:");
-//        datetime.setValue(new java.util.Date());
-//        datetime.setResolution(PopupDateField.RESOLUTION_DAY);
-//        datetime.addListener(new Property.ValueChangeListener() {
-//        	@Override
-//        	public void valueChange(ValueChangeEvent event) {
-//        		// Get the new value and format it to the current locale
-//        		DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
-//        		Object value = event.getProperty().getValue();
-//        		if (value == null || !(value instanceof Date)) {
-//        			getWindow().showNotification("Invalid date entered");
-//        		} else {
-//        			String dateOut = dateFormatter.format(value);
-//        			// Show notification
-//        			getWindow().showNotification("Starting date: " + dateOut);
-//        		}				
-//        	}
-//        });
-//        datetime.setImmediate(true);
-//        addComponent(datetime);
 
 		this.taskWorkItemOID = workItemOID;
 
@@ -123,21 +96,25 @@ public class TaskForm extends VerticalLayout {
 				int workItemAttributeIndex = 0;
 				for (int y = 0; y < data.getComponentCount(); y++) {
 					AbstractField field;
-
+					String value;
 					if (!data.getComponent(y).getClass().equals(Label.class)) {
 						if(data.getComponent(y).getClass().equals(CheckBox.class)) {
 							field = (CheckBox) data.getComponent(y);
-						} else {
+							value = field.getValue().toString();
+						} else if(data.getComponent(y).getClass().equals(TextField.class)){
 							field = (TextField) data.getComponent(y);
+							value = field.getValue().toString();
+						} else {
+							field = (PopupDateField) data.getComponent(y);
+							value = dateFormatter.format(field.getValue());
 						}
-						String value = field.getValue().toString();
+
 						setWorkItemArgumentValue(workItemAttributeIndex, value);
 						workItemAttributeIndex++;
 					}
 				}
 
 				Transaction.begin();
-//				TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
 				User activeUser = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
 				taskWorkItem.setUser(activeUser);
 				Transaction.commit();
@@ -145,7 +122,6 @@ public class TaskForm extends VerticalLayout {
 				BlendedWorkflow.getInstance().getWorkListManager().checkInWorkItem(taskWorkItemOID);
 				Transaction.commit();
 
-				getApplication().getMainWindow().showNotification("Task accomplished", Notification.TYPE_TRAY_NOTIFICATION);
 				getApplication().getMainWindow().removeWindow(TaskForm.this.getWindow());
 			}
 		});
@@ -235,7 +211,17 @@ public class TaskForm extends VerticalLayout {
 				addLabel(entity.getName(), false);
 			}
 
-			if (attribute.getType().equals(AttributeType.BOOLEAN)) {
+			if (attribute.getName().contains("Date")) {
+				//TODO:
+				PopupDateField datetime;
+				datetime = new PopupDateField(attribute.getName());
+		        datetime.setValue(new java.util.Date());
+		        datetime.setResolution(PopupDateField.RESOLUTION_DAY);
+		        datetime.setImmediate(true);
+		        data.addComponent(datetime);
+		        //TODO:
+			}
+			else if (attribute.getType().equals(AttributeType.BOOLEAN)) {
 				addCheckBox(attribute.getName(), false, null);
 			} else {
 				addTextBox(attribute.getName(), false, null);
@@ -310,6 +296,7 @@ public class TaskForm extends VerticalLayout {
 				}
 			});
 			footer.addComponent(addPMBtn);
+			
 //			BWInstance bwInstance = taskWorkItem.getBwInstance();
 //			DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 //			Entity patient = dataModelInstance.getEntity("Patient");

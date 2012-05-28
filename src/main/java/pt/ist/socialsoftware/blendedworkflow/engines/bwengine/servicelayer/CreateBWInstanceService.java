@@ -16,7 +16,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.shared.PrintBWSpecification;
 
 public class CreateBWInstanceService implements Callable<String> {
 
@@ -36,46 +35,44 @@ public class CreateBWInstanceService implements Callable<String> {
 		log.info("Start");
 		Transaction.begin();
 		try {
-		// GetUser
-		User user = BlendedWorkflow.getInstance().getOrganizationalModel().getUser(userID);
-		
-		// Get BWSpecification and clone it
-		BWInstance bwInstance = new BWInstance(this.bwSpecification, name, user);
-		
-		// Launch case on YAWL
-		BWSpecification bwSpecification = bwInstance.getBwSpecification();
-		String yawlSpecificationID = bwSpecification.getYawlSpecficationID();
-		String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter().launchCase(yawlSpecificationID);
-		bwInstance.setYawlCaseID(yawlCaseID);
-		
-		// Create GoalWorkItems and TaskWorkItems
-		BlendedWorkflow.getInstance().getBwManager().notifyCreatedBWInstance(bwInstance);
-		
-		// Create Patients
-		populatePatients(bwInstance);
-		
-//		bwInstance.getGoalModelInstance().getEnabledWorkItems();
-		bwInstance.getTaskModelInstance().getEnabledWorkItems(); // Test proposes only //FIXME
-		
-		PrintBWSpecification.dataModelInstances("Medical Appointment");
-		
+			// GetUser
+			User user = BlendedWorkflow.getInstance().getOrganizationalModel().getUser(userID);
+
+			// Get BWSpecification and clone it
+			BWInstance bwInstance = new BWInstance(this.bwSpecification, name, user);
+
+			// Launch case on YAWL
+			BWSpecification bwSpecification = bwInstance.getBwSpecification();
+			String yawlSpecificationID = bwSpecification.getYawlSpecficationID();
+			String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter().launchCase(yawlSpecificationID);
+			bwInstance.setYawlCaseID(yawlCaseID);
+
+			// Create GoalWorkItems and TaskWorkItems
+			BlendedWorkflow.getInstance().getBwManager().notifyCreatedBWInstance(bwInstance);
+
+			// Create Patients
+			populatePatients(bwInstance);
+
+			bwInstance.getTaskModelInstance().getEnabledWorkItems(); // Test proposes only //FIXME
+
 		} catch (BlendedWorkflowException bwe) {
+			log.error(bwe.getError());
 			BlendedWorkflow.getInstance().getBwManager().notifyException(bwe.getError());
 		}
 		Transaction.commit();
 		log.info("END");
 		return "CreateBWInstanceService:Sucess";
 	}
-	
+
 	private void populatePatients(BWInstance bwInstance) {
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-		
+
 		//PatientType
 		Entity patient = dataModelInstance.getEntity("Patient");
 		Attribute name = patient.getAttribute("Name");
 		Attribute age = patient.getAttribute("Age");
 		Attribute heartProblems = patient.getAttribute("Heart Problems");
-		
+
 		//Patient.1
 		EntityInstance patient1 = new EntityInstance(dataModelInstance, patient);
 		AttributeInstance patient1Name = new AttributeInstance(name, patient1);
@@ -84,7 +81,7 @@ public class CreateBWInstanceService implements Callable<String> {
 		patient1Age.setValue("23");
 		AttributeInstance patient1HeartProblems = new AttributeInstance(heartProblems, patient1);
 		patient1HeartProblems.setValue("true");
-		
+
 		//Patient.2
 		EntityInstance patient2 = new EntityInstance(dataModelInstance, patient);
 		AttributeInstance patient2Name = new AttributeInstance(name, patient2);

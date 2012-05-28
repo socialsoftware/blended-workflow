@@ -15,23 +15,15 @@ import com.vaadin.ui.Window.Notification;
 @SuppressWarnings("serial")
 public class LoadForm extends VerticalLayout {
 
-//	private SpecificationReceiver activitySpecReceiver;
 	private SpecificationReceiver bwSpecReceiver;
 
 	public LoadForm(BWPresentation bwPresentation) {
-//		activitySpecReceiver = new SpecificationReceiver(bwPresentation);
 		bwSpecReceiver = new SpecificationReceiver(bwPresentation);
 
 		// Upload buttons
 		setMargin(true);
 		setWidth("320px");
 		setHeight("120px");
-
-		// Load activity specification (upload)
-//		Upload uploadActivity = new Upload("Upload the activity specification here:", this.activitySpecReceiver);
-//		uploadActivity.setButtonCaption("Submit");
-//		uploadActivity.addListener((Upload.SucceededListener) this.activitySpecReceiver);
-//		uploadActivity.addListener((Upload.FailedListener) this.activitySpecReceiver);
 
 		// Load goal specification (upload)
 		Upload uploadBW = new Upload("Upload the Blended Workflow specification here:", this.bwSpecReceiver);
@@ -47,15 +39,11 @@ public class LoadForm extends VerticalLayout {
 			public void buttonClick(ClickEvent event) {
 				try {
 					String bwSpec = bwSpecReceiver.getSpecInString();
-//					String activitySpec = activitySpecReceiver.getSpecInString();
-//					if (!bwSpec.equals(null) && !activitySpec.equals(null)) {
 					if (!bwSpec.equals(null)) {	
 						Transaction.begin();
-//						BlendedWorkflow.getInstance().getBwManager().loadBWSpecification(bwSpec, activitySpec);
 						BlendedWorkflow.getInstance().getBwManager().loadBWSpecification(bwSpec);
 						Transaction.commit();
 
-						getApplication().getMainWindow().showNotification("Specification loaded", Notification.TYPE_TRAY_NOTIFICATION);
 						getApplication().getMainWindow().removeWindow(LoadForm.this.getWindow());
 					}
 					else {
@@ -78,7 +66,6 @@ public class LoadForm extends VerticalLayout {
 		});
 		submitPanel.addComponent(cancel);
 
-//		addComponent(uploadActivity);
 		addComponent(uploadBW);
 		addComponent(submitPanel);
 		setComponentAlignment(submitPanel, Alignment.BOTTOM_CENTER);

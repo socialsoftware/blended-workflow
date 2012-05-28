@@ -65,7 +65,6 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		setState(WorkItemState.CONSTRAINT_VIOLATION);
 		updateInputWorkItemArguments();
 		updateOutputWorkItemArguments();
-//		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this); //WS
 		evaluate(false);
 	}
 
@@ -96,8 +95,6 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 		
 		getBwInstance().getGoalModelInstance().checkPedingWorkItems();
-
-//		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
 	}
 
 	@Override
@@ -114,7 +111,6 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
 
 		getBwInstance().getGoalModelInstance().checkPedingWorkItems();
-//		getBwInstance().getGoalModelInstance().getEnabledWorkItems();
 	}
 	
 	@Override
@@ -141,6 +137,9 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		evaluate(false);
 	}
 	
+	/**
+	 * TODO: Test.
+	 */
 	public void evaluate(Boolean isActivateCondition) {
 		//Check subGoals
 		int countSubGoals = 0;
@@ -187,17 +186,10 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 					notifyPreFalse();
 				}
 			} else {
-				log.info("TestArguments" + this.getID());
-				for (WorkItemArgument wa : getOutputWorkItemArguments()) {
-					log.info("wa"+ wa.getValue() + wa.getState());
-				}
-
 				result = getSucessCondition().evaluateWithWorkItem(this, ConditionType.SUCESS);
 				log.info("SucessCondition Evaluate result for " + this.getID() + " was " + result);
 				
-				//FIXME:
 				TripleStateBool maintainConditionsResult = TripleStateBool.TRUE;
-				log.info("1"+ maintainConditionsResult);
 				Boolean und = false;
 				for (Condition maintainCondition : getMaintainConditions()) {
 					for (WorkItemArgument wa2: getOutputWorkItemArguments()) {
@@ -207,9 +199,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 					}
 					if (!und) {
 						TripleStateBool m = maintainCondition.evaluateWithDataModel(null, this, ConditionType.SUCESS);
-						log.info("2"+ m);
 						maintainConditionsResult = maintainConditionsResult.AND(m);
-						log.info("3"+ maintainConditionsResult);
 					}
 				}
 				
@@ -226,6 +216,5 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 			}
 		}
 	}
-
 
 }

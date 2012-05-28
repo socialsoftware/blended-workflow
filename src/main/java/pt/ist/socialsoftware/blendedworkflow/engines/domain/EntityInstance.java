@@ -1,12 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
-import org.apache.log4j.Logger;
-
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public class EntityInstance extends EntityInstance_Base {
-	private static Logger log = Logger.getLogger("++++++++++++++++>");
 
 	public EntityInstance(DataModelInstance dataModelInstance, Entity entity) {
 		setEntity(entity);
@@ -20,15 +17,12 @@ public class EntityInstance extends EntityInstance_Base {
 	 * Create and assign EntityInstances and AttributesInstances to Workitems
 	 */
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute, ConditionType conditionType) {
-		log.info("AssignAttributeInstances: for Att: " + attribute.getName() + " CT:" + conditionType + " GW:" + goalWorkItem.getID());
 		boolean exists = false;
 		for (AttributeInstance attributeInstance : getAttributeInstances()) {
 			if (attributeInstance.getAttribute().equals(attribute)) {
 				if (conditionType.equals(ConditionType.SUCESS)) {
-					log.info("addOutputAttributeInstances:" + attributeInstance.getID());
 					goalWorkItem.addOutputAttributeInstances(attributeInstance);
 				} else {
-					log.info("addInputAttributeInstances:" + attributeInstance.getID());
 					goalWorkItem.addInputAttributeInstances(attributeInstance);
 				}
 				exists = true;
@@ -104,16 +98,16 @@ public class EntityInstance extends EntityInstance_Base {
 		int keyAttributesDefined = 0;
 		int keyAttributesSkipped = 0;
 		for (AttributeInstance attributeInstance : getAttributeInstances()) {
-			// Count total of key Attributes
+			//Count total of key Attributes
 			if (attributeInstance.getAttribute().getIsKeyAttribute() == true) {
 				keyAttributesTotal++;
 			}
 			
-			// Count total of key Attributes defined
+			//Count total of key Attributes defined
 			if (attributeInstance.getAttribute().getIsKeyAttribute() == true && attributeInstance.getState() == DataState.DEFINED) {
 				keyAttributesDefined++;
 
-			// Count total of key Attributes skipped
+			//Count total of key Attributes skipped
 			} else if (attributeInstance.getAttribute().getIsKeyAttribute() == true && attributeInstance.getState() == DataState.SKIPPED) {
 				keyAttributesSkipped++;
 			}

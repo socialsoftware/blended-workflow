@@ -19,7 +19,6 @@ public class ConstrainsForm extends VerticalLayout{
 	private final CheckBox forAllCB = new CheckBox("ForAll?");
 	private final CheckBox existsOneCB = new CheckBox("ExistsOne?");
 	
-//	private Logger log = Logger.getLogger("ConstrainsForm");
 	private String selectedType;
 	private String relationName;
 
@@ -59,7 +58,6 @@ public class ConstrainsForm extends VerticalLayout{
 					String condition = createCondition(entity, attribute);
 
 					parent.finalize(condition);
-					getApplication().getMainWindow().showNotification("Data Selected sucessfully");
 					getApplication().getMainWindow().removeWindow(parent.getWindow());
 					getApplication().getMainWindow().removeWindow(ConstrainsForm.this.getWindow());
 				}

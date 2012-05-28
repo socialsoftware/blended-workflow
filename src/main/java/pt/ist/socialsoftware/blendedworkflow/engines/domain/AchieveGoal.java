@@ -10,14 +10,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class AchieveGoal extends AchieveGoal_Base {
 
-//	private Logger log = Logger.getLogger("Goal");
-	
-//	public AchieveGoal(){
-//		super();
-//	}
-
-
-
 	/**
 	 * Create the GoalTree root Goal.
 	 */
@@ -93,92 +85,78 @@ public class AchieveGoal extends AchieveGoal_Base {
 		Set<Attribute> attributes = getSucessCondition().getAttributes();
 		String dataString = "";
 
-		// Add Attribute entities
+		//Add Attribute entities
 		for (Attribute attribute : attributes) {
 			entities.add(attribute.getEntity());
 		}
-
-		// Create String
+		
+		//Create String
 		int count = 0;
 		for (Entity entity : entities) {
-			if (entities.size() == 1 || count < entities.size()-1) {
+			if  (entities.size() == 1) {
 				dataString += entity.getName();
+			}
+			else if (count < entities.size()-1) {
+				dataString += entity.getName() + ", ";;
 			} else {
-				dataString += entity.getName() + ", ";
+				dataString += entity.getName();
 			}
 			count++;
 		}
 		return dataString;
 	}
+	
+	public String getPreConstraintData() {
+		Set<Entity> entities = getActivateConditions().get(0).getEntities(); //FIXME:
+		Set<Attribute> attributes = getActivateConditions().get(0).getAttributes();
+		String dataString = "";
+
+		//Add Attribute entities
+		for (Attribute attribute : attributes) {
+			entities.add(attribute.getEntity());
+		}
+		
+		//Create String
+		int count = 0;
+		for (Entity entity : entities) {
+			if  (entities.size() == 1) {
+				dataString += entity.getName();
+			}
+			else if (count < entities.size()-1) {
+				dataString += entity.getName() + ", ";;
+			} else {
+				dataString += entity.getName();
+			}
+			count++;
+		}
+		return dataString;
+	}
+	
+	
 
 	/**
 	 * Get the subGoals conditions data to use in the use interface.
 	 * @return a string with the condition data entities.
 	 */
-	public String getSubGoalsData() {
-		String dataString = "";
-		Boolean first = true;
-		for (AchieveGoal subGoal : getSubGoals()) {
-			String subGoalDataString = subGoal.getConstraintData();
-			if (first) {
-				dataString += subGoalDataString;
-			}
-			else {
-				dataString += ", " + subGoalDataString;
-			}
-		}
-		return dataString;
-	}
-
-	/**********************
-	 * Check Goals to create new WorkItems.
-	 **********************/
-//	public void checkState(BWInstance bwInstance) {
-//		int subgoalsAchievedCount = 0;
-//
-//		if (getState() == GoalState.DEACTIVATED) {
-//			if (getSubGoalsCount() > 0) { 
-//				for (AchieveGoal goal : getSubGoals()) {
-//					if ( (goal.getState() == GoalState.ACHIEVED) || (goal.getState() == GoalState.SKIPPED)) {
-//						subgoalsAchievedCount++;
-//					}
-//				}
-//				if (getSubGoalsCount() == subgoalsAchievedCount) { // SubGoals achieved
-//					setState(GoalState.ENABLED);
-//					if (getParentGoal() != null && getParentGoal().getState().equals(GoalState.ENABLED)) {
-//						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
-//							getParentGoal().getGoalWorkItem().notifyConstrainViolation();
-//						}
-//					}
-//					else {
-//						new GoalWorkItem(bwInstance, this);
-//					}
-//				}
+//	public String getSubGoalsData() {
+//		String dataString = "";
+//		Boolean first = true;
+//		for (AchieveGoal subGoal : getSubGoals()) {
+//			String subGoalDataString = subGoal.getConstraintData();
+//			if (first) {
+//				dataString += subGoalDataString;
 //			}
-//			else { // No SubGoals
-//				if (getState() == GoalState.DEACTIVATED) {
-//					setState(GoalState.ENABLED);
-//					if (!getParentGoal().equals(null) && getParentGoal().getState().equals(GoalState.ENABLED)) {
-//						if (getParentGoal().getGoalWorkItem().getState().equals(WorkItemState.GOAL_PENDING)) {
-//							getParentGoal().getGoalWorkItem().notifyConstrainViolation();
-//						}
-//					}
-//					else {
-//						new GoalWorkItem(bwInstance, this);
-//					}
-//				}
+//			else {
+//				dataString += ", " + subGoalDataString;
 //			}
 //		}
-//	}
-//
-//	public void updateParentGoal() {
-//		AchieveGoal parentGoal = getParentGoal();
-//		if (parentGoal.getState().equals(GoalState.ENABLED)) {
-//			parentGoal.setState(GoalState.DEACTIVATED);
-//			parentGoal.getGoalWorkItem().notifyPending();
-//		}
+//		return dataString;
 //	}
 
+	/**
+	 * Check Pending GoalWorkitems state.
+	 * @param bwInstance
+	 */
 	public void checkPending(BWInstance bwInstance) {
 		if (getGoalWorkItems() != null) {
 			for (GoalWorkItem goalWorkItem : getGoalWorkItems()) {
@@ -188,17 +166,4 @@ public class AchieveGoal extends AchieveGoal_Base {
 			}
 		}
 	}
-		
-//		int subgoalsAchievedCount = 0;	
-//				for (Goal goal : getSubGoals()) {
-//					if ((goal.getState() == GoalState.ACHIEVED) || (goal.getState() == GoalState.SKIPPED)) {
-//						subgoalsAchievedCount++;
-//					}
-//				}
-//				if (getSubGoalsCount() == subgoalsAchievedCount) {
-//					getGoalWorkItem().notifyEnabled();
-//				}
-//			}
-//		}
-//	}
 }

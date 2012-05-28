@@ -31,7 +31,10 @@ public enum TripleStateBool {
 		}
 		return SKIPPED;
 	}
-//
+
+	/**
+	 * Legacy.
+	 */
 //	public static boolean equals(Object obj) {
 //		if(!(obj instanceof TripleStateBool) && !(obj instanceof TripleStateBool.State)) {
 //			return false;
@@ -42,6 +45,5 @@ public enum TripleStateBool {
 //		return (TripleStateBool.State)obj == myState;
 //	}
 
-	
 }
 

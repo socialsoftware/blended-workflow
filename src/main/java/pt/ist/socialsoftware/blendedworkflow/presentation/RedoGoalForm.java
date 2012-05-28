@@ -15,7 +15,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Window.Notification;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.VerticalLayout;
@@ -26,7 +25,6 @@ public class RedoGoalForm extends VerticalLayout {
 	private NativeSelect bwInstances = new NativeSelect("BWInstance");
 	private NativeSelect parentGoal = new NativeSelect("Goal:");
 	private NativeSelect workItems = new NativeSelect("Completed or Skipped GoalWorkItems:");
-//	private Logger log = Logger.getLogger("RedoGoalForm");
 	
 	public RedoGoalForm() {
 
@@ -81,7 +79,6 @@ public class RedoGoalForm extends VerticalLayout {
 					BlendedWorkflow.getInstance().getWorkListManager().redoGoal(workItemlOID, activeUserID);
 					Transaction.commit();
 					
-					getApplication().getMainWindow().showNotification("Goal ReActivated successfully", Notification.TYPE_TRAY_NOTIFICATION);
 					getApplication().getMainWindow().removeWindow(RedoGoalForm.this.getWindow());
 				} catch (java.lang.NullPointerException jle) {
 					getApplication().getMainWindow().showNotification("Please fill all the fields");
@@ -130,7 +127,6 @@ public class RedoGoalForm extends VerticalLayout {
 	
 	private void updateWorkItemsInfo(long bwInstanceOID, long goalOID) {
 		this.workItems.removeAllItems();
-//		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		AchieveGoal goal = AbstractDomainObject.fromOID(goalOID);
 		
 		Transaction.begin();

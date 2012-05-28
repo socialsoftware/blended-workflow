@@ -30,7 +30,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
-import pt.ist.socialsoftware.blendedworkflow.shared.PrintBWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
@@ -125,11 +124,10 @@ public class CreateBWInstanceServiceTest {
 			assertEquals(11, goalModelInstance.getAchieveGoalsCount());
 			assertEquals(1, goalModelInstance.getMaintainGoalsCount());
 			assertEquals(6, taskModelInstance.getTasksCount());
-//			assertEquals(1, bwInstance.getWorkItemsCount()); // 1 with tasks active 
+			assertEquals(1, bwInstance.getWorkItemsCount());
 			
 			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
 
-			PrintBWSpecification.workItemsWithAttributtes(BWSPECIFICATION_NAME);
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {

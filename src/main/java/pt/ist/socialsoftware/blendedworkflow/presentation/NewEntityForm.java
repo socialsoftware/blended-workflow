@@ -38,7 +38,7 @@ public class NewEntityForm extends VerticalLayout{
 				try {
 					String name = (String) nameTf.getValue();
 					addEntity(bwInstanceOID, name);
-					getApplication().getMainWindow().showNotification("New Entity created", Notification.TYPE_TRAY_NOTIFICATION);
+					getApplication().getMainWindow().showNotification("New Entity " + name + " created", Notification.TYPE_TRAY_NOTIFICATION);
 					parent.refreshTree(bwInstanceOID);
 					getApplication().getMainWindow().removeWindow(NewEntityForm.this.getWindow());
 				}

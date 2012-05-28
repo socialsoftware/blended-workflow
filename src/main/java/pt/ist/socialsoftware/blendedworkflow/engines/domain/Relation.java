@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
+//TODO: Create two separate Relations in DML for EntityOne and EntityTwo.
 public class Relation extends Relation_Base {
 
 	public enum Cardinality {MANY, ZERO_OR_ONE, ONE}

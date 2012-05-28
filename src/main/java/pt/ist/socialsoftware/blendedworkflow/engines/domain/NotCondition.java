@@ -46,50 +46,24 @@ public class NotCondition extends NotCondition_Base {
 	public HashMap<Attribute, String> getcompareConditionValues() {
 		return new HashMap<Attribute, String>();
 	}
-	
-//	@Override
-//	public String getRdrCondition(String type) {
-//		return "(! " + getCondition() + ")";
-//	}
-	
-	/**
-	 * TO TEST
-	 */
-	@Override
-	public String getRdrTrueCondition() { 
-		return getCondition().getRdrFalseCondition();
-	}
 
 	@Override
-	public String getRdrFalseCondition() { 
-		return getCondition().getRdrTrueCondition();
-	}
-
-	@Override
-	public String getRdrSkippedCondition() { 
-		return getCondition().getRdrSkippedCondition();
-	}
-	
-	/**
-	 * NEW
-	 */
-	@Override
-	public String getRdrUndefinedConditionNEW() {
+	public String getRdrUndefinedCondition() {
 		return "True";
 	}
 
 	@Override
-	public String getRdrSkippedConditionNEW() {
+	public String getRdrSkippedCondition() {
 		return "True";
 	}
 
 	@Override
-	public String getRdrTrueConditionNEW() {
+	public String getRdrTrueCondition() {
 		return "True";
 	}
 
 	@Override
-	public String getRdrFalseConditionNEW() {
+	public String getRdrFalseCondition() {
 		return "True";
 	}
 	
@@ -113,8 +87,7 @@ public class NotCondition extends NotCondition_Base {
 
 	@Override
 	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		// TODO Auto-generated method stub
-		return null;
+		return getCondition().evaluateWithWorkItem(goalWorkItem, conditionType).NOT();
 	}
 
 }

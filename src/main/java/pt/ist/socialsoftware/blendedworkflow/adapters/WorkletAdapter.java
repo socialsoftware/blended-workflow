@@ -189,19 +189,19 @@ public class WorkletAdapter {
 			} else {
 				// Undefined Node
 				eCornerstone = getCornerstoneData(task, null, true, "UNDEFINED");
-				condition = task.getPreConstraint().getRdrUndefinedConditionNEW();
+				condition = task.getPreConstraint().getRdrUndefinedCondition();
 				eConclusion = createRdrConclusion("UNDEFINED", true);
 				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
 
 				// Skipped Node
 				eCornerstone = getCornerstoneData(task, null, true, "SKIPPED");
-				condition = task.getPreConstraint().getRdrSkippedConditionNEW();
+				condition = task.getPreConstraint().getRdrSkippedCondition();
 				eConclusion = createRdrConclusion("SKIPPED", true);
 				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
 
 				// True Node
 				eCornerstone = getCornerstoneData(task, null, true, "DEFINED");
-				condition = task.getPreConstraint().getRdrTrueConditionNEW();
+				condition = task.getPreConstraint().getRdrTrueCondition();
 				eConclusion = createRdrConclusion("TRUE", true);
 				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
 				
@@ -215,19 +215,19 @@ public class WorkletAdapter {
 			// PostConstraintTree
 			// Undefined Node
 			eCornerstone = getCornerstoneData(task, null, false, "UNDEFINED");
-			condition = task.getPostConstraint().getRdrUndefinedConditionNEW();
+			condition = task.getPostConstraint().getRdrUndefinedCondition();
 			eConclusion = createRdrConclusion("UNDEFINED", false);
 			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
 
 			// Skipped Node
 			eCornerstone = getCornerstoneData(task, null, false, "SKIPPED");
-			condition = task.getPostConstraint().getRdrSkippedConditionNEW();
+			condition = task.getPostConstraint().getRdrSkippedCondition();
 			eConclusion = createRdrConclusion("SKIPPED", false);
 			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
 
 			// True Node
 			eCornerstone = getCornerstoneData(task, null, false, "DEFINED");
-			condition = task.getPostConstraint().getRdrTrueConditionNEW();
+			condition = task.getPostConstraint().getRdrTrueCondition();
 			eConclusion = createRdrConclusion("TRUE", false);
 			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
 			

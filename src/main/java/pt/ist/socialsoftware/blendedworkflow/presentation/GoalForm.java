@@ -21,7 +21,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -92,7 +91,6 @@ public class GoalForm extends VerticalLayout {
 				BlendedWorkflow.getInstance().getWorkListManager().checkInWorkItem(goalWorkItemOID);
 				Transaction.commit();
 
-				getApplication().getMainWindow().showNotification("Goal accomplished", Notification.TYPE_TRAY_NOTIFICATION);
 				getApplication().getMainWindow().removeWindow(GoalForm.this.getWindow());
 			}
 		});

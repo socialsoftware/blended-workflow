@@ -56,32 +56,9 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	public HashMap<Attribute, String> getcompareConditionValues() {
 		return new HashMap<Attribute, String>();
 	}
-	
-//	@Override
-//	public String getRdrCondition(String type) {
-//		String condition = "";
-//		String attributeName = getAttribute().getName().replaceAll(" ", "");
-//		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
-//		
-//		condition += entityName + "_" + attributeName + "_State = " + type;
-//		return condition;
-//	}
-	
-	/**
-	 * TO TEST
-	 */
+
 	@Override
-	public String getRdrTrueCondition() {
-		String condition = "(";
-		String attributeName = getAttribute().getName().replaceAll(" ", "");
-		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
-		
-		condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + ")";
-		return condition;
-	}
-	
-	@Override
-	public String getRdrFalseCondition() {
+	public String getRdrUndefinedCondition() {
 		String condition = "(";
 		String attributeName = getAttribute().getName().replaceAll(" ", "");
 		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
@@ -89,7 +66,7 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + ")";
 		return condition;
 	}
-	
+
 	@Override
 	public String getRdrSkippedCondition() {
 		String condition = "(";
@@ -99,33 +76,9 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
 		return condition;
 	}
-	
-	
-	/**
-	 * NEW
-	 */
-	@Override
-	public String getRdrUndefinedConditionNEW() {
-		String condition = "(";
-		String attributeName = getAttribute().getName().replaceAll(" ", "");
-		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
-		
-		condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + ")";
-		return condition;
-	}
 
 	@Override
-	public String getRdrSkippedConditionNEW() {
-		String condition = "(";
-		String attributeName = getAttribute().getName().replaceAll(" ", "");
-		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
-		
-		condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
-		return condition;
-	}
-
-	@Override
-	public String getRdrTrueConditionNEW() {
+	public String getRdrTrueCondition() {
 		String condition = "(";
 		String attributeName = getAttribute().getName().replaceAll(" ", "");
 		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
@@ -135,7 +88,7 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	}
 
 	@Override
-	public String getRdrFalseConditionNEW() {
+	public String getRdrFalseCondition() {
 		return "(FALSE_NODE = FALSE)";
 	}
 

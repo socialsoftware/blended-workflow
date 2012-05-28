@@ -223,7 +223,8 @@
 			<bw:description>Write the Episode Medical Report.</bw:description>
 			<bw:SucessCondition>existsAttribute(Medical Report.Description)</bw:SucessCondition>
 			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
-			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
+			<!-- <bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1> -->
+			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true) and existsAttribute(Patient Data.Blood Pressure)</bw:ActivateCondition1>
 			<bw:ParentName>Process Medical Appointment</bw:ParentName>
 			<bw:Context>Medical Report</bw:Context>
 		</bw:Goal>
@@ -275,7 +276,7 @@
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Name>Add Prescription Medication</bw:Name>
-			<bw:description>Write the Episode Medical Prescription.</bw:description>
+			<bw:description>Add a Prescription Medication to a Medical Prescription.</bw:description>
 			<bw:SucessCondition>existsEntity(Prescription Medication) and existsAttribute(Prescription Medication.Name) and existsAttribute(Prescription Medication.Quantity) and existsAttribute(Prescription Medication.Heart Impact)</bw:SucessCondition>
 			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
 			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
@@ -286,7 +287,7 @@
 		
 		 
 		<bw:MaintainGoal>
-			<bw:Name>Patient with Heart Problems cannot have Prescription Medication with Heart Impact</bw:Name>
+			<bw:Name>Hearth Medication Restriction</bw:Name>
 			<bw:description>Patient with Heart Problems cannot have Prescription Medication with Heart Impact.</bw:description>
 			<bw:MaintainCondition>compareAttributeTo(Prescription Medication.Heart Impact,=.false) or forAll[Patient.Patient has Episodes,compareAttributeTo(Patient.Heart Problems,=.false)]</bw:MaintainCondition>
 			<bw:Context>Prescription Medication</bw:Context>

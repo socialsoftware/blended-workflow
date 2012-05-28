@@ -15,20 +15,14 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class ActivateGoalForm extends VerticalLayout {
 
-//	private NativeSelect bwInstances = new NativeSelect("BWInstance");
-//	private NativeSelect parentGoal = new NativeSelect("Goal to Activate:");
 	private NativeSelect entityInstanceContext = new NativeSelect("Select the Goal Context:");
-	
-//	private static Logger log = Logger.getLogger("ActivateGoalForm");
-	
-	public ActivateGoalForm(final long bwInstanceOID, final long goalOID) {
 
+	public ActivateGoalForm(final long bwInstanceOID, final long goalOID) {
 		HorizontalLayout dataHL = new HorizontalLayout();
 		VerticalLayout dataVL = new VerticalLayout();
 		HorizontalLayout submitPanel = new HorizontalLayout();
@@ -42,54 +36,19 @@ public class ActivateGoalForm extends VerticalLayout {
 		dataHL.setSpacing(true);
 		submitPanel.setSpacing(true);
 
-//		bwInstances.setImmediate(true);
-//		bwInstances.addListener(new Property.ValueChangeListener() {
-//			public void valueChange(ValueChangeEvent event) {
-//				if (bwInstances.getValue() == null) {
-//					parentGoal.removeAllItems();
-//					entityInstanceContext.removeAllItems();
-//				} else {
-//					long bwInstanceOID = (Long) bwInstances.getValue();
-//					BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
-//					getGoals(bwInstance);
-//				}
-//			}
-//		});
-//		
-//		parentGoal.setImmediate(true);
-//		parentGoal.addListener(new Property.ValueChangeListener() {
-//			public void valueChange(ValueChangeEvent event) {
-//				if (parentGoal.getValue() == null) {
-//					entityInstanceContext.removeAllItems();
-//				} else {
-//					long bwInstanceOID = (Long) bwInstances.getValue();
-//					long goalOID = (Long) parentGoal.getValue();
-//					updateEntityInstancesInfo(bwInstanceOID, goalOID);
-//				}
-//			}
-//		});
-
 		Button submit = new Button("Activate");
 		submit.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-//				Long bwInstanceOID = (Long) bwInstances.getValue();
-//				Long parentGoalOID = (Long) parentGoal.getValue();
+				Long entityInstance = (Long) entityInstanceContext.getValue();
 
-//				if (bwInstanceOID == null || parentGoalOID == null) {
-//					getApplication().getMainWindow().showNotification("Please fill all the fields");
-//				} else {
-					Long entityInstance = (Long) entityInstanceContext.getValue();
+				Transaction.begin();
+				BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(bwInstanceOID, goalOID, entityInstance);
+				Transaction.commit();
 
-					Transaction.begin();
-					BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(bwInstanceOID, goalOID, entityInstance);
-					Transaction.commit();
-
-					getApplication().getMainWindow().showNotification("Goal Activated successfully", Notification.TYPE_TRAY_NOTIFICATION);
-					showDataModelTreeWindow(bwInstanceOID);
-					getApplication().getMainWindow().removeWindow(ActivateGoalForm.this.getWindow());
-				} 
-//			}
+				showDisableConditionsWindow(bwInstanceOID);
+				getApplication().getMainWindow().removeWindow(ActivateGoalForm.this.getWindow());
+			} 
 		});
 
 		Button cancel = new Button("Cancel");
@@ -101,8 +60,6 @@ public class ActivateGoalForm extends VerticalLayout {
 		});
 
 		// Layout
-//		addComponent(bwInstances);
-//		addComponent(parentGoal);
 		addComponent(entityInstanceContext);
 
 		dataHL.addComponent(dataVL);
@@ -114,7 +71,6 @@ public class ActivateGoalForm extends VerticalLayout {
 		setComponentAlignment(submitPanel, Alignment.BOTTOM_CENTER);
 
 		// Populate
-//		getBWInstances();
 		updateEntityInstancesInfo(bwInstanceOID, goalOID);
 	}
 	
@@ -136,29 +92,7 @@ public class ActivateGoalForm extends VerticalLayout {
 		Transaction.commit();
 	}
 
-//	private void getGoals(BWInstance bwInstance) {
-//		Transaction.begin();
-//		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-//		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
-//			this.parentGoal.addItem(goal.getOID());
-//			this.parentGoal.setItemCaption(goal.getOID(), goal.getName());
-//		}
-//		Transaction.commit();
-//	}
-//
-//	private void getBWInstances() {
-//		Transaction.begin();
-//		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance().getBwSpecifications()) {
-//			for (BWInstance bwInstance : bwSpecification.getBwInstances()) {
-//				this.bwInstances.addItem(bwInstance.getOID());
-//				this.bwInstances.setItemCaption(bwInstance.getOID(), bwInstance.getName());
-//			}
-//		}
-//		Transaction.commit();
-//	}
-	
-	// generate dataModelWindow
-	protected void showDataModelTreeWindow(long bwInstanceOID) {
+	protected void showDisableConditionsWindow(long bwInstanceOID) {
 		Window dataModel = new Window("Disable Conditions Form");
 		dataModel.setContent(new ManageAchieveGoalsConditionsForm(this, bwInstanceOID));
 		dataModel.center();

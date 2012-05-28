@@ -5,20 +5,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 
-	private Logger log = Logger.getLogger("ExistsEntityCondition");
-
-	
 	public ExistsEntityCondition(Entity entity) {
 		setEntity(entity);
 	}
-	
+
 	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
@@ -32,24 +27,24 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 		Entity entity = dataModelInstance.getEntity(getEntity().getName());
 		return new ExistsEntityCondition(entity);
 	}
-	
+
 	@Override
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		getEntity().assignAllAttributeInstances(goalWorkItem, getEntity(), conditionType);
 	}
-	
+
 	@Override
 	public void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
 		getEntity().assignAllAttributeInstances(taskWorkItem, getEntity(), conditionType);
 	}
-	
+
 	@Override
 	public Set<Entity> getEntities() {
 		Set<Entity> entity = new HashSet<Entity>();
 		entity.add(getEntity());
 		return entity;
 	}
-	
+
 	@Override
 	public Set<Attribute> getAttributes() {
 		Set<Attribute> attributes = new HashSet<Attribute>();
@@ -60,134 +55,21 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 		}
 		return attributes;
 	}
-	
+
 	@Override
 	public HashMap<Attribute, String> getcompareConditionValues() {
 		return new HashMap<Attribute, String>();
 	}
-	
-//	@Override
-//	public String getRdrCondition(String type) {
-//		String condition = "";
-//		String entityName = getEntity().getName().replaceAll(" ", "");
-//		
-//		int attributteCount = 0;
-//		for (Attribute attribute : getEntity().getAttributes()) {
-//			//if (attribute.getIsKeyAttribute()) {
-//
-//			String joiner = " | ";
-//			if (type.equals("DEFINED"))
-//				joiner = " & ";
-//			
-//			if (attributteCount < getEntity().getAttributes().size()-1) {
-//				String attributeName = attribute.getName().replaceAll(" ", "");
-//				condition += entityName + "_" + attributeName + "_State = " + type + joiner;
-//			}
-//			else {
-//				String attributeName = attribute.getName().replaceAll(" ", "");
-//				condition += entityName + "_" + attributeName + "_State = " + type;
-//			}
-//			attributteCount++;
-//			//}
-//		}
-//		return condition;
-//	}
-	
-	/**
-	 * AND| T | F | S   
-	 * --------------
-	 *  T | T | F | S
-	 * --------------
-	 *  F | F | F | S
-	 * --------------
-	 *  S | S | S | S
-	 */
-	@Override
-	public String getRdrTrueCondition() {
-		String condition = "(";
-		String entityName = getEntity().getName().replaceAll(" ", "");
-		
-//		int attributteCount = 0;
-		
-		Boolean first = true;
-		
-		for (Attribute attribute : getEntity().getAttributes()) {
-			if (attribute.getIsKeyAttribute()) {
-
-				if (first) {
-					String attributeName = attribute.getName().replaceAll(" ", "");
-					condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED;
-					first = false;
-				} else {
-					String attributeName = attribute.getName().replaceAll(" ", "");
-					condition += " & " + entityName + "_" + attributeName + "_State = " + DataState.DEFINED;
-				}
-				
-//				if (attributteCount < getEntity().getAttributes().size()-1) {
-//					String attributeName = attribute.getName().replaceAll(" ", "");
-//					condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + " & ";
-//				}
-//				else {
-//					String attributeName = attribute.getName().replaceAll(" ", "");
-//					condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + ")";
-//				}
-//				attributteCount++;
-			}
-		}
-		condition += ")";
-		return condition;
-	}
 
 	@Override
-	public String getRdrFalseCondition() {
-		return "((!" + getRdrTrueCondition() + ") & (!" + getRdrSkippedCondition() + "))";
-	}
-
-	@Override
-	public String getRdrSkippedCondition() {
+	public String getRdrUndefinedCondition() {
 		String condition = "(";
 		String entityName = getEntity().getName().replaceAll(" ", "");
 		Boolean first = true;
-		
-		for (Attribute attribute : getEntity().getAttributes()) {
-			if (attribute.getIsKeyAttribute()) {
-				
-				if (first) {
-					String attributeName = attribute.getName().replaceAll(" ", "");
-					condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED;
-					first = false;
-				} else {
-					String attributeName = attribute.getName().replaceAll(" ", "");
-					condition += " | " + entityName + "_" + attributeName + "_State = " + DataState.SKIPPED;
-				}
 
-//				if (attributteCount < getEntity().getAttributes().size()-1) {
-//					String attributeName = attribute.getName().replaceAll(" ", "");
-//					condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + " | ";
-//				}
-//				else {
-//					String attributeName = attribute.getName().replaceAll(" ", "");
-//					condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
-//				}
-			}
-		}
-		condition += ")";
-		return condition;
-	}
-	
-	
-	/**
-	 * NEW
-	 */
-	@Override
-	public String getRdrUndefinedConditionNEW() {
-		String condition = "(";
-		String entityName = getEntity().getName().replaceAll(" ", "");
-		Boolean first = true;
-		
 		for (Attribute attribute : getEntity().getAttributes()) {
 			if (attribute.getIsKeyAttribute()) {
-				
+
 				if (first) {
 					String attributeName = attribute.getName().replaceAll(" ", "");
 					condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED;
@@ -204,14 +86,14 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 
 	@Override
-	public String getRdrSkippedConditionNEW() {
+	public String getRdrSkippedCondition() {
 		String condition = "(";
 		String entityName = getEntity().getName().replaceAll(" ", "");
 		Boolean first = true;
-		
+
 		for (Attribute attribute : getEntity().getAttributes()) {
 			if (attribute.getIsKeyAttribute()) {
-				
+
 				if (first) {
 					String attributeName = attribute.getName().replaceAll(" ", "");
 					condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED;
@@ -227,12 +109,12 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 
 	@Override
-	public String getRdrTrueConditionNEW() {
+	public String getRdrTrueCondition() {
 		String condition = "(";
 		String entityName = getEntity().getName().replaceAll(" ", "");
-		
+
 		Boolean first = true;
-		
+
 		for (Attribute attribute : getEntity().getAttributes()) {
 			if (attribute.getIsKeyAttribute()) {
 
@@ -244,7 +126,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 					String attributeName = attribute.getName().replaceAll(" ", "");
 					condition += " & " + entityName + "_" + attributeName + "_State = " + DataState.DEFINED;
 				}
-				
+
 			}
 		}
 		condition += ")";
@@ -252,15 +134,15 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 
 	@Override
-	public String getRdrFalseConditionNEW() {
+	public String getRdrFalseCondition() {
 		return "(FALSE_NODE = FALSE)";
 	}
-	
+
 	@Override
 	public String toString() {
 		return "existsEntity(" + getEntity().getName() +")";
 	}
-	
+
 	@Override
 	public Boolean existExistEntity() {
 		return true;
@@ -279,14 +161,14 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 		} else if (conditionType.equals(ConditionType.SUCESS)) {
 			arguments = goalWorkItem.getOutputWorkItemArguments();
 		}
-		
+
 		// Exists Entity
 		for (WorkItemArgument workItemArgument : arguments) {
 			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 			Attribute conditionAttribute = getEntity().getAttribute(workItemAttribute.getName());
 			if (conditionAttribute != null && conditionAttribute.getIsKeyAttribute()) {
 				workItemEntityInstance = workItemArgument.getAttributeInstance().getEntityInstance();
-				
+
 				if (workItemArgument.getState().equals(DataState.SKIPPED)) {
 					finalResult = finalResult.AND(TripleStateBool.SKIPPED);
 				} else if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
@@ -296,7 +178,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 				}
 			}
 		}
-		
+
 		//Exists Entity Key Relations
 		for (RelationInstance relationInstance : workItemEntityInstance.getEntityInstanceOneRelationInstances()) {
 			if (relationInstance.getRelationType().getIsTwoKeyEntity()) {
@@ -304,33 +186,31 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 				finalResult = finalResult.AND(evaluateWithDataModel(two, goalWorkItem, conditionType));
 			}
 		}
-		
+
 		for (RelationInstance relationInstance : workItemEntityInstance.getEntityInstanceTwoRelationInstances()) {
 			if (relationInstance.getRelationType().getIsOneKeyEntity()) {
 				EntityInstance one = relationInstance.getEntityInstanceOne();
 				finalResult = finalResult.AND(evaluateWithDataModel(one, goalWorkItem, conditionType));
 			}
 		}
-		
+
 		return finalResult;
 	}
-	
+
 	@Override
 	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		TripleStateBool finalResult = TripleStateBool.TRUE;
-		
-		log.info("evaluateWithDataModel:" + entityInstance.getID() + goalWorkItem.getID());
-		// Exists Entity
+
+		//Exists Entity
 		for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
 			if (attributeInstance.getAttribute().getIsKeyAttribute()) {
 				TripleStateBool attributeResult;
-				
+
 				DataState state = getWorkItemState(attributeInstance, goalWorkItem, conditionType);
-				log.info("state:" + state);
 				if (state == null) {
 					state = attributeInstance.getState();
 				}				
-				
+
 				if (state.equals(DataState.DEFINED)) {
 					attributeResult = TripleStateBool.TRUE;
 				} else if (state.equals(DataState.SKIPPED)) {
@@ -338,7 +218,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 				} else {
 					attributeResult = TripleStateBool.FALSE;
 				}
-			
+
 				finalResult = finalResult.AND(attributeResult);
 			}
 		}
@@ -349,17 +229,17 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 				finalResult = finalResult.AND(evaluateWithDataModel(two, goalWorkItem, conditionType));
 			}
 		}
-		
+
 		for (RelationInstance relationInstance : entityInstance.getEntityInstanceTwoRelationInstances()) {
 			if (relationInstance.getRelationType().getIsOneKeyEntity()) {
 				EntityInstance one = relationInstance.getEntityInstanceOne();
 				finalResult = finalResult.AND(evaluateWithDataModel(one, goalWorkItem, conditionType));
 			}
 		}
-		*/
+		 */
 		return finalResult;
 	}
-	
+
 	private DataState getWorkItemState(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
 //		List<WorkItemArgument> arguments = null;
 //		if (conditionType.equals(ConditionType.ACTIVATE)) {
@@ -369,11 +249,11 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 //		}
 //		for (WorkItemArgument workItemArgument : arguments) {
 		if (goalWorkItem != null) {
-		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
-			if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
-				return workItemArgument.getState();
-			}
-		} }
+			for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
+				if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
+					return workItemArgument.getState();
+				}
+			} }
 		return null;
 	}
 

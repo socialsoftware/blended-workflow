@@ -35,30 +35,11 @@ public abstract class Condition extends Condition_Base {
 	public abstract Set<Attribute> getAttributes();
 	
 	public abstract HashMap<Attribute,String> getcompareConditionValues();
-	
-	/**
-	 * Parse an Blended Workflow condition to a Worklet Service one.
-	 * @param type the type of the condition (DEFINED, UNDEFINED or SKIPPED)
-	 * @return a string with the condition
-	 */
-//	public abstract String getRdrCondition(String type);
-	
-	/**
-	 * 
-	 * @return
-	 */
+
+	public abstract String getRdrUndefinedCondition();
+	public abstract String getRdrSkippedCondition();
 	public abstract String getRdrTrueCondition();
 	public abstract String getRdrFalseCondition();
-	public abstract String getRdrSkippedCondition();
-	
-	/**
-	 * 
-	 * NEW
-	 */
-	public abstract String getRdrUndefinedConditionNEW();
-	public abstract String getRdrSkippedConditionNEW();
-	public abstract String getRdrTrueConditionNEW();
-	public abstract String getRdrFalseConditionNEW();
 	
 	
 	public abstract String toString();
