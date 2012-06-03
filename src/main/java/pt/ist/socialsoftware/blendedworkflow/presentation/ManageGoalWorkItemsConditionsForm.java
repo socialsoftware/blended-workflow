@@ -9,6 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 
 import com.vaadin.ui.Alignment;
@@ -67,7 +68,7 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 				Transaction.begin();
 				GoalWorkItem w = AbstractDomainObject.fromOID(workItemOID);
 				w.setState(WorkItemState.ACTIVATED);
-				long bwInstanceOID = w.getBwInstance().getOID();
+//				long bwInstanceOID = w.getBwInstance().getOID();
 				
 				//remove old ai
 				List<AttributeInstance> oldAI = w.getInputAttributeInstances();
@@ -79,9 +80,19 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 				for (WorkItemArgument wa : old) {
 					w.removeInputWorkItemArguments(wa);
 				}
+				
+				for (Condition activateCondition : w.getActivateConditions()) {
+					activateCondition.assignAttributeInstances(w, ConditionType.ACTIVATE);
+				}
+				
+				w.createInputWorkItemArguments();
+				w.updateInputWorkItemArguments();
+				
+				w.updateOutputWorkItemArguments();
+				
 				Transaction.commit();
 				Transaction.begin();
-				BlendedWorkflow.getInstance().getWorkListManager().enableGoalWorkItemsService(bwInstanceOID);
+//				BlendedWorkflow.getInstance().getWorkListManager().enableGoalWorkItemsService(bwInstanceOID);
 				Transaction.commit();
 				getApplication().getMainWindow().removeWindow(ManageGoalWorkItemsConditionsForm.this.getWindow());
 			}

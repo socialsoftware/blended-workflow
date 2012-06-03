@@ -23,7 +23,7 @@
 				<bw:isKey>false</bw:isKey>
 			</bw:Attribute>
 			<bw:Attribute>
-				<bw:Name>Heart Problems</bw:Name>
+				<bw:Name>Cardiac Problems</bw:Name>
 				<bw:Type>BOOLEAN</bw:Type>
 				<bw:isKey>false</bw:isKey>
 			</bw:Attribute>
@@ -184,7 +184,7 @@
 	
 		<bw:RootGoal>
 			<bw:Name>Process Medical Appointment</bw:Name>
-			<bw:description>Process a Patient Medical Appointment</bw:description>
+			<bw:description>Process a Patient Medical Appointment.</bw:description>
 			<bw:SucessCondition>true</bw:SucessCondition>
 			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
 			<bw:ActivateCondition1>true</bw:ActivateCondition1>
@@ -211,7 +211,7 @@
 		</bw:Goal>
 		<bw:Goal>
 			<bw:Name>Book Patient</bw:Name>
-			<bw:description>Book the Patient.</bw:description>
+			<bw:description>Book a Doctor Appointment for a Patient.</bw:description>
 			<bw:SucessCondition>existsEntity(Episode)</bw:SucessCondition>
 			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
 			<bw:ActivateCondition1>true</bw:ActivateCondition1>
@@ -256,8 +256,8 @@
 			<bw:Context>Patient Data</bw:Context>
 		</bw:Goal>
 		<bw:Goal>
-			<bw:Name>Meassure Blood Pressure</bw:Name>
-			<bw:description>Meassure the Patient Blood Pressure.</bw:description>
+			<bw:Name>Measure Blood Pressure</bw:Name>
+			<bw:description>Measure the Patient Blood Pressure.</bw:description>
 			<bw:SucessCondition>existsAttribute(Patient Data.Blood Pressure)</bw:SucessCondition>
 			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
 			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
@@ -287,9 +287,9 @@
 		
 		 
 		<bw:MaintainGoal>
-			<bw:Name>Hearth Medication Restriction</bw:Name>
-			<bw:description>Patient with Heart Problems cannot have Prescription Medication with Heart Impact.</bw:description>
-			<bw:MaintainCondition>compareAttributeTo(Prescription Medication.Heart Impact,=.false) or forAll[Patient.Patient has Episodes,compareAttributeTo(Patient.Heart Problems,=.false)]</bw:MaintainCondition>
+			<bw:Name>Heart Medication Restriction</bw:Name>
+			<bw:description>Patient with Cardiac Problems cannot have Prescription Medication with Heart Impact.</bw:description>
+			<bw:MaintainCondition>compareAttributeTo(Prescription Medication.Heart Impact,=.false) or forAll[Patient.Patient has Episodes,compareAttributeTo(Patient.Cardiac Problems,=.false)]</bw:MaintainCondition>
 			<bw:Context>Prescription Medication</bw:Context>
 		</bw:MaintainGoal>
 		
@@ -300,7 +300,7 @@
 	 
 		<bw:Task>
 			<bw:Name>Booking</bw:Name>
-			<bw:description>Book a Patient for a Doctor Appointment.</bw:description>
+			<bw:description>Book a Doctor Appointment for a Patient.</bw:description>
 			<bw:PreCondition>true</bw:PreCondition>
 			<bw:PostCondition>existsEntity(Episode) and existsAttribute(Episode.Reserve Date)</bw:PostCondition>
 			<bw:FlowType>root</bw:FlowType>
@@ -312,7 +312,7 @@
 		 
 		<bw:Task>
 			<bw:Name>Check-in Patient</bw:Name>
-			<bw:description>Check-in the Patient</bw:description>
+			<bw:description>Check-in the Patient.</bw:description>
 			<bw:PreCondition>existsAttribute(Episode.Reserve Date)</bw:PreCondition>
 			<bw:PostCondition>compareAttributeTo(Episode.CheckIn,=.true)</bw:PostCondition>
 			<bw:FlowType>none</bw:FlowType>
@@ -349,7 +349,7 @@
 		</bw:Task>
 		<bw:Task>
 			<bw:Name>Doctor Appointment</bw:Name>
-			<bw:description>Patient doctor appointment</bw:description>
+			<bw:description>The Doctor Appointment.</bw:description>
 			<bw:PreCondition>existsAttribute(Patient Data.Blood Pressure)</bw:PreCondition>
 			<bw:PostCondition>existsAttribute(Medical Report.Description)</bw:PostCondition>
 			<bw:FlowType>and-join</bw:FlowType>
@@ -362,7 +362,7 @@
 		</bw:Task>
 		<bw:Task>
 			<bw:Name>Check-out Patient</bw:Name>
-			<bw:description>Check-out the Patient</bw:description>
+			<bw:description>Check-out the Patient.</bw:description>
 			<bw:PreCondition>existsEntity(Episode) and existsAttribute(Medical Report.Description)</bw:PreCondition>
 			<bw:PostCondition>compareAttributeTo(Episode.CheckOut,=.true)</bw:PostCondition>
 			<bw:FlowType>none</bw:FlowType>

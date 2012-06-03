@@ -162,8 +162,9 @@ public class NewGoalForm extends VerticalLayout {
 				showAllDataModelTreeWindow(bwInstanceOID);
 			}
 		});
-		addContext.setHeight("15px");
-		addContext.setWidth("20px");
+		addContext.setHeight("30px");
+		addContext.setWidth("40px");
+		
 
 		// Layout
 		dataVL.addComponent(conditionType);
@@ -177,6 +178,7 @@ public class NewGoalForm extends VerticalLayout {
 		
 		contextHL.addComponent(entityContext);
 		contextHL.addComponent(addContext);
+		contextHL.setComponentAlignment(addContext, Alignment.BOTTOM_CENTER);
 		
 		addComponent(name);
 		addComponent(description);

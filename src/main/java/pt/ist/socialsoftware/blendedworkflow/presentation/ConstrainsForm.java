@@ -4,6 +4,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
@@ -13,7 +14,9 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class ConstrainsForm extends VerticalLayout{
 
-	private final CheckBox isNotCB = new CheckBox("False?");
+	private final Label label = new Label("Please Select the Data Constraint:");
+	private final Label label2 = new Label("Please Select the Relation Constraint:");
+	private final CheckBox isNotCB = new CheckBox("not?");
 	private final TextField valueTf = new TextField("Value");
 	private final NativeSelect typeNS = new NativeSelect("Operator");
 	private final CheckBox forAllCB = new CheckBox("ForAll?");
@@ -27,6 +30,8 @@ public class ConstrainsForm extends VerticalLayout{
 		selectedType = type;
 		relationName = relation;
 		
+		label.addStyleName("h2");
+		label2.addStyleName("h2");
 		setMargin(true);
 
 		setWidth("300px");
@@ -34,6 +39,7 @@ public class ConstrainsForm extends VerticalLayout{
 
 		typeNS.setNullSelectionAllowed(false);
 		typeNS.addItem("");
+		typeNS.addItem("Exists(\u2203)");
 		typeNS.addItem(">");
 		typeNS.addItem(">=");
 		typeNS.addItem("<");
@@ -42,10 +48,13 @@ public class ConstrainsForm extends VerticalLayout{
 		typeNS.addItem("!=");
 		typeNS.setValue("");
 		
-		forAllCB.setValue(true);
+//		forAllCB.setValue(true);
 
 		HorizontalLayout consPanel = new HorizontalLayout();
 		consPanel.setSpacing(true);
+		
+		HorizontalLayout consPanel2 = new HorizontalLayout();
+		consPanel2.setSpacing(true);
 
 		HorizontalLayout submitPanel = new HorizontalLayout();
 		submitPanel.setSpacing(true);
@@ -76,19 +85,19 @@ public class ConstrainsForm extends VerticalLayout{
 			}
 		});
 
-		addComponent(isNotCB);
-		
-		if (type.equals("Attribute") || type.equals("RelationAttribute")) {
-			consPanel.addComponent(typeNS);
-			consPanel.addComponent(valueTf);
-		}
-		
+		consPanel.addComponent(isNotCB);
+		consPanel.addComponent(typeNS);
+		consPanel.addComponent(valueTf);
+		addComponent(label);
+		addComponent(consPanel);
+
 		if (type.equals("RelationEntity") || type.equals("RelationAttribute")) {
-			addComponent(forAllCB);
-			addComponent(existsOneCB);
+			consPanel2.addComponent(forAllCB);
+			consPanel2.addComponent(existsOneCB);
+			addComponent(label2);
+			addComponent(consPanel2);
 		}
 
-		addComponent(consPanel);
 		submitPanel.addComponent(bwInstanceCreateBtn);
 		submitPanel.addComponent(cancel);
 		addComponent(submitPanel);
@@ -123,7 +132,7 @@ public class ConstrainsForm extends VerticalLayout{
 		//Constrains
 		String opType = (String) typeNS.getValue();
 		String value = (String) valueTf.getValue();
-		if (opType.equals("") || value.equals("")) {
+		if (opType.equals("") || value.equals("") || opType.equals("Exists(\u2203)")) {
 			constrain = "";
 		}
 		else {

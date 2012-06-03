@@ -242,6 +242,8 @@ public class TaskForm extends VerticalLayout {
 			DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 			Entity patient = dataModelInstance.getEntity("Patient");
 			addNativeSelect(patient);
+		
+			
 			//FIXME: create relation
 		}
 		
@@ -352,7 +354,7 @@ public class TaskForm extends VerticalLayout {
 		ns.setNullSelectionAllowed(false);
 		ns.setImmediate(true);
 		entitiesInstances.addComponent(ns);
-
+		ns.addStyleName("h2");
 		for (EntityInstance entityInstance : entity.getEntityInstances()) {
 			ns.addItem(entityInstance.getOID());
 			ns.setItemCaption(entityInstance.getOID(), entityInstance.getAttributeInstance("Name.1").getValue());

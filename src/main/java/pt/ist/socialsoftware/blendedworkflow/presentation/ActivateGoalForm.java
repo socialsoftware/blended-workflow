@@ -11,6 +11,7 @@ import jvstm.Transaction;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.NativeSelect;
@@ -21,19 +22,17 @@ import com.vaadin.ui.VerticalLayout;
 public class ActivateGoalForm extends VerticalLayout {
 
 	private NativeSelect entityInstanceContext = new NativeSelect("Select the Goal Context:");
+	private CheckBox conditions = new CheckBox("Disable Conditions?");
 
 	public ActivateGoalForm(final long bwInstanceOID, final long goalOID) {
-		HorizontalLayout dataHL = new HorizontalLayout();
-		VerticalLayout dataVL = new VerticalLayout();
 		HorizontalLayout submitPanel = new HorizontalLayout();
 
 		// Properties
 		setMargin(true);
 		setSpacing(false);
-		setHeight("100px");
+		setHeight("150px");
 		setWidth("220px");
 
-		dataHL.setSpacing(true);
 		submitPanel.setSpacing(true);
 
 		Button submit = new Button("Activate");
@@ -42,11 +41,19 @@ public class ActivateGoalForm extends VerticalLayout {
 			public void buttonClick(ClickEvent event) {
 				Long entityInstance = (Long) entityInstanceContext.getValue();
 
+				
+				
 				Transaction.begin();
 				BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(bwInstanceOID, goalOID, entityInstance);
 				Transaction.commit();
 
-				showDisableConditionsWindow(bwInstanceOID);
+				if (conditions.getValue().equals(true)) {
+					showDisableConditionsWindow(bwInstanceOID);
+				} else {
+					Transaction.begin();
+					BlendedWorkflow.getInstance().getWorkListManager().enableGoalWorkItemsService(bwInstanceOID);
+					Transaction.commit();
+				}
 				getApplication().getMainWindow().removeWindow(ActivateGoalForm.this.getWindow());
 			} 
 		});
@@ -61,10 +68,8 @@ public class ActivateGoalForm extends VerticalLayout {
 
 		// Layout
 		addComponent(entityInstanceContext);
-
-		dataHL.addComponent(dataVL);
-		addComponent(dataHL);
-
+		addComponent(conditions);
+		
 		submitPanel.addComponent(submit);
 		submitPanel.addComponent(cancel);
 		addComponent(submitPanel);

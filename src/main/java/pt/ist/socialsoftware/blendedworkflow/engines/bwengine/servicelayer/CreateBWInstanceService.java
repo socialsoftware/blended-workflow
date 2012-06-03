@@ -71,7 +71,7 @@ public class CreateBWInstanceService implements Callable<String> {
 		Entity patient = dataModelInstance.getEntity("Patient");
 		Attribute name = patient.getAttribute("Name");
 		Attribute age = patient.getAttribute("Age");
-		Attribute heartProblems = patient.getAttribute("Heart Problems");
+		Attribute heartProblems = patient.getAttribute("Cardiac Problems");
 
 		//Patient.1
 		EntityInstance patient1 = new EntityInstance(dataModelInstance, patient);

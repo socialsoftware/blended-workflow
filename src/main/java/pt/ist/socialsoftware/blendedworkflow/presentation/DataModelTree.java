@@ -236,7 +236,7 @@ public class DataModelTree extends VerticalLayout {
 	}
 
 	protected void showConstrainsWindow(String entity, String attribute, String relation, String type) {
-		Window newConstrain= new Window("Data Constrain");
+		Window newConstrain= new Window("Data Constraint");
 		newConstrain.setContent(new ConstrainsForm(this, entity, attribute, relation, type));
 		newConstrain.center();
 		getApplication().getMainWindow().addWindow(newConstrain);

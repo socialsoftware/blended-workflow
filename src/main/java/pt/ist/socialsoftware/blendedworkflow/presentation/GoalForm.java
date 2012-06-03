@@ -184,6 +184,7 @@ public class GoalForm extends VerticalLayout {
 		NativeSelect ns = new NativeSelect(entity.getName());
 		entitiesInstances.addComponent(ns);
 
+		ns.addStyleName("h2");
 		for (EntityInstance entityInstance : entity.getEntityInstances()) {
 			ns.addItem(entityInstance.getOID());
 			ns.setItemCaption(entityInstance.getOID(), entityInstance.getID());

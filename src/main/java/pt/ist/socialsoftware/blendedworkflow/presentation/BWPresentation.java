@@ -76,34 +76,34 @@ public class BWPresentation extends Application {
 	private Button wManagerBtn = new Button("Worklist Manager");
 
 	//BWSpecTab
-	private ListSelect loadedList = new ListSelect();
-	private Table bwSpecInfoTable = new Table("Basic Information:");
-	private TreeTable bwSpecJobsInfoTable = new TreeTable("Tasks/Goals:");
+	private ListSelect loadedList = new ListSelect("BW Specifications:");
+	private Table bwSpecInfoTable = new Table("BW Specification Information:");
+	private TreeTable bwSpecJobsInfoTable = new TreeTable("Activities/Goals:");
 
 	//BWInstanceTab
-	private ListSelect launchedList = new ListSelect();
-	private Table bwInstanceInfoTable = new Table("Basic Information:");
+	private ListSelect launchedList = new ListSelect("BW Instances:");
+	private Table bwInstanceInfoTable = new Table("BW Instance Information:");
 	private Table bwInstanceJobsInfoTable = new Table("Jobs Executed:");
 
 	//DataModelTab
-	private ListSelect dataList = new ListSelect();
+	private ListSelect dataList = new ListSelect("BW Instances:");
 	private TreeTable entitydetailsTreetable = new TreeTable("Data Model:");
 
 	//TaskViewTab
-	private ListSelect taskList = new ListSelect();
-	private Table taskInfoTable = new Table("Task Information:");
+	private ListSelect taskList = new ListSelect("Activities:");
+	private Table taskInfoTable = new Table("Activity Information:");
 	private Property.ValueChangeListener taskListListener;
-	private ListSelect goalList = new ListSelect();
+	private ListSelect goalList = new ListSelect("Goals:");
 	private Table goalInfoTable = new Table("Goal Information:");
 	private Property.ValueChangeListener goalListListener;
 //	private NativeSelect taskListFilter = new NativeSelect();
 
 	//GoalViewTab
-	private ListSelect goalBWInstanceList = new ListSelect();
-	private TreeTable goalTable = new TreeTable("Achieve Goals");
+	private ListSelect goalBWInstanceList = new ListSelect("BW Instances:");
+	private TreeTable goalTable = new TreeTable("Achieve Goals:");
 //	private NativeSelect goalListFilter = new NativeSelect();
-	private Table goalWorkItemTree = new Table("GoalWorkItems");
-	private Table maintainGoalsTree = new Table("Maintain Goals");
+	private Table goalWorkItemTree = new Table("GoalWorkItems:");
+	private Table maintainGoalsTree = new Table("Maintain Goals:");
 	private static final Action ACTIVATE_GOAL_ACTION = new Action("Activate Goal");
 	private static final Action REDO_GOAL_ACTION = new Action("Redo GoalWorkItem");
 	private static final Action NEW_GOAL_ACTION = new Action("Create New Goal");
@@ -122,7 +122,7 @@ public class BWPresentation extends Application {
 		if (!Bootstrap.isInitialized()) {
 			Bootstrap.init();
 			registerBWPresentation();
-			Bootstrap.populate();
+//			Bootstrap.populate();
 		}
 		registerBWPresentation();
 		initLoginWindow();
@@ -502,7 +502,7 @@ public class BWPresentation extends Application {
 		taskList.setImmediate(true);
 		initTaskListListener();
 
-		taskInfoTable = new Table("Task Information:");
+		taskInfoTable = new Table("Activity Information:");
 
 		taskInfoTable.addContainerProperty("Name", String.class,  null);
 		taskInfoTable.addContainerProperty("Value",  String.class,  null);
@@ -514,7 +514,7 @@ public class BWPresentation extends Application {
 		goalInfoTable.addContainerProperty("Name", String.class,  null);
 		goalInfoTable.addContainerProperty("Value",  String.class,  null);
 
-		Button taskExecuteBtn = new Button("Execute Task");
+		Button taskExecuteBtn = new Button("Execute Activity");
 		taskExecuteBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -541,7 +541,7 @@ public class BWPresentation extends Application {
 			}
 		});
 
-		Button taskSkipBtn = new Button("Skip Task");
+		Button taskSkipBtn = new Button("Skip Activity");
 		taskSkipBtn.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -910,7 +910,7 @@ public class BWPresentation extends Application {
 	}
 
 	public void generatePreTaskForm(long workItemOID) {
-		Window taskWindow = new Window("Pre Task Form");
+		Window taskWindow = new Window("Pre-Activity Form");
 		taskWindow.setContent(new PreTaskForm(workItemOID));
 		taskWindow.setWidth("30%");
 		taskWindow.center();
@@ -918,7 +918,7 @@ public class BWPresentation extends Application {
 	}
 	
 	public void generateTaskForm(long workItemOID) {
-		Window taskWindow = new Window("Task Form");
+		Window taskWindow = new Window("Activity Form");
 		taskWindow.setContent(new TaskForm(workItemOID));
 		taskWindow.setWidth("30%");
 		taskWindow.center();
@@ -1026,22 +1026,22 @@ public class BWPresentation extends Application {
 
 	public void addGoalWorkItem(long OID, String ID) {
 		if (this.goalList.getItem(OID) != null) {
-			getMainWindow().showNotification("[GOAL] " + ID + " Sucess Condition Failed!", Notification.TYPE_ERROR_MESSAGE);
+			getMainWindow().showNotification(ID + " Failed to Complete!", Notification.TYPE_ERROR_MESSAGE); //"[GOAL] " + 
 		}
 		else {
 			this.goalList.addItem(OID);
-			this.goalList.setItemCaption(OID, "[GOAL] " + ID);
+			this.goalList.setItemCaption(OID, ID); //"[GOAL] " + 
 			this.goalList.attach();
 		}
 	}
 
 	public void addTaskWorkItem(long OID, String ID) {
-		if (this.taskList.getItem(OID) != null) {
-			getMainWindow().showNotification("[TASK] " + ID + " Post-Condition Failed!", Notification.TYPE_ERROR_MESSAGE);
+		if (this.taskList.getItem(OID) != null) {//"[TASK] " + 
+//			getMainWindow().showNotification(ID + " Failed to Complete!", Notification.TYPE_ERROR_MESSAGE);
 		}
 		else {
 			this.taskList.addItem(OID);
-			this.taskList.setItemCaption(OID, "[TASK] " + ID);
+			this.taskList.setItemCaption(OID, ID);//"[TASK] " + 
 			this.taskList.attach();
 		}
 	}
@@ -1116,7 +1116,7 @@ public class BWPresentation extends Application {
 		bwSpecInfoTable.addItem(new Object[] {"Description", bwSpecification.getDescription()}, new Integer(5));
 
 		//BW Tasks/Goals
-		Object tasks = bwSpecJobsInfoTable.addItem(new Object[] {"Tasks","", "", ""}, null);
+		Object tasks = bwSpecJobsInfoTable.addItem(new Object[] {"Activities","", "", ""}, null);
 		Object goals = bwSpecJobsInfoTable.addItem(new Object[] {"Goals", "", "", ""}, null);
 		
 
@@ -1168,7 +1168,7 @@ public class BWPresentation extends Application {
 		bwInstanceInfoTable.addItem(new Object[] {"Name", bwInstance.getName()}, new Integer(1));
 		bwInstanceInfoTable.addItem(new Object[] {"Launched by", bwInstance.getUser().getID()}, new Integer(2));
 		bwInstanceInfoTable.addItem(new Object[] {"Creation Date", bwInstance.getCreationDate()}, new Integer(3));
-		bwInstanceInfoTable.addItem(new Object[] {"Executed Tasks", executedTasksCount + " of " + taskModelInstance.getTasksCount()}, new Integer(4));
+		bwInstanceInfoTable.addItem(new Object[] {"Executed Activities", executedTasksCount + " of " + taskModelInstance.getTasksCount()}, new Integer(4));
 
 		//JobInfo
 		int jobIndex = 1;
@@ -1291,7 +1291,7 @@ public class BWPresentation extends Application {
 		taskInfoTable.addItem(new Object[] {"Description", task.getDescription()}, new Integer(2));
 		taskInfoTable.addItem(new Object[] {"Input Data", inputData}, new Integer(3));
 		taskInfoTable.addItem(new Object[] {"Output Data", outputData}, new Integer(4));
-		taskInfoTable.addItem(new Object[] {"Previous Task",task.getPrevious()}, new Integer(5));
+		taskInfoTable.addItem(new Object[] {"Previous Activity",task.getPrevious()}, new Integer(5));
 		
 //		taskInfoTable.setWidth("100%");
 		Transaction.commit();

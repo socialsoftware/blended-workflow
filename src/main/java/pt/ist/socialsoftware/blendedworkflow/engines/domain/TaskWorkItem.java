@@ -93,7 +93,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 			setAttributeValues();
 
 			String date = dateFormat.format(Calendar.getInstance().getTime());
-			getBwInstance().getLog().addLogRecords(new LogRecord(date,"Completed", "[TASK] " + getID(), getUser().getID()));
+			getBwInstance().getLog().addLogRecords(new LogRecord(date,"Completed", "[ACTIVITY] " + getID(), getUser().getID()));
 			BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 
 			// Test proposes only
@@ -114,7 +114,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		setAttributeSkipped();
 		
 		String date = dateFormat.format(Calendar.getInstance().getTime());
-		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Skipped", "[TASK] " + getID(), getUser().getID()));
+		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Skipped", "[ACTIVITY] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
 		
 		// Test proposes only

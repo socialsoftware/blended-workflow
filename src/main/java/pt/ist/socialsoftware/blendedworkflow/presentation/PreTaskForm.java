@@ -63,7 +63,7 @@ public class PreTaskForm extends VerticalLayout {
 				}
 
 				generateTaskForm(workItemOID);
-				getApplication().getMainWindow().showNotification("PreTask accomplished", Notification.TYPE_TRAY_NOTIFICATION);
+				getApplication().getMainWindow().showNotification("Pre-Activity accomplished", Notification.TYPE_TRAY_NOTIFICATION);
 				getApplication().getMainWindow().removeWindow(PreTaskForm.this.getWindow());
 
 			}
@@ -137,7 +137,7 @@ public class PreTaskForm extends VerticalLayout {
 	}
 
 	public void generateTaskForm(long workItemOID) {
-		Window taskWindow = new Window("Task Form");
+		Window taskWindow = new Window("Activity Form");
 		taskWindow.setContent(new TaskForm(workItemOID));
 		taskWindow.setWidth("30%");
 		taskWindow.center();

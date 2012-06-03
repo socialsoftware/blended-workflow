@@ -28,14 +28,17 @@ public class NewRelationForm extends VerticalLayout{
 	private NativeSelect otherEntity = new NativeSelect("Other Entity:");
 	private NativeSelect cardinality = new NativeSelect("Relation cardinality:");
 	private CheckBox isOtherKey = new CheckBox("The other Entity is a key Entity to this one?");
-	private CheckBox isThisKey = new CheckBox("This Entity is key to the other one?");
+	private CheckBox isThisKey = new CheckBox("This Entity is key of the other Entity?");
 
 	public NewRelationForm(AllDataModelTree parent, final long bwInstanceOID, final String entityName) {
 		setMargin(true);
 
 		setWidth("530px");
 		setHeight("480px");
-
+		
+		isOtherKey.setCaption("The other Entity is a key of " + entityName +"?"); 
+		isThisKey.setCaption(entityName + " is key of the other Entity?");
+		
 		final TextField nameTf = new TextField("Relation name:");
 
 		otherEntity.setNullSelectionAllowed(false);

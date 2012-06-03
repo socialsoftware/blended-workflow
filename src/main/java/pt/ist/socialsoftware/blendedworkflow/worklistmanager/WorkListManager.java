@@ -115,7 +115,7 @@ public class WorkListManager {
 	public void notifyReEnabledWorkItem(GoalWorkItem workItem) {
 		log.info("WorkItem " + workItem.getID() + " is now re-enabled. with OID" + workItem.getOID());
 		String bwInstanceName = workItem.getBwInstance().getName() + ".";
-		getBwPresentation().addGoalWorkItem(workItem.getOID(), bwInstanceName + workItem.getID() + "(ReEnabled)");
+		getBwPresentation().addGoalWorkItem(workItem.getOID(), bwInstanceName + workItem.getID()); //+ "(ReEnabled)"
 	}
 
 	/**
