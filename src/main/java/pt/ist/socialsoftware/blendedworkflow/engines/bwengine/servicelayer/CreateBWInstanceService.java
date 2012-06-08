@@ -16,9 +16,11 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.shared.PropertiesManager;
 
 public class CreateBWInstanceService implements Callable<String> {
 
+	protected Boolean yawlFlow = Boolean.parseBoolean(PropertiesManager.getProperty("yawl.Flow"));
 	private static Logger log = Logger.getLogger("CreateBWInstanceService");
 	private BWSpecification bwSpecification;
 	private String name;
@@ -53,7 +55,10 @@ public class CreateBWInstanceService implements Callable<String> {
 			// Create Patients
 			populatePatients(bwInstance);
 
-			bwInstance.getTaskModelInstance().getEnabledWorkItems(); //FIXME:Test proposes only 
+			// FIXME: Test proposes only
+			if (!yawlFlow) {
+				bwInstance.getTaskModelInstance().getEnabledWorkItems();
+			}
 
 		} catch (BlendedWorkflowException bwe) {
 			log.error(bwe.getError());

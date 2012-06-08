@@ -7,9 +7,11 @@ import org.apache.log4j.Logger;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.shared.PropertiesManager;
 
 public class TaskWorkItem extends TaskWorkItem_Base {
 	
+	protected Boolean yawlFlow = Boolean.parseBoolean(PropertiesManager.getProperty("yawl.Flow"));
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private Logger log = Logger.getLogger("TaskWorkItem");
 
@@ -57,25 +59,10 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 
 	@Override
 	public void notifyEnabled() {
-		//FIXME: Bad Hack!
-//		if (getTask().getName().equals("Check-in Patient")) {
-//			AttributeInstance reserveDate = getBwInstance().getDataModelInstance().getEntity("Episode").getEntityInstance("Episode.1").getAttributeInstance("Reserve Date.2");
-//			if (reserveDate.getValue().equals(BlendedWorkflow.getInstance().getToday())) {
-//				log.info("TaskWorkitem " + getID() + " is now in ENABLED state");
-//				getTask().setState(TaskState.ENABLED);
-//				setState(WorkItemState.ENABLED);
-//				BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
-//			}
-//			else {
-//				notifyPreFalse();
-//			}
-//		} 
-//		else {
-			log.info("TaskWorkitem " + getID() + " is now in ENABLED state");
-			getTask().setState(TaskState.ENABLED);
-			setState(WorkItemState.ENABLED);
-			BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
-//		}
+		log.info("TaskWorkitem " + getID() + " is now in ENABLED state");
+		getTask().setState(TaskState.ENABLED);
+		setState(WorkItemState.ENABLED);
+		BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
 	}
 
 	@Override
@@ -84,23 +71,25 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 	@Override
 	public void notifyCompleted() {
 		log.info("TaskWorkitem " + getID() + " is now in COMPLETED state");
-		
-			if (getState() == WorkItemState.CHECKED_IN || getState() == WorkItemState.CONSTRAINT_VIOLATION) {
-				setState(WorkItemState.COMPLETED);
-				getTask().setState(TaskState.ACHIEVED);
-			}	
-			setAttributeValues();
 
-			String date = dateFormat.format(Calendar.getInstance().getTime());
-			getBwInstance().getLog().addLogRecords(new LogRecord(date,"Completed", "[ACTIVITY] " + getID(), getUser().getID()));
-			BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
+		if (getState() == WorkItemState.CHECKED_IN || getState() == WorkItemState.CONSTRAINT_VIOLATION) {
+			setState(WorkItemState.COMPLETED);
+			getTask().setState(TaskState.ACHIEVED);
+		}	
+		setAttributeValues();
 
-			// Test proposes only
+		String date = dateFormat.format(Calendar.getInstance().getTime());
+		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Completed", "[ACTIVITY] " + getID(), getUser().getID()));
+		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
+
+		// FIXME: Test proposes only
+		if (!yawlFlow) {
 			try {
 				getBwInstance().getTaskModelInstance().getEnabledWorkItems();
 			} catch (BlendedWorkflowException e) {
 				log.error(e.getMessage());
 			}
+		}
 	}
 
 	@Override
@@ -116,11 +105,13 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Skipped", "[ACTIVITY] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
 		
-		// Test proposes only
-		try {
-			getBwInstance().getTaskModelInstance().getEnabledWorkItems();
-		} catch (BlendedWorkflowException e) {
-			log.error(e.getMessage());
+		// FIXME: Test proposes only
+		if (!yawlFlow) {
+			try {
+				getBwInstance().getTaskModelInstance().getEnabledWorkItems();
+			} catch (BlendedWorkflowException e) {
+				log.error(e.getMessage());
+			}
 		}
 	}
 

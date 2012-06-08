@@ -41,7 +41,7 @@ public class WorkletAdapter {
 //	private YSpecificationID yawlSpecID = new YSpecificationID(null, "0.1", "A156"); // Test proposes only.
 
 	private Logger log;
-
+	protected Boolean yawlFlow = Boolean.parseBoolean(PropertiesManager.getProperty("yawl.Flow"));
 	protected String engineAdminUser = PropertiesManager.getProperty("yawl.AdminUser");
 	protected String engineAdminPassword = PropertiesManager.getProperty("yawl.AdminPassword");
 	protected String workletGateway = PropertiesManager.getProperty("worklet.gateway");
@@ -114,8 +114,12 @@ public class WorkletAdapter {
 			else {
 //				log.info("to process");
 				TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
-//				process(taskWorkItem);
-				evaluate(taskWorkItem, null, false); // Test proposes only.
+				
+				if (yawlFlow) {
+					process(taskWorkItem);
+				} else {
+					evaluate(taskWorkItem, null, false); //FIXME: Test proposes only.
+				}
 			}
 		} catch (BlendedWorkflowException bwe) {
 			log.error("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
