@@ -15,8 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class BWSpecificationFactory {
 
-	// FIXME: Remove YAWL argument
-	public static void createBWSpecification(String bwXML, String yawlXML2) throws BlendedWorkflowException {
+	public static void createBWSpecification(String bwXML) throws BlendedWorkflowException {
 		// BWSpecification Name
 		Document doc = StringUtils.stringToDoc(bwXML);
 

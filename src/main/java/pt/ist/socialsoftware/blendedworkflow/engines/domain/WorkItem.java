@@ -196,11 +196,11 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Notify a WorkItem of a Data change.
 	 */
 	public void notifyDataChange() {
-		if (getState() == WorkItemState.ENABLED) {
+		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_FALSE) {
 			notifyConstrainViolation();
 		} else if (getState() == WorkItemState.PRE_TASK) {
 			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPreConstraint((TaskWorkItem) this);
-		} else if (getState() == WorkItemState.PRE_TASK) {
+		} else if (getState() == WorkItemState.PRE_GOAL) {
 			((GoalWorkItem)this).evaluate(true);
 		}
 	}

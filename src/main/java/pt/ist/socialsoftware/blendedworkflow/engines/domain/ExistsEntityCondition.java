@@ -9,7 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsEntityCondition extends ExistsEntityCondition_Base {
-
+	
 	public ExistsEntityCondition(Entity entity) {
 		setEntity(entity);
 	}
@@ -222,7 +222,8 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 				finalResult = finalResult.AND(attributeResult);
 			}
 		}
-		/*
+		
+		
 		for (RelationInstance relationInstance : entityInstance.getEntityInstanceOneRelationInstances()) {
 			if (relationInstance.getRelationType().getIsTwoKeyEntity()) {
 				EntityInstance two = relationInstance.getEntityInstanceTwo();
@@ -236,7 +237,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 				finalResult = finalResult.AND(evaluateWithDataModel(one, goalWorkItem, conditionType));
 			}
 		}
-		 */
+		 
 		return finalResult;
 	}
 

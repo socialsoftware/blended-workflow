@@ -32,7 +32,6 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 public class LoadBWSpecificationServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
-	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl";
 	
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 
@@ -81,8 +80,7 @@ public class LoadBWSpecificationServiceTest {
 		});
 
 		String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		String yawlSpecificationString = StringUtils.fileToString(ACTIVITY_FILENAME);
-		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).call();
+		new LoadBWSpecificationService(bwSpecificationString).call();
 		boolean committed = false;
 		try {
 			Transaction.begin();

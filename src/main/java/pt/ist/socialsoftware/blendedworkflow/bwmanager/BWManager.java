@@ -77,7 +77,7 @@ public class BWManager {
 	 */
 	public void loadBWSpecification(String bwXML){
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		LoadBWSpecificationService service = new LoadBWSpecificationService(bwXML, "yawlXML");
+		LoadBWSpecificationService service = new LoadBWSpecificationService(bwXML);
 		bwExecutorService.runTask(service);
 	}
 

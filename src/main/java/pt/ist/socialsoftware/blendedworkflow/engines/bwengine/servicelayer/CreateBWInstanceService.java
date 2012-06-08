@@ -53,7 +53,7 @@ public class CreateBWInstanceService implements Callable<String> {
 			// Create Patients
 			populatePatients(bwInstance);
 
-			bwInstance.getTaskModelInstance().getEnabledWorkItems(); // Test proposes only //FIXME
+			bwInstance.getTaskModelInstance().getEnabledWorkItems(); //FIXME:Test proposes only 
 
 		} catch (BlendedWorkflowException bwe) {
 			log.error(bwe.getError());

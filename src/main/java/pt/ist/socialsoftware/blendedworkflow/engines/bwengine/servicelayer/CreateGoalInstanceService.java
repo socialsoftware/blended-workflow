@@ -21,7 +21,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemSta
 
 public class CreateGoalInstanceService implements Callable<String> {
 
-	private static Logger log = Logger.getLogger("CreateGoalInstanceService");
+	private static Logger log = Logger.getLogger("XXX");
 
 	private BWInstance bwInstance;
 	private AchieveGoal goal;
@@ -137,6 +137,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 					if (parentEntityContext.equals(relationOne) && subEntityContext.equals(relationTwo)) {
 						if (!relationAll.getCardinalityOne().equals(Cardinality.MANY) && !relationAll.getCardinalityOne().equals(Cardinality.MANY)) {
 							if (subEntityContext.getEntityInstancesCount() > 0) {
+								log.error("ola1");
 								subGoalEntityInstanceContext = subEntityContext.getEntityInstances().get(0);
 							} else {
 								subGoalEntityInstanceContext = new EntityInstance(dataModelInstance, relationTwo);
@@ -149,6 +150,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 					if (parentEntityContext.equals(relationTwo) && subEntityContext.equals(relationOne)) {
 						if (!relationAll.getCardinalityOne().equals(Cardinality.MANY) && !relationAll.getCardinalityOne().equals(Cardinality.MANY)) {
 							if (subEntityContext.getEntityInstancesCount() > 0) {
+								log.error("ola2");
 								subGoalEntityInstanceContext = subEntityContext.getEntityInstances().get(0);
 							} else {
 								subGoalEntityInstanceContext = new EntityInstance(dataModelInstance, relationTwo);
@@ -170,20 +172,24 @@ public class CreateGoalInstanceService implements Callable<String> {
 	}
 
 	/**
-	 * TODO: Refactor.
 	 * Define RelationInstances for Relations with Cardinality different from * in both sides.
 	 */
-	private void defineSimpleRelations() {
-		if (entityContext.getEntity().getName().equals("Medical Prescription")) {
-			long episodeOID = this.bwInstance.getDataModelInstance().getEntity("Episode").getEntityInstance("Episode.1").getOID();
-			BlendedWorkflow.getInstance().getBwManager().addRelationInstance(this.bwInstance.getOID(), episodeOID, this.entityContext.getOID());
+	private void defineSimpleRelations() {	
+		for (Relation relationAll : entityContext.getEntity().getRelations()) {
+			Entity relationOne = relationAll.getEntityOne();
+			Entity relationTwo = relationAll.getEntityTwo();
 
-		}
+			if (entityContext.getEntity().equals(relationOne)) {
+				if (!relationAll.getCardinalityTwo().equals(Cardinality.MANY) && !relationAll.getCardinalityTwo().equals(Cardinality.MANY)) {
+				}
+			}
 
-		if (entityContext.getEntity().getName().equals("Prescription Medication")) {
-			long episodeOID = this.bwInstance.getDataModelInstance().getEntity("Medical Prescription").getEntityInstance("Medical Prescription.1").getOID();
-			BlendedWorkflow.getInstance().getBwManager().addRelationInstance(this.bwInstance.getOID(), episodeOID, this.entityContext.getOID());
-
+			if (entityContext.getEntity().equals(relationTwo)) {
+				if (!relationAll.getCardinalityOne().equals(Cardinality.MANY) && !relationAll.getCardinalityOne().equals(Cardinality.MANY)) {
+					long entityOneOID = relationAll.getEntityOne().getEntityInstances().get(0).getOID();
+					BlendedWorkflow.getInstance().getBwManager().addRelationInstance(this.bwInstance.getOID(), entityOneOID, this.entityContext.getOID());
+				}
+			}
 		}
 	}
 }

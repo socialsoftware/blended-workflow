@@ -136,7 +136,7 @@
 			<bw:EntityTwo>
 				<bw:EntityName>Patient Data</bw:EntityName>
 				<bw:EntityCardinality>ONE</bw:EntityCardinality>
-				<bw:isEntityKey>true</bw:isEntityKey>
+				<bw:isEntityKey>false</bw:isEntityKey>
 			</bw:EntityTwo>
 		</bw:Relation>
 		<bw:Relation>

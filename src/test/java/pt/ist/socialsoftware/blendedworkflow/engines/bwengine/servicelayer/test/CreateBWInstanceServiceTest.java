@@ -37,7 +37,6 @@ import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 public class CreateBWInstanceServiceTest {
 
 	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
-	private static String ACTIVITY_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.yawl";
 
 	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
@@ -84,8 +83,7 @@ public class CreateBWInstanceServiceTest {
 		Transaction.commit();
 
 		String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		String yawlSpecificationString = StringUtils.fileToString(ACTIVITY_FILENAME);
-		new LoadBWSpecificationService(bwSpecificationString, yawlSpecificationString).call();
+		new LoadBWSpecificationService(bwSpecificationString).call();
 	}
 
 	@After

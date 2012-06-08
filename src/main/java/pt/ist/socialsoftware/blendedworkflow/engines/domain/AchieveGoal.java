@@ -107,7 +107,7 @@ public class AchieveGoal extends AchieveGoal_Base {
 	}
 	
 	public String getPreConstraintData() {
-		Set<Entity> entities = getActivateConditions().get(0).getEntities(); //FIXME:
+		Set<Entity> entities = getActivateConditions().get(0).getEntities(); //FIXME: Only First ActivateConditionData
 		Set<Attribute> attributes = getActivateConditions().get(0).getAttributes();
 		String dataString = "";
 

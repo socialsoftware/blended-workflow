@@ -86,11 +86,10 @@ public class Bootstrap {
 	 */
 	public static void populate() {
 		String bwXML = StringUtils.fileToString(PropertiesManager.getProperty("medical.xml"));
-		String yawlXML = StringUtils.fileToString(PropertiesManager.getProperty("medical.yawl"));
 		
 		Transaction.begin();
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		LoadBWSpecificationService service = new LoadBWSpecificationService(bwXML, yawlXML);
+		LoadBWSpecificationService service = new LoadBWSpecificationService(bwXML);
 		bwExecutorService.runTask(service);
 		Transaction.commit();
 	}

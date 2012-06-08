@@ -242,9 +242,6 @@ public class TaskForm extends VerticalLayout {
 			DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 			Entity patient = dataModelInstance.getEntity("Patient");
 			addNativeSelect(patient);
-		
-			
-			//FIXME: create relation
 		}
 		
 		// doctor appoitment
@@ -298,11 +295,6 @@ public class TaskForm extends VerticalLayout {
 				}
 			});
 			footer.addComponent(addPMBtn);
-			
-//			BWInstance bwInstance = taskWorkItem.getBwInstance();
-//			DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-//			Entity patient = dataModelInstance.getEntity("Patient");
-//			addNativeSelect(patient);
 		}
 		
 		Transaction.commit();

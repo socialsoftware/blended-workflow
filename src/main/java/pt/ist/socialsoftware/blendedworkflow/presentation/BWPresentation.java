@@ -122,7 +122,7 @@ public class BWPresentation extends Application {
 		if (!Bootstrap.isInitialized()) {
 			Bootstrap.init();
 			registerBWPresentation();
-//			Bootstrap.populate();
+			Bootstrap.populate();
 		}
 		registerBWPresentation();
 		initLoginWindow();
@@ -1156,13 +1156,6 @@ public class BWPresentation extends Application {
 				executedTasksCount++;
 			}
 		}
-
-		//FIXME: state
-//		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
-//			if (goal.getState().equals(GoalState.ACHIEVED) || goal.getState().equals(GoalState.SKIPPED)) {
-//				achievedGoalsCount++;
-//			}
-//		}
 
 		//Info
 		bwInstanceInfoTable.addItem(new Object[] {"Name", bwInstance.getName()}, new Integer(1));

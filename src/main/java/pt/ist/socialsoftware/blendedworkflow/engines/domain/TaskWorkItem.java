@@ -43,8 +43,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 	@Override
 	public void notifyPreFalse() {
 		log.error("TaskWorkitem " + getID() + " is now in PreFalse state");
-		//FIXME: Bad Hack!
-		setState(WorkItemState.ENABLED);
+		setState(WorkItemState.PRE_FALSE);
 	}
 
 	@Override

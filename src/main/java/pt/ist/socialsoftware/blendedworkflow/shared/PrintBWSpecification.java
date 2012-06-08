@@ -180,7 +180,7 @@ public class PrintBWSpecification {
 			if(relation.getRelationInstancesCount()>0) {
 				for (RelationInstance relationInstance : relation.getRelationInstances()) {
 					System.out.println("RelationInstance \"" + relationInstance.getID() + "\"");
-					System.out.println("EI1 \"" + relationInstance.getEntityInstanceOne().getID() + "\""); //FIXME
+					System.out.println("EI1 \"" + relationInstance.getEntityInstanceOne().getID() + "\"");
 					System.out.println("EI2 \"" + relationInstance.getEntityInstanceTwo().getID() + "\"");
 				}
 			}

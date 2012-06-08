@@ -13,11 +13,9 @@ public class LoadBWSpecificationService implements Callable<String> {
 
 	private static Logger log = Logger.getLogger("LoadBWSpecificationService");
 	private String bwXML;
-	private String yawlXML;
 
-	public LoadBWSpecificationService(String bwXML, String yawlXML) {
+	public LoadBWSpecificationService(String bwXML) {
 		this.bwXML = bwXML;
-		this.yawlXML = yawlXML;
 	}
 
 	@Override
@@ -25,7 +23,7 @@ public class LoadBWSpecificationService implements Callable<String> {
 		log.info("Start");
 		Transaction.begin();
 		try {
-		BWSpecificationFactory.createBWSpecification(this.bwXML, this.yawlXML);
+		BWSpecificationFactory.createBWSpecification(this.bwXML);
 		} catch (BlendedWorkflowException bwe) {
 			BlendedWorkflow.getInstance().getBwManager().notifyException(bwe.getError());
 		}
