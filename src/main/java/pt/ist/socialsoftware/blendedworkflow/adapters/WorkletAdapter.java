@@ -75,7 +75,7 @@ public class WorkletAdapter {
 
 			yawlEnabledWIR.put(wir, taskWorkItem.getID());
 		} catch (BlendedWorkflowException bwe) {
-			log.info("notifyNewTaskWorkItem: exception: " + bwe.getError());
+			log.error("notifyNewTaskWorkItem: exception: " + bwe.getError());
 		}
 
 		if (result.equals("TRUE")) {
@@ -105,22 +105,22 @@ public class WorkletAdapter {
 	 * @param workItem the workItem to evaluate.
 	 */
 	public void notifyWorkItemContraintViolation(WorkItem workItem) {
-		log.info("notifyWorkItemContraintViolation");
+//		log.info("notifyWorkItemContraintViolation");
 		try {
 			if (workItem.getClass().equals(GoalWorkItem.class)) {
 				GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
 				evaluate(null, goalWorkItem, false);
 			}
 			else {
-				log.info("to process");
+//				log.info("to process");
 				TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
 //				process(taskWorkItem);
 				evaluate(taskWorkItem, null, false); // Test proposes only.
 			}
 		} catch (BlendedWorkflowException bwe) {
-			log.info("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
+			log.error("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
 		}
-		log.info("notifyWorkItemContraintViolation-end");
+//		log.info("notifyWorkItemContraintViolation-end");
 	}
 
 	/**
@@ -205,9 +205,9 @@ public class WorkletAdapter {
 				eConclusion = createRdrConclusion("TRUE", true);
 				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
 				
-//				// False Node
+				// False Node
 //				eCornerstone = getCornerstoneData(task, null, true, "DEFINED");
-//				condition = task.getPreConstraint().getRdrFalseConditionNEW();
+//				condition = task.getPreConstraint().getRdrFalseCondition();
 //				eConclusion = createRdrConclusion("FALSE", true);
 //				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
 			}
@@ -233,7 +233,7 @@ public class WorkletAdapter {
 			
 //			// False Node
 //			eCornerstone = getCornerstoneData(task, null, false, "DEFINED");
-//			condition = task.getPostConstraint().getRdrFalseConditionNEW();
+//			condition = task.getPostConstraint().getRdrFalseCondition();
 //			eConclusion = createRdrConclusion("FALSE", false);
 //			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
 		}
@@ -283,9 +283,9 @@ public class WorkletAdapter {
 			return true;
 		}
 		catch(IOException ioe){
-			log.info("Register Worklet Listener: Exception: " + ioe.getMessage());
+			log.error("Register Worklet Listener: Exception: " + ioe.getMessage());
 		}
-		log.info("Register Worklet Listener: Failed!");
+		log.error("Register Worklet Listener: Failed!");
 		return false;
 	}
 
@@ -516,9 +516,18 @@ public class WorkletAdapter {
 			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
 			String entityName = attributeInstance.getEntityInstance().getEntity().getName().replaceAll(" ", "");
 			String attributeName = attributeInstance.getAttribute().getName().replaceAll(" ", "");
-			String value = workItemArgument.getValue();
 			DataState state = workItemArgument.getState();
-
+			
+			//FIXME: Hack...
+			String value = workItemArgument.getValue();
+			if (workItemArgument.getAttributeInstance().getAttribute().getIsSystem()) {
+				if (value.equals(BlendedWorkflow.getInstance().getToday())) {
+					value = "" + "$TODAY$".hashCode();
+				} else {
+					value = "0";
+				}
+			}
+			
 			cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + state + "</" + entityName + "_" + attributeName + "_State" + ">";
 			cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
 		}
@@ -583,7 +592,6 @@ public class WorkletAdapter {
 	 * @throws BlendedWorkflowException
 	 */
 	public void process(TaskWorkItem taskWorkItem) throws BlendedWorkflowException {
-		log.info("process");
 		// Evaluation Data
 		Element eData = getEvaluationData(taskWorkItem, null, false);
 
@@ -596,8 +604,6 @@ public class WorkletAdapter {
 		} catch (IOException e) {
 			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_PROCESS);
 		}
-		
-		log.info("process-end");
 	}
 
 	/**
@@ -634,7 +640,7 @@ public class WorkletAdapter {
 			name = taskWorkItem.getTask().getName().replaceAll(" ", "_");
 			if (isPreCondition) {
 				eData = getEvaluationData(taskWorkItem, null, true);
-				log.info(JDOMUtil.elementToString(eData));
+//				log.info(JDOMUtil.elementToString(eData));
 				ruleType = RuleType.ItemPreconstraint;
 			} else {
 				eData = getEvaluationData(taskWorkItem, null, false);
@@ -652,9 +658,9 @@ public class WorkletAdapter {
 			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
 		}
 		
-		log.info(JDOMUtil.elementToString(eData));
-		log.info(conclusion);
-		log.info(parseConclusion(conclusion));
+//		log.info(JDOMUtil.elementToString(eData));
+//		log.error(conclusion);
+//		log.info(parseConclusion(conclusion));
 
 		// Parse result
 		if (isPreCondition) {
@@ -665,7 +671,7 @@ public class WorkletAdapter {
 			} else if (parseConclusion(conclusion).equals("SKIPPED")) {
 				taskWorkItem.notifyPreTask();
 			} else {
-				taskWorkItem.notifyConstrainViolation();
+				log.error("FAIL");
 			}
 		} else if (taskWorkItem != null) {
 			if (parseConclusion(conclusion).equals("TRUE")) {

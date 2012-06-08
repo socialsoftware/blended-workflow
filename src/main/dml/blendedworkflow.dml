@@ -140,6 +140,7 @@ class Attribute {
 	String name;
 	AttributeType type;
 	boolean isKeyAttribute;
+	boolean isSystem;
 }
 
 class AttributeInstance {

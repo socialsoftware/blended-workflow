@@ -38,7 +38,7 @@ public class DataModelTest {
 		
 		//Entity1
 		entity1 = new Entity(dataModelInstance, ENTITY_1_NAME);
-		entity1Att1 = new Attribute(dataModelInstance, ENTITY_1_ATT_1_NAME, entity1, ENTITY_1_ATT_1_TYPE, ENTITY_1_ATT_1_KEY);
+		entity1Att1 = new Attribute(dataModelInstance, ENTITY_1_ATT_1_NAME, entity1, ENTITY_1_ATT_1_TYPE, ENTITY_1_ATT_1_KEY, false);
 		
 		entityInstance1_1 = new EntityInstance(dataModelInstance, entity1);
 		new AttributeInstance(entity1Att1, entityInstance1_1);

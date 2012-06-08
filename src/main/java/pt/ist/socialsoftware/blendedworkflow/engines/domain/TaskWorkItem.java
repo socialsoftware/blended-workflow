@@ -58,24 +58,24 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 	@Override
 	public void notifyEnabled() {
 		//FIXME: Bad Hack!
-		if (getTask().getName().equals("Check-in Patient")) {
-			AttributeInstance reserveDate = getBwInstance().getDataModelInstance().getEntity("Episode").getEntityInstance("Episode.1").getAttributeInstance("Reserve Date.2");
-			if (reserveDate.getValue().equals(BlendedWorkflow.getInstance().getToday())) {
-				log.info("TaskWorkitem " + getID() + " is now in ENABLED state");
-				getTask().setState(TaskState.ENABLED);
-				setState(WorkItemState.ENABLED);
-				BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
-			}
-			else {
-				notifyPreFalse();
-			}
-		} 
-		else {
+//		if (getTask().getName().equals("Check-in Patient")) {
+//			AttributeInstance reserveDate = getBwInstance().getDataModelInstance().getEntity("Episode").getEntityInstance("Episode.1").getAttributeInstance("Reserve Date.2");
+//			if (reserveDate.getValue().equals(BlendedWorkflow.getInstance().getToday())) {
+//				log.info("TaskWorkitem " + getID() + " is now in ENABLED state");
+//				getTask().setState(TaskState.ENABLED);
+//				setState(WorkItemState.ENABLED);
+//				BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
+//			}
+//			else {
+//				notifyPreFalse();
+//			}
+//		} 
+//		else {
 			log.info("TaskWorkitem " + getID() + " is now in ENABLED state");
 			getTask().setState(TaskState.ENABLED);
 			setState(WorkItemState.ENABLED);
 			BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
-		}
+//		}
 	}
 
 	@Override

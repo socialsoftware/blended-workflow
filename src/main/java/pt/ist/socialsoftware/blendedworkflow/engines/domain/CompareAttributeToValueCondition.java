@@ -92,8 +92,12 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		String condition = "(";
 		String attributeName = getAttribute().getName().replaceAll(" ", "");
 		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
+		String value = getValue();
+		if (getValue().equals("$TODAY$")) {
+			value = "" + "$TODAY$".hashCode();
+		}
 		
-		condition += entityName + "_" + attributeName + " " + getOperator() + " " + getValue() + ")";
+		condition += entityName + "_" + attributeName + " " + getOperator() + " " + value + ")";
 		return condition;
 	}
 

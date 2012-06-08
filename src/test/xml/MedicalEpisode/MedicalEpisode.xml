@@ -16,16 +16,19 @@
 				<bw:Name>Name</bw:Name>
 				<bw:Type>STRING</bw:Type>
 				<bw:isKey>true</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>Age</bw:Name>
 				<bw:Type>NUMBER</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>Cardiac Problems</bw:Name>
 				<bw:Type>BOOLEAN</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 		</bw:Entity>
 		<bw:Entity>
@@ -34,21 +37,25 @@
 				<bw:Name>Number</bw:Name>
 				<bw:Type>NUMBER</bw:Type>
 				<bw:isKey>true</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>Reserve Date</bw:Name>
 				<bw:Type>String</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>true</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>CheckIn</bw:Name>
 				<bw:Type>BOOLEAN</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>CheckOut</bw:Name>
 				<bw:Type>BOOLEAN</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 		</bw:Entity>
 		<bw:Entity>
@@ -57,21 +64,25 @@
 				<bw:Name>Height</bw:Name>
 				<bw:Type>NUMBER</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>Weight</bw:Name>
 				<bw:Type>NUMBER</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>Blood Pressure</bw:Name>
 				<bw:Type>NUMBER</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>Physical Condition</bw:Name>
 				<bw:Type>STRING</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 		</bw:Entity>
 		<bw:Entity>
@@ -80,6 +91,7 @@
 				<bw:Name>Description</bw:Name>
 				<bw:Type>STRING</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 		</bw:Entity>
 		<bw:Entity>
@@ -88,6 +100,7 @@
 				<bw:Name>Description</bw:Name>
 				<bw:Type>STRING</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 		</bw:Entity>
 		<bw:Entity>
@@ -96,21 +109,25 @@
 				<bw:Name>Number</bw:Name>
 				<bw:Type>NUMBER</bw:Type>
 				<bw:isKey>true</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>Name</bw:Name>
 				<bw:Type>STRING</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>Quantity</bw:Name>
 				<bw:Type>NUMBER</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 			<bw:Attribute>
 				<bw:Name>Heart Impact</bw:Name>
 				<bw:Type>BOOLEAN</bw:Type>
 				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
 			</bw:Attribute>
 		</bw:Entity>
 		<bw:Relation>
@@ -313,7 +330,7 @@
 		<bw:Task>
 			<bw:Name>Check-in Patient</bw:Name>
 			<bw:description>Check-in the Patient.</bw:description>
-			<bw:PreCondition>existsAttribute(Episode.Reserve Date)</bw:PreCondition>
+			<bw:PreCondition>compareAttributeTo(Episode.Reserve Date,=.$TODAY$)</bw:PreCondition>
 			<bw:PostCondition>compareAttributeTo(Episode.CheckIn,=.true)</bw:PostCondition>
 			<bw:FlowType>none</bw:FlowType>
 			<bw:JoinCode>xor</bw:JoinCode>

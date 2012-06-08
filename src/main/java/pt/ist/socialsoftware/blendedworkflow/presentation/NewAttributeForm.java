@@ -95,7 +95,7 @@ public class NewAttributeForm extends VerticalLayout{
 			type = AttributeType.BOOLEAN;
 		}
 
-		new Attribute(dataModel, name, entity, type, isKeyAttribute);
+		new Attribute(dataModel, name, entity, type, isKeyAttribute, false); //FIXME: isSystem
 
 		Transaction.commit();
 	}

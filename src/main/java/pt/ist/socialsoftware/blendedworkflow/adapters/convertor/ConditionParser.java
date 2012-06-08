@@ -323,7 +323,7 @@ public class ConditionParser {
 			else
 				iskeyAttribute = false;
 
-			return new Attribute(dataModel, elementArr[1], entity, type, iskeyAttribute); 
+			return new Attribute(dataModel, elementArr[1], entity, type, iskeyAttribute, false); //FIXME: isSystem 
 		}
 	}
 

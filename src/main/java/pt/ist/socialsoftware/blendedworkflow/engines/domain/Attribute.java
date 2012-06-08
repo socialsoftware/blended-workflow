@@ -7,13 +7,14 @@ public class Attribute extends Attribute_Base {
 
 	public enum AttributeType {BOOLEAN, NUMBER, STRING};
 
-	public Attribute(DataModel dataModel, String name, Entity entity, AttributeType type, boolean isKeyAttribute) throws BlendedWorkflowException {
+	public Attribute(DataModel dataModel, String name, Entity entity, AttributeType type, boolean isKeyAttribute, boolean isSystem) throws BlendedWorkflowException {
 		checkUniqueAttributeName(entity,name);
 		setDataModel(dataModel);
 		setName(name);
 		setEntity(entity);
 		setType(type);
 		setIsKeyAttribute(isKeyAttribute);
+		setIsSystem(isSystem);
 	}
 
 	private void checkUniqueAttributeName(Entity entity, String name) throws BlendedWorkflowException {
@@ -25,7 +26,7 @@ public class Attribute extends Attribute_Base {
 	}
 
 	public void cloneAttribute(DataModelInstance dataModelInstance, Entity entity) throws BlendedWorkflowException {
-		new Attribute(dataModelInstance, getName(), entity, getType(), getIsKeyAttribute());
+		new Attribute(dataModelInstance, getName(), entity, getType(), getIsKeyAttribute(), getIsSystem());
 	}
 	
 	/**

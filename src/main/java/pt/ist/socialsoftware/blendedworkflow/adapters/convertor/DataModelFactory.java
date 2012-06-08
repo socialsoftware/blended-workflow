@@ -58,7 +58,8 @@ public class DataModelFactory {
 		String attName = attributeXML.getChildText("Name", dmNamespace);
 		String attType = attributeXML.getChildText("Type", dmNamespace);
 		boolean isKey = Boolean.parseBoolean(attributeXML.getChildText("isKey", dmNamespace));
-		new Attribute(dataModel, attName, entity, parseAttributeType(attType), isKey);
+		boolean isSystem = Boolean.parseBoolean(attributeXML.getChildText("isSystem", dmNamespace));
+		new Attribute(dataModel, attName, entity, parseAttributeType(attType), isKey, isSystem);
 	}
 
 	private void parseRelation(DataModel dataModel, Element relationInXML) throws BlendedWorkflowException {
