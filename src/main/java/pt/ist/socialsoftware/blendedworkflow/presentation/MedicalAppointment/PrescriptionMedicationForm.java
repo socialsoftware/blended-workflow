@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.presentation;
+package pt.ist.socialsoftware.blendedworkflow.presentation.MedicalAppointment;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
@@ -30,7 +30,7 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 	private TextField quantityTF = new TextField("Quantity");
 	private CheckBox heartImpactCB = new CheckBox("Heart Impact");
 
-	public PrescriptionMedicationForm(final TaskForm parent, final long bwInstanceOID) {
+	public PrescriptionMedicationForm(final DoctorAppointmentForm parent, final long bwInstanceOID) {
 		setMargin(true);
 		setSpacing(true);
 		

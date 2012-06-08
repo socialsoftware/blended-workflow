@@ -1,8 +1,13 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.Constructor;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.apache.log4j.Logger;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
@@ -38,6 +43,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.Action;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -57,9 +63,12 @@ import com.vaadin.ui.Window.Notification;
 @SuppressWarnings("serial")
 public class BWPresentation extends Application {
 
+	public static Class<?> tmp_class;
+	private static Constructor<?> tmp_const;
+	
 	private String username = "";
 	private User user = null;
-//	private Logger log = Logger.getLogger("BWPresentation");
+	private Logger log = Logger.getLogger("BWPresentation");
 	private Boolean bwManagerAcess = false;
 	private Boolean worklistManagerAcess = false;
 
@@ -527,11 +536,16 @@ public class BWPresentation extends Application {
 					if (taskWorkItem.getState().equals(WorkItemState.PRE_TASK)) {
 						isPreTask = true;
 					}
+					
+					String specificationName = taskWorkItem.getBwInstance().getBwSpecification().getName().replaceAll(" ", "");
+					String taskName = taskWorkItem.getTask().getName().replaceAll(" ", "");
+					String className = specificationName + "." + taskName + "Form";
+
 					Transaction.commit();
 					if (isPreTask) {
 						generatePreTaskForm(workItemOID);
 					} else {
-						generateTaskForm(workItemOID);
+						generateTaskForm(workItemOID, className);
 					}
 					
 					
@@ -917,12 +931,41 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(taskWindow);		
 	}
 	
-	public void generateTaskForm(long workItemOID) {
-		Window taskWindow = new Window("Activity Form");
-		taskWindow.setContent(new TaskForm(workItemOID));
-		taskWindow.setWidth("30%");
-		taskWindow.center();
-		getMainWindow().addWindow(taskWindow);		
+	public void generateTaskForm(long workItemOID, String className) {
+		log.info("className:" + className);
+		String packageName = "pt.ist.socialsoftware.blendedworkflow.presentation.";
+		
+		// Get Form class
+		try {
+			tmp_class = Class.forName(packageName + className);
+		} catch (Exception e) {
+			try {
+				log.info("nexiste");
+				tmp_class = Class.forName(packageName + "TaskForm");
+			} catch (Exception classExeception) {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				PrintStream stream = new PrintStream(baos);
+				e.printStackTrace(stream);
+				stream.flush();
+				log.info(new String(baos.toByteArray()));
+			}
+		}
+		
+		// New Instance
+		try {
+			tmp_const = tmp_class.getDeclaredConstructor(long.class);			
+			Window taskWindow = new Window(className);
+			taskWindow.setContent((ComponentContainer) tmp_const.newInstance(workItemOID));
+			taskWindow.setWidth("30%");
+			taskWindow.center();
+			getMainWindow().addWindow(taskWindow);
+		} catch (Exception e) {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			PrintStream stream = new PrintStream(baos);
+			e.printStackTrace(stream);
+			stream.flush();
+			log.info(new String(baos.toByteArray()));
+		}
 	}
 	
 	public void generatePreGoalForm(long workItemOID) {
