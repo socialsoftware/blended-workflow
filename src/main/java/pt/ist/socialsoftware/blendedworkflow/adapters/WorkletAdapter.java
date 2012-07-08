@@ -522,7 +522,7 @@ public class WorkletAdapter {
 			String attributeName = attributeInstance.getAttribute().getName().replaceAll(" ", "");
 			DataState state = workItemArgument.getState();
 			
-			//FIXME: Hack...
+			//TODO:
 			String value = workItemArgument.getValue();
 			if (workItemArgument.getAttributeInstance().getAttribute().getIsSystem()) {
 				if (value.equals(BlendedWorkflow.getInstance().getToday())) {
