@@ -60,7 +60,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	}
 	
 	@Override
-	public void notifyConstrainViolation() {
+	public void notifyDataChanged() {
 		log.info("GoalWorkitem " + getID() + " is now in ConstrainViolation state");
 		setState(WorkItemState.CONSTRAINT_VIOLATION);
 		updateInputWorkItemArguments();
@@ -179,7 +179,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 				}
 				log.info("ActivateCondition Evaluate result for " + this.getID() + " was " + result);
 				if (activateConditionJointResult.equals(TripleStateBool.TRUE)) {
-					notifyConstrainViolation();
+					notifyDataChanged();
 				} else if (activateConditionJointResult.equals(TripleStateBool.SKIPPED)) {
 					notifyPreTask();
 				} else {

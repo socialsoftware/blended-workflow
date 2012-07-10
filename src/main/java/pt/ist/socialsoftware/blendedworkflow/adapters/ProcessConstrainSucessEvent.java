@@ -9,6 +9,8 @@ import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 
 import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class ProcessConstrainSucessEvent implements Callable<String> {
 
@@ -28,12 +30,15 @@ public class ProcessConstrainSucessEvent implements Callable<String> {
 	
 		if (ruleType.equals(RuleType.ItemPreconstraint)) {
 			Transaction.begin();
-			BlendedWorkflow.getInstance().getWorkletAdapter().notifyNewTaskWorkItem(wir, "TRUE");
+			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPreConditionResult(wir, "TRUE");
+			Transaction.commit();
+		} else if (ruleType.equals(RuleType.ItemConstraintViolation)) {
+			Transaction.begin();
+			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPostConditionResult(wir, null, "FALSE");
 			Transaction.commit();
 		} else {
-			Transaction.begin();
-			BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "FALSE");
-			Transaction.commit();
+			throw new BlendedWorkflowException(BlendedWorkflowError.UMANAGED_RULE_TYPE);
+		
 		}
 		
 		log.info("End for WorkItemRecord: " + wir);

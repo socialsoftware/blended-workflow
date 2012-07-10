@@ -24,6 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 //import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
@@ -63,7 +64,7 @@ public class WorkletAdapter {
 	 * @param wir the YAWL enabled WorkItemRecord.
 	 * @param result the ItemPreConstraint result.
 	 */
-	public void notifyNewTaskWorkItem(WorkItemRecord wir, String result){
+	public void notifyWorkItemPreConditionResult(WorkItemRecord wir, String result){
 		TaskWorkItem taskWorkItem = null;
 		try {
 			BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstanceFromYAWLCaseID(wir.getCaseID());
@@ -78,20 +79,32 @@ public class WorkletAdapter {
 			log.error("notifyNewTaskWorkItem: exception: " + bwe.getError());
 		}
 
+		processPreConditionEvaluationResult(result, taskWorkItem);
+	}
+
+	private void processPreConditionEvaluationResult(String result,
+			TaskWorkItem taskWorkItem) {
 		if (result.equals("TRUE")) {
-			taskWorkItem.notifyConstrainViolation();
+			taskWorkItem.setState(WorkItemState.ENABLED);
+			// taskWorkItem.notifyConstrainViolation();
 		} else if (result.equals("SKIPPED")) {
-			taskWorkItem.notifyPreTask();
+			taskWorkItem.setState(WorkItemState.PRE_TASK);
+			// taskWorkItem.notifyPreTask();
+		} else if (result.equals("FALSE")) {
+			taskWorkItem.setState(WorkItemState.PRE_TASK);
+			// taskWorkItem.notifyPreFalse();
 		} else {
-			taskWorkItem.notifyPreFalse();
+			// it should not reach this point
 		}
+		
+		requestWorkItemPostConditionEvaluation(taskWorkItem);
 	}
 
 	/**
 	 * Evaluate a TaskWorkitem ItemPreConstraint.
 	 * @param workItem the workItem to evaluate.
 	 */
-	public void notifyWorkItemPreConstraint(TaskWorkItem workItem) {
+	public void requestWorkItemPreConstraint(TaskWorkItem workItem) {
 		try {
 			TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
 			evaluate(taskWorkItem, null, true);
@@ -104,7 +117,7 @@ public class WorkletAdapter {
 	 * Evaluate GoalWorkitem condition or Process TaskWorkitem postCondition.
 	 * @param workItem the workItem to evaluate.
 	 */
-	public void notifyWorkItemContraintViolation(WorkItem workItem) {
+	public void requestWorkItemPostConditionEvaluation(WorkItem workItem) {
 //		log.info("notifyWorkItemContraintViolation");
 		try {
 			if (workItem.getClass().equals(GoalWorkItem.class)) {
@@ -115,6 +128,7 @@ public class WorkletAdapter {
 //				log.info("to process");
 				TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
 				
+				// NOTE: yawlFlow VARIABLE IS USED TO DECIDE WHETHER YOU WANT TO EXECUTE SYNCHRONOUSLY OR ASSYNCHRONOUSLY. SYNCHRONOUS EXECUTION DOES NOT INVOKE YAWL
 				if (yawlFlow) {
 					process(taskWorkItem);
 				} else {
@@ -133,20 +147,27 @@ public class WorkletAdapter {
 	 * @param goalWorkitem a GoalWorkItem.
 	 * @param result the ItemConstrainViolation result.
 	 */
-	public void notifyConstraintViolationResult(WorkItemRecord wir, GoalWorkItem goalWorkitem, String result) {
-		WorkItem workItem = null;
-		if (wir != null) {
+	public void notifyWorkItemPostConditionResult(WorkItemRecord wir, GoalWorkItem goalWorkitem, String result) {
+		WorkItem workItem = getTaskWorkItem(wir);
+/*		if (wir != null) {
 			workItem = getTaskWorkItem(wir);
 		} else {
 			workItem = goalWorkitem;
-		}
+		} */
 		
+		processPostConditionEvaluationResult(result, workItem);
+	}
+
+	private void processPostConditionEvaluationResult(String result,
+			WorkItem workItem) {
 		if (result.equals("TRUE")) {
 			workItem.notifyCompleted();
 		} else if (result.equals("SKIPPED")) {
 			workItem.notifySkipped();
-		} else {
+		} else if (workItem.getState().equals(WorkItemState.ENABLED)){
 			workItem.notifyEnabled();
+		} else if (workItem.getState().equals(WorkItemState.PRE_TASK)) {
+			workItem.notifyPreTask();
 		}
 	}
 
@@ -619,29 +640,21 @@ public class WorkletAdapter {
 	 */
 	public void evaluate(TaskWorkItem taskWorkItem, GoalWorkItem goalWorkItem, Boolean isPreCondition) throws BlendedWorkflowException {
 		
-		WorkItem workItem;
+/*		WorkItem workItem;
 		if (taskWorkItem != null) {
 			workItem = taskWorkItem;
 		} else {
 			workItem = goalWorkItem;
-		}
+		} */
 		
-		// YAWLSpecID
-		String yawlSpecificationID = workItem.getBwInstance().getBwSpecification().getYawlSpecficationID();
-		YSpecificationID yawlSpecID = null;
-		for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedActivitySpecs()) {
-			if(ySpecificationID.getIdentifier().equals(yawlSpecificationID)) {
-				yawlSpecID = ySpecificationID;
-				break;
-			}
-		}
+		YSpecificationID yawlSpecID = getYAWLSpecificationID(taskWorkItem);
 
 		// Task/Goal Name and Evaluation Data
 		String name = null;
 		Element eData = null;
 		RuleType ruleType = RuleType.ItemConstraintViolation;
 		if (taskWorkItem != null) {
-			name = taskWorkItem.getTask().getName().replaceAll(" ", "_");
+			name = generateYAWLTaskName(taskWorkItem);
 			if (isPreCondition) {
 				eData = getEvaluationData(taskWorkItem, null, true);
 //				log.info(JDOMUtil.elementToString(eData));
@@ -669,7 +682,7 @@ public class WorkletAdapter {
 		// Parse result
 		if (isPreCondition) {
 			if (parseConclusion(conclusion).equals("TRUE")) {
-				taskWorkItem.notifyConstrainViolation();
+				taskWorkItem.notifyDataChanged();
 			} else if (parseConclusion(conclusion).equals("FALSE")) {
 				taskWorkItem.notifyPreFalse();
 			} else if (parseConclusion(conclusion).equals("SKIPPED")) {
@@ -687,13 +700,32 @@ public class WorkletAdapter {
 			}			
 		} else {
 			if (parseConclusion(conclusion).equals("TRUE")) {
-				notifyConstraintViolationResult(null, goalWorkItem, "TRUE");
+				notifyWorkItemPostConditionResult(null, goalWorkItem, "TRUE");
 			} else if (parseConclusion(conclusion).equals("FALSE")) {
-				notifyConstraintViolationResult(null, goalWorkItem, "FALSE");
+				notifyWorkItemPostConditionResult(null, goalWorkItem, "FALSE");
 			} else {
-				notifyConstraintViolationResult(null, goalWorkItem, "SKIPPED");
+				notifyWorkItemPostConditionResult(null, goalWorkItem, "SKIPPED");
 			}	
 		}
+	}
+
+	private String generateYAWLTaskName(TaskWorkItem taskWorkItem) {
+		String name;
+		name = taskWorkItem.getTask().getName().replaceAll(" ", "_");
+		return name;
+	}
+
+	private YSpecificationID getYAWLSpecificationID(WorkItem workItem)
+			throws BlendedWorkflowException {
+		String yawlSpecificationID = workItem.getBwInstance().getBwSpecification().getYawlSpecficationID();
+		YSpecificationID yawlSpecID = null;
+		for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedActivitySpecs()) {
+			if(ySpecificationID.getIdentifier().equals(yawlSpecificationID)) {
+				yawlSpecID = ySpecificationID;
+				break;
+			}
+		}
+		return yawlSpecID;
 	}
 	
 

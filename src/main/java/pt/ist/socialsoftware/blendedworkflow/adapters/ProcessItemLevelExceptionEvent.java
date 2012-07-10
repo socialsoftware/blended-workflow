@@ -35,21 +35,21 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 		Transaction.begin();
 		if (ruleType.equals(RuleType.ItemPreconstraint)) {
 			if (parseConclusion(rdrNode).equals("TRUE")) {
-				BlendedWorkflow.getInstance().getWorkletAdapter().notifyNewTaskWorkItem(wir, "TRUE");
+				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPreConditionResult(wir, "TRUE");
 			} else if (parseConclusion(rdrNode).equals("FALSE")) {
-				BlendedWorkflow.getInstance().getWorkletAdapter().notifyNewTaskWorkItem(wir, "FALSE");
+				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPreConditionResult(wir, "FALSE");
 			} else if (parseConclusion(rdrNode).equals("SKIPPED")) {
-				BlendedWorkflow.getInstance().getWorkletAdapter().notifyNewTaskWorkItem(wir, "SKIPPED");
+				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPreConditionResult(wir, "SKIPPED");
 			} else {
 				log.error(ruleType + " for wir: " + wir + " failed.");
 			}
 		} else if (ruleType.equals(RuleType.ItemConstraintViolation)) {
 			if (parseConclusion(rdrNode).equals("TRUE")) {
-				BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "TRUE");
+				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPostConditionResult(wir, null, "TRUE");
 			} else if (parseConclusion(rdrNode).equals("FALSE")) {
-				BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "FALSE");
+				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPostConditionResult(wir, null, "FALSE");
 			} else if (parseConclusion(rdrNode).equals("SKIPPED")) {
-				BlendedWorkflow.getInstance().getWorkletAdapter().notifyConstraintViolationResult(wir, null, "SKIPPED");
+				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPostConditionResult(wir, null, "SKIPPED");
 			} else {
 				log.error(ruleType + " for wir: " + wir + " failed.");
 			}

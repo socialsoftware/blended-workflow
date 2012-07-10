@@ -29,7 +29,7 @@ public abstract class WorkItem extends WorkItem_Base {
 	 * Notify a GoalWorkItem when it is created
 	 * Notify a WorkItem if there is a Data change event
 	 */
-	public abstract void notifyConstrainViolation();
+	public abstract void notifyDataChanged();
 	
 	/**
 	 * Notify a TaskWorkItem if its PostConstraint = FALSE
@@ -197,9 +197,9 @@ public abstract class WorkItem extends WorkItem_Base {
 	 */
 	public void notifyDataChange() {
 		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_FALSE) {
-			notifyConstrainViolation();
+			notifyDataChanged();
 		} else if (getState() == WorkItemState.PRE_TASK) {
-			BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPreConstraint((TaskWorkItem) this);
+			BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPreConstraint((TaskWorkItem) this);
 		} else if (getState() == WorkItemState.PRE_GOAL) {
 			((GoalWorkItem)this).evaluate(true);
 		}

@@ -96,8 +96,8 @@ public class CreateBWInstanceServiceTest {
 		context.checking(new Expectations() {
 			{
 				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
-				allowing(workletAdapter).notifyWorkItemContraintViolation(with(any(WorkItem.class)));
-				allowing(workletAdapter).notifyWorkItemPreConstraint(with(any(TaskWorkItem.class)));
+				allowing(workletAdapter).requestWorkItemPostConditionEvaluation(with(any(WorkItem.class)));
+				allowing(workletAdapter).requestWorkItemPreConstraint(with(any(TaskWorkItem.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				allowing(workListManager).notifyEnabledWorkItem(with(any(WorkItem.class)));
 			}

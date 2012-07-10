@@ -49,12 +49,12 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 	}
 
 	@Override
-	public void notifyConstrainViolation() {
-		log.info("TaskWorkitem " + getID() + " is now in ConstrainViolation state");
-		setState(WorkItemState.CONSTRAINT_VIOLATION);
+	public void notifyDataChanged() {
+		log.info("TaskWorkitem " + getID() + " is re-evaluating due to changes in data");
+//		setState(WorkItemState.CONSTRAINT_VIOLATION);
 		updateInputWorkItemArguments();
 		updateOutputWorkItemArguments();
-		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
+		BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPostConditionEvaluation(this);
 	}
 
 	@Override
@@ -123,6 +123,6 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
 			setState(WorkItemState.CHECKED_IN);
 		}
-		BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemContraintViolation(this);
+		BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPostConditionEvaluation(this);
 	}
 }
