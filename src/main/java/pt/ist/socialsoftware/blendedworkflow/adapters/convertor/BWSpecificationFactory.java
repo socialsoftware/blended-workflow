@@ -51,6 +51,7 @@ public class BWSpecificationFactory {
 		
 		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlXML).getIdentifier();
 		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
+		System.out.println(yawlSpecficationID);
 
 		// Create Worklet Rules
 		BlendedWorkflow.getInstance().getWorkletAdapter().loadRdrSet(bwSpecification);

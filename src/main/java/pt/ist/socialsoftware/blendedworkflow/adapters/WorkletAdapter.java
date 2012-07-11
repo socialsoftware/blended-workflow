@@ -47,13 +47,20 @@ public class WorkletAdapter {
 	protected String engineAdminPassword = PropertiesManager.getProperty("yawl.AdminPassword");
 	protected String workletGateway = PropertiesManager.getProperty("worklet.gateway");
 
-	private WorkletGatewayClient client= new WorkletGatewayClient();
+	private WorkletGatewayClient client = null;
 	private String handle = null;
 	private ConcurrentHashMap<WorkItemRecord, String> yawlEnabledWIR = new ConcurrentHashMap<WorkItemRecord,String>(); //WIR:WorkItemID
 
 	public WorkletAdapter() {
 		log = Logger.getLogger("WorkletAdpater");
 		registerWorkletListener();
+	}
+	
+	// Note: This constructor is used for testing purposes only
+	public WorkletAdapter(WorkletGatewayClient client) {
+		log = Logger.getLogger("WorkletAdpater");
+		this.client = client;
+		this.handle = "NO HANDLE";
 	}
 
 	/*********************************

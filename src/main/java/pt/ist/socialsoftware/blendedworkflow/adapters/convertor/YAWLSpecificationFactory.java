@@ -35,8 +35,7 @@ public class YAWLSpecificationFactory {
 		yawlSpecification += inputOutputParam();
 		yawlSpecification += footer();
 		
-//		JDOMUtil.documentToFile(JDOMUtil.stringToDocument(yawlSpecification), "C:/Users/User/Desktop/yawl.xml");
-
+//		JDOMUtil.documentToFile(JDOMUtil.stringToDocument(yawlSpecification), "C:/Users/User/Desktop/yawl.xml");		System.out.println(yawlSpecification);
 		return yawlSpecification;
 	}
 
