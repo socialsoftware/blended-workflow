@@ -13,6 +13,11 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 @RunWith(JMock.class)
 public class LoadBWSpecificationServiceTest extends AbstractServiceTest {
+	
+	@Override
+	protected void initializeSpecification() {
+		// It does not load the spec because it is the subject of the test
+	}
 
 	@Test
 	public void loadBWSpecification() throws Exception {
@@ -21,25 +26,6 @@ public class LoadBWSpecificationServiceTest extends AbstractServiceTest {
 				.fileToString(BWSPECIFICATION_FILENAME);
 		new LoadBWSpecificationService(bwSpecificationString).call();
 		verifySuccess();
-		// boolean committed = false;
-		// try {
-		// Transaction.begin();
-		// final BlendedWorkflow blendedWorkflow = BlendedWorkflow
-		// .getInstance();
-		// final BWSpecification bwSpecification = blendedWorkflow
-		// .getBWSpecification(BWSPECIFICATION_NAME);
-		// bwSpecification.getDataModel();
-		// bwSpecification.getGoalModel();
-		// bwSpecification.getTaskModel();
-		//
-		// Transaction.commit();
-		// committed = true;
-		// } catch (final BlendedWorkflowException e) {
-		// fail(e.getMessage());
-		// } finally {
-		// if (!committed)
-		// Transaction.abort();
-		// }
 	}
 
 	@Override

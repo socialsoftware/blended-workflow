@@ -159,12 +159,13 @@
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.LoadBWSpecificationServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateBWInstanceServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalInstanceServiceTest" />
-			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.ManageGoalConditionServiceTest" />
+			<!--			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.ManageGoalConditionServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.EnableGoalWorkItemsServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CheckInWorkItemServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.SkipWorkItemServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.RedoGoalWorkItemServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateNewGoalServiceTest" />
+			-->
 		</junit>
 	</target>
 	

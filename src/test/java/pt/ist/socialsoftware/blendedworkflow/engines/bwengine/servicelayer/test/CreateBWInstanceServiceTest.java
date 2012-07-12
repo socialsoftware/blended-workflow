@@ -6,11 +6,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jdom.Element;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
+import org.yawlfoundation.yawl.engine.YSpecificationID;
+import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;
+import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -34,70 +38,18 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 @RunWith(JMock.class)
-public class CreateBWInstanceServiceTest {
-
-	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
+public class CreateBWInstanceServiceTest extends AbstractServiceTest {
 
 	private static String YAWLCASE_ID = "yawlCaseID";
-	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
 	private static String USER_ID = "BlendedWorkflow";
 
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(CreateBWInstanceServiceTest.class);
-	}
-
-	private Mockery context = new Mockery() {
-		{
-			setImposteriser(ClassImposteriser.INSTANCE);
-			setThreadingPolicy(new Synchroniser());
-		}
-	};
-
-	private YAWLAdapter yawlAdapter = null;
-	private WorkletAdapter workletAdapter = null;
-	private BWManager bwManager = null;
-	private WorkListManager workListManager = null;
-
-	@Before
-	public void setUp() throws Exception {
-		Bootstrap.initTestDB();
-
-		yawlAdapter = context.mock(YAWLAdapter.class);
-		workletAdapter = context.mock(WorkletAdapter.class);
-		bwManager = context.mock(BWManager.class);
-		workListManager = context.mock(WorkListManager.class);
-		context.checking(new Expectations() {
-			{
-				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
-				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
-				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
-			}
-		});
-
-		Transaction.begin();
-		BlendedWorkflow.getInstance().setYawlAdapter(yawlAdapter);
-		BlendedWorkflow.getInstance().setWorkletAdapter(workletAdapter);
-		BlendedWorkflow.getInstance().setBwManager(bwManager);
-		BlendedWorkflow.getInstance().setWorkListManager(workListManager);
-		Transaction.commit();
-
-		String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		new LoadBWSpecificationService(bwSpecificationString).call();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		Bootstrap.clean();
-	}
 
 	@Test
 	public void createOneBWInstance() throws Exception {
 		context.checking(new Expectations() {
 			{
 				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
-				allowing(workletAdapter).requestWorkItemPostConditionEvaluation(with(any(WorkItem.class)));
-				allowing(workletAdapter).requestWorkItemPreConstraint(with(any(TaskWorkItem.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				allowing(workListManager).notifyEnabledWorkItem(with(any(WorkItem.class)));
 			}
@@ -137,11 +89,10 @@ public class CreateBWInstanceServiceTest {
 		}
 	}
 
-	private BWSpecification getBWSpecification(String name) throws BlendedWorkflowException {
-		Transaction.begin();
-		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(name);
-		Transaction.commit();
-		return bwSpecification;
+	@Override
+	protected void assertResults() throws BlendedWorkflowException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
