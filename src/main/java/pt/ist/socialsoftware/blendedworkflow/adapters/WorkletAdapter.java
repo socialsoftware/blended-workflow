@@ -47,13 +47,20 @@ public class WorkletAdapter {
 	protected String engineAdminPassword = PropertiesManager.getProperty("yawl.AdminPassword");
 	protected String workletGateway = PropertiesManager.getProperty("worklet.gateway");
 
-	private WorkletGatewayClient client= new WorkletGatewayClient();
+	private WorkletGatewayClient client = null;
 	private String handle = null;
 	private ConcurrentHashMap<WorkItemRecord, String> yawlEnabledWIR = new ConcurrentHashMap<WorkItemRecord,String>(); //WIR:WorkItemID
 
 	public WorkletAdapter() {
 		log = Logger.getLogger("WorkletAdpater");
 		registerWorkletListener();
+	}
+	
+	// Note: This constructor is used for testing purposes only
+	public WorkletAdapter(WorkletGatewayClient client) {
+		log = Logger.getLogger("WorkletAdpater");
+		this.client = client;
+		this.handle = "NO HANDLE";
 	}
 
 	/*********************************
@@ -202,16 +209,18 @@ public class WorkletAdapter {
 		// Create Tasks RdrSet
 		for (Task task : taskModel.getTasks()) {
 			String taskName = task.getName().replaceAll(" ", "_");
+			taskName = taskName +"4";
 
+			if (taskName.equals("Collect_Physical_Data4")) {
 			// PreConstraintTree
-			if (firstTask) {
-				// True Node
-				eCornerstone = getCornerstoneData(task, null, true, "NULL");
-				condition = task.getPreConstraint().getRdrTrueCondition();
-				eConclusion = createRdrConclusion("NULL", true);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
-				firstTask = false;
-			} else {
+//			if (firstTask) {
+//				// True Node
+//				eCornerstone = getCornerstoneData(task, null, true, "NULL");
+//				condition = task.getPreConstraint().getRdrTrueCondition();
+//				eConclusion = createRdrConclusion("NULL", true);
+//				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+//				firstTask = false;
+//			} else {
 				// Undefined Node
 				eCornerstone = getCornerstoneData(task, null, true, "UNDEFINED");
 				condition = task.getPreConstraint().getRdrUndefinedCondition();
@@ -225,17 +234,17 @@ public class WorkletAdapter {
 				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
 
 				// True Node
-				eCornerstone = getCornerstoneData(task, null, true, "DEFINED");
-				condition = task.getPreConstraint().getRdrTrueCondition();
-				eConclusion = createRdrConclusion("TRUE", true);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+//				eCornerstone = getCornerstoneData(task, null, true, "DEFINED");
+//				condition = task.getPreConstraint().getRdrTrueCondition();
+//				eConclusion = createRdrConclusion("TRUE", true);
+//				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
 				
 				// False Node
-//				eCornerstone = getCornerstoneData(task, null, true, "DEFINED");
-//				condition = task.getPreConstraint().getRdrFalseCondition();
-//				eConclusion = createRdrConclusion("FALSE", true);
-//				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
-			}
+				eCornerstone = getCornerstoneData(task, null, true, "DEFINED");
+				condition = task.getPreConstraint().getRdrFalseCondition();
+				eConclusion = createRdrConclusion("FALSE", true);
+				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+//			}
 
 			// PostConstraintTree
 			// Undefined Node
@@ -243,24 +252,30 @@ public class WorkletAdapter {
 			condition = task.getPostConstraint().getRdrUndefinedCondition();
 			eConclusion = createRdrConclusion("UNDEFINED", false);
 			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+			log.info("UND"+condition);
 
 			// Skipped Node
 			eCornerstone = getCornerstoneData(task, null, false, "SKIPPED");
 			condition = task.getPostConstraint().getRdrSkippedCondition();
 			eConclusion = createRdrConclusion("SKIPPED", false);
 			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+			log.info("SKIP"+condition);
 
 			// True Node
-			eCornerstone = getCornerstoneData(task, null, false, "DEFINED");
-			condition = task.getPostConstraint().getRdrTrueCondition();
-			eConclusion = createRdrConclusion("TRUE", false);
-			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
-			
-//			// False Node
 //			eCornerstone = getCornerstoneData(task, null, false, "DEFINED");
-//			condition = task.getPostConstraint().getRdrFalseCondition();
-//			eConclusion = createRdrConclusion("FALSE", false);
+//			condition = task.getPostConstraint().getRdrTrueCondition();
+//			eConclusion = createRdrConclusion("TRUE", false);
 //			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+			
+			// False Node
+			if (task.getPostConstraint().existCompareAttributeToValue()) {
+				eCornerstone = getCornerstoneData(task, null, false, "DEFINED");
+				condition = task.getPostConstraint().getRdrFalseCondition();
+				eConclusion = createRdrConclusion("FALSE", false);
+				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+				log.info("FALSE"+condition);
+			}
+		}
 		}
 
 		// Create Goals RdrSet
@@ -291,7 +306,90 @@ public class WorkletAdapter {
 //			eConclusion = createRdrConclusion("FALSE", false);
 //			addNode(yawlSpecID, goalName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
 //		}
+		
+		evaluateTest(bwSpecification);
 	}
+	
+	
+	/**
+	 * -------------------------------------------------------------------
+	 */
+	
+
+	public void evaluateTest(BWSpecification bwSpecification) throws BlendedWorkflowException {
+	String name;RuleType ruleType = RuleType.ItemConstraintViolation;
+	Element eData;
+	String conclusion;
+	String cs;
+	
+	// YAWLSpecID
+	String yawlSpecificationID = bwSpecification.getYawlSpecficationID();
+	YSpecificationID yawlSpecID = null;
+	for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedActivitySpecs()) {
+		if(ySpecificationID.getIdentifier().equals(yawlSpecificationID)) {
+			yawlSpecID = ySpecificationID;
+			break;
+		}
+	}
+	
+	name = "Collect_Physical_Data4";
+	log.info(name);
+	// UND
+	cs = "<cornerstone>"+
+			"<PatientData_Height_State>UNDEFINED</PatientData_Height_State>"+
+			"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
+			"<PatientData_Weight_State>UNDEFINED</PatientData_Weight_State>"+
+			"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
+			"<FALSE_NODE>FALSE</FALSE_NODE>"+
+			"</cornerstone>";
+	eData = JDOMUtil.stringToElement(cs);
+
+	try {
+		conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+	} catch (IOException e) {
+		throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+	}
+	log.info("UND=" + conclusion);
+
+	// DEF
+	cs = "<cornerstone>"+
+			"<PatientData_Height_State>DEFINED</PatientData_Height_State>"+
+			"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
+			"<PatientData_Weight_State>DEFINED</PatientData_Weight_State>"+
+			"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
+			"<FALSE_NODE>FALSE</FALSE_NODE>"+
+			"</cornerstone>";
+	eData = JDOMUtil.stringToElement(cs);
+
+	try {
+		conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+	} catch (IOException e) {
+		throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+	}
+	log.info("TRUE=" + conclusion);
+
+	// SKIP
+	cs = "<cornerstone>"+
+			"<PatientData_Height_State>SKIPPED</PatientData_Height_State>"+
+			"<PatientData_Height>$SKIPPED$</PatientData_Height>"+
+			"<PatientData_Weight_State>SKIPPED</PatientData_Weight_State>"+
+			"<PatientData_Weight>$SKIPPED$</PatientData_Weight>"+
+			"<FALSE_NODE>FALSE</FALSE_NODE>"+
+			"</cornerstone>";
+	eData = JDOMUtil.stringToElement(cs);
+
+	try {
+		conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+	} catch (IOException e) {
+		throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+	}
+	log.info("SKIP=" + conclusion);
+}
+
+	
+	/**
+	 * *******************************************************************
+	 */
 
 	/*******************************
 	 * Support methods
@@ -503,7 +601,8 @@ public class WorkletAdapter {
 	private void addNode(YSpecificationID yawlSpecID, String name, String condition, Element eCornerstone, Element eConclusion, RuleType ruleType) throws BlendedWorkflowException {
 		try {
 			RdrNode node = new RdrNode(condition, eConclusion, eCornerstone);
-			client.addNode(yawlSpecID, name, ruleType, node, handle);
+			String r = client.addNode(yawlSpecID, name, ruleType, node, handle);
+//			log.info("criado :" + r);
 		} catch (IOException e) {
 			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_ADDNODE);
 		}
