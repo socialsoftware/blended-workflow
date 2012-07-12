@@ -62,6 +62,13 @@ public class WorkletAdapter {
 		this.client = client;
 		this.handle = "NO HANDLE";
 	}
+	
+	// Note: This constructor is used for testing purposes only
+	public WorkletAdapter(WorkletGatewayClient client) {
+		log = Logger.getLogger("WorkletAdpater");
+		this.client = client;
+		this.handle = "NO HANDLE";
+	}
 
 	/*********************************
 	 * Notifications

@@ -2,21 +2,31 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jdom.Element;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
+import org.yawlfoundation.yawl.engine.YSpecificationID;
+import org.yawlfoundation.yawl.worklet.rdr.RdrNode;
+import org.yawlfoundation.yawl.worklet.rdr.RuleType;
+import org.yawlfoundation.yawl.worklet.support.WorkletGatewayClient;
+
+import com.sun.tools.javac.util.List;
 
 import junit.framework.JUnit4TestAdapter;
 
 import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
+import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.YAWLSpecificationFactory;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -31,7 +41,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 @RunWith(JMock.class)
 public class LoadBWSpecificationServiceTest {
 
-	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
+	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisodeTest.xml";
 	
 	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 
@@ -48,13 +58,16 @@ public class LoadBWSpecificationServiceTest {
 
 	private YAWLAdapter yawlAdapter = null;
 	private WorkletAdapter workletAdapter = null;
+	private WorkletGatewayClient workletGatewayClient = null;
 	private BWManager bwManager = null;
 
 	@Before
 	public void setUp() {
 		Bootstrap.initTestDB();
 		yawlAdapter = context.mock(YAWLAdapter.class);
-		workletAdapter = context.mock(WorkletAdapter.class);
+//		workletAdapter = context.mock(WorkletAdapter.class);
+		workletGatewayClient = context.mock(WorkletGatewayClient.class);
+		workletAdapter = new WorkletAdapter(workletGatewayClient);
 		bwManager = context.mock(BWManager.class);
 
 		Transaction.begin();
@@ -71,10 +84,16 @@ public class LoadBWSpecificationServiceTest {
 
 	@Test
 	public void loadBWSpecification() throws Exception {
+		YSpecificationID yawlSpec = new YSpecificationID("UID_3213f8b4-5757-4674-a6a2-415aa191ca91","1.0","MedicalAppointment");
+		final ArrayList<YSpecificationID> specIds = new ArrayList<YSpecificationID>();
+		specIds.add(yawlSpec);
+		
 		context.checking(new Expectations() {
 			{
 				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
-				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
+				oneOf(yawlAdapter).getLoadedActivitySpecs(); will(returnValue(specIds));
+				allowing(workletGatewayClient).addNode(with(any(YSpecificationID.class)),with(any(String.class)),with(any(RuleType.class)),with(any(RdrNode.class)),with(any(String.class)));
+//				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
 			}
 		});
