@@ -89,5 +89,15 @@ public class NotCondition extends NotCondition_Base {
 	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return getCondition().evaluateWithWorkItem(goalWorkItem, conditionType).NOT();
 	}
+	
+	@Override
+	public Boolean existCompareAttributeToValue() {
+		return false;
+	}
+	
+	@Override
+	public Boolean existTrue(){
+		return false;
+	}
 
 }

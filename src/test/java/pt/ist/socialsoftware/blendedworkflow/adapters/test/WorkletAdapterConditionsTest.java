@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.adapters.test;
 public class WorkletAdapterConditionsTest {
 	
 //	
-//	public void evaluate() throws BlendedWorkflowException {
+//	public void evaluateTest() throws BlendedWorkflowException {
 //		String name;
 //		RuleType ruleType = RuleType.ItemConstraintViolation;
 //		Element eData;

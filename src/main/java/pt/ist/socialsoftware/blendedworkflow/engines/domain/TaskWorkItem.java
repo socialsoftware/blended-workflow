@@ -54,6 +54,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 //		setState(WorkItemState.CONSTRAINT_VIOLATION);
 		updateInputWorkItemArguments();
 		updateOutputWorkItemArguments();
+		log.debug(this.getClass().getSimpleName());
 		BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPostConditionEvaluation(this);
 	}
 

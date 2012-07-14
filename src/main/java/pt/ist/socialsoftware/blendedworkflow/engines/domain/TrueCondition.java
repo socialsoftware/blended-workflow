@@ -73,6 +73,11 @@ public class TrueCondition extends TrueCondition_Base {
 	public Boolean existExistEntity() {
 		return false;
 	}
+	
+	@Override
+	public Boolean existCompareAttributeToValue() {
+		return false;
+	}
 
 	/******************************
 	 * Evaluate
@@ -85,6 +90,11 @@ public class TrueCondition extends TrueCondition_Base {
 	@Override
 	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return TripleStateBool.TRUE;
+	}
+	
+	@Override
+	public Boolean existTrue(){
+		return true;
 	}
 	
 	

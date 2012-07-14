@@ -101,6 +101,11 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 	public Boolean existExistEntity() {
 		return false;
 	}
+	
+	@Override
+	public Boolean existTrue(){
+		return false;
+	}
 
 	/******************************
 	 * Evaluate
@@ -166,6 +171,11 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 		}
 		}
 		return null;
+	}
+	
+	@Override
+	public Boolean existCompareAttributeToValue() {
+		return false;
 	}
 
 }

@@ -27,7 +27,7 @@ public class TaskModelInstance extends TaskModelInstance_Base {
 			//First Task and DEACTIVATED?
 			if (task.getPrevious().equals("") && task.getState().equals(TaskState.DEACTIVATED)) {
 				TaskWorkItem taskWorkItem = new TaskWorkItem(getBwInstance(), task);
-				BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPreConstraint(taskWorkItem);
+				BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPreCondition(taskWorkItem);
 			} else if (!task.getPrevious().equals("") && task.getState().equals(TaskState.DEACTIVATED)) {
 				//All previous Tasks ACHIEVED?
 				int pCount = 0;
@@ -41,7 +41,7 @@ public class TaskModelInstance extends TaskModelInstance_Base {
 				}
 				if (pCount == elementArr.length) {
 					TaskWorkItem taskWorkItem = new TaskWorkItem(getBwInstance(), task);
-					BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPreConstraint(taskWorkItem);
+					BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPreCondition(taskWorkItem);
 				}
 			}
 		}

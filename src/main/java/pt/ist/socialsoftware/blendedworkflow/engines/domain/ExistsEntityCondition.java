@@ -147,6 +147,11 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	public Boolean existExistEntity() {
 		return true;
 	}
+	
+	@Override
+	public Boolean existTrue(){
+		return false;
+	}
 
 	/******************************
 	 * Evaluate
@@ -258,5 +263,9 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 		return null;
 	}
 
+	@Override
+	public Boolean existCompareAttributeToValue() {
+		return false;
+	}
 
 }

@@ -96,6 +96,16 @@ public class OrCondition extends OrCondition_Base {
 	public Boolean existExistEntity() {
 		return getConditionOne().existExistEntity() || getConditionTwo().existExistEntity();
 	}
+	
+	@Override
+	public Boolean existCompareAttributeToValue() {
+		return getConditionOne().existExistEntity() || getConditionTwo().existExistEntity();
+	}
+	
+	@Override
+	public Boolean existTrue(){
+		return getConditionOne().existExistEntity() || getConditionTwo().existExistEntity();
+	}
 
 	/******************************
 	 * Evaluate

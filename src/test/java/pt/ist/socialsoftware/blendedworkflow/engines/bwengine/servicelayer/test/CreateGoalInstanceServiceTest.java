@@ -26,6 +26,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
@@ -34,14 +35,11 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 @RunWith(JMock.class)
-public class CreateGoalInstanceServiceTest {
-
-	private static String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisode.xml";
+public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 
 	private static String YAWLCASE_ID = "yawlCaseID";
-	private static String BWSPECIFICATION_NAME = "Medical Appointment";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
-
+	private static String USER_ID = "BlendedWorkflow";
 	private static String GOAL_NAME_1 = "Add Patient";
 
 //	private static String GOALWORKITEM_ID_2 = "Add Patient.2";
@@ -57,40 +55,12 @@ public class CreateGoalInstanceServiceTest {
 //	private static String ENTITYINSTANCE_1_ID = "Patient.1";
 //	private static String ENTITYINSTANCE_2_ID = "Patient.2";
 
-	private static String USER_ID = "BlendedWorkflow";
-
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(CreateGoalInstanceServiceTest.class);
-	}
-
-	private Mockery context = new Mockery() {
-		{
-			setImposteriser(ClassImposteriser.INSTANCE);
-			setThreadingPolicy(new Synchroniser());
-		}
-	};
-
-	private YAWLAdapter yawlAdapter = null;
-	private WorkletAdapter workletAdapter = null;
-	private BWManager bwManager = null;
-	private WorkListManager workListManager = null;
 
 	@Before
 	public void setUp() throws Exception {
-		Bootstrap.initTestDB();
-
-		yawlAdapter = context.mock(YAWLAdapter.class);
-		workletAdapter = context.mock(WorkletAdapter.class);
-		bwManager = context.mock(BWManager.class);
-		workListManager = context.mock(WorkListManager.class);
 		context.checking(new Expectations() {
 			{
-				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
 				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
-				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
-				allowing(workletAdapter).requestWorkItemPostConditionEvaluation(with(any(WorkItem.class)));
-				allowing(workletAdapter).requestWorkItemPreConstraint(with(any(TaskWorkItem.class)));
-				allowing(workletAdapter).addGoal(with(any(BWInstance.class)), with(any(AchieveGoal.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
 				allowing(workListManager).notifySkippedWorkItem(with(any(WorkItem.class)));
@@ -99,26 +69,8 @@ public class CreateGoalInstanceServiceTest {
 			}
 		});
 
-		Transaction.begin();
-		BlendedWorkflow.getInstance().setYawlAdapter(yawlAdapter);
-		BlendedWorkflow.getInstance().setWorkletAdapter(workletAdapter);
-		BlendedWorkflow.getInstance().setBwManager(bwManager);
-		BlendedWorkflow.getInstance().setWorkListManager(workListManager);
-		Transaction.commit();
-
-		String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
-		new LoadBWSpecificationService(bwSpecificationString).call();
-
-		Transaction.begin();
-		BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(BWSPECIFICATION_NAME);
-		Transaction.commit();
-
+		BWSpecification bwSpecification = getBWSpecification(BWSPECIFICATION_NAME);
 		new CreateBWInstanceService(bwSpecification.getOID(),"",USER_ID).call();
-	}
-
-	@After
-	public void tearDown() {
-		Bootstrap.clean();
 	}
 
 	@Test
@@ -462,5 +414,11 @@ public class CreateGoalInstanceServiceTest {
 			}
 		}
 	}*/
+
+	@Override
+	protected void assertResults() throws BlendedWorkflowException {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

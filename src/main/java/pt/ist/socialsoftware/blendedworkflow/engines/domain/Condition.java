@@ -44,6 +44,8 @@ public abstract class Condition extends Condition_Base {
 	
 	public abstract String toString();
 	public abstract Boolean existExistEntity();
+	public abstract Boolean existCompareAttributeToValue();
+	public abstract Boolean existTrue();
 	
 	/******************************
 	 * Evaluate

@@ -110,4 +110,14 @@ public class ForAllCondition extends ForAllCondition_Base {
 		}
 		return result;
 	}
+	
+	@Override
+	public Boolean existCompareAttributeToValue() {
+		return false;
+	}
+	
+	@Override
+	public Boolean existTrue(){
+		return false;
+	}
 }

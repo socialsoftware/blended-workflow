@@ -116,6 +116,11 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		return false;
 	}
 	
+	@Override
+	public Boolean existTrue(){
+		return false;
+	}
+	
 	/******************************
 	 * Evaluate
 	 ******************************/
@@ -262,7 +267,7 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 					return false;
 				}
 			} else if (getOperator().equals("=")) {
-				if (value == conditionValue) {
+				if (value.equals(conditionValue)) {
 					return true;
 				} else {
 					return false;
@@ -280,7 +285,7 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 					return false;
 				}
 			} else if (getOperator().equals("!=")) {
-				if (value != conditionValue) {
+				if (value.intValue() != conditionValue.intValue()) {
 					return true;
 				} else {
 					return false;
@@ -293,6 +298,11 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 			log.error("Invalid operator for String or Boolean type.");
 			return false;
 		}
+	}
+
+	@Override
+	public Boolean existCompareAttributeToValue() {
+		return true;
 	}
 	
 }

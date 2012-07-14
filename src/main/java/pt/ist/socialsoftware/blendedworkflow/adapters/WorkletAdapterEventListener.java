@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import jvstm.Transaction;
 
@@ -22,61 +21,38 @@ public class WorkletAdapterEventListener extends WorkletEventListener{
 	
 	protected Boolean yawlFlow = Boolean.parseBoolean(PropertiesManager.getProperty("yawl.Flow"));
 	private static Logger log = Logger.getLogger("WorkletAdapterEventListener");
-	private ConcurrentHashMap<String, Boolean> startedCases = new ConcurrentHashMap<String, Boolean>();
 
-	public void WorkletEventListener() {
-	}
+	public void WorkletEventListener() {}
 
-	/**
-	 * Receive and process ItemPreconstraint and ItemConstraintViolation events.
-	 */
 	@Override
 	public void itemLevelExceptionEvent(WorkItemRecord wir, Element caseData, RdrNode rdrNode, RuleType ruleType) {
-		log.info("ItemLevelExceptionEvent for WorkItemRecord: " + wir + " begin.");
-		
+		log.debug("ItemLevelExceptionEvent for WorkItemRecord: " + wir + " begin.");
 		if (yawlFlow) {
 			Transaction.begin();
 			BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
 			ProcessItemLevelExceptionEvent task = new ProcessItemLevelExceptionEvent(wir, caseData, rdrNode, ruleType);
 			bwExecutorService.runTask(task);
 			Transaction.commit();
-		}
-				
-		log.info("ItemLevelExceptionEvent for WorkItemRecord: " + wir + " end.");
+		}	
+		log.debug("ItemLevelExceptionEvent for WorkItemRecord: " + wir + " end.");
 	}
 
-	/**
-	 * Receive and process ConstrainSucess events, for Tasks with no ItemPreconstraint or ItemConstraintViolation constraints.
-	 */
 	@Override
 	public void constraintSuccessEvent(String caseID, WorkItemRecord wir, Element caseData, RuleType ruleType) {
-		log.info("ConstraintSuccessEvent for WorkItemRecord: " + wir + " begin.");
-
-		if (yawlFlow) {
-			log.debug("IN");
-			Transaction.begin();
-			if (ruleType.equals(RuleType.ItemPreconstraint)) {
-				log.debug("ItemPreconstraint");
-				// First Task with no precondition
-				log.debug(!startedCases.containsKey(caseID));
-				if (!startedCases.containsKey(caseID)) {
-					startedCases.put(caseID, true);
-					log.debug(!startedCases.containsKey(caseID));
-					BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-					ProcessConstrainSucessEvent task = new ProcessConstrainSucessEvent(caseID, wir, caseData, ruleType);
-					bwExecutorService.runTask(task);
-				} else {
-					log.info("PreCondition was False");
-				}
-			} else {
-
-				BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-				ProcessConstrainSucessEvent task = new ProcessConstrainSucessEvent(caseID, wir, caseData, ruleType);
-				bwExecutorService.runTask(task);
-			}
-			Transaction.commit();
-		}
-		log.info("ConstraintSuccessEvent for WorkItemRecord: " + wir + " end.");
+		log.error("FAILURE: no RdrNode for the " + wir.getTaskName() + "Task");
+//		log.debug("ConstraintSuccessEvent for WorkItemRecord: " + wir + " begin.");
+//		if (yawlFlow) {
+//			Transaction.begin();
+//			if (ruleType.equals(RuleType.ItemPreconstraint)) {
+//				BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+//				ProcessConstrainSucessEvent task = new ProcessConstrainSucessEvent(caseID, wir, caseData, ruleType);
+//				bwExecutorService.runTask(task);
+//			} else if (ruleType.equals(RuleType.ItemConstraintViolation)) {
+//				log.error("Task PosCondition failed to activate a RdrNode.");
+//			}
+//		}
+//		Transaction.commit();
+//		log.debug("ConstraintSuccessEvent for WorkItemRecord: " + wir + " end.");
 	}
 
 	@Override
@@ -89,5 +65,4 @@ public class WorkletAdapterEventListener extends WorkletEventListener{
 	public void shutdown() {
 		log.info("WorkletService shutdown.");
 	}
-
 }

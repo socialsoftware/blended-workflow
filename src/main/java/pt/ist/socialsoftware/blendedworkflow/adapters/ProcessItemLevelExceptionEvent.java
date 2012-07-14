@@ -30,7 +30,7 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 
 	@Override
 	public String call() throws Exception {
-		log.info("Start for WorkItemRecord: " + wir + " RT:" + ruleType + " Result:" + parseConclusion(rdrNode));
+		log.debug("Start for WorkItemRecord: " + wir + " RT:" + ruleType + " Result:" + parseConclusion(rdrNode));
 
 		Transaction.begin();
 		if (ruleType.equals(RuleType.ItemPreconstraint)) {
@@ -45,18 +45,18 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 			}
 		} else if (ruleType.equals(RuleType.ItemConstraintViolation)) {
 			if (parseConclusion(rdrNode).equals("TRUE")) {
-				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPostConditionResult(wir, null, "TRUE");
+				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPostConditionResult(wir, "TRUE");
 			} else if (parseConclusion(rdrNode).equals("FALSE")) {
-				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPostConditionResult(wir, null, "FALSE");
+				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPostConditionResult(wir, "FALSE");
 			} else if (parseConclusion(rdrNode).equals("SKIPPED")) {
-				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPostConditionResult(wir, null, "SKIPPED");
+				BlendedWorkflow.getInstance().getWorkletAdapter().notifyWorkItemPostConditionResult(wir, "SKIPPED");
 			} else {
 				log.error(ruleType + " for wir: " + wir + " failed.");
 			}
 		}
 		Transaction.commit();
 
-		log.info("End for WorkItemRecord: " + wir);
+		log.debug("End for WorkItemRecord: " + wir);
 		return "ItemLevelExceptionEventTask:Sucess";
 	}
 
@@ -69,12 +69,15 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 		String conclusion = JDOMUtil.elementToString(rdrNode.getConclusion());
 		if (conclusion.contains("SKIPPED"))
 			return "SKIPPED";
-		else if (conclusion.contains("FALSE") || conclusion.contains("UNDEFINED"))
+		else if (conclusion.contains("FALSE"))
 			return "FALSE";
 		else if (conclusion.contains("complete") || conclusion.contains("TRUE"))
 			return "TRUE";
 		else
+			log.error("Invalid Conclusion!");
 			return "FAIL";
 	}
+	
+	
 
 }
