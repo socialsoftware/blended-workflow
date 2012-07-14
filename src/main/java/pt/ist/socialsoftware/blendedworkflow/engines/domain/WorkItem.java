@@ -199,7 +199,7 @@ public abstract class WorkItem extends WorkItem_Base {
 		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_FALSE) {
 			notifyDataChanged();
 		} else if (getState() == WorkItemState.PRE_TASK) {
-			BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPreCondition((TaskWorkItem) this);
+			BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPreConditionEvaluation((TaskWorkItem) this);
 		} else if (getState() == WorkItemState.PRE_GOAL) {
 			((GoalWorkItem)this).evaluate(true);
 		}

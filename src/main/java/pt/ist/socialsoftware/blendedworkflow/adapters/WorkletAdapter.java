@@ -137,7 +137,7 @@ public class WorkletAdapter {
 	 * Evaluate a TaskWorkitem PreConditon.
 	 * @param taskWorkItem the taskWorkItem to evaluate.
 	 */
-	public void requestWorkItemPreCondition(TaskWorkItem taskWorkItem) {
+	public void requestWorkItemPreConditionEvaluation(TaskWorkItem taskWorkItem) {
 		try {
 			evaluatePreCondition(taskWorkItem);
 		} catch (BlendedWorkflowException bwe) {

@@ -95,8 +95,8 @@ public class RedoGoalWorkItemServiceTest {
 				oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
 				oneOf(yawlAdapter).launchCase(with(any(String.class))); will(returnValue(YAWLCASE_ID));
 				oneOf(workletAdapter).loadRdrSet(with(any(BWSpecification.class)));
-				allowing(workletAdapter).requestWorkItemPostConditionEvaluation(with(any(WorkItem.class)));
-				allowing(workletAdapter).requestWorkItemPreConstraint(with(any(TaskWorkItem.class)));
+				allowing(workletAdapter).requestWorkItemPostConditionEvaluation(with(any(TaskWorkItem.class)));
+				allowing(workletAdapter).requestWorkItemPreConditionEvaluation(with(any(TaskWorkItem.class)));
 				oneOf(bwManager).notifyCreatedBWInstance(with(any(BWInstance.class)));
 				oneOf(bwManager).notifyLoadedBWSpecification(with(any(BWSpecification.class)));
 				allowing(workListManager).notifySkippedWorkItem(with(any(WorkItem.class)));
