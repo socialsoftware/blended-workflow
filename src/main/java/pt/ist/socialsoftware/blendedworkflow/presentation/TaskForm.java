@@ -203,7 +203,7 @@ public class TaskForm extends VerticalLayout {
 		CheckBox checkBox = new CheckBox(attributeName);
 
 		if (value != null) {
-			if (value.equals(true))
+			if (value.equals("true"))
 				checkBox.setValue(true);
 			else
 				checkBox.setValue(false);

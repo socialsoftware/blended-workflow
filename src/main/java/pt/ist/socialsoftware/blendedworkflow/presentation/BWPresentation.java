@@ -50,6 +50,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.LoginForm.LoginEvent;
+import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TabSheet;
@@ -169,6 +170,23 @@ public class BWPresentation extends Application {
 	}
 
 	private void initMainWindow(String name) {
+		//Refresh HACK!
+		final ProgressIndicator progressindicator = new ProgressIndicator(new Float(0.0));
+		// Invible Solution - do not work
+		//#1Solution
+//		progressindicator.setStyleName("invisible");
+//		toolbar.addComponent(progressindicator);
+		//#2Solution
+//		HorizontalLayout progressindicatorHL = new HorizontalLayout();
+//		progressindicatorHL.setStyleName("invisible");
+//		progressindicatorHL.addComponent(progressindicator);
+//		toolbar.addComponent(progressindicatorHL);
+		//#3Solution
+		progressindicator.setWidth("1px");
+		progressindicator.setHeight("1px");
+		progressindicator.setPollingInterval(2000);
+		//Refresh HACK!
+		
 		this.username = name + "   ";
 		DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
 		getMainWindow().showNotification("Welcome " + this.username);
@@ -225,6 +243,7 @@ public class BWPresentation extends Application {
 
 		right.setSizeUndefined();
 		right.addStyleName("right");
+		right.addComponent(progressindicator);
 		right.addComponent(welcome);
 		
 		this.bwTabSheet = new TabSheet();
@@ -819,7 +838,7 @@ public class BWPresentation extends Application {
 					return new Action[]{};
 				} else {
 					String state = maintainGoalsTree.getContainerProperty(target, "State").toString();
-					if (state == "ENABLED") {
+					if (state.equals("ENABLED")) {
 						return new Action[]{DISABLE_CONDITION_ACTION};
 					} else {
 						return new Action[]{ENABLE_CONDITION_ACTION};

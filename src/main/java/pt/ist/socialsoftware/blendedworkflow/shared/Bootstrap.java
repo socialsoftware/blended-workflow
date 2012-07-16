@@ -38,7 +38,7 @@ public class Bootstrap {
 	public static void init() {
 		FenixFramework.initialize(new Config() {{
 			dbAlias = "C:/Users/User/Desktop/bwdb/" + (((Calendar.getInstance().getTime() +"").replaceAll(" ", "")).replaceAll(":", "")); // FIXME: Test proposes only.
-			domainModelPath = PropertiesManager.getProperty("dml.filename");
+			domainModelPath = BWPropertiesManager.getProperty("dml.filename");
 			repositoryType = RepositoryType.BERKELEYDB;
 			rootClass = BlendedWorkflow.class;
 		}});
@@ -85,7 +85,7 @@ public class Bootstrap {
 	 * Populate the DataBase with the MedicalEpisode Specification.
 	 */
 	public static void populate() {
-		String bwXML = StringUtils.fileToString(PropertiesManager.getProperty("medical.xml"));
+		String bwXML = StringUtils.fileToString(BWPropertiesManager.getProperty("medical.xml"));
 		
 		Transaction.begin();
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();

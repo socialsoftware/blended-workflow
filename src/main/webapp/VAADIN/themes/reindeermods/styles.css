@@ -27,3 +27,7 @@
 .v-menubar-submenu {
 	font-family: Arial, Helvetica, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
 }
+
+.i-orderedlayout-invisible .i-progressindicator {
+     display: none;
+}

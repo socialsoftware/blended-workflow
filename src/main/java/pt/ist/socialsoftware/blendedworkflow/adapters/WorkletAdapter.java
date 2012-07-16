@@ -23,7 +23,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
@@ -32,17 +31,17 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
-import pt.ist.socialsoftware.blendedworkflow.shared.PropertiesManager;
+import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 
 
 public class WorkletAdapter {
 
 	private Logger log;
 	// FIXME: yawlFlow VARIABLE IS USED TO DECIDE WHETHER YOU WANT TO EXECUTE SYNCHRONOUSLY OR ASSYNCHRONOUSLY. SYNCHRONOUS EXECUTION DOES NOT INVOKE YAWL
-	protected Boolean yawlFlow = Boolean.parseBoolean(PropertiesManager.getProperty("yawl.Flow"));
-	protected String engineAdminUser = PropertiesManager.getProperty("yawl.AdminUser");
-	protected String engineAdminPassword = PropertiesManager.getProperty("yawl.AdminPassword");
-	protected String workletGateway = PropertiesManager.getProperty("worklet.gateway");
+	protected Boolean yawlFlow = Boolean.parseBoolean(BWPropertiesManager.getProperty("yawl.Flow"));
+	protected String engineAdminUser = BWPropertiesManager.getProperty("yawl.AdminUser");
+	protected String engineAdminPassword = BWPropertiesManager.getProperty("yawl.AdminPassword");
+	protected String workletGateway = BWPropertiesManager.getProperty("worklet.gateway");
 
 	private WorkletGatewayClient client = null;
 	private String handle = null;
@@ -52,14 +51,14 @@ public class WorkletAdapter {
 		log = Logger.getLogger("WorkletAdpater");
 		registerWorkletListener();
 	}
-	
+
 	// Note: This constructor is used for testing purposes only
 	public WorkletAdapter(WorkletGatewayClient client) {
 		log = Logger.getLogger("WorkletAdpater");
 		this.client = client;
 		this.handle = "NO HANDLE";
 	}
-	
+
 	/*************************************************
 	 * WorkletAdapterEventListener Services Methods
 	 *************************************************/
@@ -85,7 +84,7 @@ public class WorkletAdapter {
 
 		processPreConditionEvaluationResult(result, taskWorkItem);
 	}
-	
+
 	/**
 	 * Process the notification by the WorkletService of a Workitem PreCondition evaluation.
 	 * @param wir a YAWL enabled WorkItemRecord.
@@ -101,18 +100,18 @@ public class WorkletAdapter {
 	 *********************************/
 	private void processPreConditionEvaluationResult(String result, TaskWorkItem taskWorkItem) {
 		if (result.equals("TRUE")) {
-//			taskWorkItem.setState(WorkItemState.ENABLED);
-			 taskWorkItem.notifyDataChanged();
+			//			taskWorkItem.setState(WorkItemState.ENABLED);
+			taskWorkItem.notifyDataChanged();
 		} else if (result.equals("SKIPPED")) {
-//			taskWorkItem.setState(WorkItemState.PRE_TASK);
-			 taskWorkItem.notifyPreTask();
+			//			taskWorkItem.setState(WorkItemState.PRE_TASK);
+			taskWorkItem.notifyPreTask();
 		} else if (result.equals("FALSE")) {
-//			taskWorkItem.setState(WorkItemState.PRE_TASK);
-			 taskWorkItem.notifyPreFalse();
+			//			taskWorkItem.setState(WorkItemState.PRE_TASK);
+			taskWorkItem.notifyPreFalse();
 		} else {
 			// it should not reach this point
 		}
-//		requestWorkItemPostConditionEvaluation(taskWorkItem);
+		//		requestWorkItemPostConditionEvaluation(taskWorkItem);
 	}
 
 	private void processPostConditionEvaluationResult(String result, WorkItem workItem) {
@@ -123,11 +122,11 @@ public class WorkletAdapter {
 		} else if (result.equals("FALSE")) {
 			workItem.notifyEnabled();
 		}
-//		else if (workItem.getState().equals(WorkItemState.ENABLED)){
-//			workItem.notifyEnabled();
-//		} else if (workItem.getState().equals(WorkItemState.PRE_TASK)) {
-//			workItem.notifyPreTask();
-//		}
+		//		else if (workItem.getState().equals(WorkItemState.ENABLED)){
+		//			workItem.notifyEnabled();
+		//		} else if (workItem.getState().equals(WorkItemState.PRE_TASK)) {
+		//			workItem.notifyPreTask();
+		//		}
 	}
 
 	/*********************************
@@ -181,7 +180,7 @@ public class WorkletAdapter {
 		// Create Tasks RdrSet
 		for (Task task : taskModel.getTasks()) {
 			String taskName = generateYAWLTaskName(task);
-			
+
 			// PreCondition Tree
 			if (!task.getPreConstraint().existTrue()) {
 				// Undefined Node
@@ -246,7 +245,7 @@ public class WorkletAdapter {
 		evaluateTest(bwSpecification);
 	}
 
-	
+
 	/*******************************
 	 * Get Data
 	 *******************************/
@@ -259,9 +258,9 @@ public class WorkletAdapter {
 	 */
 	private Element getCornerstoneData(Task task, Boolean isPreCondition, String type) {
 		String cornerStr = "<cornerstone>";
-		Set<Entity> entities;
-		Set<Attribute> attributes;
-		HashMap<Attribute, String> attributesValues;
+		Set<Entity> entities = null;
+		Set<Attribute> attributes = null;
+		HashMap<Attribute, String> attributesValues = null;
 
 		// Get Condition Data
 		if (task != null && isPreCondition) {
@@ -269,64 +268,68 @@ public class WorkletAdapter {
 			attributes = task.getPreConstraint().getAttributes();
 			attributesValues = task.getPreConstraint().getcompareConditionValues();
 		} 
-		else {
+		else if (task != null){
 			entities = task.getPostConstraint().getEntities();
 			attributes = task.getPostConstraint().getAttributes();
 			attributesValues = task.getPostConstraint().getcompareConditionValues();
 		}
 
-		Iterator<Attribute> it = attributes.iterator();
-		while (it.hasNext()) {
-			Attribute attribute = it.next();
-			Entity entity = attribute.getEntity();
-			if (entities.contains(entity) && !attributesValues.containsKey(attribute) && attribute.getIsKeyAttribute()) {
-				it.remove();
+		if (attributes != null) {
+			Iterator<Attribute> it = attributes.iterator();
+			while (it.hasNext()) {
+				Attribute attribute = it.next();
+				Entity entity = attribute.getEntity();
+				if (entities.contains(entity) && !attributesValues.containsKey(attribute) && attribute.getIsKeyAttribute()) {
+					it.remove();
+				}
 			}
 		}
+		if (entities != null) {
+			// Parse complete entities
+			for (Entity entity : entities) {
+				String entityName = entity.getName().replaceAll(" ", "");
+				for (Attribute attribute : entity.getAttributes()) {
+					if (attribute.getIsKeyAttribute()) {
+						String attributeName = attribute.getName().replaceAll(" ", "");
+						String value;
+						if (type == "UNDEFINED")
+							value = "$UNDEFINED$";
+						else if (type == "SKIPPED")
+							value = "$SKIPPED$"; 
+						else
+							value = "$DEFINED$";
 
-		// Parse complete entities
-		for (Entity entity : entities) {
-			String entityName = entity.getName().replaceAll(" ", "");
-			for (Attribute attribute : entity.getAttributes()) {
-				if (attribute.getIsKeyAttribute()) {
-					String attributeName = attribute.getName().replaceAll(" ", "");
-					String value;
+						cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + type + "</" + entityName + "_" + attributeName + "_State" + ">";
+						cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
+					}
+				}
+			}
+		}
+		// Parse single attributes
+		if (attributes != null) {
+			for (Attribute attribute : attributes) {
+				String entityName = attribute.getEntity().getName().replaceAll(" ", "");
+				String attributeName = attribute.getName().replaceAll(" ", "");
+				String value = attributesValues.get(attribute);
+				if (value == null) {
 					if (type == "UNDEFINED")
 						value = "$UNDEFINED$";
 					else if (type == "SKIPPED")
 						value = "$SKIPPED$"; 
 					else
 						value = "$DEFINED$";
-					
-					cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + type + "</" + entityName + "_" + attributeName + "_State" + ">";
-					cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
 				}
+
+				cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + type + "</" + entityName + "_" + attributeName + "_State" + ">";
+				cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
 			}
 		}
 
-		// Parse single attributes
-		for (Attribute attribute : attributes) {
-			String entityName = attribute.getEntity().getName().replaceAll(" ", "");
-			String attributeName = attribute.getName().replaceAll(" ", "");
-			String value = attributesValues.get(attribute);
-			if (value == null) {
-				if (type == "UNDEFINED")
-					value = "$UNDEFINED$";
-				else if (type == "SKIPPED")
-					value = "$SKIPPED$"; 
-				else
-					value = "$DEFINED$";
-			}
-
-			cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + type + "</" + entityName + "_" + attributeName + "_State" + ">";
-			cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
-		}
-		
 		cornerStr += "</cornerstone>";
 		Element eCornerstone = JDOMUtil.stringToElement(cornerStr);
 		return eCornerstone;
 	}
-	
+
 	/**
 	 * Get PreCondition user submitted data.
 	 * @param taskWorkItem a TaskWorkItem.
@@ -344,7 +347,7 @@ public class WorkletAdapter {
 			String entityName = attributeInstance.getEntityInstance().getEntity().getName().replaceAll(" ", "");
 			String attributeName = attributeInstance.getAttribute().getName().replaceAll(" ", "");
 			DataState state = workItemArgument.getState();
-			
+
 			//FIXME: Today
 			String value = workItemArgument.getValue();
 			if (workItemArgument.getAttributeInstance().getAttribute().getIsSystem()) {
@@ -354,7 +357,7 @@ public class WorkletAdapter {
 					value = "0";
 				}
 			}
-			
+
 			cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + state + "</" + entityName + "_" + attributeName + "_State" + ">";
 			cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
 		}
@@ -362,7 +365,7 @@ public class WorkletAdapter {
 		Element eCornerstone = JDOMUtil.stringToElement(cornerStr);
 		return eCornerstone;
 	}
-	
+
 	/**
 	 * Get PostCondition user submitted data.
 	 * @param taskWorkItem a TaskWorkItem.
@@ -372,7 +375,7 @@ public class WorkletAdapter {
 		// Get Workitem
 		WorkItem workItem= taskWorkItem;
 		List<WorkItemArgument> workItemArguments = workItem.getOutputWorkItemArguments();
-			
+
 		// Get Workitem data
 		String cornerStr = "<cornerstone>";
 		for (WorkItemArgument workItemArgument : workItemArguments) {
@@ -380,7 +383,7 @@ public class WorkletAdapter {
 			String entityName = attributeInstance.getEntityInstance().getEntity().getName().replaceAll(" ", "");
 			String attributeName = attributeInstance.getAttribute().getName().replaceAll(" ", "");
 			DataState state = workItemArgument.getState();
-			
+
 			//FIXME: Today
 			String value = workItemArgument.getValue();
 			if (workItemArgument.getAttributeInstance().getAttribute().getIsSystem()) {
@@ -390,7 +393,7 @@ public class WorkletAdapter {
 					value = "0";
 				}
 			}
-			
+
 			cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + state + "</" + entityName + "_" + attributeName + "_State" + ">";
 			cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
 		}
@@ -398,7 +401,7 @@ public class WorkletAdapter {
 		Element eCornerstone = JDOMUtil.stringToElement(cornerStr);
 		return eCornerstone;
 	}
-	
+
 	/*******************************
 	 * Rdr Conclusions
 	 *******************************/
@@ -467,7 +470,7 @@ public class WorkletAdapter {
 		else
 			return "FAIL";
 	}	
-	
+
 	/************************************************
 	 * WorkletGateway Methods
 	 *************************************************/
@@ -488,7 +491,7 @@ public class WorkletAdapter {
 		log.error("Register Worklet Listener: Failed!");
 		return false;
 	}
-	
+
 	/**
 	 * Add a node to a RdrTree.
 	 * @param yawlSpecID the YSpecificationID.
@@ -507,7 +510,7 @@ public class WorkletAdapter {
 			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_ADDNODE);
 		}
 	}
-	
+
 	/**
 	 * Process the TaskWorkItem ItemConstrainViolation.
 	 * @param taskWorkItem the TaskWorkItem.
@@ -519,7 +522,7 @@ public class WorkletAdapter {
 
 		// Get WorkItemRecord
 		WorkItemRecord workItemRecord = getWorkItemRecord(taskWorkItem);
-		
+
 		// Process
 		try {
 			client.process(workItemRecord, eData, RuleType.ItemConstraintViolation, handle);
@@ -541,14 +544,14 @@ public class WorkletAdapter {
 		Element eData = getInputEvaluationData(taskWorkItem);
 		RuleType ruleType = RuleType.ItemPreconstraint;
 		String conclusion = null;
-	
+
 		// Evaluate
 		try {
 			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
 		} catch (IOException e) {
 			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATEPRECONDITION);
 		}
-	
+
 		// Parse result
 		if (parseConclusion(conclusion).equals("TRUE")) {
 			taskWorkItem.notifyDataChanged();
@@ -560,7 +563,7 @@ public class WorkletAdapter {
 			log.error("FAIL");
 		}
 	}
-	
+
 	/**
 	 * Evaluate a Task PostCondition.
 	 * @param taskWorkItem a TaskWorkItem;
@@ -574,14 +577,14 @@ public class WorkletAdapter {
 		Element eData = getOutputEvaluationData(taskWorkItem);
 		RuleType ruleType = RuleType.ItemConstraintViolation;
 		String conclusion = null;
-		
+
 		// Evaluate
 		try {
 			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
 		} catch (IOException e) {
 			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
 		}
-	
+
 		// Parse result
 		if (parseConclusion(conclusion).equals("TRUE")) {
 			taskWorkItem.notifyCompleted();
@@ -612,7 +615,7 @@ public class WorkletAdapter {
 		}
 		return yawlSpecID;
 	}
-	
+
 	/**
 	 * Get the YAWL Task name 
 	 * @param taskWorkItem the taskWorkItem
@@ -621,7 +624,7 @@ public class WorkletAdapter {
 	private String generateYAWLTaskName(Task task) {
 		return task.getName().replaceAll(" ", "_");
 	}
-	
+
 	/**
 	 * Get the corresponding WorkItemRecord of the TaskWorkItem.
 	 * @param taskWorkItem the TaskWorkItem.
@@ -655,7 +658,7 @@ public class WorkletAdapter {
 		}
 		return (TaskWorkItem) taskWorkItem;
 	}
-	
+
 	/*****************************************
 	 * TEST
 	 *****************************************/
@@ -723,5 +726,5 @@ public class WorkletAdapter {
 		}
 		log.info("SKIP=" + conclusion);
 	}
-	
+
 }

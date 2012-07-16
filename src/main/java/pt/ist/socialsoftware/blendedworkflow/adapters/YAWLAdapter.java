@@ -21,21 +21,21 @@ import org.yawlfoundation.yawl.util.JDOMUtil;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
-import pt.ist.socialsoftware.blendedworkflow.shared.PropertiesManager;
+import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 
 public class YAWLAdapter extends InterfaceBWebsideController {
 
-	protected String engineAdminUser = PropertiesManager.getProperty("yawl.AdminUser");
-	protected String engineAdminPassword = PropertiesManager.getProperty("yawl.AdminPassword");
-	protected String engineUser = PropertiesManager.getProperty("yawl.BWUser");
-	protected String enginePassword = PropertiesManager.getProperty("yawl.BWPassword");
-	protected String engineDoco = PropertiesManager.getProperty("yawl.BWDoco");
+	protected String engineAdminUser = BWPropertiesManager.getProperty("yawl.AdminUser");
+	protected String engineAdminPassword = BWPropertiesManager.getProperty("yawl.AdminPassword");
+	protected String engineUser = BWPropertiesManager.getProperty("yawl.BWUser");
+	protected String enginePassword = BWPropertiesManager.getProperty("yawl.BWPassword");
+	protected String engineDoco = BWPropertiesManager.getProperty("yawl.BWDoco");
 
 	protected String sessionHandle = null;
-	protected String engineIaURI = PropertiesManager.getProperty("yawl.IaURI");
-	protected String engineIbURI = PropertiesManager.getProperty("yawl.IbURI");
-	protected String bwURI = PropertiesManager.getProperty("yawl.BWURI");
+	protected String engineIaURI = BWPropertiesManager.getProperty("yawl.IaURI");
+	protected String engineIbURI = BWPropertiesManager.getProperty("yawl.IbURI");
+	protected String bwURI = BWPropertiesManager.getProperty("yawl.BWURI");
 
 	private static Logger log = Logger.getLogger("YAWLAdapter");
 

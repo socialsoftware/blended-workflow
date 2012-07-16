@@ -39,7 +39,7 @@ public class LoadForm extends VerticalLayout {
 			public void buttonClick(ClickEvent event) {
 				try {
 					String bwSpec = bwSpecReceiver.getSpecInString();
-					if (!bwSpec.equals(null)) {	
+					if (bwSpec != null) {	
 						Transaction.begin();
 						BlendedWorkflow.getInstance().getBwManager().loadBWSpecification(bwSpec);
 						Transaction.commit();

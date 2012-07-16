@@ -16,11 +16,11 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.shared.PropertiesManager;
+import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 
 public class CreateBWInstanceService implements Callable<String> {
 
-	protected Boolean yawlFlow = Boolean.parseBoolean(PropertiesManager.getProperty("yawl.Flow"));
+	protected Boolean yawlFlow = Boolean.parseBoolean(BWPropertiesManager.getProperty("yawl.Flow"));
 	private static Logger log = Logger.getLogger("CreateBWInstanceService");
 	private BWSpecification bwSpecification;
 	private String name;

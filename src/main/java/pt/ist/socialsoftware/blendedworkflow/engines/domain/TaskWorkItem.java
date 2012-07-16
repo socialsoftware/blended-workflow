@@ -7,11 +7,11 @@ import org.apache.log4j.Logger;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.shared.PropertiesManager;
+import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 
 public class TaskWorkItem extends TaskWorkItem_Base {
 	
-	protected Boolean yawlFlow = Boolean.parseBoolean(PropertiesManager.getProperty("yawl.Flow"));
+	protected Boolean yawlFlow = Boolean.parseBoolean(BWPropertiesManager.getProperty("yawl.Flow"));
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private Logger log = Logger.getLogger("TaskWorkItem");
 

@@ -1,8 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
+import pt.ist.dap.util.Log;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.CompareAttributeToValueCondition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
@@ -155,7 +155,6 @@ public class ConditionParser {
 		Attribute attribute;
 		String operator;
 		String value;
-		//parseCompareAttributeConditionArgs(compareAttributeToString, startArgs, compareAttributeToString.length()-1, elementName, elementTo, attribute, operator, value);
 
 		// FIXME REFACTOR
 		int endArgs = compareAttributeToString.length()-1;
@@ -178,26 +177,6 @@ public class ConditionParser {
 		_token = endOfCondition+1;
 
 		return compareAttributeToCondition;
-	}
-
-	protected void parseCompareAttributeConditionArgs(String compareAttributeToString, int startArgs, int endArgs, StringBuilder elementName, StringBuilder elementTo, Attribute attribute, String operator, String value) throws BlendedWorkflowException {
-		if(startArgs > endArgs) return;
-
-		int subToken = compareAttributeToString.indexOf(',', startArgs);
-
-		// Parse Entity and Attribute
-		elementName.append(compareAttributeToString.substring(startArgs, subToken));
-
-		String[] elementArr = elementName.toString().split("\\.");
-		Entity entity = parseEntity(elementArr);
-		attribute = parseAttribute(elementArr, entity);
-
-		// Parse Operator and Value
-		elementTo.append(compareAttributeToString.substring(subToken+1, endArgs).trim());
-		String[] toArr = elementTo.toString().split("\\.");
-
-		operator = toArr[0];
-		value = toArr[1];
 	}
 
 	protected Condition parseForAllCondition() throws BlendedWorkflowException {
@@ -304,26 +283,29 @@ public class ConditionParser {
 	}
 	
 	
-
+	
 	private Attribute parseAttribute(String[] elementArr, Entity entity) throws BlendedWorkflowException {
-		AttributeType type;
-		boolean iskeyAttribute;
+//		AttributeType type;
+//		boolean iskeyAttribute;
 		if (entity.getAttribute(elementArr[1]) != null)
 			return entity.getAttribute(elementArr[1]);
 		else {
-			if (elementArr[2].equals("BOOLEAN"))
-				type = AttributeType.BOOLEAN;
-			else if (elementArr[2].equals("NUMBER"))
-				type = AttributeType.NUMBER;
-			else
-				type = AttributeType.STRING;
-
-			if (elementArr[3].equals("true"))
-				iskeyAttribute = true;
-			else
-				iskeyAttribute = false;
-
-			return new Attribute(dataModel, elementArr[1], entity, type, iskeyAttribute, false); //FIXME: isSystem 
+			// Legacy Code: used to create data from Conditions
+//			if (elementArr[2].equals("BOOLEAN"))
+//				type = AttributeType.BOOLEAN;
+//			else if (elementArr[2].equals("NUMBER"))
+//				type = AttributeType.NUMBER;
+//			else
+//				type = AttributeType.STRING;
+//
+//			if (elementArr[3].equals("true"))
+//				iskeyAttribute = true;
+//			else
+//				iskeyAttribute = false;
+//
+//			return new Attribute(dataModel, elementArr[1], entity, type, iskeyAttribute, false); //FIXME: isSystem 
+			Log.error("Condition Attribute does not exist in data specification.");
+			return null;
 		}
 	}
 

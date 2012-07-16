@@ -15,13 +15,13 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 public class CompareAttributeToValueCondition extends CompareAttributeToValueCondition_Base {
 
 	private static Logger log = Logger.getLogger("CompareAttributeToValueCondition");
-	
+
 	public CompareAttributeToValueCondition(Attribute attribute, String operator, String value) {
 		setAttribute(attribute);
 		setOperator(operator);
 		setValue(value);
 	}
-	
+
 	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
@@ -37,42 +37,42 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		Attribute attribute = entity.getAttribute(getAttribute().getName());
 		return new CompareAttributeToValueCondition(attribute, getOperator(), getValue());
 	}
-	
+
 	@Override
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		getAttribute().getEntity().assignAttributeInstances(goalWorkItem,getAttribute(), conditionType);
 	}
-	
+
 	@Override
 	public void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
 		getAttribute().getEntity().assignAttributeInstances(taskWorkItem,getAttribute(), conditionType);
 	}
-	
+
 	@Override
 	public Set<Entity> getEntities() {
 		return new HashSet<Entity>();
 	}
-	
+
 	@Override
 	public Set<Attribute> getAttributes() {
 		Set<Attribute> attribute = new HashSet<Attribute>();
 		attribute.add(getAttribute());
 		return attribute;
 	}
-	
+
 	@Override
 	public HashMap<Attribute, String> getcompareConditionValues() {
 		HashMap<Attribute, String> result = new HashMap<Attribute, String>();
 		result.put(getAttribute(), getValue());
 		return result;
 	}
-	
+
 	@Override
 	public String getRdrUndefinedCondition() {
 		String condition = "(";
 		String attributeName = getAttribute().getName().replaceAll(" ", "");
 		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
-		
+
 		condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + ")";
 		return condition;
 	}
@@ -82,7 +82,7 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		String condition = "(";
 		String attributeName = getAttribute().getName().replaceAll(" ", "");
 		String entityName = getAttribute().getEntity().getName().replaceAll(" ", "");
-		
+
 		condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
 		return condition;
 	}
@@ -96,7 +96,7 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		if (getValue().equals("$TODAY$")) {
 			value = "" + "$TODAY$".hashCode();
 		}
-		
+
 		condition += entityName + "_" + attributeName + " " + getOperator() + " " + value + ")";
 		return condition;
 	}
@@ -105,22 +105,22 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	public String getRdrFalseCondition() {
 		return "(!" + getRdrTrueCondition() + ")";
 	}
-	
+
 	@Override
 	public String toString() {
 		return "compareAttributeTo(" + getAttribute().getEntity().getName() + "." + getAttribute().getName() + " " + getOperator() + " " + getValue() +")";
 	}
-	
+
 	@Override
 	public Boolean existExistEntity() {
 		return false;
 	}
-	
+
 	@Override
 	public Boolean existTrue(){
 		return false;
 	}
-	
+
 	/******************************
 	 * Evaluate
 	 ******************************/
@@ -132,21 +132,22 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		} else if (conditionType.equals(ConditionType.SUCESS)) {
 			arguments = goalWorkItem.getOutputWorkItemArguments();
 		}		
+		if (arguments != null) {
+			for (WorkItemArgument workItemArgument : arguments) {
 
-		for (WorkItemArgument workItemArgument : arguments) {
-			
-			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
-			Attribute conditionAttribute = getAttribute();
-			if (workItemAttribute == conditionAttribute) {
-				if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
-					return TripleStateBool.FALSE;	
-				} else if (workItemArgument.getState().equals(DataState.SKIPPED)) {
-					return TripleStateBool.SKIPPED;
-				} else {
-					if (evaluateComparation(workItemArgument.getValue())) {
-						return TripleStateBool.TRUE;
+				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+				Attribute conditionAttribute = getAttribute();
+				if (workItemAttribute == conditionAttribute) {
+					if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
+						return TripleStateBool.FALSE;	
+					} else if (workItemArgument.getState().equals(DataState.SKIPPED)) {
+						return TripleStateBool.SKIPPED;
 					} else {
-						return TripleStateBool.FALSE;
+						if (evaluateComparation(workItemArgument.getValue())) {
+							return TripleStateBool.TRUE;
+						} else {
+							return TripleStateBool.FALSE;
+						}
 					}
 				}
 			}
@@ -159,7 +160,7 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 		if (entityInstance == null) {
 			return evaluateWithWorkItem(goalWorkItem, conditionType);
 		} 
-		
+
 		else {
 			for (AttributeInstance attributeInstance : entityInstance.getAttributeInstances()) {
 				if (attributeInstance.getAttribute().equals(getAttribute())) {
@@ -167,7 +168,7 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 					if (state == null) {
 						state = attributeInstance.getState();
 					}	
-					
+
 					if (state.equals(DataState.UNDEFINED)) {
 						return TripleStateBool.FALSE;
 					} else if (state.equals(DataState.SKIPPED)) {
@@ -189,46 +190,46 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 			return TripleStateBool.FALSE;
 		}
 	}
-	
-	
+
+
 	private String getWorkItemValue(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
-//		List<WorkItemArgument> arguments = null;
-//		if (conditionType.equals(ConditionType.ACTIVATE)) {
-//			arguments = goalWorkItem.getInputWorkItemArguments();
-//		} else if (conditionType.equals(ConditionType.SUCESS)) {
-//			arguments = goalWorkItem.getOutputWorkItemArguments();
-//		}
-//		for (WorkItemArgument workItemArgument : arguments) {
+		//		List<WorkItemArgument> arguments = null;
+		//		if (conditionType.equals(ConditionType.ACTIVATE)) {
+		//			arguments = goalWorkItem.getInputWorkItemArguments();
+		//		} else if (conditionType.equals(ConditionType.SUCESS)) {
+		//			arguments = goalWorkItem.getOutputWorkItemArguments();
+		//		}
+		//		for (WorkItemArgument workItemArgument : arguments) {
 		if (goalWorkItem != null) {
-		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
-			if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
-				return workItemArgument.getValue();
-			}
-		} }
-		return null;
-	}
-	
-	private DataState getWorkItemState(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
-//		List<WorkItemArgument> arguments = null;
-//		if (conditionType.equals(ConditionType.ACTIVATE)) {
-//			arguments = goalWorkItem.getInputWorkItemArguments();
-//		} else if (conditionType.equals(ConditionType.SUCESS)) {
-//			arguments = goalWorkItem.getOutputWorkItemArguments();
-//		}
-//		for (WorkItemArgument workItemArgument : arguments) {
-		if (goalWorkItem != null) {
-		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
-			if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
-				return workItemArgument.getState();
-			}
-		} }
+			for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
+				if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
+					return workItemArgument.getValue();
+				}
+			} }
 		return null;
 	}
 
-	
+	private DataState getWorkItemState(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		//		List<WorkItemArgument> arguments = null;
+		//		if (conditionType.equals(ConditionType.ACTIVATE)) {
+		//			arguments = goalWorkItem.getInputWorkItemArguments();
+		//		} else if (conditionType.equals(ConditionType.SUCESS)) {
+		//			arguments = goalWorkItem.getOutputWorkItemArguments();
+		//		}
+		//		for (WorkItemArgument workItemArgument : arguments) {
+		if (goalWorkItem != null) {
+			for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
+				if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
+					return workItemArgument.getState();
+				}
+			} }
+		return null;
+	}
+
+
 	private boolean evaluateComparation(String evaluateValue) {
 		String conditionValueString = getValue();
-		
+
 		if (conditionValueString.equals("$TODAY$")) {
 			conditionValueString = BlendedWorkflow.getInstance().getToday();
 		}		
@@ -304,5 +305,5 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	public Boolean existCompareAttributeToValue() {
 		return true;
 	}
-	
+
 }

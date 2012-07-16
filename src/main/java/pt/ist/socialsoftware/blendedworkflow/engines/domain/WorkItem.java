@@ -84,7 +84,8 @@ public abstract class WorkItem extends WorkItem_Base {
 				isPreTask = true;
 				modified = true;
 			}
-			else if (attributeInstance.getValue() != workItemArgument.getValue()) {
+//			else if (attributeInstance.getValue() != workItemArgument.getValue()) {
+			else if (!attributeInstance.getValue().equals(workItemArgument.getValue())) {
 				workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
 				isPreTask = true;
 				modified = true;
@@ -98,7 +99,8 @@ public abstract class WorkItem extends WorkItem_Base {
 				workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
 				modified = true;
 			}
-			else if (attributeInstance.getValue() != workItemArgument.getValue()) {
+//			else if (attributeInstance.getValue() != workItemArgument.getValue()) {
+			else if (!attributeInstance.getValue().equals(workItemArgument.getValue())) {
 				workItemArgument.getAttributeInstance().setValue(workItemArgument.getValue());
 				modified = true;
 			}

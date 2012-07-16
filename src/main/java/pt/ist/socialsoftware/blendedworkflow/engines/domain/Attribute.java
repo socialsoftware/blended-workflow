@@ -30,15 +30,10 @@ public class Attribute extends Attribute_Base {
 	}
 	
 	/**
-	 * FIXME: Boolean
+	 * FIXME: Double/Boolean
 	 */
 	public String getYAWLAttributeType() {
-		if (this.getType().equals(AttributeType.NUMBER)) {
-			return "double";
-		} 
-		else {
-			return "string";
-		}
+		return "string";
 	}
 	
 	public String getYAWLAttributeValue() {

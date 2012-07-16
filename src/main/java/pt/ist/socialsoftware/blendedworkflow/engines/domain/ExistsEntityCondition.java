@@ -168,37 +168,40 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 		}
 
 		// Exists Entity
-		for (WorkItemArgument workItemArgument : arguments) {
-			Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
-			Attribute conditionAttribute = getEntity().getAttribute(workItemAttribute.getName());
-			if (conditionAttribute != null && conditionAttribute.getIsKeyAttribute()) {
-				workItemEntityInstance = workItemArgument.getAttributeInstance().getEntityInstance();
+		if (arguments != null) {
+			for (WorkItemArgument workItemArgument : arguments) {
+				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+				Attribute conditionAttribute = getEntity().getAttribute(workItemAttribute.getName());
+				if (conditionAttribute != null && conditionAttribute.getIsKeyAttribute()) {
+					workItemEntityInstance = workItemArgument.getAttributeInstance().getEntityInstance();
 
-				if (workItemArgument.getState().equals(DataState.SKIPPED)) {
-					finalResult = finalResult.AND(TripleStateBool.SKIPPED);
-				} else if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
-					finalResult = finalResult.AND(TripleStateBool.FALSE);
-				} else {
-					finalResult = finalResult.AND(TripleStateBool.TRUE);
+					if (workItemArgument.getState().equals(DataState.SKIPPED)) {
+						finalResult = finalResult.AND(TripleStateBool.SKIPPED);
+					} else if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
+						finalResult = finalResult.AND(TripleStateBool.FALSE);
+					} else {
+						finalResult = finalResult.AND(TripleStateBool.TRUE);
+					}
 				}
 			}
 		}
 
 		//Exists Entity Key Relations
-		for (RelationInstance relationInstance : workItemEntityInstance.getEntityInstanceOneRelationInstances()) {
-			if (relationInstance.getRelationType().getIsTwoKeyEntity()) {
-				EntityInstance two = relationInstance.getEntityInstanceTwo();
-				finalResult = finalResult.AND(evaluateWithDataModel(two, goalWorkItem, conditionType));
+		if (workItemEntityInstance != null) {
+			for (RelationInstance relationInstance : workItemEntityInstance.getEntityInstanceOneRelationInstances()) {
+				if (relationInstance.getRelationType().getIsTwoKeyEntity()) {
+					EntityInstance two = relationInstance.getEntityInstanceTwo();
+					finalResult = finalResult.AND(evaluateWithDataModel(two, goalWorkItem, conditionType));
+				}
+			}
+
+			for (RelationInstance relationInstance : workItemEntityInstance.getEntityInstanceTwoRelationInstances()) {
+				if (relationInstance.getRelationType().getIsOneKeyEntity()) {
+					EntityInstance one = relationInstance.getEntityInstanceOne();
+					finalResult = finalResult.AND(evaluateWithDataModel(one, goalWorkItem, conditionType));
+				}
 			}
 		}
-
-		for (RelationInstance relationInstance : workItemEntityInstance.getEntityInstanceTwoRelationInstances()) {
-			if (relationInstance.getRelationType().getIsOneKeyEntity()) {
-				EntityInstance one = relationInstance.getEntityInstanceOne();
-				finalResult = finalResult.AND(evaluateWithDataModel(one, goalWorkItem, conditionType));
-			}
-		}
-
 		return finalResult;
 	}
 
