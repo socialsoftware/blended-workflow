@@ -1,11 +1,14 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -14,22 +17,31 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 @RunWith(JMock.class)
 public class LoadBWSpecificationServiceTest extends AbstractServiceTest {
 	
-	@Override
-	protected void initializeSpecification() {
-		// It does not load the spec because it is the subject of the test
-	}
-
 	@Test
 	public void loadBWSpecification() throws Exception {
 
 		final String bwSpecificationString = StringUtils
 				.fileToString(BWSPECIFICATION_FILENAME);
 		new LoadBWSpecificationService(bwSpecificationString).call();
-		verifySuccess();
+		
+		boolean committed = false;
+		try {
+			Transaction.begin();
+
+			assertLoadSpecificationResults();
+
+			Transaction.commit();
+			committed = true;
+		} catch (final BlendedWorkflowException e) {
+			fail(e.getMessage());
+		} finally {
+			if (!committed)
+				Transaction.abort();
+		}
+
 	}
 
-	@Override
-	protected void assertResults() throws BlendedWorkflowException {
+	private void assertLoadSpecificationResults() throws BlendedWorkflowException {
 		final BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		final BWSpecification bwSpecification = blendedWorkflow
 				.getBWSpecification(BWSPECIFICATION_NAME);

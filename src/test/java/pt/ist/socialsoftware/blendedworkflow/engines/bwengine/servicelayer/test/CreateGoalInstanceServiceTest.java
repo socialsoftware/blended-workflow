@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import pt.ist.fenixframework.pstm.Transaction;
 
+import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -23,9 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.Creat
 @RunWith(JMock.class)
 public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 
-	private static String YAWLCASE_ID = "yawlCaseID";
 	private static String BWINSTANCE_ID = "Medical Appointment.1";
-	private static String USER_ID = "BlendedWorkflow";
 	private static String GOAL_NAME_1 = "Add Patient";
 
 //	private static String GOALWORKITEM_ID_2 = "Add Patient.2";
@@ -401,10 +400,5 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		}
 	}*/
 
-	@Override
-	protected void assertResults() throws BlendedWorkflowException {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
