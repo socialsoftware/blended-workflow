@@ -7,7 +7,9 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public abstract class WorkItem extends WorkItem_Base {
 
-	public enum WorkItemState {PRE_TASK, PRE_GOAL, PRE_FALSE, CONSTRAINT_VIOLATION, ENABLED, GOAL_PENDING, CHECKED_IN, SKIPPED, 
+	public enum WorkItemState {NEW,PRE_ACTIVITY,
+		ENABLED1, SKIPPED1, COMPLETED1, 
+		PRE_TASK, PRE_GOAL, PRE_FALSE, CONSTRAINT_VIOLATION, ENABLED, GOAL_PENDING, CHECKED_IN, SKIPPED, 
 		COMPLETED, RE_ACTIVATED, ACTIVATED};
 
 	/******************************

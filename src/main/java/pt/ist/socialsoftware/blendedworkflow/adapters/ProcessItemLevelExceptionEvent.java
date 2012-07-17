@@ -14,12 +14,12 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 
 public class ProcessItemLevelExceptionEvent implements Callable<String> {
 
-	private static Logger log = Logger.getLogger("ItemLevelExceptionEventTask");
+	private static Logger log = Logger.getLogger("ItemLevelExceptionEvent");
 
-	private WorkItemRecord wir;
+	private final WorkItemRecord wir;
 //	private Element caseData;
-	private RdrNode rdrNode;
-	private RuleType ruleType;
+	private final RdrNode rdrNode;
+	private final RuleType ruleType;
 
 	public ProcessItemLevelExceptionEvent(WorkItemRecord wir, Element caseData, RdrNode rdrNode, RuleType ruleType) {
 		this.wir = wir;

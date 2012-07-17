@@ -19,8 +19,8 @@ import org.yawlfoundation.yawl.worklet.support.WorkletGatewayClient;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
@@ -33,19 +33,16 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 
-
 public class WorkletAdapter {
 
-	private Logger log;
-	// FIXME: yawlFlow VARIABLE IS USED TO DECIDE WHETHER YOU WANT TO EXECUTE SYNCHRONOUSLY OR ASSYNCHRONOUSLY. SYNCHRONOUS EXECUTION DOES NOT INVOKE YAWL
-	protected Boolean yawlFlow = Boolean.parseBoolean(BWPropertiesManager.getProperty("yawl.Flow"));
+	private final Logger log;
 	protected String engineAdminUser = BWPropertiesManager.getProperty("yawl.AdminUser");
 	protected String engineAdminPassword = BWPropertiesManager.getProperty("yawl.AdminPassword");
 	protected String workletGateway = BWPropertiesManager.getProperty("worklet.gateway");
 
 	private WorkletGatewayClient client = null;
 	private String handle = null;
-	private ConcurrentHashMap<WorkItemRecord, String> yawlEnabledWIR = new ConcurrentHashMap<WorkItemRecord,String>(); //WIR:WorkItemID
+	private final ConcurrentHashMap<WorkItemRecord, String> yawlEnabledWIR = new ConcurrentHashMap<WorkItemRecord,String>(); //WIR:WorkItemID
 
 	public WorkletAdapter() {
 		log = Logger.getLogger("WorkletAdpater");
@@ -151,11 +148,7 @@ public class WorkletAdapter {
 	public void requestWorkItemPostConditionEvaluation(TaskWorkItem taskWorkItem) {
 		log.debug("requestWorkItemPostConditionEvaluation" + taskWorkItem.getID());
 		try {
-			if (yawlFlow) {
-				process(taskWorkItem);
-			} else {
-				evaluatePostCondition(taskWorkItem);
-			}
+			process(taskWorkItem);
 		} catch (BlendedWorkflowException bwe) {
 			log.error("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
 		}
@@ -242,7 +235,6 @@ public class WorkletAdapter {
 				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
 			}
 		}
-		evaluateTest(bwSpecification);
 	}
 
 
@@ -552,7 +544,7 @@ public class WorkletAdapter {
 			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATEPRECONDITION);
 		}
 
-		// Parse result
+		// FIXME: Parse result
 		if (parseConclusion(conclusion).equals("TRUE")) {
 			taskWorkItem.notifyDataChanged();
 		} else if (parseConclusion(conclusion).equals("FALSE")) {
@@ -564,36 +556,36 @@ public class WorkletAdapter {
 		}
 	}
 
-	/**
-	 * Evaluate a Task PostCondition.
-	 * @param taskWorkItem a TaskWorkItem;
-	 * @throws BlendedWorkflowException
-	 */
-	public void evaluatePostCondition(TaskWorkItem taskWorkItem) throws BlendedWorkflowException {
-		BWSpecification bwSpecification = taskWorkItem.getBwInstance().getBwSpecification();
-		YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
-
-		String name = generateYAWLTaskName(taskWorkItem.getTask());
-		Element eData = getOutputEvaluationData(taskWorkItem);
-		RuleType ruleType = RuleType.ItemConstraintViolation;
-		String conclusion = null;
-
-		// Evaluate
-		try {
-			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-		} catch (IOException e) {
-			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-		}
-
-		// Parse result
-		if (parseConclusion(conclusion).equals("TRUE")) {
-			taskWorkItem.notifyCompleted();
-		} else if (parseConclusion(conclusion).equals("FALSE")) {
-			taskWorkItem.notifyEnabled();
-		} else {
-			taskWorkItem.notifySkipped();
-		}			
-	}
+//	/**
+//	 * Evaluate a Task PostCondition.
+//	 * @param taskWorkItem a TaskWorkItem;
+//	 * @throws BlendedWorkflowException
+//	 */
+//	public void evaluatePostCondition(TaskWorkItem taskWorkItem) throws BlendedWorkflowException {
+//		BWSpecification bwSpecification = taskWorkItem.getBwInstance().getBwSpecification();
+//		YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
+//
+//		String name = generateYAWLTaskName(taskWorkItem.getTask());
+//		Element eData = getOutputEvaluationData(taskWorkItem);
+//		RuleType ruleType = RuleType.ItemConstraintViolation;
+//		String conclusion = null;
+//
+//		// Evaluate
+//		try {
+//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+//		} catch (IOException e) {
+//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+//		}
+//
+//		// Parse result
+//		if (parseConclusion(conclusion).equals("TRUE")) {
+//			taskWorkItem.notifyCompleted();
+//		} else if (parseConclusion(conclusion).equals("FALSE")) {
+//			taskWorkItem.notifyEnabled();
+//		} else {
+//			taskWorkItem.notifySkipped();
+//		}			
+//	}
 
 	/*************************************
 	 * YAWL Converter
@@ -659,72 +651,72 @@ public class WorkletAdapter {
 		return (TaskWorkItem) taskWorkItem;
 	}
 
-	/*****************************************
-	 * TEST
-	 *****************************************/
-	public void evaluateTest(BWSpecification bwSpecification) throws BlendedWorkflowException {
-		log.debug("--------------------------------------------------------------");
-		log.debug("TEST ALL NODES");
-		log.debug("--------------------------------------------------------------");
-		String name;RuleType ruleType = RuleType.ItemConstraintViolation;
-		Element eData;
-		String conclusion;
-		String cs;
-
-		YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
-
-		name = "Collect_Physical_Data";
-		log.info(name);
-		// UND
-		cs = "<cornerstone>"+
-				"<PatientData_Height_State>UNDEFINED</PatientData_Height_State>"+
-				"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
-				"<PatientData_Weight_State>UNDEFINED</PatientData_Weight_State>"+
-				"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
-				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-				"</cornerstone>";
-		eData = JDOMUtil.stringToElement(cs);
-
-		try {
-			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-		} catch (IOException e) {
-			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-		}
-		log.info("UND=" + conclusion);
-
-		// DEF
-		cs = "<cornerstone>"+
-				"<PatientData_Height_State>DEFINED</PatientData_Height_State>"+
-				"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
-				"<PatientData_Weight_State>DEFINED</PatientData_Weight_State>"+
-				"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
-				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-				"</cornerstone>";
-		eData = JDOMUtil.stringToElement(cs);
-
-		try {
-			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-		} catch (IOException e) {
-			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-		}
-		log.info("TRUE=" + conclusion);
-
-		// SKIP
-		cs = "<cornerstone>"+
-				"<PatientData_Height_State>SKIPPED</PatientData_Height_State>"+
-				"<PatientData_Height>$SKIPPED$</PatientData_Height>"+
-				"<PatientData_Weight_State>SKIPPED</PatientData_Weight_State>"+
-				"<PatientData_Weight>$SKIPPED$</PatientData_Weight>"+
-				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-				"</cornerstone>";
-		eData = JDOMUtil.stringToElement(cs);
-
-		try {
-			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-		} catch (IOException e) {
-			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-		}
-		log.info("SKIP=" + conclusion);
-	}
+//	/*****************************************
+//	 * TEST
+//	 *****************************************/
+//	public void evaluateTest(BWSpecification bwSpecification) throws BlendedWorkflowException {
+//		log.debug("--------------------------------------------------------------");
+//		log.debug("TEST ALL NODES");
+//		log.debug("--------------------------------------------------------------");
+//		String name;RuleType ruleType = RuleType.ItemConstraintViolation;
+//		Element eData;
+//		String conclusion;
+//		String cs;
+//
+//		YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
+//
+//		name = "Collect_Physical_Data";
+//		log.info(name);
+//		// UND
+//		cs = "<cornerstone>"+
+//				"<PatientData_Height_State>UNDEFINED</PatientData_Height_State>"+
+//				"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
+//				"<PatientData_Weight_State>UNDEFINED</PatientData_Weight_State>"+
+//				"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
+//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
+//				"</cornerstone>";
+//		eData = JDOMUtil.stringToElement(cs);
+//
+//		try {
+//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+//		} catch (IOException e) {
+//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+//		}
+//		log.info("UND=" + conclusion);
+//
+//		// DEF
+//		cs = "<cornerstone>"+
+//				"<PatientData_Height_State>DEFINED</PatientData_Height_State>"+
+//				"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
+//				"<PatientData_Weight_State>DEFINED</PatientData_Weight_State>"+
+//				"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
+//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
+//				"</cornerstone>";
+//		eData = JDOMUtil.stringToElement(cs);
+//
+//		try {
+//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+//		} catch (IOException e) {
+//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+//		}
+//		log.info("TRUE=" + conclusion);
+//
+//		// SKIP
+//		cs = "<cornerstone>"+
+//				"<PatientData_Height_State>SKIPPED</PatientData_Height_State>"+
+//				"<PatientData_Height>$SKIPPED$</PatientData_Height>"+
+//				"<PatientData_Weight_State>SKIPPED</PatientData_Weight_State>"+
+//				"<PatientData_Weight>$SKIPPED$</PatientData_Weight>"+
+//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
+//				"</cornerstone>";
+//		eData = JDOMUtil.stringToElement(cs);
+//
+//		try {
+//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+//		} catch (IOException e) {
+//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+//		}
+//		log.info("SKIP=" + conclusion);
+//	}
 
 }

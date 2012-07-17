@@ -3,50 +3,48 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 
-import jvstm.Transaction;
-
+import com.vaadin.data.Item;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.data.Item;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
-public class NewGoalForm extends VerticalLayout { 
+public class NewGoalForm extends VerticalLayout {
 
-	private TextField name = new TextField("Goal Name");
-	private TextField description = new TextField("Description");
-	private NativeSelect conditionType = new NativeSelect("Condition Type");
-	private NativeSelect relationType = new NativeSelect("Joiner Type");
-	private NativeSelect entityContext = new NativeSelect("Entity Context");
-	private Table requiredData = new Table("Create Condition:");
-	private Table conditionsTable= new Table("Conditions Created");
-	
+	private final TextField name = new TextField("Goal Name");
+	private final TextField description = new TextField("Description");
+	private final NativeSelect conditionType = new NativeSelect("Condition Type");
+	private final NativeSelect relationType = new NativeSelect("Joiner Type");
+	private final NativeSelect entityContext = new NativeSelect("Entity Context");
+	private final Table requiredData = new Table("Create Condition:");
+	private final Table conditionsTable = new Table("Conditions Created");
+
 	private String sucessCondition = "";
-	private ArrayList<String> activateCondition = new ArrayList<String>();
-	
-	private long bwInstanceOID;
+	private final ArrayList<String> activateCondition = new ArrayList<String>();
+
+	private final long bwInstanceOID;
 
 	public NewGoalForm(final long bwInstance, final long parentGoalOID) {
 
 		HorizontalLayout dataHL = new HorizontalLayout();
 		VerticalLayout dataVL = new VerticalLayout();
 		HorizontalLayout submitPanel = new HorizontalLayout();
-		
+
 		HorizontalLayout contextHL = new HorizontalLayout();
 
-		
 		bwInstanceOID = bwInstance;
 
 		// Properties
@@ -56,17 +54,17 @@ public class NewGoalForm extends VerticalLayout {
 		setWidth("570px");
 
 		contextHL.setSpacing(true);
-		
+
 		dataHL.setSpacing(true);
 		submitPanel.setSpacing(true);
 
 		conditionType.setNullSelectionAllowed(false);
 		conditionType.setEnabled(true);
-		
+
 		conditionType.addItem("Activate");
 		conditionType.addItem("Success");
 		conditionType.setEnabled(true);
-		
+
 		relationType.setNullSelectionAllowed(true);
 		relationType.setImmediate(true);
 		relationType.addItem("and");
@@ -75,13 +73,13 @@ public class NewGoalForm extends VerticalLayout {
 
 		requiredData.setWidth("400px");
 		requiredData.setHeight("130px");
-		requiredData.addContainerProperty("Joiner", String.class,  null);
-		requiredData.addContainerProperty("Condition",  String.class,  null);
-		
+		requiredData.addContainerProperty("Joiner", String.class, null);
+		requiredData.addContainerProperty("Condition", String.class, null);
+
 		conditionsTable.setWidth("400px");
 		conditionsTable.setHeight("130px");
-		conditionsTable.addContainerProperty("Type", String.class,  null);
-		conditionsTable.addContainerProperty("Condition",  String.class,  null);
+		conditionsTable.addContainerProperty("Type", String.class, null);
+		conditionsTable.addContainerProperty("Condition", String.class, null);
 
 		Button addData = new Button("Add Data");
 		addData.addListener(new Button.ClickListener() {
@@ -100,7 +98,7 @@ public class NewGoalForm extends VerticalLayout {
 				}
 			}
 		});
-		
+
 		Button finishCondition = new Button("Finish Condition");
 		finishCondition.addListener(new Button.ClickListener() {
 			@Override
@@ -109,17 +107,18 @@ public class NewGoalForm extends VerticalLayout {
 				if (type == null) {
 					getApplication().getMainWindow().showNotification("Please select a condition type!");
 				} else {
-				
-				if (type.equals("Success")) {
-					sucessCondition = createCondition();
-					addDataToConditionTable("Sucess", sucessCondition);
-				} else {
-					String newActivateCondition = createCondition();
-					activateCondition.add(createCondition());
-					addDataToConditionTable("Activate", newActivateCondition);
+
+					if (type.equals("Success")) {
+						sucessCondition = createCondition();
+						addDataToConditionTable("Sucess", sucessCondition);
+					} else {
+						String newActivateCondition = createCondition();
+						activateCondition.add(createCondition());
+						addDataToConditionTable("Activate", newActivateCondition);
+					}
+					requiredData.removeAllItems();
 				}
-				requiredData.removeAllItems();
-			}}
+			}
 		});
 
 		Button submit = new Button("Submit");
@@ -131,18 +130,23 @@ public class NewGoalForm extends VerticalLayout {
 					String goalDescription = (String) description.getValue();
 					long entityOID = (Long) entityContext.getValue();
 					String activeUserID = "";
-					if (sucessCondition == "" || activateCondition.size() == 0) {
-						getApplication().getMainWindow().showNotification("Please create at least one Activate and one Sucess Conditions.");
+					if (sucessCondition.equals("") || activateCondition.size() == 0) {
+						getApplication().getMainWindow().showNotification(
+								"Please create at least one Activate and one Sucess Conditions.");
 					} else {
 						Transaction.begin();
 						activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
-						BlendedWorkflow.getInstance().getWorkListManager().createGoal(bwInstanceOID, goalName, goalDescription, parentGoalOID,  sucessCondition, activateCondition, entityOID, activeUserID); 
+						BlendedWorkflow
+								.getInstance()
+								.getWorkListManager()
+								.createGoal(bwInstanceOID, goalName, goalDescription, parentGoalOID, sucessCondition,
+										activateCondition, entityOID, activeUserID);
 						Transaction.commit();
 						getApplication().getMainWindow().removeWindow(NewGoalForm.this.getWindow());
 					}
 				} catch (java.lang.NullPointerException jle) {
 					getApplication().getMainWindow().showNotification("Please fill all the fields");
-				} 
+				}
 
 			}
 		});
@@ -154,7 +158,7 @@ public class NewGoalForm extends VerticalLayout {
 				getApplication().getMainWindow().removeWindow(NewGoalForm.this.getWindow());
 			}
 		});
-		
+
 		Button addContext = new Button("...");
 		addContext.addListener(new Button.ClickListener() {
 			@Override
@@ -164,25 +168,23 @@ public class NewGoalForm extends VerticalLayout {
 		});
 		addContext.setHeight("30px");
 		addContext.setWidth("40px");
-		
 
 		// Layout
 		dataVL.addComponent(conditionType);
 		dataVL.addComponent(relationType);
 		dataVL.addComponent(addData);
 		dataVL.addComponent(finishCondition);
-		
+
 		dataHL.addComponent(requiredData);
 		dataHL.addComponent(dataVL);
-		
-		
+
 		contextHL.addComponent(entityContext);
 		contextHL.addComponent(addContext);
 		contextHL.setComponentAlignment(addContext, Alignment.BOTTOM_CENTER);
-		
+
 		addComponent(name);
 		addComponent(description);
-		
+
 		addComponent(contextHL);
 		addComponent(dataHL);
 		addComponent(conditionsTable);
@@ -210,7 +212,7 @@ public class NewGoalForm extends VerticalLayout {
 
 	public String createCondition() {
 		String condition = "";
-		String relation ="";
+		String relation = "";
 		String subCondition = "";
 
 		for (Iterator<?> i = requiredData.getItemIds().iterator(); i.hasNext();) {
@@ -224,11 +226,11 @@ public class NewGoalForm extends VerticalLayout {
 			if (!relation.equals("")) {
 				condition += " " + relation + " ";
 			}
-			
+
 			condition += subCondition;
 		}
-		
-		if (condition == "") {
+
+		if (condition.equals("")) {
 			condition = "true";
 		}
 		return condition;
@@ -241,12 +243,12 @@ public class NewGoalForm extends VerticalLayout {
 			relationType.setValue("and");
 		}
 		int index = requiredData.getItemIds().size();
-		requiredData.addItem(new Object[] {conditionJoiner, condition}, new Integer(index+1));
+		requiredData.addItem(new Object[] { conditionJoiner, condition }, new Integer(index + 1));
 	}
-	
+
 	public void addDataToConditionTable(String conditionType, String condition) {
 		int index = conditionsTable.getItemIds().size();
-		conditionsTable.addItem(new Object[] {conditionType, condition}, new Integer(index+1));
+		conditionsTable.addItem(new Object[] { conditionType, condition }, new Integer(index + 1));
 	}
 
 	// generate dataModelWindow
@@ -258,7 +260,7 @@ public class NewGoalForm extends VerticalLayout {
 		dataModel.setResizable(false);
 		getApplication().getMainWindow().addWindow(dataModel);
 	}
-	
+
 	// generate alldataModelWindow
 	protected void showAllDataModelTreeWindow(long bwInstanceOID) {
 		Window dataModel = new Window("Choose a data element");
@@ -268,7 +270,7 @@ public class NewGoalForm extends VerticalLayout {
 		dataModel.setResizable(false);
 		getApplication().getMainWindow().addWindow(dataModel);
 	}
-	
+
 	public void setContext(long OID) {
 		entityContext.select(OID);
 	}

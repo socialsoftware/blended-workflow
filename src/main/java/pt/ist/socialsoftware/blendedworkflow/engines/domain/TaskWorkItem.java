@@ -3,37 +3,58 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
 import org.apache.log4j.Logger;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 
 public class TaskWorkItem extends TaskWorkItem_Base {
 	
-	protected Boolean yawlFlow = Boolean.parseBoolean(BWPropertiesManager.getProperty("yawl.Flow"));
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	private Logger log = Logger.getLogger("TaskWorkItem");
+	private final Logger log = Logger.getLogger("TaskWorkItem");
 
 	public TaskWorkItem(BWInstance bwInstance, Task task) {
 		log.info("New TaskWorkItem for task " + task.getName());
 		setBwInstance(bwInstance);
 		setTask(task);
 		setID(task.getName() + "." + bwInstance.getNewWorkItemID()); //Id: TaskName.#
+		setState(WorkItemState.NEW);
+		
 		setRole(task.getRole());
 		setUser(task.getUser());
 		
 		task.getPreConstraint().assignAttributeInstances(this, "pre");
 		task.getPostConstraint().assignAttributeInstances(this, "post");
-		
 		createInputWorkItemArguments();
 		createOutputWorkItemArguments();
+	}
+	
+	/******************************
+	 * NEW STATE MACHINE          *
+	 ******************************/
+	public void notifyPreActivity(){
+		log.info("ActivityWorkitem " + getID() + " is now in the PREACTIVITY state");
+		setState(WorkItemState.PRE_ACTIVITY);
+		if (getState().equals(WorkItemState.NEW)) {
+			BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPostConditionEvaluation(this);
+		} else if (getState().equals(WorkItemState.PRE_ACTIVITY)) {
+			BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
+		}
+	}
+	
+	public void notifyEnabled1() {
+		log.info("ActivityWorkitem " + getID() + " is now in ENABLED state");
+		setState(WorkItemState.ENABLED);
+		if (getState().equals(WorkItemState.NEW)) {
+			BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPostConditionEvaluation(this);
+		} else if (getState().equals(WorkItemState.PRE_ACTIVITY)) {
+			BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
+		}
 	}
 
 	/******************************
 	 * State Change Notifications *
 	 ******************************/
-
 	@Override
 	public void notifyPreTask() {
 		log.info("TaskWorkitem " + getID() + " is now in PreTask state");
@@ -82,15 +103,6 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Completed", "[ACTIVITY] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
-
-		// FIXME: Test proposes only
-		if (!yawlFlow) {
-			try {
-				getBwInstance().getTaskModelInstance().getEnabledWorkItems();
-			} catch (BlendedWorkflowException e) {
-				log.error(e.getMessage());
-			}
-		}
 	}
 
 	@Override
@@ -105,15 +117,6 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Skipped", "[ACTIVITY] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
-		
-		// FIXME: Test proposes only
-		if (!yawlFlow) {
-			try {
-				getBwInstance().getTaskModelInstance().getEnabledWorkItems();
-			} catch (BlendedWorkflowException e) {
-				log.error(e.getMessage());
-			}
-		}
 	}
 
 	@Override

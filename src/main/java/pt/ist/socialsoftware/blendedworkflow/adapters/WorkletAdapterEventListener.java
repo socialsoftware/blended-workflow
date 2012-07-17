@@ -13,13 +13,10 @@ import org.yawlfoundation.yawl.worklet.support.WorkletEventListener;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
-import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 
-//TODO: TEST
 @SuppressWarnings("serial")
 public class WorkletAdapterEventListener extends WorkletEventListener{
 	
-	protected Boolean yawlFlow = Boolean.parseBoolean(BWPropertiesManager.getProperty("yawl.Flow"));
 	private static Logger log = Logger.getLogger("WorkletAdapterEventListener");
 
 	public void WorkletEventListener() {}
@@ -27,13 +24,13 @@ public class WorkletAdapterEventListener extends WorkletEventListener{
 	@Override
 	public void itemLevelExceptionEvent(WorkItemRecord wir, Element caseData, RdrNode rdrNode, RuleType ruleType) {
 		log.debug("ItemLevelExceptionEvent for WorkItemRecord: " + wir + " begin.");
-		if (yawlFlow) {
-			Transaction.begin();
-			BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-			ProcessItemLevelExceptionEvent task = new ProcessItemLevelExceptionEvent(wir, caseData, rdrNode, ruleType);
-			bwExecutorService.runTask(task);
-			Transaction.commit();
-		}	
+
+		Transaction.begin();
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+		ProcessItemLevelExceptionEvent task = new ProcessItemLevelExceptionEvent(wir, caseData, rdrNode, ruleType);
+		bwExecutorService.runTask(task);
+		Transaction.commit();
+
 		log.debug("ItemLevelExceptionEvent for WorkItemRecord: " + wir + " end.");
 	}
 
