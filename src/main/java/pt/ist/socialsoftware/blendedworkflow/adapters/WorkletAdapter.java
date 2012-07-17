@@ -36,13 +36,16 @@ import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 public class WorkletAdapter {
 
 	private final Logger log;
-	protected String engineAdminUser = BWPropertiesManager.getProperty("yawl.AdminUser");
-	protected String engineAdminPassword = BWPropertiesManager.getProperty("yawl.AdminPassword");
-	protected String workletGateway = BWPropertiesManager.getProperty("worklet.gateway");
+	protected String engineAdminUser = BWPropertiesManager
+			.getProperty("yawl.AdminUser");
+	protected String engineAdminPassword = BWPropertiesManager
+			.getProperty("yawl.AdminPassword");
+	protected String workletGateway = BWPropertiesManager
+			.getProperty("worklet.gateway");
 
 	private WorkletGatewayClient client = null;
 	private String handle = null;
-	private final ConcurrentHashMap<WorkItemRecord, String> yawlEnabledWIR = new ConcurrentHashMap<WorkItemRecord,String>(); //WIR:WorkItemID
+	private final ConcurrentHashMap<WorkItemRecord, String> yawlEnabledWIR = new ConcurrentHashMap<WorkItemRecord, String>(); // WIR:WorkItemID
 
 	public WorkletAdapter() {
 		log = Logger.getLogger("WorkletAdpater");
@@ -60,21 +63,28 @@ public class WorkletAdapter {
 	 * WorkletAdapterEventListener Services Methods
 	 *************************************************/
 	/**
-	 * Process the notification by the WorkletService of a Workitem PreCondition evaluation.
-	 * @param wir the YAWL enabled WorkItemRecord.
-	 * @param result the ItemPreConstraint result.
+	 * Process the notification by the WorkletService of a Workitem PreCondition
+	 * evaluation.
+	 * 
+	 * @param wir
+	 *            the YAWL enabled WorkItemRecord.
+	 * @param result
+	 *            the ItemPreConstraint result.
 	 */
-	public void notifyWorkItemPreConditionResult(WorkItemRecord wir, String result){
+	public void notifyWorkItemPreConditionResult(WorkItemRecord wir,
+			String result) {
 		TaskWorkItem taskWorkItem = null;
 		try {
-			BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstanceFromYAWLCaseID(wir.getCaseID());
-			TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
+			BWInstance bwInstance = BlendedWorkflow.getInstance()
+					.getBWInstanceFromYAWLCaseID(wir.getCaseID());
+			TaskModelInstance taskModelInstance = bwInstance
+					.getTaskModelInstance();
 
 			String taskName = wir.getTaskName().replaceAll("_", " ");
 			Task task = taskModelInstance.getTask(taskName);
 			taskWorkItem = new TaskWorkItem(bwInstance, task);
 
-			yawlEnabledWIR.put(wir, taskWorkItem.getID());
+			associateWorkItemRecordWithTaskWorkItem(wir, taskWorkItem);
 		} catch (BlendedWorkflowException bwe) {
 			log.error("notifyNewTaskWorkItem: exception: " + bwe.getError());
 		}
@@ -83,11 +93,16 @@ public class WorkletAdapter {
 	}
 
 	/**
-	 * Process the notification by the WorkletService of a Workitem PreCondition evaluation.
-	 * @param wir a YAWL enabled WorkItemRecord.
-	 * @param result the ItemConstrainViolation result.
+	 * Process the notification by the WorkletService of a Workitem PreCondition
+	 * evaluation.
+	 * 
+	 * @param wir
+	 *            a YAWL enabled WorkItemRecord.
+	 * @param result
+	 *            the ItemConstrainViolation result.
 	 */
-	public void notifyWorkItemPostConditionResult(WorkItemRecord wir, String result) {
+	public void notifyWorkItemPostConditionResult(WorkItemRecord wir,
+			String result) {
 		TaskWorkItem taskWorkItem = getTaskWorkItem(wir);
 		processPostConditionEvaluationResult(result, taskWorkItem);
 	}
@@ -95,23 +110,25 @@ public class WorkletAdapter {
 	/*********************************
 	 * Process Conditions Result
 	 *********************************/
-	private void processPreConditionEvaluationResult(String result, TaskWorkItem taskWorkItem) {
+	private void processPreConditionEvaluationResult(String result,
+			TaskWorkItem taskWorkItem) {
 		if (result.equals("TRUE")) {
-			//			taskWorkItem.setState(WorkItemState.ENABLED);
+			// taskWorkItem.setState(WorkItemState.ENABLED);
 			taskWorkItem.notifyDataChanged();
 		} else if (result.equals("SKIPPED")) {
-			//			taskWorkItem.setState(WorkItemState.PRE_TASK);
+			// taskWorkItem.setState(WorkItemState.PRE_TASK);
 			taskWorkItem.notifyPreTask();
 		} else if (result.equals("FALSE")) {
-			//			taskWorkItem.setState(WorkItemState.PRE_TASK);
+			// taskWorkItem.setState(WorkItemState.PRE_TASK);
 			taskWorkItem.notifyPreFalse();
 		} else {
 			// it should not reach this point
 		}
-		//		requestWorkItemPostConditionEvaluation(taskWorkItem);
+		// requestWorkItemPostConditionEvaluation(taskWorkItem);
 	}
 
-	private void processPostConditionEvaluationResult(String result, WorkItem workItem) {
+	private void processPostConditionEvaluationResult(String result,
+			WorkItem workItem) {
 		if (result.equals("TRUE")) {
 			workItem.notifyCompleted();
 		} else if (result.equals("SKIPPED")) {
@@ -119,11 +136,11 @@ public class WorkletAdapter {
 		} else if (result.equals("FALSE")) {
 			workItem.notifyEnabled();
 		}
-		//		else if (workItem.getState().equals(WorkItemState.ENABLED)){
-		//			workItem.notifyEnabled();
-		//		} else if (workItem.getState().equals(WorkItemState.PRE_TASK)) {
-		//			workItem.notifyPreTask();
-		//		}
+		// else if (workItem.getState().equals(WorkItemState.ENABLED)){
+		// workItem.notifyEnabled();
+		// } else if (workItem.getState().equals(WorkItemState.PRE_TASK)) {
+		// workItem.notifyPreTask();
+		// }
 	}
 
 	/*********************************
@@ -131,26 +148,33 @@ public class WorkletAdapter {
 	 *********************************/
 	/**
 	 * Evaluate a TaskWorkitem PreConditon.
-	 * @param taskWorkItem the taskWorkItem to evaluate.
+	 * 
+	 * @param taskWorkItem
+	 *            the taskWorkItem to evaluate.
 	 */
 	public void requestWorkItemPreConditionEvaluation(TaskWorkItem taskWorkItem) {
 		try {
 			evaluatePreCondition(taskWorkItem);
 		} catch (BlendedWorkflowException bwe) {
-			log.error("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
+			log.error("notifyWorkItemContraintViolation: exception"
+					+ bwe.getMessage());
 		}
 	}
 
 	/**
 	 * Evaluate GoalWorkitem condition or Process TaskWorkitem postCondition.
-	 * @param workItem the workItem to evaluate.
+	 * 
+	 * @param workItem
+	 *            the workItem to evaluate.
 	 */
 	public void requestWorkItemPostConditionEvaluation(TaskWorkItem taskWorkItem) {
-		log.debug("requestWorkItemPostConditionEvaluation" + taskWorkItem.getID());
+		log.debug("requestWorkItemPostConditionEvaluation"
+				+ taskWorkItem.getID());
 		try {
 			process(taskWorkItem);
 		} catch (BlendedWorkflowException bwe) {
-			log.error("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
+			log.error("notifyWorkItemContraintViolation: exception"
+					+ bwe.getMessage());
 		}
 
 	}
@@ -160,10 +184,13 @@ public class WorkletAdapter {
 	 *********************************/
 	/**
 	 * Create and Load a specification RdrSet.
-	 * @param bwSpecification the BWSpecification.
+	 * 
+	 * @param bwSpecification
+	 *            the BWSpecification.
 	 * @throws BlendedWorkflowException
 	 */
-	public void loadRdrSet(BWSpecification bwSpecification) throws BlendedWorkflowException {
+	public void loadRdrSet(BWSpecification bwSpecification)
+			throws BlendedWorkflowException {
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
 		String condition = null;
@@ -180,32 +207,37 @@ public class WorkletAdapter {
 				eCornerstone = getCornerstoneData(task, true, "UNDEFINED");
 				condition = task.getPreConstraint().getRdrUndefinedCondition();
 				eConclusion = createRdrConclusion("UNDEFINED", true);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+				addNode(yawlSpecID, taskName, condition, eCornerstone,
+						eConclusion, RuleType.ItemPreconstraint);
 
 				// Skipped Node
 				eCornerstone = getCornerstoneData(task, true, "SKIPPED");
 				condition = task.getPreConstraint().getRdrSkippedCondition();
 				eConclusion = createRdrConclusion("SKIPPED", true);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+				addNode(yawlSpecID, taskName, condition, eCornerstone,
+						eConclusion, RuleType.ItemPreconstraint);
 
 				// True Node
 				eCornerstone = getCornerstoneData(task, true, "DEFINED");
 				condition = task.getPreConstraint().getRdrTrueCondition();
 				eConclusion = createRdrConclusion("TRUE", true);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+				addNode(yawlSpecID, taskName, condition, eCornerstone,
+						eConclusion, RuleType.ItemPreconstraint);
 
 				// False Node
 				if (task.getPreConstraint().existCompareAttributeToValue()) {
 					eCornerstone = getCornerstoneData(task, true, "DEFINED");
 					condition = task.getPreConstraint().getRdrFalseCondition();
 					eConclusion = createRdrConclusion("FALSE", true);
-					addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+					addNode(yawlSpecID, taskName, condition, eCornerstone,
+							eConclusion, RuleType.ItemPreconstraint);
 				}
 			} else {
 				eCornerstone = getCornerstoneData(task, true, "DEFINED");
 				condition = task.getPreConstraint().getRdrTrueCondition();
 				eConclusion = createRdrConclusion("TRUE", true);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemPreconstraint);
+				addNode(yawlSpecID, taskName, condition, eCornerstone,
+						eConclusion, RuleType.ItemPreconstraint);
 			}
 
 			// PostCondition Tree
@@ -213,42 +245,51 @@ public class WorkletAdapter {
 			eCornerstone = getCornerstoneData(task, false, "UNDEFINED");
 			condition = task.getPostConstraint().getRdrUndefinedCondition();
 			eConclusion = createRdrConclusion("UNDEFINED", false);
-			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
+					RuleType.ItemConstraintViolation);
 
 			// Skipped Node
 			eCornerstone = getCornerstoneData(task, false, "SKIPPED");
 			condition = task.getPostConstraint().getRdrSkippedCondition();
 			eConclusion = createRdrConclusion("SKIPPED", false);
-			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
+					RuleType.ItemConstraintViolation);
 
 			// True Node
 			eCornerstone = getCornerstoneData(task, false, "DEFINED");
 			condition = task.getPostConstraint().getRdrTrueCondition();
 			eConclusion = createRdrConclusion("TRUE", false);
-			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
+					RuleType.ItemConstraintViolation);
 
 			// False Node
 			if (task.getPostConstraint().existCompareAttributeToValue()) {
 				eCornerstone = getCornerstoneData(task, false, "DEFINED");
 				condition = task.getPostConstraint().getRdrFalseCondition();
 				eConclusion = createRdrConclusion("FALSE", false);
-				addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion, RuleType.ItemConstraintViolation);
+				addNode(yawlSpecID, taskName, condition, eCornerstone,
+						eConclusion, RuleType.ItemConstraintViolation);
 			}
 		}
 	}
-
 
 	/*******************************
 	 * Get Data
 	 *******************************/
 	/**
 	 * Get Conditions Data for a Task
-	 * @param task a Task.
-	 * @param isPreCondition if its a Task, get the ItemPreConstraint data.
-	 * @param type the type of CornerstoneData, i.e DEFINED, UNDEFINED or SKIPPED.
+	 * 
+	 * @param task
+	 *            a Task.
+	 * @param isPreCondition
+	 *            if its a Task, get the ItemPreConstraint data.
+	 * @param type
+	 *            the type of CornerstoneData, i.e DEFINED, UNDEFINED or
+	 *            SKIPPED.
 	 * @return an ELement with the cornerstoneData.
 	 */
-	private Element getCornerstoneData(Task task, Boolean isPreCondition, String type) {
+	private Element getCornerstoneData(Task task, Boolean isPreCondition,
+			String type) {
 		String cornerStr = "<cornerstone>";
 		Set<Entity> entities = null;
 		Set<Attribute> attributes = null;
@@ -258,12 +299,13 @@ public class WorkletAdapter {
 		if (task != null && isPreCondition) {
 			entities = task.getPreConstraint().getEntities();
 			attributes = task.getPreConstraint().getAttributes();
-			attributesValues = task.getPreConstraint().getcompareConditionValues();
-		} 
-		else if (task != null){
+			attributesValues = task.getPreConstraint()
+					.getcompareConditionValues();
+		} else if (task != null) {
 			entities = task.getPostConstraint().getEntities();
 			attributes = task.getPostConstraint().getAttributes();
-			attributesValues = task.getPostConstraint().getcompareConditionValues();
+			attributesValues = task.getPostConstraint()
+					.getcompareConditionValues();
 		}
 
 		if (attributes != null) {
@@ -271,7 +313,9 @@ public class WorkletAdapter {
 			while (it.hasNext()) {
 				Attribute attribute = it.next();
 				Entity entity = attribute.getEntity();
-				if (entities.contains(entity) && !attributesValues.containsKey(attribute) && attribute.getIsKeyAttribute()) {
+				if (entities.contains(entity)
+						&& !attributesValues.containsKey(attribute)
+						&& attribute.getIsKeyAttribute()) {
 					it.remove();
 				}
 			}
@@ -282,17 +326,22 @@ public class WorkletAdapter {
 				String entityName = entity.getName().replaceAll(" ", "");
 				for (Attribute attribute : entity.getAttributes()) {
 					if (attribute.getIsKeyAttribute()) {
-						String attributeName = attribute.getName().replaceAll(" ", "");
+						String attributeName = attribute.getName().replaceAll(
+								" ", "");
 						String value;
 						if (type == "UNDEFINED")
 							value = "$UNDEFINED$";
 						else if (type == "SKIPPED")
-							value = "$SKIPPED$"; 
+							value = "$SKIPPED$";
 						else
 							value = "$DEFINED$";
 
-						cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + type + "</" + entityName + "_" + attributeName + "_State" + ">";
-						cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
+						cornerStr += "<" + entityName + "_" + attributeName
+								+ "_State" + ">" + type + "</" + entityName
+								+ "_" + attributeName + "_State" + ">";
+						cornerStr += "<" + entityName + "_" + attributeName
+								+ ">" + value + "</" + entityName + "_"
+								+ attributeName + ">";
 					}
 				}
 			}
@@ -300,20 +349,24 @@ public class WorkletAdapter {
 		// Parse single attributes
 		if (attributes != null) {
 			for (Attribute attribute : attributes) {
-				String entityName = attribute.getEntity().getName().replaceAll(" ", "");
+				String entityName = attribute.getEntity().getName()
+						.replaceAll(" ", "");
 				String attributeName = attribute.getName().replaceAll(" ", "");
 				String value = attributesValues.get(attribute);
 				if (value == null) {
 					if (type == "UNDEFINED")
 						value = "$UNDEFINED$";
 					else if (type == "SKIPPED")
-						value = "$SKIPPED$"; 
+						value = "$SKIPPED$";
 					else
 						value = "$DEFINED$";
 				}
 
-				cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + type + "</" + entityName + "_" + attributeName + "_State" + ">";
-				cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
+				cornerStr += "<" + entityName + "_" + attributeName + "_State"
+						+ ">" + type + "</" + entityName + "_" + attributeName
+						+ "_State" + ">";
+				cornerStr += "<" + entityName + "_" + attributeName + ">"
+						+ value + "</" + entityName + "_" + attributeName + ">";
 			}
 		}
 
@@ -324,25 +377,32 @@ public class WorkletAdapter {
 
 	/**
 	 * Get PreCondition user submitted data.
-	 * @param taskWorkItem a TaskWorkItem.
+	 * 
+	 * @param taskWorkItem
+	 *            a TaskWorkItem.
 	 * @return an ELement with the evaluation data.
 	 */
 	private Element getInputEvaluationData(TaskWorkItem taskWorkItem) {
 		// Get Workitem
-		WorkItem workItem= taskWorkItem;
-		List<WorkItemArgument> workItemArguments = workItem.getInputWorkItemArguments();
+		WorkItem workItem = taskWorkItem;
+		List<WorkItemArgument> workItemArguments = workItem
+				.getInputWorkItemArguments();
 
 		// Get Workitem data
 		String cornerStr = "<cornerstone>";
 		for (WorkItemArgument workItemArgument : workItemArguments) {
-			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
-			String entityName = attributeInstance.getEntityInstance().getEntity().getName().replaceAll(" ", "");
-			String attributeName = attributeInstance.getAttribute().getName().replaceAll(" ", "");
+			AttributeInstance attributeInstance = workItemArgument
+					.getAttributeInstance();
+			String entityName = attributeInstance.getEntityInstance()
+					.getEntity().getName().replaceAll(" ", "");
+			String attributeName = attributeInstance.getAttribute().getName()
+					.replaceAll(" ", "");
 			DataState state = workItemArgument.getState();
 
-			//FIXME: Today
+			// FIXME: Today
 			String value = workItemArgument.getValue();
-			if (workItemArgument.getAttributeInstance().getAttribute().getIsSystem()) {
+			if (workItemArgument.getAttributeInstance().getAttribute()
+					.getIsSystem()) {
 				if (value.equals(BlendedWorkflow.getInstance().getToday())) {
 					value = "" + "$TODAY$".hashCode();
 				} else {
@@ -350,8 +410,11 @@ public class WorkletAdapter {
 				}
 			}
 
-			cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + state + "</" + entityName + "_" + attributeName + "_State" + ">";
-			cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
+			cornerStr += "<" + entityName + "_" + attributeName + "_State"
+					+ ">" + state + "</" + entityName + "_" + attributeName
+					+ "_State" + ">";
+			cornerStr += "<" + entityName + "_" + attributeName + ">" + value
+					+ "</" + entityName + "_" + attributeName + ">";
 		}
 		cornerStr += "</cornerstone>";
 		Element eCornerstone = JDOMUtil.stringToElement(cornerStr);
@@ -360,25 +423,32 @@ public class WorkletAdapter {
 
 	/**
 	 * Get PostCondition user submitted data.
-	 * @param taskWorkItem a TaskWorkItem.
+	 * 
+	 * @param taskWorkItem
+	 *            a TaskWorkItem.
 	 * @return an ELement with the evaluation data.
 	 */
 	private Element getOutputEvaluationData(TaskWorkItem taskWorkItem) {
 		// Get Workitem
-		WorkItem workItem= taskWorkItem;
-		List<WorkItemArgument> workItemArguments = workItem.getOutputWorkItemArguments();
+		WorkItem workItem = taskWorkItem;
+		List<WorkItemArgument> workItemArguments = workItem
+				.getOutputWorkItemArguments();
 
 		// Get Workitem data
 		String cornerStr = "<cornerstone>";
 		for (WorkItemArgument workItemArgument : workItemArguments) {
-			AttributeInstance attributeInstance = workItemArgument.getAttributeInstance();
-			String entityName = attributeInstance.getEntityInstance().getEntity().getName().replaceAll(" ", "");
-			String attributeName = attributeInstance.getAttribute().getName().replaceAll(" ", "");
+			AttributeInstance attributeInstance = workItemArgument
+					.getAttributeInstance();
+			String entityName = attributeInstance.getEntityInstance()
+					.getEntity().getName().replaceAll(" ", "");
+			String attributeName = attributeInstance.getAttribute().getName()
+					.replaceAll(" ", "");
 			DataState state = workItemArgument.getState();
 
-			//FIXME: Today
+			// FIXME: Today
 			String value = workItemArgument.getValue();
-			if (workItemArgument.getAttributeInstance().getAttribute().getIsSystem()) {
+			if (workItemArgument.getAttributeInstance().getAttribute()
+					.getIsSystem()) {
 				if (value.equals(BlendedWorkflow.getInstance().getToday())) {
 					value = "" + "$TODAY$".hashCode();
 				} else {
@@ -386,8 +456,11 @@ public class WorkletAdapter {
 				}
 			}
 
-			cornerStr += "<" + entityName + "_" + attributeName + "_State" + ">" + state + "</" + entityName + "_" + attributeName + "_State" + ">";
-			cornerStr += "<" + entityName + "_" + attributeName + ">" + value + "</" + entityName + "_" + attributeName + ">";
+			cornerStr += "<" + entityName + "_" + attributeName + "_State"
+					+ ">" + state + "</" + entityName + "_" + attributeName
+					+ "_State" + ">";
+			cornerStr += "<" + entityName + "_" + attributeName + ">" + value
+					+ "</" + entityName + "_" + attributeName + ">";
 		}
 		cornerStr += "</cornerstone>";
 		Element eCornerstone = JDOMUtil.stringToElement(cornerStr);
@@ -397,7 +470,7 @@ public class WorkletAdapter {
 	/*******************************
 	 * Rdr Conclusions
 	 *******************************/
-	//FIXME:
+	// FIXME:
 	private Element createRdrConclusion(String type, Boolean isPreCondition) {
 		String concStr = null;
 		Element eConclusion = null;
@@ -421,8 +494,7 @@ public class WorkletAdapter {
 				action = "complete";
 			} else if (type.equals("FALSE") || type.equals("UNDEFINED")) {
 				action = "FALSE";
-			}
-			else if (type.equals("SKIPPED")) {
+			} else if (type.equals("SKIPPED")) {
 				action = "complete";
 				constrainVilationSkip = true;
 			}
@@ -448,10 +520,12 @@ public class WorkletAdapter {
 
 	/**
 	 * Parse the RdrConclusion.
-	 * @param rdrNode the enabled RdrNode.
+	 * 
+	 * @param rdrNode
+	 *            the enabled RdrNode.
 	 * @return a string with the result.
 	 */
-	//FIXME:
+	// FIXME:
 	public String parseConclusion(String conclusion) {
 		if (conclusion.contains("SKIPPED"))
 			return "SKIPPED";
@@ -461,7 +535,7 @@ public class WorkletAdapter {
 			return "TRUE";
 		else
 			return "FAIL";
-	}	
+	}
 
 	/************************************************
 	 * WorkletGateway Methods
@@ -469,16 +543,17 @@ public class WorkletAdapter {
 	/**
 	 * Register BlendedWorkflow WorkletListener.
 	 */
-	public boolean registerWorkletListener(){
-		this.client= new WorkletGatewayClient();
-		try{
-			this.handle= this.client.connect(engineAdminUser, engineAdminPassword);
-			client.addListener(workletGateway,handle);
+	public boolean registerWorkletListener() {
+		this.client = new WorkletGatewayClient();
+		try {
+			this.handle = this.client.connect(engineAdminUser,
+					engineAdminPassword);
+			client.addListener(workletGateway, handle);
 			log.info("Register Worklet Listener: Sucess!");
 			return true;
-		}
-		catch(IOException ioe){
-			log.error("Register Worklet Listener: Exception: " + ioe.getMessage());
+		} catch (IOException ioe) {
+			log.error("Register Worklet Listener: Exception: "
+					+ ioe.getMessage());
 		}
 		log.error("Register Worklet Listener: Failed!");
 		return false;
@@ -486,29 +561,42 @@ public class WorkletAdapter {
 
 	/**
 	 * Add a node to a RdrTree.
-	 * @param yawlSpecID the YSpecificationID.
-	 * @param name the Task name.
-	 * @param condition the condition.
-	 * @param eCornerstone the RdrNode cornerstone  data.
-	 * @param eConclusion the RdrNode RdrConclusion.
-	 * @param ruleType the RuleType.
+	 * 
+	 * @param yawlSpecID
+	 *            the YSpecificationID.
+	 * @param name
+	 *            the Task name.
+	 * @param condition
+	 *            the condition.
+	 * @param eCornerstone
+	 *            the RdrNode cornerstone data.
+	 * @param eConclusion
+	 *            the RdrNode RdrConclusion.
+	 * @param ruleType
+	 *            the RuleType.
 	 * @throws BlendedWorkflowException
 	 */
-	private void addNode(YSpecificationID yawlSpecID, String name, String condition, Element eCornerstone, Element eConclusion, RuleType ruleType) throws BlendedWorkflowException {
+	private void addNode(YSpecificationID yawlSpecID, String name,
+			String condition, Element eCornerstone, Element eConclusion,
+			RuleType ruleType) throws BlendedWorkflowException {
 		try {
 			RdrNode node = new RdrNode(condition, eConclusion, eCornerstone);
 			client.addNode(yawlSpecID, name, ruleType, node, handle);
 		} catch (IOException e) {
-			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_ADDNODE);
+			throw new BlendedWorkflowException(
+					BlendedWorkflowError.WORKLET_ADAPTER_ADDNODE);
 		}
 	}
 
 	/**
 	 * Process the TaskWorkItem ItemConstrainViolation.
-	 * @param taskWorkItem the TaskWorkItem.
+	 * 
+	 * @param taskWorkItem
+	 *            the TaskWorkItem.
 	 * @throws BlendedWorkflowException
 	 */
-	public void process(TaskWorkItem taskWorkItem) throws BlendedWorkflowException {
+	public void process(TaskWorkItem taskWorkItem)
+			throws BlendedWorkflowException {
 		// Evaluation Data
 		Element eData = getOutputEvaluationData(taskWorkItem);
 
@@ -517,19 +605,25 @@ public class WorkletAdapter {
 
 		// Process
 		try {
-			client.process(workItemRecord, eData, RuleType.ItemConstraintViolation, handle);
+			client.process(workItemRecord, eData,
+					RuleType.ItemConstraintViolation, handle);
 		} catch (IOException e) {
-			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_PROCESS);
+			throw new BlendedWorkflowException(
+					BlendedWorkflowError.WORKLET_ADAPTER_PROCESS);
 		}
 	}
 
 	/**
 	 * Evaluate a Task PreCondition.
-	 * @param taskWorkItem a TaskWorkItem;
+	 * 
+	 * @param taskWorkItem
+	 *            a TaskWorkItem;
 	 * @throws BlendedWorkflowException
 	 */
-	public void evaluatePreCondition(TaskWorkItem taskWorkItem) throws BlendedWorkflowException {
-		BWSpecification bwSpecification = taskWorkItem.getBwInstance().getBwSpecification();
+	public void evaluatePreCondition(TaskWorkItem taskWorkItem)
+			throws BlendedWorkflowException {
+		BWSpecification bwSpecification = taskWorkItem.getBwInstance()
+				.getBwSpecification();
 		YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
 
 		String name = generateYAWLTaskName(taskWorkItem.getTask());
@@ -539,9 +633,11 @@ public class WorkletAdapter {
 
 		// Evaluate
 		try {
-			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType,
+					handle);
 		} catch (IOException e) {
-			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATEPRECONDITION);
+			throw new BlendedWorkflowException(
+					BlendedWorkflowError.WORKLET_ADAPTER_EVALUATEPRECONDITION);
 		}
 
 		// FIXME: Parse result
@@ -556,51 +652,58 @@ public class WorkletAdapter {
 		}
 	}
 
-//	/**
-//	 * Evaluate a Task PostCondition.
-//	 * @param taskWorkItem a TaskWorkItem;
-//	 * @throws BlendedWorkflowException
-//	 */
-//	public void evaluatePostCondition(TaskWorkItem taskWorkItem) throws BlendedWorkflowException {
-//		BWSpecification bwSpecification = taskWorkItem.getBwInstance().getBwSpecification();
-//		YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
-//
-//		String name = generateYAWLTaskName(taskWorkItem.getTask());
-//		Element eData = getOutputEvaluationData(taskWorkItem);
-//		RuleType ruleType = RuleType.ItemConstraintViolation;
-//		String conclusion = null;
-//
-//		// Evaluate
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//
-//		// Parse result
-//		if (parseConclusion(conclusion).equals("TRUE")) {
-//			taskWorkItem.notifyCompleted();
-//		} else if (parseConclusion(conclusion).equals("FALSE")) {
-//			taskWorkItem.notifyEnabled();
-//		} else {
-//			taskWorkItem.notifySkipped();
-//		}			
-//	}
+	// /**
+	// * Evaluate a Task PostCondition.
+	// * @param taskWorkItem a TaskWorkItem;
+	// * @throws BlendedWorkflowException
+	// */
+	// public void evaluatePostCondition(TaskWorkItem taskWorkItem) throws
+	// BlendedWorkflowException {
+	// BWSpecification bwSpecification =
+	// taskWorkItem.getBwInstance().getBwSpecification();
+	// YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
+	//
+	// String name = generateYAWLTaskName(taskWorkItem.getTask());
+	// Element eData = getOutputEvaluationData(taskWorkItem);
+	// RuleType ruleType = RuleType.ItemConstraintViolation;
+	// String conclusion = null;
+	//
+	// // Evaluate
+	// try {
+	// conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+	// } catch (IOException e) {
+	// throw new
+	// BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+	// }
+	//
+	// // Parse result
+	// if (parseConclusion(conclusion).equals("TRUE")) {
+	// taskWorkItem.notifyCompleted();
+	// } else if (parseConclusion(conclusion).equals("FALSE")) {
+	// taskWorkItem.notifyEnabled();
+	// } else {
+	// taskWorkItem.notifySkipped();
+	// }
+	// }
 
 	/*************************************
 	 * YAWL Converter
 	 ************************************/
 	/**
 	 * Get YAWLSpecificationID of a BWSpecification
-	 * @param bwSpecification the BWSpecification
+	 * 
+	 * @param bwSpecification
+	 *            the BWSpecification
 	 * @return yawlSpecID the YAWLSpecificationID
 	 * @throws BlendedWorkflowException
 	 */
-	private YSpecificationID getYAWLSpecificationID(BWSpecification bwSpecification) throws BlendedWorkflowException {
+	private YSpecificationID getYAWLSpecificationID(
+			BWSpecification bwSpecification) throws BlendedWorkflowException {
 		String yawlCaseID = bwSpecification.getYawlSpecficationID();
 		YSpecificationID yawlSpecID = null;
-		for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance().getYawlAdapter().getLoadedActivitySpecs()) {
-			if(ySpecificationID.getIdentifier().equals(yawlCaseID)) {
+		for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance()
+				.getYawlAdapter().getLoadedActivitySpecs()) {
+			if (ySpecificationID.getIdentifier().equals(yawlCaseID)) {
 				yawlSpecID = ySpecificationID;
 				break;
 			}
@@ -609,8 +712,10 @@ public class WorkletAdapter {
 	}
 
 	/**
-	 * Get the YAWL Task name 
-	 * @param taskWorkItem the taskWorkItem
+	 * Get the YAWL Task name
+	 * 
+	 * @param taskWorkItem
+	 *            the taskWorkItem
 	 * @return name the task name on YAWL
 	 */
 	private String generateYAWLTaskName(Task task) {
@@ -619,12 +724,14 @@ public class WorkletAdapter {
 
 	/**
 	 * Get the corresponding WorkItemRecord of the TaskWorkItem.
-	 * @param taskWorkItem the TaskWorkItem.
+	 * 
+	 * @param taskWorkItem
+	 *            the TaskWorkItem.
 	 * @return the WorkItemRecord.
 	 */
 	private WorkItemRecord getWorkItemRecord(TaskWorkItem taskWorkItem) {
 		Iterator<?> it = yawlEnabledWIR.keySet().iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			WorkItemRecord wir = (WorkItemRecord) it.next();
 			TaskWorkItem tWorkItem = getTaskWorkItem(wir);
 			if (tWorkItem.getID().equals(taskWorkItem.getID())) {
@@ -636,14 +743,17 @@ public class WorkletAdapter {
 
 	/**
 	 * Get the corresponding TaskWorkItem of the WorkItemRecord.
-	 * @param wir the WorkItemRecord.
+	 * 
+	 * @param wir
+	 *            the WorkItemRecord.
 	 * @return the TaskWorkItem.
 	 */
 	private TaskWorkItem getTaskWorkItem(WorkItemRecord wir) {
 		String workitemID = yawlEnabledWIR.get(wir);
 		WorkItem taskWorkItem = null;
 		try {
-			BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstanceFromYAWLCaseID(wir.getCaseID());
+			BWInstance bwInstance = BlendedWorkflow.getInstance()
+					.getBWInstanceFromYAWLCaseID(wir.getCaseID());
 			taskWorkItem = bwInstance.getWorkItem(workitemID);
 		} catch (BlendedWorkflowException bwe) {
 			log.error(bwe.getError());
@@ -651,72 +761,81 @@ public class WorkletAdapter {
 		return (TaskWorkItem) taskWorkItem;
 	}
 
-//	/*****************************************
-//	 * TEST
-//	 *****************************************/
-//	public void evaluateTest(BWSpecification bwSpecification) throws BlendedWorkflowException {
-//		log.debug("--------------------------------------------------------------");
-//		log.debug("TEST ALL NODES");
-//		log.debug("--------------------------------------------------------------");
-//		String name;RuleType ruleType = RuleType.ItemConstraintViolation;
-//		Element eData;
-//		String conclusion;
-//		String cs;
-//
-//		YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
-//
-//		name = "Collect_Physical_Data";
-//		log.info(name);
-//		// UND
-//		cs = "<cornerstone>"+
-//				"<PatientData_Height_State>UNDEFINED</PatientData_Height_State>"+
-//				"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
-//				"<PatientData_Weight_State>UNDEFINED</PatientData_Weight_State>"+
-//				"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("UND=" + conclusion);
-//
-//		// DEF
-//		cs = "<cornerstone>"+
-//				"<PatientData_Height_State>DEFINED</PatientData_Height_State>"+
-//				"<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
-//				"<PatientData_Weight_State>DEFINED</PatientData_Weight_State>"+
-//				"<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("TRUE=" + conclusion);
-//
-//		// SKIP
-//		cs = "<cornerstone>"+
-//				"<PatientData_Height_State>SKIPPED</PatientData_Height_State>"+
-//				"<PatientData_Height>$SKIPPED$</PatientData_Height>"+
-//				"<PatientData_Weight_State>SKIPPED</PatientData_Weight_State>"+
-//				"<PatientData_Weight>$SKIPPED$</PatientData_Weight>"+
-//				"<FALSE_NODE>FALSE</FALSE_NODE>"+
-//				"</cornerstone>";
-//		eData = JDOMUtil.stringToElement(cs);
-//
-//		try {
-//			conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
-//		} catch (IOException e) {
-//			throw new BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
-//		}
-//		log.info("SKIP=" + conclusion);
-//	}
+	public void associateWorkItemRecordWithTaskWorkItem(WorkItemRecord wir,
+			TaskWorkItem taskWorkItem) {
+		yawlEnabledWIR.put(wir, taskWorkItem.getID());
+	}
+
+	// /*****************************************
+	// * TEST
+	// *****************************************/
+	// public void evaluateTest(BWSpecification bwSpecification) throws
+	// BlendedWorkflowException {
+	// log.debug("--------------------------------------------------------------");
+	// log.debug("TEST ALL NODES");
+	// log.debug("--------------------------------------------------------------");
+	// String name;RuleType ruleType = RuleType.ItemConstraintViolation;
+	// Element eData;
+	// String conclusion;
+	// String cs;
+	//
+	// YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
+	//
+	// name = "Collect_Physical_Data";
+	// log.info(name);
+	// // UND
+	// cs = "<cornerstone>"+
+	// "<PatientData_Height_State>UNDEFINED</PatientData_Height_State>"+
+	// "<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
+	// "<PatientData_Weight_State>UNDEFINED</PatientData_Weight_State>"+
+	// "<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
+	// "<FALSE_NODE>FALSE</FALSE_NODE>"+
+	// "</cornerstone>";
+	// eData = JDOMUtil.stringToElement(cs);
+	//
+	// try {
+	// conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+	// } catch (IOException e) {
+	// throw new
+	// BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+	// }
+	// log.info("UND=" + conclusion);
+	//
+	// // DEF
+	// cs = "<cornerstone>"+
+	// "<PatientData_Height_State>DEFINED</PatientData_Height_State>"+
+	// "<PatientData_Height>$UNDEFINED$</PatientData_Height>"+
+	// "<PatientData_Weight_State>DEFINED</PatientData_Weight_State>"+
+	// "<PatientData_Weight>$UNDEFINED$</PatientData_Weight>"+
+	// "<FALSE_NODE>FALSE</FALSE_NODE>"+
+	// "</cornerstone>";
+	// eData = JDOMUtil.stringToElement(cs);
+	//
+	// try {
+	// conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+	// } catch (IOException e) {
+	// throw new
+	// BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+	// }
+	// log.info("TRUE=" + conclusion);
+	//
+	// // SKIP
+	// cs = "<cornerstone>"+
+	// "<PatientData_Height_State>SKIPPED</PatientData_Height_State>"+
+	// "<PatientData_Height>$SKIPPED$</PatientData_Height>"+
+	// "<PatientData_Weight_State>SKIPPED</PatientData_Weight_State>"+
+	// "<PatientData_Weight>$SKIPPED$</PatientData_Weight>"+
+	// "<FALSE_NODE>FALSE</FALSE_NODE>"+
+	// "</cornerstone>";
+	// eData = JDOMUtil.stringToElement(cs);
+	//
+	// try {
+	// conclusion = client.evaluate(yawlSpecID, name, eData, ruleType, handle);
+	// } catch (IOException e) {
+	// throw new
+	// BlendedWorkflowException(BlendedWorkflowError.WORKLET_ADAPTER_EVALUATE);
+	// }
+	// log.info("SKIP=" + conclusion);
+	// }
 
 }
