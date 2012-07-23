@@ -44,7 +44,7 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	}
 
 	@Override
-	public void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
 		getAttribute().getEntity().assignAttributeInstances(taskWorkItem,getAttribute(), conditionType);
 	}
 
@@ -125,16 +125,49 @@ public class CompareAttributeToValueCondition extends CompareAttributeToValueCon
 	 * Evaluate
 	 ******************************/
 	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		//TODO:In progress...
+		
+		//Input/Output Arguments
+		List<WorkItemArgument> arguments = null;
+		if (conditionType.equals(ConditionType.ACTIVATE_CONDITION)) {
+			arguments = goalWorkItem.getInputWorkItemArguments();
+		} else if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
+			arguments = goalWorkItem.getOutputWorkItemArguments();
+		}
+		if (arguments != null) {
+			for (WorkItemArgument workItemArgument : arguments) {
+				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+				Attribute conditionAttribute = getAttribute();
+				if (workItemAttribute == conditionAttribute) {
+					if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
+						return TripleStateBool.FALSE;	
+					} else if (workItemArgument.getState().equals(DataState.SKIPPED)) {
+						return TripleStateBool.SKIPPED;
+					} else {
+						if (evaluateComparation(workItemArgument.getValue())) {
+							return TripleStateBool.TRUE;
+						} else {
+							return TripleStateBool.FALSE;
+						}
+					}
+				}
+			}
+		}
+		return TripleStateBool.FALSE;
+	}
+	
+	//Legacy
+	@Override
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		List<WorkItemArgument> arguments = null;
-		if (conditionType.equals(ConditionType.ACTIVATE)) {
+		if (conditionType.equals(ConditionType.ACTIVATE_CONDITION)) {
 			arguments = goalWorkItem.getInputWorkItemArguments();
-		} else if (conditionType.equals(ConditionType.SUCESS)) {
+		} else if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
 			arguments = goalWorkItem.getOutputWorkItemArguments();
 		}		
 		if (arguments != null) {
 			for (WorkItemArgument workItemArgument : arguments) {
-
 				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 				Attribute conditionAttribute = getAttribute();
 				if (workItemAttribute == conditionAttribute) {

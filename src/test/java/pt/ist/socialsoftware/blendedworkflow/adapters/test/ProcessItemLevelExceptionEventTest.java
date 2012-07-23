@@ -24,6 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
@@ -31,7 +32,6 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
@@ -70,8 +70,7 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
 						new Element("X")), RuleType.ItemPreconstraint);
 		task.call();
 
-		assertReceivePreConditionEvaluation(WorkItemState.PRE_FALSE);
-		// assertReceivePreConditionEvaluation(WorkItemState.PRE_ACTIVITY);
+		assertReceivePreConditionEvaluation(ActivityState.PRE_ACTIVITY);
 	}
 
 	@Test
@@ -90,8 +89,7 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
 						new Element("X")), RuleType.ItemPreconstraint);
 		task.call();
 
-		assertReceivePreConditionEvaluation(WorkItemState.NEW);
-		// assertReceivePreConditionEvaluation(WorkItemState.ENABLE);
+		assertReceivePreConditionEvaluation(ActivityState.NEW);
 	}
 
 	@Test
@@ -110,11 +108,10 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
 						new Element("X")), RuleType.ItemPreconstraint);
 		task.call();
 
-		assertReceivePreConditionEvaluation(WorkItemState.PRE_TASK);
-		// assertReceivePreConditionEvaluation(WorkItemState.PRE_ACTIVITY);
+		assertReceivePreConditionEvaluation(ActivityState.PRE_ACTIVITY);
 	}
 
-	private void assertReceivePreConditionEvaluation(WorkItemState workItemState) {
+	private void assertReceivePreConditionEvaluation(ActivityState workItemState) {
 		boolean committed = false;
 		try {
 			Transaction.begin();
@@ -169,7 +166,7 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
 		bookingWorkItem.addOutputAttributeInstances(episodeReserveDate);
 		bookingWorkItem.addOutputWorkItemArguments(argumentNumber);
 		bookingWorkItem.addOutputWorkItemArguments(argumentReserveDate);
-		bookingWorkItem.setState(WorkItemState.ENABLED);
+		bookingWorkItem.setState(ActivityState.ENABLED);
 		workletAdapter.associateWorkItemRecordWithTaskWorkItem(wir,
 				bookingWorkItem);
 		Transaction.commit();
@@ -197,12 +194,12 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
 		try {
 			Transaction.begin();
 
-			assertEquals(WorkItemState.ENABLED, taskWorkItem.getState());
+			assertEquals(ActivityState.ENABLED, taskWorkItem.getState());
 
 			Transaction.commit();
 			committed = true;
-			// } catch (final BlendedWorkflowException e) {
-			// fail(e.getMessage());
+			 } catch (Exception e) {
+			 fail(e.getMessage());
 		} finally {
 			if (!committed)
 				Transaction.abort();

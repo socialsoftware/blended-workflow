@@ -7,7 +7,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public abstract class Condition extends Condition_Base {
 
-	public enum ConditionType {PRE_CONSTRAINT, CONSTRAINT_VIOLATION, ACTIVATE, SUCESS, MAINTAIN};
+	public enum ConditionType {PRE_CONDITION, POS_CONDITION, ACTIVATE_CONDITION, SUCESS_CONDITION, MAINTAIN_CONDITION};
 	public enum ConditionResult {TRUE, FALSE, SKIPPED};
 	
 	public Condition and(Condition one, Condition other) {
@@ -28,7 +28,7 @@ public abstract class Condition extends Condition_Base {
 
 	public abstract void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType);
 	
-	abstract void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType);
+	abstract void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType);
 
 	public abstract Set<Entity> getEntities();
 
@@ -50,6 +50,7 @@ public abstract class Condition extends Condition_Base {
 	/******************************
 	 * Evaluate
 	 ******************************/
+	public abstract TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType);
 	public abstract TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType);
 	public abstract TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem, ConditionType conditionType);
 }

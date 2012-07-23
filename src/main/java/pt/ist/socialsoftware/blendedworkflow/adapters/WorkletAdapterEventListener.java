@@ -23,7 +23,7 @@ public class WorkletAdapterEventListener extends WorkletEventListener{
 
 	@Override
 	public void itemLevelExceptionEvent(WorkItemRecord wir, Element caseData, RdrNode rdrNode, RuleType ruleType) {
-		log.debug("ItemLevelExceptionEvent for WorkItemRecord: " + wir + " begin.");
+//		log.debug("ItemLevelExceptionEvent for WorkItemRecord: " + wir + " begin.");
 
 		Transaction.begin();
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
@@ -31,7 +31,7 @@ public class WorkletAdapterEventListener extends WorkletEventListener{
 		bwExecutorService.runTask(task);
 		Transaction.commit();
 
-		log.debug("ItemLevelExceptionEvent for WorkItemRecord: " + wir + " end.");
+//		log.debug("ItemLevelExceptionEvent for WorkItemRecord: " + wir + " end.");
 	}
 
 	@Override

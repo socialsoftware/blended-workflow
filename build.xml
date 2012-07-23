@@ -156,10 +156,14 @@
 		<junit>
 			<classpath refid="project.classpath" />
 			<formatter type="brief" usefile="false" />
+			<!--
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.LoadBWSpecificationServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateBWInstanceServiceTest" />
+			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalInstanceServiceTest" />
+			-->
+					
 			<test name="pt.ist.socialsoftware.blendedworkflow.adapters.test.ProcessItemLevelExceptionEventTest" />
-			<!--			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CreateGoalInstanceServiceTest" />
+			<!--	
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.ManageGoalConditionServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.EnableGoalWorkItemsServiceTest" />
 			<test name="pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test.CheckInWorkItemServiceTest" />

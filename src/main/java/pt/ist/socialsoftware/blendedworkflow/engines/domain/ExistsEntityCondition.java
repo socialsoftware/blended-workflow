@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
@@ -34,7 +35,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	}
 
 	@Override
-	public void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
 		getEntity().assignAllAttributeInstances(taskWorkItem, getEntity(), conditionType);
 	}
 
@@ -157,13 +158,19 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 	 * Evaluate
 	 ******************************/
 	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		//TODO:Refactor
+		return TripleStateBool.FALSE;
+	}
+	
+	@Override
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		EntityInstance workItemEntityInstance = null;
 		List<WorkItemArgument> arguments = null;
 		TripleStateBool finalResult = TripleStateBool.TRUE;
-		if (conditionType.equals(ConditionType.ACTIVATE)) {
+		if (conditionType.equals(ConditionType.ACTIVATE_CONDITION)) {
 			arguments = goalWorkItem.getInputWorkItemArguments();
-		} else if (conditionType.equals(ConditionType.SUCESS)) {
+		} else if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
 			arguments = goalWorkItem.getOutputWorkItemArguments();
 		}
 

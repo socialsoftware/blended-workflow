@@ -278,7 +278,7 @@
 			<bw:SucessCondition>existsAttribute(Patient Data.Blood Pressure)</bw:SucessCondition>
 			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
 			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
-			<bw:ParentName>Obtain Patient Data</bw:ParentName>
+			<bw:ParentName>Obtain Medical Data</bw:ParentName>
 			<bw:Context>Patient Data</bw:Context>
 		</bw:Goal>
 		<bw:Goal>

@@ -30,7 +30,7 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 
 	@Override
 	public String call() throws Exception {
-		log.debug("Start for WorkItemRecord: " + wir + " RT:" + ruleType + " Result:" + parseConclusion(rdrNode));
+		log.debug(parseConclusion(rdrNode) + " " + ruleType + " for " + wir);
 
 		Transaction.begin();
 		if (ruleType.equals(RuleType.ItemPreconstraint)) {

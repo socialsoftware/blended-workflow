@@ -2,9 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import java.util.Set;
 
-//import org.apache.log4j.Logger;
-
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
@@ -132,36 +130,14 @@ public class AchieveGoal extends AchieveGoal_Base {
 		return dataString;
 	}
 	
-	
-
 	/**
-	 * Get the subGoals conditions data to use in the use interface.
-	 * @return a string with the condition data entities.
+	 * Check GoalWorkitems in the ACTIVATED state.
 	 */
-//	public String getSubGoalsData() {
-//		String dataString = "";
-//		Boolean first = true;
-//		for (AchieveGoal subGoal : getSubGoals()) {
-//			String subGoalDataString = subGoal.getConstraintData();
-//			if (first) {
-//				dataString += subGoalDataString;
-//			}
-//			else {
-//				dataString += ", " + subGoalDataString;
-//			}
-//		}
-//		return dataString;
-//	}
-
-	/**
-	 * Check Pending GoalWorkitems state.
-	 * @param bwInstance
-	 */
-	public void checkPending(BWInstance bwInstance) {
-		if (getGoalWorkItems() != null) {
+	public void checkActivated(BWInstance bwInstance) {
+		if (!getGoalWorkItems().isEmpty()) {
 			for (GoalWorkItem goalWorkItem : getGoalWorkItems()) {
-				if (goalWorkItem.getState().equals(WorkItemState.GOAL_PENDING)) {
-					goalWorkItem.evaluate(true);
+				if (goalWorkItem.getState().equals(GoalState.ACTIVATED)) {
+					goalWorkItem.notifyDataChanged();
 				}
 			}
 		}

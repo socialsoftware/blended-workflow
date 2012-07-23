@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsOneCondition extends ExistsOneCondition_Base {
@@ -37,7 +38,7 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
 	}
 
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
+	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
 		//TODO:assignAttributeInstances
 	}
 
@@ -91,6 +92,12 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
 	/******************************
 	 * Evaluate
 	 ******************************/
+	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		//TODO:Refactor
+		return TripleStateBool.FALSE;
+	}
+	
 	@Override
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		TripleStateBool result = TripleStateBool.FALSE;

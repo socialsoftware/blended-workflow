@@ -5,7 +5,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class MaintainGoal extends MaintainGoal_Base {
 	
-	public enum GoalState {DEACTIVATED, ENABLED};
+	public enum MaintainGoalState {DEACTIVATED, ENABLED};
     
 	public MaintainGoal(GoalModel goalModel, String name, String description, Condition condition, Entity context) throws BlendedWorkflowException {
 		checkUniqueGoalName(goalModel, name);
@@ -14,7 +14,7 @@ public class MaintainGoal extends MaintainGoal_Base {
 		setDescription(description);
 		setMaintainCondition(condition);
 		setMaintainGoalEntityContext(context);
-		setState(GoalState.ENABLED);
+		setState(MaintainGoalState.ENABLED);
 	}
 	
 	private void checkUniqueGoalName(GoalModel goalModel, String name) throws BlendedWorkflowException {

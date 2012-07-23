@@ -6,7 +6,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.GoalState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.MaintainGoalState;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -45,7 +45,7 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 					Long goalOID = (Long) target;
 
 					Transaction.begin();
-					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, GoalState.DEACTIVATED);
+					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, MaintainGoalState.DEACTIVATED);
 					Transaction.commit();
 					refreshTree(bwInstanceOID);
 				} else {
@@ -53,7 +53,7 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 					Long goalOID = (Long) target;
 
 					Transaction.begin();
-					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, GoalState.ENABLED);
+					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, MaintainGoalState.ENABLED);
 					Transaction.commit();
 					refreshTree(bwInstanceOID);
 				}

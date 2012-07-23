@@ -9,6 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
@@ -19,6 +20,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
@@ -139,7 +141,7 @@ public class PrintBWSpecification {
 		System.out.println("TaskModel Template");
 		System.out.println("----------------------------------------------------------");
 		for (Task task : taskModel.getTasks()) {
-			System.out.println("Task \"" + task.getName() + "\" is \"" + task.getState() + "\".");
+			System.out.println("Task \"" + task.getName() + "\".");
 			System.out.println("Pre Condition " + task.getPreConstraint().getClass() + " Post Condition " + task.getPostConstraint().getClass());
 			System.out.println("User: " + task.getUser() + " Role:" + task.getRole());
 		}
@@ -151,7 +153,7 @@ public class PrintBWSpecification {
 		System.out.println("TaskModel Type");
 		System.out.println("----------------------------------------------------------");
 		for (Task task : taskModelInstance.getTasks()) {
-			System.out.println("Task \"" + task.getName() + "\" is \"" + task.getState() + "\".");
+			System.out.println("Task \"" + task.getName() + "\".");
 			System.out.println("Pre Condition " + task.getPreConstraint().getClass() + " Post Condition " + task.getPostConstraint().getClass());
 			System.out.println("User: " + task.getUser() + " Role:" + task.getRole());
 		}
@@ -193,7 +195,15 @@ public class PrintBWSpecification {
 		System.out.println("WorkItems");
 		System.out.println("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
-			System.out.println("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState() + " and is associated with " + workitem.getOutputAttributeInstancesCount() + " attributeInstances.");
+			if (workitem instanceof GoalWorkItem) {
+				GoalWorkItem goalWorkItem = (GoalWorkItem) workitem;
+				System.out.println("GoalWorkItem \"" + workitem.getID() + "\" is " + goalWorkItem.getState() + " and is associated with " + workitem.getOutputAttributeInstancesCount() + " attributeInstances.");
+			}
+			
+			if (workitem instanceof TaskWorkItem) {
+				TaskWorkItem taskWorkItem = (TaskWorkItem) workitem;
+				System.out.println("GoalWorkItem \"" + workitem.getID() + "\" is " + taskWorkItem.getState() + " and is associated with " + workitem.getOutputAttributeInstancesCount() + " attributeInstances.");
+			}
 		}
 	}
 	
@@ -203,8 +213,15 @@ public class PrintBWSpecification {
 		System.out.println("WorkItems");
 		System.out.println("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
-			System.out.println("WorkItem \"" + workitem.getID() + "\" is " + workitem.getState());
-			
+			if (workitem instanceof TaskWorkItem) {
+				TaskWorkItem taskWorkItem = (TaskWorkItem) workitem;
+				System.out.println("TaskWorkItem \"" + workitem.getID() + "\" is " + taskWorkItem.getState());
+			}
+			if (workitem instanceof GoalWorkItem) {
+				GoalWorkItem goalWorkItem = (GoalWorkItem) workitem;
+				System.out.println("GoalWorkItem \"" + workitem.getID() + "\" is " + goalWorkItem.getState());
+			}
+
 			System.out.println("Input: Associated with " + workitem.getInputAttributeInstancesCount() + " attributeInstances.");
 			if (workitem.getInputAttributeInstancesCount()>0) {
 				for (AttributeInstance attributeInstance : workitem.getInputAttributeInstances()) {

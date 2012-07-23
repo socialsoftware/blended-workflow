@@ -38,7 +38,7 @@ public class AndCondition extends AndCondition_Base {
 	}
 	
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
+	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
 		getConditionOne().assignAttributeInstances(taskWorkItem, conditionType);
 		getConditionTwo().assignAttributeInstances(taskWorkItem, conditionType);
 	}
@@ -110,6 +110,10 @@ public class AndCondition extends AndCondition_Base {
 	/******************************
 	 * Evaluate
 	 ******************************/
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return getConditionOne().evaluate(goalWorkItem, conditionType).AND(getConditionTwo().evaluate(goalWorkItem, conditionType));
+	}
+	
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return getConditionOne().evaluateWithWorkItem(goalWorkItem, conditionType).AND(getConditionTwo().evaluateWithWorkItem(goalWorkItem, conditionType));
 	}
