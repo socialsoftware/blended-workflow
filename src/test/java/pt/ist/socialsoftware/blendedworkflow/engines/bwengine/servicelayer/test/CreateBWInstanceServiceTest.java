@@ -54,7 +54,7 @@ public class CreateBWInstanceServiceTest extends AbstractServiceTest {
 			assertEquals(0, bwInstance.getWorkItemsCount());
 
 			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
-
+		
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {
