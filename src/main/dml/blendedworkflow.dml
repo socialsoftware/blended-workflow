@@ -1,9 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState as DataState;
-enum pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.GoalState as GoalState;
-enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState as TaskState;
-enum pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState as WorkItemState;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.MaintainGoalState as MaintainGoalState;
+//enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState as TaskState;
+//enum pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState as WorkItemState;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState as ActivityState;
+enum pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState as GoalState;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality as Cardinality;
 
@@ -58,12 +60,16 @@ class LogRecord {
 
 class WorkItem {
 	String ID;
-	WorkItemState state;
+//	WorkItemState stateDELETE;
 }
 
-class TaskWorkItem extends WorkItem;
+class TaskWorkItem extends WorkItem {
+	ActivityState state;
+}
 
-class GoalWorkItem extends WorkItem;
+class GoalWorkItem extends WorkItem {
+	GoalState state;
+}
 
 class WorkItemArgument {
 	String value;
@@ -82,7 +88,7 @@ class AchieveGoal {
 class MaintainGoal {
 	String name;
 	String description;
-	GoalState state;
+	MaintainGoalState state;
 }
 
 class TaskModel;
@@ -92,7 +98,7 @@ class TaskModelInstance extends TaskModel;
 class Task {
 	String name;
 	String description;
-	TaskState state;
+//	TaskState state;
 	String previous;
 	String joinCode;
 	String splitCode;

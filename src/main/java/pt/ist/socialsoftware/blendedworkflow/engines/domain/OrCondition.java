@@ -38,7 +38,7 @@ public class OrCondition extends OrCondition_Base {
 	}
 	
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
+	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
 		getConditionOne().assignAttributeInstances(taskWorkItem, conditionType);
 		getConditionTwo().assignAttributeInstances(taskWorkItem, conditionType);
 	}
@@ -110,6 +110,10 @@ public class OrCondition extends OrCondition_Base {
 	/******************************
 	 * Evaluate
 	 ******************************/
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return getConditionOne().evaluate(goalWorkItem, conditionType).OR(getConditionTwo().evaluate(goalWorkItem, conditionType));
+	}
+	
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return getConditionOne().evaluateWithWorkItem(goalWorkItem, conditionType).OR(getConditionTwo().evaluateWithWorkItem(goalWorkItem, conditionType));
 	}

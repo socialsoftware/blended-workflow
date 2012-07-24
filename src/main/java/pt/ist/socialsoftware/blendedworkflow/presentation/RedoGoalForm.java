@@ -7,7 +7,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState;
 import jvstm.Transaction;
 
 import com.vaadin.ui.Alignment;
@@ -131,7 +131,7 @@ public class RedoGoalForm extends VerticalLayout {
 		
 		Transaction.begin();
 		for (GoalWorkItem goalWorkItem : goal.getGoalWorkItems()) {
-			if (goalWorkItem.getState().equals(WorkItemState.COMPLETED) || goalWorkItem.getState().equals(WorkItemState.SKIPPED)) {
+			if (goalWorkItem.getState().equals(GoalState.ACHIEVED) || goalWorkItem.getState().equals(GoalState.SKIPPED)) {
 				this.workItems.addItem(goalWorkItem.getOID());
 				this.workItems.setItemCaption(goalWorkItem.getOID(), goalWorkItem.getID());
 				//TODO: Give workitem data information

@@ -20,7 +20,7 @@ public class EntityInstance extends EntityInstance_Base {
 		boolean exists = false;
 		for (AttributeInstance attributeInstance : getAttributeInstances()) {
 			if (attributeInstance.getAttribute().equals(attribute)) {
-				if (conditionType.equals(ConditionType.SUCESS)) {
+				if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
 					goalWorkItem.addOutputAttributeInstances(attributeInstance);
 				} else {
 					goalWorkItem.addInputAttributeInstances(attributeInstance);
@@ -31,7 +31,7 @@ public class EntityInstance extends EntityInstance_Base {
 
 		if (!exists) {
 			AttributeInstance attributeInstance = new AttributeInstance(attribute, this);
-			if (conditionType.equals(ConditionType.SUCESS)) {
+			if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
 				goalWorkItem.addOutputAttributeInstances(attributeInstance);
 			} else {
 				goalWorkItem.addInputAttributeInstances(attributeInstance);
@@ -40,12 +40,12 @@ public class EntityInstance extends EntityInstance_Base {
 		}		
 	}
 
-	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, String conditionType) {
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, ConditionType conditionType) {
 		boolean exists = false;
 		boolean existsOne = false;
 		for (AttributeInstance attributeInstance : getAttributeInstances()) {
 			if (attributeInstance.getAttribute().equals(attribute)) {
-				if (conditionType.equals("pre")) {
+				if (conditionType.equals(ConditionType.PRE_CONDITION)) {
 
 					for (AttributeInstance ai : taskWorkItem.getInputAttributeInstances()) {
 						if (attributeInstance.getID().equals(ai.getID())) {
@@ -56,7 +56,7 @@ public class EntityInstance extends EntityInstance_Base {
 						taskWorkItem.addInputAttributeInstances(attributeInstance);
 					}
 				}
-				if (conditionType.equals("post")) {
+				if (conditionType.equals(ConditionType.POS_CONDITION)) {
 					for (AttributeInstance ai : taskWorkItem.getOutputAttributeInstances()) {
 						if (attributeInstance.getID().equals(ai.getID())) {
 							existsOne = true;
@@ -71,10 +71,10 @@ public class EntityInstance extends EntityInstance_Base {
 		}
 		if (!exists) {
 			AttributeInstance attributeInstance = new AttributeInstance(attribute, this);
-			if (conditionType.equals("pre")) {
+			if (conditionType.equals(ConditionType.PRE_CONDITION)) {
 				taskWorkItem.addInputAttributeInstances(attributeInstance);
 			}
-			if (conditionType.equals("post")) {
+			if (conditionType.equals(ConditionType.POS_CONDITION)) {
 				taskWorkItem.addOutputAttributeInstances(attributeInstance);
 			}
 		}	

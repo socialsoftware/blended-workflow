@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ForAllCondition extends ForAllCondition_Base {
@@ -37,7 +38,7 @@ public class ForAllCondition extends ForAllCondition_Base {
 	}
 
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
+	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
 		//TODO:assignAttributeInstances
 	}
 
@@ -50,7 +51,7 @@ public class ForAllCondition extends ForAllCondition_Base {
 
 	@Override
 	public Set<Attribute> getAttributes() {
-		return new HashSet<Attribute>();
+		return getCondition().getAttributes();
 	}
 
 	@Override
@@ -91,6 +92,12 @@ public class ForAllCondition extends ForAllCondition_Base {
 	/******************************
 	 * Evaluate
 	 ******************************/
+	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		//TODO:Refactor
+		return TripleStateBool.FALSE;
+	}
+	
 	@Override
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		TripleStateBool result = TripleStateBool.TRUE;

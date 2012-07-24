@@ -2,7 +2,10 @@ package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -12,112 +15,91 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class GoalWorkItem extends GoalWorkItem_Base {
 	
+	public enum GoalState {NEW, PRE_GOAL, ACTIVATED, ENABLED, SKIPPED, ACHIEVED, RE_ACTIVATED};
+	
 	private Logger log = Logger.getLogger("GoalWorkItem");
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-	public GoalWorkItem(BWInstance bwInstance, AchieveGoal goal, EntityInstance entityInstanceContext) {
+	public GoalWorkItem(BWInstance bwInstance, AchieveGoal goal, EntityInstance entityInstanceContext, List<Condition> activateConditions, Set<MaintainGoal> maintainGoals) {
 		log.info("New GoalWorkitem for goal " + goal.getName());
 		setBwInstance(bwInstance);
 		setAchieveGoal(goal);
+		
 		setRole(goal.getRole());
 		setUser(goal.getUser());
 		setID(goal.getName() + "." + bwInstance.getNewWorkItemID()); // Id: GoalName.#
 		setEntityInstanceContext(entityInstanceContext);
 		
-		for (Condition activateCondition : goal.getActivateConditions()){
+		//Activate Conditions
+		for (Condition activateCondition : activateConditions) {
 			addActivateConditions(activateCondition);
+			activateCondition.assignAttributeInstances(this, ConditionType.ACTIVATE_CONDITION);
 		}
+		createInputWorkItemArguments();
+		updateInputWorkItemArguments();
 		
-		for (MaintainGoal maintainGoal : bwInstance.getGoalModelInstance().getMaintainGoals()){
-			if (goal.getEntityContext().equals(maintainGoal.getMaintainGoalEntityContext())) {
-				addMaintainConditions(maintainGoal.getMaintainCondition());	
-			}
-		}
-		
+		//Success Condition
 		setSucessCondition(goal.getSucessCondition());
-
-		getSucessCondition().assignAttributeInstances(this, ConditionType.SUCESS);
+		getSucessCondition().assignAttributeInstances(this, ConditionType.SUCESS_CONDITION);
 		createOutputWorkItemArguments();
-		setState(WorkItemState.ACTIVATED);
-	}
+		
+		//Maintain Conditions
+		for (MaintainGoal maintainGoal : maintainGoals){
+			addMaintainConditions(maintainGoal.getMaintainCondition());	
+		}
 
-	/******************************
-	 * State Change Notifications *
-	 ******************************/
+		setState(GoalState.NEW);
+	}
 	
-	@Override
-	public void notifyPreTask() {
+	/******************************
+	 * State Machine
+	 ******************************/
+	public void notifyPreGoal() {
 		log.info("GoalWorkitem " + getID() + " is now in PreGoal state");
-		setState(WorkItemState.PRE_GOAL);
+		setState(GoalState.PRE_GOAL);
 		BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
 	}
 	
-	@Override
-	public void notifyPreFalse() {
-		log.error("GoalWorkitem " + getID() + " is now in PreFalse state");
-		setState(WorkItemState.PRE_FALSE);
-		BlendedWorkflow.getInstance().getWorkListManager().notifyWorkItemState(this);
+	public void notifyActivated() {
+		log.info("GoalWorkitem " + getID() + " is now in ACTIVATED state");
+		setState(GoalState.ACTIVATED);
+		evaluate();
 	}
 	
-	@Override
-	public void notifyDataChanged() {
-		log.info("GoalWorkitem " + getID() + " is now in ConstrainViolation state");
-		setState(WorkItemState.CONSTRAINT_VIOLATION);
-		updateInputWorkItemArguments();
-		updateOutputWorkItemArguments();
-		evaluate(false);
-	}
-
-	@Override
 	public void notifyEnabled() {
 		log.info("GoalWorkitem " + getID() + " is now in Enabled state");
-		setState(WorkItemState.ENABLED);
-		BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
+		setState(GoalState.ENABLED);
+		evaluate();
 	}
 	
-	@Override
-	public void notifyPending() {
-		log.info("GoalWorkitem " + getID() + " is now in Pending state");
-		setState(WorkItemState.GOAL_PENDING);
-		BlendedWorkflow.getInstance().getWorkListManager().notifyPendingWorkItem(this);
-	}
-
-	@Override
 	public void notifyCompleted() {
-
 		log.info("GoalWorkitem " + getID() + " is now in Completed state");
-		if (getState() == WorkItemState.CHECKED_IN || getState() == WorkItemState.CONSTRAINT_VIOLATION) {
-			setState(WorkItemState.COMPLETED);
-		}	
+		setState(GoalState.ACHIEVED);
 		setAttributeValues();
+		
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Completed", "[GOAL] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 		
-		getBwInstance().getGoalModelInstance().checkPedingWorkItems();
+		getBwInstance().getGoalModelInstance().checkActivatedWorkItems();
 	}
 
-	@Override
 	public void notifySkipped() {
 		log.info("GoalWorkitem " + getID() + " is now in Skipped state");
-		if (getState() == WorkItemState.CHECKED_IN || getState() == WorkItemState.CONSTRAINT_VIOLATION) {
-			setState(WorkItemState.SKIPPED);
-		}	
-		
+		setState(GoalState.SKIPPED);
 		setAttributeSkipped();
 		
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Skipped", "[GOAL] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
 
-		getBwInstance().getGoalModelInstance().checkPedingWorkItems();
+		getBwInstance().getGoalModelInstance().checkActivatedWorkItems();
 	}
 	
-	@Override
 	public void notifyReActivated() {
 		this.updateInputWorkItemArguments();
 		this.updateOutputWorkItemArguments();
-		this.setState(WorkItemState.RE_ACTIVATED);
+		this.setState(GoalState.RE_ACTIVATED);
 		
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "ReEnabled", "[GOAL] " + this.getID(), getUser().getID()));
@@ -125,29 +107,75 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		BlendedWorkflow.getInstance().getWorkListManager().notifyReEnabledWorkItem(this);
 	}
 	
-	/***********************************
-	 * Commit WorkItemArguments values *
-	 ***********************************/
+	/**********************************
+	 * Events
+	 **********************************/
+	@Override
+	public void notifyDataChanged() {
+		if (getState().equals(GoalState.ACHIEVED) || getState().equals(GoalState.SKIPPED)) {
+			log.info("GoalWorkItem " + getID() + " already in the ACHIEVED/SKIPPED state and will not re-evaluate.");
+		} else {
+			log.info("GoalWorkitem " + getID() + "is re-evaluating due to changes in data.");
+			updateInputWorkItemArguments();
+			updateOutputWorkItemArguments();
+			evaluate();	
+		}
+	}
 	
 	@Override
 	public void notifyCheckedIn() {
-		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_GOAL ||  getState() == WorkItemState.RE_ACTIVATED) {
-			setState(WorkItemState.CHECKED_IN);
+		evaluate();
+	}
+	
+	/***********************************
+	 * GOALWORKITEM METHODS
+	 ***********************************/
+	public void evaluate() {
+		if (getState().equals(GoalState.NEW) || getState().equals(GoalState.PRE_GOAL)) {
+			TripleStateBool result = evaluateActivateConditions();
+			if (result.equals(TripleStateBool.TRUE)) {
+				notifyActivated();
+			} else if (result.equals(TripleStateBool.SKIPPED) || result.equals(TripleStateBool.FALSE)) {
+				notifyPreGoal();
+			} 
+		} else if (getState().equals(GoalState.ACTIVATED)) {
+			TripleStateBool result = evaluateSubGoals();
+			if (result.equals(TripleStateBool.TRUE)) {
+				notifyEnabled();
+			} else {
+				log.info("GoalWorkItem " + getID() + " subgoals are not completed yet!");
+			} 		
+		} else if (getState().equals(GoalState.ENABLED)) {
+			TripleStateBool result = evaluateSucessCondition().AND(evaluateMaintainConditions());
+			if (result.equals(TripleStateBool.TRUE)) {
+				notifyCompleted();
+			} else if (result.equals(TripleStateBool.FALSE)) {
+				BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
+			} else if (result.equals(TripleStateBool.SKIPPED)) {
+				notifySkipped();
+			} 
+		} else if (getState().equals(GoalState.ACHIEVED)) {
+			log.info("GoalWorkItem " + getID() + " already in the ACHIEVED state!");
+		} else if (getState().equals(GoalState.SKIPPED)) {
+			log.info("GoalWorkItem " + getID() + " already in the SKIPPED state!");
+		} else if (getState().equals(GoalState.RE_ACTIVATED)) {
+			//TODO: ???
 		}
-		evaluate(false);
 	}
 	
 	/**
-	 * TODO: Test.
+	 * FIXME: Checks if all subGoals of a Goal are completed.
+	 * @return TripleStateBool
 	 */
-	public void evaluate(Boolean isActivateCondition) {
-		//Check subGoals
+	public TripleStateBool evaluateSubGoals() {
 		int countSubGoals = 0;
 		int countSubGoalsWorkItems = 0;
+		
 		for (AchieveGoal subGoal : getAchieveGoal().getSubGoals()) {
 			countSubGoalsWorkItems = 0;
+			
 			for (GoalWorkItem goalWorkItem : subGoal.getGoalWorkItems()) {
-				if (goalWorkItem.getState().equals(WorkItemState.COMPLETED) ||goalWorkItem.getState().equals(WorkItemState.SKIPPED)) {
+				if (goalWorkItem.getState().equals(GoalState.ACHIEVED) ||goalWorkItem.getState().equals(GoalState.SKIPPED)) {
 					countSubGoalsWorkItems++;
 				}
 			}
@@ -155,66 +183,53 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 				countSubGoals++;
 			}
 		}
-
+		
 		if (countSubGoals != getAchieveGoal().getSubGoalsCount()) {
-			this.notifyPending();
+			log.debug(getAchieveGoal().getSubGoalsCount() +"SG=" + TripleStateBool.FALSE);
+			return TripleStateBool.FALSE;
 		} else {
-			if (!getState().equals(WorkItemState.CHECKED_IN)) {
-			updateInputWorkItemArguments();
-			}
-
-			TripleStateBool result = null;
-			TripleStateBool activateConditionJointResult = TripleStateBool.TRUE;
-
-			if (isActivateCondition) {
-				for (Condition activateCondition : getActivateConditions()) {
-					result = activateCondition.evaluateWithWorkItem(this, ConditionType.ACTIVATE);
-					if (result.equals(TripleStateBool.FALSE)) {
-						activateConditionJointResult = TripleStateBool.FALSE;
-						break;
-					} else if (result.equals(TripleStateBool.SKIPPED)) {
-						activateConditionJointResult = TripleStateBool.SKIPPED;
-						break;
-					} 
-				}
-				log.info("ActivateCondition Evaluate result for " + this.getID() + " was " + result);
-				if (activateConditionJointResult.equals(TripleStateBool.TRUE)) {
-					notifyDataChanged();
-				} else if (activateConditionJointResult.equals(TripleStateBool.SKIPPED)) {
-					notifyPreTask();
-				} else {
-					notifyPreFalse();
-				}
-			} else {
-				result = getSucessCondition().evaluateWithWorkItem(this, ConditionType.SUCESS);
-				log.info("SucessCondition Evaluate result for " + this.getID() + " was " + result);
-				
-				TripleStateBool maintainConditionsResult = TripleStateBool.TRUE;
-				Boolean und = false;
-				for (Condition maintainCondition : getMaintainConditions()) {
-					for (WorkItemArgument wa2: getOutputWorkItemArguments()) {
-						if (wa2.getState().equals(DataState.UNDEFINED)) {
-							und = true;
-						}
-					}
-					if (!und) {
-						TripleStateBool m = maintainCondition.evaluateWithDataModel(null, this, ConditionType.SUCESS);
-						maintainConditionsResult = maintainConditionsResult.AND(m);
-					}
-				}
-				
-				log.info("MAINTAIN Evaluate result for " + this.getID() + " was " + maintainConditionsResult);
-				result = result.AND(maintainConditionsResult);
-				
-				if (result.equals(TripleStateBool.TRUE)) {
-					notifyCompleted();
-				} else if (result.equals(TripleStateBool.SKIPPED)) {
-					notifySkipped();
-				} else {
-					notifyEnabled();
-				}
-			}
+			log.debug(getAchieveGoal().getSubGoalsCount() +"SG=" + TripleStateBool.FALSE);
+			log.debug("SG=" + TripleStateBool.TRUE);
+			return TripleStateBool.TRUE;
 		}
 	}
-
+	
+	public TripleStateBool evaluateActivateConditions() {
+		TripleStateBool result = null;
+		TripleStateBool activateConditionJointResult = TripleStateBool.TRUE;
+		for (Condition activateCondition : getActivateConditions()) {
+			result = activateCondition.evaluateWithWorkItem(this, ConditionType.ACTIVATE_CONDITION);
+			if (result.equals(TripleStateBool.FALSE)) {
+				activateConditionJointResult = TripleStateBool.FALSE;
+				break;
+			} else if (result.equals(TripleStateBool.SKIPPED)) {
+				activateConditionJointResult = TripleStateBool.SKIPPED;
+				break;
+			} 
+		}
+		
+		log.debug("AC=" + activateConditionJointResult);
+		return activateConditionJointResult;
+	}
+	
+	public TripleStateBool evaluateSucessCondition() {
+		return getSucessCondition().evaluateWithWorkItem(this, ConditionType.SUCESS_CONDITION);
+	}
+	
+	public TripleStateBool evaluateMaintainConditions() {
+		TripleStateBool maintainConditionsResult = TripleStateBool.TRUE;
+		Boolean und = false;
+		for (Condition maintainCondition : getMaintainConditions()) {
+			for (WorkItemArgument wa2: getOutputWorkItemArguments()) {
+				if (wa2.getState().equals(DataState.UNDEFINED)) {
+					und = true;
+				}
+			}
+			if (!und) {
+				TripleStateBool m = maintainCondition.evaluateWithDataModel(null, this, ConditionType.SUCESS_CONDITION);
+				maintainConditionsResult = maintainConditionsResult.AND(m);
+			}
+		}
+		return maintainConditionsResult;
+	}
 }

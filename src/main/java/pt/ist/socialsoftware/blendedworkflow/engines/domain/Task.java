@@ -7,15 +7,12 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class Task extends Task_Base {
 	
-	public enum TaskState {DEACTIVATED, ENABLED, SKIPPED, ACHIEVED};
-    
     public Task(TaskModel taskModel, String name, String description, Condition preConstrain,Condition postConstrain, String previous, String joinCode, String splitCode) throws BlendedWorkflowException {
 		checkUniqueTaskName(taskModel, name);
 		setTaskModel(taskModel);
 		setName(name);
 		setPreConstraint(preConstrain);
 		setPostConstraint(postConstrain);
-		setState(TaskState.DEACTIVATED);
 		setDescription(description);
 		setPrevious(previous);
 		setJoinCode(joinCode);

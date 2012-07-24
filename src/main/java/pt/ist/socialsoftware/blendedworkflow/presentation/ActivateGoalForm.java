@@ -39,19 +39,16 @@ public class ActivateGoalForm extends VerticalLayout {
 		submit.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Long entityInstance = (Long) entityInstanceContext.getValue();
-
-				
-				
-				Transaction.begin();
-				BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(bwInstanceOID, goalOID, entityInstance);
-				Transaction.commit();
+				Long entityInstanceOID = (Long) entityInstanceContext.getValue();
 
 				if (conditions.getValue().equals(true)) {
-					showDisableConditionsWindow(bwInstanceOID);
+					if (entityInstanceOID == null) {
+						entityInstanceOID = (long) 0;
+					}
+					showDisableConditionsWindow(bwInstanceOID, goalOID, entityInstanceOID);
 				} else {
 					Transaction.begin();
-					BlendedWorkflow.getInstance().getWorkListManager().enableGoalWorkItemsService(bwInstanceOID);
+					BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(bwInstanceOID, goalOID, entityInstanceOID, null, null);
 					Transaction.commit();
 				}
 				getApplication().getMainWindow().removeWindow(ActivateGoalForm.this.getWindow());
@@ -77,6 +74,20 @@ public class ActivateGoalForm extends VerticalLayout {
 
 		// Populate
 		updateEntityInstancesInfo(bwInstanceOID, goalOID);
+		
+		//TODO:
+//		final Label test = new Label("TEST2");
+//		conditions.addListener(new Property.ValueChangeListener() {
+//			public void valueChange(ValueChangeEvent event) {
+//				if ((Boolean) conditions.getValue()) {
+//					addComponent(test);
+//					setHeight("250px");
+//				} else {
+//					removeComponent(test);
+//					setHeight("150px");
+//				}
+//			}
+//		});
 	}
 	
 	private void updateEntityInstancesInfo(long bwInstanceOID, long goalOID) {
@@ -97,9 +108,9 @@ public class ActivateGoalForm extends VerticalLayout {
 		Transaction.commit();
 	}
 
-	protected void showDisableConditionsWindow(long bwInstanceOID) {
+	protected void showDisableConditionsWindow(long bwInstanceOID, long goalOID, long entityInstanceOID) {
 		Window dataModel = new Window("Disable Conditions Form");
-		dataModel.setContent(new ManageAchieveGoalsConditionsForm(this, bwInstanceOID));
+		dataModel.setContent(new ManageAchieveGoalsConditionsForm(this, bwInstanceOID, goalOID, entityInstanceOID));
 		dataModel.center();
 		dataModel.setClosable(false);
 		dataModel.setResizable(false);

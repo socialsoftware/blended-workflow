@@ -27,7 +27,7 @@ public class TrueCondition extends TrueCondition_Base {
 	void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {}
 	
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {}
+	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {}
 	
 	@Override
 	public Set<Entity> getEntities() {
@@ -82,6 +82,11 @@ public class TrueCondition extends TrueCondition_Base {
 	/******************************
 	 * Evaluate
 	 ******************************/
+	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return TripleStateBool.TRUE;
+	}
+	
 	@Override
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return TripleStateBool.TRUE;

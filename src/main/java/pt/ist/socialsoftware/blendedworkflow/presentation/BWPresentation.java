@@ -20,21 +20,21 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.MaintainGoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.GoalState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 
 import com.vaadin.Application;
@@ -552,7 +552,7 @@ public class BWPresentation extends Application {
 					TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(workItemOID);
 					Transaction.begin();
 					Boolean isPreTask = false;
-					if (taskWorkItem.getState().equals(WorkItemState.PRE_TASK)) {
+					if (taskWorkItem.getState().equals(ActivityState.PRE_ACTIVITY)) {
 						isPreTask = true;
 					}
 					
@@ -606,7 +606,7 @@ public class BWPresentation extends Application {
 					GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(workItemOID);
 					Transaction.begin();
 					Boolean isPreGoal = false;
-					if (goalWorkItem.getState().equals(WorkItemState.PRE_GOAL)) {
+					if (goalWorkItem.getState().equals(GoalState.PRE_GOAL)) {
 						isPreGoal = true;
 					}
 					Transaction.commit();
@@ -820,14 +820,14 @@ public class BWPresentation extends Application {
 					Long goalOID = (Long) maintainGoalsTree.getContainerProperty(target, "OID").getValue();
 			       
 					Transaction.begin();
-					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, GoalState.DEACTIVATED);
+					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, MaintainGoalState.DEACTIVATED);
 					Transaction.commit();
 					updateGoalTreeInfo();
 				} else {
 					//remove condition
 					Long goalOID = (Long) maintainGoalsTree.getContainerProperty(target, "OID").getValue();
 					Transaction.begin();
-					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, GoalState.ENABLED);
+					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, MaintainGoalState.ENABLED);
 					Transaction.commit();
 					updateGoalTreeInfo();
 				}
@@ -1139,9 +1139,11 @@ public class BWPresentation extends Application {
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		Transaction.begin();
 		for (WorkItem workItem : bwInstance.getWorkItems()) {
-			if (workItem.getClass().equals(TaskWorkItem.class) && (workItem.getState().equals(WorkItemState.ENABLED) ||
-					workItem.getState().equals(WorkItemState.PRE_TASK))) {
-				addTaskWorkItem(workItem.getOID(), workItem.getID());
+			if (workItem instanceof TaskWorkItem) {
+				TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
+				if ((taskWorkItem.getState().equals(ActivityState.ENABLED) || taskWorkItem.getState().equals(ActivityState.PRE_ACTIVITY))) {
+					addTaskWorkItem(workItem.getOID(), workItem.getID());
+				}
 			}
 		}
 		Transaction.commit();
@@ -1155,9 +1157,11 @@ public class BWPresentation extends Application {
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		Transaction.begin();
 		for (WorkItem workItem : bwInstance.getWorkItems()) {
-			if (workItem.getClass().equals(GoalWorkItem.class) && (workItem.getState().equals(WorkItemState.ENABLED) ||
-					workItem.getState().equals(WorkItemState.PRE_GOAL))) {
-				addGoalWorkItem(workItem.getOID(), workItem.getID());
+			if (workItem instanceof GoalWorkItem) {
+				GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
+				if ((goalWorkItem.getState().equals(GoalState.ENABLED) || goalWorkItem.getState().equals(GoalState.PRE_GOAL))) {
+					addGoalWorkItem(workItem.getOID(), workItem.getID());
+				}
 			}
 		}
 		Transaction.commit();
@@ -1214,8 +1218,10 @@ public class BWPresentation extends Application {
 //		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
 		for (Task task : taskModelInstance.getTasks()) {
-			if (task.getState().equals(TaskState.ACHIEVED) || task.getState().equals(TaskState.SKIPPED)) {
-				executedTasksCount++;
+			if (task.getTaskWorkItem() != null) {
+				if (task.getTaskWorkItem().getState().equals(ActivityState.COMPLETED) || task.getTaskWorkItem().getState().equals(ActivityState.SKIPPED)) {
+					executedTasksCount++;
+				}
 			}
 		}
 
@@ -1456,15 +1462,17 @@ public class BWPresentation extends Application {
 		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 
 		for (WorkItem workItem : bwInstance.getWorkItems()) {
-			if (workItem.getClass().equals(GoalWorkItem.class) && (workItem.getState().equals(WorkItemState.COMPLETED)
-					|| workItem.getState().equals(WorkItemState.SKIPPED)
-					|| workItem.getState().equals(WorkItemState.PRE_FALSE)
-					|| workItem.getState().equals(WorkItemState.ENABLED))){
-				long workItemOID = workItem.getOID();
-				String workItemID = workItem.getID();
-				String workItemState = workItem.getState().toString();
-				goalWorkItemTree.addItem(new Object[] {workItemOID, workItemID, workItemState}, null);
-				
+			if (workItem instanceof GoalWorkItem) {
+				GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
+				if ((goalWorkItem.getState().equals(GoalState.ACHIEVED)
+						|| goalWorkItem.getState().equals(GoalState.SKIPPED)
+						|| goalWorkItem.getState().equals(GoalState.PRE_GOAL)
+						|| goalWorkItem.getState().equals(GoalState.ENABLED))){
+					long workItemOID = goalWorkItem.getOID();
+					String workItemID = goalWorkItem.getID();
+					String workItemState = goalWorkItem.getState().toString();
+					goalWorkItemTree.addItem(new Object[] {workItemOID, workItemID, workItemState}, null);
+				}
 			}
 		}
 		Transaction.commit();

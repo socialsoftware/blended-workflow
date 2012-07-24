@@ -35,8 +35,8 @@ public abstract class AbstractServiceTest {
 
 	protected static final String BWSPECIFICATION_FILENAME = "src/test/xml/MedicalEpisode/MedicalEpisodeTest.xml";
 	protected static final String BWSPECIFICATION_NAME = "Medical Appointment";
-	protected static String YAWLCASE_ID = "yawlCaseID";
-	protected static String USER_ID = "BlendedWorkflow";
+	protected static final String YAWLCASE_ID = "yawlCaseID";
+	protected static final String USER_ID = "BlendedWorkflow";
 
 	protected final Mockery context = new Mockery() {
 		{
@@ -113,7 +113,7 @@ public abstract class AbstractServiceTest {
 			}
 		});
 
-		BWSpecification bwSpecification = getBWSpecification(BWSPECIFICATION_NAME);
+		final BWSpecification bwSpecification = getBWSpecification(BWSPECIFICATION_NAME);
 		new CreateBWInstanceService(bwSpecification.getOID(), "", USER_ID)
 				.call();
 	}
@@ -126,7 +126,7 @@ public abstract class AbstractServiceTest {
 	protected BWSpecification getBWSpecification(String name)
 			throws BlendedWorkflowException {
 		Transaction.begin();
-		BWSpecification bwSpecification = BlendedWorkflow.getInstance()
+		final BWSpecification bwSpecification = BlendedWorkflow.getInstance()
 				.getBWSpecification(name);
 		Transaction.commit();
 		return bwSpecification;
@@ -134,7 +134,7 @@ public abstract class AbstractServiceTest {
 
 	protected BWInstance getBWInstance(BWSpecification bwSpecification) {
 		Transaction.begin();
-		BWInstance bwInstance = bwSpecification.getBwInstances().get(0);
+		final BWInstance bwInstance = bwSpecification.getBwInstances().get(0);
 		Transaction.commit();
 		return bwInstance;
 	}

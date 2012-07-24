@@ -8,9 +8,9 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -67,7 +67,7 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 			public void buttonClick(ClickEvent event) {
 				Transaction.begin();
 				GoalWorkItem w = AbstractDomainObject.fromOID(workItemOID);
-				w.setState(WorkItemState.ACTIVATED);
+				w.setState(GoalState.ACTIVATED);
 //				long bwInstanceOID = w.getBwInstance().getOID();
 				
 				//remove old ai
@@ -82,7 +82,7 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 				}
 				
 				for (Condition activateCondition : w.getActivateConditions()) {
-					activateCondition.assignAttributeInstances(w, ConditionType.ACTIVATE);
+					activateCondition.assignAttributeInstances(w, ConditionType.ACTIVATE_CONDITION);
 				}
 				
 				w.createInputWorkItemArguments();

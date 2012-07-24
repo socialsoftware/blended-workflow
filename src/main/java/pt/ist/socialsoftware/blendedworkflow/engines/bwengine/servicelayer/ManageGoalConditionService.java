@@ -10,7 +10,7 @@ import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.GoalState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.MaintainGoalState;
 
 public class ManageGoalConditionService implements Callable<String> {
 
@@ -19,7 +19,7 @@ public class ManageGoalConditionService implements Callable<String> {
 	private GoalWorkItem goalWorkItem;
 	private Condition condition;
 	private MaintainGoal maintainGoal;
-	private GoalState state;
+	private MaintainGoalState state;
 
 	/**
 	 * Remove an AchieveGoal ActivateCondition.
@@ -37,7 +37,7 @@ public class ManageGoalConditionService implements Callable<String> {
 	 * Enable/Disable BWInstance MaintainGoal Conditions.
 	 * @param maintainGoalOID
 	 */
-	public ManageGoalConditionService (long maintainGoalOID, GoalState state) {
+	public ManageGoalConditionService (long maintainGoalOID, MaintainGoalState state) {
 		this.goalWorkItem = null;
 		this.condition = null;
 		this.maintainGoal = AbstractDomainObject.fromOID(maintainGoalOID);

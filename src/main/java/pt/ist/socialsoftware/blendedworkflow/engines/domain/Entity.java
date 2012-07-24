@@ -62,7 +62,7 @@ public class Entity extends Entity_Base {
 		}
 	}
 	
-	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, String conditionType) {
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, ConditionType conditionType) {
 		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
 		if (getEntityInstances().isEmpty()) {
 			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
@@ -117,7 +117,7 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-	public void assignAllAttributeInstances(TaskWorkItem taskWorkItem, Entity entity, String conditionType) {
+	public void assignAllAttributeInstances(TaskWorkItem taskWorkItem, Entity entity, ConditionType conditionType) {
 		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
 
 		if (getEntityInstances().isEmpty()) {

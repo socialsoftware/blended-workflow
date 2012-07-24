@@ -21,12 +21,14 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -36,12 +38,9 @@ import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 public class WorkletAdapter {
 
 	private final Logger log;
-	protected String engineAdminUser = BWPropertiesManager
-			.getProperty("yawl.AdminUser");
-	protected String engineAdminPassword = BWPropertiesManager
-			.getProperty("yawl.AdminPassword");
-	protected String workletGateway = BWPropertiesManager
-			.getProperty("worklet.gateway");
+	protected String engineAdminUser = BWPropertiesManager.getProperty("yawl.AdminUser");
+	protected String engineAdminPassword = BWPropertiesManager.getProperty("yawl.AdminPassword");
+	protected String workletGateway = BWPropertiesManager.getProperty("worklet.gateway");
 
 	private WorkletGatewayClient client = null;
 	private String handle = null;
@@ -110,37 +109,29 @@ public class WorkletAdapter {
 	/*********************************
 	 * Process Conditions Result
 	 *********************************/
-	private void processPreConditionEvaluationResult(String result,
-			TaskWorkItem taskWorkItem) {
+	private void processPreConditionEvaluationResult(String result, TaskWorkItem taskWorkItem) {
 		if (result.equals("TRUE")) {
-			// taskWorkItem.setState(WorkItemState.ENABLED);
-			taskWorkItem.notifyDataChanged();
-		} else if (result.equals("SKIPPED")) {
-			// taskWorkItem.setState(WorkItemState.PRE_TASK);
-			taskWorkItem.notifyPreTask();
-		} else if (result.equals("FALSE")) {
-			// taskWorkItem.setState(WorkItemState.PRE_TASK);
-			taskWorkItem.notifyPreFalse();
+			taskWorkItem.notifyEnabled(ConditionType.PRE_CONDITION);
+		} else if (result.equals("SKIPPED") || result.equals("FALSE")) {
+			taskWorkItem.notifyPreActivity(ConditionType.PRE_CONDITION);
 		} else {
-			// it should not reach this point
+			log.error("It should not reach this point");
 		}
-		// requestWorkItemPostConditionEvaluation(taskWorkItem);
+		 requestWorkItemPostConditionEvaluation(taskWorkItem);
 	}
 
-	private void processPostConditionEvaluationResult(String result,
-			WorkItem workItem) {
+	private void processPostConditionEvaluationResult(String result, TaskWorkItem taskWorkItem) {
 		if (result.equals("TRUE")) {
-			workItem.notifyCompleted();
+			taskWorkItem.notifyCompleted();
 		} else if (result.equals("SKIPPED")) {
-			workItem.notifySkipped();
+			taskWorkItem.notifySkipped();
 		} else if (result.equals("FALSE")) {
-			workItem.notifyEnabled();
+			if (taskWorkItem.getState().equals(ActivityState.ENABLED)) {
+				taskWorkItem.notifyEnabled(ConditionType.POS_CONDITION);
+			} else if (taskWorkItem.getState().equals(ActivityState.PRE_ACTIVITY)) {
+				taskWorkItem.notifyPreActivity(ConditionType.POS_CONDITION);
+			} 
 		}
-		// else if (workItem.getState().equals(WorkItemState.ENABLED)){
-		// workItem.notifyEnabled();
-		// } else if (workItem.getState().equals(WorkItemState.PRE_TASK)) {
-		// workItem.notifyPreTask();
-		// }
 	}
 
 	/*********************************
@@ -148,16 +139,13 @@ public class WorkletAdapter {
 	 *********************************/
 	/**
 	 * Evaluate a TaskWorkitem PreConditon.
-	 * 
-	 * @param taskWorkItem
-	 *            the taskWorkItem to evaluate.
+	 * @param taskWorkItem the taskWorkItem to evaluate.
 	 */
 	public void requestWorkItemPreConditionEvaluation(TaskWorkItem taskWorkItem) {
 		try {
 			evaluatePreCondition(taskWorkItem);
 		} catch (BlendedWorkflowException bwe) {
-			log.error("notifyWorkItemContraintViolation: exception"
-					+ bwe.getMessage());
+			log.error("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
 		}
 	}
 
@@ -168,15 +156,12 @@ public class WorkletAdapter {
 	 *            the workItem to evaluate.
 	 */
 	public void requestWorkItemPostConditionEvaluation(TaskWorkItem taskWorkItem) {
-		log.debug("requestWorkItemPostConditionEvaluation"
-				+ taskWorkItem.getID());
+		log.debug("requestWorkItemPostConditionEvaluation" + taskWorkItem.getID());
 		try {
 			process(taskWorkItem);
 		} catch (BlendedWorkflowException bwe) {
-			log.error("notifyWorkItemContraintViolation: exception"
-					+ bwe.getMessage());
+			log.error("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
 		}
-
 	}
 
 	/*********************************
@@ -640,16 +625,7 @@ public class WorkletAdapter {
 					BlendedWorkflowError.WORKLET_ADAPTER_EVALUATEPRECONDITION);
 		}
 
-		// FIXME: Parse result
-		if (parseConclusion(conclusion).equals("TRUE")) {
-			taskWorkItem.notifyDataChanged();
-		} else if (parseConclusion(conclusion).equals("FALSE")) {
-			taskWorkItem.notifyPreFalse();
-		} else if (parseConclusion(conclusion).equals("SKIPPED")) {
-			taskWorkItem.notifyPreTask();
-		} else {
-			log.error("FAIL");
-		}
+		processPreConditionEvaluationResult(parseConclusion(conclusion), taskWorkItem);
 	}
 
 	// /**

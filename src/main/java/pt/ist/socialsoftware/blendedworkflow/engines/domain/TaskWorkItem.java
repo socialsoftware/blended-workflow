@@ -6,9 +6,11 @@ import java.util.Calendar;
 
 import org.apache.log4j.Logger;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task.TaskState;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 
 public class TaskWorkItem extends TaskWorkItem_Base {
+	
+	public enum ActivityState {NEW, PRE_ACTIVITY, ENABLED, SKIPPED, COMPLETED};
 	
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private final Logger log = Logger.getLogger("TaskWorkItem");
@@ -18,86 +20,44 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		setBwInstance(bwInstance);
 		setTask(task);
 		setID(task.getName() + "." + bwInstance.getNewWorkItemID()); //Id: TaskName.#
-		setState(WorkItemState.NEW);
+		setState(ActivityState.NEW);
 		
 		setRole(task.getRole());
 		setUser(task.getUser());
 		
-		task.getPreConstraint().assignAttributeInstances(this, "pre");
-		task.getPostConstraint().assignAttributeInstances(this, "post");
+		task.getPreConstraint().assignAttributeInstances(this, ConditionType.PRE_CONDITION);
 		createInputWorkItemArguments();
+		
+		task.getPostConstraint().assignAttributeInstances(this, ConditionType.POS_CONDITION);
 		createOutputWorkItemArguments();
 	}
 	
 	/******************************
-	 * NEW STATE MACHINE          *
+	 * State Machine
 	 ******************************/
-	public void notifyPreActivity(){
+	public void notifyPreActivity(ConditionType conditionType) {
 		log.info("ActivityWorkitem " + getID() + " is now in the PREACTIVITY state");
-		setState(WorkItemState.PRE_ACTIVITY);
-		if (getState().equals(WorkItemState.NEW)) {
+		setState(ActivityState.PRE_ACTIVITY);
+		if (conditionType.equals(ConditionType.PRE_CONDITION)) {
 			BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPostConditionEvaluation(this);
-		} else if (getState().equals(WorkItemState.PRE_ACTIVITY)) {
+		} else if (conditionType.equals(ConditionType.POS_CONDITION)) {
+			BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
+		}		
+	}
+	
+	public void notifyEnabled(ConditionType conditionType) {
+		log.info("ActivityWorkitem " + getID() + " is now in ENABLED state");
+		setState(ActivityState.ENABLED);
+		if (conditionType.equals(ConditionType.PRE_CONDITION)) {
+			BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPostConditionEvaluation(this);
+		} else if (conditionType.equals(ConditionType.POS_CONDITION)) {
 			BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
 		}
 	}
 	
-	public void notifyEnabled1() {
-		log.info("ActivityWorkitem " + getID() + " is now in ENABLED state");
-		setState(WorkItemState.ENABLED);
-		if (getState().equals(WorkItemState.NEW)) {
-			BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPostConditionEvaluation(this);
-		} else if (getState().equals(WorkItemState.PRE_ACTIVITY)) {
-			BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
-		}
-	}
-
-	/******************************
-	 * State Change Notifications *
-	 ******************************/
-	@Override
-	public void notifyPreTask() {
-		log.info("TaskWorkitem " + getID() + " is now in PreTask state");
-		getTask().setState(TaskState.ENABLED);
-		setState(WorkItemState.PRE_TASK);
-		BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
-	}
-
-	@Override
-	public void notifyPreFalse() {
-		log.error("TaskWorkitem " + getID() + " is now in PreFalse state");
-		setState(WorkItemState.PRE_FALSE);
-	}
-
-	@Override
-	public void notifyDataChanged() {
-		log.info("TaskWorkitem " + getID() + " is re-evaluating due to changes in data");
-//		setState(WorkItemState.CONSTRAINT_VIOLATION);
-		updateInputWorkItemArguments();
-		updateOutputWorkItemArguments();
-		log.debug(this.getClass().getSimpleName());
-		BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPostConditionEvaluation(this);
-	}
-
-	@Override
-	public void notifyEnabled() {
-		log.info("TaskWorkitem " + getID() + " is now in ENABLED state");
-		getTask().setState(TaskState.ENABLED);
-		setState(WorkItemState.ENABLED);
-		BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
-	}
-
-	@Override
-	public void notifyPending() {}
-
-	@Override
 	public void notifyCompleted() {
-		log.info("TaskWorkitem " + getID() + " is now in COMPLETED state");
-
-		if (getState() == WorkItemState.CHECKED_IN || getState() == WorkItemState.CONSTRAINT_VIOLATION) {
-			setState(WorkItemState.COMPLETED);
-			getTask().setState(TaskState.ACHIEVED);
-		}	
+		log.info("ActivityWorkitem " + getID() + " is now in COMPLETED state");
+		setState(ActivityState.COMPLETED);
 		setAttributeValues();
 
 		String date = dateFormat.format(Calendar.getInstance().getTime());
@@ -105,28 +65,31 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 	}
 
-	@Override
 	public void notifySkipped() {
-		log.info("TaskWorkitem " + getID() + " is now in SKIPPED state");
-		if (getState() == WorkItemState.CHECKED_IN || getState() == WorkItemState.CONSTRAINT_VIOLATION) {
-			setState(WorkItemState.SKIPPED);
-			getTask().setState(TaskState.SKIPPED);
-		}	
+		log.info("ActivityWorkitem " + getID() + " is now in SKIPPED state");
+		setState(ActivityState.SKIPPED);
 		setAttributeSkipped();
 		
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Skipped", "[ACTIVITY] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
 	}
+	
+	/**********************************
+	 * Events
+	 **********************************/
+	@Override
+	public void notifyDataChanged() {
+		if (getState().equals(ActivityState.ENABLED) || getState().equals(ActivityState.PRE_ACTIVITY)) {
+			log.info("ActivityWorkitem " + getID() + " is re-evaluating due to changes in data");
+			updateInputWorkItemArguments();
+			updateOutputWorkItemArguments();
+			BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPreConditionEvaluation(this);
+		}
+	}
 
 	@Override
-	public void notifyReActivated() {}
-	
-	@Override
 	public void notifyCheckedIn() {
-		if (getState() == WorkItemState.ENABLED || getState() == WorkItemState.PRE_TASK) {
-			setState(WorkItemState.CHECKED_IN);
-		}
-		BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPostConditionEvaluation(this);
+		BlendedWorkflow.getInstance().getWorkletAdapter().requestWorkItemPreConditionEvaluation(this);
 	}
 }

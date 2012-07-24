@@ -9,8 +9,8 @@ import pt.ist.fenixframework.pstm.Transaction;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem.WorkItemState;
 
 public class RedoGoalWorkItemService implements Callable<String> {
 
@@ -29,7 +29,7 @@ public class RedoGoalWorkItemService implements Callable<String> {
 		log.info("Start");
 		Transaction.begin();
 		
-		if (goalWorkItem.getState().equals(WorkItemState.SKIPPED) || goalWorkItem.getState().equals(WorkItemState.COMPLETED)) {
+		if (goalWorkItem.getState().equals(GoalState.SKIPPED) || goalWorkItem.getState().equals(GoalState.ACHIEVED)) {
 			User user = BlendedWorkflow.getInstance().getOrganizationalModel().getUser(this.userID);
 			goalWorkItem.setUser(user);
 			goalWorkItem.notifyReActivated();

@@ -146,7 +146,7 @@ public class DoctorAppointmentForm extends VerticalLayout {
 	}
 	
 	private void processData(final long workItemOID) {
-		String medicalReport = medicalReportLabel.getValue().toString();
+		String medicalReport = descriptionTF.getValue().toString();
 
 		// Set WorkItemArguments
 		Transaction.begin();

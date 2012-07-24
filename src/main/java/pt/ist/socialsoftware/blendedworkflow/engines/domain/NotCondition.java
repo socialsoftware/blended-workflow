@@ -28,7 +28,7 @@ public class NotCondition extends NotCondition_Base {
 	}
 	
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, String conditionType) {
+	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
 		getCondition().assignAttributeInstances(taskWorkItem, conditionType);
 	}
 	
@@ -80,6 +80,10 @@ public class NotCondition extends NotCondition_Base {
 	/******************************
 	 * Evaluate
 	 ******************************/
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		return getCondition().evaluate(goalWorkItem, conditionType).NOT();
+	}
+	
 	@Override
 	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return getCondition().evaluateWithWorkItem(goalWorkItem, conditionType).NOT();
