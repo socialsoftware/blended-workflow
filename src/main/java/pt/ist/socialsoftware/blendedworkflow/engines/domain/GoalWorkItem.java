@@ -14,9 +14,9 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class GoalWorkItem extends GoalWorkItem_Base {
-	
+
 	public enum GoalState {NEW, PRE_GOAL, ACTIVATED, ENABLED, SKIPPED, ACHIEVED, RE_ACTIVATED};
-	
+
 	private Logger log = Logger.getLogger("GoalWorkItem");
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -24,12 +24,12 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		log.info("New GoalWorkitem for goal " + goal.getName());
 		setBwInstance(bwInstance);
 		setAchieveGoal(goal);
-		
+
 		setRole(goal.getRole());
 		setUser(goal.getUser());
 		setID(goal.getName() + "." + bwInstance.getNewWorkItemID()); // Id: GoalName.#
 		setEntityInstanceContext(entityInstanceContext);
-		
+
 		//Activate Conditions
 		for (Condition activateCondition : activateConditions) {
 			addActivateConditions(activateCondition);
@@ -37,12 +37,12 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		}
 		createInputWorkItemArguments();
 		updateInputWorkItemArguments();
-		
+
 		//Success Condition
 		setSucessCondition(goal.getSucessCondition());
 		getSucessCondition().assignAttributeInstances(this, ConditionType.SUCESS_CONDITION);
 		createOutputWorkItemArguments();
-		
+
 		//Maintain Conditions
 		for (MaintainGoal maintainGoal : maintainGoals){
 			addMaintainConditions(maintainGoal.getMaintainCondition());	
@@ -50,7 +50,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
 		setState(GoalState.NEW);
 	}
-	
+
 	/******************************
 	 * State Machine
 	 ******************************/
@@ -59,28 +59,28 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		setState(GoalState.PRE_GOAL);
 		BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
 	}
-	
+
 	public void notifyActivated() {
 		log.info("GoalWorkitem " + getID() + " is now in ACTIVATED state");
 		setState(GoalState.ACTIVATED);
 		evaluate();
 	}
-	
+
 	public void notifyEnabled() {
 		log.info("GoalWorkitem " + getID() + " is now in Enabled state");
 		setState(GoalState.ENABLED);
 		evaluate();
 	}
-	
+
 	public void notifyCompleted() {
 		log.info("GoalWorkitem " + getID() + " is now in Completed state");
 		setState(GoalState.ACHIEVED);
 		setAttributeValues();
-		
+
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Completed", "[GOAL] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
-		
+
 		getBwInstance().getGoalModelInstance().checkActivatedWorkItems();
 	}
 
@@ -88,25 +88,25 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		log.info("GoalWorkitem " + getID() + " is now in Skipped state");
 		setState(GoalState.SKIPPED);
 		setAttributeSkipped();
-		
+
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Skipped", "[GOAL] " + getID(), getUser().getID()));
-		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
+		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 
 		getBwInstance().getGoalModelInstance().checkActivatedWorkItems();
 	}
-	
-	public void notifyReActivated() {
+
+	public void notifyReActivated(GoalWorkItem cause) {
 		this.updateInputWorkItemArguments();
 		this.updateOutputWorkItemArguments();
 		this.setState(GoalState.RE_ACTIVATED);
-		
+
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "ReEnabled", "[GOAL] " + this.getID(), getUser().getID()));
-		
-		BlendedWorkflow.getInstance().getWorkListManager().notifyReEnabledWorkItem(this);
+
+		BlendedWorkflow.getInstance().getWorkListManager().notifyReEnabledWorkItem(this, cause);
 	}
-	
+
 	/**********************************
 	 * Events
 	 **********************************/
@@ -121,14 +121,14 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 			evaluate();	
 		}
 	}
-	
+
 	@Override
 	public void notifyCheckedIn() {
 		evaluate();
 	}
-	
+
 	/***********************************
-	 * GOALWORKITEM METHODS
+	 * Evaluation Methods
 	 ***********************************/
 	public void evaluate() {
 		if (getState().equals(GoalState.NEW) || getState().equals(GoalState.PRE_GOAL)) {
@@ -162,7 +162,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 			//TODO: ???
 		}
 	}
-	
+
 	/**
 	 * FIXME: Checks if all subGoals of a Goal are completed.
 	 * @return TripleStateBool
@@ -170,10 +170,10 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	public TripleStateBool evaluateSubGoals() {
 		int countSubGoals = 0;
 		int countSubGoalsWorkItems = 0;
-		
+
 		for (AchieveGoal subGoal : getAchieveGoal().getSubGoals()) {
 			countSubGoalsWorkItems = 0;
-			
+
 			for (GoalWorkItem goalWorkItem : subGoal.getGoalWorkItems()) {
 				if (goalWorkItem.getState().equals(GoalState.ACHIEVED) ||goalWorkItem.getState().equals(GoalState.SKIPPED)) {
 					countSubGoalsWorkItems++;
@@ -183,7 +183,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 				countSubGoals++;
 			}
 		}
-		
+
 		if (countSubGoals != getAchieveGoal().getSubGoalsCount()) {
 			log.debug(getAchieveGoal().getSubGoalsCount() +"SG=" + TripleStateBool.FALSE);
 			return TripleStateBool.FALSE;
@@ -193,7 +193,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 			return TripleStateBool.TRUE;
 		}
 	}
-	
+
 	public TripleStateBool evaluateActivateConditions() {
 		TripleStateBool result = null;
 		TripleStateBool activateConditionJointResult = TripleStateBool.TRUE;
@@ -207,15 +207,15 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 				break;
 			} 
 		}
-		
+
 		log.debug("AC=" + activateConditionJointResult);
 		return activateConditionJointResult;
 	}
-	
+
 	public TripleStateBool evaluateSucessCondition() {
 		return getSucessCondition().evaluateWithWorkItem(this, ConditionType.SUCESS_CONDITION);
 	}
-	
+
 	public TripleStateBool evaluateMaintainConditions() {
 		TripleStateBool maintainConditionsResult = TripleStateBool.TRUE;
 		Boolean und = false;
@@ -232,4 +232,50 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		}
 		return maintainConditionsResult;
 	}
+
+	/***********************************
+	 * ReActivated Methods
+	 ***********************************/
+	//TODO: Test
+	public void checkAffectedGoals() {
+		AchieveGoal redoGoal = this.getAchieveGoal();
+		DataModelInstance dataModelInstance = getBwInstance().getDataModelInstance();
+		GoalModelInstance goalModelInstance = getBwInstance().getGoalModelInstance();
+		boolean workitemExists = false;
+
+		Set<AchieveGoal> affectedAchieveGoals = goalModelInstance.getAchieveGoalAssociatedAchieveGoals(redoGoal);
+
+		for (AchieveGoal affectedAG : affectedAchieveGoals) {
+			EntityInstance affectedAGEntityInstance = null; //dataModelInstance.getEntityInstance(getEntityInstanceContext(), affectedAG.getEntityContext());
+
+			if (affectedAGEntityInstance != null) {
+				for (GoalWorkItem affectedGW : affectedAG.getGoalWorkItems()) {
+					if (affectedGW.getEntityInstanceContext().equals(affectedAGEntityInstance)) {
+						if (affectedGW.getState().equals(GoalState.ACHIEVED) || affectedGW.getState().equals(GoalState.SKIPPED)) {
+							//TODO: Reactivate
+							affectedGW.notifyReActivated(this);
+							workitemExists = true;
+						} else {
+							//NOTE: Change state???
+							affectedGW.notifyReActivated(this);
+							workitemExists = true;
+						}
+					}
+				}
+
+				if (!workitemExists) {
+					//TODO: Activate Goal, which State???
+					List<Condition> activateConditions = affectedAG.getActivateConditions();
+					Set<MaintainGoal> maintainGoals = getBwInstance().getGoalModelInstance().getAchieveGoalAssociatedMaintainGoals(affectedAG);
+					new GoalWorkItem(getBwInstance(), affectedAG, affectedAGEntityInstance, activateConditions, maintainGoals);
+				}
+			}
+			else {
+				log.debug("Affected Goal Context cannot be found!");
+			}
+		}
+	}
+
+
+
 }

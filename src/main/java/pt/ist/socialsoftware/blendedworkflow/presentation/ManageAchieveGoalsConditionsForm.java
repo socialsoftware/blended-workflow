@@ -36,7 +36,7 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 
 	private static final Action DISABLE_CONDITION_ACTION = new Action("Disable Condition");
 	
-	public ManageAchieveGoalsConditionsForm(final ActivateGoalForm parent, final long bwInstanceOID, long goalOID, long entityInstanceOID) {
+	public ManageAchieveGoalsConditionsForm(final ActivateGoalForm parent, final long bwInstanceOID, long goalOID, long entityInstanceOID, final ArrayList<Long> relations) {
 		HorizontalLayout footer = new HorizontalLayout();
 		
 		_bwInstanceOID = bwInstanceOID;
@@ -96,7 +96,7 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Transaction.begin();
-				BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(bwInstanceOID, _goalOID, _entityInstanceOID, activateConditionsOID, maitainGoalsOID);
+				BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(bwInstanceOID, _goalOID, _entityInstanceOID, activateConditionsOID, maitainGoalsOID, relations);
 				Transaction.commit();
 				getApplication().getMainWindow().removeWindow(ManageAchieveGoalsConditionsForm.this.getWindow());
 			}

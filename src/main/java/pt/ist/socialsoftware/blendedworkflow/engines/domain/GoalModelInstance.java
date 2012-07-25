@@ -33,22 +33,21 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 	 */
 	public Set<MaintainGoal> getAchieveGoalAssociatedMaintainGoals(AchieveGoal achieveGoal){
 		Set<MaintainGoal> maintainGoals = new HashSet<MaintainGoal>();
-		Set<Attribute> achieveAttributes = new HashSet<Attribute>();
-		Set<Entity> achieveEntities = new HashSet<Entity>();
-		
-		//Get AchieveGoal Conditions Data
-		for (Condition ac : achieveGoal.getActivateConditions()) {
-			achieveAttributes.addAll(ac.getAttributes());
-			achieveEntities.addAll(ac.getEntities());
-		}
-		achieveAttributes.addAll(achieveGoal.getSucessCondition().getAttributes());
-		achieveEntities.addAll(achieveGoal.getSucessCondition().getEntities());
-		
+
 		for (MaintainGoal maintainGoal : getMaintainGoals()) {
-			Set<Attribute> maintainAttributes = new HashSet<Attribute>();
-			Set<Entity> maintainEntities = new HashSet<Entity>();
+			//Get AchieveGoal Conditions Data
+			Set<Attribute> achieveAttributes = new HashSet<Attribute>();
+			Set<Entity> achieveEntities = new HashSet<Entity>();
+			for (Condition ac : achieveGoal.getActivateConditions()) {
+				achieveAttributes.addAll(ac.getAttributes());
+				achieveEntities.addAll(ac.getEntities());
+			}
+			achieveAttributes.addAll(achieveGoal.getSucessCondition().getAttributes());
+			achieveEntities.addAll(achieveGoal.getSucessCondition().getEntities());
 			
 			//Get MaintainGoal Condition Data
+			Set<Attribute> maintainAttributes = new HashSet<Attribute>();
+			Set<Entity> maintainEntities = new HashSet<Entity>();
 			maintainAttributes.addAll(maintainGoal.getMaintainCondition().getAttributes());
 			maintainEntities.addAll(maintainGoal.getMaintainCondition().getEntities());
 			
@@ -61,5 +60,42 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 		}
 		
 		return maintainGoals;
+	}
+	
+	/**
+	 * Given an AchieveGoal, gets all related MaintainGoals.
+	 * @param achieveGoal An AchieveGoal.
+	 * @return a set containing all the related MaintainGoals.
+	 */
+	public Set<AchieveGoal> getAchieveGoalAssociatedAchieveGoals(AchieveGoal achieveGoal){
+		Set<AchieveGoal> achieveGoalsRESULT = new HashSet<AchieveGoal>();
+		
+		for (AchieveGoal ag : getAchieveGoals()) {
+			if (!achieveGoal.equals(ag)) {
+				//Given AchieveGoal Conditions Data
+				Set<Attribute> achieveAttributes = new HashSet<Attribute>();
+				Set<Entity> achieveEntities = new HashSet<Entity>();
+				achieveAttributes.addAll(achieveGoal.getSucessCondition().getAttributes());
+				achieveEntities.addAll(achieveGoal.getSucessCondition().getEntities());
+
+				//For AchieveGoal Conditions Data
+				Set<Attribute> agAttributes = new HashSet<Attribute>();
+				Set<Entity> agEntities = new HashSet<Entity>();
+				for (Condition ac : ag.getActivateConditions()) {
+					agAttributes.addAll(ac.getAttributes());
+					agEntities.addAll(ac.getEntities());
+				}
+				agAttributes.addAll(ag.getSucessCondition().getAttributes());
+				agEntities.addAll(ag.getSucessCondition().getEntities());
+				
+				achieveAttributes.retainAll(agAttributes);
+				achieveEntities.retainAll(agEntities);
+
+				if (!achieveAttributes.isEmpty() || !achieveEntities.isEmpty()) {
+					achieveGoalsRESULT.add(ag);
+				}
+			}
+		}
+		return achieveGoalsRESULT;
 	}
 }

@@ -220,9 +220,9 @@
 		<bw:Goal>
 			<bw:Name>Check-Out Patient</bw:Name>
 			<bw:description>Check-Out the Patient.</bw:description>
-			<bw:SucessCondition>compareAttributeTo(Episode.CheckIn,=.true)</bw:SucessCondition>
+			<bw:SucessCondition>compareAttributeTo(Episode.CheckOut,=.true)</bw:SucessCondition>
 			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
-			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckOut,=.true)</bw:ActivateCondition1>
+			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
 			<bw:ParentName>Process Medical Appointment</bw:ParentName>
 			<bw:Context>Episode</bw:Context>
 		</bw:Goal>

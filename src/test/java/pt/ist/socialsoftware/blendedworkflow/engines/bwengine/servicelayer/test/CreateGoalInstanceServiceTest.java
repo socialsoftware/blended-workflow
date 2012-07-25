@@ -66,7 +66,12 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		
 		setUpData(dataModelInstance, true);
 		
-		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, null).call();
+		Transaction.begin();
+		ArrayList<Long> relationsEntityInstancesOID = new ArrayList<Long>();
+		relationsEntityInstancesOID.add(dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID());
+		Transaction.commit();
+		
+		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, null, relationsEntityInstancesOID).call();
 		
 		Transaction.begin();
 		GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem("Obtain Patient Data.1");
@@ -106,7 +111,12 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		
 		setUpData(dataModelInstance, false);
 		
-		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, null).call();
+		Transaction.begin();
+		ArrayList<Long> relationsEntityInstancesOID = new ArrayList<Long>();
+		relationsEntityInstancesOID.add(dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID());
+		Transaction.commit();
+		
+		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, null, relationsEntityInstancesOID).call();
 		
 		Transaction.begin();
 		GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem("Obtain Patient Data.1");
@@ -146,7 +156,12 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		
 		setUpData(dataModelInstance, true);
 		
-		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, null).call();
+		Transaction.begin();
+		ArrayList<Long> relationsEntityInstancesOID = new ArrayList<Long>();
+		relationsEntityInstancesOID.add(dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID());
+		Transaction.commit();
+		
+		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, null, relationsEntityInstancesOID).call();
 		
 		Transaction.begin();
 		GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem("Obtain Patient Data.1");
@@ -186,7 +201,12 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		
 		setUpData(dataModelInstance, true);
 		
-		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, new ArrayList<Long>(), new ArrayList<Long>()).call();
+		Transaction.begin();
+		ArrayList<Long> relationsEntityInstancesOID = new ArrayList<Long>();
+		relationsEntityInstancesOID.add(dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID());
+		Transaction.commit();
+		
+		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, new ArrayList<Long>(), new ArrayList<Long>(), relationsEntityInstancesOID).call();
 		
 		Transaction.begin();
 		GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem("Obtain Patient Data.1");
@@ -214,11 +234,7 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 			}
 		}
 	}
-	
 
-	
-	
-	
 }
 
 

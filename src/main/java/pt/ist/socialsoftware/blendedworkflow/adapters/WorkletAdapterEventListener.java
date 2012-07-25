@@ -19,7 +19,7 @@ public class WorkletAdapterEventListener extends WorkletEventListener{
 	
 	private static Logger log = Logger.getLogger("WorkletAdapterEventListener");
 
-	public void WorkletEventListener() {}
+	public void WorkletEventListener() {} //FIXME: remove
 
 	@Override
 	public void itemLevelExceptionEvent(WorkItemRecord wir, Element caseData, RdrNode rdrNode, RuleType ruleType) {

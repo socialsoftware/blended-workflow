@@ -72,7 +72,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 		
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date,"Skipped", "[ACTIVITY] " + getID(), getUser().getID()));
-		BlendedWorkflow.getInstance().getWorkListManager().notifySkippedWorkItem(this);
+		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 	}
 	
 	/**********************************

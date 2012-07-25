@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsOneCondition extends ExistsOneCondition_Base {

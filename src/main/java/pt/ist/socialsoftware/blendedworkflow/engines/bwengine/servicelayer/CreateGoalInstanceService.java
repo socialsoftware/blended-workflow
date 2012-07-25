@@ -35,15 +35,17 @@ public class CreateGoalInstanceService implements Callable<String> {
 	private EntityInstance entityContext;
 	private ArrayList<Long> activateConditionsOID;
 	private ArrayList<Long> maintainGoalsOID;
+	private ArrayList<Long> relationsEntityInstancesOID;
 	private List<Condition> activateConditions;
 	private Set<MaintainGoal> maintainGoals; 
 
-	public CreateGoalInstanceService (long bwInstanceOID, long goalOID, Long entityContextOID, ArrayList<Long> activateConditionsOID, ArrayList<Long> maintainGoalsOID) {
+	public CreateGoalInstanceService (long bwInstanceOID, long goalOID, Long entityContextOID, ArrayList<Long> activateConditionsOID, ArrayList<Long> maintainGoalsOID, ArrayList<Long> relationsEntityInstancesOID) {
 		this.bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
 		this.goal = AbstractDomainObject.fromOID(goalOID);
 		this.entityContextOID = entityContextOID;
 		this.activateConditionsOID = activateConditionsOID;
 		this.maintainGoalsOID = maintainGoalsOID;
+		this.relationsEntityInstancesOID = relationsEntityInstancesOID;
 	}
 
 	@Override
@@ -82,7 +84,8 @@ public class CreateGoalInstanceService implements Callable<String> {
 		}
 		
 		//FIXME: Create RelationsInstances
-		defineSimpleRelations();
+//		defineSimpleRelations();
+		createRelationInstances();
 		generateGoalWorkItems(this.bwInstance, this.goal, this.entityContext, this.activateConditions, this.maintainGoals);
 
 		//TODO: Ask User SubGoals Context.
@@ -157,11 +160,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 			} else {
 				log.info("SubGoal context diferent than its parentGoal.");
 				
-				//TODO: Search for existing RelationInstances
-//				for (RelationInstance relationInstanceOne : parentEntityInstanceContext.getEntityInstanceOneRelationInstances()) {
-//				}
-//				for (RelationInstance relationInstanceTwo : parentEntityInstanceContext.getEntityInstanceOneRelationInstances()) {			
-//				}		
+				//Search for existing RelationInstances
 
 				//FIXME: Search for Relations
 				for (Relation relationAll : parentEntityContext.getRelations()) {
@@ -210,66 +209,35 @@ public class CreateGoalInstanceService implements Callable<String> {
 		return alreadyExists;
 	}
 	
-	//FIXME: Define RelationInstances for Relations with Cardinality different from * in both sides.
-	private void defineSimpleRelations() {	
-		for (Relation relationAll : entityContext.getEntity().getRelations()) {
-			Entity relationOne = relationAll.getEntityOne();
-			Entity relationTwo = relationAll.getEntityTwo();
-
-			if (entityContext.getEntity().equals(relationOne)) {
-//				if (!relationAll.getCardinalityTwo().equals(Cardinality.MANY) && !relationAll.getCardinalityTwo().equals(Cardinality.MANY)) {
-//					long entityTwoOID = relationAll.getEntityTwo().getEntityInstances().get(0).getOID();
-//					BlendedWorkflow.getInstance().getBwManager().addRelationInstance(this.bwInstance.getOID(), this.entityContext.getOID(), entityTwoOID);
-//				}
-			}
-
-			if (entityContext.getEntity().equals(relationTwo)) {
-				if (!relationAll.getCardinalityOne().equals(Cardinality.MANY) && !relationAll.getCardinalityOne().equals(Cardinality.MANY)) {
-					long entityOneOID = relationAll.getEntityOne().getEntityInstances().get(0).getOID();
-//					BlendedWorkflow.getInstance().getBwManager().addRelationInstance(this.bwInstance.getOID(), entityOneOID, this.entityContext.getOID());
-					addRelationInstance(this.bwInstance.getOID(), entityOneOID, this.entityContext.getOID());
-				}
-			}
+	private void createRelationInstances() {
+		DataModelInstance dataModelInstance = this.bwInstance.getDataModelInstance();
+		for (Long entityTwoOID : this.relationsEntityInstancesOID) {
+			EntityInstance entityTwo = AbstractDomainObject.fromOID(entityTwoOID);
+			dataModelInstance.createRelationInstance(this.bwInstance, this.entityContext, entityTwo);
 		}
 	}
 	
-	/**
-	 * TODO: Test/Refactor.
-	 * Create a RelationInstance.
-	 */
-	public void addRelationInstance(long bwInstanceOID, long e1OID, long e2OID) {
-		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
-		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-
-		EntityInstance e1 = AbstractDomainObject.fromOID(e1OID);
-		EntityInstance e2 = AbstractDomainObject.fromOID(e2OID);
-		Entity entity1 = e1.getEntity();
-		Entity entity2 = e2.getEntity();
-		boolean exists = false;
-		
-		//Check if relation instance already exists
-		for (Relation relation : dataModelInstance.getRelations()) {
-			for (RelationInstance relationInstance : relation.getRelationInstances()) {
-				EntityInstance one = relationInstance.getEntityInstanceOne();
-				EntityInstance two = relationInstance.getEntityInstanceTwo();
-				if (one.equals(e1) && two.equals(e2) || one.equals(e2) && two.equals(e1)) {
-					exists = true;
-					break;
-				}
-			}
-		}
-		
-		//Create only if no previous RelationInstance exists
-		if (!exists) {
-			for (Relation relation : dataModelInstance.getRelations()) {
-				Entity one = relation.getEntityOne();
-				Entity two = relation.getEntityTwo();
-				if ((one.equals(entity1) && two.equals(entity2)) ) {
-					new RelationInstance(relation, e1, e2, e1.getNewRelationInstanceID());
-				} else if (one.equals(entity2) && two.equals(entity1)) {
-					new RelationInstance(relation, e2, e1, e2.getNewRelationInstanceID());
-				}
-			}
-		}
-	}
+	//FIXME: Define RelationInstances for Relations with Cardinality different from * in both sides.
+//	private void defineSimpleRelations() {	
+//		for (Relation relationAll : entityContext.getEntity().getRelations()) {
+//			Entity relationOne = relationAll.getEntityOne();
+//			Entity relationTwo = relationAll.getEntityTwo();
+//
+//			if (entityContext.getEntity().equals(relationOne)) {
+////				if (!relationAll.getCardinalityTwo().equals(Cardinality.MANY) && !relationAll.getCardinalityTwo().equals(Cardinality.MANY)) {
+////					long entityTwoOID = relationAll.getEntityTwo().getEntityInstances().get(0).getOID();
+////					BlendedWorkflow.getInstance().getBwManager().addRelationInstance(this.bwInstance.getOID(), this.entityContext.getOID(), entityTwoOID);
+////				}
+//			}
+//
+//			if (entityContext.getEntity().equals(relationTwo)) {
+//				if (!relationAll.getCardinalityOne().equals(Cardinality.MANY) && !relationAll.getCardinalityOne().equals(Cardinality.MANY)) {
+//					long entityOneOID = relationAll.getEntityOne().getEntityInstances().get(0).getOID();
+////					BlendedWorkflow.getInstance().getBwManager().addRelationInstance(this.bwInstance.getOID(), entityOneOID, this.entityContext.getOID());
+//					log.debug("---------------------->" + relationAll.getName());
+//					addRelationInstance(this.bwInstance.getOID(), entityOneOID, this.entityContext.getOID());
+//				}
+//			}
+//		}
+//	}
 }

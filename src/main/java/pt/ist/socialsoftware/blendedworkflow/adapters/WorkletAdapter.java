@@ -117,7 +117,7 @@ public class WorkletAdapter {
 		} else {
 			log.error("It should not reach this point");
 		}
-		 requestWorkItemPostConditionEvaluation(taskWorkItem);
+		 requestWorkItemPostConditionEvaluation(taskWorkItem); //FIXME: call 2 times
 	}
 
 	private void processPostConditionEvaluationResult(String result, TaskWorkItem taskWorkItem) {

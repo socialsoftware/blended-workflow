@@ -32,7 +32,7 @@ public class RedoGoalWorkItemService implements Callable<String> {
 		if (goalWorkItem.getState().equals(GoalState.SKIPPED) || goalWorkItem.getState().equals(GoalState.ACHIEVED)) {
 			User user = BlendedWorkflow.getInstance().getOrganizationalModel().getUser(this.userID);
 			goalWorkItem.setUser(user);
-			goalWorkItem.notifyReActivated();
+			goalWorkItem.notifyReActivated(null);
 		}
 		
 		Transaction.commit();

@@ -16,4 +16,5 @@ public class RelationInstance extends RelationInstance_Base {
 			return getEntityInstanceTwo();
 		}
 	}
+
 }

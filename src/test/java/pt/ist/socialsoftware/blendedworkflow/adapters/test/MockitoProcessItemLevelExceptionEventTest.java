@@ -86,7 +86,7 @@ public class MockitoProcessItemLevelExceptionEventTest extends MockitoAbstractSe
 	public void receivePostConditionEvaluationFalsePreActState() throws Exception {
 		receivePostConditionEvaluation(conclusionFALSE, ActivityState.PRE_ACTIVITY, ActivityState.PRE_ACTIVITY);
 		// FIXME Pending or Enabled?
-		verify(workListManager).notifyPendingWorkItem(bookingWorkItem);
+		verify(workListManager).notifyEnabledWorkItem(bookingWorkItem);
 	}
 
 	@Test
@@ -104,13 +104,13 @@ public class MockitoProcessItemLevelExceptionEventTest extends MockitoAbstractSe
 	@Test
 	public void receivePostConditionEvaluationSkippedEnabledState() throws Exception {
 		receivePostConditionEvaluation(conclusionSKIPPED, ActivityState.ENABLED, ActivityState.SKIPPED);
-		verify(workListManager).notifySkippedWorkItem(bookingWorkItem);
+		verify(workListManager).notifyCompletedWorkItem(bookingWorkItem);
 	}
 
 	@Test
 	public void receivePostConditionEvaluationSkippedPreActState() throws Exception {
 		receivePostConditionEvaluation(conclusionSKIPPED, ActivityState.PRE_ACTIVITY, ActivityState.SKIPPED);
-		verify(workListManager).notifySkippedWorkItem(bookingWorkItem);
+		verify(workListManager).notifyCompletedWorkItem(bookingWorkItem);
 	}
 
 	private void setUpBookingActivity(ActivityState state) throws BlendedWorkflowException {

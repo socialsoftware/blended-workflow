@@ -635,8 +635,23 @@ public class BWPresentation extends Application {
 					Transaction.commit();
 					
 					Transaction.begin();
-					BlendedWorkflow.getInstance().getWorkListManager().skipWorkItem(workItemOID);
+					Boolean isPreGoal = false;
+					if (goalWorkItem.getState().equals(GoalState.PRE_GOAL)) {
+						isPreGoal = true;
+					}
 					Transaction.commit();
+					
+					if (isPreGoal) {
+						getMainWindow().showNotification("A GoalWorkItem in a Pre-Goal State cannot be Skipped.");
+					} else {
+						Transaction.begin();
+						BlendedWorkflow.getInstance().getWorkListManager().skipWorkItem(workItemOID);
+						Transaction.commit();
+					}
+					
+//					Transaction.begin();
+//					BlendedWorkflow.getInstance().getWorkListManager().skipWorkItem(workItemOID);
+//					Transaction.commit();
 					
 				} catch (java.lang.NullPointerException jle) {
 					getMainWindow().showNotification("Please select a workItem to skip");
