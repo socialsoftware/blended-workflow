@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.worklistmanager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -152,24 +153,9 @@ public class WorkListManager {
 	 * Services.
 	 ********************/
 	public void checkInWorkItem(long workItemOID){
-//		AbstractDomainObject workitem = AbstractDomainObject.fromOID(workItemOID);
-//		if (workitem instanceof GoalWorkItem) {
-//			GoalWorkItem goalWorkItem = (GoalWorkItem) workitem;
-//			if (goalWorkItem.getState().equals(GoalState.RE_ACTIVATED)) {
-//				goalWorkItem.
-//				// get Affected Workitem
-//				//if empty
-//				//check if it appears on the list of any other
-//				// yes remove, else
-//				// checkin
-//				//reavalute pending list
-//				//else put on the list
-//			}
-//		} else {
-			BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-			CheckInWorkItemService service = new CheckInWorkItemService(workItemOID);
-			bwExecutorService.runTask(service);
-//		}
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+		CheckInWorkItemService service = new CheckInWorkItemService(workItemOID);
+		bwExecutorService.runTask(service);
 	}
 	
 	public void skipWorkItem(long workItemOID){
@@ -184,9 +170,11 @@ public class WorkListManager {
 		bwExecutorService.runTask(service);
 	}
 	
-	public void createGoalInstance(long bwInstanceOID, long parentGoalID, Long context, ArrayList<Long> activateConditions, ArrayList<Long> maintainConditions, ArrayList<Long> relationsEntityInstances) {
+	public void createGoalInstance(long bwInstanceOID, long goalOID, ArrayList<Long> activateConditions, 
+			ArrayList<Long> maintainConditions, HashMap<Long, Long> entitiesOID) {
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		CreateGoalInstanceService service = new CreateGoalInstanceService(bwInstanceOID, parentGoalID, context, activateConditions, maintainConditions, relationsEntityInstances);
+		CreateGoalInstanceService service = new CreateGoalInstanceService(bwInstanceOID, goalOID, activateConditions, maintainConditions, entitiesOID);
+//		CreateGoalInstanceService service = new CreateGoalInstanceService(bwInstanceOID, parentGoalID, context, activateConditions, maintainConditions, relationsEntityInstances);
 		bwExecutorService.runTask(service);
 	}
 

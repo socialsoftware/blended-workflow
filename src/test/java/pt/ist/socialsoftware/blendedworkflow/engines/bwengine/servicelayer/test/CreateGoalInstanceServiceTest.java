@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jmock.integration.junit4.JMock;
 import org.junit.Before;
@@ -24,14 +25,15 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
+import pt.ist.socialsoftware.blendedworkflow.shared.PrintBWSpecification;
 
 @RunWith(JMock.class)
 public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 
 	private static final String BWINSTANCE_ID = "Medical Appointment.1";
 	
-	//AchieveGoal: Booking
 	private static final String GOAL_NAME_1 = "Obtain Patient Data";
+	private static final String GOAL_NAME_2 = "Write Medical Prescription";
 
 	@Before
 	public void setUp() throws Exception {
@@ -67,11 +69,20 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		setUpData(dataModelInstance, true);
 		
 		Transaction.begin();
-		ArrayList<Long> relationsEntityInstancesOID = new ArrayList<Long>();
-		relationsEntityInstancesOID.add(dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID());
+		HashMap<Long, Long> entitiesOID = new HashMap<Long, Long>();
+		Long episode = dataModelInstance.getEntity("Episode").getOID();
+		Long episodeOne = dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID();
+		Long patientData = dataModelInstance.getEntity("Patient Data").getOID();
+		Long patientDataNew = null;
+		entitiesOID.put(episode, episodeOne);
+		entitiesOID.put(patientData, patientDataNew);
+				
+//		ArrayList<Long> relationsOID = new ArrayList<Long>();
+//		Long patienHasPatientData = dataModelInstance.getRelation("Episode has Patient Data").getOID();
+//		relationsOID.add(patienHasPatientData);
 		Transaction.commit();
 		
-		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, null, relationsEntityInstancesOID).call();
+		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, entitiesOID).call();
 		
 		Transaction.begin();
 		GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem("Obtain Patient Data.1");
@@ -84,6 +95,8 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		try {
 			Transaction.begin();
 			
+			assertEquals(1,1);
+			PrintBWSpecification.workItems(BWSPECIFICATION_NAME);
 			assertEquals(GoalState.ACTIVATED, goalWorkItem1.getState());
 			assertEquals(GoalState.ENABLED, goalWorkItem2.getState());
 			assertEquals(GoalState.ACTIVATED, goalWorkItem3.getState());
@@ -112,11 +125,20 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		setUpData(dataModelInstance, false);
 		
 		Transaction.begin();
-		ArrayList<Long> relationsEntityInstancesOID = new ArrayList<Long>();
-		relationsEntityInstancesOID.add(dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID());
+		HashMap<Long, Long> entitiesOID = new HashMap<Long, Long>();
+		Long episode = dataModelInstance.getEntity("Episode").getOID();
+		Long episodeOne = dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID();
+		Long patientData = dataModelInstance.getEntity("Patient Data").getOID();
+		Long patientDataNew = null;
+		entitiesOID.put(episode, episodeOne);
+		entitiesOID.put(patientData, patientDataNew);
+				
+//		ArrayList<Long> relationsOID = new ArrayList<Long>();
+//		Long patienHasPatientData = dataModelInstance.getRelation("Episode has Patient Data").getOID();
+//		relationsOID.add(patienHasPatientData);
 		Transaction.commit();
 		
-		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, null, relationsEntityInstancesOID).call();
+		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, entitiesOID).call();
 		
 		Transaction.begin();
 		GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem("Obtain Patient Data.1");
@@ -129,6 +151,7 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		try {
 			Transaction.begin();
 			
+			assertEquals(1,1);
 			assertEquals(GoalState.PRE_GOAL, goalWorkItem1.getState());
 			assertEquals(GoalState.NEW, goalWorkItem2.getState());
 			assertEquals(GoalState.NEW, goalWorkItem3.getState());
@@ -156,12 +179,23 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		
 		setUpData(dataModelInstance, true);
 		
+		setUpData(dataModelInstance, false);
+		
 		Transaction.begin();
-		ArrayList<Long> relationsEntityInstancesOID = new ArrayList<Long>();
-		relationsEntityInstancesOID.add(dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID());
+		HashMap<Long, Long> entitiesOID = new HashMap<Long, Long>();
+		Long episode = dataModelInstance.getEntity("Episode").getOID();
+		Long episodeOne = dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID();
+		Long patientData = dataModelInstance.getEntity("Patient Data").getOID();
+		Long patientDataNew = null;
+		entitiesOID.put(episode, episodeOne);
+		entitiesOID.put(patientData, patientDataNew);
+				
+//		ArrayList<Long> relationsOID = new ArrayList<Long>();
+//		Long patienHasPatientData = dataModelInstance.getRelation("Episode has Patient Data").getOID();
+//		relationsOID.add(patienHasPatientData);
 		Transaction.commit();
 		
-		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, null, relationsEntityInstancesOID).call();
+		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, entitiesOID).call();
 		
 		Transaction.begin();
 		GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem("Obtain Patient Data.1");
@@ -202,11 +236,20 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 		setUpData(dataModelInstance, true);
 		
 		Transaction.begin();
-		ArrayList<Long> relationsEntityInstancesOID = new ArrayList<Long>();
-		relationsEntityInstancesOID.add(dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID());
+		HashMap<Long, Long> entitiesOID = new HashMap<Long, Long>();
+		Long episode = dataModelInstance.getEntity("Episode").getOID();
+		Long episodeOne = dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID();
+		Long patientData = dataModelInstance.getEntity("Patient Data").getOID();
+		Long patientDataNew = null;
+		entitiesOID.put(episode, episodeOne);
+		entitiesOID.put(patientData, patientDataNew);
+				
+//		ArrayList<Long> relationsOID = new ArrayList<Long>();
+//		Long patienHasPatientData = dataModelInstance.getRelation("Episode has Patient Data").getOID();
+//		relationsOID.add(patienHasPatientData);
 		Transaction.commit();
 		
-		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, new ArrayList<Long>(), new ArrayList<Long>(), relationsEntityInstancesOID).call();
+		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), new ArrayList<Long>(), new ArrayList<Long>(), entitiesOID).call();
 		
 		Transaction.begin();
 		GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem("Obtain Patient Data.1");
@@ -234,11 +277,63 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 			}
 		}
 	}
+	
+	@Test
+	public void createOneGoalInstanceSubGoalsWithDifferentContext() throws Exception {
+		Transaction.begin();
+		BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstance(BWINSTANCE_ID);
+		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+		AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_2);
+		Transaction.commit();
+		
+		setUpData(dataModelInstance, true);
+		
+		Transaction.begin();
+		HashMap<Long, Long> entitiesOID = new HashMap<Long, Long>();
+		Long episode = dataModelInstance.getEntity("Episode").getOID();
+		Long episodeOne = dataModelInstance.getEntity("Episode").getEntityInstances().get(0).getOID();
+		Long medicalPrescription = dataModelInstance.getEntity("Medical Prescription").getOID();
+		Long medicalPrescriptionNew = null;
+		Long prescriptionMedication = dataModelInstance.getEntity("Prescription Medication").getOID();
+		Long prescriptionMedicationNew = null;
+		entitiesOID.put(episode, episodeOne);
+		entitiesOID.put(medicalPrescription, medicalPrescriptionNew);
+		entitiesOID.put(prescriptionMedication, prescriptionMedicationNew);
+				
+//		ArrayList<Long> relationsOID = new ArrayList<Long>();
+//		Long episodeHasMedicalPrescription = dataModelInstance.getRelation("Episode has Medical Prescription").getOID();
+//		Long medicalPrescriptionHasPrecriptionMedication = dataModelInstance.getRelation("Medical Prescription has Prescription Medication").getOID();
+//		relationsOID.add(episodeHasMedicalPrescription);
+//		relationsOID.add(medicalPrescriptionHasPrecriptionMedication);
+		Transaction.commit();
+		
+		new CreateGoalInstanceService(bwInstance.getOID(), goal.getOID(), null, null, entitiesOID).call();
+		
+		Transaction.begin();
+		GoalWorkItem goalWorkItem1 = (GoalWorkItem) bwInstance.getWorkItem("Write Medical Prescription.1");
+		GoalWorkItem goalWorkItem2 = (GoalWorkItem) bwInstance.getWorkItem("Add Prescription Medication.2");
+		Transaction.commit();
+		
+		boolean committed = false;
+		try {
+			Transaction.begin();
+		
+			assertEquals(GoalState.ACTIVATED, goalWorkItem1.getState());
+			assertEquals(GoalState.ENABLED, goalWorkItem2.getState());
+		
+			Transaction.commit();
+			committed = true;
+		} catch (Exception e) {
+			fail(e.getMessage());
+		} finally {
+			if (!committed) {
+				Transaction.abort();
+			}
+		}
+	}
 
 }
-
-
-
 
 //	private static String BWINSTANCE_ID = "Medical Appointment.1";
 //	private static String GOAL_NAME_1 = "Add Patient";

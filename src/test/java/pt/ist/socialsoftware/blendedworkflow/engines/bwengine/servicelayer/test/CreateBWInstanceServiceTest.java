@@ -54,7 +54,38 @@ public class CreateBWInstanceServiceTest extends AbstractServiceTest {
 			assertEquals(0, bwInstance.getWorkItemsCount());
 
 			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
-		
+			
+			//FIXME: REMOVE Partial Test
+			/*
+			AchieveGoal goal0 = goalModelInstance.getGoal("Process Medical Appointment");
+			AchieveGoal goal1 = goalModelInstance.getGoal("Measure Blood Pressure");
+			AchieveGoal goal2 = goalModelInstance.getGoal("Write Medical Prescription");
+			
+			for (Relation r : goalModelInstance.getSubGoalsRelations(goal0)) {
+				 System.out.println(r.getName());
+			}
+
+			for (Relation r : goalModelInstance.getSubGoalsRelations(goal1)) {
+				 System.out.println(r.getName());
+			}
+			
+			for (Relation r : goalModelInstance.getSubGoalsRelations(goal2)) {
+				 System.out.println(r.getName());
+			}
+			
+			for (Entity e : goal0.getSubGoalsContext()) {
+				 System.out.println(e.getName());
+			}
+			
+			for (Entity e : goal1.getSubGoalsContext()) {
+				 System.out.println(e.getName());
+			}
+			
+			for (Entity e : goal2.getSubGoalsContext()) {
+				 System.out.println(e.getName());
+			}
+			*/
+			//FIXME: REMOVE Partial Test
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {

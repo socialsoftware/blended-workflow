@@ -147,6 +147,13 @@ public class DataModelInstance extends DataModelInstance_Base {
 		return result;
 	}
 	
+	public ArrayList<Relation> getRelations(Entity startEntity, Entity targetEntity) {
+		searchEntity(startEntity, targetEntity, null, new ArrayList<Entity>(), new ArrayList<Relation>());
+		ArrayList<Relation> result = getFoundRelationPath();
+		clearSearchEntityVariables();
+		return result;
+	}
+	
 	//FIXME: Merge with RelationInstance construtor?
 	public void createRelationInstance(BWInstance bwInstance, EntityInstance e1, EntityInstance e2) {
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();

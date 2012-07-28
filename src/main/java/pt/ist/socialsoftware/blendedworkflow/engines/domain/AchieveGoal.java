@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState;
@@ -142,4 +143,32 @@ public class AchieveGoal extends AchieveGoal_Base {
 			}
 		}
 	}
+	
+	/**
+	 * Check if exists a goalWorkitem for a given context
+	 * @param goal
+	 * @param entityInstanceContext
+	 * @return
+	 */
+	public Boolean goalWorkItemsExistForTheContext(EntityInstance entityInstanceContext) {
+		Boolean alreadyExists = false;
+		for (GoalWorkItem goalWorkItem : getGoalWorkItems()) {
+			if (goalWorkItem.getEntityInstanceContext().equals(entityInstanceContext)) {
+				alreadyExists = true;
+			}
+		}
+		return alreadyExists;
+	}
+
+	//TODO:
+	public Set<Entity> getSubGoalsContext() {
+		Set<Entity> result = new HashSet<Entity>();
+		result.add(getEntityContext());
+		for (AchieveGoal subGoal : getSubGoals()) {
+			result.add(subGoal.getEntityContext());
+		}
+		
+		return result;
+	}
+	
 }

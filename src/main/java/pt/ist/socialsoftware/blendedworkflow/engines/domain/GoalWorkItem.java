@@ -72,13 +72,13 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		evaluate();
 	}
 
-	public void notifyCompleted() {
+	public void notifyAchieved() {
 		log.info("GoalWorkitem " + getID() + " is now in Completed state");
 		setState(GoalState.ACHIEVED);
 		setAttributeValues();
 
 		String date = dateFormat.format(Calendar.getInstance().getTime());
-		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Completed", "[GOAL] " + getID(), getUser().getID()));
+		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Achieved", "[GOAL] " + getID(), getUser().getID()));
 		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 
 		getBwInstance().getGoalModelInstance().checkActivatedWorkItems();
@@ -124,7 +124,16 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
 	@Override
 	public void notifyCheckedIn() {
-		evaluate();
+		if (this.getState().equals(GoalState.RE_ACTIVATED)) {
+			if (checkAffectedGoals()) {
+				log.debug("GoalWorkItem " + getID() + " cannot be checked-in because the new data have impact other Goals");
+			} else {
+				log.debug("GoalWorkItem " + getID() + " can be checked-in because the new data does not have impact other Goals");
+				evaluate();
+			}
+		} else {
+			evaluate();
+		}
 	}
 
 	/***********************************
@@ -133,6 +142,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	public void evaluate() {
 		if (getState().equals(GoalState.NEW) || getState().equals(GoalState.PRE_GOAL)) {
 			TripleStateBool result = evaluateActivateConditions();
+//			System.out.println(getID()+ "|AC=" + result);
 			if (result.equals(TripleStateBool.TRUE)) {
 				notifyActivated();
 			} else if (result.equals(TripleStateBool.SKIPPED) || result.equals(TripleStateBool.FALSE)) {
@@ -145,10 +155,10 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 			} else {
 				log.info("GoalWorkItem " + getID() + " subgoals are not completed yet!");
 			} 		
-		} else if (getState().equals(GoalState.ENABLED)) {
+		} else if (getState().equals(GoalState.ENABLED) || getState().equals(GoalState.RE_ACTIVATED)) {
 			TripleStateBool result = evaluateSucessCondition().AND(evaluateMaintainConditions());
 			if (result.equals(TripleStateBool.TRUE)) {
-				notifyCompleted();
+				notifyAchieved();
 			} else if (result.equals(TripleStateBool.FALSE)) {
 				BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
 			} else if (result.equals(TripleStateBool.SKIPPED)) {
@@ -158,13 +168,10 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 			log.info("GoalWorkItem " + getID() + " already in the ACHIEVED state!");
 		} else if (getState().equals(GoalState.SKIPPED)) {
 			log.info("GoalWorkItem " + getID() + " already in the SKIPPED state!");
-		} else if (getState().equals(GoalState.RE_ACTIVATED)) {
-			//TODO: ???
-		}
+		} 
 	}
 
 	/**
-	 * FIXME: Checks if all subGoals of a Goal are completed.
 	 * @return TripleStateBool
 	 */
 	public TripleStateBool evaluateSubGoals() {
@@ -234,48 +241,80 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	}
 
 	/***********************************
-	 * ReActivated Methods
-	 ***********************************/
-	//TODO: Test
-	public void checkAffectedGoals() {
+	 * Redo Methods
+	 ***********************************/			
+	public boolean checkAffectedGoals() {
 		AchieveGoal redoGoal = this.getAchieveGoal();
 		DataModelInstance dataModelInstance = getBwInstance().getDataModelInstance();
 		GoalModelInstance goalModelInstance = getBwInstance().getGoalModelInstance();
 		boolean workitemExists = false;
+		boolean affectedMandatory = false;
 
 		Set<AchieveGoal> affectedAchieveGoals = goalModelInstance.getAchieveGoalAssociatedAchieveGoals(redoGoal);
 
+		//Search All Affected Goals:
 		for (AchieveGoal affectedAG : affectedAchieveGoals) {
-			EntityInstance affectedAGEntityInstance = null; //dataModelInstance.getEntityInstance(getEntityInstanceContext(), affectedAG.getEntityContext());
+			for (EntityInstance entityInstance : affectedAG.getEntityContext().getEntityInstances()) {
+				EntityInstance affectedAGEntityInstance = dataModelInstance.getEntityInstance(getEntityInstanceContext(), entityInstance);
 
-			if (affectedAGEntityInstance != null) {
-				for (GoalWorkItem affectedGW : affectedAG.getGoalWorkItems()) {
-					if (affectedGW.getEntityInstanceContext().equals(affectedAGEntityInstance)) {
-						if (affectedGW.getState().equals(GoalState.ACHIEVED) || affectedGW.getState().equals(GoalState.SKIPPED)) {
-							//TODO: Reactivate
-							affectedGW.notifyReActivated(this);
-							workitemExists = true;
-						} else {
-							//NOTE: Change state???
-							affectedGW.notifyReActivated(this);
+				//Context can be reached
+				if (affectedAGEntityInstance != null) {
+					for (GoalWorkItem affectedGW : affectedAG.getGoalWorkItems()) {
+						if (affectedGW.getEntityInstanceContext().equals(affectedAGEntityInstance)) {
+							//notify?
+							log.debug("GoalWorkItem for EntityInstance: " + affectedAGEntityInstance.getID() + " already exists: " + affectedGW.getID());
 							workitemExists = true;
 						}
 					}
-				}
 
-				if (!workitemExists) {
-					//TODO: Activate Goal, which State???
-					List<Condition> activateConditions = affectedAG.getActivateConditions();
-					Set<MaintainGoal> maintainGoals = getBwInstance().getGoalModelInstance().getAchieveGoalAssociatedMaintainGoals(affectedAG);
-					new GoalWorkItem(getBwInstance(), affectedAG, affectedAGEntityInstance, activateConditions, maintainGoals);
+					//If a GoalWorkItem does not exists
+					if (!workitemExists) {
+						log.debug("Goal does not have GoalWorkItems for EntityInstance: " + affectedAGEntityInstance.getID());
+						//Create GoalWorkItem
+						List<Condition> activateConditions = affectedAG.getActivateConditions();
+						Set<MaintainGoal> maintainGoals = getBwInstance().getGoalModelInstance().getAchieveGoalAssociatedMaintainGoals(affectedAG);
+						GoalWorkItem newGoalWorkItem = new GoalWorkItem(getBwInstance(), affectedAG, affectedAGEntityInstance, activateConditions, maintainGoals);
+						//evaluate SucessCondition with old data
+						TripleStateBool result = newGoalWorkItem.evaluateSucessCondition();
+						log.debug("New GoalWorkItem: " + newGoalWorkItem.getID() + " SucessCondition with old data = " + result);
+						if (result.equals(TripleStateBool.TRUE) || result.equals(TripleStateBool.SKIPPED)) {
+							//Put new data into the new workitem
+							for (WorkItemArgument redoOutputWA : this.getOutputWorkItemArguments()) {
+								for (WorkItemArgument newInputWA : newGoalWorkItem.getInputWorkItemArguments()) {
+									if (redoOutputWA.getAttributeInstance().equals(newInputWA.getAttributeInstance())) {
+										newInputWA.setValue(redoOutputWA.getValue());
+									}
+								}
+								for (WorkItemArgument newOutputWA : newGoalWorkItem.getOutputWorkItemArguments()) {
+									if (redoOutputWA.getAttributeInstance().equals(newOutputWA.getAttributeInstance())) {
+										newOutputWA.setValue(redoOutputWA.getValue());
+									}
+								}
+							}
+							//evaluate SucessCondition with new data
+							log.debug("New GoalWorkItem: " + newGoalWorkItem.getID() + " SucessCondition with new data = " + result);
+							result = newGoalWorkItem.evaluateSucessCondition();
+							if (result.equals(TripleStateBool.TRUE)) {
+								newGoalWorkItem.notifyAchieved();
+							} else if (result.equals(TripleStateBool.TRUE)) {
+								newGoalWorkItem.notifySkipped();
+							}
+							else {
+								log.debug("New GoalWorkItem: " + newGoalWorkItem.getID() + " Sucessed with the old data but failed with the new data! ");
+								BlendedWorkflow.getInstance().getWorkListManager().notifyReEnabledWorkItem(newGoalWorkItem, this);
+								affectedMandatory = true;
+							}
+						} else {
+							//notify?
+							log.debug("New GoalWorkItem: " + newGoalWorkItem.getID() + " SucessCondition with old data failed and will be removed!");
+							newGoalWorkItem.deleteDomainObject();
+						}
+					}
+				} else {
+					log.debug("Affected Goal Context cannot be found!");
 				}
-			}
-			else {
-				log.debug("Affected Goal Context cannot be found!");
 			}
 		}
+		return affectedMandatory;
 	}
-
-
-
 }

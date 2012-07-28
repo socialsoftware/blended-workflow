@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
@@ -25,7 +26,7 @@ import com.vaadin.event.Action;
 public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 
 	private Long _bwInstanceOID = null;
-	private Long _entityInstanceOID = null;
+//	private Long _entityInstanceOID = null;
 	private Long _goalOID = null;
 	private ArrayList<Long> activateConditionsOID = new ArrayList<Long>();
 	private ArrayList<Long> maitainGoalsOID = new ArrayList<Long>();
@@ -36,13 +37,13 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 
 	private static final Action DISABLE_CONDITION_ACTION = new Action("Disable Condition");
 	
-	public ManageAchieveGoalsConditionsForm(final ActivateGoalForm parent, final long bwInstanceOID, long goalOID, long entityInstanceOID, final ArrayList<Long> relations) {
+	public ManageAchieveGoalsConditionsForm(final ActivateGoalForm parent, final long bwInstanceOID, long goalOID, final HashMap<Long, Long> entitiesOID) {
 		HorizontalLayout footer = new HorizontalLayout();
 		
 		_bwInstanceOID = bwInstanceOID;
-		if (entityInstanceOID != 0) {
-			_entityInstanceOID = entityInstanceOID;
-		}
+//		if (entityInstanceOID != 0) {
+//			_entityInstanceOID = entityInstanceOID;
+//		}
 		_goalOID = goalOID;
 		
 		// Properties
@@ -96,7 +97,8 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Transaction.begin();
-				BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(bwInstanceOID, _goalOID, _entityInstanceOID, activateConditionsOID, maitainGoalsOID, relations);
+//				FIXME: new parameters from previous screen
+				BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(bwInstanceOID, _goalOID, activateConditionsOID, maitainGoalsOID, entitiesOID);
 				Transaction.commit();
 				getApplication().getMainWindow().removeWindow(ManageAchieveGoalsConditionsForm.this.getWindow());
 			}

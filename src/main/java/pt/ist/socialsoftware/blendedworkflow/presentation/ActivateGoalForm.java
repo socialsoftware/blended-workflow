@@ -1,11 +1,14 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 import pt.ist.fenixframework.pstm.AbstractDomainObject;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
@@ -17,6 +20,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window.Notification;
@@ -26,67 +30,118 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class ActivateGoalForm extends VerticalLayout {
+	
+	//Variables
+	private long _bwInstanceOID; 
+	private long _goalOID;
+	private HashMap<Long, Long> _entities = new HashMap<Long, Long>();
+	private static Logger log = Logger.getLogger("????????????");
 
-	private static final Long NEW_DATA = (long) -1;
-	private static final String NEW_DATA_Caption = "New Data...";
+	//Interface
+	private static final long NEW_DATA = -1;
+	private static final String NEW_DATA_CAPTION = "New Data...";
+	
 	private NativeSelect entityInstanceContext = new NativeSelect("Select the Goal Context:");
 	private CheckBox conditions = new CheckBox("Disable Conditions?");
-	
-	private VerticalLayout relationsVL = new VerticalLayout();
+	private VerticalLayout keyRelationsVL = new VerticalLayout();
+	private VerticalLayout subGoalContextVL = new VerticalLayout();
+	private HorizontalLayout submitPanel = new HorizontalLayout();
 
-	public ActivateGoalForm(final long bwInstanceOID, final long goalOID) {
-		HorizontalLayout submitPanel = new HorizontalLayout();
-
-		// Properties
+	public ActivateGoalForm(long bwInstanceOID, long goalOID) {
+		_bwInstanceOID = bwInstanceOID; 
+		_goalOID = goalOID;
+		
+		//Properties
 		setMargin(true);
 		setSpacing(false);
 		setHeight("150px");
 		setWidth("220px");
-
 		submitPanel.setSpacing(true);
-
+		entityInstanceContext.setNullSelectionAllowed(false);
+		entityInstanceContext.setImmediate(true);
+		entityInstanceContext.addItem(NEW_DATA);
+		entityInstanceContext.setItemCaption(NEW_DATA, NEW_DATA_CAPTION);
+		
+		entityInstanceContext.addListener(new Property.ValueChangeListener() {
+			public void valueChange(ValueChangeEvent event) {
+				if (entityInstanceContext.getValue().equals(NEW_DATA)) {
+					getKeyEntities();
+				} else {
+					keyRelationsVL.removeAllComponents();
+				}
+			}
+		});
+		
 		Button submit = new Button("Activate");
 		submit.addListener(new Button.ClickListener() {
-			//NOTE: Goals cannot be activated if some of its key entities are not created
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Long entityInstanceOID = (Long) entityInstanceContext.getValue();
-				ArrayList<Long> relationsEntityInstancesOID = new ArrayList<Long>();
 				Boolean activate = true;
 				
-				//Gather Relation EntityInstance
-				for (int i = 0; i < relationsVL.getComponentCount(); i++) {
-					NativeSelect selec = (NativeSelect) relationsVL.getComponent(i);
+				//Get Goal Context
+				Long entityInstanceOID = (Long) entityInstanceContext.getValue();
+				Transaction.begin();
+				EntityInstance entityInstance = AbstractDomainObject.fromOID(entityInstanceOID);
+				Long entityOID = entityInstance.getEntity().getOid();
+				if (entityInstanceOID == -1) {
+					_entities.put(entityOID, null);
+				} else {
+					_entities.put(entityOID, entityInstanceOID);
+				}
+				Transaction.commit();
+					
+				//Get Keys
+				for (int i = 0; i < keyRelationsVL.getComponentCount(); i++) {
+					NativeSelect selec = (NativeSelect) keyRelationsVL.getComponent(i);
 					if (selec.getValue() == null) {
 						activate = false;
 					}
-					long e2OID = (Long) selec.getValue();
-					relationsEntityInstancesOID.add(e2OID);
+					long keyEntityInstanceOID = (Long) selec.getValue();
+					
+					Transaction.begin();
+					EntityInstance keyEntityInstance = AbstractDomainObject.fromOID(keyEntityInstanceOID);
+					Long keyEntityOID = keyEntityInstance.getEntity().getOid();
+					_entities.put(keyEntityOID, keyEntityInstanceOID);
+					Transaction.commit();
+				}
+				
+				//Get SubGoals Context
+				for (int i = 0; i < subGoalContextVL.getComponentCount(); i++) {
+					NativeSelect selec = (NativeSelect) subGoalContextVL.getComponent(i);
+					long subEntityInstanceOID = (Long) selec.getValue();
+					
+					Transaction.begin();
+					EntityInstance subEntityInstance = AbstractDomainObject.fromOID(subEntityInstanceOID);
+					Long subEntityOID = subEntityInstance.getEntity().getOid();
+					
+					if (subEntityInstanceOID == -1) {
+						_entities.put(entityOID, null);
+					} else {
+						_entities.put(entityOID, entityInstanceOID);
+					}
+					
+					_entities.put(subEntityOID, subEntityInstanceOID);
+					Transaction.commit();
+				}
+				
+				for (Map.Entry<Long, Long> entry : _entities.entrySet()) {
+					log.debug("E:" + entry.getKey() + " EI:" + entry.getValue());
 				}
 
 				//Show Disable Form depending on its checkbox value
-				if (conditions.getValue().equals(true)) {
-					if (entityInstanceOID.equals(NEW_DATA)) {
-						entityInstanceOID = (long) 0;
-					}
-					if (activate) {
-						showDisableConditionsWindow(bwInstanceOID, goalOID, entityInstanceOID, relationsEntityInstancesOID);
+				if (activate) {
+					if (conditions.getValue().equals(true)) {
+						showDisableConditionsWindow(_bwInstanceOID, _goalOID, _entities);
 					} else {
-						getApplication().getMainWindow().showNotification("The Goal cannot be Activated due to missing key data!", Notification.TYPE_ERROR_MESSAGE); //"[GOAL] " + 
-					}
-				} else {
-					if (entityInstanceOID.equals(NEW_DATA)) {
-						entityInstanceOID = null;
-					}
-					if (activate) {
 						Transaction.begin();
-						BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(bwInstanceOID, goalOID, entityInstanceOID, null, null, relationsEntityInstancesOID);
+						BlendedWorkflow.getInstance().getWorkListManager().createGoalInstance(_bwInstanceOID, _goalOID, null, null, _entities);
 						Transaction.commit();
-					} else {
-						getApplication().getMainWindow().showNotification("The Goal cannot be Activated due to missing key data!", Notification.TYPE_ERROR_MESSAGE); //"[GOAL] " + 
 					}
+					getApplication().getMainWindow().removeWindow(ActivateGoalForm.this.getWindow());
+				} else {
+					getApplication().getMainWindow().showNotification("The Goal cannot be Activated due to missing key data!", Notification.TYPE_ERROR_MESSAGE); //"[GOAL] " + 
 				}
-				getApplication().getMainWindow().removeWindow(ActivateGoalForm.this.getWindow());
+
 			} 
 		});
 
@@ -101,83 +156,27 @@ public class ActivateGoalForm extends VerticalLayout {
 		// Layout
 		addComponent(entityInstanceContext);
 		addComponent(conditions);
-		addComponent(relationsVL);
-		
+		addComponent(keyRelationsVL);
+		addComponent(subGoalContextVL);
 		submitPanel.addComponent(submit);
 		submitPanel.addComponent(cancel);
 		addComponent(submitPanel);
 		setComponentAlignment(submitPanel, Alignment.BOTTOM_CENTER);
 
 		// Populate
-		updateEntityInstancesInfo(bwInstanceOID, goalOID);
-		
-		entityInstanceContext.setNullSelectionAllowed(false);
-		entityInstanceContext.setImmediate(true);
-		entityInstanceContext.addItem(NEW_DATA);
-		entityInstanceContext.setItemCaption(NEW_DATA, NEW_DATA_Caption);
-		entityInstanceContext.addListener(new Property.ValueChangeListener() {
-			public void valueChange(ValueChangeEvent event) {
-				if (entityInstanceContext.getValue().equals(NEW_DATA)) {
-					getRelations(bwInstanceOID, goalOID);
-				} else {
-					relationsVL.removeAllComponents();
-				}
-			}
-		});
-		
-		//TODO:
-//		final Label test = new Label("TEST2");
-//		conditions.addListener(new Property.ValueChangeListener() {
-//			public void valueChange(ValueChangeEvent event) {
-//				if ((Boolean) conditions.getValue()) {
-//					addComponent(test);
-//					setHeight("250px");
-//				} else {
-//					removeComponent(test);
-//					setHeight("150px");
-//				}
-//			}
-//		});
+		getEntityInstances();
+		getSubGoalsEntities();
 	}
 	
-	private void getRelations(long bwInstanceOID, long goalOID) {
+	/******************************
+	 * Support Methods
+	 ******************************/
+	private void getEntityInstances() {
 		Transaction.begin();
-		AchieveGoal goal = AbstractDomainObject.fromOID(goalOID);
-		Entity goalContext = goal.getEntityContext();
-		for (Relation relation : goalContext.getRelations()) {
-			Entity one = relation.getEntityOne();
-			Entity two = relation.getEntityTwo();
-			if (goalContext.equals(one) && relation.getIsTwoKeyEntity()) {
-				addNativeSelect(two);
-			}
-			if (goalContext.equals(two) && relation.getIsOneKeyEntity()) {
-				addNativeSelect(one);
-			}
-		}
 		
-		if (relationsVL.getComponentCount() > 0) {
-			setHeight("200px");
-		}
-		
-		Transaction.commit();
-	}
-	
-	protected void addNativeSelect(Entity entity) {
-		NativeSelect ns = new NativeSelect(entity.getName());
-		relationsVL.addComponent(ns);
-
-		ns.addStyleName("h2");
-		for (EntityInstance entityInstance : entity.getEntityInstances()) {
-			ns.addItem(entityInstance.getOID());
-			ns.setItemCaption(entityInstance.getOID(), entityInstance.getID());
-		}
-	}
-	
-	private void updateEntityInstancesInfo(long bwInstanceOID, long goalOID) {
-		Transaction.begin();
-		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+		BWInstance bwInstance = AbstractDomainObject.fromOID(_bwInstanceOID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-		AchieveGoal goal = AbstractDomainObject.fromOID(goalOID);
+		AchieveGoal goal = AbstractDomainObject.fromOID(_goalOID);
 		Entity goalContext = goal.getEntityContext();
 
 		for (Entity entity : dataModelInstance.getEntities()) {
@@ -188,14 +187,69 @@ public class ActivateGoalForm extends VerticalLayout {
 				}
 			}
 		}
-		
-		//TODO:Relations?
+
 		Transaction.commit();
 	}
+	
+	private void getKeyEntities() {
+		Transaction.begin();
+		
+		AchieveGoal goal = AbstractDomainObject.fromOID(_goalOID);
+		Entity goalContext = goal.getEntityContext();
+		for (Relation relation : goalContext.getRelations()) {
+			Entity one = relation.getEntityOne();
+			Entity two = relation.getEntityTwo();
+			if (goalContext.equals(one) && relation.getIsTwoKeyEntity()) {
+				addNativeSelect(keyRelationsVL, two);
+			}
+			if (goalContext.equals(two) && relation.getIsOneKeyEntity()) {
+				addNativeSelect(keyRelationsVL, one);
+			}
+		}
+		
+		if (keyRelationsVL.getComponentCount() > 0) {
+			setHeight("200px");
+		}
+		
+		Transaction.commit();
+	}
+	
+	private void getSubGoalsEntities() {
+		Transaction.begin();
+		
+		AchieveGoal goal = AbstractDomainObject.fromOID(_goalOID);		
+		for (Entity entity : goal.getSubGoalsContext()) {
+			addNativeSelect(subGoalContextVL, entity);
+			_entities.put(entity.getOID(), null);
+		}
+		
+		if (subGoalContextVL.getComponentCount() > 0) {
+			setHeight("250px");
+		}
+		
+		Transaction.commit();
+	}
+	
+	protected void addNativeSelect(Layout l, Entity entity) {
+		NativeSelect ns = new NativeSelect(entity.getName());
+		ns.setImmediate(true);
+		ns.addStyleName("h2");
+		if (!l.equals(keyRelationsVL)) {
+			ns.setNullSelectionAllowed(false);
+			ns.addItem(NEW_DATA);
+			ns.setItemCaption(NEW_DATA, NEW_DATA_CAPTION);
+		}
+		l.addComponent(ns);
+		
+		for (EntityInstance entityInstance : entity.getEntityInstances()) {
+			ns.addItem(entityInstance.getOID());
+			ns.setItemCaption(entityInstance.getOID(), entityInstance.getID());
+		}
+	}
 
-	protected void showDisableConditionsWindow(long bwInstanceOID, long goalOID, long entityInstanceOID, ArrayList<Long> relations) {
+	protected void showDisableConditionsWindow(long bwInstanceOID, long goalOID, HashMap<Long, Long> entitiesOID) {
 		Window dataModel = new Window("Disable Conditions Form");
-		dataModel.setContent(new ManageAchieveGoalsConditionsForm(this, bwInstanceOID, goalOID, entityInstanceOID, relations));
+		dataModel.setContent(new ManageAchieveGoalsConditionsForm(this, bwInstanceOID, goalOID, entitiesOID));
 		dataModel.center();
 		dataModel.setClosable(false);
 		dataModel.setResizable(false);

@@ -98,4 +98,15 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 		}
 		return achieveGoalsRESULT;
 	}
+	
+	public Set<Relation> getSubGoalsRelations(AchieveGoal topGoal) {
+		Set<Relation> result = new HashSet<Relation>();
+		
+		DataModelInstance dataModelInstance = getBwInstance().getDataModelInstance();
+		for (AchieveGoal subGoal : topGoal.getSubGoals()) {
+			result.addAll(dataModelInstance.getRelations(topGoal.getEntityContext(), subGoal.getEntityContext()));
+		}
+		
+		return result;
+	}
 }

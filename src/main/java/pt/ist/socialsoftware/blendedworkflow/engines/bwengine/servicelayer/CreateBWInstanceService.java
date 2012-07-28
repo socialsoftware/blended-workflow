@@ -62,6 +62,7 @@ public class CreateBWInstanceService implements Callable<String> {
 		return "CreateBWInstanceService:Sucess";
 	}
 
+	//TODO: add to BWSpecification
 	private void populatePatients(BWInstance bwInstance) {
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 
@@ -88,6 +89,5 @@ public class CreateBWInstanceService implements Callable<String> {
 		patient2Age.setValue("26");
 		AttributeInstance patient2HeartProblems = new AttributeInstance(heartProblems, patient2);
 		patient2HeartProblems.setValue("false");
-
 	}
 }
