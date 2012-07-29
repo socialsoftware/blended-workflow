@@ -34,4 +34,9 @@ public class AttributeInstance extends AttributeInstance_Base {
 			getEntityInstance().checkState();
 		}
 	}
+
+	public void cloneAttributeInstance(DataModelInstance dataModelInstance, EntityInstance newEntityInstance) {
+		AttributeInstance newAttributeInstance = new AttributeInstance(getAttribute(), newEntityInstance);
+		newAttributeInstance.setValue(getValue());
+	}
 }

@@ -5,7 +5,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public class EntityInstance extends EntityInstance_Base {
 
-	public EntityInstance(DataModelInstance dataModelInstance, Entity entity) {
+	public EntityInstance(Entity entity) {
 		setEntity(entity);
 		setID(entity.getName() + "." + entity.getNewEntityInstanceId()); // Id: EntityName.#
 		setAttributeInstanceCounter(0);
@@ -127,6 +127,13 @@ public class EntityInstance extends EntityInstance_Base {
 			}
 		}
 		return null;
+	}
+
+	public void cloneEntityInstance(DataModelInstance dataModelInstance, Entity newEntity) {
+		EntityInstance newEntityInstance = new EntityInstance(newEntity);
+		for (AttributeInstance attributeInstance : getAttributeInstances()) {
+			attributeInstance.cloneAttributeInstance(dataModelInstance, newEntityInstance);
+		}
 	}
 
 }

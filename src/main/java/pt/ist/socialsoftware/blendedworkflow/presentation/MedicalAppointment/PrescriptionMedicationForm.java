@@ -67,7 +67,7 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 				Attribute quantityAtt = prescriptionMedication.getAttribute("Quantity");
 				Attribute heartImpactAtt = prescriptionMedication.getAttribute("Heart Impact");
 
-				EntityInstance prescriptionMedication1 = new EntityInstance(dataModelInstance, prescriptionMedication);
+				EntityInstance prescriptionMedication1 = new EntityInstance(prescriptionMedication);
 				AttributeInstance prescriptionMedication1Number = new AttributeInstance(numberAtt, prescriptionMedication1);
 				prescriptionMedication1Number.setValue(number);
 				AttributeInstance prescriptionMedication1Name = new AttributeInstance(nameAtt, prescriptionMedication1);

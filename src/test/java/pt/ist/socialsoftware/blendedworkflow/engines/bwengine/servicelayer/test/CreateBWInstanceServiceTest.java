@@ -46,6 +46,7 @@ public class CreateBWInstanceServiceTest extends AbstractServiceTest {
 					.getTaskModelInstance();
 
 			assertEquals(6, dataModelInstance.getEntitiesCount());
+			assertEquals(2, dataModelInstance.getEntity("Patient").getEntityInstancesCount());
 			assertEquals(17, dataModelInstance.getAttributesCount());
 			assertEquals(5, dataModelInstance.getRelationsCount());
 			assertEquals(11, goalModelInstance.getAchieveGoalsCount());
@@ -55,37 +56,6 @@ public class CreateBWInstanceServiceTest extends AbstractServiceTest {
 
 			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
 			
-			//FIXME: REMOVE Partial Test
-			/*
-			AchieveGoal goal0 = goalModelInstance.getGoal("Process Medical Appointment");
-			AchieveGoal goal1 = goalModelInstance.getGoal("Measure Blood Pressure");
-			AchieveGoal goal2 = goalModelInstance.getGoal("Write Medical Prescription");
-			
-			for (Relation r : goalModelInstance.getSubGoalsRelations(goal0)) {
-				 System.out.println(r.getName());
-			}
-
-			for (Relation r : goalModelInstance.getSubGoalsRelations(goal1)) {
-				 System.out.println(r.getName());
-			}
-			
-			for (Relation r : goalModelInstance.getSubGoalsRelations(goal2)) {
-				 System.out.println(r.getName());
-			}
-			
-			for (Entity e : goal0.getSubGoalsContext()) {
-				 System.out.println(e.getName());
-			}
-			
-			for (Entity e : goal1.getSubGoalsContext()) {
-				 System.out.println(e.getName());
-			}
-			
-			for (Entity e : goal2.getSubGoalsContext()) {
-				 System.out.println(e.getName());
-			}
-			*/
-			//FIXME: REMOVE Partial Test
 			Transaction.commit();
 			committed = true;
 		} catch (BlendedWorkflowException e) {

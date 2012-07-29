@@ -26,6 +26,10 @@ public class Entity extends Entity_Base {
 		for (Attribute attribute : getAttributes()) {
 			attribute.cloneAttribute(dataModelInstance, newEntity);
 		}
+		
+		for (EntityInstance ei : getEntityInstances()) {
+			ei.cloneEntityInstance(dataModelInstance, newEntity);
+		}
 	}
 
 	/**
@@ -65,7 +69,8 @@ public class Entity extends Entity_Base {
 	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, ConditionType conditionType) {
 		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
 		if (getEntityInstances().isEmpty()) {
-			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
+//			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this); //OLD
+			EntityInstance entityInstance = new EntityInstance(this);
 			entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 
 			//FIXME: Bad Hack!
@@ -121,7 +126,8 @@ public class Entity extends Entity_Base {
 		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
 
 		if (getEntityInstances().isEmpty()) {
-			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
+//			EntityInstance entityInstance = new EntityInstance(dataModelInstance, this);
+			EntityInstance entityInstance = new EntityInstance(this);
 			for (Attribute attribute : getAttributes()) {
 				if (attribute.getIsKeyAttribute())
 				entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
@@ -157,7 +163,8 @@ public class Entity extends Entity_Base {
 				//Relations instances already exists?
 				if (relation.getRelationInstances().isEmpty()) {
 					if (relationEntityTwo.getEntityInstances().isEmpty()){
-						relationEntityInstanceTwo = new EntityInstance(dataModelInstance, relationEntityTwo);
+//						relationEntityInstanceTwo = new EntityInstance(dataModelInstance, relationEntityTwo);
+						relationEntityInstanceTwo = new EntityInstance(relationEntityTwo);
 					}
 					else {
 						for (EntityInstance entityInstance1 : relationEntityTwo.getEntityInstances()) { //FIXME: only 1 entityInstance

@@ -71,9 +71,9 @@ public class ForAllConditionTest {
 		entity1 = new Entity(dataModelInstance, ENTITY_1_NAME);
 		entity1Att1 = new Attribute(dataModelInstance, ENTITY_1_ATT_1_NAME, entity1, ENTITY_1_ATT_1_TYPE, ENTITY_1_ATT_1_KEY, false);
 		
-		entityInstance1_1 = new EntityInstance(dataModelInstance, entity1);
+		entityInstance1_1 = new EntityInstance(entity1);
 		entityInstance1_1Att1 = new AttributeInstance(entity1Att1, entityInstance1_1);
-		entityInstance1_2 = new EntityInstance(dataModelInstance, entity1);
+		entityInstance1_2 = new EntityInstance(entity1);
 		entityInstance1_2Att1 = new AttributeInstance(entity1Att1, entityInstance1_2);
 		
 		entityInstance1_1Att1.setValue(" ");
@@ -83,9 +83,9 @@ public class ForAllConditionTest {
 		entity2 = new Entity(dataModelInstance, ENTITY_2_NAME);
 		entity2Att1 = new Attribute(dataModelInstance, ENTITY_2_ATT_1_NAME, entity2, ENTITY_2_ATT_1_TYPE, ENTITY_2_ATT_1_KEY, false);
 		
-		entityInstance2_1 = new EntityInstance(dataModelInstance, entity2);
+		entityInstance2_1 = new EntityInstance(entity2);
 		entityInstance2_1Att1 = new AttributeInstance(entity2Att1, entityInstance2_1);
-		entityInstance2_2 = new EntityInstance(dataModelInstance, entity2);
+		entityInstance2_2 = new EntityInstance(entity2);
 		entityInstance2_2Att1 =new AttributeInstance(entity2Att1, entityInstance2_2);
 
 		//Relation

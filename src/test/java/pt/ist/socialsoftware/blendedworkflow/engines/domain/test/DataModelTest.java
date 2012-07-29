@@ -58,15 +58,15 @@ public class DataModelTest {
 		Relation EC = new Relation(dataModelInstance, "EC", E, C, Cardinality.ONE, Cardinality.ONE, true, false);
 
 		//Instances
-		EntityInstance A1 = new EntityInstance(dataModelInstance, A);
-		EntityInstance B1 = new EntityInstance(dataModelInstance, B);
-		EntityInstance C1 = new EntityInstance(dataModelInstance, C);
-		EntityInstance D1 = new EntityInstance(dataModelInstance, D);
-		EntityInstance E1 = new EntityInstance(dataModelInstance, E);
-		EntityInstance F1 = new EntityInstance(dataModelInstance, F);
-		EntityInstance F2 = new EntityInstance(dataModelInstance, F);
-		EntityInstance F3 = new EntityInstance(dataModelInstance, F);
-		EntityInstance X1 = new EntityInstance(dataModelInstance, X);
+		EntityInstance A1 = new EntityInstance(A);
+		EntityInstance B1 = new EntityInstance(B);
+		EntityInstance C1 = new EntityInstance(C);
+		EntityInstance D1 = new EntityInstance(D);
+		EntityInstance E1 = new EntityInstance(E);
+		EntityInstance F1 = new EntityInstance(F);
+		EntityInstance F2 = new EntityInstance(F);
+		EntityInstance F3 = new EntityInstance(F);
+		EntityInstance X1 = new EntityInstance(X);
 		new RelationInstance(AB, A1, B1, A1.getNewRelationInstanceID());
 		new RelationInstance(AC, A1, C1, A1.getNewRelationInstanceID());
 		new RelationInstance(AD, A1, D1, A1.getNewRelationInstanceID());

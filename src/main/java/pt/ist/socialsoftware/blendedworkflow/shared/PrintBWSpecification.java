@@ -1,11 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.shared;
 
-//import org.apache.log4j.Logger;
-
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
@@ -81,7 +80,11 @@ public class PrintBWSpecification {
 		System.out.println("DataModel Template");
 		System.out.println("----------------------------------------------------------");
 		for (Entity entity : dataModelTemplate.getEntities()) {
-			System.out.println("Entity \"" + entity.getName() + "\"");
+			System.out.println("Entity \"" + entity.getName() + "\" has " + entity.getEntityInstancesCount() + " Instances");
+			for (EntityInstance ei : entity.getEntityInstances()) {
+				System.out.println("EntityInstance \"" + ei.getID() + "\" is " + ei.getState());
+			}
+			
 			for (Attribute attribute : entity.getAttributes()) {
 				System.out.println("Attribute \"" + attribute.getName() + "\"");
 			}
@@ -99,6 +102,7 @@ public class PrintBWSpecification {
 		System.out.println("----------------------------------------------------------");
 		for (Entity entity : dataModelInstance.getEntities()) {
 			System.out.println("Entity \"" + entity.getName() + "\"");
+
 			for (Attribute attribute : entity.getAttributes()) {
 				System.out.println("Attribute \"" + attribute.getName() + "\"");
 			}
@@ -115,10 +119,12 @@ public class PrintBWSpecification {
 		System.out.println("GoalModel Template");
 		System.out.println("----------------------------------------------------------");
 		for (AchieveGoal goal : goalModel.getAchieveGoals()) {
-			System.out.println("Goal \"" + goal.getName() + "\" has \"" + goal.getGoalWorkItemsCount() + "\"WorkItems and has " + goal.getSubGoals().size() + " subgoals.");
-			System.out.println("ActivateCondition " + goal.getActivateConditionsCount());
-			System.out.println("SucessCondition " + goal.getSucessCondition());
-			System.out.println("User: " + goal.getUser() + " Role:" + goal.getRole());
+			System.out.println("Goal \"" + goal.getName() + "\" has \"" + goal.getGoalWorkItemsCount() + "\" WorkItems and has " + goal.getSubGoalsCount() + " subgoals.");
+			for (Condition ac : goal.getActivateConditions()) {
+				System.out.println("ActivateCondition: " + ac);	
+			}
+			System.out.println("SucessCondition: " + goal.getSucessCondition());
+			System.out.println("User: " + goal.getUser().getID() + " Role: " + goal.getRole().getName());
 		}
 	}
 
@@ -128,10 +134,12 @@ public class PrintBWSpecification {
 		System.out.println("GoalModel Type");
 		System.out.println("----------------------------------------------------------");
 		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
-			System.out.println("Goal \"" + goal.getName() + "\" has \"" + goal.getGoalWorkItemsCount() + "\"WorkItems and has " + goal.getSubGoals().size() + " subgoals.");
-			System.out.println("ActivateCondition " + goal.getActivateConditionsCount());
-			System.out.println("SucessCondition " + goal.getSucessCondition());
-			System.out.println("User: " + goal.getUser() + " Role:" + goal.getRole());
+			System.out.println("Goal \"" + goal.getName() + "\" has \"" + goal.getGoalWorkItemsCount() + "\" WorkItems and has " + goal.getSubGoals().size() + " subgoals.");
+			for (Condition ac : goal.getActivateConditions()) {
+				System.out.println("ActivateCondition: " + ac);	
+			}
+			System.out.println("SucessCondition: " + goal.getSucessCondition());
+			System.out.println("User: " + goal.getUser().getID() + " Role: " + goal.getRole().getName());
 		}
 	}
 	
@@ -142,8 +150,9 @@ public class PrintBWSpecification {
 		System.out.println("----------------------------------------------------------");
 		for (Task task : taskModel.getTasks()) {
 			System.out.println("Task \"" + task.getName() + "\".");
-			System.out.println("Pre Condition " + task.getPreConstraint().getClass() + " Post Condition " + task.getPostConstraint().getClass());
-			System.out.println("User: " + task.getUser() + " Role:" + task.getRole());
+			System.out.println("Pre Condition: " + task.getPreConstraint());
+			System.out.println("Post Condition: " + task.getPostConstraint());
+			System.out.println("User: " + task.getUser().getID() + " Role: " + task.getRole().getName());
 		}
 	}
 
@@ -154,8 +163,9 @@ public class PrintBWSpecification {
 		System.out.println("----------------------------------------------------------");
 		for (Task task : taskModelInstance.getTasks()) {
 			System.out.println("Task \"" + task.getName() + "\".");
-			System.out.println("Pre Condition " + task.getPreConstraint().getClass() + " Post Condition " + task.getPostConstraint().getClass());
-			System.out.println("User: " + task.getUser() + " Role:" + task.getRole());
+			System.out.println("Pre Condition: " + task.getPreConstraint());
+			System.out.println("Post Condition: " + task.getPostConstraint());
+			System.out.println("User: " + task.getUser().getID() + " Role: " + task.getRole().getName());
 		}
 	}
 
@@ -210,7 +220,7 @@ public class PrintBWSpecification {
 	public static void workItemsWithAttributtes(String bwSpecificationName) throws BlendedWorkflowException {
 		init(bwSpecificationName);
 		System.out.println("**************************************************************");
-		System.out.println("WorkItems");
+		System.out.println("WorkItems with Attributes");
 		System.out.println("----------------------------------------------------------");
 		for (WorkItem workitem : bwInstance.getWorkItems()) {
 			if (workitem instanceof TaskWorkItem) {

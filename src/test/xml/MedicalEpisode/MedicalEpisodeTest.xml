@@ -390,4 +390,20 @@
 		</bw:Task>
 		
 	</bw:TaskModel>
+	
+	<bw:DataModelInstance>
+		<bw:EntityInstance>
+			<bw:Type>Patient</bw:Type>
+			<bw:Name>Davide Passinhas</bw:Name>
+			<bw:Age>23</bw:Age>
+			<bw:Cardiac_Problems>true</bw:Cardiac_Problems>
+		</bw:EntityInstance>
+		<bw:EntityInstance>
+			<bw:Type>Patient</bw:Type>
+			<bw:Name>David Martinho</bw:Name>
+			<bw:Age>26</bw:Age>
+			<bw:Cardiac_Problems>false</bw:Cardiac_Problems>
+		</bw:EntityInstance>
+	</bw:DataModelInstance>
+	
 </bw:BlendedWorkflowSchema>

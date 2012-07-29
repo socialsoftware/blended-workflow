@@ -85,7 +85,6 @@ public class MockitoProcessItemLevelExceptionEventTest extends MockitoAbstractSe
 	@Test
 	public void receivePostConditionEvaluationFalsePreActState() throws Exception {
 		receivePostConditionEvaluation(conclusionFALSE, ActivityState.PRE_ACTIVITY, ActivityState.PRE_ACTIVITY);
-		// FIXME Pending or Enabled?
 		verify(workListManager).notifyEnabledWorkItem(bookingWorkItem);
 	}
 
@@ -124,7 +123,8 @@ public class MockitoProcessItemLevelExceptionEventTest extends MockitoAbstractSe
 		final TaskModel taskModel = bwInstance.getTaskModelInstance();
 
 		final Entity episodeType = dataModelInstance.getEntity("Episode");
-		final EntityInstance episodeOne = new EntityInstance(dataModelInstance, episodeType);
+//		final EntityInstance episodeOne = new EntityInstance(dataModelInstance, episodeType);
+		final EntityInstance episodeOne = new EntityInstance(episodeType);
 		final EntityInstance myPatient = dataModelInstance.getEntity("Patient").getEntityInstances().get(0);
 		new RelationInstance(dataModelInstance.getRelation("Patient has Episodes"), myPatient, episodeOne,
 				myPatient.getNewRelationInstanceID());

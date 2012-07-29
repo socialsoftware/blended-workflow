@@ -133,7 +133,7 @@ public class DoctorAppointmentForm extends VerticalLayout {
 		Entity medicalPrescription = dataModelInstance.getEntity("Medical Prescription");
 		Attribute description = medicalPrescription.getAttribute("Description");
 
-		EntityInstance medicalPrescription1 = new EntityInstance(dataModelInstance, medicalPrescription);
+		EntityInstance medicalPrescription1 = new EntityInstance(medicalPrescription);
 		long medicalPrescription1OID = medicalPrescription1.getOID();
 		AttributeInstance medicalPrescription1Description = new AttributeInstance(description, medicalPrescription1);
 		String value = medicalPrescriptionTF.getValue().toString();

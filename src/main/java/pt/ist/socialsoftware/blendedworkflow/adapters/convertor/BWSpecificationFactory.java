@@ -34,7 +34,8 @@ public class BWSpecificationFactory {
 		// Data Model
 		DataModel dataModel = bwSpecification.getDataModel();
 		new DataModelFactory().parseXMLDataModel(dataModel, bwXML);
-
+		new DataModelInstanceFactory().parseXMLDataModel(dataModel, bwXML);
+				
 		// Task Model
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, bwXML);

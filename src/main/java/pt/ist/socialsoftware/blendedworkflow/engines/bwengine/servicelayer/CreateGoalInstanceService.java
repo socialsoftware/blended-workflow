@@ -81,7 +81,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 		for (Map.Entry<Long, Long> entry : entitiesOID.entrySet()) {
 			if (entry.getValue() == null) {
 				Entity entity = AbstractDomainObject.fromOID(entry.getKey());
-				EntityInstance newEntityInstance = new EntityInstance(dataModelInstance, entity);
+				EntityInstance newEntityInstance = new EntityInstance(entity);
 				entry.setValue(newEntityInstance.getOID());
 			}
 		}

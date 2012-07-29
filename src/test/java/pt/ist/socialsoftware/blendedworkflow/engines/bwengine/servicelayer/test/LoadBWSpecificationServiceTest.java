@@ -50,6 +50,7 @@ public class LoadBWSpecificationServiceTest extends AbstractServiceTest {
 		final TaskModel taskModel = bwSpecification.getTaskModel();
 
 		assertEquals(6, dataModel.getEntitiesCount());
+		assertEquals(2, dataModel.getEntity("Patient").getEntityInstancesCount());
 		assertEquals(17, dataModel.getAttributesCount());
 		assertEquals(5, dataModel.getRelationsCount());
 		assertEquals(11, goalModel.getAchieveGoalsCount());
@@ -59,7 +60,7 @@ public class LoadBWSpecificationServiceTest extends AbstractServiceTest {
 		assertEquals(3, BlendedWorkflow.getInstance().getOrganizationalModel()
 				.getRolesCount());
 		assertEquals(4, BlendedWorkflow.getInstance().getOrganizationalModel()
-				.getUsersCount());
+				.getUsersCount());	
 	}
 
 }
