@@ -117,7 +117,7 @@ public class WorkletAdapter {
 		} else {
 			log.error("It should not reach this point");
 		}
-		 requestWorkItemPostConditionEvaluation(taskWorkItem); //FIXME: call 2 times
+//		 requestWorkItemPostConditionEvaluation(taskWorkItem); //FIXME: call 2 times
 	}
 
 	private void processPostConditionEvaluationResult(String result, TaskWorkItem taskWorkItem) {
@@ -314,9 +314,9 @@ public class WorkletAdapter {
 						String attributeName = attribute.getName().replaceAll(
 								" ", "");
 						String value;
-						if (type == "UNDEFINED")
+						if (type.equals("UNDEFINED"))
 							value = "$UNDEFINED$";
-						else if (type == "SKIPPED")
+						else if (type.equals("SKIPPED"))
 							value = "$SKIPPED$";
 						else
 							value = "$DEFINED$";

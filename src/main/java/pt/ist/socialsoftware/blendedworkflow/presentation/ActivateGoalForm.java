@@ -81,11 +81,12 @@ public class ActivateGoalForm extends VerticalLayout {
 				//Get Goal Context
 				Long entityInstanceOID = (Long) entityInstanceContext.getValue();
 				Transaction.begin();
-				EntityInstance entityInstance = AbstractDomainObject.fromOID(entityInstanceOID);
-				Long entityOID = entityInstance.getEntity().getOid();
 				if (entityInstanceOID == -1) {
-					_entities.put(entityOID, null);
+					AchieveGoal goal = AbstractDomainObject.fromOID(_goalOID);
+					_entities.put(goal.getEntityContext().getOID(), null);
 				} else {
+					EntityInstance entityInstance = AbstractDomainObject.fromOID(entityInstanceOID);
+					Long entityOID = entityInstance.getEntity().getOid();
 					_entities.put(entityOID, entityInstanceOID);
 				}
 				Transaction.commit();
@@ -111,16 +112,18 @@ public class ActivateGoalForm extends VerticalLayout {
 					long subEntityInstanceOID = (Long) selec.getValue();
 					
 					Transaction.begin();
-					EntityInstance subEntityInstance = AbstractDomainObject.fromOID(subEntityInstanceOID);
-					Long subEntityOID = subEntityInstance.getEntity().getOid();
-					
+					BWInstance bwInstance = AbstractDomainObject.fromOID(_bwInstanceOID);
+					DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+					log.info("|" + selec.getCaption() +"|");
+					Entity subGoalEntity = dataModelInstance.getEntity(selec.getCaption());
 					if (subEntityInstanceOID == -1) {
-						_entities.put(entityOID, null);
+						_entities.put(subGoalEntity.getOID(), null);
 					} else {
-						_entities.put(entityOID, entityInstanceOID);
+						EntityInstance subEntityInstance = AbstractDomainObject.fromOID(subEntityInstanceOID);
+						Long subEntityOID = subEntityInstance.getEntity().getOid();
+						_entities.put(subEntityOID, subEntityInstanceOID);
 					}
 					
-					_entities.put(subEntityOID, subEntityInstanceOID);
 					Transaction.commit();
 				}
 				
@@ -208,7 +211,7 @@ public class ActivateGoalForm extends VerticalLayout {
 		}
 		
 		if (keyRelationsVL.getComponentCount() > 0) {
-			setHeight("200px");
+			setHeight("250px");
 		}
 		
 		Transaction.commit();

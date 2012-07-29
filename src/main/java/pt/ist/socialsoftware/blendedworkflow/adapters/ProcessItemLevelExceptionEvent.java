@@ -30,7 +30,8 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 
 	@Override
 	public String call() throws Exception {
-		log.debug(parseConclusion(rdrNode) + " " + ruleType + " for " + wir);
+		log.debug("-----------BEGIN----------------->"+ parseConclusion(rdrNode) + " " + ruleType + " for " + wir);
+		Thread.sleep(1000); //FIXME:??
 
 		Transaction.begin();
 		if (ruleType.equals(RuleType.ItemPreconstraint)) {
@@ -56,7 +57,7 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 		}
 		Transaction.commit();
 
-		log.debug("End for WorkItemRecord: " + wir);
+		log.debug("---------END-------------->"+  parseConclusion(rdrNode) + " " + ruleType + " for " + wir);
 		return "ItemLevelExceptionEventTask:Sucess";
 	}
 

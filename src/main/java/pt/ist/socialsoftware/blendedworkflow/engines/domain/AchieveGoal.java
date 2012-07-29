@@ -163,7 +163,7 @@ public class AchieveGoal extends AchieveGoal_Base {
 	//TODO:
 	public Set<Entity> getSubGoalsContext() {
 		Set<Entity> result = new HashSet<Entity>();
-		result.add(getEntityContext());
+//		result.add(getEntityContext());
 		for (AchieveGoal subGoal : getSubGoals()) {
 			result.add(subGoal.getEntityContext());
 		}
