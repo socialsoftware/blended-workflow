@@ -31,7 +31,7 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 	@Override
 	public String call() throws Exception {
 		log.debug("-----------BEGIN----------------->"+ parseConclusion(rdrNode) + " " + ruleType + " for " + wir);
-		Thread.sleep(1000); //FIXME:??
+		Thread.sleep(4000); //FIXME:??
 
 		Transaction.begin();
 		if (ruleType.equals(RuleType.ItemPreconstraint)) {

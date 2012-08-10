@@ -9,7 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
+//import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 
@@ -44,7 +44,7 @@ public class GoalForm extends VerticalLayout {
 		addComponent(entitiesInstances);
 //		getInputData();
 		getOutputData();
-		getRelationEntities();
+//		getRelationEntities();
 
 		HorizontalLayout footer = new HorizontalLayout();
 		footer.setMargin(true);
@@ -146,27 +146,27 @@ public class GoalForm extends VerticalLayout {
 		Transaction.commit();
 	}
 	
-	private void getRelationEntities() {
-		Transaction.begin();
-		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
-		Entity goalContext = goalWorkItem.getAchieveGoal().getEntityContext();
-		
-		if (goalWorkItem.getSucessCondition().existExistEntity()) {
-			
-			for (Relation relation : goalContext.getRelations()) {
-				Entity one = relation.getEntityOne();
-				Entity two = relation.getEntityTwo();
-				if (goalContext.equals(one) && relation.getIsTwoKeyEntity()) {
-					addNativeSelect(two);
-				}
-				if (goalContext.equals(two) && relation.getIsOneKeyEntity()) {
-					addNativeSelect(one);
-				}
-			}
-		}
-		
-		Transaction.commit();
-	}
+//	private void getRelationEntities() {
+//		Transaction.begin();
+//		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
+//		Entity goalContext = goalWorkItem.getAchieveGoal().getEntityContext();
+//		
+//		if (goalWorkItem.getSucessCondition().existExistEntity()) {
+//			
+//			for (Relation relation : goalContext.getRelations()) {
+//				Entity one = relation.getEntityOne();
+//				Entity two = relation.getEntityTwo();
+//				if (goalContext.equals(one) && relation.getIsTwoKeyEntity()) {
+//					addNativeSelect(two);
+//				}
+//				if (goalContext.equals(two) && relation.getIsOneKeyEntity()) {
+//					addNativeSelect(one);
+//				}
+//			}
+//		}
+//		
+//		Transaction.commit();
+//	}
 	
 	
 
