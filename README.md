@@ -1,16 +1,16 @@
 # Blended Workflow Engine
 
--Required Software
+-Required Software:
 --Java
 --YAWL
 --Tomcat (optional if the Tomcat embedded in YAWL is used)
 
--YAWL
+-YAWL:
 --Install YAWL 2.3
 --Activate Worklet service
 --Launch YAWL
 
--Blended Workflow
+-Blended Workflow:
 --Download Blended Workflow from GITHub.
 --Change configuration files:
     -blended-workflow\src\main\config\build.properties (Endpoints, User, password, etc)
