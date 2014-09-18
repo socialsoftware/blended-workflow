@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import jvstm.Transaction;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
@@ -11,34 +11,39 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window.Notification;
 
 @SuppressWarnings("serial")
-public class NewRelationForm extends VerticalLayout{
+public class NewRelationForm extends VerticalLayout {
 
-	private Table relations = new Table("Existing Relations:");
-	private NativeSelect otherEntity = new NativeSelect("Other Entity:");
-	private NativeSelect cardinality = new NativeSelect("Relation cardinality:");
-	private CheckBox isOtherKey = new CheckBox("The other Entity is a key Entity to this one?");
-	private CheckBox isThisKey = new CheckBox("This Entity is key of the other Entity?");
+	private final Table relations = new Table("Existing Relations:");
+	private final NativeSelect otherEntity = new NativeSelect("Other Entity:");
+	private final NativeSelect cardinality = new NativeSelect(
+			"Relation cardinality:");
+	private final CheckBox isOtherKey = new CheckBox(
+			"The other Entity is a key Entity to this one?");
+	private final CheckBox isThisKey = new CheckBox(
+			"This Entity is key of the other Entity?");
 
-	public NewRelationForm(AllDataModelTree parent, final long bwInstanceOID, final String entityName) {
+	public NewRelationForm(AllDataModelTree parent, final long bwInstanceOID,
+			final String entityName) {
 		setMargin(true);
 
 		setWidth("530px");
 		setHeight("480px");
-		
-		isOtherKey.setCaption("The other Entity is a key of " + entityName +"?"); 
+
+		isOtherKey.setCaption("The other Entity is a key of " + entityName
+				+ "?");
 		isThisKey.setCaption(entityName + " is key of the other Entity?");
-		
+
 		final TextField nameTf = new TextField("Relation name:");
 
 		otherEntity.setNullSelectionAllowed(false);
@@ -56,12 +61,12 @@ public class NewRelationForm extends VerticalLayout{
 
 		relations.setWidth("500px");
 		relations.setHeight("130px");
-		relations.addContainerProperty("Name",  String.class,  null);
-		relations.addContainerProperty("Entity One",  String.class,  null);
-		relations.addContainerProperty("Entity Two",  String.class,  null);
-		relations.addContainerProperty("Cardinality",  String.class,  null);
-		relations.addContainerProperty("is One Key?",  String.class,  null);
-		relations.addContainerProperty("is Two Key?",  String.class,  null);
+		relations.addContainerProperty("Name", String.class, null);
+		relations.addContainerProperty("Entity One", String.class, null);
+		relations.addContainerProperty("Entity Two", String.class, null);
+		relations.addContainerProperty("Cardinality", String.class, null);
+		relations.addContainerProperty("is One Key?", String.class, null);
+		relations.addContainerProperty("is Two Key?", String.class, null);
 
 		getRelations(bwInstanceOID, entityName);
 		getEntities(bwInstanceOID, entityName);
@@ -80,24 +85,31 @@ public class NewRelationForm extends VerticalLayout{
 					Boolean isOne = (Boolean) isThisKey.getValue();
 					Boolean isTwo = (Boolean) isOtherKey.getValue();
 
-					addRelation(bwInstanceOID, name, entityName, secondEntityName, card, isOne, isTwo);
+					addRelation(bwInstanceOID, name, entityName,
+							secondEntityName, card, isOne, isTwo);
 
-					getApplication().getMainWindow().showNotification("New Relation " + name + " created", Notification.TYPE_TRAY_NOTIFICATION);
-					getApplication().getMainWindow().removeWindow(NewRelationForm.this.getWindow());
+					getApplication().getMainWindow().showNotification(
+							"New Relation " + name + " created",
+							Notification.TYPE_TRAY_NOTIFICATION);
+					getApplication().getMainWindow().removeWindow(
+							NewRelationForm.this.getWindow());
 				} catch (java.lang.NullPointerException jle) {
-					getApplication().getMainWindow().showNotification("Please fill all fields");
+					getApplication().getMainWindow().showNotification(
+							"Please fill all fields");
 				} catch (BlendedWorkflowException bwe) {
-					getApplication().getMainWindow().showNotification(bwe.getError().toString(), Notification.TYPE_ERROR_MESSAGE);
+					getApplication().getMainWindow().showNotification(
+							bwe.getError().toString(),
+							Notification.TYPE_ERROR_MESSAGE);
 				}
 			}
 		});
-
 
 		Button cancel = new Button("Cancel");
 		cancel.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(NewRelationForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						NewRelationForm.this.getWindow());
 			}
 		});
 
@@ -115,30 +127,36 @@ public class NewRelationForm extends VerticalLayout{
 
 	private void getRelations(long bwInstanceOID, String entityName) {
 		Transaction.begin();
-		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
 		int relationIndex = 1;
 		for (Relation relation : dataModel.getRelations()) {
 			Entity entityOne = relation.getEntityOne();
 			Entity entityTwo = relation.getEntityTwo();
-			if (entityOne.getName().equals(entityName) || entityTwo.getName().equals(entityName) ) {
+			if (entityOne.getName().equals(entityName)
+					|| entityTwo.getName().equals(entityName)) {
 
 				String name = relation.getName();
-				String card = parseCardinalityToString(relation.getCardinalityOne()) + " to " + parseCardinalityToString(relation.getCardinalityTwo());
+				String card = parseCardinalityToString(relation
+						.getCardinalityOne())
+						+ " to "
+						+ parseCardinalityToString(relation.getCardinalityTwo());
 				Boolean isOne = relation.getIsOneKeyEntity();
 				Boolean isTwo = relation.getIsTwoKeyEntity();
 
-				this.relations.addItem(new Object[] {name, entityOne.getName(),entityTwo.getName(), card, isOne, isTwo}, new Integer(relationIndex));
+				this.relations.addItem(new Object[] { name,
+						entityOne.getName(), entityTwo.getName(), card, isOne,
+						isTwo }, new Integer(relationIndex));
 				relationIndex++;
 			}
 		}
-		Transaction.commit();	
+		Transaction.commit();
 	}
 
 	private void getEntities(long bwInstanceOID, String entityName) {
 		Transaction.begin();
-		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
 		for (Entity entity : dataModel.getEntities()) {
@@ -149,11 +167,13 @@ public class NewRelationForm extends VerticalLayout{
 		Transaction.commit();
 	}
 
-	public void addRelation(long bwInstanceOID, String name, String entityOneName, 
-			String entityTwoName, String cardinality, Boolean isOneKeyEntity, Boolean isTwoKeyEntity) throws BlendedWorkflowException {
+	public void addRelation(long bwInstanceOID, String name,
+			String entityOneName, String entityTwoName, String cardinality,
+			Boolean isOneKeyEntity, Boolean isTwoKeyEntity)
+			throws BlendedWorkflowException {
 
 		Transaction.begin();
-		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
 		Entity entityOne = dataModel.getEntity(entityOneName);
@@ -162,7 +182,8 @@ public class NewRelationForm extends VerticalLayout{
 		Cardinality cardinalityOne = parseThisCardinality(cardinality);
 		Cardinality cardinalityTwo = parseOtherCardinality(cardinality);
 
-		new Relation(dataModel, name, entityOne, entityTwo, cardinalityOne, cardinalityTwo, isOneKeyEntity, isTwoKeyEntity);
+		new Relation(dataModel, name, entityOne, entityTwo, cardinalityOne,
+				cardinalityTwo, isOneKeyEntity, isTwoKeyEntity);
 
 		Transaction.commit();
 	}
@@ -170,7 +191,7 @@ public class NewRelationForm extends VerticalLayout{
 	private String parseCardinalityToString(Cardinality card) {
 		if (card.equals(Cardinality.ONE)) {
 			return "1";
-		} else 	if (card.equals(Cardinality.ZERO_OR_ONE)) {
+		} else if (card.equals(Cardinality.ZERO_OR_ONE)) {
 			return "0..1";
 		} else {
 			return "*";
@@ -178,50 +199,49 @@ public class NewRelationForm extends VerticalLayout{
 	}
 
 	private Cardinality parseThisCardinality(String card) {
-		if(card.equals("1 to 0..1")) {
+		if (card.equals("1 to 0..1")) {
 			return Cardinality.ONE;
-		} else if(card.equals("1 to *")) {
+		} else if (card.equals("1 to *")) {
 			return Cardinality.ONE;
-		} else if(card.equals("1 to 1")) {
+		} else if (card.equals("1 to 1")) {
 			return Cardinality.ONE;
-		} else if(card.equals("0..1 to 1")) {
+		} else if (card.equals("0..1 to 1")) {
 			return Cardinality.ZERO_OR_ONE;
-		} else if(card.equals("0..1 to 0..1")) {
+		} else if (card.equals("0..1 to 0..1")) {
 			return Cardinality.ZERO_OR_ONE;
-		} else if(card.equals("0..1 to *")) {
+		} else if (card.equals("0..1 to *")) {
 			return Cardinality.ZERO_OR_ONE;
-		} else if(card.equals("* to 1")) {
+		} else if (card.equals("* to 1")) {
 			return Cardinality.MANY;
-		} else if(card.equals("* to 0..1")) {
+		} else if (card.equals("* to 0..1")) {
 			return Cardinality.MANY;
-		} else if(card.equals("* to *")) {
+		} else if (card.equals("* to *")) {
 			return Cardinality.MANY;
 		}
 		return null;
 	}
 
 	private Cardinality parseOtherCardinality(String card) {
-		if(card.equals("1 to 0..1")) {
+		if (card.equals("1 to 0..1")) {
 			return Cardinality.ZERO_OR_ONE;
-		} else if(card.equals("1 to *")) {
+		} else if (card.equals("1 to *")) {
 			return Cardinality.MANY;
-		} else if(card.equals("1 to 1")) {
+		} else if (card.equals("1 to 1")) {
 			return Cardinality.ONE;
-		} else if(card.equals("0..1 to 1")) {
+		} else if (card.equals("0..1 to 1")) {
 			return Cardinality.ONE;
-		} else if(card.equals("0..1 to 0..1")) {
+		} else if (card.equals("0..1 to 0..1")) {
 			return Cardinality.ZERO_OR_ONE;
-		} else if(card.equals("0..1 to *")) {
+		} else if (card.equals("0..1 to *")) {
 			return Cardinality.MANY;
-		} else if(card.equals("* to 1")) {
+		} else if (card.equals("* to 1")) {
 			return Cardinality.ONE;
-		} else if(card.equals("* to 0..1")) {
+		} else if (card.equals("* to 0..1")) {
 			return Cardinality.ZERO_OR_ONE;
-		} else if(card.equals("* to *")) {
+		} else if (card.equals("* to *")) {
 			return Cardinality.MANY;
 		}
 		return null;
 	}
 
 }
-

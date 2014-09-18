@@ -4,21 +4,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 
-import org.apache.log4j.Logger;
-
 import jvstm.Transaction;
 
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import org.apache.log4j.Logger;
+
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
@@ -26,19 +28,16 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
 
 @SuppressWarnings("serial")
 public class PreTaskForm extends VerticalLayout {
-	
+
 	public static Class<?> tmp_class;
 	private static Constructor<?> tmp_const;
-	private long taskWorkItemOID;
+	private final long taskWorkItemOID;
 	VerticalLayout data = new VerticalLayout();
-	private Logger log = Logger.getLogger("PreTask");
-
+	private final Logger log = Logger.getLogger("PreTask");
 
 	public PreTaskForm(final long workItemOID) {
 		setMargin(true);
@@ -62,7 +61,8 @@ public class PreTaskForm extends VerticalLayout {
 					AbstractField field;
 
 					if (!data.getComponent(y).getClass().equals(Label.class)) {
-						if(data.getComponent(y).getClass().equals(CheckBox.class)) {
+						if (data.getComponent(y).getClass()
+								.equals(CheckBox.class)) {
 							field = (CheckBox) data.getComponent(y);
 						} else {
 							field = (TextField) data.getComponent(y);
@@ -74,8 +74,11 @@ public class PreTaskForm extends VerticalLayout {
 				}
 
 				generateTaskForm(workItemOID);
-				getApplication().getMainWindow().showNotification("Pre-Activity accomplished", Notification.TYPE_TRAY_NOTIFICATION);
-				getApplication().getMainWindow().removeWindow(PreTaskForm.this.getWindow());
+				getApplication().getMainWindow().showNotification(
+						"Pre-Activity accomplished",
+						Notification.TYPE_TRAY_NOTIFICATION);
+				getApplication().getMainWindow().removeWindow(
+						PreTaskForm.this.getWindow());
 
 			}
 		});
@@ -85,7 +88,8 @@ public class PreTaskForm extends VerticalLayout {
 		cancelButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(PreTaskForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						PreTaskForm.this.getWindow());
 			}
 		});
 		footer.addComponent(cancelButton);
@@ -96,20 +100,25 @@ public class PreTaskForm extends VerticalLayout {
 
 	private void setWorkItemArgumentValue(int index, String value) {
 		Transaction.begin();
-		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
+		TaskWorkItem taskWorkItem = FenixFramework
+				.getDomainObject(taskWorkItemOID);
 		taskWorkItem.getInputWorkItemArguments().get(index).setValue(value);
-		taskWorkItem.getInputWorkItemArguments().get(index).setState(DataState.DEFINED);
+		taskWorkItem.getInputWorkItemArguments().get(index)
+				.setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
 	private void getOutputData() {
 		Transaction.begin();
-		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
+		TaskWorkItem taskWorkItem = FenixFramework
+				.getDomainObject(taskWorkItemOID);
 
 		Entity previousEntity = null;
 		Boolean first = true;
-		for (WorkItemArgument workItemArgument : taskWorkItem.getInputWorkItemArguments()) {
-			Attribute attribute = workItemArgument.getAttributeInstance().getAttribute();
+		for (WorkItemArgument workItemArgument : taskWorkItem
+				.getInputWorkItemArguments()) {
+			Attribute attribute = workItemArgument.getAttributeInstance()
+					.getAttribute();
 			Entity entity = attribute.getEntity();
 
 			if (first) {
@@ -142,22 +151,23 @@ public class PreTaskForm extends VerticalLayout {
 	}
 
 	protected void addLabel(String entityName) {
-		Label l= new Label(entityName);
+		Label l = new Label(entityName);
 		l.addStyleName("h2");
 		data.addComponent(l);
 	}
 
 	public void generateTaskForm(long workItemOID) {
 		Transaction.begin();
-		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(workItemOID);
-		String specificationName = taskWorkItem.getBwInstance().getBwSpecification().getName().replaceAll(" ", "");
+		TaskWorkItem taskWorkItem = FenixFramework.getDomainObject(workItemOID);
+		String specificationName = taskWorkItem.getBwInstance()
+				.getBwSpecification().getName().replaceAll(" ", "");
 		String taskName = taskWorkItem.getTask().getName().replaceAll(" ", "");
 		String className = specificationName + "." + taskName + "Form";
 		Transaction.commit();
-		
+
 		log.info("className:" + className);
 		String packageName = "pt.ist.socialsoftware.blendedworkflow.presentation.";
-		
+
 		// Get Form class
 		try {
 			tmp_class = Class.forName(packageName + className);
@@ -173,12 +183,13 @@ public class PreTaskForm extends VerticalLayout {
 				log.info(new String(baos.toByteArray()));
 			}
 		}
-		
+
 		// New Instance
 		try {
-			tmp_const = tmp_class.getDeclaredConstructor(long.class);			
+			tmp_const = tmp_class.getDeclaredConstructor(long.class);
 			Window taskWindow = new Window(className);
-			taskWindow.setContent((ComponentContainer) tmp_const.newInstance(workItemOID));
+			taskWindow.setContent((ComponentContainer) tmp_const
+					.newInstance(workItemOID));
 			taskWindow.setWidth("30%");
 			taskWindow.center();
 			getApplication().getMainWindow().addWindow(taskWindow);
@@ -191,4 +202,3 @@ public class PreTaskForm extends VerticalLayout {
 		}
 	}
 }
-

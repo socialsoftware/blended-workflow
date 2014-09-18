@@ -1,21 +1,21 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import jvstm.Transaction;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 
+import com.vaadin.event.Action;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.event.Action;
 
 @SuppressWarnings("serial")
 public class AllDataModelTree extends VerticalLayout {
@@ -24,9 +24,9 @@ public class AllDataModelTree extends VerticalLayout {
 	private NewGoalForm parentWindow;
 
 	private static final Action ADD_ENTITY_ACTION = new Action("Add Entity");
-	private static final Action ADD_ATTRIBUTE_ACTION = new Action("Add Attribute");
+	private static final Action ADD_ATTRIBUTE_ACTION = new Action(
+			"Add Attribute");
 	private static final Action ADD_RELATION_ACTION = new Action("Add Relation");
-
 
 	public AllDataModelTree(final NewGoalForm parent, final long bwInstanceOID) {
 		parentWindow = parent;
@@ -43,22 +43,26 @@ public class AllDataModelTree extends VerticalLayout {
 		footer.setSpacing(true);
 
 		treetable.addActionHandler(new Action.Handler() {
+			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == ADD_ATTRIBUTE_ACTION) {
-					String entityName = treetable.getItemCaption(target).toString();
+					String entityName = treetable.getItemCaption(target)
+							.toString();
 					showNewAttributeWindow(bwInstanceOID, entityName);
 				} else if (action == ADD_ENTITY_ACTION) {
 					showNewEntityWindow(bwInstanceOID);
-				} 
-				else if (action == ADD_RELATION_ACTION) {
-					String entityName = treetable.getItemCaption(target).toString();
+				} else if (action == ADD_RELATION_ACTION) {
+					String entityName = treetable.getItemCaption(target)
+							.toString();
 					showNewRelationWindow(bwInstanceOID, entityName);
-				} 
+				}
 			}
 
+			@Override
 			public Action[] getActions(Object target, Object sender) {
 				if (treetable.areChildrenAllowed(target)) {
-					return new Action[]{ADD_ENTITY_ACTION, ADD_ATTRIBUTE_ACTION, ADD_RELATION_ACTION };
+					return new Action[] { ADD_ENTITY_ACTION,
+							ADD_ATTRIBUTE_ACTION, ADD_RELATION_ACTION };
 				} else {
 					return new Action[] {};
 				}
@@ -70,8 +74,9 @@ public class AllDataModelTree extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				upadateEntities();
-				parent.setContext((Long)treetable.getValue());
-				getApplication().getMainWindow().removeWindow(AllDataModelTree.this.getWindow());
+				parent.setContext((Long) treetable.getValue());
+				getApplication().getMainWindow().removeWindow(
+						AllDataModelTree.this.getWindow());
 			}
 		});
 
@@ -80,7 +85,8 @@ public class AllDataModelTree extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				upadateEntities();
-				getApplication().getMainWindow().removeWindow(AllDataModelTree.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						AllDataModelTree.this.getWindow());
 			}
 		});
 
@@ -96,7 +102,7 @@ public class AllDataModelTree extends VerticalLayout {
 
 	public void getDataModel(long bwInstanceOID) {
 		Transaction.begin();
-		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		for (Entity entity : dataModelInstance.getEntities()) {
 			String entityName = entity.getName();
@@ -107,7 +113,7 @@ public class AllDataModelTree extends VerticalLayout {
 				String attributeName = attribute.getName();
 				long attributeOID = attribute.getOID();
 				treetable.addItem(attributeOID);
-				treetable.setParent(attributeOID,entityOID);
+				treetable.setParent(attributeOID, entityOID);
 				treetable.setItemCaption(attributeOID, attributeName);
 				treetable.setChildrenAllowed(attributeOID, false);
 			}
@@ -124,14 +130,16 @@ public class AllDataModelTree extends VerticalLayout {
 
 	protected void showNewAttributeWindow(long bwInstanceOID, String entityName) {
 		Window newAttribute = new Window("New Attribute");
-		newAttribute.setContent(new NewAttributeForm(this, bwInstanceOID, entityName));
+		newAttribute.setContent(new NewAttributeForm(this, bwInstanceOID,
+				entityName));
 		newAttribute.center();
 		getApplication().getMainWindow().addWindow(newAttribute);
 	}
 
 	protected void showNewRelationWindow(long bwInstanceOID, String entityName) {
-		Window newRelation= new Window("New Relation");
-		newRelation.setContent(new NewRelationForm(this, bwInstanceOID, entityName));
+		Window newRelation = new Window("New Relation");
+		newRelation.setContent(new NewRelationForm(this, bwInstanceOID,
+				entityName));
 		newRelation.center();
 		getApplication().getMainWindow().addWindow(newRelation);
 	}

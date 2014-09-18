@@ -2,20 +2,20 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import java.util.concurrent.Callable;
 
+import jvstm.Transaction;
+
 import org.apache.log4j.Logger;
 
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.fenixframework.pstm.Transaction;
-
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 
 public class CheckInWorkItemService implements Callable<String> {
 
 	private static Logger log = Logger.getLogger("CheckInWorkItemService");
-	private WorkItem workItem;
+	private final WorkItem workItem;
 
-	public CheckInWorkItemService (long workItemOID) {
-		this.workItem = AbstractDomainObject.fromOID(workItemOID);
+	public CheckInWorkItemService(long workItemOID) {
+		this.workItem = FenixFramework.getDomainObject(workItemOID);
 	}
 
 	@Override

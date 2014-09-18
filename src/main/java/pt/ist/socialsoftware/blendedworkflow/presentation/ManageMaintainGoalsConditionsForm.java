@@ -1,29 +1,31 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import jvstm.Transaction;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.MaintainGoalState;
 
+import com.vaadin.event.Action;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.event.Action;
 
 @SuppressWarnings("serial")
 public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 
 	protected final Tree treetable = new Tree("Achieve Goals");
 
-	private static final Action ENABLE_CONDITION_ACTION = new Action("Enable Condition");
-	private static final Action DISABLE_CONDITION_ACTION = new Action("Disable Condition");
+	private static final Action ENABLE_CONDITION_ACTION = new Action(
+			"Enable Condition");
+	private static final Action DISABLE_CONDITION_ACTION = new Action(
+			"Disable Condition");
 
 	public ManageMaintainGoalsConditionsForm(final long bwInstanceOID) {
 		HorizontalLayout footer = new HorizontalLayout();
@@ -39,13 +41,18 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 		footer.setSpacing(true);
 
 		treetable.addActionHandler(new Action.Handler() {
+			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == DISABLE_CONDITION_ACTION) {
 					// remove condition
 					Long goalOID = (Long) target;
 
 					Transaction.begin();
-					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, MaintainGoalState.DEACTIVATED);
+					BlendedWorkflow
+							.getInstance()
+							.getWorkListManager()
+							.manageGoalCondition(goalOID,
+									MaintainGoalState.DEACTIVATED);
 					Transaction.commit();
 					refreshTree(bwInstanceOID);
 				} else {
@@ -53,19 +60,25 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 					Long goalOID = (Long) target;
 
 					Transaction.begin();
-					BlendedWorkflow.getInstance().getWorkListManager().manageGoalCondition(goalOID, MaintainGoalState.ENABLED);
+					BlendedWorkflow
+							.getInstance()
+							.getWorkListManager()
+							.manageGoalCondition(goalOID,
+									MaintainGoalState.ENABLED);
 					Transaction.commit();
 					refreshTree(bwInstanceOID);
 				}
 			}
 
+			@Override
 			public Action[] getActions(Object target, Object sender) {
 				if (treetable.areChildrenAllowed(target)) {
-					String goalName = (String) treetable.getItemCaption(target).toString();
+					String goalName = treetable.getItemCaption(target)
+							.toString();
 					if (goalName.contains("ENABLED")) {
-						return new Action[]{DISABLE_CONDITION_ACTION};
+						return new Action[] { DISABLE_CONDITION_ACTION };
 					} else {
-						return new Action[]{ENABLE_CONDITION_ACTION};
+						return new Action[] { ENABLE_CONDITION_ACTION };
 					}
 				} else {
 					return new Action[] {};
@@ -77,7 +90,8 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 		submitButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(ManageMaintainGoalsConditionsForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						ManageMaintainGoalsConditionsForm.this.getWindow());
 			}
 		});
 
@@ -92,20 +106,22 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 
 	public void getMaintainGoals(long bwInstanceOID) {
 		Transaction.begin();
-		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
 		for (MaintainGoal achieveGoal : goalModelInstance.getMaintainGoals()) {
 			long goalOID = achieveGoal.getOID();
-			String goalName = achieveGoal.getName() + "("+ achieveGoal.getState() + ")";
+			String goalName = achieveGoal.getName() + "("
+					+ achieveGoal.getState() + ")";
 			treetable.addItem(goalOID);
 			treetable.setItemCaption(goalOID, goalName);
 
 			long conditionOID = achieveGoal.getMaintainCondition().getOID();
-			String conditionName = achieveGoal.getMaintainCondition().toString();
+			String conditionName = achieveGoal.getMaintainCondition()
+					.toString();
 			treetable.addItem(conditionOID);
 			treetable.setItemCaption(conditionOID, conditionName);
-			treetable.setParent(conditionOID,goalOID);
+			treetable.setParent(conditionOID, goalOID);
 			treetable.setChildrenAllowed(conditionOID, false);
 
 			treetable.expandItemsRecursively(goalOID);

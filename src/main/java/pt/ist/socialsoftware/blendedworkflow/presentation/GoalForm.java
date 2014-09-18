@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import jvstm.Transaction;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -16,20 +16,20 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class GoalForm extends VerticalLayout {
 
-	private long goalWorkItemOID;
-//	VerticalLayout preData = new VerticalLayout();
+	private final long goalWorkItemOID;
+	// VerticalLayout preData = new VerticalLayout();
 	VerticalLayout data = new VerticalLayout();
 	VerticalLayout entitiesInstances = new VerticalLayout();
 
@@ -39,12 +39,12 @@ public class GoalForm extends VerticalLayout {
 
 		this.goalWorkItemOID = workItemOID;
 
-//		addComponent(preData);
+		// addComponent(preData);
 		addComponent(data);
 		addComponent(entitiesInstances);
-//		getInputData();
+		// getInputData();
 		getOutputData();
-//		getRelationEntities();
+		// getRelationEntities();
 
 		HorizontalLayout footer = new HorizontalLayout();
 		footer.setMargin(true);
@@ -55,24 +55,28 @@ public class GoalForm extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Transaction.begin();
-				GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(workItemOID);
+				GoalWorkItem goalWorkItem = FenixFramework
+						.getDomainObject(workItemOID);
 				long e1OID = goalWorkItem.getEntityInstanceContext().getOID();
 				long bwInstanceOID = goalWorkItem.getBwInstance().getOID();
 				Transaction.commit();
-				
+
 				for (int i = 0; i < entitiesInstances.getComponentCount(); i++) {
-					NativeSelect selec = (NativeSelect) entitiesInstances.getComponent(i);
+					NativeSelect selec = (NativeSelect) entitiesInstances
+							.getComponent(i);
 					long e2OID = (Long) selec.getValue();
 					Transaction.begin();
-					BlendedWorkflow.getInstance().getBwManager().addRelationInstance(bwInstanceOID, e1OID, e2OID);
+					BlendedWorkflow.getInstance().getBwManager()
+							.addRelationInstance(bwInstanceOID, e1OID, e2OID);
 					Transaction.commit();
 				}
-				
+
 				int workItemAttributeIndex = 0;
 				for (int y = 0; y < data.getComponentCount(); y++) {
 					AbstractField field;
 					if (!data.getComponent(y).getClass().equals(Label.class)) {
-						if(data.getComponent(y).getClass().equals(CheckBox.class)) {
+						if (data.getComponent(y).getClass()
+								.equals(CheckBox.class)) {
 							field = (CheckBox) data.getComponent(y);
 						} else {
 							field = (TextField) data.getComponent(y);
@@ -84,14 +88,17 @@ public class GoalForm extends VerticalLayout {
 				}
 
 				Transaction.begin();
-				User activeUser = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
+				User activeUser = BlendedWorkflow.getInstance()
+						.getOrganizationalManager().getActiveUser();
 				goalWorkItem.setUser(activeUser);
 				Transaction.commit();
 				Transaction.begin();
-				BlendedWorkflow.getInstance().getWorkListManager().checkInWorkItem(goalWorkItemOID);
+				BlendedWorkflow.getInstance().getWorkListManager()
+						.checkInWorkItem(goalWorkItemOID);
 				Transaction.commit();
 
-				getApplication().getMainWindow().removeWindow(GoalForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						GoalForm.this.getWindow());
 			}
 		});
 		footer.addComponent(submitButton);
@@ -100,7 +107,8 @@ public class GoalForm extends VerticalLayout {
 		cancelButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(GoalForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						GoalForm.this.getWindow());
 			}
 		});
 		footer.addComponent(cancelButton);
@@ -111,20 +119,25 @@ public class GoalForm extends VerticalLayout {
 
 	private void setWorkItemArgumentValue(int index, String value) {
 		Transaction.begin();
-		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
+		GoalWorkItem goalWorkItem = FenixFramework
+				.getDomainObject(goalWorkItemOID);
 		goalWorkItem.getOutputWorkItemArguments().get(index).setValue(value);
-		goalWorkItem.getOutputWorkItemArguments().get(index).setState(DataState.DEFINED);
+		goalWorkItem.getOutputWorkItemArguments().get(index)
+				.setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
 	private void getOutputData() {
 		Transaction.begin();
-		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
+		GoalWorkItem goalWorkItem = FenixFramework
+				.getDomainObject(goalWorkItemOID);
 
 		Entity previousEntity = null;
 		Boolean first = true;
-		for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArguments()) {
-			Attribute attribute = workItemArgument.getAttributeInstance().getAttribute();
+		for (WorkItemArgument workItemArgument : goalWorkItem
+				.getOutputWorkItemArguments()) {
+			Attribute attribute = workItemArgument.getAttributeInstance()
+					.getAttribute();
 			Entity entity = attribute.getEntity();
 
 			if (first) {
@@ -145,30 +158,29 @@ public class GoalForm extends VerticalLayout {
 		}
 		Transaction.commit();
 	}
-	
-//	private void getRelationEntities() {
-//		Transaction.begin();
-//		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
-//		Entity goalContext = goalWorkItem.getAchieveGoal().getEntityContext();
-//		
-//		if (goalWorkItem.getSucessCondition().existExistEntity()) {
-//			
-//			for (Relation relation : goalContext.getRelations()) {
-//				Entity one = relation.getEntityOne();
-//				Entity two = relation.getEntityTwo();
-//				if (goalContext.equals(one) && relation.getIsTwoKeyEntity()) {
-//					addNativeSelect(two);
-//				}
-//				if (goalContext.equals(two) && relation.getIsOneKeyEntity()) {
-//					addNativeSelect(one);
-//				}
-//			}
-//		}
-//		
-//		Transaction.commit();
-//	}
-	
-	
+
+	// private void getRelationEntities() {
+	// Transaction.begin();
+	// GoalWorkItem goalWorkItem =
+	// FenixFramework.getDomainObject(goalWorkItemOID);
+	// Entity goalContext = goalWorkItem.getAchieveGoal().getEntityContext();
+	//
+	// if (goalWorkItem.getSucessCondition().existExistEntity()) {
+	//
+	// for (Relation relation : goalContext.getRelations()) {
+	// Entity one = relation.getEntityOne();
+	// Entity two = relation.getEntityTwo();
+	// if (goalContext.equals(one) && relation.getIsTwoKeyEntity()) {
+	// addNativeSelect(two);
+	// }
+	// if (goalContext.equals(two) && relation.getIsOneKeyEntity()) {
+	// addNativeSelect(one);
+	// }
+	// }
+	// }
+	//
+	// Transaction.commit();
+	// }
 
 	protected void addCheckBox(String attributeName) {
 		CheckBox checkBox = new CheckBox(attributeName);
@@ -179,7 +191,7 @@ public class GoalForm extends VerticalLayout {
 		TextField tf = new TextField(attributeName);
 		data.addComponent(tf);
 	}
-	
+
 	protected void addNativeSelect(Entity entity) {
 		NativeSelect ns = new NativeSelect(entity.getName());
 		entitiesInstances.addComponent(ns);
@@ -192,53 +204,57 @@ public class GoalForm extends VerticalLayout {
 	}
 
 	protected void addLabel(String entityName) {
-		Label l= new Label(entityName);
+		Label l = new Label(entityName);
 		l.addStyleName("h2");
 		data.addComponent(l);
 	}
-	
-//	private void getInputData() {
-//		Transaction.begin();
-//		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
-//
-//		Entity previousEntity = null;
-//		Boolean first = true;
-//		Boolean posAttribute = false;
-//		for (WorkItemArgument preWorkItemArgument : taskWorkItem.getInputWorkItemArguments()) {
-//			AttributeInstance preAttributeInstance = preWorkItemArgument.getAttributeInstance();
-//			Attribute attribute = preAttributeInstance.getAttribute();
-//			Entity entity = attribute.getEntity();
-//			String value = preWorkItemArgument.getValue();
-//
-//			for (WorkItemArgument posWorkItemArgument: taskWorkItem.getOutputWorkItemArguments()) {
-//				AttributeInstance posAttributeInstance = posWorkItemArgument.getAttributeInstance();
-//				if (preAttributeInstance.equals(posAttributeInstance)) {
-//					posAttribute = true;
-//				}
-//			}
-//
-//			if (!posAttribute) {
-//
-//				if (first) {
-//					previousEntity = entity;
-//					addLabel(entity.getName(), true);
-//					first = false;
-//				}
-//				if (!entity.equals(previousEntity)) {
-//					addLabel(entity.getName(), true);
-//				}
-//
-//				if (attribute.getType().equals(AttributeType.BOOLEAN)) {
-//					addCheckBox(attribute.getName(), true, value);
-//				} else {
-//					addTextBox(attribute.getName(), true, value);
-//				}
-//			}
-//			posAttribute = false;
-//			previousEntity = entity;
-//		}
-//		Transaction.commit();
-//	}
+
+	// private void getInputData() {
+	// Transaction.begin();
+	// TaskWorkItem taskWorkItem =
+	// FenixFramework.getDomainObject(taskWorkItemOID);
+	//
+	// Entity previousEntity = null;
+	// Boolean first = true;
+	// Boolean posAttribute = false;
+	// for (WorkItemArgument preWorkItemArgument :
+	// taskWorkItem.getInputWorkItemArguments()) {
+	// AttributeInstance preAttributeInstance =
+	// preWorkItemArgument.getAttributeInstance();
+	// Attribute attribute = preAttributeInstance.getAttribute();
+	// Entity entity = attribute.getEntity();
+	// String value = preWorkItemArgument.getValue();
+	//
+	// for (WorkItemArgument posWorkItemArgument:
+	// taskWorkItem.getOutputWorkItemArguments()) {
+	// AttributeInstance posAttributeInstance =
+	// posWorkItemArgument.getAttributeInstance();
+	// if (preAttributeInstance.equals(posAttributeInstance)) {
+	// posAttribute = true;
+	// }
+	// }
+	//
+	// if (!posAttribute) {
+	//
+	// if (first) {
+	// previousEntity = entity;
+	// addLabel(entity.getName(), true);
+	// first = false;
+	// }
+	// if (!entity.equals(previousEntity)) {
+	// addLabel(entity.getName(), true);
+	// }
+	//
+	// if (attribute.getType().equals(AttributeType.BOOLEAN)) {
+	// addCheckBox(attribute.getName(), true, value);
+	// } else {
+	// addTextBox(attribute.getName(), true, value);
+	// }
+	// }
+	// posAttribute = false;
+	// previousEntity = entity;
+	// }
+	// Transaction.commit();
+	// }
 
 }
-

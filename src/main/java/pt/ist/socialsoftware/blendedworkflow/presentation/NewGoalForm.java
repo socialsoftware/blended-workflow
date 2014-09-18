@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import jvstm.Transaction;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
@@ -26,9 +26,11 @@ public class NewGoalForm extends VerticalLayout {
 
 	private final TextField name = new TextField("Goal Name");
 	private final TextField description = new TextField("Description");
-	private final NativeSelect conditionType = new NativeSelect("Condition Type");
+	private final NativeSelect conditionType = new NativeSelect(
+			"Condition Type");
 	private final NativeSelect relationType = new NativeSelect("Joiner Type");
-	private final NativeSelect entityContext = new NativeSelect("Entity Context");
+	private final NativeSelect entityContext = new NativeSelect(
+			"Entity Context");
 	private final Table requiredData = new Table("Create Condition:");
 	private final Table conditionsTable = new Table("Conditions Created");
 
@@ -87,14 +89,16 @@ public class NewGoalForm extends VerticalLayout {
 			public void buttonClick(ClickEvent event) {
 				Long entityContextOID = (Long) entityContext.getValue();
 				if (entityContext == null) {
-					getApplication().getMainWindow().showNotification("Please select a Context!");
+					getApplication().getMainWindow().showNotification(
+							"Please select a Context!");
 				} else {
 					String relation = (String) relationType.getValue();
 
 					if (relation == null) {
 						relation = "";
 					}
-					showDataModelTreeWindow(bwInstanceOID, entityContextOID, relation);
+					showDataModelTreeWindow(bwInstanceOID, entityContextOID,
+							relation);
 				}
 			}
 		});
@@ -105,7 +109,8 @@ public class NewGoalForm extends VerticalLayout {
 			public void buttonClick(ClickEvent event) {
 				String type = (String) conditionType.getValue();
 				if (type == null) {
-					getApplication().getMainWindow().showNotification("Please select a condition type!");
+					getApplication().getMainWindow().showNotification(
+							"Please select a condition type!");
 				} else {
 
 					if (type.equals("Success")) {
@@ -114,7 +119,8 @@ public class NewGoalForm extends VerticalLayout {
 					} else {
 						String newActivateCondition = createCondition();
 						activateCondition.add(createCondition());
-						addDataToConditionTable("Activate", newActivateCondition);
+						addDataToConditionTable("Activate",
+								newActivateCondition);
 					}
 					requiredData.removeAllItems();
 				}
@@ -130,22 +136,31 @@ public class NewGoalForm extends VerticalLayout {
 					String goalDescription = (String) description.getValue();
 					long entityOID = (Long) entityContext.getValue();
 					String activeUserID = "";
-					if (sucessCondition.equals("") || activateCondition.size() == 0) {
-						getApplication().getMainWindow().showNotification(
-								"Please create at least one Activate and one Sucess Conditions.");
+					if (sucessCondition.equals("")
+							|| activateCondition.size() == 0) {
+						getApplication()
+								.getMainWindow()
+								.showNotification(
+										"Please create at least one Activate and one Sucess Conditions.");
 					} else {
 						Transaction.begin();
-						activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
+						activeUserID = BlendedWorkflow.getInstance()
+								.getOrganizationalManager().getActiveUser()
+								.getID();
 						BlendedWorkflow
 								.getInstance()
 								.getWorkListManager()
-								.createGoal(bwInstanceOID, goalName, goalDescription, parentGoalOID, sucessCondition,
-										activateCondition, entityOID, activeUserID);
+								.createGoal(bwInstanceOID, goalName,
+										goalDescription, parentGoalOID,
+										sucessCondition, activateCondition,
+										entityOID, activeUserID);
 						Transaction.commit();
-						getApplication().getMainWindow().removeWindow(NewGoalForm.this.getWindow());
+						getApplication().getMainWindow().removeWindow(
+								NewGoalForm.this.getWindow());
 					}
 				} catch (java.lang.NullPointerException jle) {
-					getApplication().getMainWindow().showNotification("Please fill all the fields");
+					getApplication().getMainWindow().showNotification(
+							"Please fill all the fields");
 				}
 
 			}
@@ -155,7 +170,8 @@ public class NewGoalForm extends VerticalLayout {
 		cancel.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(NewGoalForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						NewGoalForm.this.getWindow());
 			}
 		});
 
@@ -199,13 +215,14 @@ public class NewGoalForm extends VerticalLayout {
 	}
 
 	public void getGoals() {
-		BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		Transaction.begin();
 
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		for (Entity entity : dataModelInstance.getEntities()) {
 			this.entityContext.addItem(entity.getOID());
-			this.entityContext.setItemCaption(entity.getOID(), entity.getName());
+			this.entityContext
+					.setItemCaption(entity.getOID(), entity.getName());
 		}
 		Transaction.commit();
 	}
@@ -220,7 +237,8 @@ public class NewGoalForm extends VerticalLayout {
 			Item item = requiredData.getItem(iid);
 
 			relation = item.getItemProperty("Joiner").getValue().toString();
-			subCondition = item.getItemProperty("Condition").getValue().toString();
+			subCondition = item.getItemProperty("Condition").getValue()
+					.toString();
 
 			// RelationType
 			if (!relation.equals("")) {
@@ -243,18 +261,22 @@ public class NewGoalForm extends VerticalLayout {
 			relationType.setValue("and");
 		}
 		int index = requiredData.getItemIds().size();
-		requiredData.addItem(new Object[] { conditionJoiner, condition }, new Integer(index + 1));
+		requiredData.addItem(new Object[] { conditionJoiner, condition },
+				new Integer(index + 1));
 	}
 
 	public void addDataToConditionTable(String conditionType, String condition) {
 		int index = conditionsTable.getItemIds().size();
-		conditionsTable.addItem(new Object[] { conditionType, condition }, new Integer(index + 1));
+		conditionsTable.addItem(new Object[] { conditionType, condition },
+				new Integer(index + 1));
 	}
 
 	// generate dataModelWindow
-	protected void showDataModelTreeWindow(long bwInstanceOID, long contextOID, String relation) {
+	protected void showDataModelTreeWindow(long bwInstanceOID, long contextOID,
+			String relation) {
 		Window dataModel = new Window("Choose a data element");
-		dataModel.setContent(new DataModelTree(this, bwInstanceOID, contextOID, relation));
+		dataModel.setContent(new DataModelTree(this, bwInstanceOID, contextOID,
+				relation));
 		dataModel.center();
 		dataModel.setClosable(false);
 		dataModel.setResizable(false);

@@ -1,33 +1,34 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import jvstm.Transaction;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window.Notification;
 
 @SuppressWarnings("serial")
-public class NewAttributeForm extends VerticalLayout{
+public class NewAttributeForm extends VerticalLayout {
 
 	private final TextField nameTf = new TextField("Attribute name:");
 	private final NativeSelect typeNS = new NativeSelect("Type:");
 	private final CheckBox isKeyCB = new CheckBox("Key Attribute:");
-	
-	public NewAttributeForm(final AllDataModelTree parent, final long bwInstanceOID, final String entityName) {
+
+	public NewAttributeForm(final AllDataModelTree parent,
+			final long bwInstanceOID, final String entityName) {
 		setMargin(true);
 
 		setWidth("300px");
@@ -50,14 +51,21 @@ public class NewAttributeForm extends VerticalLayout{
 					String name = (String) nameTf.getValue();
 					String type = (String) typeNS.getValue();
 					Boolean isKeyAttribute = (Boolean) isKeyCB.getValue();
-					addAttribute(bwInstanceOID, name, entityName, type, isKeyAttribute);
-					getApplication().getMainWindow().showNotification("New Attribute  " + name +" created", Notification.TYPE_TRAY_NOTIFICATION);
+					addAttribute(bwInstanceOID, name, entityName, type,
+							isKeyAttribute);
+					getApplication().getMainWindow().showNotification(
+							"New Attribute  " + name + " created",
+							Notification.TYPE_TRAY_NOTIFICATION);
 					parent.refreshTree(bwInstanceOID);
-					getApplication().getMainWindow().removeWindow(NewAttributeForm.this.getWindow());
+					getApplication().getMainWindow().removeWindow(
+							NewAttributeForm.this.getWindow());
 				} catch (java.lang.NullPointerException jle) {
-					getApplication().getMainWindow().showNotification("Please fill all fields");
+					getApplication().getMainWindow().showNotification(
+							"Please fill all fields");
 				} catch (BlendedWorkflowException bwe) {
-					getApplication().getMainWindow().showNotification(bwe.getError().toString(), Notification.TYPE_ERROR_MESSAGE);
+					getApplication().getMainWindow().showNotification(
+							bwe.getError().toString(),
+							Notification.TYPE_ERROR_MESSAGE);
 				}
 			}
 		});
@@ -66,7 +74,8 @@ public class NewAttributeForm extends VerticalLayout{
 		cancel.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(NewAttributeForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						NewAttributeForm.this.getWindow());
 			}
 		});
 
@@ -79,10 +88,12 @@ public class NewAttributeForm extends VerticalLayout{
 		setComponentAlignment(submitPanel, Alignment.MIDDLE_CENTER);
 	}
 
-	public void addAttribute(long BwInstanceOID, String name, String entityName, String typeString, Boolean isKeyAttribute) throws BlendedWorkflowException {
+	public void addAttribute(long BwInstanceOID, String name,
+			String entityName, String typeString, Boolean isKeyAttribute)
+			throws BlendedWorkflowException {
 		Transaction.begin();
 
-		BWInstance bwInstance = AbstractDomainObject.fromOID(BwInstanceOID);
+		BWInstance bwInstance = FenixFramework.getDomainObject(BwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 		Entity entity = dataModel.getEntity(entityName);
 
@@ -95,7 +106,8 @@ public class NewAttributeForm extends VerticalLayout{
 			type = AttributeType.BOOLEAN;
 		}
 
-		new Attribute(dataModel, name, entity, type, isKeyAttribute, false); //FIXME: isSystem
+		new Attribute(dataModel, name, entity, type, isKeyAttribute, false); // FIXME:
+																				// isSystem
 
 		Transaction.commit();
 	}

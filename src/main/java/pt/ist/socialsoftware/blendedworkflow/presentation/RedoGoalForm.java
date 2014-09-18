@@ -1,31 +1,32 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import jvstm.Transaction;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState;
-import jvstm.Transaction;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class RedoGoalForm extends VerticalLayout {
 
-	private NativeSelect bwInstances = new NativeSelect("BWInstance");
-	private NativeSelect parentGoal = new NativeSelect("Goal:");
-	private NativeSelect workItems = new NativeSelect("Completed or Skipped GoalWorkItems:");
-	
+	private final NativeSelect bwInstances = new NativeSelect("BWInstance");
+	private final NativeSelect parentGoal = new NativeSelect("Goal:");
+	private final NativeSelect workItems = new NativeSelect(
+			"Completed or Skipped GoalWorkItems:");
+
 	public RedoGoalForm() {
 
 		HorizontalLayout dataHL = new HorizontalLayout();
@@ -43,27 +44,30 @@ public class RedoGoalForm extends VerticalLayout {
 
 		bwInstances.setImmediate(true);
 		bwInstances.addListener(new Property.ValueChangeListener() {
+			@Override
 			public void valueChange(ValueChangeEvent event) {
 				if (bwInstances.getValue() == null) {
 					parentGoal.removeAllItems();
 					workItems.removeAllItems();
 				} else {
 					long bwInstanceOID = (Long) bwInstances.getValue();
-					BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
+					BWInstance bwInstance = FenixFramework
+							.getDomainObject(bwInstanceOID);
 					getGoals(bwInstance);
 				}
 			}
 		});
-		
+
 		parentGoal.setImmediate(true);
 		parentGoal.addListener(new Property.ValueChangeListener() {
+			@Override
 			public void valueChange(ValueChangeEvent event) {
 				if (parentGoal.getValue() == null) {
 					workItems.removeAllItems();
 				} else {
 					long bwInstanceOID = (Long) bwInstances.getValue();
 					long goalOID = (Long) parentGoal.getValue();
-					updateWorkItemsInfo(bwInstanceOID, goalOID); 
+					updateWorkItemsInfo(bwInstanceOID, goalOID);
 				}
 			}
 		});
@@ -75,14 +79,18 @@ public class RedoGoalForm extends VerticalLayout {
 				try {
 					long workItemlOID = (Long) workItems.getValue();
 					Transaction.begin();
-					String activeUserID = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser().getID();
-					BlendedWorkflow.getInstance().getWorkListManager().redoGoal(workItemlOID, activeUserID);
+					String activeUserID = BlendedWorkflow.getInstance()
+							.getOrganizationalManager().getActiveUser().getID();
+					BlendedWorkflow.getInstance().getWorkListManager()
+							.redoGoal(workItemlOID, activeUserID);
 					Transaction.commit();
-					
-					getApplication().getMainWindow().removeWindow(RedoGoalForm.this.getWindow());
+
+					getApplication().getMainWindow().removeWindow(
+							RedoGoalForm.this.getWindow());
 				} catch (java.lang.NullPointerException jle) {
-					getApplication().getMainWindow().showNotification("Please fill all the fields");
-				} 
+					getApplication().getMainWindow().showNotification(
+							"Please fill all the fields");
+				}
 
 			}
 		});
@@ -91,7 +99,8 @@ public class RedoGoalForm extends VerticalLayout {
 		cancel.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(RedoGoalForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						RedoGoalForm.this.getWindow());
 			}
 		});
 
@@ -99,8 +108,6 @@ public class RedoGoalForm extends VerticalLayout {
 		addComponent(bwInstances);
 		addComponent(parentGoal);
 		addComponent(workItems);
-		
-
 
 		dataHL.addComponent(dataVL);
 		addComponent(dataHL);
@@ -120,32 +127,37 @@ public class RedoGoalForm extends VerticalLayout {
 		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
 			if (goal.getGoalWorkItemsCount() > 0) {
 				this.parentGoal.addItem(goal.getOID());
-				this.parentGoal.setItemCaption(goal.getOID(), goal.getName());}
-		}
-		Transaction.commit();
-	}
-	
-	private void updateWorkItemsInfo(long bwInstanceOID, long goalOID) {
-		this.workItems.removeAllItems();
-		AchieveGoal goal = AbstractDomainObject.fromOID(goalOID);
-		
-		Transaction.begin();
-		for (GoalWorkItem goalWorkItem : goal.getGoalWorkItems()) {
-			if (goalWorkItem.getState().equals(GoalState.ACHIEVED) || goalWorkItem.getState().equals(GoalState.SKIPPED)) {
-				this.workItems.addItem(goalWorkItem.getOID());
-				this.workItems.setItemCaption(goalWorkItem.getOID(), goalWorkItem.getID());
-				//TODO: Give workitem data information
+				this.parentGoal.setItemCaption(goal.getOID(), goal.getName());
 			}
 		}
 		Transaction.commit();
 	}
-	
+
+	private void updateWorkItemsInfo(long bwInstanceOID, long goalOID) {
+		this.workItems.removeAllItems();
+		AchieveGoal goal = FenixFramework.getDomainObject(goalOID);
+
+		Transaction.begin();
+		for (GoalWorkItem goalWorkItem : goal.getGoalWorkItems()) {
+			if (goalWorkItem.getState().equals(GoalState.ACHIEVED)
+					|| goalWorkItem.getState().equals(GoalState.SKIPPED)) {
+				this.workItems.addItem(goalWorkItem.getOID());
+				this.workItems.setItemCaption(goalWorkItem.getOID(),
+						goalWorkItem.getID());
+				// TODO: Give workitem data information
+			}
+		}
+		Transaction.commit();
+	}
+
 	private void getBWInstances() {
 		Transaction.begin();
-		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance().getBwSpecifications()) {
+		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance()
+				.getBwSpecifications()) {
 			for (BWInstance bwInstance : bwSpecification.getBwInstances()) {
 				this.bwInstances.addItem(bwInstance.getOID());
-				this.bwInstances.setItemCaption(bwInstance.getOID(), bwInstance.getName());
+				this.bwInstances.setItemCaption(bwInstance.getOID(),
+						bwInstance.getName());
 			}
 		}
 		Transaction.commit();

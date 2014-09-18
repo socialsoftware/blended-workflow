@@ -4,26 +4,26 @@ import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
-import pt.ist.fenixframework.pstm.Transaction;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 public class SkipWorkItemService implements Callable<String> {
 
 	private static Logger log = Logger.getLogger("SkipWorkItemService");
-	private WorkItem workItem;
+	private final WorkItem workItem;
 
-	public SkipWorkItemService (long workItemOID) {
-		this.workItem = AbstractDomainObject.fromOID(workItemOID);
+	public SkipWorkItemService(long workItemOID) {
+		this.workItem = FenixFramework.getDomainObject(workItemOID);
 	}
 
 	@Override
 	public String call() throws Exception {
 		log.info("Start");
 		Transaction.begin();
-		for (WorkItemArgument workItemArgument : this.workItem.getOutputWorkItemArguments()) {
+		for (WorkItemArgument workItemArgument : this.workItem
+				.getOutputWorkItemArguments()) {
 			workItemArgument.setState(DataState.SKIPPED);
 			workItemArgument.setValue("$SKIPPED$");
 		}
@@ -32,6 +32,6 @@ public class SkipWorkItemService implements Callable<String> {
 		Transaction.commit();
 		log.info("END");
 		return "SkipWorkItemService:Sucess";
-	}	
+	}
 
 }

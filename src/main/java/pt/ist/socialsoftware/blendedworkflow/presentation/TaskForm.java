@@ -3,26 +3,26 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import java.text.DateFormat;
 
 import jvstm.Transaction;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -30,11 +30,11 @@ import com.vaadin.ui.VerticalLayout;
 public class TaskForm extends VerticalLayout {
 	DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
 
-	private long taskWorkItemOID;
+	private final long taskWorkItemOID;
 	VerticalLayout preData = new VerticalLayout();
 	VerticalLayout data = new VerticalLayout();
 	HorizontalLayout footer = new HorizontalLayout();
-	 
+
 	public TaskForm(final long workItemOID) {
 		setMargin(true);
 		setSpacing(true);
@@ -46,7 +46,7 @@ public class TaskForm extends VerticalLayout {
 
 		getInputData();
 		getOutputData();
-		
+
 		footer.setMargin(true);
 		footer.setSpacing(true);
 
@@ -54,21 +54,24 @@ public class TaskForm extends VerticalLayout {
 		submitButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
-				//New
+
+				// New
 				Transaction.begin();
-				TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(workItemOID);
+				TaskWorkItem taskWorkItem = FenixFramework
+						.getDomainObject(workItemOID);
 				Transaction.commit();
-					
+
 				int workItemAttributeIndex = 0;
 				for (int y = 0; y < data.getComponentCount(); y++) {
 					AbstractField field;
 					String value;
 					if (!data.getComponent(y).getClass().equals(Label.class)) {
-						if(data.getComponent(y).getClass().equals(CheckBox.class)) {
+						if (data.getComponent(y).getClass()
+								.equals(CheckBox.class)) {
 							field = (CheckBox) data.getComponent(y);
 							value = field.getValue().toString();
-						} else if(data.getComponent(y).getClass().equals(TextField.class)){
+						} else if (data.getComponent(y).getClass()
+								.equals(TextField.class)) {
 							field = (TextField) data.getComponent(y);
 							value = field.getValue().toString();
 						} else {
@@ -82,14 +85,17 @@ public class TaskForm extends VerticalLayout {
 				}
 
 				Transaction.begin();
-				User activeUser = BlendedWorkflow.getInstance().getOrganizationalManager().getActiveUser();
+				User activeUser = BlendedWorkflow.getInstance()
+						.getOrganizationalManager().getActiveUser();
 				taskWorkItem.setUser(activeUser);
 				Transaction.commit();
 				Transaction.begin();
-				BlendedWorkflow.getInstance().getWorkListManager().checkInWorkItem(taskWorkItemOID);
+				BlendedWorkflow.getInstance().getWorkListManager()
+						.checkInWorkItem(taskWorkItemOID);
 				Transaction.commit();
 
-				getApplication().getMainWindow().removeWindow(TaskForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						TaskForm.this.getWindow());
 			}
 		});
 		footer.addComponent(submitButton);
@@ -98,7 +104,8 @@ public class TaskForm extends VerticalLayout {
 		cancelButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(TaskForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						TaskForm.this.getWindow());
 			}
 		});
 		footer.addComponent(cancelButton);
@@ -109,27 +116,34 @@ public class TaskForm extends VerticalLayout {
 
 	private void setWorkItemArgumentValue(int index, String value) {
 		Transaction.begin();
-		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
+		TaskWorkItem taskWorkItem = FenixFramework
+				.getDomainObject(taskWorkItemOID);
 		taskWorkItem.getOutputWorkItemArguments().get(index).setValue(value);
-		taskWorkItem.getOutputWorkItemArguments().get(index).setState(DataState.DEFINED);
+		taskWorkItem.getOutputWorkItemArguments().get(index)
+				.setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
 	private void getInputData() {
 		Transaction.begin();
-		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
+		TaskWorkItem taskWorkItem = FenixFramework
+				.getDomainObject(taskWorkItemOID);
 
 		Entity previousEntity = null;
 		Boolean first = true;
 		Boolean posAttribute = false;
-		for (WorkItemArgument preWorkItemArgument : taskWorkItem.getInputWorkItemArguments()) {
-			AttributeInstance preAttributeInstance = preWorkItemArgument.getAttributeInstance();
+		for (WorkItemArgument preWorkItemArgument : taskWorkItem
+				.getInputWorkItemArguments()) {
+			AttributeInstance preAttributeInstance = preWorkItemArgument
+					.getAttributeInstance();
 			Attribute attribute = preAttributeInstance.getAttribute();
 			Entity entity = attribute.getEntity();
 			String value = preWorkItemArgument.getValue();
 
-			for (WorkItemArgument posWorkItemArgument: taskWorkItem.getOutputWorkItemArguments()) {
-				AttributeInstance posAttributeInstance = posWorkItemArgument.getAttributeInstance();
+			for (WorkItemArgument posWorkItemArgument : taskWorkItem
+					.getOutputWorkItemArguments()) {
+				AttributeInstance posAttributeInstance = posWorkItemArgument
+						.getAttributeInstance();
 				if (preAttributeInstance.equals(posAttributeInstance)) {
 					posAttribute = true;
 				}
@@ -161,12 +175,15 @@ public class TaskForm extends VerticalLayout {
 	private void getOutputData() {
 		Transaction.begin();
 
-		TaskWorkItem taskWorkItem = AbstractDomainObject.fromOID(taskWorkItemOID);
+		TaskWorkItem taskWorkItem = FenixFramework
+				.getDomainObject(taskWorkItemOID);
 
 		Entity previousEntity = null;
 		Boolean first = true;
-		for (WorkItemArgument workItemArgument : taskWorkItem.getOutputWorkItemArguments()) {
-			Attribute attribute = workItemArgument.getAttributeInstance().getAttribute();
+		for (WorkItemArgument workItemArgument : taskWorkItem
+				.getOutputWorkItemArguments()) {
+			Attribute attribute = workItemArgument.getAttributeInstance()
+					.getAttribute();
 			Entity entity = attribute.getEntity();
 
 			if (first) {
@@ -179,16 +196,15 @@ public class TaskForm extends VerticalLayout {
 			}
 
 			if (attribute.getName().contains("Date")) {
-				//TODO:
+				// TODO:
 				PopupDateField datetime;
 				datetime = new PopupDateField(attribute.getName());
-		        datetime.setValue(new java.util.Date());
-		        datetime.setResolution(PopupDateField.RESOLUTION_DAY);
-		        datetime.setImmediate(true);
-		        data.addComponent(datetime);
-		        //TODO:
-			}
-			else if (attribute.getType().equals(AttributeType.BOOLEAN)) {
+				datetime.setValue(new java.util.Date());
+				datetime.setResolution(PopupDateField.RESOLUTION_DAY);
+				datetime.setImmediate(true);
+				data.addComponent(datetime);
+				// TODO:
+			} else if (attribute.getType().equals(AttributeType.BOOLEAN)) {
 				addCheckBox(attribute.getName(), false, null);
 			} else {
 				addTextBox(attribute.getName(), false, null);
@@ -198,8 +214,9 @@ public class TaskForm extends VerticalLayout {
 		Transaction.commit();
 
 	}
-	
-	protected void addCheckBox(String attributeName, Boolean isPreData, String value) {
+
+	protected void addCheckBox(String attributeName, Boolean isPreData,
+			String value) {
 		CheckBox checkBox = new CheckBox(attributeName);
 
 		if (value != null) {
@@ -216,7 +233,8 @@ public class TaskForm extends VerticalLayout {
 		}
 	}
 
-	protected void addTextBox(String attributeName, Boolean isPreData, String value) {
+	protected void addTextBox(String attributeName, Boolean isPreData,
+			String value) {
 		TextField tf = new TextField(attributeName);
 		if (value != null) {
 			tf.setValue(value);
@@ -230,7 +248,7 @@ public class TaskForm extends VerticalLayout {
 	}
 
 	protected void addLabel(String entityName, Boolean isPreData) {
-		Label l= new Label(entityName);
+		Label l = new Label(entityName);
 		l.addStyleName("h2");
 
 		if (isPreData) {
@@ -240,4 +258,3 @@ public class TaskForm extends VerticalLayout {
 		}
 	}
 }
-

@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation.MedicalAppointment;
 
-import jvstm.Transaction;
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
@@ -15,25 +14,26 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class PrescriptionMedicationForm extends VerticalLayout {
-	
-	HorizontalLayout footer = new HorizontalLayout();
-	private Label pmL = new Label("Prescription Medication");
-	private TextField numberTF = new TextField("Number");
-	private TextField nameTF = new TextField("Name");
-	private TextField quantityTF = new TextField("Quantity");
-	private CheckBox heartImpactCB = new CheckBox("Heart Impact");
 
-	public PrescriptionMedicationForm(final DoctorAppointmentForm parent, final long bwInstanceOID) {
+	HorizontalLayout footer = new HorizontalLayout();
+	private final Label pmL = new Label("Prescription Medication");
+	private final TextField numberTF = new TextField("Number");
+	private final TextField nameTF = new TextField("Name");
+	private final TextField quantityTF = new TextField("Quantity");
+	private final CheckBox heartImpactCB = new CheckBox("Heart Impact");
+
+	public PrescriptionMedicationForm(final DoctorAppointmentForm parent,
+			final long bwInstanceOID) {
 		setMargin(true);
 		setSpacing(true);
-		
+
 		pmL.addStyleName("h2");
 
 		addComponent(pmL);
@@ -41,7 +41,7 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 		addComponent(nameTF);
 		addComponent(quantityTF);
 		addComponent(heartImpactCB);
-		
+
 		footer.setMargin(true);
 		footer.setSpacing(true);
 
@@ -49,46 +49,70 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 		submitButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				//User Values
+				// User Values
 				String number = numberTF.getValue().toString();
 				String name = nameTF.getValue().toString();
 				String quantity = quantityTF.getValue().toString();
 				String heartImpact = heartImpactCB.getValue().toString();
-				
-				//Models
-				Transaction.begin();
-				BWInstance bwInstance = AbstractDomainObject.fromOID(bwInstanceOID);
-				DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-								
-				//PrescriptionMedication
-				Entity prescriptionMedication = dataModelInstance.getEntity("Prescription Medication");
-				Attribute numberAtt = prescriptionMedication.getAttribute("Number");
-				Attribute nameAtt = prescriptionMedication.getAttribute("Name");
-				Attribute quantityAtt = prescriptionMedication.getAttribute("Quantity");
-				Attribute heartImpactAtt = prescriptionMedication.getAttribute("Heart Impact");
 
-				EntityInstance prescriptionMedication1 = new EntityInstance(prescriptionMedication);
-				AttributeInstance prescriptionMedication1Number = new AttributeInstance(numberAtt, prescriptionMedication1);
+				// Models
+				Transaction.begin();
+				BWInstance bwInstance = FenixFramework
+						.getDomainObject(bwInstanceOID);
+				DataModelInstance dataModelInstance = bwInstance
+						.getDataModelInstance();
+
+				// PrescriptionMedication
+				Entity prescriptionMedication = dataModelInstance
+						.getEntity("Prescription Medication");
+				Attribute numberAtt = prescriptionMedication
+						.getAttribute("Number");
+				Attribute nameAtt = prescriptionMedication.getAttribute("Name");
+				Attribute quantityAtt = prescriptionMedication
+						.getAttribute("Quantity");
+				Attribute heartImpactAtt = prescriptionMedication
+						.getAttribute("Heart Impact");
+
+				EntityInstance prescriptionMedication1 = new EntityInstance(
+						prescriptionMedication);
+				AttributeInstance prescriptionMedication1Number = new AttributeInstance(
+						numberAtt, prescriptionMedication1);
 				prescriptionMedication1Number.setValue(number);
-				AttributeInstance prescriptionMedication1Name = new AttributeInstance(nameAtt, prescriptionMedication1);
+				AttributeInstance prescriptionMedication1Name = new AttributeInstance(
+						nameAtt, prescriptionMedication1);
 				prescriptionMedication1Name.setValue(name);
-				AttributeInstance prescriptionMedication1Quantity = new AttributeInstance(quantityAtt, prescriptionMedication1);
+				AttributeInstance prescriptionMedication1Quantity = new AttributeInstance(
+						quantityAtt, prescriptionMedication1);
 				prescriptionMedication1Quantity.setValue(quantity);
-				AttributeInstance prescriptionMedication1HeartImpact = new AttributeInstance(heartImpactAtt, prescriptionMedication1);
+				AttributeInstance prescriptionMedication1HeartImpact = new AttributeInstance(
+						heartImpactAtt, prescriptionMedication1);
 				prescriptionMedication1HeartImpact.setValue(heartImpact);
-				
-				//Relation to Medical Prescription
-				Entity medicalPrescription = dataModelInstance.getEntity("Medical Prescription");
-				long medicalPrescription1OID = medicalPrescription.getEntityInstance("Medical Prescription.1").getOID();
-				long prescriptionMedication1OID = prescriptionMedication1.getOID();
-				BlendedWorkflow.getInstance().getBwManager().addRelationInstance(bwInstanceOID, medicalPrescription1OID, prescriptionMedication1OID);
+
+				// Relation to Medical Prescription
+				Entity medicalPrescription = dataModelInstance
+						.getEntity("Medical Prescription");
+				long medicalPrescription1OID = medicalPrescription
+						.getEntityInstance("Medical Prescription.1").getOID();
+				long prescriptionMedication1OID = prescriptionMedication1
+						.getOID();
+				BlendedWorkflow
+						.getInstance()
+						.getBwManager()
+						.addRelationInstance(bwInstanceOID,
+								medicalPrescription1OID,
+								prescriptionMedication1OID);
 				Transaction.commit();
 
-				//Add to parentWindowsTable and close
-				parent.prescriptionMedication(number, name, quantity, heartImpact);
-				getApplication().getMainWindow().showNotification("Medical Prescription " + name + " Successfully added!");
-				
-				getApplication().getMainWindow().removeWindow(PrescriptionMedicationForm.this.getWindow());
+				// Add to parentWindowsTable and close
+				parent.prescriptionMedication(number, name, quantity,
+						heartImpact);
+				getApplication().getMainWindow()
+						.showNotification(
+								"Medical Prescription " + name
+										+ " Successfully added!");
+
+				getApplication().getMainWindow().removeWindow(
+						PrescriptionMedicationForm.this.getWindow());
 			}
 		});
 		footer.addComponent(submitButton);
@@ -97,7 +121,8 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 		cancelButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(PrescriptionMedicationForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						PrescriptionMedicationForm.this.getWindow());
 			}
 		});
 		footer.addComponent(cancelButton);
@@ -107,4 +132,3 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 	}
 
 }
-

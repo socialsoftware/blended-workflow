@@ -1,32 +1,31 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import jvstm.Transaction;
-
-import pt.ist.fenixframework.pstm.AbstractDomainObject;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
 
 @SuppressWarnings("serial")
 public class PreGoalForm extends VerticalLayout {
 
-	private long goalWorkItemOID;
+	private final long goalWorkItemOID;
 	VerticalLayout data = new VerticalLayout();
 
 	public PreGoalForm(final long workItemOID) {
@@ -51,7 +50,8 @@ public class PreGoalForm extends VerticalLayout {
 					AbstractField field;
 
 					if (!data.getComponent(y).getClass().equals(Label.class)) {
-						if(data.getComponent(y).getClass().equals(CheckBox.class)) {
+						if (data.getComponent(y).getClass()
+								.equals(CheckBox.class)) {
 							field = (CheckBox) data.getComponent(y);
 						} else {
 							field = (TextField) data.getComponent(y);
@@ -63,8 +63,11 @@ public class PreGoalForm extends VerticalLayout {
 				}
 
 				generateGoalForm(workItemOID);
-				getApplication().getMainWindow().showNotification("PreGoal accomplished", Notification.TYPE_TRAY_NOTIFICATION);
-				getApplication().getMainWindow().removeWindow(PreGoalForm.this.getWindow());
+				getApplication().getMainWindow().showNotification(
+						"PreGoal accomplished",
+						Notification.TYPE_TRAY_NOTIFICATION);
+				getApplication().getMainWindow().removeWindow(
+						PreGoalForm.this.getWindow());
 
 			}
 		});
@@ -74,7 +77,8 @@ public class PreGoalForm extends VerticalLayout {
 		cancelButton.addListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(PreGoalForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						PreGoalForm.this.getWindow());
 			}
 		});
 		footer.addComponent(cancelButton);
@@ -85,20 +89,25 @@ public class PreGoalForm extends VerticalLayout {
 
 	private void setWorkItemArgumentValue(int index, String value) {
 		Transaction.begin();
-		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
+		GoalWorkItem goalWorkItem = FenixFramework
+				.getDomainObject(goalWorkItemOID);
 		goalWorkItem.getInputWorkItemArguments().get(index).setValue(value);
-		goalWorkItem.getInputWorkItemArguments().get(index).setState(DataState.DEFINED);
+		goalWorkItem.getInputWorkItemArguments().get(index)
+				.setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
 	private void getInputData() {
 		Transaction.begin();
-		GoalWorkItem goalWorkItem = AbstractDomainObject.fromOID(goalWorkItemOID);
+		GoalWorkItem goalWorkItem = FenixFramework
+				.getDomainObject(goalWorkItemOID);
 
 		Entity previousEntity = null;
 		Boolean first = true;
-		for (WorkItemArgument workItemArgument : goalWorkItem.getInputWorkItemArguments()) {
-			Attribute attribute = workItemArgument.getAttributeInstance().getAttribute();
+		for (WorkItemArgument workItemArgument : goalWorkItem
+				.getInputWorkItemArguments()) {
+			Attribute attribute = workItemArgument.getAttributeInstance()
+					.getAttribute();
 			Entity entity = attribute.getEntity();
 
 			if (first) {
@@ -131,7 +140,7 @@ public class PreGoalForm extends VerticalLayout {
 	}
 
 	protected void addLabel(String entityName) {
-		Label l= new Label(entityName);
+		Label l = new Label(entityName);
 		l.addStyleName("h2");
 		data.addComponent(l);
 	}
@@ -141,7 +150,6 @@ public class PreGoalForm extends VerticalLayout {
 		goalWindow.setContent(new GoalForm(workItemOID));
 		goalWindow.setWidth("30%");
 		goalWindow.center();
-		getApplication().getMainWindow().addWindow(goalWindow);		
+		getApplication().getMainWindow().addWindow(goalWindow);
 	}
 }
-
