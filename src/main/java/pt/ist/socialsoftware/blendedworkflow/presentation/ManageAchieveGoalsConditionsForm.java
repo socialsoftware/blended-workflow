@@ -1,7 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
@@ -25,11 +26,11 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 
-	private Long _bwInstanceOID = null;
-	// private Long _entityInstanceOID = null;
-	private Long _goalOID = null;
-	private final ArrayList<Long> activateConditionsOID = new ArrayList<Long>();
-	private final ArrayList<Long> maitainGoalsOID = new ArrayList<Long>();
+	private String _bwInstanceOID = null;
+	// private String _entityInstanceOID = null;
+	private String _goalOID = null;
+	private final Set<String> activateConditionsOID = new HashSet<String>();
+	private final Set<String> maitainGoalsOID = new HashSet<String>();
 
 	protected final Tree acTreetable = new Tree("Activate Conditions:");
 	protected final Tree mcTreetable = new Tree("Maintain Conditions:");
@@ -39,8 +40,8 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 			"Disable Condition");
 
 	public ManageAchieveGoalsConditionsForm(final ActivateGoalForm parent,
-			final long bwInstanceOID, long goalOID,
-			final HashMap<Long, Long> entitiesOID) {
+			final String bwInstanceOID, String goalOID,
+			final HashMap<String, String> entitiesOID) {
 		HorizontalLayout footer = new HorizontalLayout();
 
 		_bwInstanceOID = bwInstanceOID;
@@ -63,7 +64,7 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == DISABLE_CONDITION_ACTION) {
-					Long ConditionOID = (Long) target;
+					String ConditionOID = (String) target;
 					activateConditionsOID.remove(ConditionOID);
 					acTreetable.removeItem(ConditionOID);
 				}
@@ -83,7 +84,7 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == DISABLE_CONDITION_ACTION) {
-					Long ConditionOID = (Long) target;
+					String ConditionOID = (String) target;
 					maitainGoalsOID.remove(ConditionOID);
 					mcTreetable.removeItem(ConditionOID);
 				}
@@ -137,8 +138,8 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 		AchieveGoal newGoal = FenixFramework.getDomainObject(_goalOID);
 		goalNameLabel.setCaption(newGoal.getName());
 
-		for (Condition activateCondition : newGoal.getActivateConditions()) {
-			long ID = activateCondition.getOID();
+		for (Condition activateCondition : newGoal.getActivateConditionsSet()) {
+			String ID = activateCondition.getExternalId();
 			String caption = activateCondition.toString();
 
 			acTreetable.addItem(ID);
@@ -149,7 +150,7 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 
 		for (MaintainGoal mg : goalModelInstance
 				.getAchieveGoalAssociatedMaintainGoals(newGoal)) {
-			long ID = mg.getOID();
+			String ID = mg.getExternalId();
 			String caption = mg.getMaintainCondition().toString();
 
 			mcTreetable.addItem(ID);

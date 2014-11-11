@@ -19,7 +19,8 @@ import com.vaadin.ui.Window.Notification;
 @SuppressWarnings("serial")
 public class NewEntityForm extends VerticalLayout {
 
-	public NewEntityForm(final AllDataModelTree parent, final long bwInstanceOID) {
+	public NewEntityForm(final AllDataModelTree parent,
+			final String bwInstanceOID) {
 		setMargin(true);
 
 		setWidth("300px");
@@ -70,7 +71,7 @@ public class NewEntityForm extends VerticalLayout {
 		setComponentAlignment(submitPanel, Alignment.MIDDLE_CENTER);
 	}
 
-	public void addEntity(long BwInstanceOID, String name)
+	public void addEntity(String BwInstanceOID, String name)
 			throws BlendedWorkflowException {
 		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(BwInstanceOID);

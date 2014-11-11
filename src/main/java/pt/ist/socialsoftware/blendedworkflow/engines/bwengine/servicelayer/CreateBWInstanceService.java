@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import java.util.concurrent.Callable;
 
+import jvstm.Transaction;
+
 import org.apache.log4j.Logger;
 
 import pt.ist.fenixframework.FenixFramework;
@@ -18,7 +20,7 @@ public class CreateBWInstanceService implements Callable<String> {
 	private final String name;
 	private final String userID;
 
-	public CreateBWInstanceService(long bwSpecificationOID, String name,
+	public CreateBWInstanceService(String bwSpecificationOID, String name,
 			String userID) {
 		this.bwSpecification = FenixFramework
 				.getDomainObject(bwSpecificationOID);

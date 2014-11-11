@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import java.util.List;
+import java.util.Set;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
@@ -29,7 +29,7 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 	private static final Action DISABLE_CONDITION_ACTION = new Action(
 			"Disable Condition");
 
-	public ManageGoalWorkItemsConditionsForm(final long workItemOID) {
+	public ManageGoalWorkItemsConditionsForm(final String workItemOID) {
 		HorizontalLayout footer = new HorizontalLayout();
 
 		// Properties
@@ -46,7 +46,7 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == DISABLE_CONDITION_ACTION) {
-					Long ConditionOID = (Long) target;
+					String ConditionOID = (String) target;
 					Transaction.begin();
 					BlendedWorkflow.getInstance().getWorkListManager()
 							.manageGoalCondition(workItemOID, ConditionOID);
@@ -72,20 +72,21 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 				Transaction.begin();
 				GoalWorkItem w = FenixFramework.getDomainObject(workItemOID);
 				w.setState(GoalState.ACTIVATED);
-				// long bwInstanceOID = w.getBwInstance().getOID();
+				// String bwInstanceOID = w.getBwInstance().getOID();
 
 				// remove old ai
-				List<AttributeInstance> oldAI = w.getInputAttributeInstances();
+				Set<AttributeInstance> oldAI = w
+						.getInputAttributeInstancesSet();
 				for (AttributeInstance ai : oldAI) {
 					w.removeInputAttributeInstances(ai);
 				}
 				// remove old wa
-				List<WorkItemArgument> old = w.getInputWorkItemArguments();
+				Set<WorkItemArgument> old = w.getInputWorkItemArgumentsSet();
 				for (WorkItemArgument wa : old) {
 					w.removeInputWorkItemArguments(wa);
 				}
 
-				for (Condition activateCondition : w.getActivateConditions()) {
+				for (Condition activateCondition : w.getActivateConditionsSet()) {
 					activateCondition.assignAttributeInstances(w,
 							ConditionType.ACTIVATE_CONDITION);
 				}
@@ -113,7 +114,7 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 		getDataModel(workItemOID);
 	}
 
-	public void getDataModel(long workItemOID) {
+	public void getDataModel(String workItemOID) {
 		Transaction.begin();
 		GoalWorkItem goalWorkItem = FenixFramework.getDomainObject(workItemOID);
 
@@ -122,8 +123,9 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 		treetable.addItem(goalWorkItem.getID());
 		treetable.addItem(activateConditionCaption);
 		treetable.setParent(activateConditionCaption, goalWorkItem.getID());
-		for (Condition activateCondition : goalWorkItem.getActivateConditions()) {
-			long OID = activateCondition.getOID();
+		for (Condition activateCondition : goalWorkItem
+				.getActivateConditionsSet()) {
+			String OID = activateCondition.getExternalId();
 			String activateConditionString = activateCondition.toString();
 			treetable.addItem(OID);
 			treetable.setItemCaption(OID, activateConditionString);
@@ -135,8 +137,9 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 		String maintainConditionCaption = "Maintain Conditions:";
 		treetable.addItem(maintainConditionCaption);
 		treetable.setParent(maintainConditionCaption, goalWorkItem.getID());
-		for (Condition maintainCondition : goalWorkItem.getMaintainConditions()) {
-			long OID = maintainCondition.getOID();
+		for (Condition maintainCondition : goalWorkItem
+				.getMaintainConditionsSet()) {
+			String OID = maintainCondition.getExternalId();
 			String maintainConditionString = maintainCondition.toString();
 			treetable.addItem(OID);
 			treetable.setItemCaption(OID, maintainConditionString);
@@ -149,7 +152,7 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 		Transaction.commit();
 	}
 
-	public void refreshTree(long workItemOID) {
+	public void refreshTree(String workItemOID) {
 		treetable.removeAllItems();
 		getDataModel(workItemOID);
 	}

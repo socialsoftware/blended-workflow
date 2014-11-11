@@ -1,13 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.worklistmanager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-
-import com.vaadin.ui.Window.Notification;
 
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CheckInWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateGoalInstanceService;
@@ -22,47 +20,54 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.MaintainGoalState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 
+import com.vaadin.ui.Window.Notification;
+
 public class WorkListManager {
 
-	private Logger log = Logger.getLogger("WorklistManager");
+	private final Logger log = Logger.getLogger("WorklistManager");
 	protected BWPresentation bwPresentation = null;
-	
+
 	LinkedHashMap<GoalWorkItem, ArrayList<GoalWorkItem>> redoList = new LinkedHashMap<GoalWorkItem, ArrayList<GoalWorkItem>>();
-	
-	private void addReActivatedGoalWorkItem(GoalWorkItem newGW, GoalWorkItem causeGW) {
+
+	private void addReActivatedGoalWorkItem(GoalWorkItem newGW,
+			GoalWorkItem causeGW) {
 		redoList.put(newGW, new ArrayList<GoalWorkItem>());
 		if (causeGW != null) {
 			redoList.get(causeGW).add(newGW);
 		}
 	}
-	
+
 	private void removeReActivatedGoalWorkItem(GoalWorkItem goalWorkItem) {
 		redoList.remove(goalWorkItem);
-		for (Map.Entry<GoalWorkItem, ArrayList<GoalWorkItem>> entry : redoList.entrySet()) {
+		for (Map.Entry<GoalWorkItem, ArrayList<GoalWorkItem>> entry : redoList
+				.entrySet()) {
 			entry.getValue().remove(goalWorkItem);
 		}
-		
+
 		checkPending();
 	}
-	
+
 	private void checkPending() {
-		for (Map.Entry<GoalWorkItem, ArrayList<GoalWorkItem>> entry : redoList.entrySet()) {
+		for (Map.Entry<GoalWorkItem, ArrayList<GoalWorkItem>> entry : redoList
+				.entrySet()) {
 			if (entry.getValue().isEmpty()) {
-				long workItemOID = entry.getKey().getOID();
-				BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-				CheckInWorkItemService service = new CheckInWorkItemService(workItemOID);
+				String workItemOID = entry.getKey().getExternalId();
+				BWExecutorService bwExecutorService = BlendedWorkflow
+						.getInstance().getBWExecutorService();
+				CheckInWorkItemService service = new CheckInWorkItemService(
+						workItemOID);
 				bwExecutorService.runTask(service);
 			}
 		}
 	}
-	
+
 	public BWPresentation getBwPresentation() {
 		return bwPresentation;
 	}
@@ -73,135 +78,185 @@ public class WorkListManager {
 
 	/**
 	 * Notify the BWPresentation of enabled WorkItems.
-	 * @param workItem The enabled WorkItem (i.e. State = ENABLED or PRE_TASK).
+	 * 
+	 * @param workItem
+	 *            The enabled WorkItem (i.e. State = ENABLED or PRE_TASK).
 	 */
 	public void notifyEnabledWorkItem(WorkItem workItem) {
-		log.info("WorkItem " + workItem.getID() + " is now enabled. with OID" + workItem.getOID());
+		log.info("WorkItem " + workItem.getID() + " is now enabled. with OID"
+				+ workItem.getExternalId());
 		String bwInstanceName = workItem.getBwInstance().getName() + ".";
 		if (workItem.getClass().equals(GoalWorkItem.class)) {
-			getBwPresentation().addGoalWorkItem(workItem.getOID(), bwInstanceName + workItem.getID());
-		}
-		else {
-			getBwPresentation().addTaskWorkItem(workItem.getOID(), bwInstanceName + workItem.getID());
+			getBwPresentation().addGoalWorkItem(workItem.getExternalId(),
+					bwInstanceName + workItem.getID());
+		} else {
+			getBwPresentation().addTaskWorkItem(workItem.getExternalId(),
+					bwInstanceName + workItem.getID());
 		}
 	}
-	
-	public void notifyReEnabledWorkItem(GoalWorkItem workItem, GoalWorkItem cause) {
-		log.info("WorkItem " + workItem.getID() + " is now re-enabled. with OID" + workItem.getOID());
-		
+
+	public void notifyReEnabledWorkItem(GoalWorkItem workItem,
+			GoalWorkItem cause) {
+		log.info("WorkItem " + workItem.getID()
+				+ " is now re-enabled. with OID" + workItem.getExternalId());
+
 		addReActivatedGoalWorkItem(workItem, cause);
-		
+
 		String bwInstanceName = workItem.getBwInstance().getName() + ".";
-		getBwPresentation().addGoalWorkItem(workItem.getOID(), bwInstanceName + workItem.getID()); //+ "(ReEnabled)"
+		getBwPresentation().addGoalWorkItem(workItem.getExternalId(),
+				bwInstanceName + workItem.getID()); // + "(ReEnabled)"
 	}
 
 	/**
 	 * Notify the BWPresentation of completed WorkItems.
-	 * @param workItem The pending WorkItem (i.e. State = COMPLETED).
+	 * 
+	 * @param workItem
+	 *            The pending WorkItem (i.e. State = COMPLETED).
 	 */
 	public void notifyCompletedWorkItem(WorkItem workItem) {
 		String bwInstanceName = workItem.getBwInstance().getName() + ".";
 		if (workItem instanceof GoalWorkItem) {
 			GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
-			log.info("WorkItem " + workItem.getID() + " is now " + goalWorkItem.getState() + ".");
-			getBwPresentation().removeGoalWorkItem(goalWorkItem.getOID(), bwInstanceName + goalWorkItem.getID(), goalWorkItem.getState().toString());
-			
+			log.info("WorkItem " + workItem.getID() + " is now "
+					+ goalWorkItem.getState() + ".");
+			getBwPresentation().removeGoalWorkItem(
+					goalWorkItem.getExternalId(),
+					bwInstanceName + goalWorkItem.getID(),
+					goalWorkItem.getState().toString());
+
 			removeReActivatedGoalWorkItem(goalWorkItem);
-		}
-		else {
+		} else {
 			TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
-			log.info("WorkItem " + workItem.getID() + " is now " + taskWorkItem.getState() + ".");
-			getBwPresentation().removeTaskWorkItem(taskWorkItem.getOID(), bwInstanceName + taskWorkItem.getID(), taskWorkItem.getState().toString());
+			log.info("WorkItem " + workItem.getID() + " is now "
+					+ taskWorkItem.getState() + ".");
+			getBwPresentation().removeTaskWorkItem(
+					taskWorkItem.getExternalId(),
+					bwInstanceName + taskWorkItem.getID(),
+					taskWorkItem.getState().toString());
 		}
 	}
 
 	public void notifyWorkItemState(WorkItem workItem) {
-		String message = "WorkItem: " + workItem.getID() + " activate condition failed.";
-		getBwPresentation().getMainWindow().showNotification(message, Notification.TYPE_ERROR_MESSAGE);
+		String message = "WorkItem: " + workItem.getID()
+				+ " activate condition failed.";
+		getBwPresentation().getMainWindow().showNotification(message,
+				Notification.TYPE_ERROR_MESSAGE);
 	}
-	
+
 	public void notifyNewGoalCreated(AchieveGoal goal) {
-		getBwPresentation().getMainWindow().showNotification("New Goal " + goal.getName() + " created successfully", Notification.TYPE_TRAY_NOTIFICATION);
+		getBwPresentation().getMainWindow().showNotification(
+				"New Goal " + goal.getName() + " created successfully",
+				Notification.TYPE_TRAY_NOTIFICATION);
 	}
-	
+
 	public void notifyException(BlendedWorkflowError bwe) {
-		getBwPresentation().getMainWindow().showNotification(bwe.toString(), Notification.TYPE_ERROR_MESSAGE);
+		getBwPresentation().getMainWindow().showNotification(bwe.toString(),
+				Notification.TYPE_ERROR_MESSAGE);
 	}
 
 	/**
 	 * Update the BWPresentation with all the active WorkItems.
 	 */
 	public void updateBWPresentation() {
-		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance().getBwSpecifications()) {
-			for (BWInstance bwInstance : bwSpecification.getBwInstances()) {
-				for (WorkItem workItem : bwInstance.getWorkItems()) {
+		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance()
+				.getBwSpecificationsSet()) {
+			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
+				for (WorkItem workItem : bwInstance.getWorkItemsSet()) {
 					if (workItem instanceof GoalWorkItem) {
 						GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
-						if (goalWorkItem.getState().equals(GoalState.ENABLED) || goalWorkItem.getState().equals(GoalState.PRE_GOAL))
+						if (goalWorkItem.getState().equals(GoalState.ENABLED)
+								|| goalWorkItem.getState().equals(
+										GoalState.PRE_GOAL))
 							notifyEnabledWorkItem(goalWorkItem);
 					} else {
 						TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
-						if (taskWorkItem.getState().equals(ActivityState.ENABLED) || taskWorkItem.getState().equals(ActivityState.PRE_ACTIVITY))
+						if (taskWorkItem.getState().equals(
+								ActivityState.ENABLED)
+								|| taskWorkItem.getState().equals(
+										ActivityState.PRE_ACTIVITY))
 							notifyEnabledWorkItem(taskWorkItem);
 					}
 				}
 			}
 		}
 	}
-	
+
 	/********************
 	 * Services.
 	 ********************/
-	public void checkInWorkItem(long workItemOID){
-		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+	public void checkInWorkItem(String workItemOID) {
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance()
+				.getBWExecutorService();
 		CheckInWorkItemService service = new CheckInWorkItemService(workItemOID);
 		bwExecutorService.runTask(service);
 	}
-	
-	public void skipWorkItem(long workItemOID){
-		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
+
+	public void skipWorkItem(String workItemOID) {
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance()
+				.getBWExecutorService();
 		SkipWorkItemService service = new SkipWorkItemService(workItemOID);
 		bwExecutorService.runTask(service);
 	}
-	
-	public void createGoal(long bwInstanceOID, String goalName, String goalDescription, long parentGoalID, String goalCondition, ArrayList<String> activateConditions, long entityOID, String userID){
-		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		CreateNewGoalService service = new CreateNewGoalService(bwInstanceOID, goalName, goalDescription, parentGoalID, goalCondition, activateConditions, entityOID, userID);
-		bwExecutorService.runTask(service);
-	}
-	
-	public void createGoalInstance(long bwInstanceOID, long goalOID, ArrayList<Long> activateConditions, 
-			ArrayList<Long> maintainConditions, HashMap<Long, Long> entitiesOID) {
-		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		CreateGoalInstanceService service = new CreateGoalInstanceService(bwInstanceOID, goalOID, activateConditions, maintainConditions, entitiesOID);
-//		CreateGoalInstanceService service = new CreateGoalInstanceService(bwInstanceOID, parentGoalID, context, activateConditions, maintainConditions, relationsEntityInstances);
+
+	public void createGoal(String bwInstanceOID, String goalName,
+			String goalDescription, String parentGoalID, String goalCondition,
+			ArrayList<String> activateConditions, String entityOID,
+			String userID) {
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance()
+				.getBWExecutorService();
+		CreateNewGoalService service = new CreateNewGoalService(bwInstanceOID,
+				goalName, goalDescription, parentGoalID, goalCondition,
+				activateConditions, entityOID, userID);
 		bwExecutorService.runTask(service);
 	}
 
-	public void redoGoal(long workItemOID, String userID) {
+	public void createGoalInstance(String bwInstanceOID, String goalOID,
+			Set<String> activateConditions, Set<String> maintainConditions,
+			Map<String, String> entitiesOID) {
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance()
+				.getBWExecutorService();
+		CreateGoalInstanceService service = new CreateGoalInstanceService(
+				bwInstanceOID, goalOID, activateConditions, maintainConditions,
+				entitiesOID);
+		// CreateGoalInstanceService service = new
+		// CreateGoalInstanceService(bwInstanceOID, parentGoalID, context,
+		// activateConditions, maintainConditions, relationsEntityInstances);
+		bwExecutorService.runTask(service);
+	}
+
+	public void redoGoal(String workItemOID, String userID) {
 		log.info("Redo GoalWorkItem: " + workItemOID);
-		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		RedoGoalWorkItemService service = new RedoGoalWorkItemService(workItemOID, userID);
-		bwExecutorService.runTask(service);
-	}
-	
-	public void manageGoalCondition(long workitemOID, long conditionOID) {
-		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		ManageGoalConditionService service = new ManageGoalConditionService(workitemOID, conditionOID);
-		bwExecutorService.runTask(service);
-	}
-	
-	public void manageGoalCondition(long maintainGoalOID, MaintainGoalState state) {
-		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-		ManageGoalConditionService service = new ManageGoalConditionService(maintainGoalOID, state);
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance()
+				.getBWExecutorService();
+		RedoGoalWorkItemService service = new RedoGoalWorkItemService(
+				workItemOID, userID);
 		bwExecutorService.runTask(service);
 	}
 
-	//TODO: Delete
-//	public void enableGoalWorkItemsService(long bwInstanceOID) {
-//		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance().getBWExecutorService();
-//		EnableGoalWorkItemsService service = new EnableGoalWorkItemsService(bwInstanceOID);
-//		bwExecutorService.runTask(service);
-//	}
+	public void manageGoalCondition(String workitemOID, String conditionOID) {
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance()
+				.getBWExecutorService();
+		ManageGoalConditionService service = new ManageGoalConditionService(
+				workitemOID, conditionOID);
+		bwExecutorService.runTask(service);
+	}
+
+	public void manageGoalCondition(String maintainGoalOID,
+			MaintainGoalState state) {
+		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance()
+				.getBWExecutorService();
+		ManageGoalConditionService service = new ManageGoalConditionService(
+				maintainGoalOID, state);
+		bwExecutorService.runTask(service);
+	}
+
+	// TODO: Delete
+	// public void enableGoalWorkItemsService(String bwInstanceOID) {
+	// BWExecutorService bwExecutorService =
+	// BlendedWorkflow.getInstance().getBWExecutorService();
+	// EnableGoalWorkItemsService service = new
+	// EnableGoalWorkItemsService(bwInstanceOID);
+	// bwExecutorService.runTask(service);
+	// }
 
 }

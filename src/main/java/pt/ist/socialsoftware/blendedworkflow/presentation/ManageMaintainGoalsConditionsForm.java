@@ -27,7 +27,7 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 	private static final Action DISABLE_CONDITION_ACTION = new Action(
 			"Disable Condition");
 
-	public ManageMaintainGoalsConditionsForm(final long bwInstanceOID) {
+	public ManageMaintainGoalsConditionsForm(final String bwInstanceOID) {
 		HorizontalLayout footer = new HorizontalLayout();
 
 		// Properties
@@ -45,7 +45,7 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == DISABLE_CONDITION_ACTION) {
 					// remove condition
-					Long goalOID = (Long) target;
+					String goalOID = (String) target;
 
 					Transaction.begin();
 					BlendedWorkflow
@@ -57,7 +57,7 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 					refreshTree(bwInstanceOID);
 				} else {
 					// remove condition
-					Long goalOID = (Long) target;
+					String goalOID = (String) target;
 
 					Transaction.begin();
 					BlendedWorkflow
@@ -104,19 +104,20 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 		getMaintainGoals(bwInstanceOID);
 	}
 
-	public void getMaintainGoals(long bwInstanceOID) {
+	public void getMaintainGoals(String bwInstanceOID) {
 		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
-		for (MaintainGoal achieveGoal : goalModelInstance.getMaintainGoals()) {
-			long goalOID = achieveGoal.getOID();
+		for (MaintainGoal achieveGoal : goalModelInstance.getMaintainGoalsSet()) {
+			String goalOID = achieveGoal.getExternalId();
 			String goalName = achieveGoal.getName() + "("
 					+ achieveGoal.getState() + ")";
 			treetable.addItem(goalOID);
 			treetable.setItemCaption(goalOID, goalName);
 
-			long conditionOID = achieveGoal.getMaintainCondition().getOID();
+			String conditionOID = achieveGoal.getMaintainCondition()
+					.getExternalId();
 			String conditionName = achieveGoal.getMaintainCondition()
 					.toString();
 			treetable.addItem(conditionOID);
@@ -130,7 +131,7 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 		Transaction.commit();
 	}
 
-	public void refreshTree(long bwInstanceOID) {
+	public void refreshTree(String bwInstanceOID) {
 		treetable.removeAllItems();
 		getMaintainGoals(bwInstanceOID);
 	}

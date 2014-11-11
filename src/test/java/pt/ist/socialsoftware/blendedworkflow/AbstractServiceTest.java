@@ -1,6 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import jvstm.Transaction;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -15,7 +18,6 @@ import org.yawlfoundation.yawl.worklet.rdr.RdrNode;
 import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 import org.yawlfoundation.yawl.worklet.support.WorkletGatewayClient;
 
-import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
@@ -114,8 +116,8 @@ public abstract class AbstractServiceTest {
 		});
 
 		final BWSpecification bwSpecification = getBWSpecification(BWSPECIFICATION_NAME);
-		new CreateBWInstanceService(bwSpecification.getOID(), "", USER_ID)
-				.call();
+		new CreateBWInstanceService(bwSpecification.getExternalId(), "",
+				USER_ID).call();
 	}
 
 	@After
@@ -134,7 +136,9 @@ public abstract class AbstractServiceTest {
 
 	protected BWInstance getBWInstance(BWSpecification bwSpecification) {
 		Transaction.begin();
-		final BWInstance bwInstance = bwSpecification.getBwInstances().get(0);
+		List<BWInstance> bwInstances = new ArrayList<BWInstance>(
+				bwSpecification.getBwInstancesSet());
+		final BWInstance bwInstance = bwInstances.get(0);
 		Transaction.commit();
 		return bwInstance;
 	}

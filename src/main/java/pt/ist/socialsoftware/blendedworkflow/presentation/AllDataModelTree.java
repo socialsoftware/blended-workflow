@@ -28,7 +28,7 @@ public class AllDataModelTree extends VerticalLayout {
 			"Add Attribute");
 	private static final Action ADD_RELATION_ACTION = new Action("Add Relation");
 
-	public AllDataModelTree(final NewGoalForm parent, final long bwInstanceOID) {
+	public AllDataModelTree(final NewGoalForm parent, final String bwInstanceOID) {
 		parentWindow = parent;
 		HorizontalLayout footer = new HorizontalLayout();
 
@@ -74,7 +74,7 @@ public class AllDataModelTree extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				upadateEntities();
-				parent.setContext((Long) treetable.getValue());
+				parent.setContext((String) treetable.getValue());
 				getApplication().getMainWindow().removeWindow(
 						AllDataModelTree.this.getWindow());
 			}
@@ -100,18 +100,18 @@ public class AllDataModelTree extends VerticalLayout {
 		getDataModel(bwInstanceOID);
 	}
 
-	public void getDataModel(long bwInstanceOID) {
+	public void getDataModel(String bwInstanceOID) {
 		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-		for (Entity entity : dataModelInstance.getEntities()) {
+		for (Entity entity : dataModelInstance.getEntitiesSet()) {
 			String entityName = entity.getName();
-			long entityOID = entity.getOID();
+			String entityOID = entity.getExternalId();
 			treetable.addItem(entityOID);
 			treetable.setItemCaption(entityOID, entityName);
-			for (Attribute attribute : entity.getAttributes()) {
+			for (Attribute attribute : entity.getAttributesSet()) {
 				String attributeName = attribute.getName();
-				long attributeOID = attribute.getOID();
+				String attributeOID = attribute.getExternalId();
 				treetable.addItem(attributeOID);
 				treetable.setParent(attributeOID, entityOID);
 				treetable.setItemCaption(attributeOID, attributeName);
@@ -121,14 +121,15 @@ public class AllDataModelTree extends VerticalLayout {
 		Transaction.commit();
 	}
 
-	protected void showNewEntityWindow(long bwInstanceOID) {
+	protected void showNewEntityWindow(String bwInstanceOID) {
 		Window newEntity = new Window("New Entity");
 		newEntity.setContent(new NewEntityForm(this, bwInstanceOID));
 		newEntity.center();
 		getApplication().getMainWindow().addWindow(newEntity);
 	}
 
-	protected void showNewAttributeWindow(long bwInstanceOID, String entityName) {
+	protected void showNewAttributeWindow(String bwInstanceOID,
+			String entityName) {
 		Window newAttribute = new Window("New Attribute");
 		newAttribute.setContent(new NewAttributeForm(this, bwInstanceOID,
 				entityName));
@@ -136,7 +137,7 @@ public class AllDataModelTree extends VerticalLayout {
 		getApplication().getMainWindow().addWindow(newAttribute);
 	}
 
-	protected void showNewRelationWindow(long bwInstanceOID, String entityName) {
+	protected void showNewRelationWindow(String bwInstanceOID, String entityName) {
 		Window newRelation = new Window("New Relation");
 		newRelation.setContent(new NewRelationForm(this, bwInstanceOID,
 				entityName));
@@ -144,7 +145,7 @@ public class AllDataModelTree extends VerticalLayout {
 		getApplication().getMainWindow().addWindow(newRelation);
 	}
 
-	public void refreshTree(long bwInstanceOID) {
+	public void refreshTree(String bwInstanceOID) {
 		treetable.removeAllItems();
 		getDataModel(bwInstanceOID);
 	}

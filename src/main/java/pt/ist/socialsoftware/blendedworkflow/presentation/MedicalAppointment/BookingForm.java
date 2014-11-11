@@ -1,7 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation.MedicalAppointment;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
+import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -11,6 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -27,7 +31,7 @@ import com.vaadin.ui.VerticalLayout;
 public class BookingForm extends VerticalLayout {
 	DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
 
-	private final long taskWorkItemOID;
+	private final String taskWorkItemOID;
 	HorizontalLayout footer = new HorizontalLayout();
 
 	Label episodeLabel;
@@ -35,7 +39,7 @@ public class BookingForm extends VerticalLayout {
 	PopupDateField reserveDatePDF;
 	NativeSelect patientNS;
 
-	public BookingForm(final long workItemOID) {
+	public BookingForm(final String workItemOID) {
 		setMargin(true);
 		setSpacing(true);
 
@@ -90,18 +94,19 @@ public class BookingForm extends VerticalLayout {
 		setComponentAlignment(footer, Alignment.MIDDLE_CENTER);
 	}
 
-	private void processData(final long workItemOID) {
+	private void processData(final String workItemOID) {
 		String episodeNumber = numberTF.getValue().toString();
 		String episodeReserveDate = dateFormatter.format(reserveDatePDF
 				.getValue());
-		long patientOID = (Long) patientNS.getValue();
+		String patientOID = (String) patientNS.getValue();
 
 		// Create RelationInstance
 		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework.getDomainObject(workItemOID);
-		long bwInstanceOID = taskWorkItem.getBwInstance().getOID();
-		long episodeOID = taskWorkItem.getBwInstance().getDataModelInstance()
-				.getEntity("Episode").getEntityInstance("Episode.1").getOID();
+		String bwInstanceOID = taskWorkItem.getBwInstance().getExternalId();
+		String episodeOID = taskWorkItem.getBwInstance().getDataModelInstance()
+				.getEntity("Episode").getEntityInstance("Episode.1")
+				.getExternalId();
 		Transaction.commit();
 		Transaction.begin();
 		BlendedWorkflow.getInstance().getBwManager()
@@ -110,14 +115,12 @@ public class BookingForm extends VerticalLayout {
 
 		// Set WorkItemArguments
 		Transaction.begin();
-		taskWorkItem.getOutputWorkItemArguments().get(0)
-				.setValue(episodeNumber);
-		taskWorkItem.getOutputWorkItemArguments().get(0)
-				.setState(DataState.DEFINED);
-		taskWorkItem.getOutputWorkItemArguments().get(1)
-				.setValue(episodeReserveDate);
-		taskWorkItem.getOutputWorkItemArguments().get(1)
-				.setState(DataState.DEFINED);
+		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
+				taskWorkItem.getOutputWorkItemArgumentsSet());
+		arguments.get(0).setValue(episodeNumber);
+		arguments.get(0).setState(DataState.DEFINED);
+		arguments.get(1).setValue(episodeReserveDate);
+		arguments.get(1).setState(DataState.DEFINED);
 		Transaction.commit();
 
 		Transaction.begin();
@@ -138,10 +141,10 @@ public class BookingForm extends VerticalLayout {
 		BWInstance bwInstance = taskWorkItem.getBwInstance();
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		Entity patient = dataModelInstance.getEntity("Patient");
-		for (EntityInstance entityInstance : patient.getEntityInstances()) {
-			patientNS.addItem(entityInstance.getOID());
-			patientNS.setItemCaption(entityInstance.getOID(), entityInstance
-					.getAttributeInstance("Name.1").getValue());
+		for (EntityInstance entityInstance : patient.getEntityInstancesSet()) {
+			patientNS.addItem(entityInstance.getExternalId());
+			patientNS.setItemCaption(entityInstance.getExternalId(),
+					entityInstance.getAttributeInstance("Name.1").getValue());
 		}
 		Transaction.commit();
 	}

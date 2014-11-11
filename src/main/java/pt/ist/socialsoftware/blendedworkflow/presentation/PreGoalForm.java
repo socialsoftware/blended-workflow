@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
@@ -25,10 +28,10 @@ import com.vaadin.ui.Window.Notification;
 @SuppressWarnings("serial")
 public class PreGoalForm extends VerticalLayout {
 
-	private final long goalWorkItemOID;
+	private final String goalWorkItemOID;
 	VerticalLayout data = new VerticalLayout();
 
-	public PreGoalForm(final long workItemOID) {
+	public PreGoalForm(final String workItemOID) {
 		setMargin(true);
 		setSpacing(true);
 
@@ -91,9 +94,10 @@ public class PreGoalForm extends VerticalLayout {
 		Transaction.begin();
 		GoalWorkItem goalWorkItem = FenixFramework
 				.getDomainObject(goalWorkItemOID);
-		goalWorkItem.getInputWorkItemArguments().get(index).setValue(value);
-		goalWorkItem.getInputWorkItemArguments().get(index)
-				.setState(DataState.DEFINED);
+		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
+				goalWorkItem.getInputWorkItemArgumentsSet());
+		arguments.get(index).setValue(value);
+		arguments.get(index).setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
@@ -105,7 +109,7 @@ public class PreGoalForm extends VerticalLayout {
 		Entity previousEntity = null;
 		Boolean first = true;
 		for (WorkItemArgument workItemArgument : goalWorkItem
-				.getInputWorkItemArguments()) {
+				.getInputWorkItemArgumentsSet()) {
 			Attribute attribute = workItemArgument.getAttributeInstance()
 					.getAttribute();
 			Entity entity = attribute.getEntity();
@@ -145,7 +149,7 @@ public class PreGoalForm extends VerticalLayout {
 		data.addComponent(l);
 	}
 
-	public void generateGoalForm(long workItemOID) {
+	public void generateGoalForm(String workItemOID) {
 		Window goalWindow = new Window("Goal Form");
 		goalWindow.setContent(new GoalForm(workItemOID));
 		goalWindow.setWidth("30%");

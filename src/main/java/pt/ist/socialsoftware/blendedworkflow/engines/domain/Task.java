@@ -6,8 +6,10 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 
 public class Task extends Task_Base {
-	
-    public Task(TaskModel taskModel, String name, String description, Condition preConstrain,Condition postConstrain, String previous, String joinCode, String splitCode) throws BlendedWorkflowException {
+
+	public Task(TaskModel taskModel, String name, String description,
+			Condition preConstrain, Condition postConstrain, String previous,
+			String joinCode, String splitCode) throws BlendedWorkflowException {
 		checkUniqueTaskName(taskModel, name);
 		setTaskModel(taskModel);
 		setName(name);
@@ -17,17 +19,20 @@ public class Task extends Task_Base {
 		setPrevious(previous);
 		setJoinCode(joinCode);
 		setSplitCode(splitCode);
-    }
-    
-	private void checkUniqueTaskName(TaskModel taskModel, String name) throws BlendedWorkflowException {
-		for (Task task : taskModel.getTasks()) {
+	}
+
+	private void checkUniqueTaskName(TaskModel taskModel, String name)
+			throws BlendedWorkflowException {
+		for (Task task : taskModel.getTasksSet()) {
 			if (task.getName().equals(name)) {
-				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_TASK_NAME, name);
+				throw new BlendedWorkflowException(
+						BlendedWorkflowError.INVALID_TASK_NAME, name);
 			}
 		}
 	}
-	
-	public void cloneTask(TaskModelInstance taskModelInstance) throws BlendedWorkflowException {
+
+	public void cloneTask(TaskModelInstance taskModelInstance)
+			throws BlendedWorkflowException {
 		Condition newPreCondition = null;
 		Condition preCondition = getPreConstraint();
 		Condition newPostCondition = null;
@@ -36,21 +41,24 @@ public class Task extends Task_Base {
 			newPreCondition = preCondition.cloneCondition(taskModelInstance);
 			newPostCondition = postCondition.cloneCondition(taskModelInstance);
 		}
-		Task newTask = new Task(taskModelInstance, getName(), getDescription(), newPreCondition, newPostCondition, getPrevious(), getJoinCode(), getSplitCode());
+		Task newTask = new Task(taskModelInstance, getName(), getDescription(),
+				newPreCondition, newPostCondition, getPrevious(),
+				getJoinCode(), getSplitCode());
 		newTask.setUser(getUser());
 		newTask.setRole(getRole());
 	}
-	
+
 	/**
 	 * Get the Task condition data to use in the use interface.
+	 * 
 	 * @return a string with the condition data entities.
 	 */
 	public String getConstraintData(Boolean isPreConstraint) {
 		Set<Entity> entities;
 		Set<Attribute> attributes;
 		String dataString = "";
-		
-		//Get Condition Data
+
+		// Get Condition Data
 		if (isPreConstraint) {
 			entities = getPreConstraint().getEntities();
 			attributes = getPreConstraint().getAttributes();
@@ -59,19 +67,19 @@ public class Task extends Task_Base {
 			attributes = getPostConstraint().getAttributes();
 		}
 
-		//Add Attribute entities
+		// Add Attribute entities
 		for (Attribute attribute : attributes) {
 			entities.add(attribute.getEntity());
 		}
-		
-		//Create String
+
+		// Create String
 		int count = 0;
 		for (Entity entity : entities) {
-			if  (entities.size() == 1) {
+			if (entities.size() == 1) {
 				dataString += entity.getName();
-			}
-			else if (count < entities.size()-1) {
-				dataString += entity.getName() + ", ";;
+			} else if (count < entities.size() - 1) {
+				dataString += entity.getName() + ", ";
+				;
 			} else {
 				dataString += entity.getName();
 			}
@@ -79,5 +87,5 @@ public class Task extends Task_Base {
 		}
 		return dataString;
 	}
-    
+
 }

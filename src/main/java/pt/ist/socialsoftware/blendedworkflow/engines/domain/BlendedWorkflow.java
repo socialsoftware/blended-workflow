@@ -6,7 +6,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.*;
+import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.organizationalmanager.OrganizationalManager;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
@@ -20,19 +20,25 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	private BWManager bwManager = null;
 	private OrganizationalManager organizationalManager = null;
 	private String today = dateFormatter.format(new java.util.Date());
-	
-	private BWExecutorService bwExecutorService = null;
-	
-	public static BlendedWorkflow getInstance() {
-		return FenixFramework.getRoot();
-	}	
 
-	public BWSpecification getBWSpecification(String name) throws BlendedWorkflowException {
-		for (BWSpecification bwSpecification : getBwSpecifications()) {
+	private BWExecutorService bwExecutorService = null;
+
+	public static BlendedWorkflow getInstance() {
+		return FenixFramework.getDomainRoot().getBlendedWorkflow();
+	}
+
+	public BlendedWorkflow() {
+		FenixFramework.getDomainRoot().setBlendedWorkflow(this);
+	}
+
+	public BWSpecification getBWSpecification(String name)
+			throws BlendedWorkflowException {
+		for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
 			if (bwSpecification.getName().equals(name))
 				return bwSpecification;
 		}
-		throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_SPECIFICATION_NAME, name);
+		throw new BlendedWorkflowException(
+				BlendedWorkflowError.INVALID_SPECIFICATION_NAME, name);
 	}
 
 	public BWInstance getBWInstance(String ID) throws BlendedWorkflowException {
@@ -42,17 +48,20 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 					return bwInstance;
 			}
 		}
-		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_CASE_ID, ID);
+		throw new BlendedWorkflowException(
+				BlendedWorkflowError.NON_EXISTENT_CASE_ID, ID);
 	}
-	
-	public BWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID) throws BlendedWorkflowException {
+
+	public BWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID)
+			throws BlendedWorkflowException {
 		for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
 			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
 				if (bwInstance.getYawlCaseID().equals(yawlCaseID))
 					return bwInstance;
 			}
 		}
-		throw new BlendedWorkflowException(BlendedWorkflowError.NON_EXISTENT_CASE_ID, yawlCaseID);
+		throw new BlendedWorkflowException(
+				BlendedWorkflowError.NON_EXISTENT_CASE_ID, yawlCaseID);
 	}
 
 	public YAWLAdapter getYawlAdapter() throws BlendedWorkflowException {
@@ -76,7 +85,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	public void setWorkletAdapter(WorkletAdapter workletAdapter) {
 		this.workletAdapter = workletAdapter;
 	}
-	
+
 	public WorkListManager getWorkListManager() {
 		if (workListManager == null) {
 			workListManager = new WorkListManager();
@@ -87,7 +96,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	public void setWorkListManager(WorkListManager workListManager) {
 		this.workListManager = workListManager;
 	}
-	
+
 	public BWManager getBwManager() {
 		if (bwManager == null) {
 			bwManager = new BWManager();
@@ -98,7 +107,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	public void setBwManager(BWManager bwManager) {
 		this.bwManager = bwManager;
 	}
-	
+
 	public OrganizationalManager getOrganizationalManager() {
 		if (organizationalManager == null) {
 			organizationalManager = new OrganizationalManager();
@@ -106,17 +115,18 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 		return organizationalManager;
 	}
 
-	public void setOrganizationalManager(OrganizationalManager organizationalManager) {
+	public void setOrganizationalManager(
+			OrganizationalManager organizationalManager) {
 		this.organizationalManager = organizationalManager;
 	}
-	
+
 	public BWExecutorService getBWExecutorService() {
 		if (bwExecutorService == null) {
 			bwExecutorService = new BWExecutorService();
 		}
 		return bwExecutorService;
 	}
-	
+
 	public void setBWExecutorService(BWExecutorService bwExecutorService) {
 		this.bwExecutorService = bwExecutorService;
 	}

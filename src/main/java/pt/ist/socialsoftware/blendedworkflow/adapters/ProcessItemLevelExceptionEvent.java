@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.adapters;
 
 import java.util.concurrent.Callable;
 
+import jvstm.Transaction;
+
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;

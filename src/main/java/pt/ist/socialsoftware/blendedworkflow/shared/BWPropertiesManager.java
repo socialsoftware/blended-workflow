@@ -21,6 +21,7 @@ public class BWPropertiesManager {
 	}
 
 	public static String getProperty(final String key) {
+		System.out.println("XXXXXXXXXX" + properties.getProperty(key));
 		return properties.getProperty(key);
 	}
 

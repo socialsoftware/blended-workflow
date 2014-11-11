@@ -33,7 +33,7 @@ public class NewRelationForm extends VerticalLayout {
 	private final CheckBox isThisKey = new CheckBox(
 			"This Entity is key of the other Entity?");
 
-	public NewRelationForm(AllDataModelTree parent, final long bwInstanceOID,
+	public NewRelationForm(AllDataModelTree parent, final String bwInstanceOID,
 			final String entityName) {
 		setMargin(true);
 
@@ -125,13 +125,13 @@ public class NewRelationForm extends VerticalLayout {
 		setComponentAlignment(submitPanel, Alignment.MIDDLE_CENTER);
 	}
 
-	private void getRelations(long bwInstanceOID, String entityName) {
+	private void getRelations(String bwInstanceOID, String entityName) {
 		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
 		int relationIndex = 1;
-		for (Relation relation : dataModel.getRelations()) {
+		for (Relation relation : dataModel.getRelationsSet()) {
 			Entity entityOne = relation.getEntityOne();
 			Entity entityTwo = relation.getEntityTwo();
 			if (entityOne.getName().equals(entityName)
@@ -154,12 +154,12 @@ public class NewRelationForm extends VerticalLayout {
 		Transaction.commit();
 	}
 
-	private void getEntities(long bwInstanceOID, String entityName) {
+	private void getEntities(String bwInstanceOID, String entityName) {
 		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
-		for (Entity entity : dataModel.getEntities()) {
+		for (Entity entity : dataModel.getEntitiesSet()) {
 			if (!entity.getName().equals(entityName)) {
 				this.otherEntity.addItem(entity.getName());
 			}
@@ -167,7 +167,7 @@ public class NewRelationForm extends VerticalLayout {
 		Transaction.commit();
 	}
 
-	public void addRelation(long bwInstanceOID, String name,
+	public void addRelation(String bwInstanceOID, String name,
 			String entityOneName, String entityTwoName, String cardinality,
 			Boolean isOneKeyEntity, Boolean isTwoKeyEntity)
 			throws BlendedWorkflowException {

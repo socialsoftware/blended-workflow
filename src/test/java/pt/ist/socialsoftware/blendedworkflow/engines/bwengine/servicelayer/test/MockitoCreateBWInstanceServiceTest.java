@@ -1,16 +1,22 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import jvstm.Transaction;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import pt.ist.fenixframework.pstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.MockitoAbstractServiceTest;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.*;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 
-public class MockitoCreateBWInstanceServiceTest extends MockitoAbstractServiceTest {
+public class MockitoCreateBWInstanceServiceTest extends
+		MockitoAbstractServiceTest {
 
 	@Before
 	public void setUp() throws Exception, BlendedWorkflowException {
@@ -25,19 +31,24 @@ public class MockitoCreateBWInstanceServiceTest extends MockitoAbstractServiceTe
 		try {
 			Transaction.begin();
 
-			final BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-			final BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
-			final DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-			final GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-			final TaskModelInstance taskModelInstance = bwInstance.getTaskModelInstance();
+			final BlendedWorkflow blendedWorkflow = BlendedWorkflow
+					.getInstance();
+			final BWInstance bwInstance = blendedWorkflow
+					.getBWInstance(BWINSTANCE_ID);
+			final DataModelInstance dataModelInstance = bwInstance
+					.getDataModelInstance();
+			final GoalModelInstance goalModelInstance = bwInstance
+					.getGoalModelInstance();
+			final TaskModelInstance taskModelInstance = bwInstance
+					.getTaskModelInstance();
 
-			assertEquals(6, dataModelInstance.getEntitiesCount());
-			assertEquals(17, dataModelInstance.getAttributesCount());
-			assertEquals(5, dataModelInstance.getRelationsCount());
-			assertEquals(11, goalModelInstance.getAchieveGoalsCount());
-			assertEquals(1, goalModelInstance.getMaintainGoalsCount());
-			assertEquals(6, taskModelInstance.getTasksCount());
-			assertEquals(0, bwInstance.getWorkItemsCount());
+			assertEquals(6, dataModelInstance.getEntitiesSet().size());
+			assertEquals(17, dataModelInstance.getAttributesSet().size());
+			assertEquals(5, dataModelInstance.getRelationsSet().size());
+			assertEquals(11, goalModelInstance.getAchieveGoalsSet().size());
+			assertEquals(1, goalModelInstance.getMaintainGoalsSet().size());
+			assertEquals(6, taskModelInstance.getTasksSet().size());
+			assertEquals(0, bwInstance.getWorkItemsSet().size());
 
 			assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
 

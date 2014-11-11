@@ -5,3 +5,6 @@ bin
 dist
 test-db
 src/main/config/build.properties
+/target/
+/target/
+/target/

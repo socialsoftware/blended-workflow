@@ -2,11 +2,14 @@ package pt.ist.socialsoftware.blendedworkflow.shared;
 
 import static org.junit.Assert.fail;
 
-import java.util.Calendar;
 import java.util.Set;
 
 import jvstm.Transaction;
-import pt.ist.fenixframework.Config;
+
+import org.apache.log4j.Logger;
+
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
@@ -17,58 +20,33 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
 
 public class Bootstrap {
 
-	private static boolean notInitialized = true;
-
-	/**
-	 * Check if the database is initialized.
-	 * 
-	 * @return
-	 */
-	public static Boolean isInitialized() {
-		Config config = FenixFramework.getConfig();
-		if (config == null) {
-			return false;
-		} else
-			return true;
-	}
+	private static Logger _log = Logger.getLogger(Bootstrap.class);
 
 	/**
 	 * Initializes the Database.
 	 */
 	// FIXME: PropertiesManager.getProperty("dbAlias");
+	@Atomic(mode = TxMode.WRITE)
 	public static void init() {
-		FenixFramework.initialize(new Config() {
-			{
-				dbAlias = "C:/Users/User/Desktop/bwdb/"
-						+ (((Calendar.getInstance().getTime() + "").replaceAll(
-								" ", "")).replaceAll(":", "")); // FIXME: Test
-																// proposes
-																// only.
-				domainModelPath = BWPropertiesManager
-						.getProperty("dml.filename");
-				// repositoryType = RepositoryType.BERKELEYDB;
-				rootClass = BlendedWorkflow.class;
-			}
-		});
-		createOraganizationalModel();
+		FenixFramework.getDomainRoot();
+		if (BlendedWorkflow.getInstance() == null) {
+			new BlendedWorkflow();
+			createOraganizationalModel();
+			populate();
+		}
+
+		_log.info("Bootstrap::init");
 	}
 
 	/**
 	 * Initializes the Test Database.
 	 */
 	public static void initTestDB() {
-		if (notInitialized) {
-			FenixFramework.initialize(new Config() {
-				{
-					dbAlias = "test-db";
-					domainModelPath = "src/main/dml/blendedworkflow.dml";
-					// repositoryType = RepositoryType.BERKELEYDB;
-					rootClass = BlendedWorkflow.class;
-				}
-			});
+		FenixFramework.getDomainRoot();
+		if (BlendedWorkflow.getInstance() == null) {
+			new BlendedWorkflow();
+			createOraganizationalModel();
 		}
-		notInitialized = false;
-		createOraganizationalModel();
 	}
 
 	/**

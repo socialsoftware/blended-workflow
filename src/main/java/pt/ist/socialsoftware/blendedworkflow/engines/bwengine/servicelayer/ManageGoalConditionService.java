@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import java.util.concurrent.Callable;
 
+import jvstm.Transaction;
+
 import org.apache.log4j.Logger;
 
 import pt.ist.fenixframework.FenixFramework;
@@ -27,7 +29,7 @@ public class ManageGoalConditionService implements Callable<String> {
 	 * @param conditionOID
 	 *            the condition OID.
 	 */
-	public ManageGoalConditionService(long workItemOID, long conditionOID) {
+	public ManageGoalConditionService(String workItemOID, String conditionOID) {
 		this.goalWorkItem = FenixFramework.getDomainObject(workItemOID);
 		this.condition = FenixFramework.getDomainObject(conditionOID);
 		this.maintainGoal = null;
@@ -39,7 +41,7 @@ public class ManageGoalConditionService implements Callable<String> {
 	 * 
 	 * @param maintainGoalOID
 	 */
-	public ManageGoalConditionService(long maintainGoalOID,
+	public ManageGoalConditionService(String maintainGoalOID,
 			MaintainGoalState state) {
 		this.goalWorkItem = null;
 		this.condition = null;
@@ -55,14 +57,14 @@ public class ManageGoalConditionService implements Callable<String> {
 		if (this.maintainGoal == null) {
 
 			for (Condition activateCondition : this.goalWorkItem
-					.getActivateConditions()) {
+					.getActivateConditionsSet()) {
 				if (activateCondition.equals(condition)) {
 					this.goalWorkItem.removeActivateConditions(condition);
 				}
 			}
 
 			for (Condition maintainCondition : this.goalWorkItem
-					.getMaintainConditions()) {
+					.getMaintainConditionsSet()) {
 				if (maintainCondition.equals(condition)) {
 					this.goalWorkItem.removeMaintainConditions(condition);
 				}

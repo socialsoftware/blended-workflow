@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation.MedicalAppointment;
 
+import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
@@ -30,7 +31,7 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 	private final CheckBox heartImpactCB = new CheckBox("Heart Impact");
 
 	public PrescriptionMedicationForm(final DoctorAppointmentForm parent,
-			final long bwInstanceOID) {
+			final String bwInstanceOID) {
 		setMargin(true);
 		setSpacing(true);
 
@@ -91,10 +92,11 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 				// Relation to Medical Prescription
 				Entity medicalPrescription = dataModelInstance
 						.getEntity("Medical Prescription");
-				long medicalPrescription1OID = medicalPrescription
-						.getEntityInstance("Medical Prescription.1").getOID();
-				long prescriptionMedication1OID = prescriptionMedication1
-						.getOID();
+				String medicalPrescription1OID = medicalPrescription
+						.getEntityInstance("Medical Prescription.1")
+						.getExternalId();
+				String prescriptionMedication1OID = prescriptionMedication1
+						.getExternalId();
 				BlendedWorkflow
 						.getInstance()
 						.getBwManager()

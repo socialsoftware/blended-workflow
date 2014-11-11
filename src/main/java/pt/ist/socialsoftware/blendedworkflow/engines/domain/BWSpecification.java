@@ -9,7 +9,8 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class BWSpecification extends BWSpecification_Base {
 
-	public BWSpecification(String name, String author, String description, String version, String UID) throws BlendedWorkflowException {
+	public BWSpecification(String name, String author, String description,
+			String version, String UID) throws BlendedWorkflowException {
 		checkUniqueBWSpecificationName(name);
 		setName(name);
 		setAuthor(author);
@@ -28,17 +29,20 @@ public class BWSpecification extends BWSpecification_Base {
 		blendedWorkflow.addBwSpecifications(this);
 	}
 
-	private void checkUniqueBWSpecificationName(String name) throws BlendedWorkflowException {
+	private void checkUniqueBWSpecificationName(String name)
+			throws BlendedWorkflowException {
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-		for (BWSpecification bwSpecification : blendedWorkflow.getBwSpecifications()) {
+		for (BWSpecification bwSpecification : blendedWorkflow
+				.getBwSpecificationsSet()) {
 			if (bwSpecification.getName().equals(name)) {
-				throw new BlendedWorkflowException(BlendedWorkflowError.INVALID_SPECIFICATION_NAME, name);
+				throw new BlendedWorkflowException(
+						BlendedWorkflowError.INVALID_SPECIFICATION_NAME, name);
 			}
 		}
 	}
 
 	public int getNewBWInstanceId() {
-		setBwInstanceCounter(getBwInstanceCounter()+1);
+		setBwInstanceCounter(getBwInstanceCounter() + 1);
 		return getBwInstanceCounter();
 	}
 

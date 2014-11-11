@@ -42,7 +42,7 @@ public class BWManager {
 	 */
 	public void notifyLoadedBWSpecification(BWSpecification bwSpecification) {
 		log.info("BWSpecification " + bwSpecification.getName() + " created.");
-		getBwPresentation().addBWSpecification(bwSpecification.getOID(),
+		getBwPresentation().addBWSpecification(bwSpecification.getExternalId(),
 				bwSpecification.getName());
 	}
 
@@ -54,7 +54,7 @@ public class BWManager {
 	 */
 	public void notifyCreatedBWInstance(BWInstance bwInstance) {
 		log.info("BWInstance " + bwInstance.getID() + " created.");
-		getBwPresentation().addBWInstance(bwInstance.getOID(),
+		getBwPresentation().addBWInstance(bwInstance.getExternalId(),
 				bwInstance.getName());
 	}
 
@@ -64,9 +64,9 @@ public class BWManager {
 	 */
 	public void updateBWPresentation() {
 		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance()
-				.getBwSpecifications()) {
+				.getBwSpecificationsSet()) {
 			notifyLoadedBWSpecification(bwSpecification);
-			for (BWInstance bwInstance : bwSpecification.getBwInstances()) {
+			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
 				notifyCreatedBWInstance(bwInstance);
 			}
 		}
@@ -94,7 +94,7 @@ public class BWManager {
 	/**
 	 * Create BWInstance Service.
 	 */
-	public void createBWInstance(long bwSpecificationOID, String name,
+	public void createBWInstance(String bwSpecificationOID, String name,
 			String userID) {
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance()
 				.getBWExecutorService();
@@ -118,9 +118,9 @@ public class BWManager {
 		boolean exists = false;
 
 		// Check if relation instance already exists
-		for (Relation relation : dataModelInstance.getRelations()) {
+		for (Relation relation : dataModelInstance.getRelationsSet()) {
 			for (RelationInstance relationInstance : relation
-					.getRelationInstances()) {
+					.getRelationInstancesSet()) {
 				EntityInstance one = relationInstance.getEntityInstanceOne();
 				EntityInstance two = relationInstance.getEntityInstanceTwo();
 				if (one.equals(e1) && two.equals(e2) || one.equals(e2)
@@ -133,7 +133,7 @@ public class BWManager {
 
 		// Create only if no previous RelationInstance exists
 		if (!exists) {
-			for (Relation relation : dataModelInstance.getRelations()) {
+			for (Relation relation : dataModelInstance.getRelationsSet()) {
 				Entity one = relation.getEntityOne();
 				Entity two = relation.getEntityTwo();
 				if ((one.equals(entity1) && two.equals(entity2))) {

@@ -50,7 +50,7 @@ public class RedoGoalForm extends VerticalLayout {
 					parentGoal.removeAllItems();
 					workItems.removeAllItems();
 				} else {
-					long bwInstanceOID = (Long) bwInstances.getValue();
+					String bwInstanceOID = (String) bwInstances.getValue();
 					BWInstance bwInstance = FenixFramework
 							.getDomainObject(bwInstanceOID);
 					getGoals(bwInstance);
@@ -65,8 +65,8 @@ public class RedoGoalForm extends VerticalLayout {
 				if (parentGoal.getValue() == null) {
 					workItems.removeAllItems();
 				} else {
-					long bwInstanceOID = (Long) bwInstances.getValue();
-					long goalOID = (Long) parentGoal.getValue();
+					String bwInstanceOID = (String) bwInstances.getValue();
+					String goalOID = (String) parentGoal.getValue();
 					updateWorkItemsInfo(bwInstanceOID, goalOID);
 				}
 			}
@@ -77,7 +77,7 @@ public class RedoGoalForm extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					long workItemlOID = (Long) workItems.getValue();
+					String workItemlOID = (String) workItems.getValue();
 					Transaction.begin();
 					String activeUserID = BlendedWorkflow.getInstance()
 							.getOrganizationalManager().getActiveUser().getID();
@@ -124,25 +124,26 @@ public class RedoGoalForm extends VerticalLayout {
 	private void getGoals(BWInstance bwInstance) {
 		Transaction.begin();
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
-			if (goal.getGoalWorkItemsCount() > 0) {
-				this.parentGoal.addItem(goal.getOID());
-				this.parentGoal.setItemCaption(goal.getOID(), goal.getName());
+		for (AchieveGoal goal : goalModelInstance.getAchieveGoalsSet()) {
+			if (goal.getGoalWorkItemsSet().size() > 0) {
+				this.parentGoal.addItem(goal.getExternalId());
+				this.parentGoal.setItemCaption(goal.getExternalId(),
+						goal.getName());
 			}
 		}
 		Transaction.commit();
 	}
 
-	private void updateWorkItemsInfo(long bwInstanceOID, long goalOID) {
+	private void updateWorkItemsInfo(String bwInstanceOID, String goalOID) {
 		this.workItems.removeAllItems();
 		AchieveGoal goal = FenixFramework.getDomainObject(goalOID);
 
 		Transaction.begin();
-		for (GoalWorkItem goalWorkItem : goal.getGoalWorkItems()) {
+		for (GoalWorkItem goalWorkItem : goal.getGoalWorkItemsSet()) {
 			if (goalWorkItem.getState().equals(GoalState.ACHIEVED)
 					|| goalWorkItem.getState().equals(GoalState.SKIPPED)) {
-				this.workItems.addItem(goalWorkItem.getOID());
-				this.workItems.setItemCaption(goalWorkItem.getOID(),
+				this.workItems.addItem(goalWorkItem.getExternalId());
+				this.workItems.setItemCaption(goalWorkItem.getExternalId(),
 						goalWorkItem.getID());
 				// TODO: Give workitem data information
 			}
@@ -153,10 +154,10 @@ public class RedoGoalForm extends VerticalLayout {
 	private void getBWInstances() {
 		Transaction.begin();
 		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance()
-				.getBwSpecifications()) {
-			for (BWInstance bwInstance : bwSpecification.getBwInstances()) {
-				this.bwInstances.addItem(bwInstance.getOID());
-				this.bwInstances.setItemCaption(bwInstance.getOID(),
+				.getBwSpecificationsSet()) {
+			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
+				this.bwInstances.addItem(bwInstance.getExternalId());
+				this.bwInstances.setItemCaption(bwInstance.getExternalId(),
 						bwInstance.getName());
 			}
 		}

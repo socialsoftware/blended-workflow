@@ -33,13 +33,13 @@ import com.vaadin.ui.Window.Notification;
 public class ActivateGoalForm extends VerticalLayout {
 
 	// Variables
-	private final long _bwInstanceOID;
-	private final long _goalOID;
-	private final HashMap<Long, Long> _entities = new HashMap<Long, Long>();
+	private final String _bwInstanceOID;
+	private final String _goalOID;
+	private final HashMap<String, String> _entities = new HashMap<String, String>();
 	private static Logger log = Logger.getLogger("????????????");
 
 	// Interface
-	private static final long NEW_DATA = -1;
+	private static final String NEW_DATA = "";
 	private static final String NEW_DATA_CAPTION = "New Data...";
 
 	private final NativeSelect entityInstanceContext = new NativeSelect(
@@ -49,7 +49,7 @@ public class ActivateGoalForm extends VerticalLayout {
 	private final VerticalLayout subGoalContextVL = new VerticalLayout();
 	private final HorizontalLayout submitPanel = new HorizontalLayout();
 
-	public ActivateGoalForm(long bwInstanceOID, long goalOID) {
+	public ActivateGoalForm(String bwInstanceOID, String goalOID) {
 		_bwInstanceOID = bwInstanceOID;
 		_goalOID = goalOID;
 
@@ -82,16 +82,18 @@ public class ActivateGoalForm extends VerticalLayout {
 				Boolean activate = true;
 
 				// Get Goal Context
-				Long entityInstanceOID = (Long) entityInstanceContext
+				String entityInstanceOID = (String) entityInstanceContext
 						.getValue();
 				Transaction.begin();
-				if (entityInstanceOID == -1) {
+				if (entityInstanceOID == "") {
 					AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
-					_entities.put(goal.getEntityContext().getOID(), null);
+					_entities
+							.put(goal.getEntityContext().getExternalId(), null);
 				} else {
 					EntityInstance entityInstance = FenixFramework
 							.getDomainObject(entityInstanceOID);
-					Long entityOID = entityInstance.getEntity().getOid();
+					String entityOID = entityInstance.getEntity()
+							.getExternalId();
 					_entities.put(entityOID, entityInstanceOID);
 				}
 				Transaction.commit();
@@ -103,12 +105,13 @@ public class ActivateGoalForm extends VerticalLayout {
 					if (selec.getValue() == null) {
 						activate = false;
 					}
-					long keyEntityInstanceOID = (Long) selec.getValue();
+					String keyEntityInstanceOID = (String) selec.getValue();
 
 					Transaction.begin();
 					EntityInstance keyEntityInstance = FenixFramework
 							.getDomainObject(keyEntityInstanceOID);
-					Long keyEntityOID = keyEntityInstance.getEntity().getOid();
+					String keyEntityOID = keyEntityInstance.getEntity()
+							.getExternalId();
 					_entities.put(keyEntityOID, keyEntityInstanceOID);
 					Transaction.commit();
 				}
@@ -117,7 +120,7 @@ public class ActivateGoalForm extends VerticalLayout {
 				for (int i = 0; i < subGoalContextVL.getComponentCount(); i++) {
 					NativeSelect selec = (NativeSelect) subGoalContextVL
 							.getComponent(i);
-					long subEntityInstanceOID = (Long) selec.getValue();
+					String subEntityInstanceOID = (String) selec.getValue();
 
 					Transaction.begin();
 					BWInstance bwInstance = FenixFramework
@@ -127,20 +130,20 @@ public class ActivateGoalForm extends VerticalLayout {
 					log.info("|" + selec.getCaption() + "|");
 					Entity subGoalEntity = dataModelInstance.getEntity(selec
 							.getCaption());
-					if (subEntityInstanceOID == -1) {
-						_entities.put(subGoalEntity.getOID(), null);
+					if (subEntityInstanceOID == "") {
+						_entities.put(subGoalEntity.getExternalId(), null);
 					} else {
 						EntityInstance subEntityInstance = FenixFramework
 								.getDomainObject(subEntityInstanceOID);
-						Long subEntityOID = subEntityInstance.getEntity()
-								.getOid();
+						String subEntityOID = subEntityInstance.getEntity()
+								.getExternalId();
 						_entities.put(subEntityOID, subEntityInstanceOID);
 					}
 
 					Transaction.commit();
 				}
 
-				for (Map.Entry<Long, Long> entry : _entities.entrySet()) {
+				for (Map.Entry<String, String> entry : _entities.entrySet()) {
 					log.debug("E:" + entry.getKey() + " EI:" + entry.getValue());
 				}
 
@@ -207,13 +210,15 @@ public class ActivateGoalForm extends VerticalLayout {
 		AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
 		Entity goalContext = goal.getEntityContext();
 
-		for (Entity entity : dataModelInstance.getEntities()) {
+		for (Entity entity : dataModelInstance.getEntitiesSet()) {
 			if (entity.equals(goalContext)) {
 				for (EntityInstance entityInstance : entity
-						.getEntityInstances()) {
-					this.entityInstanceContext.addItem(entityInstance.getOID());
+						.getEntityInstancesSet()) {
+					this.entityInstanceContext.addItem(entityInstance
+							.getExternalId());
 					this.entityInstanceContext.setItemCaption(
-							entityInstance.getOID(), entityInstance.getID());
+							entityInstance.getExternalId(),
+							entityInstance.getID());
 				}
 			}
 		}
@@ -226,7 +231,7 @@ public class ActivateGoalForm extends VerticalLayout {
 
 		AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
 		Entity goalContext = goal.getEntityContext();
-		for (Relation relation : goalContext.getRelations()) {
+		for (Relation relation : goalContext.getRelationsSet()) {
 			Entity one = relation.getEntityOne();
 			Entity two = relation.getEntityTwo();
 			if (goalContext.equals(one) && relation.getIsTwoKeyEntity()) {
@@ -250,7 +255,7 @@ public class ActivateGoalForm extends VerticalLayout {
 		AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
 		for (Entity entity : goal.getSubGoalsContext()) {
 			addNativeSelect(subGoalContextVL, entity);
-			_entities.put(entity.getOID(), null);
+			_entities.put(entity.getExternalId(), null);
 		}
 
 		if (subGoalContextVL.getComponentCount() > 0) {
@@ -271,14 +276,15 @@ public class ActivateGoalForm extends VerticalLayout {
 		}
 		l.addComponent(ns);
 
-		for (EntityInstance entityInstance : entity.getEntityInstances()) {
-			ns.addItem(entityInstance.getOID());
-			ns.setItemCaption(entityInstance.getOID(), entityInstance.getID());
+		for (EntityInstance entityInstance : entity.getEntityInstancesSet()) {
+			ns.addItem(entityInstance.getExternalId());
+			ns.setItemCaption(entityInstance.getExternalId(),
+					entityInstance.getID());
 		}
 	}
 
-	protected void showDisableConditionsWindow(long bwInstanceOID,
-			long goalOID, HashMap<Long, Long> entitiesOID) {
+	protected void showDisableConditionsWindow(String bwInstanceOID,
+			String goalOID, HashMap<String, String> entitiesOID) {
 		Window dataModel = new Window("Disable Conditions Form");
 		dataModel.setContent(new ManageAchieveGoalsConditionsForm(this,
 				bwInstanceOID, goalOID, entitiesOID));

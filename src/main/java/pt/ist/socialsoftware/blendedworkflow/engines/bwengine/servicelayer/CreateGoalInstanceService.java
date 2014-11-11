@@ -1,12 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
+
+import jvstm.Transaction;
 
 import org.apache.log4j.Logger;
 
@@ -30,19 +29,19 @@ public class CreateGoalInstanceService implements Callable<String> {
 
 	private final BWInstance bwInstance;
 	private final AchieveGoal goal;
-	private final ArrayList<Long> activateConditionsOID;
-	private List<Condition> activateConditions;
-	private final ArrayList<Long> maintainGoalsOID;
+	private final Set<String> activateConditionsOID;
+	private Set<Condition> activateConditions;
+	private final Set<String> maintainGoalsOID;
 	private Set<MaintainGoal> maintainGoals;
-	private final HashMap<Long, Long> entitiesOID;
+	private final Map<String, String> entitiesOID;
 	private final Set<Relation> relations;
 
-	// private ArrayList<Long> relationsOID;
+	// private ArrayList<String> relationsOID;
 
 	// get relation
-	public CreateGoalInstanceService(long bwInstanceOID, long goalOID,
-			ArrayList<Long> activateConditionsOID,
-			ArrayList<Long> maintainGoalsOID, HashMap<Long, Long> entitiesOID) {
+	public CreateGoalInstanceService(String bwInstanceOID, String goalOID,
+			Set<String> activateConditionsOID, Set<String> maintainGoalsOID,
+			Map<String, String> entitiesOID) {
 		this.bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		this.goal = FenixFramework.getDomainObject(goalOID);
 		this.activateConditionsOID = activateConditionsOID;
@@ -61,9 +60,9 @@ public class CreateGoalInstanceService implements Callable<String> {
 				.getDataModelInstance();
 
 		// Get Key Relations if the Context is new
-		if (this.entitiesOID.get(this.goal.getEntityContext().getOID()) == null) {
+		if (this.entitiesOID.get(this.goal.getEntityContext().getExternalId()) == null) {
 			for (Relation relation : this.goal.getEntityContext()
-					.getRelations()) {
+					.getRelationsSet()) {
 				Entity one = relation.getEntityOne();
 				Entity two = relation.getEntityTwo();
 				if (this.goal.getEntityContext().equals(one)
@@ -84,20 +83,21 @@ public class CreateGoalInstanceService implements Callable<String> {
 				.addAll(goalModelInstance.getSubGoalsRelations(this.goal));
 
 		// Create EntityInstances that do not exist
-		for (Map.Entry<Long, Long> entry : entitiesOID.entrySet()) {
+		for (Map.Entry<String, String> entry : entitiesOID.entrySet()) {
 			if (entry.getValue() == null) {
 				Entity entity = FenixFramework.getDomainObject(entry.getKey());
 				EntityInstance newEntityInstance = new EntityInstance(entity);
-				entry.setValue(newEntityInstance.getOID());
+				entry.setValue(newEntityInstance.getExternalId());
 			}
 		}
 
 		// Parse Activate Conditions
 		if (this.activateConditionsOID == null) {
-			this.activateConditions = this.goal.getActivateConditions();
+			this.activateConditions = new HashSet<Condition>(
+					this.goal.getActivateConditionsSet());
 		} else {
-			this.activateConditions = new ArrayList<Condition>();
-			for (Long activateConditionOID : this.activateConditionsOID) {
+			this.activateConditions = new HashSet<Condition>();
+			for (String activateConditionOID : this.activateConditionsOID) {
 				Condition activateCondition = FenixFramework
 						.getDomainObject(activateConditionOID);
 				this.activateConditions.add(activateCondition);
@@ -106,11 +106,12 @@ public class CreateGoalInstanceService implements Callable<String> {
 
 		// Parse Maintain Goals
 		if (this.maintainGoalsOID == null) {
-			this.maintainGoals = this.bwInstance.getGoalModelInstance()
-					.getAchieveGoalAssociatedMaintainGoals(this.goal);
+			this.maintainGoals = new HashSet<MaintainGoal>(this.bwInstance
+					.getGoalModelInstance()
+					.getAchieveGoalAssociatedMaintainGoals(this.goal));
 		} else {
 			this.maintainGoals = new HashSet<MaintainGoal>();
-			for (Long maintainGoalOID : this.maintainGoalsOID) {
+			for (String maintainGoalOID : this.maintainGoalsOID) {
 				MaintainGoal maintainGoal = FenixFramework
 						.getDomainObject(maintainGoalOID);
 				this.maintainGoals.add(maintainGoal);
@@ -121,10 +122,10 @@ public class CreateGoalInstanceService implements Callable<String> {
 		for (Relation relation : this.relations) {
 			EntityInstance entityInstanceOne = FenixFramework
 					.getDomainObject(this.entitiesOID.get(relation
-							.getEntityOne().getOID()));
+							.getEntityOne().getExternalId()));
 			EntityInstance entityInstanceTwo = FenixFramework
 					.getDomainObject(this.entitiesOID.get(relation
-							.getEntityTwo().getOID()));
+							.getEntityTwo().getExternalId()));
 
 			dataModelInstance.createRelationInstance(this.bwInstance,
 					entityInstanceOne, entityInstanceTwo);
@@ -144,12 +145,12 @@ public class CreateGoalInstanceService implements Callable<String> {
 	}
 
 	private void createGoalWorkItems(BWInstance bwInstance, AchieveGoal goal,
-			List<Condition> activateConditions, Set<MaintainGoal> maintainGoals) {
+			Set<Condition> activateConditions, Set<MaintainGoal> maintainGoals) {
 		// NOTE: If parent goal has activated workItems change their state to
 		// ACTIVATED
-		if (goal.getParentGoal().getGoalWorkItemsCount() > 0) {
+		if (goal.getParentGoal().getGoalWorkItemsSet().size() > 0) {
 			for (GoalWorkItem goalWorkItem : goal.getParentGoal()
-					.getGoalWorkItems()) {
+					.getGoalWorkItemsSet()) {
 				if (goalWorkItem.getState().equals(GoalState.ENABLED)
 						|| goalWorkItem.getState().equals(GoalState.PRE_GOAL)) {
 					goalWorkItem.notifyActivated();
@@ -160,7 +161,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 		// Create GoalWorkItem
 		EntityInstance goalEntityInstanceContext = FenixFramework
 				.getDomainObject(this.entitiesOID.get(goal.getEntityContext()
-						.getOID()));
+						.getExternalId()));
 		if (!goal.goalWorkItemsExistForTheContext(goalEntityInstanceContext)) {
 			new GoalWorkItem(bwInstance, goal, goalEntityInstanceContext,
 					activateConditions, maintainGoals);
@@ -170,12 +171,12 @@ public class CreateGoalInstanceService implements Callable<String> {
 		}
 
 		// Recursive call for all subgoals
-		for (AchieveGoal subGoal : goal.getSubGoals()) {
-			List<Condition> subGoalActivateConditions = subGoal
-					.getActivateConditions();
-			Set<MaintainGoal> subGoalMaintainGoals = bwInstance
-					.getGoalModelInstance()
-					.getAchieveGoalAssociatedMaintainGoals(subGoal);
+		for (AchieveGoal subGoal : goal.getSubGoalsSet()) {
+			Set<Condition> subGoalActivateConditions = new HashSet<Condition>(
+					subGoal.getActivateConditionsSet());
+			Set<MaintainGoal> subGoalMaintainGoals = new HashSet<MaintainGoal>(
+					bwInstance.getGoalModelInstance()
+							.getAchieveGoalAssociatedMaintainGoals(subGoal));
 			createGoalWorkItems(bwInstance, subGoal, subGoalActivateConditions,
 					subGoalMaintainGoals);
 		}
@@ -183,7 +184,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 
 	private void evaluateNew() {
 		GoalWorkItem parentGoalWorkItem = null;
-		for (WorkItem workItem : this.bwInstance.getWorkItems()) {
+		for (WorkItem workItem : this.bwInstance.getWorkItemsSet()) {
 			if (workItem instanceof GoalWorkItem) {
 				parentGoalWorkItem = (GoalWorkItem) workItem;
 				if (parentGoalWorkItem.getAchieveGoal().equals(this.goal)) {
@@ -198,7 +199,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 
 		if (parentGoalWorkItem != null
 				&& !parentGoalWorkItem.getState().equals(GoalState.PRE_GOAL)) {
-			for (WorkItem workItem : this.bwInstance.getWorkItems()) {
+			for (WorkItem workItem : this.bwInstance.getWorkItemsSet()) {
 				if (workItem instanceof GoalWorkItem) {
 					GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
 					if ((goalWorkItem != parentGoalWorkItem)
@@ -213,18 +214,19 @@ public class CreateGoalInstanceService implements Callable<String> {
 	/*****************************
 	 * LEGACY
 	 ****************************/
-	// private Long entityContextOID;
+	// private String entityContextOID;
 	// private EntityInstance entityContext;
-	// private ArrayList<Long> relationsEntityInstancesOID;
+	// private ArrayList<String> relationsEntityInstancesOID;
 
 	/*
-	 * public CreateGoalInstanceService (long bwInstanceOID, long goalOID, Long
-	 * entityContextOID, ArrayList<Long> activateConditionsOID, ArrayList<Long>
-	 * maintainGoalsOID, ArrayList<Long> relationsEntityInstancesOID) {
-	 * this.bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
-	 * this.goal = FenixFramework.getDomainObject(goalOID);
-	 * this.entityContextOID = entityContextOID; this.activateConditionsOID =
-	 * activateConditionsOID; this.maintainGoalsOID = maintainGoalsOID;
+	 * public CreateGoalInstanceService (String bwInstanceOID, String goalOID,
+	 * String entityContextOID, ArrayList<String> activateConditionsOID,
+	 * ArrayList<String> maintainGoalsOID, ArrayList<String>
+	 * relationsEntityInstancesOID) { this.bwInstance =
+	 * FenixFramework.getDomainObject(bwInstanceOID); this.goal =
+	 * FenixFramework.getDomainObject(goalOID); this.entityContextOID =
+	 * entityContextOID; this.activateConditionsOID = activateConditionsOID;
+	 * this.maintainGoalsOID = maintainGoalsOID;
 	 * this.relationsEntityInstancesOID = relationsEntityInstancesOID; }
 	 * 
 	 * @Override public String call() throws Exception { log.info("Start");
@@ -238,7 +240,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 	 * 
 	 * //Parse Conditions if (this.activateConditionsOID == null) {
 	 * this.activateConditions = this.goal.getActivateConditions(); } else {
-	 * this.activateConditions = new ArrayList<Condition>(); for (Long
+	 * this.activateConditions = new ArrayList<Condition>(); for (String
 	 * activateConditionOID : this.activateConditionsOID) { Condition
 	 * activateCondition = FenixFramework.getDomainObject(activateConditionOID);
 	 * this.activateConditions.add(activateCondition); } }
@@ -246,7 +248,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 	 * if (this.maintainGoalsOID == null) { this.maintainGoals =
 	 * this.bwInstance.
 	 * getGoalModelInstance().getAchieveGoalAssociatedMaintainGoals(this.goal);
-	 * } else { this.maintainGoals = new HashSet<MaintainGoal>(); for (Long
+	 * } else { this.maintainGoals = new HashSet<MaintainGoal>(); for (String
 	 * maintainGoalOID : this.maintainGoalsOID) { MaintainGoal maintainGoal =
 	 * FenixFramework.getDomainObject(maintainGoalOID);
 	 * this.maintainGoals.add(maintainGoal); } }
@@ -335,7 +337,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 
 	/*
 	 * private void createRelationInstances() { DataModelInstance
-	 * dataModelInstance = this.bwInstance.getDataModelInstance(); for (Long
+	 * dataModelInstance = this.bwInstance.getDataModelInstance(); for (String
 	 * entityTwoOID : this.relationsEntityInstancesOID) { EntityInstance
 	 * entityTwo = FenixFramework.getDomainObject(entityTwoOID);
 	 * dataModelInstance.createRelationInstance(this.bwInstance,
@@ -351,7 +353,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 	// if (entityContext.getEntity().equals(relationOne)) {
 	// // if (!relationAll.getCardinalityTwo().equals(Cardinality.MANY) &&
 	// !relationAll.getCardinalityTwo().equals(Cardinality.MANY)) {
-	// // long entityTwoOID =
+	// // String entityTwoOID =
 	// relationAll.getEntityTwo().getEntityInstances().get(0).getOID();
 	// //
 	// BlendedWorkflow.getInstance().getBwManager().addRelationInstance(this.bwInstance.getOID(),
@@ -362,7 +364,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 	// if (entityContext.getEntity().equals(relationTwo)) {
 	// if (!relationAll.getCardinalityOne().equals(Cardinality.MANY) &&
 	// !relationAll.getCardinalityOne().equals(Cardinality.MANY)) {
-	// long entityOneOID =
+	// String entityOneOID =
 	// relationAll.getEntityOne().getEntityInstances().get(0).getOID();
 	// //
 	// BlendedWorkflow.getInstance().getBwManager().addRelationInstance(this.bwInstance.getOID(),

@@ -13,6 +13,15 @@ class BlendedWorkflow {
 	Integer bwSpecificationCounter;
 }
 
+relation DomainRootHasLdoDApplication {
+	.pt.ist.fenixframework.DomainRoot playsRole root {
+		multiplicity 1..1;
+	}
+	BlendedWorkflow playsRole blendedWorkflow {
+		multiplicity 0..1;
+	}
+}
+
 class OrganizationalModel;
 
 class Role {
@@ -367,11 +376,16 @@ relation EntityInstanceHasAttributeInstances {
 	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
 }
 
-//FIXME
-relation EntityMayHaveRelations {
-	Relation playsRole relations { multiplicity 0..*; }
-	Entity playsRole entities { multiplicity 0..*; } //FIXME 0..2
+relation RelationHasEntityOne {
+	Relation playsRole relationsOne { multiplicity 0..*; }
+	Entity playsRole entityOne { multiplicity 1..1; }
 }
+
+relation RelationHasEntityTwo {
+	Relation playsRole relationsTwo { multiplicity 0..*; }
+	Entity playsRole entityTwo { multiplicity 1..1; }
+}
+
 /*
 relation EntityInstanceMayHaveRelationInstances {
 	EntityInstance playsRole entityInstances { multiplicity 0..*; } //FIXME 0..2
@@ -404,15 +418,25 @@ relation EntityInstanceMayBeRelationEntityTwo {
 
 // Conditions
 // AndCondition
-relation AndConditionHasConditions {
-	AndCondition playsRole andCondition { multiplicity 0..1; }
-	Condition playsRole conditions { multiplicity 0..*; } //FIXME 0..2
+relation AndConditionHasLeftConditions {
+	AndCondition playsRole andLeftCondition { multiplicity 0..1; }
+	Condition playsRole leftCondition { multiplicity 0..1; }
+}
+
+relation AndConditionHasRightConditions {
+	AndCondition playsRole andRightCondition { multiplicity 0..1; }
+	Condition playsRole rightCondition { multiplicity 0..1; }
 }
 
 // OrCondition
-relation OrConditionHasConditions {
-	OrCondition playsRole orCondition { multiplicity 0..1; }
-	Condition playsRole conditions { multiplicity 0..*; } //FIXME 0..2
+relation OrConditionHasLeftConditions {
+	OrCondition playsRole orLeftCondition { multiplicity 0..1; }
+	Condition playsRole leftCondition { multiplicity 0..1; } 
+}
+
+relation OrConditionHasRightConditions {
+	OrCondition playsRole orRightCondition { multiplicity 0..1; }
+	Condition playsRole rightCondition { multiplicity 0..1; } 
 }
 
 // NotCondition

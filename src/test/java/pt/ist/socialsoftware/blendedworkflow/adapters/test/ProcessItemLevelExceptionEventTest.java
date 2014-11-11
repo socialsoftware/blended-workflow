@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import jvstm.Transaction;
 
@@ -24,13 +26,13 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -117,8 +119,10 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
 			Transaction.begin();
 			BWSpecification bwSpecification = BlendedWorkflow.getInstance()
 					.getBWSpecification(BWSPECIFICATION_NAME);
-			BWInstance bwInstance = bwSpecification.getBwInstances().get(0);
-			List<WorkItem> workItemList = bwInstance.getWorkItems();
+			List<BWInstance> bwInstances = new ArrayList<BWInstance>(
+					bwSpecification.getBwInstancesSet());
+			BWInstance bwInstance = bwInstances.get(0);
+			Set<WorkItem> workItemList = bwInstance.getWorkItemsSet();
 			assertEquals(1, workItemList.size());
 			for (WorkItem workItem : workItemList) {
 				assertTrue(workItem instanceof TaskWorkItem);
@@ -141,13 +145,16 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
 		Transaction.begin();
 		BWSpecification bwSpecification = BlendedWorkflow.getInstance()
 				.getBWSpecification(BWSPECIFICATION_NAME);
-		BWInstance bwInstance = bwSpecification.getBwInstances().get(0);
+		List<BWInstance> bwInstances = new ArrayList<BWInstance>(
+				bwSpecification.getBwInstancesSet());
+		BWInstance bwInstance = bwInstances.get(0);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		TaskModel taskModel = bwInstance.getTaskModelInstance();
 		Entity episodeType = dataModelInstance.getEntity("Episode");
 		EntityInstance episodeOne = new EntityInstance(episodeType);
-		EntityInstance myPatient = dataModelInstance.getEntity("Patient")
-				.getEntityInstances().get(0);
+		List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
+				dataModelInstance.getEntity("Patient").getEntityInstancesSet());
+		EntityInstance myPatient = entityInstances.get(0);
 		new RelationInstance(
 				dataModelInstance.getRelation("Patient has Episodes"),
 				myPatient, episodeOne, myPatient.getNewRelationInstanceID());
@@ -197,8 +204,8 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
 
 			Transaction.commit();
 			committed = true;
-			 } catch (Exception e) {
-			 fail(e.getMessage());
+		} catch (Exception e) {
+			fail(e.getMessage());
 		} finally {
 			if (!committed)
 				Transaction.abort();

@@ -36,10 +36,10 @@ public class DataModelTree extends VerticalLayout {
 
 	// private Logger log = Logger.getLogger("DataModelTree");
 
-	private long entityOID;
+	private String entityOID;
 
-	public DataModelTree(final NewGoalForm parent, final long bwInstanceOID,
-			final long contextOID, final String joiner) {
+	public DataModelTree(final NewGoalForm parent, final String bwInstanceOID,
+			final String contextOID, final String joiner) {
 		parentWindow = parent;
 		conditionJoiner = joiner;
 		HorizontalLayout footer = new HorizontalLayout();
@@ -180,17 +180,17 @@ public class DataModelTree extends VerticalLayout {
 		// getRelations(bwInstanceOID);
 	}
 
-	public void getDataModel(long bwInstanceOID) {
+	public void getDataModel(String bwInstanceOID) {
 		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		Entity context = FenixFramework.getDomainObject(entityOID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-		for (Entity entity : dataModelInstance.getEntities()) {
+		for (Entity entity : dataModelInstance.getEntitiesSet()) {
 
 			if (entity.equals(context)) {
 				String entityName = entity.getName();
 				treetable.addItem(entityName);
-				for (Attribute attribute : entity.getAttributes()) {
+				for (Attribute attribute : entity.getAttributesSet()) {
 					String attributeName = attribute.getName();
 					treetable.addItem(attributeName);
 					treetable.setParent(attributeName, entityName);
@@ -200,7 +200,7 @@ public class DataModelTree extends VerticalLayout {
 			}
 		}
 
-		for (Relation relation : dataModelInstance.getRelations()) {
+		for (Relation relation : dataModelInstance.getRelationsSet()) {
 			if (context.equals(relation.getEntityOne())) {
 				relationtable.addItem(relation.getName());
 
@@ -208,7 +208,7 @@ public class DataModelTree extends VerticalLayout {
 				relationtable.addItem(e.getName());
 				relationtable.setParent(e.getName(), relation.getName());
 
-				for (Attribute attribute : e.getAttributes()) {
+				for (Attribute attribute : e.getAttributesSet()) {
 					String attributeName = attribute.getName();
 					relationtable.addItem(attributeName);
 					relationtable.setParent(attributeName, e.getName());
@@ -221,7 +221,7 @@ public class DataModelTree extends VerticalLayout {
 				Entity e = relation.getEntityOne();
 				relationtable.addItem(e.getName());
 				relationtable.setParent(e.getName(), relation.getName());
-				for (Attribute attribute : e.getAttributes()) {
+				for (Attribute attribute : e.getAttributesSet()) {
 					String attributeName = attribute.getName();
 					relationtable.addItem(attributeName);
 					relationtable.setParent(attributeName, e.getName());
@@ -232,14 +232,15 @@ public class DataModelTree extends VerticalLayout {
 		Transaction.commit();
 	}
 
-	protected void showNewEntityWindow(long bwInstanceOID) {
+	protected void showNewEntityWindow(String bwInstanceOID) {
 		// Window newEntity = new Window("New Entity");
 		// newEntity.setContent(new NewEntityForm(this, bwInstanceOID));
 		// newEntity.center();
 		// getApplication().getMainWindow().addWindow(newEntity);
 	}
 
-	protected void showNewAttributeWindow(long bwInstanceOID, String entityName) {
+	protected void showNewAttributeWindow(String bwInstanceOID,
+			String entityName) {
 		// Window newAttribute = new Window("New Attribute");
 		// newAttribute.setContent(new NewAttributeForm(this, bwInstanceOID,
 		// entityName));
@@ -247,7 +248,7 @@ public class DataModelTree extends VerticalLayout {
 		// getApplication().getMainWindow().addWindow(newAttribute);
 	}
 
-	protected void showNewRelationWindow(long bwInstanceOID, String entityName) {
+	protected void showNewRelationWindow(String bwInstanceOID, String entityName) {
 		// Window newRelation= new Window("New Relation");
 		// newRelation.setContent(new NewRelationForm(this, bwInstanceOID,
 		// entityName));
@@ -264,7 +265,7 @@ public class DataModelTree extends VerticalLayout {
 		getApplication().getMainWindow().addWindow(newConstrain);
 	}
 
-	public void refreshTree(long bwInstanceOID) {
+	public void refreshTree(String bwInstanceOID) {
 		treetable.removeAllItems();
 		getDataModel(bwInstanceOID);
 

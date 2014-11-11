@@ -16,7 +16,8 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class DataModelInstanceFactory {
 
-	public void parseXMLDataModel(DataModel dataModel, String specificationXML) throws BlendedWorkflowException {
+	public void parseXMLDataModel(DataModel dataModel, String specificationXML)
+			throws BlendedWorkflowException {
 		Document doc = StringUtils.stringToDoc(specificationXML);
 
 		Element root = doc.getRootElement();
@@ -24,15 +25,18 @@ public class DataModelInstanceFactory {
 
 		Element dataModelXML = root.getChild("DataModelInstance", bwNamespace);
 
-		List<?> entities = dataModelXML.getChildren("EntityInstance", bwNamespace);
+		List<?> entities = dataModelXML.getChildren("EntityInstance",
+				bwNamespace);
 		for (Object ent : entities) {
 			Element entityXML = (Element) ent;
-			EntityInstance entityInstance = parseEntityInstance(dataModel, entityXML);
+			EntityInstance entityInstance = parseEntityInstance(dataModel,
+					entityXML);
 			parseAttributeInstance(dataModel, entityInstance, entityXML);
 		}
 	}
 
-	private EntityInstance parseEntityInstance(DataModel dataModel, Element entityXML) throws BlendedWorkflowException {
+	private EntityInstance parseEntityInstance(DataModel dataModel,
+			Element entityXML) throws BlendedWorkflowException {
 		Namespace dmNamespace = entityXML.getNamespace();
 
 		String entityName = entityXML.getChildText("Type", dmNamespace);
@@ -41,13 +45,17 @@ public class DataModelInstanceFactory {
 		return entityInstance;
 	}
 
-	private void parseAttributeInstance(DataModel dataModel, EntityInstance entityInstance, Element entityXML) throws BlendedWorkflowException {
+	private void parseAttributeInstance(DataModel dataModel,
+			EntityInstance entityInstance, Element entityXML)
+			throws BlendedWorkflowException {
 		Namespace dmNamespace = entityXML.getNamespace();
-		
-		for (Attribute attribute : entityInstance.getEntity().getAttributes()) {
+
+		for (Attribute attribute : entityInstance.getEntity()
+				.getAttributesSet()) {
 			String attributeName = attribute.getName().replaceAll(" ", "_");
 			String value = entityXML.getChildText(attributeName, dmNamespace);
-			AttributeInstance attributeInstance = new AttributeInstance(attribute, entityInstance);
+			AttributeInstance attributeInstance = new AttributeInstance(
+					attribute, entityInstance);
 			attributeInstance.setValue(value);
 		}
 	}

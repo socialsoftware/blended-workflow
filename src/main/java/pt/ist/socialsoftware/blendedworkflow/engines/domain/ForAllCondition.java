@@ -7,38 +7,47 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ForAllCondition extends ForAllCondition_Base {
-	    
-    public ForAllCondition(Relation relation, Entity entity, Condition condition) {
-    	setForAllEntity(entity);
-    	setForAllRelation(relation);
-    	setCondition(condition);
-    }
+
+	public ForAllCondition(Relation relation, Entity entity, Condition condition) {
+		setForAllEntity(entity);
+		setForAllRelation(relation);
+		setCondition(condition);
+	}
 
 	@Override
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
-		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
-		Relation relation = dataModelInstance.getRelation(getForAllRelation().getName());
-		Entity entity = dataModelInstance.getEntity(getForAllEntity().getName());
-		return new ForAllCondition(relation, entity, getCondition().cloneCondition(goalModelInstance));
+		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
+				.getDataModelInstance();
+		Relation relation = dataModelInstance.getRelation(getForAllRelation()
+				.getName());
+		Entity entity = dataModelInstance
+				.getEntity(getForAllEntity().getName());
+		return new ForAllCondition(relation, entity, getCondition()
+				.cloneCondition(goalModelInstance));
 	}
 
 	@Override
 	Condition cloneCondition(TaskModelInstance taskModelInstance) {
-		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
-		Relation relation = dataModelInstance.getRelation(getForAllRelation().getName());
-		Entity entity = dataModelInstance.getEntity(getForAllEntity().getName());
-		return new ForAllCondition(relation, entity, getCondition().cloneCondition(taskModelInstance));
+		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
+				.getDataModelInstance();
+		Relation relation = dataModelInstance.getRelation(getForAllRelation()
+				.getName());
+		Entity entity = dataModelInstance
+				.getEntity(getForAllEntity().getName());
+		return new ForAllCondition(relation, entity, getCondition()
+				.cloneCondition(taskModelInstance));
 	}
 
 	@Override
-	public
-	void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		//TODO:assignAttributeInstances
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem,
+			ConditionType conditionType) {
+		// TODO:assignAttributeInstances
 	}
 
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
-		//TODO:assignAttributeInstances
+	void assignAttributeInstances(TaskWorkItem taskWorkItem,
+			ConditionType conditionType) {
+		// TODO:assignAttributeInstances
 	}
 
 	@Override
@@ -57,17 +66,18 @@ public class ForAllCondition extends ForAllCondition_Base {
 	public HashMap<Attribute, String> getcompareConditionValues() {
 		return new HashMap<Attribute, String>();
 	}
-	
+
 	@Override
 	public String toString() {
-		return "ForAll[" + getForAllEntity().getName() + "." + getForAllRelation().getName() + "," + getCondition() + "]";
+		return "ForAll[" + getForAllEntity().getName() + "."
+				+ getForAllRelation().getName() + "," + getCondition() + "]";
 	}
-	
+
 	@Override
 	public Boolean existExistEntity() {
 		return false;
 	}
-    
+
 	@Override
 	public String getRdrUndefinedCondition() {
 		return null;
@@ -87,43 +97,52 @@ public class ForAllCondition extends ForAllCondition_Base {
 	public String getRdrFalseCondition() {
 		return null;
 	}
-	
+
 	/******************************
 	 * Evaluate
 	 ******************************/
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		//TODO:Refactor
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem,
+			ConditionType conditionType) {
+		// TODO:Refactor
 		return TripleStateBool.FALSE;
 	}
-	
+
 	@Override
-	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem,
+			ConditionType conditionType) {
 		TripleStateBool result = TripleStateBool.TRUE;
-		for (RelationInstance relationInstance : getForAllRelation().getRelationInstances()) {
-			EntityInstance entityInstance = relationInstance.getEntityInstance(getForAllEntity());
-			result = result.AND(getCondition().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
+		for (RelationInstance relationInstance : getForAllRelation()
+				.getRelationInstancesSet()) {
+			EntityInstance entityInstance = relationInstance
+					.getEntityInstance(getForAllEntity());
+			result = result.AND(getCondition().evaluateWithDataModel(
+					entityInstance, goalWorkItem, conditionType));
 		}
 		return result;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance invalid, GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluateWithDataModel(EntityInstance invalid,
+			GoalWorkItem goalWorkItem, ConditionType conditionType) {
 		TripleStateBool result = TripleStateBool.TRUE;
-		for (RelationInstance relationInstance : getForAllRelation().getRelationInstances()) {
-			EntityInstance entityInstance = relationInstance.getEntityInstance(getForAllEntity());
-			result = result.AND(getCondition().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
+		for (RelationInstance relationInstance : getForAllRelation()
+				.getRelationInstancesSet()) {
+			EntityInstance entityInstance = relationInstance
+					.getEntityInstance(getForAllEntity());
+			result = result.AND(getCondition().evaluateWithDataModel(
+					entityInstance, goalWorkItem, conditionType));
 		}
 		return result;
 	}
-	
+
 	@Override
 	public Boolean existCompareAttributeToValue() {
 		return false;
 	}
-	
+
 	@Override
-	public Boolean existTrue(){
+	public Boolean existTrue() {
 		return false;
 	}
 }

@@ -28,7 +28,7 @@ public class NewAttributeForm extends VerticalLayout {
 	private final CheckBox isKeyCB = new CheckBox("Key Attribute:");
 
 	public NewAttributeForm(final AllDataModelTree parent,
-			final long bwInstanceOID, final String entityName) {
+			final String bwInstanceOID, final String entityName) {
 		setMargin(true);
 
 		setWidth("300px");
@@ -88,7 +88,7 @@ public class NewAttributeForm extends VerticalLayout {
 		setComponentAlignment(submitPanel, Alignment.MIDDLE_CENTER);
 	}
 
-	public void addAttribute(long BwInstanceOID, String name,
+	public void addAttribute(String BwInstanceOID, String name,
 			String entityName, String typeString, Boolean isKeyAttribute)
 			throws BlendedWorkflowException {
 		Transaction.begin();

@@ -1,9 +1,14 @@
 package pt.ist.socialsoftware.blendedworkflow;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jvstm.Transaction;
 
@@ -42,10 +47,14 @@ public abstract class MockitoAbstractServiceTest {
 	protected BWInstance bwInstance = null;
 
 	protected WorkletAdapter workletAdapter;
-	@Mock protected WorkletGatewayClient workletGatewayClient;
-	@Mock protected BWManager bwManager;
-	@Mock protected WorkListManager workListManager;
-	@Mock protected YAWLAdapter yawlAdapter;
+	@Mock
+	protected WorkletGatewayClient workletGatewayClient;
+	@Mock
+	protected BWManager bwManager;
+	@Mock
+	protected WorkListManager workListManager;
+	@Mock
+	protected YAWLAdapter yawlAdapter;
 
 	@Before
 	public void initialSetUp() {
@@ -66,42 +75,53 @@ public abstract class MockitoAbstractServiceTest {
 	}
 
 	protected void initializeSpecification() throws Exception {
-		final YSpecificationID yawlSpec = new YSpecificationID("UID_3213f8b4-5757-4674-a6a2-415aa191ca91", "1.0",
+		final YSpecificationID yawlSpec = new YSpecificationID(
+				"UID_3213f8b4-5757-4674-a6a2-415aa191ca91", "1.0",
 				"MedicalAppointment");
 		final ArrayList<YSpecificationID> specIds = new ArrayList<YSpecificationID>();
 		specIds.add(yawlSpec);
 
 		when(yawlAdapter.getLoadedActivitySpecs()).thenReturn(specIds);
 
-		final String bwSpecificationString = StringUtils.fileToString(BWSPECIFICATION_FILENAME);
+		final String bwSpecificationString = StringUtils
+				.fileToString(BWSPECIFICATION_FILENAME);
 		new LoadBWSpecificationService(bwSpecificationString).call();
 
 		verify(yawlAdapter).loadSpecification(anyString());
-		verify(workletGatewayClient, times(36)).addNode(any(YSpecificationID.class), anyString(), any(RuleType.class),
+		verify(workletGatewayClient, times(36)).addNode(
+				any(YSpecificationID.class), anyString(), any(RuleType.class),
 				any(RdrNode.class), anyString());
-		verify(bwManager).notifyLoadedBWSpecification(any(BWSpecification.class));
+		verify(bwManager).notifyLoadedBWSpecification(
+				any(BWSpecification.class));
 	}
 
-	protected void initializeBWInstance() throws BlendedWorkflowException, Exception {
+	protected void initializeBWInstance() throws BlendedWorkflowException,
+			Exception {
 		when(yawlAdapter.launchCase(anyString())).thenReturn(YAWLCASE_ID);
 
 		final BWSpecification bwSpecification = getBWSpecification(BWSPECIFICATION_NAME);
-		new CreateBWInstanceService(bwSpecification.getOID(), "", USER_ID).call();
+		new CreateBWInstanceService(bwSpecification.getExternalId(), "",
+				USER_ID).call();
 
 		verify(bwManager).notifyCreatedBWInstance((any(BWInstance.class)));
-		verify(workListManager, never()).notifyEnabledWorkItem(any(WorkItem.class));
+		verify(workListManager, never()).notifyEnabledWorkItem(
+				any(WorkItem.class));
 
 		Transaction.begin();
 		// bwInstance =
 		// BlendedWorkflow.getInstance().getBWInstance(BWINSTANCE_ID);
-		bwInstance = bwSpecification.getBwInstances().get(0);
+		List<BWInstance> bwInstances = new ArrayList<BWInstance>(
+				bwSpecification.getBwInstancesSet());
+		bwInstance = bwInstances.get(0);
 		Transaction.commit();
 
 	}
 
-	protected BWSpecification getBWSpecification(String name) throws BlendedWorkflowException {
+	protected BWSpecification getBWSpecification(String name)
+			throws BlendedWorkflowException {
 		Transaction.begin();
-		final BWSpecification bwSpecification = BlendedWorkflow.getInstance().getBWSpecification(name);
+		final BWSpecification bwSpecification = BlendedWorkflow.getInstance()
+				.getBWSpecification(name);
 		Transaction.commit();
 		return bwSpecification;
 	}

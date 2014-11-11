@@ -1,6 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
@@ -30,12 +32,12 @@ import com.vaadin.ui.VerticalLayout;
 public class TaskForm extends VerticalLayout {
 	DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
 
-	private final long taskWorkItemOID;
+	private final String taskWorkItemOID;
 	VerticalLayout preData = new VerticalLayout();
 	VerticalLayout data = new VerticalLayout();
 	HorizontalLayout footer = new HorizontalLayout();
 
-	public TaskForm(final long workItemOID) {
+	public TaskForm(final String workItemOID) {
 		setMargin(true);
 		setSpacing(true);
 
@@ -118,9 +120,10 @@ public class TaskForm extends VerticalLayout {
 		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
-		taskWorkItem.getOutputWorkItemArguments().get(index).setValue(value);
-		taskWorkItem.getOutputWorkItemArguments().get(index)
-				.setState(DataState.DEFINED);
+		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
+				taskWorkItem.getOutputWorkItemArgumentsSet());
+		arguments.get(index).setValue(value);
+		arguments.get(index).setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
@@ -133,7 +136,7 @@ public class TaskForm extends VerticalLayout {
 		Boolean first = true;
 		Boolean posAttribute = false;
 		for (WorkItemArgument preWorkItemArgument : taskWorkItem
-				.getInputWorkItemArguments()) {
+				.getInputWorkItemArgumentsSet()) {
 			AttributeInstance preAttributeInstance = preWorkItemArgument
 					.getAttributeInstance();
 			Attribute attribute = preAttributeInstance.getAttribute();
@@ -141,7 +144,7 @@ public class TaskForm extends VerticalLayout {
 			String value = preWorkItemArgument.getValue();
 
 			for (WorkItemArgument posWorkItemArgument : taskWorkItem
-					.getOutputWorkItemArguments()) {
+					.getOutputWorkItemArgumentsSet()) {
 				AttributeInstance posAttributeInstance = posWorkItemArgument
 						.getAttributeInstance();
 				if (preAttributeInstance.equals(posAttributeInstance)) {
@@ -181,7 +184,7 @@ public class TaskForm extends VerticalLayout {
 		Entity previousEntity = null;
 		Boolean first = true;
 		for (WorkItemArgument workItemArgument : taskWorkItem
-				.getOutputWorkItemArguments()) {
+				.getOutputWorkItemArgumentsSet()) {
 			Attribute attribute = workItemArgument.getAttributeInstance()
 					.getAttribute();
 			Entity entity = attribute.getEntity();

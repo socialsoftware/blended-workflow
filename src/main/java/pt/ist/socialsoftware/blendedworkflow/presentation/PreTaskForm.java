@@ -3,6 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 
 import jvstm.Transaction;
 
@@ -35,11 +37,11 @@ public class PreTaskForm extends VerticalLayout {
 
 	public static Class<?> tmp_class;
 	private static Constructor<?> tmp_const;
-	private final long taskWorkItemOID;
+	private final String taskWorkItemOID;
 	VerticalLayout data = new VerticalLayout();
 	private final Logger log = Logger.getLogger("PreTask");
 
-	public PreTaskForm(final long workItemOID) {
+	public PreTaskForm(final String workItemOID) {
 		setMargin(true);
 		setSpacing(true);
 
@@ -102,9 +104,10 @@ public class PreTaskForm extends VerticalLayout {
 		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
-		taskWorkItem.getInputWorkItemArguments().get(index).setValue(value);
-		taskWorkItem.getInputWorkItemArguments().get(index)
-				.setState(DataState.DEFINED);
+		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
+				taskWorkItem.getInputWorkItemArgumentsSet());
+		arguments.get(index).setValue(value);
+		arguments.get(index).setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
@@ -116,7 +119,7 @@ public class PreTaskForm extends VerticalLayout {
 		Entity previousEntity = null;
 		Boolean first = true;
 		for (WorkItemArgument workItemArgument : taskWorkItem
-				.getInputWorkItemArguments()) {
+				.getInputWorkItemArgumentsSet()) {
 			Attribute attribute = workItemArgument.getAttributeInstance()
 					.getAttribute();
 			Entity entity = attribute.getEntity();
@@ -156,7 +159,7 @@ public class PreTaskForm extends VerticalLayout {
 		data.addComponent(l);
 	}
 
-	public void generateTaskForm(long workItemOID) {
+	public void generateTaskForm(String workItemOID) {
 		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework.getDomainObject(workItemOID);
 		String specificationName = taskWorkItem.getBwInstance()

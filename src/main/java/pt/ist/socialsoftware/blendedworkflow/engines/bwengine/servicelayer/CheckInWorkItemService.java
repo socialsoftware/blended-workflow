@@ -14,7 +14,7 @@ public class CheckInWorkItemService implements Callable<String> {
 	private static Logger log = Logger.getLogger("CheckInWorkItemService");
 	private final WorkItem workItem;
 
-	public CheckInWorkItemService(long workItemOID) {
+	public CheckInWorkItemService(String workItemOID) {
 		this.workItem = FenixFramework.getDomainObject(workItemOID);
 	}
 

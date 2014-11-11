@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import java.util.concurrent.Callable;
 
+import jvstm.Transaction;
+
 import org.apache.log4j.Logger;
 
 import pt.ist.fenixframework.FenixFramework;
@@ -17,7 +19,7 @@ public class RedoGoalWorkItemService implements Callable<String> {
 	private final GoalWorkItem goalWorkItem;
 	private final String userID;
 
-	public RedoGoalWorkItemService(long goalWorkItemOID, String userID) {
+	public RedoGoalWorkItemService(String goalWorkItemOID, String userID) {
 		this.goalWorkItem = FenixFramework.getDomainObject(goalWorkItemOID);
 		this.userID = userID;
 	}

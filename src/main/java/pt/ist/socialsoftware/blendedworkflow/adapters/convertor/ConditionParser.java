@@ -354,7 +354,8 @@ public class ConditionParser {
 			//
 			// return new Attribute(dataModel, elementArr[1], entity, type,
 			// iskeyAttribute, false); //FIXME: isSystem
-			Log.error("Condition Attribute does not exist in data specification.");
+			System.out
+					.println("Condition Attribute does not exist in data specification.");
 			return null;
 		}
 	}

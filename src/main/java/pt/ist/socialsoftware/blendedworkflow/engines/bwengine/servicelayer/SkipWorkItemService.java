@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import java.util.concurrent.Callable;
 
+import jvstm.Transaction;
+
 import org.apache.log4j.Logger;
 
 import pt.ist.fenixframework.FenixFramework;
@@ -14,7 +16,7 @@ public class SkipWorkItemService implements Callable<String> {
 	private static Logger log = Logger.getLogger("SkipWorkItemService");
 	private final WorkItem workItem;
 
-	public SkipWorkItemService(long workItemOID) {
+	public SkipWorkItemService(String workItemOID) {
 		this.workItem = FenixFramework.getDomainObject(workItemOID);
 	}
 
@@ -23,7 +25,7 @@ public class SkipWorkItemService implements Callable<String> {
 		log.info("Start");
 		Transaction.begin();
 		for (WorkItemArgument workItemArgument : this.workItem
-				.getOutputWorkItemArguments()) {
+				.getOutputWorkItemArgumentsSet()) {
 			workItemArgument.setState(DataState.SKIPPED);
 			workItemArgument.setValue("$SKIPPED$");
 		}

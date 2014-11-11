@@ -11,7 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
 
 public class OrganizationalManager {
 
-	private Logger log = Logger.getLogger("OrganizationalManager");
+	private final Logger log = Logger.getLogger("OrganizationalManager");
 	protected BWPresentation bwPresentation = null;
 	User activeUser = null;
 
@@ -25,44 +25,52 @@ public class OrganizationalManager {
 
 	/**
 	 * Notify the BWPresentation of created Roles.
-	 * @param role The created Role.
+	 * 
+	 * @param role
+	 *            The created Role.
 	 */
 	public void notifyCreatedRole(Role role) {
 		log.info("Role " + role.getName() + " created.");
-		getBwPresentation().addRole(role.getOID(), role.getName());
+		getBwPresentation().addRole(role.getExternalId(), role.getName());
 	}
 
 	/**
 	 * Notify the BWPresentation of created Users.
-	 * @param user The created User.
+	 * 
+	 * @param user
+	 *            The created User.
 	 */
 	public void notifyCreatedUser(User user) {
 		log.info("User " + user.getName() + " created.");
-		getBwPresentation().addUser(user.getOID(), user.getName());
+		getBwPresentation().addUser(user.getExternalId(), user.getName());
 	}
 
 	/**
 	 * Update the BWPresentation with all Roles and Users created.
 	 */
 	public void updateBWPresentation() {
-		OrganizationalModel organizationalModel = BlendedWorkflow.getInstance().getOrganizationalModel();
-		for (Role role : organizationalModel.getRoles()) {
+		OrganizationalModel organizationalModel = BlendedWorkflow.getInstance()
+				.getOrganizationalModel();
+		for (Role role : organizationalModel.getRolesSet()) {
 			notifyCreatedRole(role);
 		}
-		for (User user : organizationalModel.getUsers()) {
+		for (User user : organizationalModel.getUsersSet()) {
 			notifyCreatedUser(user);
 		}
 	}
 
 	/**
 	 * TODO: OrganizationalManager:checkPermissions
-	 * @throws BlendedWorkflowException 
+	 * 
+	 * @throws BlendedWorkflowException
 	 */
 	public Boolean loginUser(String userID, String userPassword) {
-		OrganizationalModel organizationalModel = BlendedWorkflow.getInstance().getOrganizationalModel();
+		OrganizationalModel organizationalModel = BlendedWorkflow.getInstance()
+				.getOrganizationalModel();
 		Boolean valid = false;
-		for (User user : organizationalModel.getUsers()) {
-			if (user.getID().equals(userID) && user.getPassword().equals(userPassword)) {
+		for (User user : organizationalModel.getUsersSet()) {
+			if (user.getID().equals(userID)
+					&& user.getPassword().equals(userPassword)) {
 				this.activeUser = user;
 				valid = true;
 			}

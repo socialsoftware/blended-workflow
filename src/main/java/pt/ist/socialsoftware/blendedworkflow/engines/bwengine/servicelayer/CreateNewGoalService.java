@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.Callable;
 
+import jvstm.Transaction;
+
 import org.apache.log4j.Logger;
 
 import pt.ist.fenixframework.FenixFramework;
@@ -34,9 +36,10 @@ public class CreateNewGoalService implements Callable<String> {
 	private final Entity entityContext;
 	private final String userID;
 
-	public CreateNewGoalService(long bwInstanceOID, String name,
-			String description, long parentGoalOID, String condition,
-			ArrayList<String> activateConditions, long entityOID, String userID) {
+	public CreateNewGoalService(String bwInstanceOID, String name,
+			String description, String parentGoalOID, String condition,
+			ArrayList<String> activateConditions, String entityOID,
+			String userID) {
 		this.bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		this.parentGoal = FenixFramework.getDomainObject(parentGoalOID);
 		this.name = name;

@@ -37,9 +37,9 @@ public class NewGoalForm extends VerticalLayout {
 	private String sucessCondition = "";
 	private final ArrayList<String> activateCondition = new ArrayList<String>();
 
-	private final long bwInstanceOID;
+	private final String bwInstanceOID;
 
-	public NewGoalForm(final long bwInstance, final long parentGoalOID) {
+	public NewGoalForm(final String bwInstance, final String parentGoalOID) {
 
 		HorizontalLayout dataHL = new HorizontalLayout();
 		VerticalLayout dataVL = new VerticalLayout();
@@ -87,7 +87,7 @@ public class NewGoalForm extends VerticalLayout {
 		addData.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Long entityContextOID = (Long) entityContext.getValue();
+				String entityContextOID = (String) entityContext.getValue();
 				if (entityContext == null) {
 					getApplication().getMainWindow().showNotification(
 							"Please select a Context!");
@@ -134,7 +134,7 @@ public class NewGoalForm extends VerticalLayout {
 				try {
 					String goalName = (String) name.getValue();
 					String goalDescription = (String) description.getValue();
-					long entityOID = (Long) entityContext.getValue();
+					String entityOID = (String) entityContext.getValue();
 					String activeUserID = "";
 					if (sucessCondition.equals("")
 							|| activateCondition.size() == 0) {
@@ -219,10 +219,10 @@ public class NewGoalForm extends VerticalLayout {
 		Transaction.begin();
 
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-		for (Entity entity : dataModelInstance.getEntities()) {
-			this.entityContext.addItem(entity.getOID());
-			this.entityContext
-					.setItemCaption(entity.getOID(), entity.getName());
+		for (Entity entity : dataModelInstance.getEntitiesSet()) {
+			this.entityContext.addItem(entity.getExternalId());
+			this.entityContext.setItemCaption(entity.getExternalId(),
+					entity.getName());
 		}
 		Transaction.commit();
 	}
@@ -272,8 +272,8 @@ public class NewGoalForm extends VerticalLayout {
 	}
 
 	// generate dataModelWindow
-	protected void showDataModelTreeWindow(long bwInstanceOID, long contextOID,
-			String relation) {
+	protected void showDataModelTreeWindow(String bwInstanceOID,
+			String contextOID, String relation) {
 		Window dataModel = new Window("Choose a data element");
 		dataModel.setContent(new DataModelTree(this, bwInstanceOID, contextOID,
 				relation));
@@ -284,7 +284,7 @@ public class NewGoalForm extends VerticalLayout {
 	}
 
 	// generate alldataModelWindow
-	protected void showAllDataModelTreeWindow(long bwInstanceOID) {
+	protected void showAllDataModelTreeWindow(String bwInstanceOID) {
 		Window dataModel = new Window("Choose a data element");
 		dataModel.setContent(new AllDataModelTree(this, bwInstanceOID));
 		dataModel.center();
@@ -293,7 +293,7 @@ public class NewGoalForm extends VerticalLayout {
 		getApplication().getMainWindow().addWindow(dataModel);
 	}
 
-	public void setContext(long OID) {
+	public void setContext(String OID) {
 		entityContext.select(OID);
 	}
 }

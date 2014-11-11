@@ -18,9 +18,10 @@ public class YAWLSpecificationFactory {
 	private int lovalVariablesIndex = 0;
 	private int taskIndex = 3;
 	private int inputOutputParamIndex = 0;
-	private HashMap<String, String> taskYAWLID = new HashMap<String, String>();
+	private final HashMap<String, String> taskYAWLID = new HashMap<String, String>();
 
-	public String parseYAWLSpecificationFactory(BWSpecification bwSpecification) throws BlendedWorkflowException {
+	public String parseYAWLSpecificationFactory(BWSpecification bwSpecification)
+			throws BlendedWorkflowException {
 
 		this.bwSpecification = bwSpecification;
 		this.specificationURI = bwSpecification.getName().replaceAll(" ", "");
@@ -34,30 +35,33 @@ public class YAWLSpecificationFactory {
 		yawlSpecification += processControlElements();
 		yawlSpecification += inputOutputParam();
 		yawlSpecification += footer();
-		
-//		JDOMUtil.documentToFile(JDOMUtil.stringToDocument(yawlSpecification), "C:/Users/User/Desktop/yawl.xml");		System.out.println(yawlSpecification);
+
+		// JDOMUtil.documentToFile(JDOMUtil.stringToDocument(yawlSpecification),
+		// "C:/Users/User/Desktop/yawl.xml");
+		// System.out.println(yawlSpecification);
 		return yawlSpecification;
 	}
 
 	private String header() {
-		String header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-				"<specificationSet xmlns=\"http://www.yawlfoundation.org/yawlschema\" " + 
-				"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
-				"version=\"2.2\" xsi:schemaLocation=\"http://www.yawlfoundation.org/yawlschema " +
-				"http://www.yawlfoundation.org/yawlschema/YAWL_Schema2.2.xsd\">";
+		String header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+				+ "<specificationSet xmlns=\"http://www.yawlfoundation.org/yawlschema\" "
+				+ "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+				+ "version=\"2.2\" xsi:schemaLocation=\"http://www.yawlfoundation.org/yawlschema "
+				+ "http://www.yawlfoundation.org/yawlschema/YAWL_Schema2.2.xsd\">";
 		return header;
 	}
 
 	private String metaData() {
-		String metaData = "<specification uri=\"" + this.specificationURI + "\">" +
-				"<metaData>" +
-				"<title>" + this.bwSpecification.getName() + "</title>" +
-				"<creator>" + this.bwSpecification.getAuthor() + "</creator>" +
-				"<description>" + this.bwSpecification.getDescription() + "</description>" +
-				"<version>" + this.bwSpecification.getVersion() + "</version>" +
-				"<persistent>false</persistent>" +
-				"<identifier>" + this.bwSpecification.getUID() + "</identifier>" +
-				"</metaData>";
+		String metaData = "<specification uri=\"" + this.specificationURI
+				+ "\">" + "<metaData>" + "<title>"
+				+ this.bwSpecification.getName() + "</title>" + "<creator>"
+				+ this.bwSpecification.getAuthor() + "</creator>"
+				+ "<description>" + this.bwSpecification.getDescription()
+				+ "</description>" + "<version>"
+				+ this.bwSpecification.getVersion() + "</version>"
+				+ "<persistent>false</persistent>" + "<identifier>"
+				+ this.bwSpecification.getUID() + "</identifier>"
+				+ "</metaData>";
 		return metaData;
 	}
 
@@ -67,31 +71,33 @@ public class YAWLSpecificationFactory {
 	}
 
 	private String localVariables() {
-		String localVariables = "<decomposition id=\"" + specificationURI + "\" isRootNet=\"true\" xsi:type=\"NetFactsType\">";
+		String localVariables = "<decomposition id=\"" + specificationURI
+				+ "\" isRootNet=\"true\" xsi:type=\"NetFactsType\">";
 
 		DataModel dataModel = bwSpecification.getDataModel();
-		for (Attribute attribute : dataModel.getAttributes()) {
-			String entityName = attribute.getEntity().getName().replaceAll(" ", "");
+		for (Attribute attribute : dataModel.getAttributesSet()) {
+			String entityName = attribute.getEntity().getName()
+					.replaceAll(" ", "");
 			String attributeName = attribute.getName().replaceAll(" ", "");
 			String type = attribute.getYAWLAttributeType();
 			String value = attribute.getYAWLAttributeValue();
 
-			String localVariable = "<localVariable>" + 
-					"<index>" + lovalVariablesIndex + "</index>" + 
-					"<name>" + entityName + "_" + attributeName + "_State" + "</name>" + 
-					"<type>" + "string" + "</type>" + 
-					"<namespace>http://www.w3.org/2001/XMLSchema</namespace>" + 
-					"<initialValue>" + DataState.UNDEFINED + "</initialValue>" + 
-					"</localVariable>";
+			String localVariable = "<localVariable>" + "<index>"
+					+ lovalVariablesIndex + "</index>" + "<name>" + entityName
+					+ "_" + attributeName + "_State" + "</name>" + "<type>"
+					+ "string" + "</type>"
+					+ "<namespace>http://www.w3.org/2001/XMLSchema</namespace>"
+					+ "<initialValue>" + DataState.UNDEFINED
+					+ "</initialValue>" + "</localVariable>";
 
 			lovalVariablesIndex++;
-			localVariable += "<localVariable>" + 
-					"<index>" + lovalVariablesIndex + "</index>" + 
-					"<name>" + entityName + "_" + attributeName + "</name>" + 
-					"<type>" + type + "</type>" + 
-					"<namespace>http://www.w3.org/2001/XMLSchema</namespace>" + 
-					"<initialValue>" + value + "</initialValue>" + 
-					"</localVariable>";
+			localVariable += "<localVariable>" + "<index>"
+					+ lovalVariablesIndex + "</index>" + "<name>" + entityName
+					+ "_" + attributeName + "</name>" + "<type>" + type
+					+ "</type>"
+					+ "<namespace>http://www.w3.org/2001/XMLSchema</namespace>"
+					+ "<initialValue>" + value + "</initialValue>"
+					+ "</localVariable>";
 			lovalVariablesIndex++;
 			localVariables += localVariable;
 		}
@@ -102,22 +108,23 @@ public class YAWLSpecificationFactory {
 		Set<Attribute> attributes;
 		String processControlElements = "";
 		String element = "";
-		String startingMappings ="";
-		String completedMappings ="";
+		String startingMappings = "";
+		String completedMappings = "";
 		Boolean firstTask = true;
 
 		// Tasks
 		TaskModel taskModel = bwSpecification.getTaskModel();
 
 		// Create YAWL Task IDs
-		for (Task task : taskModel.getTasks()) {
+		for (Task task : taskModel.getTasksSet()) {
 			String taskName = task.getName();
-			String yawlID = task.getName().replaceAll(" ", "_") + "_" + taskIndex;
+			String yawlID = task.getName().replaceAll(" ", "_") + "_"
+					+ taskIndex;
 			this.taskYAWLID.put(taskName, yawlID);
 			taskIndex++;
 		}
 
-		for (Task task : taskModel.getTasks()) {
+		for (Task task : taskModel.getTasksSet()) {
 			String taskName = task.getName().replaceAll(" ", "_");
 			String taskID = this.taskYAWLID.get(task.getName());
 			String joinCode = task.getJoinCode();
@@ -126,60 +133,78 @@ public class YAWLSpecificationFactory {
 			startingMappings = "";
 			completedMappings = "";
 			if (firstTask) {
-				element += "<processControlElements>" + 
-						"<inputCondition id=\"InputCondition_1\">" + 
-						"<flowsInto>" + 
-						"<nextElementRef id=\"" + taskID + "\" />" + 
-						"</flowsInto>" + 
-						"</inputCondition>";
+				element += "<processControlElements>"
+						+ "<inputCondition id=\"InputCondition_1\">"
+						+ "<flowsInto>" + "<nextElementRef id=\"" + taskID
+						+ "\" />" + "</flowsInto>" + "</inputCondition>";
 				processControlElements += element;
 				element = "";
 				firstTask = false;
 			}
 
-			element += "<task id=\"" + taskID + "\">" + 
-					"<name>" + taskName + "</name>";
+			element += "<task id=\"" + taskID + "\">" + "<name>" + taskName
+					+ "</name>";
 
-			if (task.getNextTasksCount() > 0) {
-				for (Task nextTask : task.getNextTasks()) {
+			if (task.getNextTasksSet().size() > 0) {
+				for (Task nextTask : task.getNextTasksSet()) {
 					String nextTaskID = this.taskYAWLID.get(nextTask.getName());
-					element += "<flowsInto>" + 
-							"<nextElementRef id=\"" + nextTaskID + "\" />" + 
-							"</flowsInto>";
+					element += "<flowsInto>" + "<nextElementRef id=\""
+							+ nextTaskID + "\" />" + "</flowsInto>";
 				}
 			} else {
-				element += "<flowsInto>" + 
-						"<nextElementRef id=\"" + "OutputCondition_2" + "\" />" + 
-						"</flowsInto>";
+				element += "<flowsInto>" + "<nextElementRef id=\""
+						+ "OutputCondition_2" + "\" />" + "</flowsInto>";
 			}
 
-			element += "<join code=\"" + joinCode + "\" />" + 
-					"<split code=\"" + splitCode + "\" />";
+			element += "<join code=\"" + joinCode + "\" />" + "<split code=\""
+					+ splitCode + "\" />";
 
 			// Starting Mapping
 			attributes = task.getPreConstraint().getAttributes();
 			if (attributes.size() > 0) {
 				startingMappings += "<startingMappings>";
 				for (Attribute attribute : attributes) {
-					String entityName = attribute.getEntity().getName().replaceAll(" ", "");
-					String attributeName = attribute.getName().replaceAll(" ", "");
+					String entityName = attribute.getEntity().getName()
+							.replaceAll(" ", "");
+					String attributeName = attribute.getName().replaceAll(" ",
+							"");
 
-					startingMappings += "<mapping>" + 
-							"<expression query=\"&lt;" + 
-							entityName + "_" + attributeName + "_State" + "&gt;{/" + 
-							this.specificationURI + "/" + entityName + "_" + attributeName + "_State" + "/text()}&lt;/" + entityName + "_" + attributeName + "_State" + "&gt;\" /> " + 
-							"<mapsTo>" + entityName + "_" + attributeName + "_State" + "</mapsTo>" + 
-							"</mapping>";
+					startingMappings += "<mapping>"
+							+ "<expression query=\"&lt;"
+							+ entityName
+							+ "_"
+							+ attributeName
+							+ "_State"
+							+ "&gt;{/"
+							+ this.specificationURI
+							+ "/"
+							+ entityName
+							+ "_"
+							+ attributeName
+							+ "_State"
+							+ "/text()}&lt;/"
+							+ entityName
+							+ "_"
+							+ attributeName
+							+ "_State"
+							+ "&gt;\" /> "
+							+ "<mapsTo>"
+							+ entityName
+							+ "_"
+							+ attributeName
+							+ "_State" + "</mapsTo>" + "</mapping>";
 
-					startingMappings  += "<mapping>" + 
-							"<expression query=\"&lt;" + 
-							entityName + "_" + attributeName + "&gt;{/" + 
-							this.specificationURI + "/" + entityName + "_" + attributeName + "/text()}&lt;/" + entityName + "_" + attributeName + "&gt;\" /> " + 
-							"<mapsTo>" + entityName + "_" + attributeName + "</mapsTo>" + 
-							"</mapping>";
+					startingMappings += "<mapping>"
+							+ "<expression query=\"&lt;" + entityName + "_"
+							+ attributeName + "&gt;{/" + this.specificationURI
+							+ "/" + entityName + "_" + attributeName
+							+ "/text()}&lt;/" + entityName + "_"
+							+ attributeName + "&gt;\" /> " + "<mapsTo>"
+							+ entityName + "_" + attributeName + "</mapsTo>"
+							+ "</mapping>";
 
 				}
-				startingMappings +="</startingMappings>";
+				startingMappings += "</startingMappings>";
 				element += startingMappings;
 			}
 
@@ -188,34 +213,56 @@ public class YAWLSpecificationFactory {
 			if (attributes.size() > 0) {
 				completedMappings += "<completedMappings>";
 				for (Attribute attribute : attributes) {
-					String entityName = attribute.getEntity().getName().replaceAll(" ", "");
-					String attributeName = attribute.getName().replaceAll(" ", "");
+					String entityName = attribute.getEntity().getName()
+							.replaceAll(" ", "");
+					String attributeName = attribute.getName().replaceAll(" ",
+							"");
 
-					completedMappings  += "<mapping>" + 
-							"<expression query=\"&lt;" + 
-							entityName + "_" + attributeName + "_State" + "&gt;{/" + 
-							taskName + "/" + entityName + "_" + attributeName + "_State" + "/text()}&lt;/" + entityName + "_" + attributeName + "_State" + "&gt;\" /> " + 
-							"<mapsTo>" + entityName + "_" + attributeName + "_State" + "</mapsTo>" + 
-							"</mapping>";
+					completedMappings += "<mapping>"
+							+ "<expression query=\"&lt;"
+							+ entityName
+							+ "_"
+							+ attributeName
+							+ "_State"
+							+ "&gt;{/"
+							+ taskName
+							+ "/"
+							+ entityName
+							+ "_"
+							+ attributeName
+							+ "_State"
+							+ "/text()}&lt;/"
+							+ entityName
+							+ "_"
+							+ attributeName
+							+ "_State"
+							+ "&gt;\" /> "
+							+ "<mapsTo>"
+							+ entityName
+							+ "_"
+							+ attributeName
+							+ "_State"
+							+ "</mapsTo>"
+							+ "</mapping>";
 
-					completedMappings  += "<mapping>" + 
-							"<expression query=\"&lt;" + 
-							entityName + "_" + attributeName + "&gt;{/" + 
-							taskName + "/" + entityName + "_" + attributeName + "/text()}&lt;/" + entityName + "_" + attributeName + "&gt;\" /> " + 
-							"<mapsTo>" + entityName + "_" + attributeName + "</mapsTo>" + 
-							"</mapping>";
+					completedMappings += "<mapping>"
+							+ "<expression query=\"&lt;" + entityName + "_"
+							+ attributeName + "&gt;{/" + taskName + "/"
+							+ entityName + "_" + attributeName
+							+ "/text()}&lt;/" + entityName + "_"
+							+ attributeName + "&gt;\" /> " + "<mapsTo>"
+							+ entityName + "_" + attributeName + "</mapsTo>"
+							+ "</mapping>";
 				}
-				completedMappings +="</completedMappings>";
+				completedMappings += "</completedMappings>";
 				element += completedMappings;
 			}
 
-			//footer
-			element += "<resourcing>" + 
-					"<offer initiator=\"user\" />" + 
-					"<allocate initiator=\"user\" />" + 
-					"<start initiator=\"user\" />" + "</resourcing>" + 
-					"<decomposesTo id=\"" + taskName + "\" />" + 
-					"</task>";
+			// footer
+			element += "<resourcing>" + "<offer initiator=\"user\" />"
+					+ "<allocate initiator=\"user\" />"
+					+ "<start initiator=\"user\" />" + "</resourcing>"
+					+ "<decomposesTo id=\"" + taskName + "\" />" + "</task>";
 			processControlElements += element;
 		}
 		element = "<outputCondition id=\"OutputCondition_2\" /></processControlElements></decomposition>";
@@ -231,35 +278,54 @@ public class YAWLSpecificationFactory {
 
 		// Tasks
 		TaskModel taskModel = bwSpecification.getTaskModel();
-		for (Task task : taskModel.getTasks()) {
+		for (Task task : taskModel.getTasksSet()) {
 			inputOutputParamIndex = 0;
-			inputParam ="";
-			outputParam ="";
+			inputParam = "";
+			outputParam = "";
 
 			String taskName = task.getName().replaceAll(" ", "_");
-			inputOutputParameters += "<decomposition id=\"" + taskName + "\" xsi:type=\"WebServiceGatewayFactsType\">";
+			inputOutputParameters += "<decomposition id=\"" + taskName
+					+ "\" xsi:type=\"WebServiceGatewayFactsType\">";
 
 			// Input Parameters
 			attributes = task.getPreConstraint().getAttributes();
 			for (Attribute attribute : attributes) {
-				String entityName = attribute.getEntity().getName().replaceAll(" ", "");
+				String entityName = attribute.getEntity().getName()
+						.replaceAll(" ", "");
 				String attributeName = attribute.getName().replaceAll(" ", "");
 				String type = attribute.getYAWLAttributeType();
 
-				inputParam  += "<inputParam>" + 
-						"<index>" + inputOutputParamIndex + "</index>" + 
-						"<name>" + entityName + "_" + attributeName + "_State" + "</name>" + 
-						"<type>" + "string" + "</type>" + 
-						"<namespace>http://www.w3.org/2001/XMLSchema</namespace>" + 
-						"</inputParam>";
+				inputParam += "<inputParam>"
+						+ "<index>"
+						+ inputOutputParamIndex
+						+ "</index>"
+						+ "<name>"
+						+ entityName
+						+ "_"
+						+ attributeName
+						+ "_State"
+						+ "</name>"
+						+ "<type>"
+						+ "string"
+						+ "</type>"
+						+ "<namespace>http://www.w3.org/2001/XMLSchema</namespace>"
+						+ "</inputParam>";
 
 				inputOutputParamIndex++;
-				inputParam += "<inputParam>" + 
-						"<index>" + inputOutputParamIndex + "</index>" + 
-						"<name>" + entityName + "_" + attributeName + "</name>" + 
-						"<type>" + type + "</type>" + 
-						"<namespace>http://www.w3.org/2001/XMLSchema</namespace>" + 
-						"</inputParam>";
+				inputParam += "<inputParam>"
+						+ "<index>"
+						+ inputOutputParamIndex
+						+ "</index>"
+						+ "<name>"
+						+ entityName
+						+ "_"
+						+ attributeName
+						+ "</name>"
+						+ "<type>"
+						+ type
+						+ "</type>"
+						+ "<namespace>http://www.w3.org/2001/XMLSchema</namespace>"
+						+ "</inputParam>";
 				inputOutputParamIndex++;
 			}
 			inputOutputParameters += inputParam;
@@ -267,23 +333,41 @@ public class YAWLSpecificationFactory {
 			// Output Parameters
 			attributes = task.getPostConstraint().getAttributes();
 			for (Attribute attribute : attributes) {
-				String entityName = attribute.getEntity().getName().replaceAll(" ", "");
+				String entityName = attribute.getEntity().getName()
+						.replaceAll(" ", "");
 				String attributeName = attribute.getName().replaceAll(" ", "");
 				String type = attribute.getYAWLAttributeType();
-				outputParam  += "<outputParam>" + 
-						"<index>" + inputOutputParamIndex + "</index>" + 
-						"<name>" + entityName + "_" + attributeName + "_State" + "</name>" + 
-						"<type>" + "string" + "</type>" + 
-						"<namespace>http://www.w3.org/2001/XMLSchema</namespace>" + 
-						"</outputParam>";
+				outputParam += "<outputParam>"
+						+ "<index>"
+						+ inputOutputParamIndex
+						+ "</index>"
+						+ "<name>"
+						+ entityName
+						+ "_"
+						+ attributeName
+						+ "_State"
+						+ "</name>"
+						+ "<type>"
+						+ "string"
+						+ "</type>"
+						+ "<namespace>http://www.w3.org/2001/XMLSchema</namespace>"
+						+ "</outputParam>";
 
 				inputOutputParamIndex++;
-				outputParam += "<outputParam>" + 
-						"<index>" + inputOutputParamIndex + "</index>" + 
-						"<name>" + entityName + "_" + attributeName + "</name>" + 
-						"<type>" + type + "</type>" + 
-						"<namespace>http://www.w3.org/2001/XMLSchema</namespace>" + 
-						"</outputParam>";
+				outputParam += "<outputParam>"
+						+ "<index>"
+						+ inputOutputParamIndex
+						+ "</index>"
+						+ "<name>"
+						+ entityName
+						+ "_"
+						+ attributeName
+						+ "</name>"
+						+ "<type>"
+						+ type
+						+ "</type>"
+						+ "<namespace>http://www.w3.org/2001/XMLSchema</namespace>"
+						+ "</outputParam>";
 				inputOutputParamIndex++;
 			}
 			inputOutputParameters += outputParam;

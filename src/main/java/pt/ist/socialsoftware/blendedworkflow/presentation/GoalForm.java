@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
@@ -28,12 +31,12 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class GoalForm extends VerticalLayout {
 
-	private final long goalWorkItemOID;
+	private final String goalWorkItemOID;
 	// VerticalLayout preData = new VerticalLayout();
 	VerticalLayout data = new VerticalLayout();
 	VerticalLayout entitiesInstances = new VerticalLayout();
 
-	public GoalForm(final long workItemOID) {
+	public GoalForm(final String workItemOID) {
 		setMargin(true);
 		setSpacing(true);
 
@@ -57,14 +60,16 @@ public class GoalForm extends VerticalLayout {
 				Transaction.begin();
 				GoalWorkItem goalWorkItem = FenixFramework
 						.getDomainObject(workItemOID);
-				long e1OID = goalWorkItem.getEntityInstanceContext().getOID();
-				long bwInstanceOID = goalWorkItem.getBwInstance().getOID();
+				String e1OID = goalWorkItem.getEntityInstanceContext()
+						.getExternalId();
+				String bwInstanceOID = goalWorkItem.getBwInstance()
+						.getExternalId();
 				Transaction.commit();
 
 				for (int i = 0; i < entitiesInstances.getComponentCount(); i++) {
 					NativeSelect selec = (NativeSelect) entitiesInstances
 							.getComponent(i);
-					long e2OID = (Long) selec.getValue();
+					String e2OID = (String) selec.getValue();
 					Transaction.begin();
 					BlendedWorkflow.getInstance().getBwManager()
 							.addRelationInstance(bwInstanceOID, e1OID, e2OID);
@@ -121,9 +126,10 @@ public class GoalForm extends VerticalLayout {
 		Transaction.begin();
 		GoalWorkItem goalWorkItem = FenixFramework
 				.getDomainObject(goalWorkItemOID);
-		goalWorkItem.getOutputWorkItemArguments().get(index).setValue(value);
-		goalWorkItem.getOutputWorkItemArguments().get(index)
-				.setState(DataState.DEFINED);
+		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
+				goalWorkItem.getOutputWorkItemArgumentsSet());
+		arguments.get(index).setValue(value);
+		arguments.get(index).setState(DataState.DEFINED);
 		Transaction.commit();
 	}
 
@@ -135,7 +141,7 @@ public class GoalForm extends VerticalLayout {
 		Entity previousEntity = null;
 		Boolean first = true;
 		for (WorkItemArgument workItemArgument : goalWorkItem
-				.getOutputWorkItemArguments()) {
+				.getOutputWorkItemArgumentsSet()) {
 			Attribute attribute = workItemArgument.getAttributeInstance()
 					.getAttribute();
 			Entity entity = attribute.getEntity();
@@ -197,9 +203,10 @@ public class GoalForm extends VerticalLayout {
 		entitiesInstances.addComponent(ns);
 
 		ns.addStyleName("h2");
-		for (EntityInstance entityInstance : entity.getEntityInstances()) {
-			ns.addItem(entityInstance.getOID());
-			ns.setItemCaption(entityInstance.getOID(), entityInstance.getID());
+		for (EntityInstance entityInstance : entity.getEntityInstancesSet()) {
+			ns.addItem(entityInstance.getExternalId());
+			ns.setItemCaption(entityInstance.getExternalId(),
+					entityInstance.getID());
 		}
 	}
 

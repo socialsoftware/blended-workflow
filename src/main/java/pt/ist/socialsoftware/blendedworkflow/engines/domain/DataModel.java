@@ -4,7 +4,9 @@ import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowEx
 
 public class DataModel extends DataModel_Base {
 
-	public enum DataState {DEFINED, UNDEFINED, SKIPPED}
+	public enum DataState {
+		DEFINED, UNDEFINED, SKIPPED
+	}
 
 	/**
 	 * Clone the DataModel.
@@ -14,21 +16,24 @@ public class DataModel extends DataModel_Base {
 		Entity relationEntityOne;
 		Entity relationEntityTwo;
 
-		for (Entity entity : getEntities()) {
+		for (Entity entity : getEntitiesSet()) {
 			entity.cloneEntity(newDataModelInstance);
 		}
 
 		// Get relation -> Get new Entities -> Clone with new Entities
-		for (Relation relation : getRelations()) { 
-			relationEntityOne = newDataModelInstance.getEntity(relation.getEntityOne().getName());
-			relationEntityTwo = newDataModelInstance.getEntity(relation.getEntityTwo().getName());
-			relation.cloneRelation(newDataModelInstance, relationEntityOne, relationEntityTwo);
+		for (Relation relation : getRelationsSet()) {
+			relationEntityOne = newDataModelInstance.getEntity(relation
+					.getEntityOne().getName());
+			relationEntityTwo = newDataModelInstance.getEntity(relation
+					.getEntityTwo().getName());
+			relation.cloneRelation(newDataModelInstance, relationEntityOne,
+					relationEntityTwo);
 		}
 		return newDataModelInstance;
 	}
 
 	public Entity getEntity(String name) {
-		for (Entity entity : getEntities()) {
+		for (Entity entity : getEntitiesSet()) {
 			if (entity.getName().equals(name)) {
 				return entity;
 			}
@@ -37,7 +42,7 @@ public class DataModel extends DataModel_Base {
 	}
 
 	public Relation getRelation(String name) {
-		for (Relation relation : getRelations()) {
+		for (Relation relation : getRelationsSet()) {
 			if (relation.getName().equals(name)) {
 				return relation;
 			}

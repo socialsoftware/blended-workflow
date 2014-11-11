@@ -139,11 +139,8 @@ public class BWPresentation extends Application {
 	public void init() {
 		bwPresentation = this;
 		// Init and populate database
-		if (!Bootstrap.isInitialized()) {
-			Bootstrap.init();
-			registerBWPresentation();
-			Bootstrap.populate();
-		}
+		Bootstrap.init();
+		registerBWPresentation();
 		registerBWPresentation();
 		initLoginWindow();
 	}
@@ -337,7 +334,7 @@ public class BWPresentation extends Application {
 					bwSpecInfoTable.removeAllItems();
 					bwSpecJobsInfoTable.removeAllItems();
 				} else {
-					long bwSpecificationOID = (Long) loadedList.getValue();
+					String bwSpecificationOID = (String) loadedList.getValue();
 					updateBWSpecificationInfo(bwSpecificationOID);
 				}
 			}
@@ -376,7 +373,7 @@ public class BWPresentation extends Application {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					long bwSpecificationOID = (Long) loadedList.getValue();
+					String bwSpecificationOID = (String) loadedList.getValue();
 					generateLaunchForm(bwSpecificationOID);
 				} catch (java.lang.NullPointerException jle) {
 					getMainWindow().showNotification(
@@ -430,7 +427,7 @@ public class BWPresentation extends Application {
 					bwInstanceInfoTable.removeAllItems();
 					bwInstanceJobsInfoTable.removeAllItems();
 				} else {
-					long bwInstanceOID = (Long) launchedList.getValue();
+					String bwInstanceOID = (String) launchedList.getValue();
 					updateBWInstanceInfo(bwInstanceOID);
 				}
 			}
@@ -505,7 +502,7 @@ public class BWPresentation extends Application {
 				if (dataList.getValue() == null) {
 					entitydetailsTreetable.removeAllItems();
 				} else {
-					long bwSpecificationOID = (Long) dataList.getValue();
+					String bwSpecificationOID = (String) dataList.getValue();
 					updateBWInstanceDataInfo(bwSpecificationOID);
 				}
 			}
@@ -550,7 +547,7 @@ public class BWPresentation extends Application {
 		// Components
 		// taskListFilter.addListener(new Property.ValueChangeListener() {
 		// public void valueChange(ValueChangeEvent event) {
-		// long workItemOID = (Long) taskListFilter.getValue();
+		// String workItemOID = (String) taskListFilter.getValue();
 		// updateTaskList(workItemOID);
 		// }
 		// });
@@ -578,7 +575,7 @@ public class BWPresentation extends Application {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					long workItemOID = (Long) taskList.getValue();
+					String workItemOID = (String) taskList.getValue();
 
 					TaskWorkItem taskWorkItem = FenixFramework
 							.getDomainObject(workItemOID);
@@ -615,7 +612,7 @@ public class BWPresentation extends Application {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					long workItemOID = (Long) taskList.getValue();
+					String workItemOID = (String) taskList.getValue();
 					Transaction.begin();
 					TaskWorkItem taskWorkItem = FenixFramework
 							.getDomainObject(workItemOID);
@@ -641,7 +638,7 @@ public class BWPresentation extends Application {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					long workItemOID = (Long) goalList.getValue();
+					String workItemOID = (String) goalList.getValue();
 
 					GoalWorkItem goalWorkItem = FenixFramework
 							.getDomainObject(workItemOID);
@@ -668,7 +665,7 @@ public class BWPresentation extends Application {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					long workItemOID = (Long) goalList.getValue();
+					String workItemOID = (String) goalList.getValue();
 
 					Transaction.begin();
 					GoalWorkItem goalWorkItem = FenixFramework
@@ -781,21 +778,21 @@ public class BWPresentation extends Application {
 
 		goalTable.setWidth("450px");
 		goalTable.setHeight("190px");
-		goalTable.addContainerProperty("OID", Long.class, "");
+		goalTable.addContainerProperty("OID", String.class, "");
 		goalTable.addContainerProperty("Goal", String.class, "");
 		goalTable.setVisibleColumns(new Object[] { "Goal" });
 
 		goalTable.addActionHandler(new Action.Handler() {
 			@Override
 			public void handleAction(Action action, Object sender, Object target) {
-				long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+				String bwInstanceOID = (String) goalBWInstanceList.getValue();
 				if (action == ACTIVATE_GOAL_ACTION) {
-					Long goalOID = (Long) goalTable.getContainerProperty(
+					String goalOID = (String) goalTable.getContainerProperty(
 							target, "OID").getValue();
 					generateActivateGoalWindow(bwInstanceOID, goalOID);
 					// updateGoalTreeInfo();
 				} else {
-					Long goalOID = (Long) goalTable.getContainerProperty(
+					String goalOID = (String) goalTable.getContainerProperty(
 							target, "OID").getValue();
 					generateNewGoalWindow(bwInstanceOID, goalOID);
 					// updateGoalTreeInfo();
@@ -831,7 +828,7 @@ public class BWPresentation extends Application {
 		novo.setSpacing(true);
 
 		// WorkItems
-		goalWorkItemTree.addContainerProperty("OID", Long.class, null);
+		goalWorkItemTree.addContainerProperty("OID", String.class, null);
 		goalWorkItemTree.addContainerProperty("GoalWorkItems", String.class,
 				null);
 		goalWorkItemTree.addContainerProperty("State", String.class, null);
@@ -846,7 +843,7 @@ public class BWPresentation extends Application {
 			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == REDO_GOAL_ACTION) {
-					Long workItemlOID = (Long) goalWorkItemTree
+					String workItemlOID = (String) goalWorkItemTree
 							.getContainerProperty(target, "OID").getValue();
 					Transaction.begin();
 					String activeUserID = BlendedWorkflow.getInstance()
@@ -857,7 +854,7 @@ public class BWPresentation extends Application {
 					updateGoalTreeInfo();
 				} else if (action == DISABLE_CONDITION_ACTION) {
 					// remove condition
-					Long workItemlOID = (Long) goalWorkItemTree
+					String workItemlOID = (String) goalWorkItemTree
 							.getContainerProperty(target, "OID").getValue();
 					updateGoalTreeInfo();
 					generateManageGoalWorkItemsConditionsWindows(workItemlOID);
@@ -881,7 +878,7 @@ public class BWPresentation extends Application {
 			}
 		});
 
-		maintainGoalsTree.addContainerProperty("OID", Long.class, null);
+		maintainGoalsTree.addContainerProperty("OID", String.class, null);
 		maintainGoalsTree.addContainerProperty("Goal", String.class, null);
 		maintainGoalsTree.addContainerProperty("State", String.class, null);
 		maintainGoalsTree.setImmediate(true);
@@ -896,7 +893,7 @@ public class BWPresentation extends Application {
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == DISABLE_CONDITION_ACTION) {
 					// remove condition
-					Long goalOID = (Long) maintainGoalsTree
+					String goalOID = (String) maintainGoalsTree
 							.getContainerProperty(target, "OID").getValue();
 
 					Transaction.begin();
@@ -909,7 +906,7 @@ public class BWPresentation extends Application {
 					updateGoalTreeInfo();
 				} else {
 					// remove condition
-					Long goalOID = (Long) maintainGoalsTree
+					String goalOID = (String) maintainGoalsTree
 							.getContainerProperty(target, "OID").getValue();
 					Transaction.begin();
 					BlendedWorkflow
@@ -959,7 +956,7 @@ public class BWPresentation extends Application {
 				if (taskList.getValue() == null) {
 					taskInfoTable.removeAllItems();
 				} else {
-					long workItemOID = (Long) taskList.getValue();
+					String workItemOID = (String) taskList.getValue();
 					updateTaskView(workItemOID);
 				}
 			}
@@ -973,7 +970,7 @@ public class BWPresentation extends Application {
 				if (goalList.getValue() == null) {
 					goalInfoTable.removeAllItems();
 				} else {
-					long workItemOID = (Long) goalList.getValue();
+					String workItemOID = (String) goalList.getValue();
 					updateGoalView(workItemOID);
 				}
 			}
@@ -993,7 +990,7 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(loadWindow);
 	}
 
-	public void generateLaunchForm(long bwSpecificationOID) {
+	public void generateLaunchForm(String bwSpecificationOID) {
 		Window launchWindow = new Window("Launch a BWInstance");
 		launchWindow.setContent(new LaunchForm(bwSpecificationOID));
 		launchWindow.center();
@@ -1040,7 +1037,7 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(loginWindow);
 	}
 
-	public void generatePreTaskForm(long workItemOID) {
+	public void generatePreTaskForm(String workItemOID) {
 		Window taskWindow = new Window("Pre-Activity Form");
 		taskWindow.setContent(new PreTaskForm(workItemOID));
 		taskWindow.setWidth("30%");
@@ -1048,7 +1045,7 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(taskWindow);
 	}
 
-	public void generateTaskForm(long workItemOID, String className) {
+	public void generateTaskForm(String workItemOID, String className) {
 		log.info("className:" + className);
 		String packageName = "pt.ist.socialsoftware.blendedworkflow.presentation.";
 
@@ -1070,7 +1067,7 @@ public class BWPresentation extends Application {
 
 		// New Instance
 		try {
-			tmp_const = tmp_class.getDeclaredConstructor(long.class);
+			tmp_const = tmp_class.getDeclaredConstructor(String.class);
 			Window taskWindow = new Window(className);
 			taskWindow.setContent((ComponentContainer) tmp_const
 					.newInstance(workItemOID));
@@ -1086,7 +1083,7 @@ public class BWPresentation extends Application {
 		}
 	}
 
-	public void generatePreGoalForm(long workItemOID) {
+	public void generatePreGoalForm(String workItemOID) {
 		Window goalWindow = new Window("Pre Goal Form");
 		goalWindow.setContent(new PreGoalForm(workItemOID));
 		goalWindow.setWidth("30%");
@@ -1094,7 +1091,7 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(goalWindow);
 	}
 
-	public void generateGoalForm(long workItemOID) {
+	public void generateGoalForm(String workItemOID) {
 		Window goalWindow = new Window("Goal Form");
 		goalWindow.setContent(new GoalForm(workItemOID));
 		goalWindow.setWidth("30%");
@@ -1102,7 +1099,7 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(goalWindow);
 	}
 
-	public void generateActivateGoalWindow(long bwInstanceOID, long goalOID) {
+	public void generateActivateGoalWindow(String bwInstanceOID, String goalOID) {
 		Window newGoalWindow = new Window("Activate Goal");
 		newGoalWindow.setContent(new ActivateGoalForm(bwInstanceOID, goalOID));
 		newGoalWindow.center();
@@ -1122,7 +1119,7 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(newGoalWindow);
 	}
 
-	public void generateNewGoalWindow(long bwInstanceOID, long goalOID) {
+	public void generateNewGoalWindow(String bwInstanceOID, String goalOID) {
 		Window newGoalWindow = new Window("New Goal Form");
 		newGoalWindow.setContent(new NewGoalForm(bwInstanceOID, goalOID));
 		newGoalWindow.center();
@@ -1144,7 +1141,7 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(newGoalWindow);
 	}
 
-	public void generateNewDisableMaintainGoalsWindow(long bwInstanceOID) {
+	public void generateNewDisableMaintainGoalsWindow(String bwInstanceOID) {
 		Window newGoalWindow = new Window("Enable/Disable MaintainGoals");
 		newGoalWindow.setContent(new ManageMaintainGoalsConditionsForm(
 				bwInstanceOID));
@@ -1155,7 +1152,7 @@ public class BWPresentation extends Application {
 		getMainWindow().addWindow(newGoalWindow);
 	}
 
-	public void generateManageGoalWorkItemsConditionsWindows(long workItemOID) {
+	public void generateManageGoalWorkItemsConditionsWindows(String workItemOID) {
 		Window newGoalWindow = new Window("Enable/Disable WorkItem Conditions");
 		newGoalWindow.setContent(new ManageGoalWorkItemsConditionsForm(
 				workItemOID));
@@ -1169,14 +1166,14 @@ public class BWPresentation extends Application {
 	/********************************************
 	 * BWPresentation Data changes methods
 	 ********************************************/
-	public void addBWSpecification(long OID, String name) {
+	public void addBWSpecification(String OID, String name) {
 		this.loadedList.addItem(OID);
 		this.loadedList.setItemCaption(OID, name);
 		// getMainWindow().showNotification("Blended Workflow Specification " +
 		// name +" loaded", Notification.TYPE_TRAY_NOTIFICATION);
 	}
 
-	public void addBWInstance(long OID, String name) {
+	public void addBWInstance(String OID, String name) {
 		this.launchedList.addItem(OID);
 		this.launchedList.setItemCaption(OID, name);
 		this.dataList.addItem(OID);
@@ -1192,7 +1189,7 @@ public class BWPresentation extends Application {
 				Notification.TYPE_TRAY_NOTIFICATION);
 	}
 
-	public void addGoalWorkItem(long OID, String ID) {
+	public void addGoalWorkItem(String OID, String ID) {
 		if (this.goalList.getItem(OID) != null) {
 			getMainWindow().showNotification(ID + " Failed to Complete!",
 					Notification.TYPE_ERROR_MESSAGE); // "[GOAL] " +
@@ -1203,7 +1200,7 @@ public class BWPresentation extends Application {
 		}
 	}
 
-	public void addTaskWorkItem(long OID, String ID) {
+	public void addTaskWorkItem(String OID, String ID) {
 		if (this.taskList.getItem(OID) != null) {// "[TASK] " +
 			// getMainWindow().showNotification(ID + " Failed to Complete!",
 			// Notification.TYPE_ERROR_MESSAGE);
@@ -1214,15 +1211,15 @@ public class BWPresentation extends Application {
 		}
 	}
 
-	public void addUser(long oid, String name) {
+	public void addUser(String oid, String name) {
 		// TODO:FutureImplementation: addUser
 	}
 
-	public void addRole(long oid, String name) {
+	public void addRole(String oid, String name) {
 		// TODO:FutureImplementation: addRole
 	}
 
-	public void removeGoalWorkItem(long OID, String ID, String state) {
+	public void removeGoalWorkItem(String OID, String ID, String state) {
 		this.goalList.removeListener(goalListListener);
 		this.goalList.removeItem(OID);
 		this.goalInfoTable.removeAllItems();
@@ -1231,7 +1228,7 @@ public class BWPresentation extends Application {
 		initGoalListListener();
 	}
 
-	public void removeTaskWorkItem(long OID, String ID, String state) {
+	public void removeTaskWorkItem(String OID, String ID, String state) {
 		this.taskList.removeListener(taskListListener);
 		this.taskList.removeItem(OID);
 		this.taskInfoTable.removeAllItems();
@@ -1240,18 +1237,18 @@ public class BWPresentation extends Application {
 		initTaskListListener();
 	}
 
-	public void updateTaskList(long bwInstanceOID) {
+	public void updateTaskList(String bwInstanceOID) {
 		this.taskList.removeListener(taskListListener);
 		this.taskList.removeAllItems();
 
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		Transaction.begin();
-		for (WorkItem workItem : bwInstance.getWorkItems()) {
+		for (WorkItem workItem : bwInstance.getWorkItemsSet()) {
 			if (workItem instanceof TaskWorkItem) {
 				TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
 				if ((taskWorkItem.getState().equals(ActivityState.ENABLED) || taskWorkItem
 						.getState().equals(ActivityState.PRE_ACTIVITY))) {
-					addTaskWorkItem(workItem.getOID(), workItem.getID());
+					addTaskWorkItem(workItem.getExternalId(), workItem.getID());
 				}
 			}
 		}
@@ -1259,18 +1256,18 @@ public class BWPresentation extends Application {
 		initTaskListListener();
 	}
 
-	public void updateGoalList(long bwInstanceOID) {
+	public void updateGoalList(String bwInstanceOID) {
 		this.goalList.removeListener(goalListListener);
 		this.goalList.removeAllItems();
 		initGoalListListener();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		Transaction.begin();
-		for (WorkItem workItem : bwInstance.getWorkItems()) {
+		for (WorkItem workItem : bwInstance.getWorkItemsSet()) {
 			if (workItem instanceof GoalWorkItem) {
 				GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
 				if ((goalWorkItem.getState().equals(GoalState.ENABLED) || goalWorkItem
 						.getState().equals(GoalState.PRE_GOAL))) {
-					addGoalWorkItem(workItem.getOID(), workItem.getID());
+					addGoalWorkItem(workItem.getExternalId(), workItem.getID());
 				}
 			}
 		}
@@ -1278,7 +1275,7 @@ public class BWPresentation extends Application {
 		initGoalListListener();
 	}
 
-	public void updateBWSpecificationInfo(long OID) {
+	public void updateBWSpecificationInfo(String OID) {
 		Transaction.begin();
 		bwSpecInfoTable.removeAllItems();
 		bwSpecJobsInfoTable.removeAllItems();
@@ -1309,7 +1306,7 @@ public class BWPresentation extends Application {
 				"", "" }, null);
 
 		TaskModel taskModel = bwSpecification.getTaskModel();
-		for (Task task : taskModel.getTasks()) {
+		for (Task task : taskModel.getTasksSet()) {
 			Object task1 = bwSpecJobsInfoTable.addItem(
 					new Object[] { task.getName(), task.getDescription(),
 							task.getConstraintData(true),
@@ -1319,7 +1316,7 @@ public class BWPresentation extends Application {
 		}
 
 		GoalModel goalModel = bwSpecification.getGoalModel();
-		for (AchieveGoal goal : goalModel.getAchieveGoals()) {
+		for (AchieveGoal goal : goalModel.getAchieveGoalsSet()) {
 			Object goal1 = bwSpecJobsInfoTable.addItem(
 					new Object[] { goal.getName(), goal.getDescription(),
 							goal.getPreConstraintData(),
@@ -1332,7 +1329,7 @@ public class BWPresentation extends Application {
 
 	}
 
-	public void updateBWInstanceInfo(long OID) {
+	public void updateBWInstanceInfo(String OID) {
 		Transaction.begin();
 		bwInstanceInfoTable.removeAllItems();
 		bwInstanceJobsInfoTable.removeAllItems();
@@ -1345,7 +1342,7 @@ public class BWPresentation extends Application {
 		// GoalModelInstance goalModelInstance =
 		// bwInstance.getGoalModelInstance();
 
-		for (Task task : taskModelInstance.getTasks()) {
+		for (Task task : taskModelInstance.getTasksSet()) {
 			if (task.getTaskWorkItem() != null) {
 				if (task.getTaskWorkItem().getState()
 						.equals(ActivityState.COMPLETED)
@@ -1364,16 +1361,15 @@ public class BWPresentation extends Application {
 		bwInstanceInfoTable.addItem(
 				new Object[] { "Creation Date", bwInstance.getCreationDate() },
 				new Integer(3));
-		bwInstanceInfoTable.addItem(
-				new Object[] {
-						"Executed Activities",
-						executedTasksCount + " of "
-								+ taskModelInstance.getTasksCount() },
+		bwInstanceInfoTable.addItem(new Object[] {
+				"Executed Activities",
+				executedTasksCount + " of "
+						+ taskModelInstance.getTasksSet().size() },
 				new Integer(4));
 
 		// JobInfo
 		int jobIndex = 1;
-		for (LogRecord logRecord : bwInstance.getLog().getLogRecords()) {
+		for (LogRecord logRecord : bwInstance.getLog().getLogRecordsSet()) {
 			bwInstanceJobsInfoTable.addItem(
 					new Object[] { logRecord.getDate(), logRecord.getAction(),
 							logRecord.getValue(), logRecord.getAuthor() },
@@ -1384,24 +1380,24 @@ public class BWPresentation extends Application {
 		Transaction.commit();
 	}
 
-	public void updateBWInstanceDataInfo(long OID) {
+	public void updateBWInstanceDataInfo(String OID) {
 		Transaction.begin();
 		entitydetailsTreetable.removeAllItems();
 
 		BWInstance bwInstance = FenixFramework.getDomainObject(OID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 
-		for (Entity entity : dataModelInstance.getEntities()) {
+		for (Entity entity : dataModelInstance.getEntitiesSet()) {
 			Object entityItem = entitydetailsTreetable.addItem(new Object[] {
 					entity.getName(), "", "" }, null);
-			for (EntityInstance entityInstance : entity.getEntityInstances()) {
+			for (EntityInstance entityInstance : entity.getEntityInstancesSet()) {
 				Object entityInstanceItem = entitydetailsTreetable.addItem(
 						new Object[] { entityInstance.getID(), "",
 								entityInstance.getState() }, null);
 				entitydetailsTreetable
 						.setParent(entityInstanceItem, entityItem);
 				for (AttributeInstance attributeInstance : entityInstance
-						.getAttributeInstances()) {
+						.getAttributeInstancesSet()) {
 					String value = " ";
 					if (attributeInstance.getValue() != "$UNDEFINED$"
 							&& attributeInstance.getValue() != "$SKIPPED$")
@@ -1421,7 +1417,7 @@ public class BWPresentation extends Application {
 	}
 
 	public void updateGoalTreeInfo() {
-		long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+		String bwInstanceOID = (String) goalBWInstanceList.getValue();
 		goalTable.setVisibleColumns(new Object[] { "OID", "Goal" });
 		Transaction.begin();
 		goalTable.removeAllItems();
@@ -1431,19 +1427,21 @@ public class BWPresentation extends Application {
 
 		// Add Goals
 		HashMap<AchieveGoal, Object> addedGoals = new HashMap<AchieveGoal, Object>();
-		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
-			Object goalItem = goalTable.addItem(new Object[] { goal.getOID(),
-					goal.getName() }, null);
+		for (AchieveGoal goal : goalModelInstance.getAchieveGoalsSet()) {
+			Object goalItem = goalTable
+					.addItem(
+							new Object[] { goal.getExternalId(), goal.getName() },
+							null);
 			addedGoals.put(goal, goalItem);
 		}
 
 		// Goal Relations
-		for (AchieveGoal goal : goalModelInstance.getAchieveGoals()) {
+		for (AchieveGoal goal : goalModelInstance.getAchieveGoalsSet()) {
 			if (goal.getParentGoal() != null) {
 				Object goalObject = addedGoals.get(goal);
 				Object parentGoalObject = addedGoals.get(goal.getParentGoal());
 				goalTable.setParent(goalObject, parentGoalObject);
-				if (goal.getSubGoalsCount() == 0) {
+				if (goal.getSubGoalsSet().size() == 0) {
 					goalTable.setChildrenAllowed(goalObject, false);
 				}
 			}
@@ -1458,7 +1456,7 @@ public class BWPresentation extends Application {
 		getGoalWorkItemsTree();
 	}
 
-	public void updateTaskView(long OID) {
+	public void updateTaskView(String OID) {
 		Transaction.begin();
 		taskInfoTable.removeAllItems();
 		TaskWorkItem taskWorkItem = FenixFramework.getDomainObject(OID);
@@ -1468,7 +1466,7 @@ public class BWPresentation extends Application {
 		int inputIndex = 0;
 		ArrayList<Entity> inputEntities = new ArrayList<Entity>();
 		for (AttributeInstance attributeInstance : taskWorkItem
-				.getInputAttributeInstances()) {
+				.getInputAttributeInstancesSet()) {
 			Entity entity = attributeInstance.getAttribute().getEntity();
 			if (!inputEntities.contains(entity)) {
 				inputEntities.add(entity);
@@ -1487,7 +1485,7 @@ public class BWPresentation extends Application {
 		int outputIndex = 0;
 		ArrayList<Entity> outputEntities = new ArrayList<Entity>();
 		for (AttributeInstance attributeInstance : taskWorkItem
-				.getOutputAttributeInstances()) {
+				.getOutputAttributeInstancesSet()) {
 			Entity entity = attributeInstance.getAttribute().getEntity();
 			if (!outputEntities.contains(entity)) {
 				outputEntities.add(entity);
@@ -1521,7 +1519,7 @@ public class BWPresentation extends Application {
 
 	}
 
-	public void updateGoalView(long OID) {
+	public void updateGoalView(String OID) {
 		Transaction.begin();
 		goalInfoTable.removeAllItems();
 		GoalWorkItem goalWorkItem = FenixFramework.getDomainObject(OID);
@@ -1533,7 +1531,7 @@ public class BWPresentation extends Application {
 		int subGoalIndex = 0;
 		ArrayList<Entity> inputEntities = new ArrayList<Entity>();
 
-		for (AchieveGoal subGoal : goal.getSubGoals()) {
+		for (AchieveGoal subGoal : goal.getSubGoalsSet()) {
 
 			// TODO: GoalInputData
 			// for (AttributeInstance attributeInstance :
@@ -1565,7 +1563,7 @@ public class BWPresentation extends Application {
 		int outputIndex = 0;
 		ArrayList<Entity> outputEntities = new ArrayList<Entity>();
 		for (AttributeInstance attributeInstance : goalWorkItem
-				.getOutputAttributeInstances()) {
+				.getOutputAttributeInstancesSet()) {
 			Entity entity = attributeInstance.getAttribute().getEntity();
 			if (!outputEntities.contains(entity)) {
 				outputEntities.add(entity);
@@ -1605,7 +1603,7 @@ public class BWPresentation extends Application {
 
 	public void getMaintainGoalTree() {
 		maintainGoalsTree.removeAllItems();
-		long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+		String bwInstanceOID = (String) goalBWInstanceList.getValue();
 		maintainGoalsTree.setVisibleColumns(new Object[] { "OID", "Goal",
 				"State" });
 
@@ -1613,8 +1611,8 @@ public class BWPresentation extends Application {
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
-		for (MaintainGoal achieveGoal : goalModelInstance.getMaintainGoals()) {
-			long goalOID = achieveGoal.getOID();
+		for (MaintainGoal achieveGoal : goalModelInstance.getMaintainGoalsSet()) {
+			String goalOID = achieveGoal.getExternalId();
 			String goalName = achieveGoal.getName();
 			String state = achieveGoal.getState().toString();
 			maintainGoalsTree.addItem(
@@ -1626,21 +1624,21 @@ public class BWPresentation extends Application {
 
 	public void getGoalWorkItemsTree() {
 		goalWorkItemTree.removeAllItems();
-		long bwInstanceOID = (Long) goalBWInstanceList.getValue();
+		String bwInstanceOID = (String) goalBWInstanceList.getValue();
 		goalWorkItemTree.setVisibleColumns(new Object[] { "OID",
 				"GoalWorkItems", "State" });
 
 		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 
-		for (WorkItem workItem : bwInstance.getWorkItems()) {
+		for (WorkItem workItem : bwInstance.getWorkItemsSet()) {
 			if (workItem instanceof GoalWorkItem) {
 				GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
 				if ((goalWorkItem.getState().equals(GoalState.ACHIEVED)
 						|| goalWorkItem.getState().equals(GoalState.SKIPPED)
 						|| goalWorkItem.getState().equals(GoalState.PRE_GOAL) || goalWorkItem
 						.getState().equals(GoalState.ENABLED))) {
-					long workItemOID = goalWorkItem.getOID();
+					String workItemOID = goalWorkItem.getExternalId();
 					String workItemID = goalWorkItem.getID();
 					String workItemState = goalWorkItem.getState().toString();
 					goalWorkItemTree.addItem(new Object[] { workItemOID,

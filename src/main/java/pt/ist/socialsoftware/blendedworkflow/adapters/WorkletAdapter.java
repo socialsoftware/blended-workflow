@@ -3,7 +3,6 @@ package pt.ist.socialsoftware.blendedworkflow.adapters;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,9 +37,12 @@ import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 public class WorkletAdapter {
 
 	private final Logger log;
-	protected String engineAdminUser = BWPropertiesManager.getProperty("yawl.AdminUser");
-	protected String engineAdminPassword = BWPropertiesManager.getProperty("yawl.AdminPassword");
-	protected String workletGateway = BWPropertiesManager.getProperty("worklet.gateway");
+	protected String engineAdminUser = BWPropertiesManager
+			.getProperty("yawl.AdminUser");
+	protected String engineAdminPassword = BWPropertiesManager
+			.getProperty("yawl.AdminPassword");
+	protected String workletGateway = BWPropertiesManager
+			.getProperty("worklet.gateway");
 
 	private WorkletGatewayClient client = null;
 	private String handle = null;
@@ -109,7 +111,8 @@ public class WorkletAdapter {
 	/*********************************
 	 * Process Conditions Result
 	 *********************************/
-	private void processPreConditionEvaluationResult(String result, TaskWorkItem taskWorkItem) {
+	private void processPreConditionEvaluationResult(String result,
+			TaskWorkItem taskWorkItem) {
 		if (result.equals("TRUE")) {
 			taskWorkItem.notifyEnabled(ConditionType.PRE_CONDITION);
 		} else if (result.equals("SKIPPED") || result.equals("FALSE")) {
@@ -117,10 +120,12 @@ public class WorkletAdapter {
 		} else {
 			log.error("It should not reach this point");
 		}
-//		 requestWorkItemPostConditionEvaluation(taskWorkItem); //FIXME: call 2 times
+		// requestWorkItemPostConditionEvaluation(taskWorkItem); //FIXME: call 2
+		// times
 	}
 
-	private void processPostConditionEvaluationResult(String result, TaskWorkItem taskWorkItem) {
+	private void processPostConditionEvaluationResult(String result,
+			TaskWorkItem taskWorkItem) {
 		if (result.equals("TRUE")) {
 			taskWorkItem.notifyCompleted();
 		} else if (result.equals("SKIPPED")) {
@@ -128,9 +133,10 @@ public class WorkletAdapter {
 		} else if (result.equals("FALSE")) {
 			if (taskWorkItem.getState().equals(ActivityState.ENABLED)) {
 				taskWorkItem.notifyEnabled(ConditionType.POS_CONDITION);
-			} else if (taskWorkItem.getState().equals(ActivityState.PRE_ACTIVITY)) {
+			} else if (taskWorkItem.getState().equals(
+					ActivityState.PRE_ACTIVITY)) {
 				taskWorkItem.notifyPreActivity(ConditionType.POS_CONDITION);
-			} 
+			}
 		}
 	}
 
@@ -139,13 +145,16 @@ public class WorkletAdapter {
 	 *********************************/
 	/**
 	 * Evaluate a TaskWorkitem PreConditon.
-	 * @param taskWorkItem the taskWorkItem to evaluate.
+	 * 
+	 * @param taskWorkItem
+	 *            the taskWorkItem to evaluate.
 	 */
 	public void requestWorkItemPreConditionEvaluation(TaskWorkItem taskWorkItem) {
 		try {
 			evaluatePreCondition(taskWorkItem);
 		} catch (BlendedWorkflowException bwe) {
-			log.error("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
+			log.error("notifyWorkItemContraintViolation: exception"
+					+ bwe.getMessage());
 		}
 	}
 
@@ -156,11 +165,13 @@ public class WorkletAdapter {
 	 *            the workItem to evaluate.
 	 */
 	public void requestWorkItemPostConditionEvaluation(TaskWorkItem taskWorkItem) {
-		log.debug("requestWorkItemPostConditionEvaluation" + taskWorkItem.getID());
+		log.debug("requestWorkItemPostConditionEvaluation"
+				+ taskWorkItem.getID());
 		try {
 			process(taskWorkItem);
 		} catch (BlendedWorkflowException bwe) {
-			log.error("notifyWorkItemContraintViolation: exception" + bwe.getMessage());
+			log.error("notifyWorkItemContraintViolation: exception"
+					+ bwe.getMessage());
 		}
 	}
 
@@ -183,7 +194,7 @@ public class WorkletAdapter {
 		Element eCornerstone = null;
 
 		// Create Tasks RdrSet
-		for (Task task : taskModel.getTasks()) {
+		for (Task task : taskModel.getTasksSet()) {
 			String taskName = generateYAWLTaskName(task);
 
 			// PreCondition Tree
@@ -309,7 +320,7 @@ public class WorkletAdapter {
 			// Parse complete entities
 			for (Entity entity : entities) {
 				String entityName = entity.getName().replaceAll(" ", "");
-				for (Attribute attribute : entity.getAttributes()) {
+				for (Attribute attribute : entity.getAttributesSet()) {
 					if (attribute.getIsKeyAttribute()) {
 						String attributeName = attribute.getName().replaceAll(
 								" ", "");
@@ -370,8 +381,8 @@ public class WorkletAdapter {
 	private Element getInputEvaluationData(TaskWorkItem taskWorkItem) {
 		// Get Workitem
 		WorkItem workItem = taskWorkItem;
-		List<WorkItemArgument> workItemArguments = workItem
-				.getInputWorkItemArguments();
+		Set<WorkItemArgument> workItemArguments = workItem
+				.getInputWorkItemArgumentsSet();
 
 		// Get Workitem data
 		String cornerStr = "<cornerstone>";
@@ -416,8 +427,8 @@ public class WorkletAdapter {
 	private Element getOutputEvaluationData(TaskWorkItem taskWorkItem) {
 		// Get Workitem
 		WorkItem workItem = taskWorkItem;
-		List<WorkItemArgument> workItemArguments = workItem
-				.getOutputWorkItemArguments();
+		Set<WorkItemArgument> workItemArguments = workItem
+				.getOutputWorkItemArgumentsSet();
 
 		// Get Workitem data
 		String cornerStr = "<cornerstone>";
@@ -625,7 +636,8 @@ public class WorkletAdapter {
 					BlendedWorkflowError.WORKLET_ADAPTER_EVALUATEPRECONDITION);
 		}
 
-		processPreConditionEvaluationResult(parseConclusion(conclusion), taskWorkItem);
+		processPreConditionEvaluationResult(parseConclusion(conclusion),
+				taskWorkItem);
 	}
 
 	// /**
