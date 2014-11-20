@@ -2,7 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import java.util.Set;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -43,14 +44,13 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 		footer.setSpacing(true);
 
 		treetable.addActionHandler(new Action.Handler() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == DISABLE_CONDITION_ACTION) {
 					String ConditionOID = (String) target;
-					Transaction.begin();
 					BlendedWorkflow.getInstance().getWorkListManager()
 							.manageGoalCondition(workItemOID, ConditionOID);
-					Transaction.commit();
 					refreshTree(workItemOID);
 				}
 			}
@@ -67,9 +67,9 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 
 		Button submitButton = new Button("Finish");
 		submitButton.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Transaction.begin();
 				GoalWorkItem w = FenixFramework.getDomainObject(workItemOID);
 				w.setState(GoalState.ACTIVATED);
 				// String bwInstanceOID = w.getBwInstance().getOID();
@@ -96,10 +96,7 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 
 				w.updateOutputWorkItemArguments();
 
-				Transaction.commit();
-				Transaction.begin();
 				// BlendedWorkflow.getInstance().getWorkListManager().enableGoalWorkItemsService(bwInstanceOID);
-				Transaction.commit();
 				getApplication().getMainWindow().removeWindow(
 						ManageGoalWorkItemsConditionsForm.this.getWindow());
 			}
@@ -114,8 +111,8 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 		getDataModel(workItemOID);
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void getDataModel(String workItemOID) {
-		Transaction.begin();
 		GoalWorkItem goalWorkItem = FenixFramework.getDomainObject(workItemOID);
 
 		// Activate
@@ -149,7 +146,6 @@ public class ManageGoalWorkItemsConditionsForm extends VerticalLayout {
 
 		// treetable.setWidth("100%");
 		// setWidth("100%");
-		Transaction.commit();
 	}
 
 	public void refreshTree(String workItemOID) {

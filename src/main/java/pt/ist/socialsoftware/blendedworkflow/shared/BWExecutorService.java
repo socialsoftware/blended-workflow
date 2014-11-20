@@ -23,12 +23,15 @@ public class BWExecutorService {
 
 	/**
 	 * Add a Task to the BWExecutorService.
-	 * @param task a task.
+	 * 
+	 * @param task
+	 *            a task.
 	 */
 	public void runTask(Callable<String> task) {
-		log.info("Task: " + task.getClass().getSimpleName() + " added to BWExecutorService.");
+		log.info("Task: " + task.getClass().getSimpleName()
+				+ " added to BWExecutorService.");
 		Future<String> f = executorService.submit(task);
-		
+
 		// Print the exceptions
 		try {
 			log.info(f.get());
@@ -53,6 +56,5 @@ public class BWExecutorService {
 	public void shutDown() {
 		executorService.shutdown();
 	}
-
 
 }

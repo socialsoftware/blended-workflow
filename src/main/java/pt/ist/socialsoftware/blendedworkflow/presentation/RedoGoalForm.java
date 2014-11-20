@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
@@ -44,6 +45,7 @@ public class RedoGoalForm extends VerticalLayout {
 
 		bwInstances.setImmediate(true);
 		bwInstances.addListener(new Property.ValueChangeListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				if (bwInstances.getValue() == null) {
@@ -60,6 +62,7 @@ public class RedoGoalForm extends VerticalLayout {
 
 		parentGoal.setImmediate(true);
 		parentGoal.addListener(new Property.ValueChangeListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				if (parentGoal.getValue() == null) {
@@ -74,16 +77,15 @@ public class RedoGoalForm extends VerticalLayout {
 
 		Button submit = new Button("Submit");
 		submit.addListener(new Button.ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
 					String workItemlOID = (String) workItems.getValue();
-					Transaction.begin();
 					String activeUserID = BlendedWorkflow.getInstance()
 							.getOrganizationalManager().getActiveUser().getID();
 					BlendedWorkflow.getInstance().getWorkListManager()
 							.redoGoal(workItemlOID, activeUserID);
-					Transaction.commit();
 
 					getApplication().getMainWindow().removeWindow(
 							RedoGoalForm.this.getWindow());
@@ -122,7 +124,6 @@ public class RedoGoalForm extends VerticalLayout {
 	}
 
 	private void getGoals(BWInstance bwInstance) {
-		Transaction.begin();
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 		for (AchieveGoal goal : goalModelInstance.getAchieveGoalsSet()) {
 			if (goal.getGoalWorkItemsSet().size() > 0) {
@@ -131,14 +132,12 @@ public class RedoGoalForm extends VerticalLayout {
 						goal.getName());
 			}
 		}
-		Transaction.commit();
 	}
 
 	private void updateWorkItemsInfo(String bwInstanceOID, String goalOID) {
 		this.workItems.removeAllItems();
 		AchieveGoal goal = FenixFramework.getDomainObject(goalOID);
 
-		Transaction.begin();
 		for (GoalWorkItem goalWorkItem : goal.getGoalWorkItemsSet()) {
 			if (goalWorkItem.getState().equals(GoalState.ACHIEVED)
 					|| goalWorkItem.getState().equals(GoalState.SKIPPED)) {
@@ -148,11 +147,10 @@ public class RedoGoalForm extends VerticalLayout {
 				// TODO: Give workitem data information
 			}
 		}
-		Transaction.commit();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	private void getBWInstances() {
-		Transaction.begin();
 		for (BWSpecification bwSpecification : BlendedWorkflow.getInstance()
 				.getBwSpecificationsSet()) {
 			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
@@ -161,7 +159,6 @@ public class RedoGoalForm extends VerticalLayout {
 						bwInstance.getName());
 			}
 		}
-		Transaction.commit();
 	}
 
 }

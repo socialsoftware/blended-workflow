@@ -1,21 +1,22 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
 
 @SuppressWarnings("serial")
 public class LoadForm extends VerticalLayout {
 
-	private SpecificationReceiver bwSpecReceiver;
+	private final SpecificationReceiver bwSpecReceiver;
 
 	public LoadForm(BWPresentation bwPresentation) {
 		bwSpecReceiver = new SpecificationReceiver(bwPresentation);
@@ -26,7 +27,9 @@ public class LoadForm extends VerticalLayout {
 		setHeight("120px");
 
 		// Load goal specification (upload)
-		Upload uploadBW = new Upload("Upload the Blended Workflow specification here:", this.bwSpecReceiver);
+		Upload uploadBW = new Upload(
+				"Upload the Blended Workflow specification here:",
+				this.bwSpecReceiver);
 		uploadBW.setButtonCaption("Submit");
 		uploadBW.addListener((Upload.SucceededListener) this.bwSpecReceiver);
 		uploadBW.addListener((Upload.FailedListener) this.bwSpecReceiver);
@@ -35,23 +38,24 @@ public class LoadForm extends VerticalLayout {
 		submitPanel.setSpacing(true);
 		Button bwSpecificationLoadBtn = new Button("Load");
 		bwSpecificationLoadBtn.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
 					String bwSpec = bwSpecReceiver.getSpecInString();
-					if (bwSpec != null) {	
-						Transaction.begin();
-						BlendedWorkflow.getInstance().getBwManager().loadBWSpecification(bwSpec);
-						Transaction.commit();
-
-						getApplication().getMainWindow().removeWindow(LoadForm.this.getWindow());
+					if (bwSpec != null) {
+						BlendedWorkflow.getInstance().getBwManager()
+								.loadBWSpecification(bwSpec);
+						getApplication().getMainWindow().removeWindow(
+								LoadForm.this.getWindow());
+					} else {
+						getApplication().getMainWindow().showNotification(
+								"Blended Workflow Specification missing");
 					}
-					else {
-						getApplication().getMainWindow().showNotification("Blended Workflow Specification missing");
-					}
-				}
-				catch (java.lang.NullPointerException jle) {
-					getApplication().getMainWindow().showNotification("Please upload a Blended Workflow Specifications", Notification.TYPE_ERROR_MESSAGE);
+				} catch (java.lang.NullPointerException jle) {
+					getApplication().getMainWindow().showNotification(
+							"Please upload a Blended Workflow Specifications",
+							Notification.TYPE_ERROR_MESSAGE);
 				}
 			}
 		});
@@ -61,7 +65,8 @@ public class LoadForm extends VerticalLayout {
 		cancel.addListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(LoadForm.this.getWindow());
+				getApplication().getMainWindow().removeWindow(
+						LoadForm.this.getWindow());
 			}
 		});
 		submitPanel.addComponent(cancel);

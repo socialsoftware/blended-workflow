@@ -11,6 +11,7 @@ public class BWPropertiesManager {
 		try {
 			properties.load(BWPropertiesManager.class
 					.getResourceAsStream("/build.properties"));
+
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to load properties files.", e);
 		}

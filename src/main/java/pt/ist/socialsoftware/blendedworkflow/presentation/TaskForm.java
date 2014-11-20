@@ -4,7 +4,8 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
@@ -54,14 +55,13 @@ public class TaskForm extends VerticalLayout {
 
 		Button submitButton = new Button("Submit");
 		submitButton.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 
 				// New
-				Transaction.begin();
 				TaskWorkItem taskWorkItem = FenixFramework
 						.getDomainObject(workItemOID);
-				Transaction.commit();
 
 				int workItemAttributeIndex = 0;
 				for (int y = 0; y < data.getComponentCount(); y++) {
@@ -86,15 +86,11 @@ public class TaskForm extends VerticalLayout {
 					}
 				}
 
-				Transaction.begin();
 				User activeUser = BlendedWorkflow.getInstance()
 						.getOrganizationalManager().getActiveUser();
 				taskWorkItem.setUser(activeUser);
-				Transaction.commit();
-				Transaction.begin();
 				BlendedWorkflow.getInstance().getWorkListManager()
 						.checkInWorkItem(taskWorkItemOID);
-				Transaction.commit();
 
 				getApplication().getMainWindow().removeWindow(
 						TaskForm.this.getWindow());
@@ -117,18 +113,15 @@ public class TaskForm extends VerticalLayout {
 	}
 
 	private void setWorkItemArgumentValue(int index, String value) {
-		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
 		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
 				taskWorkItem.getOutputWorkItemArgumentsSet());
 		arguments.get(index).setValue(value);
 		arguments.get(index).setState(DataState.DEFINED);
-		Transaction.commit();
 	}
 
 	private void getInputData() {
-		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
 
@@ -172,11 +165,9 @@ public class TaskForm extends VerticalLayout {
 			posAttribute = false;
 			previousEntity = entity;
 		}
-		Transaction.commit();
 	}
 
 	private void getOutputData() {
-		Transaction.begin();
 
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
@@ -214,7 +205,6 @@ public class TaskForm extends VerticalLayout {
 			}
 			previousEntity = entity;
 		}
-		Transaction.commit();
 
 	}
 

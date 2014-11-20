@@ -15,7 +15,8 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class BWSpecificationFactory {
 
-	public static void createBWSpecification(String bwXML) throws BlendedWorkflowException {
+	public static void createBWSpecification(String bwXML)
+			throws BlendedWorkflowException {
 		// BWSpecification Name
 		Document doc = StringUtils.stringToDoc(bwXML);
 
@@ -28,36 +29,42 @@ public class BWSpecificationFactory {
 		String description = caseInfo.getChildText("description", bwNamespace);
 		String version = caseInfo.getChildText("version", bwNamespace);
 		String identifier = caseInfo.getChildText("identifier", bwNamespace);
-		
-		BWSpecification bwSpecification = new BWSpecification(name, author, description, version, identifier);
+
+		BWSpecification bwSpecification = new BWSpecification(name, author,
+				description, version, identifier);
 
 		// Data Model
 		DataModel dataModel = bwSpecification.getDataModel();
 		new DataModelFactory().parseXMLDataModel(dataModel, bwXML);
 		new DataModelInstanceFactory().parseXMLDataModel(dataModel, bwXML);
-				
+
 		// Task Model
 		TaskModel taskModel = bwSpecification.getTaskModel();
 		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, bwXML);
-		
+
 		// Goal Model
 		GoalModel goalModel = bwSpecification.getGoalModel();
 		new GoalModelFactory().parseXMLGoalModel(dataModel, goalModel, bwXML);
-		
+
 		// Create YAWL Specification
-		String yawlXML = new YAWLSpecificationFactory().parseYAWLSpecificationFactory(bwSpecification);
-		
+		String yawlXML = new YAWLSpecificationFactory()
+				.parseYAWLSpecificationFactory(bwSpecification);
+
 		// Load YAWL Specification on the engine
-		BlendedWorkflow.getInstance().getYawlAdapter().loadSpecification(yawlXML);
-		
-		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(yawlXML).getIdentifier();
+		BlendedWorkflow.getInstance().getYawlAdapter()
+				.loadSpecification(yawlXML);
+
+		String yawlSpecficationID = SpecUtils.getYAWLSpecificationIDFromSpec(
+				yawlXML).getIdentifier();
 		bwSpecification.setYawlSpecficationID(yawlSpecficationID);
 
 		// Create Worklet Rules
-		BlendedWorkflow.getInstance().getWorkletAdapter().loadRdrSet(bwSpecification);
-		
+		// BlendedWorkflow.getInstance().getWorkletAdapter()
+		// .loadRdrSet(bwSpecification);
+
 		// Notify BWManager
-		BlendedWorkflow.getInstance().getBwManager().notifyLoadedBWSpecification(bwSpecification);
+		BlendedWorkflow.getInstance().getBwManager()
+				.notifyLoadedBWSpecification(bwSpecification);
 	}
 
 }

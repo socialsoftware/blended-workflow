@@ -4,7 +4,8 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
@@ -81,19 +82,18 @@ public class DoctorAppointmentForm extends VerticalLayout {
 
 		Button addPMBtn = new Button("Add Prescription Medication");
 		addPMBtn.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if (first) {
 					createMedicalPrescription();
 				}
 
-				Transaction.begin();
 				TaskWorkItem taskWorkItem = FenixFramework
 						.getDomainObject(taskWorkItemOID);
 				String bwInstanceOID = taskWorkItem.getBwInstance()
 						.getExternalId();
 				showDataModelTreeWindow(bwInstanceOID);
-				Transaction.commit();
 			}
 
 		});
@@ -101,6 +101,7 @@ public class DoctorAppointmentForm extends VerticalLayout {
 
 		Button submitButton = new Button("Submit");
 		submitButton.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				processData(workItemOID);
@@ -124,8 +125,8 @@ public class DoctorAppointmentForm extends VerticalLayout {
 		setComponentAlignment(footer, Alignment.MIDDLE_CENTER);
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	private void getInputData() {
-		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
 		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
@@ -133,11 +134,9 @@ public class DoctorAppointmentForm extends VerticalLayout {
 		String value = arguments.get(0).getValue();
 		bloodPressureTF.setValue(value);
 		bloodPressureTF.setEnabled(false);
-		Transaction.commit();
 	}
 
 	private void createMedicalPrescription() {
-		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
 		BWInstance bwInstance = taskWorkItem.getBwInstance();
@@ -164,7 +163,6 @@ public class DoctorAppointmentForm extends VerticalLayout {
 				.getBwManager()
 				.addRelationInstance(bwInstanceOID, episodeOID,
 						medicalPrescription1OID);
-		Transaction.commit();
 		first = false;
 	}
 
@@ -172,23 +170,17 @@ public class DoctorAppointmentForm extends VerticalLayout {
 		String medicalReport = descriptionTF.getValue().toString();
 
 		// Set WorkItemArguments
-		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework.getDomainObject(workItemOID);
 		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
 				taskWorkItem.getOutputWorkItemArgumentsSet());
 		arguments.get(0).setValue(medicalReport);
 		arguments.get(0).setState(DataState.DEFINED);
-		Transaction.commit();
 
-		Transaction.begin();
 		User activeUser = BlendedWorkflow.getInstance()
 				.getOrganizationalManager().getActiveUser();
 		taskWorkItem.setUser(activeUser);
-		Transaction.commit();
-		Transaction.begin();
 		BlendedWorkflow.getInstance().getWorkListManager()
 				.checkInWorkItem(taskWorkItemOID);
-		Transaction.commit();
 	}
 
 	public void prescriptionMedication(String number, String name,

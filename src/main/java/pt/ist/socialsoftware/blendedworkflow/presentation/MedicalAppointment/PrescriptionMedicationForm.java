@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation.MedicalAppointment;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
@@ -48,6 +49,7 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 
 		Button submitButton = new Button("Submit");
 		submitButton.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				// User Values
@@ -57,7 +59,6 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 				String heartImpact = heartImpactCB.getValue().toString();
 
 				// Models
-				Transaction.begin();
 				BWInstance bwInstance = FenixFramework
 						.getDomainObject(bwInstanceOID);
 				DataModelInstance dataModelInstance = bwInstance
@@ -103,7 +104,6 @@ public class PrescriptionMedicationForm extends VerticalLayout {
 						.addRelationInstance(bwInstanceOID,
 								medicalPrescription1OID,
 								prescriptionMedication1OID);
-				Transaction.commit();
 
 				// Add to parentWindowsTable and close
 				parent.prescriptionMedication(number, name, quantity,

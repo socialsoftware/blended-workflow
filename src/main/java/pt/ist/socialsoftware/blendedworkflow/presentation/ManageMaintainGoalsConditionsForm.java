@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -41,31 +42,28 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 		footer.setSpacing(true);
 
 		treetable.addActionHandler(new Action.Handler() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == DISABLE_CONDITION_ACTION) {
 					// remove condition
 					String goalOID = (String) target;
 
-					Transaction.begin();
 					BlendedWorkflow
 							.getInstance()
 							.getWorkListManager()
 							.manageGoalCondition(goalOID,
 									MaintainGoalState.DEACTIVATED);
-					Transaction.commit();
 					refreshTree(bwInstanceOID);
 				} else {
 					// remove condition
 					String goalOID = (String) target;
 
-					Transaction.begin();
 					BlendedWorkflow
 							.getInstance()
 							.getWorkListManager()
 							.manageGoalCondition(goalOID,
 									MaintainGoalState.ENABLED);
-					Transaction.commit();
 					refreshTree(bwInstanceOID);
 				}
 			}
@@ -104,8 +102,8 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 		getMaintainGoals(bwInstanceOID);
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void getMaintainGoals(String bwInstanceOID) {
-		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
@@ -128,7 +126,6 @@ public class ManageMaintainGoalsConditionsForm extends VerticalLayout {
 			treetable.expandItemsRecursively(goalOID);
 		}
 		setWidth("100%");
-		Transaction.commit();
 	}
 
 	public void refreshTree(String bwInstanceOID) {

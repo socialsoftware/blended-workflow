@@ -3,7 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -129,6 +130,7 @@ public class NewGoalForm extends VerticalLayout {
 
 		Button submit = new Button("Submit");
 		submit.addListener(new Button.ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
@@ -143,7 +145,6 @@ public class NewGoalForm extends VerticalLayout {
 								.showNotification(
 										"Please create at least one Activate and one Sucess Conditions.");
 					} else {
-						Transaction.begin();
 						activeUserID = BlendedWorkflow.getInstance()
 								.getOrganizationalManager().getActiveUser()
 								.getID();
@@ -154,7 +155,6 @@ public class NewGoalForm extends VerticalLayout {
 										goalDescription, parentGoalOID,
 										sucessCondition, activateCondition,
 										entityOID, activeUserID);
-						Transaction.commit();
 						getApplication().getMainWindow().removeWindow(
 								NewGoalForm.this.getWindow());
 					}
@@ -214,9 +214,9 @@ public class NewGoalForm extends VerticalLayout {
 		getGoals();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void getGoals() {
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
-		Transaction.begin();
 
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		for (Entity entity : dataModelInstance.getEntitiesSet()) {
@@ -224,7 +224,6 @@ public class NewGoalForm extends VerticalLayout {
 			this.entityContext.setItemCaption(entity.getExternalId(),
 					entity.getName());
 		}
-		Transaction.commit();
 	}
 
 	public String createCondition() {

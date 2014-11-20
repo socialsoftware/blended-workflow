@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
@@ -76,6 +77,7 @@ public class NewRelationForm extends VerticalLayout {
 
 		Button bwInstanceCreateBtn = new Button("Submit");
 		bwInstanceCreateBtn.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
@@ -125,8 +127,8 @@ public class NewRelationForm extends VerticalLayout {
 		setComponentAlignment(submitPanel, Alignment.MIDDLE_CENTER);
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	private void getRelations(String bwInstanceOID, String entityName) {
-		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
@@ -151,11 +153,10 @@ public class NewRelationForm extends VerticalLayout {
 				relationIndex++;
 			}
 		}
-		Transaction.commit();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	private void getEntities(String bwInstanceOID, String entityName) {
-		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
@@ -164,7 +165,6 @@ public class NewRelationForm extends VerticalLayout {
 				this.otherEntity.addItem(entity.getName());
 			}
 		}
-		Transaction.commit();
 	}
 
 	public void addRelation(String bwInstanceOID, String name,
@@ -172,7 +172,6 @@ public class NewRelationForm extends VerticalLayout {
 			Boolean isOneKeyEntity, Boolean isTwoKeyEntity)
 			throws BlendedWorkflowException {
 
-		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
@@ -185,7 +184,6 @@ public class NewRelationForm extends VerticalLayout {
 		new Relation(dataModel, name, entityOne, entityTwo, cardinalityOne,
 				cardinalityTwo, isOneKeyEntity, isTwoKeyEntity);
 
-		Transaction.commit();
 	}
 
 	private String parseCardinalityToString(Cardinality card) {

@@ -4,7 +4,8 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
@@ -70,6 +71,7 @@ public class BookingForm extends VerticalLayout {
 
 		Button submitButton = new Button("Submit");
 		submitButton.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 
@@ -101,41 +103,31 @@ public class BookingForm extends VerticalLayout {
 		String patientOID = (String) patientNS.getValue();
 
 		// Create RelationInstance
-		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework.getDomainObject(workItemOID);
 		String bwInstanceOID = taskWorkItem.getBwInstance().getExternalId();
 		String episodeOID = taskWorkItem.getBwInstance().getDataModelInstance()
 				.getEntity("Episode").getEntityInstance("Episode.1")
 				.getExternalId();
-		Transaction.commit();
-		Transaction.begin();
 		BlendedWorkflow.getInstance().getBwManager()
 				.addRelationInstance(bwInstanceOID, episodeOID, patientOID);
-		Transaction.commit();
 
 		// Set WorkItemArguments
-		Transaction.begin();
 		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
 				taskWorkItem.getOutputWorkItemArgumentsSet());
 		arguments.get(0).setValue(episodeNumber);
 		arguments.get(0).setState(DataState.DEFINED);
 		arguments.get(1).setValue(episodeReserveDate);
 		arguments.get(1).setState(DataState.DEFINED);
-		Transaction.commit();
 
-		Transaction.begin();
 		User activeUser = BlendedWorkflow.getInstance()
 				.getOrganizationalManager().getActiveUser();
 		taskWorkItem.setUser(activeUser);
-		Transaction.commit();
-		Transaction.begin();
 		BlendedWorkflow.getInstance().getWorkListManager()
 				.checkInWorkItem(taskWorkItemOID);
-		Transaction.commit();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	protected void getPatients() {
-		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
 		BWInstance bwInstance = taskWorkItem.getBwInstance();
@@ -146,6 +138,5 @@ public class BookingForm extends VerticalLayout {
 			patientNS.setItemCaption(entityInstance.getExternalId(),
 					entityInstance.getAttributeInstance("Name.1").getValue());
 		}
-		Transaction.commit();
 	}
 }

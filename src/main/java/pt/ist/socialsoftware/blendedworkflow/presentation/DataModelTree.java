@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
@@ -180,8 +181,8 @@ public class DataModelTree extends VerticalLayout {
 		// getRelations(bwInstanceOID);
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void getDataModel(String bwInstanceOID) {
-		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		Entity context = FenixFramework.getDomainObject(entityOID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
@@ -229,7 +230,6 @@ public class DataModelTree extends VerticalLayout {
 				}
 			}
 		}
-		Transaction.commit();
 	}
 
 	protected void showNewEntityWindow(String bwInstanceOID) {

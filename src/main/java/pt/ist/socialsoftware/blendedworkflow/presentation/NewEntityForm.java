@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
@@ -34,6 +35,7 @@ public class NewEntityForm extends VerticalLayout {
 
 		Button bwInstanceCreateBtn = new Button("Submit");
 		bwInstanceCreateBtn.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
@@ -73,11 +75,9 @@ public class NewEntityForm extends VerticalLayout {
 
 	public void addEntity(String BwInstanceOID, String name)
 			throws BlendedWorkflowException {
-		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(BwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 		new Entity(dataModel, name);
-		Transaction.commit();
 	}
 
 }

@@ -2,10 +2,10 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import java.util.concurrent.Callable;
 
-import jvstm.Transaction;
-
 import org.apache.log4j.Logger;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
@@ -28,10 +28,10 @@ public class CreateBWInstanceService implements Callable<String> {
 		this.userID = userID;
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	@Override
 	public String call() throws Exception {
 		log.info("Start");
-		Transaction.begin();
 		try {
 			// GetUser
 			User user = BlendedWorkflow.getInstance().getOrganizationalModel()
@@ -42,12 +42,14 @@ public class CreateBWInstanceService implements Callable<String> {
 					user);
 
 			// Launch case on YAWL
-			BWSpecification bwSpecification = bwInstance.getBwSpecification();
-			String yawlSpecificationID = bwSpecification
-					.getYawlSpecficationID();
-			String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter()
-					.launchCase(yawlSpecificationID);
-			bwInstance.setYawlCaseID(yawlCaseID);
+			// BWSpecification bwSpecification =
+			// bwInstance.getBwSpecification();
+			// String yawlSpecificationID = bwSpecification
+			// .getYawlSpecficationID();
+			// String yawlCaseID =
+			// BlendedWorkflow.getInstance().getYawlAdapter()
+			// .launchCase(yawlSpecificationID);
+			// bwInstance.setYawlCaseID(yawlCaseID);
 
 			// Create GoalWorkItems and TaskWorkItems
 			BlendedWorkflow.getInstance().getBwManager()
@@ -58,7 +60,6 @@ public class CreateBWInstanceService implements Callable<String> {
 			BlendedWorkflow.getInstance().getBwManager()
 					.notifyException(bwe.getError());
 		}
-		Transaction.commit();
 		log.info("END");
 		return "CreateBWInstanceService:Sucess";
 	}

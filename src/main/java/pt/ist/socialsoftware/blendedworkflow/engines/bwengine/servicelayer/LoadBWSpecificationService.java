@@ -2,10 +2,10 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer;
 
 import java.util.concurrent.Callable;
 
-import jvstm.Transaction;
-
 import org.apache.log4j.Logger;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.BWSpecificationFactory;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
@@ -19,17 +19,16 @@ public class LoadBWSpecificationService implements Callable<String> {
 		this.bwXML = bwXML;
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	@Override
 	public String call() throws Exception {
 		log.info("Start");
-		Transaction.begin();
 		try {
 			BWSpecificationFactory.createBWSpecification(this.bwXML);
 		} catch (BlendedWorkflowException bwe) {
 			BlendedWorkflow.getInstance().getBwManager()
 					.notifyException(bwe.getError());
 		}
-		Transaction.commit();
 		log.info("END");
 		return "LoadBWSpecificationService:Sucess";
 	}

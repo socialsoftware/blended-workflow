@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
@@ -102,9 +103,9 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 
 		Button submitButton = new Button("Finish");
 		submitButton.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Transaction.begin();
 				// FIXME: new parameters from previous screen
 				BlendedWorkflow
 						.getInstance()
@@ -112,7 +113,6 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 						.createGoalInstance(bwInstanceOID, _goalOID,
 								activateConditionsOID, maitainGoalsOID,
 								entitiesOID);
-				Transaction.commit();
 				getApplication().getMainWindow().removeWindow(
 						ManageAchieveGoalsConditionsForm.this.getWindow());
 			}
@@ -130,8 +130,8 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 		getGoalConditions();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void getGoalConditions() {
-		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(_bwInstanceOID);
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
@@ -159,7 +159,5 @@ public class ManageAchieveGoalsConditionsForm extends VerticalLayout {
 
 			this.maitainGoalsOID.add(ID);
 		}
-
-		Transaction.commit();
 	}
 }

@@ -3,7 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import java.util.ArrayList;
 import java.util.List;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
@@ -55,25 +56,22 @@ public class GoalForm extends VerticalLayout {
 
 		Button submitButton = new Button("Submit");
 		submitButton.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Transaction.begin();
 				GoalWorkItem goalWorkItem = FenixFramework
 						.getDomainObject(workItemOID);
 				String e1OID = goalWorkItem.getEntityInstanceContext()
 						.getExternalId();
 				String bwInstanceOID = goalWorkItem.getBwInstance()
 						.getExternalId();
-				Transaction.commit();
 
 				for (int i = 0; i < entitiesInstances.getComponentCount(); i++) {
 					NativeSelect selec = (NativeSelect) entitiesInstances
 							.getComponent(i);
 					String e2OID = (String) selec.getValue();
-					Transaction.begin();
 					BlendedWorkflow.getInstance().getBwManager()
 							.addRelationInstance(bwInstanceOID, e1OID, e2OID);
-					Transaction.commit();
 				}
 
 				int workItemAttributeIndex = 0;
@@ -92,15 +90,11 @@ public class GoalForm extends VerticalLayout {
 					}
 				}
 
-				Transaction.begin();
 				User activeUser = BlendedWorkflow.getInstance()
 						.getOrganizationalManager().getActiveUser();
 				goalWorkItem.setUser(activeUser);
-				Transaction.commit();
-				Transaction.begin();
 				BlendedWorkflow.getInstance().getWorkListManager()
 						.checkInWorkItem(goalWorkItemOID);
-				Transaction.commit();
 
 				getApplication().getMainWindow().removeWindow(
 						GoalForm.this.getWindow());
@@ -123,18 +117,16 @@ public class GoalForm extends VerticalLayout {
 	}
 
 	private void setWorkItemArgumentValue(int index, String value) {
-		Transaction.begin();
 		GoalWorkItem goalWorkItem = FenixFramework
 				.getDomainObject(goalWorkItemOID);
 		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
 				goalWorkItem.getOutputWorkItemArgumentsSet());
 		arguments.get(index).setValue(value);
 		arguments.get(index).setState(DataState.DEFINED);
-		Transaction.commit();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	private void getOutputData() {
-		Transaction.begin();
 		GoalWorkItem goalWorkItem = FenixFramework
 				.getDomainObject(goalWorkItemOID);
 
@@ -162,7 +154,6 @@ public class GoalForm extends VerticalLayout {
 			}
 			previousEntity = entity;
 		}
-		Transaction.commit();
 	}
 
 	// private void getRelationEntities() {

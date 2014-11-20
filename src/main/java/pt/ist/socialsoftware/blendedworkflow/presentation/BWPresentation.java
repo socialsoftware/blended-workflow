@@ -7,10 +7,10 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import jvstm.Transaction;
-
 import org.apache.log4j.Logger;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
@@ -148,13 +148,12 @@ public class BWPresentation extends Application {
 	/**
 	 * Register the BWPresentation with the BWManager and WorklistManager.
 	 */
+	@Atomic(mode = TxMode.WRITE)
 	private void registerBWPresentation() {
-		Transaction.begin();
 		BlendedWorkflow.getInstance().getBwManager()
 				.setBwPresentation(BWPresentation.this);
 		BlendedWorkflow.getInstance().getWorkListManager()
 				.setBwPresentation(BWPresentation.this);
-		Transaction.commit();
 	}
 
 	/******************************
@@ -178,6 +177,7 @@ public class BWPresentation extends Application {
 		mainWindow.addComponent(toolbar);
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	private void initMainWindow(String name) {
 		// Refresh HACK!
 		final ProgressIndicator progressindicator = new ProgressIndicator(
@@ -262,7 +262,6 @@ public class BWPresentation extends Application {
 		this.bwTabSheet.setWidth("100%");
 
 		// Role Manager
-		Transaction.begin();
 		user = BlendedWorkflow.getInstance().getOrganizationalManager()
 				.getActiveUser();
 		Role userRole = user.getRole();
@@ -306,7 +305,6 @@ public class BWPresentation extends Application {
 					.updateBWPresentation();
 			worklistManagerAcess = true;
 		}
-		Transaction.commit();
 
 		right.addComponent(logout);
 		toolbar.addComponent(right);
@@ -537,6 +535,7 @@ public class BWPresentation extends Application {
 		return bwInstancesVL;
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	private VerticalLayout initTaskViewTab() {
 		// Layouts
 		VerticalLayout bwInstancesVL = new VerticalLayout();
@@ -572,6 +571,7 @@ public class BWPresentation extends Application {
 
 		Button taskExecuteBtn = new Button("Execute Activity");
 		taskExecuteBtn.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
@@ -579,7 +579,6 @@ public class BWPresentation extends Application {
 
 					TaskWorkItem taskWorkItem = FenixFramework
 							.getDomainObject(workItemOID);
-					Transaction.begin();
 					Boolean isPreTask = false;
 					if (taskWorkItem.getState().equals(
 							ActivityState.PRE_ACTIVITY)) {
@@ -593,7 +592,6 @@ public class BWPresentation extends Application {
 					String className = specificationName + "." + taskName
 							+ "Form";
 
-					Transaction.commit();
 					if (isPreTask) {
 						generatePreTaskForm(workItemOID);
 					} else {
@@ -609,22 +607,19 @@ public class BWPresentation extends Application {
 
 		Button taskSkipBtn = new Button("Skip Activity");
 		taskSkipBtn.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
 					String workItemOID = (String) taskList.getValue();
-					Transaction.begin();
 					TaskWorkItem taskWorkItem = FenixFramework
 							.getDomainObject(workItemOID);
 					User activeUser = BlendedWorkflow.getInstance()
 							.getOrganizationalManager().getActiveUser();
 					taskWorkItem.setUser(activeUser);
-					Transaction.commit();
 
-					Transaction.begin();
 					BlendedWorkflow.getInstance().getWorkListManager()
 							.skipWorkItem(workItemOID);
-					Transaction.commit();
 				} catch (java.lang.NullPointerException jle) {
 					getMainWindow().showNotification(
 							"Please select a workItem to skip");
@@ -635,6 +630,7 @@ public class BWPresentation extends Application {
 		// goal
 		Button goalExecuteBtn = new Button("Achieve Goal");
 		goalExecuteBtn.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
@@ -642,12 +638,10 @@ public class BWPresentation extends Application {
 
 					GoalWorkItem goalWorkItem = FenixFramework
 							.getDomainObject(workItemOID);
-					Transaction.begin();
 					Boolean isPreGoal = false;
 					if (goalWorkItem.getState().equals(GoalState.PRE_GOAL)) {
 						isPreGoal = true;
 					}
-					Transaction.commit();
 					if (isPreGoal) {
 						generatePreGoalForm(workItemOID);
 					} else {
@@ -662,40 +656,33 @@ public class BWPresentation extends Application {
 
 		Button goalSkipBtn = new Button("Skip Goal");
 		goalSkipBtn.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
 					String workItemOID = (String) goalList.getValue();
 
-					Transaction.begin();
 					GoalWorkItem goalWorkItem = FenixFramework
 							.getDomainObject(workItemOID);
 					User activeUser = BlendedWorkflow.getInstance()
 							.getOrganizationalManager().getActiveUser();
 					goalWorkItem.setUser(activeUser);
-					Transaction.commit();
 
-					Transaction.begin();
 					Boolean isPreGoal = false;
 					if (goalWorkItem.getState().equals(GoalState.PRE_GOAL)) {
 						isPreGoal = true;
 					}
-					Transaction.commit();
 
 					if (isPreGoal) {
 						getMainWindow()
 								.showNotification(
 										"A GoalWorkItem in a Pre-Goal State cannot be Skipped.");
 					} else {
-						Transaction.begin();
 						BlendedWorkflow.getInstance().getWorkListManager()
 								.skipWorkItem(workItemOID);
-						Transaction.commit();
 					}
 
-					// Transaction.begin();
 					// BlendedWorkflow.getInstance().getWorkListManager().skipWorkItem(workItemOID);
-					// Transaction.commit();
 
 				} catch (java.lang.NullPointerException jle) {
 					getMainWindow().showNotification(
@@ -752,6 +739,7 @@ public class BWPresentation extends Application {
 		return bwInstancesVL;
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	private VerticalLayout initGoalViewTab() {
 		// Layouts
 		VerticalLayout goalManagerVL = new VerticalLayout();
@@ -840,17 +828,16 @@ public class BWPresentation extends Application {
 		goalWorkItemTree.setVisibleColumns(new Object[] { "GoalWorkItems",
 				"State" });
 		goalWorkItemTree.addActionHandler(new Action.Handler() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == REDO_GOAL_ACTION) {
 					String workItemlOID = (String) goalWorkItemTree
 							.getContainerProperty(target, "OID").getValue();
-					Transaction.begin();
 					String activeUserID = BlendedWorkflow.getInstance()
 							.getOrganizationalManager().getActiveUser().getID();
 					BlendedWorkflow.getInstance().getWorkListManager()
 							.redoGoal(workItemlOID, activeUserID);
-					Transaction.commit();
 					updateGoalTreeInfo();
 				} else if (action == DISABLE_CONDITION_ACTION) {
 					// remove condition
@@ -889,6 +876,7 @@ public class BWPresentation extends Application {
 		infoVL.setComponentAlignment(maintainGoalsTree, Alignment.TOP_LEFT);
 
 		maintainGoalsTree.addActionHandler(new Action.Handler() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void handleAction(Action action, Object sender, Object target) {
 				if (action == DISABLE_CONDITION_ACTION) {
@@ -896,25 +884,21 @@ public class BWPresentation extends Application {
 					String goalOID = (String) maintainGoalsTree
 							.getContainerProperty(target, "OID").getValue();
 
-					Transaction.begin();
 					BlendedWorkflow
 							.getInstance()
 							.getWorkListManager()
 							.manageGoalCondition(goalOID,
 									MaintainGoalState.DEACTIVATED);
-					Transaction.commit();
 					updateGoalTreeInfo();
 				} else {
 					// remove condition
 					String goalOID = (String) maintainGoalsTree
 							.getContainerProperty(target, "OID").getValue();
-					Transaction.begin();
 					BlendedWorkflow
 							.getInstance()
 							.getWorkListManager()
 							.manageGoalCondition(goalOID,
 									MaintainGoalState.ENABLED);
-					Transaction.commit();
 					updateGoalTreeInfo();
 				}
 			}
@@ -1006,14 +990,13 @@ public class BWPresentation extends Application {
 		login.setHeight("300px");
 		login.addListener(new LoginForm.LoginListener() {
 			@Override
+			@Atomic(mode = TxMode.WRITE)
 			public void onLogin(LoginEvent event) {
-				Transaction.begin();
 				String userID = event.getLoginParameter("username");
 				String userPassword = event.getLoginParameter("password");
 
 				if (BlendedWorkflow.getInstance().getOrganizationalManager()
 						.loginUser(userID, userPassword)) {
-					Transaction.commit();
 					getMainWindow().removeWindow(loginWindow);
 					initMainWindow(event.getLoginParameter("username"));
 				} else {
@@ -1237,12 +1220,12 @@ public class BWPresentation extends Application {
 		initTaskListListener();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void updateTaskList(String bwInstanceOID) {
 		this.taskList.removeListener(taskListListener);
 		this.taskList.removeAllItems();
 
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
-		Transaction.begin();
 		for (WorkItem workItem : bwInstance.getWorkItemsSet()) {
 			if (workItem instanceof TaskWorkItem) {
 				TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
@@ -1252,16 +1235,15 @@ public class BWPresentation extends Application {
 				}
 			}
 		}
-		Transaction.commit();
 		initTaskListListener();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void updateGoalList(String bwInstanceOID) {
 		this.goalList.removeListener(goalListListener);
 		this.goalList.removeAllItems();
 		initGoalListListener();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
-		Transaction.begin();
 		for (WorkItem workItem : bwInstance.getWorkItemsSet()) {
 			if (workItem instanceof GoalWorkItem) {
 				GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
@@ -1271,12 +1253,11 @@ public class BWPresentation extends Application {
 				}
 			}
 		}
-		Transaction.commit();
 		initGoalListListener();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void updateBWSpecificationInfo(String OID) {
-		Transaction.begin();
 		bwSpecInfoTable.removeAllItems();
 		bwSpecJobsInfoTable.removeAllItems();
 		BWSpecification bwSpecification = FenixFramework.getDomainObject(OID);
@@ -1325,12 +1306,10 @@ public class BWPresentation extends Application {
 			bwSpecJobsInfoTable.setChildrenAllowed(goal1, false);
 		}
 
-		Transaction.commit();
-
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void updateBWInstanceInfo(String OID) {
-		Transaction.begin();
 		bwInstanceInfoTable.removeAllItems();
 		bwInstanceJobsInfoTable.removeAllItems();
 
@@ -1376,12 +1355,10 @@ public class BWPresentation extends Application {
 					new Integer(jobIndex));
 			jobIndex++;
 		}
-
-		Transaction.commit();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void updateBWInstanceDataInfo(String OID) {
-		Transaction.begin();
 		entitydetailsTreetable.removeAllItems();
 
 		BWInstance bwInstance = FenixFramework.getDomainObject(OID);
@@ -1413,13 +1390,12 @@ public class BWPresentation extends Application {
 				}
 			}
 		}
-		Transaction.commit();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void updateGoalTreeInfo() {
 		String bwInstanceOID = (String) goalBWInstanceList.getValue();
 		goalTable.setVisibleColumns(new Object[] { "OID", "Goal" });
-		Transaction.begin();
 		goalTable.removeAllItems();
 
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
@@ -1447,7 +1423,6 @@ public class BWPresentation extends Application {
 			}
 		}
 
-		Transaction.commit();
 		goalTable.setVisibleColumns(new Object[] { "Goal" });
 
 		// maintain
@@ -1456,8 +1431,8 @@ public class BWPresentation extends Application {
 		getGoalWorkItemsTree();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void updateTaskView(String OID) {
-		Transaction.begin();
 		taskInfoTable.removeAllItems();
 		TaskWorkItem taskWorkItem = FenixFramework.getDomainObject(OID);
 		Task task = taskWorkItem.getTask();
@@ -1515,12 +1490,10 @@ public class BWPresentation extends Application {
 				new Integer(5));
 
 		// taskInfoTable.setWidth("100%");
-		Transaction.commit();
-
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void updateGoalView(String OID) {
-		Transaction.begin();
 		goalInfoTable.removeAllItems();
 		GoalWorkItem goalWorkItem = FenixFramework.getDomainObject(OID);
 		AchieveGoal goal = goalWorkItem.getAchieveGoal();
@@ -1598,16 +1571,15 @@ public class BWPresentation extends Application {
 				new Integer(6));
 
 		// goalInfoTable.setWidth("100%");
-		Transaction.commit();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void getMaintainGoalTree() {
 		maintainGoalsTree.removeAllItems();
 		String bwInstanceOID = (String) goalBWInstanceList.getValue();
 		maintainGoalsTree.setVisibleColumns(new Object[] { "OID", "Goal",
 				"State" });
 
-		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
@@ -1618,17 +1590,16 @@ public class BWPresentation extends Application {
 			maintainGoalsTree.addItem(
 					new Object[] { goalOID, goalName, state }, null);
 		}
-		Transaction.commit();
 		maintainGoalsTree.setVisibleColumns(new Object[] { "Goal", "State" });
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	public void getGoalWorkItemsTree() {
 		goalWorkItemTree.removeAllItems();
 		String bwInstanceOID = (String) goalBWInstanceList.getValue();
 		goalWorkItemTree.setVisibleColumns(new Object[] { "OID",
 				"GoalWorkItems", "State" });
 
-		Transaction.begin();
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 
 		for (WorkItem workItem : bwInstance.getWorkItemsSet()) {
@@ -1646,7 +1617,6 @@ public class BWPresentation extends Application {
 				}
 			}
 		}
-		Transaction.commit();
 		goalWorkItemTree.setVisibleColumns(new Object[] { "GoalWorkItems",
 				"State" });
 	}

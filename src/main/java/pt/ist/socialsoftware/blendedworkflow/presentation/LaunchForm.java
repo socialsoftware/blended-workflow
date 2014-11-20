@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 
 import com.vaadin.ui.Alignment;
@@ -29,13 +30,13 @@ public class LaunchForm extends VerticalLayout {
 
 		Button bwInstanceCreateBtn = new Button("Launch");
 		bwInstanceCreateBtn.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
 					String name = (String) nameTf.getValue();
 					String activeUserID = "";
 
-					Transaction.begin();
 					activeUserID = BlendedWorkflow.getInstance()
 							.getOrganizationalManager().getActiveUser().getID();
 					BlendedWorkflow
@@ -43,7 +44,6 @@ public class LaunchForm extends VerticalLayout {
 							.getBwManager()
 							.createBWInstance(bwSpecificationOID, name,
 									activeUserID);
-					Transaction.commit();
 					getApplication().getMainWindow().removeWindow(
 							LaunchForm.this.getWindow());
 				} catch (java.lang.NullPointerException jle) {

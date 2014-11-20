@@ -6,10 +6,10 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import jvstm.Transaction;
-
 import org.apache.log4j.Logger;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
@@ -56,6 +56,7 @@ public class PreTaskForm extends VerticalLayout {
 
 		Button submitButton = new Button("Submit");
 		submitButton.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				int workItemAttributeIndex = 0;
@@ -101,18 +102,16 @@ public class PreTaskForm extends VerticalLayout {
 	}
 
 	private void setWorkItemArgumentValue(int index, String value) {
-		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
 		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
 				taskWorkItem.getInputWorkItemArgumentsSet());
 		arguments.get(index).setValue(value);
 		arguments.get(index).setState(DataState.DEFINED);
-		Transaction.commit();
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	private void getOutputData() {
-		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
 
@@ -140,7 +139,6 @@ public class PreTaskForm extends VerticalLayout {
 			}
 			previousEntity = entity;
 		}
-		Transaction.commit();
 	}
 
 	protected void addCheckBox(String attributeName) {
@@ -160,13 +158,11 @@ public class PreTaskForm extends VerticalLayout {
 	}
 
 	public void generateTaskForm(String workItemOID) {
-		Transaction.begin();
 		TaskWorkItem taskWorkItem = FenixFramework.getDomainObject(workItemOID);
 		String specificationName = taskWorkItem.getBwInstance()
 				.getBwSpecification().getName().replaceAll(" ", "");
 		String taskName = taskWorkItem.getTask().getName().replaceAll(" ", "");
 		String className = specificationName + "." + taskName + "Form";
-		Transaction.commit();
 
 		log.info("className:" + className);
 		String packageName = "pt.ist.socialsoftware.blendedworkflow.presentation.";

@@ -88,6 +88,12 @@ public class BWManager {
 				.getBWExecutorService();
 		LoadBWSpecificationService service = new LoadBWSpecificationService(
 				bwXML);
+		// try {
+		// service.call();
+		// } catch (Exception e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		bwExecutorService.runTask(service);
 	}
 

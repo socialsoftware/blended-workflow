@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.presentation;
 
-import jvstm.Transaction;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
@@ -45,6 +46,7 @@ public class NewAttributeForm extends VerticalLayout {
 
 		Button bwInstanceCreateBtn = new Button("Submit");
 		bwInstanceCreateBtn.addListener(new ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
@@ -91,8 +93,6 @@ public class NewAttributeForm extends VerticalLayout {
 	public void addAttribute(String BwInstanceOID, String name,
 			String entityName, String typeString, Boolean isKeyAttribute)
 			throws BlendedWorkflowException {
-		Transaction.begin();
-
 		BWInstance bwInstance = FenixFramework.getDomainObject(BwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 		Entity entity = dataModel.getEntity(entityName);
@@ -108,8 +108,6 @@ public class NewAttributeForm extends VerticalLayout {
 
 		new Attribute(dataModel, name, entity, type, isKeyAttribute, false); // FIXME:
 																				// isSystem
-
-		Transaction.commit();
 	}
 
 }

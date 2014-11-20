@@ -3,10 +3,10 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import java.util.HashMap;
 import java.util.Map;
 
-import jvstm.Transaction;
-
 import org.apache.log4j.Logger;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
@@ -65,6 +65,7 @@ public class ActivateGoalForm extends VerticalLayout {
 		entityInstanceContext.setItemCaption(NEW_DATA, NEW_DATA_CAPTION);
 
 		entityInstanceContext.addListener(new Property.ValueChangeListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				if (entityInstanceContext.getValue().equals(NEW_DATA)) {
@@ -77,6 +78,7 @@ public class ActivateGoalForm extends VerticalLayout {
 
 		Button submit = new Button("Activate");
 		submit.addListener(new Button.ClickListener() {
+			@Atomic(mode = TxMode.WRITE)
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Boolean activate = true;
@@ -84,7 +86,6 @@ public class ActivateGoalForm extends VerticalLayout {
 				// Get Goal Context
 				String entityInstanceOID = (String) entityInstanceContext
 						.getValue();
-				Transaction.begin();
 				if (entityInstanceOID == "") {
 					AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
 					_entities
@@ -96,7 +97,6 @@ public class ActivateGoalForm extends VerticalLayout {
 							.getExternalId();
 					_entities.put(entityOID, entityInstanceOID);
 				}
-				Transaction.commit();
 
 				// Get Keys
 				for (int i = 0; i < keyRelationsVL.getComponentCount(); i++) {
@@ -107,13 +107,11 @@ public class ActivateGoalForm extends VerticalLayout {
 					}
 					String keyEntityInstanceOID = (String) selec.getValue();
 
-					Transaction.begin();
 					EntityInstance keyEntityInstance = FenixFramework
 							.getDomainObject(keyEntityInstanceOID);
 					String keyEntityOID = keyEntityInstance.getEntity()
 							.getExternalId();
 					_entities.put(keyEntityOID, keyEntityInstanceOID);
-					Transaction.commit();
 				}
 
 				// Get SubGoals Context
@@ -122,7 +120,6 @@ public class ActivateGoalForm extends VerticalLayout {
 							.getComponent(i);
 					String subEntityInstanceOID = (String) selec.getValue();
 
-					Transaction.begin();
 					BWInstance bwInstance = FenixFramework
 							.getDomainObject(_bwInstanceOID);
 					DataModelInstance dataModelInstance = bwInstance
@@ -140,7 +137,6 @@ public class ActivateGoalForm extends VerticalLayout {
 						_entities.put(subEntityOID, subEntityInstanceOID);
 					}
 
-					Transaction.commit();
 				}
 
 				for (Map.Entry<String, String> entry : _entities.entrySet()) {
@@ -153,13 +149,11 @@ public class ActivateGoalForm extends VerticalLayout {
 						showDisableConditionsWindow(_bwInstanceOID, _goalOID,
 								_entities);
 					} else {
-						Transaction.begin();
 						BlendedWorkflow
 								.getInstance()
 								.getWorkListManager()
 								.createGoalInstance(_bwInstanceOID, _goalOID,
 										null, null, _entities);
-						Transaction.commit();
 					}
 					getApplication().getMainWindow().removeWindow(
 							ActivateGoalForm.this.getWindow());
@@ -202,8 +196,8 @@ public class ActivateGoalForm extends VerticalLayout {
 	/******************************
 	 * Support Methods
 	 ******************************/
+	@Atomic(mode = TxMode.WRITE)
 	private void getEntityInstances() {
-		Transaction.begin();
 
 		BWInstance bwInstance = FenixFramework.getDomainObject(_bwInstanceOID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
@@ -223,11 +217,9 @@ public class ActivateGoalForm extends VerticalLayout {
 			}
 		}
 
-		Transaction.commit();
 	}
 
 	private void getKeyEntities() {
-		Transaction.begin();
 
 		AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
 		Entity goalContext = goal.getEntityContext();
@@ -246,12 +238,9 @@ public class ActivateGoalForm extends VerticalLayout {
 			setHeight("250px");
 		}
 
-		Transaction.commit();
 	}
 
 	private void getSubGoalsEntities() {
-		Transaction.begin();
-
 		AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
 		for (Entity entity : goal.getSubGoalsContext()) {
 			addNativeSelect(subGoalContextVL, entity);
@@ -261,8 +250,6 @@ public class ActivateGoalForm extends VerticalLayout {
 		if (subGoalContextVL.getComponentCount() > 0) {
 			setHeight("250px");
 		}
-
-		Transaction.commit();
 	}
 
 	protected void addNativeSelect(Layout l, Entity entity) {

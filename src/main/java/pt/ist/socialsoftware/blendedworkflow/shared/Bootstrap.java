@@ -1,10 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.shared;
 
-import static org.junit.Assert.fail;
-
 import java.util.Set;
-
-import jvstm.Transaction;
 
 import org.apache.log4j.Logger;
 
@@ -28,7 +24,7 @@ public class Bootstrap {
 	// FIXME: PropertiesManager.getProperty("dbAlias");
 	@Atomic(mode = TxMode.WRITE)
 	public static void init() {
-		FenixFramework.getDomainRoot();
+		// FenixFramework.getDomainRoot();
 		if (BlendedWorkflow.getInstance() == null) {
 			new BlendedWorkflow();
 			createOraganizationalModel();
@@ -52,42 +48,44 @@ public class Bootstrap {
 	/**
 	 * Clean the created Database.
 	 */
+
 	public static void clean() {
-		boolean committed = false;
-		try {
-			Transaction.begin();
-			BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-			Set<BWSpecification> allBWSpecifications = blendedWorkflow
-					.getBwSpecificationsSet();
-			allBWSpecifications.clear();
-			Transaction.commit();
-			committed = true;
-		} finally {
-			if (!committed) {
-				Transaction.abort();
-				fail("Clean database.");
-			}
-		}
+		// boolean committed = false;
+		// try {
+		// Transaction.begin();
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		Set<BWSpecification> allBWSpecifications = blendedWorkflow
+				.getBwSpecificationsSet();
+		allBWSpecifications.clear();
+		// Transaction.commit();
+		// committed = true;
+		// } finally {
+		// if (!committed) {
+		// Transaction.abort();
+		// fail("Clean database.");
+		// }
+		// }
 	}
 
 	/**
 	 * Populate the DataBase with the MedicalEpisode Specification.
 	 */
+	@Atomic(mode = TxMode.WRITE)
 	public static void populate() {
 		String bwXML = StringUtils.fileToString(BWPropertiesManager
 				.getProperty("medical.xml"));
 
-		Transaction.begin();
+		// Transaction.begin();
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance()
 				.getBWExecutorService();
 		LoadBWSpecificationService service = new LoadBWSpecificationService(
 				bwXML);
 		bwExecutorService.runTask(service);
-		Transaction.commit();
+		// Transaction.commit();
 	}
 
 	public static void createOraganizationalModel() {
-		Transaction.begin();
+		// Transaction.begin();
 		new OrganizationalModel();
 
 		// AdminRole
@@ -150,7 +148,7 @@ public class Bootstrap {
 		User testUser = new User(userName, userID, userPassword, userNotes);
 		testUser.setRole(user);
 
-		Transaction.commit();
+		// Transaction.commit();
 	}
 
 }
