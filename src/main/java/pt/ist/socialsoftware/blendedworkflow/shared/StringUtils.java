@@ -84,7 +84,7 @@ public class StringUtils {
 		SAXBuilder _builder = new SAXBuilder(
 				"org.apache.xerces.parsers.SAXParser");
 
-		// _builder.setIgnoringBoundaryWhitespace(true);
+		_builder.setIgnoringBoundaryWhitespace(true);
 
 		_log.info("XXXXX: stringToDoc");
 

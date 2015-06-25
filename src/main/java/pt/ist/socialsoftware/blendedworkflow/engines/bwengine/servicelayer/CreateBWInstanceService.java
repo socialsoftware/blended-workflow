@@ -42,14 +42,12 @@ public class CreateBWInstanceService implements Callable<String> {
 					user);
 
 			// Launch case on YAWL
-			// BWSpecification bwSpecification =
-			// bwInstance.getBwSpecification();
-			// String yawlSpecificationID = bwSpecification
-			// .getYawlSpecficationID();
-			// String yawlCaseID =
-			// BlendedWorkflow.getInstance().getYawlAdapter()
-			// .launchCase(yawlSpecificationID);
-			// bwInstance.setYawlCaseID(yawlCaseID);
+			BWSpecification bwSpecification = bwInstance.getBwSpecification();
+			String yawlSpecificationID = bwSpecification
+					.getYawlSpecficationID();
+			String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter()
+					.launchCase(yawlSpecificationID);
+			bwInstance.setYawlCaseID(yawlCaseID);
 
 			// Create GoalWorkItems and TaskWorkItems
 			BlendedWorkflow.getInstance().getBwManager()

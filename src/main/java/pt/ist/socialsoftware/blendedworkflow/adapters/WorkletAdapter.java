@@ -24,6 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionT
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
+import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState;
@@ -186,87 +187,86 @@ public class WorkletAdapter {
 	 */
 	public void loadRdrSet(BWSpecification bwSpecification)
 			throws BlendedWorkflowException {
-		// TaskModel taskModel = bwSpecification.getTaskModel();
-		// YSpecificationID yawlSpecID =
-		// getYAWLSpecificationID(bwSpecification);
-		// String condition = null;
-		// Element eConclusion = null;
-		// Element eCornerstone = null;
-		//
-		// // Create Tasks RdrSet
-		// for (Task task : taskModel.getTasksSet()) {
-		// String taskName = generateYAWLTaskName(task);
-		//
-		// // PreCondition Tree
-		// if (!task.getPreConstraint().existTrue()) {
-		// // Undefined Node
-		// eCornerstone = getCornerstoneData(task, true, "UNDEFINED");
-		// condition = task.getPreConstraint().getRdrUndefinedCondition();
-		// eConclusion = createRdrConclusion("UNDEFINED", true);
-		// addNode(yawlSpecID, taskName, condition, eCornerstone,
-		// eConclusion, RuleType.ItemPreconstraint);
-		//
-		// // Skipped Node
-		// eCornerstone = getCornerstoneData(task, true, "SKIPPED");
-		// condition = task.getPreConstraint().getRdrSkippedCondition();
-		// eConclusion = createRdrConclusion("SKIPPED", true);
-		// addNode(yawlSpecID, taskName, condition, eCornerstone,
-		// eConclusion, RuleType.ItemPreconstraint);
-		//
-		// // True Node
-		// eCornerstone = getCornerstoneData(task, true, "DEFINED");
-		// condition = task.getPreConstraint().getRdrTrueCondition();
-		// eConclusion = createRdrConclusion("TRUE", true);
-		// addNode(yawlSpecID, taskName, condition, eCornerstone,
-		// eConclusion, RuleType.ItemPreconstraint);
-		//
-		// // False Node
-		// if (task.getPreConstraint().existCompareAttributeToValue()) {
-		// eCornerstone = getCornerstoneData(task, true, "DEFINED");
-		// condition = task.getPreConstraint().getRdrFalseCondition();
-		// eConclusion = createRdrConclusion("FALSE", true);
-		// addNode(yawlSpecID, taskName, condition, eCornerstone,
-		// eConclusion, RuleType.ItemPreconstraint);
-		// }
-		// } else {
-		// eCornerstone = getCornerstoneData(task, true, "DEFINED");
-		// condition = task.getPreConstraint().getRdrTrueCondition();
-		// eConclusion = createRdrConclusion("TRUE", true);
-		// addNode(yawlSpecID, taskName, condition, eCornerstone,
-		// eConclusion, RuleType.ItemPreconstraint);
-		// }
-		//
-		// // PostCondition Tree
-		// // Undefined Node
-		// eCornerstone = getCornerstoneData(task, false, "UNDEFINED");
-		// condition = task.getPostConstraint().getRdrUndefinedCondition();
-		// eConclusion = createRdrConclusion("UNDEFINED", false);
-		// addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
-		// RuleType.ItemConstraintViolation);
-		//
-		// // Skipped Node
-		// eCornerstone = getCornerstoneData(task, false, "SKIPPED");
-		// condition = task.getPostConstraint().getRdrSkippedCondition();
-		// eConclusion = createRdrConclusion("SKIPPED", false);
-		// addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
-		// RuleType.ItemConstraintViolation);
-		//
-		// // True Node
-		// eCornerstone = getCornerstoneData(task, false, "DEFINED");
-		// condition = task.getPostConstraint().getRdrTrueCondition();
-		// eConclusion = createRdrConclusion("TRUE", false);
-		// addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
-		// RuleType.ItemConstraintViolation);
-		//
-		// // False Node
-		// if (task.getPostConstraint().existCompareAttributeToValue()) {
-		// eCornerstone = getCornerstoneData(task, false, "DEFINED");
-		// condition = task.getPostConstraint().getRdrFalseCondition();
-		// eConclusion = createRdrConclusion("FALSE", false);
-		// addNode(yawlSpecID, taskName, condition, eCornerstone,
-		// eConclusion, RuleType.ItemConstraintViolation);
-		// }
-		// }
+		TaskModel taskModel = bwSpecification.getTaskModel();
+		YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
+		String condition = null;
+		Element eConclusion = null;
+		Element eCornerstone = null;
+
+		// Create Tasks RdrSet
+		for (Task task : taskModel.getTasksSet()) {
+			String taskName = generateYAWLTaskName(task);
+
+			// PreCondition Tree
+			if (!task.getPreConstraint().existTrue()) {
+				// Undefined Node
+				eCornerstone = getCornerstoneData(task, true, "UNDEFINED");
+				condition = task.getPreConstraint().getRdrUndefinedCondition();
+				eConclusion = createRdrConclusion("UNDEFINED", true);
+				addNode(yawlSpecID, taskName, condition, eCornerstone,
+						eConclusion, RuleType.ItemPreconstraint);
+
+				// Skipped Node
+				eCornerstone = getCornerstoneData(task, true, "SKIPPED");
+				condition = task.getPreConstraint().getRdrSkippedCondition();
+				eConclusion = createRdrConclusion("SKIPPED", true);
+				addNode(yawlSpecID, taskName, condition, eCornerstone,
+						eConclusion, RuleType.ItemPreconstraint);
+
+				// True Node
+				eCornerstone = getCornerstoneData(task, true, "DEFINED");
+				condition = task.getPreConstraint().getRdrTrueCondition();
+				eConclusion = createRdrConclusion("TRUE", true);
+				addNode(yawlSpecID, taskName, condition, eCornerstone,
+						eConclusion, RuleType.ItemPreconstraint);
+
+				// False Node
+				if (task.getPreConstraint().existCompareAttributeToValue()) {
+					eCornerstone = getCornerstoneData(task, true, "DEFINED");
+					condition = task.getPreConstraint().getRdrFalseCondition();
+					eConclusion = createRdrConclusion("FALSE", true);
+					addNode(yawlSpecID, taskName, condition, eCornerstone,
+							eConclusion, RuleType.ItemPreconstraint);
+				}
+			} else {
+				eCornerstone = getCornerstoneData(task, true, "DEFINED");
+				condition = task.getPreConstraint().getRdrTrueCondition();
+				eConclusion = createRdrConclusion("TRUE", true);
+				addNode(yawlSpecID, taskName, condition, eCornerstone,
+						eConclusion, RuleType.ItemPreconstraint);
+			}
+
+			// PostCondition Tree
+			// Undefined Node
+			eCornerstone = getCornerstoneData(task, false, "UNDEFINED");
+			condition = task.getPostConstraint().getRdrUndefinedCondition();
+			eConclusion = createRdrConclusion("UNDEFINED", false);
+			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
+					RuleType.ItemConstraintViolation);
+
+			// Skipped Node
+			eCornerstone = getCornerstoneData(task, false, "SKIPPED");
+			condition = task.getPostConstraint().getRdrSkippedCondition();
+			eConclusion = createRdrConclusion("SKIPPED", false);
+			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
+					RuleType.ItemConstraintViolation);
+
+			// True Node
+			eCornerstone = getCornerstoneData(task, false, "DEFINED");
+			condition = task.getPostConstraint().getRdrTrueCondition();
+			eConclusion = createRdrConclusion("TRUE", false);
+			addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
+					RuleType.ItemConstraintViolation);
+
+			// False Node
+			if (task.getPostConstraint().existCompareAttributeToValue()) {
+				eCornerstone = getCornerstoneData(task, false, "DEFINED");
+				condition = task.getPostConstraint().getRdrFalseCondition();
+				eConclusion = createRdrConclusion("FALSE", false);
+				addNode(yawlSpecID, taskName, condition, eCornerstone,
+						eConclusion, RuleType.ItemConstraintViolation);
+			}
+		}
 	}
 
 	/*******************************

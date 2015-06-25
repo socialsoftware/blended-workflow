@@ -70,22 +70,18 @@ public class Bootstrap {
 	/**
 	 * Populate the DataBase with the MedicalEpisode Specification.
 	 */
-	@Atomic(mode = TxMode.WRITE)
 	public static void populate() {
 		String bwXML = StringUtils.fileToString(BWPropertiesManager
 				.getProperty("medical.xml"));
 
-		// Transaction.begin();
 		BWExecutorService bwExecutorService = BlendedWorkflow.getInstance()
 				.getBWExecutorService();
 		LoadBWSpecificationService service = new LoadBWSpecificationService(
 				bwXML);
 		bwExecutorService.runTask(service);
-		// Transaction.commit();
 	}
 
 	public static void createOraganizationalModel() {
-		// Transaction.begin();
 		new OrganizationalModel();
 
 		// AdminRole
@@ -147,8 +143,6 @@ public class Bootstrap {
 		userNotes = "Test User.";
 		User testUser = new User(userName, userID, userPassword, userNotes);
 		testUser.setRole(user);
-
-		// Transaction.commit();
 	}
 
 }

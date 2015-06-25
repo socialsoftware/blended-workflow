@@ -2,8 +2,6 @@ package pt.ist.socialsoftware.blendedworkflow.adapters;
 
 import java.util.concurrent.Callable;
 
-import jvstm.Transaction;
-
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;
@@ -11,6 +9,8 @@ import org.yawlfoundation.yawl.util.JDOMUtil;
 import org.yawlfoundation.yawl.worklet.rdr.RdrNode;
 import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
 
 public class ProcessItemLevelExceptionEvent implements Callable<String> {
@@ -30,13 +30,13 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 		this.ruleType = ruleType;
 	}
 
+	@Atomic(mode = TxMode.WRITE)
 	@Override
 	public String call() throws Exception {
 		log.debug("-----------BEGIN----------------->"
 				+ parseConclusion(rdrNode) + " " + ruleType + " for " + wir);
 		Thread.sleep(4000); // FIXME:??
 
-		Transaction.begin();
 		if (ruleType.equals(RuleType.ItemPreconstraint)) {
 			if (parseConclusion(rdrNode).equals("TRUE")) {
 				BlendedWorkflow.getInstance().getWorkletAdapter()
@@ -64,7 +64,6 @@ public class ProcessItemLevelExceptionEvent implements Callable<String> {
 				log.error(ruleType + " for wir: " + wir + " failed.");
 			}
 		}
-		Transaction.commit();
 
 		log.debug("---------END-------------->" + parseConclusion(rdrNode)
 				+ " " + ruleType + " for " + wir);

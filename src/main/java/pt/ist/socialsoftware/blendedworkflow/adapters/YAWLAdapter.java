@@ -21,6 +21,7 @@ import org.yawlfoundation.yawl.util.JDOMUtil;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
 import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
+import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 
 public class YAWLAdapter extends InterfaceBWebsideController {
 
@@ -101,30 +102,29 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 	}
 
 	public void addBWService() throws BlendedWorkflowException {
-		// try {
-		// if (connected()) {
-		//
-		// Boolean registered = false;
-		// for (YAWLServiceReference yawlServiceReference :
-		// this.interfaceAClient
-		// .getRegisteredYAWLServices(sessionHandle)) {
-		// if (yawlServiceReference.getServiceName()
-		// .equals(engineUser)) {
-		// registered = true;
-		// }
-		// }
-		// if (!registered) {
-		// YAWLServiceReference service = new YAWLServiceReference(
-		// bwURI, null, engineUser, enginePassword, engineDoco);
-		// this.interfaceAClient
-		// .addYAWLService(service, sessionHandle);
-		// }
-		// }
-		// } catch (IOException ioe) {
-		// log.error("addRegisteredService", ioe);
-		// throw new BlendedWorkflowException(
-		// BlendedWorkflowError.YAWL_REGISTER_SERVICE);
-		// }
+		try {
+			if (connected()) {
+
+				Boolean registered = false;
+				for (YAWLServiceReference yawlServiceReference : this.interfaceAClient
+						.getRegisteredYAWLServices(sessionHandle)) {
+					if (yawlServiceReference.getServiceName()
+							.equals(engineUser)) {
+						registered = true;
+					}
+				}
+				if (!registered) {
+					YAWLServiceReference service = new YAWLServiceReference(
+							bwURI, null, engineUser, enginePassword, engineDoco);
+					this.interfaceAClient
+							.addYAWLService(service, sessionHandle);
+				}
+			}
+		} catch (IOException ioe) {
+			log.error("addRegisteredService", ioe);
+			throw new BlendedWorkflowException(
+					BlendedWorkflowError.YAWL_REGISTER_SERVICE);
+		}
 	}
 
 	public void removeBWService() throws BlendedWorkflowException {
@@ -148,29 +148,29 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 	}
 
 	public void addBWClientAccount() throws BlendedWorkflowException {
-		// try {
-		// Boolean registered = false;
-		// for (YExternalClient yExternalClient : this.interfaceAClient
-		// .getClientAccounts(connect(this.engineAdminUser,
-		// this.engineAdminPassword))) {
-		// if (yExternalClient.getUserName().equals(engineUser)) {
-		// registered = true;
-		// }
-		// }
-		// if (!registered) {
-		// this.interfaceAClient
-		// .addClientAccount(
-		// engineUser,
-		// enginePassword,
-		// engineDoco,
-		// connect(this.engineAdminUser,
-		// this.engineAdminPassword));
-		// }
-		// } catch (IOException ioe) {
-		// log.error("addClientAccount", ioe);
-		// throw new BlendedWorkflowException(
-		// BlendedWorkflowError.YAWL_REGISTER_CLIENT);
-		// }
+		try {
+			Boolean registered = false;
+			for (YExternalClient yExternalClient : this.interfaceAClient
+					.getClientAccounts(connect(this.engineAdminUser,
+							this.engineAdminPassword))) {
+				if (yExternalClient.getUserName().equals(engineUser)) {
+					registered = true;
+				}
+			}
+			if (!registered) {
+				this.interfaceAClient
+						.addClientAccount(
+								engineUser,
+								enginePassword,
+								engineDoco,
+								connect(this.engineAdminUser,
+										this.engineAdminPassword));
+			}
+		} catch (IOException ioe) {
+			log.error("addClientAccount", ioe);
+			throw new BlendedWorkflowException(
+					BlendedWorkflowError.YAWL_REGISTER_CLIENT);
+		}
 	}
 
 	public void removeBWClientAccount() throws BlendedWorkflowException {
@@ -200,45 +200,45 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 	 * YAWL Specifications
 	 ***************************/
 	public void loadSpecification(String spec) throws BlendedWorkflowException {
-		// YSpecificationID ySpecificationID = SpecUtils
-		// .getYAWLSpecificationIDFromSpec(spec);
-		//
-		// // Check if specification is already loaded
-		// for (SpecificationData specificationData : getLoadedSpecs()) {
-		// if (specificationData.getID().equals(ySpecificationID)) {
-		// log.info("Specification already loaded. Not loading again.");
-		// throw new BlendedWorkflowException(
-		// BlendedWorkflowError.YAWL_LOAD_SPECIFICATION,
-		// "Specification already loaded. Not loading again.");
-		// }
-		// }
-		//
-		// // Load specification in YAWL
-		// try {
-		// if (connected()) {
-		// String result = interfaceAClient.uploadSpecification(spec,
-		// this.sessionHandle);
-		// if (successful(result)) {
-		// log.info("Specification "
-		// + ySpecificationID.getIdentifier()
-		// + " correctly uploaded to YAWL");
-		// this.loadedActivitySpecs.add(ySpecificationID);
-		// } else {
-		// log.error("Specification "
-		// + ySpecificationID.getIdentifier()
-		// + " was not correctly uploaded.");
-		// throw new BlendedWorkflowException(
-		// BlendedWorkflowError.YAWL_LOAD_SPECIFICATION,
-		// "Sucess False");
-		// }
-		// }
-		// } catch (IOException ioe) {
-		// log.error("IOException: Specification "
-		// + ySpecificationID.getIdentifier()
-		// + " was not correctly uploaded");
-		// throw new BlendedWorkflowException(
-		// BlendedWorkflowError.YAWL_LOAD_SPECIFICATION, "IOException");
-		// }
+		YSpecificationID ySpecificationID = SpecUtils
+				.getYAWLSpecificationIDFromSpec(spec);
+
+		// Check if specification is already loaded
+		for (SpecificationData specificationData : getLoadedSpecs()) {
+			if (specificationData.getID().equals(ySpecificationID)) {
+				log.info("Specification already loaded. Not loading again.");
+				throw new BlendedWorkflowException(
+						BlendedWorkflowError.YAWL_LOAD_SPECIFICATION,
+						"Specification already loaded. Not loading again.");
+			}
+		}
+
+		// Load specification in YAWL
+		try {
+			if (connected()) {
+				String result = interfaceAClient.uploadSpecification(spec,
+						this.sessionHandle);
+				if (successful(result)) {
+					log.info("Specification "
+							+ ySpecificationID.getIdentifier()
+							+ " correctly uploaded to YAWL");
+					this.loadedActivitySpecs.add(ySpecificationID);
+				} else {
+					log.error("Specification "
+							+ ySpecificationID.getIdentifier()
+							+ " was not correctly uploaded.");
+					throw new BlendedWorkflowException(
+							BlendedWorkflowError.YAWL_LOAD_SPECIFICATION,
+							"Sucess False");
+				}
+			}
+		} catch (IOException ioe) {
+			log.error("IOException: Specification "
+					+ ySpecificationID.getIdentifier()
+					+ " was not correctly uploaded");
+			throw new BlendedWorkflowException(
+					BlendedWorkflowError.YAWL_LOAD_SPECIFICATION, "IOException");
+		}
 	}
 
 	// TODO:FutureImplementation: UnloadSpecification
