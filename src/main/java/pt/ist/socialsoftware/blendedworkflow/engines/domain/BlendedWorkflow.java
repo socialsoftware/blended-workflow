@@ -13,130 +13,134 @@ import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
-	DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
-	private YAWLAdapter yawlAdapter = null;
-	private WorkletAdapter workletAdapter = null;
-	private WorkListManager workListManager = null;
-	private BWManager bwManager = null;
-	private OrganizationalManager organizationalManager = null;
-	private String today = dateFormatter.format(new java.util.Date());
+    DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
+    private YAWLAdapter yawlAdapter = null;
+    private WorkletAdapter workletAdapter = null;
+    private WorkListManager workListManager = null;
+    private BWManager bwManager = null;
+    private OrganizationalManager organizationalManager = null;
+    private String today = dateFormatter.format(new java.util.Date());
 
-	private BWExecutorService bwExecutorService = null;
+    private BWExecutorService bwExecutorService = null;
 
-	public static BlendedWorkflow getInstance() {
-		return FenixFramework.getDomainRoot().getBlendedWorkflow();
-	}
+    public static BlendedWorkflow getInstance() {
+        if (FenixFramework.getDomainRoot().getBlendedWorkflow() == null) {
+            new BlendedWorkflow();
+        }
 
-	public BlendedWorkflow() {
-		FenixFramework.getDomainRoot().setBlendedWorkflow(this);
-	}
+        return FenixFramework.getDomainRoot().getBlendedWorkflow();
+    }
 
-	public BWSpecification getBWSpecification(String name)
-			throws BlendedWorkflowException {
-		for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
-			if (bwSpecification.getName().equals(name))
-				return bwSpecification;
-		}
-		throw new BlendedWorkflowException(
-				BlendedWorkflowError.INVALID_SPECIFICATION_NAME, name);
-	}
+    public BlendedWorkflow() {
+        FenixFramework.getDomainRoot().setBlendedWorkflow(this);
+    }
 
-	public BWInstance getBWInstance(String ID) throws BlendedWorkflowException {
-		for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
-			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
-				if (bwInstance.getID().equals(ID))
-					return bwInstance;
-			}
-		}
-		throw new BlendedWorkflowException(
-				BlendedWorkflowError.NON_EXISTENT_CASE_ID, ID);
-	}
+    public BWSpecification getBWSpecification(String name)
+            throws BlendedWorkflowException {
+        for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
+            if (bwSpecification.getName().equals(name))
+                return bwSpecification;
+        }
+        throw new BlendedWorkflowException(
+                BlendedWorkflowError.INVALID_SPECIFICATION_NAME, name);
+    }
 
-	public BWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID)
-			throws BlendedWorkflowException {
-		for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
-			for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
-				if (bwInstance.getYawlCaseID().equals(yawlCaseID))
-					return bwInstance;
-			}
-		}
-		throw new BlendedWorkflowException(
-				BlendedWorkflowError.NON_EXISTENT_CASE_ID, yawlCaseID);
-	}
+    public BWInstance getBWInstance(String ID) throws BlendedWorkflowException {
+        for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
+            for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
+                if (bwInstance.getID().equals(ID))
+                    return bwInstance;
+            }
+        }
+        throw new BlendedWorkflowException(
+                BlendedWorkflowError.NON_EXISTENT_CASE_ID, ID);
+    }
 
-	public YAWLAdapter getYawlAdapter() throws BlendedWorkflowException {
-		if (yawlAdapter == null) {
-			yawlAdapter = new YAWLAdapter();
-		}
-		return yawlAdapter;
-	}
+    public BWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID)
+            throws BlendedWorkflowException {
+        for (BWSpecification bwSpecification : getBwSpecificationsSet()) {
+            for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
+                if (bwInstance.getYawlCaseID().equals(yawlCaseID))
+                    return bwInstance;
+            }
+        }
+        throw new BlendedWorkflowException(
+                BlendedWorkflowError.NON_EXISTENT_CASE_ID, yawlCaseID);
+    }
 
-	public void setYawlAdapter(YAWLAdapter yawlAdapter) {
-		this.yawlAdapter = yawlAdapter;
-	}
+    public YAWLAdapter getYawlAdapter() throws BlendedWorkflowException {
+        if (yawlAdapter == null) {
+            yawlAdapter = new YAWLAdapter();
+        }
+        return yawlAdapter;
+    }
 
-	public WorkletAdapter getWorkletAdapter() {
-		if (workletAdapter == null) {
-			workletAdapter = new WorkletAdapter();
-		}
-		return workletAdapter;
-	}
+    public void setYawlAdapter(YAWLAdapter yawlAdapter) {
+        this.yawlAdapter = yawlAdapter;
+    }
 
-	public void setWorkletAdapter(WorkletAdapter workletAdapter) {
-		this.workletAdapter = workletAdapter;
-	}
+    public WorkletAdapter getWorkletAdapter() {
+        if (workletAdapter == null) {
+            workletAdapter = new WorkletAdapter();
+        }
+        return workletAdapter;
+    }
 
-	public WorkListManager getWorkListManager() {
-		if (workListManager == null) {
-			workListManager = new WorkListManager();
-		}
-		return workListManager;
-	}
+    public void setWorkletAdapter(WorkletAdapter workletAdapter) {
+        this.workletAdapter = workletAdapter;
+    }
 
-	public void setWorkListManager(WorkListManager workListManager) {
-		this.workListManager = workListManager;
-	}
+    public WorkListManager getWorkListManager() {
+        if (workListManager == null) {
+            workListManager = new WorkListManager();
+        }
+        return workListManager;
+    }
 
-	public BWManager getBwManager() {
-		if (bwManager == null) {
-			bwManager = new BWManager();
-		}
-		return bwManager;
-	}
+    public void setWorkListManager(WorkListManager workListManager) {
+        this.workListManager = workListManager;
+    }
 
-	public void setBwManager(BWManager bwManager) {
-		this.bwManager = bwManager;
-	}
+    public BWManager getBwManager() {
+        if (bwManager == null) {
+            bwManager = new BWManager();
+        }
+        return bwManager;
+    }
 
-	public OrganizationalManager getOrganizationalManager() {
-		if (organizationalManager == null) {
-			organizationalManager = new OrganizationalManager();
-		}
-		return organizationalManager;
-	}
+    public void setBwManager(BWManager bwManager) {
+        this.bwManager = bwManager;
+    }
 
-	public void setOrganizationalManager(
-			OrganizationalManager organizationalManager) {
-		this.organizationalManager = organizationalManager;
-	}
+    public OrganizationalManager getOrganizationalManager() {
+        if (organizationalManager == null) {
+            organizationalManager = new OrganizationalManager();
+        }
+        return organizationalManager;
+    }
 
-	public BWExecutorService getBWExecutorService() {
-		if (bwExecutorService == null) {
-			bwExecutorService = new BWExecutorService();
-		}
-		return bwExecutorService;
-	}
+    public void setOrganizationalManager(
+            OrganizationalManager organizationalManager) {
+        this.organizationalManager = organizationalManager;
+    }
 
-	public void setBWExecutorService(BWExecutorService bwExecutorService) {
-		this.bwExecutorService = bwExecutorService;
-	}
+    public BWExecutorService getBWExecutorService() {
+        if (bwExecutorService == null) {
+            bwExecutorService = new BWExecutorService();
+        }
+        return bwExecutorService;
+    }
 
-	public String getToday() {
-		return today;
-	}
+    public void setBWExecutorService(BWExecutorService bwExecutorService) {
+        this.bwExecutorService = bwExecutorService;
+    }
 
-	public void setToday(String today) {
-		this.today = today;
-	}
+    public String getToday() {
+        return today;
+    }
+
+    public void setToday(String today) {
+        this.today = today;
+    }
 
 }
