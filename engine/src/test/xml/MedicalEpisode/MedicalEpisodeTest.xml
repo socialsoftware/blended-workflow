@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bw:BlendedWorkflowSchema xmlns:bw="http://www.example.org/BWSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/BWSchema BWSchema.xsd " uri="MedicalEpisodeBP">
+	<bw:CaseInfo>
+		<bw:name>Medical Appointment</bw:name>
+		<bw:author>Davide Passinhas</bw:author>
+		<bw:description>A simple process of a medical appointment.</bw:description>
+		<bw:version>1.0</bw:version>
+		<bw:identifier>UID_3213f8b4-5757-4674-a6a2-415aa191ca91</bw:identifier>
+	</bw:CaseInfo>
+	<bw:DataModel>
+		<bw:Entity>
+			<bw:Name>Patient</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Name</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>true</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Age</bw:Name>
+				<bw:Type>NUMBER</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Cardiac Problems</bw:Name>
+				<bw:Type>BOOLEAN</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Entity>
+			<bw:Name>Episode</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Number</bw:Name>
+				<bw:Type>NUMBER</bw:Type>
+				<bw:isKey>true</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Reserve Date</bw:Name>
+				<bw:Type>String</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>true</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>CheckIn</bw:Name>
+				<bw:Type>BOOLEAN</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>CheckOut</bw:Name>
+				<bw:Type>BOOLEAN</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Entity>
+			<bw:Name>Patient Data</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Height</bw:Name>
+				<bw:Type>NUMBER</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Weight</bw:Name>
+				<bw:Type>NUMBER</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Blood Pressure</bw:Name>
+				<bw:Type>NUMBER</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Physical Condition</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Entity>
+			<bw:Name>Medical Prescription</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Description</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Entity>
+			<bw:Name>Medical Report</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Description</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Entity>
+			<bw:Name>Prescription Medication</bw:Name>
+			<bw:Attribute>
+				<bw:Name>Number</bw:Name>
+				<bw:Type>NUMBER</bw:Type>
+				<bw:isKey>true</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Name</bw:Name>
+				<bw:Type>STRING</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Quantity</bw:Name>
+				<bw:Type>NUMBER</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+			<bw:Attribute>
+				<bw:Name>Heart Impact</bw:Name>
+				<bw:Type>BOOLEAN</bw:Type>
+				<bw:isKey>false</bw:isKey>
+				<bw:isSystem>false</bw:isSystem>
+			</bw:Attribute>
+		</bw:Entity>
+		<bw:Relation>
+			<bw:Name>Patient has Episodes</bw:Name>
+			<bw:EntityOne>
+				<bw:EntityName>Patient</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>true</bw:isEntityKey>
+			</bw:EntityOne>
+			<bw:EntityTwo>
+				<bw:EntityName>Episode</bw:EntityName>
+				<bw:EntityCardinality>MANY</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityTwo>
+		</bw:Relation>
+		<bw:Relation>
+			<bw:Name>Episode has Patient Data</bw:Name>
+			<bw:EntityOne>
+				<bw:EntityName>Episode</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>true</bw:isEntityKey>
+			</bw:EntityOne>
+			<bw:EntityTwo>
+				<bw:EntityName>Patient Data</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityTwo>
+		</bw:Relation>
+		<bw:Relation>
+			<bw:Name>Episode has Medical Report</bw:Name>
+			<bw:EntityOne>
+				<bw:EntityName>Episode</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>true</bw:isEntityKey>
+			</bw:EntityOne>
+			<bw:EntityTwo>
+				<bw:EntityName>Medical Report</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityTwo>
+		</bw:Relation>
+		<bw:Relation>
+			<bw:Name>Episode has Medical Prescription</bw:Name>
+			<bw:EntityOne>
+				<bw:EntityName>Episode</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>true</bw:isEntityKey>
+			</bw:EntityOne>
+			<bw:EntityTwo>
+				<bw:EntityName>Medical Prescription</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityTwo>
+		</bw:Relation>
+		<bw:Relation>
+			<bw:Name>Medical Prescription has Prescription Medication</bw:Name>
+			<bw:EntityOne>
+				<bw:EntityName>Medical Prescription</bw:EntityName>
+				<bw:EntityCardinality>ONE</bw:EntityCardinality>
+				<bw:isEntityKey>true</bw:isEntityKey>
+			</bw:EntityOne>
+			<bw:EntityTwo>
+				<bw:EntityName>Prescription Medication</bw:EntityName>
+				<bw:EntityCardinality>MANY</bw:EntityCardinality>
+				<bw:isEntityKey>false</bw:isEntityKey>
+			</bw:EntityTwo>
+		</bw:Relation>
+	</bw:DataModel>
+	
+	<bw:GoalModel>
+	
+		<bw:RootGoal>
+			<bw:Name>Process Medical Appointment</bw:Name>
+			<bw:description>Process a Patient Medical Appointment.</bw:description>
+			<bw:SucessCondition>true</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>true</bw:ActivateCondition1>
+			<bw:Context>Episode</bw:Context>
+		</bw:RootGoal>
+		
+		<bw:Goal>
+			<bw:Name>Check-In Patient</bw:Name>
+			<bw:description>Check-In the Patient.</bw:description>
+			<bw:SucessCondition>compareAttributeTo(Episode.CheckIn,=.true)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>compareAttributeTo(Episode.Reserve Date,=.$TODAY$)</bw:ActivateCondition1>
+			<bw:ParentName>Process Medical Appointment</bw:ParentName>
+			<bw:Context>Episode</bw:Context>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Check-Out Patient</bw:Name>
+			<bw:description>Check-Out the Patient.</bw:description>
+			<bw:SucessCondition>compareAttributeTo(Episode.CheckOut,=.true)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
+			<bw:ParentName>Process Medical Appointment</bw:ParentName>
+			<bw:Context>Episode</bw:Context>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Book Patient</bw:Name>
+			<bw:description>Book a Doctor Appointment for a Patient.</bw:description>
+			<bw:SucessCondition>existsEntity(Episode)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>true</bw:ActivateCondition1>
+			<bw:ParentName>Process Medical Appointment</bw:ParentName>
+			<bw:Context>Episode</bw:Context>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Write Medical Report</bw:Name>
+			<bw:description>Write the Episode Medical Report.</bw:description>
+			<bw:SucessCondition>existsAttribute(Medical Report.Description)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<!-- <bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1> -->
+			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true) and existsAttribute(Patient Data.Blood Pressure)</bw:ActivateCondition1>
+			<bw:ParentName>Process Medical Appointment</bw:ParentName>
+			<bw:Context>Medical Report</bw:Context>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Obtain Patient Data</bw:Name>
+			<bw:description>Obtain the Patient Physical and Medical Data.</bw:description>
+			<bw:SucessCondition>true</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
+			<bw:ParentName>Process Medical Appointment</bw:ParentName>
+			<bw:Context>Patient Data</bw:Context>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Obtain Physical Data</bw:Name>
+			<bw:description>Obtain the Patient Physical Data.</bw:description>
+			<bw:SucessCondition>existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
+			<bw:ParentName>Obtain Patient Data</bw:ParentName>
+			<bw:Context>Patient Data</bw:Context>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Obtain Medical Data</bw:Name>
+			<bw:description>Obtain the Patient Medical Data.</bw:description>
+			<bw:SucessCondition>existsAttribute(Patient Data.Physical Condition)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
+			<bw:ParentName>Obtain Patient Data</bw:ParentName>
+			<bw:Context>Patient Data</bw:Context>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Measure Blood Pressure</bw:Name>
+			<bw:description>Measure the Patient Blood Pressure.</bw:description>
+			<bw:SucessCondition>existsAttribute(Patient Data.Blood Pressure)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
+			<bw:ParentName>Obtain Medical Data</bw:ParentName>
+			<bw:Context>Patient Data</bw:Context>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Write Medical Prescription</bw:Name>
+			<bw:description>Write the Episode Medical Prescription.</bw:description>
+			<bw:SucessCondition>existsAttribute(Medical Prescription.Description)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1> 
+			<!-- <bw:ActivateCondition1>true</bw:ActivateCondition1>-->
+			<bw:ParentName>Process Medical Appointment</bw:ParentName>
+			<bw:Context>Medical Prescription</bw:Context>
+		</bw:Goal>
+		<bw:Goal>
+			<bw:Name>Add Prescription Medication</bw:Name>
+			<bw:description>Add a Prescription Medication to a Medical Prescription.</bw:description>
+			<bw:SucessCondition>existsEntity(Prescription Medication) and existsAttribute(Prescription Medication.Name) and existsAttribute(Prescription Medication.Quantity) and existsAttribute(Prescription Medication.Heart Impact)</bw:SucessCondition>
+			<bw:ActivateConditionCount>1</bw:ActivateConditionCount>
+			<bw:ActivateCondition1>compareAttributeTo(Episode.CheckIn,=.true)</bw:ActivateCondition1>
+			<!-- <bw:ActivateCondition1>true</bw:ActivateCondition1> -->
+			<bw:ParentName>Write Medical Prescription</bw:ParentName>
+			<bw:Context>Prescription Medication</bw:Context>
+		</bw:Goal>
+		
+		 
+		<bw:MaintainGoal>
+			<bw:Name>Heart Medication Restriction</bw:Name>
+			<bw:description>Patient with Cardiac Problems cannot have Prescription Medication with Heart Impact.</bw:description>
+			<bw:MaintainCondition>compareAttributeTo(Prescription Medication.Heart Impact,=.false) or forAll[Patient.Patient has Episodes,compareAttributeTo(Patient.Cardiac Problems,=.false)]</bw:MaintainCondition>
+			<bw:Context>Prescription Medication</bw:Context>
+		</bw:MaintainGoal>
+		
+		
+	</bw:GoalModel>
+	
+	<bw:TaskModel>
+	 
+		<bw:Task>
+			<bw:Name>Booking</bw:Name>
+			<bw:description>Book a Doctor Appointment for a Patient.</bw:description>
+			<bw:PreCondition>true</bw:PreCondition>
+			<bw:PostCondition>existsEntity(Episode) and existsAttribute(Episode.Reserve Date)</bw:PostCondition>
+			<bw:FlowType>root</bw:FlowType>
+			<bw:JoinCode>xor</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
+			<bw:NextTaskCount>1</bw:NextTaskCount>
+			<bw:NextTaskName1>Check-in Patient</bw:NextTaskName1>
+		</bw:Task>
+		 
+		<bw:Task>
+			<bw:Name>Check-in Patient</bw:Name>
+			<bw:description>Check-in the Patient.</bw:description>
+			<bw:PreCondition>compareAttributeTo(Episode.Reserve Date,=.$TODAY$)</bw:PreCondition>
+			<bw:PostCondition>compareAttributeTo(Episode.CheckIn,=.true)</bw:PostCondition>
+			<bw:FlowType>none</bw:FlowType>
+			<bw:JoinCode>xor</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
+			<bw:PreviousTaskName>Booking</bw:PreviousTaskName>
+			<bw:NextTaskCount>2</bw:NextTaskCount>
+			<bw:NextTaskName1>Collect Medical Data</bw:NextTaskName1>
+			<bw:NextTaskName2>Collect Physical Data</bw:NextTaskName2>
+		</bw:Task>
+		<bw:Task>
+			<bw:Name>Collect Medical Data</bw:Name>
+			<bw:description>Collect the Patient Medical Data.</bw:description>
+			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
+			<bw:PostCondition>existsAttribute(Patient Data.Blood Pressure) and existsAttribute(Patient Data.Physical Condition)</bw:PostCondition>
+			<bw:FlowType>none</bw:FlowType>
+			<bw:JoinCode>xor</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
+			<bw:PreviousTaskName>Check-in Patient</bw:PreviousTaskName>
+			<bw:NextTaskCount>1</bw:NextTaskCount>
+			<bw:NextTaskName1>Doctor Appointment</bw:NextTaskName1>
+		</bw:Task>
+		<bw:Task>
+			<bw:Name>Collect Physical Data</bw:Name>
+			<bw:description>Collect the Patient Physical Data.</bw:description>
+			<bw:PreCondition>existsEntity(Episode)</bw:PreCondition>
+			<bw:PostCondition>existsAttribute(Patient Data.Height) and existsAttribute(Patient Data.Weight)</bw:PostCondition>
+			<bw:FlowType>none</bw:FlowType>
+			<bw:JoinCode>xor</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
+			<bw:PreviousTaskName>Check-in Patient</bw:PreviousTaskName>
+			<bw:NextTaskCount>1</bw:NextTaskCount>
+			<bw:NextTaskName1>Doctor Appointment</bw:NextTaskName1>
+		</bw:Task>
+		<bw:Task>
+			<bw:Name>Doctor Appointment</bw:Name>
+			<bw:description>The Doctor Appointment.</bw:description>
+			<bw:PreCondition>existsAttribute(Patient Data.Blood Pressure)</bw:PreCondition>
+			<bw:PostCondition>existsAttribute(Medical Report.Description)</bw:PostCondition>
+			<bw:FlowType>and-join</bw:FlowType>
+			<bw:JoinCode>and</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
+			<bw:PreviousTaskName1>Collect Medical Data</bw:PreviousTaskName1>
+			<bw:PreviousTaskName2>Collect Physical Data</bw:PreviousTaskName2>
+			<bw:NextTaskCount>1</bw:NextTaskCount>
+			<bw:NextTaskName1>Check-out Patient</bw:NextTaskName1>
+		</bw:Task>
+		<bw:Task>
+			<bw:Name>Check-out Patient</bw:Name>
+			<bw:description>Check-out the Patient.</bw:description>
+			<bw:PreCondition>existsEntity(Episode) and existsAttribute(Medical Report.Description)</bw:PreCondition>
+			<bw:PostCondition>compareAttributeTo(Episode.CheckOut,=.true)</bw:PostCondition>
+			<bw:FlowType>none</bw:FlowType>
+			<bw:JoinCode>xor</bw:JoinCode>
+			<bw:SplitCode>and</bw:SplitCode>
+			<bw:PreviousTaskName>Doctor Appointment</bw:PreviousTaskName>
+			<bw:NextTaskCount>0</bw:NextTaskCount>
+		</bw:Task>
+		
+	</bw:TaskModel>
+	
+	<bw:DataModelInstance>
+		<bw:EntityInstance>
+			<bw:Type>Patient</bw:Type>
+			<bw:Name>Davide Passinhas</bw:Name>
+			<bw:Age>23</bw:Age>
+			<bw:Cardiac_Problems>true</bw:Cardiac_Problems>
+		</bw:EntityInstance>
+		<bw:EntityInstance>
+			<bw:Type>Patient</bw:Type>
+			<bw:Name>David Martinho</bw:Name>
+			<bw:Age>26</bw:Age>
+			<bw:Cardiac_Problems>false</bw:Cardiac_Problems>
+		</bw:EntityInstance>
+	</bw:DataModelInstance>
+	
+</bw:BlendedWorkflowSchema>
