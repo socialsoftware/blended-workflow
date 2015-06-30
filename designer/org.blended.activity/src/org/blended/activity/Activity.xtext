@@ -1,0 +1,7 @@
+grammar org.blended.activity.Activity with org.blended.Blended
+
+generate activity "http://www.blended.org/activity/Activity"
+
+ActivityModel:
+	activities += Activity+
+;

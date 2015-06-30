@@ -1,0 +1,9 @@
+grammar org.blended.goal.Goal with org.blended.Blended
+
+generate goal "http://www.blended.org/goal/Goal"
+
+//import "http://www.blended.org/condition/Condition" as def
+
+GoalModel:
+	goals += Goal+
+;

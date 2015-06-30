@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.data/src-gen" editDirectory="/org.blended.data.edit/src"
+    editorDirectory="/org.blended.data.editor/src" modelPluginID="org.blended.data"
+    forceOverwrite="true" modelName="Data" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="org.blended.data.edit"
+    editorPluginID="org.blended.data.editor" runtimeVersion="2.10">
+  <genPackages prefix="Data" basePackage="org.blended.data" disposableProviderFactory="true"
+      fileExtensions="dm" ecorePackage="Data.ecore#/">
+    <genClasses ecoreClass="Data.ecore#//DataModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//DataModel/entities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//DataModel/associations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//DataModel/constraint"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//Entity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Entity/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Entity/exists"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Data.ecore#//Entity/dependsOn"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//Entity/attributes"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//Attribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Attribute/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Attribute/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Attribute/mandatory"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Data.ecore#//Attribute/dependsOn"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//AttributeGroup">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//AttributeGroup/mandatory"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Data.ecore#//AttributeGroup/dependsOn"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//AttributeGroup/attributes"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//Association">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Data.ecore#//Association/entity1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Association/name1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Association/cardinality1"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Data.ecore#//Association/entity2"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Association/name2"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Association/cardinality2"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//Constraint">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//Constraint/constraint"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//Expression"/>
+    <genClasses ecoreClass="Data.ecore#//Or">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//Or/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//Or/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//And">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//And/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//And/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//Not">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//Not/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//AttributeDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//AttributeDefinition/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//AttributeValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//AttributeValue/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
