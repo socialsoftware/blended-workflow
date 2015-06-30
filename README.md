@@ -1,4 +1,8 @@
-# Blended Workflow Engine
+# Blended Workflow Designer and Engine
+
+This is the code for the Blended Workflow which is a research project, (http://blended-workflow.social-software.esw.inesc-id.pt/), done in the context of INESC-ID's Software Engineering group.
+
+The master contains the current version of development. For the first version, which comprises the engine only, you have to download blended1.0.
 
 -Required Software:
 --Java
