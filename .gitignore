@@ -1,8 +1,14 @@
 .classpath
 .project
 .settings
-target
 tmp-data
-test-db
-/target/
+engine/.classpath
+engine/.project
+engine/.settings
+engine/target
+engine/tmp-data
+engine/test-db
+designer/.classpath
+designer/.project
+designer/.settings
 /target/
