@@ -76,13 +76,13 @@ public interface DataPackage extends EPackage
   int DATA_MODEL__ENTITIES = 0;
 
   /**
-   * The feature id for the '<em><b>Associations</b></em>' containment reference list.
+   * The feature id for the '<em><b>Associatios</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int DATA_MODEL__ASSOCIATIONS = 1;
+  int DATA_MODEL__ASSOCIATIOS = 1;
 
   /**
    * The feature id for the '<em><b>Constraint</b></em>' containment reference list.
@@ -559,15 +559,15 @@ public interface DataPackage extends EPackage
   EReference getDataModel_Entities();
 
   /**
-   * Returns the meta object for the containment reference list '{@link org.blended.data.data.DataModel#getAssociations <em>Associations</em>}'.
+   * Returns the meta object for the containment reference list '{@link org.blended.data.data.DataModel#getAssociatios <em>Associatios</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Associations</em>'.
-   * @see org.blended.data.data.DataModel#getAssociations()
+   * @return the meta object for the containment reference list '<em>Associatios</em>'.
+   * @see org.blended.data.data.DataModel#getAssociatios()
    * @see #getDataModel()
    * @generated
    */
-  EReference getDataModel_Associations();
+  EReference getDataModel_Associatios();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.blended.data.data.DataModel#getConstraint <em>Constraint</em>}'.
@@ -1007,12 +1007,12 @@ public interface DataPackage extends EPackage
     EReference DATA_MODEL__ENTITIES = eINSTANCE.getDataModel_Entities();
 
     /**
-     * The meta object literal for the '<em><b>Associations</b></em>' containment reference list feature.
+     * The meta object literal for the '<em><b>Associatios</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference DATA_MODEL__ASSOCIATIONS = eINSTANCE.getDataModel_Associations();
+    EReference DATA_MODEL__ASSOCIATIOS = eINSTANCE.getDataModel_Associatios();
 
     /**
      * The meta object literal for the '<em><b>Constraint</b></em>' containment reference list feature.

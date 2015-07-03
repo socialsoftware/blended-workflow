@@ -4,12 +4,12 @@ generate data "http://www.blended.org/data/Data"
 
 DataModel:
 	entities += Entity*
-	associations += Association*
+	associatios += Association*
 	constraint += Constraint*
 ;
 
 Entity:
-	'Entityy' name = ID (exists ?= 'exists')? ('dependsOn' dependsOn = [Entity])? '{' 
+	'Entity' name = ID (exists ?= 'exists')? ('dependsOn' dependsOn = [Entity])? '{' 
 		attributes += (AttributeGroup | Attribute)*
 	'}'
 ;

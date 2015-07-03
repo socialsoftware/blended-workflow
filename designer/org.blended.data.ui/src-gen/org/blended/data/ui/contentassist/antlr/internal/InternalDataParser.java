@@ -22,7 +22,7 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalDataParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_INT", "RULE_ID", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'Entityy'", "'{'", "'}'", "'dependsOn'", "':'", "','", "'group'", "'.'", "'Association'", "'with'", "'('", "')'", "'Constraint'", "'..'", "'*'", "'+'", "'OR'", "'AND'", "'NOT'", "'DEF'", "'exists'", "'mandatory'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_INT", "RULE_ID", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'Entity'", "'{'", "'}'", "'dependsOn'", "':'", "','", "'group'", "'.'", "'Association'", "'with'", "'('", "')'", "'Constraint'", "'..'", "'*'", "'+'", "'OR'", "'AND'", "'NOT'", "'DEF'", "'exists'", "'mandatory'"
     };
     public static final int RULE_STRING=6;
     public static final int RULE_SL_COMMENT=8;
@@ -1682,20 +1682,20 @@ public class InternalDataParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__DataModel__Group__1__Impl"
-    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:573:1: rule__DataModel__Group__1__Impl : ( ( rule__DataModel__AssociationsAssignment_1 )* ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:573:1: rule__DataModel__Group__1__Impl : ( ( rule__DataModel__AssociatiosAssignment_1 )* ) ;
     public final void rule__DataModel__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:577:1: ( ( ( rule__DataModel__AssociationsAssignment_1 )* ) )
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:578:1: ( ( rule__DataModel__AssociationsAssignment_1 )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:577:1: ( ( ( rule__DataModel__AssociatiosAssignment_1 )* ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:578:1: ( ( rule__DataModel__AssociatiosAssignment_1 )* )
             {
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:578:1: ( ( rule__DataModel__AssociationsAssignment_1 )* )
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:579:1: ( rule__DataModel__AssociationsAssignment_1 )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:578:1: ( ( rule__DataModel__AssociatiosAssignment_1 )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:579:1: ( rule__DataModel__AssociatiosAssignment_1 )*
             {
-             before(grammarAccess.getDataModelAccess().getAssociationsAssignment_1()); 
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:580:1: ( rule__DataModel__AssociationsAssignment_1 )*
+             before(grammarAccess.getDataModelAccess().getAssociatiosAssignment_1()); 
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:580:1: ( rule__DataModel__AssociatiosAssignment_1 )*
             loop6:
             do {
                 int alt6=2;
@@ -1708,10 +1708,10 @@ public class InternalDataParser extends AbstractInternalContentAssistParser {
 
                 switch (alt6) {
             	case 1 :
-            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:580:2: rule__DataModel__AssociationsAssignment_1
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:580:2: rule__DataModel__AssociatiosAssignment_1
             	    {
-            	    pushFollow(FOLLOW_rule__DataModel__AssociationsAssignment_1_in_rule__DataModel__Group__1__Impl1192);
-            	    rule__DataModel__AssociationsAssignment_1();
+            	    pushFollow(FOLLOW_rule__DataModel__AssociatiosAssignment_1_in_rule__DataModel__Group__1__Impl1192);
+            	    rule__DataModel__AssociatiosAssignment_1();
 
             	    state._fsp--;
 
@@ -1724,7 +1724,7 @@ public class InternalDataParser extends AbstractInternalContentAssistParser {
                 }
             } while (true);
 
-             after(grammarAccess.getDataModelAccess().getAssociationsAssignment_1()); 
+             after(grammarAccess.getDataModelAccess().getAssociatiosAssignment_1()); 
 
             }
 
@@ -1883,21 +1883,21 @@ public class InternalDataParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Entity__Group__0__Impl"
-    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:636:1: rule__Entity__Group__0__Impl : ( 'Entityy' ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:636:1: rule__Entity__Group__0__Impl : ( 'Entity' ) ;
     public final void rule__Entity__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:640:1: ( ( 'Entityy' ) )
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:641:1: ( 'Entityy' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:640:1: ( ( 'Entity' ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:641:1: ( 'Entity' )
             {
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:641:1: ( 'Entityy' )
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:642:1: 'Entityy'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:641:1: ( 'Entity' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:642:1: 'Entity'
             {
-             before(grammarAccess.getEntityAccess().getEntityyKeyword_0()); 
+             before(grammarAccess.getEntityAccess().getEntityKeyword_0()); 
             match(input,11,FOLLOW_11_in_rule__Entity__Group__0__Impl1318); 
-             after(grammarAccess.getEntityAccess().getEntityyKeyword_0()); 
+             after(grammarAccess.getEntityAccess().getEntityKeyword_0()); 
 
             }
 
@@ -8629,9 +8629,9 @@ public class InternalDataParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__DataModel__EntitiesAssignment_0"
 
 
-    // $ANTLR start "rule__DataModel__AssociationsAssignment_1"
-    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3312:1: rule__DataModel__AssociationsAssignment_1 : ( ruleAssociation ) ;
-    public final void rule__DataModel__AssociationsAssignment_1() throws RecognitionException {
+    // $ANTLR start "rule__DataModel__AssociatiosAssignment_1"
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3312:1: rule__DataModel__AssociatiosAssignment_1 : ( ruleAssociation ) ;
+    public final void rule__DataModel__AssociatiosAssignment_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -8642,13 +8642,13 @@ public class InternalDataParser extends AbstractInternalContentAssistParser {
             // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3317:1: ( ruleAssociation )
             // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3318:1: ruleAssociation
             {
-             before(grammarAccess.getDataModelAccess().getAssociationsAssociationParserRuleCall_1_0()); 
-            pushFollow(FOLLOW_ruleAssociation_in_rule__DataModel__AssociationsAssignment_16561);
+             before(grammarAccess.getDataModelAccess().getAssociatiosAssociationParserRuleCall_1_0()); 
+            pushFollow(FOLLOW_ruleAssociation_in_rule__DataModel__AssociatiosAssignment_16561);
             ruleAssociation();
 
             state._fsp--;
 
-             after(grammarAccess.getDataModelAccess().getAssociationsAssociationParserRuleCall_1_0()); 
+             after(grammarAccess.getDataModelAccess().getAssociatiosAssociationParserRuleCall_1_0()); 
 
             }
 
@@ -8667,7 +8667,7 @@ public class InternalDataParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__DataModel__AssociationsAssignment_1"
+    // $ANTLR end "rule__DataModel__AssociatiosAssignment_1"
 
 
     // $ANTLR start "rule__DataModel__ConstraintAssignment_2"
@@ -9841,7 +9841,7 @@ public class InternalDataParser extends AbstractInternalContentAssistParser {
     public static final BitSet FOLLOW_rule__DataModel__EntitiesAssignment_0_in_rule__DataModel__Group__0__Impl1131 = new BitSet(new long[]{0x0000000000000802L});
     public static final BitSet FOLLOW_rule__DataModel__Group__1__Impl_in_rule__DataModel__Group__11162 = new BitSet(new long[]{0x0000000000880000L});
     public static final BitSet FOLLOW_rule__DataModel__Group__2_in_rule__DataModel__Group__11165 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__DataModel__AssociationsAssignment_1_in_rule__DataModel__Group__1__Impl1192 = new BitSet(new long[]{0x0000000000080002L});
+    public static final BitSet FOLLOW_rule__DataModel__AssociatiosAssignment_1_in_rule__DataModel__Group__1__Impl1192 = new BitSet(new long[]{0x0000000000080002L});
     public static final BitSet FOLLOW_rule__DataModel__Group__2__Impl_in_rule__DataModel__Group__21223 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__DataModel__ConstraintAssignment_2_in_rule__DataModel__Group__2__Impl1250 = new BitSet(new long[]{0x0000000000800002L});
     public static final BitSet FOLLOW_rule__Entity__Group__0__Impl_in_rule__Entity__Group__01287 = new BitSet(new long[]{0x0000000000000020L});
@@ -10070,7 +10070,7 @@ public class InternalDataParser extends AbstractInternalContentAssistParser {
     public static final BitSet FOLLOW_rule__Atomic__Group_1__1__Impl_in_rule__Atomic__Group_1__16464 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Atomic__NameAssignment_1_1_in_rule__Atomic__Group_1__1__Impl6491 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleEntity_in_rule__DataModel__EntitiesAssignment_06530 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleAssociation_in_rule__DataModel__AssociationsAssignment_16561 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleAssociation_in_rule__DataModel__AssociatiosAssignment_16561 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleConstraint_in_rule__DataModel__ConstraintAssignment_26592 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_ID_in_rule__Entity__NameAssignment_16623 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_31_in_rule__Entity__ExistsAssignment_26659 = new BitSet(new long[]{0x0000000000000002L});

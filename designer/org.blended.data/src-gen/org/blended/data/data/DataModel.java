@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.blended.data.data.DataModel#getEntities <em>Entities</em>}</li>
- *   <li>{@link org.blended.data.data.DataModel#getAssociations <em>Associations</em>}</li>
+ *   <li>{@link org.blended.data.data.DataModel#getAssociatios <em>Associatios</em>}</li>
  *   <li>{@link org.blended.data.data.DataModel#getConstraint <em>Constraint</em>}</li>
  * </ul>
  *
@@ -43,20 +43,20 @@ public interface DataModel extends EObject
   EList<Entity> getEntities();
 
   /**
-   * Returns the value of the '<em><b>Associations</b></em>' containment reference list.
+   * Returns the value of the '<em><b>Associatios</b></em>' containment reference list.
    * The list contents are of type {@link org.blended.data.data.Association}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Associations</em>' containment reference list isn't clear,
+   * If the meaning of the '<em>Associatios</em>' containment reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Associations</em>' containment reference list.
-   * @see org.blended.data.data.DataPackage#getDataModel_Associations()
+   * @return the value of the '<em>Associatios</em>' containment reference list.
+   * @see org.blended.data.data.DataPackage#getDataModel_Associatios()
    * @model containment="true"
    * @generated
    */
-  EList<Association> getAssociations();
+  EList<Association> getAssociatios();
 
   /**
    * Returns the value of the '<em><b>Constraint</b></em>' containment reference list.

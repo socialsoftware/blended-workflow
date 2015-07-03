@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </p>
  * <ul>
  *   <li>{@link org.blended.data.data.impl.DataModelImpl#getEntities <em>Entities</em>}</li>
- *   <li>{@link org.blended.data.data.impl.DataModelImpl#getAssociations <em>Associations</em>}</li>
+ *   <li>{@link org.blended.data.data.impl.DataModelImpl#getAssociatios <em>Associatios</em>}</li>
  *   <li>{@link org.blended.data.data.impl.DataModelImpl#getConstraint <em>Constraint</em>}</li>
  * </ul>
  *
@@ -50,14 +50,14 @@ public class DataModelImpl extends MinimalEObjectImpl.Container implements DataM
   protected EList<Entity> entities;
 
   /**
-   * The cached value of the '{@link #getAssociations() <em>Associations</em>}' containment reference list.
+   * The cached value of the '{@link #getAssociatios() <em>Associatios</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getAssociations()
+   * @see #getAssociatios()
    * @generated
    * @ordered
    */
-  protected EList<Association> associations;
+  protected EList<Association> associatios;
 
   /**
    * The cached value of the '{@link #getConstraint() <em>Constraint</em>}' containment reference list.
@@ -109,13 +109,13 @@ public class DataModelImpl extends MinimalEObjectImpl.Container implements DataM
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Association> getAssociations()
+  public EList<Association> getAssociatios()
   {
-    if (associations == null)
+    if (associatios == null)
     {
-      associations = new EObjectContainmentEList<Association>(Association.class, this, DataPackage.DATA_MODEL__ASSOCIATIONS);
+      associatios = new EObjectContainmentEList<Association>(Association.class, this, DataPackage.DATA_MODEL__ASSOCIATIOS);
     }
-    return associations;
+    return associatios;
   }
 
   /**
@@ -144,8 +144,8 @@ public class DataModelImpl extends MinimalEObjectImpl.Container implements DataM
     {
       case DataPackage.DATA_MODEL__ENTITIES:
         return ((InternalEList<?>)getEntities()).basicRemove(otherEnd, msgs);
-      case DataPackage.DATA_MODEL__ASSOCIATIONS:
-        return ((InternalEList<?>)getAssociations()).basicRemove(otherEnd, msgs);
+      case DataPackage.DATA_MODEL__ASSOCIATIOS:
+        return ((InternalEList<?>)getAssociatios()).basicRemove(otherEnd, msgs);
       case DataPackage.DATA_MODEL__CONSTRAINT:
         return ((InternalEList<?>)getConstraint()).basicRemove(otherEnd, msgs);
     }
@@ -164,8 +164,8 @@ public class DataModelImpl extends MinimalEObjectImpl.Container implements DataM
     {
       case DataPackage.DATA_MODEL__ENTITIES:
         return getEntities();
-      case DataPackage.DATA_MODEL__ASSOCIATIONS:
-        return getAssociations();
+      case DataPackage.DATA_MODEL__ASSOCIATIOS:
+        return getAssociatios();
       case DataPackage.DATA_MODEL__CONSTRAINT:
         return getConstraint();
     }
@@ -187,9 +187,9 @@ public class DataModelImpl extends MinimalEObjectImpl.Container implements DataM
         getEntities().clear();
         getEntities().addAll((Collection<? extends Entity>)newValue);
         return;
-      case DataPackage.DATA_MODEL__ASSOCIATIONS:
-        getAssociations().clear();
-        getAssociations().addAll((Collection<? extends Association>)newValue);
+      case DataPackage.DATA_MODEL__ASSOCIATIOS:
+        getAssociatios().clear();
+        getAssociatios().addAll((Collection<? extends Association>)newValue);
         return;
       case DataPackage.DATA_MODEL__CONSTRAINT:
         getConstraint().clear();
@@ -212,8 +212,8 @@ public class DataModelImpl extends MinimalEObjectImpl.Container implements DataM
       case DataPackage.DATA_MODEL__ENTITIES:
         getEntities().clear();
         return;
-      case DataPackage.DATA_MODEL__ASSOCIATIONS:
-        getAssociations().clear();
+      case DataPackage.DATA_MODEL__ASSOCIATIOS:
+        getAssociatios().clear();
         return;
       case DataPackage.DATA_MODEL__CONSTRAINT:
         getConstraint().clear();
@@ -234,8 +234,8 @@ public class DataModelImpl extends MinimalEObjectImpl.Container implements DataM
     {
       case DataPackage.DATA_MODEL__ENTITIES:
         return entities != null && !entities.isEmpty();
-      case DataPackage.DATA_MODEL__ASSOCIATIONS:
-        return associations != null && !associations.isEmpty();
+      case DataPackage.DATA_MODEL__ASSOCIATIOS:
+        return associatios != null && !associatios.isEmpty();
       case DataPackage.DATA_MODEL__CONSTRAINT:
         return constraint != null && !constraint.isEmpty();
     }

@@ -98,16 +98,16 @@ ruleDataModel returns [EObject current=null]
 )*(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getDataModelAccess().getAssociationsAssociationParserRuleCall_1_0()); 
+	        newCompositeNode(grammarAccess.getDataModelAccess().getAssociatiosAssociationParserRuleCall_1_0()); 
 	    }
-		lv_associations_1_0=ruleAssociation		{
+		lv_associatios_1_0=ruleAssociation		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getDataModelRule());
 	        }
        		add(
        			$current, 
-       			"associations",
-        		lv_associations_1_0, 
+       			"associatios",
+        		lv_associatios_1_0, 
         		"Association");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -152,9 +152,9 @@ ruleEntity returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-(	otherlv_0='Entityy' 
+(	otherlv_0='Entity' 
     {
-    	newLeafNode(otherlv_0, grammarAccess.getEntityAccess().getEntityyKeyword_0());
+    	newLeafNode(otherlv_0, grammarAccess.getEntityAccess().getEntityKeyword_0());
     }
 (
 (

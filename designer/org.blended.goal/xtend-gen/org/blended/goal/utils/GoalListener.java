@@ -1,6 +1,5 @@
 package org.blended.goal.utils;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import java.io.IOException;
 import java.util.Map;
@@ -73,18 +72,13 @@ public class GoalListener implements Runnable {
   }
   
   public void doTask(final String option) {
-    boolean _matched = false;
-    if (!_matched) {
-      if (Objects.equal(option, "0")) {
-        _matched=true;
+    switch (option) {
+      case "0":
         CharSequence _listOfActions = GoalListener.listOfActions();
         String _string = _listOfActions.toString();
         ConsoleManagement.write(this.name, _string);
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "1")) {
-        _matched=true;
+        break;
+      case "1":
         ConsoleManagement.write(this.name, "List of all the Goals:");
         TreeIterator<EObject> _allContents = this.resource.getAllContents();
         Iterable<EObject> _iterable = IteratorExtensions.<EObject>toIterable(_allContents);
@@ -94,11 +88,8 @@ public class GoalListener implements Runnable {
           String _plus = ("g:" + _name);
           ConsoleManagement.write(this.name, ConsoleManagement.TypeOutput.OutputData, _plus);
         }
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "2")) {
-        _matched=true;
+        break;
+      case "2":
         ConsoleManagement.write(this.name, "Testing manipulation of model:");
         GoalFactory blendedFactory = GoalFactory.eINSTANCE;
         Goal goal = blendedFactory.createGoal();
@@ -111,10 +102,10 @@ public class GoalListener implements Runnable {
         EList<Goal> _goals_1 = gm.getGoals();
         _goals_1.remove(1);
         this.update();
-      }
-    }
-    if (!_matched) {
-      ConsoleManagement.write(this.name, "Option no valid. Type 0 to see the options");
+        break;
+      default:
+        ConsoleManagement.write(this.name, "Option no valid. Type 0 to see the options");
+        break;
     }
   }
   

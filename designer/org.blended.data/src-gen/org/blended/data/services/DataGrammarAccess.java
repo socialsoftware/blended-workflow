@@ -23,16 +23,16 @@ public class DataGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cEntitiesAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final RuleCall cEntitiesEntityParserRuleCall_0_0 = (RuleCall)cEntitiesAssignment_0.eContents().get(0);
-		private final Assignment cAssociationsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cAssociationsAssociationParserRuleCall_1_0 = (RuleCall)cAssociationsAssignment_1.eContents().get(0);
+		private final Assignment cAssociatiosAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cAssociatiosAssociationParserRuleCall_1_0 = (RuleCall)cAssociatiosAssignment_1.eContents().get(0);
 		private final Assignment cConstraintAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cConstraintConstraintParserRuleCall_2_0 = (RuleCall)cConstraintAssignment_2.eContents().get(0);
 		
 		//DataModel:
-		//	entities+=Entity* associations+=Association* constraint+=Constraint*;
+		//	entities+=Entity* associatios+=Association* constraint+=Constraint*;
 		@Override public ParserRule getRule() { return rule; }
 
-		//entities+=Entity* associations+=Association* constraint+=Constraint*
+		//entities+=Entity* associatios+=Association* constraint+=Constraint*
 		public Group getGroup() { return cGroup; }
 
 		//entities+=Entity*
@@ -41,11 +41,11 @@ public class DataGrammarAccess extends AbstractGrammarElementFinder {
 		//Entity
 		public RuleCall getEntitiesEntityParserRuleCall_0_0() { return cEntitiesEntityParserRuleCall_0_0; }
 
-		//associations+=Association*
-		public Assignment getAssociationsAssignment_1() { return cAssociationsAssignment_1; }
+		//associatios+=Association*
+		public Assignment getAssociatiosAssignment_1() { return cAssociatiosAssignment_1; }
 
 		//Association
-		public RuleCall getAssociationsAssociationParserRuleCall_1_0() { return cAssociationsAssociationParserRuleCall_1_0; }
+		public RuleCall getAssociatiosAssociationParserRuleCall_1_0() { return cAssociatiosAssociationParserRuleCall_1_0; }
 
 		//constraint+=Constraint*
 		public Assignment getConstraintAssignment_2() { return cConstraintAssignment_2; }
@@ -57,7 +57,7 @@ public class DataGrammarAccess extends AbstractGrammarElementFinder {
 	public class EntityElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Entity");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cEntityyKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Keyword cEntityKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		private final Assignment cExistsAssignment_2 = (Assignment)cGroup.eContents().get(2);
@@ -75,15 +75,15 @@ public class DataGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
 		//Entity:
-		//	"Entityy" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)*
+		//	"Entity" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)*
 		//	"}";
 		@Override public ParserRule getRule() { return rule; }
 
-		//"Entityy" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)* "}"
+		//"Entity" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)* "}"
 		public Group getGroup() { return cGroup; }
 
-		//"Entityy"
-		public Keyword getEntityyKeyword_0() { return cEntityyKeyword_0; }
+		//"Entity"
+		public Keyword getEntityKeyword_0() { return cEntityKeyword_0; }
 
 		//name=ID
 		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
@@ -780,7 +780,7 @@ public class DataGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//DataModel:
-	//	entities+=Entity* associations+=Association* constraint+=Constraint*;
+	//	entities+=Entity* associatios+=Association* constraint+=Constraint*;
 	public DataModelElements getDataModelAccess() {
 		return pDataModel;
 	}
@@ -790,7 +790,7 @@ public class DataGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Entity:
-	//	"Entityy" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)*
+	//	"Entity" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)*
 	//	"}";
 	public EntityElements getEntityAccess() {
 		return pEntity;

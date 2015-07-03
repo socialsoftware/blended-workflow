@@ -1,6 +1,5 @@
 package org.blended.activity.utils;
 
-import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Map;
 import org.blended.activity.utils.ConsoleManagement;
@@ -65,30 +64,22 @@ public class ActivityListener implements Runnable {
   }
   
   public void doTask(final String option) {
-    boolean _matched = false;
-    if (!_matched) {
-      if (Objects.equal(option, "0")) {
-        _matched=true;
+    switch (option) {
+      case "0":
         CharSequence _listOfActions = ActivityListener.listOfActions();
         String _string = _listOfActions.toString();
         ConsoleManagement.write(this.name, _string);
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "1")) {
-        _matched=true;
+        break;
+      case "1":
         ConsoleManagement.write(this.name, "List of all the Goals:");
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "2")) {
-        _matched=true;
+        break;
+      case "2":
         ConsoleManagement.write(this.name, "Testing manipulation of model:");
         this.update();
-      }
-    }
-    if (!_matched) {
-      ConsoleManagement.write(this.name, "Option no valid. Type 0 to see the options");
+        break;
+      default:
+        ConsoleManagement.write(this.name, "Option no valid. Type 0 to see the options");
+        break;
     }
   }
   

@@ -576,9 +576,9 @@ rule__DataModel__Group__1__Impl
     }
 :
 (
-{ before(grammarAccess.getDataModelAccess().getAssociationsAssignment_1()); }
-(rule__DataModel__AssociationsAssignment_1)*
-{ after(grammarAccess.getDataModelAccess().getAssociationsAssignment_1()); }
+{ before(grammarAccess.getDataModelAccess().getAssociatiosAssignment_1()); }
+(rule__DataModel__AssociatiosAssignment_1)*
+{ after(grammarAccess.getDataModelAccess().getAssociatiosAssignment_1()); }
 )
 
 ;
@@ -639,11 +639,11 @@ rule__Entity__Group__0__Impl
     }
 :
 (
-{ before(grammarAccess.getEntityAccess().getEntityyKeyword_0()); }
+{ before(grammarAccess.getEntityAccess().getEntityKeyword_0()); }
 
-	'Entityy' 
+	'Entity' 
 
-{ after(grammarAccess.getEntityAccess().getEntityyKeyword_0()); }
+{ after(grammarAccess.getEntityAccess().getEntityKeyword_0()); }
 )
 
 ;
@@ -3309,14 +3309,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__DataModel__AssociationsAssignment_1
+rule__DataModel__AssociatiosAssignment_1
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getDataModelAccess().getAssociationsAssociationParserRuleCall_1_0()); }
-	ruleAssociation{ after(grammarAccess.getDataModelAccess().getAssociationsAssociationParserRuleCall_1_0()); }
+{ before(grammarAccess.getDataModelAccess().getAssociatiosAssociationParserRuleCall_1_0()); }
+	ruleAssociation{ after(grammarAccess.getDataModelAccess().getAssociatiosAssociationParserRuleCall_1_0()); }
 )
 
 ;

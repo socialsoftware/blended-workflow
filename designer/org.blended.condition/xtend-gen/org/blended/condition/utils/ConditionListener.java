@@ -1,6 +1,5 @@
 package org.blended.condition.utils;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import java.io.IOException;
 import java.util.Map;
@@ -85,18 +84,13 @@ public class ConditionListener implements Runnable {
   
   public Object doTask(final String option) {
     Object _switchResult = null;
-    boolean _matched = false;
-    if (!_matched) {
-      if (Objects.equal(option, "0")) {
-        _matched=true;
+    switch (option) {
+      case "0":
         CharSequence _listOfActions = ConditionListener.listOfActions();
         String _string = _listOfActions.toString();
         ConsoleManagement.write(this.name, _string);
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "1")) {
-        _matched=true;
+        break;
+      case "1":
         ConsoleManagement.write(this.name, "List of Entity Achive Conditions:");
         TreeIterator<EObject> _allContents = this.resource.getAllContents();
         Iterable<EObject> _iterable = IteratorExtensions.<EObject>toIterable(_allContents);
@@ -107,11 +101,8 @@ public class ConditionListener implements Runnable {
           String _plus_1 = (_plus + ")");
           ConsoleManagement.write(this.name, ConsoleManagement.TypeOutput.OutputData, _plus_1);
         }
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "2")) {
-        _matched=true;
+        break;
+      case "2":
         ConsoleManagement.write(this.name, "List of Entity Invariant Conditions:");
         TreeIterator<EObject> _allContents_1 = this.resource.getAllContents();
         Iterable<EObject> _iterable_1 = IteratorExtensions.<EObject>toIterable(_allContents_1);
@@ -125,11 +116,8 @@ public class ConditionListener implements Runnable {
           String _plus_5 = (_plus_4 + ")");
           ConsoleManagement.write(this.name, ConsoleManagement.TypeOutput.OutputData, _plus_5);
         }
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "3")) {
-        _matched=true;
+        break;
+      case "3":
         ConsoleManagement.write(this.name, "List of Entity Dependence Conditions:");
         TreeIterator<EObject> _allContents_2 = this.resource.getAllContents();
         Iterable<EObject> _iterable_2 = IteratorExtensions.<EObject>toIterable(_allContents_2);
@@ -143,11 +131,8 @@ public class ConditionListener implements Runnable {
           String _plus_9 = (_plus_8 + "))");
           ConsoleManagement.write(this.name, ConsoleManagement.TypeOutput.OutputData, _plus_9);
         }
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "4")) {
-        _matched=true;
+        break;
+      case "4":
         ConsoleManagement.write(this.name, "List of Attribute Achive Conditions:");
         TreeIterator<EObject> _allContents_3 = this.resource.getAllContents();
         Iterable<EObject> _iterable_3 = IteratorExtensions.<EObject>toIterable(_allContents_3);
@@ -167,11 +152,8 @@ public class ConditionListener implements Runnable {
             ConsoleManagement.write(this.name, ConsoleManagement.TypeOutput.OutputData, _plus_13);
           }
         }
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "5")) {
-        _matched=true;
+        break;
+      case "5":
         ConsoleManagement.write(this.name, "List of Attribute Invariant Conditions:");
         TreeIterator<EObject> _allContents_4 = this.resource.getAllContents();
         Iterable<EObject> _iterable_4 = IteratorExtensions.<EObject>toIterable(_allContents_4);
@@ -183,11 +165,8 @@ public class ConditionListener implements Runnable {
           String _plus_15 = (_plus_14 + ")");
           ConsoleManagement.write(this.name, ConsoleManagement.TypeOutput.OutputData, _plus_15);
         }
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "6")) {
-        _matched=true;
+        break;
+      case "6":
         ConsoleManagement.write(this.name, "List of Attribute Dependence Conditions:");
         TreeIterator<EObject> _allContents_5 = this.resource.getAllContents();
         Iterable<EObject> _iterable_5 = IteratorExtensions.<EObject>toIterable(_allContents_5);
@@ -202,11 +181,8 @@ public class ConditionListener implements Runnable {
           String _plus_19 = (_plus_18 + "))");
           ConsoleManagement.write(this.name, ConsoleManagement.TypeOutput.OutputData, _plus_19);
         }
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "7")) {
-        _matched=true;
+        break;
+      case "7":
         ConsoleManagement.write(this.name, "Testing manipulation of model:");
         ConditionFactory blendedFactory = ConditionFactory.eINSTANCE;
         EntityAchieveCondition eac = blendedFactory.createEntityAchieveCondition();
@@ -218,16 +194,13 @@ public class ConditionListener implements Runnable {
         EList<EObject> _entityAchieveConditions = _conditions_2.getEntityAchieveConditions();
         _entityAchieveConditions.add(eac);
         this.update();
-      }
-    }
-    if (!_matched) {
-      if (Objects.equal(option, "")) {
-        _matched=true;
+        break;
+      case "":
         _switchResult = null;
-      }
-    }
-    if (!_matched) {
-      ConsoleManagement.write(this.name, "Option no valid. Type 0 to see the options");
+        break;
+      default:
+        ConsoleManagement.write(this.name, "Option no valid. Type 0 to see the options");
+        break;
     }
     return _switchResult;
   }

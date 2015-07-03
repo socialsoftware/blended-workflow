@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature id="org.blended.data.sdk"
 	label="Data SDK Feature "
-	version="1.0.0.201507030841">
+	version="1.0.0.201507030857">
 	<plugin
 			id="org.blended.data"
 			download-size="152"
-			install-size="405"
-			version="1.0.0.201507030841"
+			install-size="404"
+			version="1.0.0.201507030857"
 			unpack="false"/>
 	<plugin
 			id="org.blended.data.ui"
 			download-size="75"
 			install-size="274"
-			version="1.0.0.201507030841"
+			version="1.0.0.201507030857"
 			unpack="false"/>
 </feature>

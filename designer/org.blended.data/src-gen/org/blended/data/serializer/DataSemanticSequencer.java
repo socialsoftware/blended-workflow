@@ -201,7 +201,7 @@ public class DataSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (entities+=Entity* associations+=Association* constraint+=Constraint*)
+	 *     (entities+=Entity* associatios+=Association* constraint+=Constraint*)
 	 */
 	protected void sequence_DataModel(EObject context, DataModel semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -66,7 +66,7 @@ public class DataParser extends AbstractContentAssistParser {
 					put(grammarAccess.getAtomicAccess().getGroup_0(), "rule__Atomic__Group_0__0");
 					put(grammarAccess.getAtomicAccess().getGroup_1(), "rule__Atomic__Group_1__0");
 					put(grammarAccess.getDataModelAccess().getEntitiesAssignment_0(), "rule__DataModel__EntitiesAssignment_0");
-					put(grammarAccess.getDataModelAccess().getAssociationsAssignment_1(), "rule__DataModel__AssociationsAssignment_1");
+					put(grammarAccess.getDataModelAccess().getAssociatiosAssignment_1(), "rule__DataModel__AssociatiosAssignment_1");
 					put(grammarAccess.getDataModelAccess().getConstraintAssignment_2(), "rule__DataModel__ConstraintAssignment_2");
 					put(grammarAccess.getEntityAccess().getNameAssignment_1(), "rule__Entity__NameAssignment_1");
 					put(grammarAccess.getEntityAccess().getExistsAssignment_2(), "rule__Entity__ExistsAssignment_2");

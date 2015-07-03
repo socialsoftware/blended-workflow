@@ -204,7 +204,7 @@ public class DataPackageImpl extends EPackageImpl implements DataPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getDataModel_Associations()
+  public EReference getDataModel_Associatios()
   {
     return (EReference)dataModelEClass.getEStructuralFeatures().get(1);
   }
@@ -611,7 +611,7 @@ public class DataPackageImpl extends EPackageImpl implements DataPackage
     // Create classes and their features
     dataModelEClass = createEClass(DATA_MODEL);
     createEReference(dataModelEClass, DATA_MODEL__ENTITIES);
-    createEReference(dataModelEClass, DATA_MODEL__ASSOCIATIONS);
+    createEReference(dataModelEClass, DATA_MODEL__ASSOCIATIOS);
     createEReference(dataModelEClass, DATA_MODEL__CONSTRAINT);
 
     entityEClass = createEClass(ENTITY);
@@ -700,7 +700,7 @@ public class DataPackageImpl extends EPackageImpl implements DataPackage
     // Initialize classes and features; add operations and parameters
     initEClass(dataModelEClass, DataModel.class, "DataModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getDataModel_Entities(), this.getEntity(), null, "entities", null, 0, -1, DataModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getDataModel_Associations(), this.getAssociation(), null, "associations", null, 0, -1, DataModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getDataModel_Associatios(), this.getAssociation(), null, "associatios", null, 0, -1, DataModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getDataModel_Constraint(), this.getConstraint(), null, "constraint", null, 0, -1, DataModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(entityEClass, Entity.class, "Entity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

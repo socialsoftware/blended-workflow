@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <units size='2'>
-  <unit id='org.blended.data.sdk.feature.group' version='1.0.0.201507030841' singleton='false'>
-    <update id='org.blended.data.sdk.feature.group' range='[0.0.0,1.0.0.201507030841)' severity='0'/>
+  <unit id='org.blended.data.sdk.feature.group' version='1.0.0.201507030857' singleton='false'>
+    <update id='org.blended.data.sdk.feature.group' range='[0.0.0,1.0.0.201507030857)' severity='0'/>
     <properties size='5'>
       <property name='org.eclipse.equinox.p2.name' value='Data SDK Feature '/>
       <property name='org.eclipse.equinox.p2.type.group' value='true'/>
@@ -10,12 +10,12 @@
       <property name='maven-version' value='1.0.0-SNAPSHOT'/>
     </properties>
     <provides size='1'>
-      <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.group' version='1.0.0.201507030841'/>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.group' version='1.0.0.201507030857'/>
     </provides>
     <requires size='3'>
-      <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data' range='[1.0.0.201507030841,1.0.0.201507030841]'/>
-      <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.ui' range='[1.0.0.201507030841,1.0.0.201507030841]'/>
-      <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.jar' range='[1.0.0.201507030841,1.0.0.201507030841]'>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data' range='[1.0.0.201507030857,1.0.0.201507030857]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.ui' range='[1.0.0.201507030857,1.0.0.201507030857]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.jar' range='[1.0.0.201507030857,1.0.0.201507030857]'>
         <filter>
           (org.eclipse.update.install.features=true)
         </filter>
@@ -23,7 +23,7 @@
     </requires>
     <touchpoint id='null' version='0.0.0'/>
   </unit>
-  <unit id='org.blended.data.sdk.feature.jar' version='1.0.0.201507030841'>
+  <unit id='org.blended.data.sdk.feature.jar' version='1.0.0.201507030857'>
     <properties size='4'>
       <property name='org.eclipse.equinox.p2.name' value='Data SDK Feature '/>
       <property name='maven-groupId' value='org.blendedProject'/>
@@ -31,15 +31,15 @@
       <property name='maven-version' value='1.0.0-SNAPSHOT'/>
     </properties>
     <provides size='3'>
-      <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.jar' version='1.0.0.201507030841'/>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.jar' version='1.0.0.201507030857'/>
       <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
-      <provided namespace='org.eclipse.update.feature' name='org.blended.data.sdk' version='1.0.0.201507030841'/>
+      <provided namespace='org.eclipse.update.feature' name='org.blended.data.sdk' version='1.0.0.201507030857'/>
     </provides>
     <filter>
       (org.eclipse.update.install.features=true)
     </filter>
     <artifacts size='1'>
-      <artifact classifier='org.eclipse.update.feature' id='org.blended.data.sdk' version='1.0.0.201507030841'/>
+      <artifact classifier='org.eclipse.update.feature' id='org.blended.data.sdk' version='1.0.0.201507030857'/>
     </artifacts>
     <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
     <touchpointData size='1'>
