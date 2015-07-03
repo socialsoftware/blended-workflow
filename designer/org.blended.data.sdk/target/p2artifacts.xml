@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?artifactRepository version='1.1.0'?>
 <artifacts size='1'>
-  <artifact classifier='org.eclipse.update.feature' id='org.blended.data.sdk' version='1.0.0.201507030857'>
+  <artifact classifier='org.eclipse.update.feature' id='org.blended.data.sdk' version='1.0.0.201507031112'>
     <properties size='6'>
-      <property name='artifact.size' value='667'/>
-      <property name='download.size' value='667'/>
-      <property name='maven-groupId' value='org.blendedProject'/>
+      <property name='artifact.size' value='668'/>
+      <property name='download.size' value='668'/>
+      <property name='maven-groupId' value='pt.ist.socialsoftware'/>
       <property name='maven-artifactId' value='org.blended.data.sdk'/>
       <property name='maven-version' value='1.0.0-SNAPSHOT'/>
       <property name='download.contentType' value='application/zip'/>

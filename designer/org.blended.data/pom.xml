@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>org.blended.data</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<name>The Blended Workflow Core - Data</name>
 
 	<parent>
-		<relativePath>../org.blended.releng/pom.xml</relativePath>
-		<groupId>org.blendedProject</groupId>
-		<artifactId>parent</artifactId>
-		<version>${code.version}</version>
+		<groupId>pt.ist.socialsoftware</groupId>
+		<artifactId>designer</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
  
 	<build>
@@ -87,7 +87,7 @@
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>
-			</plugin>
+			</plugin>   
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -124,4 +124,13 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	
+	<dependencies>
+		<dependency>
+			<groupId>pt.ist.socialsoftware</groupId>
+			<artifactId>engine</artifactId>
+			<version>1.0.0-SNAPSHOT</version>			
+		</dependency>
+	</dependencies>
+	
 </project>

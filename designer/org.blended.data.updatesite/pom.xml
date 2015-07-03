@@ -6,9 +6,8 @@
   <name>The Blended Workflow Update Site - Data</name>
 
   <parent>
-    <relativePath>../org.blended.releng/pom.xml</relativePath>
-    <groupId>org.blendedProject</groupId>
-    <artifactId>parent</artifactId>
+	<groupId>pt.ist.socialsoftware</groupId>
+	<artifactId>designer</artifactId>
     <version>${code.version}</version>
   </parent>
 

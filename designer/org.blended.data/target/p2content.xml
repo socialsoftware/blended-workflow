@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <units size='1'>
-  <unit id='org.blended.data' version='1.0.0.201507030857'>
-    <update id='org.blended.data' range='[0.0.0,1.0.0.201507030857)' severity='0'/>
+  <unit id='org.blended.data' version='1.0.0.201507031557'>
+    <update id='org.blended.data' range='[0.0.0,1.0.0.201507031557)' severity='0'/>
     <properties size='5'>
       <property name='org.eclipse.equinox.p2.name' value='org.blended.data'/>
       <property name='org.eclipse.equinox.p2.provider' value='My Company'/>
-      <property name='maven-groupId' value='org.blendedProject'/>
+      <property name='maven-groupId' value='pt.ist.socialsoftware'/>
       <property name='maven-artifactId' value='org.blended.data'/>
       <property name='maven-version' value='1.0.0-SNAPSHOT'/>
     </properties>
     <provides size='15'>
-      <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data' version='1.0.0.201507030857'/>
-      <provided namespace='osgi.bundle' name='org.blended.data' version='1.0.0.201507030857'/>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data' version='1.0.0.201507031557'/>
+      <provided namespace='osgi.bundle' name='org.blended.data' version='1.0.0.201507031557'/>
       <provided namespace='java.package' name='org.blended.data' version='0.0.0'/>
       <provided namespace='java.package' name='org.blended.data.services' version='0.0.0'/>
       <provided namespace='java.package' name='org.blended.data.data' version='0.0.0'/>
@@ -39,13 +39,13 @@
       <required namespace='java.package' name='org.apache.log4j' range='0.0.0'/>
     </requires>
     <artifacts size='1'>
-      <artifact classifier='osgi.bundle' id='org.blended.data' version='1.0.0.201507030857'/>
+      <artifact classifier='osgi.bundle' id='org.blended.data' version='1.0.0.201507031557'/>
     </artifacts>
     <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
     <touchpointData size='1'>
       <instructions size='1'>
         <instruction key='manifest'>
-          Bundle-SymbolicName: org.blended.data; singleton:=true&#xA;Bundle-Version: 1.0.0.201507030857&#xA;
+          Bundle-SymbolicName: org.blended.data; singleton:=true&#xA;Bundle-Version: 1.0.0.201507031557&#xA;
         </instruction>
       </instructions>
     </touchpointData>

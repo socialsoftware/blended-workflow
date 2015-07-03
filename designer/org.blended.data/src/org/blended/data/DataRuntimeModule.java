@@ -3,9 +3,11 @@
  */
 package org.blended.data;
 
+//import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
+
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 public class DataRuntimeModule extends org.blended.data.AbstractDataRuntimeModule {
-
+	//DesignInterface instance;
 }

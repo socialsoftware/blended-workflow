@@ -295,154 +295,104 @@ public class DataGeneratorConditionModel {
   
   public CharSequence entityAchieveCondition(final Entity e) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("DEF(");
-    String _name = e.getName();
-    _builder.append(_name, "");
-    _builder.append(")\t");
-    _builder.newLineIfNotEmpty();
+    _builder.append("DEF( �e.name �)\t");
+    _builder.newLine();
     return _builder;
   }
   
   public CharSequence entityAchieveConditionExists(final Entity e) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("EXISTS(DEF(");
-    String _name = e.getName();
-    _builder.append(_name, "");
-    _builder.append("))");
-    _builder.newLineIfNotEmpty();
+    _builder.append("EXISTS(DEF( �e.name �))");
+    _builder.newLine();
     return _builder;
   }
   
   public CharSequence entityInvariantCondition1(final Association a) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("MUL(");
-    Entity _entity1 = a.getEntity1();
-    String _name = _entity1.getName();
-    _builder.append(_name, "");
-    _builder.append(".");
-    String _name2 = a.getName2();
-    _builder.append(_name2, "");
-    _builder.append(", ");
-    String _cardinality2 = a.getCardinality2();
-    _builder.append(_cardinality2, "");
-    _builder.append(")");
-    _builder.newLineIfNotEmpty();
+    _builder.append("MUL( �a.entity1.name �. �a.name2 �,  �a.cardinality2 �)");
+    _builder.newLine();
     return _builder;
   }
   
   public CharSequence entityInvariantCondition2(final Association a) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("MUL(");
-    Entity _entity2 = a.getEntity2();
-    String _name = _entity2.getName();
-    _builder.append(_name, "");
-    _builder.append(".");
-    String _name1 = a.getName1();
-    _builder.append(_name1, "");
-    _builder.append(", ");
-    String _cardinality1 = a.getCardinality1();
-    _builder.append(_cardinality1, "");
-    _builder.append(")");
-    _builder.newLineIfNotEmpty();
+    _builder.append("MUL( �a.entity2.name �. �a.name1 �,  �a.cardinality1 �)");
+    _builder.newLine();
     return _builder;
   }
   
   public CharSequence entityDependenceCondition(final Entity e) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("DEP(DEF(");
-    String _name = e.getName();
-    _builder.append(_name, "");
-    _builder.append("), DEF(");
-    Entity _dependsOn = e.getDependsOn();
-    String _name_1 = _dependsOn.getName();
-    _builder.append(_name_1, "");
-    _builder.append("))\t");
-    _builder.newLineIfNotEmpty();
+    _builder.append("DEP(DEF( �e.name �), DEF( �e.dependsOn.name �))\t");
+    _builder.newLine();
     return _builder;
   }
   
   public CharSequence attributeAchieveCondition(final Entity e, final Attribute a) {
     StringConcatenation _builder = new StringConcatenation();
-    {
-      boolean _isMandatory = a.isMandatory();
-      if (_isMandatory) {
-        _builder.append("MAN(DEF(");
-        String _name = e.getName();
-        _builder.append(_name, "");
-        _builder.append(".");
-        String _name_1 = a.getName();
-        _builder.append(_name_1, "");
-        _builder.append("))");
-        _builder.newLineIfNotEmpty();
-      } else {
-        _builder.append("DEF(");
-        String _name_2 = e.getName();
-        _builder.append(_name_2, "");
-        _builder.append(".");
-        String _name_3 = a.getName();
-        _builder.append(_name_3, "");
-        _builder.append(")");
-        _builder.newLineIfNotEmpty();
-      }
-    }
+    _builder.append(" ");
+    _builder.append("�IF a.mandatory �");
+    _builder.newLine();
+    _builder.append("MAN(DEF( �e.name �. �a.name �))");
+    _builder.newLine();
+    _builder.append(" ");
+    _builder.append("�ELSE �");
+    _builder.newLine();
+    _builder.append("DEF( �e.name �. �a.name �)");
+    _builder.newLine();
+    _builder.append(" ");
+    _builder.append("�ENDIF �");
+    _builder.newLine();
     return _builder;
   }
   
   public CharSequence attributeAchieveCondition(final String s, final Boolean mandatory) {
     StringConcatenation _builder = new StringConcatenation();
-    {
-      if ((mandatory).booleanValue()) {
-        _builder.append("MAN(DEF(");
-        _builder.append(s, "");
-        _builder.append("))");
-        _builder.newLineIfNotEmpty();
-      } else {
-        _builder.append("DEF(");
-        _builder.append(s, "");
-        _builder.append(")");
-        _builder.newLineIfNotEmpty();
-      }
-    }
+    _builder.append(" ");
+    _builder.append("�IF mandatory �");
+    _builder.newLine();
+    _builder.append("MAN(DEF( �s �))");
+    _builder.newLine();
+    _builder.append(" ");
+    _builder.append("�ELSE �");
+    _builder.newLine();
+    _builder.append("DEF( �s �)");
+    _builder.newLine();
+    _builder.append(" ");
+    _builder.append("�ENDIF �");
+    _builder.newLine();
     return _builder;
   }
   
   public CharSequence attributeAchieveConditionGrouped(final String s, final Boolean mandatory) {
     StringConcatenation _builder = new StringConcatenation();
-    {
-      if ((mandatory).booleanValue()) {
-        _builder.append("MAN(DEF(");
-        _builder.append(s, "");
-        _builder.append("))");
-        _builder.newLineIfNotEmpty();
-      } else {
-        _builder.append("DEF(");
-        _builder.append(s, "");
-        _builder.append(")");
-        _builder.newLineIfNotEmpty();
-      }
-    }
+    _builder.append(" ");
+    _builder.append("�IF mandatory �");
+    _builder.newLine();
+    _builder.append("MAN(DEF( �s �))");
+    _builder.newLine();
+    _builder.append(" ");
+    _builder.append("�ELSE �");
+    _builder.newLine();
+    _builder.append("DEF( �s �)");
+    _builder.newLine();
+    _builder.append(" ");
+    _builder.append("�ENDIF �");
+    _builder.newLine();
     return _builder;
   }
   
   public CharSequence attributeInvariantCondition(final Constraint c) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("RUL(");
-    Expression _constraint = c.getConstraint();
-    String _completeExpression = DataGeneratorConditionModel.getCompleteExpression(_constraint);
-    _builder.append(_completeExpression, "");
-    _builder.append(")");
-    _builder.newLineIfNotEmpty();
+    _builder.append("RUL( �c.constraint.completeExpression �)");
+    _builder.newLine();
     return _builder;
   }
   
   public CharSequence attributeDependenceCondition(final String a, final String b) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("DEP(DEF(");
-    _builder.append(a, "");
-    _builder.append("), DEF(");
-    _builder.append(b, "");
-    _builder.append("))");
-    _builder.newLineIfNotEmpty();
+    _builder.append("DEP(DEF( �a �), DEF( �b �))");
+    _builder.newLine();
     return _builder;
   }
   

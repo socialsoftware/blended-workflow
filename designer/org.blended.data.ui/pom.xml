@@ -6,10 +6,9 @@
 	<name>The Blended Workflow UI - Data</name>
 
 	<parent>
-		<relativePath>../org.blended.releng/pom.xml</relativePath>
-		<groupId>org.blendedProject</groupId>
-		<artifactId>parent</artifactId>
-		<version>${code.version}</version>
+		<groupId>pt.ist.socialsoftware</groupId>
+		<artifactId>designer</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
 	<build>
@@ -30,4 +29,13 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<dependencies>
+		<dependency>
+			<groupId>pt.ist.socialsoftware</groupId>
+			<artifactId>engine</artifactId>
+			<version>1.0.0-SNAPSHOT</version>			
+		</dependency>
+	</dependencies>
+	
 </project>

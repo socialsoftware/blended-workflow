@@ -2782,77 +2782,6 @@
         </instructions>
       </touchpointData>
     </unit>
-    <unit id='org.blended.data.ui' version='1.0.0.201507030857'>
-      <update id='org.blended.data.ui' range='[0.0.0,1.0.0.201507030857)' severity='0'/>
-      <properties size='5'>
-        <property name='org.eclipse.equinox.p2.name' value='org.blended.data.ui'/>
-        <property name='org.eclipse.equinox.p2.provider' value='My Company'/>
-        <property name='maven-groupId' value='org.blendedProject'/>
-        <property name='maven-artifactId' value='org.blended.data.ui'/>
-        <property name='maven-version' value='1.0.0-SNAPSHOT'/>
-      </properties>
-      <provides size='7'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.ui' version='1.0.0.201507030857'/>
-        <provided namespace='osgi.bundle' name='org.blended.data.ui' version='1.0.0.201507030857'/>
-        <provided namespace='java.package' name='org.blended.data.ui.quickfix' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.ui.contentassist' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.ui.internal' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.ui.contentassist.antlr' version='0.0.0'/>
-        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
-      </provides>
-      <requires size='12'>
-        <required namespace='osgi.bundle' name='org.blended.data' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.xtext.ui' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.ui.editors' range='3.5.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.ui.ide' range='3.5.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.xtext.ui.shared' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.ui' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.xtext.builder' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.xtext.xbase.lib' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.xtext.common.types.ui' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.xtext.ui.codetemplates.ui' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.compare' range='0.0.0'/>
-        <required namespace='java.package' name='org.apache.log4j' range='0.0.0'/>
-      </requires>
-      <artifacts size='1'>
-        <artifact classifier='osgi.bundle' id='org.blended.data.ui' version='1.0.0.201507030857'/>
-      </artifacts>
-      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
-      <touchpointData size='1'>
-        <instructions size='1'>
-          <instruction key='manifest'>
-            Bundle-SymbolicName: org.blended.data.ui; singleton:=true&#xA;Bundle-Version: 1.0.0.201507030857
-          </instruction>
-        </instructions>
-      </touchpointData>
-    </unit>
-    <unit id='org.blended.data.sdk.feature.jar' version='1.0.0.201507030857'>
-      <properties size='4'>
-        <property name='org.eclipse.equinox.p2.name' value='Data SDK Feature'/>
-        <property name='maven-groupId' value='org.blendedProject'/>
-        <property name='maven-artifactId' value='org.blended.data.sdk'/>
-        <property name='maven-version' value='1.0.0-SNAPSHOT'/>
-      </properties>
-      <provides size='3'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.jar' version='1.0.0.201507030857'/>
-        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
-        <provided namespace='org.eclipse.update.feature' name='org.blended.data.sdk' version='1.0.0.201507030857'/>
-      </provides>
-      <filter>
-        (org.eclipse.update.install.features=true)
-      </filter>
-      <artifacts size='1'>
-        <artifact classifier='org.eclipse.update.feature' id='org.blended.data.sdk' version='1.0.0.201507030857'/>
-      </artifacts>
-      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
-      <touchpointData size='1'>
-        <instructions size='1'>
-          <instruction key='zipped'>
-            true
-          </instruction>
-        </instructions>
-      </touchpointData>
-    </unit>
     <unit id='org.apache.ant' version='1.9.2.v201404171502' singleton='false'>
       <update id='org.apache.ant' range='[0.0.0,1.9.2.v201404171502)' severity='0'/>
       <properties size='5'>
@@ -2953,29 +2882,6 @@
           </instruction>
         </instructions>
       </touchpointData>
-    </unit>
-    <unit id='org.blended.data.sdk.feature.group' version='1.0.0.201507030857' singleton='false'>
-      <update id='org.blended.data.sdk.feature.group' range='[0.0.0,1.0.0.201507030857)' severity='0'/>
-      <properties size='5'>
-        <property name='org.eclipse.equinox.p2.name' value='Data SDK Feature'/>
-        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
-        <property name='maven-groupId' value='org.blendedProject'/>
-        <property name='maven-artifactId' value='org.blended.data.sdk'/>
-        <property name='maven-version' value='1.0.0-SNAPSHOT'/>
-      </properties>
-      <provides size='1'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.group' version='1.0.0.201507030857'/>
-      </provides>
-      <requires size='3'>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data' range='[1.0.0.201507030857,1.0.0.201507030857]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.ui' range='[1.0.0.201507030857,1.0.0.201507030857]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.jar' range='[1.0.0.201507030857,1.0.0.201507030857]'>
-          <filter>
-            (org.eclipse.update.install.features=true)
-          </filter>
-        </required>
-      </requires>
-      <touchpoint id='null' version='0.0.0'/>
     </unit>
     <unit id='org.eclipse.e4.ui.workbench3' version='0.12.0.v20140227-2118'>
       <update id='org.eclipse.e4.ui.workbench3' range='[0.0.0,0.12.0.v20140227-2118)' severity='0'/>
@@ -3368,56 +3274,6 @@
         <instructions size='1'>
           <instruction key='manifest'>
             Bundle-SymbolicName: org.eclipse.osgi; singleton:=true&#xA;Bundle-Version: 3.10.2.v20150203-1939
-          </instruction>
-        </instructions>
-      </touchpointData>
-    </unit>
-    <unit id='org.blended.data' version='1.0.0.201507030857'>
-      <update id='org.blended.data' range='[0.0.0,1.0.0.201507030857)' severity='0'/>
-      <properties size='5'>
-        <property name='org.eclipse.equinox.p2.name' value='org.blended.data'/>
-        <property name='org.eclipse.equinox.p2.provider' value='My Company'/>
-        <property name='maven-groupId' value='org.blendedProject'/>
-        <property name='maven-artifactId' value='org.blended.data'/>
-        <property name='maven-version' value='1.0.0-SNAPSHOT'/>
-      </properties>
-      <provides size='15'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data' version='1.0.0.201507030857'/>
-        <provided namespace='osgi.bundle' name='org.blended.data' version='1.0.0.201507030857'/>
-        <provided namespace='java.package' name='org.blended.data' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.services' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.data' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.data.impl' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.data.util' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.serializer' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.parser.antlr' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.parser.antlr.internal' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.validation' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.scoping' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.generator' version='0.0.0'/>
-        <provided namespace='java.package' name='org.blended.data.formatting' version='0.0.0'/>
-        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
-      </provides>
-      <requires size='10'>
-        <required namespace='osgi.bundle' name='org.eclipse.xtext' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.equinox.common' range='3.5.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.xtext.util' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.emf.ecore' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.emf.common' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.xtext.xbase.lib' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.antlr.runtime' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.xtext.common.types' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.objectweb.asm' range='[5.0.1,6.0.0)' optional='true' greedy='false'/>
-        <required namespace='java.package' name='org.apache.log4j' range='0.0.0'/>
-      </requires>
-      <artifacts size='1'>
-        <artifact classifier='osgi.bundle' id='org.blended.data' version='1.0.0.201507030857'/>
-      </artifacts>
-      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
-      <touchpointData size='1'>
-        <instructions size='1'>
-          <instruction key='manifest'>
-            Bundle-SymbolicName: org.blended.data; singleton:=true&#xA;Bundle-Version: 1.0.0.201507030857
           </instruction>
         </instructions>
       </touchpointData>
@@ -6188,6 +6044,56 @@
         </instructions>
       </touchpointData>
     </unit>
+    <unit id='org.blended.data' version='1.0.0.201507031112'>
+      <update id='org.blended.data' range='[0.0.0,1.0.0.201507031112)' severity='0'/>
+      <properties size='5'>
+        <property name='org.eclipse.equinox.p2.name' value='org.blended.data'/>
+        <property name='org.eclipse.equinox.p2.provider' value='My Company'/>
+        <property name='maven-groupId' value='pt.ist.socialsoftware'/>
+        <property name='maven-artifactId' value='org.blended.data'/>
+        <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+      </properties>
+      <provides size='15'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data' version='1.0.0.201507031112'/>
+        <provided namespace='osgi.bundle' name='org.blended.data' version='1.0.0.201507031112'/>
+        <provided namespace='java.package' name='org.blended.data' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.services' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.data' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.data.impl' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.data.util' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.serializer' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.parser.antlr' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.parser.antlr.internal' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.validation' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.scoping' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.generator' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.formatting' version='0.0.0'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='10'>
+        <required namespace='osgi.bundle' name='org.eclipse.xtext' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.equinox.common' range='3.5.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.xtext.util' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.emf.ecore' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.emf.common' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.xtext.xbase.lib' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.antlr.runtime' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.xtext.common.types' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.objectweb.asm' range='[5.0.1,6.0.0)' optional='true' greedy='false'/>
+        <required namespace='java.package' name='org.apache.log4j' range='0.0.0'/>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='org.blended.data' version='1.0.0.201507031112'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: org.blended.data; singleton:=true&#xA;Bundle-Version: 1.0.0.201507031112
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
     <unit id='org.eclipse.emf.mwe2.lib' version='2.7.0.v201409021027' singleton='false'>
       <update id='org.eclipse.emf.mwe2.lib' range='[0.0.0,2.7.0.v201409021027)' severity='0'/>
       <properties size='2'>
@@ -6481,6 +6387,50 @@
         </instructions>
       </touchpointData>
     </unit>
+    <unit id='org.blended.data.ui' version='1.0.0.201507031112'>
+      <update id='org.blended.data.ui' range='[0.0.0,1.0.0.201507031112)' severity='0'/>
+      <properties size='5'>
+        <property name='org.eclipse.equinox.p2.name' value='org.blended.data.ui'/>
+        <property name='org.eclipse.equinox.p2.provider' value='My Company'/>
+        <property name='maven-groupId' value='pt.ist.socialsoftware'/>
+        <property name='maven-artifactId' value='org.blended.data.ui'/>
+        <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+      </properties>
+      <provides size='7'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.ui' version='1.0.0.201507031112'/>
+        <provided namespace='osgi.bundle' name='org.blended.data.ui' version='1.0.0.201507031112'/>
+        <provided namespace='java.package' name='org.blended.data.ui.quickfix' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.ui.contentassist' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.ui.internal' version='0.0.0'/>
+        <provided namespace='java.package' name='org.blended.data.ui.contentassist.antlr' version='0.0.0'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='12'>
+        <required namespace='osgi.bundle' name='org.blended.data' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.xtext.ui' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.ui.editors' range='3.5.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.ui.ide' range='3.5.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.xtext.ui.shared' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.ui' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.xtext.builder' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.xtext.xbase.lib' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.xtext.common.types.ui' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.xtext.ui.codetemplates.ui' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.compare' range='0.0.0'/>
+        <required namespace='java.package' name='org.apache.log4j' range='0.0.0'/>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='org.blended.data.ui' version='1.0.0.201507031112'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: org.blended.data.ui; singleton:=true&#xA;Bundle-Version: 1.0.0.201507031112
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
     <unit id='org.eclipse.e4.core.di' version='1.4.0.v20140414-1837' singleton='false'>
       <update id='org.eclipse.e4.core.di' range='[0.0.0,1.4.0.v20140414-1837)' severity='0'/>
       <properties size='8'>
@@ -6589,6 +6539,33 @@
         <instructions size='1'>
           <instruction key='manifest'>
             Bundle-SymbolicName: com.google.inject&#xA;Bundle-Version: 3.0.0.v201312141243
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='org.blended.data.sdk.feature.jar' version='1.0.0.201507031112'>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='Data SDK Feature'/>
+        <property name='maven-groupId' value='pt.ist.socialsoftware'/>
+        <property name='maven-artifactId' value='org.blended.data.sdk'/>
+        <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.jar' version='1.0.0.201507031112'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='org.blended.data.sdk' version='1.0.0.201507031112'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='org.blended.data.sdk' version='1.0.0.201507031112'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
           </instruction>
         </instructions>
       </touchpointData>
@@ -6823,6 +6800,29 @@
           </instruction>
         </instructions>
       </touchpointData>
+    </unit>
+    <unit id='org.blended.data.sdk.feature.group' version='1.0.0.201507031112' singleton='false'>
+      <update id='org.blended.data.sdk.feature.group' range='[0.0.0,1.0.0.201507031112)' severity='0'/>
+      <properties size='5'>
+        <property name='org.eclipse.equinox.p2.name' value='Data SDK Feature'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+        <property name='maven-groupId' value='pt.ist.socialsoftware'/>
+        <property name='maven-artifactId' value='org.blended.data.sdk'/>
+        <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.group' version='1.0.0.201507031112'/>
+      </provides>
+      <requires size='3'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data' range='[1.0.0.201507031112,1.0.0.201507031112]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.ui' range='[1.0.0.201507031112,1.0.0.201507031112]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.blended.data.sdk.feature.jar' range='[1.0.0.201507031112,1.0.0.201507031112]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
     </unit>
     <unit id='org.eclipse.xtext.smap' version='2.8.3.v201506010551' singleton='false'>
       <update id='org.eclipse.xtext.smap' range='[0.0.0,2.8.3.v201506010551)' severity='0'/>

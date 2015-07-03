@@ -4,11 +4,17 @@
 
         <groupId>pt.ist.socialsoftware</groupId>
         <artifactId>blendedworkflow</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
         <packaging>pom</packaging>
 
         <name>Blended Workflow</name>
 
+		<properties>
+			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+			<code.version>1.0.0-SNAPSHOT</code.version>
+			<maven-clean.version>2.5</maven-clean.version>
+		</properties>
+		
         <modules>
                 <module>designer</module>
                 <module>engine</module>

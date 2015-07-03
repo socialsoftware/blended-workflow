@@ -6,7 +6,7 @@ Export-Package: org.blended.data,org.blended.data.services,org.blended
  a.parser.antlr.internal,org.blended.data.validation,org.blended.data.
  scoping,org.blended.data.generator,org.blended.data.formatting
 Bundle-Name: org.blended.data
-Bundle-Version: 1.0.0.201507030857
+Bundle-Version: 1.0.0.201507031557
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,org.eclipse.equ
  inox.common;bundle-version="3.5.0",org.eclipse.xtext.util,org.eclipse
  .emf.ecore,org.eclipse.emf.common,org.eclipse.xtext.xbase.lib,org.ant
