@@ -6,7 +6,7 @@ package org.blended.condition.generator;
 import org.blended.condition.generator.ConditionGeneratorActivityModel;
 import org.blended.condition.generator.ConditionGeneratorGoalModel;
 import org.blended.condition.utils.ConditionListener;
-import org.blended.utils.ConsoleManagement;
+import org.blended.condition.utils.ConsoleManagement;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.EcoreUtil2;

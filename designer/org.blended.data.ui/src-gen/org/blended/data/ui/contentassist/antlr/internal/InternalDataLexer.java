@@ -54,17 +54,17 @@ public class InternalDataLexer extends Lexer {
         super(input,state);
 
     }
-    public String getGrammarFileName() { return "../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g"; }
+    public String getGrammarFileName() { return "/C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g"; }
 
     // $ANTLR start "T__11"
     public final void mT__11() throws RecognitionException {
         try {
             int _type = T__11;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:11:7: ( 'Entity' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:11:9: 'Entity'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:11:7: ( 'Entityy' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:11:9: 'Entityy'
             {
-            match("Entity"); 
+            match("Entityy"); 
 
 
             }
@@ -82,8 +82,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__12;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:12:7: ( '{' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:12:9: '{'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:12:7: ( '{' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:12:9: '{'
             {
             match('{'); 
 
@@ -102,8 +102,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__13;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:13:7: ( '}' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:13:9: '}'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:13:7: ( '}' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:13:9: '}'
             {
             match('}'); 
 
@@ -122,8 +122,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__14;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:14:7: ( 'dependsOn' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:14:9: 'dependsOn'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:14:7: ( 'dependsOn' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:14:9: 'dependsOn'
             {
             match("dependsOn"); 
 
@@ -143,8 +143,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__15;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:15:7: ( ':' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:15:9: ':'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:15:7: ( ':' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:15:9: ':'
             {
             match(':'); 
 
@@ -163,8 +163,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__16;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:16:7: ( ',' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:16:9: ','
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:16:7: ( ',' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:16:9: ','
             {
             match(','); 
 
@@ -183,8 +183,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__17;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:17:7: ( 'group' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:17:9: 'group'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:17:7: ( 'group' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:17:9: 'group'
             {
             match("group"); 
 
@@ -204,8 +204,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__18;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:18:7: ( '.' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:18:9: '.'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:18:7: ( '.' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:18:9: '.'
             {
             match('.'); 
 
@@ -224,8 +224,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__19;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:19:7: ( 'Association' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:19:9: 'Association'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:19:7: ( 'Association' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:19:9: 'Association'
             {
             match("Association"); 
 
@@ -245,8 +245,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__20;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:20:7: ( 'with' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:20:9: 'with'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:20:7: ( 'with' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:20:9: 'with'
             {
             match("with"); 
 
@@ -266,8 +266,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__21;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:21:7: ( '(' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:21:9: '('
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:21:7: ( '(' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:21:9: '('
             {
             match('('); 
 
@@ -286,8 +286,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__22;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:22:7: ( ')' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:22:9: ')'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:22:7: ( ')' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:22:9: ')'
             {
             match(')'); 
 
@@ -306,8 +306,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__23;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:23:7: ( 'Constraint' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:23:9: 'Constraint'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:23:7: ( 'Constraint' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:23:9: 'Constraint'
             {
             match("Constraint"); 
 
@@ -327,8 +327,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__24;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:24:7: ( '..' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:24:9: '..'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:24:7: ( '..' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:24:9: '..'
             {
             match(".."); 
 
@@ -348,8 +348,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__25;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:25:7: ( '*' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:25:9: '*'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:25:7: ( '*' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:25:9: '*'
             {
             match('*'); 
 
@@ -368,8 +368,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__26;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:26:7: ( '+' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:26:9: '+'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:26:7: ( '+' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:26:9: '+'
             {
             match('+'); 
 
@@ -388,8 +388,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__27;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:27:7: ( 'OR' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:27:9: 'OR'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:27:7: ( 'OR' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:27:9: 'OR'
             {
             match("OR"); 
 
@@ -409,8 +409,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__28;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:28:7: ( 'AND' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:28:9: 'AND'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:28:7: ( 'AND' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:28:9: 'AND'
             {
             match("AND"); 
 
@@ -430,8 +430,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__29;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:29:7: ( 'NOT' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:29:9: 'NOT'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:29:7: ( 'NOT' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:29:9: 'NOT'
             {
             match("NOT"); 
 
@@ -451,8 +451,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__30;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:30:7: ( 'DEF' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:30:9: 'DEF'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:30:7: ( 'DEF' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:30:9: 'DEF'
             {
             match("DEF"); 
 
@@ -472,8 +472,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__31;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:31:7: ( 'exists' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:31:9: 'exists'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:31:7: ( 'exists' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:31:9: 'exists'
             {
             match("exists"); 
 
@@ -493,8 +493,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__32;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:32:7: ( 'mandatory' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:32:9: 'mandatory'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:32:7: ( 'mandatory' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:32:9: 'mandatory'
             {
             match("mandatory"); 
 
@@ -514,10 +514,10 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = RULE_ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3771:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3771:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3771:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3771:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             {
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3771:11: ( '^' )?
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3771:11: ( '^' )?
             int alt1=2;
             int LA1_0 = input.LA(1);
 
@@ -526,7 +526,7 @@ public class InternalDataLexer extends Lexer {
             }
             switch (alt1) {
                 case 1 :
-                    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3771:11: '^'
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3771:11: '^'
                     {
                     match('^'); 
 
@@ -544,7 +544,7 @@ public class InternalDataLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3771:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3771:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             loop2:
             do {
                 int alt2=2;
@@ -557,7 +557,7 @@ public class InternalDataLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:
             	    {
             	    if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
             	        input.consume();
@@ -593,10 +593,10 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = RULE_INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3773:10: ( ( '0' .. '9' )+ )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3773:12: ( '0' .. '9' )+
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3773:10: ( ( '0' .. '9' )+ )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3773:12: ( '0' .. '9' )+
             {
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3773:12: ( '0' .. '9' )+
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3773:12: ( '0' .. '9' )+
             int cnt3=0;
             loop3:
             do {
@@ -610,7 +610,7 @@ public class InternalDataLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3773:13: '0' .. '9'
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3773:13: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -642,10 +642,10 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = RULE_STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:13: ( ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:13: ( ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             {
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -663,10 +663,10 @@ public class InternalDataLexer extends Lexer {
             }
             switch (alt6) {
                 case 1 :
-                    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:16: '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:16: '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
                     {
                     match('\"'); 
-                    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:20: ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )*
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:20: ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )*
                     loop4:
                     do {
                         int alt4=3;
@@ -682,7 +682,7 @@ public class InternalDataLexer extends Lexer {
 
                         switch (alt4) {
                     	case 1 :
-                    	    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:21: '\\\\' .
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:21: '\\\\' .
                     	    {
                     	    match('\\'); 
                     	    matchAny(); 
@@ -690,7 +690,7 @@ public class InternalDataLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:28: ~ ( ( '\\\\' | '\"' ) )
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:28: ~ ( ( '\\\\' | '\"' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -715,10 +715,10 @@ public class InternalDataLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:48: '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:48: '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:53: ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:53: ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop5:
                     do {
                         int alt5=3;
@@ -734,7 +734,7 @@ public class InternalDataLexer extends Lexer {
 
                         switch (alt5) {
                     	case 1 :
-                    	    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:54: '\\\\' .
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:54: '\\\\' .
                     	    {
                     	    match('\\'); 
                     	    matchAny(); 
@@ -742,7 +742,7 @@ public class InternalDataLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:61: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3775:61: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -785,12 +785,12 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = RULE_ML_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3777:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3777:19: '/*' ( options {greedy=false; } : . )* '*/'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3777:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3777:19: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3777:24: ( options {greedy=false; } : . )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3777:24: ( options {greedy=false; } : . )*
             loop7:
             do {
                 int alt7=2;
@@ -815,7 +815,7 @@ public class InternalDataLexer extends Lexer {
 
                 switch (alt7) {
             	case 1 :
-            	    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3777:52: .
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3777:52: .
             	    {
             	    matchAny(); 
 
@@ -845,12 +845,12 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = RULE_SL_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("//"); 
 
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop8:
             do {
                 int alt8=2;
@@ -863,7 +863,7 @@ public class InternalDataLexer extends Lexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -883,7 +883,7 @@ public class InternalDataLexer extends Lexer {
                 }
             } while (true);
 
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:40: ( ( '\\r' )? '\\n' )?
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:40: ( ( '\\r' )? '\\n' )?
             int alt10=2;
             int LA10_0 = input.LA(1);
 
@@ -892,9 +892,9 @@ public class InternalDataLexer extends Lexer {
             }
             switch (alt10) {
                 case 1 :
-                    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:41: ( '\\r' )? '\\n'
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:41: ( '\\r' )? '\\n'
                     {
-                    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:41: ( '\\r' )?
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:41: ( '\\r' )?
                     int alt9=2;
                     int LA9_0 = input.LA(1);
 
@@ -903,7 +903,7 @@ public class InternalDataLexer extends Lexer {
                     }
                     switch (alt9) {
                         case 1 :
-                            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:41: '\\r'
+                            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3779:41: '\\r'
                             {
                             match('\r'); 
 
@@ -935,10 +935,10 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = RULE_WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3781:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3781:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3781:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3781:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3781:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3781:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt11=0;
             loop11:
             do {
@@ -952,7 +952,7 @@ public class InternalDataLexer extends Lexer {
 
                 switch (alt11) {
             	case 1 :
-            	    // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:
             	    {
             	    if ( (input.LA(1)>='\t' && input.LA(1)<='\n')||input.LA(1)=='\r'||input.LA(1)==' ' ) {
             	        input.consume();
@@ -992,8 +992,8 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = RULE_ANY_OTHER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3783:16: ( . )
-            // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3783:18: .
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3783:16: ( . )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:3783:18: .
             {
             matchAny(); 
 
@@ -1008,208 +1008,208 @@ public class InternalDataLexer extends Lexer {
     // $ANTLR end "RULE_ANY_OTHER"
 
     public void mTokens() throws RecognitionException {
-        // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:8: ( T__11 | T__12 | T__13 | T__14 | T__15 | T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | RULE_ID | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER )
+        // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:8: ( T__11 | T__12 | T__13 | T__14 | T__15 | T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | RULE_ID | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER )
         int alt12=29;
         alt12 = dfa12.predict(input);
         switch (alt12) {
             case 1 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:10: T__11
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:10: T__11
                 {
                 mT__11(); 
 
                 }
                 break;
             case 2 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:16: T__12
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:16: T__12
                 {
                 mT__12(); 
 
                 }
                 break;
             case 3 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:22: T__13
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:22: T__13
                 {
                 mT__13(); 
 
                 }
                 break;
             case 4 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:28: T__14
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:28: T__14
                 {
                 mT__14(); 
 
                 }
                 break;
             case 5 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:34: T__15
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:34: T__15
                 {
                 mT__15(); 
 
                 }
                 break;
             case 6 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:40: T__16
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:40: T__16
                 {
                 mT__16(); 
 
                 }
                 break;
             case 7 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:46: T__17
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:46: T__17
                 {
                 mT__17(); 
 
                 }
                 break;
             case 8 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:52: T__18
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:52: T__18
                 {
                 mT__18(); 
 
                 }
                 break;
             case 9 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:58: T__19
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:58: T__19
                 {
                 mT__19(); 
 
                 }
                 break;
             case 10 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:64: T__20
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:64: T__20
                 {
                 mT__20(); 
 
                 }
                 break;
             case 11 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:70: T__21
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:70: T__21
                 {
                 mT__21(); 
 
                 }
                 break;
             case 12 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:76: T__22
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:76: T__22
                 {
                 mT__22(); 
 
                 }
                 break;
             case 13 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:82: T__23
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:82: T__23
                 {
                 mT__23(); 
 
                 }
                 break;
             case 14 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:88: T__24
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:88: T__24
                 {
                 mT__24(); 
 
                 }
                 break;
             case 15 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:94: T__25
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:94: T__25
                 {
                 mT__25(); 
 
                 }
                 break;
             case 16 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:100: T__26
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:100: T__26
                 {
                 mT__26(); 
 
                 }
                 break;
             case 17 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:106: T__27
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:106: T__27
                 {
                 mT__27(); 
 
                 }
                 break;
             case 18 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:112: T__28
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:112: T__28
                 {
                 mT__28(); 
 
                 }
                 break;
             case 19 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:118: T__29
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:118: T__29
                 {
                 mT__29(); 
 
                 }
                 break;
             case 20 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:124: T__30
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:124: T__30
                 {
                 mT__30(); 
 
                 }
                 break;
             case 21 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:130: T__31
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:130: T__31
                 {
                 mT__31(); 
 
                 }
                 break;
             case 22 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:136: T__32
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:136: T__32
                 {
                 mT__32(); 
 
                 }
                 break;
             case 23 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:142: RULE_ID
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:142: RULE_ID
                 {
                 mRULE_ID(); 
 
                 }
                 break;
             case 24 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:150: RULE_INT
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:150: RULE_INT
                 {
                 mRULE_INT(); 
 
                 }
                 break;
             case 25 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:159: RULE_STRING
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:159: RULE_STRING
                 {
                 mRULE_STRING(); 
 
                 }
                 break;
             case 26 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:171: RULE_ML_COMMENT
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:171: RULE_ML_COMMENT
                 {
                 mRULE_ML_COMMENT(); 
 
                 }
                 break;
             case 27 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:187: RULE_SL_COMMENT
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:187: RULE_SL_COMMENT
                 {
                 mRULE_SL_COMMENT(); 
 
                 }
                 break;
             case 28 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:203: RULE_WS
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:203: RULE_WS
                 {
                 mRULE_WS(); 
 
                 }
                 break;
             case 29 :
-                // ../org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:211: RULE_ANY_OTHER
+                // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:1:211: RULE_ANY_OTHER
                 {
                 mRULE_ANY_OTHER(); 
 
@@ -1227,11 +1227,11 @@ public class InternalDataLexer extends Lexer {
         "\2\uffff\5\36\1\34\2\uffff\3\34\2\uffff\1\36\3\uffff\1\36\2\uffff"+
         "\1\36\2\uffff\3\36\2\uffff\1\36\2\uffff\1\100\4\36\5\uffff\4\36"+
         "\1\111\2\36\1\uffff\1\114\1\115\6\36\1\uffff\1\124\1\36\2\uffff"+
-        "\4\36\1\132\1\36\1\uffff\3\36\1\137\1\36\1\uffff\2\36\1\143\1\36"+
-        "\1\uffff\3\36\1\uffff\5\36\1\155\2\36\1\160\1\uffff\1\36\1\162\1"+
-        "\uffff\1\163\2\uffff";
+        "\4\36\1\132\1\36\1\uffff\5\36\1\uffff\2\36\1\143\1\36\1\145\3\36"+
+        "\1\uffff\1\36\1\uffff\4\36\1\156\2\36\1\161\1\uffff\1\36\1\163\1"+
+        "\uffff\1\164\2\uffff";
     static final String DFA12_eofS =
-        "\164\uffff";
+        "\165\uffff";
     static final String DFA12_minS =
         "\1\0\1\156\2\uffff\1\145\2\uffff\1\162\1\56\1\116\1\151\2\uffff"+
         "\1\157\2\uffff\1\122\1\117\1\105\1\170\1\141\1\101\2\uffff\2\0\1"+
@@ -1239,10 +1239,10 @@ public class InternalDataLexer extends Lexer {
         "\1\164\2\uffff\1\156\2\uffff\1\60\1\124\1\106\1\151\1\156\5\uffff"+
         "\1\151\1\145\1\165\1\157\1\60\1\150\1\163\1\uffff\2\60\1\163\1\144"+
         "\1\164\1\156\1\160\1\143\1\uffff\1\60\1\164\2\uffff\1\164\1\141"+
-        "\1\171\1\144\1\60\1\151\1\uffff\1\162\1\163\1\164\1\60\1\163\1\uffff"+
-        "\2\141\1\60\1\157\1\uffff\1\117\1\164\1\151\1\uffff\1\162\1\156"+
-        "\1\151\1\156\1\171\1\60\1\157\1\164\1\60\1\uffff\1\156\1\60\1\uffff"+
-        "\1\60\2\uffff";
+        "\1\171\1\144\1\60\1\151\1\uffff\1\162\1\163\1\164\1\171\1\163\1"+
+        "\uffff\2\141\1\60\1\157\1\60\1\117\1\164\1\151\1\uffff\1\162\1\uffff"+
+        "\1\156\1\151\1\156\1\171\1\60\1\157\1\164\1\60\1\uffff\1\156\1\60"+
+        "\1\uffff\1\60\2\uffff";
     static final String DFA12_maxS =
         "\1\uffff\1\156\2\uffff\1\145\2\uffff\1\162\1\56\1\163\1\151\2\uffff"+
         "\1\157\2\uffff\1\122\1\117\1\105\1\170\1\141\1\172\2\uffff\2\uffff"+
@@ -1250,19 +1250,19 @@ public class InternalDataLexer extends Lexer {
         "\104\1\164\2\uffff\1\156\2\uffff\1\172\1\124\1\106\1\151\1\156\5"+
         "\uffff\1\151\1\145\1\165\1\157\1\172\1\150\1\163\1\uffff\2\172\1"+
         "\163\1\144\1\164\1\156\1\160\1\143\1\uffff\1\172\1\164\2\uffff\1"+
-        "\164\1\141\1\171\1\144\1\172\1\151\1\uffff\1\162\1\163\1\164\1\172"+
-        "\1\163\1\uffff\2\141\1\172\1\157\1\uffff\1\117\1\164\1\151\1\uffff"+
-        "\1\162\1\156\1\151\1\156\1\171\1\172\1\157\1\164\1\172\1\uffff\1"+
-        "\156\1\172\1\uffff\1\172\2\uffff";
+        "\164\1\141\1\171\1\144\1\172\1\151\1\uffff\1\162\1\163\1\164\1\171"+
+        "\1\163\1\uffff\2\141\1\172\1\157\1\172\1\117\1\164\1\151\1\uffff"+
+        "\1\162\1\uffff\1\156\1\151\1\156\1\171\1\172\1\157\1\164\1\172\1"+
+        "\uffff\1\156\1\172\1\uffff\1\172\2\uffff";
     static final String DFA12_acceptS =
         "\2\uffff\1\2\1\3\1\uffff\1\5\1\6\4\uffff\1\13\1\14\1\uffff\1\17"+
         "\1\20\6\uffff\1\27\1\30\3\uffff\1\34\1\35\1\uffff\1\27\1\2\1\3\1"+
         "\uffff\1\5\1\6\1\uffff\1\16\1\10\3\uffff\1\13\1\14\1\uffff\1\17"+
         "\1\20\5\uffff\1\30\1\31\1\32\1\33\1\34\7\uffff\1\21\10\uffff\1\22"+
-        "\2\uffff\1\23\1\24\6\uffff\1\12\5\uffff\1\7\4\uffff\1\1\3\uffff"+
-        "\1\25\11\uffff\1\4\2\uffff\1\26\1\uffff\1\15\1\11";
+        "\2\uffff\1\23\1\24\6\uffff\1\12\5\uffff\1\7\10\uffff\1\25\1\uffff"+
+        "\1\1\10\uffff\1\4\2\uffff\1\26\1\uffff\1\15\1\11";
     static final String DFA12_specialS =
-        "\1\2\27\uffff\1\1\1\0\132\uffff}>";
+        "\1\1\27\uffff\1\2\1\0\133\uffff}>";
     static final String[] DFA12_transitionS = {
             "\11\34\2\33\2\34\1\33\22\34\1\33\1\34\1\30\4\34\1\31\1\13\1"+
             "\14\1\16\1\17\1\6\1\34\1\10\1\32\12\27\1\5\6\34\1\11\1\26\1"+
@@ -1356,29 +1356,30 @@ public class InternalDataLexer extends Lexer {
             "\1\134",
             "\1\135",
             "\1\136",
-            "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
+            "\1\137",
             "\1\140",
             "",
             "\1\141",
             "\1\142",
             "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
             "\1\144",
-            "",
-            "\1\145",
+            "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
             "\1\146",
             "\1\147",
-            "",
             "\1\150",
+            "",
             "\1\151",
+            "",
             "\1\152",
             "\1\153",
             "\1\154",
+            "\1\155",
             "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
-            "\1\156",
             "\1\157",
+            "\1\160",
             "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
             "",
-            "\1\161",
+            "\1\162",
             "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
             "",
             "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
@@ -1433,16 +1434,6 @@ public class InternalDataLexer extends Lexer {
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
-                        int LA12_24 = input.LA(1);
-
-                        s = -1;
-                        if ( ((LA12_24>='\u0000' && LA12_24<='\uFFFF')) ) {s = 53;}
-
-                        else s = 28;
-
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
                         int LA12_0 = input.LA(1);
 
                         s = -1;
@@ -1501,6 +1492,16 @@ public class InternalDataLexer extends Lexer {
                         else if ( ((LA12_0>='\t' && LA12_0<='\n')||LA12_0=='\r'||LA12_0==' ') ) {s = 27;}
 
                         else if ( ((LA12_0>='\u0000' && LA12_0<='\b')||(LA12_0>='\u000B' && LA12_0<='\f')||(LA12_0>='\u000E' && LA12_0<='\u001F')||LA12_0=='!'||(LA12_0>='#' && LA12_0<='&')||LA12_0=='-'||(LA12_0>=';' && LA12_0<='@')||(LA12_0>='[' && LA12_0<=']')||LA12_0=='`'||LA12_0=='|'||(LA12_0>='~' && LA12_0<='\uFFFF')) ) {s = 28;}
+
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
+                        int LA12_24 = input.LA(1);
+
+                        s = -1;
+                        if ( ((LA12_24>='\u0000' && LA12_24<='\uFFFF')) ) {s = 53;}
+
+                        else s = 28;
 
                         if ( s>=0 ) return s;
                         break;

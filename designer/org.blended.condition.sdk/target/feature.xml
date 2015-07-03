@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature id="org.blended.condition.sdk"
+	label="Condition SDK Feature "
+	version="1.0.0.201507021541">
+	<plugin
+			id="org.blended.condition"
+			download-size="221"
+			install-size="634"
+			version="1.0.0.201507021541"
+			unpack="false"/>
+	<plugin
+			id="org.blended.condition.ui"
+			download-size="89"
+			install-size="371"
+			version="1.0.0.201507021541"
+			unpack="false"/>
+</feature>

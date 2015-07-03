@@ -1,9 +1,93 @@
-grammar org.blended.goal.Goal with org.blended.Blended
+grammar org.blended.goal.Goal with org.eclipse.xtext.common.Terminals
 
 generate goal "http://www.blended.org/goal/Goal"
 
-//import "http://www.blended.org/condition/Condition" as def
-
 GoalModel:
 	goals += Goal+
+;
+
+EntityAchieveCondition:
+	'DEFF' '(' name = ID ')'
+;
+
+EntityAchieveConditionExist:
+	'EXISTS' '(' 'DEF' '(' name = ID ')' ')'
+;
+
+EntityInvariantCondition:
+	'MUL' '(' name = Attribute ',' cardinality = Cardinality ')'
+;
+
+EntityDependenceCondition:
+	'DEP' '(' 'DEF' '(' entity1 = ID ')' ',' 'DEF' '(' entity2 = ID ')' ')'
+;
+
+AttributeAchieveCondition:
+	MandatoryAttributeAchieveCondition | NotMandatoryAttributeAchieveCondition
+;
+
+NotMandatoryAttributeAchieveCondition:
+	'DEF' '(' conditions += Attribute (',' conditions += Attribute)* ')' 
+;
+
+MandatoryAttributeAchieveCondition:
+	'MAN' '(' 'DEF' '(' conditions += Attribute (',' conditions += Attribute)* ')' ')' 
+;
+
+AttributeInvariantCondition:
+	'RUL' '(' expression = Expression ')'
+;
+
+AttributeDependenceCondition:
+	'DEP' '(' 'DEF' '(' attributes1 += Attribute (',' attributes1 += Attribute)* ')' 
+		',' 'DEF' '(' attribute2 = Attribute ')' 
+	')'
+;
+
+Cardinality:
+	INT | INT '..' INT | INT '..' '*' | INT '..' '+'
+;
+
+Attribute: 
+	ID '.' ID ('.' ID)*
+;
+
+Nothing:
+	name = 'nothing'
+;
+
+Expression: Or;
+
+Or returns Expression:
+	And (
+		{Or.left = current} 'OR' right = And
+	)*;	
+	
+And returns Expression:
+	Primary (
+		{And.left = current} 'AND' right = Primary
+	)*;	
+
+Primary returns Expression:
+	'(' Expression ')' | 
+	{Not} 'NOT' expression = Primary |
+	Atomic
+;
+
+Atomic returns Expression:
+	{AttributeDefinition} 'DEF' '(' name = Attribute ')' |
+	{AttributeValue} name = Attribute
+;
+
+//********GOAL MODEL
+Goal:
+	name = ID ':'
+	'SUC' '(' sucessCondition = (EntityAchieveCondition | AttributeAchieveCondition | Nothing) ')'
+	(',' 'ACT' '(' activationCondition =  (EntityAchieveCondition | AttributeAchieveCondition) ')')?
+	(',' 'INV' '(' invariantConditions += (EntityInvariantCondition|AttributeInvariantCondition) 
+		(',' invariantConditions += (EntityInvariantCondition|AttributeInvariantCondition))* ')'
+	)?
+	(',' 'SUB' '(' childrenGoals += [Goal] 
+		(',' childrenGoals += [Goal])* ')'
+	)?
 ;

@@ -4,18 +4,20 @@
 package org.blended.activity.ui.labeling
 
 import com.google.inject.Inject
+import org.blended.activity.activity.Activity
 import org.blended.activity.activity.ActivityModel
-import org.blended.blended.Activity
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
 
 /**
  * Provides labels for EObjects.
  * 
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
-class ActivityLabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider {
+class ActivityLabelProvider extends DefaultEObjectLabelProvider {
 
 	@Inject
-	new(org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider delegate) {
+	new(AdapterFactoryLabelProvider delegate) {
 		super(delegate);
 	}
 

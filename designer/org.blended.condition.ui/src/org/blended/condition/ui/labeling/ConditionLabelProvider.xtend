@@ -4,19 +4,19 @@
 package org.blended.condition.ui.labeling
 
 import com.google.inject.Inject
-import org.blended.blended.AttributeAchieveCondition
-import org.blended.blended.AttributeDependenceCondition
-import org.blended.blended.AttributeInvariantCondition
-import org.blended.blended.EntityAchieveCondition
-import org.blended.blended.EntityDependenceCondition
-import org.blended.blended.EntityInvariantCondition
+import org.blended.condition.condition.And
+import org.blended.condition.condition.AttributeAchieveCondition
+import org.blended.condition.condition.AttributeDependenceCondition
+import org.blended.condition.condition.AttributeInvariantCondition
+import org.blended.condition.condition.Condition
 import org.blended.condition.condition.ConditionModel
+import org.blended.condition.condition.EntityAchieveCondition
+import org.blended.condition.condition.EntityDependenceCondition
+import org.blended.condition.condition.EntityInvariantCondition
+import org.blended.condition.condition.Not
+import org.blended.condition.condition.Or
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
-import org.blended.blended.And
-import org.blended.blended.Condition
-import org.blended.blended.Not
-import org.blended.blended.Or
 
 /**
  * Provides labels for EObjects.

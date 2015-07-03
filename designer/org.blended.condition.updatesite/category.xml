@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.blended.condition.sdk_1.0.0.qualifier.jar" id="org.blended.condition.sdk" version="1.0.0.qualifier">
+      <category name="org.blended.condition"/>
+   </feature>
+   <category-def name="org.blended.condition" label="Blended Workflow Engine - Condition"/>
+</site>

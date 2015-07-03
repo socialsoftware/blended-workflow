@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.blended.goal.sdk_1.0.0.qualifier.jar" id="org.blended.goal.sdk" version="1.0.0.qualifier">
+      <category name="org.blended.goal"/>
+   </feature>
+   <category-def name="org.blended.goal" label="Blended Workflow Engine - Goal"/>
+</site>

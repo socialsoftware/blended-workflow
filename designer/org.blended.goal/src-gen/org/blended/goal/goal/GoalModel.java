@@ -2,8 +2,6 @@
  */
 package org.blended.goal.goal;
 
-import org.blended.blended.Goal;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -28,7 +26,7 @@ public interface GoalModel extends EObject
 {
   /**
    * Returns the value of the '<em><b>Goals</b></em>' containment reference list.
-   * The list contents are of type {@link org.blended.blended.Goal}.
+   * The list contents are of type {@link org.blended.goal.goal.Goal}.
    * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Goals</em>' containment reference list isn't clear,

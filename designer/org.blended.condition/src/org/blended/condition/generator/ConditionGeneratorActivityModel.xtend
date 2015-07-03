@@ -5,17 +5,16 @@ package org.blended.condition.generator
 
 import java.util.ArrayList
 import java.util.List
-import org.blended.blended.EntityAchieveCondition
-import org.blended.generator.CustomOutputConfigurationProvider
+import org.blended.condition.condition.AttributeAchieveCondition
+import org.blended.condition.condition.AttributeDependenceCondition
+import org.blended.condition.condition.AttributeInvariantCondition
+import org.blended.condition.condition.EntityAchieveCondition
+import org.blended.condition.condition.EntityDependenceCondition
+import org.blended.condition.condition.EntityInvariantCondition
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import org.blended.blended.EntityDependenceCondition
-import org.blended.blended.EntityInvariantCondition
-import org.blended.blended.AttributeAchieveCondition
-import org.blended.blended.AttributeInvariantCondition
-import org.blended.blended.AttributeDependenceCondition
 
 /**
  * Generates code from your model files on save.

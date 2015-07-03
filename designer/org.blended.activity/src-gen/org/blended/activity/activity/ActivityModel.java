@@ -2,8 +2,6 @@
  */
 package org.blended.activity.activity;
 
-import org.blended.blended.Activity;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -28,7 +26,7 @@ public interface ActivityModel extends EObject
 {
   /**
    * Returns the value of the '<em><b>Activities</b></em>' containment reference list.
-   * The list contents are of type {@link org.blended.blended.Activity}.
+   * The list contents are of type {@link org.blended.activity.activity.Activity}.
    * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Activities</em>' containment reference list isn't clear,

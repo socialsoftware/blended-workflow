@@ -4,18 +4,20 @@
 package org.blended.goal.ui.labeling
 
 import com.google.inject.Inject
+import org.blended.goal.goal.Goal
 import org.blended.goal.goal.GoalModel
-import org.blended.blended.Goal
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
 
 /**
  * Provides labels for EObjects.
  * 
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
-class GoalLabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider {
+class GoalLabelProvider extends DefaultEObjectLabelProvider {
 
 	@Inject
-	new(org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider delegate) {
+	new(AdapterFactoryLabelProvider delegate) {
 		super(delegate);
 	}
 

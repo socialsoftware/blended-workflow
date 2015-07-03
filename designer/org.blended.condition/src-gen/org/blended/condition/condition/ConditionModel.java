@@ -2,8 +2,6 @@
  */
 package org.blended.condition.condition;
 
-import org.blended.blended.Condition;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

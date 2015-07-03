@@ -4,12 +4,12 @@
 package org.blended.condition.generator
 
 import org.blended.condition.utils.ConditionListener
-import org.blended.utils.ConsoleManagement
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.blended.condition.utils.ConsoleManagement
 
 /**
  * Generates code from your model files on save.

@@ -3,11 +3,12 @@
  */
 package org.blended.goal.generator
 
+import org.blended.goal.utils.ConsoleManagement
 import org.blended.goal.utils.GoalListener
-import org.blended.utils.ConsoleManagement
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
+
 import static extension org.eclipse.xtext.EcoreUtil2.*
 
 /**

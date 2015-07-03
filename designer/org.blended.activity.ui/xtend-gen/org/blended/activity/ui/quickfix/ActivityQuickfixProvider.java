@@ -3,7 +3,7 @@
  */
 package org.blended.activity.ui.quickfix;
 
-import org.blended.ui.quickfix.BlendedQuickfixProvider;
+import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
 
 /**
  * Custom quickfixes.
@@ -11,5 +11,5 @@ import org.blended.ui.quickfix.BlendedQuickfixProvider;
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#quick-fixes
  */
 @SuppressWarnings("all")
-public class ActivityQuickfixProvider extends BlendedQuickfixProvider {
+public class ActivityQuickfixProvider extends DefaultQuickfixProvider {
 }

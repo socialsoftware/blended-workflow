@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: org.blended.goal;singleton:=true
+Export-Package: org.blended.goal,org.blended.goal.services,org.blended
+ .goal.goal,org.blended.goal.goal.impl,org.blended.goal.goal.util,org.
+ blended.goal.serializer,org.blended.goal.parser.antlr,org.blended.goa
+ l.parser.antlr.internal,org.blended.goal.validation,org.blended.goal.
+ scoping,org.blended.goal.generator,org.blended.goal.formatting
+Bundle-Name: org.blended.goal
+Bundle-Version: 1.0.0.201507021541
+Require-Bundle: org.eclipse.xtext;visibility:=reexport,org.eclipse.equ
+ inox.common;bundle-version="3.5.0",org.eclipse.xtext.util,org.eclipse
+ .emf.ecore,org.eclipse.emf.common,org.eclipse.xtext.xbase.lib,org.ant
+ lr.runtime,org.eclipse.xtext.common.types,org.objectweb.asm;bundle-ve
+ rsion="[5.0.1,6.0.0)";resolution:=optional,org.eclipse.jface,org.ecli
+ pse.ui.console;bundle-version="3.5.300"
+Bundle-ManifestVersion: 2
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Vendor: My Company
+Import-Package: org.apache.log4j
+

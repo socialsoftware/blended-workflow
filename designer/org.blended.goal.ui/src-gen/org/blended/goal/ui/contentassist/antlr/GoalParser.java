@@ -37,20 +37,14 @@ public class GoalParser extends AbstractContentAssistParser {
 			nameMappings = new HashMap<AbstractElement, String>() {
 				private static final long serialVersionUID = 1L;
 				{
-					put(grammarAccess.getBlendedModelAccess().getAlternatives(), "rule__BlendedModel__Alternatives");
 					put(grammarAccess.getAttributeAchieveConditionAccess().getAlternatives(), "rule__AttributeAchieveCondition__Alternatives");
 					put(grammarAccess.getCardinalityAccess().getAlternatives(), "rule__Cardinality__Alternatives");
 					put(grammarAccess.getPrimaryAccess().getAlternatives(), "rule__Primary__Alternatives");
 					put(grammarAccess.getAtomicAccess().getAlternatives(), "rule__Atomic__Alternatives");
-					put(grammarAccess.getConditionAccess().getEntityAchieveConditionsAlternatives_1_1_0(), "rule__Condition__EntityAchieveConditionsAlternatives_1_1_0");
 					put(grammarAccess.getGoalAccess().getSucessConditionAlternatives_4_0(), "rule__Goal__SucessConditionAlternatives_4_0");
 					put(grammarAccess.getGoalAccess().getActivationConditionAlternatives_6_3_0(), "rule__Goal__ActivationConditionAlternatives_6_3_0");
 					put(grammarAccess.getGoalAccess().getInvariantConditionsAlternatives_7_3_0(), "rule__Goal__InvariantConditionsAlternatives_7_3_0");
 					put(grammarAccess.getGoalAccess().getInvariantConditionsAlternatives_7_4_1_0(), "rule__Goal__InvariantConditionsAlternatives_7_4_1_0");
-					put(grammarAccess.getActivityAccess().getPreAlternatives_5_0_0(), "rule__Activity__PreAlternatives_5_0_0");
-					put(grammarAccess.getActivityAccess().getPreAlternatives_5_1_1_0(), "rule__Activity__PreAlternatives_5_1_1_0");
-					put(grammarAccess.getActivityAccess().getPostAlternatives_10_0_0(), "rule__Activity__PostAlternatives_10_0_0");
-					put(grammarAccess.getActivityAccess().getPostAlternatives_10_1_1_0(), "rule__Activity__PostAlternatives_10_1_1_0");
 					put(grammarAccess.getEntityAchieveConditionAccess().getGroup(), "rule__EntityAchieveCondition__Group__0");
 					put(grammarAccess.getEntityAchieveConditionExistAccess().getGroup(), "rule__EntityAchieveConditionExist__Group__0");
 					put(grammarAccess.getEntityInvariantConditionAccess().getGroup(), "rule__EntityInvariantCondition__Group__0");
@@ -75,24 +69,12 @@ public class GoalParser extends AbstractContentAssistParser {
 					put(grammarAccess.getPrimaryAccess().getGroup_1(), "rule__Primary__Group_1__0");
 					put(grammarAccess.getAtomicAccess().getGroup_0(), "rule__Atomic__Group_0__0");
 					put(grammarAccess.getAtomicAccess().getGroup_1(), "rule__Atomic__Group_1__0");
-					put(grammarAccess.getConditionAccess().getGroup(), "rule__Condition__Group__0");
-					put(grammarAccess.getConditionAccess().getGroup_1(), "rule__Condition__Group_1__0");
-					put(grammarAccess.getConditionAccess().getGroup_2(), "rule__Condition__Group_2__0");
-					put(grammarAccess.getConditionAccess().getGroup_3(), "rule__Condition__Group_3__0");
-					put(grammarAccess.getConditionAccess().getGroup_4(), "rule__Condition__Group_4__0");
-					put(grammarAccess.getConditionAccess().getGroup_5(), "rule__Condition__Group_5__0");
-					put(grammarAccess.getConditionAccess().getGroup_6(), "rule__Condition__Group_6__0");
 					put(grammarAccess.getGoalAccess().getGroup(), "rule__Goal__Group__0");
 					put(grammarAccess.getGoalAccess().getGroup_6(), "rule__Goal__Group_6__0");
 					put(grammarAccess.getGoalAccess().getGroup_7(), "rule__Goal__Group_7__0");
 					put(grammarAccess.getGoalAccess().getGroup_7_4(), "rule__Goal__Group_7_4__0");
 					put(grammarAccess.getGoalAccess().getGroup_8(), "rule__Goal__Group_8__0");
 					put(grammarAccess.getGoalAccess().getGroup_8_4(), "rule__Goal__Group_8_4__0");
-					put(grammarAccess.getActivityAccess().getGroup(), "rule__Activity__Group__0");
-					put(grammarAccess.getActivityAccess().getGroup_5(), "rule__Activity__Group_5__0");
-					put(grammarAccess.getActivityAccess().getGroup_5_1(), "rule__Activity__Group_5_1__0");
-					put(grammarAccess.getActivityAccess().getGroup_10(), "rule__Activity__Group_10__0");
-					put(grammarAccess.getActivityAccess().getGroup_10_1(), "rule__Activity__Group_10_1__0");
 					put(grammarAccess.getGoalModelAccess().getGoalsAssignment(), "rule__GoalModel__GoalsAssignment");
 					put(grammarAccess.getEntityAchieveConditionAccess().getNameAssignment_2(), "rule__EntityAchieveCondition__NameAssignment_2");
 					put(grammarAccess.getEntityAchieveConditionExistAccess().getNameAssignment_4(), "rule__EntityAchieveConditionExist__NameAssignment_4");
@@ -114,12 +96,6 @@ public class GoalParser extends AbstractContentAssistParser {
 					put(grammarAccess.getPrimaryAccess().getExpressionAssignment_1_2(), "rule__Primary__ExpressionAssignment_1_2");
 					put(grammarAccess.getAtomicAccess().getNameAssignment_0_3(), "rule__Atomic__NameAssignment_0_3");
 					put(grammarAccess.getAtomicAccess().getNameAssignment_1_1(), "rule__Atomic__NameAssignment_1_1");
-					put(grammarAccess.getConditionAccess().getEntityAchieveConditionsAssignment_1_1(), "rule__Condition__EntityAchieveConditionsAssignment_1_1");
-					put(grammarAccess.getConditionAccess().getEntityInvariantConditionsAssignment_2_1(), "rule__Condition__EntityInvariantConditionsAssignment_2_1");
-					put(grammarAccess.getConditionAccess().getEntityDependenceConditionsAssignment_3_1(), "rule__Condition__EntityDependenceConditionsAssignment_3_1");
-					put(grammarAccess.getConditionAccess().getAttributeAchieveConditionsAssignment_4_1(), "rule__Condition__AttributeAchieveConditionsAssignment_4_1");
-					put(grammarAccess.getConditionAccess().getAttributeInvariantConditionsAssignment_5_1(), "rule__Condition__AttributeInvariantConditionsAssignment_5_1");
-					put(grammarAccess.getConditionAccess().getAttributeDependenceConditionsAssignment_6_1(), "rule__Condition__AttributeDependenceConditionsAssignment_6_1");
 					put(grammarAccess.getGoalAccess().getNameAssignment_0(), "rule__Goal__NameAssignment_0");
 					put(grammarAccess.getGoalAccess().getSucessConditionAssignment_4(), "rule__Goal__SucessConditionAssignment_4");
 					put(grammarAccess.getGoalAccess().getActivationConditionAssignment_6_3(), "rule__Goal__ActivationConditionAssignment_6_3");
@@ -127,12 +103,6 @@ public class GoalParser extends AbstractContentAssistParser {
 					put(grammarAccess.getGoalAccess().getInvariantConditionsAssignment_7_4_1(), "rule__Goal__InvariantConditionsAssignment_7_4_1");
 					put(grammarAccess.getGoalAccess().getChildrenGoalsAssignment_8_3(), "rule__Goal__ChildrenGoalsAssignment_8_3");
 					put(grammarAccess.getGoalAccess().getChildrenGoalsAssignment_8_4_1(), "rule__Goal__ChildrenGoalsAssignment_8_4_1");
-					put(grammarAccess.getActivityAccess().getNameAssignment_0(), "rule__Activity__NameAssignment_0");
-					put(grammarAccess.getActivityAccess().getDescriptionAssignment_2(), "rule__Activity__DescriptionAssignment_2");
-					put(grammarAccess.getActivityAccess().getPreAssignment_5_0(), "rule__Activity__PreAssignment_5_0");
-					put(grammarAccess.getActivityAccess().getPreAssignment_5_1_1(), "rule__Activity__PreAssignment_5_1_1");
-					put(grammarAccess.getActivityAccess().getPostAssignment_10_0(), "rule__Activity__PostAssignment_10_0");
-					put(grammarAccess.getActivityAccess().getPostAssignment_10_1_1(), "rule__Activity__PostAssignment_10_1_1");
 				}
 			};
 		}

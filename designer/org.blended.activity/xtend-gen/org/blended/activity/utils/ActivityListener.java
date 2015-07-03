@@ -1,19 +1,15 @@
 package org.blended.activity.utils;
 
-import com.google.common.collect.Iterables;
+import com.google.common.base.Objects;
 import java.io.IOException;
 import java.util.Map;
-import org.blended.blended.Goal;
-import org.blended.utils.ConsoleManagement;
-import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.ecore.EObject;
+import org.blended.activity.utils.ConsoleManagement;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.console.IOConsole;
 import org.eclipse.ui.console.IOConsoleInputStream;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 @SuppressWarnings("all")
 public class ActivityListener implements Runnable {
@@ -69,30 +65,30 @@ public class ActivityListener implements Runnable {
   }
   
   public void doTask(final String option) {
-    switch (option) {
-      case "0":
+    boolean _matched = false;
+    if (!_matched) {
+      if (Objects.equal(option, "0")) {
+        _matched=true;
         CharSequence _listOfActions = ActivityListener.listOfActions();
         String _string = _listOfActions.toString();
         ConsoleManagement.write(this.name, _string);
-        break;
-      case "1":
+      }
+    }
+    if (!_matched) {
+      if (Objects.equal(option, "1")) {
+        _matched=true;
         ConsoleManagement.write(this.name, "List of all the Goals:");
-        TreeIterator<EObject> _allContents = this.resource.getAllContents();
-        Iterable<EObject> _iterable = IteratorExtensions.<EObject>toIterable(_allContents);
-        Iterable<Goal> _filter = Iterables.<Goal>filter(_iterable, Goal.class);
-        for (final Goal r : _filter) {
-          String _name = r.getName();
-          String _plus = ("g:" + _name);
-          ConsoleManagement.write(this.name, ConsoleManagement.TypeOutput.OutputData, _plus);
-        }
-        break;
-      case "2":
+      }
+    }
+    if (!_matched) {
+      if (Objects.equal(option, "2")) {
+        _matched=true;
         ConsoleManagement.write(this.name, "Testing manipulation of model:");
         this.update();
-        break;
-      default:
-        ConsoleManagement.write(this.name, "Option no valid. Type 0 to see the options");
-        break;
+      }
+    }
+    if (!_matched) {
+      ConsoleManagement.write(this.name, "Option no valid. Type 0 to see the options");
     }
   }
   

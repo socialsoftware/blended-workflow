@@ -16,7 +16,7 @@ import org.blended.data.data.Entity;
 import org.blended.data.data.Expression;
 import org.blended.data.data.Not;
 import org.blended.data.data.Or;
-import org.blended.generator.CustomOutputConfigurationProvider;
+import org.blended.data.generator.CustomOutputConfigurationProvider;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;

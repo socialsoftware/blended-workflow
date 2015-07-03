@@ -3,8 +3,8 @@
  */
 package org.blended.goal.generator;
 
+import org.blended.goal.utils.ConsoleManagement;
 import org.blended.goal.utils.GoalListener;
-import org.blended.utils.ConsoleManagement;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.EcoreUtil2;

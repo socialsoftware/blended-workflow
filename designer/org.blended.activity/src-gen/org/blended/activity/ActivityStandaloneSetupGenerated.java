@@ -18,7 +18,7 @@ public class ActivityStandaloneSetupGenerated implements ISetup {
 
 	@Override
 	public Injector createInjectorAndDoEMFRegistration() {
-		org.blended.BlendedStandaloneSetup.doSetup();
+		org.eclipse.xtext.common.TerminalsStandaloneSetup.doSetup();
 
 		Injector injector = createInjector();
 		register(injector);

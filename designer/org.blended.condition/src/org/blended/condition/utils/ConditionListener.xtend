@@ -1,21 +1,20 @@
 package org.blended.condition.utils
 
 import java.io.IOException
-import org.blended.blended.AttributeAchieveCondition
-import org.blended.blended.AttributeDependenceCondition
-import org.blended.blended.AttributeInvariantCondition
-import org.blended.blended.BlendedFactory
-import org.blended.blended.EntityAchieveCondition
-import org.blended.blended.EntityDependenceCondition
-import org.blended.blended.EntityInvariantCondition
-import org.blended.blended.MandatoryAttributeAchieveCondition
+import org.blended.condition.condition.AttributeAchieveCondition
+import org.blended.condition.condition.AttributeDependenceCondition
+import org.blended.condition.condition.AttributeInvariantCondition
 import org.blended.condition.condition.ConditionModel
+import org.blended.condition.condition.EntityAchieveCondition
+import org.blended.condition.condition.EntityDependenceCondition
+import org.blended.condition.condition.EntityInvariantCondition
+import org.blended.condition.condition.MandatoryAttributeAchieveCondition
 import org.blended.condition.generator.ConditionGeneratorGoalModel
-import org.blended.utils.ConsoleManagement
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.IOConsole
 import org.eclipse.ui.console.IOConsoleInputStream
 import org.eclipse.xtext.resource.SaveOptions
+import org.blended.condition.condition.ConditionFactory
 
 class ConditionListener implements Runnable {
 	package String name
@@ -111,7 +110,7 @@ class ConditionListener implements Runnable {
 				ConsoleManagement.write(name, "Testing manipulation of model:")
 				
 				//CHANGING THE MODEL
-				var blendedFactory = BlendedFactory.eINSTANCE;
+				var blendedFactory = ConditionFactory.eINSTANCE;
 				var eac = blendedFactory.createEntityAchieveCondition();
 				eac.name = "TESTING"
 				var cm = resource.getContents().get(0) as ConditionModel

@@ -1,14 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.activity/src-gen" editDirectory="/org.blended.activity.edit/src"
-    editorDirectory="/org.blended.activity.editor/src" modelPluginID="org.blended.activity"
-    forceOverwrite="true" modelName="Activity" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.activity/src-gen" editDirectory="/C:\Users\Vicente\Documents\GitHub\bw\designer\org.blended.activity.edit/src"
+    editorDirectory="/C:\Users\Vicente\Documents\GitHub\bw\designer\org.blended.activity.editor/src"
+    modelPluginID="org.blended.activity" forceOverwrite="true" modelName="Activity"
+    updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="6.0" copyrightFields="false" editPluginID="org.blended.activity.edit"
-    editorPluginID="org.blended.activity.editor" runtimeVersion="2.10" usedGenPackages="platform:/resource/org.blended/model/generated/Blended.genmodel#//blended">
+    editorPluginID="org.blended.activity.editor" runtimeVersion="2.10">
   <genPackages prefix="Activity" basePackage="org.blended.activity" disposableProviderFactory="true"
       fileExtensions="am" ecorePackage="Activity.ecore#/">
     <genClasses ecoreClass="Activity.ecore#//ActivityModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//ActivityModel/activities"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//EntityAchieveCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//EntityAchieveCondition/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//EntityAchieveConditionExist">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//EntityAchieveConditionExist/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//EntityInvariantCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//EntityInvariantCondition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//EntityInvariantCondition/cardinality"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//EntityDependenceCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//EntityDependenceCondition/entity1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//EntityDependenceCondition/entity2"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//AttributeAchieveCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//AttributeAchieveCondition/conditions"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//NotMandatoryAttributeAchieveCondition"/>
+    <genClasses ecoreClass="Activity.ecore#//MandatoryAttributeAchieveCondition"/>
+    <genClasses ecoreClass="Activity.ecore#//AttributeInvariantCondition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//AttributeInvariantCondition/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//AttributeDependenceCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//AttributeDependenceCondition/attributes1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//AttributeDependenceCondition/attribute2"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//Nothing">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//Nothing/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//Expression"/>
+    <genClasses ecoreClass="Activity.ecore#//Activity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//Activity/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//Activity/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//Activity/pre"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//Activity/post"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//Or">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//Or/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//Or/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//And">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//And/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//And/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//Not">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//Not/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//AttributeDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//AttributeDefinition/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Activity.ecore#//AttributeValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Activity.ecore#//AttributeValue/name"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

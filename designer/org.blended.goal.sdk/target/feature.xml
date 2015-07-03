@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature id="org.blended.goal.sdk"
+	label="Goal SDK Feature "
+	version="1.0.0.201507021541">
+	<plugin
+			id="org.blended.goal"
+			download-size="158"
+			install-size="398"
+			version="1.0.0.201507021541"
+			unpack="false"/>
+	<plugin
+			id="org.blended.goal.ui"
+			download-size="78"
+			install-size="305"
+			version="1.0.0.201507021541"
+			unpack="false"/>
+</feature>

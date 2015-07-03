@@ -79,6 +79,132 @@ public class GoalSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case GoalPackage.ENTITY_ACHIEVE_CONDITION:
+      {
+        EntityAchieveCondition entityAchieveCondition = (EntityAchieveCondition)theEObject;
+        T result = caseEntityAchieveCondition(entityAchieveCondition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.ENTITY_ACHIEVE_CONDITION_EXIST:
+      {
+        EntityAchieveConditionExist entityAchieveConditionExist = (EntityAchieveConditionExist)theEObject;
+        T result = caseEntityAchieveConditionExist(entityAchieveConditionExist);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.ENTITY_INVARIANT_CONDITION:
+      {
+        EntityInvariantCondition entityInvariantCondition = (EntityInvariantCondition)theEObject;
+        T result = caseEntityInvariantCondition(entityInvariantCondition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.ENTITY_DEPENDENCE_CONDITION:
+      {
+        EntityDependenceCondition entityDependenceCondition = (EntityDependenceCondition)theEObject;
+        T result = caseEntityDependenceCondition(entityDependenceCondition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.ATTRIBUTE_ACHIEVE_CONDITION:
+      {
+        AttributeAchieveCondition attributeAchieveCondition = (AttributeAchieveCondition)theEObject;
+        T result = caseAttributeAchieveCondition(attributeAchieveCondition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.NOT_MANDATORY_ATTRIBUTE_ACHIEVE_CONDITION:
+      {
+        NotMandatoryAttributeAchieveCondition notMandatoryAttributeAchieveCondition = (NotMandatoryAttributeAchieveCondition)theEObject;
+        T result = caseNotMandatoryAttributeAchieveCondition(notMandatoryAttributeAchieveCondition);
+        if (result == null) result = caseAttributeAchieveCondition(notMandatoryAttributeAchieveCondition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.MANDATORY_ATTRIBUTE_ACHIEVE_CONDITION:
+      {
+        MandatoryAttributeAchieveCondition mandatoryAttributeAchieveCondition = (MandatoryAttributeAchieveCondition)theEObject;
+        T result = caseMandatoryAttributeAchieveCondition(mandatoryAttributeAchieveCondition);
+        if (result == null) result = caseAttributeAchieveCondition(mandatoryAttributeAchieveCondition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.ATTRIBUTE_INVARIANT_CONDITION:
+      {
+        AttributeInvariantCondition attributeInvariantCondition = (AttributeInvariantCondition)theEObject;
+        T result = caseAttributeInvariantCondition(attributeInvariantCondition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.ATTRIBUTE_DEPENDENCE_CONDITION:
+      {
+        AttributeDependenceCondition attributeDependenceCondition = (AttributeDependenceCondition)theEObject;
+        T result = caseAttributeDependenceCondition(attributeDependenceCondition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.NOTHING:
+      {
+        Nothing nothing = (Nothing)theEObject;
+        T result = caseNothing(nothing);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.EXPRESSION:
+      {
+        Expression expression = (Expression)theEObject;
+        T result = caseExpression(expression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.GOAL:
+      {
+        Goal goal = (Goal)theEObject;
+        T result = caseGoal(goal);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.OR:
+      {
+        Or or = (Or)theEObject;
+        T result = caseOr(or);
+        if (result == null) result = caseExpression(or);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.AND:
+      {
+        And and = (And)theEObject;
+        T result = caseAnd(and);
+        if (result == null) result = caseExpression(and);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.NOT:
+      {
+        Not not = (Not)theEObject;
+        T result = caseNot(not);
+        if (result == null) result = caseExpression(not);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.ATTRIBUTE_DEFINITION:
+      {
+        AttributeDefinition attributeDefinition = (AttributeDefinition)theEObject;
+        T result = caseAttributeDefinition(attributeDefinition);
+        if (result == null) result = caseExpression(attributeDefinition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case GoalPackage.ATTRIBUTE_VALUE:
+      {
+        AttributeValue attributeValue = (AttributeValue)theEObject;
+        T result = caseAttributeValue(attributeValue);
+        if (result == null) result = caseExpression(attributeValue);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       default: return defaultCase(theEObject);
     }
   }
@@ -95,6 +221,278 @@ public class GoalSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseGoalModel(GoalModel object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Entity Achieve Condition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Entity Achieve Condition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEntityAchieveCondition(EntityAchieveCondition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Entity Achieve Condition Exist</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Entity Achieve Condition Exist</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEntityAchieveConditionExist(EntityAchieveConditionExist object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Entity Invariant Condition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Entity Invariant Condition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEntityInvariantCondition(EntityInvariantCondition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Entity Dependence Condition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Entity Dependence Condition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEntityDependenceCondition(EntityDependenceCondition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Attribute Achieve Condition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Attribute Achieve Condition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAttributeAchieveCondition(AttributeAchieveCondition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Not Mandatory Attribute Achieve Condition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Not Mandatory Attribute Achieve Condition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNotMandatoryAttributeAchieveCondition(NotMandatoryAttributeAchieveCondition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Mandatory Attribute Achieve Condition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Mandatory Attribute Achieve Condition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseMandatoryAttributeAchieveCondition(MandatoryAttributeAchieveCondition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Attribute Invariant Condition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Attribute Invariant Condition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAttributeInvariantCondition(AttributeInvariantCondition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Attribute Dependence Condition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Attribute Dependence Condition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAttributeDependenceCondition(AttributeDependenceCondition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Nothing</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Nothing</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNothing(Nothing object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseExpression(Expression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Goal</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Goal</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseGoal(Goal object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Or</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Or</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOr(Or object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>And</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>And</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAnd(And object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Not</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Not</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNot(Not object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Attribute Definition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Attribute Definition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAttributeDefinition(AttributeDefinition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Attribute Value</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Attribute Value</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAttributeValue(AttributeValue object)
   {
     return null;
   }

@@ -4,7 +4,7 @@
 package org.blended.goal.ui.labeling;
 
 import com.google.inject.Inject;
-import org.blended.blended.Goal;
+import org.blended.goal.goal.Goal;
 import org.blended.goal.goal.GoalModel;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;

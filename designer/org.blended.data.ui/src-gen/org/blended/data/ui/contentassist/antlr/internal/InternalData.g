@@ -639,11 +639,11 @@ rule__Entity__Group__0__Impl
     }
 :
 (
-{ before(grammarAccess.getEntityAccess().getEntityKeyword_0()); }
+{ before(grammarAccess.getEntityAccess().getEntityyKeyword_0()); }
 
-	'Entity' 
+	'Entityy' 
 
-{ after(grammarAccess.getEntityAccess().getEntityKeyword_0()); }
+{ after(grammarAccess.getEntityAccess().getEntityyKeyword_0()); }
 )
 
 ;

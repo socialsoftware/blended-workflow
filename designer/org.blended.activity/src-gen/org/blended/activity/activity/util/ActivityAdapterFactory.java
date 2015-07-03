@@ -80,6 +80,91 @@ public class ActivityAdapterFactory extends AdapterFactoryImpl
         return createActivityModelAdapter();
       }
       @Override
+      public Adapter caseEntityAchieveCondition(EntityAchieveCondition object)
+      {
+        return createEntityAchieveConditionAdapter();
+      }
+      @Override
+      public Adapter caseEntityAchieveConditionExist(EntityAchieveConditionExist object)
+      {
+        return createEntityAchieveConditionExistAdapter();
+      }
+      @Override
+      public Adapter caseEntityInvariantCondition(EntityInvariantCondition object)
+      {
+        return createEntityInvariantConditionAdapter();
+      }
+      @Override
+      public Adapter caseEntityDependenceCondition(EntityDependenceCondition object)
+      {
+        return createEntityDependenceConditionAdapter();
+      }
+      @Override
+      public Adapter caseAttributeAchieveCondition(AttributeAchieveCondition object)
+      {
+        return createAttributeAchieveConditionAdapter();
+      }
+      @Override
+      public Adapter caseNotMandatoryAttributeAchieveCondition(NotMandatoryAttributeAchieveCondition object)
+      {
+        return createNotMandatoryAttributeAchieveConditionAdapter();
+      }
+      @Override
+      public Adapter caseMandatoryAttributeAchieveCondition(MandatoryAttributeAchieveCondition object)
+      {
+        return createMandatoryAttributeAchieveConditionAdapter();
+      }
+      @Override
+      public Adapter caseAttributeInvariantCondition(AttributeInvariantCondition object)
+      {
+        return createAttributeInvariantConditionAdapter();
+      }
+      @Override
+      public Adapter caseAttributeDependenceCondition(AttributeDependenceCondition object)
+      {
+        return createAttributeDependenceConditionAdapter();
+      }
+      @Override
+      public Adapter caseNothing(Nothing object)
+      {
+        return createNothingAdapter();
+      }
+      @Override
+      public Adapter caseExpression(Expression object)
+      {
+        return createExpressionAdapter();
+      }
+      @Override
+      public Adapter caseActivity(Activity object)
+      {
+        return createActivityAdapter();
+      }
+      @Override
+      public Adapter caseOr(Or object)
+      {
+        return createOrAdapter();
+      }
+      @Override
+      public Adapter caseAnd(And object)
+      {
+        return createAndAdapter();
+      }
+      @Override
+      public Adapter caseNot(Not object)
+      {
+        return createNotAdapter();
+      }
+      @Override
+      public Adapter caseAttributeDefinition(AttributeDefinition object)
+      {
+        return createAttributeDefinitionAdapter();
+      }
+      @Override
+      public Adapter caseAttributeValue(AttributeValue object)
+      {
+        return createAttributeValueAdapter();
+      }
+      @Override
       public Adapter defaultCase(EObject object)
       {
         return createEObjectAdapter();
@@ -112,6 +197,261 @@ public class ActivityAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createActivityModelAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.EntityAchieveCondition <em>Entity Achieve Condition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.EntityAchieveCondition
+   * @generated
+   */
+  public Adapter createEntityAchieveConditionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.EntityAchieveConditionExist <em>Entity Achieve Condition Exist</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.EntityAchieveConditionExist
+   * @generated
+   */
+  public Adapter createEntityAchieveConditionExistAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.EntityInvariantCondition <em>Entity Invariant Condition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.EntityInvariantCondition
+   * @generated
+   */
+  public Adapter createEntityInvariantConditionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.EntityDependenceCondition <em>Entity Dependence Condition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.EntityDependenceCondition
+   * @generated
+   */
+  public Adapter createEntityDependenceConditionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.AttributeAchieveCondition <em>Attribute Achieve Condition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.AttributeAchieveCondition
+   * @generated
+   */
+  public Adapter createAttributeAchieveConditionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.NotMandatoryAttributeAchieveCondition <em>Not Mandatory Attribute Achieve Condition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.NotMandatoryAttributeAchieveCondition
+   * @generated
+   */
+  public Adapter createNotMandatoryAttributeAchieveConditionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.MandatoryAttributeAchieveCondition <em>Mandatory Attribute Achieve Condition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.MandatoryAttributeAchieveCondition
+   * @generated
+   */
+  public Adapter createMandatoryAttributeAchieveConditionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.AttributeInvariantCondition <em>Attribute Invariant Condition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.AttributeInvariantCondition
+   * @generated
+   */
+  public Adapter createAttributeInvariantConditionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.AttributeDependenceCondition <em>Attribute Dependence Condition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.AttributeDependenceCondition
+   * @generated
+   */
+  public Adapter createAttributeDependenceConditionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.Nothing <em>Nothing</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.Nothing
+   * @generated
+   */
+  public Adapter createNothingAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.Expression <em>Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.Expression
+   * @generated
+   */
+  public Adapter createExpressionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.Activity <em>Activity</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.Activity
+   * @generated
+   */
+  public Adapter createActivityAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.Or <em>Or</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.Or
+   * @generated
+   */
+  public Adapter createOrAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.And <em>And</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.And
+   * @generated
+   */
+  public Adapter createAndAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.Not <em>Not</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.Not
+   * @generated
+   */
+  public Adapter createNotAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.AttributeDefinition <em>Attribute Definition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.AttributeDefinition
+   * @generated
+   */
+  public Adapter createAttributeDefinitionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.blended.activity.activity.AttributeValue <em>Attribute Value</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.blended.activity.activity.AttributeValue
+   * @generated
+   */
+  public Adapter createAttributeValueAdapter()
   {
     return null;
   }

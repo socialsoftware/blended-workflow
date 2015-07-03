@@ -1,12 +1,13 @@
 package org.blended.goal.utils;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import java.io.IOException;
 import java.util.Map;
-import org.blended.blended.BlendedFactory;
-import org.blended.blended.Goal;
+import org.blended.goal.goal.Goal;
+import org.blended.goal.goal.GoalFactory;
 import org.blended.goal.goal.GoalModel;
-import org.blended.utils.ConsoleManagement;
+import org.blended.goal.utils.ConsoleManagement;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
@@ -72,13 +73,18 @@ public class GoalListener implements Runnable {
   }
   
   public void doTask(final String option) {
-    switch (option) {
-      case "0":
+    boolean _matched = false;
+    if (!_matched) {
+      if (Objects.equal(option, "0")) {
+        _matched=true;
         CharSequence _listOfActions = GoalListener.listOfActions();
         String _string = _listOfActions.toString();
         ConsoleManagement.write(this.name, _string);
-        break;
-      case "1":
+      }
+    }
+    if (!_matched) {
+      if (Objects.equal(option, "1")) {
+        _matched=true;
         ConsoleManagement.write(this.name, "List of all the Goals:");
         TreeIterator<EObject> _allContents = this.resource.getAllContents();
         Iterable<EObject> _iterable = IteratorExtensions.<EObject>toIterable(_allContents);
@@ -88,10 +94,13 @@ public class GoalListener implements Runnable {
           String _plus = ("g:" + _name);
           ConsoleManagement.write(this.name, ConsoleManagement.TypeOutput.OutputData, _plus);
         }
-        break;
-      case "2":
+      }
+    }
+    if (!_matched) {
+      if (Objects.equal(option, "2")) {
+        _matched=true;
         ConsoleManagement.write(this.name, "Testing manipulation of model:");
-        BlendedFactory blendedFactory = BlendedFactory.eINSTANCE;
+        GoalFactory blendedFactory = GoalFactory.eINSTANCE;
         Goal goal = blendedFactory.createGoal();
         goal.setName("NEWGOAL");
         EList<EObject> _contents = this.resource.getContents();
@@ -102,10 +111,10 @@ public class GoalListener implements Runnable {
         EList<Goal> _goals_1 = gm.getGoals();
         _goals_1.remove(1);
         this.update();
-        break;
-      default:
-        ConsoleManagement.write(this.name, "Option no valid. Type 0 to see the options");
-        break;
+      }
+    }
+    if (!_matched) {
+      ConsoleManagement.write(this.name, "Option no valid. Type 0 to see the options");
     }
   }
   

@@ -12,7 +12,7 @@ package org.blended.activity.ui.quickfix
  *
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#quick-fixes
  */
-class ActivityQuickfixProvider extends org.blended.ui.quickfix.BlendedQuickfixProvider {
+class ActivityQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider {
 
 //	@Fix(MyDslValidator::INVALID_NAME)
 //	def capitalizeName(Issue issue, IssueResolutionAcceptor acceptor) {

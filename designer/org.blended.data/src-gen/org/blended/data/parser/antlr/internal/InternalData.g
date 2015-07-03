@@ -152,9 +152,9 @@ ruleEntity returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-(	otherlv_0='Entity' 
+(	otherlv_0='Entityy' 
     {
-    	newLeafNode(otherlv_0, grammarAccess.getEntityAccess().getEntityKeyword_0());
+    	newLeafNode(otherlv_0, grammarAccess.getEntityAccess().getEntityyKeyword_0());
     }
 (
 (

@@ -4,8 +4,8 @@
 package org.blended.activity.ui.labeling;
 
 import com.google.inject.Inject;
+import org.blended.activity.activity.Activity;
 import org.blended.activity.activity.ActivityModel;
-import org.blended.blended.Activity;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 

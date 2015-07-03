@@ -1,13 +1,10 @@
 package org.blended.activity.utils
 
 import java.io.IOException
-import org.blended.blended.Goal
-
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.IOConsole
 import org.eclipse.ui.console.IOConsoleInputStream
 import org.eclipse.xtext.resource.SaveOptions
-import org.blended.utils.ConsoleManagement
 
 class ActivityListener implements Runnable {
 	package String name
@@ -53,11 +50,11 @@ class ActivityListener implements Runnable {
 			}
 			case "1": {
 				ConsoleManagement.write(name, "List of all the Goals:")
-				for (r : resource.allContents.toIterable.filter(typeof(Goal))){
-					ConsoleManagement.write(name, ConsoleManagement.TypeOutput.OutputData, 
-					'g:' + r.name
-					)
-				}
+				//for (r : resource.allContents.toIterable.filter(typeof(Goal))){
+				//	ConsoleManagement.write(name, ConsoleManagement.TypeOutput.OutputData, 
+				//	'g:' + r.name
+				//	)
+				//}
 			}
 			case "2": {
 				ConsoleManagement.write(name, "Testing manipulation of model:")

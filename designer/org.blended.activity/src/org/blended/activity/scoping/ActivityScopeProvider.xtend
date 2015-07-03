@@ -10,6 +10,6 @@ package org.blended.activity.scoping
  * on how and when to use it.
  *
  */
-class ActivityScopeProvider extends org.blended.scoping.BlendedScopeProvider {
+class ActivityScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider {
 
 }

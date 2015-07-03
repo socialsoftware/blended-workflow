@@ -21,7 +21,7 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalDataParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_INT", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'Entity'", "'exists'", "'dependsOn'", "'{'", "'}'", "':'", "'mandatory'", "','", "'group'", "'.'", "'Association'", "'with'", "'('", "')'", "'Constraint'", "'..'", "'*'", "'+'", "'OR'", "'AND'", "'NOT'", "'DEF'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_INT", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'Entityy'", "'exists'", "'dependsOn'", "'{'", "'}'", "':'", "'mandatory'", "','", "'group'", "'.'", "'Association'", "'with'", "'('", "')'", "'Constraint'", "'..'", "'*'", "'+'", "'OR'", "'AND'", "'NOT'", "'DEF'"
     };
     public static final int RULE_STRING=6;
     public static final int RULE_SL_COMMENT=8;
@@ -68,7 +68,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
         
 
     public String[] getTokenNames() { return InternalDataParser.tokenNames; }
-    public String getGrammarFileName() { return "../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g"; }
+    public String getGrammarFileName() { return "/C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g"; }
 
 
 
@@ -93,7 +93,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleDataModel"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:67:1: entryRuleDataModel returns [EObject current=null] : iv_ruleDataModel= ruleDataModel EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:67:1: entryRuleDataModel returns [EObject current=null] : iv_ruleDataModel= ruleDataModel EOF ;
     public final EObject entryRuleDataModel() throws RecognitionException {
         EObject current = null;
 
@@ -101,8 +101,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:68:2: (iv_ruleDataModel= ruleDataModel EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:69:2: iv_ruleDataModel= ruleDataModel EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:68:2: (iv_ruleDataModel= ruleDataModel EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:69:2: iv_ruleDataModel= ruleDataModel EOF
             {
              newCompositeNode(grammarAccess.getDataModelRule()); 
             pushFollow(FOLLOW_ruleDataModel_in_entryRuleDataModel75);
@@ -129,7 +129,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleDataModel"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:76:1: ruleDataModel returns [EObject current=null] : ( ( (lv_entities_0_0= ruleEntity ) )* ( (lv_associations_1_0= ruleAssociation ) )* ( (lv_constraint_2_0= ruleConstraint ) )* ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:76:1: ruleDataModel returns [EObject current=null] : ( ( (lv_entities_0_0= ruleEntity ) )* ( (lv_associations_1_0= ruleAssociation ) )* ( (lv_constraint_2_0= ruleConstraint ) )* ) ;
     public final EObject ruleDataModel() throws RecognitionException {
         EObject current = null;
 
@@ -143,13 +143,13 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:79:28: ( ( ( (lv_entities_0_0= ruleEntity ) )* ( (lv_associations_1_0= ruleAssociation ) )* ( (lv_constraint_2_0= ruleConstraint ) )* ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:80:1: ( ( (lv_entities_0_0= ruleEntity ) )* ( (lv_associations_1_0= ruleAssociation ) )* ( (lv_constraint_2_0= ruleConstraint ) )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:79:28: ( ( ( (lv_entities_0_0= ruleEntity ) )* ( (lv_associations_1_0= ruleAssociation ) )* ( (lv_constraint_2_0= ruleConstraint ) )* ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:80:1: ( ( (lv_entities_0_0= ruleEntity ) )* ( (lv_associations_1_0= ruleAssociation ) )* ( (lv_constraint_2_0= ruleConstraint ) )* )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:80:1: ( ( (lv_entities_0_0= ruleEntity ) )* ( (lv_associations_1_0= ruleAssociation ) )* ( (lv_constraint_2_0= ruleConstraint ) )* )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:80:2: ( (lv_entities_0_0= ruleEntity ) )* ( (lv_associations_1_0= ruleAssociation ) )* ( (lv_constraint_2_0= ruleConstraint ) )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:80:1: ( ( (lv_entities_0_0= ruleEntity ) )* ( (lv_associations_1_0= ruleAssociation ) )* ( (lv_constraint_2_0= ruleConstraint ) )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:80:2: ( (lv_entities_0_0= ruleEntity ) )* ( (lv_associations_1_0= ruleAssociation ) )* ( (lv_constraint_2_0= ruleConstraint ) )*
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:80:2: ( (lv_entities_0_0= ruleEntity ) )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:80:2: ( (lv_entities_0_0= ruleEntity ) )*
             loop1:
             do {
                 int alt1=2;
@@ -162,10 +162,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 switch (alt1) {
             	case 1 :
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:81:1: (lv_entities_0_0= ruleEntity )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:81:1: (lv_entities_0_0= ruleEntity )
             	    {
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:81:1: (lv_entities_0_0= ruleEntity )
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:82:3: lv_entities_0_0= ruleEntity
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:81:1: (lv_entities_0_0= ruleEntity )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:82:3: lv_entities_0_0= ruleEntity
             	    {
             	     
             	    	        newCompositeNode(grammarAccess.getDataModelAccess().getEntitiesEntityParserRuleCall_0_0()); 
@@ -198,7 +198,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
                 }
             } while (true);
 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:98:3: ( (lv_associations_1_0= ruleAssociation ) )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:98:3: ( (lv_associations_1_0= ruleAssociation ) )*
             loop2:
             do {
                 int alt2=2;
@@ -211,10 +211,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 switch (alt2) {
             	case 1 :
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:99:1: (lv_associations_1_0= ruleAssociation )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:99:1: (lv_associations_1_0= ruleAssociation )
             	    {
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:99:1: (lv_associations_1_0= ruleAssociation )
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:100:3: lv_associations_1_0= ruleAssociation
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:99:1: (lv_associations_1_0= ruleAssociation )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:100:3: lv_associations_1_0= ruleAssociation
             	    {
             	     
             	    	        newCompositeNode(grammarAccess.getDataModelAccess().getAssociationsAssociationParserRuleCall_1_0()); 
@@ -247,7 +247,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
                 }
             } while (true);
 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:116:3: ( (lv_constraint_2_0= ruleConstraint ) )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:116:3: ( (lv_constraint_2_0= ruleConstraint ) )*
             loop3:
             do {
                 int alt3=2;
@@ -260,10 +260,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 switch (alt3) {
             	case 1 :
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:117:1: (lv_constraint_2_0= ruleConstraint )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:117:1: (lv_constraint_2_0= ruleConstraint )
             	    {
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:117:1: (lv_constraint_2_0= ruleConstraint )
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:118:3: lv_constraint_2_0= ruleConstraint
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:117:1: (lv_constraint_2_0= ruleConstraint )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:118:3: lv_constraint_2_0= ruleConstraint
             	    {
             	     
             	    	        newCompositeNode(grammarAccess.getDataModelAccess().getConstraintConstraintParserRuleCall_2_0()); 
@@ -317,7 +317,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleEntity"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:142:1: entryRuleEntity returns [EObject current=null] : iv_ruleEntity= ruleEntity EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:142:1: entryRuleEntity returns [EObject current=null] : iv_ruleEntity= ruleEntity EOF ;
     public final EObject entryRuleEntity() throws RecognitionException {
         EObject current = null;
 
@@ -325,8 +325,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:143:2: (iv_ruleEntity= ruleEntity EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:144:2: iv_ruleEntity= ruleEntity EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:143:2: (iv_ruleEntity= ruleEntity EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:144:2: iv_ruleEntity= ruleEntity EOF
             {
              newCompositeNode(grammarAccess.getEntityRule()); 
             pushFollow(FOLLOW_ruleEntity_in_entryRuleEntity212);
@@ -353,7 +353,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleEntity"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:151:1: ruleEntity returns [EObject current=null] : (otherlv_0= 'Entity' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:151:1: ruleEntity returns [EObject current=null] : (otherlv_0= 'Entityy' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' ) ;
     public final EObject ruleEntity() throws RecognitionException {
         EObject current = null;
 
@@ -372,21 +372,21 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:154:28: ( (otherlv_0= 'Entity' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:1: (otherlv_0= 'Entity' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:154:28: ( (otherlv_0= 'Entityy' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:1: (otherlv_0= 'Entityy' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:1: (otherlv_0= 'Entity' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:3: otherlv_0= 'Entity' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:1: (otherlv_0= 'Entityy' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:3: otherlv_0= 'Entityy' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}'
             {
             otherlv_0=(Token)match(input,11,FOLLOW_11_in_ruleEntity259); 
 
-                	newLeafNode(otherlv_0, grammarAccess.getEntityAccess().getEntityKeyword_0());
+                	newLeafNode(otherlv_0, grammarAccess.getEntityAccess().getEntityyKeyword_0());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:159:1: ( (lv_name_1_0= RULE_ID ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:160:1: (lv_name_1_0= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:159:1: ( (lv_name_1_0= RULE_ID ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:160:1: (lv_name_1_0= RULE_ID )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:160:1: (lv_name_1_0= RULE_ID )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:161:3: lv_name_1_0= RULE_ID
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:160:1: (lv_name_1_0= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:161:3: lv_name_1_0= RULE_ID
             {
             lv_name_1_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleEntity276); 
 
@@ -408,7 +408,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:177:2: ( (lv_exists_2_0= 'exists' ) )?
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:177:2: ( (lv_exists_2_0= 'exists' ) )?
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -417,10 +417,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
             }
             switch (alt4) {
                 case 1 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:178:1: (lv_exists_2_0= 'exists' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:178:1: (lv_exists_2_0= 'exists' )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:178:1: (lv_exists_2_0= 'exists' )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:179:3: lv_exists_2_0= 'exists'
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:178:1: (lv_exists_2_0= 'exists' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:179:3: lv_exists_2_0= 'exists'
                     {
                     lv_exists_2_0=(Token)match(input,12,FOLLOW_12_in_ruleEntity299); 
 
@@ -441,7 +441,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:192:3: (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )?
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:192:3: (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -450,17 +450,17 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
             }
             switch (alt5) {
                 case 1 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:192:5: otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:192:5: otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) )
                     {
                     otherlv_3=(Token)match(input,13,FOLLOW_13_in_ruleEntity326); 
 
                         	newLeafNode(otherlv_3, grammarAccess.getEntityAccess().getDependsOnKeyword_3_0());
                         
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:196:1: ( (otherlv_4= RULE_ID ) )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:197:1: (otherlv_4= RULE_ID )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:196:1: ( (otherlv_4= RULE_ID ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:197:1: (otherlv_4= RULE_ID )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:197:1: (otherlv_4= RULE_ID )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:198:3: otherlv_4= RULE_ID
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:197:1: (otherlv_4= RULE_ID )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:198:3: otherlv_4= RULE_ID
                     {
 
                     			if (current==null) {
@@ -487,7 +487,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 	newLeafNode(otherlv_5, grammarAccess.getEntityAccess().getLeftCurlyBracketKeyword_4());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:213:1: ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:213:1: ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )*
             loop7:
             do {
                 int alt7=2;
@@ -500,12 +500,12 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 switch (alt7) {
             	case 1 :
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:214:1: ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:214:1: ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) )
             	    {
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:214:1: ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) )
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:215:1: (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:214:1: ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:215:1: (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute )
             	    {
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:215:1: (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:215:1: (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute )
             	    int alt6=2;
             	    int LA6_0 = input.LA(1);
 
@@ -523,7 +523,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
             	    }
             	    switch (alt6) {
             	        case 1 :
-            	            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:216:3: lv_attributes_6_1= ruleAttributeGroup
+            	            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:216:3: lv_attributes_6_1= ruleAttributeGroup
             	            {
             	             
             	            	        newCompositeNode(grammarAccess.getEntityAccess().getAttributesAttributeGroupParserRuleCall_5_0_0()); 
@@ -548,7 +548,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
             	            }
             	            break;
             	        case 2 :
-            	            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:231:8: lv_attributes_6_2= ruleAttribute
+            	            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:231:8: lv_attributes_6_2= ruleAttribute
             	            {
             	             
             	            	        newCompositeNode(grammarAccess.getEntityAccess().getAttributesAttributeParserRuleCall_5_0_1()); 
@@ -612,7 +612,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleAttribute"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:261:1: entryRuleAttribute returns [EObject current=null] : iv_ruleAttribute= ruleAttribute EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:261:1: entryRuleAttribute returns [EObject current=null] : iv_ruleAttribute= ruleAttribute EOF ;
     public final EObject entryRuleAttribute() throws RecognitionException {
         EObject current = null;
 
@@ -620,8 +620,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:262:2: (iv_ruleAttribute= ruleAttribute EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:263:2: iv_ruleAttribute= ruleAttribute EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:262:2: (iv_ruleAttribute= ruleAttribute EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:263:2: iv_ruleAttribute= ruleAttribute EOF
             {
              newCompositeNode(grammarAccess.getAttributeRule()); 
             pushFollow(FOLLOW_ruleAttribute_in_entryRuleAttribute454);
@@ -648,7 +648,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAttribute"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:270:1: ruleAttribute returns [EObject current=null] : ( ( (lv_name_0_0= ruleQualifiedName ) ) otherlv_1= ':' ( (lv_type_2_0= RULE_ID ) ) ( (lv_mandatory_3_0= 'mandatory' ) )? (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )? ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:270:1: ruleAttribute returns [EObject current=null] : ( ( (lv_name_0_0= ruleQualifiedName ) ) otherlv_1= ':' ( (lv_type_2_0= RULE_ID ) ) ( (lv_mandatory_3_0= 'mandatory' ) )? (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )? ) ;
     public final EObject ruleAttribute() throws RecognitionException {
         EObject current = null;
 
@@ -663,17 +663,17 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:273:28: ( ( ( (lv_name_0_0= ruleQualifiedName ) ) otherlv_1= ':' ( (lv_type_2_0= RULE_ID ) ) ( (lv_mandatory_3_0= 'mandatory' ) )? (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )? ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:274:1: ( ( (lv_name_0_0= ruleQualifiedName ) ) otherlv_1= ':' ( (lv_type_2_0= RULE_ID ) ) ( (lv_mandatory_3_0= 'mandatory' ) )? (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )? )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:273:28: ( ( ( (lv_name_0_0= ruleQualifiedName ) ) otherlv_1= ':' ( (lv_type_2_0= RULE_ID ) ) ( (lv_mandatory_3_0= 'mandatory' ) )? (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )? ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:274:1: ( ( (lv_name_0_0= ruleQualifiedName ) ) otherlv_1= ':' ( (lv_type_2_0= RULE_ID ) ) ( (lv_mandatory_3_0= 'mandatory' ) )? (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )? )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:274:1: ( ( (lv_name_0_0= ruleQualifiedName ) ) otherlv_1= ':' ( (lv_type_2_0= RULE_ID ) ) ( (lv_mandatory_3_0= 'mandatory' ) )? (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )? )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:274:2: ( (lv_name_0_0= ruleQualifiedName ) ) otherlv_1= ':' ( (lv_type_2_0= RULE_ID ) ) ( (lv_mandatory_3_0= 'mandatory' ) )? (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )?
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:274:1: ( ( (lv_name_0_0= ruleQualifiedName ) ) otherlv_1= ':' ( (lv_type_2_0= RULE_ID ) ) ( (lv_mandatory_3_0= 'mandatory' ) )? (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )? )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:274:2: ( (lv_name_0_0= ruleQualifiedName ) ) otherlv_1= ':' ( (lv_type_2_0= RULE_ID ) ) ( (lv_mandatory_3_0= 'mandatory' ) )? (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )?
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:274:2: ( (lv_name_0_0= ruleQualifiedName ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:275:1: (lv_name_0_0= ruleQualifiedName )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:274:2: ( (lv_name_0_0= ruleQualifiedName ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:275:1: (lv_name_0_0= ruleQualifiedName )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:275:1: (lv_name_0_0= ruleQualifiedName )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:276:3: lv_name_0_0= ruleQualifiedName
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:275:1: (lv_name_0_0= ruleQualifiedName )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:276:3: lv_name_0_0= ruleQualifiedName
             {
              
             	        newCompositeNode(grammarAccess.getAttributeAccess().getNameQualifiedNameParserRuleCall_0_0()); 
@@ -704,11 +704,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 	newLeafNode(otherlv_1, grammarAccess.getAttributeAccess().getColonKeyword_1());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:296:1: ( (lv_type_2_0= RULE_ID ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:297:1: (lv_type_2_0= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:296:1: ( (lv_type_2_0= RULE_ID ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:297:1: (lv_type_2_0= RULE_ID )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:297:1: (lv_type_2_0= RULE_ID )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:298:3: lv_type_2_0= RULE_ID
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:297:1: (lv_type_2_0= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:298:3: lv_type_2_0= RULE_ID
             {
             lv_type_2_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleAttribute539); 
 
@@ -730,7 +730,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:314:2: ( (lv_mandatory_3_0= 'mandatory' ) )?
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:314:2: ( (lv_mandatory_3_0= 'mandatory' ) )?
             int alt8=2;
             int LA8_0 = input.LA(1);
 
@@ -739,10 +739,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
             }
             switch (alt8) {
                 case 1 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:315:1: (lv_mandatory_3_0= 'mandatory' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:315:1: (lv_mandatory_3_0= 'mandatory' )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:315:1: (lv_mandatory_3_0= 'mandatory' )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:316:3: lv_mandatory_3_0= 'mandatory'
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:315:1: (lv_mandatory_3_0= 'mandatory' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:316:3: lv_mandatory_3_0= 'mandatory'
                     {
                     lv_mandatory_3_0=(Token)match(input,17,FOLLOW_17_in_ruleAttribute562); 
 
@@ -763,7 +763,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:329:3: (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )?
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:329:3: (otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )* )?
             int alt10=2;
             int LA10_0 = input.LA(1);
 
@@ -772,17 +772,17 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
             }
             switch (alt10) {
                 case 1 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:329:5: otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )*
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:329:5: otherlv_4= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_6= ',' ( ( ruleQualifiedName ) ) )*
                     {
                     otherlv_4=(Token)match(input,13,FOLLOW_13_in_ruleAttribute589); 
 
                         	newLeafNode(otherlv_4, grammarAccess.getAttributeAccess().getDependsOnKeyword_4_0());
                         
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:333:1: ( ( ruleQualifiedName ) )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:334:1: ( ruleQualifiedName )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:333:1: ( ( ruleQualifiedName ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:334:1: ( ruleQualifiedName )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:334:1: ( ruleQualifiedName )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:335:3: ruleQualifiedName
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:334:1: ( ruleQualifiedName )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:335:3: ruleQualifiedName
                     {
 
                     			if (current==null) {
@@ -806,7 +806,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:348:2: (otherlv_6= ',' ( ( ruleQualifiedName ) ) )*
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:348:2: (otherlv_6= ',' ( ( ruleQualifiedName ) ) )*
                     loop9:
                     do {
                         int alt9=2;
@@ -819,17 +819,17 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                         switch (alt9) {
                     	case 1 :
-                    	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:348:4: otherlv_6= ',' ( ( ruleQualifiedName ) )
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:348:4: otherlv_6= ',' ( ( ruleQualifiedName ) )
                     	    {
                     	    otherlv_6=(Token)match(input,18,FOLLOW_18_in_ruleAttribute625); 
 
                     	        	newLeafNode(otherlv_6, grammarAccess.getAttributeAccess().getCommaKeyword_4_2_0());
                     	        
-                    	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:352:1: ( ( ruleQualifiedName ) )
-                    	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:353:1: ( ruleQualifiedName )
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:352:1: ( ( ruleQualifiedName ) )
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:353:1: ( ruleQualifiedName )
                     	    {
-                    	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:353:1: ( ruleQualifiedName )
-                    	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:354:3: ruleQualifiedName
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:353:1: ( ruleQualifiedName )
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:354:3: ruleQualifiedName
                     	    {
 
                     	    			if (current==null) {
@@ -889,7 +889,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleAttributeGroup"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:375:1: entryRuleAttributeGroup returns [EObject current=null] : iv_ruleAttributeGroup= ruleAttributeGroup EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:375:1: entryRuleAttributeGroup returns [EObject current=null] : iv_ruleAttributeGroup= ruleAttributeGroup EOF ;
     public final EObject entryRuleAttributeGroup() throws RecognitionException {
         EObject current = null;
 
@@ -897,8 +897,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:376:2: (iv_ruleAttributeGroup= ruleAttributeGroup EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:377:2: iv_ruleAttributeGroup= ruleAttributeGroup EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:376:2: (iv_ruleAttributeGroup= ruleAttributeGroup EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:377:2: iv_ruleAttributeGroup= ruleAttributeGroup EOF
             {
              newCompositeNode(grammarAccess.getAttributeGroupRule()); 
             pushFollow(FOLLOW_ruleAttributeGroup_in_entryRuleAttributeGroup688);
@@ -925,7 +925,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAttributeGroup"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:384:1: ruleAttributeGroup returns [EObject current=null] : (otherlv_0= 'group' ( (lv_mandatory_1_0= 'mandatory' ) )? (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )? otherlv_6= '{' ( (lv_attributes_7_0= ruleAttribute ) )+ otherlv_8= '}' ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:384:1: ruleAttributeGroup returns [EObject current=null] : (otherlv_0= 'group' ( (lv_mandatory_1_0= 'mandatory' ) )? (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )? otherlv_6= '{' ( (lv_attributes_7_0= ruleAttribute ) )+ otherlv_8= '}' ) ;
     public final EObject ruleAttributeGroup() throws RecognitionException {
         EObject current = null;
 
@@ -941,17 +941,17 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:387:28: ( (otherlv_0= 'group' ( (lv_mandatory_1_0= 'mandatory' ) )? (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )? otherlv_6= '{' ( (lv_attributes_7_0= ruleAttribute ) )+ otherlv_8= '}' ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:388:1: (otherlv_0= 'group' ( (lv_mandatory_1_0= 'mandatory' ) )? (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )? otherlv_6= '{' ( (lv_attributes_7_0= ruleAttribute ) )+ otherlv_8= '}' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:387:28: ( (otherlv_0= 'group' ( (lv_mandatory_1_0= 'mandatory' ) )? (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )? otherlv_6= '{' ( (lv_attributes_7_0= ruleAttribute ) )+ otherlv_8= '}' ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:388:1: (otherlv_0= 'group' ( (lv_mandatory_1_0= 'mandatory' ) )? (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )? otherlv_6= '{' ( (lv_attributes_7_0= ruleAttribute ) )+ otherlv_8= '}' )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:388:1: (otherlv_0= 'group' ( (lv_mandatory_1_0= 'mandatory' ) )? (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )? otherlv_6= '{' ( (lv_attributes_7_0= ruleAttribute ) )+ otherlv_8= '}' )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:388:3: otherlv_0= 'group' ( (lv_mandatory_1_0= 'mandatory' ) )? (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )? otherlv_6= '{' ( (lv_attributes_7_0= ruleAttribute ) )+ otherlv_8= '}'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:388:1: (otherlv_0= 'group' ( (lv_mandatory_1_0= 'mandatory' ) )? (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )? otherlv_6= '{' ( (lv_attributes_7_0= ruleAttribute ) )+ otherlv_8= '}' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:388:3: otherlv_0= 'group' ( (lv_mandatory_1_0= 'mandatory' ) )? (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )? otherlv_6= '{' ( (lv_attributes_7_0= ruleAttribute ) )+ otherlv_8= '}'
             {
             otherlv_0=(Token)match(input,19,FOLLOW_19_in_ruleAttributeGroup735); 
 
                 	newLeafNode(otherlv_0, grammarAccess.getAttributeGroupAccess().getGroupKeyword_0());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:392:1: ( (lv_mandatory_1_0= 'mandatory' ) )?
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:392:1: ( (lv_mandatory_1_0= 'mandatory' ) )?
             int alt11=2;
             int LA11_0 = input.LA(1);
 
@@ -960,10 +960,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
             }
             switch (alt11) {
                 case 1 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:393:1: (lv_mandatory_1_0= 'mandatory' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:393:1: (lv_mandatory_1_0= 'mandatory' )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:393:1: (lv_mandatory_1_0= 'mandatory' )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:394:3: lv_mandatory_1_0= 'mandatory'
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:393:1: (lv_mandatory_1_0= 'mandatory' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:394:3: lv_mandatory_1_0= 'mandatory'
                     {
                     lv_mandatory_1_0=(Token)match(input,17,FOLLOW_17_in_ruleAttributeGroup753); 
 
@@ -984,7 +984,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:407:3: (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )?
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:407:3: (otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )* )?
             int alt13=2;
             int LA13_0 = input.LA(1);
 
@@ -993,17 +993,17 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
             }
             switch (alt13) {
                 case 1 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:407:5: otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )*
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:407:5: otherlv_2= 'dependsOn' ( ( ruleQualifiedName ) ) (otherlv_4= ',' ( ( ruleQualifiedName ) ) )*
                     {
                     otherlv_2=(Token)match(input,13,FOLLOW_13_in_ruleAttributeGroup780); 
 
                         	newLeafNode(otherlv_2, grammarAccess.getAttributeGroupAccess().getDependsOnKeyword_2_0());
                         
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:411:1: ( ( ruleQualifiedName ) )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:412:1: ( ruleQualifiedName )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:411:1: ( ( ruleQualifiedName ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:412:1: ( ruleQualifiedName )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:412:1: ( ruleQualifiedName )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:413:3: ruleQualifiedName
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:412:1: ( ruleQualifiedName )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:413:3: ruleQualifiedName
                     {
 
                     			if (current==null) {
@@ -1027,7 +1027,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:426:2: (otherlv_4= ',' ( ( ruleQualifiedName ) ) )*
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:426:2: (otherlv_4= ',' ( ( ruleQualifiedName ) ) )*
                     loop12:
                     do {
                         int alt12=2;
@@ -1040,17 +1040,17 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                         switch (alt12) {
                     	case 1 :
-                    	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:426:4: otherlv_4= ',' ( ( ruleQualifiedName ) )
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:426:4: otherlv_4= ',' ( ( ruleQualifiedName ) )
                     	    {
                     	    otherlv_4=(Token)match(input,18,FOLLOW_18_in_ruleAttributeGroup816); 
 
                     	        	newLeafNode(otherlv_4, grammarAccess.getAttributeGroupAccess().getCommaKeyword_2_2_0());
                     	        
-                    	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:430:1: ( ( ruleQualifiedName ) )
-                    	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:431:1: ( ruleQualifiedName )
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:430:1: ( ( ruleQualifiedName ) )
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:431:1: ( ruleQualifiedName )
                     	    {
-                    	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:431:1: ( ruleQualifiedName )
-                    	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:432:3: ruleQualifiedName
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:431:1: ( ruleQualifiedName )
+                    	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:432:3: ruleQualifiedName
                     	    {
 
                     	    			if (current==null) {
@@ -1093,7 +1093,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 	newLeafNode(otherlv_6, grammarAccess.getAttributeGroupAccess().getLeftCurlyBracketKeyword_3());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:449:1: ( (lv_attributes_7_0= ruleAttribute ) )+
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:449:1: ( (lv_attributes_7_0= ruleAttribute ) )+
             int cnt14=0;
             loop14:
             do {
@@ -1107,10 +1107,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 switch (alt14) {
             	case 1 :
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:450:1: (lv_attributes_7_0= ruleAttribute )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:450:1: (lv_attributes_7_0= ruleAttribute )
             	    {
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:450:1: (lv_attributes_7_0= ruleAttribute )
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:451:3: lv_attributes_7_0= ruleAttribute
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:450:1: (lv_attributes_7_0= ruleAttribute )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:451:3: lv_attributes_7_0= ruleAttribute
             	    {
             	     
             	    	        newCompositeNode(grammarAccess.getAttributeGroupAccess().getAttributesAttributeParserRuleCall_4_0()); 
@@ -1172,7 +1172,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleQualifiedName"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:479:1: entryRuleQualifiedName returns [String current=null] : iv_ruleQualifiedName= ruleQualifiedName EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:479:1: entryRuleQualifiedName returns [String current=null] : iv_ruleQualifiedName= ruleQualifiedName EOF ;
     public final String entryRuleQualifiedName() throws RecognitionException {
         String current = null;
 
@@ -1180,8 +1180,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:480:2: (iv_ruleQualifiedName= ruleQualifiedName EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:481:2: iv_ruleQualifiedName= ruleQualifiedName EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:480:2: (iv_ruleQualifiedName= ruleQualifiedName EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:481:2: iv_ruleQualifiedName= ruleQualifiedName EOF
             {
              newCompositeNode(grammarAccess.getQualifiedNameRule()); 
             pushFollow(FOLLOW_ruleQualifiedName_in_entryRuleQualifiedName926);
@@ -1208,7 +1208,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleQualifiedName"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:488:1: ruleQualifiedName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID (kw= '.' this_ID_2= RULE_ID )* ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:488:1: ruleQualifiedName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID (kw= '.' this_ID_2= RULE_ID )* ) ;
     public final AntlrDatatypeRuleToken ruleQualifiedName() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -1219,11 +1219,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:491:28: ( (this_ID_0= RULE_ID (kw= '.' this_ID_2= RULE_ID )* ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:492:1: (this_ID_0= RULE_ID (kw= '.' this_ID_2= RULE_ID )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:491:28: ( (this_ID_0= RULE_ID (kw= '.' this_ID_2= RULE_ID )* ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:492:1: (this_ID_0= RULE_ID (kw= '.' this_ID_2= RULE_ID )* )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:492:1: (this_ID_0= RULE_ID (kw= '.' this_ID_2= RULE_ID )* )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:492:6: this_ID_0= RULE_ID (kw= '.' this_ID_2= RULE_ID )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:492:1: (this_ID_0= RULE_ID (kw= '.' this_ID_2= RULE_ID )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:492:6: this_ID_0= RULE_ID (kw= '.' this_ID_2= RULE_ID )*
             {
             this_ID_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQualifiedName977); 
 
@@ -1232,7 +1232,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
              
                 newLeafNode(this_ID_0, grammarAccess.getQualifiedNameAccess().getIDTerminalRuleCall_0()); 
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:499:1: (kw= '.' this_ID_2= RULE_ID )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:499:1: (kw= '.' this_ID_2= RULE_ID )*
             loop15:
             do {
                 int alt15=2;
@@ -1245,7 +1245,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 switch (alt15) {
             	case 1 :
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:500:2: kw= '.' this_ID_2= RULE_ID
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:500:2: kw= '.' this_ID_2= RULE_ID
             	    {
             	    kw=(Token)match(input,20,FOLLOW_20_in_ruleQualifiedName996); 
 
@@ -1289,7 +1289,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleAssociation"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:520:1: entryRuleAssociation returns [EObject current=null] : iv_ruleAssociation= ruleAssociation EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:520:1: entryRuleAssociation returns [EObject current=null] : iv_ruleAssociation= ruleAssociation EOF ;
     public final EObject entryRuleAssociation() throws RecognitionException {
         EObject current = null;
 
@@ -1297,8 +1297,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:521:2: (iv_ruleAssociation= ruleAssociation EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:522:2: iv_ruleAssociation= ruleAssociation EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:521:2: (iv_ruleAssociation= ruleAssociation EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:522:2: iv_ruleAssociation= ruleAssociation EOF
             {
              newCompositeNode(grammarAccess.getAssociationRule()); 
             pushFollow(FOLLOW_ruleAssociation_in_entryRuleAssociation1058);
@@ -1325,7 +1325,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAssociation"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:529:1: ruleAssociation returns [EObject current=null] : (otherlv_0= 'Association' otherlv_1= '{' ( (otherlv_2= RULE_ID ) ) otherlv_3= 'with' ( (lv_name1_4_0= RULE_ID ) ) otherlv_5= '(' ( (lv_cardinality1_6_0= ruleCardinality ) ) otherlv_7= ')' ( (otherlv_8= RULE_ID ) ) otherlv_9= 'with' ( (lv_name2_10_0= RULE_ID ) ) otherlv_11= '(' ( (lv_cardinality2_12_0= ruleCardinality ) ) otherlv_13= ')' otherlv_14= '}' ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:529:1: ruleAssociation returns [EObject current=null] : (otherlv_0= 'Association' otherlv_1= '{' ( (otherlv_2= RULE_ID ) ) otherlv_3= 'with' ( (lv_name1_4_0= RULE_ID ) ) otherlv_5= '(' ( (lv_cardinality1_6_0= ruleCardinality ) ) otherlv_7= ')' ( (otherlv_8= RULE_ID ) ) otherlv_9= 'with' ( (lv_name2_10_0= RULE_ID ) ) otherlv_11= '(' ( (lv_cardinality2_12_0= ruleCardinality ) ) otherlv_13= ')' otherlv_14= '}' ) ;
     public final EObject ruleAssociation() throws RecognitionException {
         EObject current = null;
 
@@ -1350,11 +1350,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:532:28: ( (otherlv_0= 'Association' otherlv_1= '{' ( (otherlv_2= RULE_ID ) ) otherlv_3= 'with' ( (lv_name1_4_0= RULE_ID ) ) otherlv_5= '(' ( (lv_cardinality1_6_0= ruleCardinality ) ) otherlv_7= ')' ( (otherlv_8= RULE_ID ) ) otherlv_9= 'with' ( (lv_name2_10_0= RULE_ID ) ) otherlv_11= '(' ( (lv_cardinality2_12_0= ruleCardinality ) ) otherlv_13= ')' otherlv_14= '}' ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:533:1: (otherlv_0= 'Association' otherlv_1= '{' ( (otherlv_2= RULE_ID ) ) otherlv_3= 'with' ( (lv_name1_4_0= RULE_ID ) ) otherlv_5= '(' ( (lv_cardinality1_6_0= ruleCardinality ) ) otherlv_7= ')' ( (otherlv_8= RULE_ID ) ) otherlv_9= 'with' ( (lv_name2_10_0= RULE_ID ) ) otherlv_11= '(' ( (lv_cardinality2_12_0= ruleCardinality ) ) otherlv_13= ')' otherlv_14= '}' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:532:28: ( (otherlv_0= 'Association' otherlv_1= '{' ( (otherlv_2= RULE_ID ) ) otherlv_3= 'with' ( (lv_name1_4_0= RULE_ID ) ) otherlv_5= '(' ( (lv_cardinality1_6_0= ruleCardinality ) ) otherlv_7= ')' ( (otherlv_8= RULE_ID ) ) otherlv_9= 'with' ( (lv_name2_10_0= RULE_ID ) ) otherlv_11= '(' ( (lv_cardinality2_12_0= ruleCardinality ) ) otherlv_13= ')' otherlv_14= '}' ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:533:1: (otherlv_0= 'Association' otherlv_1= '{' ( (otherlv_2= RULE_ID ) ) otherlv_3= 'with' ( (lv_name1_4_0= RULE_ID ) ) otherlv_5= '(' ( (lv_cardinality1_6_0= ruleCardinality ) ) otherlv_7= ')' ( (otherlv_8= RULE_ID ) ) otherlv_9= 'with' ( (lv_name2_10_0= RULE_ID ) ) otherlv_11= '(' ( (lv_cardinality2_12_0= ruleCardinality ) ) otherlv_13= ')' otherlv_14= '}' )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:533:1: (otherlv_0= 'Association' otherlv_1= '{' ( (otherlv_2= RULE_ID ) ) otherlv_3= 'with' ( (lv_name1_4_0= RULE_ID ) ) otherlv_5= '(' ( (lv_cardinality1_6_0= ruleCardinality ) ) otherlv_7= ')' ( (otherlv_8= RULE_ID ) ) otherlv_9= 'with' ( (lv_name2_10_0= RULE_ID ) ) otherlv_11= '(' ( (lv_cardinality2_12_0= ruleCardinality ) ) otherlv_13= ')' otherlv_14= '}' )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:533:3: otherlv_0= 'Association' otherlv_1= '{' ( (otherlv_2= RULE_ID ) ) otherlv_3= 'with' ( (lv_name1_4_0= RULE_ID ) ) otherlv_5= '(' ( (lv_cardinality1_6_0= ruleCardinality ) ) otherlv_7= ')' ( (otherlv_8= RULE_ID ) ) otherlv_9= 'with' ( (lv_name2_10_0= RULE_ID ) ) otherlv_11= '(' ( (lv_cardinality2_12_0= ruleCardinality ) ) otherlv_13= ')' otherlv_14= '}'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:533:1: (otherlv_0= 'Association' otherlv_1= '{' ( (otherlv_2= RULE_ID ) ) otherlv_3= 'with' ( (lv_name1_4_0= RULE_ID ) ) otherlv_5= '(' ( (lv_cardinality1_6_0= ruleCardinality ) ) otherlv_7= ')' ( (otherlv_8= RULE_ID ) ) otherlv_9= 'with' ( (lv_name2_10_0= RULE_ID ) ) otherlv_11= '(' ( (lv_cardinality2_12_0= ruleCardinality ) ) otherlv_13= ')' otherlv_14= '}' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:533:3: otherlv_0= 'Association' otherlv_1= '{' ( (otherlv_2= RULE_ID ) ) otherlv_3= 'with' ( (lv_name1_4_0= RULE_ID ) ) otherlv_5= '(' ( (lv_cardinality1_6_0= ruleCardinality ) ) otherlv_7= ')' ( (otherlv_8= RULE_ID ) ) otherlv_9= 'with' ( (lv_name2_10_0= RULE_ID ) ) otherlv_11= '(' ( (lv_cardinality2_12_0= ruleCardinality ) ) otherlv_13= ')' otherlv_14= '}'
             {
             otherlv_0=(Token)match(input,21,FOLLOW_21_in_ruleAssociation1105); 
 
@@ -1364,11 +1364,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 	newLeafNode(otherlv_1, grammarAccess.getAssociationAccess().getLeftCurlyBracketKeyword_1());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:541:1: ( (otherlv_2= RULE_ID ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:542:1: (otherlv_2= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:541:1: ( (otherlv_2= RULE_ID ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:542:1: (otherlv_2= RULE_ID )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:542:1: (otherlv_2= RULE_ID )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:543:3: otherlv_2= RULE_ID
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:542:1: (otherlv_2= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:543:3: otherlv_2= RULE_ID
             {
 
             			if (current==null) {
@@ -1389,11 +1389,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 	newLeafNode(otherlv_3, grammarAccess.getAssociationAccess().getWithKeyword_3());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:558:1: ( (lv_name1_4_0= RULE_ID ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:559:1: (lv_name1_4_0= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:558:1: ( (lv_name1_4_0= RULE_ID ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:559:1: (lv_name1_4_0= RULE_ID )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:559:1: (lv_name1_4_0= RULE_ID )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:560:3: lv_name1_4_0= RULE_ID
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:559:1: (lv_name1_4_0= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:560:3: lv_name1_4_0= RULE_ID
             {
             lv_name1_4_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleAssociation1166); 
 
@@ -1419,11 +1419,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 	newLeafNode(otherlv_5, grammarAccess.getAssociationAccess().getLeftParenthesisKeyword_5());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:580:1: ( (lv_cardinality1_6_0= ruleCardinality ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:581:1: (lv_cardinality1_6_0= ruleCardinality )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:580:1: ( (lv_cardinality1_6_0= ruleCardinality ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:581:1: (lv_cardinality1_6_0= ruleCardinality )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:581:1: (lv_cardinality1_6_0= ruleCardinality )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:582:3: lv_cardinality1_6_0= ruleCardinality
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:581:1: (lv_cardinality1_6_0= ruleCardinality )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:582:3: lv_cardinality1_6_0= ruleCardinality
             {
              
             	        newCompositeNode(grammarAccess.getAssociationAccess().getCardinality1CardinalityParserRuleCall_6_0()); 
@@ -1454,11 +1454,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 	newLeafNode(otherlv_7, grammarAccess.getAssociationAccess().getRightParenthesisKeyword_7());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:602:1: ( (otherlv_8= RULE_ID ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:603:1: (otherlv_8= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:602:1: ( (otherlv_8= RULE_ID ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:603:1: (otherlv_8= RULE_ID )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:603:1: (otherlv_8= RULE_ID )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:604:3: otherlv_8= RULE_ID
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:603:1: (otherlv_8= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:604:3: otherlv_8= RULE_ID
             {
 
             			if (current==null) {
@@ -1479,11 +1479,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 	newLeafNode(otherlv_9, grammarAccess.getAssociationAccess().getWithKeyword_9());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:619:1: ( (lv_name2_10_0= RULE_ID ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:620:1: (lv_name2_10_0= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:619:1: ( (lv_name2_10_0= RULE_ID ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:620:1: (lv_name2_10_0= RULE_ID )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:620:1: (lv_name2_10_0= RULE_ID )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:621:3: lv_name2_10_0= RULE_ID
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:620:1: (lv_name2_10_0= RULE_ID )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:621:3: lv_name2_10_0= RULE_ID
             {
             lv_name2_10_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleAssociation1265); 
 
@@ -1509,11 +1509,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 	newLeafNode(otherlv_11, grammarAccess.getAssociationAccess().getLeftParenthesisKeyword_11());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:641:1: ( (lv_cardinality2_12_0= ruleCardinality ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:642:1: (lv_cardinality2_12_0= ruleCardinality )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:641:1: ( (lv_cardinality2_12_0= ruleCardinality ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:642:1: (lv_cardinality2_12_0= ruleCardinality )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:642:1: (lv_cardinality2_12_0= ruleCardinality )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:643:3: lv_cardinality2_12_0= ruleCardinality
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:642:1: (lv_cardinality2_12_0= ruleCardinality )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:643:3: lv_cardinality2_12_0= ruleCardinality
             {
              
             	        newCompositeNode(grammarAccess.getAssociationAccess().getCardinality2CardinalityParserRuleCall_12_0()); 
@@ -1569,7 +1569,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleConstraint"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:675:1: entryRuleConstraint returns [EObject current=null] : iv_ruleConstraint= ruleConstraint EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:675:1: entryRuleConstraint returns [EObject current=null] : iv_ruleConstraint= ruleConstraint EOF ;
     public final EObject entryRuleConstraint() throws RecognitionException {
         EObject current = null;
 
@@ -1577,8 +1577,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:676:2: (iv_ruleConstraint= ruleConstraint EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:677:2: iv_ruleConstraint= ruleConstraint EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:676:2: (iv_ruleConstraint= ruleConstraint EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:677:2: iv_ruleConstraint= ruleConstraint EOF
             {
              newCompositeNode(grammarAccess.getConstraintRule()); 
             pushFollow(FOLLOW_ruleConstraint_in_entryRuleConstraint1363);
@@ -1605,7 +1605,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleConstraint"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:684:1: ruleConstraint returns [EObject current=null] : (otherlv_0= 'Constraint' otherlv_1= ':' ( (lv_constraint_2_0= ruleExpression ) ) ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:684:1: ruleConstraint returns [EObject current=null] : (otherlv_0= 'Constraint' otherlv_1= ':' ( (lv_constraint_2_0= ruleExpression ) ) ) ;
     public final EObject ruleConstraint() throws RecognitionException {
         EObject current = null;
 
@@ -1617,11 +1617,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:687:28: ( (otherlv_0= 'Constraint' otherlv_1= ':' ( (lv_constraint_2_0= ruleExpression ) ) ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:688:1: (otherlv_0= 'Constraint' otherlv_1= ':' ( (lv_constraint_2_0= ruleExpression ) ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:687:28: ( (otherlv_0= 'Constraint' otherlv_1= ':' ( (lv_constraint_2_0= ruleExpression ) ) ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:688:1: (otherlv_0= 'Constraint' otherlv_1= ':' ( (lv_constraint_2_0= ruleExpression ) ) )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:688:1: (otherlv_0= 'Constraint' otherlv_1= ':' ( (lv_constraint_2_0= ruleExpression ) ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:688:3: otherlv_0= 'Constraint' otherlv_1= ':' ( (lv_constraint_2_0= ruleExpression ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:688:1: (otherlv_0= 'Constraint' otherlv_1= ':' ( (lv_constraint_2_0= ruleExpression ) ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:688:3: otherlv_0= 'Constraint' otherlv_1= ':' ( (lv_constraint_2_0= ruleExpression ) )
             {
             otherlv_0=(Token)match(input,25,FOLLOW_25_in_ruleConstraint1410); 
 
@@ -1631,11 +1631,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 	newLeafNode(otherlv_1, grammarAccess.getConstraintAccess().getColonKeyword_1());
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:696:1: ( (lv_constraint_2_0= ruleExpression ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:697:1: (lv_constraint_2_0= ruleExpression )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:696:1: ( (lv_constraint_2_0= ruleExpression ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:697:1: (lv_constraint_2_0= ruleExpression )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:697:1: (lv_constraint_2_0= ruleExpression )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:698:3: lv_constraint_2_0= ruleExpression
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:697:1: (lv_constraint_2_0= ruleExpression )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:698:3: lv_constraint_2_0= ruleExpression
             {
              
             	        newCompositeNode(grammarAccess.getConstraintAccess().getConstraintExpressionParserRuleCall_2_0()); 
@@ -1683,7 +1683,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleCardinality"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:722:1: entryRuleCardinality returns [String current=null] : iv_ruleCardinality= ruleCardinality EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:722:1: entryRuleCardinality returns [String current=null] : iv_ruleCardinality= ruleCardinality EOF ;
     public final String entryRuleCardinality() throws RecognitionException {
         String current = null;
 
@@ -1691,8 +1691,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:723:2: (iv_ruleCardinality= ruleCardinality EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:724:2: iv_ruleCardinality= ruleCardinality EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:723:2: (iv_ruleCardinality= ruleCardinality EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:724:2: iv_ruleCardinality= ruleCardinality EOF
             {
              newCompositeNode(grammarAccess.getCardinalityRule()); 
             pushFollow(FOLLOW_ruleCardinality_in_entryRuleCardinality1480);
@@ -1719,7 +1719,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleCardinality"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:731:1: ruleCardinality returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_INT_0= RULE_INT | (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT ) | (this_INT_4= RULE_INT kw= '..' kw= '*' ) | (this_INT_7= RULE_INT kw= '..' kw= '+' ) ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:731:1: ruleCardinality returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_INT_0= RULE_INT | (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT ) | (this_INT_4= RULE_INT kw= '..' kw= '*' ) | (this_INT_7= RULE_INT kw= '..' kw= '+' ) ) ;
     public final AntlrDatatypeRuleToken ruleCardinality() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -1733,10 +1733,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:734:28: ( (this_INT_0= RULE_INT | (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT ) | (this_INT_4= RULE_INT kw= '..' kw= '*' ) | (this_INT_7= RULE_INT kw= '..' kw= '+' ) ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:735:1: (this_INT_0= RULE_INT | (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT ) | (this_INT_4= RULE_INT kw= '..' kw= '*' ) | (this_INT_7= RULE_INT kw= '..' kw= '+' ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:734:28: ( (this_INT_0= RULE_INT | (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT ) | (this_INT_4= RULE_INT kw= '..' kw= '*' ) | (this_INT_7= RULE_INT kw= '..' kw= '+' ) ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:735:1: (this_INT_0= RULE_INT | (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT ) | (this_INT_4= RULE_INT kw= '..' kw= '*' ) | (this_INT_7= RULE_INT kw= '..' kw= '+' ) )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:735:1: (this_INT_0= RULE_INT | (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT ) | (this_INT_4= RULE_INT kw= '..' kw= '*' ) | (this_INT_7= RULE_INT kw= '..' kw= '+' ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:735:1: (this_INT_0= RULE_INT | (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT ) | (this_INT_4= RULE_INT kw= '..' kw= '*' ) | (this_INT_7= RULE_INT kw= '..' kw= '+' ) )
             int alt16=4;
             int LA16_0 = input.LA(1);
 
@@ -1786,7 +1786,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
             }
             switch (alt16) {
                 case 1 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:735:6: this_INT_0= RULE_INT
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:735:6: this_INT_0= RULE_INT
                     {
                     this_INT_0=(Token)match(input,RULE_INT,FOLLOW_RULE_INT_in_ruleCardinality1531); 
 
@@ -1799,10 +1799,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:743:6: (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:743:6: (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:743:6: (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:743:11: this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:743:6: (this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:743:11: this_INT_1= RULE_INT kw= '..' this_INT_3= RULE_INT
                     {
                     this_INT_1=(Token)match(input,RULE_INT,FOLLOW_RULE_INT_in_ruleCardinality1558); 
 
@@ -1830,10 +1830,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:764:6: (this_INT_4= RULE_INT kw= '..' kw= '*' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:764:6: (this_INT_4= RULE_INT kw= '..' kw= '*' )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:764:6: (this_INT_4= RULE_INT kw= '..' kw= '*' )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:764:11: this_INT_4= RULE_INT kw= '..' kw= '*'
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:764:6: (this_INT_4= RULE_INT kw= '..' kw= '*' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:764:11: this_INT_4= RULE_INT kw= '..' kw= '*'
                     {
                     this_INT_4=(Token)match(input,RULE_INT,FOLLOW_RULE_INT_in_ruleCardinality1619); 
 
@@ -1859,10 +1859,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:784:6: (this_INT_7= RULE_INT kw= '..' kw= '+' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:784:6: (this_INT_7= RULE_INT kw= '..' kw= '+' )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:784:6: (this_INT_7= RULE_INT kw= '..' kw= '+' )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:784:11: this_INT_7= RULE_INT kw= '..' kw= '+'
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:784:6: (this_INT_7= RULE_INT kw= '..' kw= '+' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:784:11: this_INT_7= RULE_INT kw= '..' kw= '+'
                     {
                     this_INT_7=(Token)match(input,RULE_INT,FOLLOW_RULE_INT_in_ruleCardinality1673); 
 
@@ -1908,7 +1908,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExpression"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:811:1: entryRuleExpression returns [EObject current=null] : iv_ruleExpression= ruleExpression EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:811:1: entryRuleExpression returns [EObject current=null] : iv_ruleExpression= ruleExpression EOF ;
     public final EObject entryRuleExpression() throws RecognitionException {
         EObject current = null;
 
@@ -1916,8 +1916,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:812:2: (iv_ruleExpression= ruleExpression EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:813:2: iv_ruleExpression= ruleExpression EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:812:2: (iv_ruleExpression= ruleExpression EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:813:2: iv_ruleExpression= ruleExpression EOF
             {
              newCompositeNode(grammarAccess.getExpressionRule()); 
             pushFollow(FOLLOW_ruleExpression_in_entryRuleExpression1745);
@@ -1944,7 +1944,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExpression"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:820:1: ruleExpression returns [EObject current=null] : this_Or_0= ruleOr ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:820:1: ruleExpression returns [EObject current=null] : this_Or_0= ruleOr ;
     public final EObject ruleExpression() throws RecognitionException {
         EObject current = null;
 
@@ -1954,8 +1954,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:823:28: (this_Or_0= ruleOr )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:825:5: this_Or_0= ruleOr
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:823:28: (this_Or_0= ruleOr )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:825:5: this_Or_0= ruleOr
             {
              
                     newCompositeNode(grammarAccess.getExpressionAccess().getOrParserRuleCall()); 
@@ -1987,7 +1987,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleOr"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:841:1: entryRuleOr returns [EObject current=null] : iv_ruleOr= ruleOr EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:841:1: entryRuleOr returns [EObject current=null] : iv_ruleOr= ruleOr EOF ;
     public final EObject entryRuleOr() throws RecognitionException {
         EObject current = null;
 
@@ -1995,8 +1995,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:842:2: (iv_ruleOr= ruleOr EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:843:2: iv_ruleOr= ruleOr EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:842:2: (iv_ruleOr= ruleOr EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:843:2: iv_ruleOr= ruleOr EOF
             {
              newCompositeNode(grammarAccess.getOrRule()); 
             pushFollow(FOLLOW_ruleOr_in_entryRuleOr1835);
@@ -2023,7 +2023,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleOr"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:850:1: ruleOr returns [EObject current=null] : (this_And_0= ruleAnd ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )* ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:850:1: ruleOr returns [EObject current=null] : (this_And_0= ruleAnd ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )* ) ;
     public final EObject ruleOr() throws RecognitionException {
         EObject current = null;
 
@@ -2036,11 +2036,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:853:28: ( (this_And_0= ruleAnd ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )* ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:854:1: (this_And_0= ruleAnd ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:853:28: ( (this_And_0= ruleAnd ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )* ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:854:1: (this_And_0= ruleAnd ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )* )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:854:1: (this_And_0= ruleAnd ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )* )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:855:5: this_And_0= ruleAnd ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:854:1: (this_And_0= ruleAnd ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:855:5: this_And_0= ruleAnd ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )*
             {
              
                     newCompositeNode(grammarAccess.getOrAccess().getAndParserRuleCall_0()); 
@@ -2054,7 +2054,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
                     current = this_And_0; 
                     afterParserOrEnumRuleCall();
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:863:1: ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:863:1: ( () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) ) )*
             loop17:
             do {
                 int alt17=2;
@@ -2067,10 +2067,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 switch (alt17) {
             	case 1 :
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:863:2: () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:863:2: () otherlv_2= 'OR' ( (lv_right_3_0= ruleAnd ) )
             	    {
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:863:2: ()
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:864:5: 
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:863:2: ()
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:864:5: 
             	    {
 
             	            current = forceCreateModelElementAndSet(
@@ -2084,11 +2084,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
             	        	newLeafNode(otherlv_2, grammarAccess.getOrAccess().getORKeyword_1_1());
             	        
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:873:1: ( (lv_right_3_0= ruleAnd ) )
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:874:1: (lv_right_3_0= ruleAnd )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:873:1: ( (lv_right_3_0= ruleAnd ) )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:874:1: (lv_right_3_0= ruleAnd )
             	    {
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:874:1: (lv_right_3_0= ruleAnd )
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:875:3: lv_right_3_0= ruleAnd
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:874:1: (lv_right_3_0= ruleAnd )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:875:3: lv_right_3_0= ruleAnd
             	    {
             	     
             	    	        newCompositeNode(grammarAccess.getOrAccess().getRightAndParserRuleCall_1_2_0()); 
@@ -2145,7 +2145,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleAnd"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:899:1: entryRuleAnd returns [EObject current=null] : iv_ruleAnd= ruleAnd EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:899:1: entryRuleAnd returns [EObject current=null] : iv_ruleAnd= ruleAnd EOF ;
     public final EObject entryRuleAnd() throws RecognitionException {
         EObject current = null;
 
@@ -2153,8 +2153,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:900:2: (iv_ruleAnd= ruleAnd EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:901:2: iv_ruleAnd= ruleAnd EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:900:2: (iv_ruleAnd= ruleAnd EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:901:2: iv_ruleAnd= ruleAnd EOF
             {
              newCompositeNode(grammarAccess.getAndRule()); 
             pushFollow(FOLLOW_ruleAnd_in_entryRuleAnd1972);
@@ -2181,7 +2181,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAnd"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:908:1: ruleAnd returns [EObject current=null] : (this_Primary_0= rulePrimary ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )* ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:908:1: ruleAnd returns [EObject current=null] : (this_Primary_0= rulePrimary ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )* ) ;
     public final EObject ruleAnd() throws RecognitionException {
         EObject current = null;
 
@@ -2194,11 +2194,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:911:28: ( (this_Primary_0= rulePrimary ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )* ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:912:1: (this_Primary_0= rulePrimary ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:911:28: ( (this_Primary_0= rulePrimary ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )* ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:912:1: (this_Primary_0= rulePrimary ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )* )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:912:1: (this_Primary_0= rulePrimary ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )* )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:913:5: this_Primary_0= rulePrimary ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:912:1: (this_Primary_0= rulePrimary ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )* )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:913:5: this_Primary_0= rulePrimary ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )*
             {
              
                     newCompositeNode(grammarAccess.getAndAccess().getPrimaryParserRuleCall_0()); 
@@ -2212,7 +2212,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
                     current = this_Primary_0; 
                     afterParserOrEnumRuleCall();
                 
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:921:1: ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )*
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:921:1: ( () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) ) )*
             loop18:
             do {
                 int alt18=2;
@@ -2225,10 +2225,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                 switch (alt18) {
             	case 1 :
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:921:2: () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:921:2: () otherlv_2= 'AND' ( (lv_right_3_0= rulePrimary ) )
             	    {
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:921:2: ()
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:922:5: 
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:921:2: ()
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:922:5: 
             	    {
 
             	            current = forceCreateModelElementAndSet(
@@ -2242,11 +2242,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
             	        	newLeafNode(otherlv_2, grammarAccess.getAndAccess().getANDKeyword_1_1());
             	        
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:931:1: ( (lv_right_3_0= rulePrimary ) )
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:932:1: (lv_right_3_0= rulePrimary )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:931:1: ( (lv_right_3_0= rulePrimary ) )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:932:1: (lv_right_3_0= rulePrimary )
             	    {
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:932:1: (lv_right_3_0= rulePrimary )
-            	    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:933:3: lv_right_3_0= rulePrimary
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:932:1: (lv_right_3_0= rulePrimary )
+            	    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:933:3: lv_right_3_0= rulePrimary
             	    {
             	     
             	    	        newCompositeNode(grammarAccess.getAndAccess().getRightPrimaryParserRuleCall_1_2_0()); 
@@ -2303,7 +2303,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRulePrimary"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:957:1: entryRulePrimary returns [EObject current=null] : iv_rulePrimary= rulePrimary EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:957:1: entryRulePrimary returns [EObject current=null] : iv_rulePrimary= rulePrimary EOF ;
     public final EObject entryRulePrimary() throws RecognitionException {
         EObject current = null;
 
@@ -2311,8 +2311,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:958:2: (iv_rulePrimary= rulePrimary EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:959:2: iv_rulePrimary= rulePrimary EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:958:2: (iv_rulePrimary= rulePrimary EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:959:2: iv_rulePrimary= rulePrimary EOF
             {
              newCompositeNode(grammarAccess.getPrimaryRule()); 
             pushFollow(FOLLOW_rulePrimary_in_entryRulePrimary2109);
@@ -2339,7 +2339,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePrimary"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:966:1: rulePrimary returns [EObject current=null] : ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) ) | this_Atomic_6= ruleAtomic ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:966:1: rulePrimary returns [EObject current=null] : ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) ) | this_Atomic_6= ruleAtomic ) ;
     public final EObject rulePrimary() throws RecognitionException {
         EObject current = null;
 
@@ -2356,10 +2356,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:969:28: ( ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) ) | this_Atomic_6= ruleAtomic ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:970:1: ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) ) | this_Atomic_6= ruleAtomic )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:969:28: ( ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) ) | this_Atomic_6= ruleAtomic ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:970:1: ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) ) | this_Atomic_6= ruleAtomic )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:970:1: ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) ) | this_Atomic_6= ruleAtomic )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:970:1: ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) ) | this_Atomic_6= ruleAtomic )
             int alt19=3;
             switch ( input.LA(1) ) {
             case 23:
@@ -2387,10 +2387,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
             switch (alt19) {
                 case 1 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:970:2: (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:970:2: (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:970:2: (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:970:4: otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')'
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:970:2: (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:970:4: otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')'
                     {
                     otherlv_0=(Token)match(input,23,FOLLOW_23_in_rulePrimary2157); 
 
@@ -2419,13 +2419,13 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:988:6: ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:988:6: ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:988:6: ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:988:7: () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:988:6: ( () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:988:7: () otherlv_4= 'NOT' ( (lv_expression_5_0= rulePrimary ) )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:988:7: ()
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:989:5: 
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:988:7: ()
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:989:5: 
                     {
 
                             current = forceCreateModelElement(
@@ -2439,11 +2439,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                         	newLeafNode(otherlv_4, grammarAccess.getPrimaryAccess().getNOTKeyword_1_1());
                         
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:998:1: ( (lv_expression_5_0= rulePrimary ) )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:999:1: (lv_expression_5_0= rulePrimary )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:998:1: ( (lv_expression_5_0= rulePrimary ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:999:1: (lv_expression_5_0= rulePrimary )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:999:1: (lv_expression_5_0= rulePrimary )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1000:3: lv_expression_5_0= rulePrimary
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:999:1: (lv_expression_5_0= rulePrimary )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1000:3: lv_expression_5_0= rulePrimary
                     {
                      
                     	        newCompositeNode(grammarAccess.getPrimaryAccess().getExpressionPrimaryParserRuleCall_1_2_0()); 
@@ -2477,7 +2477,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1018:5: this_Atomic_6= ruleAtomic
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1018:5: this_Atomic_6= ruleAtomic
                     {
                      
                             newCompositeNode(grammarAccess.getPrimaryAccess().getAtomicParserRuleCall_2()); 
@@ -2515,7 +2515,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleAtomic"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1034:1: entryRuleAtomic returns [EObject current=null] : iv_ruleAtomic= ruleAtomic EOF ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1034:1: entryRuleAtomic returns [EObject current=null] : iv_ruleAtomic= ruleAtomic EOF ;
     public final EObject entryRuleAtomic() throws RecognitionException {
         EObject current = null;
 
@@ -2523,8 +2523,8 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1035:2: (iv_ruleAtomic= ruleAtomic EOF )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1036:2: iv_ruleAtomic= ruleAtomic EOF
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1035:2: (iv_ruleAtomic= ruleAtomic EOF )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1036:2: iv_ruleAtomic= ruleAtomic EOF
             {
              newCompositeNode(grammarAccess.getAtomicRule()); 
             pushFollow(FOLLOW_ruleAtomic_in_entryRuleAtomic2304);
@@ -2551,7 +2551,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAtomic"
-    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1043:1: ruleAtomic returns [EObject current=null] : ( ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' ) | ( () ( (lv_name_6_0= ruleQualifiedName ) ) ) ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1043:1: ruleAtomic returns [EObject current=null] : ( ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' ) | ( () ( (lv_name_6_0= ruleQualifiedName ) ) ) ) ;
     public final EObject ruleAtomic() throws RecognitionException {
         EObject current = null;
 
@@ -2566,10 +2566,10 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1046:28: ( ( ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' ) | ( () ( (lv_name_6_0= ruleQualifiedName ) ) ) ) )
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:1: ( ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' ) | ( () ( (lv_name_6_0= ruleQualifiedName ) ) ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1046:28: ( ( ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' ) | ( () ( (lv_name_6_0= ruleQualifiedName ) ) ) ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:1: ( ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' ) | ( () ( (lv_name_6_0= ruleQualifiedName ) ) ) )
             {
-            // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:1: ( ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' ) | ( () ( (lv_name_6_0= ruleQualifiedName ) ) ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:1: ( ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' ) | ( () ( (lv_name_6_0= ruleQualifiedName ) ) ) )
             int alt20=2;
             int LA20_0 = input.LA(1);
 
@@ -2587,13 +2587,13 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
             }
             switch (alt20) {
                 case 1 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:2: ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:2: ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:2: ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:3: () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')'
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:2: ( () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')' )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:3: () otherlv_1= 'DEF' otherlv_2= '(' ( (lv_name_3_0= ruleQualifiedName ) ) otherlv_4= ')'
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:3: ()
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1048:5: 
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1047:3: ()
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1048:5: 
                     {
 
                             current = forceCreateModelElement(
@@ -2611,11 +2611,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                         	newLeafNode(otherlv_2, grammarAccess.getAtomicAccess().getLeftParenthesisKeyword_0_2());
                         
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1061:1: ( (lv_name_3_0= ruleQualifiedName ) )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1062:1: (lv_name_3_0= ruleQualifiedName )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1061:1: ( (lv_name_3_0= ruleQualifiedName ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1062:1: (lv_name_3_0= ruleQualifiedName )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1062:1: (lv_name_3_0= ruleQualifiedName )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1063:3: lv_name_3_0= ruleQualifiedName
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1062:1: (lv_name_3_0= ruleQualifiedName )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1063:3: lv_name_3_0= ruleQualifiedName
                     {
                      
                     	        newCompositeNode(grammarAccess.getAtomicAccess().getNameQualifiedNameParserRuleCall_0_3_0()); 
@@ -2653,13 +2653,13 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1084:6: ( () ( (lv_name_6_0= ruleQualifiedName ) ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1084:6: ( () ( (lv_name_6_0= ruleQualifiedName ) ) )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1084:6: ( () ( (lv_name_6_0= ruleQualifiedName ) ) )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1084:7: () ( (lv_name_6_0= ruleQualifiedName ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1084:6: ( () ( (lv_name_6_0= ruleQualifiedName ) ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1084:7: () ( (lv_name_6_0= ruleQualifiedName ) )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1084:7: ()
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1085:5: 
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1084:7: ()
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1085:5: 
                     {
 
                             current = forceCreateModelElement(
@@ -2669,11 +2669,11 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1090:2: ( (lv_name_6_0= ruleQualifiedName ) )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1091:1: (lv_name_6_0= ruleQualifiedName )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1090:2: ( (lv_name_6_0= ruleQualifiedName ) )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1091:1: (lv_name_6_0= ruleQualifiedName )
                     {
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1091:1: (lv_name_6_0= ruleQualifiedName )
-                    // ../org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1092:3: lv_name_6_0= ruleQualifiedName
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1091:1: (lv_name_6_0= ruleQualifiedName )
+                    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:1092:3: lv_name_6_0= ruleQualifiedName
                     {
                      
                     	        newCompositeNode(grammarAccess.getAtomicAccess().getNameQualifiedNameParserRuleCall_1_1_0()); 

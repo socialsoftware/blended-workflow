@@ -3,12 +3,13 @@
  */
 package org.blended.activity.generator
 
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.generator.IGenerator
-import org.eclipse.xtext.generator.IFileSystemAccess
-import org.blended.utils.ConsoleManagement
-import static extension org.eclipse.xtext.EcoreUtil2.*
 import org.blended.activity.utils.ActivityListener
+import org.blended.activity.utils.ConsoleManagement
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IGenerator
+
+import static extension org.eclipse.xtext.EcoreUtil2.*
 
 /**
  * Generates code from your model files on save.

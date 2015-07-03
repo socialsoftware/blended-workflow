@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.emf.ecore.EPackage;
 
-public class AbstractConditionValidator extends org.blended.validation.BlendedValidator {
+public class AbstractConditionValidator extends org.eclipse.xtext.validation.AbstractDeclarativeValidator {
 
 	@Override
 	protected List<EPackage> getEPackages() {
-	    List<EPackage> result = new ArrayList<EPackage>(super.getEPackages());
+	    List<EPackage> result = new ArrayList<EPackage>();
 	    result.add(org.blended.condition.condition.ConditionPackage.eINSTANCE);
 		return result;
 	}

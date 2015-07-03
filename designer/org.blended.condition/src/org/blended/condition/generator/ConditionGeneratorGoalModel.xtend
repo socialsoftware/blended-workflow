@@ -3,25 +3,25 @@
  */
 package org.blended.condition.generator
 
+import java.util.ArrayList
+import java.util.List
+import org.blended.condition.condition.And
+import org.blended.condition.condition.AttributeAchieveCondition
+import org.blended.condition.condition.AttributeDefinition
+import org.blended.condition.condition.AttributeDependenceCondition
+import org.blended.condition.condition.AttributeInvariantCondition
+import org.blended.condition.condition.AttributeValue
+import org.blended.condition.condition.EntityAchieveCondition
+import org.blended.condition.condition.EntityDependenceCondition
+import org.blended.condition.condition.EntityInvariantCondition
+import org.blended.condition.condition.Expression
+import org.blended.condition.condition.MandatoryAttributeAchieveCondition
+import org.blended.condition.condition.Not
+import org.blended.condition.condition.Or
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
+
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import org.blended.blended.EntityAchieveCondition
-import java.util.List
-import java.util.ArrayList
-import org.blended.blended.AttributeAchieveCondition
-import org.blended.blended.MandatoryAttributeAchieveCondition
-import org.blended.blended.EntityDependenceCondition
-import org.blended.blended.AttributeDependenceCondition
-import org.blended.blended.EntityInvariantCondition
-import org.blended.blended.AttributeInvariantCondition
-import org.blended.blended.Expression
-import org.blended.blended.AttributeDefinition
-import org.blended.blended.AttributeValue
-import org.blended.blended.Not
-import org.blended.blended.And
-import org.blended.blended.Or
-import org.blended.generator.CustomOutputConfigurationProvider
 
 /**
  * Generates code from your model files on save.

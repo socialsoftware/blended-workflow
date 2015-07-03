@@ -1,6 +1,6 @@
 package org.blended.goal.ui;
 
-import org.blended.blended.Goal;
+import org.blended.goal.goal.Goal;
 import org.blended.goal.goal.GoalModel;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;

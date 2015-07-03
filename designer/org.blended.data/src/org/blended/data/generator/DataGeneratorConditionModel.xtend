@@ -12,7 +12,6 @@ import org.blended.data.data.Entity
 import org.blended.data.data.Expression
 import org.blended.data.data.Not
 import org.blended.data.data.Or
-import org.blended.generator.CustomOutputConfigurationProvider
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 

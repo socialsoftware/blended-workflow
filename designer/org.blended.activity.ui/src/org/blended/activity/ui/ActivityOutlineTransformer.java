@@ -1,7 +1,7 @@
 package org.blended.activity.ui;
 
+import org.blended.activity.activity.Activity;
 import org.blended.activity.activity.ActivityModel;
-import org.blended.blended.Activity;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;

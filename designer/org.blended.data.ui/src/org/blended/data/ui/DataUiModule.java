@@ -3,7 +3,7 @@
  */
 package org.blended.data.ui;
 
-import org.blended.generator.CustomOutputConfigurationProvider;
+import org.blended.data.generator.CustomOutputConfigurationProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 

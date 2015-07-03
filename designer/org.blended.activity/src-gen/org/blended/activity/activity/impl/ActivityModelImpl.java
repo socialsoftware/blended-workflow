@@ -4,10 +4,9 @@ package org.blended.activity.activity.impl;
 
 import java.util.Collection;
 
+import org.blended.activity.activity.Activity;
 import org.blended.activity.activity.ActivityModel;
 import org.blended.activity.activity.ActivityPackage;
-
-import org.blended.blended.Activity;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 

@@ -4,7 +4,7 @@
 package org.blended.activity.generator;
 
 import org.blended.activity.utils.ActivityListener;
-import org.blended.utils.ConsoleManagement;
+import org.blended.activity.utils.ConsoleManagement;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.EcoreUtil2;

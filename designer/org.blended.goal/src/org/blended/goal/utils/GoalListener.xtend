@@ -1,10 +1,9 @@
 package org.blended.goal.utils
 
 import java.io.IOException
-import org.blended.blended.BlendedFactory
-import org.blended.blended.Goal
+import org.blended.goal.goal.Goal
+import org.blended.goal.goal.GoalFactory
 import org.blended.goal.goal.GoalModel
-import org.blended.utils.ConsoleManagement
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.IOConsole
 import org.eclipse.ui.console.IOConsoleInputStream
@@ -64,7 +63,7 @@ class GoalListener implements Runnable {
 				ConsoleManagement.write(name, "Testing manipulation of model:")
 				
 				//CHANGING THE MODEL
-				var blendedFactory = BlendedFactory.eINSTANCE;
+				var blendedFactory = GoalFactory.eINSTANCE;
 				var goal = blendedFactory.createGoal();
 				goal.name = "NEWGOAL"
 				var gm = resource.getContents().get(0) as GoalModel

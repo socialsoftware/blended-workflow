@@ -2,8 +2,7 @@
  */
 package org.blended.condition.condition.impl;
 
-import org.blended.blended.Condition;
-
+import org.blended.condition.condition.Condition;
 import org.blended.condition.condition.ConditionModel;
 import org.blended.condition.condition.ConditionPackage;
 

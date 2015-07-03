@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='1'>
+  <artifact classifier='osgi.bundle' id='org.blended.data' version='1.0.0.201507030841'>
+    <properties size='5'>
+      <property name='artifact.size' value='156548'/>
+      <property name='download.size' value='156548'/>
+      <property name='maven-groupId' value='org.blendedProject'/>
+      <property name='maven-artifactId' value='org.blended.data'/>
+      <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+    </properties>
+  </artifact>
+</artifacts>

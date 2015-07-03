@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.blended.data.sdk_1.0.0.qualifier.jar" id="org.blended.data.sdk" version="1.0.0.qualifier">
+      <category name="org.blended.data"/>
+   </feature>
+   <category-def name="org.blended.data" label="Blended Workflow Engine - Data"/>
+</site>

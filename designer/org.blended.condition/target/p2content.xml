@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<units size='1'>
+  <unit id='org.blended.condition' version='1.0.0.201507021541'>
+    <update id='org.blended.condition' range='[0.0.0,1.0.0.201507021541)' severity='0'/>
+    <properties size='5'>
+      <property name='org.eclipse.equinox.p2.name' value='org.blended.condition'/>
+      <property name='org.eclipse.equinox.p2.provider' value='My Company'/>
+      <property name='maven-groupId' value='org.blendedProject'/>
+      <property name='maven-artifactId' value='org.blended.condition'/>
+      <property name='maven-version' value='1.0.0-SNAPSHOT'/>
+    </properties>
+    <provides size='16'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.blended.condition' version='1.0.0.201507021541'/>
+      <provided namespace='osgi.bundle' name='org.blended.condition' version='1.0.0.201507021541'/>
+      <provided namespace='java.package' name='org.blended.condition' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.condition' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.condition.impl' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.condition.util' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.formatting' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.generator' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.parser.antlr' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.parser.antlr.internal' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.scoping' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.serializer' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.services' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.utils' version='0.0.0'/>
+      <provided namespace='java.package' name='org.blended.condition.validation' version='0.0.0'/>
+      <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+    </provides>
+    <requires size='18'>
+      <required namespace='osgi.bundle' name='org.eclipse.xtext' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.equinox.common' range='3.5.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.xtext.util' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.emf.ecore' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.emf.common' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.xtext.xbase.lib' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.antlr.runtime' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.xtext.common.types' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.objectweb.asm' range='[5.0.1,6.0.0)' optional='true' greedy='false'/>
+      <required namespace='osgi.bundle' name='org.eclipse.ui.console' range='3.5.300'/>
+      <required namespace='osgi.bundle' name='org.eclipse.jface' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.e4.ui.workbench' range='1.2.2'/>
+      <required namespace='osgi.bundle' name='org.eclipse.xtext.xbase' range='2.8.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.equinox.p2.repository' range='2.3.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.equinox.security' range='1.2.0'/>
+      <required namespace='java.package' name='org.apache.log4j' range='0.0.0'/>
+      <required namespace='java.package' name='org.eclipse.swt.graphics' range='0.0.0'/>
+      <required namespace='java.package' name='org.eclipse.swt.widgets' range='0.0.0'/>
+    </requires>
+    <artifacts size='1'>
+      <artifact classifier='osgi.bundle' id='org.blended.condition' version='1.0.0.201507021541'/>
+    </artifacts>
+    <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+    <touchpointData size='1'>
+      <instructions size='1'>
+        <instruction key='manifest'>
+          Bundle-SymbolicName: org.blended.condition; singleton:=true&#xA;Bundle-Version: 1.0.0.201507021541&#xA;
+        </instruction>
+      </instructions>
+    </touchpointData>
+  </unit>
+</units>

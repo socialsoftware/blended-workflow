@@ -3,7 +3,7 @@
  */
 package org.blended.activity.scoping;
 
-import org.blended.scoping.BlendedScopeProvider;
+import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 
 /**
  * This class contains custom scoping description.
@@ -12,5 +12,5 @@ import org.blended.scoping.BlendedScopeProvider;
  * on how and when to use it.
  */
 @SuppressWarnings("all")
-public class ActivityScopeProvider extends BlendedScopeProvider {
+public class ActivityScopeProvider extends AbstractDeclarativeScopeProvider {
 }

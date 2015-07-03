@@ -4,8 +4,7 @@ package org.blended.goal.goal.impl;
 
 import java.util.Collection;
 
-import org.blended.blended.Goal;
-
+import org.blended.goal.goal.Goal;
 import org.blended.goal.goal.GoalModel;
 import org.blended.goal.goal.GoalPackage;
 

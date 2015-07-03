@@ -9,7 +9,7 @@ DataModel:
 ;
 
 Entity:
-	'Entity' name = ID (exists ?= 'exists')? ('dependsOn' dependsOn = [Entity])? '{' 
+	'Entityy' name = ID (exists ?= 'exists')? ('dependsOn' dependsOn = [Entity])? '{' 
 		attributes += (AttributeGroup | Attribute)*
 	'}'
 ;
