@@ -6,26 +6,26 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class DataModelTest extends AbstractDomainTest {
 
     private DataModelInstance dataModelInstance;
 
     @Override
-    protected void populate4DomainTest() throws BlendedWorkflowException {
+    protected void populate4DomainTest() throws BWException {
         // TODO Auto-generated method stub
 
     }
 
     @Test
-    public void test2() throws BlendedWorkflowException {
+    public void test2() throws BWException {
         dataModelInstance = new DataModelInstance();
 
         // Types

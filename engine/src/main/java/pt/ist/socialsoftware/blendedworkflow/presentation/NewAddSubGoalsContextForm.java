@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 import com.vaadin.ui.VerticalLayout;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
 
 //TODO: Class
 @SuppressWarnings("serial")

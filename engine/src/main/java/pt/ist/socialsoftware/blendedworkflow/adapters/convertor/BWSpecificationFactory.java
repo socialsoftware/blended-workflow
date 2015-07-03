@@ -4,19 +4,19 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class BWSpecificationFactory {
 
 	public static void createBWSpecification(String bwXML)
-			throws BlendedWorkflowException {
+			throws BWException {
 		// BWSpecification Name
 		Document doc = StringUtils.stringToDoc(bwXML);
 
@@ -30,7 +30,7 @@ public class BWSpecificationFactory {
 		String version = caseInfo.getChildText("version", bwNamespace);
 		String identifier = caseInfo.getChildText("identifier", bwNamespace);
 
-		BWSpecification bwSpecification = new BWSpecification(name, author,
+		Specification bwSpecification = new Specification(name, author,
 				description, version, identifier);
 
 		// Data Model

@@ -2,12 +2,12 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal.MaintainGoalState;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.MaintainGoal.MaintainGoalState;
 
 import com.vaadin.event.Action;
 import com.vaadin.ui.Alignment;

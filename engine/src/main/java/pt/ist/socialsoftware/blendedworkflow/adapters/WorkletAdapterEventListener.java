@@ -11,7 +11,7 @@ import org.yawlfoundation.yawl.worklet.support.WorkletEventListener;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 
 @SuppressWarnings("serial")

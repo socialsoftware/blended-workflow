@@ -7,14 +7,14 @@ import org.apache.log4j.Logger;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;

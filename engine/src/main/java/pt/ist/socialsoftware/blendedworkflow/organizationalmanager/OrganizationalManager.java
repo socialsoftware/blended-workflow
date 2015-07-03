@@ -2,12 +2,12 @@ package pt.ist.socialsoftware.blendedworkflow.organizationalmanager;
 
 import org.apache.log4j.Logger;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.OrganizationalModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.OrganizationalModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Role;
+import pt.ist.socialsoftware.blendedworkflow.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class OrganizationalManager {
 
@@ -62,7 +62,7 @@ public class OrganizationalManager {
 	/**
 	 * TODO: OrganizationalManager:checkPermissions
 	 * 
-	 * @throws BlendedWorkflowException
+	 * @throws BWException
 	 */
 	public Boolean loginUser(String userID, String userPassword) {
 		OrganizationalModel organizationalModel = BlendedWorkflow.getInstance()

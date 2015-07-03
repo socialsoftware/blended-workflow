@@ -6,18 +6,18 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class DataModelInstanceFactory {
 
 	public void parseXMLDataModel(DataModel dataModel, String specificationXML)
-			throws BlendedWorkflowException {
+			throws BWException {
 		Document doc = StringUtils.stringToDoc(specificationXML);
 
 		Element root = doc.getRootElement();
@@ -36,7 +36,7 @@ public class DataModelInstanceFactory {
 	}
 
 	private EntityInstance parseEntityInstance(DataModel dataModel,
-			Element entityXML) throws BlendedWorkflowException {
+			Element entityXML) throws BWException {
 		Namespace dmNamespace = entityXML.getNamespace();
 
 		String entityName = entityXML.getChildText("Type", dmNamespace);
@@ -47,7 +47,7 @@ public class DataModelInstanceFactory {
 
 	private void parseAttributeInstance(DataModel dataModel,
 			EntityInstance entityInstance, Element entityXML)
-			throws BlendedWorkflowException {
+			throws BWException {
 		Namespace dmNamespace = entityXML.getNamespace();
 
 		for (Attribute attribute : entityInstance.getEntity()

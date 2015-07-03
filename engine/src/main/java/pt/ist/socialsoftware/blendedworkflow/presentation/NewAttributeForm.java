@@ -3,12 +3,12 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -64,7 +64,7 @@ public class NewAttributeForm extends VerticalLayout {
 				} catch (java.lang.NullPointerException jle) {
 					getApplication().getMainWindow().showNotification(
 							"Please fill all fields");
-				} catch (BlendedWorkflowException bwe) {
+				} catch (BWException bwe) {
 					getApplication().getMainWindow().showNotification(
 							bwe.getError().toString(),
 							Notification.TYPE_ERROR_MESSAGE);
@@ -92,7 +92,7 @@ public class NewAttributeForm extends VerticalLayout {
 
 	public void addAttribute(String BwInstanceOID, String name,
 			String entityName, String typeString, Boolean isKeyAttribute)
-			throws BlendedWorkflowException {
+			throws BWException {
 		BWInstance bwInstance = FenixFramework.getDomainObject(BwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 		Entity entity = dataModel.getEntity(entityName);

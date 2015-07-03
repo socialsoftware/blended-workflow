@@ -5,13 +5,13 @@ import java.util.List;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;

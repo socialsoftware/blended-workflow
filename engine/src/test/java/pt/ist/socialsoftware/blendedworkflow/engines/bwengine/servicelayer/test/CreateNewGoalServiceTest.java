@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
-import junit.framework.JUnit4TestAdapter;
-import jvstm.Transaction;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -18,20 +15,22 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import junit.framework.JUnit4TestAdapter;
+import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateBWInstanceService;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.CreateNewGoalService;
-import pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.LoadBWSpecificationService;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AchieveGoal;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.service.execution.CreateBWInstanceService;
+import pt.ist.socialsoftware.blendedworkflow.service.execution.CreateNewGoalService;
+import pt.ist.socialsoftware.blendedworkflow.service.execution.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
@@ -59,7 +58,8 @@ public class CreateNewGoalServiceTest {
     // "Other doctor opinion.";
     // private static String SECONDOPINION_CONDITION = "existsEntity(Episode)";
     // private static String SECONDOPINION_CONDITION =
-    // "existsEntity(Second Opinion) and existsAttribute(Second Opinion.Report.STRING.true)";
+    // "existsEntity(Second Opinion) and existsAttribute(Second
+    // Opinion.Report.STRING.true)";
     // private static String SECONDOPINION_PARENTGOAL_NAME_1 =
     // "Write Medical Report";
     // private static String SECONDOPINION_PARENTGOAL_NAME_2 = "Prescribe";
@@ -94,19 +94,18 @@ public class CreateNewGoalServiceTest {
                 oneOf(yawlAdapter).loadSpecification(with(any(String.class)));
                 oneOf(yawlAdapter).launchCase(with(any(String.class)));
                 will(returnValue(YAWLCASE_ID));
-                oneOf(workletAdapter).loadRdrSet(
-                        with(any(BWSpecification.class)));
-                allowing(workletAdapter)
-                        .requestWorkItemPostConditionEvaluation(
-                                with(any(TaskWorkItem.class)));
+                oneOf(workletAdapter)
+                        .loadRdrSet(with(any(Specification.class)));
+                allowing(workletAdapter).requestWorkItemPostConditionEvaluation(
+                        with(any(TaskWorkItem.class)));
                 allowing(workletAdapter).requestWorkItemPreConditionEvaluation(
                         with(any(TaskWorkItem.class)));
-                oneOf(bwManager).notifyCreatedBWInstance(
-                        with(any(BWInstance.class)));
+                oneOf(bwManager)
+                        .notifyCreatedBWInstance(with(any(BWInstance.class)));
                 oneOf(bwManager).notifyLoadedBWSpecification(
-                        with(any(BWSpecification.class)));
-                allowing(workListManager).notifyEnabledWorkItem(
-                        with(any(WorkItem.class)));
+                        with(any(Specification.class)));
+                allowing(workListManager)
+                        .notifyEnabledWorkItem(with(any(WorkItem.class)));
             }
         });
 
@@ -122,8 +121,8 @@ public class CreateNewGoalServiceTest {
         new LoadBWSpecificationService(bwSpecificationString).call();
 
         Transaction.begin();
-        BWSpecification bwSpecification = BlendedWorkflow.getInstance()
-                .getBWSpecification(BWSPECIFICATION_NAME);
+        Specification bwSpecification = BlendedWorkflow.getInstance()
+                .getSpecification(BWSPECIFICATION_NAME).orElse(null);
         Transaction.commit();
 
         new CreateBWInstanceService(bwSpecification.getExternalId(), "",
@@ -166,11 +165,11 @@ public class CreateNewGoalServiceTest {
             AchieveGoal newGoal = goalModelInstance.getGoal(NEWGOAL_NAME);
             assertEquals(NEWGOAL_NAME, newGoal.getName());
             assertEquals(NEWGOAL_DESCRIPTION, newGoal.getDescription());
-            assertEquals(NEWGOAL_SUCESS_CONDITION, newGoal.getSucessCondition()
-                    .toString());
+            assertEquals(NEWGOAL_SUCESS_CONDITION,
+                    newGoal.getSucessCondition().toString());
             assertEquals(1, newGoal.getActivateConditionsSet().size());
-            assertEquals(NEWGOAL_PARENTGOAL_NAME, newGoal.getParentGoal()
-                    .getName());
+            assertEquals(NEWGOAL_PARENTGOAL_NAME,
+                    newGoal.getParentGoal().getName());
             assertEquals(ENTITY_NAME, newGoal.getEntityContext().getName());
 
             Transaction.commit();

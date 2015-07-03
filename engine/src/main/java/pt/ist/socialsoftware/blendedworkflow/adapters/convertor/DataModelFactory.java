@@ -6,18 +6,18 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class DataModelFactory {
 
-	public void parseXMLDataModel(DataModel dataModel, String specificationXML) throws BlendedWorkflowException {
+	public void parseXMLDataModel(DataModel dataModel, String specificationXML) throws BWException {
 		Document doc = StringUtils.stringToDoc(specificationXML);
 
 		Element root = doc.getRootElement();
@@ -44,7 +44,7 @@ public class DataModelFactory {
 		}
 	}
 
-	private Entity parseEntity(DataModel dataModel, Element entityXML) throws BlendedWorkflowException {
+	private Entity parseEntity(DataModel dataModel, Element entityXML) throws BWException {
 		Namespace dmNamespace = entityXML.getNamespace();
 
 		String entityName = entityXML.getChildText("Name", dmNamespace);
@@ -52,7 +52,7 @@ public class DataModelFactory {
 		return entity;
 	}
 
-	private void parseAttribute(DataModel dataModel, Entity entity, Element attributeXML) throws BlendedWorkflowException {
+	private void parseAttribute(DataModel dataModel, Entity entity, Element attributeXML) throws BWException {
 		Namespace dmNamespace = attributeXML.getNamespace();
 
 		String attName = attributeXML.getChildText("Name", dmNamespace);
@@ -62,7 +62,7 @@ public class DataModelFactory {
 		new Attribute(dataModel, attName, entity, parseAttributeType(attType), isKey, isSystem);
 	}
 
-	private void parseRelation(DataModel dataModel, Element relationInXML) throws BlendedWorkflowException {
+	private void parseRelation(DataModel dataModel, Element relationInXML) throws BWException {
 		Namespace dmNamespace = relationInXML.getNamespace();
 
 		String relationName = relationInXML.getChildText("Name", dmNamespace);

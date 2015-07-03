@@ -2,21 +2,21 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import jvstm.Transaction;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
+import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.MockitoAbstractServiceTest;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class MockitoLoadBWSpecificationServiceTest extends
-        MockitoAbstractServiceTest {
+public class MockitoLoadBWSpecificationServiceTest
+        extends MockitoAbstractServiceTest {
 
     @Ignore
     @Test
@@ -31,7 +31,7 @@ public class MockitoLoadBWSpecificationServiceTest extends
 
             Transaction.commit();
             committed = true;
-        } catch (final BlendedWorkflowException e) {
+        } catch (final BWException e) {
             fail(e.getMessage());
         } finally {
             if (!committed)
@@ -39,11 +39,10 @@ public class MockitoLoadBWSpecificationServiceTest extends
         }
     }
 
-    private void assertLoadSpecificationResults()
-            throws BlendedWorkflowException {
+    private void assertLoadSpecificationResults() throws BWException {
         final BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-        final BWSpecification bwSpecification = blendedWorkflow
-                .getBWSpecification(BWSPECIFICATION_NAME);
+        final Specification bwSpecification = blendedWorkflow
+                .getSpecification(BWSPECIFICATION_NAME).orElse(null);
         final DataModel dataModel = bwSpecification.getDataModel();
         final GoalModel goalModel = bwSpecification.getGoalModel();
         final TaskModel taskModel = bwSpecification.getTaskModel();

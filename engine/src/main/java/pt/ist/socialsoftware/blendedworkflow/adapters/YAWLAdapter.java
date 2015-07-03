@@ -18,8 +18,8 @@ import org.yawlfoundation.yawl.logging.YLogDataItem;
 import org.yawlfoundation.yawl.logging.YLogDataItemList;
 import org.yawlfoundation.yawl.util.JDOMUtil;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 
@@ -50,7 +50,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 
 	private final ArrayList<YSpecificationID> loadedActivitySpecs = new ArrayList<YSpecificationID>();
 
-	public YAWLAdapter() throws BlendedWorkflowException {
+	public YAWLAdapter() throws BWException {
 		super();
 		this.interfaceBClient = new InterfaceB_EnvironmentBasedClient(
 				this.engineIbURI);
@@ -80,13 +80,13 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		return (successful(this.sessionHandle));
 	}
 
-	public void connectYAWL() throws BlendedWorkflowException {
+	public void connectYAWL() throws BWException {
 		log.info("Register BWService in YAWL.");
 		addBWClientAccount();
 		addBWService();
 	}
 
-	public void disconnectYAWL() throws BlendedWorkflowException {
+	public void disconnectYAWL() throws BWException {
 		log.info("Remove BWService from YAWL");
 		for (YExternalClient client : getClientAccounts()) {
 			if (client.getUserName().equals(engineUser)) {
@@ -101,7 +101,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		}
 	}
 
-	public void addBWService() throws BlendedWorkflowException {
+	public void addBWService() throws BWException {
 		try {
 			if (connected()) {
 
@@ -122,19 +122,19 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 			}
 		} catch (IOException ioe) {
 			log.error("addRegisteredService", ioe);
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.YAWL_REGISTER_SERVICE);
 		}
 	}
 
-	public void removeBWService() throws BlendedWorkflowException {
+	public void removeBWService() throws BWException {
 		try {
 			if (connected()) {
 				this.interfaceAClient.removeYAWLService(bwURI, sessionHandle);
 			}
 		} catch (IOException ioe) {
 			log.error("removeRegisteredService()", ioe);
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.YAWL_REMOVE_SERVICE);
 		}
 	}
@@ -147,7 +147,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		return null;
 	}
 
-	public void addBWClientAccount() throws BlendedWorkflowException {
+	public void addBWClientAccount() throws BWException {
 		try {
 			Boolean registered = false;
 			for (YExternalClient yExternalClient : this.interfaceAClient
@@ -168,19 +168,19 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 			}
 		} catch (IOException ioe) {
 			log.error("addClientAccount", ioe);
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.YAWL_REGISTER_CLIENT);
 		}
 	}
 
-	public void removeBWClientAccount() throws BlendedWorkflowException {
+	public void removeBWClientAccount() throws BWException {
 		try {
 			if (connected())
 				this.interfaceAClient.removeClientAccount(engineUser,
 						sessionHandle);
 		} catch (IOException ioe) {
 			log.error("removeClientAccount", ioe);
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.YAWL_REMOVE_CLIENT);
 		}
 	}
@@ -199,7 +199,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 	/***************************
 	 * YAWL Specifications
 	 ***************************/
-	public void loadSpecification(String spec) throws BlendedWorkflowException {
+	public void loadSpecification(String spec) throws BWException {
 		YSpecificationID ySpecificationID = SpecUtils
 				.getYAWLSpecificationIDFromSpec(spec);
 
@@ -207,7 +207,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 		for (SpecificationData specificationData : getLoadedSpecs()) {
 			if (specificationData.getID().equals(ySpecificationID)) {
 				log.info("Specification already loaded. Not loading again.");
-				throw new BlendedWorkflowException(
+				throw new BWException(
 						BlendedWorkflowError.YAWL_LOAD_SPECIFICATION,
 						"Specification already loaded. Not loading again.");
 			}
@@ -227,7 +227,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 					log.error("Specification "
 							+ ySpecificationID.getIdentifier()
 							+ " was not correctly uploaded.");
-					throw new BlendedWorkflowException(
+					throw new BWException(
 							BlendedWorkflowError.YAWL_LOAD_SPECIFICATION,
 							"Sucess False");
 				}
@@ -236,14 +236,14 @@ public class YAWLAdapter extends InterfaceBWebsideController {
 			log.error("IOException: Specification "
 					+ ySpecificationID.getIdentifier()
 					+ " was not correctly uploaded");
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.YAWL_LOAD_SPECIFICATION, "IOException");
 		}
 	}
 
 	// TODO:FutureImplementation: UnloadSpecification
 	public void unloadSpecification(String specID)
-			throws BlendedWorkflowException {
+			throws BWException {
 		// if(specID == null) {
 		// log.error("Cannot unload the specification. The specification is null");
 		// throw new

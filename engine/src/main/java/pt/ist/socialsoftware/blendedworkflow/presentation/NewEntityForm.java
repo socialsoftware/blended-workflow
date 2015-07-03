@@ -3,10 +3,10 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -50,7 +50,7 @@ public class NewEntityForm extends VerticalLayout {
 				} catch (java.lang.NullPointerException jle) {
 					getApplication().getMainWindow().showNotification(
 							"Please fill all fields");
-				} catch (BlendedWorkflowException bwe) {
+				} catch (BWException bwe) {
 					getApplication().getMainWindow().showNotification(
 							bwe.getError().toString(),
 							Notification.TYPE_ERROR_MESSAGE);
@@ -74,7 +74,7 @@ public class NewEntityForm extends VerticalLayout {
 	}
 
 	public void addEntity(String BwInstanceOID, String name)
-			throws BlendedWorkflowException {
+			throws BWException {
 		BWInstance bwInstance = FenixFramework.getDomainObject(BwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
 		new Entity(dataModel, name);

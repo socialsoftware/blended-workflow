@@ -3,25 +3,25 @@ package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 import java.util.HashMap;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Task;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class YAWLSpecificationFactory {
 
-	private BWSpecification bwSpecification;
+	private Specification bwSpecification;
 	private String specificationURI;
 	private int lovalVariablesIndex = 0;
 	private int taskIndex = 3;
 	private int inputOutputParamIndex = 0;
 	private final HashMap<String, String> taskYAWLID = new HashMap<String, String>();
 
-	public String parseYAWLSpecificationFactory(BWSpecification bwSpecification)
-			throws BlendedWorkflowException {
+	public String parseYAWLSpecificationFactory(Specification bwSpecification)
+			throws BWException {
 
 		this.bwSpecification = bwSpecification;
 		this.specificationURI = bwSpecification.getName().replaceAll(" ", "");

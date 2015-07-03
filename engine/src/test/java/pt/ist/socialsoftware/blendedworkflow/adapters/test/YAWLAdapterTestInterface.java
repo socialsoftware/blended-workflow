@@ -6,8 +6,8 @@ import org.yawlfoundation.yawl.elements.YAWLServiceReference;
 import org.yawlfoundation.yawl.engine.interfce.SpecificationData;
 
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
@@ -33,7 +33,7 @@ public class YAWLAdapterTestInterface extends Application {
 	public void init() {
 		try {
 			yawlAdapter= new YAWLAdapter();
-		} catch(BlendedWorkflowException e) {
+		} catch(BWException e) {
 			log.info(e.getMessage());
 		}
 		final Window main = new Window("YAWLAdapterTestInterface");

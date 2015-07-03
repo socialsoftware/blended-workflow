@@ -4,19 +4,19 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.CompareAttributeToValueCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsOneCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.CompareAttributeToValueCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.ExistsOneCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsOneConditionTest extends AbstractDomainTest {
@@ -62,7 +62,7 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
     private ExistsOneCondition existsOneCondition;
 
     @Override
-    protected void populate4DomainTest() throws BlendedWorkflowException {
+    protected void populate4DomainTest() throws BWException {
         dataModelInstance = new DataModelInstance();
 
         // Entity1
@@ -110,7 +110,7 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
     }
 
     @Test
-    public void evaluateToFalse() throws BlendedWorkflowException {
+    public void evaluateToFalse() throws BWException {
         entityInstance2_1Att1.setState(DataState.UNDEFINED);
         entityInstance2_2Att1.setState(DataState.UNDEFINED);
         assertEquals(TripleStateBool.FALSE,
@@ -125,7 +125,7 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
     }
 
     @Test
-    public void evaluateToTrue() throws BlendedWorkflowException {
+    public void evaluateToTrue() throws BWException {
         entityInstance2_1Att1.setValue(CONDITION_VALUE_TRUE);
         entityInstance2_1Att1.setState(DataState.DEFINED);
         entityInstance2_2Att1.setValue(CONDITION_VALUE_FALSE);

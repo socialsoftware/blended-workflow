@@ -6,19 +6,19 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Role;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.User;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Role;
+import pt.ist.socialsoftware.blendedworkflow.domain.Task;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.User;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class TaskModelFactory {
 	
-	public void parseXMLTaskModel(DataModel dataModel, TaskModel taskModel, String specificationXML) throws BlendedWorkflowException {
+	public void parseXMLTaskModel(DataModel dataModel, TaskModel taskModel, String specificationXML) throws BWException {
 		User defaultUser = BlendedWorkflow.getInstance().getOrganizationalModel().getUser("BlendedWorkflow");
 		Role defaultRole = BlendedWorkflow.getInstance().getOrganizationalModel().getRole("Admin");
 		

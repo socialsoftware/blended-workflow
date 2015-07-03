@@ -3,12 +3,12 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -98,7 +98,7 @@ public class NewRelationForm extends VerticalLayout {
 				} catch (java.lang.NullPointerException jle) {
 					getApplication().getMainWindow().showNotification(
 							"Please fill all fields");
-				} catch (BlendedWorkflowException bwe) {
+				} catch (BWException bwe) {
 					getApplication().getMainWindow().showNotification(
 							bwe.getError().toString(),
 							Notification.TYPE_ERROR_MESSAGE);
@@ -170,7 +170,7 @@ public class NewRelationForm extends VerticalLayout {
 	public void addRelation(String bwInstanceOID, String name,
 			String entityOneName, String entityTwoName, String cardinality,
 			Boolean isOneKeyEntity, Boolean isTwoKeyEntity)
-			throws BlendedWorkflowException {
+			throws BWException {
 
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();

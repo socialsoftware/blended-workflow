@@ -24,18 +24,18 @@ import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 
 import pt.ist.socialsoftware.blendedworkflow.MockitoAbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.adapters.ProcessItemLevelExceptionEvent;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class MockitoProcessItemLevelExceptionEventTest extends
         MockitoAbstractServiceTest {
@@ -153,7 +153,7 @@ public class MockitoProcessItemLevelExceptionEventTest extends
     }
 
     private void setUpBookingActivity(ActivityState state)
-            throws BlendedWorkflowException {
+            throws BWException {
         Transaction.begin();
 
         // final BWSpecification bwSpecification =

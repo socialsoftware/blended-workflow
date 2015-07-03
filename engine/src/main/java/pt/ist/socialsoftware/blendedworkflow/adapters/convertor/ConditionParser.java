@@ -1,21 +1,21 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AndCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.CompareAttributeToValueCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsEntityCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.ExistsOneCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.ForAllCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.NotCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.OrCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TrueCondition;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException.BlendedWorkflowError;
+import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.CompareAttributeToValueCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.ExistsAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.ExistsEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.ExistsOneCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.OrCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
+import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
 public class ConditionParser {
 
@@ -27,9 +27,9 @@ public class ConditionParser {
 	private int _token;
 
 	public ConditionParser(DataModel dataModel, String condition)
-			throws BlendedWorkflowException {
+			throws BWException {
 		if (condition == null || condition.equals("")) {
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.EMPTY_CONDITION_STRING);
 		}
 		this.dataModel = dataModel;
@@ -38,7 +38,7 @@ public class ConditionParser {
 		_token = 0;
 	}
 
-	public Condition parseCondition() throws BlendedWorkflowException {
+	public Condition parseCondition() throws BWException {
 		Condition finalCondition = null;
 		if (_cond.startsWith("existsAttribute(")
 				|| _cond.startsWith("existsEntity(")
@@ -49,7 +49,7 @@ public class ConditionParser {
 		} else if (_cond.startsWith("true")) {
 			return new TrueCondition();
 		} else {
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 
@@ -57,13 +57,13 @@ public class ConditionParser {
 	}
 
 	protected Condition continueParseCondition(Condition parsedCondition)
-			throws BlendedWorkflowException {
+			throws BWException {
 		while (_token < STR_LENGHT) {
 			if (_cond.startsWith(" and ", _token)
 					|| _cond.startsWith(" or ", _token)) {
 				parsedCondition = parseConditionJoiner(parsedCondition);
 			} else {
-				throw new BlendedWorkflowException(
+				throw new BWException(
 						BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 			}
 		}
@@ -71,7 +71,7 @@ public class ConditionParser {
 	}
 
 	// //// PARSE RULES /////
-	protected Condition parseConditionType() throws BlendedWorkflowException {
+	protected Condition parseConditionType() throws BWException {
 		Condition parsedCondition;
 		if (_cond.startsWith("existsAttribute(", _token)) {
 			parsedCondition = parseExistsAttributeCondition();
@@ -95,10 +95,10 @@ public class ConditionParser {
 	}
 
 	protected Condition parseExistsAttributeCondition()
-			throws BlendedWorkflowException {
+			throws BWException {
 		int endOfCondition = _cond.indexOf(')', _token);
 		if (endOfCondition < _token) {
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 		String existsAttributeString = _cond.substring(_token,
@@ -117,9 +117,9 @@ public class ConditionParser {
 
 	protected Attribute parseExistsAttributeConditionArgs(
 			String existsAttributeCondition, int startArgs, int endArgs,
-			StringBuilder elementName) throws BlendedWorkflowException {
+			StringBuilder elementName) throws BWException {
 		if (startArgs > endArgs)
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.INVALID_CONDITION_STRING,
 					existsAttributeCondition);
 
@@ -134,10 +134,10 @@ public class ConditionParser {
 	}
 
 	protected Condition parseExistsEntityCondition()
-			throws BlendedWorkflowException {
+			throws BWException {
 		int endOfCondition = _cond.indexOf(')', _token);
 		if (endOfCondition < _token) {
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 
@@ -154,9 +154,9 @@ public class ConditionParser {
 
 	protected Entity parseExistsEntityConditionArgs(
 			String existsEntityCondition, int startArgs, int endArgs,
-			StringBuilder elementName) throws BlendedWorkflowException {
+			StringBuilder elementName) throws BWException {
 		if (startArgs > endArgs)
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.INVALID_CONDITION_STRING,
 					existsEntityCondition);
 
@@ -169,11 +169,11 @@ public class ConditionParser {
 	}
 
 	protected Condition parseCompareAttributeToCondition()
-			throws BlendedWorkflowException {
+			throws BWException {
 		int endOfCondition = _cond.indexOf(')', _token);
 
 		if (endOfCondition < _token) {
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 
@@ -213,11 +213,11 @@ public class ConditionParser {
 		return compareAttributeToCondition;
 	}
 
-	protected Condition parseForAllCondition() throws BlendedWorkflowException {
+	protected Condition parseForAllCondition() throws BWException {
 		int endOfCondition = _cond.indexOf(']', _token);
 
 		if (endOfCondition < _token) {
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 		String forAllString = _cond.substring(_token, endOfCondition + 1);
@@ -248,11 +248,11 @@ public class ConditionParser {
 	}
 
 	protected Condition parseExistsOneCondition()
-			throws BlendedWorkflowException {
+			throws BWException {
 		int endOfCondition = _cond.indexOf(']', _token);
 
 		if (endOfCondition < _token) {
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 		String exitsOneString = _cond.substring(_token, endOfCondition + 1);
@@ -288,31 +288,31 @@ public class ConditionParser {
 	}
 
 	protected Condition parseConditionJoiner(Condition parsedCondition)
-			throws BlendedWorkflowException {
+			throws BWException {
 		if (_cond.startsWith(" and ", _token)) {
 			return parseAndCondition(parsedCondition);
 		} else if (_cond.startsWith(" or ", _token)) {
 			return parseOrCondition(parsedCondition);
 		} else {
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.INVALID_CONDITION_STRING, _cond);
 		}
 	}
 
 	protected Condition parseAndCondition(Condition parsedCondition)
-			throws BlendedWorkflowException {
+			throws BWException {
 		_token += " and ".length();
 		return new AndCondition(parsedCondition, parseConditionType());
 	}
 
 	protected Condition parseOrCondition(Condition parsedCondition)
-			throws BlendedWorkflowException {
+			throws BWException {
 		_token += " or ".length();
 		return new OrCondition(parsedCondition, parseConditionType());
 	}
 
 	private Entity parseEntity(String[] elementArr)
-			throws BlendedWorkflowException {
+			throws BWException {
 		Entity entity;
 		if (dataModel.getEntity(elementArr[0]) != null)
 			entity = dataModel.getEntity(elementArr[0]);
@@ -322,18 +322,18 @@ public class ConditionParser {
 	}
 
 	private Relation parseRelation(String relationName)
-			throws BlendedWorkflowException {
+			throws BWException {
 		Relation relation;
 		if (dataModel.getRelation(relationName) != null)
 			relation = dataModel.getRelation(relationName);
 		else
-			throw new BlendedWorkflowException(
+			throw new BWException(
 					BlendedWorkflowError.INVALID_CONDITION_STRING);
 		return relation;
 	}
 
 	private Attribute parseAttribute(String[] elementArr, Entity entity)
-			throws BlendedWorkflowException {
+			throws BWException {
 		// AttributeType type;
 		// boolean iskeyAttribute;
 		if (entity.getAttribute(elementArr[1]) != null)

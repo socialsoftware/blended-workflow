@@ -8,8 +8,8 @@ import org.junit.Before;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.WriteOnReadError;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public abstract class AbstractDomainTest {
 
@@ -34,6 +34,6 @@ public abstract class AbstractDomainTest {
     }
 
     protected abstract void populate4DomainTest()
-            throws BlendedWorkflowException;
+            throws BWException;
 
 }

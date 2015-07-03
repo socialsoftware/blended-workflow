@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import jvstm.Transaction;
-
 import org.jdom.Element;
 import org.jmock.Expectations;
 import org.junit.Before;
@@ -20,34 +18,35 @@ import org.yawlfoundation.yawl.util.JDOMUtil;
 import org.yawlfoundation.yawl.worklet.rdr.RdrNode;
 import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 
+import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.adapters.ProcessItemLevelExceptionEvent;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.RelationInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModel;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem.ActivityState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState;
+import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
     TaskWorkItem bookingWorkItem = null;
     WorkItemRecord wir = new WorkItemRecord(YAWLCASE_ID, "",
             BWSPECIFICATION_NAME, "", "");
-    Element conclusionFALSE = JDOMUtil
-            .stringToElement("<conclusion><action>FALSE</action><target>workitem</target></conclusion>");
-    Element conclusionTRUE = JDOMUtil
-            .stringToElement("<conclusion><action>TRUE</action><target>workitem</target></conclusion>");
-    Element conclusionSKIPPED = JDOMUtil
-            .stringToElement("<conclusion><action>SKIPPED</action><target>workitem</target></conclusion>");
+    Element conclusionFALSE = JDOMUtil.stringToElement(
+            "<conclusion><action>FALSE</action><target>workitem</target></conclusion>");
+    Element conclusionTRUE = JDOMUtil.stringToElement(
+            "<conclusion><action>TRUE</action><target>workitem</target></conclusion>");
+    Element conclusionSKIPPED = JDOMUtil.stringToElement(
+            "<conclusion><action>SKIPPED</action><target>workitem</target></conclusion>");
 
     @Before
     public void setUp() throws Exception {
@@ -70,8 +69,9 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
         });
 
         ProcessItemLevelExceptionEvent task = new ProcessItemLevelExceptionEvent(
-                wir, new Element("X"), new RdrNode("", conclusionFALSE,
-                        new Element("X")), RuleType.ItemPreconstraint);
+                wir, new Element("X"),
+                new RdrNode("", conclusionFALSE, new Element("X")),
+                RuleType.ItemPreconstraint);
         task.call();
 
         assertReceivePreConditionEvaluation(ActivityState.PRE_ACTIVITY);
@@ -90,8 +90,9 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
         });
 
         ProcessItemLevelExceptionEvent task = new ProcessItemLevelExceptionEvent(
-                wir, new Element("X"), new RdrNode("", conclusionTRUE,
-                        new Element("X")), RuleType.ItemPreconstraint);
+                wir, new Element("X"),
+                new RdrNode("", conclusionTRUE, new Element("X")),
+                RuleType.ItemPreconstraint);
         task.call();
 
         assertReceivePreConditionEvaluation(ActivityState.NEW);
@@ -110,19 +111,21 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
         });
 
         ProcessItemLevelExceptionEvent task = new ProcessItemLevelExceptionEvent(
-                wir, new Element("X"), new RdrNode("", conclusionSKIPPED,
-                        new Element("X")), RuleType.ItemPreconstraint);
+                wir, new Element("X"),
+                new RdrNode("", conclusionSKIPPED, new Element("X")),
+                RuleType.ItemPreconstraint);
         task.call();
 
         assertReceivePreConditionEvaluation(ActivityState.PRE_ACTIVITY);
     }
 
-    private void assertReceivePreConditionEvaluation(ActivityState workItemState) {
+    private void assertReceivePreConditionEvaluation(
+            ActivityState workItemState) {
         boolean committed = false;
         try {
             Transaction.begin();
-            BWSpecification bwSpecification = BlendedWorkflow.getInstance()
-                    .getBWSpecification(BWSPECIFICATION_NAME);
+            Specification bwSpecification = BlendedWorkflow.getInstance()
+                    .getSpecification(BWSPECIFICATION_NAME).orElse(null);
             List<BWInstance> bwInstances = new ArrayList<BWInstance>(
                     bwSpecification.getBwInstancesSet());
             BWInstance bwInstance = bwInstances.get(0);
@@ -132,12 +135,12 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
                 assertTrue(workItem instanceof TaskWorkItem);
                 TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
                 assertEquals(workItemState, taskWorkItem.getState());
-                assertEquals(wir.getTaskName(), taskWorkItem.getTask()
-                        .getName());
+                assertEquals(wir.getTaskName(),
+                        taskWorkItem.getTask().getName());
             }
             Transaction.commit();
             committed = true;
-        } catch (final BlendedWorkflowException e) {
+        } catch (final BWException e) {
             fail(e.getMessage());
         } finally {
             if (!committed)
@@ -145,10 +148,10 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
         }
     }
 
-    private void setUpBookingActivity() throws BlendedWorkflowException {
+    private void setUpBookingActivity() throws BWException {
         Transaction.begin();
-        BWSpecification bwSpecification = BlendedWorkflow.getInstance()
-                .getBWSpecification(BWSPECIFICATION_NAME);
+        Specification bwSpecification = BlendedWorkflow.getInstance()
+                .getSpecification(BWSPECIFICATION_NAME).orElse(null);
         List<BWInstance> bwInstances = new ArrayList<BWInstance>(
                 bwSpecification.getBwInstancesSet());
         BWInstance bwInstance = bwInstances.get(0);
@@ -193,14 +196,16 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
 
         setUpBookingActivity();
         ProcessItemLevelExceptionEvent task = new ProcessItemLevelExceptionEvent(
-                wir, new Element("X"), new RdrNode("", conclusionFALSE,
-                        new Element("X")), RuleType.ItemConstraintViolation);
+                wir, new Element("X"),
+                new RdrNode("", conclusionFALSE, new Element("X")),
+                RuleType.ItemConstraintViolation);
         task.call();
 
         assertReceivePostConditionEvaluation(bookingWorkItem);
     }
 
-    private void assertReceivePostConditionEvaluation(TaskWorkItem taskWorkItem) {
+    private void assertReceivePostConditionEvaluation(
+            TaskWorkItem taskWorkItem) {
         boolean committed = false;
         try {
             Transaction.begin();

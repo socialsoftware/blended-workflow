@@ -8,16 +8,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
-import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
-
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -32,172 +22,182 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
+
 @SuppressWarnings("serial")
 public class PreTaskForm extends VerticalLayout {
 
-	public static Class<?> tmp_class;
-	private static Constructor<?> tmp_const;
-	private final String taskWorkItemOID;
-	VerticalLayout data = new VerticalLayout();
-	private final Logger log = Logger.getLogger("PreTask");
+    public static Class<?> tmp_class;
+    private static Constructor<?> tmp_const;
+    private final String taskWorkItemOID;
+    VerticalLayout data = new VerticalLayout();
+    private final Logger log = Logger.getLogger("PreTask");
 
-	public PreTaskForm(final String workItemOID) {
-		setMargin(true);
-		setSpacing(true);
+    public PreTaskForm(final String workItemOID) {
+        setMargin(true);
+        setSpacing(true);
 
-		this.taskWorkItemOID = workItemOID;
+        this.taskWorkItemOID = workItemOID;
 
-		addComponent(data);
-		getOutputData();
+        addComponent(data);
+        getOutputData();
 
-		HorizontalLayout footer = new HorizontalLayout();
-		footer.setMargin(true);
-		footer.setSpacing(true);
+        HorizontalLayout footer = new HorizontalLayout();
+        footer.setMargin(true);
+        footer.setSpacing(true);
 
-		Button submitButton = new Button("Submit");
-		submitButton.addListener(new ClickListener() {
-			@Atomic(mode = TxMode.WRITE)
-			@Override
-			public void buttonClick(ClickEvent event) {
-				int workItemAttributeIndex = 0;
-				for (int y = 0; y < data.getComponentCount(); y++) {
-					AbstractField field;
+        Button submitButton = new Button("Submit");
+        submitButton.addListener(new ClickListener() {
+            @Atomic(mode = TxMode.WRITE)
+            @Override
+            public void buttonClick(ClickEvent event) {
+                int workItemAttributeIndex = 0;
+                for (int y = 0; y < data.getComponentCount(); y++) {
+                    AbstractField field;
 
-					if (!data.getComponent(y).getClass().equals(Label.class)) {
-						if (data.getComponent(y).getClass()
-								.equals(CheckBox.class)) {
-							field = (CheckBox) data.getComponent(y);
-						} else {
-							field = (TextField) data.getComponent(y);
-						}
-						String value = field.getValue().toString();
-						setWorkItemArgumentValue(workItemAttributeIndex, value);
-						workItemAttributeIndex++;
-					}
-				}
+                    if (!data.getComponent(y).getClass().equals(Label.class)) {
+                        if (data.getComponent(y).getClass()
+                                .equals(CheckBox.class)) {
+                            field = (CheckBox) data.getComponent(y);
+                        } else {
+                            field = (TextField) data.getComponent(y);
+                        }
+                        String value = field.getValue().toString();
+                        setWorkItemArgumentValue(workItemAttributeIndex, value);
+                        workItemAttributeIndex++;
+                    }
+                }
 
-				generateTaskForm(workItemOID);
-				getApplication().getMainWindow().showNotification(
-						"Pre-Activity accomplished",
-						Notification.TYPE_TRAY_NOTIFICATION);
-				getApplication().getMainWindow().removeWindow(
-						PreTaskForm.this.getWindow());
+                generateTaskForm(workItemOID);
+                getApplication().getMainWindow().showNotification(
+                        "Pre-Activity accomplished",
+                        Notification.TYPE_TRAY_NOTIFICATION);
+                getApplication().getMainWindow()
+                        .removeWindow(PreTaskForm.this.getWindow());
 
-			}
-		});
-		footer.addComponent(submitButton);
+            }
+        });
+        footer.addComponent(submitButton);
 
-		Button cancelButton = new Button("Cancel");
-		cancelButton.addListener(new ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				getApplication().getMainWindow().removeWindow(
-						PreTaskForm.this.getWindow());
-			}
-		});
-		footer.addComponent(cancelButton);
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                getApplication().getMainWindow()
+                        .removeWindow(PreTaskForm.this.getWindow());
+            }
+        });
+        footer.addComponent(cancelButton);
 
-		addComponent(footer);
-		setComponentAlignment(footer, Alignment.MIDDLE_CENTER);
-	}
+        addComponent(footer);
+        setComponentAlignment(footer, Alignment.MIDDLE_CENTER);
+    }
 
-	private void setWorkItemArgumentValue(int index, String value) {
-		TaskWorkItem taskWorkItem = FenixFramework
-				.getDomainObject(taskWorkItemOID);
-		List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
-				taskWorkItem.getInputWorkItemArgumentsSet());
-		arguments.get(index).setValue(value);
-		arguments.get(index).setState(DataState.DEFINED);
-	}
+    private void setWorkItemArgumentValue(int index, String value) {
+        TaskWorkItem taskWorkItem = FenixFramework
+                .getDomainObject(taskWorkItemOID);
+        List<WorkItemArgument> arguments = new ArrayList<WorkItemArgument>(
+                taskWorkItem.getInputWorkItemArgumentsSet());
+        arguments.get(index).setValue(value);
+        arguments.get(index).setState(DataState.DEFINED);
+    }
 
-	@Atomic(mode = TxMode.WRITE)
-	private void getOutputData() {
-		TaskWorkItem taskWorkItem = FenixFramework
-				.getDomainObject(taskWorkItemOID);
+    @Atomic(mode = TxMode.WRITE)
+    private void getOutputData() {
+        TaskWorkItem taskWorkItem = FenixFramework
+                .getDomainObject(taskWorkItemOID);
 
-		Entity previousEntity = null;
-		Boolean first = true;
-		for (WorkItemArgument workItemArgument : taskWorkItem
-				.getInputWorkItemArgumentsSet()) {
-			Attribute attribute = workItemArgument.getAttributeInstance()
-					.getAttribute();
-			Entity entity = attribute.getEntity();
+        Entity previousEntity = null;
+        Boolean first = true;
+        for (WorkItemArgument workItemArgument : taskWorkItem
+                .getInputWorkItemArgumentsSet()) {
+            Attribute attribute = workItemArgument.getAttributeInstance()
+                    .getAttribute();
+            Entity entity = attribute.getEntity();
 
-			if (first) {
-				previousEntity = entity;
-				addLabel(entity.getName());
-				first = false;
-			}
-			if (!entity.equals(previousEntity)) {
-				addLabel(entity.getName());
-			}
+            if (first) {
+                previousEntity = entity;
+                addLabel(entity.getName());
+                first = false;
+            }
+            if (!entity.equals(previousEntity)) {
+                addLabel(entity.getName());
+            }
 
-			if (attribute.getType().equals(AttributeType.BOOLEAN)) {
-				addCheckBox(attribute.getName());
-			} else {
-				addTextBox(attribute.getName());
-			}
-			previousEntity = entity;
-		}
-	}
+            if (attribute.getType().equals(AttributeType.BOOLEAN)) {
+                addCheckBox(attribute.getName());
+            } else {
+                addTextBox(attribute.getName());
+            }
+            previousEntity = entity;
+        }
+    }
 
-	protected void addCheckBox(String attributeName) {
-		CheckBox checkBox = new CheckBox(attributeName);
-		data.addComponent(checkBox);
-	}
+    protected void addCheckBox(String attributeName) {
+        CheckBox checkBox = new CheckBox(attributeName);
+        data.addComponent(checkBox);
+    }
 
-	protected void addTextBox(String attributeName) {
-		TextField tf = new TextField(attributeName);
-		data.addComponent(tf);
-	}
+    protected void addTextBox(String attributeName) {
+        TextField tf = new TextField(attributeName);
+        data.addComponent(tf);
+    }
 
-	protected void addLabel(String entityName) {
-		Label l = new Label(entityName);
-		l.addStyleName("h2");
-		data.addComponent(l);
-	}
+    protected void addLabel(String entityName) {
+        Label l = new Label(entityName);
+        l.addStyleName("h2");
+        data.addComponent(l);
+    }
 
-	public void generateTaskForm(String workItemOID) {
-		TaskWorkItem taskWorkItem = FenixFramework.getDomainObject(workItemOID);
-		String specificationName = taskWorkItem.getBwInstance()
-				.getBwSpecification().getName().replaceAll(" ", "");
-		String taskName = taskWorkItem.getTask().getName().replaceAll(" ", "");
-		String className = specificationName + "." + taskName + "Form";
+    public void generateTaskForm(String workItemOID) {
+        TaskWorkItem taskWorkItem = FenixFramework.getDomainObject(workItemOID);
+        String specificationName = taskWorkItem.getBwInstance()
+                .getSpecification().getName().replaceAll(" ", "");
+        String taskName = taskWorkItem.getTask().getName().replaceAll(" ", "");
+        String className = specificationName + "." + taskName + "Form";
 
-		log.info("className:" + className);
-		String packageName = "pt.ist.socialsoftware.blendedworkflow.presentation.";
+        log.info("className:" + className);
+        String packageName = "pt.ist.socialsoftware.blendedworkflow.presentation.";
 
-		// Get Form class
-		try {
-			tmp_class = Class.forName(packageName + className);
-		} catch (Exception e) {
-			try {
-				log.info("nexiste");
-				tmp_class = Class.forName(packageName + "TaskForm");
-			} catch (Exception classExeception) {
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				PrintStream stream = new PrintStream(baos);
-				e.printStackTrace(stream);
-				stream.flush();
-				log.info(new String(baos.toByteArray()));
-			}
-		}
+        // Get Form class
+        try {
+            tmp_class = Class.forName(packageName + className);
+        } catch (Exception e) {
+            try {
+                log.info("nexiste");
+                tmp_class = Class.forName(packageName + "TaskForm");
+            } catch (Exception classExeception) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                PrintStream stream = new PrintStream(baos);
+                e.printStackTrace(stream);
+                stream.flush();
+                log.info(new String(baos.toByteArray()));
+            }
+        }
 
-		// New Instance
-		try {
-			tmp_const = tmp_class.getDeclaredConstructor(long.class);
-			Window taskWindow = new Window(className);
-			taskWindow.setContent((ComponentContainer) tmp_const
-					.newInstance(workItemOID));
-			taskWindow.setWidth("30%");
-			taskWindow.center();
-			getApplication().getMainWindow().addWindow(taskWindow);
-		} catch (Exception e) {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			PrintStream stream = new PrintStream(baos);
-			e.printStackTrace(stream);
-			stream.flush();
-			log.info(new String(baos.toByteArray()));
-		}
-	}
+        // New Instance
+        try {
+            tmp_const = tmp_class.getDeclaredConstructor(long.class);
+            Window taskWindow = new Window(className);
+            taskWindow.setContent(
+                    (ComponentContainer) tmp_const.newInstance(workItemOID));
+            taskWindow.setWidth("30%");
+            taskWindow.center();
+            getApplication().getMainWindow().addWindow(taskWindow);
+        } catch (Exception e) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PrintStream stream = new PrintStream(baos);
+            e.printStackTrace(stream);
+            stream.flush();
+            log.info(new String(baos.toByteArray()));
+        }
+    }
 }

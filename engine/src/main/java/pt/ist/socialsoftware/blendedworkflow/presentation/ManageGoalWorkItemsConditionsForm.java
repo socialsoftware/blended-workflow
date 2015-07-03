@@ -4,14 +4,14 @@ import java.util.Set;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.Condition.ConditionType;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalWorkItem.GoalState;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.WorkItemArgument;
 
 import com.vaadin.event.Action;
 import com.vaadin.ui.Alignment;

@@ -9,18 +9,18 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.MockitoAbstractServiceTest;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.GoalModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.domain.TaskModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.engines.exception.BlendedWorkflowException;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class MockitoCreateBWInstanceServiceTest extends
         MockitoAbstractServiceTest {
 
     @Before
-    public void setUp() throws Exception, BlendedWorkflowException {
+    public void setUp() throws Exception, BWException {
         initializeSpecification();
     }
 
@@ -56,7 +56,7 @@ public class MockitoCreateBWInstanceServiceTest extends
 
             Transaction.commit();
             committed = true;
-        } catch (final BlendedWorkflowException e) {
+        } catch (final BWException e) {
             fail(e.getMessage());
         } finally {
             if (!committed)
