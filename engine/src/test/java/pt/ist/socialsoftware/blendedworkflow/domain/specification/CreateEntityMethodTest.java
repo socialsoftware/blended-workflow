@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.service.design;
+package pt.ist.socialsoftware.blendedworkflow.domain.specification;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,30 +6,32 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
-import pt.ist.socialsoftware.blendedworkflow.service.BWServiceTest;
 
-public class CreateEntityTest extends BWServiceTest {
+public class CreateEntityMethodTest extends BWDomainAndServiceTest {
     private static final String SPEC_NAME = "Spec Name";
     private static final String ENTITY_NAME = "Entity Name";
     private static final String DUP_NAME = "Exists Name";
     private static final String EMPTY_NAME = "";
 
+    DataModel dataModel = null;
+
     @Override
     public void populate4Test() throws BWException {
         Specification spec = new Specification(SPEC_NAME, "author",
                 "description", "version", "UID");
-        new Entity(spec.getDataModel(), DUP_NAME);
+        dataModel = spec.getDataModel();
+        new Entity(dataModel, DUP_NAME);
     }
 
     @Test
     public void success() throws BWException {
-
-        CreateEntity service = new CreateEntity(SPEC_NAME, ENTITY_NAME);
-        service.execute();
+        dataModel.createEntity(ENTITY_NAME);
 
         Specification spec = getBlendedWorkflow().getSpecification(SPEC_NAME)
                 .get();
@@ -40,10 +42,8 @@ public class CreateEntityTest extends BWServiceTest {
 
     @Test
     public void duplicateName() throws BWException {
-        CreateEntity service = new CreateEntity(SPEC_NAME, DUP_NAME);
-
         try {
-            service.execute();
+            dataModel.createEntity(DUP_NAME);
             fail("duplicateName");
         } catch (BWException bwe) {
             assertEquals(BlendedWorkflowError.INVALID_ENTITY_NAME,
@@ -53,10 +53,8 @@ public class CreateEntityTest extends BWServiceTest {
 
     @Test
     public void emptyName() throws BWException {
-        CreateEntity service = new CreateEntity(SPEC_NAME, EMPTY_NAME);
-
         try {
-            service.execute();
+            dataModel.createEntity(EMPTY_NAME);
             fail("emptyName");
         } catch (BWException bwe) {
             assertEquals(BlendedWorkflowError.INVALID_ENTITY_NAME,
@@ -66,10 +64,8 @@ public class CreateEntityTest extends BWServiceTest {
 
     @Test
     public void nullName() throws BWException {
-        CreateEntity service = new CreateEntity(SPEC_NAME, null);
-
         try {
-            service.execute();
+            dataModel.createEntity(null);
             fail("nullName");
         } catch (BWException bwe) {
             assertEquals(BlendedWorkflowError.INVALID_ENTITY_NAME,

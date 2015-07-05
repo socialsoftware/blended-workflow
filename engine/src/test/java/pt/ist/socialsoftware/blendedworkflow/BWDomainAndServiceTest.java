@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.service;
+package pt.ist.socialsoftware.blendedworkflow;
 
 import javax.transaction.NotSupportedException;
 import javax.transaction.SystemException;
@@ -9,8 +9,9 @@ import org.junit.Before;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.WriteOnReadError;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public abstract class BWServiceTest {
+public abstract class BWDomainAndServiceTest {
 
     @Before
     public void setUp() throws Exception {
