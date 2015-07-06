@@ -57,13 +57,10 @@ public class DataFormatter extends AbstractDeclarativeFormatter {
       }
     }
     List<Pair<Keyword, Keyword>> _findKeywordPairs = f.findKeywordPairs("{", "}");
-    final Consumer<Pair<Keyword, Keyword>> _function = new Consumer<Pair<Keyword, Keyword>>() {
-      @Override
-      public void accept(final Pair<Keyword, Keyword> it) {
-        Keyword _first = it.getFirst();
-        Keyword _second = it.getSecond();
-        c.setIndentation(_first, _second);
-      }
+    final Consumer<Pair<Keyword, Keyword>> _function = (Pair<Keyword, Keyword> it) -> {
+      Keyword _first = it.getFirst();
+      Keyword _second = it.getSecond();
+      c.setIndentation(_first, _second);
     };
     _findKeywordPairs.forEach(_function);
     FormattingConfig.LinewrapLocator _setLinewrap_1 = c.setLinewrap();
