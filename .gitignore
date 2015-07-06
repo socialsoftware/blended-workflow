@@ -14,4 +14,6 @@ designer/.project
 designer/.settings
 /target/
 /bin/
+/src-gen/
+/xtend-gen/
 
