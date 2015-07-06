@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Bundle-ClassPath: ../../repo/engine.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: org.blended.goal
 Bundle-Vendor: My Company

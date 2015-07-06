@@ -28,3 +28,4 @@ Export-Package: org.blended.data,
  org.blended.data.scoping,
  org.blended.data.generator,
  org.blended.data.formatting
+Bundle-ClassPath: ., ../../repo/engine.jar
