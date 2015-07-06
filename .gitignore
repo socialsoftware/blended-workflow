@@ -2,6 +2,7 @@
 .project
 .settings
 tmp-data
+repo
 engine/.classpath
 engine/.project
 engine/.settings
@@ -12,3 +13,5 @@ designer/.classpath
 designer/.project
 designer/.settings
 /target/
+/bin/
+
