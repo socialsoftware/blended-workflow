@@ -61,10 +61,10 @@ public class InternalDataLexer extends Lexer {
         try {
             int _type = T__11;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:11:7: ( 'Entity' )
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:11:9: 'Entity'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:11:7: ( 'Entityy' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:11:9: 'Entityy'
             {
-            match("Entity"); 
+            match("Entityy"); 
 
 
             }
@@ -1227,11 +1227,11 @@ public class InternalDataLexer extends Lexer {
         "\2\uffff\3\36\1\34\2\uffff\3\34\2\uffff\1\36\1\uffff\2\36\3\uffff"+
         "\1\36\1\uffff\1\36\2\uffff\3\36\2\uffff\1\36\2\uffff\1\102\2\36"+
         "\5\uffff\6\36\1\113\2\36\1\uffff\1\116\1\117\6\36\1\uffff\1\126"+
-        "\1\36\2\uffff\4\36\1\134\1\36\1\uffff\1\36\1\137\1\140\2\36\1\uffff"+
-        "\2\36\2\uffff\10\36\1\155\1\156\2\36\2\uffff\1\36\1\162\1\163\2"+
-        "\uffff";
+        "\1\36\2\uffff\4\36\1\134\1\36\1\uffff\2\36\1\140\2\36\1\uffff\2"+
+        "\36\1\145\1\uffff\4\36\1\uffff\4\36\1\156\1\157\2\36\2\uffff\1\36"+
+        "\1\163\1\164\2\uffff";
     static final String DFA12_eofS =
-        "\164\uffff";
+        "\165\uffff";
     static final String DFA12_minS =
         "\1\0\1\156\1\170\1\145\3\uffff\1\141\1\uffff\1\162\1\56\1\116\1"+
         "\151\2\uffff\1\157\2\uffff\1\122\1\117\1\105\1\101\2\uffff\2\0\1"+
@@ -1239,9 +1239,9 @@ public class InternalDataLexer extends Lexer {
         "\2\uffff\1\163\1\104\1\164\2\uffff\1\156\2\uffff\1\60\1\124\1\106"+
         "\5\uffff\1\151\1\163\1\145\1\144\1\165\1\157\1\60\1\150\1\163\1"+
         "\uffff\2\60\2\164\1\156\1\141\1\160\1\143\1\uffff\1\60\1\164\2\uffff"+
-        "\1\171\1\163\1\144\1\164\1\60\1\151\1\uffff\1\162\2\60\1\163\1\157"+
-        "\1\uffff\2\141\2\uffff\1\117\1\162\1\164\1\151\1\156\1\171\1\151"+
-        "\1\156\2\60\1\157\1\164\2\uffff\1\156\2\60\2\uffff";
+        "\1\171\1\163\1\144\1\164\1\60\1\151\1\uffff\1\162\1\171\1\60\1\163"+
+        "\1\157\1\uffff\2\141\1\60\1\uffff\1\117\1\162\1\164\1\151\1\uffff"+
+        "\1\156\1\171\1\151\1\156\2\60\1\157\1\164\2\uffff\1\156\2\60\2\uffff";
     static final String DFA12_maxS =
         "\1\uffff\1\156\1\170\1\145\3\uffff\1\141\1\uffff\1\162\1\56\1\163"+
         "\1\151\2\uffff\1\157\2\uffff\1\122\1\117\1\105\1\172\2\uffff\2\uffff"+
@@ -1249,18 +1249,19 @@ public class InternalDataLexer extends Lexer {
         "\157\2\uffff\1\163\1\104\1\164\2\uffff\1\156\2\uffff\1\172\1\124"+
         "\1\106\5\uffff\1\151\1\163\1\145\1\144\1\165\1\157\1\172\1\150\1"+
         "\163\1\uffff\2\172\2\164\1\156\1\141\1\160\1\143\1\uffff\1\172\1"+
-        "\164\2\uffff\1\171\1\163\1\144\1\164\1\172\1\151\1\uffff\1\162\2"+
-        "\172\1\163\1\157\1\uffff\2\141\2\uffff\1\117\1\162\1\164\1\151\1"+
-        "\156\1\171\1\151\1\156\2\172\1\157\1\164\2\uffff\1\156\2\172\2\uffff";
+        "\164\2\uffff\1\171\1\163\1\144\1\164\1\172\1\151\1\uffff\1\162\1"+
+        "\171\1\172\1\163\1\157\1\uffff\2\141\1\172\1\uffff\1\117\1\162\1"+
+        "\164\1\151\1\uffff\1\156\1\171\1\151\1\156\2\172\1\157\1\164\2\uffff"+
+        "\1\156\2\172\2\uffff";
     static final String DFA12_acceptS =
         "\4\uffff\1\4\1\5\1\6\1\uffff\1\10\4\uffff\1\15\1\16\1\uffff\1\21"+
         "\1\22\4\uffff\1\27\1\30\3\uffff\1\34\1\35\1\uffff\1\27\2\uffff\1"+
         "\4\1\5\1\6\1\uffff\1\10\1\uffff\1\20\1\12\3\uffff\1\15\1\16\1\uffff"+
         "\1\21\1\22\3\uffff\1\30\1\31\1\32\1\33\1\34\11\uffff\1\23\10\uffff"+
-        "\1\24\2\uffff\1\25\1\26\6\uffff\1\14\5\uffff\1\11\2\uffff\1\1\1"+
-        "\2\14\uffff\1\3\1\7\3\uffff\1\17\1\13";
+        "\1\24\2\uffff\1\25\1\26\6\uffff\1\14\5\uffff\1\11\3\uffff\1\2\4"+
+        "\uffff\1\1\10\uffff\1\3\1\7\3\uffff\1\17\1\13";
     static final String DFA12_specialS =
-        "\1\0\27\uffff\1\2\1\1\132\uffff}>";
+        "\1\1\27\uffff\1\2\1\0\133\uffff}>";
     static final String[] DFA12_transitionS = {
             "\11\34\2\33\2\34\1\33\22\34\1\33\1\34\1\30\4\34\1\31\1\15\1"+
             "\16\1\20\1\21\1\10\1\34\1\12\1\32\12\27\1\6\6\34\1\13\1\26\1"+
@@ -1354,30 +1355,31 @@ public class InternalDataLexer extends Lexer {
             "\1\135",
             "",
             "\1\136",
-            "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
+            "\1\137",
             "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
             "\1\141",
             "\1\142",
             "",
             "\1\143",
             "\1\144",
+            "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
             "",
-            "",
-            "\1\145",
             "\1\146",
             "\1\147",
             "\1\150",
             "\1\151",
+            "",
             "\1\152",
             "\1\153",
             "\1\154",
+            "\1\155",
             "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
             "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
-            "\1\157",
             "\1\160",
-            "",
-            "",
             "\1\161",
+            "",
+            "",
+            "\1\162",
             "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
             "\12\36\7\uffff\32\36\4\uffff\1\36\1\uffff\32\36",
             "",
@@ -1421,6 +1423,16 @@ public class InternalDataLexer extends Lexer {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
+                        int LA12_25 = input.LA(1);
+
+                        s = -1;
+                        if ( ((LA12_25>='\u0000' && LA12_25<='\uFFFF')) ) {s = 53;}
+
+                        else s = 28;
+
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
                         int LA12_0 = input.LA(1);
 
                         s = -1;
@@ -1479,16 +1491,6 @@ public class InternalDataLexer extends Lexer {
                         else if ( ((LA12_0>='\t' && LA12_0<='\n')||LA12_0=='\r'||LA12_0==' ') ) {s = 27;}
 
                         else if ( ((LA12_0>='\u0000' && LA12_0<='\b')||(LA12_0>='\u000B' && LA12_0<='\f')||(LA12_0>='\u000E' && LA12_0<='\u001F')||LA12_0=='!'||(LA12_0>='#' && LA12_0<='&')||LA12_0=='-'||(LA12_0>=';' && LA12_0<='@')||(LA12_0>='[' && LA12_0<=']')||LA12_0=='`'||LA12_0=='|'||(LA12_0>='~' && LA12_0<='\uFFFF')) ) {s = 28;}
-
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA12_25 = input.LA(1);
-
-                        s = -1;
-                        if ( ((LA12_25>='\u0000' && LA12_25<='\uFFFF')) ) {s = 53;}
-
-                        else s = 28;
 
                         if ( s>=0 ) return s;
                         break;

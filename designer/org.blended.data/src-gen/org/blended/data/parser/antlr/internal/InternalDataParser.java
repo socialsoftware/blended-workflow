@@ -21,7 +21,7 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalDataParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_INT", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'Entity'", "'exists'", "'dependsOn'", "'{'", "'}'", "':'", "'mandatory'", "','", "'group'", "'.'", "'Association'", "'with'", "'('", "')'", "'Constraint'", "'..'", "'*'", "'+'", "'OR'", "'AND'", "'NOT'", "'DEF'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_INT", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'Entityy'", "'exists'", "'dependsOn'", "'{'", "'}'", "':'", "'mandatory'", "','", "'group'", "'.'", "'Association'", "'with'", "'('", "')'", "'Constraint'", "'..'", "'*'", "'+'", "'OR'", "'AND'", "'NOT'", "'DEF'"
     };
     public static final int RULE_STRING=6;
     public static final int RULE_SL_COMMENT=8;
@@ -353,7 +353,7 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleEntity"
-    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:151:1: ruleEntity returns [EObject current=null] : (otherlv_0= 'Entity' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:151:1: ruleEntity returns [EObject current=null] : (otherlv_0= 'Entityy' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' ) ;
     public final EObject ruleEntity() throws RecognitionException {
         EObject current = null;
 
@@ -372,15 +372,15 @@ public class InternalDataParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:154:28: ( (otherlv_0= 'Entity' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' ) )
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:1: (otherlv_0= 'Entity' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:154:28: ( (otherlv_0= 'Entityy' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:1: (otherlv_0= 'Entityy' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' )
             {
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:1: (otherlv_0= 'Entity' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' )
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:3: otherlv_0= 'Entity' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:1: (otherlv_0= 'Entityy' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:155:3: otherlv_0= 'Entityy' ( (lv_name_1_0= RULE_ID ) ) ( (lv_exists_2_0= 'exists' ) )? (otherlv_3= 'dependsOn' ( (otherlv_4= RULE_ID ) ) )? otherlv_5= '{' ( ( (lv_attributes_6_1= ruleAttributeGroup | lv_attributes_6_2= ruleAttribute ) ) )* otherlv_7= '}'
             {
             otherlv_0=(Token)match(input,11,FOLLOW_11_in_ruleEntity259); 
 
-                	newLeafNode(otherlv_0, grammarAccess.getEntityAccess().getEntityKeyword_0());
+                	newLeafNode(otherlv_0, grammarAccess.getEntityAccess().getEntityyKeyword_0());
                 
             // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:159:1: ( (lv_name_1_0= RULE_ID ) )
             // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data/src-gen/org/blended/data/parser/antlr/internal/InternalData.g:160:1: (lv_name_1_0= RULE_ID )

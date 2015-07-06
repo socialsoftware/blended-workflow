@@ -22,7 +22,7 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalDataParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_INT", "RULE_ID", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'Entity'", "'{'", "'}'", "'dependsOn'", "':'", "','", "'group'", "'.'", "'Association'", "'with'", "'('", "')'", "'Constraint'", "'..'", "'*'", "'+'", "'OR'", "'AND'", "'NOT'", "'DEF'", "'exists'", "'mandatory'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_INT", "RULE_ID", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'Entityy'", "'{'", "'}'", "'dependsOn'", "':'", "','", "'group'", "'.'", "'Association'", "'with'", "'('", "')'", "'Constraint'", "'..'", "'*'", "'+'", "'OR'", "'AND'", "'NOT'", "'DEF'", "'exists'", "'mandatory'"
     };
     public static final int RULE_STRING=6;
     public static final int RULE_SL_COMMENT=8;
@@ -1883,21 +1883,21 @@ public class InternalDataParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Entity__Group__0__Impl"
-    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:636:1: rule__Entity__Group__0__Impl : ( 'Entity' ) ;
+    // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:636:1: rule__Entity__Group__0__Impl : ( 'Entityy' ) ;
     public final void rule__Entity__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:640:1: ( ( 'Entity' ) )
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:641:1: ( 'Entity' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:640:1: ( ( 'Entityy' ) )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:641:1: ( 'Entityy' )
             {
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:641:1: ( 'Entity' )
-            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:642:1: 'Entity'
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:641:1: ( 'Entityy' )
+            // /C:\\Users\\Vicente\\Documents\\GitHub\\bw\\designer\\org.blended.data.ui/src-gen/org/blended/data/ui/contentassist/antlr/internal/InternalData.g:642:1: 'Entityy'
             {
-             before(grammarAccess.getEntityAccess().getEntityKeyword_0()); 
+             before(grammarAccess.getEntityAccess().getEntityyKeyword_0()); 
             match(input,11,FOLLOW_11_in_rule__Entity__Group__0__Impl1318); 
-             after(grammarAccess.getEntityAccess().getEntityKeyword_0()); 
+             after(grammarAccess.getEntityAccess().getEntityyKeyword_0()); 
 
             }
 

@@ -57,7 +57,7 @@ public class DataGrammarAccess extends AbstractGrammarElementFinder {
 	public class EntityElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Entity");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cEntityKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Keyword cEntityyKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		private final Assignment cExistsAssignment_2 = (Assignment)cGroup.eContents().get(2);
@@ -75,15 +75,15 @@ public class DataGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
 		//Entity:
-		//	"Entity" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)*
+		//	"Entityy" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)*
 		//	"}";
 		@Override public ParserRule getRule() { return rule; }
 
-		//"Entity" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)* "}"
+		//"Entityy" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)* "}"
 		public Group getGroup() { return cGroup; }
 
-		//"Entity"
-		public Keyword getEntityKeyword_0() { return cEntityKeyword_0; }
+		//"Entityy"
+		public Keyword getEntityyKeyword_0() { return cEntityyKeyword_0; }
 
 		//name=ID
 		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
@@ -790,7 +790,7 @@ public class DataGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Entity:
-	//	"Entity" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)*
+	//	"Entityy" name=ID exists?="exists"? ("dependsOn" dependsOn=[Entity])? "{" attributes+=(AttributeGroup | Attribute)*
 	//	"}";
 	public EntityElements getEntityAccess() {
 		return pEntity;
