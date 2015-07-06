@@ -1,17 +1,24 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.service.BWService;
 
-public class CreateEntity extends BWService {
+public class CreateAttributeService extends BWService {
     private final String specName;
     private final String entityName;
+    private final String attributeName;
+    private final AttributeType type;
 
-    public CreateEntity(String specName, String entityName) {
+    public CreateAttributeService(String specName, String entityName,
+            String attributeName, AttributeType type) {
         this.specName = specName;
         this.entityName = entityName;
+        this.attributeName = attributeName;
+        this.type = type;
     }
 
     @Override
@@ -21,7 +28,11 @@ public class CreateEntity extends BWService {
                 .orElseThrow(() -> new BWException(
                         BlendedWorkflowError.INVALID_SPECIFICATION_NAME));
 
-        spec.getDataModel().createEntity(entityName);
+        Entity ent = spec.getDataModel().getEntity(this.entityName)
+                .orElseThrow(() -> new BWException(
+                        BlendedWorkflowError.INVALID_ENTITY_NAME));
+
+        ent.createAttribute(attributeName, type);
     }
 
 }

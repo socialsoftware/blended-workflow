@@ -2,7 +2,6 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import jvstm.Transaction;
 
 import org.jmock.integration.junit4.JMock;
 import org.junit.Before;
@@ -10,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
@@ -48,7 +48,7 @@ public class CreateBWInstanceServiceTest extends AbstractServiceTest {
                     .getTaskModelInstance();
 
             assertEquals(6, dataModelInstance.getEntitiesCount());
-            assertEquals(2, dataModelInstance.getEntity("Patient")
+            assertEquals(2, dataModelInstance.getEntity("Patient").get()
                     .getEntityInstancesCount());
             assertEquals(17, dataModelInstance.getAttributesCount());
             assertEquals(5, dataModelInstance.getRelationsCount());

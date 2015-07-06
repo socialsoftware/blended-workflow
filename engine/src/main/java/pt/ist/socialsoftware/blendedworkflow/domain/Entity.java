@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
@@ -34,6 +35,11 @@ public class Entity extends Entity_Base {
         if (exists)
             throw new BWException(BlendedWorkflowError.INVALID_ENTITY_NAME,
                     name);
+    }
+
+    public Attribute createAttribute(String name, AttributeType type) {
+        return new Attribute(this.getDataModel(), name, this, type, false,
+                false);
     }
 
     public void cloneEntity(DataModelInstance dataModelInstance)
@@ -265,11 +271,9 @@ public class Entity extends Entity_Base {
     }
 
     public Attribute getAttribute(String name) {
-        for (Attribute attribute : getAttributesSet()) {
-            if (attribute.getName().equals(name))
-                return attribute;
-        }
-        return null;
+        return getAttributesSet().stream()
+                .filter(att -> att.getName().equals(name)).findFirst()
+                .orElse(null);
     }
 
     public EntityInstance getEntityInstance(String ID) {
@@ -293,6 +297,8 @@ public class Entity extends Entity_Base {
 
     public void delete() {
         setDataModel(null);
+        getAttributesSet().stream().forEach(att -> att.delete());
+
         deleteDomainObject();
     }
 

@@ -3,5 +3,7 @@
 .settings
 test-db
 tmp-data
+src/main/resources/build.properties
+src/main/resources/log4j.properties
 /target/
 /target/

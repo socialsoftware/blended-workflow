@@ -22,7 +22,7 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
         Relation relation = dataModelInstance
                 .getRelation(getExistsOneRelation().getName());
         Entity entity = dataModelInstance
-                .getEntity(getExistsOneEntity().getName());
+                .getEntity(getExistsOneEntity().getName()).get();
         return new ExistsOneCondition(relation, entity,
                 getCondition().cloneCondition(goalModelInstance));
     }
@@ -34,7 +34,7 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
         Relation relation = dataModelInstance
                 .getRelation(getExistsOneRelation().getName());
         Entity entity = dataModelInstance
-                .getEntity(getExistsOneEntity().getName());
+                .getEntity(getExistsOneEntity().getName()).get();
         return new ForAllCondition(relation, entity,
                 getCondition().cloneCondition(taskModelInstance));
     }

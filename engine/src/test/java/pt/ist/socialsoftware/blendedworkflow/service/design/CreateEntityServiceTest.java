@@ -28,19 +28,21 @@ public class CreateEntityServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void success() throws BWException {
-        CreateEntity service = new CreateEntity(SPEC_NAME, ENTITY_NAME);
+        CreateEntityService service = new CreateEntityService(SPEC_NAME,
+                ENTITY_NAME);
         service.execute();
 
         Specification spec = getBlendedWorkflow().getSpecification(SPEC_NAME)
                 .get();
-        Entity entity = spec.getDataModel().getEntity(ENTITY_NAME);
+        Entity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
         assertNotNull(entity);
         assertEquals(ENTITY_NAME, entity.getName());
     }
 
     @Test
     public void nonExistentSpecification() throws BWException {
-        CreateEntity service = new CreateEntity(NON_EXIST, ENTITY_NAME);
+        CreateEntityService service = new CreateEntityService(NON_EXIST,
+                ENTITY_NAME);
 
         try {
             service.execute();
@@ -53,7 +55,8 @@ public class CreateEntityServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void emptySpecName() throws BWException {
-        CreateEntity service = new CreateEntity(EMPTY_NAME, ENTITY_NAME);
+        CreateEntityService service = new CreateEntityService(EMPTY_NAME,
+                ENTITY_NAME);
 
         try {
             service.execute();
@@ -66,7 +69,8 @@ public class CreateEntityServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void nullName() throws BWException {
-        CreateEntity service = new CreateEntity(null, ENTITY_NAME);
+        CreateEntityService service = new CreateEntityService(null,
+                ENTITY_NAME);
 
         try {
             service.execute();

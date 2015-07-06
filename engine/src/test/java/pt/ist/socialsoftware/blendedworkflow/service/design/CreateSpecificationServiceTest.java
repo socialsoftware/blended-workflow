@@ -19,7 +19,7 @@ public class CreateSpecificationServiceTest extends BWDomainAndServiceTest {
     @Test
     public void success() throws BWException {
 
-        CreateSpecification service = new CreateSpecification(SPEC_NAME);
+        CreateSpecificationService service = new CreateSpecificationService(SPEC_NAME);
 
         service.execute();
 

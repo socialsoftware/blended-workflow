@@ -9,22 +9,42 @@ public class Attribute extends Attribute_Base {
         BOOLEAN, NUMBER, STRING
     };
 
+    @Override
+    public void setName(String name) {
+        checkName(name);
+        super.setName(name);
+    }
+
     public Attribute(DataModel dataModel, String name, Entity entity,
             AttributeType type, boolean isKeyAttribute, boolean isSystem)
                     throws BWException {
-        checkUniqueAttributeName(entity, name);
         setDataModel(dataModel);
-        setName(name);
         setEntity(entity);
+        setName(name);
         setType(type);
         setIsKeyAttribute(isKeyAttribute);
         setIsSystem(isSystem);
     }
 
-    private void checkUniqueAttributeName(Entity entity, String name)
-            throws BWException {
-        for (Attribute attribute : entity.getAttributesSet()) {
-            if (attribute.getName().equals(name)) {
+    private void checkName(String name) {
+        if ((name == null) || name.equals(""))
+            throw new BWException(BlendedWorkflowError.INVALID_ATTRIBUTE_NAME,
+                    name);
+
+        checkUniqueAttributeName(name);
+    }
+
+    private void checkUniqueAttributeName(String name) throws BWException {
+        // Optional<Attribute> res = getEntity().getAttributesSet().stream()
+        // .filter(att -> ((att != this) && att.getName().equals(name)))
+        // .findFirst();
+        //
+        // if (res.isPresent()) {
+        // new BWException(BlendedWorkflowError.INVALID_ATTRIBUTE_NAME, name);
+        // }
+
+        for (Attribute attribute : getEntity().getAttributesSet()) {
+            if ((attribute != this) && attribute.getName().equals(name)) {
                 throw new BWException(
                         BlendedWorkflowError.INVALID_ATTRIBUTE_NAME, name);
             }
@@ -50,6 +70,12 @@ public class Attribute extends Attribute_Base {
         } else {
             return "string";
         }
+    }
+
+    public void delete() {
+        setDataModel(null);
+        setEntity(null);
+        deleteDomainObject();
     }
 
 }

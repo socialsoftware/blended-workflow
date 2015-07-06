@@ -35,7 +35,7 @@ public class CreateEntityMethodTest extends BWDomainAndServiceTest {
 
         Specification spec = getBlendedWorkflow().getSpecification(SPEC_NAME)
                 .get();
-        Entity entity = spec.getDataModel().getEntity(ENTITY_NAME);
+        Entity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
         assertNotNull(entity);
         assertEquals(ENTITY_NAME, entity.getName());
     }

@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Optional;
+
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class DataModel extends DataModel_Base {
@@ -23,22 +25,24 @@ public class DataModel extends DataModel_Base {
         // Get relation -> Get new Entities -> Clone with new Entities
         for (Relation relation : getRelationsSet()) {
             relationEntityOne = newDataModelInstance
-                    .getEntity(relation.getEntityOne().getName());
+                    .getEntity(relation.getEntityOne().getName()).get();
             relationEntityTwo = newDataModelInstance
-                    .getEntity(relation.getEntityTwo().getName());
+                    .getEntity(relation.getEntityTwo().getName()).get();
             relation.cloneRelation(newDataModelInstance, relationEntityOne,
                     relationEntityTwo);
         }
         return newDataModelInstance;
     }
 
-    public Entity getEntity(String name) {
-        for (Entity entity : getEntitiesSet()) {
-            if (entity.getName().equals(name)) {
-                return entity;
-            }
-        }
-        return null;
+    public Optional<Entity> getEntity(String name) {
+        return getEntitiesSet().stream()
+                .filter(ent -> ent.getName().equals(name)).findFirst();
+        // for (Entity entity : getEntitiesSet()) {
+        // if (entity.getName().equals(name)) {
+        // return entity;
+        // }
+        // }
+        // return null;
     }
 
     public Relation getRelation(String name) {

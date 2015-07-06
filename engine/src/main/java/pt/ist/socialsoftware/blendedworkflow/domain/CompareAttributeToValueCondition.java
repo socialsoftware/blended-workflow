@@ -28,7 +28,7 @@ public class CompareAttributeToValueCondition
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
         Entity entity = dataModelInstance
-                .getEntity(getAttribute().getEntity().getName());
+                .getEntity(getAttribute().getEntity().getName()).get();
         Attribute attribute = entity.getAttribute(getAttribute().getName());
         return new CompareAttributeToValueCondition(attribute, getOperator(),
                 getValue());
@@ -39,7 +39,7 @@ public class CompareAttributeToValueCondition
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
         Entity entity = dataModelInstance
-                .getEntity(getAttribute().getEntity().getName());
+                .getEntity(getAttribute().getEntity().getName()).get();
         Attribute attribute = entity.getAttribute(getAttribute().getName());
         return new CompareAttributeToValueCondition(attribute, getOperator(),
                 getValue());

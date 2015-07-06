@@ -17,7 +17,8 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
     Condition cloneCondition(GoalModelInstance goalModelInstance) {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
-        Entity entity = dataModelInstance.getEntity(getEntity().getName());
+        Entity entity = dataModelInstance.getEntity(getEntity().getName())
+                .get();
         return new ExistsEntityCondition(entity);
     }
 
@@ -25,7 +26,8 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
     Condition cloneCondition(TaskModelInstance taskModelInstance) {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
-        Entity entity = dataModelInstance.getEntity(getEntity().getName());
+        Entity entity = dataModelInstance.getEntity(getEntity().getName())
+                .get();
         return new ExistsEntityCondition(entity);
     }
 

@@ -18,7 +18,7 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
         Entity entity = dataModelInstance
-                .getEntity(getAttribute().getEntity().getName());
+                .getEntity(getAttribute().getEntity().getName()).get();
         Attribute attribute = entity.getAttribute(getAttribute().getName());
         return new ExistsAttributeCondition(attribute);
     }
@@ -28,7 +28,7 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
         Entity entity = dataModelInstance
-                .getEntity(getAttribute().getEntity().getName());
+                .getEntity(getAttribute().getEntity().getName()).get();
         Attribute attribute = entity.getAttribute(getAttribute().getName());
         return new ExistsAttributeCondition(attribute);
     }

@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import jvstm.Transaction;
-
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -22,32 +20,33 @@ import org.yawlfoundation.yawl.util.JDOMUtil;
 import org.yawlfoundation.yawl.worklet.rdr.RdrNode;
 import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 
+import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.MockitoAbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.adapters.ProcessItemLevelExceptionEvent;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class MockitoProcessItemLevelExceptionEventTest extends
-        MockitoAbstractServiceTest {
+public class MockitoProcessItemLevelExceptionEventTest
+        extends MockitoAbstractServiceTest {
     private TaskWorkItem bookingWorkItem = null;
     private final WorkItemRecord wir = new WorkItemRecord(YAWLCASE_ID, "",
             BWSPECIFICATION_NAME, "", "");
-    private final Element conclusionFALSE = JDOMUtil
-            .stringToElement("<conclusion><action>FALSE</action><target>workitem</target></conclusion>");
-    private final Element conclusionTRUE = JDOMUtil
-            .stringToElement("<conclusion><action>TRUE</action><target>workitem</target></conclusion>");
-    private final Element conclusionSKIPPED = JDOMUtil
-            .stringToElement("<conclusion><action>SKIPPED</action><target>workitem</target></conclusion>");
+    private final Element conclusionFALSE = JDOMUtil.stringToElement(
+            "<conclusion><action>FALSE</action><target>workitem</target></conclusion>");
+    private final Element conclusionTRUE = JDOMUtil.stringToElement(
+            "<conclusion><action>TRUE</action><target>workitem</target></conclusion>");
+    private final Element conclusionSKIPPED = JDOMUtil.stringToElement(
+            "<conclusion><action>SKIPPED</action><target>workitem</target></conclusion>");
 
     @Before
     public void setUp() throws Exception {
@@ -57,17 +56,17 @@ public class MockitoProcessItemLevelExceptionEventTest extends
     }
 
     private void sendPreConditionEvent(Element conclusion) throws Exception {
-        new ProcessItemLevelExceptionEvent(wir, new Element("X"), new RdrNode(
-                "", conclusion, new Element("X")), RuleType.ItemPreconstraint)
-                .call();
+        new ProcessItemLevelExceptionEvent(wir, new Element("X"),
+                new RdrNode("", conclusion, new Element("X")),
+                RuleType.ItemPreconstraint).call();
         // FIXME twice for both PRE and POST verification?
         verify(workletGatewayClient).process(eq(wir), any(Element.class),
                 any(RuleType.class), anyString());
     }
 
     private void sendPostConditionEvent(Element conclusion) throws Exception {
-        new ProcessItemLevelExceptionEvent(wir, new Element("X"), new RdrNode(
-                "", conclusion, new Element("X")),
+        new ProcessItemLevelExceptionEvent(wir, new Element("X"),
+                new RdrNode("", conclusion, new Element("X")),
                 RuleType.ItemConstraintViolation).call();
     }
 
@@ -138,8 +137,8 @@ public class MockitoProcessItemLevelExceptionEventTest extends
     @Test
     public void receivePostConditionEvaluationSkippedEnabledState()
             throws Exception {
-        receivePostConditionEvaluation(conclusionSKIPPED,
-                ActivityState.ENABLED, ActivityState.SKIPPED);
+        receivePostConditionEvaluation(conclusionSKIPPED, ActivityState.ENABLED,
+                ActivityState.SKIPPED);
         verify(workListManager).notifyCompletedWorkItem(bookingWorkItem);
     }
 
@@ -152,8 +151,7 @@ public class MockitoProcessItemLevelExceptionEventTest extends
         verify(workListManager).notifyCompletedWorkItem(bookingWorkItem);
     }
 
-    private void setUpBookingActivity(ActivityState state)
-            throws BWException {
+    private void setUpBookingActivity(ActivityState state) throws BWException {
         Transaction.begin();
 
         // final BWSpecification bwSpecification =
@@ -164,12 +162,13 @@ public class MockitoProcessItemLevelExceptionEventTest extends
                 .getDataModelInstance();
         final TaskModel taskModel = bwInstance.getTaskModelInstance();
 
-        final Entity episodeType = dataModelInstance.getEntity("Episode");
+        final Entity episodeType = dataModelInstance.getEntity("Episode").get();
         // final EntityInstance episodeOne = new
         // EntityInstance(dataModelInstance, episodeType);
         final EntityInstance episodeOne = new EntityInstance(episodeType);
         List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
-                dataModelInstance.getEntity("Patient").getEntityInstancesSet());
+                dataModelInstance.getEntity("Patient").get()
+                        .getEntityInstancesSet());
         final EntityInstance myPatient = entityInstances.get(0);
         new RelationInstance(
                 dataModelInstance.getRelation("Patient has Episodes"),
@@ -198,14 +197,15 @@ public class MockitoProcessItemLevelExceptionEventTest extends
 
     private void receivePostConditionEvaluation(Element conclusion,
             ActivityState initialState, ActivityState expectedState)
-            throws Exception {
+                    throws Exception {
         setUpBookingActivity(initialState);
         sendPostConditionEvent(conclusion);
 
         assertReceivePostConditionEvaluation(bookingWorkItem, expectedState);
     }
 
-    private void assertReceivePreConditionEvaluation(ActivityState workItemState) {
+    private void assertReceivePreConditionEvaluation(
+            ActivityState workItemState) {
         boolean committed = false;
         try {
             Transaction.begin();
@@ -222,8 +222,8 @@ public class MockitoProcessItemLevelExceptionEventTest extends
                 assertTrue(workItem instanceof TaskWorkItem);
                 final TaskWorkItem taskWorkItem = (TaskWorkItem) workItem;
                 assertEquals(workItemState, taskWorkItem.getState());
-                assertEquals(wir.getTaskName(), taskWorkItem.getTask()
-                        .getName());
+                assertEquals(wir.getTaskName(),
+                        taskWorkItem.getTask().getName());
             }
 
             Transaction.commit();
@@ -236,8 +236,8 @@ public class MockitoProcessItemLevelExceptionEventTest extends
         }
     }
 
-    private void assertReceivePostConditionEvaluation(
-            TaskWorkItem taskWorkItem, ActivityState expectedState) {
+    private void assertReceivePostConditionEvaluation(TaskWorkItem taskWorkItem,
+            ActivityState expectedState) {
         boolean committed = false;
         try {
             Transaction.begin();

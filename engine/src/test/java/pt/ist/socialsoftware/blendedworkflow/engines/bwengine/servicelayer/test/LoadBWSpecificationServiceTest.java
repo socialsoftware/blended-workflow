@@ -56,8 +56,8 @@ public class LoadBWSpecificationServiceTest extends AbstractServiceTest {
         final TaskModel taskModel = bwSpecification.getTaskModel();
 
         assertEquals(6, dataModel.getEntitiesSet().size());
-        assertEquals(2,
-                dataModel.getEntity("Patient").getEntityInstancesSet().size());
+        assertEquals(2, dataModel.getEntity("Patient").get()
+                .getEntityInstancesSet().size());
         assertEquals(17, dataModel.getAttributesSet().size());
         assertEquals(5, dataModel.getRelationsSet().size());
         assertEquals(11, goalModel.getAchieveGoalsSet().size());

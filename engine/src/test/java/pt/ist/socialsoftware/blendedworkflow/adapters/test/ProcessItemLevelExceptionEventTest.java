@@ -157,10 +157,11 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
         BWInstance bwInstance = bwInstances.get(0);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         TaskModel taskModel = bwInstance.getTaskModelInstance();
-        Entity episodeType = dataModelInstance.getEntity("Episode");
+        Entity episodeType = dataModelInstance.getEntity("Episode").get();
         EntityInstance episodeOne = new EntityInstance(episodeType);
         List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
-                dataModelInstance.getEntity("Patient").getEntityInstancesSet());
+                dataModelInstance.getEntity("Patient").get()
+                        .getEntityInstancesSet());
         EntityInstance myPatient = entityInstances.get(0);
         new RelationInstance(
                 dataModelInstance.getRelation("Patient has Episodes"),

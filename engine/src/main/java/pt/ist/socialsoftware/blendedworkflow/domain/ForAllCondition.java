@@ -21,8 +21,8 @@ public class ForAllCondition extends ForAllCondition_Base {
                 .getDataModelInstance();
         Relation relation = dataModelInstance
                 .getRelation(getForAllRelation().getName());
-        Entity entity = dataModelInstance
-                .getEntity(getForAllEntity().getName());
+        Entity entity = dataModelInstance.getEntity(getForAllEntity().getName())
+                .get();
         return new ForAllCondition(relation, entity,
                 getCondition().cloneCondition(goalModelInstance));
     }
@@ -33,8 +33,8 @@ public class ForAllCondition extends ForAllCondition_Base {
                 .getDataModelInstance();
         Relation relation = dataModelInstance
                 .getRelation(getForAllRelation().getName());
-        Entity entity = dataModelInstance
-                .getEntity(getForAllEntity().getName());
+        Entity entity = dataModelInstance.getEntity(getForAllEntity().getName())
+                .get();
         return new ForAllCondition(relation, entity,
                 getCondition().cloneCondition(taskModelInstance));
     }

@@ -145,8 +145,8 @@ public class CreateNewGoalServiceTest {
         AchieveGoal parentGoal = goalModelInstance
                 .getGoal(NEWGOAL_PARENTGOAL_NAME);
         String parentGoalOID = parentGoal.getExternalId();
-        Entity entity = bwInstance.getDataModelInstance()
-                .getEntity(ENTITY_NAME);
+        Entity entity = bwInstance.getDataModelInstance().getEntity(ENTITY_NAME)
+                .get();
         String entityOID = entity.getExternalId();
 
         ArrayList<String> activateConditions = new ArrayList<String>();

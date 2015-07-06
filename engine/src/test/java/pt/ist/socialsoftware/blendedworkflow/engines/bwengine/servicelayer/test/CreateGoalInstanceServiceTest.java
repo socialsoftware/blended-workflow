@@ -8,14 +8,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import jvstm.Transaction;
-
 import org.jmock.integration.junit4.JMock;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
@@ -26,8 +25,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.CreateGoalInstanceService;
 
 @RunWith(JMock.class)
@@ -48,10 +47,11 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
             Boolean checkInValue) {
         Transaction.begin();
         // Episode.1
-        Entity episodeType = dataModelInstance.getEntity("Episode");
+        Entity episodeType = dataModelInstance.getEntity("Episode").get();
         EntityInstance episodeOne = new EntityInstance(episodeType);
         List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
-                dataModelInstance.getEntity("Patient").getEntityInstancesSet());
+                dataModelInstance.getEntity("Patient").get()
+                        .getEntityInstancesSet());
         EntityInstance myPatient = entityInstances.get(0);
         new RelationInstance(
                 dataModelInstance.getRelation("Patient has Episodes"),
@@ -73,8 +73,8 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
     public void createOneGoalInstanceWithTrueActivateCondition()
             throws Exception {
         Transaction.begin();
-        BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstance(
-                BWINSTANCE_ID);
+        BWInstance bwInstance = BlendedWorkflow.getInstance()
+                .getBWInstance(BWINSTANCE_ID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
         AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_1);
@@ -84,11 +84,13 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 
         Transaction.begin();
         HashMap<String, String> entitiesOID = new HashMap<String, String>();
-        String episode = dataModelInstance.getEntity("Episode").getExternalId();
+        String episode = dataModelInstance.getEntity("Episode").get()
+                .getExternalId();
         List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
-                dataModelInstance.getEntity("Episode").getEntityInstancesSet());
+                dataModelInstance.getEntity("Episode").get()
+                        .getEntityInstancesSet());
         String episodeOne = entityInstances.get(0).getExternalId();
-        String patientData = dataModelInstance.getEntity("Patient Data")
+        String patientData = dataModelInstance.getEntity("Patient Data").get()
                 .getExternalId();
         String patientDataNew = null;
         entitiesOID.put(episode, episodeOne);
@@ -134,8 +136,8 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
     public void createOneGoalInstanceWithFalseActivateCondition()
             throws Exception {
         Transaction.begin();
-        BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstance(
-                BWINSTANCE_ID);
+        BWInstance bwInstance = BlendedWorkflow.getInstance()
+                .getBWInstance(BWINSTANCE_ID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
         AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_1);
@@ -145,11 +147,13 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 
         Transaction.begin();
         HashMap<String, String> entitiesOID = new HashMap<String, String>();
-        String episode = dataModelInstance.getEntity("Episode").getExternalId();
+        String episode = dataModelInstance.getEntity("Episode").get()
+                .getExternalId();
         List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
-                dataModelInstance.getEntity("Episode").getEntityInstancesSet());
+                dataModelInstance.getEntity("Episode").get()
+                        .getEntityInstancesSet());
         String episodeOne = entityInstances.get(0).getExternalId();
-        String patientData = dataModelInstance.getEntity("Patient Data")
+        String patientData = dataModelInstance.getEntity("Patient Data").get()
                 .getExternalId();
         String patientDataNew = null;
         entitiesOID.put(episode, episodeOne);
@@ -197,8 +201,8 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
     public void createOneGoalInstanceWithoutDisablingConditions()
             throws Exception {
         Transaction.begin();
-        BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstance(
-                BWINSTANCE_ID);
+        BWInstance bwInstance = BlendedWorkflow.getInstance()
+                .getBWInstance(BWINSTANCE_ID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
         AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_1);
@@ -210,11 +214,13 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 
         Transaction.begin();
         HashMap<String, String> entitiesOID = new HashMap<String, String>();
-        String episode = dataModelInstance.getEntity("Episode").getExternalId();
+        String episode = dataModelInstance.getEntity("Episode").get()
+                .getExternalId();
         List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
-                dataModelInstance.getEntity("Episode").getEntityInstancesSet());
+                dataModelInstance.getEntity("Episode").get()
+                        .getEntityInstancesSet());
         String episodeOne = entityInstances.get(0).getExternalId();
-        String patientData = dataModelInstance.getEntity("Patient Data")
+        String patientData = dataModelInstance.getEntity("Patient Data").get()
                 .getExternalId();
         String patientDataNew = null;
         entitiesOID.put(episode, episodeOne);
@@ -260,8 +266,8 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
     @Test
     public void createOneGoalInstanceDisablingConditions() throws Exception {
         Transaction.begin();
-        BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstance(
-                BWINSTANCE_ID);
+        BWInstance bwInstance = BlendedWorkflow.getInstance()
+                .getBWInstance(BWINSTANCE_ID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
         AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_1);
@@ -271,11 +277,13 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 
         Transaction.begin();
         HashMap<String, String> entitiesOID = new HashMap<String, String>();
-        String episode = dataModelInstance.getEntity("Episode").getExternalId();
+        String episode = dataModelInstance.getEntity("Episode").get()
+                .getExternalId();
         List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
-                dataModelInstance.getEntity("Episode").getEntityInstancesSet());
+                dataModelInstance.getEntity("Episode").get()
+                        .getEntityInstancesSet());
         String episodeOne = entityInstances.get(0).getExternalId();
-        String patientData = dataModelInstance.getEntity("Patient Data")
+        String patientData = dataModelInstance.getEntity("Patient Data").get()
                 .getExternalId();
         String patientDataNew = null;
         entitiesOID.put(episode, episodeOne);
@@ -323,8 +331,8 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
     public void createOneGoalInstanceSubGoalsWithDifferentContext()
             throws Exception {
         Transaction.begin();
-        BWInstance bwInstance = BlendedWorkflow.getInstance().getBWInstance(
-                BWINSTANCE_ID);
+        BWInstance bwInstance = BlendedWorkflow.getInstance()
+                .getBWInstance(BWINSTANCE_ID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
         AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_2);
@@ -334,15 +342,17 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
 
         Transaction.begin();
         HashMap<String, String> entitiesOID = new HashMap<String, String>();
-        String episode = dataModelInstance.getEntity("Episode").getExternalId();
+        String episode = dataModelInstance.getEntity("Episode").get()
+                .getExternalId();
         List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
-                dataModelInstance.getEntity("Episode").getEntityInstancesSet());
+                dataModelInstance.getEntity("Episode").get()
+                        .getEntityInstancesSet());
         String episodeOne = entityInstances.get(0).getExternalId();
-        String medicalPrescription = dataModelInstance.getEntity(
-                "Medical Prescription").getExternalId();
+        String medicalPrescription = dataModelInstance
+                .getEntity("Medical Prescription").get().getExternalId();
         String medicalPrescriptionNew = null;
-        String prescriptionMedication = dataModelInstance.getEntity(
-                "Prescription Medication").getExternalId();
+        String prescriptionMedication = dataModelInstance
+                .getEntity("Prescription Medication").get().getExternalId();
         String prescriptionMedicationNew = null;
         entitiesOID.put(episode, episodeOne);
         entitiesOID.put(medicalPrescription, medicalPrescriptionNew);
