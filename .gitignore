@@ -12,8 +12,8 @@ engine/test-db
 designer/.classpath
 designer/.project
 designer/.settings
-/target/
-/bin/
-/src-gen/
-/xtend-gen/
+target/
+bin/
+src-gen/
+xtend-gen/
 
