@@ -37,3 +37,4 @@ Export-Package: org.blended.condition,
  org.blended.condition.services,
  org.blended.condition.utils,
  org.blended.condition.validation
+Bundle-ClassPath: ., ../../repo/engine.jar

@@ -31,3 +31,4 @@ Export-Package: org.blended.activity,
  org.blended.activity.scoping,
  org.blended.activity.generator,
  org.blended.activity.formatting
+Bundle-ClassPath: ., ../../repo/engine.jar

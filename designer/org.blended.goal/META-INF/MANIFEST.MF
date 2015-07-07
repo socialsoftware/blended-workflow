@@ -31,3 +31,4 @@ Export-Package: org.blended.goal,
  org.blended.goal.scoping,
  org.blended.goal.generator,
  org.blended.goal.formatting
+Bundle-ClassPath: ., ../../repo/engine.jar

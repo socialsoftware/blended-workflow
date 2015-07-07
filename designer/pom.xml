@@ -32,7 +32,7 @@
 		<module>org.blended.data.sdk</module>
 		<module>org.blended.data.updatesite</module>
 		
-		<!--  <module>org.blended.condition</module>
+		<module>org.blended.condition</module>
 		<module>org.blended.condition.ui</module>
 		<module>org.blended.condition.sdk</module>
 	 	<module>org.blended.condition.updatesite</module>
@@ -45,7 +45,7 @@
 		<module>org.blended.activity</module>
 		<module>org.blended.activity.ui</module>
 		<module>org.blended.activity.sdk</module>
-		<module>org.blended.activity.updatesite</module>-->
+		<module>org.blended.activity.updatesite</module>
 	</modules>
 
 	<repositories>

@@ -3,9 +3,11 @@
  */
 package org.blended.condition;
 
+import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
+
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 public class ConditionRuntimeModule extends org.blended.condition.AbstractConditionRuntimeModule {
-
+	 DesignInterface instance;
 }
