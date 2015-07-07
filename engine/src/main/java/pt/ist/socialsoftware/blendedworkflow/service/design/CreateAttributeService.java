@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
+import java.util.regex.Pattern;
+
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
@@ -14,11 +16,11 @@ public class CreateAttributeService extends BWService {
     private final AttributeType type;
 
     public CreateAttributeService(String specName, String entityName,
-            String attributeName, AttributeType type) {
+            String attributeName, String attributeType) {
         this.specName = specName;
         this.entityName = entityName;
         this.attributeName = attributeName;
-        this.type = type;
+        this.type = parseAttributeType(attributeType);
     }
 
     @Override
@@ -33,6 +35,36 @@ public class CreateAttributeService extends BWService {
                         BlendedWorkflowError.INVALID_ENTITY_NAME));
 
         ent.createAttribute(attributeName, type);
+    }
+
+    final static String STRING = "String";
+    final static String NUMBER = "Number";
+    final static String BOOLEAN = "Boolean";
+    final static String ATTRIBUTE_TYPE = "(" + STRING + "|" + NUMBER + "|"
+            + BOOLEAN + ")";
+
+    private AttributeType parseAttributeType(String type) {
+        if (!Pattern.matches(ATTRIBUTE_TYPE, type))
+            throw new BWException(BlendedWorkflowError.INVALID_CARDINALITY);
+
+        AttributeType res;
+
+        switch (type) {
+        case STRING:
+            res = AttributeType.STRING;
+            break;
+        case NUMBER:
+            res = AttributeType.NUMBER;
+            break;
+        case BOOLEAN:
+            res = AttributeType.BOOLEAN;
+            break;
+        default:
+            res = null;
+            assert(false);
+        }
+
+        return res;
     }
 
 }

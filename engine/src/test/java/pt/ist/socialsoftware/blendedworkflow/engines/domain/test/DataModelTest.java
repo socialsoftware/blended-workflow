@@ -10,8 +10,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class DataModelTest extends AbstractDomainTest {
@@ -36,20 +36,20 @@ public class DataModelTest extends AbstractDomainTest {
         Entity E = new Entity(dataModelInstance, "E");
         Entity F = new Entity(dataModelInstance, "F");
         Entity X = new Entity(dataModelInstance, "X");
-        Relation AB = new Relation(dataModelInstance, "AB", A, B,
-                Cardinality.ONE, Cardinality.MANY, false, true);
-        Relation AC = new Relation(dataModelInstance, "AC", A, C,
-                Cardinality.ONE, Cardinality.ONE, true, false);
-        Relation AD = new Relation(dataModelInstance, "AD", A, D,
-                Cardinality.ONE, Cardinality.ONE, true, false);
-        Relation DE = new Relation(dataModelInstance, "DE", D, E,
-                Cardinality.ONE, Cardinality.ONE, true, false);
-        Relation DF = new Relation(dataModelInstance, "DF", D, F,
-                Cardinality.ONE, Cardinality.ONE, true, false);
-        Relation EF = new Relation(dataModelInstance, "EF", E, F,
-                Cardinality.ONE, Cardinality.ONE, true, false);
-        Relation EC = new Relation(dataModelInstance, "EC", E, C,
-                Cardinality.ONE, Cardinality.ONE, true, false);
+        Relation AB = new Relation(dataModelInstance, "AB", A, "",
+                Cardinality.ONE, false, B, "", Cardinality.MANY, true);
+        Relation AC = new Relation(dataModelInstance, "AC", A, "",
+                Cardinality.ONE, true, C, "", Cardinality.ONE, false);
+        Relation AD = new Relation(dataModelInstance, "AD", A, "",
+                Cardinality.ONE, true, D, "", Cardinality.ONE, false);
+        Relation DE = new Relation(dataModelInstance, "DE", D, "",
+                Cardinality.ONE, true, E, "", Cardinality.ONE, false);
+        Relation DF = new Relation(dataModelInstance, "DF", D, "",
+                Cardinality.ONE, true, F, "", Cardinality.ONE, false);
+        Relation EF = new Relation(dataModelInstance, "EF", E, "",
+                Cardinality.ONE, true, F, "", Cardinality.ONE, false);
+        Relation EC = new Relation(dataModelInstance, "EC", E, "",
+                Cardinality.ONE, true, C, "", Cardinality.ONE, false);
 
         // Instances
         EntityInstance A1 = new EntityInstance(A);

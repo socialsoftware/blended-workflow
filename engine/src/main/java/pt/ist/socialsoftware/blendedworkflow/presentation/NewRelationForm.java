@@ -181,8 +181,8 @@ public class NewRelationForm extends VerticalLayout {
         Cardinality cardinalityOne = parseThisCardinality(cardinality);
         Cardinality cardinalityTwo = parseOtherCardinality(cardinality);
 
-        new Relation(dataModel, name, entityOne, entityTwo, cardinalityOne,
-                cardinalityTwo, isOneKeyEntity, isTwoKeyEntity);
+        new Relation(dataModel, name, entityOne, "", cardinalityOne,
+                isOneKeyEntity, entityTwo, "", cardinalityTwo, isTwoKeyEntity);
 
     }
 

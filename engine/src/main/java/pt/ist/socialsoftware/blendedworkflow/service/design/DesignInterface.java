@@ -1,7 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
-
 public class DesignInterface {
     public static DesignInterface instance = null;
 
@@ -25,9 +23,16 @@ public class DesignInterface {
     }
 
     public void createAttribute(String specName, String entityName,
-            String attributeName, AttributeType type) {
-        new CreateAttributeService(specName, entityName, attributeName, type)
-                .execute();
+            String attributeName, String attributeType) {
+        new CreateAttributeService(specName, entityName, attributeName,
+                attributeType).execute();
+    }
+
+    public void createRelation(String specName, String entityOneName,
+            String roleNameOne, String cardinalityOne, String entityTwoName,
+            String roleNameTwo, String cardinalityTwo) {
+        new CreateRelationService(specName, entityOneName, roleNameOne,
+                cardinalityOne, entityTwoName, roleNameTwo, cardinalityTwo);
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
@@ -39,6 +40,16 @@ public class Entity extends Entity_Base {
 
     public Attribute createAttribute(String name, AttributeType type) {
         return new Attribute(this.getDataModel(), name, this, type, false,
+                false);
+    }
+
+    public Relation createRelation(String roleNameOne,
+            Cardinality cardinalityOne, Entity entityTwo, String roleNameTwo,
+            Cardinality cardinalityTwo) {
+        String name = getName() + "." + roleNameOne + "-" + roleNameTwo + "."
+                + entityTwo.getName();
+        return new Relation(getDataModel(), name, this, roleNameOne,
+                cardinalityOne, false, entityTwo, roleNameTwo, cardinalityTwo,
                 false);
     }
 
@@ -298,6 +309,8 @@ public class Entity extends Entity_Base {
     public void delete() {
         setDataModel(null);
         getAttributesSet().stream().forEach(att -> att.delete());
+        getRelationsOneSet().stream().forEach(rel -> rel.delete());
+        getRelationsTwoSet().stream().forEach(rel -> rel.delete());
 
         deleteDomainObject();
     }

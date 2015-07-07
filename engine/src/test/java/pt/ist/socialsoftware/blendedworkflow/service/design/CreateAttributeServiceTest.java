@@ -21,6 +21,9 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     private static final String NON_EXIST = "No Name";
     private static final String DUP_NAME = "Exists Name";
     private static final String EMPTY_NAME = "";
+    private static final String BOOLEAN = "Boolean";
+    private static final String STRING = "String";
+    private static final String NUMBER = "Number";
 
     @Override
     public void populate4Test() throws BWException {
@@ -34,7 +37,7 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void success() throws BWException {
         CreateAttributeService service = new CreateAttributeService(SPEC_NAME,
-                ENTITY_NAME, ATTRIBUTE_NAME, AttributeType.NUMBER);
+                ENTITY_NAME, ATTRIBUTE_NAME, NUMBER);
         service.execute();
 
         Specification spec = getBlendedWorkflow().getSpecification(SPEC_NAME)
@@ -49,7 +52,7 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void nonExistentSpecification() throws BWException {
         CreateAttributeService service = new CreateAttributeService(NON_EXIST,
-                ENTITY_NAME, ATTRIBUTE_NAME, AttributeType.BOOLEAN);
+                ENTITY_NAME, ATTRIBUTE_NAME, BOOLEAN);
 
         try {
             service.execute();
@@ -63,7 +66,7 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void emptySpecName() throws BWException {
         CreateAttributeService service = new CreateAttributeService(EMPTY_NAME,
-                ENTITY_NAME, ATTRIBUTE_NAME, AttributeType.STRING);
+                ENTITY_NAME, ATTRIBUTE_NAME, STRING);
 
         try {
             service.execute();
@@ -77,7 +80,7 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void nullSpecName() throws BWException {
         CreateAttributeService service = new CreateAttributeService(null,
-                ENTITY_NAME, ATTRIBUTE_NAME, AttributeType.BOOLEAN);
+                ENTITY_NAME, ATTRIBUTE_NAME, BOOLEAN);
 
         try {
             service.execute();
@@ -91,7 +94,7 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void nonExistentEntity() throws BWException {
         CreateAttributeService service = new CreateAttributeService(SPEC_NAME,
-                NON_EXIST, ATTRIBUTE_NAME, AttributeType.BOOLEAN);
+                NON_EXIST, ATTRIBUTE_NAME, BOOLEAN);
 
         try {
             service.execute();
@@ -105,7 +108,7 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void emptyEntityName() throws BWException {
         CreateAttributeService service = new CreateAttributeService(SPEC_NAME,
-                EMPTY_NAME, ATTRIBUTE_NAME, AttributeType.STRING);
+                EMPTY_NAME, ATTRIBUTE_NAME, STRING);
 
         try {
             service.execute();
@@ -119,7 +122,7 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void nullEntityName() throws BWException {
         CreateAttributeService service = new CreateAttributeService(SPEC_NAME,
-                null, ATTRIBUTE_NAME, AttributeType.BOOLEAN);
+                null, ATTRIBUTE_NAME, BOOLEAN);
 
         try {
             service.execute();

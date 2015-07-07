@@ -5,17 +5,17 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.CompareAttributeToValueCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.ExistsOneCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
@@ -93,9 +93,9 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
                 entityInstance2_2);
 
         // Relation
-        relation = new Relation(dataModelInstance, RELATION_1_NAME, entity1,
-                entity2, ENTITY_1_CARDINALITY, ENTITY_2_CARDINALITY,
-                ENTITY_1_KEY, ENTITY_2_KEY);
+        relation = new Relation(dataModelInstance, RELATION_1_NAME, entity1, "",
+                ENTITY_1_CARDINALITY, ENTITY_1_KEY, entity2, "",
+                ENTITY_2_CARDINALITY, ENTITY_2_KEY);
 
         new RelationInstance(relation, entityInstance1_1, entityInstance2_1,
                 entityInstance1_1.getNewRelationInstanceID());

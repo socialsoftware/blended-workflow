@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 
@@ -35,14 +34,19 @@ public class LocalSystemTest {
     public void walktrough() {
         designInterface.createSpecification("First Specification");
         designInterface.createSpecification("Second Specification");
+
         designInterface.createEntity("First Specification", "First Entity");
         designInterface.createEntity("First Specification", "Second Entity");
+
         designInterface.createAttribute("First Specification", "First Entity",
-                "att1", AttributeType.BOOLEAN);
+                "att1", "Boolean");
         designInterface.createAttribute("First Specification", "First Entity",
-                "att2", AttributeType.STRING);
+                "att2", "String");
         designInterface.createAttribute("First Specification", "First Entity",
-                "att3", AttributeType.NUMBER);
+                "att3", "Number");
+
+        designInterface.createRelation("First Specification", "First Entity",
+                "first", "1", "Second Entity", "second", "*");
     }
 
 }

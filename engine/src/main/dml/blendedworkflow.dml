@@ -166,6 +166,8 @@ class AttributeInstance {
 
 class Relation {
 	String name;
+	String roleNameOne;
+	String roleNameTwo;
 	Cardinality cardinalityOne;
 	Cardinality cardinalityTwo;
 	boolean isOneKeyEntity;

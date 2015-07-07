@@ -93,8 +93,8 @@ public class DataModelFactory {
         Boolean isTwoKeyEntity = parseIsKeyEntity(
                 entityTwoXML.getChildText("isEntityKey", dmNamespace));
 
-        new Relation(dataModel, relationName, entityOne, entityTwo,
-                cardinalityOne, cardinalityTwo, isOneKeyEntity, isTwoKeyEntity);
+        new Relation(dataModel, relationName, entityOne, "", cardinalityOne,
+                isOneKeyEntity, entityTwo, "", cardinalityTwo, isTwoKeyEntity);
     }
 
     private Cardinality parseCardinality(String cardinality) {
