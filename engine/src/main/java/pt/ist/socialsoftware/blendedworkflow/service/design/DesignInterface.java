@@ -1,10 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
-//import org.blended.data.data.DataModel;
-//import org.eclipse.xtext.EcoreUtil2;
+import org.blended.data.data.DataModel;
 
-//import static org.eclipse.xtext.EcoreUtil2.*;
-import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class DesignInterface {
     public static DesignInterface instance = null;
@@ -17,16 +15,21 @@ public class DesignInterface {
     }
 
     private DesignInterface() {
-        //Bootstrap.init();
+        // Bootstrap.init();
+    }
+
+    public void loadDataModel(DataModel dataModel) {
+        // String fileName = EcoreUtil2.getNormalizedURI(dataModel.eResource())
+        // .lastSegment();
+
+        dataModel.eResource();
+
+        throw new BWException(null);
     }
 
     public void createSpecification(String name) {
         new CreateSpecificationService(name).execute();
     }
-    
-   /* public void loadDataModel(DataModel dataModel) {
-    	String fileName = EcoreUtil2.getNormalizedURI(dataModel.eResource()).lastSegment();
-    }*/
 
     public void createEntity(String specName, String entityName) {
         new CreateEntityService(specName, entityName).execute();
