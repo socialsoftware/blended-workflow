@@ -5,7 +5,7 @@ generate data "http://www.blended.org/data/Data"
 DataModel:
 	specification = Specification
 	entities += Entity*
-	associatios += Association*
+	associations += Association*
 	constraint += Constraint*
 ;
 

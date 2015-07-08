@@ -9,6 +9,7 @@ import org.blended.data.data.Specification
 import org.eclipse.xtext.validation.Check
 import pt.ist.socialsoftware.blendedworkflow.service.BWException
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface
+import org.blended.data.data.DataModel
 
 /**
  * This class contains custom validation rules. 
@@ -27,13 +28,15 @@ class DataValidator extends AbstractDataValidator {
   	public static val INVALID_NAME = 'invalidName'
   	
   	@Check
-  	def String checkTest(Entity entity) {
+  	def String checkModel(DataModel model) {
+  		var instance = DesignInterface.getInstance
+  		//instance.loadDataModel(model)
   		//if (entity.uid == null) {
   		//	entity.uid = entity.hashCode().toString
   		//	System.out.println("UUID for entity " + entity.name + ": " + entity.uid)
   		//}
   		//else System.out.println("UUID for entity " + entity.name + "is already assigned with value: " + entity.uid)
-  		System.out.println("UUID for entity " + entity.name + ": " + entity.hashCode)
+  		//System.out.println("UUID for entity " + entity.name + ": " + entity.hashCode)
   		return "helloo"
   	}
 

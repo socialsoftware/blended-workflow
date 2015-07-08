@@ -1,5 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
+//import org.blended.data.data.DataModel;
+//import org.eclipse.xtext.EcoreUtil2;
+
+//import static org.eclipse.xtext.EcoreUtil2.*;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
 
 public class DesignInterface {
@@ -19,6 +23,10 @@ public class DesignInterface {
     public void createSpecification(String name) {
         new CreateSpecificationService(name).execute();
     }
+    
+   /* public void loadDataModel(DataModel dataModel) {
+    	String fileName = EcoreUtil2.getNormalizedURI(dataModel.eResource()).lastSegment();
+    }*/
 
     public void createEntity(String specName, String entityName) {
         new CreateEntityService(specName, entityName).execute();

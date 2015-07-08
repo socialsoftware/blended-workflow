@@ -356,6 +356,8 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.4</version>
 		</dependency>
+		
+		
 	</dependencies>
 	<repositories>
 		<repository>
