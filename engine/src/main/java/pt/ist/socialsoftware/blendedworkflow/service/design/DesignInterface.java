@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
+import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
+
 public class DesignInterface {
     public static DesignInterface instance = null;
 
@@ -11,7 +13,7 @@ public class DesignInterface {
     }
 
     private DesignInterface() {
-        // Bootstrap.init();
+        //Bootstrap.init();
     }
 
     public void createSpecification(String name) {

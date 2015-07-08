@@ -111,7 +111,34 @@
 									<version>${code.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
-									<outputDirectory>../repo</outputDirectory>
+									<outputDirectory>../designer/org.blended.data/lib</outputDirectory>
+									<destFileName>engine.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>pt.ist.socialsoftware</groupId>
+									<artifactId>engine</artifactId>
+									<version>${code.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>../designer/org.blended.condition/lib</outputDirectory>
+									<destFileName>engine.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>pt.ist.socialsoftware</groupId>
+									<artifactId>engine</artifactId>
+									<version>${code.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>../designer/org.blended.goal/lib</outputDirectory>
+									<destFileName>engine.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>pt.ist.socialsoftware</groupId>
+									<artifactId>engine</artifactId>
+									<version>${code.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>../designer/org.blended.activity/lib</outputDirectory>
 									<destFileName>engine.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
@@ -119,7 +146,21 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<!--<configuration>
+					<finalName>uber-${artifactId}-${version}</finalName>
+				</configuration>-->
+			</plugin>
 		</plugins>
 	</build>
 

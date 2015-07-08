@@ -3,9 +3,14 @@ grammar org.blended.data.Data with org.eclipse.xtext.common.Terminals
 generate data "http://www.blended.org/data/Data"
 
 DataModel:
+	specification = Specification
 	entities += Entity*
 	associatios += Association*
 	constraint += Constraint*
+;
+
+Specification:
+	'Specification' ':' name = STRING
 ;
 
 Entity:

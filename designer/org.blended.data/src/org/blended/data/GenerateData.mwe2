@@ -24,12 +24,16 @@ Workflow {
     		from = "platform:/resource/org.eclipse.xtext.common.types/"
     		to = "classpath:/"
     	}
+   
     	
     	//scanClassPath = true
     	platformUri = "${runtimeProject}/.."
     	// The following two lines can be removed, if Xbase is not used.
     	registerGeneratedEPackage = "org.eclipse.xtext.xbase.XbasePackage"
     	registerGenModelFile = "platform:/resource/org.eclipse.xtext.xbase/model/Xbase.genmodel"
+
+       // registerGeneratedEPackage = "org.blended.blended.BlendedPackage"
+       // registerGenModelFile = "platform:/resource/org.blended/model/generated/Blended.genmodel"
     }
     
     component = DirectoryCleaner {
@@ -44,14 +48,14 @@ Workflow {
     	directory = "${runtimeProject}.ui/src-gen"
     }
     
-//    component = DirectoryCleaner {
-//    	directory = "${runtimeProject}.tests/src-gen"
-//    }
+    //component = DirectoryCleaner {
+    //	directory = "${runtimeProject}.tests/src-gen"
+    //}
     
-    component = Generator {
+    component =  Generator {
     	pathRtProject = runtimeProject
     	pathUiProject = "${runtimeProject}.ui"
-//    	pathTestProject = "${runtimeProject}.tests"
+    	//pathTestProject = "${runtimeProject}.tests"
     	projectNameRt = projectName
     	projectNameUi = "${projectName}.ui"
     	encoding = encoding
@@ -66,7 +70,6 @@ Workflow {
     		fragment = ecore.EMFGeneratorFragment auto-inject {
     			javaModelDirectory = "/${projectName}/src-gen"    			
     		}
-    
     		// the old serialization component
     		// fragment = parseTreeConstructor.ParseTreeConstructorFragment auto-inject {}    
     

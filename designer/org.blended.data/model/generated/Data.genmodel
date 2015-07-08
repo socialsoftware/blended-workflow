@@ -9,9 +9,13 @@
   <genPackages prefix="Data" basePackage="org.blended.data" disposableProviderFactory="true"
       fileExtensions="dm" ecorePackage="Data.ecore#/">
     <genClasses ecoreClass="Data.ecore#//DataModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//DataModel/specification"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//DataModel/entities"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//DataModel/associatios"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//DataModel/constraint"/>
+    </genClasses>
+    <genClasses ecoreClass="Data.ecore#//Specification">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Specification/name"/>
     </genClasses>
     <genClasses ecoreClass="Data.ecore#//Entity">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Entity/name"/>

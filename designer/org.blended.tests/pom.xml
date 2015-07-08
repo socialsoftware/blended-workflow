@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>org.blended.tests</artifactId>
+	<packaging>jar</packaging>
+	<name>The Blended Workflow - DSL Tests</name>
+
+	<parent>
+		<groupId>pt.ist.socialsoftware</groupId>
+		<artifactId>designer</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+	<dependency>
+		<groupId>org.eclipse.emf</groupId>
+		<artifactId>org.eclipse.emf.ecore</artifactId>
+		<version>2.11.0-v20150123-0347</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.eclipse.emf</groupId>
+		<artifactId>org.eclipse.emf.ecore</artifactId>
+		<version>2.11.0-v20150123-0347</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.eclipse.emf</groupId>
+		<artifactId>common</artifactId>
+		<version>2.3.0-v200706262000</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.eclipse.emf</groupId>
+		<artifactId>org.eclipse.emf.common</artifactId>
+		<version>2.11.0-v20150123-0347</version>
+	</dependency>
+
+    <dependency>
+      <groupId>pt.ist.socialsoftware</groupId>
+      <artifactId>org.blended.data</artifactId>
+      <version>${code.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

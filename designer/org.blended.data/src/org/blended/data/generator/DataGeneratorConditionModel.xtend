@@ -157,55 +157,55 @@ class DataGeneratorConditionModel {
 	}
 	
 	def entityAchieveCondition(Entity e)'''
-	DEF( «e.name »)	
+	DEF(Â«e.nameÂ») with ui: Â«e.toStringÂ» 	
 	'''
 	
 	def entityAchieveConditionExists(Entity e)'''
-	EXISTS(DEF( «e.name »))
+	EXISTS(DEF( ï¿½e.name ï¿½))
 	'''
 	
 	def entityInvariantCondition1(Association a)'''
-	MUL( «a.entity1.name ». «a.name2 »,  «a.cardinality2 »)
+	MUL( ï¿½a.entity1.name ï¿½. ï¿½a.name2 ï¿½,  ï¿½a.cardinality2 ï¿½)
 	'''	
 	
 	def entityInvariantCondition2(Association a)'''
-	MUL( «a.entity2.name ». «a.name1 »,  «a.cardinality1 »)
+	MUL( ï¿½a.entity2.name ï¿½. ï¿½a.name1 ï¿½,  ï¿½a.cardinality1 ï¿½)
 	'''	
 	
 	def entityDependenceCondition(Entity e)'''
-	DEP(DEF( «e.name »), DEF( «e.dependsOn.name »))	
+	DEP(DEF( ï¿½e.name ï¿½), DEF( ï¿½e.dependsOn.name ï¿½))	
 	'''
 
 	def attributeAchieveCondition(Entity e, Attribute a)'''
-	 «IF a.mandatory »
-	MAN(DEF( «e.name ». «a.name »))
-	 «ELSE »
-	DEF( «e.name ». «a.name »)
-	 «ENDIF »
+	 ï¿½IF a.mandatory ï¿½
+	MAN(DEF( ï¿½e.name ï¿½. ï¿½a.name ï¿½))
+	 ï¿½ELSE ï¿½
+	DEF( ï¿½e.name ï¿½. ï¿½a.name ï¿½)
+	 ï¿½ENDIF ï¿½
 	'''
 	
 	def attributeAchieveCondition(String s, Boolean mandatory)'''
-	 «IF mandatory »
-	MAN(DEF( «s »))
-	 «ELSE »
-	DEF( «s »)
-	 «ENDIF »
+	 ï¿½IF mandatory ï¿½
+	MAN(DEF( ï¿½s ï¿½))
+	 ï¿½ELSE ï¿½
+	DEF( ï¿½s ï¿½)
+	 ï¿½ENDIF ï¿½
 	'''
 	
 	def attributeAchieveConditionGrouped(String s, Boolean mandatory)'''
-	 «IF mandatory »
-	MAN(DEF( «s »))
-	 «ELSE »
-	DEF( «s »)
-	 «ENDIF »
+	 ï¿½IF mandatory ï¿½
+	MAN(DEF( ï¿½s ï¿½))
+	 ï¿½ELSE ï¿½
+	DEF( ï¿½s ï¿½)
+	 ï¿½ENDIF ï¿½
 	'''
 	
 	def attributeInvariantCondition(Constraint c)'''
-	RUL( «c.constraint.completeExpression »)
+	RUL( ï¿½c.constraint.completeExpression ï¿½)
 	'''
 	
 	def attributeDependenceCondition(String a, String b)'''
-	DEP(DEF( «a »), DEF( «b »))
+	DEP(DEF( ï¿½a ï¿½), DEF( ï¿½b ï¿½))
 	'''
 
 	static def getCompleteExpression(Expression e) {
