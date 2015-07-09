@@ -6,6 +6,9 @@ package org.blended.data.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
+import org.blended.data.utils.ConsoleManagement
+import org.blended.data.utils.DataListener
+import static extension org.eclipse.xtext.EcoreUtil2.*
 /*import org.blended.condition.ConditionStandaloneSetup
 import org.eclipse.xtext.util.StringInputStream
 import org.blended.condition.condition.ConditionModel
@@ -13,7 +16,7 @@ import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.emf.common.util.URI
 import org.eclipse.xtext.resource.SaveOptions
-import static extension org.eclipse.xtext.EcoreUtil2.**/
+*/
 
 /**
  * Generates code from your model files on save.
@@ -22,10 +25,24 @@ import static extension org.eclipse.xtext.EcoreUtil2.**/
  */
 class DataGenerator implements IGenerator {
 	
-	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		var conditionModel = new DataGeneratorConditionModel(resource, fsa)
-		conditionModel.doGenerate	
+	override void doGenerate(Resource resource, IFileSystemAccess fsa) {	
+		var consoleName = ConsoleManagement.DATA_CONSOLE + " (" + resource.normalizedURI.lastSegment + ")"
+
+		var manager = DataListener.getInstance(consoleName, resource)	
 		
+		if (!manager.isRunning) {
+			var thread = new Thread(manager)					
+			thread.start()	
+		}	
+		
+		//COMMENT TO BE REMOVED TO GENERATE CONDITION MODEL
+		//var conditionModel = new DataGeneratorConditionModel(resource, fsa)
+		//conditionModel.doGenerate	
+		
+		ConsoleManagement.write(consoleName, "DATA MODEL " + resource.normalizedURI.lastSegment + " UPDATED. TYPE 0 TO SEE THE OPTIONS")	
+
+
+
 	/* 	new org.eclipse.emf.mwe.utils.StandaloneSetup()
 		var file = resource.normalizedURI.toString.replace(".dm", ".cm")
 		

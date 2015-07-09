@@ -1,8 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
+import org.blended.data.data.Association;
 import org.blended.data.data.DataModel;
-
-import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.xtext.EcoreUtil2;
 
 public class DesignInterface {
     public static DesignInterface instance = null;
@@ -19,12 +20,14 @@ public class DesignInterface {
     }
 
     public void loadDataModel(DataModel dataModel) {
-        // String fileName = EcoreUtil2.getNormalizedURI(dataModel.eResource())
-        // .lastSegment();
+        String fileName = EcoreUtil2.getNormalizedURI(dataModel.eResource())
+        		.lastSegment();
+        
+        EList<Association> associations = dataModel.getAssociations();
 
         dataModel.eResource();
 
-        throw new BWException(null);
+        //throw new BWException(null);
     }
 
     public void createSpecification(String name) {
