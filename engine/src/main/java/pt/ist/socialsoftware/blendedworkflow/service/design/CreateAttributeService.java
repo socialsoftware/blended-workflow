@@ -43,7 +43,7 @@ public class CreateAttributeService extends BWService {
     final static String ATTRIBUTE_TYPE = "(" + STRING + "|" + NUMBER + "|"
             + BOOLEAN + ")";
 
-    private AttributeType parseAttributeType(String type) {
+    public static AttributeType parseAttributeType(String type) {
         if (!Pattern.matches(ATTRIBUTE_TYPE, type))
             throw new BWException(BlendedWorkflowError.INVALID_CARDINALITY);
 

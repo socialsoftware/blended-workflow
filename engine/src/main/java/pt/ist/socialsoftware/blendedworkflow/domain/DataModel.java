@@ -61,8 +61,8 @@ public class DataModel extends DataModel_Base {
         deleteDomainObject();
     }
 
-    public void createEntity(String entityName) {
-        new Entity(this, entityName);
+    public Entity createEntity(String entityName) {
+        return new Entity(this, entityName);
     }
 
 }
