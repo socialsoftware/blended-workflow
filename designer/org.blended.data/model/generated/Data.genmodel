@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.data/src-gen" editDirectory="//Users/ars/Repositories/blendedworkflow/designer/org.blended.data.edit/src"
-    editorDirectory="//Users/ars/Repositories/blendedworkflow/designer/org.blended.data.editor/src"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.data/src-gen" editDirectory="/C:\Users\Vicente\Documents\GitHub\bw\designer\org.blended.data.edit/src"
+    editorDirectory="/C:\Users\Vicente\Documents\GitHub\bw\designer\org.blended.data.editor/src"
     modelPluginID="org.blended.data" forceOverwrite="true" modelName="Data" updateClasspath="false"
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" complianceLevel="6.0"
-    copyrightFields="false" editPluginID="org.blended.data.edit" editorPluginID="org.blended.data.edit"
+    copyrightFields="false" editPluginID="org.blended.data.edit" editorPluginID="org.blended.data.editor"
     runtimeVersion="2.10">
   <genPackages prefix="Data" basePackage="org.blended.data" disposableProviderFactory="true"
       fileExtensions="dm" ecorePackage="Data.ecore#/">
