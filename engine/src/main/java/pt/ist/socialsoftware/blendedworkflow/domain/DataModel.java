@@ -37,12 +37,6 @@ public class DataModel extends DataModel_Base {
     public Optional<Entity> getEntity(String name) {
         return getEntitiesSet().stream()
                 .filter(ent -> ent.getName().equals(name)).findFirst();
-        // for (Entity entity : getEntitiesSet()) {
-        // if (entity.getName().equals(name)) {
-        // return entity;
-        // }
-        // }
-        // return null;
     }
 
     public Relation getRelation(String name) {
