@@ -54,5 +54,7 @@ class DataFormatter extends AbstractDeclarativeFormatter {
 		//c.setIndentationIncrement().before(f.associationRule)
 		//c.setIndentationDecrement().after(f.associationRule)
 		c.setLinewrap().before(f.associationRule)
+		
+		c.setLinewrap(2).after(f.specificationRule)
 	}
 }

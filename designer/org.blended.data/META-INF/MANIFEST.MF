@@ -33,4 +33,5 @@ Export-Package: org.blended.data,
  org.blended.data.formatting
 Bundle-ClassPath: .,
  lib/yawl-lib-2.3.jar,
- lib/engine.jar
+ lib/engine.jar,
+ lib/jcommander-1.48.jar

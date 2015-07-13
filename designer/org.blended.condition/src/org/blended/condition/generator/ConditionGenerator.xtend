@@ -3,13 +3,9 @@
  */
 package org.blended.condition.generator
 
-import org.blended.condition.utils.ConditionListener
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-
-import static extension org.eclipse.xtext.EcoreUtil2.*
-import org.blended.condition.utils.ConsoleManagement
 
 /**
  * Generates code from your model files on save.
@@ -19,20 +15,10 @@ import org.blended.condition.utils.ConsoleManagement
 class ConditionGenerator implements IGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		var consoleName = ConsoleManagement.CONDITION_CONSOLE + " (" + resource.normalizedURI.lastSegment + ")"
-		
 		var goalModel = new ConditionGeneratorGoalModel(resource, fsa)
 		goalModel.doGenerate
 		
 		var activityModel = new ConditionGeneratorActivityModel(resource, fsa)
 		activityModel.doGenerate
-
-		var manager = new ConditionListener(consoleName, resource)	
-		if (!manager.isRunning) {
-			var thread = new Thread(manager)					
-			thread.start()	
-		}	
-		
-		ConsoleManagement.write(consoleName, "CONDITION MODEL " + resource.normalizedURI.lastSegment + " UPDATED. TYPE 0 TO SEE THE OPTIONS")		
 	}
 }

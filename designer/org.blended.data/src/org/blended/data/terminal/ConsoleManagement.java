@@ -1,4 +1,4 @@
-package org.blended.data.utils;
+package org.blended.data.terminal;
 
 import java.io.IOException;
 

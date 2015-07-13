@@ -4,11 +4,11 @@
 package org.blended.data.validation
 
 import org.blended.data.data.DataModel
-import org.blended.data.data.Specification
-import org.eclipse.xtext.validation.Check
-import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface
-import pt.ist.socialsoftware.blendedworkflow.service.BWException
 import org.blended.data.data.DataPackage
+import org.eclipse.xtext.validation.Check
+import pt.ist.socialsoftware.blendedworkflow.service.BWException
+import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface
+import static extension org.eclipse.xtext.EcoreUtil2.*
 
 /**
  * This class contains custom validation rules. 
@@ -20,15 +20,13 @@ class DataValidator extends AbstractDataValidator {
  	
   		@Check
 	  	def checkModel(DataModel model) {
-	  		warning('Going...', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
 	  	  	var instance = DesignInterface.getInstance
-	  		//try {
-	  			instance.loadDataModel(model)
-	  				//instance.createSpecification("Hi")
-  				warning('Going12...', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
-	  //		} catch (BWException bwe) {
-	  //			error('Specification with the same name already exists', DataPackage.Literals.SPECIFICATION__NAME, INVALID_NAME)
-	  //		}
+	  		try {
+				var fileName = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+//	  			instance.loadDataModel(model, fileName)
+	  		} catch (BWException bwe) {
+	  			error('Specification with the same name already exists', DataPackage.Literals.SPECIFICATION__NAME, INVALID_NAME)
+	  		}
 
 	  		//if (entity.uid == null) {
 	  		//	entity.uid = entity.hashCode().toString
@@ -38,19 +36,4 @@ class DataValidator extends AbstractDataValidator {
 	  		//System.out.println("UUID for entity " + entity.name + ": " + entity.hashCode) 		
   	}
 
-	@Check
-	def check(Specification specification) {
-		warning('Going3...', DataPackage.Literals.SPECIFICATION__NAME, INVALID_NAME)
-/*		var instance = DesignInterface.getInstance
-		
-		try {
-			instance.createSpecification(specification.name)
-			
-		}
-		catch (BWException ex) {
-			if (ex.error.equals(BWException.BlendedWorkflowError.INVALID_SPECIFICATION_NAME)) {
-				error('Specification with the same name already exists', DataPackage.Literals.SPECIFICATION__NAME, INVALID_NAME)
-			}
-		}*/
-	}
 }

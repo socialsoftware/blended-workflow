@@ -3,7 +3,12 @@
  */
 package org.blended.condition.validation
 
-//import org.eclipse.xtext.validation.Check
+import org.eclipse.xtext.validation.Check
+import pt.ist.socialsoftware.blendedworkflow.service.BWException
+import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface
+import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.blended.condition.condition.ConditionModel
+import org.blended.condition.condition.ConditionPackage
 
 /**
  * This class contains custom validation rules. 
@@ -12,14 +17,21 @@ package org.blended.condition.validation
  */
 class ConditionValidator extends AbstractConditionValidator {
 
-//  public static val INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	def checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.name.charAt(0))) {
-//			warning('Name should start with a capital', 
-//					MyDslPackage.Literals.GREETING__NAME,
-//					INVALID_NAME)
-//		}
-//	}
+  		@Check
+	  	def checkModel(ConditionModel model) {
+	  	  	var instance = DesignInterface.getInstance
+	  		try {
+				var fileName = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+//	  			instance.loadConditionModel(model, fileName)
+	  		} catch (BWException bwe) {
+	  			//error('Specification with the same name already exists', ConditionPackage.Literals.SPECIFICATION__NAME, INVALID_NAME)
+	  		}
+
+	  		//if (entity.uid == null) {
+	  		//	entity.uid = entity.hashCode().toString
+	  		//	System.out.println("UUID for entity " + entity.name + ": " + entity.uid)
+	  		//}
+	  		//else System.out.println("UUID for entity " + entity.name + "is already assigned with value: " + entity.uid)
+	  		//System.out.println("UUID for entity " + entity.name + ": " + entity.hashCode) 		
+  	}
 }

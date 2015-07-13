@@ -6,8 +6,8 @@ package org.blended.data.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
-import org.blended.data.utils.ConsoleManagement
-import org.blended.data.utils.DataListener
+import org.blended.data.terminal.ConsoleManagement
+import org.blended.data.terminal.DataListener
 import static extension org.eclipse.xtext.EcoreUtil2.*
 /*import org.blended.condition.ConditionStandaloneSetup
 import org.eclipse.xtext.util.StringInputStream
@@ -26,20 +26,20 @@ import org.eclipse.xtext.resource.SaveOptions
 class DataGenerator implements IGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {	
-		var consoleName = ConsoleManagement.DATA_CONSOLE + " (" + resource.normalizedURI.lastSegment + ")"
+		//BY THE MOMENT, WE WILL NOT USE A CONSOLE		
+//		var consoleName = ConsoleManagement.DATA_CONSOLE + " (" + resource.normalizedURI.lastSegment + ")"
+//		var manager = DataListener.getInstance(consoleName, resource)	
+//		if (!manager.isRunning) {
+//			var thread = new Thread(manager)					
+//			thread.start()	
+//			ConsoleManagement.write(consoleName, "DATA MODEL " + resource.normalizedURI.lastSegment + " UPDATED. TYPE -help TO SEE THE OPTIONS")
+//		} else manager.setModel(resource)
+		
 
-		var manager = DataListener.getInstance(consoleName, resource)	
+		var conditionModel = new DataGeneratorConditionModel(resource, fsa)
+		conditionModel.doGenerate	
 		
-		if (!manager.isRunning) {
-			var thread = new Thread(manager)					
-			thread.start()	
-		}	
-		
-		//COMMENT TO BE REMOVED TO GENERATE CONDITION MODEL
-		//var conditionModel = new DataGeneratorConditionModel(resource, fsa)
-		//conditionModel.doGenerate	
-		
-		ConsoleManagement.write(consoleName, "DATA MODEL " + resource.normalizedURI.lastSegment + " UPDATED. TYPE 0 TO SEE THE OPTIONS")	
+	
 
 
 
