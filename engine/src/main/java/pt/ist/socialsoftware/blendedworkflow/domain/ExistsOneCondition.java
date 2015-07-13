@@ -8,7 +8,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsOneCondition extends ExistsOneCondition_Base {
 
-    public ExistsOneCondition(Relation relation, Entity entity,
+    public ExistsOneCondition(BWRelation relation, BWEntity entity,
             Condition condition) {
         setExistsOneEntity(entity);
         setExistsOneRelation(relation);
@@ -19,9 +19,9 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
     Condition cloneCondition(GoalModelInstance goalModelInstance) {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
-        Relation relation = dataModelInstance
+        BWRelation relation = dataModelInstance
                 .getRelation(getExistsOneRelation().getName());
-        Entity entity = dataModelInstance
+        BWEntity entity = dataModelInstance
                 .getEntity(getExistsOneEntity().getName()).get();
         return new ExistsOneCondition(relation, entity,
                 getCondition().cloneCondition(goalModelInstance));
@@ -31,9 +31,9 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
     Condition cloneCondition(TaskModelInstance taskModelInstance) {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
-        Relation relation = dataModelInstance
+        BWRelation relation = dataModelInstance
                 .getRelation(getExistsOneRelation().getName());
-        Entity entity = dataModelInstance
+        BWEntity entity = dataModelInstance
                 .getEntity(getExistsOneEntity().getName()).get();
         return new ForAllCondition(relation, entity,
                 getCondition().cloneCondition(taskModelInstance));
@@ -52,20 +52,20 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
     }
 
     @Override
-    public Set<Entity> getEntities() {
-        Set<Entity> entity = new HashSet<Entity>();
+    public Set<BWEntity> getEntities() {
+        Set<BWEntity> entity = new HashSet<BWEntity>();
         entity.add(getExistsOneEntity());
         return entity;
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        return new HashSet<Attribute>();
+    public Set<BWAttribute> getAttributes() {
+        return new HashSet<BWAttribute>();
     }
 
     @Override
-    public HashMap<Attribute, String> getcompareConditionValues() {
-        return new HashMap<Attribute, String>();
+    public HashMap<BWAttribute, String> getcompareConditionValues() {
+        return new HashMap<BWAttribute, String>();
     }
 
     @Override

@@ -1,13 +1,13 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-enum pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState as DataState;
+enum pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState as DataState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal.MaintainGoalState as MaintainGoalState;
 //enum pt.ist.socialsoftware.blendedworkflow.domain.Task.TaskState as TaskState;
 //enum pt.ist.socialsoftware.blendedworkflow.domain.WorkItem.WorkItemState as WorkItemState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState as ActivityState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState as GoalState;
-enum pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType as AttributeType;
-enum pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality as Cardinality;
+enum pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType as AttributeType;
+enum pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality as Cardinality;
 
 class BlendedWorkflow {
 	Integer specificationCounter;
@@ -39,7 +39,8 @@ class User {
 	String notes;
 }
 
-class Specification {
+class BWSpecification {
+  String specId;
 	String name;
 	String author;
 	String description;
@@ -85,9 +86,9 @@ class WorkItemArgument {
 	DataState state;
 }
 
-class GoalModel;
+class BWGoalModel;
 
-class GoalModelInstance extends GoalModel;
+class GoalModelInstance extends BWGoalModel;
 
 class AchieveGoal {
 	String name;
@@ -135,11 +136,11 @@ class TrueCondition extends Condition;
 class ForAllCondition extends Condition;
 class ExistsOneCondition extends Condition;
 
-class DataModel;
+class BWDataModel;
 
-class DataModelInstance extends DataModel;
+class DataModelInstance extends BWDataModel;
 
-class Entity {
+class BWEntity {
 	String name;
 	Integer entityInstanceCounter;
 }
@@ -151,7 +152,7 @@ class EntityInstance {
 	Integer relationInstanceCounter;
 }
 
-class Attribute {
+class BWAttribute {
 	String name;
 	AttributeType type;
 	boolean isKeyAttribute;
@@ -164,7 +165,7 @@ class AttributeInstance {
 	DataState state;
 }
 
-class Relation {
+class BWRelation {
 	String name;
 	String roleNameOne;
 	String roleNameTwo;
@@ -181,30 +182,30 @@ class RelationInstance {
 //class RelationRole;
 
 // BlendedWorkflow
-relation BlendedWorkflowHasSpecifications {
+relation BlendedWorkflowHasBWSpecifications {
 	BlendedWorkflow playsRole blendedWorkflow {multiplicity 0..1;}
-	Specification playsRole specification {multiplicity 0..*;}
+	BWSpecification playsRole specification {multiplicity 0..*;}
 }
 
-// Specification
-relation SpecificationHasBWInstances {
-	Specification playsRole specification {multiplicity 0..1;}
+// BWSpecification
+relation BWSpecificationHasBWInstances {
+	BWSpecification playsRole specification {multiplicity 0..1;}
 	BWInstance playsRole bwInstances {multiplicity 0..*;}
 }
 
-relation SpecificationHasGoalModel {
-	Specification playsRole specification {multiplicity 0..1;}
-	GoalModel playsRole goalModel { multiplicity 0..1; }
+relation BWSpecificationHasBWGoalModel {
+	BWSpecification playsRole specification {multiplicity 0..1;}
+	BWGoalModel playsRole goalModel { multiplicity 0..1; }
 }
 
-relation SpecificationHasTaskModel {
-	Specification playsRole specification {multiplicity 0..1;}
+relation BWSpecificationHasTaskModel {
+	BWSpecification playsRole specification {multiplicity 0..1;}
 	TaskModel playsRole taskModel { multiplicity 0..1; }
 }
 
-relation SpecificationHasDataModel {
-	Specification playsRole specification {multiplicity 0..1;}
-	DataModel playsRole dataModel { multiplicity 0..1; }
+relation BWSpecificationHasBWDataModel {
+	BWSpecification playsRole specification {multiplicity 0..1;}
+	BWDataModel playsRole dataModel { multiplicity 0..1; }
 }
 
 // BWInstance
@@ -229,8 +230,8 @@ relation BWInstanceHasWorkItems {
 }
 
 // Log
-relation SpecificationHasLog {
-	Specification playsRole specification {multiplicity 0..1;}
+relation BWSpecificationHasLog {
+	BWSpecification playsRole specification {multiplicity 0..1;}
 	Log playsRole log {multiplicity 0..1;}
 }
 
@@ -272,13 +273,13 @@ relation WorkItemArgumentRefersAttributteInstances {
 }
 
 // Goal Model
-relation GoalModelHasAchieveGoals {
-	GoalModel playsRole goalModel { multiplicity 0..1; }
+relation BWGoalModelHasAchieveGoals {
+	BWGoalModel playsRole goalModel { multiplicity 0..1; }
 	AchieveGoal playsRole achieveGoals { multiplicity 0..*; }
 }
 
-relation GoalModelHasMaintainGoals {
-	GoalModel playsRole goalModel { multiplicity 0..1; }
+relation BWGoalModelHasMaintainGoals {
+	BWGoalModel playsRole goalModel { multiplicity 0..1; }
 	MaintainGoal playsRole maintainGoals { multiplicity 0..*; }
 }
 
@@ -331,44 +332,44 @@ relation TaskHasTaskWorkItem {
 	TaskWorkItem playsRole taskWorkItem { multiplicity 0..1; }
 }
 
-// DataModel
-relation DataModelHasEntities {
-	DataModel playsRole dataModel { multiplicity 0..1; }
-	Entity playsRole entities { multiplicity 0..*; }
+// BWDataModel
+relation BWDataModelHasEntities {
+	BWDataModel playsRole dataModel { multiplicity 0..1; }
+	BWEntity playsRole entities { multiplicity 0..*; }
 }
 
-relation DataModelHasAttributes {
-	DataModel playsRole dataModel { multiplicity 0..1; }
-	Attribute playsRole attributes { multiplicity 0..*; }
+relation BWDataModelHasAttributes {
+	BWDataModel playsRole dataModel { multiplicity 0..1; }
+	BWAttribute playsRole attributes { multiplicity 0..*; }
 }
 
-relation DataModelHasRelation {
-	DataModel playsRole dataModel { multiplicity 0..1; }
-	Relation playsRole relations { multiplicity 0..*; }
+relation BWDataModelHasBWRelation {
+	BWDataModel playsRole dataModel { multiplicity 0..1; }
+	BWRelation playsRole relations { multiplicity 0..*; }
 }
 
-// Entity
-relation EntityHasAttributes {
-	Entity playsRole entity { multiplicity 0..1; }
-	Attribute playsRole attributes { multiplicity 0..*; }
+// BWEntity
+relation BWEntityHasBWAttributes {
+	BWEntity playsRole entity { multiplicity 0..1; }
+	BWAttribute playsRole attributes { multiplicity 0..*; }
 }
 
 
 
-relation EntityHasEntityInstances {
-	Entity playsRole entity { multiplicity 0..1; }
+relation BWEntityHasEntityInstances {
+	BWEntity playsRole entity { multiplicity 0..1; }
 	EntityInstance playsRole entityInstances { multiplicity 0..*; }
 }
 
-// Relation
-relation RelationHasRelationInstances {
-	Relation playsRole relationType { multiplicity 0..1; } //FIXME relation
+// BWRelation
+relation BWRelationHasRelationInstances {
+	BWRelation playsRole relationType { multiplicity 0..1; } //FIXME relation
 	RelationInstance playsRole relationInstances { multiplicity 0..*; }
 }
 
-// Attributes
-relation AttributeHasAttributeInstances {
-	Attribute playsRole attribute { multiplicity 0..1; }
+// BWAttributes
+relation BWAttributeHasAttributeInstances {
+	BWAttribute playsRole attribute { multiplicity 0..1; }
 	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
 }
 
@@ -378,14 +379,14 @@ relation EntityInstanceHasAttributeInstances {
 	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
 }
 
-relation RelationHasEntityOne {
-	Relation playsRole relationsOne { multiplicity 0..*; }
-	Entity playsRole entityOne { multiplicity 1..1; }
+relation BWRelationHasBWEntityOne {
+	BWRelation playsRole relationsOne { multiplicity 0..*; }
+	BWEntity playsRole entityOne { multiplicity 1..1; }
 }
 
-relation RelationHasEntityTwo {
-	Relation playsRole relationsTwo { multiplicity 0..*; }
-	Entity playsRole entityTwo { multiplicity 1..1; }
+relation BWRelationHasBWEntityTwo {
+	BWRelation playsRole relationsTwo { multiplicity 0..*; }
+	BWEntity playsRole entityTwo { multiplicity 1..1; }
 }
 
 /*
@@ -396,14 +397,14 @@ relation EntityInstanceMayHaveRelationInstances {
 
 //NEW
 /*
-relation EntityMayBeRelationEntityOne {
-	Entity playsRole entityOne { multiplicity 0..1; }
-	Relation playsRole entityOneRelationInstances { multiplicity 0..*; }
+relation BWEntityMayBeRelationBWEntityOne {
+	BWEntity playsRole entityOne { multiplicity 0..1; }
+	BWRelation playsRole entityOneRelationInstances { multiplicity 0..*; }
 }
 
-relation EntityMayBeRelationEntityTwo {
-	Entity playsRole entityTwo { multiplicity 0..1; }
-	Relation playsRole entityTwoRelationInstances { multiplicity 0..*; }
+relation BWEntityMayBeRelationBWEntityTwo {
+	BWEntity playsRole entityTwo { multiplicity 0..1; }
+	BWRelation playsRole entityTwoRelationInstances { multiplicity 0..*; }
 }*/
 
 relation EntityInstanceMayBeRelationEntityOne {
@@ -447,22 +448,22 @@ relation NotConditionHasConditions {
 	Condition playsRole condition { multiplicity 0..1; }
 }
 
-// ExistsAttributeCondition
-relation ExistsAttributeConditionHasAttributes {
+// ExistsBWAttributeCondition
+relation ExistsBWAttributeConditionHasBWAttributes {
 	ExistsAttributeCondition playsRole existsAttributeCondition { multiplicity 0..*; }
-	Attribute playsRole attribute { multiplicity 0..1; }
+	BWAttribute playsRole attribute { multiplicity 0..1; }
 }
 
 //ExistsEntityCondition
-relation ExistsEntityConditionHasEntities {
+relation ExistsBWEntityConditionHasEntities {
 	ExistsEntityCondition playsRole existsEntityCondition { multiplicity 0..*; }
-	Entity playsRole entity { multiplicity 0..1; }
+	BWEntity playsRole entity { multiplicity 0..1; }
 }
 
 // CompareAttributeToValueCondition
 relation CompareAttributeToValueConditionHasAttributes {
 	CompareAttributeToValueCondition playsRole compareAttributeToValueCondition { multiplicity 0..*; }
-	Attribute playsRole attribute { multiplicity 0..1; }
+	BWAttribute playsRole attribute { multiplicity 0..1; }
 }
 
 //OrganizationalModel
@@ -521,15 +522,15 @@ relation WorkItemHasUsers {
 	User playsRole user {multiplicity 0..1;}
 }
 
-//NEWGoalModel Relations
-relation AchieveGoalHasEntity {
+//NEWBWGoalModel Relations
+relation AchieveGoalHasBWEntity {
 	AchieveGoal playsRole achieveGoalContext {multiplicity 0..*;}
-	Entity playsRole entityContext {multiplicity 0..1;}
+	BWEntity playsRole entityContext {multiplicity 0..1;}
 }
 
-relation MaintainGoalHasEntity {
+relation MaintainGoalHasBWEntity {
 	MaintainGoal playsRole maintainGoalContext {multiplicity 0..*;}
-	Entity playsRole maintainGoalEntityContext {multiplicity 0..1;}
+	BWEntity playsRole maintainGoalEntityContext {multiplicity 0..1;}
 }
 
 relation GoalWorkItemHasEntityInstances {
@@ -568,14 +569,14 @@ relation ForAllConditionConditionHasCondition {
 //	RelationRole playsRole relationRole { multiplicity 0..1; }
 //}
 
-relation ForAllConditionConditionConditionHasEntity {
+relation ForAllConditionConditionConditionHasBWEntity {
 	ForAllCondition playsRole forAllCondition { multiplicity 0..*; }
-	Entity playsRole forAllEntity { multiplicity 0..1; }
+	BWEntity playsRole forAllEntity { multiplicity 0..1; }
 }
 
-relation ForAllConditionConditionConditionHasRelation {
+relation ForAllConditionConditionConditionHasBWRelation {
 	ForAllCondition playsRole forAllCondition { multiplicity 0..*; }
-	Relation playsRole forAllRelation { multiplicity 0..1; }
+	BWRelation playsRole forAllRelation { multiplicity 0..1; }
 }
 
 //ExistsOne
@@ -584,24 +585,24 @@ relation ExistsOneConditionHasCondition {
 	Condition playsRole condition { multiplicity 0..1; }
 }
 
-relation ExistsOneConditionConditionHasEntity {
+relation ExistsOneConditionConditionHasBWEntity {
 	ExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
-	Entity playsRole existsOneEntity { multiplicity 0..1; }
+	BWEntity playsRole existsOneEntity { multiplicity 0..1; }
 }
 
-relation ExistsOneConditionConditionHasRelation {
+relation ExistsOneConditionConditionHasBWRelation {
 	ExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
-	Relation playsRole existsOneRelation { multiplicity 0..1; }
+	BWRelation playsRole existsOneRelation { multiplicity 0..1; }
 }
 
 //RelationRole
-//relation RelationRoleHasRelation {
+//relation RelationRoleHasBWRelation {
 //	RelationRole playsRole relationRole {multiplicity 0..1;}
-//	Relation playsRole relationRoleRelation {multiplicity 0..1;}
+//	BWRelation playsRole relationRoleRelation {multiplicity 0..1;}
 //}
 //
-//relation RelationRoleHasEntity {
+//relation RelationRoleHasBWEntity {
 //	RelationRole playsRole relationRole {multiplicity 0..1;}
-//	Entity playsRole entity {multiplicity 0..1;}
+//	BWEntity playsRole entity {multiplicity 0..1;}
 //}
 

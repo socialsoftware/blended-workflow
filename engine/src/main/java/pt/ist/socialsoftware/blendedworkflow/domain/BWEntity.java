@@ -2,13 +2,13 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
-public class Entity extends Entity_Base {
+public class BWEntity extends BWEntity_Base {
 
     @Override
     public void setName(String name) {
@@ -16,7 +16,7 @@ public class Entity extends Entity_Base {
         super.setName(name);
     }
 
-    public Entity(DataModel dataModel, String name) throws BWException {
+    public BWEntity(BWDataModel dataModel, String name) throws BWException {
         setDataModel(dataModel);
         setName(name);
         setEntityInstanceCounter(0);
@@ -24,8 +24,7 @@ public class Entity extends Entity_Base {
 
     private void checkEntityName(String name) {
         if ((name == null) || (name.equals("")))
-            throw new BWException(BlendedWorkflowError.INVALID_ENTITY_NAME,
-                    name);
+            throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
 
         checkUniqueEntityName(name);
     }
@@ -34,29 +33,28 @@ public class Entity extends Entity_Base {
         boolean exists = getDataModel().getEntitiesSet().stream().anyMatch(
                 ent -> (ent.getName() != null) && (ent.getName().equals(name)));
         if (exists)
-            throw new BWException(BlendedWorkflowError.INVALID_ENTITY_NAME,
-                    name);
+            throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
     }
 
-    public Attribute createAttribute(String name, AttributeType type) {
-        return new Attribute(this.getDataModel(), name, this, type, false,
+    public BWAttribute createAttribute(String name, AttributeType type) {
+        return new BWAttribute(this.getDataModel(), name, this, type, false,
                 false);
     }
 
-    public Relation createRelation(String roleNameOne,
-            Cardinality cardinalityOne, Entity entityTwo, String roleNameTwo,
+    public BWRelation createRelation(String roleNameOne,
+            Cardinality cardinalityOne, BWEntity entityTwo, String roleNameTwo,
             Cardinality cardinalityTwo) {
         String name = getName() + "." + roleNameOne + "-" + roleNameTwo + "."
                 + entityTwo.getName();
-        return new Relation(getDataModel(), name, this, roleNameOne,
+        return new BWRelation(getDataModel(), name, this, roleNameOne,
                 cardinalityOne, false, entityTwo, roleNameTwo, cardinalityTwo,
                 false);
     }
 
     public void cloneEntity(DataModelInstance dataModelInstance)
             throws BWException {
-        Entity newEntity = new Entity(dataModelInstance, getName());
-        for (Attribute attribute : getAttributesSet()) {
+        BWEntity newEntity = new BWEntity(dataModelInstance, getName());
+        for (BWAttribute attribute : getAttributesSet()) {
             attribute.cloneAttribute(dataModelInstance, newEntity);
         }
 
@@ -69,10 +67,10 @@ public class Entity extends Entity_Base {
      * Create and assign EntityInstances and AttributesInstances to Workitems
      */
     public void assignAttributeInstances(GoalWorkItem goalWorkItem,
-            Attribute attribute, ConditionType conditionType) {
+            BWAttribute attribute, ConditionType conditionType) {
         EntityInstance entityInstanceContext = goalWorkItem
                 .getEntityInstanceContext();
-        Entity entityContext = entityInstanceContext.getEntity();
+        BWEntity entityContext = entityInstanceContext.getEntity();
 
         if (this.equals(entityContext)) {
             entityInstanceContext.assignAttributeInstances(goalWorkItem,
@@ -80,7 +78,7 @@ public class Entity extends Entity_Base {
         } else {
             for (RelationInstance relationInstance : entityInstanceContext
                     .getEntityInstanceOneRelationInstancesSet()) {
-                Entity relationEntityContext = relationInstance
+                BWEntity relationEntityContext = relationInstance
                         .getEntityInstanceTwo().getEntity();
                 EntityInstance relationEntityInstanceContext = relationInstance
                         .getEntityInstanceTwo();
@@ -92,7 +90,7 @@ public class Entity extends Entity_Base {
 
             for (RelationInstance relationInstance : entityInstanceContext
                     .getEntityInstanceTwoRelationInstancesSet()) {
-                Entity relationEntityContext = relationInstance
+                BWEntity relationEntityContext = relationInstance
                         .getEntityInstanceOne().getEntity();
                 EntityInstance relationEntityInstanceContext = relationInstance
                         .getEntityInstanceOne();
@@ -114,7 +112,7 @@ public class Entity extends Entity_Base {
     }
 
     public void assignAttributeInstances(TaskWorkItem taskWorkItem,
-            Attribute attribute, ConditionType conditionType) {
+            BWAttribute attribute, ConditionType conditionType) {
         DataModelInstance dataModelInstance = taskWorkItem.getBwInstance()
                 .getDataModelInstance();
         if (getEntityInstancesSet().isEmpty()) {
@@ -140,13 +138,13 @@ public class Entity extends Entity_Base {
     }
 
     public void assignAllAttributeInstances(GoalWorkItem goalWorkItem,
-            Entity entity, ConditionType conditionType) {
+            BWEntity entity, ConditionType conditionType) {
         EntityInstance entityInstanceContext = goalWorkItem
                 .getEntityInstanceContext();
-        Entity entityContext = entityInstanceContext.getEntity();
+        BWEntity entityContext = entityInstanceContext.getEntity();
 
         if (this.equals(entityContext)) {
-            for (Attribute attribute : entityContext.getAttributesSet()) {
+            for (BWAttribute attribute : entityContext.getAttributesSet()) {
                 if (attribute.getIsKeyAttribute()) {
                     entityInstanceContext.assignAttributeInstances(goalWorkItem,
                             attribute, conditionType);
@@ -155,12 +153,12 @@ public class Entity extends Entity_Base {
         } else {
             for (RelationInstance relationInstance : entityInstanceContext
                     .getEntityInstanceOneRelationInstancesSet()) {
-                Entity relationEntityContext = relationInstance
+                BWEntity relationEntityContext = relationInstance
                         .getEntityInstanceTwo().getEntity();
                 EntityInstance relationEntityInstanceContext = relationInstance
                         .getEntityInstanceTwo();
                 if (relationEntityContext.equals(this)) {
-                    for (Attribute attribute : relationEntityContext
+                    for (BWAttribute attribute : relationEntityContext
                             .getAttributesSet()) {
                         if (attribute.getIsKeyAttribute()) {
                             relationEntityInstanceContext
@@ -173,12 +171,12 @@ public class Entity extends Entity_Base {
 
             for (RelationInstance relationInstance : entityInstanceContext
                     .getEntityInstanceTwoRelationInstancesSet()) {
-                Entity relationEntityContext = relationInstance
+                BWEntity relationEntityContext = relationInstance
                         .getEntityInstanceOne().getEntity();
                 EntityInstance relationEntityInstanceContext = relationInstance
                         .getEntityInstanceOne();
                 if (relationEntityContext.equals(this)) {
-                    for (Attribute attribute : relationEntityContext
+                    for (BWAttribute attribute : relationEntityContext
                             .getAttributesSet()) {
                         if (attribute.getIsKeyAttribute()) {
                             relationEntityInstanceContext
@@ -192,7 +190,7 @@ public class Entity extends Entity_Base {
     }
 
     public void assignAllAttributeInstances(TaskWorkItem taskWorkItem,
-            Entity entity, ConditionType conditionType) {
+            BWEntity entity, ConditionType conditionType) {
         DataModelInstance dataModelInstance = taskWorkItem.getBwInstance()
                 .getDataModelInstance();
 
@@ -200,7 +198,7 @@ public class Entity extends Entity_Base {
             // EntityInstance entityInstance = new
             // EntityInstance(dataModelInstance, this);
             EntityInstance entityInstance = new EntityInstance(this);
-            for (Attribute attribute : getAttributesSet()) {
+            for (BWAttribute attribute : getAttributesSet()) {
                 if (attribute.getIsKeyAttribute())
                     entityInstance.assignAttributeInstances(taskWorkItem,
                             attribute, conditionType);
@@ -215,7 +213,7 @@ public class Entity extends Entity_Base {
                                                                             // Only
                                                                             // 1
                                                                             // entityInstance
-                for (Attribute attribute : getAttributesSet()) {
+                for (BWAttribute attribute : getAttributesSet()) {
                     if (attribute.getIsKeyAttribute())
                         entityInstance.assignAttributeInstances(taskWorkItem,
                                 attribute, conditionType);
@@ -226,13 +224,13 @@ public class Entity extends Entity_Base {
 
     private void createRelationInstances(DataModelInstance dataModelInstance,
             EntityInstance entityInstance) {
-        Entity relationEntityTwo = null;
+        BWEntity relationEntityTwo = null;
         EntityInstance relationEntityInstanceTwo = null;
         // Relation Type Exists?
         if (this.getRelationsCount() > 0) {
-            for (Relation relation : this.getRelationsSet()) {
+            for (BWRelation relation : this.getRelationsSet()) {
                 // Get the other relation entity
-                for (Entity entity : relation.getEntitiesSet()) {
+                for (BWEntity entity : relation.getEntitiesSet()) {
                     if (!this.getName().equals(entity.getName())) {
                         relationEntityTwo = entity; // entity2
                     }
@@ -281,7 +279,7 @@ public class Entity extends Entity_Base {
         return getEntityInstanceCounter();
     }
 
-    public Attribute getAttribute(String name) {
+    public BWAttribute getAttribute(String name) {
         return getAttributesSet().stream()
                 .filter(att -> att.getName().equals(name)).findFirst()
                 .orElse(null);
@@ -296,8 +294,8 @@ public class Entity extends Entity_Base {
         return null;
     }
 
-    public Set<Relation> getRelationsSet() {
-        Set<Relation> relations = this.getRelationsOneSet();
+    public Set<BWRelation> getRelationsSet() {
+        Set<BWRelation> relations = this.getRelationsOneSet();
         relations.addAll(getRelationsTwoSet());
         return relations;
     }

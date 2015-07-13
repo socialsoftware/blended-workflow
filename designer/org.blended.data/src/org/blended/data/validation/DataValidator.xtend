@@ -22,8 +22,8 @@ class DataValidator extends AbstractDataValidator {
 	  	def checkModel(DataModel model) {
 	  	  	var instance = DesignInterface.getInstance
 	  		try {
-				var fileName = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
-//	  			instance.loadDataModel(model, fileName)
+				var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+    			instance.loadDataModel(specId, model)
 	  		} catch (BWException bwe) {
 	  			error('Specification with the same name already exists', DataPackage.Literals.SPECIFICATION__NAME, INVALID_NAME)
 	  		}

@@ -5,7 +5,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 import com.vaadin.ui.Alignment;
@@ -77,7 +77,7 @@ public class NewEntityForm extends VerticalLayout {
 			throws BWException {
 		BWInstance bwInstance = FenixFramework.getDomainObject(BwInstanceOID);
 		DataModelInstance dataModel = bwInstance.getDataModelInstance();
-		new Entity(dataModel, name);
+		new BWEntity(dataModel, name);
 	}
 
 }

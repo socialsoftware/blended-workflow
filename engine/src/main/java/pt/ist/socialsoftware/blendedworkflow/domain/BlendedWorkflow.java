@@ -10,8 +10,8 @@ import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.organizationalmanager.OrganizationalManager;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
@@ -39,41 +39,46 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
     }
 
     @Atomic(mode = TxMode.WRITE)
-    public Specification createSpecification(String name) throws BWException {
+    public BWSpecification createSpecification(String specId, String name)
+            throws BWException {
         String author = "Author";
         String description = "Description";
         String version = "Version";
         String UID = "UID";
-        return new Specification(name, author, description, version, UID);
+        return new BWSpecification(specId, name, author, description, version,
+                UID);
     }
 
-    public Optional<Specification> getSpecification(String name)
-            throws BWException {
+    public Optional<BWSpecification> getSpecByName(String name) {
         return getSpecificationSet().stream()
                 .filter(spec -> spec.getName().equals(name)).findFirst();
     }
 
+    public Optional<BWSpecification> getSpecById(String specId) {
+        return getSpecificationSet().stream()
+                .filter(spec -> spec.getSpecId().equals(specId)).findFirst();
+    }
+
     public BWInstance getBWInstance(String ID) throws BWException {
-        for (Specification specificationpecification : getSpecificationSet()) {
+        for (BWSpecification specificationpecification : getSpecificationSet()) {
             for (BWInstance bwInstance : specificationpecification
                     .getBwInstancesSet()) {
                 if (bwInstance.getID().equals(ID))
                     return bwInstance;
             }
         }
-        throw new BWException(BlendedWorkflowError.NON_EXISTENT_CASE_ID, ID);
+        throw new BWException(BWErrorType.NON_EXISTENT_CASE_ID, ID);
     }
 
     public BWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID)
             throws BWException {
-        for (Specification specification : getSpecificationSet()) {
+        for (BWSpecification specification : getSpecificationSet()) {
             for (BWInstance bwInstance : specification.getBwInstancesSet()) {
                 if (bwInstance.getYawlCaseID().equals(yawlCaseID))
                     return bwInstance;
             }
         }
-        throw new BWException(BlendedWorkflowError.NON_EXISTENT_CASE_ID,
-                yawlCaseID);
+        throw new BWException(BWErrorType.NON_EXISTENT_CASE_ID, yawlCaseID);
     }
 
     public YAWLAdapter getYawlAdapter() throws BWException {

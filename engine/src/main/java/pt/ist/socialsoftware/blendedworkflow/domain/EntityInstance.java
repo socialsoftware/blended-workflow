@@ -1,11 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 
 public class EntityInstance extends EntityInstance_Base {
 
-    public EntityInstance(Entity entity) {
+    public EntityInstance(BWEntity entity) {
         setEntity(entity);
         setID(entity.getName() + "." + entity.getNewEntityInstanceId()); // Id:
                                                                          // EntityName.#
@@ -18,7 +18,7 @@ public class EntityInstance extends EntityInstance_Base {
      * Create and assign EntityInstances and AttributesInstances to Workitems
      */
     public void assignAttributeInstances(GoalWorkItem goalWorkItem,
-            Attribute attribute, ConditionType conditionType) {
+            BWAttribute attribute, ConditionType conditionType) {
         boolean exists = false;
         for (AttributeInstance attributeInstance : getAttributeInstancesSet()) {
             if (attributeInstance.getAttribute().equals(attribute)) {
@@ -44,7 +44,7 @@ public class EntityInstance extends EntityInstance_Base {
     }
 
     public void assignAttributeInstances(TaskWorkItem taskWorkItem,
-            Attribute attribute, ConditionType conditionType) {
+            BWAttribute attribute, ConditionType conditionType) {
         boolean exists = false;
         boolean existsOne = false;
         for (AttributeInstance attributeInstance : getAttributeInstancesSet()) {
@@ -142,7 +142,7 @@ public class EntityInstance extends EntityInstance_Base {
     }
 
     public void cloneEntityInstance(DataModelInstance dataModelInstance,
-            Entity newEntity) {
+            BWEntity newEntity) {
         EntityInstance newEntityInstance = new EntityInstance(newEntity);
         for (AttributeInstance attributeInstance : getAttributeInstancesSet()) {
             attributeInstance.cloneAttributeInstance(dataModelInstance,

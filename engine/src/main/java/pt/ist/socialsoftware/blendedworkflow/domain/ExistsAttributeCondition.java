@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 
-    public ExistsAttributeCondition(Attribute attribute) {
+    public ExistsAttributeCondition(BWAttribute attribute) {
         setAttribute(attribute);
     }
 
@@ -17,9 +17,9 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
     Condition cloneCondition(GoalModelInstance goalModelInstance) {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
-        Entity entity = dataModelInstance
+        BWEntity entity = dataModelInstance
                 .getEntity(getAttribute().getEntity().getName()).get();
-        Attribute attribute = entity.getAttribute(getAttribute().getName());
+        BWAttribute attribute = entity.getAttribute(getAttribute().getName());
         return new ExistsAttributeCondition(attribute);
     }
 
@@ -27,9 +27,9 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
     Condition cloneCondition(TaskModelInstance taskModelInstance) {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
-        Entity entity = dataModelInstance
+        BWEntity entity = dataModelInstance
                 .getEntity(getAttribute().getEntity().getName()).get();
-        Attribute attribute = entity.getAttribute(getAttribute().getName());
+        BWAttribute attribute = entity.getAttribute(getAttribute().getName());
         return new ExistsAttributeCondition(attribute);
     }
 
@@ -48,20 +48,20 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
     }
 
     @Override
-    public Set<Entity> getEntities() {
-        return new HashSet<Entity>();
+    public Set<BWEntity> getEntities() {
+        return new HashSet<BWEntity>();
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        Set<Attribute> attribute = new HashSet<Attribute>();
+    public Set<BWAttribute> getAttributes() {
+        Set<BWAttribute> attribute = new HashSet<BWAttribute>();
         attribute.add(getAttribute());
         return attribute;
     }
 
     @Override
-    public HashMap<Attribute, String> getcompareConditionValues() {
-        return new HashMap<Attribute, String>();
+    public HashMap<BWAttribute, String> getcompareConditionValues() {
+        return new HashMap<BWAttribute, String>();
     }
 
     @Override
@@ -143,9 +143,9 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
 
         if (arguments != null) {
             for (WorkItemArgument workItemArgument : arguments) {
-                Attribute workItemAttribute = workItemArgument
+                BWAttribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                Attribute conditionAttribute = getAttribute();
+                BWAttribute conditionAttribute = getAttribute();
                 if (workItemAttribute == conditionAttribute) {
                     if (workItemArgument.getState().equals(DataState.SKIPPED)) {
                         return TripleStateBool.SKIPPED;
@@ -164,8 +164,8 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
             GoalWorkItem goalWorkItem, ConditionType conditionType) {
         for (AttributeInstance attributeInstance : entityInstance
                 .getAttributeInstancesSet()) {
-            Attribute attribute = attributeInstance.getAttribute();
-            Attribute conditionAttribute = getAttribute();
+            BWAttribute attribute = attributeInstance.getAttribute();
+            BWAttribute conditionAttribute = getAttribute();
 
             if (attribute == conditionAttribute) {
                 DataState state = getWorkItemState(attributeInstance,

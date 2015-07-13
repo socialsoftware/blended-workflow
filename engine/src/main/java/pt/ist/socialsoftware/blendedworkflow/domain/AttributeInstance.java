@@ -1,10 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 
 public class AttributeInstance extends AttributeInstance_Base {
 
-    public AttributeInstance(Attribute attribute,
+    public AttributeInstance(BWAttribute attribute,
             EntityInstance entityInstance) {
         setEntityInstance(entityInstance);
         setAttribute(attribute);

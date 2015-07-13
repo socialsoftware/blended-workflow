@@ -22,10 +22,10 @@ import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.Bootstrap;
@@ -91,7 +91,7 @@ public abstract class AbstractServiceTest {
                         with(any(String.class)), with(any(RuleType.class)),
                         with(any(RdrNode.class)), with(any(String.class)));
                 oneOf(bwManager).notifyLoadedBWSpecification(
-                        with(any(Specification.class)));
+                        with(any(BWSpecification.class)));
             }
         };
     }
@@ -114,7 +114,7 @@ public abstract class AbstractServiceTest {
             }
         });
 
-        final Specification bwSpecification = getBWSpecification(
+        final BWSpecification bwSpecification = getBWSpecification(
                 BWSPECIFICATION_NAME);
         new CreateBWInstanceService(bwSpecification.getExternalId(), "",
                 USER_ID).call();
@@ -125,16 +125,16 @@ public abstract class AbstractServiceTest {
         Bootstrap.clean();
     }
 
-    protected Specification getBWSpecification(String name) throws BWException {
+    protected BWSpecification getBWSpecification(String name) throws BWException {
         Transaction.begin();
-        final Specification bwSpecification = BlendedWorkflow.getInstance()
-                .getSpecification(name).orElseThrow(() -> new BWException(
-                        BlendedWorkflowError.INVALID_SPECIFICATION_NAME, name));
+        final BWSpecification bwSpecification = BlendedWorkflow.getInstance()
+                .getSpecByName(name).orElseThrow(() -> new BWException(
+                        BWErrorType.INVALID_SPECIFICATION_NAME, name));
         Transaction.commit();
         return bwSpecification;
     }
 
-    protected BWInstance getBWInstance(Specification bwSpecification) {
+    protected BWInstance getBWInstance(BWSpecification bwSpecification) {
         Transaction.begin();
         List<BWInstance> bwInstances = new ArrayList<BWInstance>(
                 bwSpecification.getBwInstancesSet());

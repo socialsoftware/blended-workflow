@@ -4,17 +4,17 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.ExistsEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
@@ -38,11 +38,11 @@ public class ForAllConditionTest extends AbstractDomainTest {
     private static Boolean ENTITY_2_KEY = false;
 
     private DataModelInstance dataModelInstance;
-    private Entity entity1;
-    private Attribute entity1Att1;
-    private Entity entity2;
-    private Attribute entity2Att1;
-    private Relation relation;
+    private BWEntity entity1;
+    private BWAttribute entity1Att1;
+    private BWEntity entity2;
+    private BWAttribute entity2Att1;
+    private BWRelation relation;
 
     private EntityInstance entityInstance1_1;
     private AttributeInstance entityInstance1_1Att1;
@@ -62,8 +62,8 @@ public class ForAllConditionTest extends AbstractDomainTest {
         dataModelInstance = new DataModelInstance();
 
         // Entity1
-        entity1 = new Entity(dataModelInstance, ENTITY_1_NAME);
-        entity1Att1 = new Attribute(dataModelInstance, ENTITY_1_ATT_1_NAME,
+        entity1 = new BWEntity(dataModelInstance, ENTITY_1_NAME);
+        entity1Att1 = new BWAttribute(dataModelInstance, ENTITY_1_ATT_1_NAME,
                 entity1, ENTITY_1_ATT_1_TYPE, ENTITY_1_ATT_1_KEY, false);
 
         entityInstance1_1 = new EntityInstance(entity1);
@@ -77,8 +77,8 @@ public class ForAllConditionTest extends AbstractDomainTest {
         entityInstance1_2Att1.setValue(" ");
 
         // Entity2
-        entity2 = new Entity(dataModelInstance, ENTITY_2_NAME);
-        entity2Att1 = new Attribute(dataModelInstance, ENTITY_2_ATT_1_NAME,
+        entity2 = new BWEntity(dataModelInstance, ENTITY_2_NAME);
+        entity2Att1 = new BWAttribute(dataModelInstance, ENTITY_2_ATT_1_NAME,
                 entity2, ENTITY_2_ATT_1_TYPE, ENTITY_2_ATT_1_KEY, false);
 
         entityInstance2_1 = new EntityInstance(entity2);
@@ -89,7 +89,7 @@ public class ForAllConditionTest extends AbstractDomainTest {
                 entityInstance2_2);
 
         // Relation
-        relation = new Relation(dataModelInstance, RELATION_1_NAME, entity1, "",
+        relation = new BWRelation(dataModelInstance, RELATION_1_NAME, entity1, "",
                 ENTITY_1_CARDINALITY, ENTITY_1_KEY, entity2, "",
                 ENTITY_2_CARDINALITY, ENTITY_2_KEY);
 

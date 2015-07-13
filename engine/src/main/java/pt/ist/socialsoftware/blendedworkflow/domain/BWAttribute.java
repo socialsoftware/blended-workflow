@@ -1,9 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
-public class Attribute extends Attribute_Base {
+public class BWAttribute extends BWAttribute_Base {
 
     public enum AttributeType {
         BOOLEAN, NUMBER, STRING
@@ -15,9 +15,8 @@ public class Attribute extends Attribute_Base {
         super.setName(name);
     }
 
-    public Attribute(DataModel dataModel, String name, Entity entity,
-            AttributeType type, boolean isKeyAttribute, boolean isSystem)
-                    throws BWException {
+    public BWAttribute(BWDataModel dataModel, String name, BWEntity entity,
+            AttributeType type, boolean isKeyAttribute, boolean isSystem) {
         setDataModel(dataModel);
         setEntity(entity);
         setName(name);
@@ -28,8 +27,7 @@ public class Attribute extends Attribute_Base {
 
     private void checkName(String name) {
         if ((name == null) || name.equals(""))
-            throw new BWException(BlendedWorkflowError.INVALID_ATTRIBUTE_NAME,
-                    name);
+            throw new BWException(BWErrorType.INVALID_ATTRIBUTE_NAME, name);
 
         checkUniqueAttributeName(name);
     }
@@ -43,17 +41,16 @@ public class Attribute extends Attribute_Base {
         // new BWException(BlendedWorkflowError.INVALID_ATTRIBUTE_NAME, name);
         // }
 
-        for (Attribute attribute : getEntity().getAttributesSet()) {
+        for (BWAttribute attribute : getEntity().getAttributesSet()) {
             if ((attribute != this) && attribute.getName().equals(name)) {
-                throw new BWException(
-                        BlendedWorkflowError.INVALID_ATTRIBUTE_NAME, name);
+                throw new BWException(BWErrorType.INVALID_ATTRIBUTE_NAME, name);
             }
         }
     }
 
     public void cloneAttribute(DataModelInstance dataModelInstance,
-            Entity entity) throws BWException {
-        new Attribute(dataModelInstance, getName(), entity, getType(),
+            BWEntity entity) throws BWException {
+        new BWAttribute(dataModelInstance, getName(), entity, getType(),
                 getIsKeyAttribute(), getIsSystem());
     }
 

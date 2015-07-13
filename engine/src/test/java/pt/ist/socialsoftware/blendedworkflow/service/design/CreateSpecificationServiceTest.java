@@ -6,10 +6,11 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateSpecificationServiceTest extends BWDomainAndServiceTest {
+    private static final String SPEC_ID = "Spec ID";
     private static final String SPEC_NAME = "Spec Name";
 
     @Override
@@ -18,14 +19,12 @@ public class CreateSpecificationServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void success() throws BWException {
+        DesignInterface.getInstance().createSpecification(SPEC_ID, SPEC_NAME);
 
-        CreateSpecificationService service = new CreateSpecificationService(SPEC_NAME);
-
-        service.execute();
-
-        Specification spec = getBlendedWorkflow().getSpecification(SPEC_NAME)
+        BWSpecification spec = getBlendedWorkflow().getSpecByName(SPEC_NAME)
                 .orElse(null);
         assertNotNull(spec);
+        assertEquals(SPEC_ID, spec.getSpecId());
         assertEquals(SPEC_NAME, spec.getName());
     }
 

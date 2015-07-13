@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class DataModel extends DataModel_Base {
+public class BWDataModel extends BWDataModel_Base {
 
     public enum DataState {
         DEFINED, UNDEFINED, SKIPPED
@@ -15,15 +15,15 @@ public class DataModel extends DataModel_Base {
      */
     public DataModelInstance cloneDataModel() throws BWException {
         DataModelInstance newDataModelInstance = new DataModelInstance();
-        Entity relationEntityOne;
-        Entity relationEntityTwo;
+        BWEntity relationEntityOne;
+        BWEntity relationEntityTwo;
 
-        for (Entity entity : getEntitiesSet()) {
+        for (BWEntity entity : getEntitiesSet()) {
             entity.cloneEntity(newDataModelInstance);
         }
 
         // Get relation -> Get new Entities -> Clone with new Entities
-        for (Relation relation : getRelationsSet()) {
+        for (BWRelation relation : getRelationsSet()) {
             relationEntityOne = newDataModelInstance
                     .getEntity(relation.getEntityOne().getName()).get();
             relationEntityTwo = newDataModelInstance
@@ -34,13 +34,13 @@ public class DataModel extends DataModel_Base {
         return newDataModelInstance;
     }
 
-    public Optional<Entity> getEntity(String name) {
+    public Optional<BWEntity> getEntity(String name) {
         return getEntitiesSet().stream()
                 .filter(ent -> ent.getName().equals(name)).findFirst();
     }
 
-    public Relation getRelation(String name) {
-        for (Relation relation : getRelationsSet()) {
+    public BWRelation getRelation(String name) {
+        for (BWRelation relation : getRelationsSet()) {
             if (relation.getName().equals(name)) {
                 return relation;
             }
@@ -55,8 +55,8 @@ public class DataModel extends DataModel_Base {
         deleteDomainObject();
     }
 
-    public Entity createEntity(String entityName) {
-        return new Entity(this, entityName);
+    public BWEntity createEntity(String entityName) {
+        return new BWEntity(this, entityName);
     }
 
 }

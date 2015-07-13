@@ -3,11 +3,11 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
 //TODO: Create two separate Relations in DML for EntityOne and EntityTwo.
-public class Relation extends Relation_Base {
+public class BWRelation extends BWRelation_Base {
 
     public enum Cardinality {
         MANY, ZERO_OR_ONE, ONE
@@ -19,9 +19,9 @@ public class Relation extends Relation_Base {
         super.setName(name);
     }
 
-    public Relation(DataModel dataModel, String name, Entity entityOne,
+    public BWRelation(BWDataModel dataModel, String name, BWEntity entityOne,
             String roleNameOne, Cardinality cardinalityOne,
-            boolean isOneKeyEntity, Entity entityTwo, String roleNameTwo,
+            boolean isOneKeyEntity, BWEntity entityTwo, String roleNameTwo,
             Cardinality cardinalityTwo, boolean isTwoKeyEntity)
                     throws BWException {
         setDataModel(dataModel);
@@ -38,8 +38,7 @@ public class Relation extends Relation_Base {
 
     private void checkRelationName(String name) {
         if ((name == null) || name.equals(""))
-            throw new BWException(BlendedWorkflowError.INVALID_RELATION_NAME,
-                    name);
+            throw new BWException(BWErrorType.INVALID_RELATION_NAME, name);
 
         checkUniqueRelationName(name);
     }
@@ -49,23 +48,23 @@ public class Relation extends Relation_Base {
                 rel -> ((rel != this) && (isInRelation(getEntityTwo(), rel))));
 
         if (find)
-            throw new BWException(BlendedWorkflowError.INVALID_RELATION_NAME,
-                    name);
+            throw new BWException(BWErrorType.INVALID_RELATION_NAME, name);
     }
 
-    private boolean isInRelation(Entity entityTwo, Relation relation) {
+    private boolean isInRelation(BWEntity entityTwo, BWRelation relation) {
         return relation.getEntityOne().equals(entityTwo)
                 || relation.getEntityTwo().equals(entityTwo);
     }
 
     public void cloneRelation(DataModelInstance dataModelInstance,
-            Entity entityOne, Entity entityTwo) throws BWException {
-        new Relation(dataModelInstance, getName(), entityOne, getRoleNameOne(),
-                getCardinalityOne(), getIsOneKeyEntity(), entityTwo,
-                getRoleNameTwo(), getCardinalityTwo(), getIsTwoKeyEntity());
+            BWEntity entityOne, BWEntity entityTwo) throws BWException {
+        new BWRelation(dataModelInstance, getName(), entityOne,
+                getRoleNameOne(), getCardinalityOne(), getIsOneKeyEntity(),
+                entityTwo, getRoleNameTwo(), getCardinalityTwo(),
+                getIsTwoKeyEntity());
     }
 
-    public Entity getEntity(Entity entity) {
+    public BWEntity getEntity(BWEntity entity) {
         if (entity.equals(getEntityOne())) {
             return getEntityOne();
         } else {
@@ -73,8 +72,8 @@ public class Relation extends Relation_Base {
         }
     }
 
-    public Set<Entity> getEntitiesSet() {
-        Set<Entity> entities = new HashSet<Entity>();
+    public Set<BWEntity> getEntitiesSet() {
+        Set<BWEntity> entities = new HashSet<BWEntity>();
         entities.add(this.getEntityOne());
         entities.add(this.getEntityTwo());
         return entities;

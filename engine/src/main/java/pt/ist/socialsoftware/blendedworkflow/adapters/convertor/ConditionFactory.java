@@ -1,12 +1,12 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class ConditionFactory {
 
-	public static Condition createCondition(DataModel dataModel, String condInString) throws BWException {
+	public static Condition createCondition(BWDataModel dataModel, String condInString) throws BWException {
 		return new ConditionParser(dataModel, condInString).parseCondition();
 	}
 	

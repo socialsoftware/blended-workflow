@@ -17,7 +17,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.domain.Role;
@@ -33,7 +33,7 @@ public class CreateNewGoalService implements Callable<String> {
 	private final String description;
 	private final String condition;
 	private final ArrayList<String> activateConditions;
-	private final Entity entityContext;
+	private final BWEntity entityContext;
 	private final String userID;
 
 	public CreateNewGoalService(String bwInstanceOID, String name,

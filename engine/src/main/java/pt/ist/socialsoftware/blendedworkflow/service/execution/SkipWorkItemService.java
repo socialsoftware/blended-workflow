@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 
 public class SkipWorkItemService implements Callable<String> {
 

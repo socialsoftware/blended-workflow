@@ -13,12 +13,12 @@ import com.vaadin.ui.VerticalLayout;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 
 @SuppressWarnings("serial")
@@ -65,14 +65,14 @@ public class PrescriptionMedicationForm extends VerticalLayout {
                         .getDataModelInstance();
 
                 // PrescriptionMedication
-                Entity prescriptionMedication = dataModelInstance
+                BWEntity prescriptionMedication = dataModelInstance
                         .getEntity("Prescription Medication").get();
-                Attribute numberAtt = prescriptionMedication
+                BWAttribute numberAtt = prescriptionMedication
                         .getAttribute("Number");
-                Attribute nameAtt = prescriptionMedication.getAttribute("Name");
-                Attribute quantityAtt = prescriptionMedication
+                BWAttribute nameAtt = prescriptionMedication.getAttribute("Name");
+                BWAttribute quantityAtt = prescriptionMedication
                         .getAttribute("Quantity");
-                Attribute heartImpactAtt = prescriptionMedication
+                BWAttribute heartImpactAtt = prescriptionMedication
                         .getAttribute("Heart Impact");
 
                 EntityInstance prescriptionMedication1 = new EntityInstance(
@@ -91,7 +91,7 @@ public class PrescriptionMedicationForm extends VerticalLayout {
                 prescriptionMedication1HeartImpact.setValue(heartImpact);
 
                 // Relation to Medical Prescription
-                Entity medicalPrescription = dataModelInstance
+                BWEntity medicalPrescription = dataModelInstance
                         .getEntity("Medical Prescription").get();
                 String medicalPrescription1OID = medicalPrescription
                         .getEntityInstance("Medical Prescription.1")

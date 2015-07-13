@@ -37,11 +37,11 @@ public abstract class Condition extends Condition_Base {
     abstract void assignAttributeInstances(TaskWorkItem taskWorkItem,
             ConditionType conditionType);
 
-    public abstract Set<Entity> getEntities();
+    public abstract Set<BWEntity> getEntities();
 
-    public abstract Set<Attribute> getAttributes();
+    public abstract Set<BWAttribute> getAttributes();
 
-    public abstract HashMap<Attribute, String> getcompareConditionValues();
+    public abstract HashMap<BWAttribute, String> getcompareConditionValues();
 
     public abstract String getRdrUndefinedCondition();
 

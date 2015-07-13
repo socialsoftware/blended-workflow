@@ -6,8 +6,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class CompareAttributeToValueCondition
@@ -16,7 +16,7 @@ public class CompareAttributeToValueCondition
     private static Logger log = Logger
             .getLogger("CompareAttributeToValueCondition");
 
-    public CompareAttributeToValueCondition(Attribute attribute,
+    public CompareAttributeToValueCondition(BWAttribute attribute,
             String operator, String value) {
         setAttribute(attribute);
         setOperator(operator);
@@ -27,9 +27,9 @@ public class CompareAttributeToValueCondition
     Condition cloneCondition(GoalModelInstance goalModelInstance) {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
-        Entity entity = dataModelInstance
+        BWEntity entity = dataModelInstance
                 .getEntity(getAttribute().getEntity().getName()).get();
-        Attribute attribute = entity.getAttribute(getAttribute().getName());
+        BWAttribute attribute = entity.getAttribute(getAttribute().getName());
         return new CompareAttributeToValueCondition(attribute, getOperator(),
                 getValue());
     }
@@ -38,9 +38,9 @@ public class CompareAttributeToValueCondition
     Condition cloneCondition(TaskModelInstance taskModelInstance) {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
-        Entity entity = dataModelInstance
+        BWEntity entity = dataModelInstance
                 .getEntity(getAttribute().getEntity().getName()).get();
-        Attribute attribute = entity.getAttribute(getAttribute().getName());
+        BWAttribute attribute = entity.getAttribute(getAttribute().getName());
         return new CompareAttributeToValueCondition(attribute, getOperator(),
                 getValue());
     }
@@ -60,20 +60,20 @@ public class CompareAttributeToValueCondition
     }
 
     @Override
-    public Set<Entity> getEntities() {
-        return new HashSet<Entity>();
+    public Set<BWEntity> getEntities() {
+        return new HashSet<BWEntity>();
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        Set<Attribute> attribute = new HashSet<Attribute>();
+    public Set<BWAttribute> getAttributes() {
+        Set<BWAttribute> attribute = new HashSet<BWAttribute>();
         attribute.add(getAttribute());
         return attribute;
     }
 
     @Override
-    public HashMap<Attribute, String> getcompareConditionValues() {
-        HashMap<Attribute, String> result = new HashMap<Attribute, String>();
+    public HashMap<BWAttribute, String> getcompareConditionValues() {
+        HashMap<BWAttribute, String> result = new HashMap<BWAttribute, String>();
         result.put(getAttribute(), getValue());
         return result;
     }
@@ -157,9 +157,9 @@ public class CompareAttributeToValueCondition
         }
         if (arguments != null) {
             for (WorkItemArgument workItemArgument : arguments) {
-                Attribute workItemAttribute = workItemArgument
+                BWAttribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                Attribute conditionAttribute = getAttribute();
+                BWAttribute conditionAttribute = getAttribute();
                 if (workItemAttribute == conditionAttribute) {
                     if (workItemArgument.getState()
                             .equals(DataState.UNDEFINED)) {
@@ -192,9 +192,9 @@ public class CompareAttributeToValueCondition
         }
         if (arguments != null) {
             for (WorkItemArgument workItemArgument : arguments) {
-                Attribute workItemAttribute = workItemArgument
+                BWAttribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                Attribute conditionAttribute = getAttribute();
+                BWAttribute conditionAttribute = getAttribute();
                 if (workItemAttribute == conditionAttribute) {
                     if (workItemArgument.getState()
                             .equals(DataState.UNDEFINED)) {

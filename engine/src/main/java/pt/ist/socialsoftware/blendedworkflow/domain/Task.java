@@ -2,8 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
 public class Task extends Task_Base {
 
@@ -25,8 +25,7 @@ public class Task extends Task_Base {
             throws BWException {
         for (Task task : taskModel.getTasksSet()) {
             if (task.getName().equals(name)) {
-                throw new BWException(
-                        BlendedWorkflowError.INVALID_TASK_NAME, name);
+                throw new BWException(BWErrorType.INVALID_TASK_NAME, name);
             }
         }
     }
@@ -54,8 +53,8 @@ public class Task extends Task_Base {
      * @return a string with the condition data entities.
      */
     public String getConstraintData(Boolean isPreConstraint) {
-        Set<Entity> entities;
-        Set<Attribute> attributes;
+        Set<BWEntity> entities;
+        Set<BWAttribute> attributes;
         String dataString = "";
 
         // Get Condition Data
@@ -68,13 +67,13 @@ public class Task extends Task_Base {
         }
 
         // Add Attribute entities
-        for (Attribute attribute : attributes) {
+        for (BWAttribute attribute : attributes) {
             entities.add(attribute.getEntity());
         }
 
         // Create String
         int count = 0;
-        for (Entity entity : entities) {
+        for (BWEntity entity : entities) {
             if (entities.size() == 1) {
                 dataString += entity.getName();
             } else if (count < entities.size() - 1) {

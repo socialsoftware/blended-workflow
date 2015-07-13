@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -29,26 +29,26 @@ public class DataModelTest extends AbstractDomainTest {
         dataModelInstance = new DataModelInstance();
 
         // Types
-        Entity A = new Entity(dataModelInstance, "A");
-        Entity B = new Entity(dataModelInstance, "B");
-        Entity C = new Entity(dataModelInstance, "C");
-        Entity D = new Entity(dataModelInstance, "D");
-        Entity E = new Entity(dataModelInstance, "E");
-        Entity F = new Entity(dataModelInstance, "F");
-        Entity X = new Entity(dataModelInstance, "X");
-        Relation AB = new Relation(dataModelInstance, "AB", A, "",
+        BWEntity A = new BWEntity(dataModelInstance, "A");
+        BWEntity B = new BWEntity(dataModelInstance, "B");
+        BWEntity C = new BWEntity(dataModelInstance, "C");
+        BWEntity D = new BWEntity(dataModelInstance, "D");
+        BWEntity E = new BWEntity(dataModelInstance, "E");
+        BWEntity F = new BWEntity(dataModelInstance, "F");
+        BWEntity X = new BWEntity(dataModelInstance, "X");
+        BWRelation AB = new BWRelation(dataModelInstance, "AB", A, "",
                 Cardinality.ONE, false, B, "", Cardinality.MANY, true);
-        Relation AC = new Relation(dataModelInstance, "AC", A, "",
+        BWRelation AC = new BWRelation(dataModelInstance, "AC", A, "",
                 Cardinality.ONE, true, C, "", Cardinality.ONE, false);
-        Relation AD = new Relation(dataModelInstance, "AD", A, "",
+        BWRelation AD = new BWRelation(dataModelInstance, "AD", A, "",
                 Cardinality.ONE, true, D, "", Cardinality.ONE, false);
-        Relation DE = new Relation(dataModelInstance, "DE", D, "",
+        BWRelation DE = new BWRelation(dataModelInstance, "DE", D, "",
                 Cardinality.ONE, true, E, "", Cardinality.ONE, false);
-        Relation DF = new Relation(dataModelInstance, "DF", D, "",
+        BWRelation DF = new BWRelation(dataModelInstance, "DF", D, "",
                 Cardinality.ONE, true, F, "", Cardinality.ONE, false);
-        Relation EF = new Relation(dataModelInstance, "EF", E, "",
+        BWRelation EF = new BWRelation(dataModelInstance, "EF", E, "",
                 Cardinality.ONE, true, F, "", Cardinality.ONE, false);
-        Relation EC = new Relation(dataModelInstance, "EC", E, "",
+        BWRelation EC = new BWRelation(dataModelInstance, "EC", E, "",
                 Cardinality.ONE, true, C, "", Cardinality.ONE, false);
 
         // Instances

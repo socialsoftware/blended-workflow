@@ -2,8 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import org.apache.log4j.Logger;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
 public class OrganizationalModel extends OrganizationalModel_Base {
 
@@ -21,7 +21,7 @@ public class OrganizationalModel extends OrganizationalModel_Base {
                 return user;
             }
         }
-        throw new BWException(BlendedWorkflowError.INVALID_USER);
+        throw new BWException(BWErrorType.INVALID_USER);
     }
 
     public Role getRole(String roleName) throws BWException {
@@ -30,7 +30,7 @@ public class OrganizationalModel extends OrganizationalModel_Base {
                 return role;
             }
         }
-        throw new BWException(BlendedWorkflowError.INVALID_ROLE);
+        throw new BWException(BWErrorType.INVALID_ROLE);
     }
 
 }

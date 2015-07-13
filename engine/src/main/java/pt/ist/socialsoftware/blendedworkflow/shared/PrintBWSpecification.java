@@ -1,21 +1,21 @@
 package pt.ist.socialsoftware.blendedworkflow.shared;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModelInstance;
@@ -28,9 +28,9 @@ public class PrintBWSpecification {
     // private static Logger log = Logger.getLogger("PrintBWSpecification");
 
     private static BlendedWorkflow blendedWorkflow;
-    private static Specification bwSpecification;
-    private static DataModel dataModelTemplate;
-    private static GoalModel goalModel;
+    private static BWSpecification bwSpecification;
+    private static BWDataModel dataModelTemplate;
+    private static BWGoalModel goalModel;
     private static TaskModel taskModel;
     private static BWInstance bwInstance;
     private static DataModelInstance dataModelInstance;
@@ -55,7 +55,7 @@ public class PrintBWSpecification {
 
     private static void init(String bwSpecificationName) throws BWException {
         blendedWorkflow = BlendedWorkflow.getInstance();
-        bwSpecification = blendedWorkflow.getSpecification(bwSpecificationName)
+        bwSpecification = blendedWorkflow.getSpecByName(bwSpecificationName)
                 .orElse(null);
         dataModelTemplate = bwSpecification.getDataModel();
         goalModel = bwSpecification.getGoalModel();
@@ -91,7 +91,7 @@ public class PrintBWSpecification {
         System.out.println("DataModel Template");
         System.out.println(
                 "----------------------------------------------------------");
-        for (Entity entity : dataModelTemplate.getEntitiesSet()) {
+        for (BWEntity entity : dataModelTemplate.getEntitiesSet()) {
             System.out.println("Entity \"" + entity.getName() + "\" has "
                     + entity.getEntityInstancesSet().size() + " Instances");
             for (EntityInstance ei : entity.getEntityInstancesSet()) {
@@ -99,13 +99,13 @@ public class PrintBWSpecification {
                         + ei.getState());
             }
 
-            for (Attribute attribute : entity.getAttributesSet()) {
+            for (BWAttribute attribute : entity.getAttributesSet()) {
                 System.out.println("Attribute \"" + attribute.getName() + "\"");
             }
             System.out.println(
                     "----------------------------------------------------------");
         }
-        for (Relation relation : dataModelTemplate.getRelationsSet()) {
+        for (BWRelation relation : dataModelTemplate.getRelationsSet()) {
             System.out.println("Relation \"" + relation.getName() + "\"");
         }
     }
@@ -118,16 +118,16 @@ public class PrintBWSpecification {
         System.out.println("DataModel Type");
         System.out.println(
                 "----------------------------------------------------------");
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
             System.out.println("Entity \"" + entity.getName() + "\"");
 
-            for (Attribute attribute : entity.getAttributesSet()) {
+            for (BWAttribute attribute : entity.getAttributesSet()) {
                 System.out.println("Attribute \"" + attribute.getName() + "\"");
             }
             System.out.println(
                     "----------------------------------------------------------");
         }
-        for (Relation relation : dataModelInstance.getRelationsSet()) {
+        for (BWRelation relation : dataModelInstance.getRelationsSet()) {
             System.out.println("Relation \"" + relation.getName() + "\"");
         }
     }
@@ -218,7 +218,7 @@ public class PrintBWSpecification {
         System.out.println("DataModel Instance");
         System.out.println(
                 "----------------------------------------------------------");
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
             System.out.println("Entity \"" + entity.getName() + "\" has "
                     + entity.getEntityInstancesSet().size() + " instances.");
             if (entity.getEntityInstancesSet().size() > 0) {
@@ -241,7 +241,7 @@ public class PrintBWSpecification {
             System.out.println(
                     "----------------------------------------------------------");
         }
-        for (Relation relation : dataModelInstance.getRelationsSet()) {
+        for (BWRelation relation : dataModelInstance.getRelationsSet()) {
             System.out.println("Relation \"" + relation.getName() + "\" has "
                     + relation.getRelationInstancesSet().size()
                     + " instances.");

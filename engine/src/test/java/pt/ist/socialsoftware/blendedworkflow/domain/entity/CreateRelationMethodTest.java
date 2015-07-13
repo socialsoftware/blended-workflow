@@ -6,10 +6,10 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateRelationMethodTest extends BWDomainAndServiceTest {
@@ -18,20 +18,20 @@ public class CreateRelationMethodTest extends BWDomainAndServiceTest {
     private static String EXISTS_NAME = "Role name exist";
     private static String EMPTY_NAME = "";
 
-    private Entity entityOne = null;
-    private Entity entityTwo = null;
+    private BWEntity entityOne = null;
+    private BWEntity entityTwo = null;
 
     @Override
     public void populate4Test() throws BWException {
-        Specification spec = new Specification("My spec", "author",
+        BWSpecification spec = new BWSpecification("SpecId", "My spec", "author",
                 "description", "version", "UID");
-        entityOne = new Entity(spec.getDataModel(), "Entity one name");
-        entityTwo = new Entity(spec.getDataModel(), "Entity two name");
+        entityOne = new BWEntity(spec.getDataModel(), "Entity one name");
+        entityTwo = new BWEntity(spec.getDataModel(), "Entity two name");
     }
 
     @Test
     public void success() {
-        Relation relation = entityOne.createRelation(ROLE_NAME_ONE,
+        BWRelation relation = entityOne.createRelation(ROLE_NAME_ONE,
                 Cardinality.MANY, entityTwo, ROLE_NAME_TWO, Cardinality.ONE);
 
         assertNotNull(relation);

@@ -1,9 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
-public class GoalModel extends GoalModel_Base {
+public class BWGoalModel extends BWGoalModel_Base {
 
     /**
      * Clone the GoalModel tree
@@ -32,8 +32,7 @@ public class GoalModel extends GoalModel_Base {
                 return goal;
             }
         }
-        throw new BWException(BlendedWorkflowError.NON_EXISTENT_GOAL_NAME,
-                name);
+        throw new BWException(BWErrorType.NON_EXISTENT_GOAL_NAME, name);
     }
 
     public MaintainGoal getMaintainGoal(String name) throws BWException {
@@ -42,8 +41,7 @@ public class GoalModel extends GoalModel_Base {
                 return goal;
             }
         }
-        throw new BWException(BlendedWorkflowError.NON_EXISTENT_GOAL_NAME,
-                name);
+        throw new BWException(BWErrorType.NON_EXISTENT_GOAL_NAME, name);
     }
 
     public void delete() {

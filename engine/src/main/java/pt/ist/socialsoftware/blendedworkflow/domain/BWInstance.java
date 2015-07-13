@@ -6,8 +6,8 @@ import java.util.Calendar;
 
 import org.apache.log4j.Logger;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
 public class BWInstance extends BWInstance_Base {
 
@@ -17,7 +17,7 @@ public class BWInstance extends BWInstance_Base {
      * Create a new BWInstance, and clones the Data, Task and Goal models from
      * its parent BWSpecification
      */
-    public BWInstance(Specification bwSpecification, String name, User user)
+    public BWInstance(BWSpecification bwSpecification, String name, User user)
             throws BWException {
         setSpecification(bwSpecification);
         setID(getSpecification().getName() + "."
@@ -53,8 +53,7 @@ public class BWInstance extends BWInstance_Base {
         for (WorkItem workItem : getWorkItemsSet())
             if (workItem.getID().equals(id))
                 return workItem;
-        throw new BWException(BlendedWorkflowError.NON_EXISTENT_WORKITEM_ID,
-                id);
+        throw new BWException(BWErrorType.NON_EXISTENT_WORKITEM_ID, id);
     }
 
 }

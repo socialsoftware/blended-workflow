@@ -3,24 +3,24 @@ package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 import java.util.HashMap;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class YAWLSpecificationFactory {
 
-	private Specification bwSpecification;
+	private BWSpecification bwSpecification;
 	private String specificationURI;
 	private int lovalVariablesIndex = 0;
 	private int taskIndex = 3;
 	private int inputOutputParamIndex = 0;
 	private final HashMap<String, String> taskYAWLID = new HashMap<String, String>();
 
-	public String parseYAWLSpecificationFactory(Specification bwSpecification)
+	public String parseYAWLSpecificationFactory(BWSpecification bwSpecification)
 			throws BWException {
 
 		this.bwSpecification = bwSpecification;
@@ -74,8 +74,8 @@ public class YAWLSpecificationFactory {
 		String localVariables = "<decomposition id=\"" + specificationURI
 				+ "\" isRootNet=\"true\" xsi:type=\"NetFactsType\">";
 
-		DataModel dataModel = bwSpecification.getDataModel();
-		for (Attribute attribute : dataModel.getAttributesSet()) {
+		BWDataModel dataModel = bwSpecification.getDataModel();
+		for (BWAttribute attribute : dataModel.getAttributesSet()) {
 			String entityName = attribute.getEntity().getName()
 					.replaceAll(" ", "");
 			String attributeName = attribute.getName().replaceAll(" ", "");
@@ -105,7 +105,7 @@ public class YAWLSpecificationFactory {
 	}
 
 	private String processControlElements() {
-		Set<Attribute> attributes;
+		Set<BWAttribute> attributes;
 		String processControlElements = "";
 		String element = "";
 		String startingMappings = "";
@@ -163,7 +163,7 @@ public class YAWLSpecificationFactory {
 			attributes = task.getPreConstraint().getAttributes();
 			if (attributes.size() > 0) {
 				startingMappings += "<startingMappings>";
-				for (Attribute attribute : attributes) {
+				for (BWAttribute attribute : attributes) {
 					String entityName = attribute.getEntity().getName()
 							.replaceAll(" ", "");
 					String attributeName = attribute.getName().replaceAll(" ",
@@ -212,7 +212,7 @@ public class YAWLSpecificationFactory {
 			attributes = task.getPostConstraint().getAttributes();
 			if (attributes.size() > 0) {
 				completedMappings += "<completedMappings>";
-				for (Attribute attribute : attributes) {
+				for (BWAttribute attribute : attributes) {
 					String entityName = attribute.getEntity().getName()
 							.replaceAll(" ", "");
 					String attributeName = attribute.getName().replaceAll(" ",
@@ -271,7 +271,7 @@ public class YAWLSpecificationFactory {
 	}
 
 	private String inputOutputParam() {
-		Set<Attribute> attributes;
+		Set<BWAttribute> attributes;
 		String inputOutputParameters = "";
 		String inputParam = "";
 		String outputParam = "";
@@ -289,7 +289,7 @@ public class YAWLSpecificationFactory {
 
 			// Input Parameters
 			attributes = task.getPreConstraint().getAttributes();
-			for (Attribute attribute : attributes) {
+			for (BWAttribute attribute : attributes) {
 				String entityName = attribute.getEntity().getName()
 						.replaceAll(" ", "");
 				String attributeName = attribute.getName().replaceAll(" ", "");
@@ -332,7 +332,7 @@ public class YAWLSpecificationFactory {
 
 			// Output Parameters
 			attributes = task.getPostConstraint().getAttributes();
-			for (Attribute attribute : attributes) {
+			for (BWAttribute attribute : attributes) {
 				String entityName = attribute.getEntity().getName()
 						.replaceAll(" ", "");
 				String attributeName = attribute.getName().replaceAll(" ", "");

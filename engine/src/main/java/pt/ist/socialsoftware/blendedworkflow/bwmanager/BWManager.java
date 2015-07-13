@@ -10,13 +10,13 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.CreateBWInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.LoadBWSpecificationService;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
@@ -40,7 +40,7 @@ public class BWManager {
      * @param bwSpecification
      *            The loaded BWSpecification.
      */
-    public void notifyLoadedBWSpecification(Specification bwSpecification) {
+    public void notifyLoadedBWSpecification(BWSpecification bwSpecification) {
         log.info("BWSpecification " + bwSpecification.getName() + " created.");
         getBwPresentation().addBWSpecification(bwSpecification.getExternalId(),
                 bwSpecification.getName());
@@ -63,7 +63,7 @@ public class BWManager {
      * created.
      */
     public void updateBWPresentation() {
-        for (Specification bwSpecification : BlendedWorkflow.getInstance()
+        for (BWSpecification bwSpecification : BlendedWorkflow.getInstance()
                 .getSpecificationSet()) {
             notifyLoadedBWSpecification(bwSpecification);
             for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
@@ -75,7 +75,7 @@ public class BWManager {
     /**
      * Show Exception.
      */
-    public void notifyException(BlendedWorkflowError bwe) {
+    public void notifyException(BWErrorType bwe) {
         getBwPresentation().getMainWindow().showNotification(bwe.toString(),
                 Notification.TYPE_ERROR_MESSAGE);
     }
@@ -113,12 +113,12 @@ public class BWManager {
 
         EntityInstance e1 = FenixFramework.getDomainObject(e1OID);
         EntityInstance e2 = FenixFramework.getDomainObject(e2OID);
-        Entity entity1 = e1.getEntity();
-        Entity entity2 = e2.getEntity();
+        BWEntity entity1 = e1.getEntity();
+        BWEntity entity2 = e2.getEntity();
         boolean exists = false;
 
         // Check if relation instance already exists
-        for (Relation relation : dataModelInstance.getRelationsSet()) {
+        for (BWRelation relation : dataModelInstance.getRelationsSet()) {
             for (RelationInstance relationInstance : relation
                     .getRelationInstancesSet()) {
                 EntityInstance one = relationInstance.getEntityInstanceOne();
@@ -133,9 +133,9 @@ public class BWManager {
 
         // Create only if no previous RelationInstance exists
         if (!exists) {
-            for (Relation relation : dataModelInstance.getRelationsSet()) {
-                Entity one = relation.getEntityOne();
-                Entity two = relation.getEntityTwo();
+            for (BWRelation relation : dataModelInstance.getRelationsSet()) {
+                BWEntity one = relation.getEntityOne();
+                BWEntity two = relation.getEntityTwo();
                 if ((one.equals(entity1) && two.equals(entity2))) {
                     new RelationInstance(relation, e1, e2,
                             e1.getNewRelationInstanceID());
@@ -148,7 +148,7 @@ public class BWManager {
     }
 
     public void notifyNeededEntityInstances(EntityInstance entityContext,
-            HashMap<Entity, Relation> neededEntityInstances) {
+            HashMap<BWEntity, BWRelation> neededEntityInstances) {
         getBwPresentation().generateAddSubGoalsContextWindow(entityContext,
                 neededEntityInstances);
     }

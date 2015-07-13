@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 
-    public ExistsEntityCondition(Entity entity) {
+    public ExistsEntityCondition(BWEntity entity) {
         setEntity(entity);
     }
 
@@ -17,7 +17,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
     Condition cloneCondition(GoalModelInstance goalModelInstance) {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
-        Entity entity = dataModelInstance.getEntity(getEntity().getName())
+        BWEntity entity = dataModelInstance.getEntity(getEntity().getName())
                 .get();
         return new ExistsEntityCondition(entity);
     }
@@ -26,7 +26,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
     Condition cloneCondition(TaskModelInstance taskModelInstance) {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
-        Entity entity = dataModelInstance.getEntity(getEntity().getName())
+        BWEntity entity = dataModelInstance.getEntity(getEntity().getName())
                 .get();
         return new ExistsEntityCondition(entity);
     }
@@ -46,16 +46,16 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
     }
 
     @Override
-    public Set<Entity> getEntities() {
-        Set<Entity> entity = new HashSet<Entity>();
+    public Set<BWEntity> getEntities() {
+        Set<BWEntity> entity = new HashSet<BWEntity>();
         entity.add(getEntity());
         return entity;
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        Set<Attribute> attributes = new HashSet<Attribute>();
-        for (Attribute attribute : getEntity().getAttributesSet()) {
+    public Set<BWAttribute> getAttributes() {
+        Set<BWAttribute> attributes = new HashSet<BWAttribute>();
+        for (BWAttribute attribute : getEntity().getAttributesSet()) {
             if (attribute.getIsKeyAttribute()) {
                 attributes.add(attribute);
             }
@@ -64,8 +64,8 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
     }
 
     @Override
-    public HashMap<Attribute, String> getcompareConditionValues() {
-        return new HashMap<Attribute, String>();
+    public HashMap<BWAttribute, String> getcompareConditionValues() {
+        return new HashMap<BWAttribute, String>();
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
         String entityName = getEntity().getName().replaceAll(" ", "");
         Boolean first = true;
 
-        for (Attribute attribute : getEntity().getAttributesSet()) {
+        for (BWAttribute attribute : getEntity().getAttributesSet()) {
             if (attribute.getIsKeyAttribute()) {
 
                 if (first) {
@@ -102,7 +102,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
         String entityName = getEntity().getName().replaceAll(" ", "");
         Boolean first = true;
 
-        for (Attribute attribute : getEntity().getAttributesSet()) {
+        for (BWAttribute attribute : getEntity().getAttributesSet()) {
             if (attribute.getIsKeyAttribute()) {
 
                 if (first) {
@@ -130,7 +130,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
 
         Boolean first = true;
 
-        for (Attribute attribute : getEntity().getAttributesSet()) {
+        for (BWAttribute attribute : getEntity().getAttributesSet()) {
             if (attribute.getIsKeyAttribute()) {
 
                 if (first) {
@@ -197,9 +197,9 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
         // Exists Entity
         if (arguments != null) {
             for (WorkItemArgument workItemArgument : arguments) {
-                Attribute workItemAttribute = workItemArgument
+                BWAttribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                Attribute conditionAttribute = getEntity()
+                BWAttribute conditionAttribute = getEntity()
                         .getAttribute(workItemAttribute.getName());
                 if (conditionAttribute != null
                         && conditionAttribute.getIsKeyAttribute()) {

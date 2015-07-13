@@ -105,24 +105,24 @@
 				</executions>
 				<configuration>
 					<artifactSet>
-				 		<includes>
-				 			<include>pt.ist:fenix-framework-core-api:*</include>
-				 			<include>pt.ist:fenix-framework-core-dml:*</include>
-				 			<include>javax.transaction:*</include>
-				 			<include>pt.ist.esw:*</include>
-				 			<include>pt.ist:fenix-framework-core-consistency-predicates:*</include>
-				 			<include>jvstm:*</include>
-				 			<include>pt.ist:fenix-framework-core-adt-bplustree:*</include>
-				 			<include>pt.ist:fenix-framework-backend-jvstm-ojb-runtime:*</include>
-				 			<include>pt.ist:db-ojb:*</include>
-				 			<include>mysql:*</include>
-				 			<include>org.slf4j:*</include>
-				 			<include>antlr:*</include>
-				 			<include>joda-time:*</include>
-				 			<include>commons-lang:*</include>
-				 			<include>commons-pool:*</include>
-				 			<include>com.google.code.gson:*</include>
-				 		</includes>
+						<includes>
+							<include>pt.ist:fenix-framework-core-api:*</include>
+							<include>pt.ist:fenix-framework-core-dml:*</include>
+							<include>javax.transaction:*</include>
+							<include>pt.ist.esw:*</include>
+							<include>pt.ist:fenix-framework-core-consistency-predicates:*</include>
+							<include>jvstm:*</include>
+							<include>pt.ist:fenix-framework-core-adt-bplustree:*</include>
+							<include>pt.ist:fenix-framework-backend-jvstm-ojb-runtime:*</include>
+							<include>pt.ist:db-ojb:*</include>
+							<include>mysql:*</include>
+							<include>org.slf4j:*</include>
+							<include>antlr:*</include>
+							<include>joda-time:*</include>
+							<include>commons-lang:*</include>
+							<include>commons-pool:*</include>
+							<include>com.google.code.gson:*</include>
+						</includes>
 					</artifactSet>
 				</configuration>
 			</plugin>
@@ -376,38 +376,31 @@
 			<version>1.4</version>
 		</dependency>
 
-<!-- 
+<!--  
 		<dependency>
 			<groupId>org.eclipse.core</groupId>
 			<artifactId>runtime</artifactId>
 			<version>[3.3.0,4.0.0)</version>
 		</dependency>
-		<dependency> <groupId>org.eclipse.emf</groupId> <artifactId>org.eclipse.emf.ecore</artifactId> 
-			<version>2.11.0-v20150123-0347</version> </dependency>
-		<dependency>
-			<groupId>org.eclipse.xtext</groupId>
-			<artifactId>org.eclipse.xtext</artifactId>
-			<version>2.8.3</version>
-		</dependency>	
+
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
-			<artifactId>ecore</artifactId>
-			<version>[2.3.0,3.0.0)</version>
+			<artifactId>org.eclipse.emf.ecore</artifactId>
+			<version>2.11.0-v20150123-0347</version>
 		</dependency>
- -->
-
 
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
 			<artifactId>ecore</artifactId>
 			<version>[2.3.0,3.0.0)</version>
 		</dependency>
-		
+-->
+
 		<dependency>
 			<groupId>org.eclipse.xtext</groupId>
 			<artifactId>org.eclipse.xtext</artifactId>
 			<version>2.8.3</version>
-		</dependency>	
+		</dependency>
 
 		<dependency>
 			<groupId>pt.ist.socialsoftware</groupId>

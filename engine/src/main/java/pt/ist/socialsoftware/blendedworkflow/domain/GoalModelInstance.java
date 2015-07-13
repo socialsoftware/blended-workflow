@@ -3,8 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
 public class GoalModelInstance extends GoalModelInstance_Base {
 
@@ -15,8 +15,7 @@ public class GoalModelInstance extends GoalModelInstance_Base {
                 return goal;
             }
         }
-        throw new BWException(
-                BlendedWorkflowError.NON_EXISTENT_GOAL_NAME, name);
+        throw new BWException(BWErrorType.NON_EXISTENT_GOAL_NAME, name);
     }
 
     /**
@@ -42,8 +41,8 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 
         for (MaintainGoal maintainGoal : getMaintainGoalsSet()) {
             // Get AchieveGoal Conditions Data
-            Set<Attribute> achieveAttributes = new HashSet<Attribute>();
-            Set<Entity> achieveEntities = new HashSet<Entity>();
+            Set<BWAttribute> achieveAttributes = new HashSet<BWAttribute>();
+            Set<BWEntity> achieveEntities = new HashSet<BWEntity>();
             for (Condition ac : achieveGoal.getActivateConditionsSet()) {
                 achieveAttributes.addAll(ac.getAttributes());
                 achieveEntities.addAll(ac.getEntities());
@@ -54,8 +53,8 @@ public class GoalModelInstance extends GoalModelInstance_Base {
                     .addAll(achieveGoal.getSucessCondition().getEntities());
 
             // Get MaintainGoal Condition Data
-            Set<Attribute> maintainAttributes = new HashSet<Attribute>();
-            Set<Entity> maintainEntities = new HashSet<Entity>();
+            Set<BWAttribute> maintainAttributes = new HashSet<BWAttribute>();
+            Set<BWEntity> maintainEntities = new HashSet<BWEntity>();
             maintainAttributes.addAll(
                     maintainGoal.getMaintainCondition().getAttributes());
             maintainEntities
@@ -86,16 +85,16 @@ public class GoalModelInstance extends GoalModelInstance_Base {
         for (AchieveGoal ag : getAchieveGoalsSet()) {
             if (!achieveGoal.equals(ag)) {
                 // Given AchieveGoal Conditions Data
-                Set<Attribute> achieveAttributes = new HashSet<Attribute>();
-                Set<Entity> achieveEntities = new HashSet<Entity>();
+                Set<BWAttribute> achieveAttributes = new HashSet<BWAttribute>();
+                Set<BWEntity> achieveEntities = new HashSet<BWEntity>();
                 achieveAttributes.addAll(
                         achieveGoal.getSucessCondition().getAttributes());
                 achieveEntities
                         .addAll(achieveGoal.getSucessCondition().getEntities());
 
                 // For AchieveGoal Conditions Data
-                Set<Attribute> agAttributes = new HashSet<Attribute>();
-                Set<Entity> agEntities = new HashSet<Entity>();
+                Set<BWAttribute> agAttributes = new HashSet<BWAttribute>();
+                Set<BWEntity> agEntities = new HashSet<BWEntity>();
                 for (Condition ac : ag.getActivateConditionsSet()) {
                     agAttributes.addAll(ac.getAttributes());
                     agEntities.addAll(ac.getEntities());
@@ -115,8 +114,8 @@ public class GoalModelInstance extends GoalModelInstance_Base {
         return achieveGoalsRESULT;
     }
 
-    public Set<Relation> getSubGoalsRelations(AchieveGoal topGoal) {
-        Set<Relation> result = new HashSet<Relation>();
+    public Set<BWRelation> getSubGoalsRelations(AchieveGoal topGoal) {
+        Set<BWRelation> result = new HashSet<BWRelation>();
 
         DataModelInstance dataModelInstance = getBwInstance()
                 .getDataModelInstance();

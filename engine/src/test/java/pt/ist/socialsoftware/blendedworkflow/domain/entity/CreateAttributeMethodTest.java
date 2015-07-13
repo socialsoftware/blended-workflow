@@ -6,12 +6,12 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
 public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
     private static String ATT_NAME_ONE = "Attribute name one";
@@ -20,24 +20,24 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
     private static String EXISTS_NAME = "Attribute name exist";
     private static String EMPTY_NAME = "";
 
-    private Entity entity = null;
+    private BWEntity entity = null;
 
     @Override
     public void populate4Test() throws BWException {
-        Specification spec = new Specification("My spec", "author",
+        BWSpecification spec = new BWSpecification("SpecId", "My spec", "author",
                 "description", "version", "UID");
-        entity = new Entity(spec.getDataModel(), "Entity name");
-        new Attribute(spec.getDataModel(), EXISTS_NAME, entity,
+        entity = new BWEntity(spec.getDataModel(), "Entity name");
+        new BWAttribute(spec.getDataModel(), EXISTS_NAME, entity,
                 AttributeType.BOOLEAN, false, false);
     }
 
     @Test
     public void success() {
-        Attribute att1 = entity.createAttribute(ATT_NAME_ONE,
+        BWAttribute att1 = entity.createAttribute(ATT_NAME_ONE,
                 AttributeType.STRING);
-        Attribute att2 = entity.createAttribute(ATT_NAME_TWO,
+        BWAttribute att2 = entity.createAttribute(ATT_NAME_TWO,
                 AttributeType.BOOLEAN);
-        Attribute att3 = entity.createAttribute(ATT_NAME_THREE,
+        BWAttribute att3 = entity.createAttribute(ATT_NAME_THREE,
                 AttributeType.NUMBER);
 
         assertEquals(4, entity.getAttributesSet().size());
@@ -57,8 +57,7 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
             entity.createAttribute(EXISTS_NAME, AttributeType.NUMBER);
             fail("Able to create an attribute with the same name");
         } catch (BWException bwe) {
-            assertEquals(BlendedWorkflowError.INVALID_ATTRIBUTE_NAME,
-                    bwe.getError());
+            assertEquals(BWErrorType.INVALID_ATTRIBUTE_NAME, bwe.getError());
         }
     }
 
@@ -68,8 +67,7 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
             entity.createAttribute(EMPTY_NAME, AttributeType.BOOLEAN);
             fail("Able to create an attribute with empty name");
         } catch (BWException bwe) {
-            assertEquals(BlendedWorkflowError.INVALID_ATTRIBUTE_NAME,
-                    bwe.getError());
+            assertEquals(BWErrorType.INVALID_ATTRIBUTE_NAME, bwe.getError());
         }
     }
 
@@ -79,8 +77,7 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
             entity.createAttribute(null, AttributeType.STRING);
             fail("Able to create an attribute with null name");
         } catch (BWException bwe) {
-            assertEquals(BlendedWorkflowError.INVALID_ATTRIBUTE_NAME,
-                    bwe.getError());
+            assertEquals(BWErrorType.INVALID_ATTRIBUTE_NAME, bwe.getError());
         }
     }
 

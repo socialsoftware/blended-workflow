@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.integration.LocalSystemTest;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -19,20 +19,22 @@ public class GetSpecificationMethodTest extends BWDomainAndServiceTest {
     private static final Logger logger = LoggerFactory
             .getLogger(LocalSystemTest.class);
 
+    private static final String SPEC_ID = "SpecId";
     private static final String SPEC_NAME = "Spec Name";
     private static final String NON_EXIST = "Non Exists Name";
     private static final String EMPTY_NAME = "";
 
     @Override
     public void populate4Test() throws BWException {
-        new Specification(SPEC_NAME, "author", "description", "version", "UID");
+        new BWSpecification(SPEC_ID, SPEC_NAME, "author", "description",
+                "version", "UID");
     }
 
     @Test
     public void success() throws BWException {
         logger.info("GetSpecificationMethod::sucess");
 
-        Specification spec = getBlendedWorkflow().getSpecification(SPEC_NAME)
+        BWSpecification spec = getBlendedWorkflow().getSpecByName(SPEC_NAME)
                 .orElse(null);
         assertNotNull(spec);
         assertEquals(SPEC_NAME, spec.getName());
@@ -40,24 +42,24 @@ public class GetSpecificationMethodTest extends BWDomainAndServiceTest {
 
     @Test
     public void nonExistName() throws BWException {
-        Optional<Specification> spec = getBlendedWorkflow()
-                .getSpecification(NON_EXIST);
+        Optional<BWSpecification> spec = getBlendedWorkflow()
+                .getSpecByName(NON_EXIST);
 
         assertFalse(spec.isPresent());
     }
 
     @Test
     public void emptyName() throws BWException {
-        Optional<Specification> spec = getBlendedWorkflow()
-                .getSpecification(EMPTY_NAME);
+        Optional<BWSpecification> spec = getBlendedWorkflow()
+                .getSpecByName(EMPTY_NAME);
 
         assertFalse(spec.isPresent());
     }
 
     @Test
     public void nullName() throws BWException {
-        Optional<Specification> spec = getBlendedWorkflow()
-                .getSpecification(null);
+        Optional<BWSpecification> spec = getBlendedWorkflow()
+                .getSpecByName(null);
 
         assertFalse(spec.isPresent());
     }

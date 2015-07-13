@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
 public class MaintainGoal extends MaintainGoal_Base {
 
@@ -9,9 +9,8 @@ public class MaintainGoal extends MaintainGoal_Base {
         DEACTIVATED, ENABLED
     };
 
-    public MaintainGoal(GoalModel goalModel, String name, String description,
-            Condition condition, Entity context)
-                    throws BWException {
+    public MaintainGoal(BWGoalModel goalModel, String name, String description,
+            Condition condition, BWEntity context) throws BWException {
         checkUniqueGoalName(goalModel, name);
         setGoalModel(goalModel);
         setName(name);
@@ -21,18 +20,16 @@ public class MaintainGoal extends MaintainGoal_Base {
         setState(MaintainGoalState.ENABLED);
     }
 
-    private void checkUniqueGoalName(GoalModel goalModel, String name)
+    private void checkUniqueGoalName(BWGoalModel goalModel, String name)
             throws BWException {
         for (AchieveGoal goal : goalModel.getAchieveGoalsSet()) {
             if (goal.getName().equals(name)) {
-                throw new BWException(
-                        BlendedWorkflowError.INVALID_GOAL_NAME, name);
+                throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
             }
         }
         for (MaintainGoal goal : goalModel.getMaintainGoalsSet()) {
             if (goal.getName().equals(name)) {
-                throw new BWException(
-                        BlendedWorkflowError.INVALID_GOAL_NAME, name);
+                throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
             }
         }
     }
@@ -48,8 +45,8 @@ public class MaintainGoal extends MaintainGoal_Base {
         // Get EntityTypeContext from Template
         BWInstance bwInstance = goalModelInstance.getBwInstance();
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-        Entity newEntityContext = null;
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        BWEntity newEntityContext = null;
+        for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
             if (getMaintainGoalEntityContext().getName()
                     .equals(entity.getName())) {
                 newEntityContext = entity;

@@ -6,18 +6,18 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation;
-import pt.ist.socialsoftware.blendedworkflow.domain.Relation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class DataModelFactory {
 
-    public void parseXMLDataModel(DataModel dataModel, String specificationXML)
+    public void parseXMLDataModel(BWDataModel dataModel, String specificationXML)
             throws BWException {
         Document doc = StringUtils.stringToDoc(specificationXML);
 
@@ -29,7 +29,7 @@ public class DataModelFactory {
         List<?> entities = dataModelXML.getChildren("Entity", bwNamespace);
         for (Object ent : entities) {
             Element entityXML = (Element) ent;
-            Entity entity = parseEntity(dataModel, entityXML);
+            BWEntity entity = parseEntity(dataModel, entityXML);
 
             List<?> attributes = entityXML.getChildren("Attribute",
                     bwNamespace);
@@ -46,16 +46,16 @@ public class DataModelFactory {
         }
     }
 
-    private Entity parseEntity(DataModel dataModel, Element entityXML)
+    private BWEntity parseEntity(BWDataModel dataModel, Element entityXML)
             throws BWException {
         Namespace dmNamespace = entityXML.getNamespace();
 
         String entityName = entityXML.getChildText("Name", dmNamespace);
-        Entity entity = new Entity(dataModel, entityName);
+        BWEntity entity = new BWEntity(dataModel, entityName);
         return entity;
     }
 
-    private void parseAttribute(DataModel dataModel, Entity entity,
+    private void parseAttribute(BWDataModel dataModel, BWEntity entity,
             Element attributeXML) throws BWException {
         Namespace dmNamespace = attributeXML.getNamespace();
 
@@ -65,11 +65,11 @@ public class DataModelFactory {
                 .parseBoolean(attributeXML.getChildText("isKey", dmNamespace));
         boolean isSystem = Boolean.parseBoolean(
                 attributeXML.getChildText("isSystem", dmNamespace));
-        new Attribute(dataModel, attName, entity, parseAttributeType(attType),
+        new BWAttribute(dataModel, attName, entity, parseAttributeType(attType),
                 isKey, isSystem);
     }
 
-    private void parseRelation(DataModel dataModel, Element relationInXML)
+    private void parseRelation(BWDataModel dataModel, Element relationInXML)
             throws BWException {
         Namespace dmNamespace = relationInXML.getNamespace();
 
@@ -77,7 +77,7 @@ public class DataModelFactory {
         Element entityOneXML = relationInXML.getChild("EntityOne", dmNamespace);
         Element entityTwoXML = relationInXML.getChild("EntityTwo", dmNamespace);
 
-        Entity entityOne = dataModel
+        BWEntity entityOne = dataModel
                 .getEntity(entityOneXML.getChildText("EntityName", dmNamespace))
                 .get();
         Cardinality cardinalityOne = parseCardinality(
@@ -85,7 +85,7 @@ public class DataModelFactory {
         Boolean isOneKeyEntity = Boolean.parseBoolean(
                 entityOneXML.getChildText("isEntityKey", dmNamespace));
 
-        Entity entityTwo = dataModel
+        BWEntity entityTwo = dataModel
                 .getEntity(entityTwoXML.getChildText("EntityName", dmNamespace))
                 .get();
         Cardinality cardinalityTwo = parseCardinality(
@@ -93,7 +93,7 @@ public class DataModelFactory {
         Boolean isTwoKeyEntity = parseIsKeyEntity(
                 entityTwoXML.getChildText("isEntityKey", dmNamespace));
 
-        new Relation(dataModel, relationName, entityOne, "", cardinalityOne,
+        new BWRelation(dataModel, relationName, entityOne, "", cardinalityOne,
                 isOneKeyEntity, entityTwo, "", cardinalityTwo, isTwoKeyEntity);
     }
 

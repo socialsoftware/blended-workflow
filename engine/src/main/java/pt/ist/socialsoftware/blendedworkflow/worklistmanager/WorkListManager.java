@@ -15,12 +15,12 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal.MaintainGoalState;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.CheckInWorkItemService;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.CreateGoalInstanceService;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.CreateNewGoalService;
@@ -147,7 +147,7 @@ public class WorkListManager {
                 Notification.TYPE_TRAY_NOTIFICATION);
     }
 
-    public void notifyException(BlendedWorkflowError bwe) {
+    public void notifyException(BWErrorType bwe) {
         getBwPresentation().getMainWindow().showNotification(bwe.toString(),
                 Notification.TYPE_ERROR_MESSAGE);
     }
@@ -156,7 +156,7 @@ public class WorkListManager {
      * Update the BWPresentation with all the active WorkItems.
      */
     public void updateBWPresentation() {
-        for (Specification bwSpecification : BlendedWorkflow.getInstance()
+        for (BWSpecification bwSpecification : BlendedWorkflow.getInstance()
                 .getSpecificationSet()) {
             for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
                 for (WorkItem workItem : bwInstance.getWorkItemsSet()) {

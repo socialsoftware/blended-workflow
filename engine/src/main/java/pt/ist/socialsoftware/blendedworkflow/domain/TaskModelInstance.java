@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
 public class TaskModelInstance extends TaskModelInstance_Base {
 
@@ -12,7 +12,6 @@ public class TaskModelInstance extends TaskModelInstance_Base {
                 return task;
             }
         }
-        throw new BWException(
-                BlendedWorkflowError.NON_EXISTENT_TASK_NAME, name);
+        throw new BWException(BWErrorType.NON_EXISTENT_TASK_NAME, name);
     }
 }

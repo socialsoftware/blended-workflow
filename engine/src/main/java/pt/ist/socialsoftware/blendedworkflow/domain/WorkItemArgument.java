@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 
 public class WorkItemArgument extends WorkItemArgument_Base {
 

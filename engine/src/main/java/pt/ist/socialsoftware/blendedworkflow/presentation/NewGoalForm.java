@@ -8,7 +8,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.vaadin.data.Item;
@@ -219,7 +219,7 @@ public class NewGoalForm extends VerticalLayout {
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-		for (Entity entity : dataModelInstance.getEntitiesSet()) {
+		for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
 			this.entityContext.addItem(entity.getExternalId());
 			this.entityContext.setItemCaption(entity.getExternalId(),
 					entity.getName());

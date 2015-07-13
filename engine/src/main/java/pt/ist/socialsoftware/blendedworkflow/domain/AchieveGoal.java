@@ -6,17 +6,16 @@ import java.util.List;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException.BlendedWorkflowError;
 
 public class AchieveGoal extends AchieveGoal_Base {
 
     /**
      * Create the GoalTree root Goal.
      */
-    public AchieveGoal(GoalModel goalModel, String name, String description,
-            Condition condition, Entity context)
-                    throws BWException {
+    public AchieveGoal(BWGoalModel goalModel, String name, String description,
+            Condition condition, BWEntity context) throws BWException {
         checkUniqueGoalName(goalModel, name);
         setGoalModel(goalModel);
         setName(name);
@@ -29,8 +28,8 @@ public class AchieveGoal extends AchieveGoal_Base {
     /**
      * Create a Goal.
      */
-    public AchieveGoal(GoalModel goalModel, AchieveGoal parentGoal, String name,
-            String description, Condition condition, Entity context)
+    public AchieveGoal(BWGoalModel goalModel, AchieveGoal parentGoal, String name,
+            String description, Condition condition, BWEntity context)
                     throws BWException {
         checkUniqueGoalName(goalModel, name);
         setGoalModel(goalModel);
@@ -41,18 +40,16 @@ public class AchieveGoal extends AchieveGoal_Base {
         setEntityContext(context);
     }
 
-    private void checkUniqueGoalName(GoalModel goalModel, String name)
+    private void checkUniqueGoalName(BWGoalModel goalModel, String name)
             throws BWException {
         for (AchieveGoal goal : goalModel.getAchieveGoalsSet()) {
             if (goal.getName().equals(name)) {
-                throw new BWException(
-                        BlendedWorkflowError.INVALID_GOAL_NAME, name);
+                throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
             }
         }
         for (MaintainGoal goal : goalModel.getMaintainGoalsSet()) {
             if (goal.getName().equals(name)) {
-                throw new BWException(
-                        BlendedWorkflowError.INVALID_GOAL_NAME, name);
+                throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
             }
         }
     }
@@ -68,8 +65,8 @@ public class AchieveGoal extends AchieveGoal_Base {
         // Get EntityTypeContext from Template
         BWInstance bwInstance = goalModelInstance.getBwInstance();
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-        Entity newEntityContext = null;
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        BWEntity newEntityContext = null;
+        for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
             if (getEntityContext().getName().equals(entity.getName())) {
                 newEntityContext = entity;
             }
@@ -93,18 +90,18 @@ public class AchieveGoal extends AchieveGoal_Base {
      * @return a string with the condition data entities.
      */
     public String getConstraintData() {
-        Set<Entity> entities = getSucessCondition().getEntities();
-        Set<Attribute> attributes = getSucessCondition().getAttributes();
+        Set<BWEntity> entities = getSucessCondition().getEntities();
+        Set<BWAttribute> attributes = getSucessCondition().getAttributes();
         String dataString = "";
 
         // Add Attribute entities
-        for (Attribute attribute : attributes) {
+        for (BWAttribute attribute : attributes) {
             entities.add(attribute.getEntity());
         }
 
         // Create String
         int count = 0;
-        for (Entity entity : entities) {
+        for (BWEntity entity : entities) {
             if (entities.size() == 1) {
                 dataString += entity.getName();
             } else if (count < entities.size() - 1) {
@@ -121,21 +118,21 @@ public class AchieveGoal extends AchieveGoal_Base {
     public String getPreConstraintData() {
         List<Condition> activateConditions = new ArrayList<Condition>(
                 getActivateConditionsSet());
-        Set<Entity> entities = activateConditions.get(0).getEntities(); // FIXME:
+        Set<BWEntity> entities = activateConditions.get(0).getEntities(); // FIXME:
                                                                         // Only
                                                                         // First
                                                                         // ActivateConditionData
-        Set<Attribute> attributes = activateConditions.get(0).getAttributes();
+        Set<BWAttribute> attributes = activateConditions.get(0).getAttributes();
         String dataString = "";
 
         // Add Attribute entities
-        for (Attribute attribute : attributes) {
+        for (BWAttribute attribute : attributes) {
             entities.add(attribute.getEntity());
         }
 
         // Create String
         int count = 0;
-        for (Entity entity : entities) {
+        for (BWEntity entity : entities) {
             if (entities.size() == 1) {
                 dataString += entity.getName();
             } else if (count < entities.size() - 1) {
@@ -182,8 +179,8 @@ public class AchieveGoal extends AchieveGoal_Base {
     }
 
     // TODO:
-    public Set<Entity> getSubGoalsContext() {
-        Set<Entity> result = new HashSet<Entity>();
+    public Set<BWEntity> getSubGoalsContext() {
+        Set<BWEntity> result = new HashSet<BWEntity>();
         // result.add(getEntityContext());
         for (AchieveGoal subGoal : getSubGoalsSet()) {
             result.add(subGoal.getEntityContext());

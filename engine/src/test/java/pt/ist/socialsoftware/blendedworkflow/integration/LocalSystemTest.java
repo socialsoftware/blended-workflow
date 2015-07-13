@@ -32,8 +32,8 @@ public class LocalSystemTest {
 
     @Test
     public void walktrough() {
-        designInterface.createSpecification("First Specification");
-        designInterface.createSpecification("Second Specification");
+        designInterface.createSpecification("id1", "First Specification");
+        designInterface.createSpecification("id2", "Second Specification");
 
         designInterface.createEntity("First Specification", "First Entity");
         designInterface.createEntity("First Specification", "Second Entity");

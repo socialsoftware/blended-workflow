@@ -2,7 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 public class RelationInstance extends RelationInstance_Base {
 
-    public RelationInstance(Relation relation, EntityInstance entityInstanceOne,
+    public RelationInstance(BWRelation relation, EntityInstance entityInstanceOne,
             EntityInstance entityInstanceTwo, String id) {
         setRelationType(relation);
         setID(getRelationType().getName() + "." + id);
@@ -10,7 +10,7 @@ public class RelationInstance extends RelationInstance_Base {
         setEntityInstanceTwo(entityInstanceTwo);
     }
 
-    public EntityInstance getEntityInstance(Entity entity) {
+    public EntityInstance getEntityInstance(BWEntity entity) {
         if (entity.equals(getEntityInstanceOne().getEntity())) {
             return getEntityInstanceOne();
         } else {

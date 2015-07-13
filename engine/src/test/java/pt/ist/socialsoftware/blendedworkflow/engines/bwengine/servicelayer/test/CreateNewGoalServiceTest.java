@@ -23,9 +23,9 @@ import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.CreateBWInstanceService;
@@ -95,7 +95,7 @@ public class CreateNewGoalServiceTest {
                 oneOf(yawlAdapter).launchCase(with(any(String.class)));
                 will(returnValue(YAWLCASE_ID));
                 oneOf(workletAdapter)
-                        .loadRdrSet(with(any(Specification.class)));
+                        .loadRdrSet(with(any(BWSpecification.class)));
                 allowing(workletAdapter).requestWorkItemPostConditionEvaluation(
                         with(any(TaskWorkItem.class)));
                 allowing(workletAdapter).requestWorkItemPreConditionEvaluation(
@@ -103,7 +103,7 @@ public class CreateNewGoalServiceTest {
                 oneOf(bwManager)
                         .notifyCreatedBWInstance(with(any(BWInstance.class)));
                 oneOf(bwManager).notifyLoadedBWSpecification(
-                        with(any(Specification.class)));
+                        with(any(BWSpecification.class)));
                 allowing(workListManager)
                         .notifyEnabledWorkItem(with(any(WorkItem.class)));
             }
@@ -121,8 +121,8 @@ public class CreateNewGoalServiceTest {
         new LoadBWSpecificationService(bwSpecificationString).call();
 
         Transaction.begin();
-        Specification bwSpecification = BlendedWorkflow.getInstance()
-                .getSpecification(BWSPECIFICATION_NAME).orElse(null);
+        BWSpecification bwSpecification = BlendedWorkflow.getInstance()
+                .getSpecByName(BWSPECIFICATION_NAME).orElse(null);
         Transaction.commit();
 
         new CreateBWInstanceService(bwSpecification.getExternalId(), "",
@@ -145,7 +145,7 @@ public class CreateNewGoalServiceTest {
         AchieveGoal parentGoal = goalModelInstance
                 .getGoal(NEWGOAL_PARENTGOAL_NAME);
         String parentGoalOID = parentGoal.getExternalId();
-        Entity entity = bwInstance.getDataModelInstance().getEntity(ENTITY_NAME)
+        BWEntity entity = bwInstance.getDataModelInstance().getEntity(ENTITY_NAME)
                 .get();
         String entityOID = entity.getExternalId();
 

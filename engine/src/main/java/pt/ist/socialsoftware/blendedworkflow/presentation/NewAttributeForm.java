@@ -14,11 +14,11 @@ import com.vaadin.ui.Window.Notification;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 @SuppressWarnings("serial")
@@ -95,7 +95,7 @@ public class NewAttributeForm extends VerticalLayout {
                     throws BWException {
         BWInstance bwInstance = FenixFramework.getDomainObject(BwInstanceOID);
         DataModelInstance dataModel = bwInstance.getDataModelInstance();
-        Entity entity = dataModel.getEntity(entityName).get();
+        BWEntity entity = dataModel.getEntity(entityName).get();
 
         AttributeType type;
         if (typeString.equals("String")) {
@@ -106,7 +106,7 @@ public class NewAttributeForm extends VerticalLayout {
             type = AttributeType.BOOLEAN;
         }
 
-        new Attribute(dataModel, name, entity, type, isKeyAttribute, false); // FIXME:
+        new BWAttribute(dataModel, name, entity, type, isKeyAttribute, false); // FIXME:
                                                                              // isSystem
     }
 
