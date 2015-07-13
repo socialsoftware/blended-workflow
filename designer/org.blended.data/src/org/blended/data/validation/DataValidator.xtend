@@ -20,12 +20,15 @@ class DataValidator extends AbstractDataValidator {
  	
   		@Check
 	  	def checkModel(DataModel model) {
+	  			warning('1', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
 	  	  	var instance = DesignInterface.getInstance
 	  		try {
 				var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+	  			warning('2', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
     			instance.loadDataModel(specId, model)
+	  			warning('3', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
 	  		} catch (BWException bwe) {
-	  			error('Specification with the same name already exists', DataPackage.Literals.SPECIFICATION__NAME, INVALID_NAME)
+	  			error('Specification with the same name already exists', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
 	  		}
 
 	  		//if (entity.uid == null) {

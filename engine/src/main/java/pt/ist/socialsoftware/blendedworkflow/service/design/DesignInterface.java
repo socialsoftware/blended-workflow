@@ -35,6 +35,7 @@ public class DesignInterface {
         // Bootstrap.init();
     }
 
+    @Atomic
     public BWNotification loadDataModel(String specId, DataModel eDataModel) {
         // String specId = EcoreUtil2.getNormalizedURI(eDataModel.eResource())
         // .lastSegment().split("\\.")[0];
