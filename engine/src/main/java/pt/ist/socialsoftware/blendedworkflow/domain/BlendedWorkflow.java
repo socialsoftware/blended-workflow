@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.text.DateFormat;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
@@ -49,9 +51,10 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
                 UID);
     }
 
-    public Optional<BWSpecification> getSpecByName(String name) {
+    public Set<BWSpecification> getSpecByName(String name) {
         return getSpecificationSet().stream()
-                .filter(spec -> spec.getName().equals(name)).findFirst();
+                .filter(spec -> spec.getName().equals(name))
+                .collect(Collectors.toSet());
     }
 
     public Optional<BWSpecification> getSpecById(String specId) {

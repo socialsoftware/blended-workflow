@@ -125,10 +125,10 @@ public class DesignInterface {
     }
 
     @Atomic
-    public BWNotification createEntity(String specName, String entityName) {
+    public BWNotification createEntity(String specId, String entityName) {
         BWNotification notification = new BWNotification();
 
-        BWSpecification spec = getSpecification(specName, notification);
+        BWSpecification spec = getSpecification(specId, notification);
         if (notification.hasErrors())
             return notification;
         BWDataModel dataModel = spec.getDataModel();
@@ -143,11 +143,11 @@ public class DesignInterface {
     }
 
     @Atomic
-    public BWNotification createAttribute(String specName, String entityName,
+    public BWNotification createAttribute(String specId, String entityName,
             String attributeName, String attributeType) {
         BWNotification notification = new BWNotification();
 
-        BWSpecification spec = getSpecification(specName, notification);
+        BWSpecification spec = getSpecification(specId, notification);
         if (notification.hasErrors())
             return notification;
 
@@ -187,12 +187,12 @@ public class DesignInterface {
     }
 
     @Atomic
-    public BWNotification createRelation(String specName, String entityOneName,
+    public BWNotification createRelation(String specId, String entityOneName,
             String roleNameOne, String cardinalityOne, String entityTwoName,
             String roleNameTwo, String cardinalityTwo) {
         BWNotification notification = new BWNotification();
 
-        BWSpecification spec = getSpecification(specName, notification);
+        BWSpecification spec = getSpecification(specId, notification);
         if (notification.hasErrors())
             return notification;
 
@@ -227,13 +227,13 @@ public class DesignInterface {
 
     }
 
-    private BWSpecification getSpecification(String specName,
+    private BWSpecification getSpecification(String specId,
             BWNotification notification) {
-        BWSpecification spec = getBlendedWorkflow().getSpecByName(specName)
+        BWSpecification spec = getBlendedWorkflow().getSpecById(specId)
                 .orElse(null);
         if (spec == null) {
             notification.addError(new BWError(
-                    BWErrorType.INVALID_SPECIFICATION_NAME, specName, ""));
+                    BWErrorType.INVALID_SPECIFICATION_ID, specId, ""));
         }
         return spec;
     }

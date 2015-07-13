@@ -14,7 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateEntityMethodTest extends BWDomainAndServiceTest {
-    private static final String SPEC_NAME = "Spec Name";
+    private static final String SPEC_ID = "Spec ID";
     private static final String ENTITY_NAME = "Entity Name";
     private static final String DUP_NAME = "Exists Name";
     private static final String EMPTY_NAME = "";
@@ -23,7 +23,7 @@ public class CreateEntityMethodTest extends BWDomainAndServiceTest {
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification("SpecId", SPEC_NAME, "author",
+        BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
         dataModel = spec.getDataModel();
         new BWEntity(dataModel, DUP_NAME);
@@ -33,8 +33,7 @@ public class CreateEntityMethodTest extends BWDomainAndServiceTest {
     public void success() throws BWException {
         dataModel.createEntity(ENTITY_NAME);
 
-        BWSpecification spec = getBlendedWorkflow().getSpecByName(SPEC_NAME)
-                .get();
+        BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
         BWEntity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
         assertNotNull(entity);
         assertEquals(ENTITY_NAME, entity.getName());

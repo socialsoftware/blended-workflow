@@ -43,9 +43,9 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
     public void populate4Test() {
         designInterface = DesignInterface.getInstance();
 
-        BWSpecification spec = new BWSpecification(EXISTS_SPEC_ID,
-                EXISTS_SPEC_NAME, "author", "description", "version", "UID");
-        existingDataModel = getBlendedWorkflow().getSpecByName(EXISTS_SPEC_NAME)
+        new BWSpecification(EXISTS_SPEC_ID, EXISTS_SPEC_NAME, "author",
+                "description", "version", "UID");
+        existingDataModel = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
                 .get().getDataModel();
 
         BWEntity entity = new BWEntity(existingDataModel, EXISTS_ENTITY_NAME);
@@ -65,7 +65,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
                 eDataModel);
 
         assertFalse(notification.hasErrors());
-        BWSpecification spec = getBlendedWorkflow().getSpecByName(NEW_SPEC_NAME)
+        BWSpecification spec = getBlendedWorkflow().getSpecById(NEW_SPEC_ID)
                 .get();
         assertNotNull(spec);
         assertEquals(NEW_SPEC_ID, spec.getSpecId());
@@ -82,8 +82,8 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());
-        BWSpecification spec = getBlendedWorkflow()
-                .getSpecByName(EXISTS_SPEC_NAME).get();
+        BWSpecification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
+                .get();
         assertNotNull(spec);
         assertEquals(EXISTS_SPEC_ID, spec.getSpecId());
         assertEquals(EXISTS_SPEC_NAME, spec.getName());

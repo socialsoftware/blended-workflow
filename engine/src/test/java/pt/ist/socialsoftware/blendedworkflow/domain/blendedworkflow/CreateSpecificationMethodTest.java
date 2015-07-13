@@ -20,15 +20,15 @@ public class CreateSpecificationMethodTest extends BWDomainAndServiceTest {
 
     @Override
     public void populate4Test() throws BWException {
-        new BWSpecification(DUP_ID, DUP_NAME, "author", "description", "version",
-                "UID");
+        new BWSpecification(DUP_ID, DUP_NAME, "author", "description",
+                "version", "UID");
     }
 
     @Test
     public void success() throws BWException {
         getBlendedWorkflow().createSpecification(SPEC_ID, SPEC_NAME);
 
-        BWSpecification spec = getBlendedWorkflow().getSpecByName(SPEC_NAME)
+        BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID)
                 .orElse(null);
         assertNotNull(spec);
         assertEquals(SPEC_ID, spec.getSpecId());
@@ -37,13 +37,9 @@ public class CreateSpecificationMethodTest extends BWDomainAndServiceTest {
 
     @Test
     public void duplicateName() throws BWException {
-        try {
-            getBlendedWorkflow().createSpecification(SPEC_ID, DUP_NAME);
-            fail("duplicateName");
-        } catch (BWException bwe) {
-            assertEquals(BWErrorType.INVALID_SPECIFICATION_NAME,
-                    bwe.getError());
-        }
+        getBlendedWorkflow().createSpecification(SPEC_ID, DUP_NAME);
+
+        assertEquals(2, getBlendedWorkflow().getSpecByName(DUP_NAME).size());
     }
 
     @Test

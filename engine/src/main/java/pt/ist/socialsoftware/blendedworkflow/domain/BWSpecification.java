@@ -60,7 +60,7 @@ public class BWSpecification extends BWSpecification_Base {
         if ((name == null) || name.equals(""))
             throw new BWException(BWErrorType.INVALID_SPECIFICATION_NAME, name);
 
-        checkUniqueSpecificationName(name);
+        // checkUniqueSpecificationName(name);
     }
 
     private void checkUniqueSpecificationName(String name) throws BWException {

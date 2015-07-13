@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
 
 import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.LoadBWSpecificationService;
@@ -50,7 +50,7 @@ public class LoadBWSpecificationServiceTest extends AbstractServiceTest {
     private void assertLoadSpecificationResults() throws BWException {
         final BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
         final BWSpecification bwSpecification = blendedWorkflow
-                .getSpecByName(BWSPECIFICATION_NAME).orElse(null);
+                .getSpecById(BWSPECIFICATION_NAME).orElse(null);
         final BWDataModel dataModel = bwSpecification.getDataModel();
         final BWGoalModel goalModel = bwSpecification.getGoalModel();
         final TaskModel taskModel = bwSpecification.getTaskModel();

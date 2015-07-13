@@ -22,14 +22,14 @@ import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.adapters.ProcessItemLevelExceptionEvent;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState;
@@ -125,7 +125,7 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
         try {
             Transaction.begin();
             BWSpecification bwSpecification = BlendedWorkflow.getInstance()
-                    .getSpecByName(BWSPECIFICATION_NAME).orElse(null);
+                    .getSpecById(BWSPECIFICATION_NAME).orElse(null);
             List<BWInstance> bwInstances = new ArrayList<BWInstance>(
                     bwSpecification.getBwInstancesSet());
             BWInstance bwInstance = bwInstances.get(0);
@@ -151,7 +151,7 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
     private void setUpBookingActivity() throws BWException {
         Transaction.begin();
         BWSpecification bwSpecification = BlendedWorkflow.getInstance()
-                .getSpecByName(BWSPECIFICATION_NAME).orElse(null);
+                .getSpecById(BWSPECIFICATION_NAME).orElse(null);
         List<BWInstance> bwInstances = new ArrayList<BWInstance>(
                 bwSpecification.getBwInstancesSet());
         BWInstance bwInstance = bwInstances.get(0);

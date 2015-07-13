@@ -14,7 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 
 public class CreateEntityServiceTest extends BWDomainAndServiceTest {
-    private static final String SPEC_NAME = "Spec Name";
+    private static final String SPEC_ID = "Spec ID";
     private static final String ENTITY_NAME = "Entity Name";
     private static final String NON_EXIST = "No Name";
     private static final String DUP_NAME = "Exists Name";
@@ -22,7 +22,7 @@ public class CreateEntityServiceTest extends BWDomainAndServiceTest {
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification("id1", SPEC_NAME, "author",
+        BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
         new BWEntity(spec.getDataModel(), DUP_NAME);
     }
@@ -30,11 +30,10 @@ public class CreateEntityServiceTest extends BWDomainAndServiceTest {
     @Test
     public void success() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createEntity(SPEC_NAME, ENTITY_NAME);
+                .createEntity(SPEC_ID, ENTITY_NAME);
 
         assertFalse(notification.hasErrors());
-        BWSpecification spec = getBlendedWorkflow().getSpecByName(SPEC_NAME)
-                .get();
+        BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
         BWEntity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
         assertNotNull(entity);
         assertEquals(ENTITY_NAME, entity.getName());
@@ -45,27 +44,27 @@ public class CreateEntityServiceTest extends BWDomainAndServiceTest {
         BWNotification notification = DesignInterface.getInstance()
                 .createEntity(NON_EXIST, ENTITY_NAME);
 
-        assertEquals(BWErrorType.INVALID_SPECIFICATION_NAME,
+        assertEquals(BWErrorType.INVALID_SPECIFICATION_ID,
                 notification.getError().get(0).getType());
         assertEquals(NON_EXIST, notification.getError().get(0).getValue());
     }
 
     @Test
-    public void emptySpecName() throws BWException {
+    public void emptySpecId() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
                 .createEntity(EMPTY_NAME, ENTITY_NAME);
 
-        assertEquals(BWErrorType.INVALID_SPECIFICATION_NAME,
+        assertEquals(BWErrorType.INVALID_SPECIFICATION_ID,
                 notification.getError().get(0).getType());
         assertEquals(EMPTY_NAME, notification.getError().get(0).getValue());
     }
 
     @Test
-    public void nullName() throws BWException {
+    public void nullSpecId() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
                 .createEntity(null, ENTITY_NAME);
 
-        assertEquals(BWErrorType.INVALID_SPECIFICATION_NAME,
+        assertEquals(BWErrorType.INVALID_SPECIFICATION_ID,
                 notification.getError().get(0).getType());
         assertEquals(null, notification.getError().get(0).getValue());
     }
@@ -73,7 +72,7 @@ public class CreateEntityServiceTest extends BWDomainAndServiceTest {
     @Test
     public void entityExists() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createEntity(SPEC_NAME, DUP_NAME);
+                .createEntity(SPEC_ID, DUP_NAME);
 
         assertEquals(BWErrorType.INVALID_ENTITY_NAME,
                 notification.getError().get(0).getType());

@@ -21,7 +21,7 @@ public class CreateSpecificationServiceTest extends BWDomainAndServiceTest {
     public void success() throws BWException {
         DesignInterface.getInstance().createSpecification(SPEC_ID, SPEC_NAME);
 
-        BWSpecification spec = getBlendedWorkflow().getSpecByName(SPEC_NAME)
+        BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID)
                 .orElse(null);
         assertNotNull(spec);
         assertEquals(SPEC_ID, spec.getSpecId());

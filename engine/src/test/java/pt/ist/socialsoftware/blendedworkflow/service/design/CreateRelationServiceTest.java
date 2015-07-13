@@ -13,7 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateRelationServiceTest extends BWDomainAndServiceTest {
-    private static final String SPEC_NAME = "Spec Name";
+    private static final String SPEC_ID = "Spec ID";
     private static final String ENTITY_ONE_NAME = "Entity Name One";
     private static final String ENTITY_TWO_NAME = "Entity Name Two";
     private static final String ROLENAME_ONE = "Rolename Name One";
@@ -29,7 +29,7 @@ public class CreateRelationServiceTest extends BWDomainAndServiceTest {
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification("id1", SPEC_NAME, "author",
+        BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
         entityOne = new BWEntity(spec.getDataModel(), ENTITY_ONE_NAME);
         entityTwo = new BWEntity(spec.getDataModel(), ENTITY_TWO_NAME);
@@ -37,7 +37,7 @@ public class CreateRelationServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void success() throws BWException {
-        DesignInterface.getInstance().createRelation(SPEC_NAME, ENTITY_ONE_NAME,
+        DesignInterface.getInstance().createRelation(SPEC_ID, ENTITY_ONE_NAME,
                 ROLENAME_ONE, ONE, ENTITY_TWO_NAME, ROLENAME_TWO, MANY);
 
         BWRelation relation = entityOne.getRelationsOneSet().stream()

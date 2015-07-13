@@ -21,7 +21,7 @@ public class GetSpecificationMethodTest extends BWDomainAndServiceTest {
 
     private static final String SPEC_ID = "SpecId";
     private static final String SPEC_NAME = "Spec Name";
-    private static final String NON_EXIST = "Non Exists Name";
+    private static final String NON_EXIST = "Non Exists Id";
     private static final String EMPTY_NAME = "";
 
     @Override
@@ -34,32 +34,31 @@ public class GetSpecificationMethodTest extends BWDomainAndServiceTest {
     public void success() throws BWException {
         logger.info("GetSpecificationMethod::sucess");
 
-        BWSpecification spec = getBlendedWorkflow().getSpecByName(SPEC_NAME)
+        BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID)
                 .orElse(null);
         assertNotNull(spec);
         assertEquals(SPEC_NAME, spec.getName());
     }
 
     @Test
-    public void nonExistName() throws BWException {
+    public void nonExistId() throws BWException {
         Optional<BWSpecification> spec = getBlendedWorkflow()
-                .getSpecByName(NON_EXIST);
+                .getSpecById(NON_EXIST);
 
         assertFalse(spec.isPresent());
     }
 
     @Test
-    public void emptyName() throws BWException {
+    public void emptyId() throws BWException {
         Optional<BWSpecification> spec = getBlendedWorkflow()
-                .getSpecByName(EMPTY_NAME);
+                .getSpecById(EMPTY_NAME);
 
         assertFalse(spec.isPresent());
     }
 
     @Test
-    public void nullName() throws BWException {
-        Optional<BWSpecification> spec = getBlendedWorkflow()
-                .getSpecByName(null);
+    public void nullId() throws BWException {
+        Optional<BWSpecification> spec = getBlendedWorkflow().getSpecById(null);
 
         assertFalse(spec.isPresent());
     }

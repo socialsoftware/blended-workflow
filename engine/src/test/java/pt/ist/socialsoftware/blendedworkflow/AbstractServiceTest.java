@@ -21,8 +21,8 @@ import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -125,10 +125,11 @@ public abstract class AbstractServiceTest {
         Bootstrap.clean();
     }
 
-    protected BWSpecification getBWSpecification(String name) throws BWException {
+    protected BWSpecification getBWSpecification(String name)
+            throws BWException {
         Transaction.begin();
         final BWSpecification bwSpecification = BlendedWorkflow.getInstance()
-                .getSpecByName(name).orElseThrow(() -> new BWException(
+                .getSpecById(name).orElseThrow(() -> new BWException(
                         BWErrorType.INVALID_SPECIFICATION_NAME, name));
         Transaction.commit();
         return bwSpecification;
