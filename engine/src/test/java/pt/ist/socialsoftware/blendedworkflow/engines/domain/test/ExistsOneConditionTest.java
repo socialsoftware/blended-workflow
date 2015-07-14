@@ -66,7 +66,7 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
         dataModelInstance = new DataModelInstance();
 
         // Entity1
-        entity1 = new BWEntity(dataModelInstance, ENTITY_1_NAME);
+        entity1 = new BWEntity(dataModelInstance, ENTITY_1_NAME, true);
         entity1Att1 = new BWAttribute(dataModelInstance, ENTITY_1_ATT_1_NAME,
                 entity1, ENTITY_1_ATT_1_TYPE, ENTITY_1_ATT_1_KEY, false);
 
@@ -81,7 +81,7 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
         entityInstance1_2Att1.setValue(" ");
 
         // Entity2
-        entity2 = new BWEntity(dataModelInstance, ENTITY_2_NAME);
+        entity2 = new BWEntity(dataModelInstance, ENTITY_2_NAME, false);
         entity2Att1 = new BWAttribute(dataModelInstance, ENTITY_2_ATT_1_NAME,
                 entity2, ENTITY_2_ATT_1_TYPE, ENTITY_2_ATT_1_KEY, false);
 

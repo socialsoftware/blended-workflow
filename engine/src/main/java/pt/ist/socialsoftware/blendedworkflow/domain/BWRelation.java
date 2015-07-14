@@ -10,7 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 public class BWRelation extends BWRelation_Base {
 
     public enum Cardinality {
-        MANY, ZERO_OR_ONE, ONE
+        ZERO_MANY, ONE_MANY, ZERO_OR_ONE, ONE
     }
 
     @Override

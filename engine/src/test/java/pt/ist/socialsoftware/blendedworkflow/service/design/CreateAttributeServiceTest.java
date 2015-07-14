@@ -31,7 +31,7 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     public void populate4Test() throws BWException {
         BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
-        BWEntity ent = new BWEntity(spec.getDataModel(), ENTITY_NAME);
+        BWEntity ent = new BWEntity(spec.getDataModel(), ENTITY_NAME, false);
         new BWAttribute(spec.getDataModel(), DUP_NAME, ent,
                 AttributeType.NUMBER, false, false);
     }

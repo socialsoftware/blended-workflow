@@ -27,31 +27,32 @@ public class CreateRelationMethodTest extends BWDomainAndServiceTest {
     public void populate4Test() throws BWException {
         BWSpecification spec = new BWSpecification("SpecId", "My spec",
                 "author", "description", "version", "UID");
-        entityOne = new BWEntity(spec.getDataModel(), "Entity one name");
-        entityTwo = new BWEntity(spec.getDataModel(), "Entity two name");
+        entityOne = new BWEntity(spec.getDataModel(), "Entity one name", false);
+        entityTwo = new BWEntity(spec.getDataModel(), "Entity two name", false);
         new BWRelation(spec.getDataModel(), "name", entityOne, EXISTS_ROLE_NAME,
                 Cardinality.ONE, false, entityTwo, EXISTS_ROLE_NAME,
-                Cardinality.MANY, false);
+                Cardinality.ZERO_MANY, false);
     }
 
     @Test
     public void success() {
         BWRelation relation = entityOne.createRelation(ROLE_NAME_ONE,
-                Cardinality.MANY, entityTwo, ROLE_NAME_TWO, Cardinality.ONE);
+                Cardinality.ZERO_MANY, entityTwo, ROLE_NAME_TWO,
+                Cardinality.ONE);
 
         assertNotNull(relation);
         assertEquals(entityOne, relation.getEntityOne());
         assertEquals(entityTwo, relation.getEntityTwo());
         assertEquals(ROLE_NAME_ONE, relation.getRoleNameOne());
         assertEquals(ROLE_NAME_TWO, relation.getRoleNameTwo());
-        assertEquals(Cardinality.MANY, relation.getCardinalityOne());
+        assertEquals(Cardinality.ZERO_MANY, relation.getCardinalityOne());
         assertEquals(Cardinality.ONE, relation.getCardinalityTwo());
     }
 
     @Test
     public void duplicatedRoleName1() {
         try {
-            entityOne.createRelation(EXISTS_ROLE_NAME, Cardinality.MANY,
+            entityOne.createRelation(EXISTS_ROLE_NAME, Cardinality.ZERO_MANY,
                     entityTwo, ROLE_NAME_TWO, Cardinality.ONE);
             fail();
         } catch (BWException bwe) {

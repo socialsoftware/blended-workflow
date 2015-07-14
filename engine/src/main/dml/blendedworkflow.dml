@@ -142,6 +142,7 @@ class DataModelInstance extends BWDataModel;
 
 class BWEntity {
 	String name;
+	boolean exists;
 	Integer entityInstanceCounter;
 }
 

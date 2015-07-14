@@ -17,9 +17,10 @@ public class BWEntity extends BWEntity_Base {
         super.setName(name);
     }
 
-    public BWEntity(BWDataModel dataModel, String name) {
+    public BWEntity(BWDataModel dataModel, String name, boolean exists) {
         setDataModel(dataModel);
         setName(name);
+        setExists(exists);
         setEntityInstanceCounter(0);
     }
 
@@ -54,7 +55,7 @@ public class BWEntity extends BWEntity_Base {
 
     public void cloneEntity(DataModelInstance dataModelInstance)
             throws BWException {
-        BWEntity newEntity = new BWEntity(dataModelInstance, getName());
+        BWEntity newEntity = new BWEntity(dataModelInstance, getName(), false);
         for (BWAttribute attribute : getAttributesSet()) {
             attribute.cloneAttribute(dataModelInstance, newEntity);
         }

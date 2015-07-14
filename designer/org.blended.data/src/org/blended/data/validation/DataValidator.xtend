@@ -6,40 +6,30 @@ package org.blended.data.validation
 import org.blended.data.data.Attribute
 import org.blended.data.data.DataPackage
 import org.eclipse.xtext.validation.Check
+import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface
+import static extension org.eclipse.xtext.EcoreUtil2.*
+import pt.ist.socialsoftware.blendedworkflow.service.BWNotification
+import pt.ist.socialsoftware.blendedworkflow.service.BWError
+import org.blended.data.data.DataModel
 
 /**
  * This class contains custom validation rules. 
- *
+ * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class DataValidator extends AbstractDataValidator {
-  	public static val INVALID_NAME = 'invalidName'
- 	
-  		@Check
-	  	def checkModel(Attribute att) {
-	  		if ((!att.type.equals("String"))&&
-	  			(!att.type.equals("Boolean"))&&
-	  			(!att.type.equals("Number"))&&
-	  			(!att.type.equals("Data"))) {
-	  			error("Invalid Data Type", DataPackage.Literals.ATTRIBUTE__TYPE)
-	  		}
-	  	/*		warning('1', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
-	  	  	var instance = DesignInterface.getInstance
-	  		try {
-				var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
-	  			warning('2', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
-    			instance.loadDataModel(specId, model)
-	  			warning('3', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
-	  		} catch (BWException bwe) {
-	  			error('Specification with the same name already exists', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
-	  		}
-*/
-	  		//if (entity.uid == null) {
-	  		//	entity.uid = entity.hashCode().toString
-	  		//	System.out.println("UUID for entity " + entity.name + ": " + entity.uid)
-	  		//}
-	  		//else System.out.println("UUID for entity " + entity.name + "is already assigned with value: " + entity.uid)
-	  		//System.out.println("UUID for entity " + entity.name + ": " + entity.hashCode) 		
-  	}
+	public static val INVALID_NAME = 'invalidName'
 
+	@Check
+	def checkModel(DataModel model) {
+		var instance = DesignInterface.getInstance
+		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+		var notification = instance.loadDataModel(specId, model)
+		if (notification.hasErrors)
+			for (BWError error : notification.error)
+				error(error.type.toString + "-" + error.value, DataPackage.Literals.DATA_MODEL__SPECIFICATION,
+					INVALID_NAME)
+		else
+			info('everything OK', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
+	}
 }

@@ -1,11 +1,20 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.blended.data.data.Association;
+import org.blended.data.data.Attribute;
+import org.blended.data.data.DataModel;
+import org.blended.data.data.Entity;
+import org.eclipse.emf.ecore.EObject;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
@@ -35,13 +44,13 @@ public class AtomicDesignInterface {
     }
 
     @Atomic
-    public void createEntity(String specId, String entityName) {
+    public void createEntity(String specId, String entityName, Boolean exists) {
         BWSpecification spec = getBlendedWorkflow().getSpecById(specId)
                 .orElseThrow(() -> new BWException(
                         BWErrorType.INVALID_SPECIFICATION_ID, specId));
         BWDataModel dataModel = spec.getDataModel();
 
-        dataModel.createEntity(entityName);
+        dataModel.createEntity(entityName, exists);
     }
 
     @Atomic
@@ -51,9 +60,7 @@ public class AtomicDesignInterface {
                 .orElseThrow(() -> new BWException(
                         BWErrorType.INVALID_SPECIFICATION_ID, specId));
 
-        BWEntity ent = spec.getDataModel().getEntity(entityName).orElseThrow(
-                () -> new BWException(BWErrorType.INVALID_ENTITY_NAME,
-                        entityName));
+        BWEntity ent = getEntity(spec.getDataModel(), entityName);
 
         ent.createAttribute(attributeName, parseAttributeType(attributeType));
     }
@@ -67,23 +74,102 @@ public class AtomicDesignInterface {
                 .orElseThrow(() -> new BWException(
                         BWErrorType.INVALID_SPECIFICATION_ID, specId));
 
-        BWEntity entityOne = spec.getDataModel().getEntity(entityOneName)
-                .orElseThrow(() -> new BWException(
-                        BWErrorType.INVALID_ENTITY_NAME, entityOneName));
+        BWEntity entityOne = getEntity(spec.getDataModel(), entityOneName);
 
-        BWEntity entityTwo = spec.getDataModel().getEntity(entityTwoName)
-                .orElseThrow(() -> new BWException(
-                        BWErrorType.INVALID_ENTITY_NAME, entityTwoName));
+        BWEntity entityTwo = getEntity(spec.getDataModel(), entityTwoName);
 
         entityOne.createRelation(roleNameOne, parseCardinality(cardinalityOne),
                 entityTwo, roleNameTwo, parseCardinality(cardinalityTwo));
     }
 
+    @Atomic
+    public void loadDataModel(String specId, DataModel eDataModel) {
+        BlendedWorkflow bw = getBlendedWorkflow();
+
+        BWSpecification spec = bw.getSpecById(specId)
+                .orElseGet(() -> bw.createSpecification(specId,
+                        eDataModel.getSpecification().getName()));
+        BWDataModel dataModel = spec.getDataModel();
+
+        // create entities
+        Set<String> existingEntities = dataModel.getEntitiesSet().stream()
+                .map(ent -> ent.getName()).collect(Collectors.toSet());
+
+        for (Entity eEnt : eDataModel.getEntities()) {
+            BWEntity newEnt = null;
+            if (!existingEntities.contains(eEnt.getName())) {
+                newEnt = dataModel.createEntity(eEnt.getName(),
+                        eEnt.isExists());
+
+            } else {
+                existingEntities.remove(eEnt.getName());
+                newEnt = getEntity(dataModel, eEnt.getName());
+            }
+
+            // create attributes
+            Set<String> existingAttributes = newEnt.getAttributesSet().stream()
+                    .map(att -> att.getName()).collect(Collectors.toSet());
+
+            for (EObject att : eEnt.getAttributes()) {
+                if (att instanceof Attribute) {
+                    Attribute eAtt = (Attribute) att;
+                    if (!existingAttributes.contains(eAtt.getName())) {
+                        newEnt.createAttribute(eAtt.getName(),
+                                parseAttributeType(eAtt.getType()));
+                    } else {
+                        existingAttributes.remove(eAtt.getName());
+                        BWAttribute existAtt = newEnt
+                                .getAttribute(eAtt.getName());
+                        existAtt.setType(parseAttributeType(eAtt.getType()));
+                    }
+                }
+            }
+
+            // delete attributes
+            for (String attName : existingAttributes) {
+                newEnt.getAttribute(attName).delete();
+            }
+        }
+
+        // delete entities
+        for (String entityName : existingEntities) {
+            dataModel.getEntity(entityName).get().delete();
+        }
+
+        // create relations
+        // first delete all existing relation because they do not have a name
+        for (BWRelation rel : dataModel.getRelationsSet()) {
+            rel.delete();
+        }
+
+        for (Association assoc : eDataModel.getAssociations()) {
+            BWEntity entityOne = getEntity(dataModel,
+                    assoc.getEntity1().getName());
+            BWEntity entityTwo = getEntity(dataModel,
+                    assoc.getEntity2().getName());
+
+            entityOne.createRelation(assoc.getName1(),
+                    parseCardinality(assoc.getCardinality1()), entityTwo,
+                    assoc.getName2(),
+                    parseCardinality(assoc.getCardinality2()));
+        }
+
+        // create attribute group
+        // EObject obj = eDataModel.getEntities().get(0).getAttributes().get(0);
+        // if (obj instanceof Attribute) {
+        // Attribute att = (Attribute) obj;
+        //
+        // } else if (obj instanceof AttributeGroup) {
+        //
+        // }
+    }
+
     final static String STRING = "String";
     final static String NUMBER = "Number";
     final static String BOOLEAN = "Boolean";
+    final static String DATE = "Date";
     final static String ATTRIBUTE_TYPE = "(" + STRING + "|" + NUMBER + "|"
-            + BOOLEAN + ")";
+            + BOOLEAN + "|" + DATE + ")";
 
     private BWAttribute.AttributeType parseAttributeType(String type) {
         if (!Pattern.matches(ATTRIBUTE_TYPE, type))
@@ -101,6 +187,9 @@ public class AtomicDesignInterface {
         case BOOLEAN:
             res = BWAttribute.AttributeType.BOOLEAN;
             break;
+        case DATE:
+            res = BWAttribute.AttributeType.DATE;
+            break;
         default:
             res = null;
             assert(false);
@@ -110,14 +199,15 @@ public class AtomicDesignInterface {
     }
 
     final static String ONE = "1";
-    final static String MANY = "\\*";
+    final static String ZERO_MANY = "\\*";
     final static String ZERO_OR_ONE = "0..1";
-    final static String CARDINALITY = "(" + ONE + "|" + ZERO_OR_ONE + "|" + MANY
-            + ")";
+    final static String ONE_MANY = "1..\\*";
+    final static String CARDINALITY = "(" + ONE + "|" + ZERO_OR_ONE + "|"
+            + ZERO_MANY + "|" + ONE_MANY + ")";
 
     private Cardinality parseCardinality(String cardinality) {
         if (!Pattern.matches(CARDINALITY, cardinality))
-            throw new BWException(BWErrorType.INVALID_CARDINALITY);
+            throw new BWException(BWErrorType.INVALID_CARDINALITY, cardinality);
 
         Cardinality res;
 
@@ -129,7 +219,10 @@ public class AtomicDesignInterface {
             res = Cardinality.ZERO_OR_ONE;
             break;
         case "*":
-            res = Cardinality.MANY;
+            res = Cardinality.ZERO_MANY;
+            break;
+        case "1..*":
+            res = Cardinality.ONE_MANY;
             break;
         default:
             res = null;
@@ -137,6 +230,11 @@ public class AtomicDesignInterface {
         }
 
         return res;
+    }
+
+    private BWEntity getEntity(BWDataModel dataModel, String name) {
+        return dataModel.getEntity(name).orElseThrow(
+                () -> new BWException(BWErrorType.INVALID_ENTITY_NAME, name));
     }
 
 }

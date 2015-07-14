@@ -29,15 +29,16 @@ public class DataModelTest extends AbstractDomainTest {
         dataModelInstance = new DataModelInstance();
 
         // Types
-        BWEntity A = new BWEntity(dataModelInstance, "A");
-        BWEntity B = new BWEntity(dataModelInstance, "B");
-        BWEntity C = new BWEntity(dataModelInstance, "C");
-        BWEntity D = new BWEntity(dataModelInstance, "D");
-        BWEntity E = new BWEntity(dataModelInstance, "E");
-        BWEntity F = new BWEntity(dataModelInstance, "F");
-        BWEntity X = new BWEntity(dataModelInstance, "X");
+        BWEntity A = new BWEntity(dataModelInstance, "A", false);
+        BWEntity B = new BWEntity(dataModelInstance, "B", false);
+        BWEntity C = new BWEntity(dataModelInstance, "C", false);
+        BWEntity D = new BWEntity(dataModelInstance, "D", false);
+        BWEntity E = new BWEntity(dataModelInstance, "E", false);
+        BWEntity F = new BWEntity(dataModelInstance, "F", false);
+        BWEntity X = new BWEntity(dataModelInstance, "X", false);
         BWRelation AB = new BWRelation(dataModelInstance, "AB", A, A.getName(),
-                Cardinality.ONE, false, B, B.getName(), Cardinality.MANY, true);
+                Cardinality.ONE, false, B, B.getName(), Cardinality.ZERO_MANY,
+                true);
         BWRelation AC = new BWRelation(dataModelInstance, "AC", A, A.getName(),
                 Cardinality.ONE, true, C, C.getName(), Cardinality.ONE, false);
         BWRelation AD = new BWRelation(dataModelInstance, "AD", A, A.getName(),

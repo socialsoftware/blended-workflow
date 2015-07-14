@@ -24,9 +24,9 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification("SpecId", "My spec", "author",
-                "description", "version", "UID");
-        entity = new BWEntity(spec.getDataModel(), "Entity name");
+        BWSpecification spec = new BWSpecification("SpecId", "My spec",
+                "author", "description", "version", "UID");
+        entity = new BWEntity(spec.getDataModel(), "Entity name", false);
         new BWAttribute(spec.getDataModel(), EXISTS_NAME, entity,
                 AttributeType.BOOLEAN, false, false);
     }

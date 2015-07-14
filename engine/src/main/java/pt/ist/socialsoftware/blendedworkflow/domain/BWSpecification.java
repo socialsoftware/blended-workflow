@@ -59,16 +59,6 @@ public class BWSpecification extends BWSpecification_Base {
     private void checkSpecificationName(String name) {
         if ((name == null) || name.equals(""))
             throw new BWException(BWErrorType.INVALID_SPECIFICATION_NAME, name);
-
-        // checkUniqueSpecificationName(name);
-    }
-
-    private void checkUniqueSpecificationName(String name) throws BWException {
-        BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-        boolean existsName = blendedWorkflow.getSpecificationSet().stream()
-                .anyMatch(spec -> spec.getName().equals(name));
-        if (existsName)
-            throw new BWException(BWErrorType.INVALID_SPECIFICATION_NAME, name);
     }
 
     public int generateInstanceId() {

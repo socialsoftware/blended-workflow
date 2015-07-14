@@ -35,8 +35,10 @@ public class LocalSystemTest {
         designInterface.createSpecification("id1", "First Specification");
         designInterface.createSpecification("id2", "Second Specification");
 
-        designInterface.createEntity("First Specification", "First Entity");
-        designInterface.createEntity("First Specification", "Second Entity");
+        designInterface.createEntity("First Specification", "First Entity",
+                false);
+        designInterface.createEntity("First Specification", "Second Entity",
+                false);
 
         designInterface.createAttribute("First Specification", "First Entity",
                 "att1", "Boolean");

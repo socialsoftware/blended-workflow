@@ -6,7 +6,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 public class BWAttribute extends BWAttribute_Base {
 
     public enum AttributeType {
-        BOOLEAN, NUMBER, STRING
+        BOOLEAN, NUMBER, STRING, DATE
     };
 
     @Override

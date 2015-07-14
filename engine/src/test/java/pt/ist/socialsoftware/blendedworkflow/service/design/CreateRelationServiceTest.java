@@ -31,8 +31,8 @@ public class CreateRelationServiceTest extends BWDomainAndServiceTest {
     public void populate4Test() throws BWException {
         BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
-        entityOne = new BWEntity(spec.getDataModel(), ENTITY_ONE_NAME);
-        entityTwo = new BWEntity(spec.getDataModel(), ENTITY_TWO_NAME);
+        entityOne = new BWEntity(spec.getDataModel(), ENTITY_ONE_NAME, false);
+        entityTwo = new BWEntity(spec.getDataModel(), ENTITY_TWO_NAME, false);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class CreateRelationServiceTest extends BWDomainAndServiceTest {
         assertEquals(Cardinality.ONE, relation.getCardinalityOne());
         assertEquals(ENTITY_TWO_NAME, relation.getEntityTwo().getName());
         assertEquals(ROLENAME_TWO, relation.getRoleNameTwo());
-        assertEquals(Cardinality.MANY, relation.getCardinalityTwo());
+        assertEquals(Cardinality.ZERO_MANY, relation.getCardinalityTwo());
     }
 
 }

@@ -17,8 +17,8 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class DataModelFactory {
 
-    public void parseXMLDataModel(BWDataModel dataModel, String specificationXML)
-            throws BWException {
+    public void parseXMLDataModel(BWDataModel dataModel,
+            String specificationXML) throws BWException {
         Document doc = StringUtils.stringToDoc(specificationXML);
 
         Element root = doc.getRootElement();
@@ -51,7 +51,7 @@ public class DataModelFactory {
         Namespace dmNamespace = entityXML.getNamespace();
 
         String entityName = entityXML.getChildText("Name", dmNamespace);
-        BWEntity entity = new BWEntity(dataModel, entityName);
+        BWEntity entity = new BWEntity(dataModel, entityName, false);
         return entity;
     }
 
@@ -100,8 +100,8 @@ public class DataModelFactory {
     private Cardinality parseCardinality(String cardinality) {
         if (cardinality.equals(Cardinality.ONE.toString())) {
             return Cardinality.ONE;
-        } else if (cardinality.equals(Cardinality.MANY.toString())) {
-            return Cardinality.MANY;
+        } else if (cardinality.equals(Cardinality.ZERO_MANY.toString())) {
+            return Cardinality.ZERO_MANY;
         } else if (cardinality.equals(Cardinality.ZERO_OR_ONE.toString())) {
             return Cardinality.ZERO_OR_ONE;
         }

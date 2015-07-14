@@ -55,8 +55,8 @@ public class BWDataModel extends BWDataModel_Base {
         deleteDomainObject();
     }
 
-    public BWEntity createEntity(String entityName) {
-        return new BWEntity(this, entityName);
+    public BWEntity createEntity(String entityName, Boolean exists) {
+        return new BWEntity(this, entityName, exists);
     }
 
 }

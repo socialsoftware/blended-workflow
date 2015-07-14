@@ -2,17 +2,17 @@ package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.CompareAttributeToValueCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.CompareAttributeToValueCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ExistsAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ExistsEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ExistsOneCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.OrCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -157,7 +157,7 @@ public class ConditionParser {
         if (dataModel.getEntity(elementName.toString()) != null)
             return dataModel.getEntity(elementName.toString()).get();
         else
-            return new BWEntity(dataModel, elementName.toString());
+            return new BWEntity(dataModel, elementName.toString(), false);
     }
 
     protected Condition parseCompareAttributeToCondition() throws BWException {
@@ -302,7 +302,7 @@ public class ConditionParser {
         if (dataModel.getEntity(elementArr[0]) != null)
             entity = dataModel.getEntity(elementArr[0]).get();
         else
-            entity = new BWEntity(dataModel, elementArr[0]);
+            entity = new BWEntity(dataModel, elementArr[0], false);
         return entity;
     }
 

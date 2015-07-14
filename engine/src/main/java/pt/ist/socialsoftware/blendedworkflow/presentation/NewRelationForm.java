@@ -210,11 +210,11 @@ public class NewRelationForm extends VerticalLayout {
         } else if (card.equals("0..1 to *")) {
             return Cardinality.ZERO_OR_ONE;
         } else if (card.equals("* to 1")) {
-            return Cardinality.MANY;
+            return Cardinality.ZERO_MANY;
         } else if (card.equals("* to 0..1")) {
-            return Cardinality.MANY;
+            return Cardinality.ZERO_MANY;
         } else if (card.equals("* to *")) {
-            return Cardinality.MANY;
+            return Cardinality.ZERO_MANY;
         }
         return null;
     }
@@ -223,7 +223,7 @@ public class NewRelationForm extends VerticalLayout {
         if (card.equals("1 to 0..1")) {
             return Cardinality.ZERO_OR_ONE;
         } else if (card.equals("1 to *")) {
-            return Cardinality.MANY;
+            return Cardinality.ZERO_MANY;
         } else if (card.equals("1 to 1")) {
             return Cardinality.ONE;
         } else if (card.equals("0..1 to 1")) {
@@ -231,13 +231,13 @@ public class NewRelationForm extends VerticalLayout {
         } else if (card.equals("0..1 to 0..1")) {
             return Cardinality.ZERO_OR_ONE;
         } else if (card.equals("0..1 to *")) {
-            return Cardinality.MANY;
+            return Cardinality.ZERO_MANY;
         } else if (card.equals("* to 1")) {
             return Cardinality.ONE;
         } else if (card.equals("* to 0..1")) {
             return Cardinality.ZERO_OR_ONE;
         } else if (card.equals("* to *")) {
-            return Cardinality.MANY;
+            return Cardinality.ZERO_MANY;
         }
         return null;
     }

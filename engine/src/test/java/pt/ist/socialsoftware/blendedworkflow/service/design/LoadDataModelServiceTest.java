@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.blended.data.data.Association;
 import org.blended.data.data.Attribute;
 import org.blended.data.data.DataFactory;
 import org.blended.data.data.DataModel;
@@ -18,6 +19,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 
@@ -48,9 +51,14 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         existingDataModel = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
                 .get().getDataModel();
 
-        BWEntity entity = new BWEntity(existingDataModel, EXISTS_ENTITY_NAME);
+        BWEntity entity = new BWEntity(existingDataModel, EXISTS_ENTITY_NAME,
+                false);
         new BWAttribute(existingDataModel, EXISTS_ATTRIBUTE_NAME, entity,
                 BWAttribute.AttributeType.NUMBER, false, false);
+
+        BWRelation relation = new BWRelation(existingDataModel, "relation",
+                entity, "role1", Cardinality.ZERO_OR_ONE, false, entity,
+                "role2", Cardinality.ONE, false);
 
         eDataModel = dataFactory.createDataModel();
     }
@@ -93,6 +101,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
     public void successCreateAndDeleteEntity() {
         eEnt = dataFactory.createEntity();
         eEnt.setName(ENTITY_NAME);
+        eEnt.setExists(true);
         eDataModel.getEntities().add(eEnt);
 
         BWNotification notification = designInterface
@@ -102,6 +111,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
         BWEntity entity = existingDataModel.getEntity(ENTITY_NAME).orElse(null);
         assertTrue(existingDataModel.getEntitiesSet().contains(entity));
+        assertTrue(entity.getExists());
         entity = existingDataModel.getEntity(EXISTS_ENTITY_NAME).orElse(null);
         assertNull(entity);
     }
@@ -110,9 +120,11 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
     public void successCreateAndMaintainEntity() {
         eEnt = dataFactory.createEntity();
         eEnt.setName(ENTITY_NAME);
+        eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
         Entity eEnt = dataFactory.createEntity();
         eEnt.setName(EXISTS_ENTITY_NAME);
+        eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
 
         BWNotification notification = designInterface
@@ -122,14 +134,17 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
         BWEntity entity = existingDataModel.getEntity(ENTITY_NAME).orElse(null);
         assertTrue(existingDataModel.getEntitiesSet().contains(entity));
+        assertFalse(entity.getExists());
         entity = existingDataModel.getEntity(EXISTS_ENTITY_NAME).orElse(null);
         assertTrue(existingDataModel.getEntitiesSet().contains(entity));
+        assertFalse(entity.getExists());
     }
 
     @Test
     public void successCreateAndDeleteAttribute() {
         eEnt = dataFactory.createEntity();
         eEnt.setName(EXISTS_ENTITY_NAME);
+        eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
         Attribute eAtt = dataFactory.createAttribute();
         eEnt.getAttributes().add(eAtt);
@@ -155,6 +170,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
     public void successCreateAndMaintainAttribute() {
         eEnt = dataFactory.createEntity();
         eEnt.setName(EXISTS_ENTITY_NAME);
+        eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
         Attribute eAtt = dataFactory.createAttribute();
         eEnt.getAttributes().add(eAtt);
@@ -188,6 +204,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
     public void successMaintainAttributeAndChangeType() {
         eEnt = dataFactory.createEntity();
         eEnt.setName(EXISTS_ENTITY_NAME);
+        eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
         Attribute eAtt = dataFactory.createAttribute();
         eEnt.getAttributes().add(eAtt);
@@ -205,7 +222,33 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
         assertEquals(AttributeType.STRING,
                 entity.getAttribute(EXISTS_ATTRIBUTE_NAME).getType());
+    }
 
+    @Test
+    public void successRelation() {
+        Entity eEntOne = dataFactory.createEntity();
+        eEntOne.setName(ENTITY_NAME);
+        eEntOne.setExists(false);
+        eDataModel.getEntities().add(eEntOne);
+        Entity eEntTwo = dataFactory.createEntity();
+        eEntTwo.setName(EXISTS_ENTITY_NAME);
+        eEntTwo.setExists(false);
+        eDataModel.getEntities().add(eEntTwo);
+        Association eAssoc = dataFactory.createAssociation();
+        eAssoc.setEntity1(eEntOne);
+        eAssoc.setName1("role1");
+        eAssoc.setCardinality1("*");
+        eAssoc.setEntity2(eEntTwo);
+        eAssoc.setName2("role2");
+        eAssoc.setCardinality2("0..1");
+        eDataModel.getAssociations().add(eAssoc);
+
+        BWNotification notification = designInterface
+                .loadDataModel(EXISTS_SPEC_ID, eDataModel);
+
+        assertFalse(notification.hasErrors());
+
+        assertEquals(1, existingDataModel.getRelationsSet().size());
     }
 
 }
