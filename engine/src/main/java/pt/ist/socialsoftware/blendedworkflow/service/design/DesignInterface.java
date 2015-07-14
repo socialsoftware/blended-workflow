@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.blended.data.data.Association;
 import org.blended.data.data.Attribute;
 import org.blended.data.data.DataModel;
 import org.blended.data.data.Entity;
@@ -13,7 +14,6 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.service.BWError;
@@ -22,7 +22,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 
 public class DesignInterface {
-    public static DesignInterface instance = null;
+    private static DesignInterface instance = null;
 
     public static DesignInterface getInstance() {
         if (instance == null) {
@@ -31,15 +31,70 @@ public class DesignInterface {
         return instance;
     }
 
+    private AtomicDesignInterface adi = null;
+
     private DesignInterface() {
-        // Bootstrap.init();
+        adi = AtomicDesignInterface.getInstance();
+    }
+
+    public BWNotification createSpecification(String specId, String name) {
+        BWNotification notification = new BWNotification();
+        try {
+            adi.createSpecification(specId, name);
+        } catch (BWException bwe) {
+            notification
+                    .addError(new BWError(bwe.getError(), bwe.getMessage()));
+        }
+
+        return notification;
+    }
+
+    public BWNotification createEntity(String specId, String entityName) {
+        BWNotification notification = new BWNotification();
+
+        try {
+            adi.createEntity(specId, entityName);
+        } catch (BWException bwe) {
+            notification
+                    .addError(new BWError(bwe.getError(), bwe.getMessage()));
+        }
+
+        return notification;
+    }
+
+    public BWNotification createAttribute(String specId, String entityName,
+            String attributeName, String attributeType) {
+        BWNotification notification = new BWNotification();
+
+        try {
+            adi.createAttribute(specId, entityName, attributeName,
+                    attributeType);
+        } catch (BWException bwe) {
+            notification
+                    .addError(new BWError(bwe.getError(), bwe.getMessage()));
+        }
+        return notification;
+    }
+
+    public BWNotification createRelation(String specId, String entityOneName,
+            String roleNameOne, String cardinalityOne, String entityTwoName,
+            String roleNameTwo, String cardinalityTwo) {
+        BWNotification notification = new BWNotification();
+
+        try {
+            adi.createRelation(specId, entityOneName, roleNameOne,
+                    cardinalityOne, entityTwoName, roleNameTwo, cardinalityTwo);
+        } catch (BWException bwe) {
+            notification
+                    .addError(new BWError(bwe.getError(), bwe.getMessage()));
+        }
+
+        return notification;
+
     }
 
     @Atomic
     public BWNotification loadDataModel(String specId, DataModel eDataModel) {
-        // String specId = EcoreUtil2.getNormalizedURI(eDataModel.eResource())
-        // .lastSegment().split("\\.")[0];
-
         BWNotification notification = new BWNotification();
 
         BlendedWorkflow bw = getBlendedWorkflow();
@@ -49,7 +104,7 @@ public class DesignInterface {
                         eDataModel.getSpecification().getName()));
         BWDataModel dataModel = spec.getDataModel();
 
-        // create/delete entities
+        // create entities
         Set<String> existingEntities = dataModel.getEntitiesSet().stream()
                 .map(ent -> ent.getName()).collect(Collectors.toSet());
 
@@ -60,14 +115,14 @@ public class DesignInterface {
                     newEnt = dataModel.createEntity(eEnt.getName());
                 } catch (BWException bwe) {
                     notification.addError(
-                            new BWError(bwe.getError(), eEnt.getName(), ""));
+                            new BWError(bwe.getError(), eEnt.getName()));
                 }
             } else {
                 existingEntities.remove(eEnt.getName());
                 newEnt = dataModel.getEntity(eEnt.getName()).get();
             }
 
-            // create/delete attributes
+            // create attributes
             Set<String> existingAttributes = newEnt.getAttributesSet().stream()
                     .map(att -> att.getName()).collect(Collectors.toSet());
 
@@ -80,7 +135,7 @@ public class DesignInterface {
                                     parseAttributeType(eAtt.getType()));
                         } catch (BWException bwe) {
                             notification.addError(new BWError(bwe.getError(),
-                                    eEnt.getName(), ""));
+                                    eEnt.getName()));
                         }
                     } else {
                         existingAttributes.remove(eAtt.getName());
@@ -91,151 +146,27 @@ public class DesignInterface {
                 }
             }
 
+            // delete attributes
             for (String attName : existingAttributes) {
                 newEnt.getAttribute(attName).delete();
             }
         }
 
+        // delete entities
         for (String entityName : existingEntities) {
             dataModel.getEntity(entityName).get().delete();
         }
 
-        return notification;
-    }
+        // create relations
+        for (Association assoc : eDataModel.getAssociations()) {
+            if ((assoc.getEntity1() == null) || (assoc.getEntity2() == null))
+                System.out.println("null entity");
 
-    @Atomic
-    public BWNotification createSpecification(String specId, String name) {
-        BWNotification notification = new BWNotification();
-        try {
-            getBlendedWorkflow().createSpecification(specId, name);
-        } catch (BWException bwe) {
-            switch (bwe.getError()) {
-            case INVALID_SPECIFICATION_ID:
-                notification.addError(new BWError(bwe.getError(), specId, ""));
-                break;
-            case INVALID_SPECIFICATION_NAME:
-                notification.addError(new BWError(bwe.getError(), name, ""));
-                break;
-            default:
-                assert false;
-            }
+            System.out.println(assoc.getEntity1().getName() + ","
+                    + assoc.getEntity2().getName());
         }
 
         return notification;
-    }
-
-    @Atomic
-    public BWNotification createEntity(String specId, String entityName) {
-        BWNotification notification = new BWNotification();
-
-        BWSpecification spec = getSpecification(specId, notification);
-        if (notification.hasErrors())
-            return notification;
-        BWDataModel dataModel = spec.getDataModel();
-
-        try {
-            dataModel.createEntity(entityName);
-        } catch (BWException bwe) {
-            notification.addError(new BWError(bwe.getError(), entityName, ""));
-        }
-
-        return notification;
-    }
-
-    @Atomic
-    public BWNotification createAttribute(String specId, String entityName,
-            String attributeName, String attributeType) {
-        BWNotification notification = new BWNotification();
-
-        BWSpecification spec = getSpecification(specId, notification);
-        if (notification.hasErrors())
-            return notification;
-
-        BWEntity ent = getEntity(entityName, notification, spec);
-        if (notification.hasErrors())
-            return notification;
-
-        try {
-            ent.createAttribute(attributeName,
-                    parseAttributeType(attributeType));
-        } catch (BWException bwe) {
-            switch (bwe.getError()) {
-            case INVALID_ATTRIBUTE_NAME:
-                notification.addError(new BWError(
-                        BWErrorType.INVALID_ATTRIBUTE_NAME, attributeName, ""));
-                return notification;
-            case INVALID_ATTRIBUTE_TYPE:
-                notification.addError(new BWError(
-                        BWErrorType.INVALID_ATTRIBUTE_TYPE, attributeType, ""));
-                return notification;
-            default:
-                assert(false);
-            }
-        }
-
-        return notification;
-    }
-
-    private BWEntity getEntity(String entityName, BWNotification notification,
-            BWSpecification spec) {
-        BWEntity ent = spec.getDataModel().getEntity(entityName).orElse(null);
-        if (ent == null) {
-            notification.addError(new BWError(BWErrorType.INVALID_ENTITY_NAME,
-                    entityName, ""));
-        }
-        return ent;
-    }
-
-    @Atomic
-    public BWNotification createRelation(String specId, String entityOneName,
-            String roleNameOne, String cardinalityOne, String entityTwoName,
-            String roleNameTwo, String cardinalityTwo) {
-        BWNotification notification = new BWNotification();
-
-        BWSpecification spec = getSpecification(specId, notification);
-        if (notification.hasErrors())
-            return notification;
-
-        BWEntity entityOne = getEntity(entityOneName, notification, spec);
-        if (notification.hasErrors())
-            return notification;
-
-        BWEntity entityTwo = getEntity(entityTwoName, notification, spec);
-        if (notification.hasErrors())
-            return notification;
-
-        try {
-            entityOne.createRelation(roleNameOne,
-                    parseCardinality(cardinalityOne), entityTwo, roleNameTwo,
-                    parseCardinality(cardinalityTwo));
-        } catch (BWException bwe) {
-            switch (bwe.getError()) {
-            case INVALID_ROLE:
-                notification.addError(new BWError(bwe.getError(),
-                        roleNameOne + "-" + roleNameTwo, ""));
-                break;
-            case INVALID_CARDINALITY:
-                notification.addError(new BWError(bwe.getError(),
-                        cardinalityOne + "-" + cardinalityTwo, ""));
-                break;
-            default:
-                assert false;
-            }
-        }
-
-        return notification;
-
-    }
-
-    private BWSpecification getSpecification(String specId,
-            BWNotification notification) {
-        BWSpecification spec = getBlendedWorkflow().getSpecById(specId)
-                .orElse(null);
-        if (spec == null) {
-            notification.addError(new BWError(
-                    BWErrorType.INVALID_SPECIFICATION_ID, specId, ""));
-        }
-        return spec;
     }
 
     private BlendedWorkflow getBlendedWorkflow() {
@@ -248,9 +179,9 @@ public class DesignInterface {
     final static String ATTRIBUTE_TYPE = "(" + STRING + "|" + NUMBER + "|"
             + BOOLEAN + ")";
 
-    public static BWAttribute.AttributeType parseAttributeType(String type) {
+    private BWAttribute.AttributeType parseAttributeType(String type) {
         if (!Pattern.matches(ATTRIBUTE_TYPE, type))
-            throw new BWException(BWErrorType.INVALID_CARDINALITY);
+            throw new BWException(BWErrorType.INVALID_ATTRIBUTE_TYPE);
 
         BWAttribute.AttributeType res;
 
@@ -263,36 +194,6 @@ public class DesignInterface {
             break;
         case BOOLEAN:
             res = BWAttribute.AttributeType.BOOLEAN;
-            break;
-        default:
-            res = null;
-            assert(false);
-        }
-
-        return res;
-    }
-
-    final static String ONE = "1";
-    final static String MANY = "\\*";
-    final static String ZERO_OR_ONE = "0..1";
-    final static String CARDINALITY = "(" + ONE + "|" + ZERO_OR_ONE + "|" + MANY
-            + ")";
-
-    private Cardinality parseCardinality(String cardinality) {
-        if (!Pattern.matches(CARDINALITY, cardinality))
-            throw new BWException(BWErrorType.INVALID_CARDINALITY);
-
-        Cardinality res;
-
-        switch (cardinality) {
-        case ONE:
-            res = Cardinality.ONE;
-            break;
-        case ZERO_OR_ONE:
-            res = Cardinality.ZERO_OR_ONE;
-            break;
-        case "*":
-            res = Cardinality.MANY;
             break;
         default:
             res = null;

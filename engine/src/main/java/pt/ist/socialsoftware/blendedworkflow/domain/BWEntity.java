@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
@@ -16,7 +17,7 @@ public class BWEntity extends BWEntity_Base {
         super.setName(name);
     }
 
-    public BWEntity(BWDataModel dataModel, String name) throws BWException {
+    public BWEntity(BWDataModel dataModel, String name) {
         setDataModel(dataModel);
         setName(name);
         setEntityInstanceCounter(0);
@@ -295,7 +296,8 @@ public class BWEntity extends BWEntity_Base {
     }
 
     public Set<BWRelation> getRelationsSet() {
-        Set<BWRelation> relations = this.getRelationsOneSet();
+        Set<BWRelation> relations = new HashSet<BWRelation>(
+                this.getRelationsOneSet());
         relations.addAll(getRelationsTwoSet());
         return relations;
     }

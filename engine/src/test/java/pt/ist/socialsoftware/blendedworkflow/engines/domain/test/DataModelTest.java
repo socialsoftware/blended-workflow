@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -36,20 +36,20 @@ public class DataModelTest extends AbstractDomainTest {
         BWEntity E = new BWEntity(dataModelInstance, "E");
         BWEntity F = new BWEntity(dataModelInstance, "F");
         BWEntity X = new BWEntity(dataModelInstance, "X");
-        BWRelation AB = new BWRelation(dataModelInstance, "AB", A, "",
-                Cardinality.ONE, false, B, "", Cardinality.MANY, true);
-        BWRelation AC = new BWRelation(dataModelInstance, "AC", A, "",
-                Cardinality.ONE, true, C, "", Cardinality.ONE, false);
-        BWRelation AD = new BWRelation(dataModelInstance, "AD", A, "",
-                Cardinality.ONE, true, D, "", Cardinality.ONE, false);
-        BWRelation DE = new BWRelation(dataModelInstance, "DE", D, "",
-                Cardinality.ONE, true, E, "", Cardinality.ONE, false);
-        BWRelation DF = new BWRelation(dataModelInstance, "DF", D, "",
-                Cardinality.ONE, true, F, "", Cardinality.ONE, false);
-        BWRelation EF = new BWRelation(dataModelInstance, "EF", E, "",
-                Cardinality.ONE, true, F, "", Cardinality.ONE, false);
-        BWRelation EC = new BWRelation(dataModelInstance, "EC", E, "",
-                Cardinality.ONE, true, C, "", Cardinality.ONE, false);
+        BWRelation AB = new BWRelation(dataModelInstance, "AB", A, A.getName(),
+                Cardinality.ONE, false, B, B.getName(), Cardinality.MANY, true);
+        BWRelation AC = new BWRelation(dataModelInstance, "AC", A, A.getName(),
+                Cardinality.ONE, true, C, C.getName(), Cardinality.ONE, false);
+        BWRelation AD = new BWRelation(dataModelInstance, "AD", A, A.getName(),
+                Cardinality.ONE, true, D, D.getName(), Cardinality.ONE, false);
+        BWRelation DE = new BWRelation(dataModelInstance, "DE", D, D.getName(),
+                Cardinality.ONE, true, E, E.getName(), Cardinality.ONE, false);
+        BWRelation DF = new BWRelation(dataModelInstance, "DF", D, D.getName(),
+                Cardinality.ONE, true, F, F.getName(), Cardinality.ONE, false);
+        BWRelation EF = new BWRelation(dataModelInstance, "EF", E, E.getName(),
+                Cardinality.ONE, true, F, F.getName(), Cardinality.ONE, false);
+        BWRelation EC = new BWRelation(dataModelInstance, "EC", E, E.getName(),
+                Cardinality.ONE, true, C, C.getName(), Cardinality.ONE, false);
 
         // Instances
         EntityInstance A1 = new EntityInstance(A);

@@ -4,17 +4,17 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.ExistsEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
@@ -89,8 +89,9 @@ public class ForAllConditionTest extends AbstractDomainTest {
                 entityInstance2_2);
 
         // Relation
-        relation = new BWRelation(dataModelInstance, RELATION_1_NAME, entity1, "",
-                ENTITY_1_CARDINALITY, ENTITY_1_KEY, entity2, "",
+        relation = new BWRelation(dataModelInstance, RELATION_1_NAME, entity1,
+                entity1.getClass().getName(), ENTITY_1_CARDINALITY,
+                ENTITY_1_KEY, entity2, entity2.getClass().getName(),
                 ENTITY_2_CARDINALITY, ENTITY_2_KEY);
 
         new RelationInstance(relation, entityInstance1_1, entityInstance2_1,

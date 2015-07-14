@@ -376,25 +376,11 @@
 			<version>1.4</version>
 		</dependency>
 
-<!--  
-		<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>runtime</artifactId>
-			<version>[3.3.0,4.0.0)</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.emf</groupId>
-			<artifactId>org.eclipse.emf.ecore</artifactId>
-			<version>2.11.0-v20150123-0347</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.emf</groupId>
-			<artifactId>ecore</artifactId>
-			<version>[2.3.0,3.0.0)</version>
-		</dependency>
--->
+		<!-- <dependency> <groupId>org.eclipse.core</groupId> <artifactId>runtime</artifactId> 
+			<version>[3.3.0,4.0.0)</version> </dependency> <dependency> <groupId>org.eclipse.emf</groupId> 
+			<artifactId>org.eclipse.emf.ecore</artifactId> <version>2.11.0-v20150123-0347</version> 
+			</dependency> <dependency> <groupId>org.eclipse.emf</groupId> <artifactId>ecore</artifactId> 
+			<version>[2.3.0,3.0.0)</version> </dependency> -->
 
 		<dependency>
 			<groupId>org.eclipse.xtext</groupId>
@@ -406,6 +392,13 @@
 			<groupId>pt.ist.socialsoftware</groupId>
 			<artifactId>org.blended.data</artifactId>
 			<version>${code.version}</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>  
+					<groupId>pt.ist.socialsoftware</groupId>
+					<artifactId>engine</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 	</dependencies>

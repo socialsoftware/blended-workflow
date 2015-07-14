@@ -19,15 +19,27 @@ public class BWRelation extends BWRelation_Base {
         super.setName(name);
     }
 
+    @Override
+    public void setRoleNameOne(String roleNameOne) {
+        checkRoleNameOne(roleNameOne);
+        super.setRoleNameOne(roleNameOne);
+    }
+
+    @Override
+    public void setRoleNameTwo(String roleNameTwo) {
+        checkRoleNameTwo(roleNameTwo);
+        super.setRoleNameTwo(roleNameTwo);
+    }
+
     public BWRelation(BWDataModel dataModel, String name, BWEntity entityOne,
             String roleNameOne, Cardinality cardinalityOne,
             boolean isOneKeyEntity, BWEntity entityTwo, String roleNameTwo,
             Cardinality cardinalityTwo, boolean isTwoKeyEntity)
                     throws BWException {
         setDataModel(dataModel);
+        setName(name);
         setEntityOne(entityOne);
         setEntityTwo(entityTwo);
-        setName(name);
         setRoleNameOne(roleNameOne);
         setRoleNameTwo(roleNameTwo);
         setCardinalityOne(cardinalityOne);
@@ -44,16 +56,34 @@ public class BWRelation extends BWRelation_Base {
     }
 
     private void checkUniqueRelationName(String name) throws BWException {
-        Boolean find = getEntityOne().getRelationsSet().stream().anyMatch(
-                rel -> ((rel != this) && (isInRelation(getEntityTwo(), rel))));
+        Boolean find = getDataModel().getRelationsSet().stream().anyMatch(
+                rel -> ((rel != this) && (rel.getName().equals(name))));
 
         if (find)
             throw new BWException(BWErrorType.INVALID_RELATION_NAME, name);
     }
 
-    private boolean isInRelation(BWEntity entityTwo, BWRelation relation) {
-        return relation.getEntityOne().equals(entityTwo)
-                || relation.getEntityTwo().equals(entityTwo);
+    private void checkRoleNameOne(String roleNameOne) {
+        if ((roleNameOne == null) || roleNameOne.equals(""))
+            throw new BWException(BWErrorType.INVALID_ROLE_NAME, roleNameOne);
+
+        checkUniqueRolename(getEntityTwo(), roleNameOne);
+    }
+
+    private void checkRoleNameTwo(String roleNameTwo) {
+        if ((roleNameTwo == null) || roleNameTwo.equals(""))
+            throw new BWException(BWErrorType.INVALID_ROLE_NAME, roleNameTwo);
+
+        checkUniqueRolename(getEntityOne(), roleNameTwo);
+    }
+
+    private void checkUniqueRolename(BWEntity entity, String roleName) {
+        if (entity.getRelationsSet().stream().filter(rel -> rel != this)
+                .anyMatch(rel -> (rel.getRoleNameOne().equals(roleName)
+                        && rel.getEntityTwo() == entity)
+                        || (rel.getRoleNameTwo().equals(roleName)
+                                && rel.getEntityOne() == entity)))
+            throw new BWException(BWErrorType.INVALID_ROLE_NAME, roleName);
     }
 
     public void cloneRelation(DataModelInstance dataModelInstance,
