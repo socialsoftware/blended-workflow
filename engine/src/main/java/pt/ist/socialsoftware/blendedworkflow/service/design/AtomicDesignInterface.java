@@ -132,7 +132,7 @@ public class AtomicDesignInterface {
                 } else if (att instanceof AttributeGroup) {
                     AttributeGroup eAttGroup = (AttributeGroup) att;
                     BWAttributeGroup attGroup = entity
-                            .createAttributeGroup("TODEFINE");
+                            .createAttributeGroup(eAttGroup.getName());
                     for (Attribute eAtt : eAttGroup.getAttributes()) {
                         BWAttribute bwAtt = entity.createAttribute(
                                 eAtt.getName(),

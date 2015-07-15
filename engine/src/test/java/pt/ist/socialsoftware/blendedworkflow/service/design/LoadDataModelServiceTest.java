@@ -261,7 +261,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
         AttributeGroup eAttGroup = dataFactory.createAttributeGroup();
-        // eAttGroup.setName(ATTRIBUTE_GROUP_NAME);
+        eAttGroup.setName(ATTRIBUTE_GROUP_NAME);
         eEnt.getAttributes().add(eAttGroup);
         Attribute eAtt = dataFactory.createAttribute();
         eAttGroup.getAttributes().add(eAtt);
@@ -278,10 +278,10 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         assertEquals(1, entity.getAttributeGroupSet().size());
         assertEquals(1, entity.getAttributesSet().size());
 
-        BWAttributeGroup attGroup = entity.getAttributeGroup("TODEFINE")
-                .orElse(null);
+        BWAttributeGroup attGroup = entity
+                .getAttributeGroup(ATTRIBUTE_GROUP_NAME).orElse(null);
 
-        assertEquals("TODEFINE", attGroup.getName());
+        assertEquals(ATTRIBUTE_GROUP_NAME, attGroup.getName());
         assertEquals(ATTRIBUTE_NAME,
                 attGroup.getAttribute(ATTRIBUTE_NAME).getName());
         assertEquals(AttributeType.NUMBER,
