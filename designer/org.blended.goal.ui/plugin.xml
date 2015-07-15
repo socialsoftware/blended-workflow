@@ -10,7 +10,7 @@
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
             extensions="gm"
-            icon="icons/goal.gif"
+            icon="icons/goal.png"
             id="org.blended.goal.Goal"
             name="Goal Editor">
         </editor>

@@ -1,4 +1,4 @@
-package org.blended.activity.utils;
+package org.blended.goal.terminal;
 
 import java.io.IOException;
 
@@ -13,9 +13,7 @@ import org.eclipse.ui.console.IOConsole;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 
 public class ConsoleManagement {
-	public static String CONDITION_CONSOLE = "ConditionConsole";
-	public static String GOAL_CONSOLE = "GoalConsole";
-	public static String ACTIVITY_CONSOLE = "ActivityConsole";
+	public static String GOAL_CONSOLE = "Goal Console";
 	
 	private static final RGB DEFAULT_COLOR = new RGB(0, 0, 0);
 	private static final RGB OUTPUT = new RGB(0, 0, 200);
@@ -32,15 +30,7 @@ public class ConsoleManagement {
 				return (IOConsole) existing[i];
 		ImageDescriptor img = null;
 		IOConsole myConsole = new IOConsole(name, img);
-		conMan.addConsoles(new IConsole[] { myConsole });
-		
-		/*IWorkbench wb = PlatformUI.getWorkbench();
-		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-		IWorkbenchPage page = win.getActivePage();
-		String id = IConsoleConstants.ID_CONSOLE_VIEW;
-		IConsoleView view = (IConsoleView) page.showView(id);
-		view.display(myConsole);*/
-		
+		conMan.addConsoles(new IConsole[] { myConsole });	
 		return myConsole;
 	}
 	

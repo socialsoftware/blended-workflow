@@ -6,6 +6,8 @@ package org.blended.data.generator
 import org.blended.data.data.And
 import org.blended.data.data.Association
 import org.blended.data.data.Attribute
+import org.blended.data.data.AttributeDefinition
+import org.blended.data.data.AttributeGroup
 import org.blended.data.data.AttributeValue
 import org.blended.data.data.Constraint
 import org.blended.data.data.Entity
@@ -16,8 +18,6 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import org.blended.data.data.AttributeGroup
-import org.blended.data.data.AttributeDefinition
 
 /**
  * Generates code from your model files on save.
@@ -62,9 +62,11 @@ class DataGeneratorConditionModel {
 		
 		sb.append("\r\nENTITY_DEPENDENCE_CONDITIONS\r\n")
 		for (r : resource.allContents.toIterable.filter(typeof(Entity))) {
-			if ((!r.exists) && (r.dependsOn != null)) {
-				var entity = new StringBuilder(r.entityDependenceCondition)
-				sb.append("\t" + entity)	
+			if ((!r.exists) && (r.dependsOn.size > 0)) {
+				for (d : r.dependsOn) {
+					var dependency = new StringBuilder(r.entityDependenceCondition(d))
+					sb.append("\t" + dependency)	
+				}		
 			}
 		}	
 		
@@ -112,23 +114,15 @@ class DataGeneratorConditionModel {
 			if (!e.exists) {
 				for (ab : e.attributes) {
 					if (ab instanceof Attribute) {
-						var b = new StringBuilder()
-						var i = 1
 						if (ab.dependsOn.size > 0) {
 							for (d : ab.dependsOn) {
-								if (i==1) {
-									b.append((d.eContainer as Entity).name + "." + d.name)
-									i++
-								}
-								else b.append(", " + (d.eContainer as Entity).name + "." + d.name)
-							}
-							var entity = new StringBuilder(attributeDependenceCondition(e.name + "." + ab.name, b.toString))
-							sb.append("\t" + entity)	
+								var entity = new StringBuilder(attributeDependenceCondition(e.name + "." + ab.name, d))
+								sb.append("\t" + entity)	
+							}	
 						}					
 					}
 					if (ab instanceof AttributeGroup) {
 						var a = new StringBuilder()
-						var b = new StringBuilder()
 						if (ab.dependsOn.size > 0) {
 							var i = 1
 							for (att : ab.attributes) {
@@ -137,16 +131,10 @@ class DataGeneratorConditionModel {
 									i++
 								} else a.append(", " + e.name + "." + att.name)
 							}
-							i = 1
 							for (d : ab.dependsOn) {
-								if (i==1) {
-									b.append((d.eContainer as Entity).name + "." + d.name)
-									i++
-								}
-								else b.append(", " + (d.eContainer as Entity).name + "." + d.name)
-							}
-							var entity = new StringBuilder(attributeDependenceCondition(a.toString(), b.toString))
-							sb.append("\t" + entity)	
+								var entity = new StringBuilder(attributeDependenceCondition(a.toString(), d))
+								sb.append("\t" + entity)	
+							}	
 						}
 					}
 				}
@@ -172,8 +160,8 @@ class DataGeneratorConditionModel {
 	MUL(«a.entity2.name».«a.name1»,«a.cardinality1»)
 	'''	
 	
-	def entityDependenceCondition(Entity e)'''
-	DEP(DEF(«e.name»), DEF(«e.dependsOn.name»))	
+	def entityDependenceCondition(Entity e, String b)'''
+	DEP(DEF(«e.name»), DEF(«b»))	
 	'''
 
 	def attributeAchieveCondition(Entity e, Attribute a)'''

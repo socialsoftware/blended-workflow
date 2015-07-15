@@ -14,19 +14,19 @@ Specification:
 ;
 
 Entity:
-	'Entity' name = ID (exists ?= 'exists')? ('dependsOn' dependsOn = [Entity])? '{' 
+	'Entity' name = ID (exists ?= 'exists')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? '{' 
 		attributes += (AttributeGroup | Attribute)*
 	'}'
 ;
 
 Attribute:
-	name = QualifiedName ':' type = ID 
+	name = QualifiedName ':' type = ID
 	(mandatory ?= 'mandatory')?
-	('dependsOn' dependsOn += [Attribute|QualifiedName] (',' dependsOn += [Attribute|QualifiedName])*)?
+	('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)?
 ;
 
 AttributeGroup:
-	"group" (mandatory ?= 'mandatory')? ('dependsOn' dependsOn += [Attribute|QualifiedName] (',' dependsOn += [Attribute|QualifiedName])*)? "{"
+	"group" name = ID (mandatory ?= 'mandatory')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? "{"
 		(attributes += Attribute)+
 	"}"
 ;
@@ -47,7 +47,7 @@ Constraint:
 ;
 
 Cardinality:
-	INT | INT '..' INT | INT '..' '*' | INT '..' '+'
+	INT | INT '..' INT | INT '..' '*' | '+' | '*'
 ;
 
 Expression: Or;

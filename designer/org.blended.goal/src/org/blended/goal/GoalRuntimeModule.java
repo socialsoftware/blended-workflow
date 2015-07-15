@@ -3,11 +3,9 @@
  */
 package org.blended.goal;
 
-import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
-
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 public class GoalRuntimeModule extends org.blended.goal.AbstractGoalRuntimeModule {
-	 DesignInterface instance;
+
 }

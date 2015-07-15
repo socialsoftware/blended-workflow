@@ -7,7 +7,7 @@ ActivityModel:
 ;
 
 EntityAchieveCondition:
-	'DEFF' '(' name = ID ')'
+	'DEF' '(' name = ID ')'
 ;
 
 EntityAchieveConditionExist:

@@ -14,16 +14,9 @@
     <genClasses ecoreClass="Goal.ecore#//EntityAchieveCondition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//EntityAchieveCondition/name"/>
     </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//EntityAchieveConditionExist">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//EntityAchieveConditionExist/name"/>
-    </genClasses>
     <genClasses ecoreClass="Goal.ecore#//EntityInvariantCondition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//EntityInvariantCondition/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//EntityInvariantCondition/cardinality"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//EntityDependenceCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//EntityDependenceCondition/entity1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//EntityDependenceCondition/entity2"/>
     </genClasses>
     <genClasses ecoreClass="Goal.ecore#//AttributeAchieveCondition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//AttributeAchieveCondition/conditions"/>
@@ -32,10 +25,6 @@
     <genClasses ecoreClass="Goal.ecore#//MandatoryAttributeAchieveCondition"/>
     <genClasses ecoreClass="Goal.ecore#//AttributeInvariantCondition">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//AttributeInvariantCondition/expression"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//AttributeDependenceCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//AttributeDependenceCondition/attributes1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//AttributeDependenceCondition/attribute2"/>
     </genClasses>
     <genClasses ecoreClass="Goal.ecore#//Nothing">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//Nothing/name"/>

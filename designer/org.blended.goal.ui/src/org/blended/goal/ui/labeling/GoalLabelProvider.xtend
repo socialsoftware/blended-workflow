@@ -4,10 +4,10 @@
 package org.blended.goal.ui.labeling
 
 import com.google.inject.Inject
-import org.blended.goal.goal.Goal
-import org.blended.goal.goal.GoalModel
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
+import org.blended.goal.goal.GoalModel
+import org.blended.goal.goal.Goal
 
 /**
  * Provides labels for EObjects.
@@ -23,7 +23,7 @@ class GoalLabelProvider extends DefaultEObjectLabelProvider {
 
 	// Labels and icons can be computed like this:
 	
-	def image(GoalModel cm) {
+ 	def image(GoalModel cm) {
 		'goal.gif'
 	}
 	

@@ -3,8 +3,8 @@
  */
 package org.blended.activity.generator
 
-import org.blended.activity.utils.ActivityListener
-import org.blended.activity.utils.ConsoleManagement
+import org.blended.activity.terminal.ActivityListener
+import org.blended.activity.terminal.ConsoleManagement
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
@@ -20,14 +20,11 @@ class ActivityGenerator implements IGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		var consoleName = ConsoleManagement.ACTIVITY_CONSOLE + " (" + resource.normalizedURI.lastSegment + ")"
-		
-		var manager = new ActivityListener(consoleName, resource)	
+		var manager = ActivityListener.getInstance(consoleName, resource)	
 		if (!manager.isRunning) {
 			var thread = new Thread(manager)					
 			thread.start()	
-		}	
-		
-		ConsoleManagement.write(consoleName, "ACTIVITY MODEL " + resource.normalizedURI.lastSegment + " UPDATED. TYPE 0 TO SEE THE OPTIONS")		
-		
+			ConsoleManagement.write(consoleName, "ACTIVITY MODEL " + resource.normalizedURI.lastSegment + " UPDATED. TYPE -help TO SEE THE OPTIONS")
+		} else manager.setModel(resource)
 	}
 }

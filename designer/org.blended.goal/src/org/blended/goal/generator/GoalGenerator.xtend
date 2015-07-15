@@ -3,12 +3,11 @@
  */
 package org.blended.goal.generator
 
-import org.blended.goal.utils.ConsoleManagement
-import org.blended.goal.utils.GoalListener
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-
+import org.eclipse.xtext.generator.IFileSystemAccess
+import org.blended.goal.terminal.ConsoleManagement
+import org.blended.goal.terminal.DataListener
 import static extension org.eclipse.xtext.EcoreUtil2.*
 
 /**
@@ -19,15 +18,11 @@ import static extension org.eclipse.xtext.EcoreUtil2.*
 class GoalGenerator implements IGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {	
 		var consoleName = ConsoleManagement.GOAL_CONSOLE + " (" + resource.normalizedURI.lastSegment + ")"
-		
-		var manager = new GoalListener(consoleName, resource)	
+		var manager = DataListener.getInstance(consoleName, resource)	
 		if (!manager.isRunning) {
 			var thread = new Thread(manager)					
 			thread.start()	
-		}	
-		
-		ConsoleManagement.write(consoleName, "GOAL MODEL " + resource.normalizedURI.lastSegment + " UPDATED. TYPE 0 TO SEE THE OPTIONS")		
-
-		
+			ConsoleManagement.write(consoleName, "GOAL MODEL " + resource.normalizedURI.lastSegment + " UPDATED. TYPE -help TO SEE THE OPTIONS")
+		} else manager.setModel(resource)
 	}
 }

@@ -15,6 +15,15 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.blended.activity.activity.ActivityFactory
+import org.eclipse.xtext.nodemodel.ICompositeNode
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.nodemodel.ICompositeNode
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.emf.ecore.resource.ResourceSet
+import com.google.inject.Guice
+import org.blended.activity.ActivityRuntimeModule
+import org.eclipse.xtext.serializer.ISerializer
 
 /**
  * Generates code from your model files on save.
@@ -42,21 +51,61 @@ class ConditionGeneratorActivityModel {
 		this.i = 0
 	}
 	
+	def notFinish() {
+		true
+	}
+	
+	def getNextACHelement() {
+		"a"
+	}
+	
 	def doGenerate() {	
-		for (r : resource.allContents.toIterable.filter(typeof(EntityAchieveCondition))) {
-			//this.nPre.add(i, 0)
-			//this.postsEnt.add(i, new ArrayList<String>())
-			//this.postsAtt.add(i, new ArrayList<String>())
-			var sb = new StringBuilder(r.activity)
-			sbs.add(sb)
-			i++
-		}
+		var ACH = resource.allContents.toIterable.filter(typeof(EntityAchieveCondition)).clone
+			resource.allContents.toIterable.filter(typeof(AttributeAchieveCondition)).clone
 		
-		for (part : sbs) {
-			sb.append(part) //to put everything together
-		}
+		var factory = ActivityFactory.eINSTANCE
+		var model = factory.createActivityModel
+		var activity = factory.createActivity
+		activity.name = "TESTING"
+		model.activities.add(activity)
 		
-		fsa.generateFile(resource.normalizedURI.lastSegment.replace(".cm", ".am"), CustomOutputConfigurationProvider::SRC_OUTPUT, sb.toString)
+		val injector = Guice.createInjector(new ActivityRuntimeModule)
+		val serializer = injector.getInstance(ISerializer)		
+		//var rs = injector.getInstance(ResourceSet)
+		//val resource = rs.createResource(URI.createURI("dummy/test.mydsl"))
+		//resource.contents += model
+		
+				// Error happens here:
+		val result = serializer.serialize(model)
+		//while (notFinish()) {
+		//	var element = getNextACHelement()
+		//}
+		
+//		for (r : ACH) {
+//			//this.nPre.add(i, 0)
+//			//this.postsEnt.add(i, new ArrayList<String>())
+//			//this.postsAtt.add(i, new ArrayList<String>())
+//			var sb = new StringBuilder(r.activity)
+//			sbs.add(sb)
+//			i++
+//		}
+//		
+//		for (part : sbs) {
+//			sb.append(part) //to put everything together
+//		}
+
+		System.out.println("MODEL:" + model)
+		System.out.println("ERESOURCE:" + model.eResource())
+		System.out.println("CONTENTS:" + model.eResource.contents.size)
+	
+
+		//var node = NodeModelUtils.getNode(model.eResource().getContents().get(0));
+		
+		//System.out.println("CCCCCCCC")
+		
+		//System.out.println("NODEEEEEEEEEEEEEEEEEEEEE" + node.text)
+		
+		fsa.generateFile(resource.normalizedURI.lastSegment.replace(".cm", ".am"), CustomOutputConfigurationProvider::SRC_OUTPUT, result)
 	}
 	
 	def activity(EntityAchieveCondition eac) {

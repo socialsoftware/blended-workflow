@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.data/src-gen" editDirectory="//Users/ars/Repositories/blendedworkflow/designer/org.blended.data.edit/src"
-    editorDirectory="//Users/ars/Repositories/blendedworkflow/designer/org.blended.data.editor/src"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.data/src-gen" editDirectory="/C:\Users\Vicente\Documents\GitHub\bw\designer\org.blended.data.edit/src"
+    editorDirectory="/C:\Users\Vicente\Documents\GitHub\bw\designer\org.blended.data.editor/src"
     modelPluginID="org.blended.data" forceOverwrite="true" modelName="Data" updateClasspath="false"
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" complianceLevel="6.0"
-    copyrightFields="false" editPluginID="org.blended.data.edit" editorPluginID="org.blended.data.edit"
+    copyrightFields="false" editPluginID="org.blended.data.edit" editorPluginID="org.blended.data.editor"
     runtimeVersion="2.10">
   <genPackages prefix="Data" basePackage="org.blended.data" disposableProviderFactory="true"
       fileExtensions="dm" ecorePackage="Data.ecore#/">
@@ -20,18 +20,19 @@
     <genClasses ecoreClass="Data.ecore#//Entity">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Entity/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Entity/exists"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Data.ecore#//Entity/dependsOn"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Entity/dependsOn"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//Entity/attributes"/>
     </genClasses>
     <genClasses ecoreClass="Data.ecore#//Attribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Attribute/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Attribute/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Attribute/mandatory"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Data.ecore#//Attribute/dependsOn"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//Attribute/dependsOn"/>
     </genClasses>
     <genClasses ecoreClass="Data.ecore#//AttributeGroup">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//AttributeGroup/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//AttributeGroup/mandatory"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Data.ecore#//AttributeGroup/dependsOn"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Data.ecore#//AttributeGroup/dependsOn"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Data.ecore#//AttributeGroup/attributes"/>
     </genClasses>
     <genClasses ecoreClass="Data.ecore#//Association">

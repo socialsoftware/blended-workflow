@@ -1,12 +1,8 @@
 package org.blended.data.terminal;
 
-import java.util.stream.Collectors;
-
 import org.blended.data.data.DataModel;
-import org.blended.data.data.Entity;
-import org.blended.data.data.Attribute;
-import org.blended.data.data.AttributeGroup;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 public class ManageLs {
 	public static void specification(DataModel model, String name, CommandLs cmd) {
@@ -15,8 +11,10 @@ public class ManageLs {
 	}
 	
 	public static void entities(DataModel model, String name, CommandLs cmd) throws ValueException  {
-		ConsoleManagement.write(name, "List of entities:");
-		for (Entity ent : model.getEntities()){
+		ConsoleManagement.write(name, "Data:");
+		ICompositeNode node = NodeModelUtils.getNode(model.eResource().getContents().get(0));
+		ConsoleManagement.write(name, ConsoleManagement.TypeOutput.OutputData, node.getText());
+		/*for (Entity ent : model.getEntities()){
 			String textEnt = ent.getName();
 			if (ent.isExists()) textEnt += " exists";
 			if (ent.getDependsOn() != null) textEnt += " dependsOn " + ent.getDependsOn().getName();
@@ -52,14 +50,7 @@ public class ManageLs {
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
-	public static void associations(DataModel model, String name, CommandLs cmd) throws ValueException {
-		
-	}
-	
-	public static void expressions(DataModel model, String name, CommandLs cmd) throws ValueException {
-		
-	}
 }

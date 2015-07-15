@@ -1,6 +1,5 @@
-package org.blended.data.terminal;
+package org.blended.activity.terminal;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 @Parameters(separators = "=", commandDescription = "Listing elements")

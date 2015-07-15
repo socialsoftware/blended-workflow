@@ -7,19 +7,11 @@ GoalModel:
 ;
 
 EntityAchieveCondition:
-	'DEFF' '(' name = ID ')'
-;
-
-EntityAchieveConditionExist:
-	'EXISTS' '(' 'DEF' '(' name = ID ')' ')'
+	'DEF' '(' name = ID ')'
 ;
 
 EntityInvariantCondition:
 	'MUL' '(' name = Attribute ',' cardinality = Cardinality ')'
-;
-
-EntityDependenceCondition:
-	'DEP' '(' 'DEF' '(' entity1 = ID ')' ',' 'DEF' '(' entity2 = ID ')' ')'
 ;
 
 AttributeAchieveCondition:
@@ -36,12 +28,6 @@ MandatoryAttributeAchieveCondition:
 
 AttributeInvariantCondition:
 	'RUL' '(' expression = Expression ')'
-;
-
-AttributeDependenceCondition:
-	'DEP' '(' 'DEF' '(' attributes1 += Attribute (',' attributes1 += Attribute)* ')' 
-		',' 'DEF' '(' attribute2 = Attribute ')' 
-	')'
 ;
 
 Cardinality:

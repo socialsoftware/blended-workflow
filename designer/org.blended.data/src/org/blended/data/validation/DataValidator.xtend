@@ -3,12 +3,9 @@
  */
 package org.blended.data.validation
 
-import org.blended.data.data.DataModel
+import org.blended.data.data.Attribute
 import org.blended.data.data.DataPackage
 import org.eclipse.xtext.validation.Check
-import pt.ist.socialsoftware.blendedworkflow.service.BWException
-import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface
-import static extension org.eclipse.xtext.EcoreUtil2.*
 
 /**
  * This class contains custom validation rules. 
@@ -19,8 +16,14 @@ class DataValidator extends AbstractDataValidator {
   	public static val INVALID_NAME = 'invalidName'
  	
   		@Check
-	  	def checkModel(DataModel model) {
-	  			warning('1', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
+	  	def checkModel(Attribute att) {
+	  		if ((!att.type.equals("String"))&&
+	  			(!att.type.equals("Boolean"))&&
+	  			(!att.type.equals("Number"))&&
+	  			(!att.type.equals("Data"))) {
+	  			error("Invalid Data Type", DataPackage.Literals.ATTRIBUTE__TYPE)
+	  		}
+	  	/*		warning('1', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
 	  	  	var instance = DesignInterface.getInstance
 	  		try {
 				var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
@@ -30,7 +33,7 @@ class DataValidator extends AbstractDataValidator {
 	  		} catch (BWException bwe) {
 	  			error('Specification with the same name already exists', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
 	  		}
-
+*/
 	  		//if (entity.uid == null) {
 	  		//	entity.uid = entity.hashCode().toString
 	  		//	System.out.println("UUID for entity " + entity.name + ": " + entity.uid)
