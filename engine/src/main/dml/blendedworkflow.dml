@@ -51,6 +51,37 @@ class BWSpecification {
 	String version;
 }
 
+class BWDataModel;
+
+class DataModelInstance extends BWDataModel;
+
+class BWEntity {
+	String name;
+	boolean exists;
+	Integer entityInstanceCounter;
+}
+
+class BWAttribute {
+	String name;
+	AttributeType type;
+	boolean isKeyAttribute;
+	boolean isSystem;
+}
+
+class BWAttributeGroup {
+	String name;
+}
+
+class BWRelation {
+	String name;
+	String roleNameOne;
+	String roleNameTwo;
+	Cardinality cardinalityOne;
+	Cardinality cardinalityTwo;
+	boolean isOneKeyEntity;
+	boolean isTwoKeyEntity;
+}
+
 class BWInstance {
 	String ID;
 	String name;
@@ -136,16 +167,6 @@ class TrueCondition extends Condition;
 class ForAllCondition extends Condition;
 class ExistsOneCondition extends Condition;
 
-class BWDataModel;
-
-class DataModelInstance extends BWDataModel;
-
-class BWEntity {
-	String name;
-	boolean exists;
-	Integer entityInstanceCounter;
-}
-
 class EntityInstance {
 	String ID;
 	DataState state;
@@ -153,27 +174,10 @@ class EntityInstance {
 	Integer relationInstanceCounter;
 }
 
-class BWAttribute {
-	String name;
-	AttributeType type;
-	boolean isKeyAttribute;
-	boolean isSystem;
-}
-
 class AttributeInstance {
 	String ID;
 	String value;
 	DataState state;
-}
-
-class BWRelation {
-	String name;
-	String roleNameOne;
-	String roleNameTwo;
-	Cardinality cardinalityOne;
-	Cardinality cardinalityTwo;
-	boolean isOneKeyEntity;
-	boolean isTwoKeyEntity;
 }
 
 class RelationInstance {
@@ -344,6 +348,11 @@ relation BWDataModelHasAttributes {
 	BWAttribute playsRole attributes { multiplicity 0..*; }
 }
 
+relation BWDataModelHasAttributeGroup {
+	BWDataModel playsRole dataModel { multiplicity 1..1; }
+	BWAttributeGroup playsRole attributeGroup { multiplicity 0..*; }
+}
+
 relation BWDataModelHasBWRelation {
 	BWDataModel playsRole dataModel { multiplicity 0..1; }
 	BWRelation playsRole relations { multiplicity 0..*; }
@@ -355,6 +364,10 @@ relation BWEntityHasBWAttributes {
 	BWAttribute playsRole attributes { multiplicity 0..*; }
 }
 
+relation BWEntityHasBWAttributeGroups {
+	BWEntity playsRole entity { multiplicity 1..1; }
+	BWAttributeGroup playsRole attributeGroup { multiplicity 0..*; }
+}
 
 
 relation BWEntityHasEntityInstances {
@@ -372,6 +385,12 @@ relation BWRelationHasRelationInstances {
 relation BWAttributeHasAttributeInstances {
 	BWAttribute playsRole attribute { multiplicity 0..1; }
 	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
+}
+
+// BWAttributeGroup
+relation BWAttributeGroupHasAttributes {
+	BWAttributeGroup playsRole attributeGroup { multiplicity 0..1; }
+	BWAttribute playsRole attribute { multiplicity 0..*; }
 }
 
 // EntityInstance

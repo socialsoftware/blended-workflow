@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
@@ -41,6 +42,10 @@ public class BWEntity extends BWEntity_Base {
     public BWAttribute createAttribute(String name, AttributeType type) {
         return new BWAttribute(this.getDataModel(), name, this, type, false,
                 false);
+    }
+
+    public BWAttributeGroup createAttributeGroup(String name) {
+        return new BWAttributeGroup(this.getDataModel(), this, name);
     }
 
     public BWRelation createRelation(String roleNameOne,
@@ -314,6 +319,12 @@ public class BWEntity extends BWEntity_Base {
         getRelationsTwoSet().stream().forEach(rel -> rel.delete());
 
         deleteDomainObject();
+    }
+
+    public Optional<BWAttributeGroup> getAttributeGroup(String name) {
+        return getAttributeGroupSet().stream()
+                .filter(attGroup -> attGroup.getName().equals(name))
+                .findFirst();
     }
 
 }

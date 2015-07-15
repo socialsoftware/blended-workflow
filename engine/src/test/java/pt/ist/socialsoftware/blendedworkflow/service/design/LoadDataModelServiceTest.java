@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.blended.data.data.Association;
 import org.blended.data.data.Attribute;
+import org.blended.data.data.AttributeGroup;
 import org.blended.data.data.DataFactory;
 import org.blended.data.data.DataModel;
 import org.blended.data.data.Entity;
@@ -17,6 +18,7 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
@@ -33,6 +35,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
     private static final String EXISTS_ENTITY_NAME = "Exists Entity Name";
     private static final String ATTRIBUTE_NAME = "Attribute Name";
     private static final String EXISTS_ATTRIBUTE_NAME = "Exists Attribute Name";
+    private static final String ATTRIBUTE_GROUP_NAME = "Attribute Group Name";
 
     DataFactory dataFactory = DataFactory.eINSTANCE;
     DataModel eDataModel;
@@ -249,6 +252,42 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         assertFalse(notification.hasErrors());
 
         assertEquals(1, existingDataModel.getRelationsSet().size());
+    }
+
+    @Test
+    public void successCreateAttributeGroup() {
+        eEnt = dataFactory.createEntity();
+        eEnt.setName(EXISTS_ENTITY_NAME);
+        eEnt.setExists(false);
+        eDataModel.getEntities().add(eEnt);
+        AttributeGroup eAttGroup = dataFactory.createAttributeGroup();
+        // eAttGroup.setName(ATTRIBUTE_GROUP_NAME);
+        eEnt.getAttributes().add(eAttGroup);
+        Attribute eAtt = dataFactory.createAttribute();
+        eAttGroup.getAttributes().add(eAtt);
+        eAtt.setName(ATTRIBUTE_NAME);
+        eAtt.setType("Number");
+
+        BWNotification notification = designInterface
+                .loadDataModel(EXISTS_SPEC_ID, eDataModel);
+
+        assertFalse(notification.hasErrors());
+
+        BWEntity entity = existingDataModel.getEntity(EXISTS_ENTITY_NAME)
+                .orElse(null);
+        assertEquals(1, entity.getAttributeGroupSet().size());
+        assertEquals(1, entity.getAttributesSet().size());
+
+        BWAttributeGroup attGroup = entity.getAttributeGroup("TODEFINE")
+                .orElse(null);
+
+        assertEquals("TODEFINE", attGroup.getName());
+        assertEquals(ATTRIBUTE_NAME,
+                attGroup.getAttribute(ATTRIBUTE_NAME).getName());
+        assertEquals(AttributeType.NUMBER,
+                attGroup.getAttribute(ATTRIBUTE_NAME).getType());
+        assertEquals(AttributeType.NUMBER,
+                entity.getAttribute(ATTRIBUTE_NAME).getType());
     }
 
 }

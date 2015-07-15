@@ -6,12 +6,14 @@ import java.util.stream.Collectors;
 
 import org.blended.data.data.Association;
 import org.blended.data.data.Attribute;
+import org.blended.data.data.AttributeGroup;
 import org.blended.data.data.DataModel;
 import org.blended.data.data.Entity;
 import org.eclipse.emf.ecore.EObject;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
@@ -96,38 +98,53 @@ public class AtomicDesignInterface {
                 .map(ent -> ent.getName()).collect(Collectors.toSet());
 
         for (Entity eEnt : eDataModel.getEntities()) {
-            BWEntity newEnt = null;
+            BWEntity entity = null;
             if (!existingEntities.contains(eEnt.getName())) {
-                newEnt = dataModel.createEntity(eEnt.getName(),
+                entity = dataModel.createEntity(eEnt.getName(),
                         eEnt.isExists());
 
             } else {
                 existingEntities.remove(eEnt.getName());
-                newEnt = getEntity(dataModel, eEnt.getName());
+                entity = getEntity(dataModel, eEnt.getName());
             }
 
             // create attributes
-            Set<String> existingAttributes = newEnt.getAttributesSet().stream()
+            Set<String> existingAttributes = entity.getAttributesSet().stream()
                     .map(att -> att.getName()).collect(Collectors.toSet());
+
+            // delete existing attribute groups
+            for (BWAttributeGroup attGroup : entity.getAttributeGroupSet()) {
+                attGroup.delete();
+            }
 
             for (EObject att : eEnt.getAttributes()) {
                 if (att instanceof Attribute) {
                     Attribute eAtt = (Attribute) att;
                     if (!existingAttributes.contains(eAtt.getName())) {
-                        newEnt.createAttribute(eAtt.getName(),
+                        entity.createAttribute(eAtt.getName(),
                                 parseAttributeType(eAtt.getType()));
                     } else {
                         existingAttributes.remove(eAtt.getName());
-                        BWAttribute existAtt = newEnt
+                        BWAttribute existAtt = entity
                                 .getAttribute(eAtt.getName());
                         existAtt.setType(parseAttributeType(eAtt.getType()));
+                    }
+                } else if (att instanceof AttributeGroup) {
+                    AttributeGroup eAttGroup = (AttributeGroup) att;
+                    BWAttributeGroup attGroup = entity
+                            .createAttributeGroup("TODEFINE");
+                    for (Attribute eAtt : eAttGroup.getAttributes()) {
+                        BWAttribute bwAtt = entity.createAttribute(
+                                eAtt.getName(),
+                                parseAttributeType(eAtt.getType()));
+                        attGroup.addAttribute(bwAtt);
                     }
                 }
             }
 
             // delete attributes
             for (String attName : existingAttributes) {
-                newEnt.getAttribute(attName).delete();
+                entity.getAttribute(attName).delete();
             }
         }
 
@@ -154,14 +171,6 @@ public class AtomicDesignInterface {
                     parseCardinality(assoc.getCardinality2()));
         }
 
-        // create attribute group
-        // EObject obj = eDataModel.getEntities().get(0).getAttributes().get(0);
-        // if (obj instanceof Attribute) {
-        // Attribute att = (Attribute) obj;
-        //
-        // } else if (obj instanceof AttributeGroup) {
-        //
-        // }
     }
 
     final static String STRING = "String";
