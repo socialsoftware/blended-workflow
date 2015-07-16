@@ -200,7 +200,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
                 BWAttribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
                 BWAttribute conditionAttribute = getEntity()
-                        .getAttribute(workItemAttribute.getName());
+                        .getAttribute(workItemAttribute.getName()).orElse(null);
                 if (conditionAttribute != null
                         && conditionAttribute.getIsKeyAttribute()) {
                     workItemEntityInstance = workItemArgument

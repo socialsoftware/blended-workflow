@@ -167,9 +167,10 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
                 dataModelInstance.getRelation("Patient has Episodes"),
                 myPatient, episodeOne, myPatient.getNewRelationInstanceID());
         AttributeInstance episodeNumber = new AttributeInstance(
-                episodeType.getAttribute("Number"), episodeOne);
+                episodeType.getAttribute("Number").orElse(null), episodeOne);
         AttributeInstance episodeReserveDate = new AttributeInstance(
-                episodeType.getAttribute("Reserve Date"), episodeOne);
+                episodeType.getAttribute("Reserve Date").orElse(null),
+                episodeOne);
         bookingWorkItem = new TaskWorkItem(bwInstance,
                 taskModel.getTask("Booking"));
         WorkItemArgument argumentNumber = new WorkItemArgument(episodeNumber,

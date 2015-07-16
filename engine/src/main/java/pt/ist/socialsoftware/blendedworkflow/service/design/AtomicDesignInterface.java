@@ -15,6 +15,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
@@ -98,53 +99,68 @@ public class AtomicDesignInterface {
                 .map(ent -> ent.getName()).collect(Collectors.toSet());
 
         for (Entity eEnt : eDataModel.getEntities()) {
-            BWEntity entity = null;
+            BWEntity bwEntity = null;
             if (!existingEntities.contains(eEnt.getName())) {
-                entity = dataModel.createEntity(eEnt.getName(),
+                bwEntity = dataModel.createEntity(eEnt.getName(),
                         eEnt.isExists());
 
             } else {
                 existingEntities.remove(eEnt.getName());
-                entity = getEntity(dataModel, eEnt.getName());
+                bwEntity = getEntity(dataModel, eEnt.getName());
+            }
+
+            // create entity dependences
+            for (String eDep : eEnt.getDependsOn()) {
+                bwEntity.createDependence(eDep);
             }
 
             // create attributes
-            Set<String> existingAttributes = entity.getAttributesSet().stream()
-                    .map(att -> att.getName()).collect(Collectors.toSet());
+            Set<String> existingAttributes = bwEntity.getAttributesSet()
+                    .stream().map(att -> att.getName())
+                    .collect(Collectors.toSet());
 
             // delete existing attribute groups
-            for (BWAttributeGroup attGroup : entity.getAttributeGroupSet()) {
+            for (BWAttributeGroup attGroup : bwEntity.getAttributeGroupSet()) {
                 attGroup.delete();
             }
 
             for (EObject att : eEnt.getAttributes()) {
                 if (att instanceof Attribute) {
                     Attribute eAtt = (Attribute) att;
+                    BWAttribute bwAtt;
                     if (!existingAttributes.contains(eAtt.getName())) {
-                        entity.createAttribute(eAtt.getName(),
+                        bwAtt = bwEntity.createAttribute(eAtt.getName(),
                                 parseAttributeType(eAtt.getType()));
                     } else {
                         existingAttributes.remove(eAtt.getName());
-                        BWAttribute existAtt = entity
-                                .getAttribute(eAtt.getName());
-                        existAtt.setType(parseAttributeType(eAtt.getType()));
+                        bwAtt = bwEntity.getAttribute(eAtt.getName())
+                                .orElse(null);
+                        bwAtt.setType(parseAttributeType(eAtt.getType()));
+                    }
+                    // create attribute dependences
+                    for (String eDep : eAtt.getDependsOn()) {
+                        bwAtt.createDependence(eDep);
                     }
                 } else if (att instanceof AttributeGroup) {
                     AttributeGroup eAttGroup = (AttributeGroup) att;
-                    BWAttributeGroup attGroup = entity
+                    BWAttributeGroup attGroup = bwEntity
                             .createAttributeGroup(eAttGroup.getName());
                     for (Attribute eAtt : eAttGroup.getAttributes()) {
-                        BWAttribute bwAtt = entity.createAttribute(
+                        BWAttribute bwAtt = bwEntity.createAttribute(
                                 eAtt.getName(),
                                 parseAttributeType(eAtt.getType()));
                         attGroup.addAttribute(bwAtt);
+                    }
+                    // create group attribute dependences
+                    for (String eDep : eAttGroup.getDependsOn()) {
+                        attGroup.createDependence(eDep);
                     }
                 }
             }
 
             // delete attributes
             for (String attName : existingAttributes) {
-                entity.getAttribute(attName).delete();
+                bwEntity.getAttribute(attName).orElse(null).delete();
             }
         }
 
@@ -171,6 +187,10 @@ public class AtomicDesignInterface {
                     parseCardinality(assoc.getCardinality2()));
         }
 
+        // check dependences
+        for (BWDependence dependence : dataModel.getDependenceSet()) {
+            dependence.check();
+        }
     }
 
     final static String STRING = "String";

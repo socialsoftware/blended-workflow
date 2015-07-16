@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.List;
+
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -69,10 +71,22 @@ public class BWAttribute extends BWAttribute_Base {
         }
     }
 
+    @Override
     public void delete() {
         setDataModel(null);
         setEntity(null);
-        deleteDomainObject();
+        setAttributeGroup(null);
+
+        super.delete();
+    }
+
+    @Override
+    public BWProduct getNext(List<String> path, String value) {
+        if (path.size() == 0)
+            return this;
+        else
+            throw new BWException(BWErrorType.INVALID_DEPENDENCE,
+                    value + ":" + path);
     }
 
 }

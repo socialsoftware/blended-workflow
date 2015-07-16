@@ -44,7 +44,7 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
         assertFalse(notification.hasErrors());
         BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
         BWEntity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
-        BWAttribute att = entity.getAttribute(ATTRIBUTE_NAME);
+        BWAttribute att = entity.getAttribute(ATTRIBUTE_NAME).orElse(null);
         assertNotNull(att);
         assertEquals(ATTRIBUTE_NAME, att.getName());
         assertEquals(AttributeType.NUMBER, att.getType());

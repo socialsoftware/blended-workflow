@@ -18,10 +18,10 @@ import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
@@ -57,11 +57,12 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
                 dataModelInstance.getRelation("Patient has Episodes"),
                 myPatient, episodeOne, myPatient.getNewRelationInstanceID());
         AttributeInstance episodeOneNumber = new AttributeInstance(
-                episodeType.getAttribute("Number"), episodeOne);
+                episodeType.getAttribute("Number").orElse(null), episodeOne);
         AttributeInstance episodeOneReserveDate = new AttributeInstance(
-                episodeType.getAttribute("Reserve Date"), episodeOne);
+                episodeType.getAttribute("Reserve Date").orElse(null),
+                episodeOne);
         AttributeInstance episodeOneCheckIn = new AttributeInstance(
-                episodeType.getAttribute("CheckIn"), episodeOne);
+                episodeType.getAttribute("CheckIn").orElse(null), episodeOne);
         episodeOneNumber.setValue("1");
         episodeOneReserveDate.setValue("17/07/2012");
         episodeOneCheckIn.setValue(checkInValue.toString());

@@ -55,21 +55,25 @@ class BWDataModel;
 
 class DataModelInstance extends BWDataModel;
 
-class BWEntity {
+class BWProduct {
 	String name;
+}
+
+class BWEntity extends BWProduct{
 	boolean exists;
 	Integer entityInstanceCounter;
 }
 
-class BWAttribute {
-	String name;
+class BWAttribute extends BWProduct{
 	AttributeType type;
 	boolean isKeyAttribute;
 	boolean isSystem;
 }
 
-class BWAttributeGroup {
-	String name;
+class BWAttributeGroup extends BWProduct;
+
+class BWDependence {
+	String value;
 }
 
 class BWRelation {
@@ -349,13 +353,24 @@ relation BWDataModelHasAttributes {
 }
 
 relation BWDataModelHasAttributeGroup {
-	BWDataModel playsRole dataModel { multiplicity 1..1; }
+	BWDataModel playsRole dataModel { multiplicity 0..1; }
 	BWAttributeGroup playsRole attributeGroup { multiplicity 0..*; }
 }
 
 relation BWDataModelHasBWRelation {
 	BWDataModel playsRole dataModel { multiplicity 0..1; }
 	BWRelation playsRole relations { multiplicity 0..*; }
+}
+
+relation BWDataModelHasBWDependence {
+	BWDataModel playsRole dataModel { multiplicity 1..1; }
+	BWDependence playsRole dependence { multiplicity 0..*; }
+}
+
+// BWProduct
+relation BWProductHasBWDependence {
+	BWProduct playsRole product { multiplicity 0..1; }
+	BWDependence playsRole dependence { multiplicity 0..*; }
 }
 
 // BWEntity
@@ -365,7 +380,7 @@ relation BWEntityHasBWAttributes {
 }
 
 relation BWEntityHasBWAttributeGroups {
-	BWEntity playsRole entity { multiplicity 1..1; }
+	BWEntity playsRole entity { multiplicity 0..1; }
 	BWAttributeGroup playsRole attributeGroup { multiplicity 0..*; }
 }
 

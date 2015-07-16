@@ -25,8 +25,8 @@ import pt.ist.socialsoftware.blendedworkflow.MockitoAbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.adapters.ProcessItemLevelExceptionEvent;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
@@ -162,7 +162,8 @@ public class MockitoProcessItemLevelExceptionEventTest
                 .getDataModelInstance();
         final TaskModel taskModel = bwInstance.getTaskModelInstance();
 
-        final BWEntity episodeType = dataModelInstance.getEntity("Episode").get();
+        final BWEntity episodeType = dataModelInstance.getEntity("Episode")
+                .get();
         // final EntityInstance episodeOne = new
         // EntityInstance(dataModelInstance, episodeType);
         final EntityInstance episodeOne = new EntityInstance(episodeType);
@@ -175,9 +176,10 @@ public class MockitoProcessItemLevelExceptionEventTest
                 myPatient, episodeOne, myPatient.getNewRelationInstanceID());
 
         final AttributeInstance episodeNumber = new AttributeInstance(
-                episodeType.getAttribute("Number"), episodeOne);
+                episodeType.getAttribute("Number").orElse(null), episodeOne);
         final AttributeInstance episodeReserveDate = new AttributeInstance(
-                episodeType.getAttribute("Reserve Date"), episodeOne);
+                episodeType.getAttribute("Reserve Date").orElse(null),
+                episodeOne);
         bookingWorkItem = new TaskWorkItem(bwInstance,
                 taskModel.getTask("Booking"));
         final WorkItemArgument argumentNumber = new WorkItemArgument(

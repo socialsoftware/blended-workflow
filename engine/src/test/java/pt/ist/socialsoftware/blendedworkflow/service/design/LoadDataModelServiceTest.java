@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.stream.Collectors;
+
 import org.blended.data.data.Association;
 import org.blended.data.data.Attribute;
 import org.blended.data.data.AttributeGroup;
@@ -165,8 +167,8 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         assertEquals(1, entity.getAttributesSet().size());
         assertNotNull(entity.getAttribute(ATTRIBUTE_NAME));
         assertEquals(AttributeType.BOOLEAN,
-                entity.getAttribute(ATTRIBUTE_NAME).getType());
-        assertNull(entity.getAttribute(EXISTS_ATTRIBUTE_NAME));
+                entity.getAttribute(ATTRIBUTE_NAME).orElse(null).getType());
+        assertNull(entity.getAttribute(EXISTS_ATTRIBUTE_NAME).orElse(null));
     }
 
     @Test
@@ -195,11 +197,11 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
         assertNotNull(entity.getAttribute(ATTRIBUTE_NAME));
         assertEquals(AttributeType.BOOLEAN,
-                entity.getAttribute(ATTRIBUTE_NAME).getType());
+                entity.getAttribute(ATTRIBUTE_NAME).orElse(null).getType());
 
         assertNotNull(entity.getAttribute(EXISTS_ATTRIBUTE_NAME));
-        assertEquals(AttributeType.NUMBER,
-                entity.getAttribute(EXISTS_ATTRIBUTE_NAME).getType());
+        assertEquals(AttributeType.NUMBER, entity
+                .getAttribute(EXISTS_ATTRIBUTE_NAME).orElse(null).getType());
 
     }
 
@@ -223,8 +225,8 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
                 .orElse(null);
         assertEquals(1, entity.getAttributesSet().size());
 
-        assertEquals(AttributeType.STRING,
-                entity.getAttribute(EXISTS_ATTRIBUTE_NAME).getType());
+        assertEquals(AttributeType.STRING, entity
+                .getAttribute(EXISTS_ATTRIBUTE_NAME).orElse(null).getType());
     }
 
     @Test
@@ -283,11 +285,60 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
         assertEquals(ATTRIBUTE_GROUP_NAME, attGroup.getName());
         assertEquals(ATTRIBUTE_NAME,
-                attGroup.getAttribute(ATTRIBUTE_NAME).getName());
+                attGroup.getAttribute(ATTRIBUTE_NAME).orElse(null).getName());
         assertEquals(AttributeType.NUMBER,
-                attGroup.getAttribute(ATTRIBUTE_NAME).getType());
+                attGroup.getAttribute(ATTRIBUTE_NAME).orElse(null).getType());
         assertEquals(AttributeType.NUMBER,
-                entity.getAttribute(ATTRIBUTE_NAME).getType());
+                entity.getAttribute(ATTRIBUTE_NAME).orElse(null).getType());
+    }
+
+    @Test
+    public void successCreateDependence() {
+        String DEPENDENCE_ONE = "role2" + "." + ATTRIBUTE_NAME;
+        String DEPENDENCE_TWO = "role1" + "." + EXISTS_ATTRIBUTE_NAME;
+
+        Entity eEntOne = dataFactory.createEntity();
+        eEntOne.setName(EXISTS_ENTITY_NAME);
+        eEntOne.setExists(false);
+        eDataModel.getEntities().add(eEntOne);
+        Attribute eAtt = dataFactory.createAttribute();
+        eEntOne.getAttributes().add(eAtt);
+        eAtt.setName(EXISTS_ATTRIBUTE_NAME);
+        eAtt.setType("Number");
+        eAtt.getDependsOn().add(DEPENDENCE_ONE);
+
+        Entity eEntTwo = dataFactory.createEntity();
+        eEntTwo.setName(ENTITY_NAME);
+        eEntTwo.setExists(false);
+        eDataModel.getEntities().add(eEntTwo);
+        eAtt = dataFactory.createAttribute();
+        eEntTwo.getAttributes().add(eAtt);
+        eAtt.setName(ATTRIBUTE_NAME);
+        eAtt.setType("Number");
+        eAtt.getDependsOn().add(DEPENDENCE_TWO);
+
+        Association eAssoc = dataFactory.createAssociation();
+        eAssoc.setEntity1(eEntOne);
+        eAssoc.setName1("role1");
+        eAssoc.setCardinality1("*");
+        eAssoc.setEntity2(eEntTwo);
+        eAssoc.setName2("role2");
+        eAssoc.setCardinality2("0..1");
+        eDataModel.getAssociations().add(eAssoc);
+
+        BWNotification notification = designInterface
+                .loadDataModel(EXISTS_SPEC_ID, eDataModel);
+
+        notification.getError().stream()
+                .map(err -> err.getType() + "-" + err.getValue())
+                .forEach(System.out::println);
+
+        assertFalse(notification.hasErrors());
+
+        assertEquals(DEPENDENCE_TWO + "," + DEPENDENCE_ONE,
+                existingDataModel.getDependenceSet().stream()
+                        .map(dep -> dep.getValue()).sorted()
+                        .collect(Collectors.joining(",")));
     }
 
 }

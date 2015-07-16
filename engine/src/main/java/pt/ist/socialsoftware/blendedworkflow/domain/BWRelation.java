@@ -117,4 +117,12 @@ public class BWRelation extends BWRelation_Base {
         deleteDomainObject();
     }
 
+    public BWEntity getEntity(String element) {
+        if (getRoleNameOne().equals(element))
+            return getEntityOne();
+        if (getRoleNameTwo().equals(element))
+            return getEntityTwo();
+        return null;
+    }
+
 }

@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -286,10 +287,9 @@ public class BWEntity extends BWEntity_Base {
         return getEntityInstanceCounter();
     }
 
-    public BWAttribute getAttribute(String name) {
+    public Optional<BWAttribute> getAttribute(String name) {
         return getAttributesSet().stream()
-                .filter(att -> att.getName().equals(name)).findFirst()
-                .orElse(null);
+                .filter(att -> att.getName().equals(name)).findFirst();
     }
 
     public EntityInstance getEntityInstance(String ID) {
@@ -312,19 +312,58 @@ public class BWEntity extends BWEntity_Base {
         return getRelationsOneSet().size() + getRelationsTwoSet().size();
     }
 
-    public void delete() {
-        setDataModel(null);
-        getAttributesSet().stream().forEach(att -> att.delete());
-        getRelationsOneSet().stream().forEach(rel -> rel.delete());
-        getRelationsTwoSet().stream().forEach(rel -> rel.delete());
-
-        deleteDomainObject();
-    }
-
     public Optional<BWAttributeGroup> getAttributeGroup(String name) {
         return getAttributeGroupSet().stream()
                 .filter(attGroup -> attGroup.getName().equals(name))
                 .findFirst();
+    }
+
+    @Override
+    public void delete() {
+        setDataModel(null);
+        getAttributeGroupSet().stream().forEach(attGroup -> attGroup.delete());
+        getAttributesSet().stream().forEach(att -> att.delete());
+        getRelationsOneSet().stream().forEach(rel -> rel.delete());
+        getRelationsTwoSet().stream().forEach(rel -> rel.delete());
+
+        super.delete();
+    }
+
+    @Override
+    public BWEntity getEntity() {
+        return this;
+    }
+
+    @Override
+    public BWProduct getNext(List<String> path, String value) {
+        if (path.isEmpty())
+            return this;
+
+        String element = path.get(0);
+        Optional<BWAttributeGroup> oBwAttGroup = getAttributeGroup(element);
+        if (oBwAttGroup.isPresent()) {
+            path.remove(0);
+            return oBwAttGroup.get().getNext(path, value);
+        }
+
+        Optional<BWAttribute> oBwAtt = getAttribute(element);
+        if (oBwAtt.isPresent()) {
+            path.remove(0);
+            return oBwAtt.get().getNext(path, value);
+        }
+
+        Optional<BWRelation> oBwRel = getRelationsSet().stream()
+                .filter(rel -> (rel.getRoleNameOne().equals(element)
+                        && rel.getEntityTwo() == this)
+                        || (rel.getRoleNameTwo().equals(element)
+                                && rel.getEntityOne() == this))
+                .findFirst();
+        if (oBwRel.isPresent()) {
+            path.remove(0);
+            return oBwRel.get().getEntity(element).getNext(path, value);
+        } else
+            throw new BWException(BWErrorType.INVALID_DEPENDENCE,
+                    value + ":" + path);
     }
 
 }

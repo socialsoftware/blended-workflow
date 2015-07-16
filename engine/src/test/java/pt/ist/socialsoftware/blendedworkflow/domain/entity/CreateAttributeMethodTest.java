@@ -42,9 +42,9 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
 
         assertEquals(4, entity.getAttributesSet().size());
         assertEquals(ATT_NAME_ONE, att1.getName());
-        assertEquals(att1, entity.getAttribute(ATT_NAME_ONE));
-        assertEquals(att2, entity.getAttribute(ATT_NAME_TWO));
-        assertEquals(att3, entity.getAttribute(ATT_NAME_THREE));
+        assertEquals(att1, entity.getAttribute(ATT_NAME_ONE).orElse(null));
+        assertEquals(att2, entity.getAttribute(ATT_NAME_TWO).orElse(null));
+        assertEquals(att3, entity.getAttribute(ATT_NAME_THREE).orElse(null));
         assertEquals(AttributeType.STRING, att1.getType());
         assertEquals(AttributeType.BOOLEAN, att2.getType());
         assertEquals(AttributeType.NUMBER, att3.getType());

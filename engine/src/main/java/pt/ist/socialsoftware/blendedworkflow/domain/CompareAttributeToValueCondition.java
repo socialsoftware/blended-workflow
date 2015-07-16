@@ -29,7 +29,8 @@ public class CompareAttributeToValueCondition
                 .getDataModelInstance();
         BWEntity entity = dataModelInstance
                 .getEntity(getAttribute().getEntity().getName()).get();
-        BWAttribute attribute = entity.getAttribute(getAttribute().getName());
+        BWAttribute attribute = entity.getAttribute(getAttribute().getName())
+                .orElse(null);
         return new CompareAttributeToValueCondition(attribute, getOperator(),
                 getValue());
     }
@@ -40,7 +41,8 @@ public class CompareAttributeToValueCondition
                 .getDataModelInstance();
         BWEntity entity = dataModelInstance
                 .getEntity(getAttribute().getEntity().getName()).get();
-        BWAttribute attribute = entity.getAttribute(getAttribute().getName());
+        BWAttribute attribute = entity.getAttribute(getAttribute().getName())
+                .orElse(null);
         return new CompareAttributeToValueCondition(attribute, getOperator(),
                 getValue());
     }

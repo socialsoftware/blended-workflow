@@ -18,13 +18,13 @@ import com.vaadin.ui.Window;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
@@ -149,7 +149,8 @@ public class DoctorAppointmentForm extends VerticalLayout {
 
         BWEntity medicalPrescription = dataModelInstance
                 .getEntity("Medical Prescription").get();
-        BWAttribute description = medicalPrescription.getAttribute("Description");
+        BWAttribute description = medicalPrescription
+                .getAttribute("Description").orElse(null);
 
         EntityInstance medicalPrescription1 = new EntityInstance(
                 medicalPrescription);

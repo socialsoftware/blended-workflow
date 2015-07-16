@@ -13,12 +13,12 @@ import com.vaadin.ui.VerticalLayout;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 
 @SuppressWarnings("serial")
@@ -68,12 +68,13 @@ public class PrescriptionMedicationForm extends VerticalLayout {
                 BWEntity prescriptionMedication = dataModelInstance
                         .getEntity("Prescription Medication").get();
                 BWAttribute numberAtt = prescriptionMedication
-                        .getAttribute("Number");
-                BWAttribute nameAtt = prescriptionMedication.getAttribute("Name");
+                        .getAttribute("Number").orElse(null);
+                BWAttribute nameAtt = prescriptionMedication
+                        .getAttribute("Name").orElse(null);
                 BWAttribute quantityAtt = prescriptionMedication
-                        .getAttribute("Quantity");
+                        .getAttribute("Quantity").orElse(null);
                 BWAttribute heartImpactAtt = prescriptionMedication
-                        .getAttribute("Heart Impact");
+                        .getAttribute("Heart Impact").orElse(null);
 
                 EntityInstance prescriptionMedication1 = new EntityInstance(
                         prescriptionMedication);

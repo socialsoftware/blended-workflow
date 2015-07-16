@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.List;
+import java.util.Optional;
+
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -30,16 +33,31 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
                     name);
     }
 
+    public Optional<BWAttribute> getAttribute(String name) {
+        return getAttributeSet().stream()
+                .filter(att -> att.getName().equals(name)).findFirst();
+    }
+
+    @Override
     public void delete() {
         setDataModel(null);
         setEntity(null);
         getAttributeSet().stream().forEach(att -> att.delete());
+
+        super.delete();
     }
 
-    public BWAttribute getAttribute(String name) {
-        return getAttributeSet().stream()
-                .filter(att -> att.getName().equals(name)).findFirst()
-                .orElse(null);
+    @Override
+    public BWProduct getNext(List<String> path, String value) {
+        if (path.isEmpty())
+            return this;
+
+        BWAttribute att = getAttribute(path.get(0)).orElseThrow(
+                () -> new BWException(BWErrorType.INVALID_DEPENDENCE,
+                        value + ":" + path));
+
+        path.remove(0);
+        return att.getNext(path, value);
     }
 
 }

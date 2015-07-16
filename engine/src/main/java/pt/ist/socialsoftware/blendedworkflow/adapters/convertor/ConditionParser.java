@@ -320,7 +320,7 @@ public class ConditionParser {
         // AttributeType type;
         // boolean iskeyAttribute;
         if (entity.getAttribute(elementArr[1]) != null)
-            return entity.getAttribute(elementArr[1]);
+            return entity.getAttribute(elementArr[1]).orElse(null);
         else {
             // Legacy Code: used to create data from Conditions
             // if (elementArr[2].equals("BOOLEAN"))
