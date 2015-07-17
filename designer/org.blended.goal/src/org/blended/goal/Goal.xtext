@@ -1,4 +1,4 @@
-grammar org.blended.goal.Goal with org.eclipse.xtext.common.Terminals
+grammar org.blended.goal.Goal with org.blended.common.Common
 
 generate goal "http://www.blended.org/goal/Goal"
 
@@ -6,66 +6,6 @@ GoalModel:
 	goals += Goal+
 ;
 
-EntityAchieveCondition:
-	'DEF' '(' name = ID ')'
-;
-
-EntityInvariantCondition:
-	'MUL' '(' name = Attribute ',' cardinality = Cardinality ')'
-;
-
-AttributeAchieveCondition:
-	MandatoryAttributeAchieveCondition | NotMandatoryAttributeAchieveCondition
-;
-
-NotMandatoryAttributeAchieveCondition:
-	'DEF' '(' conditions += Attribute (',' conditions += Attribute)* ')' 
-;
-
-MandatoryAttributeAchieveCondition:
-	'MAN' '(' 'DEF' '(' conditions += Attribute (',' conditions += Attribute)* ')' ')' 
-;
-
-AttributeInvariantCondition:
-	'RUL' '(' expression = Expression ')'
-;
-
-Cardinality:
-	INT | INT '..' INT | INT '..' '*' | INT '..' '+'
-;
-
-Attribute: 
-	ID '.' ID ('.' ID)*
-;
-
-Nothing:
-	name = 'nothing'
-;
-
-Expression: Or;
-
-Or returns Expression:
-	And (
-		{Or.left = current} 'OR' right = And
-	)*;	
-	
-And returns Expression:
-	Primary (
-		{And.left = current} 'AND' right = Primary
-	)*;	
-
-Primary returns Expression:
-	'(' Expression ')' | 
-	{Not} 'NOT' expression = Primary |
-	Atomic
-;
-
-Atomic returns Expression:
-	{AttributeDefinition} 'DEF' '(' name = Attribute ')' |
-	{AttributeValue} name = Attribute
-;
-
-//********GOAL MODEL
 Goal:
 	name = ID ':'
 	'SUC' '(' sucessCondition = (EntityAchieveCondition | AttributeAchieveCondition | Nothing) ')'

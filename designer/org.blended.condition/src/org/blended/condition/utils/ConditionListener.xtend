@@ -1,20 +1,19 @@
 package org.blended.condition.utils
 
 import java.io.IOException
-import org.blended.condition.condition.AttributeAchieveCondition
-import org.blended.condition.condition.AttributeDependenceCondition
-import org.blended.condition.condition.AttributeInvariantCondition
+import org.blended.common.common.AttributeAchieveCondition
+import org.blended.common.common.AttributeDependenceCondition
+import org.blended.common.common.EntityAchieveCondition
+import org.blended.common.common.EntityDependenceCondition
+import org.blended.common.common.EntityInvariantCondition
+import org.blended.common.common.MandatoryAttributeAchieveCondition
+import org.blended.condition.condition.ConditionFactory
 import org.blended.condition.condition.ConditionModel
-import org.blended.condition.condition.EntityAchieveCondition
-import org.blended.condition.condition.EntityDependenceCondition
-import org.blended.condition.condition.EntityInvariantCondition
-import org.blended.condition.condition.MandatoryAttributeAchieveCondition
-import org.blended.condition.generator.ConditionGeneratorGoalModel
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.IOConsole
 import org.eclipse.ui.console.IOConsoleInputStream
 import org.eclipse.xtext.resource.SaveOptions
-import org.blended.condition.condition.ConditionFactory
+import org.blended.common.common.CommonFactory
 
 class ConditionListener implements Runnable {
 	package String name
@@ -93,28 +92,28 @@ class ConditionListener implements Runnable {
 				}
 			}
 			case "5": {
-				ConsoleManagement.write(name, "List of Attribute Invariant Conditions:")
-				for (r : resource.allContents.toIterable.filter(typeof(AttributeInvariantCondition))){
-					ConsoleManagement.write(name, ConsoleManagement.TypeOutput.OutputData, 
-						'RUL('+ ConditionGeneratorGoalModel.getCompleteExpression(r.expression) + ')')
-				}
+			//	ConsoleManagement.write(name, "List of Attribute Invariant Conditions:")
+			//	for (r : resource.allContents.toIterable.filter(typeof(AttributeInvariantCondition))){
+			//		ConsoleManagement.write(name, ConsoleManagement.TypeOutput.OutputData, 
+			//			'RUL('+ ConditionGeneratorGoalModel.getCompleteExpression(r.expression) + ')')
+			//	}
 			}
 			case "6": {
-				ConsoleManagement.write(name, "List of Attribute Dependence Conditions:")
-				for (r : resource.allContents.toIterable.filter(typeof(AttributeDependenceCondition))){
-					ConsoleManagement.write(name, ConsoleManagement.TypeOutput.OutputData, 
-					'DEP(DEF(' + r.attributes1.join(", ") + '), DEF(' + r.attribute2 + '))')
-				}
+//				ConsoleManagement.write(name, "List of Attribute Dependence Conditions:")
+//				for (r : resource.allContents.toIterable.filter(typeof(AttributeDependenceCondition))){
+//					ConsoleManagement.write(name, ConsoleManagement.TypeOutput.OutputData, 
+//					'DEP(DEF(' + r.attributes1.join(", ") + '), DEF(' + r.attribute2 + '))')
+//				}
 			}
 			case "7": {
 				ConsoleManagement.write(name, "Testing manipulation of model:")
 				
 				//CHANGING THE MODEL
-				var blendedFactory = ConditionFactory.eINSTANCE;
+				var blendedFactory = CommonFactory.eINSTANCE;
 				var eac = blendedFactory.createEntityAchieveCondition();
 				eac.name = "TESTING"
 				var cm = resource.getContents().get(0) as ConditionModel
-				cm.conditions.entityAchieveConditions.add(eac)		
+				cm.entityAchieveConditions.add(eac)		
 						
 				update()
 			}

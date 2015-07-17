@@ -1,87 +1,9 @@
-grammar org.blended.condition.Condition with org.eclipse.xtext.common.Terminals
+//grammar org.blended.condition.Condition with org.eclipse.xtext.common.Terminals
+grammar org.blended.condition.Condition with org.blended.common.Common
 
 generate condition "http://www.blended.org/condition/Condition"
 
 ConditionModel:
-	conditions = Condition
-;
-
-EntityAchieveCondition:
-	'DEF' '(' name = ID ')'
-;
-
-EntityAchieveConditionExist:
-	'EXISTS' '(' 'DEF' '(' name = ID ')' ')'
-;
-
-EntityInvariantCondition:
-	'MUL' '(' name = Attribute ',' cardinality = Cardinality ')'
-;
-
-EntityDependenceCondition:
-	'DEP' '(' 'DEF' '(' entity1 = ID ')' ',' 'DEF' '(' entity2 = ID ')' ')'
-;
-
-AttributeAchieveCondition:
-	MandatoryAttributeAchieveCondition | NotMandatoryAttributeAchieveCondition
-;
-
-NotMandatoryAttributeAchieveCondition:
-	'DEF' '(' conditions += Attribute (',' conditions += Attribute)* ')' 
-;
-
-MandatoryAttributeAchieveCondition:
-	'MAN' '(' 'DEF' '(' conditions += Attribute (',' conditions += Attribute)* ')' ')' 
-;
-
-AttributeInvariantCondition:
-	'RUL' '(' expression = Expression ')'
-;
-
-AttributeDependenceCondition:
-	'DEP' '(' 'DEF' '(' attributes1 += Attribute (',' attributes1 += Attribute)* ')' 
-		',' 'DEF' '(' attribute2 = Attribute ')' 
-	')'
-;
-
-Cardinality:
-	INT | INT '..' INT | INT '..' '*' | INT '..' '+'
-;
-
-Attribute: 
-	ID '.' ID ('.' ID)*
-;
-
-Nothing:
-	name = 'nothing'
-;
-
-Expression: Or;
-
-Or returns Expression:
-	And (
-		{Or.left = current} 'OR' right = And
-	)*;	
-	
-And returns Expression:
-	Primary (
-		{And.left = current} 'AND' right = Primary
-	)*;	
-
-Primary returns Expression:
-	'(' Expression ')' | 
-	{Not} 'NOT' expression = Primary |
-	Atomic
-;
-
-Atomic returns Expression:
-	{AttributeDefinition} 'DEF' '(' name = Attribute ')' |
-	{AttributeValue} name = Attribute
-;
-
-//********CONDITION MODEL
-Condition:
-	{Condition}
 	('ENTITY_ACHIEVE_CONDITIONS' entityAchieveConditions += (EntityAchieveCondition | EntityAchieveConditionExist)*)?
 	('ENTITY_INVARIANT_CONDITIONS' entityInvariantConditions += EntityInvariantCondition*)?
 	('ENTITY_DEPENDENCE_CONDITIONS' entityDependenceConditions += EntityDependenceCondition*)?

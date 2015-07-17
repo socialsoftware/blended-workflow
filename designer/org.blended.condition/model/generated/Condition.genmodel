@@ -1,70 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.condition/src-gen" editDirectory="/C:\Users\Vicente\Documents\GitHub\bw\designer\org.blended.condition.edit/src"
-    editorDirectory="/C:\Users\Vicente\Documents\GitHub\bw\designer\org.blended.condition.editor/src"
-    modelPluginID="org.blended.condition" forceOverwrite="true" modelName="Condition"
-    updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.condition/src-gen" editDirectory="/org.blended.condition.edit/src"
+    editorDirectory="/org.blended.condition.editor/src" modelPluginID="org.blended.condition"
+    forceOverwrite="true" modelName="Condition" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="6.0" copyrightFields="false" editPluginID="org.blended.condition.edit"
-    editorPluginID="org.blended.condition.editor" runtimeVersion="2.10">
+    editorPluginID="org.blended.condition.editor" runtimeVersion="2.10" usedGenPackages="platform:/resource/org.blended.common/model/generated/Common.genmodel#//common">
   <genPackages prefix="Condition" basePackage="org.blended.condition" disposableProviderFactory="true"
       fileExtensions="cm" ecorePackage="Condition.ecore#/">
     <genClasses ecoreClass="Condition.ecore#//ConditionModel">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/conditions"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//EntityAchieveCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//EntityAchieveCondition/name"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//EntityAchieveConditionExist">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//EntityAchieveConditionExist/name"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//EntityInvariantCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//EntityInvariantCondition/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//EntityInvariantCondition/cardinality"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//EntityDependenceCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//EntityDependenceCondition/entity1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//EntityDependenceCondition/entity2"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//AttributeAchieveCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//AttributeAchieveCondition/conditions"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//NotMandatoryAttributeAchieveCondition"/>
-    <genClasses ecoreClass="Condition.ecore#//MandatoryAttributeAchieveCondition"/>
-    <genClasses ecoreClass="Condition.ecore#//AttributeInvariantCondition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//AttributeInvariantCondition/expression"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//AttributeDependenceCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//AttributeDependenceCondition/attributes1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//AttributeDependenceCondition/attribute2"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//Nothing">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//Nothing/name"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//Expression"/>
-    <genClasses ecoreClass="Condition.ecore#//Condition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//Condition/entityAchieveConditions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//Condition/entityInvariantConditions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//Condition/entityDependenceConditions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//Condition/attributeAchieveConditions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//Condition/attributeInvariantConditions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//Condition/attributeDependenceConditions"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//Or">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//Or/left"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//Or/right"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//And">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//And/left"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//And/right"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//Not">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//Not/expression"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//AttributeDefinition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//AttributeDefinition/name"/>
-    </genClasses>
-    <genClasses ecoreClass="Condition.ecore#//AttributeValue">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Condition.ecore#//AttributeValue/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/entityAchieveConditions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/entityInvariantConditions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/entityDependenceConditions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/attributeAchieveConditions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/attributeInvariantConditions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/attributeDependenceConditions"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -10,6 +10,7 @@
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
             extensions="am"
+            icon="icons/activities.gif"
             id="org.blended.activity.Activity"
             name="Activity Editor">
         </editor>

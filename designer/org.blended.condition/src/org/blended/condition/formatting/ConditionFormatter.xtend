@@ -21,9 +21,10 @@ class ConditionFormatter extends AbstractDeclarativeFormatter {
 		var ConditionGrammarAccess f = getGrammarAccess() as ConditionGrammarAccess;
 		c.autoLinewrap = 130
 		
-		for (Keyword key : f.findKeywords("ENTITY_ACHIEVE_CONDITIONS")) {
-			c.setNoSpace().before(key)
-		}
+		//for (Keyword key : f.findKeywords("ENTITY_ACHIEVE_CONDITIONS")) {
+		//	c.setNoSpace().before(key)
+		//}
+
 			
 		for (Keyword key : f.findKeywords("(")) {
 			c.setNoSpace().before(key)
@@ -36,6 +37,10 @@ class ConditionFormatter extends AbstractDeclarativeFormatter {
 			
 		for (Keyword key : f.findKeywords(",")) {
 			c.setNoSpace().before(key)
+		}
+		
+		for (Keyword key : f.findKeywords("ENTITY_ACHIEVE_CONDITIONS")) {
+			c.setLinewrap().after(key)
 		}
 		
 		for (Keyword key : f.findKeywords("ENTITY_INVARIANT_CONDITIONS",

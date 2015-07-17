@@ -4,17 +4,16 @@
 package org.blended.condition.ui.labeling
 
 import com.google.inject.Inject
-import org.blended.condition.condition.And
-import org.blended.condition.condition.AttributeAchieveCondition
-import org.blended.condition.condition.AttributeDependenceCondition
-import org.blended.condition.condition.AttributeInvariantCondition
-import org.blended.condition.condition.Condition
+import org.blended.common.common.And
+import org.blended.common.common.AttributeAchieveCondition
+import org.blended.common.common.AttributeDependenceCondition
+import org.blended.common.common.AttributeInvariantCondition
+import org.blended.common.common.EntityAchieveCondition
+import org.blended.common.common.EntityDependenceCondition
+import org.blended.common.common.EntityInvariantCondition
+import org.blended.common.common.Not
+import org.blended.common.common.Or
 import org.blended.condition.condition.ConditionModel
-import org.blended.condition.condition.EntityAchieveCondition
-import org.blended.condition.condition.EntityDependenceCondition
-import org.blended.condition.condition.EntityInvariantCondition
-import org.blended.condition.condition.Not
-import org.blended.condition.condition.Or
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
 
@@ -40,13 +39,13 @@ class ConditionLabelProvider extends DefaultEObjectLabelProvider {
 		'Conditions'
 	}
 	
-	def image(Condition c) {
+	/*def image(Condition c) {
 		'condition.gif'
 	}
 	
 	def text(Condition c) {
 		'For Entities and Attributes'
-	}
+	}*/
 	
 	//********ENTITIES
 	def image(EntityAchieveCondition eac) {
@@ -108,6 +107,6 @@ class ConditionLabelProvider extends DefaultEObjectLabelProvider {
 	}
 	
 	def text(AttributeDependenceCondition edc) {
-		'Dependence on: [' + edc.attribute2 + ']'
+		'Dependence on: [' + edc.attributes2.join(',') + ']'
 	}
 }

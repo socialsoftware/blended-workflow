@@ -6,9 +6,9 @@ package org.blended.data.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
-import org.blended.data.terminal.ConsoleManagement
-import org.blended.data.terminal.DataListener
-import static extension org.eclipse.xtext.EcoreUtil2.*
+//import org.blended.data.terminal.ConsoleManagement
+//import org.blended.data.terminal.DataListener
+//import static extension org.eclipse.xtext.EcoreUtil2.*
 /*import org.blended.condition.ConditionStandaloneSetup
 import org.eclipse.xtext.util.StringInputStream
 import org.blended.condition.condition.ConditionModel

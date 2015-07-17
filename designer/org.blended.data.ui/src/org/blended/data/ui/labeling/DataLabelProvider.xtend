@@ -4,23 +4,25 @@
 package org.blended.data.ui.labeling
 
 import com.google.inject.Inject
+import org.blended.common.common.And
+import org.blended.common.common.Association
+import org.blended.common.common.Constraint
+import org.blended.common.common.Entity
+import org.blended.common.common.Not
+import org.blended.common.common.Or
 import org.blended.data.data.DataModel
-import org.blended.data.data.Entity
-import org.blended.data.data.Association
-import org.blended.data.data.Constraint
-import org.blended.data.data.And
-import org.blended.data.data.Or
-import org.blended.data.data.Not
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
+import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
 
 /**
  * Provides labels for EObjects.
  * 
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
-class DataLabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider {
+class DataLabelProvider extends DefaultEObjectLabelProvider {
 
 	@Inject
-	new(org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider delegate) {
+	new(AdapterFactoryLabelProvider delegate) {
 		super(delegate);
 	}
 

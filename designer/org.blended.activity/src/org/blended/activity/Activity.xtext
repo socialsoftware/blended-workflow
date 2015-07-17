@@ -1,4 +1,5 @@
-grammar org.blended.activity.Activity with org.eclipse.xtext.common.Terminals
+//grammar org.blended.activity.Activity with org.eclipse.xtext.common.Terminals
+grammar org.blended.activity.Activity with org.blended.common.Common
 
 generate activity "http://www.blended.org/activity/Activity"
 
@@ -6,80 +7,6 @@ ActivityModel:
 	activities += Activity+
 ;
 
-EntityAchieveCondition:
-	'DEF' '(' name = ID ')'
-;
-
-EntityAchieveConditionExist:
-	'EXISTS' '(' 'DEF' '(' name = ID ')' ')'
-;
-
-EntityInvariantCondition:
-	'MUL' '(' name = Attribute ',' cardinality = Cardinality ')'
-;
-
-EntityDependenceCondition:
-	'DEP' '(' 'DEF' '(' entity1 = ID ')' ',' 'DEF' '(' entity2 = ID ')' ')'
-;
-
-AttributeAchieveCondition:
-	MandatoryAttributeAchieveCondition | NotMandatoryAttributeAchieveCondition
-;
-
-NotMandatoryAttributeAchieveCondition:
-	'DEF' '(' conditions += Attribute (',' conditions += Attribute)* ')' 
-;
-
-MandatoryAttributeAchieveCondition:
-	'MAN' '(' 'DEF' '(' conditions += Attribute (',' conditions += Attribute)* ')' ')' 
-;
-
-AttributeInvariantCondition:
-	'RUL' '(' expression = Expression ')'
-;
-
-AttributeDependenceCondition:
-	'DEP' '(' 'DEF' '(' attributes1 += Attribute (',' attributes1 += Attribute)* ')' 
-		',' 'DEF' '(' attribute2 = Attribute ')' 
-	')'
-;
-
-Cardinality:
-	INT | INT '..' INT | INT '..' '*' | INT '..' '+'
-;
-
-Attribute: 
-	ID '.' ID ('.' ID)*
-;
-
-Nothing:
-	name = 'nothing'
-;
-
-Expression: Or;
-
-Or returns Expression:
-	And (
-		{Or.left = current} 'OR' right = And
-	)*;	
-	
-And returns Expression:
-	Primary (
-		{And.left = current} 'AND' right = Primary
-	)*;	
-
-Primary returns Expression:
-	'(' Expression ')' | 
-	{Not} 'NOT' expression = Primary |
-	Atomic
-;
-
-Atomic returns Expression:
-	{AttributeDefinition} 'DEF' '(' name = Attribute ')' |
-	{AttributeValue} name = Attribute
-;
-
-//********ACTIVITY MODEL
 Activity:
 	name = ID ':' description = STRING
 	'PRE' '(' (pre += (EntityAchieveCondition | NotMandatoryAttributeAchieveCondition) (',' pre += (EntityAchieveCondition | NotMandatoryAttributeAchieveCondition))*)? ')'','

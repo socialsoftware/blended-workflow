@@ -8,7 +8,4 @@ package org.blended.data;
  */
 public class DataRuntimeModule extends org.blended.data.AbstractDataRuntimeModule {
 
-	
 }
-
-

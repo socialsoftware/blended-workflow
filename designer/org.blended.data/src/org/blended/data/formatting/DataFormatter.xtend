@@ -3,9 +3,9 @@
  */
 package org.blended.data.formatting
 
+import org.blended.data.services.DataGrammarAccess
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter
 import org.eclipse.xtext.formatting.impl.FormattingConfig
-import org.blended.data.services.DataGrammarAccess
 import org.eclipse.xtext.Keyword
 
 /**

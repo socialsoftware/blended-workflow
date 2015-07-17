@@ -5,19 +5,8 @@ package org.blended.condition.generator
 
 import java.util.ArrayList
 import java.util.List
-import org.blended.condition.condition.And
-import org.blended.condition.condition.AttributeAchieveCondition
-import org.blended.condition.condition.AttributeDefinition
-import org.blended.condition.condition.AttributeDependenceCondition
-import org.blended.condition.condition.AttributeInvariantCondition
-import org.blended.condition.condition.AttributeValue
-import org.blended.condition.condition.EntityAchieveCondition
-import org.blended.condition.condition.EntityDependenceCondition
-import org.blended.condition.condition.EntityInvariantCondition
-import org.blended.condition.condition.Expression
-import org.blended.condition.condition.MandatoryAttributeAchieveCondition
-import org.blended.condition.condition.Not
-import org.blended.condition.condition.Or
+import org.blended.common.common.AttributeAchieveCondition
+import org.blended.common.common.EntityAchieveCondition
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 
@@ -46,7 +35,7 @@ class ConditionGeneratorGoalModel {
 	def doGenerate() {	
 		numberOfEntities = resource.allContents.toIterable.filter(typeof(EntityAchieveCondition)).size
 		numberOfAttributes = resource.allContents.toIterable.filter(typeof(AttributeAchieveCondition)).size
-		insertParts()
+		//insertParts()
 		
 		for (part : sbs) {
 			sb.append(part) //to put everything together
@@ -55,232 +44,232 @@ class ConditionGeneratorGoalModel {
 		fsa.generateFile(resource.normalizedURI.lastSegment.replace(".cm", ".gm"), CustomOutputConfigurationProvider::SRC_OUTPUT, sb.toString)
 	}
 	
-	def insertParts() '''
-«rootGoal»
-«goalsBasedOnEntities»
-«goalsBasedOnAttributes»
-	'''
-	
-//ROOT GOAL
-	def rootGoal() {
-		var sb = new StringBuilder('g0: SUC(nothing), SUB('+ rootGoalSubs() +')\r\n')
-		sbs.add(sb)
-	}
-	
-	def rootGoalSubs() {
-		var sb = new StringBuilder
-		for (var i = 1; i <= numberOfEntities; i++) {
-			if (i == 1) 
-				sb.append('g' + i)
-			else
-				sb.append(', g' + i)
-		}
-		return sb.toString
-	}
-//*********
-	
-//FROM ENTITIES
-	def goalsBasedOnEntities() {
-		var i = 1
-		for (r : resource.allContents.toIterable.filter(typeof(EntityAchieveCondition))) {
-			var sb = new StringBuilder(r.goalBasedOnEntity(i))
-			sbs.add(sb)
-			i++
-		}
-	}
-	
-	def goalBasedOnEntity(EntityAchieveCondition eac, int numberOfGoal) '''
-g«numberOfGoal»: «sucsEntity(eac)»«actsEntity(eac)»«invsEntity(eac)»«subsEntity(eac)»
-	'''
-	
-	def sucsEntity(EntityAchieveCondition eac) {
-		'SUC(DEF('+ eac.name + '))'
-	}
-	
-	def actsEntity(EntityAchieveCondition eac) {
-		for (r : resource.allContents.toIterable.filter(typeof(EntityDependenceCondition))) {
-			if (r.entity1 == eac.name) {
-				return ', ACT(DEF(' + r.entity2 + '))'
-			}
-		}
-	}
-	
-	def invsEntity(EntityAchieveCondition eac) {
-		var sb = new StringBuilder
-		var i = 0
-		for (r : resource.allContents.toIterable.filter(typeof(EntityInvariantCondition))) {
-			if (getEntityNameFromAttribute(r.name) == eac.name) {
-				if (i == 0) {
-					sb.append('MUL(' + r.name  + ',' + r.cardinality + ')')
-					i++
-				}
-				else sb.append(', MUL(' + r.name  + ',' + r.cardinality + ')')
-			}
-		}
-		if (sb.length > 0) return ', INV('+ sb.toString + ')'
-	}
-	
-	def subsEntity(EntityAchieveCondition eac) {
-		var sb = new StringBuilder
-		var i = 0
-		var numberOfAttribute = 1
-		for (r : resource.allContents.toIterable.filter(typeof(AttributeAchieveCondition))) {
-			var used = false
-			for (att : r.conditions) {
-				if (getEntityNameFromAttribute(att) == eac.name) {
-					if (i == 0) {
-						if (!used) sb.append('g' + (numberOfEntities + numberOfAttribute))
-						used = true
-						i++
-					}
-					else {
-						if (!used) sb.append(', g' + (numberOfEntities + numberOfAttribute))
-						used = true
-					}
-				}
-			}
-			numberOfAttribute++
-		}
-		if (sb.length > 0) return ', SUB('+ sb.toString + ')'
-	}
-//*********
-	
-//FROM ATTRIBUTES
-	def goalsBasedOnAttributes() {
-		var i = numberOfEntities+1
-		for (r : resource.allContents.toIterable.filter(typeof(AttributeAchieveCondition))) {
-			var sb = new StringBuilder(r.goalBasedOnAttribute(i))
-			sbs.add(sb)
-			i++
-		}
-	}
-	
-	def goalBasedOnAttribute(AttributeAchieveCondition aac, int numberOfGoal) '''
-g«numberOfGoal»: «sucsAttribute(aac)»«actsAttribute(aac)»«invsAttribute(aac)»
-	'''
-	
-	def sucsAttribute(AttributeAchieveCondition aac) {
-		if (isMandatoryAttribute(aac))
-			'SUC(MAN(DEF('+ getAttributeNames(aac.conditions) + ')))'
-		else
-			'SUC(DEF('+ getAttributeNames(aac.conditions) + '))'
-	}
-	
-	def actsAttribute(AttributeAchieveCondition aac) {
-		for (r : resource.allContents.toIterable.filter(typeof(AttributeDependenceCondition))) {
-			if (getAttributeNames(r.attributes1) == getAttributeNames(aac.conditions)) {
-				return ', ACT(DEF(' + r.attribute2 + '))'
-			}
-		}
-	}
-	
-	def invsAttribute(AttributeAchieveCondition aac) {
-		var sb = new StringBuilder
-		var i = 0
-		for (r : resource.allContents.toIterable.filter(typeof(AttributeInvariantCondition))) {
-			for (ele1 : aac.conditions) { //for each attribute
-				var used = false
-				for (ele2 : getDecomposedExpression(r.expression)) {
-					if (ele1.toLowerCase == ele2.toLowerCase) {
-						if (i == 0) {
-							if(!used) sb.append('RUL(' + getCompleteExpression(r.expression) + ')')
-							used = true
-							i++
-						}
-						else {
-							if(!used) sb.append(', RUL(' + getCompleteExpression(r.expression) + ')')	
-							used = true
-						}						
-					}
-				}
-			}
-		}
-		if (sb.length > 0) return ', INV('+ sb.toString + ')'
-	}
-//*********
-	
-//UTILS
-	def isMandatoryAttribute(AttributeAchieveCondition aac) {
-		if (aac instanceof MandatoryAttributeAchieveCondition) return true
-		else return false
-	}
-	
-	def getAttributeNames(List<String> aac) {
-		var sb = new StringBuilder();
-		var i = 0
-		for (s : aac) {
-			if (i == 0) {
-				sb.append(s)
-				i++
-			} 
-			else
-				sb.append(','+s)
-		}
-		return sb.toString
-	}
-	
-	def getAttributeLastName(String att) {
-		var parts = att.split('.')
-		if (parts.size >= 2)
-			return parts.get(parts.size-2) + '.' + parts.get(parts.size-1)
-	}
-	
-	def getEntityNameFromAttribute(String att) {
-		return att.substring(0, att.indexOf('.'))
-	}
-	
-	static def getDecomposedExpression(Expression e) {
-		var list = new ArrayList<String>()
-		e.getDecomposedExpression(list)	
-		return list
-	}
-	
-	static def Object getDecomposedExpression(Expression e, List<String> list) {	
-		switch (e) {
-			AttributeDefinition: list.add(e.name)
-			AttributeValue: list.add(e.name)
-			Not: e.expression.getDecomposedExpression(list)
-			And: {
-				e.left.getDecomposedExpression(list)
-				e.right.getDecomposedExpression(list)
-			}
-			Or: {
-				e.left.getDecomposedExpression(list)
-				e.right.getDecomposedExpression(list)
-			}
-		}		
-	}
-	
-	static def getCompleteExpression(Expression e) {
-		var sb = new StringBuilder()
-		e.getCompleteExpression(sb)		
-		return sb.toString
-	}
-	
-	static def Object getCompleteExpression(Expression e, StringBuilder sb) {	
-		switch (e) {
-			AttributeDefinition: sb.append(e.name)
-			AttributeValue: sb.append(e.name)
-			Not: {
-				sb.append('NOT (')
-				e.expression.getCompleteExpression(sb)
-				sb.append(')')
-			}
-			And: {
-				sb.append('(')
-				e.left.getCompleteExpression(sb)
-				sb.append(') AND (') 
-				e.right.getCompleteExpression(sb)
-				sb.append(')')
-			}
-			Or: {
-				sb.append('(')
-				e.left.getCompleteExpression(sb)
-				sb.append(') OR (') 
-				e.right.getCompleteExpression(sb)
-				sb.append(')')
-			}
-		}		
-	}
+//	def insertParts() '''
+//«rootGoal»
+//«goalsBasedOnEntities»
+//«goalsBasedOnAttributes»
+//	'''
+//	
+////ROOT GOAL
+//	def rootGoal() {
+//		var sb = new StringBuilder('g0: SUC(nothing), SUB('+ rootGoalSubs() +')\r\n')
+//		sbs.add(sb)
+//	}
+//	
+//	def rootGoalSubs() {
+//		var sb = new StringBuilder
+//		for (var i = 1; i <= numberOfEntities; i++) {
+//			if (i == 1) 
+//				sb.append('g' + i)
+//			else
+//				sb.append(', g' + i)
+//		}
+//		return sb.toString
+//	}
+////*********
+//	
+////FROM ENTITIES
+//	def goalsBasedOnEntities() {
+//		var i = 1
+//		for (r : resource.allContents.toIterable.filter(typeof(EntityAchieveCondition))) {
+//			var sb = new StringBuilder(r.goalBasedOnEntity(i))
+//			sbs.add(sb)
+//			i++
+//		}
+//	}
+//	
+//	def goalBasedOnEntity(EntityAchieveCondition eac, int numberOfGoal) '''
+//g«numberOfGoal»: «sucsEntity(eac)»«actsEntity(eac)»«invsEntity(eac)»«subsEntity(eac)»
+//	'''
+//	
+//	def sucsEntity(EntityAchieveCondition eac) {
+//		'SUC(DEF('+ eac.name + '))'
+//	}
+//	
+//	def actsEntity(EntityAchieveCondition eac) {
+//		for (r : resource.allContents.toIterable.filter(typeof(EntityDependenceCondition))) {
+//			if (r.entity1 == eac.name) {
+//				return ', ACT(DEF(' + r.entity2 + '))'
+//			}
+//		}
+//	}
+//	
+//	def invsEntity(EntityAchieveCondition eac) {
+//		var sb = new StringBuilder
+//		var i = 0
+//		for (r : resource.allContents.toIterable.filter(typeof(EntityInvariantCondition))) {
+//			if (getEntityNameFromAttribute(r.name) == eac.name) {
+//				if (i == 0) {
+//					sb.append('MUL(' + r.name  + ',' + r.cardinality + ')')
+//					i++
+//				}
+//				else sb.append(', MUL(' + r.name  + ',' + r.cardinality + ')')
+//			}
+//		}
+//		if (sb.length > 0) return ', INV('+ sb.toString + ')'
+//	}
+//	
+//	def subsEntity(EntityAchieveCondition eac) {
+//		var sb = new StringBuilder
+//		var i = 0
+//		var numberOfAttribute = 1
+//		for (r : resource.allContents.toIterable.filter(typeof(AttributeAchieveCondition))) {
+//			var used = false
+//			for (att : r.conditions) {
+//				if (getEntityNameFromAttribute(att) == eac.name) {
+//					if (i == 0) {
+//						if (!used) sb.append('g' + (numberOfEntities + numberOfAttribute))
+//						used = true
+//						i++
+//					}
+//					else {
+//						if (!used) sb.append(', g' + (numberOfEntities + numberOfAttribute))
+//						used = true
+//					}
+//				}
+//			}
+//			numberOfAttribute++
+//		}
+//		if (sb.length > 0) return ', SUB('+ sb.toString + ')'
+//	}
+////*********
+//	
+////FROM ATTRIBUTES
+//	def goalsBasedOnAttributes() {
+//		var i = numberOfEntities+1
+//		for (r : resource.allContents.toIterable.filter(typeof(AttributeAchieveCondition))) {
+//			var sb = new StringBuilder(r.goalBasedOnAttribute(i))
+//			sbs.add(sb)
+//			i++
+//		}
+//	}
+//	
+//	def goalBasedOnAttribute(AttributeAchieveCondition aac, int numberOfGoal) '''
+//g«numberOfGoal»: «sucsAttribute(aac)»«actsAttribute(aac)»«invsAttribute(aac)»
+//	'''
+//	
+//	def sucsAttribute(AttributeAchieveCondition aac) {
+//		if (isMandatoryAttribute(aac))
+//			'SUC(MAN(DEF('+ getAttributeNames(aac.conditions) + ')))'
+//		else
+//			'SUC(DEF('+ getAttributeNames(aac.conditions) + '))'
+//	}
+//	
+//	def actsAttribute(AttributeAchieveCondition aac) {
+//		for (r : resource.allContents.toIterable.filter(typeof(AttributeDependenceCondition))) {
+//			if (getAttributeNames(r.attributes1) == getAttributeNames(aac.conditions)) {
+//				return ', ACT(DEF(' + r.attribute2 + '))'
+//			}
+//		}
+//	}
+//	
+//	def invsAttribute(AttributeAchieveCondition aac) {
+//		var sb = new StringBuilder
+//		var i = 0
+//		for (r : resource.allContents.toIterable.filter(typeof(AttributeInvariantCondition))) {
+//			for (ele1 : aac.conditions) { //for each attribute
+//				var used = false
+//				for (ele2 : getDecomposedExpression(r.expression)) {
+//					if (ele1.toLowerCase == ele2.toLowerCase) {
+//						if (i == 0) {
+//							if(!used) sb.append('RUL(' + getCompleteExpression(r.expression) + ')')
+//							used = true
+//							i++
+//						}
+//						else {
+//							if(!used) sb.append(', RUL(' + getCompleteExpression(r.expression) + ')')	
+//							used = true
+//						}						
+//					}
+//				}
+//			}
+//		}
+//		if (sb.length > 0) return ', INV('+ sb.toString + ')'
+//	}
+////*********
+//	
+////UTILS
+//	def isMandatoryAttribute(AttributeAchieveCondition aac) {
+//		if (aac instanceof MandatoryAttributeAchieveCondition) return true
+//		else return false
+//	}
+//	
+//	def getAttributeNames(List<String> aac) {
+//		var sb = new StringBuilder();
+//		var i = 0
+//		for (s : aac) {
+//			if (i == 0) {
+//				sb.append(s)
+//				i++
+//			} 
+//			else
+//				sb.append(','+s)
+//		}
+//		return sb.toString
+//	}
+//	
+//	def getAttributeLastName(String att) {
+//		var parts = att.split('.')
+//		if (parts.size >= 2)
+//			return parts.get(parts.size-2) + '.' + parts.get(parts.size-1)
+//	}
+//	
+//	def getEntityNameFromAttribute(String att) {
+//		return att.substring(0, att.indexOf('.'))
+//	}
+//	
+//	static def getDecomposedExpression(Expression e) {
+//		var list = new ArrayList<String>()
+//		e.getDecomposedExpression(list)	
+//		return list
+//	}
+//	
+//	static def Object getDecomposedExpression(Expression e, List<String> list) {	
+//		switch (e) {
+//			AttributeDefinition: list.add(e.name)
+//			AttributeValue: list.add(e.name)
+//			Not: e.expression.getDecomposedExpression(list)
+//			And: {
+//				e.left.getDecomposedExpression(list)
+//				e.right.getDecomposedExpression(list)
+//			}
+//			Or: {
+//				e.left.getDecomposedExpression(list)
+//				e.right.getDecomposedExpression(list)
+//			}
+//		}		
+//	}
+//	
+//	static def getCompleteExpression(Expression e) {
+//		var sb = new StringBuilder()
+//		e.getCompleteExpression(sb)		
+//		return sb.toString
+//	}
+//	
+//	static def Object getCompleteExpression(Expression e, StringBuilder sb) {	
+//		switch (e) {
+//			AttributeDefinition: sb.append(e.name)
+//			AttributeValue: sb.append(e.name)
+//			Not: {
+//				sb.append('NOT (')
+//				e.expression.getCompleteExpression(sb)
+//				sb.append(')')
+//			}
+//			And: {
+//				sb.append('(')
+//				e.left.getCompleteExpression(sb)
+//				sb.append(') AND (') 
+//				e.right.getCompleteExpression(sb)
+//				sb.append(')')
+//			}
+//			Or: {
+//				sb.append('(')
+//				e.left.getCompleteExpression(sb)
+//				sb.append(') OR (') 
+//				e.right.getCompleteExpression(sb)
+//				sb.append(')')
+//			}
+//		}		
+//	}
 
 }

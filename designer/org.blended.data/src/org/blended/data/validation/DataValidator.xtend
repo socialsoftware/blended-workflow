@@ -3,14 +3,15 @@
  */
 package org.blended.data.validation
 
-import org.blended.data.data.Attribute
+import org.blended.common.common.Attribute
+import org.blended.common.common.CommonPackage
+import org.blended.data.data.DataModel
 import org.blended.data.data.DataPackage
 import org.eclipse.xtext.validation.Check
-import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface
-import static extension org.eclipse.xtext.EcoreUtil2.*
-import pt.ist.socialsoftware.blendedworkflow.service.BWNotification
 import pt.ist.socialsoftware.blendedworkflow.service.BWError
-import org.blended.data.data.DataModel
+import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface
+
+import static extension org.eclipse.xtext.EcoreUtil2.*
 
 /**
  * This class contains custom validation rules. 
@@ -19,6 +20,14 @@ import org.blended.data.data.DataModel
  */
 class DataValidator extends AbstractDataValidator {
 	public static val INVALID_NAME = 'invalidName'
+
+	@Check
+	def checkModel(Attribute att) {
+		if ((!att.type.equals("String")) && (!att.type.equals("Boolean")) && (!att.type.equals("Number")) &&
+			(!att.type.equals("Date"))) {
+			error("Invalid Data Type", CommonPackage.Literals.ATTRIBUTE__TYPE)
+		}
+	}
 
 	@Check
 	def checkModel(DataModel model) {

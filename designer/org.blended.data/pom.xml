@@ -67,6 +67,11 @@
 				</configuration>
 				<dependencies>
 					<dependency>
+						<groupId>pt.ist.socialsoftware</groupId>
+						<artifactId>org.blended.common</artifactId>
+						<version>${code.version}</version>
+					</dependency>
+					 <dependency>
 						<groupId>org.eclipse.xtext</groupId>
 						<artifactId>org.eclipse.xtext.xtext</artifactId>
 						<version>${xtext.version}</version>

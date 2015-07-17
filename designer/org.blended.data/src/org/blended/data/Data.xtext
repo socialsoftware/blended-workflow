@@ -1,4 +1,4 @@
-grammar org.blended.data.Data with org.eclipse.xtext.common.Terminals
+grammar org.blended.data.Data with org.blended.common.Common
 
 generate data "http://www.blended.org/data/Data"
 
@@ -7,69 +7,5 @@ DataModel:
 	entities += Entity*
 	associations += Association*
 	constraint += Constraint*
-;
-
-Specification:
-	'Specification' ':' name = STRING
-;
-
-Entity:
-	'Entity' name = ID (exists ?= 'exists')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? '{' 
-		attributes += (AttributeGroup | Attribute)*
-	'}'
-;
-
-Attribute:
-	name = QualifiedName ':' type = ID
-	(mandatory ?= 'mandatory')?
-	('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)?
-;
-
-AttributeGroup:
-	"group" name = ID (mandatory ?= 'mandatory')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? "{"
-		(attributes += Attribute)+
-	"}"
-;
-
-QualifiedName: 
-	ID ('.' ID)*
-;
-
-Association:
-	'Association' '{'
-		entity1 = [Entity] 'with' name1 = ID  '(' cardinality1 = Cardinality ')'
-		entity2 = [Entity] 'with' name2 = ID '(' cardinality2 = Cardinality ')'
-	'}'
-;
-
-Constraint:
-	'Constraint' ':' constraint = Expression
-;
-
-Cardinality:
-	INT | INT '..' INT | INT '..' '*' | '+' | '*'
-;
-
-Expression: Or;
-
-Or returns Expression:
-	And (
-		{Or.left = current} 'OR' right = And
-	)*;	
-	
-And returns Expression:
-	Primary (
-		{And.left = current} 'AND' right = Primary
-	)*;	
-
-Primary returns Expression:
-	'(' Expression ')' | 
-	{Not} 'NOT' expression = Primary |
-	Atomic
-;
-
-Atomic returns Expression:
-	{AttributeDefinition} 'DEF' '(' name = QualifiedName ')' |
-	{AttributeValue} name = QualifiedName
 ;
 

@@ -1,58 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.goal/src-gen" editDirectory="/C:\Users\Vicente\Documents\GitHub\bw\designer\org.blended.goal.edit/src"
-    editorDirectory="/C:\Users\Vicente\Documents\GitHub\bw\designer\org.blended.goal.editor/src"
-    modelPluginID="org.blended.goal" forceOverwrite="true" modelName="Goal" updateClasspath="false"
-    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" complianceLevel="6.0"
-    copyrightFields="false" editPluginID="org.blended.goal.edit" editorPluginID="org.blended.goal.editor"
-    runtimeVersion="2.10">
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.goal/src-gen" editDirectory="/org.blended.goal.edit/src"
+    editorDirectory="/org.blended.goal.editor/src" modelPluginID="org.blended.goal"
+    forceOverwrite="true" modelName="Goal" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="org.blended.goal.edit"
+    editorPluginID="org.blended.goal.editor" runtimeVersion="2.10">
   <genPackages prefix="Goal" basePackage="org.blended.goal" disposableProviderFactory="true"
       fileExtensions="gm" ecorePackage="Goal.ecore#/">
     <genClasses ecoreClass="Goal.ecore#//GoalModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//GoalModel/goals"/>
     </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//EntityAchieveCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//EntityAchieveCondition/name"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//EntityInvariantCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//EntityInvariantCondition/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//EntityInvariantCondition/cardinality"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//AttributeAchieveCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//AttributeAchieveCondition/conditions"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//NotMandatoryAttributeAchieveCondition"/>
-    <genClasses ecoreClass="Goal.ecore#//MandatoryAttributeAchieveCondition"/>
-    <genClasses ecoreClass="Goal.ecore#//AttributeInvariantCondition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//AttributeInvariantCondition/expression"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//Nothing">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//Nothing/name"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//Expression"/>
     <genClasses ecoreClass="Goal.ecore#//Goal">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//Goal/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Goal/sucessCondition"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Goal/activationCondition"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Goal/invariantConditions"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Goal.ecore#//Goal/childrenGoals"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//Or">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Or/left"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Or/right"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//And">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//And/left"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//And/right"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//Not">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Not/expression"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//AttributeDefinition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//AttributeDefinition/name"/>
-    </genClasses>
-    <genClasses ecoreClass="Goal.ecore#//AttributeValue">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//AttributeValue/name"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
