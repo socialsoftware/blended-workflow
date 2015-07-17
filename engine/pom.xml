@@ -403,6 +403,12 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>pt.ist.socialsoftware</groupId>
+			<artifactId>org.blended.common</artifactId>
+			<version>${code.version}</version>
+		</dependency>
+
 	</dependencies>
 	<repositories>
 		<repository>

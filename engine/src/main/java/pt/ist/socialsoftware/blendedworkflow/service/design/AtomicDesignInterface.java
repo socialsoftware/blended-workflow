@@ -4,12 +4,13 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.blended.data.data.Association;
-import org.blended.data.data.Attribute;
-import org.blended.data.data.AttributeGroup;
-import org.blended.data.data.Constraint;
+import org.blended.common.common.And;
+import org.blended.common.common.Association;
+import org.blended.common.common.Attribute;
+import org.blended.common.common.AttributeGroup;
+import org.blended.common.common.Constraint;
+import org.blended.common.common.Entity;
 import org.blended.data.data.DataModel;
-import org.blended.data.data.Entity;
 import org.eclipse.emf.ecore.EObject;
 
 import pt.ist.fenixframework.Atomic;
@@ -196,6 +197,7 @@ public class AtomicDesignInterface {
         // load constraint
         for (Constraint constraint : eDataModel.getConstraint()) {
             // BWRule rule = dataModel.createRule(constraint.getConstraint());
+            ((And) constraint.getConstraint()).getLeft();
         }
     }
 

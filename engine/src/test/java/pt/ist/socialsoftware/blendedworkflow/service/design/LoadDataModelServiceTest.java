@@ -8,13 +8,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.stream.Collectors;
 
-import org.blended.data.data.Association;
-import org.blended.data.data.Attribute;
-import org.blended.data.data.AttributeGroup;
+import org.blended.common.common.Association;
+import org.blended.common.common.Attribute;
+import org.blended.common.common.AttributeGroup;
+import org.blended.common.common.CommonFactory;
+import org.blended.common.common.Entity;
+import org.blended.common.common.Specification;
 import org.blended.data.data.DataFactory;
 import org.blended.data.data.DataModel;
-import org.blended.data.data.Entity;
-import org.blended.data.data.Specification;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
@@ -39,6 +40,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
     private static final String EXISTS_ATTRIBUTE_NAME = "Exists Attribute Name";
     private static final String ATTRIBUTE_GROUP_NAME = "Attribute Group Name";
 
+    CommonFactory commonFactory = CommonFactory.eINSTANCE;
     DataFactory dataFactory = DataFactory.eINSTANCE;
     DataModel eDataModel;
 
@@ -70,7 +72,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void newSpec() {
-        Specification eSpec = dataFactory.createSpecification();
+        Specification eSpec = commonFactory.createSpecification();
         eSpec.setName(NEW_SPEC_NAME);
         eDataModel.setSpecification(eSpec);
 
@@ -87,7 +89,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void successSpecExist() {
-        Specification eSpec = dataFactory.createSpecification();
+        Specification eSpec = commonFactory.createSpecification();
         eSpec.setName(EXISTS_SPEC_NAME);
         eDataModel.setSpecification(eSpec);
 
@@ -104,7 +106,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void successCreateAndDeleteEntity() {
-        eEnt = dataFactory.createEntity();
+        eEnt = commonFactory.createEntity();
         eEnt.setName(ENTITY_NAME);
         eEnt.setExists(true);
         eDataModel.getEntities().add(eEnt);
@@ -123,11 +125,11 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void successCreateAndMaintainEntity() {
-        eEnt = dataFactory.createEntity();
+        eEnt = commonFactory.createEntity();
         eEnt.setName(ENTITY_NAME);
         eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
-        Entity eEnt = dataFactory.createEntity();
+        Entity eEnt = commonFactory.createEntity();
         eEnt.setName(EXISTS_ENTITY_NAME);
         eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
@@ -147,11 +149,11 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void successCreateAndDeleteAttribute() {
-        eEnt = dataFactory.createEntity();
+        eEnt = commonFactory.createEntity();
         eEnt.setName(EXISTS_ENTITY_NAME);
         eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
-        Attribute eAtt = dataFactory.createAttribute();
+        Attribute eAtt = commonFactory.createAttribute();
         eEnt.getAttributes().add(eAtt);
         eAtt.setName(ATTRIBUTE_NAME);
         eAtt.setType("Boolean");
@@ -173,15 +175,15 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void successCreateAndMaintainAttribute() {
-        eEnt = dataFactory.createEntity();
+        eEnt = commonFactory.createEntity();
         eEnt.setName(EXISTS_ENTITY_NAME);
         eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
-        Attribute eAtt = dataFactory.createAttribute();
+        Attribute eAtt = commonFactory.createAttribute();
         eEnt.getAttributes().add(eAtt);
         eAtt.setName(ATTRIBUTE_NAME);
         eAtt.setType("Boolean");
-        eAtt = dataFactory.createAttribute();
+        eAtt = commonFactory.createAttribute();
         eEnt.getAttributes().add(eAtt);
         eAtt.setName(EXISTS_ATTRIBUTE_NAME);
         eAtt.setType("Number");
@@ -207,11 +209,11 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void successMaintainAttributeAndChangeType() {
-        eEnt = dataFactory.createEntity();
+        eEnt = commonFactory.createEntity();
         eEnt.setName(EXISTS_ENTITY_NAME);
         eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
-        Attribute eAtt = dataFactory.createAttribute();
+        Attribute eAtt = commonFactory.createAttribute();
         eEnt.getAttributes().add(eAtt);
         eAtt.setName(EXISTS_ATTRIBUTE_NAME);
         eAtt.setType("String");
@@ -231,15 +233,15 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void successRelation() {
-        Entity eEntOne = dataFactory.createEntity();
+        Entity eEntOne = commonFactory.createEntity();
         eEntOne.setName(ENTITY_NAME);
         eEntOne.setExists(false);
         eDataModel.getEntities().add(eEntOne);
-        Entity eEntTwo = dataFactory.createEntity();
+        Entity eEntTwo = commonFactory.createEntity();
         eEntTwo.setName(EXISTS_ENTITY_NAME);
         eEntTwo.setExists(false);
         eDataModel.getEntities().add(eEntTwo);
-        Association eAssoc = dataFactory.createAssociation();
+        Association eAssoc = commonFactory.createAssociation();
         eAssoc.setEntity1(eEntOne);
         eAssoc.setName1("role1");
         eAssoc.setCardinality1("*");
@@ -258,14 +260,14 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void successCreateAttributeGroup() {
-        eEnt = dataFactory.createEntity();
+        eEnt = commonFactory.createEntity();
         eEnt.setName(EXISTS_ENTITY_NAME);
         eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
-        AttributeGroup eAttGroup = dataFactory.createAttributeGroup();
+        AttributeGroup eAttGroup = commonFactory.createAttributeGroup();
         eAttGroup.setName(ATTRIBUTE_GROUP_NAME);
         eEnt.getAttributes().add(eAttGroup);
-        Attribute eAtt = dataFactory.createAttribute();
+        Attribute eAtt = commonFactory.createAttribute();
         eAttGroup.getAttributes().add(eAtt);
         eAtt.setName(ATTRIBUTE_NAME);
         eAtt.setType("Number");
@@ -297,27 +299,27 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         String DEPENDENCE_ONE = "role2" + "." + ATTRIBUTE_NAME;
         String DEPENDENCE_TWO = "role1" + "." + EXISTS_ATTRIBUTE_NAME;
 
-        Entity eEntOne = dataFactory.createEntity();
+        Entity eEntOne = commonFactory.createEntity();
         eEntOne.setName(EXISTS_ENTITY_NAME);
         eEntOne.setExists(false);
         eDataModel.getEntities().add(eEntOne);
-        Attribute eAtt = dataFactory.createAttribute();
+        Attribute eAtt = commonFactory.createAttribute();
         eEntOne.getAttributes().add(eAtt);
         eAtt.setName(EXISTS_ATTRIBUTE_NAME);
         eAtt.setType("Number");
         eAtt.getDependsOn().add(DEPENDENCE_ONE);
 
-        Entity eEntTwo = dataFactory.createEntity();
+        Entity eEntTwo = commonFactory.createEntity();
         eEntTwo.setName(ENTITY_NAME);
         eEntTwo.setExists(false);
         eDataModel.getEntities().add(eEntTwo);
-        eAtt = dataFactory.createAttribute();
+        eAtt = commonFactory.createAttribute();
         eEntTwo.getAttributes().add(eAtt);
         eAtt.setName(ATTRIBUTE_NAME);
         eAtt.setType("Number");
         eAtt.getDependsOn().add(DEPENDENCE_TWO);
 
-        Association eAssoc = dataFactory.createAssociation();
+        Association eAssoc = commonFactory.createAssociation();
         eAssoc.setEntity1(eEntOne);
         eAssoc.setName1("role1");
         eAssoc.setCardinality1("*");
