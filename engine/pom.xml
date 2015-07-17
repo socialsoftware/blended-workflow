@@ -305,30 +305,13 @@
 			<version>${version.org.slf4j}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${version.org.slf4j}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${version.ch.qos.logback}</version>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>${version.ch.qos.logback}</version>
-		</dependency>
+
 
 		<!-- NEW FOR THIS MOVE TO MAVEN -->
-		<!-- 
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-		</dependency>
-		 -->
 		<dependency>
 			<groupId>org.yawlfoundation.yawl</groupId>
 			<artifactId>yawlStandalone</artifactId>
@@ -378,12 +361,6 @@
 			<version>1.4</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.eclipse.core</groupId> <artifactId>runtime</artifactId> 
-			<version>[3.3.0,4.0.0)</version> </dependency> <dependency> <groupId>org.eclipse.emf</groupId> 
-			<artifactId>org.eclipse.emf.ecore</artifactId> <version>2.11.0-v20150123-0347</version> 
-			</dependency> <dependency> <groupId>org.eclipse.emf</groupId> <artifactId>ecore</artifactId> 
-			<version>[2.3.0,3.0.0)</version> </dependency> -->
-
 		<dependency>
 			<groupId>org.eclipse.xtext</groupId>
 			<artifactId>org.eclipse.xtext</artifactId>
@@ -396,7 +373,7 @@
 			<version>${code.version}</version>
 			<scope>compile</scope>
 			<exclusions>
-				<exclusion>  
+				<exclusion>
 					<groupId>pt.ist.socialsoftware</groupId>
 					<artifactId>engine</artifactId>
 				</exclusion>

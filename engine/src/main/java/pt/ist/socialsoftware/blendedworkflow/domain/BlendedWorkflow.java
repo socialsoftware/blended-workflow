@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
@@ -18,7 +21,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
-    // private static Logger log = LoggerFactory.getLogger("BlendedWorkflow");
+    private static Logger log = LoggerFactory.getLogger(BlendedWorkflow.class);
 
     DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
     private YAWLAdapter yawlAdapter = null;
@@ -33,7 +36,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
     public static BlendedWorkflow getInstance() {
         if (FenixFramework.getDomainRoot().getBlendedWorkflow() == null) {
             new BlendedWorkflow();
-            // log.info("BlendedWorkflow instance created");
+            log.debug("BlendedWorkflow instance created");
         }
 
         return FenixFramework.getDomainRoot().getBlendedWorkflow();

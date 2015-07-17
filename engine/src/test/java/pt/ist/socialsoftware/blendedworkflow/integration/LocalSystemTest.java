@@ -19,14 +19,14 @@ public class LocalSystemTest {
     @Before
     @Atomic
     public void setUp() {
-        logger.info("LocalSystemTest::setUp");
+        logger.debug("LocalSystemTest::setUp");
         designInterface = DesignInterface.getInstance();
     }
 
     @After
     @Atomic
     public void tearDown() {
-        logger.info("LocalSystemTest::tearDown");
+        logger.debug("LocalSystemTest::tearDown");
         BlendedWorkflow.getInstance().delete();
     }
 

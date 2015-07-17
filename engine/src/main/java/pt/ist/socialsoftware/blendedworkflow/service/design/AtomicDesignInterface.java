@@ -197,6 +197,7 @@ public class AtomicDesignInterface {
         // load constraint
         for (Constraint constraint : eDataModel.getConstraint()) {
             // BWRule rule = dataModel.createRule(constraint.getConstraint());
+
             ((And) constraint.getConstraint()).getLeft();
         }
     }
