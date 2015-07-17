@@ -48,16 +48,16 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
     }
 
     @Override
-    public BWProduct getNext(List<String> path, String value) {
-        if (path.isEmpty())
+    public BWProduct getNext(List<String> pathLeft, String path) {
+        if (pathLeft.isEmpty())
             return this;
 
-        BWAttribute att = getAttribute(path.get(0)).orElseThrow(
+        BWAttribute att = getAttribute(pathLeft.get(0)).orElseThrow(
                 () -> new BWException(BWErrorType.INVALID_DEPENDENCE,
-                        value + ":" + path));
+                        path + ":" + pathLeft));
 
-        path.remove(0);
-        return att.getNext(path, value);
+        pathLeft.remove(0);
+        return att.getNext(pathLeft, path);
     }
 
 }

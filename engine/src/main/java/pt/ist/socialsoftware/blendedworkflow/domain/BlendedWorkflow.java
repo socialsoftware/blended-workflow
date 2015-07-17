@@ -18,6 +18,8 @@ import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
+    // private static Logger log = LoggerFactory.getLogger("BlendedWorkflow");
+
     DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
     private YAWLAdapter yawlAdapter = null;
     private WorkletAdapter workletAdapter = null;
@@ -31,6 +33,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
     public static BlendedWorkflow getInstance() {
         if (FenixFramework.getDomainRoot().getBlendedWorkflow() == null) {
             new BlendedWorkflow();
+            // log.info("BlendedWorkflow instance created");
         }
 
         return FenixFramework.getDomainRoot().getBlendedWorkflow();

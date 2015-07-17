@@ -81,12 +81,12 @@ public class BWAttribute extends BWAttribute_Base {
     }
 
     @Override
-    public BWProduct getNext(List<String> path, String value) {
-        if (path.size() == 0)
+    public BWProduct getNext(List<String> pathLeft, String path) {
+        if (pathLeft.size() == 0)
             return this;
         else
             throw new BWException(BWErrorType.INVALID_DEPENDENCE,
-                    value + ":" + path);
+                    path + ":" + pathLeft);
     }
 
 }

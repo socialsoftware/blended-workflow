@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.blended.data.data.Association;
 import org.blended.data.data.Attribute;
 import org.blended.data.data.AttributeGroup;
+import org.blended.data.data.Constraint;
 import org.blended.data.data.DataModel;
 import org.blended.data.data.Entity;
 import org.eclipse.emf.ecore.EObject;
@@ -190,6 +191,11 @@ public class AtomicDesignInterface {
         // check dependences
         for (BWDependence dependence : dataModel.getDependenceSet()) {
             dependence.check();
+        }
+
+        // load constraint
+        for (Constraint constraint : eDataModel.getConstraint()) {
+            // BWRule rule = dataModel.createRule(constraint.getConstraint());
         }
     }
 

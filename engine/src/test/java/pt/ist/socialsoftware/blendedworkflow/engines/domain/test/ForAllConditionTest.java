@@ -13,7 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.ExistsEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -54,7 +54,7 @@ public class ForAllConditionTest extends AbstractDomainTest {
     private EntityInstance entityInstance2_2;
     private AttributeInstance entityInstance2_2Att1;
 
-    private ExistsEntityCondition existsEntityCondition;
+    private DEFEntityCondition existsEntityCondition;
     private ForAllCondition forAllCondition;
 
     @Override
@@ -100,7 +100,7 @@ public class ForAllConditionTest extends AbstractDomainTest {
                 entityInstance1_2.getNewRelationInstanceID());
 
         // Condition
-        existsEntityCondition = new ExistsEntityCondition(entity2);
+        existsEntityCondition = new DEFEntityCondition(entity2);
         forAllCondition = new ForAllCondition(relation, entity2,
                 existsEntityCondition);
     }

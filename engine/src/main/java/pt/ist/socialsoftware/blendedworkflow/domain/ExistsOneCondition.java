@@ -53,9 +53,9 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
 
     @Override
     public Set<BWEntity> getEntities() {
-        Set<BWEntity> entity = new HashSet<BWEntity>();
-        entity.add(getExistsOneEntity());
-        return entity;
+        Set<BWEntity> entities = new HashSet<BWEntity>();
+        entities.add(getExistsOneEntity());
+        return entities;
     }
 
     @Override

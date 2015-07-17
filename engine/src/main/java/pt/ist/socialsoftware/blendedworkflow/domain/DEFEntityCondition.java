@@ -7,9 +7,9 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class ExistsEntityCondition extends ExistsEntityCondition_Base {
+public class DEFEntityCondition extends DEFEntityCondition_Base {
 
-    public ExistsEntityCondition(BWEntity entity) {
+    public DEFEntityCondition(BWEntity entity) {
         setEntity(entity);
     }
 
@@ -19,7 +19,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
                 .getDataModelInstance();
         BWEntity entity = dataModelInstance.getEntity(getEntity().getName())
                 .get();
-        return new ExistsEntityCondition(entity);
+        return new DEFEntityCondition(entity);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ExistsEntityCondition extends ExistsEntityCondition_Base {
                 .getDataModelInstance();
         BWEntity entity = dataModelInstance.getEntity(getEntity().getName())
                 .get();
-        return new ExistsEntityCondition(entity);
+        return new DEFEntityCondition(entity);
     }
 
     @Override

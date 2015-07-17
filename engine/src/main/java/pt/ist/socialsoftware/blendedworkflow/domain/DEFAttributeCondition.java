@@ -7,9 +7,9 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
+public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
-    public ExistsAttributeCondition(BWAttribute attribute) {
+    public DEFAttributeCondition(BWAttribute attribute) {
         setAttribute(attribute);
     }
 
@@ -21,7 +21,7 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
                 .getEntity(getAttribute().getEntity().getName()).get();
         BWAttribute attribute = entity.getAttribute(getAttribute().getName())
                 .orElse(null);
-        return new ExistsAttributeCondition(attribute);
+        return new DEFAttributeCondition(attribute);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ExistsAttributeCondition extends ExistsAttributeCondition_Base {
                 .getEntity(getAttribute().getEntity().getName()).get();
         BWAttribute attribute = entity.getAttribute(getAttribute().getName())
                 .orElse(null);
-        return new ExistsAttributeCondition(attribute);
+        return new DEFAttributeCondition(attribute);
     }
 
     @Override

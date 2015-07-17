@@ -337,7 +337,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
         assertEquals(DEPENDENCE_TWO + "," + DEPENDENCE_ONE,
                 existingDataModel.getDependenceSet().stream()
-                        .map(dep -> dep.getValue()).sorted()
+                        .map(dep -> dep.getPath()).sorted()
                         .collect(Collectors.joining(",")));
     }
 

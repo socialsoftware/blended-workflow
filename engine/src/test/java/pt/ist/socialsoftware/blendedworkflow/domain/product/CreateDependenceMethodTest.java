@@ -36,7 +36,7 @@ public class CreateDependenceMethodTest extends BWDomainAndServiceTest {
 
         assertEquals(1, entity.getDependenceSet().size());
         assertEquals(DEPENDENCE, entity.getDependenceSet().stream().findFirst()
-                .get().getValue());
+                .get().getPath());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class CreateDependenceMethodTest extends BWDomainAndServiceTest {
 
         assertEquals(1, attributeGroup.getDependenceSet().size());
         assertEquals(DEPENDENCE, attributeGroup.getDependenceSet().stream()
-                .findFirst().get().getValue());
+                .findFirst().get().getPath());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class CreateDependenceMethodTest extends BWDomainAndServiceTest {
 
         assertEquals(1, attribute.getDependenceSet().size());
         assertEquals(DEPENDENCE, attribute.getDependenceSet().stream()
-                .findFirst().get().getValue());
+                .findFirst().get().getPath());
     }
 
 }
