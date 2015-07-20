@@ -154,8 +154,9 @@ public class AndCondition extends AndCondition_Base {
 
     @Override
     public void delete() {
-        getConditionOne().delete();
-        getConditionTwo().delete();
+        getLeftCondition().delete();
+        getRightCondition().delete();
+
         super.delete();
     }
 

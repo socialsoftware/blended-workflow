@@ -75,6 +75,12 @@ public abstract class Condition extends Condition_Base {
 
     public void delete() {
         setRule(null);
+        setAndLeftCondition(null);
+        setAndRightCondition(null);
+        setOrLeftCondition(null);
+        setOrRightCondition(null);
+        setNotCondition(null);
+
         deleteDomainObject();
     }
 

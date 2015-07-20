@@ -76,7 +76,8 @@ public class BWAttribute extends BWAttribute_Base {
         setDataModel(null);
         setEntity(null);
         setAttributeGroup(null);
-        getAttValueExpressionSet().stream().forEach(exp -> exp.delete());
+        getAttValueExpressionSet().stream()
+                .forEach(exp -> exp.setAttribute(null));
 
         super.delete();
     }
