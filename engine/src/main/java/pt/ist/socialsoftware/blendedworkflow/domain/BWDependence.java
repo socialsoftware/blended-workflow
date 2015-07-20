@@ -26,7 +26,7 @@ public class BWDependence extends BWDependence_Base {
         List<String> pathLeft = Arrays.stream(getPath().split("\\."))
                 .collect(Collectors.toList());
         if (pathLeft.size() == 0) {
-            throw new BWException(BWErrorType.INVALID_DEPENDENCE, getPath());
+            throw new BWException(BWErrorType.INVALID_PATH, getPath());
         }
 
         getProduct().getEntity().getNext(pathLeft, getPath());

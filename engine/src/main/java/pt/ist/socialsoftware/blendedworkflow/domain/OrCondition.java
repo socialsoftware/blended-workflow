@@ -150,4 +150,12 @@ public class OrCondition extends OrCondition_Base {
                 .OR(getConditionTwo().evaluateWithDataModel(entityInstance,
                         goalWorkItem, conditionType));
     }
+
+    @Override
+    public void delete() {
+        getConditionOne().delete();
+        getConditionTwo().delete();
+        super.delete();
+    }
+
 }

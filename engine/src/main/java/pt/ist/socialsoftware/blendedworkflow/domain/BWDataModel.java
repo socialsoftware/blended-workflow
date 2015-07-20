@@ -50,6 +50,7 @@ public class BWDataModel extends BWDataModel_Base {
 
     public void delete() {
         getEntitiesSet().stream().forEach(ent -> ent.delete());
+        getRuleSet().stream().forEach(rule -> rule.delete());
 
         setSpecification(null);
         deleteDomainObject();
@@ -57,6 +58,10 @@ public class BWDataModel extends BWDataModel_Base {
 
     public BWEntity createEntity(String entityName, Boolean exists) {
         return new BWEntity(this, entityName, exists);
+    }
+
+    public BWRule createRule(Condition condition) {
+        return new BWRule(this, condition);
     }
 
 }

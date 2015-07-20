@@ -113,4 +113,10 @@ public class NotCondition extends NotCondition_Base {
         return false;
     }
 
+    @Override
+    public void delete() {
+        getCondition().delete();
+        super.delete();
+    }
+
 }

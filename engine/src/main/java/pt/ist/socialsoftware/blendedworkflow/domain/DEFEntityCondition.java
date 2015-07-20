@@ -319,4 +319,10 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
         return false;
     }
 
+    @Override
+    public void delete() {
+        setEntity(null);
+        super.delete();
+    }
+
 }

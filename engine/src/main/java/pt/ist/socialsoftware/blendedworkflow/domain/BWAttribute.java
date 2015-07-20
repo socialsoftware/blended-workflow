@@ -76,6 +76,7 @@ public class BWAttribute extends BWAttribute_Base {
         setDataModel(null);
         setEntity(null);
         setAttributeGroup(null);
+        getAttValueExpressionSet().stream().forEach(exp -> exp.delete());
 
         super.delete();
     }
@@ -85,7 +86,7 @@ public class BWAttribute extends BWAttribute_Base {
         if (pathLeft.size() == 0)
             return this;
         else
-            throw new BWException(BWErrorType.INVALID_DEPENDENCE,
+            throw new BWException(BWErrorType.INVALID_PATH,
                     path + ":" + pathLeft);
     }
 

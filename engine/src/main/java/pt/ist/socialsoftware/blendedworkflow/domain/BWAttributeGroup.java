@@ -53,7 +53,7 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
             return this;
 
         BWAttribute att = getAttribute(pathLeft.get(0)).orElseThrow(
-                () -> new BWException(BWErrorType.INVALID_DEPENDENCE,
+                () -> new BWException(BWErrorType.INVALID_PATH,
                         path + ":" + pathLeft));
 
         pathLeft.remove(0);

@@ -152,4 +152,11 @@ public class AndCondition extends AndCondition_Base {
 
     }
 
+    @Override
+    public void delete() {
+        getConditionOne().delete();
+        getConditionTwo().delete();
+        super.delete();
+    }
+
 }

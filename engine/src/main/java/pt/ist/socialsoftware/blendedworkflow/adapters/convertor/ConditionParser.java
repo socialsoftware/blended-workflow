@@ -5,7 +5,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.CompareAttributeToValueCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
@@ -196,8 +196,8 @@ public class ConditionParser {
         value = toArr[1];
         // FIXME REFACTOR
 
-        CompareAttributeToValueCondition compareAttributeToCondition = new CompareAttributeToValueCondition(
-                attribute, operator, value);
+        Comparison compareAttributeToCondition = new Comparison(attribute,
+                operator, value);
         _token = endOfCondition + 1;
 
         return compareAttributeToCondition;

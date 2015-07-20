@@ -72,4 +72,27 @@ public abstract class Condition extends Condition_Base {
     public abstract TripleStateBool evaluateWithDataModel(
             EntityInstance entityInstance, GoalWorkItem goalWorkItem,
             ConditionType conditionType);
+
+    public void delete() {
+        setRule(null);
+        deleteDomainObject();
+    }
+
+    public BWDataModel getDataModel() {
+        if (getRule() != null)
+            return getRule().getDataModel();
+        if (getAndLeftCondition() != null)
+            return getAndLeftCondition().getDataModel();
+        if (getAndRightCondition() != null)
+            return getAndLeftCondition().getDataModel();
+        if (getOrLeftCondition() != null)
+            return getOrLeftCondition().getDataModel();
+        if (getOrRightCondition() != null)
+            return getOrLeftCondition().getDataModel();
+        if (getNotCondition() != null)
+            return getNotCondition().getDataModel();
+        assert false;
+        return null;
+    }
+
 }

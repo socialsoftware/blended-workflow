@@ -11,7 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.CompareAttributeToValueCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.ExistsOneCondition;
@@ -58,7 +58,7 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
     private EntityInstance entityInstance2_2;
     private AttributeInstance entityInstance2_2Att1;
 
-    private CompareAttributeToValueCondition compareAttributeToValueCondition;
+    private Comparison compareAttributeToValueCondition;
     private ExistsOneCondition existsOneCondition;
 
     @Override
@@ -104,8 +104,8 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
                 entityInstance1_2.getNewRelationInstanceID());
 
         // Condition
-        compareAttributeToValueCondition = new CompareAttributeToValueCondition(
-                entity2Att1, CONDITION_OPERATOR, CONDITION_VALUE_TRUE);
+        compareAttributeToValueCondition = new Comparison(entity2Att1,
+                CONDITION_OPERATOR, CONDITION_VALUE_TRUE);
         existsOneCondition = new ExistsOneCondition(relation, entity2,
                 compareAttributeToValueCondition);
     }

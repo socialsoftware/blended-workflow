@@ -8,6 +8,8 @@ enum pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState as 
 enum pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState as GoalState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality as Cardinality;
+enum pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator as ComparisonOperator;
+enum pt.ist.socialsoftware.blendedworkflow.domain.BWBinaryExpression.BinaryOperator as BinaryOperator;
 
 class BlendedWorkflow {
 	Integer specificationCounter;
@@ -88,6 +90,22 @@ class BWRelation {
 
 class BWRule;
 
+class BWExpression;
+
+class BWBinaryExpression extends BWExpression {
+	BinaryOperator operator;
+}
+
+class BWAttributeValueExpression extends BWExpression;
+
+class BWNumberLiteral extends BWExpression {
+	int value;
+}
+
+class BWStringLiteral extends BWExpression {
+	String value;
+}
+
 class BWInstance {
 	String ID;
 	String name;
@@ -163,12 +181,15 @@ class DEFAttributeCondition extends Condition;
 
 class DEFEntityCondition extends Condition;
 
-class CompareAttributeToValueCondition extends Condition {
+class Comparison extends Condition {
+	ComparisonOperator comparator;
 	String operator;
 	String value;
 }
 
 class TrueCondition extends Condition;
+
+class FalseCondition extends Condition;
 
 class ForAllCondition extends Condition;
 class ExistsOneCondition extends Condition;
@@ -371,7 +392,7 @@ relation BWDataModelHasBWDependence {
 
 relation BWDataModelHasBWRule {
 	BWDataModel playsRole dataModel { multiplicity 1..1; }
-	BWRule playsRole constraint { multiplicity 0..*; }
+	BWRule playsRole rule { multiplicity 0..*; }
 }
 
 // BWProduct
@@ -417,7 +438,7 @@ relation BWAttributeGroupHasAttributes {
 
 // BWRule
 relation BWRuleHasCondition {
-	BWRule playsRole constraint { multiplicity 0..1; }
+	BWRule playsRole rule { multiplicity 0..1; }
 	Condition playsRole condition { multiplicity 1..1; }
 }
 
@@ -508,9 +529,36 @@ relation DEFBWEntityConditionHasEntities {
 	BWEntity playsRole entity { multiplicity 0..1; }
 }
 
-// CompareAttributeToValueCondition
-relation CompareAttributeToValueConditionHasAttributes {
-	CompareAttributeToValueCondition playsRole compareAttributeToValueCondition { multiplicity 0..*; }
+// Comparison
+relation ComparisonHasAttributes {
+	Comparison playsRole comparison { multiplicity 0..*; }
+	BWAttribute playsRole attribute { multiplicity 0..1; }
+}
+
+relation ComparisonHasBWExpressionLeft {
+	Comparison playsRole leftComparison { multiplicity 0..1; }
+	BWExpression playsRole leftExpression { multiplicity 0..1; }
+}
+
+relation ComparisonHasBWExpressionRight {
+	Comparison playsRole rightComparison { multiplicity 0..1; }
+	BWExpression playsRole rightExpression { multiplicity 0..1; }
+}
+
+// BWBinaryExpression
+relation BWBinaryExpressionHasBWExpressionLeft {
+	BWBinaryExpression playsRole leftBinary { multiplicity 0..1; }
+	BWExpression playsRole leftExpression { multiplicity 0..1; }
+}
+
+relation BWBinaryExpressionHasBWExpressionRight {
+	BWBinaryExpression playsRole rightBinary { multiplicity 0..1; }
+	BWExpression playsRole rightExpression { multiplicity 0..1; }
+}
+
+// BWAttributeValueExpression
+relation BWAttributeValueExpressionHasBWAttribute {
+	BWAttributeValueExpression playsRole attValueExpression { multiplicity 0..*; }
 	BWAttribute playsRole attribute { multiplicity 0..1; }
 }
 

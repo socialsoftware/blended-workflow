@@ -9,7 +9,6 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 public class TrueCondition extends TrueCondition_Base {
 
     public TrueCondition() {
-        super();
     }
 
     @Override

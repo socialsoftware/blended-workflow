@@ -362,7 +362,7 @@ public class BWEntity extends BWEntity_Base {
             pathLeft.remove(0);
             return oBwRel.get().getEntity(element).getNext(pathLeft, path);
         } else
-            throw new BWException(BWErrorType.INVALID_DEPENDENCE,
+            throw new BWException(BWErrorType.INVALID_PATH,
                     path + ":" + pathLeft);
     }
 

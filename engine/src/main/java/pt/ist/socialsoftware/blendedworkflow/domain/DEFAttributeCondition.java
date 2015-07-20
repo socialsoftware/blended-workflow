@@ -213,4 +213,10 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         return false;
     }
 
+    @Override
+    public void delete() {
+        setAttribute(null);
+        super.delete();
+    }
+
 }

@@ -132,7 +132,7 @@ public class CheckMethodTest extends BWDomainAndServiceTest {
             dep.check();
             fail();
         } catch (BWException bwe) {
-            assertEquals(BWErrorType.INVALID_DEPENDENCE, bwe.getError());
+            assertEquals(BWErrorType.INVALID_PATH, bwe.getError());
             assertEquals(ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "."
                     + "notHere" + ":" + "[notHere]", bwe.getMessage());
         }

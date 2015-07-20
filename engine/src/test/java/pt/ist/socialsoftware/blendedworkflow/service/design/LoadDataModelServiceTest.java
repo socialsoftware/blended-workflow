@@ -8,25 +8,39 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.stream.Collectors;
 
+import org.blended.common.common.And;
 import org.blended.common.common.Association;
 import org.blended.common.common.Attribute;
 import org.blended.common.common.AttributeGroup;
+import org.blended.common.common.AttributeValue;
+import org.blended.common.common.BoolConstant;
 import org.blended.common.common.CommonFactory;
+import org.blended.common.common.Constraint;
 import org.blended.common.common.Entity;
+import org.blended.common.common.Greater;
+import org.blended.common.common.IntConstant;
 import org.blended.common.common.Specification;
 import org.blended.data.data.DataFactory;
 import org.blended.data.data.DataModel;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWNumberLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
+import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 
 public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
@@ -341,6 +355,127 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
                 existingDataModel.getDependenceSet().stream()
                         .map(dep -> dep.getPath()).sorted()
                         .collect(Collectors.joining(",")));
+    }
+
+    @Test
+    public void newCreateComparatorRule() {
+        Entity eEntOne = commonFactory.createEntity();
+        eEntOne.setName(EXISTS_ENTITY_NAME);
+        eEntOne.setExists(false);
+        eDataModel.getEntities().add(eEntOne);
+        Attribute eAtt = commonFactory.createAttribute();
+        eEntOne.getAttributes().add(eAtt);
+        eAtt.setName(EXISTS_ATTRIBUTE_NAME);
+        eAtt.setType("Number");
+
+        Constraint constraint = commonFactory.createConstraint();
+        eDataModel.getConstraint().add(constraint);
+
+        IntConstant intExpression = commonFactory.createIntConstant();
+        intExpression.setName(6);
+
+        AttributeValue attValueExpression = commonFactory
+                .createAttributeValue();
+        attValueExpression
+                .setName(EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME);
+
+        Greater greaterExpression = commonFactory.createGreater();
+        greaterExpression.setLeft(intExpression);
+        greaterExpression.setRight(attValueExpression);
+        constraint.setConstraint(greaterExpression);
+
+        BWNotification notification = designInterface
+                .loadDataModel(EXISTS_SPEC_ID, eDataModel);
+
+        assertFalse(notification.hasErrors());
+        BWSpecification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
+                .get();
+        assertNotNull(spec);
+        assertEquals(1, spec.getDataModel().getRuleSet().size());
+        BWRule rule = spec.getDataModel().getRuleSet().stream()
+                .collect(Collectors.toList()).get(0);
+        assertTrue(rule.getCondition() instanceof Comparison);
+        Comparison comparison = (Comparison) rule.getCondition();
+        assertEquals(Comparison.ComparisonOperator.GREATER,
+                comparison.getComparator());
+        BWExpression leftExpression = comparison.getLeftExpression();
+        BWExpression righExpression = comparison.getRightExpression();
+
+        BWNumberLiteral literal = (BWNumberLiteral) leftExpression;
+        assertEquals(6, literal.getValue());
+
+        BWAttributeValueExpression attValue = (BWAttributeValueExpression) righExpression;
+        BWEntity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME)
+                .get();
+        BWAttribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
+        assertEquals(att, attValue.getAttribute());
+    }
+
+    @Test
+    public void newCreateAndConstraint() {
+        Entity eEntOne = commonFactory.createEntity();
+        eEntOne.setName(EXISTS_ENTITY_NAME);
+        eEntOne.setExists(false);
+        eDataModel.getEntities().add(eEntOne);
+        Attribute eAtt = commonFactory.createAttribute();
+        eEntOne.getAttributes().add(eAtt);
+        eAtt.setName(EXISTS_ATTRIBUTE_NAME);
+        eAtt.setType("Number");
+
+        Constraint constraint = commonFactory.createConstraint();
+        eDataModel.getConstraint().add(constraint);
+
+        And andExpression = commonFactory.createAnd();
+        constraint.setConstraint(andExpression);
+
+        Greater greaterExpression = commonFactory.createGreater();
+        andExpression.setLeft(greaterExpression);
+
+        IntConstant intExpression = commonFactory.createIntConstant();
+        greaterExpression.setLeft(intExpression);
+        intExpression.setName(6);
+
+        AttributeValue attValueExpression = commonFactory
+                .createAttributeValue();
+        greaterExpression.setRight(attValueExpression);
+        attValueExpression
+                .setName(EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME);
+
+        BoolConstant boolConstant = commonFactory.createBoolConstant();
+        andExpression.setRight(boolConstant);
+        boolConstant.setName("true");
+
+        BWNotification notification = designInterface
+                .loadDataModel(EXISTS_SPEC_ID, eDataModel);
+
+        assertFalse(notification.hasErrors());
+        BWSpecification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
+                .get();
+        assertNotNull(spec);
+        assertEquals(1, spec.getDataModel().getRuleSet().size());
+        BWRule rule = spec.getDataModel().getRuleSet().stream()
+                .collect(Collectors.toList()).get(0);
+        assertTrue(rule.getCondition() instanceof AndCondition);
+        AndCondition andCondition = (AndCondition) rule.getCondition();
+        Condition leftCondition = andCondition.getLeftCondition();
+        Condition rightCondition = andCondition.getRightCondition();
+        assertTrue(leftCondition instanceof Comparison);
+        assertTrue(rightCondition instanceof TrueCondition);
+
+        Comparison comparison = (Comparison) leftCondition;
+        assertEquals(Comparison.ComparisonOperator.GREATER,
+                comparison.getComparator());
+        BWExpression leftExpression = comparison.getLeftExpression();
+        BWExpression righExpression = comparison.getRightExpression();
+
+        BWNumberLiteral literal = (BWNumberLiteral) leftExpression;
+        assertEquals(6, literal.getValue());
+
+        BWAttributeValueExpression attValue = (BWAttributeValueExpression) righExpression;
+        BWEntity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME)
+                .get();
+        BWAttribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
+        assertEquals(att, attValue.getAttribute());
     }
 
 }
