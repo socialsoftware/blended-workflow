@@ -8,6 +8,7 @@
   <genPackages prefix="Condition" basePackage="org.blended.condition" disposableProviderFactory="true"
       fileExtensions="cm" ecorePackage="Condition.ecore#/">
     <genClasses ecoreClass="Condition.ecore#//ConditionModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/specification"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/entityAchieveConditions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/entityInvariantConditions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Condition.ecore#//ConditionModel/entityDependenceConditions"/>

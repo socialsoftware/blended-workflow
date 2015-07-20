@@ -77,4 +77,16 @@ class Queries {
 			//BoolConstant: list.add(e.name)
 		}		
 	}
+	
+	static def getEntityNameFrom(String name) {
+		return name.substring(0, name.indexOf('.')).toFirstUpper //TO CHANGE FOR THE ENGINE!!
+	}
+	
+	static def getEntityNameTo(String name) {
+		return name.substring(name.indexOf('.')+1).toFirstUpper //TO CHANGE FOR THE ENGINE!!
+	}
+	
+	static def getAttributeName(String name) {
+		return name.substring(name.indexOf('.')+1) //TO CHANGE FOR THE ENGINE!!
+	}
 }

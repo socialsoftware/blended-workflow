@@ -3,13 +3,14 @@ grammar org.blended.goal.Goal with org.blended.common.Common
 generate goal "http://www.blended.org/goal/Goal"
 
 GoalModel:
+	specification = Specification
 	goals += Goal+
 ;
 
 Goal:
 	name = ID ':'
-	'SUC' '(' sucessCondition = (EntityAchieveCondition | AttributeAchieveCondition | Nothing) ')'
-	(',' 'ACT' '(' activationCondition =  (EntityAchieveCondition | AttributeAchieveCondition) ')')?
+	'SUC' '(' successConditions += ((EntityAchieveCondition | AttributeAchieveCondition | Nothing))+ ')'
+	(',' 'ACT' '(' activationConditions +=  ((EntityAchieveCondition | AttributeAchieveCondition))* ')')?
 	(',' 'INV' '(' invariantConditions += (EntityInvariantCondition|AttributeInvariantCondition) 
 		(',' invariantConditions += (EntityInvariantCondition|AttributeInvariantCondition))* ')'
 	)?

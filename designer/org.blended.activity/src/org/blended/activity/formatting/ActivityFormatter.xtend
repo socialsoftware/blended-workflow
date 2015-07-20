@@ -33,6 +33,7 @@ class ActivityFormatter extends AbstractDeclarativeFormatter {
 			c.setIndentationDecrement.after(key)
 		}
 
+		c.setLinewrap(2).after(f.specificationRule)
 		c.setLinewrap(2).after(f.activityRule)
 		
 		for (Keyword key : f.findKeywords("(")) {

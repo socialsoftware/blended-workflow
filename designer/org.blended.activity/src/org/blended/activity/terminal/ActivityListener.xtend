@@ -8,6 +8,7 @@ import org.eclipse.ui.console.IOConsole
 import org.eclipse.ui.console.IOConsoleInputStream
 import org.eclipse.xtext.resource.SaveOptions
 import org.blended.activity.activity.ActivityModel
+import org.blended.common.utils.ConsoleManagement
 
 class ActivityListener implements Runnable {
 	package String name

@@ -27,6 +27,7 @@ import org.eclipse.xtext.resource.SaveOptions
 import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
 import static extension org.eclipse.xtext.EcoreUtil2.*
 import org.blended.activity.activity.ActivityFactory
+import org.blended.common.common.Specification
 
 /**
  * Generates code from your model files on save.
@@ -49,6 +50,8 @@ class ConditionGeneratorActivityModel {
 	}
 
 	def doGenerate() {
+		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy 
+		
 		var i = 1 // number of the activity
 
 		for (o : resource.allContents.toIterable.filter(typeof(EntityAchieveCondition)) +
@@ -143,8 +146,8 @@ class ConditionGeneratorActivityModel {
 	def step4(EntityInvariantCondition o) {
 		//we need to know which one of the entities involved in the MUL was defined last in the ACTIVITY MODEL and put the MUL in the POST of that entity
 		//call to the engine to know the reference there are pointing to
-		var entityName1 = o.name.substring(0, o.name.indexOf("."))
-		var entityName2 = o.name.substring(o.name.indexOf(".")+1).toFirstUpper
+		var entityName1 = Queries.getEntityNameFrom(o.name)
+		var entityName2 = Queries.getEntityNameTo(o.name)
 		
 		//get activities related to entity1 and entity2
 		var act1 = getFirstActivityWithEntityPost(entityName1)
@@ -166,8 +169,8 @@ class ConditionGeneratorActivityModel {
 		var listElementsInvolved = new ArrayList<PairOfElements>()
 		for (String element : listElements) {
 			//call to the engine to know the entity/attribute each of them are pointing to
-			var entityName = element.substring(0, element.indexOf("."))
-			var attributeName = element.substring(element.indexOf(".")+1)
+			var entityName = Queries.getEntityNameFrom(element)
+			var attributeName = Queries.getAttributeName(element)
 			var data = new PairOfElements(entityName, attributeName)
 			listElementsInvolved.add(data)		
 		}	

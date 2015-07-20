@@ -4,10 +4,11 @@
     editorDirectory="/org.blended.activity.editor/src" modelPluginID="org.blended.activity"
     forceOverwrite="true" modelName="Activity" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="6.0" copyrightFields="false" editPluginID="org.blended.activity.edit"
-    editorPluginID="org.blended.activity.editor" runtimeVersion="2.10">
+    editorPluginID="org.blended.activity.editor" runtimeVersion="2.10" usedGenPackages="platform:/resource/org.blended.common/model/generated/Common.genmodel#//common">
   <genPackages prefix="Activity" basePackage="org.blended.activity" disposableProviderFactory="true"
       fileExtensions="am" ecorePackage="Activity.ecore#/">
     <genClasses ecoreClass="Activity.ecore#//ActivityModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//ActivityModel/specification"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Activity.ecore#//ActivityModel/activities"/>
     </genClasses>
     <genClasses ecoreClass="Activity.ecore#//Activity">

@@ -1,5 +1,6 @@
 package org.blended.data.terminal;
 
+import org.blended.common.utils.ConsoleManagement;
 import org.blended.data.data.DataModel;
 
 public class ManageCh {

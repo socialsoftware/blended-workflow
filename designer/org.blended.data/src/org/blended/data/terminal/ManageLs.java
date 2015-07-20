@@ -1,5 +1,6 @@
 package org.blended.data.terminal;
 
+import org.blended.common.utils.ConsoleManagement;
 import org.blended.data.data.DataModel;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;

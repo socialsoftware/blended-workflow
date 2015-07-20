@@ -18,6 +18,7 @@ import org.eclipse.xtext.resource.SaveOptions
 
 import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.blended.common.common.Specification
 
 /**
  * Generates code from your model files on save.
@@ -40,6 +41,8 @@ class DataGeneratorConditionModel {
 	}
 	
 	def doGenerate() {
+		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy 
+		
 		for (r : resource.allContents.toIterable.filter(typeof(Entity))) {
 			entityAchieveCondition(r)
 		}

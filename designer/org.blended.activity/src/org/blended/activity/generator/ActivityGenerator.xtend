@@ -4,12 +4,11 @@
 package org.blended.activity.generator
 
 import org.blended.activity.terminal.ActivityListener
-import org.blended.activity.terminal.ConsoleManagement
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.blended.common.utils.ConsoleManagement
 
 /**
  * Generates code from your model files on save.

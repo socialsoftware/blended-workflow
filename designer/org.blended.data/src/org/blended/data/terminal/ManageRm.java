@@ -1,7 +1,8 @@
 package org.blended.data.terminal;
 
-import org.blended.data.data.DataModel;
 import org.blended.common.common.Entity;
+import org.blended.common.utils.ConsoleManagement;
+import org.blended.data.data.DataModel;
 
 public class ManageRm {
 	public static void entity(DataModel model, String name, CommandRm cmd) throws ValueException {

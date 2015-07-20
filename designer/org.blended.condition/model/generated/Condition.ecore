@@ -3,6 +3,8 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="condition" nsURI="http://www.blended.org/condition/Condition"
     nsPrefix="condition">
   <eClassifiers xsi:type="ecore:EClass" name="ConditionModel">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specification" eType="ecore:EClass platform:/resource/org.blended.common/model/generated/Common.ecore#//Specification"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entityAchieveConditions"
         upperBound="-1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
         containment="true"/>

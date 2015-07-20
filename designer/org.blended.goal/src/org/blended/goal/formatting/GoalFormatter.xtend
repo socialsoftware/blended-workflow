@@ -41,5 +41,6 @@ class GoalFormatter extends AbstractDeclarativeFormatter {
 		}
 		
 		c.setLinewrap().after(f.goalRule)
+		c.setLinewrap(2).after(f.specificationRule)
 	}
 }

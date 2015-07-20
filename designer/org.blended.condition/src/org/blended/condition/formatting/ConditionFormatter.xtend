@@ -39,11 +39,7 @@ class ConditionFormatter extends AbstractDeclarativeFormatter {
 			c.setNoSpace().before(key)
 		}
 		
-		for (Keyword key : f.findKeywords("ENTITY_ACHIEVE_CONDITIONS")) {
-			c.setLinewrap().after(key)
-		}
-		
-		for (Keyword key : f.findKeywords("ENTITY_INVARIANT_CONDITIONS",
+		for (Keyword key : f.findKeywords("ENTITY_ACHIEVE_CONDITIONS", "ENTITY_INVARIANT_CONDITIONS",
 			"ENTITY_DEPENDENCE_CONDITIONS", "ATTRIBUTE_ACHIEVE_CONDITIONS", 
 			"ATTRIBUTE_INVARIANT_CONDITIONS", "ATTRIBUTE_DEPENDENCE_CONDITIONS"
 		)) {
@@ -53,6 +49,10 @@ class ConditionFormatter extends AbstractDeclarativeFormatter {
 		c.setIndentationIncrement().before(f.entityAchieveConditionRule)
 		c.setIndentationDecrement().after(f.entityAchieveConditionRule)
 		c.setLinewrap().before(f.entityAchieveConditionRule)
+
+		c.setIndentationIncrement().before(f.entityAchieveConditionExistRule)
+		c.setIndentationDecrement().after(f.entityAchieveConditionExistRule)
+		c.setLinewrap().before(f.entityAchieveConditionExistRule)
 		
 		c.setIndentationIncrement().before(f.entityInvariantConditionRule)
 		c.setIndentationDecrement().after(f.entityInvariantConditionRule)

@@ -3,6 +3,7 @@ package org.blended.data.terminal
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.ParameterException
 import java.io.IOException
+import org.blended.common.utils.ConsoleManagement
 import org.blended.data.data.DataModel
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.IOConsole

@@ -1,6 +1,6 @@
 package org.blended.goal.terminal;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
+import org.blended.goal.goal.GoalModel;
 
 public class ManageRm {
 	public static void entity(GoalModel model, String name, CommandRm cmd) throws ValueException {

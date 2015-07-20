@@ -1,19 +1,18 @@
-package org.blended.condition.utils
+package org.blended.condition.terminal
 
 import java.io.IOException
 import org.blended.common.common.AttributeAchieveCondition
-import org.blended.common.common.AttributeDependenceCondition
+import org.blended.common.common.CommonFactory
 import org.blended.common.common.EntityAchieveCondition
 import org.blended.common.common.EntityDependenceCondition
 import org.blended.common.common.EntityInvariantCondition
 import org.blended.common.common.MandatoryAttributeAchieveCondition
-import org.blended.condition.condition.ConditionFactory
+import org.blended.common.utils.ConsoleManagement
 import org.blended.condition.condition.ConditionModel
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.IOConsole
 import org.eclipse.ui.console.IOConsoleInputStream
 import org.eclipse.xtext.resource.SaveOptions
-import org.blended.common.common.CommonFactory
 
 class ConditionListener implements Runnable {
 	package String name

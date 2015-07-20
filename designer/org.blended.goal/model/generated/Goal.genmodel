@@ -4,16 +4,17 @@
     editorDirectory="/org.blended.goal.editor/src" modelPluginID="org.blended.goal"
     forceOverwrite="true" modelName="Goal" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="6.0" copyrightFields="false" editPluginID="org.blended.goal.edit"
-    editorPluginID="org.blended.goal.editor" runtimeVersion="2.10">
+    editorPluginID="org.blended.goal.editor" runtimeVersion="2.10" usedGenPackages="platform:/resource/org.blended.common/model/generated/Common.genmodel#//common">
   <genPackages prefix="Goal" basePackage="org.blended.goal" disposableProviderFactory="true"
       fileExtensions="gm" ecorePackage="Goal.ecore#/">
     <genClasses ecoreClass="Goal.ecore#//GoalModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//GoalModel/specification"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//GoalModel/goals"/>
     </genClasses>
     <genClasses ecoreClass="Goal.ecore#//Goal">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Goal.ecore#//Goal/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Goal/sucessCondition"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Goal/activationCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Goal/successConditions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Goal/activationConditions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Goal.ecore#//Goal/invariantConditions"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Goal.ecore#//Goal/childrenGoals"/>
     </genClasses>

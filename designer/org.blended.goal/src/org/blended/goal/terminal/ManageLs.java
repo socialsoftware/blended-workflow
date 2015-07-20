@@ -1,5 +1,6 @@
 package org.blended.goal.terminal;
 
+import org.blended.common.utils.ConsoleManagement;
 import org.blended.goal.goal.GoalModel;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
