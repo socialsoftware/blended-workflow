@@ -13,17 +13,17 @@ public class BWDependence extends BWDependence_Base {
             String value) {
         setDataModel(dataModel);
         setProduct(product);
-        setValue(value);
+        setPath(value);
     }
 
     public void check() {
-        List<String> path = Arrays.stream(getValue().split("\\."))
+        List<String> pathLeft = Arrays.stream(getPath().split("\\."))
                 .collect(Collectors.toList());
-        if (path.size() == 0) {
-            throw new BWException(BWErrorType.INVALID_DEPENDENCE, getValue());
+        if (pathLeft.size() == 0) {
+            throw new BWException(BWErrorType.INVALID_DEPENDENCE, getPath());
         }
 
-        getProduct().getEntity().getNext(path, getValue());
+        getProduct().getEntity().getNext(pathLeft, getPath());
     }
 
     public void delete() {

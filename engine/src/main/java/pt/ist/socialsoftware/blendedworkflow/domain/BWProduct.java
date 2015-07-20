@@ -10,7 +10,7 @@ public abstract class BWProduct extends BWProduct_Base {
 
     public abstract BWEntity getEntity();
 
-    public abstract BWProduct getNext(List<String> path, String value);
+    public abstract BWProduct getNext(List<String> pathLeft, String path);
 
     public void delete() {
         getDependenceSet().stream().forEach(dep -> dep.delete());

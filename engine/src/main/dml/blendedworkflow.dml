@@ -73,7 +73,7 @@ class BWAttribute extends BWProduct{
 class BWAttributeGroup extends BWProduct;
 
 class BWDependence {
-	String value;
+	String path;
 }
 
 class BWRelation {
@@ -85,6 +85,8 @@ class BWRelation {
 	boolean isOneKeyEntity;
 	boolean isTwoKeyEntity;
 }
+
+class BWRule;
 
 class BWInstance {
 	String ID;
@@ -157,9 +159,9 @@ class OrCondition extends Condition;
 
 class NotCondition extends Condition;
 
-class ExistsAttributeCondition extends Condition;
+class DEFAttributeCondition extends Condition;
 
-class ExistsEntityCondition extends Condition;
+class DEFEntityCondition extends Condition;
 
 class CompareAttributeToValueCondition extends Condition {
 	String operator;
@@ -367,6 +369,11 @@ relation BWDataModelHasBWDependence {
 	BWDependence playsRole dependence { multiplicity 0..*; }
 }
 
+relation BWDataModelHasBWRule {
+	BWDataModel playsRole dataModel { multiplicity 1..1; }
+	BWRule playsRole constraint { multiplicity 0..*; }
+}
+
 // BWProduct
 relation BWProductHasBWDependence {
 	BWProduct playsRole product { multiplicity 0..1; }
@@ -406,6 +413,12 @@ relation BWAttributeHasAttributeInstances {
 relation BWAttributeGroupHasAttributes {
 	BWAttributeGroup playsRole attributeGroup { multiplicity 0..1; }
 	BWAttribute playsRole attribute { multiplicity 0..*; }
+}
+
+// BWRule
+relation BWRuleHasCondition {
+	BWRule playsRole constraint { multiplicity 0..1; }
+	Condition playsRole condition { multiplicity 1..1; }
 }
 
 // EntityInstance
@@ -483,15 +496,15 @@ relation NotConditionHasConditions {
 	Condition playsRole condition { multiplicity 0..1; }
 }
 
-// ExistsBWAttributeCondition
-relation ExistsBWAttributeConditionHasBWAttributes {
-	ExistsAttributeCondition playsRole existsAttributeCondition { multiplicity 0..*; }
+// DEFAttributeCondition
+relation DEFAttributeConditionHasBWAttributes {
+	DEFAttributeCondition playsRole defAttributeCondition { multiplicity 0..*; }
 	BWAttribute playsRole attribute { multiplicity 0..1; }
 }
 
-//ExistsEntityCondition
-relation ExistsBWEntityConditionHasEntities {
-	ExistsEntityCondition playsRole existsEntityCondition { multiplicity 0..*; }
+//DEFEntityCondition
+relation DEFBWEntityConditionHasEntities {
+	DEFEntityCondition playsRole defEntityCondition { multiplicity 0..*; }
 	BWEntity playsRole entity { multiplicity 0..1; }
 }
 

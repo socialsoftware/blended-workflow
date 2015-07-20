@@ -7,8 +7,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.CompareAttributeToValueCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
-import pt.ist.socialsoftware.blendedworkflow.domain.ExistsAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.ExistsEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ExistsOneCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
@@ -105,7 +105,7 @@ public class ConditionParser {
         BWAttribute attribute = parseExistsAttributeConditionArgs(
                 existsAttributeString, startArgs,
                 existsAttributeString.length() - 1, elementName);
-        Condition existsAttributeCondition = new ExistsAttributeCondition(
+        Condition existsAttributeCondition = new DEFAttributeCondition(
                 attribute);
         _token = endOfCondition + 1;
         return existsAttributeCondition;
@@ -140,7 +140,7 @@ public class ConditionParser {
         BWEntity entity = parseExistsEntityConditionArgs(existsEntityString,
                 startArgs, existsEntityString.length() - 1, elementName);
 
-        Condition existsEntityCondition = new ExistsEntityCondition(entity);
+        Condition existsEntityCondition = new DEFEntityCondition(entity);
         _token = endOfCondition + 1;
         return existsEntityCondition;
     }

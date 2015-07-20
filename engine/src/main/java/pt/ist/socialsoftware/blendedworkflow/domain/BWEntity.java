@@ -335,21 +335,21 @@ public class BWEntity extends BWEntity_Base {
     }
 
     @Override
-    public BWProduct getNext(List<String> path, String value) {
-        if (path.isEmpty())
+    public BWProduct getNext(List<String> pathLeft, String path) {
+        if (pathLeft.isEmpty())
             return this;
 
-        String element = path.get(0);
+        String element = pathLeft.get(0);
         Optional<BWAttributeGroup> oBwAttGroup = getAttributeGroup(element);
         if (oBwAttGroup.isPresent()) {
-            path.remove(0);
-            return oBwAttGroup.get().getNext(path, value);
+            pathLeft.remove(0);
+            return oBwAttGroup.get().getNext(pathLeft, path);
         }
 
         Optional<BWAttribute> oBwAtt = getAttribute(element);
         if (oBwAtt.isPresent()) {
-            path.remove(0);
-            return oBwAtt.get().getNext(path, value);
+            pathLeft.remove(0);
+            return oBwAtt.get().getNext(pathLeft, path);
         }
 
         Optional<BWRelation> oBwRel = getRelationsSet().stream()
@@ -359,11 +359,11 @@ public class BWEntity extends BWEntity_Base {
                                 && rel.getEntityOne() == this))
                 .findFirst();
         if (oBwRel.isPresent()) {
-            path.remove(0);
-            return oBwRel.get().getEntity(element).getNext(path, value);
+            pathLeft.remove(0);
+            return oBwRel.get().getEntity(element).getNext(pathLeft, path);
         } else
             throw new BWException(BWErrorType.INVALID_DEPENDENCE,
-                    value + ":" + path);
+                    path + ":" + pathLeft);
     }
 
 }
