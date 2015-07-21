@@ -33,7 +33,7 @@ public class LocalSystemTest {
     @Before
     @Atomic
     public void setUp() {
-        logger.debug("LocalSystemTest::setUp");
+    	logger.debug("LocalSystemTest::setUp");
         dataInterface = DataInterface.getInstance();
     }
 

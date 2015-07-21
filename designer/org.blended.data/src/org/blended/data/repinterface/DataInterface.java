@@ -17,10 +17,10 @@ public class DataInterface {
         return instance;
     }
 
-    private AtomicDesignInterface adi = null;
+    private AtomicDataInterface adi = null;
 
     private DataInterface() {
-        adi = AtomicDesignInterface.getInstance();
+        adi = AtomicDataInterface.getInstance();
     }
 
     public BWNotification createSpecification(String specId, String name) {

@@ -33,13 +33,17 @@ class DataValidator extends AbstractDataValidator {
 	def checkModel(DataModel model) {
 		var instance = DataInterface.getInstance
 		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+		info('everything OK -1', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
 		var notification = instance.loadDataModel(specId, model)
+		
+				info('everything OK 0', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
 		if (notification.hasErrors)
-			for (BWError error : notification.error)
-				error(error.type.toString + "-" + error.value, DataPackage.Literals.DATA_MODEL__SPECIFICATION,
-					INVALID_NAME)
+		info('everything OK 1', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
+//			for (BWError error : notification.error)
+//				error(error.type.toString + "-" + error.value, DataPackage.Literals.DATA_MODEL__SPECIFICATION,
+//					INVALID_NAME)
 		else
-			info('everything OK', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
+			info('everything OK 2', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
 	}
 
 }
