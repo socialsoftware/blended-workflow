@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.service.design;
+package org.blended.data.repinterface;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -24,7 +24,6 @@ import org.blended.data.data.DataFactory;
 import org.blended.data.data.DataModel;
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
@@ -60,12 +59,12 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
 
     BWDataModel existingDataModel;
 
-    DesignInterface designInterface;
+    DataInterface dataInterface;
     Entity eEnt;
 
     @Override
     public void populate4Test() {
-        designInterface = DesignInterface.getInstance();
+        dataInterface = DataInterface.getInstance();
 
         new BWSpecification(EXISTS_SPEC_ID, EXISTS_SPEC_NAME, "author",
                 "description", "version", "UID");
@@ -90,7 +89,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eSpec.setName(NEW_SPEC_NAME);
         eDataModel.setSpecification(eSpec);
 
-        BWNotification notification = designInterface.loadDataModel(NEW_SPEC_ID,
+        BWNotification notification = dataInterface.loadDataModel(NEW_SPEC_ID,
                 eDataModel);
 
         assertFalse(notification.hasErrors());
@@ -107,7 +106,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eSpec.setName(EXISTS_SPEC_NAME);
         eDataModel.setSpecification(eSpec);
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());
@@ -125,7 +124,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eEnt.setExists(true);
         eDataModel.getEntities().add(eEnt);
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());
@@ -148,7 +147,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eEnt.setExists(false);
         eDataModel.getEntities().add(eEnt);
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());
@@ -172,7 +171,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eAtt.setName(ATTRIBUTE_NAME);
         eAtt.setType("Boolean");
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());
@@ -202,7 +201,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eAtt.setName(EXISTS_ATTRIBUTE_NAME);
         eAtt.setType("Number");
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());
@@ -232,7 +231,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eAtt.setName(EXISTS_ATTRIBUTE_NAME);
         eAtt.setType("String");
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());
@@ -264,7 +263,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eAssoc.setCardinality2("0..1");
         eDataModel.getAssociations().add(eAssoc);
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());
@@ -286,7 +285,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eAtt.setName(ATTRIBUTE_NAME);
         eAtt.setType("Number");
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());
@@ -342,7 +341,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         eAssoc.setCardinality2("0..1");
         eDataModel.getAssociations().add(eAssoc);
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         notification.getError().stream()
@@ -384,7 +383,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         greaterExpression.setRight(attValueExpression);
         constraint.setConstraint(greaterExpression);
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());
@@ -445,7 +444,7 @@ public class LoadDataModelServiceTest extends BWDomainAndServiceTest {
         andExpression.setRight(boolConstant);
         boolConstant.setName("true");
 
-        BWNotification notification = designInterface
+        BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
         assertFalse(notification.hasErrors());

@@ -17,18 +17,10 @@
 		<tycho-version>0.23.0</tycho-version>
 		<xtext.version>2.8.3</xtext.version>
 	</properties>
-	
-	<dependencies>
-		<dependency>
-			<groupId>pt.ist.socialsoftware</groupId>
-			<artifactId>engine</artifactId>
-			<version>${code.version}</version>
-		</dependency>
-	</dependencies>
-	
+		
 	<modules>
-		<!--<module>org.blended.common</module>
-		<module>org.blended.common.ui</module>-->
+		<module>org.blended.common</module>
+		<module>org.blended.common.ui</module>
 	
 		<module>org.blended.data</module>
 		<module>org.blended.data.ui</module>

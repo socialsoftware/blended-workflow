@@ -9,9 +9,9 @@ import org.blended.data.data.DataModel
 import org.blended.data.data.DataPackage
 import org.eclipse.xtext.validation.Check
 import pt.ist.socialsoftware.blendedworkflow.service.BWError
-import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.blended.data.repinterface.DataInterface
 
 /**
  * This class contains custom validation rules. 
@@ -31,7 +31,7 @@ class DataValidator extends AbstractDataValidator {
 
 	@Check
 	def checkModel(DataModel model) {
-		/*var instance = DesignInterface.getInstance
+		var instance = DataInterface.getInstance
 		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
 		var notification = instance.loadDataModel(specId, model)
 		if (notification.hasErrors)
@@ -39,6 +39,6 @@ class DataValidator extends AbstractDataValidator {
 				error(error.type.toString + "-" + error.value, DataPackage.Literals.DATA_MODEL__SPECIFICATION,
 					INVALID_NAME)
 		else
-			info('everything OK', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)*/
+			info('everything OK', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
 	}
 }

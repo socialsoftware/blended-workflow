@@ -361,12 +361,13 @@
 			<version>1.4</version>
 		</dependency>
 
+
 		<dependency>
 			<groupId>org.eclipse.xtext</groupId>
 			<artifactId>org.eclipse.xtext</artifactId>
 			<version>2.8.3</version>
 		</dependency>
-
+<!-- 
 		<dependency>
 			<groupId>pt.ist.socialsoftware</groupId>
 			<artifactId>org.blended.data</artifactId>
@@ -385,7 +386,8 @@
 			<artifactId>org.blended.common</artifactId>
 			<version>${code.version}</version>
 		</dependency>
-
+  -->
+  
 	</dependencies>
 	<repositories>
 		<repository>

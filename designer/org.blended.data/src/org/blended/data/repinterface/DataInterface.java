@@ -1,22 +1,25 @@
-package pt.ist.socialsoftware.blendedworkflow.service.design;
+package org.blended.data.repinterface;
+
+import org.blended.data.data.DataModel;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWError;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
+import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
 
-public class DesignInterface {
-    private static DesignInterface instance = null;
+public class DataInterface {
+    private static DataInterface instance = null;
 
-    public static DesignInterface getInstance() {
+    public static DataInterface getInstance() {
         if (instance == null) {
-            instance = new DesignInterface();
+            instance = new DataInterface();
         }
         return instance;
     }
 
     private AtomicDesignInterface adi = null;
 
-    private DesignInterface() {
+    private DataInterface() {
         adi = AtomicDesignInterface.getInstance();
     }
 
@@ -75,6 +78,19 @@ public class DesignInterface {
 
         return notification;
 
+    }
+
+    public BWNotification loadDataModel(String specId, DataModel eDataModel) {
+        BWNotification notification = new BWNotification();
+
+        try {
+            adi.loadDataModel(specId, eDataModel);
+        } catch (BWException bwe) {
+            notification
+                    .addError(new BWError(bwe.getError(), bwe.getMessage()));
+        }
+
+        return notification;
     }
 
 }
