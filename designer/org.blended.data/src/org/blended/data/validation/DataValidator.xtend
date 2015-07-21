@@ -41,4 +41,5 @@ class DataValidator extends AbstractDataValidator {
 		else
 			info('everything OK', DataPackage.Literals.DATA_MODEL__SPECIFICATION, INVALID_NAME)
 	}
+
 }

@@ -17,21 +17,11 @@
 		<tycho-version>0.23.0</tycho-version>
 		<xtext.version>2.8.3</xtext.version>
 	</properties>
-		
+
 	<modules>
 		<module>org.blended.common</module>
 		<module>org.blended.common.ui</module>
 	
-		<module>org.blended.data</module>
-		<module>org.blended.data.ui</module>
-		<!--<module>org.blended.data.sdk</module>
-		<module>org.blended.data.updatesite</module>-->
-		
-		<module>org.blended.condition</module>
-		<module>org.blended.condition.ui</module>
-		<!--<module>org.blended.condition.sdk</module>
-	 	<module>org.blended.condition.updatesite</module>-->
-		
 		<module>org.blended.goal</module>
 		<module>org.blended.goal.ui</module>
 		<!--<module>org.blended.goal.sdk</module>
@@ -41,6 +31,16 @@
 		<module>org.blended.activity.ui</module>
 		<!--<module>org.blended.activity.sdk</module>
 		<module>org.blended.activity.updatesite</module>-->
+	
+		<module>org.blended.condition</module>
+		<module>org.blended.condition.ui</module>
+		<!--<module>org.blended.condition.sdk</module>
+	 	<module>org.blended.condition.updatesite</module>-->
+	
+		<module>org.blended.data</module>
+		<module>org.blended.data.ui</module>
+		<!--<module>org.blended.data.sdk</module>
+		<module>org.blended.data.updatesite</module>-->
 		
 		<module>org.blended.tests</module>
 	</modules>
