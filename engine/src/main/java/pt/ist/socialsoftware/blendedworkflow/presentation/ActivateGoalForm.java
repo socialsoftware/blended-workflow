@@ -3,7 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -22,12 +23,12 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 
 @SuppressWarnings("serial")
 public class ActivateGoalForm extends VerticalLayout {
@@ -36,7 +37,7 @@ public class ActivateGoalForm extends VerticalLayout {
     private final String _bwInstanceOID;
     private final String _goalOID;
     private final HashMap<String, String> _entities = new HashMap<String, String>();
-    private static Logger log = Logger.getLogger("????????????");
+    private static Logger log = LoggerFactory.getLogger("????????????");
 
     // Interface
     private static final String NEW_DATA = "";

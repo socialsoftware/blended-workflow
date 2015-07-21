@@ -2,20 +2,22 @@ package pt.ist.socialsoftware.blendedworkflow.service.execution;
 
 import java.util.concurrent.Callable;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateBWInstanceService implements Callable<String> {
 
-    private static Logger log = Logger.getLogger("CreateBWInstanceService");
+    private static Logger log = LoggerFactory
+            .getLogger("CreateBWInstanceService");
     private final BWSpecification bwSpecification;
     private final String name;
     private final String userID;
@@ -54,7 +56,7 @@ public class CreateBWInstanceService implements Callable<String> {
                     .notifyCreatedBWInstance(bwInstance);
 
         } catch (BWException bwe) {
-            log.error(bwe.getError());
+            log.error(bwe.getError().name());
             BlendedWorkflow.getInstance().getBwManager()
                     .notifyException(bwe.getError());
         }

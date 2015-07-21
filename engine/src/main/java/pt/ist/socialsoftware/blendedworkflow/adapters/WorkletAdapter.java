@@ -6,8 +6,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.log4j.Logger;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yawlfoundation.yawl.engine.YSpecificationID;
 import org.yawlfoundation.yawl.engine.interfce.WorkItemRecord;
 import org.yawlfoundation.yawl.util.JDOMUtil;
@@ -15,14 +16,14 @@ import org.yawlfoundation.yawl.worklet.rdr.RdrNode;
 import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 import org.yawlfoundation.yawl.worklet.support.WorkletGatewayClient;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModelInstance;
@@ -49,13 +50,13 @@ public class WorkletAdapter {
     private final ConcurrentHashMap<WorkItemRecord, String> yawlEnabledWIR = new ConcurrentHashMap<WorkItemRecord, String>(); // WIR:WorkItemID
 
     public WorkletAdapter() {
-        log = Logger.getLogger("WorkletAdpater");
+        log = LoggerFactory.getLogger("WorkletAdpater");
         registerWorkletListener();
     }
 
     // Note: This constructor is used for testing purposes only
     public WorkletAdapter(WorkletGatewayClient client) {
-        log = Logger.getLogger("WorkletAdpater");
+        log = LoggerFactory.getLogger("WorkletAdpater");
         this.client = client;
         this.handle = "NO HANDLE";
     }
@@ -742,7 +743,7 @@ public class WorkletAdapter {
                     .getBWInstanceFromYAWLCaseID(wir.getCaseID());
             taskWorkItem = bwInstance.getWorkItem(workitemID);
         } catch (BWException bwe) {
-            log.error(bwe.getError());
+            log.error(bwe.getError().name());
         }
         return (TaskWorkItem) taskWorkItem;
     }

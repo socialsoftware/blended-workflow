@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yawlfoundation.yawl.authentication.YExternalClient;
 import org.yawlfoundation.yawl.elements.YAWLServiceReference;
 import org.yawlfoundation.yawl.engine.YSpecificationID;
@@ -18,8 +19,8 @@ import org.yawlfoundation.yawl.logging.YLogDataItem;
 import org.yawlfoundation.yawl.logging.YLogDataItemList;
 import org.yawlfoundation.yawl.util.JDOMUtil;
 
-import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
 import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 
@@ -43,7 +44,7 @@ public class YAWLAdapter extends InterfaceBWebsideController {
             .getProperty("yawl.IbURI");
     protected String bwURI = BWPropertiesManager.getProperty("yawl.BWURI");
 
-    private static Logger log = Logger.getLogger("YAWLAdapter");
+    private static Logger log = LoggerFactory.getLogger("YAWLAdapter");
 
     private final InterfaceB_EnvironmentBasedClient interfaceBClient;
     private final InterfaceA_EnvironmentBasedClient interfaceAClient;

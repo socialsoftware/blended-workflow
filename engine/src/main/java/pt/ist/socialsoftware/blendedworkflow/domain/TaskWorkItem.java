@@ -4,7 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 
@@ -15,7 +16,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
     };
 
     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    private final Logger log = Logger.getLogger("TaskWorkItem");
+    private final Logger log = LoggerFactory.getLogger("TaskWorkItem");
 
     public TaskWorkItem(BWInstance bwInstance, Task task) {
         log.info("New TaskWorkItem for task " + task.getName());

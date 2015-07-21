@@ -1,13 +1,14 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class OrganizationalModel extends OrganizationalModel_Base {
 
-    private final Logger log = Logger.getLogger("OrganizationalModel");
+    private final Logger log = LoggerFactory.getLogger("OrganizationalModel");
 
     public OrganizationalModel() {
         BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();

@@ -7,7 +7,8 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.Application;
 import com.vaadin.data.Property;
@@ -38,21 +39,21 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal.MaintainGoalState;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.Role;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModelInstance;
@@ -70,7 +71,7 @@ public class BWPresentation extends Application {
 
     private String username = "";
     private User user = null;
-    private final Logger log = Logger.getLogger("BWPresentation");
+    private final Logger log = LoggerFactory.getLogger("BWPresentation");
     private Boolean bwManagerAcess = false;
     private Boolean worklistManagerAcess = false;
 

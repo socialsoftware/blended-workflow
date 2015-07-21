@@ -5,17 +5,18 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Window.Notification;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal.MaintainGoalState;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
@@ -31,7 +32,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 
 public class WorkListManager {
 
-    private final Logger log = Logger.getLogger("WorklistManager");
+    private final Logger log = LoggerFactory.getLogger("WorklistManager");
     protected BWPresentation bwPresentation = null;
 
     LinkedHashMap<GoalWorkItem, ArrayList<GoalWorkItem>> redoList = new LinkedHashMap<GoalWorkItem, ArrayList<GoalWorkItem>>();

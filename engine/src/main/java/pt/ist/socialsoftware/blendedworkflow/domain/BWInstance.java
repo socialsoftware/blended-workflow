@@ -4,14 +4,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class BWInstance extends BWInstance_Base {
 
-    private final Logger log = Logger.getLogger("BWInstance");
+    private final Logger log = LoggerFactory.getLogger("BWInstance");
 
     /**
      * Create a new BWInstance, and clones the Data, Task and Goal models from

@@ -6,7 +6,8 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
@@ -39,7 +40,7 @@ public class PreTaskForm extends VerticalLayout {
     private static Constructor<?> tmp_const;
     private final String taskWorkItemOID;
     VerticalLayout data = new VerticalLayout();
-    private final Logger log = Logger.getLogger("PreTask");
+    private final Logger log = LoggerFactory.getLogger("PreTask");
 
     public PreTaskForm(final String workItemOID) {
         setMargin(true);

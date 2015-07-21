@@ -2,19 +2,20 @@ package pt.ist.socialsoftware.blendedworkflow.bwmanager;
 
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Window.Notification;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.CreateBWInstanceService;
@@ -23,7 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
 
 public class BWManager {
 
-    private final Logger log = Logger.getLogger("BWManager");
+    private final Logger log = LoggerFactory.getLogger("BWManager");
     protected BWPresentation bwPresentation = null;
 
     public BWPresentation getBwPresentation() {

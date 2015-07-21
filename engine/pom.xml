@@ -359,35 +359,7 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.4</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.eclipse.xtext</groupId>
-			<artifactId>org.eclipse.xtext</artifactId>
-			<version>2.8.3</version>
-		</dependency>
-<!-- 
-		<dependency>
-			<groupId>pt.ist.socialsoftware</groupId>
-			<artifactId>org.blended.data</artifactId>
-			<version>${code.version}</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>pt.ist.socialsoftware</groupId>
-					<artifactId>engine</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>pt.ist.socialsoftware</groupId>
-			<artifactId>org.blended.common</artifactId>
-			<version>${code.version}</version>
-		</dependency>
-  -->
-  
+		</dependency>  
 	</dependencies>
 	<repositories>
 		<repository>

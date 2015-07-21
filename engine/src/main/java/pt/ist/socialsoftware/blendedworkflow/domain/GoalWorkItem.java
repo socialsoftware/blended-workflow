@@ -5,10 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class GoalWorkItem extends GoalWorkItem_Base {
@@ -17,7 +18,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
         NEW, PRE_GOAL, ACTIVATED, ENABLED, SKIPPED, ACHIEVED, RE_ACTIVATED
     };
 
-    private final Logger log = Logger.getLogger("GoalWorkItem");
+    private final Logger log = LoggerFactory.getLogger("GoalWorkItem");
     private final DateFormat dateFormat = new SimpleDateFormat(
             "yyyy/MM/dd HH:mm:ss");
 
