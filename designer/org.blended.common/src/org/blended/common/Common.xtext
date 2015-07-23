@@ -37,14 +37,14 @@ QualifiedName:
 ;
 
 Association:
-	'Association' '{'
+	'Association' name = ID '{'
 		entity1 = [Entity] 'with' name1 = ID  '(' cardinality1 = Cardinality ')'
 		entity2 = [Entity] 'with' name2 = ID '(' cardinality2 = Cardinality ')'
 	'}'
 ;
 
 Constraint:
-	'Constraint' ':' constraint = Expression
+	'Constraint' name = ID ':' constraint = Expression
 ;
 
 EntityAchieveCondition:

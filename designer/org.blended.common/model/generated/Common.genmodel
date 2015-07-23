@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.common/src-gen" editDirectory="//Users/ars/Repositories/blendedworkflow/designer/org.blended.common.edit/src"
-    editorDirectory="//Users/ars/Repositories/blendedworkflow/designer/org.blended.common.editor/src"
-    modelPluginID="org.blended.common" forceOverwrite="true" modelName="Common" updateClasspath="false"
-    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" complianceLevel="6.0"
-    copyrightFields="false" editPluginID="org.blended.common.edit" editorPluginID="org.blended.common.edit"
-    runtimeVersion="2.10">
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.blended.common/src-gen" editDirectory="/org.blended.common.edit/src"
+    editorDirectory="/org.blended.common.editor/src" modelPluginID="org.blended.common"
+    forceOverwrite="true" modelName="Common" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="org.blended.common.edit"
+    editorPluginID="org.blended.common.editor" runtimeVersion="2.10">
   <genPackages prefix="Common" basePackage="org.blended.common" disposableProviderFactory="true"
       fileExtensions="blended" ecorePackage="Common.ecore#/">
     <genClasses ecoreClass="Common.ecore#//BlendedModel">
@@ -36,6 +35,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Common.ecore#//AttributeGroup/attributes"/>
     </genClasses>
     <genClasses ecoreClass="Common.ecore#//Association">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Association/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Common.ecore#//Association/entity1"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Association/name1"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Association/cardinality1"/>
@@ -44,6 +44,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Association/cardinality2"/>
     </genClasses>
     <genClasses ecoreClass="Common.ecore#//Constraint">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Constraint/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Common.ecore#//Constraint/constraint"/>
     </genClasses>
     <genClasses ecoreClass="Common.ecore#//EntityAchieveCondition">

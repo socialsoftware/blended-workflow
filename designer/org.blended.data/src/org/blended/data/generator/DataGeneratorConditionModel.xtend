@@ -44,7 +44,7 @@ class DataGeneratorConditionModel {
 		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy 
 		
 		for (r : resource.allContents.toIterable.filter(typeof(Entity))) {
-			entityAchieveCondition(r)
+			entityAchieveCondition(r, model)
 		}
 		
 		for (r : resource.allContents.toIterable.filter(typeof(Association))) {
@@ -77,8 +77,8 @@ class DataGeneratorConditionModel {
 		builder.format
 		r.save(builder.options.toOptionsMap)
 	}
-	
-	def entityAchieveCondition(Entity e) {
+	 
+	def entityAchieveCondition(Entity e, ConditionModel model) {
 		if (!e.exists) {
 			var eac = factory.createEntityAchieveCondition
 			eac.name = e.name
