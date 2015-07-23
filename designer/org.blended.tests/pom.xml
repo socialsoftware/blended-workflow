@@ -16,42 +16,75 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    
-<!-- 	<dependency>
-		<groupId>org.eclipse.emf</groupId>
-		<artifactId>org.eclipse.emf.ecore</artifactId>
-		<version>2.11.0-v20150123-0347</version>
+	<dependency>
+	  	<groupId>org.hamcrest</groupId>
+	  	<artifactId>hamcrest-core</artifactId>
+	  	<version>1.3</version>
+	  	<scope>test</scope>
 	</dependency>
 	
 	<dependency>
-		<groupId>org.eclipse.emf</groupId>
-		<artifactId>common</artifactId>
-		<version>2.3.0-v200706262000</version>
+	  	<groupId>junit</groupId>
+	  	<artifactId>junit</artifactId>
+	  	<version>4.11</version>
+	  	<scope>test</scope>
+	</dependency>  
+	       
+	<dependency>
+	  	<groupId>org.hamcrest</groupId>
+	  	<artifactId>hamcrest-library</artifactId>
+	  	<version>1.3</version>
+	  	<scope>test</scope>
 	</dependency>
 	
 	<dependency>
-		<groupId>org.eclipse.emf</groupId>
-		<artifactId>org.eclipse.emf.common</artifactId>
-		<version>2.11.0-v20150123-0347</version>
+	  	<groupId>org.mockito</groupId>
+	  	<artifactId>mockito-core</artifactId>
+	  	<version>1.9.0</version>
+	  	<scope>test</scope>
 	</dependency>
 
 	<dependency>
 		<groupId>org.eclipse.xtext</groupId>
 		<artifactId>org.eclipse.xtext</artifactId>
 		<version>2.8.3</version>
-	</dependency>-->
+      	<scope>test</scope>
+	</dependency>
 
-   <!--   <dependency>
-      <groupId>pt.ist.socialsoftware</groupId>
-      <artifactId>org.blended.data</artifactId>
-      <version>${code.version}</version>
-      <scope>test</scope>
-    </dependency>-->
+  	<dependency>
+      	<groupId>pt.ist.socialsoftware</groupId>
+      	<artifactId>org.blended.common</artifactId>
+      	<version>${code.version}</version>
+     	<scope>test</scope>
+   	</dependency>
+
+   	<dependency>
+      	<groupId>pt.ist.socialsoftware</groupId>
+      	<artifactId>org.blended.data</artifactId>
+      	<version>${code.version}</version>
+      	<scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      	<groupId>pt.ist.socialsoftware</groupId>
+      	<artifactId>org.blended.condition</artifactId>
+      	<version>${code.version}</version>
+      	<scope>test</scope>
+    </dependency>
+    
+   	<dependency>
+      	<groupId>pt.ist.socialsoftware</groupId>
+      	<artifactId>org.blended.goal</artifactId>
+      	<version>${code.version}</version>
+      	<scope>test</scope>
+    </dependency>  
+    
+    <dependency>
+      	<groupId>pt.ist.socialsoftware</groupId>
+      	<artifactId>org.blended.activity</artifactId>
+      	<version>${code.version}</version>
+      	<scope>test</scope>
+    </dependency>  
+    
   </dependencies>
 </project>
