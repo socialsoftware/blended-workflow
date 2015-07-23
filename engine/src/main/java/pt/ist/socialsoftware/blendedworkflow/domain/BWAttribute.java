@@ -17,10 +17,12 @@ public class BWAttribute extends BWAttribute_Base {
         super.setName(name);
     }
 
-    public BWAttribute(BWDataModel dataModel, String name, BWEntity entity,
-            AttributeType type, boolean isKeyAttribute, boolean isSystem) {
+    public BWAttribute(BWDataModel dataModel, BWEntity entity,
+            BWAttributeGroup group, String name, AttributeType type,
+            boolean isKeyAttribute, boolean isSystem) {
         setDataModel(dataModel);
         setEntity(entity);
+        setAttributeGroup(group);
         setName(name);
         setType(type);
         setIsKeyAttribute(isKeyAttribute);
@@ -52,8 +54,8 @@ public class BWAttribute extends BWAttribute_Base {
 
     public void cloneAttribute(DataModelInstance dataModelInstance,
             BWEntity entity) throws BWException {
-        new BWAttribute(dataModelInstance, getName(), entity, getType(),
-                getIsKeyAttribute(), getIsSystem());
+        new BWAttribute(dataModelInstance, entity, getAttributeGroup(),
+                getName(), getType(), getIsKeyAttribute(), getIsSystem());
     }
 
     /**

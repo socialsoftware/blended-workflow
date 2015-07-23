@@ -8,6 +8,7 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
 
 public class CreateSpecificationServiceTest extends BWDomainAndServiceTest {
     private static final String SPEC_ID = "Spec ID";
@@ -19,7 +20,8 @@ public class CreateSpecificationServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void success() throws BWException {
-        DesignInterface.getInstance().createSpecification(SPEC_ID, SPEC_NAME);
+        DesignInterface.getInstance()
+                .createSpecification(new SpecificationDTO(SPEC_ID, SPEC_NAME));
 
         BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID)
                 .orElse(null);

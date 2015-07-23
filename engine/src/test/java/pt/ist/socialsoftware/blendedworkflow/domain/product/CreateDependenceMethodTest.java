@@ -26,7 +26,7 @@ public class CreateDependenceMethodTest extends BWDomainAndServiceTest {
         entity = new BWEntity(spec.getDataModel(), "Entity name", false);
         attributeGroup = new BWAttributeGroup(spec.getDataModel(), entity,
                 "name");
-        attribute = new BWAttribute(spec.getDataModel(), "name", entity,
+        attribute = new BWAttribute(spec.getDataModel(), entity, null, "name",
                 AttributeType.BOOLEAN, false, false);
     }
 
@@ -35,8 +35,8 @@ public class CreateDependenceMethodTest extends BWDomainAndServiceTest {
         entity.createDependence(DEPENDENCE);
 
         assertEquals(1, entity.getDependenceSet().size());
-        assertEquals(DEPENDENCE, entity.getDependenceSet().stream().findFirst()
-                .get().getPath());
+        assertEquals(DEPENDENCE,
+                entity.getDependenceSet().stream().findFirst().get().getPath());
     }
 
     @Test

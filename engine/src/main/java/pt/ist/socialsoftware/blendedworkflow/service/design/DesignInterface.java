@@ -3,6 +3,10 @@ package pt.ist.socialsoftware.blendedworkflow.service.design;
 import pt.ist.socialsoftware.blendedworkflow.service.BWError;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
 
 public class DesignInterface {
     private static DesignInterface instance = null;
@@ -20,10 +24,10 @@ public class DesignInterface {
         adi = AtomicDesignInterface.getInstance();
     }
 
-    public BWNotification createSpecification(String specId, String name) {
+    public BWNotification createSpecification(SpecificationDTO specDTO) {
         BWNotification notification = new BWNotification();
         try {
-            adi.createSpecification(specId, name);
+            adi.createSpecification(specDTO);
         } catch (BWException bwe) {
             notification
                     .addError(new BWError(bwe.getError(), bwe.getMessage()));
@@ -32,12 +36,11 @@ public class DesignInterface {
         return notification;
     }
 
-    public BWNotification createEntity(String specId, String entityName,
-            Boolean exists) {
+    public BWNotification createEntity(EntityDTO entDTO) {
         BWNotification notification = new BWNotification();
 
         try {
-            adi.createEntity(specId, entityName, exists);
+            adi.createEntity(entDTO);
         } catch (BWException bwe) {
             notification
                     .addError(new BWError(bwe.getError(), bwe.getMessage()));
@@ -46,13 +49,11 @@ public class DesignInterface {
         return notification;
     }
 
-    public BWNotification createAttribute(String specId, String entityName,
-            String attributeName, String attributeType) {
+    public BWNotification createAttribute(AttributeDTO attDTO) {
         BWNotification notification = new BWNotification();
 
         try {
-            adi.createAttribute(specId, entityName, attributeName,
-                    attributeType);
+            adi.createAttribute(attDTO);
         } catch (BWException bwe) {
             notification
                     .addError(new BWError(bwe.getError(), bwe.getMessage()));
@@ -60,14 +61,11 @@ public class DesignInterface {
         return notification;
     }
 
-    public BWNotification createRelation(String specId, String entityOneName,
-            String roleNameOne, String cardinalityOne, String entityTwoName,
-            String roleNameTwo, String cardinalityTwo) {
+    public BWNotification createRelation(RelationDTO relDTO) {
         BWNotification notification = new BWNotification();
 
         try {
-            adi.createRelation(specId, entityOneName, roleNameOne,
-                    cardinalityOne, entityTwoName, roleNameTwo, cardinalityTwo);
+            adi.createRelation(relDTO);
         } catch (BWException bwe) {
             notification
                     .addError(new BWError(bwe.getError(), bwe.getMessage()));

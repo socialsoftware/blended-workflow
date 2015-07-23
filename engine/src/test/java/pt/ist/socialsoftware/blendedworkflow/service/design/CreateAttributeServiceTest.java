@@ -15,6 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 
 public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     private static final String SPEC_ID = "Spec ID";
@@ -32,14 +33,15 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
         BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
         BWEntity ent = new BWEntity(spec.getDataModel(), ENTITY_NAME, false);
-        new BWAttribute(spec.getDataModel(), DUP_NAME, ent,
+        new BWAttribute(spec.getDataModel(), ent, null, DUP_NAME,
                 AttributeType.NUMBER, false, false);
     }
 
     @Test
     public void success() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(SPEC_ID, ENTITY_NAME, ATTRIBUTE_NAME, NUMBER);
+                .createAttribute(new AttributeDTO(SPEC_ID, ENTITY_NAME,
+                        ATTRIBUTE_NAME, NUMBER));
 
         assertFalse(notification.hasErrors());
         BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
@@ -53,8 +55,8 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void nonExistentSpecification() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(NON_EXIST, ENTITY_NAME, ATTRIBUTE_NAME,
-                        BOOLEAN);
+                .createAttribute(new AttributeDTO(NON_EXIST, ENTITY_NAME,
+                        ATTRIBUTE_NAME, BOOLEAN));
 
         assertTrue(notification.hasErrors());
         assertEquals(BWErrorType.INVALID_SPECIFICATION_ID,
@@ -65,8 +67,8 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void emptySpecId() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(EMPTY_NAME, ENTITY_NAME, ATTRIBUTE_NAME,
-                        STRING);
+                .createAttribute(new AttributeDTO(EMPTY_NAME, ENTITY_NAME,
+                        ATTRIBUTE_NAME, STRING));
 
         assertTrue(notification.hasErrors());
         assertEquals(BWErrorType.INVALID_SPECIFICATION_ID,
@@ -77,7 +79,8 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void nullSpecId() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(null, ENTITY_NAME, ATTRIBUTE_NAME, BOOLEAN);
+                .createAttribute(new AttributeDTO(null, ENTITY_NAME,
+                        ATTRIBUTE_NAME, BOOLEAN));
 
         assertTrue(notification.hasErrors());
         assertEquals(BWErrorType.INVALID_SPECIFICATION_ID,
@@ -88,7 +91,8 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void nonExistentEntity() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(SPEC_ID, NON_EXIST, ATTRIBUTE_NAME, BOOLEAN);
+                .createAttribute(new AttributeDTO(SPEC_ID, NON_EXIST,
+                        ATTRIBUTE_NAME, BOOLEAN));
 
         assertTrue(notification.hasErrors());
         assertEquals(BWErrorType.INVALID_ENTITY_NAME,
@@ -99,7 +103,8 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void emptyEntityName() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(SPEC_ID, EMPTY_NAME, ATTRIBUTE_NAME, STRING);
+                .createAttribute(new AttributeDTO(SPEC_ID, EMPTY_NAME,
+                        ATTRIBUTE_NAME, STRING));
 
         assertTrue(notification.hasErrors());
         assertEquals(BWErrorType.INVALID_ENTITY_NAME,
@@ -110,7 +115,8 @@ public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
     @Test
     public void nullEntityName() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(SPEC_ID, null, ATTRIBUTE_NAME, BOOLEAN);
+                .createAttribute(new AttributeDTO(SPEC_ID, null, ATTRIBUTE_NAME,
+                        BOOLEAN));
 
         assertTrue(notification.hasErrors());
         assertEquals(BWErrorType.INVALID_ENTITY_NAME,

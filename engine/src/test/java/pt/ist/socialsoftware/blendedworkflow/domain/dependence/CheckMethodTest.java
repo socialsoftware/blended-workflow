@@ -51,13 +51,13 @@ public class CheckMethodTest extends BWDomainAndServiceTest {
         BWAttributeGroup attGroupOne = new BWAttributeGroup(dataModel, entOne,
                 GROUP_ONE_NAME);
 
-        BWAttribute attOne = new BWAttribute(dataModel, ATT_ONE_NAME, entOne,
-                AttributeType.BOOLEAN, false, false);
+        BWAttribute attOne = new BWAttribute(dataModel, entOne, null,
+                ATT_ONE_NAME, AttributeType.BOOLEAN, false, false);
         attGroupOne.addAttribute(attOne);
-        BWAttribute attTwo = new BWAttribute(dataModel, ATT_TWO_NAME, entOne,
-                AttributeType.NUMBER, false, false);
+        BWAttribute attTwo = new BWAttribute(dataModel, entOne, null,
+                ATT_TWO_NAME, AttributeType.NUMBER, false, false);
 
-        attThree = new BWAttribute(dataModel, ATT_THREE_NAME, entTwo,
+        attThree = new BWAttribute(dataModel, entTwo, null, ATT_THREE_NAME,
                 AttributeType.STRING, false, false);
 
         BWRelation relOneThree = new BWRelation(dataModel, "relOne", entOne,

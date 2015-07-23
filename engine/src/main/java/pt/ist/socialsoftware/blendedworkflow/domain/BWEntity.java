@@ -40,9 +40,10 @@ public class BWEntity extends BWEntity_Base {
             throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
     }
 
-    public BWAttribute createAttribute(String name, AttributeType type) {
-        return new BWAttribute(this.getDataModel(), name, this, type, false,
-                false);
+    public BWAttribute createAttribute(BWAttributeGroup attGroup, String name,
+            AttributeType type) {
+        return new BWAttribute(this.getDataModel(), this, attGroup, name, type,
+                false, false);
     }
 
     public BWAttributeGroup createAttributeGroup(String name) {

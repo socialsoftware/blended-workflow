@@ -11,9 +11,9 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -63,8 +63,9 @@ public class ForAllConditionTest extends AbstractDomainTest {
 
         // Entity1
         entity1 = new BWEntity(dataModelInstance, ENTITY_1_NAME, false);
-        entity1Att1 = new BWAttribute(dataModelInstance, ENTITY_1_ATT_1_NAME,
-                entity1, ENTITY_1_ATT_1_TYPE, ENTITY_1_ATT_1_KEY, false);
+        entity1Att1 = new BWAttribute(dataModelInstance, entity1, null,
+                ENTITY_1_ATT_1_NAME, ENTITY_1_ATT_1_TYPE, ENTITY_1_ATT_1_KEY,
+                false);
 
         entityInstance1_1 = new EntityInstance(entity1);
         entityInstance1_1Att1 = new AttributeInstance(entity1Att1,
@@ -78,8 +79,9 @@ public class ForAllConditionTest extends AbstractDomainTest {
 
         // Entity2
         entity2 = new BWEntity(dataModelInstance, ENTITY_2_NAME, false);
-        entity2Att1 = new BWAttribute(dataModelInstance, ENTITY_2_ATT_1_NAME,
-                entity2, ENTITY_2_ATT_1_TYPE, ENTITY_2_ATT_1_KEY, false);
+        entity2Att1 = new BWAttribute(dataModelInstance, entity2, null,
+                ENTITY_2_ATT_1_NAME, ENTITY_2_ATT_1_TYPE, ENTITY_2_ATT_1_KEY,
+                false);
 
         entityInstance2_1 = new EntityInstance(entity2);
         entityInstance2_1Att1 = new AttributeInstance(entity2Att1,

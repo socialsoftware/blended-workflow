@@ -24,16 +24,16 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 
-public class LocalSystemTest {
+public class DataInterfaceTest {
     private DataInterface dataInterface;
 
     private static final Logger logger = LoggerFactory
-            .getLogger(LocalSystemTest.class);
+            .getLogger(DataInterfaceTest.class);
 
     @Before
     @Atomic
     public void setUp() {
-    	logger.debug("LocalSystemTest::setUp");
+        logger.debug("LocalSystemTest::setUp");
         dataInterface = DataInterface.getInstance();
     }
 
@@ -46,24 +46,6 @@ public class LocalSystemTest {
 
     @Test
     public void walktrough() {
-        dataInterface.createSpecification("id1", "First Specification");
-        dataInterface.createSpecification("id2", "Second Specification");
-
-        dataInterface.createEntity("First Specification", "First Entity",
-                false);
-        dataInterface.createEntity("First Specification", "Second Entity",
-                false);
-
-        dataInterface.createAttribute("First Specification", "First Entity",
-                "att1", "Boolean");
-        dataInterface.createAttribute("First Specification", "First Entity",
-                "att2", "String");
-        dataInterface.createAttribute("First Specification", "First Entity",
-                "att3", "Number");
-
-        dataInterface.createRelation("First Specification", "First Entity",
-                "first", "1", "Second Entity", "second", "*");
-
         String EXISTS_SPEC_ID = "ID0";
         String NEW_SPEC_ID = "ID1";
         String NEW_SPEC_NAME = "Doctor Appointment";

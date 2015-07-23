@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.integration.LocalSystemTest;
+import pt.ist.socialsoftware.blendedworkflow.integration.DesignInterfaceTest;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class GetSpecificationMethodTest extends BWDomainAndServiceTest {
     private static final Logger logger = LoggerFactory
-            .getLogger(LocalSystemTest.class);
+            .getLogger(DesignInterfaceTest.class);
 
     private static final String SPEC_ID = "SpecId";
     private static final String SPEC_NAME = "Spec Name";

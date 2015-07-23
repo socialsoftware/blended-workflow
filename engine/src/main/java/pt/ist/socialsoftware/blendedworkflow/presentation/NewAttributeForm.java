@@ -16,9 +16,9 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 @SuppressWarnings("serial")
@@ -106,8 +106,9 @@ public class NewAttributeForm extends VerticalLayout {
             type = AttributeType.BOOLEAN;
         }
 
-        new BWAttribute(dataModel, name, entity, type, isKeyAttribute, false); // FIXME:
-                                                                             // isSystem
+        new BWAttribute(dataModel, entity, null, name, type, isKeyAttribute,
+                false); // FIXME:
+        // isSystem
     }
 
 }

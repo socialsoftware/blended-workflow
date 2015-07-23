@@ -11,6 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 
 public class CreateRelationServiceTest extends BWDomainAndServiceTest {
     private static final String SPEC_ID = "Spec ID";
@@ -37,8 +38,10 @@ public class CreateRelationServiceTest extends BWDomainAndServiceTest {
 
     @Test
     public void success() throws BWException {
-        DesignInterface.getInstance().createRelation(SPEC_ID, ENTITY_ONE_NAME,
-                ROLENAME_ONE, ONE, ENTITY_TWO_NAME, ROLENAME_TWO, MANY);
+
+        DesignInterface.getInstance().createRelation(
+                new RelationDTO(SPEC_ID, ENTITY_ONE_NAME, ROLENAME_ONE, ONE,
+                        ENTITY_TWO_NAME, ROLENAME_TWO, MANY));
 
         BWRelation relation = entityOne.getRelationsOneSet().stream()
                 .filter(rel -> rel.getRoleNameOne().equals(ROLENAME_ONE))

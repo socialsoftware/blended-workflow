@@ -117,6 +117,7 @@
 							<include>pt.ist:db-ojb:*</include>
 							<include>mysql:*</include>
 							<include>org.slf4j:*</include>
+							<include>ch.qos.logback:*</include>
 							<include>antlr:*</include>
 							<include>joda-time:*</include>
 							<include>commons-lang:*</include>
