@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.ui.console.IOConsole
 import org.eclipse.ui.console.IOConsoleInputStream
 import org.eclipse.xtext.resource.SaveOptions
+import org.blended.common.utils.ValueException
 
 class DataListener implements Runnable {
 	package String name
@@ -64,19 +65,13 @@ class DataListener implements Runnable {
 	
 	def doTask(String option) {
 		var cm = new CommandMain()
-		var jc = new JCommander(cm)
-		//jc.caseSensitiveOptions = false
-		
+		var jc = new JCommander(cm)		
 		var help = new CommandHelp()
 		var ls = new CommandLs()
-		var mk = new CommandMk()
-		var rm = new CommandRm()
-		var ch = new CommandCh()
+		var join = new CommandJoin()
 		jc.addCommand("help", help)	
-		jc.addCommand("ls", ls)
-		jc.addCommand("mk", mk)		
-		jc.addCommand("rm", rm)
-		jc.addCommand("ch", ch)		
+		jc.addCommand("ls", ls)	
+		jc.addCommand("join", join)
 		
 		try {
 			jc.parse(option.split(" "))
@@ -92,42 +87,20 @@ class DataListener implements Runnable {
 					case "ls": {
 						ConsoleManagement.write(name, helpLS().toString);
 					}
-					case "mk": {
-						ConsoleManagement.write(name, helpMK().toString);
+					case "join": {
+						ConsoleManagement.write(name, helpJOIN().toString);
 					}
-					case "rm": {
-						ConsoleManagement.write(name, helpRM().toString);
-					}
-					case "ch": {
-						ConsoleManagement.write(name, helpCH().toString);
+					case "split": {
+						ConsoleManagement.write(name, helpSPLIT().toString);
 					}
 				}
 			}
 			else if (jc.getParsedCommand().equals("ls")) {
 				ManageLs.goals(model, name, ls);
 			}
-			else if (jc.getParsedCommand().equals("mk")) {
-				
-			}
-			else if (jc.getParsedCommand().equals("rm")) {
-				switch(rm.type) {
-					case "ent": {
-						//ManageRm.entity(model, name, rm);
-						//updateResource()
-					}
-					case "att": {
-					}
-					case "exp": {
-					}
-				}
-			}
-			else if (jc.getParsedCommand().equals("ch")) {
-				switch(ch.type) {
-					case "spe": {
-						//ManageCh.specification(model, name, ch)
-						//updateResource()
-					}
-				}
+			else if (jc.getParsedCommand().equals("join")) {
+				ManageJoin.goals(model, name, join);
+				updateResource();
 			}
 		}
 		catch (ParameterException pex) {
@@ -151,9 +124,8 @@ class DataListener implements Runnable {
 	Data Model Commands:	
 		help	shows the help for specific commands
 		ls	lists elements of the model
-		mk	creates elements in the model
-		rm	removes elements from the model
-		ch	changes elements from the model
+		join	joins together two goals in the model
+		split	splits two goals in the model
 		
 		-help	prints this message
 	'''
@@ -175,19 +147,18 @@ class DataListener implements Runnable {
 	ls
 	'''
 	
-	static def helpMK()'''
-	mk is a command used to create elements in the model
-	'''
-	
-	static def helpRM()'''
-	rm is a command used to remove elements from the model
-	'''
-	
-	static def helpCH()'''
-	ch is a command used to change elements from the model
+	static def helpJOIN()'''
+	join is a command used to join together two goals in the model
 	
 	Syntax for the specification:
-	up -t=esp -v=NAME
+	join GOAL1 GOAL2
+	'''
+	
+	static def helpSPLIT()'''
+	splits is a command used to splits two goals in the model
+	
+	Syntax for the specification:
+	splits XXXX
 	'''
 		
 	def updateResource() {

@@ -9,8 +9,10 @@ GoalModel:
 
 Goal:
 	name = ID ':'
-	'SUC' '(' successConditions += ((EntityAchieveCondition | AttributeAchieveCondition | Nothing))+ ')'
-	(',' 'ACT' '(' activationConditions +=  ((EntityAchieveCondition | AttributeAchieveCondition))* ')')?
+	'SUC' '(' successConditions += (EntityAchieveCondition | AttributeAchieveCondition | Nothing)
+		(',' successConditions += (EntityAchieveCondition | AttributeAchieveCondition | Nothing))* ')'
+	(',' 'ACT' '(' activationConditions +=  (EntityAchieveCondition | AttributeAchieveCondition)
+		(',' activationConditions +=  (EntityAchieveCondition | AttributeAchieveCondition))* ')')?
 	(',' 'INV' '(' invariantConditions += (EntityInvariantCondition|AttributeInvariantCondition) 
 		(',' invariantConditions += (EntityInvariantCondition|AttributeInvariantCondition))* ')'
 	)?

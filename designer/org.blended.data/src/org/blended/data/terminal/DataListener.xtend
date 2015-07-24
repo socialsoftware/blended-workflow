@@ -73,11 +73,13 @@ class DataListener implements Runnable {
 		var mk = new CommandMk()
 		var rm = new CommandRm()
 		var ch = new CommandCh()
+		var join = new CommandJoin()
 		jc.addCommand("help", help)	
 		jc.addCommand("ls", ls)
 		jc.addCommand("mk", mk)		
 		jc.addCommand("rm", rm)
 		jc.addCommand("ch", ch)		
+		jc.addCommand("join", join)
 		
 		try {
 			jc.parse(option.split(" "))
