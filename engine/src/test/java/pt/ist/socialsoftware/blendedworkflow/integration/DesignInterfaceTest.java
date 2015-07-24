@@ -8,23 +8,30 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO.Type;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
 
 public class DesignInterfaceTest {
-    private DesignInterface designInterface;
+    private AtomicDesignInterface designInterface;
 
     private static final Logger logger = LoggerFactory
             .getLogger(DesignInterfaceTest.class);
+
+    public static String EXISTS_SPEC_ID = "id1";
+    public static String EXISTS_ENTITY_NAME = "First Entity";
+    public static String EXISTS_ATTRIBUTE_NAME_STRING = "att2";
 
     @Before
     @Atomic
     public void setUp() {
         logger.debug("LocalSystemTest::setUp");
-        designInterface = DesignInterface.getInstance();
+        designInterface = AtomicDesignInterface.getInstance();
     }
 
     @After
@@ -37,24 +44,35 @@ public class DesignInterfaceTest {
     @Test
     public void walktrough() {
         designInterface.createSpecification(
-                new SpecificationDTO("id1", "First Specification"));
+                new SpecificationDTO(EXISTS_SPEC_ID, "First Specification"));
         designInterface.createSpecification(
                 new SpecificationDTO("id2", "Second Specification"));
 
         designInterface.createEntity(
-                new EntityDTO("First Specification", "First Entity", false));
+                new EntityDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, false));
         designInterface.createEntity(
-                new EntityDTO("First Specification", "Second Entity", false));
+                new EntityDTO(EXISTS_SPEC_ID, "Second Entity", false));
 
-        designInterface.createAttribute(new AttributeDTO("First Specification",
-                "First Entity", "att1", "Boolean"));
-        designInterface.createAttribute(new AttributeDTO("First Specification",
-                "First Entity", "att2", "String"));
-        designInterface.createAttribute(new AttributeDTO("First Specification",
-                "First Entity", "att3", "Number"));
+        designInterface.createAttribute(new AttributeDTO(EXISTS_SPEC_ID,
+                EXISTS_ENTITY_NAME, "att1", "Boolean", true));
+        designInterface.createAttribute(
+                new AttributeDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME,
+                        EXISTS_ATTRIBUTE_NAME_STRING, "String", false));
+        designInterface.createAttribute(new AttributeDTO(EXISTS_SPEC_ID,
+                EXISTS_ENTITY_NAME, "att3", "Number", true));
 
-        designInterface.createRelation(new RelationDTO("First Specification",
-                "First Entity", "first", "1", "Second Entity", "second", "*"));
+        designInterface.createRelation(new RelationDTO(EXISTS_SPEC_ID,
+                "Relation name", EXISTS_ENTITY_NAME, "first", "1",
+                "Second Entity", "second", "*"));
+
+        ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, Type.GREATER,
+                new ExpressionDTO(EXISTS_SPEC_ID, Type.STRING, "today"),
+                new ExpressionDTO(EXISTS_SPEC_ID, Type.ATT_VALUE,
+                        EXISTS_ENTITY_NAME + "."
+                                + EXISTS_ATTRIBUTE_NAME_STRING));
+
+        designInterface
+                .createRule(new RuleDTO(EXISTS_SPEC_ID, "myRule", expDTO));
 
     }
 

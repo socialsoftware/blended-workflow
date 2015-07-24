@@ -3,10 +3,14 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class BWAttributeGroup extends BWAttributeGroup_Base {
+    private static Logger log = LoggerFactory.getLogger(BWAttributeGroup.class);
 
     @Override
     public void setName(String name) {
@@ -14,11 +18,12 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
         super.setName(name);
     }
 
-    public BWAttributeGroup(BWDataModel dataModel, BWEntity entity,
-            String name) {
+    public BWAttributeGroup(BWDataModel dataModel, BWEntity entity, String name,
+            boolean isMandatory) {
         setDataModel(dataModel);
         setEntity(entity);
         setName(name);
+        setIsMandatory(isMandatory);
     }
 
     private void checkName(String name) {
@@ -49,11 +54,13 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
 
     @Override
     public BWProduct getNext(List<String> pathLeft, String path) {
+        log.debug("getNext {}:{}", path, pathLeft);
+
         if (pathLeft.isEmpty())
             return this;
 
-        BWAttribute att = getAttribute(pathLeft.get(0)).orElseThrow(
-                () -> new BWException(BWErrorType.INVALID_PATH,
+        BWAttribute att = getAttribute(pathLeft.get(0))
+                .orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH,
                         path + ":" + pathLeft));
 
         pathLeft.remove(0);

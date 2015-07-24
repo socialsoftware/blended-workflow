@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
@@ -12,6 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class BWEntity extends BWEntity_Base {
+    private static Logger log = LoggerFactory.getLogger(BWEntity.class);
 
     @Override
     public void setName(String name) {
@@ -41,20 +45,20 @@ public class BWEntity extends BWEntity_Base {
     }
 
     public BWAttribute createAttribute(BWAttributeGroup attGroup, String name,
-            AttributeType type) {
+            AttributeType type, boolean isMandatory) {
         return new BWAttribute(this.getDataModel(), this, attGroup, name, type,
-                false, false);
+                isMandatory, false, false);
     }
 
-    public BWAttributeGroup createAttributeGroup(String name) {
-        return new BWAttributeGroup(this.getDataModel(), this, name);
+    public BWAttributeGroup createAttributeGroup(String name,
+            boolean isMandatory) {
+        return new BWAttributeGroup(this.getDataModel(), this, name,
+                isMandatory);
     }
 
-    public BWRelation createRelation(String roleNameOne,
+    public BWRelation createRelation(String name, String roleNameOne,
             Cardinality cardinalityOne, BWEntity entityTwo, String roleNameTwo,
             Cardinality cardinalityTwo) {
-        String name = getName() + "." + roleNameOne + "-" + roleNameTwo + "."
-                + entityTwo.getName();
         return new BWRelation(getDataModel(), name, this, roleNameOne,
                 cardinalityOne, false, entityTwo, roleNameTwo, cardinalityTwo,
                 false);
@@ -337,6 +341,8 @@ public class BWEntity extends BWEntity_Base {
 
     @Override
     public BWProduct getNext(List<String> pathLeft, String path) {
+        log.debug("getNext {}:{}", path, pathLeft);
+
         if (pathLeft.isEmpty())
             return this;
 
@@ -362,9 +368,9 @@ public class BWEntity extends BWEntity_Base {
         if (oBwRel.isPresent()) {
             pathLeft.remove(0);
             return oBwRel.get().getEntity(element).getNext(pathLeft, path);
-        } else
-            throw new BWException(BWErrorType.INVALID_PATH,
-                    path + ":" + pathLeft);
+        }
+
+        throw new BWException(BWErrorType.INVALID_PATH, path + ":" + pathLeft);
     }
 
 }

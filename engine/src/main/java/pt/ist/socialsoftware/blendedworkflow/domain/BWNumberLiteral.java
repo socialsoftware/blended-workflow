@@ -8,8 +8,14 @@ public class BWNumberLiteral extends BWNumberLiteral_Base {
         setValue(name);
     }
 
+    @Override
     public AttributeType getType() {
         return AttributeType.NUMBER;
+    }
+
+    @Override
+    public String getExpressionPath() {
+        return super.getExpressionPath() + "." + getValue();
     }
 
 }

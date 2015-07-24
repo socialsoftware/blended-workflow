@@ -25,9 +25,9 @@ public class CreateDependenceMethodTest extends BWDomainAndServiceTest {
                 "author", "description", "version", "UID");
         entity = new BWEntity(spec.getDataModel(), "Entity name", false);
         attributeGroup = new BWAttributeGroup(spec.getDataModel(), entity,
-                "name");
+                "name", true);
         attribute = new BWAttribute(spec.getDataModel(), entity, null, "name",
-                AttributeType.BOOLEAN, false, false);
+                AttributeType.BOOLEAN, true, false, false);
     }
 
     @Test

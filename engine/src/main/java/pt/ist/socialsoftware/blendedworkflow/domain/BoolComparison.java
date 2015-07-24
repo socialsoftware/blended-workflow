@@ -3,12 +3,32 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashMap;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class FalseCondition extends FalseCondition_Base {
+public class BoolComparison extends BoolComparison_Base {
 
-    public FalseCondition() {
-        super();
+    public BoolComparison(Condition leftCondition, Condition rightCondition,
+            ComparisonOperator comparator) {
+        setLeftCondition(leftCondition);
+        setRightCondition(rightCondition);
+        setComparator(comparator);
+        checkConsistency();
+    }
+
+    private void checkConsistency() {
+        if ((getLeftCondition() == null) || (getRightCondition() == null))
+            throw new BWException(BWErrorType.INCONSISTENT_EXPRESSION,
+                    getExpressionPath());
+    }
+
+    @Override
+    public void delete() {
+        getLeftCondition().delete();
+        getRightCondition().delete();
+        super.delete();
     }
 
     @Override
@@ -126,7 +146,7 @@ public class FalseCondition extends FalseCondition_Base {
 
     @Override
     public String getExpressionPath() {
-        return super.getExpressionPath() + "." + "false";
+        return super.getExpressionPath() + "." + getComparator().name();
     }
 
 }

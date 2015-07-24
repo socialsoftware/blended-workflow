@@ -15,6 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateRelationMethodTest extends BWDomainAndServiceTest {
+    private static String RELATION_NAME = "Relation name";
     private static String ROLE_NAME_ONE = "Role name one";
     private static String ROLE_NAME_TWO = "Role name two";
     private static String EXISTS_ROLE_NAME = "Role name exist";
@@ -36,8 +37,8 @@ public class CreateRelationMethodTest extends BWDomainAndServiceTest {
 
     @Test
     public void success() {
-        BWRelation relation = entityOne.createRelation(ROLE_NAME_ONE,
-                Cardinality.ZERO_MANY, entityTwo, ROLE_NAME_TWO,
+        BWRelation relation = entityOne.createRelation(RELATION_NAME,
+                ROLE_NAME_ONE, Cardinality.ZERO_MANY, entityTwo, ROLE_NAME_TWO,
                 Cardinality.ONE);
 
         assertNotNull(relation);
@@ -52,8 +53,9 @@ public class CreateRelationMethodTest extends BWDomainAndServiceTest {
     @Test
     public void duplicatedRoleName1() {
         try {
-            entityOne.createRelation(EXISTS_ROLE_NAME, Cardinality.ZERO_MANY,
-                    entityTwo, ROLE_NAME_TWO, Cardinality.ONE);
+            entityOne.createRelation(RELATION_NAME, EXISTS_ROLE_NAME,
+                    Cardinality.ZERO_MANY, entityTwo, ROLE_NAME_TWO,
+                    Cardinality.ONE);
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.INVALID_ROLE_NAME, bwe.getError());
@@ -64,8 +66,9 @@ public class CreateRelationMethodTest extends BWDomainAndServiceTest {
     @Test
     public void duplicatedRoleName2() {
         try {
-            entityOne.createRelation(ROLE_NAME_ONE, Cardinality.ZERO_OR_ONE,
-                    entityTwo, EXISTS_ROLE_NAME, Cardinality.ONE);
+            entityOne.createRelation(RELATION_NAME, ROLE_NAME_ONE,
+                    Cardinality.ZERO_OR_ONE, entityTwo, EXISTS_ROLE_NAME,
+                    Cardinality.ONE);
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.INVALID_ROLE_NAME, bwe.getError());

@@ -5,10 +5,21 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class FalseCondition extends FalseCondition_Base {
+public class BWAttributeBoolCondition extends BWAttributeBoolCondition_Base {
 
-    public FalseCondition() {
-        super();
+    public BWAttributeBoolCondition(BWAttribute att) {
+        setAttribute(att);
+    }
+
+    @Override
+    public void delete() {
+        setAttribute(null);
+        super.delete();
+    }
+
+    @Override
+    public String getExpressionPath() {
+        return super.getExpressionPath() + "." + getAttribute().getName();
     }
 
     @Override
@@ -122,11 +133,6 @@ public class FalseCondition extends FalseCondition_Base {
             GoalWorkItem goalWorkItem, ConditionType conditionType) {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + "false";
     }
 
 }

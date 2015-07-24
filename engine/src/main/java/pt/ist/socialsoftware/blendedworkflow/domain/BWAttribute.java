@@ -2,10 +2,14 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class BWAttribute extends BWAttribute_Base {
+    private static Logger log = LoggerFactory.getLogger(BWAttribute.class);
 
     public enum AttributeType {
         BOOLEAN, NUMBER, STRING, DATE
@@ -19,12 +23,13 @@ public class BWAttribute extends BWAttribute_Base {
 
     public BWAttribute(BWDataModel dataModel, BWEntity entity,
             BWAttributeGroup group, String name, AttributeType type,
-            boolean isKeyAttribute, boolean isSystem) {
+            boolean isMandatory, boolean isKeyAttribute, boolean isSystem) {
         setDataModel(dataModel);
         setEntity(entity);
         setAttributeGroup(group);
         setName(name);
         setType(type);
+        setIsMandatory(isMandatory);
         setIsKeyAttribute(isKeyAttribute);
         setIsSystem(isSystem);
     }
@@ -55,7 +60,8 @@ public class BWAttribute extends BWAttribute_Base {
     public void cloneAttribute(DataModelInstance dataModelInstance,
             BWEntity entity) throws BWException {
         new BWAttribute(dataModelInstance, entity, getAttributeGroup(),
-                getName(), getType(), getIsKeyAttribute(), getIsSystem());
+                getName(), getType(), getIsMandatory(), getIsKeyAttribute(),
+                getIsSystem());
     }
 
     /**
@@ -80,17 +86,22 @@ public class BWAttribute extends BWAttribute_Base {
         setAttributeGroup(null);
         getAttValueExpressionSet().stream()
                 .forEach(exp -> exp.setAttribute(null));
+        getDefAttributeConditionSet().stream()
+                .forEach(def -> def.setAttribute(null));
+        getAttBoolConditionSet().stream()
+                .forEach(cond -> cond.setAttribute(null));
 
         super.delete();
     }
 
     @Override
     public BWProduct getNext(List<String> pathLeft, String path) {
+        log.debug("getNext {}:{}", path, pathLeft);
+
         if (pathLeft.size() == 0)
             return this;
-        else
-            throw new BWException(BWErrorType.INVALID_PATH,
-                    path + ":" + pathLeft);
+
+        throw new BWException(BWErrorType.INVALID_PATH, path + ":" + pathLeft);
     }
 
 }

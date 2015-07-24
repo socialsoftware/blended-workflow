@@ -39,9 +39,9 @@ public class CreateDependenceServiceTest extends BWDomainAndServiceTest {
 
         BWEntity entity = new BWEntity(dataModel, ENTITY_NAME, false);
         BWAttributeGroup group = new BWAttributeGroup(dataModel, entity,
-                ATTRIBUTE_GROUP_NAME);
+                ATTRIBUTE_GROUP_NAME, false);
         new BWAttribute(dataModel, entity, group, ATTRIBUTE_NAME,
-                BWAttribute.AttributeType.NUMBER, false, false);
+                BWAttribute.AttributeType.NUMBER, true, false, false);
         entity.createDependence(DEPENDENCE_ONE);
     }
 

@@ -41,7 +41,7 @@ public class LoadDataModelSpecificationServiceTest
         BWEntity entity = new BWEntity(existingDataModel, EXISTS_ENTITY_NAME,
                 false);
         new BWAttribute(existingDataModel, entity, null, EXISTS_ATTRIBUTE_NAME,
-                BWAttribute.AttributeType.NUMBER, false, false);
+                BWAttribute.AttributeType.NUMBER, true, false, false);
 
         BWRelation relation = new BWRelation(existingDataModel, "relation",
                 entity, "role1", Cardinality.ZERO_OR_ONE, false, entity,

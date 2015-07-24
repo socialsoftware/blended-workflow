@@ -80,6 +80,8 @@ public abstract class Condition extends Condition_Base {
         setOrLeftCondition(null);
         setOrRightCondition(null);
         setNotCondition(null);
+        setLeftBoolComparison(null);
+        setRightBoolComparison(null);
 
         deleteDomainObject();
     }
@@ -97,7 +99,28 @@ public abstract class Condition extends Condition_Base {
             return getOrLeftCondition().getDataModel();
         if (getNotCondition() != null)
             return getNotCondition().getDataModel();
-        assert false;
+        assert(false);
+        return null;
+    }
+
+    public String getExpressionPath() {
+        if (getRule() != null)
+            return getRule().getName();
+        if (getAndLeftCondition() != null)
+            return getAndLeftCondition().getExpressionPath();
+        if (getAndRightCondition() != null)
+            return getAndLeftCondition().getExpressionPath();
+        if (getOrLeftCondition() != null)
+            return getOrLeftCondition().getExpressionPath();
+        if (getOrRightCondition() != null)
+            return getOrLeftCondition().getExpressionPath();
+        if (getNotCondition() != null)
+            return getNotCondition().getExpressionPath();
+        if (getLeftBoolComparison() != null)
+            return getLeftBoolComparison().getExpressionPath();
+        if (getRightBoolComparison() != null)
+            return getRightBoolComparison().getExpressionPath();
+        assert(false);
         return null;
     }
 

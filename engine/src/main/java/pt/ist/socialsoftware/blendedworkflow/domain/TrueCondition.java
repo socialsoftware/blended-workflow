@@ -107,4 +107,9 @@ public class TrueCondition extends TrueCondition_Base {
         return true;
     }
 
+    @Override
+    public String getExpressionPath() {
+        return super.getExpressionPath() + "." + "true";
+    }
+
 }

@@ -19,16 +19,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
-import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
 
 public class DataInterfaceTest {
     private DataInterface dataInterface;
 
     private static final Logger logger = LoggerFactory
             .getLogger(DataInterfaceTest.class);
+
+    private static String EXISTS_SPEC_ID = "ID0";
+    private static String EXISTS_SPEC_NAME = "Old Doctor Appointment Specification";
+    private static String EXISTS_ENTITY_NAME = "Exists Entity Name";
+    private static String EXISTS_ATTRIBUTE_NAME = "Exists Attribute Name";
 
     @Before
     @Atomic
@@ -41,31 +44,15 @@ public class DataInterfaceTest {
     @Atomic
     public void tearDown() {
         logger.debug("LocalSystemTest::tearDown");
-        BlendedWorkflow.getInstance().delete();
+        dataInterface.deleteSpecification(new SpecificationDTO(EXISTS_SPEC_ID));
     }
 
     @Test
     public void walktrough() {
-        String EXISTS_SPEC_ID = "ID0";
-        String NEW_SPEC_ID = "ID1";
-        String NEW_SPEC_NAME = "Doctor Appointment";
-        String EXISTS_SPEC_NAME = "Old Doctor Appointment Specification";
-        String ENTITY_NAME = "Entity Name";
-        String EXISTS_ENTITY_NAME = "Exists Entity Name";
-        String ATTRIBUTE_NAME = "Attribute Name";
-        String EXISTS_ATTRIBUTE_NAME = "Exists Attribute Name";
-        String ATTRIBUTE_GROUP_NAME = "Attribute Group Name";
 
         CommonFactory commonFactory = CommonFactory.eINSTANCE;
         DataFactory dataFactory = DataFactory.eINSTANCE;
         DataModel eDataModel;
-
-        BWDataModel existingDataModel;
-
-        DesignInterface designInterface;
-        Entity eEnt;
-
-        designInterface = DesignInterface.getInstance();
 
         eDataModel = dataFactory.createDataModel();
 
@@ -104,6 +91,8 @@ public class DataInterfaceTest {
         BoolConstant boolConstant = commonFactory.createBoolConstant();
         andExpression.setRight(boolConstant);
         boolConstant.setName("true");
+
+        dataInterface = DataInterface.getInstance();
 
         BWNotification notification = dataInterface
                 .loadDataModel(EXISTS_SPEC_ID, eDataModel);

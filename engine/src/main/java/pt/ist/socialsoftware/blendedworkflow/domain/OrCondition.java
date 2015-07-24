@@ -3,6 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashMap;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class OrCondition extends OrCondition_Base {
@@ -10,6 +12,13 @@ public class OrCondition extends OrCondition_Base {
     public OrCondition(Condition one, Condition two) {
         setLeftCondition(one);
         setRightCondition(two);
+        checkConsistency();
+    }
+
+    private void checkConsistency() {
+        if ((getLeftCondition() == null) || (getRightCondition() == null))
+            throw new BWException(BWErrorType.INCONSISTENT_EXPRESSION,
+                    getExpressionPath());
     }
 
     public Condition getConditionOne() {
@@ -156,6 +165,11 @@ public class OrCondition extends OrCondition_Base {
         getLeftCondition().delete();
         getRightCondition().delete();
         super.delete();
+    }
+
+    @Override
+    public String getExpressionPath() {
+        return super.getExpressionPath() + "." + "OR";
     }
 
 }

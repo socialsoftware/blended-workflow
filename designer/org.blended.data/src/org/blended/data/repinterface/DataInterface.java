@@ -1,5 +1,7 @@
 package org.blended.data.repinterface;
 
+import java.util.List;
+
 import org.blended.common.common.And;
 import org.blended.common.common.Association;
 import org.blended.common.common.Attribute;
@@ -26,6 +28,8 @@ import org.blended.common.common.SmallerEqual;
 import org.blended.common.common.StringConstant;
 import org.blended.data.data.DataModel;
 import org.eclipse.emf.ecore.EObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWError;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -39,9 +43,12 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO.Type;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
 
 public class DataInterface {
+    private static Logger log = LoggerFactory.getLogger(DataInterface.class);
+
     private static DataInterface instance = null;
 
     public static DataInterface getInstance() {
@@ -49,6 +56,11 @@ public class DataInterface {
             instance = new DataInterface();
         }
         return instance;
+    }
+
+    // to be invoked by tests only
+    public void deleteSpecification(SpecificationDTO specDTO) {
+        adi.deleteSpecification(specDTO);
     }
 
     private AtomicDesignInterface adi = null;
@@ -109,6 +121,8 @@ public class DataInterface {
     }
 
     public BWNotification loadDataModel(String specId, DataModel eDataModel) {
+        log.debug("loadDataModel: {}", specId);
+
         BWNotification notification = new BWNotification();
 
         try {
@@ -117,6 +131,7 @@ public class DataInterface {
         } catch (BWException bwe) {
             notification
                     .addError(new BWError(bwe.getError(), bwe.getMessage()));
+            log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
         }
 
         for (Entity eEnt : eDataModel.getEntities()) {
@@ -132,6 +147,7 @@ public class DataInterface {
             } catch (BWException bwe) {
                 notification.addError(
                         new BWError(bwe.getError(), bwe.getMessage()));
+                log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
                 continue;
             }
 
@@ -139,9 +155,9 @@ public class DataInterface {
                 if (eObj instanceof Attribute) {
                     Attribute eAtt = (Attribute) eObj;
                     try {
-                        adi.createAttribute(
-                                new AttributeDTO(specId, eEnt.getName(),
-                                        eAtt.getName(), eAtt.getType()));
+                        adi.createAttribute(new AttributeDTO(specId,
+                                eEnt.getName(), eAtt.getName(), eAtt.getType(),
+                                eAtt.isMandatory()));
 
                         // create attribute dependences
                         for (String eDep : eAtt.getDependsOn()) {
@@ -152,12 +168,15 @@ public class DataInterface {
                     } catch (BWException bwe) {
                         notification.addError(
                                 new BWError(bwe.getError(), bwe.getMessage()));
+                        log.debug("Error: {}, {}", bwe.getError(),
+                                bwe.getMessage());
                     }
                 } else if (eObj instanceof AttributeGroup) {
                     AttributeGroup eAttGroup = (AttributeGroup) eObj;
                     try {
                         adi.createAttributeGroup(new AttributeGroupDTO(specId,
-                                eEnt.getName(), eAttGroup.getName()));
+                                eEnt.getName(), eAttGroup.getName(),
+                                eAttGroup.isMandatory()));
 
                         // create group attribute dependences
                         for (String eDep : eAttGroup.getDependsOn()) {
@@ -168,14 +187,17 @@ public class DataInterface {
                     } catch (BWException bwe) {
                         notification.addError(
                                 new BWError(bwe.getError(), bwe.getMessage()));
+                        log.debug("Error: {}, {}", bwe.getError(),
+                                bwe.getMessage());
                         continue;
                     }
 
                     for (Attribute eAtt : eAttGroup.getAttributes()) {
                         // create groupAttribute's attributes
-                        adi.createAttribute(new AttributeDTO(specId,
-                                eEnt.getName(), eAttGroup.getName(),
-                                eAtt.getName(), eAtt.getType()));
+                        adi.createAttribute(
+                                new AttributeDTO(specId, eEnt.getName(),
+                                        eAttGroup.getName(), eAtt.getName(),
+                                        eAtt.getType(), eAtt.isMandatory()));
                     }
                 }
             }
@@ -183,31 +205,38 @@ public class DataInterface {
 
         for (Association assoc : eDataModel.getAssociations()) {
             try {
-                adi.createRelation(new RelationDTO(specId,
+                adi.createRelation(new RelationDTO(specId, assoc.getName(),
                         assoc.getEntity1().getName(), assoc.getName1(),
                         assoc.getCardinality1(), assoc.getEntity2().getName(),
                         assoc.getName2(), assoc.getCardinality2()));
             } catch (BWException bwe) {
                 notification.addError(
                         new BWError(bwe.getError(), bwe.getMessage()));
+                log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
             }
         }
 
-        try {
-            adi.checkDependencies(new SpecificationDTO(specId));
-        } catch (BWException bwe) {
-            notification
-                    .addError(new BWError(bwe.getError(), bwe.getMessage()));
+        List<String> deps = adi.getDependencies(new SpecificationDTO(specId));
+        for (String dep : deps) {
+            try {
+                adi.checkDependence(dep);
+            } catch (BWException bwe) {
+                notification.addError(
+                        new BWError(bwe.getError(), bwe.getMessage()));
+                log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
+            }
         }
 
         for (Constraint constraint : eDataModel.getConstraint()) {
             ExpressionDTO expression = buildExpressionDTO(specId,
                     constraint.getConstraint());
             try {
-                adi.createRule(expression);
+                adi.createRule(
+                        new RuleDTO(specId, constraint.getName(), expression));
             } catch (BWException bwe) {
                 notification.addError(
                         new BWError(bwe.getError(), bwe.getMessage()));
+                log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
             }
         }
 
@@ -222,10 +251,10 @@ public class DataInterface {
                     buildExpressionDTO(specId, andExpression.getLeft()),
                     buildExpressionDTO(specId, andExpression.getRight()));
         } else if (expression instanceof Or) {
-            Or andExpression = (Or) expression;
+            Or orExpression = (Or) expression;
             return new ExpressionDTO(specId, Type.OR,
-                    buildExpressionDTO(specId, andExpression.getLeft()),
-                    buildExpressionDTO(specId, andExpression.getRight()));
+                    buildExpressionDTO(specId, orExpression.getLeft()),
+                    buildExpressionDTO(specId, orExpression.getRight()));
         } else if (expression instanceof Not) {
             Not notExpression = (Not) expression;
             return new ExpressionDTO(specId, Type.NOT,
@@ -298,14 +327,14 @@ public class DataInterface {
                     castedExpression.getName());
         } else if (expression instanceof IntConstant) {
             IntConstant castedExpression = (IntConstant) expression;
-            return new ExpressionDTO(specId, Type.BOOL,
+            return new ExpressionDTO(specId, Type.INT,
                     String.valueOf(castedExpression.getName()));
         } else if (expression instanceof BoolConstant) {
             BoolConstant castedExpression = (BoolConstant) expression;
             return new ExpressionDTO(specId, Type.BOOL,
                     castedExpression.getName());
         }
-        assert false;
+        assert(false);
         return null;
     }
 

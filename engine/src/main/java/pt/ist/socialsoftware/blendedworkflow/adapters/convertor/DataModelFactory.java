@@ -66,7 +66,7 @@ public class DataModelFactory {
         boolean isSystem = Boolean.parseBoolean(
                 attributeXML.getChildText("isSystem", dmNamespace));
         new BWAttribute(dataModel, entity, null, attName,
-                parseAttributeType(attType), isKey, isSystem);
+                parseAttributeType(attType), true, isKey, isSystem);
     }
 
     private void parseRelation(BWDataModel dataModel, Element relationInXML)

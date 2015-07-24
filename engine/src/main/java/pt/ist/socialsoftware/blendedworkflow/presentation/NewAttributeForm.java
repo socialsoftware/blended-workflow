@@ -106,8 +106,8 @@ public class NewAttributeForm extends VerticalLayout {
             type = AttributeType.BOOLEAN;
         }
 
-        new BWAttribute(dataModel, entity, null, name, type, isKeyAttribute,
-                false); // FIXME:
+        new BWAttribute(dataModel, entity, null, name, type, true,
+                isKeyAttribute, false); // FIXME:
         // isSystem
     }
 

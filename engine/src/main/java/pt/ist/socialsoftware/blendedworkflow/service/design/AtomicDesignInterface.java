@@ -1,13 +1,19 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeBoolCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWBinaryExpression;
@@ -22,6 +28,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWStringLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.BoolComparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
@@ -38,9 +45,13 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
 
 public class AtomicDesignInterface {
+    private static Logger log = LoggerFactory
+            .getLogger(AtomicDesignInterface.class);
+
     private static AtomicDesignInterface instance;
 
     public static AtomicDesignInterface getInstance() {
@@ -57,6 +68,12 @@ public class AtomicDesignInterface {
         return BlendedWorkflow.getInstance();
     }
 
+    // to be invoked by tests only
+    @Atomic
+    public void deleteSpecification(SpecificationDTO specDTO) {
+        getBlendedWorkflow().getSpecById(specDTO.specId).get().delete();
+    }
+
     @Atomic
     public void createSpecification(SpecificationDTO specDTO) {
         getBlendedWorkflow().createSpecification(specDTO.specId, specDTO.name);
@@ -71,9 +88,9 @@ public class AtomicDesignInterface {
 
         BWDataModel dataModel = spec.getDataModel();
 
-        dataModel.getEntitiesSet().stream().forEach(ent -> ent.delete());
-        dataModel.getRuleSet().stream().forEach(rule -> rule.delete());
+        dataModel.delete();
 
+        spec.setDataModel(new BWDataModel());
     }
 
     @Atomic
@@ -94,7 +111,7 @@ public class AtomicDesignInterface {
                 .orElse(null);
 
         ent.createAttribute(attGroup, attDTO.name,
-                parseAttributeType(attDTO.type));
+                parseAttributeType(attDTO.type), attDTO.isMandatory);
     }
 
     @Atomic
@@ -109,7 +126,7 @@ public class AtomicDesignInterface {
         BWEntity entityTwo = getEntity(spec.getDataModel(),
                 relDTO.entTwoDTO.name);
 
-        entityOne.createRelation(relDTO.rolenameOne,
+        entityOne.createRelation(relDTO.name, relDTO.rolenameOne,
                 parseCardinality(relDTO.cardinalityOne), entityTwo,
                 relDTO.rolenameTwo, parseCardinality(relDTO.cardinalityTwo));
     }
@@ -122,7 +139,7 @@ public class AtomicDesignInterface {
         BWEntity entity = getEntity(spec.getDataModel(),
                 attGroupDTO.entDTO.name);
 
-        entity.createAttributeGroup(attGroupDTO.name);
+        entity.createAttributeGroup(attGroupDTO.name, attGroupDTO.isMandatory);
     }
 
     @Atomic
@@ -151,6 +168,25 @@ public class AtomicDesignInterface {
     }
 
     @Atomic
+    public List<String> getDependencies(SpecificationDTO specDTO) {
+        List<String> deps = new ArrayList<String>();
+
+        BWSpecification spec = getSpecification(specDTO.specId);
+
+        for (BWDependence dependence : spec.getDataModel().getDependenceSet()) {
+            deps.add(dependence.getExternalId());
+        }
+
+        return deps;
+    }
+
+    @Atomic
+    public void checkDependence(String externalId) {
+        BWDependence dependence = FenixFramework.getDomainObject(externalId);
+        dependence.check();
+    }
+
+    @Atomic
     public void checkDependencies(SpecificationDTO specDTO) {
         BWSpecification spec = getSpecification(specDTO.specId);
 
@@ -160,11 +196,11 @@ public class AtomicDesignInterface {
     }
 
     @Atomic
-    public void createRule(ExpressionDTO expDTO) {
-        BWSpecification spec = getSpecification(expDTO.specDTO.specId);
+    public void createRule(RuleDTO ruleDTO) {
+        BWSpecification spec = getSpecification(ruleDTO.specDTO.specId);
 
-        spec.getDataModel()
-                .createRule(buildCondition(spec.getDataModel(), expDTO));
+        spec.getDataModel().createRule(ruleDTO.name,
+                buildCondition(spec.getDataModel(), ruleDTO.expDTO));
     }
 
     final static String STRING = "String";
@@ -281,16 +317,40 @@ public class AtomicDesignInterface {
             // TODO: remove the cast
             return new DEFAttributeCondition(
                     (BWAttribute) entity.getNext(pathLeft, expression.value));
+        case ATT_VALUE:
+            pathLeft = Arrays.stream(expression.value.split("\\."))
+                    .collect(Collectors.toList());
+            entity = dataModel.getEntity(pathLeft.get(0))
+                    .orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH,
+                            expression.value + ":" + pathLeft));
+            pathLeft.remove(0);
+            // TODO: remove cast
+            BWAttribute att = (BWAttribute) entity.getNext(pathLeft,
+                    expression.value);
+            // if (att.getType().equals(BOOLEAN))
+            return new BWAttributeBoolCondition(att);
         case EQUAL:
-            return new Comparison(
-                    buildExpression(dataModel, expression.leftExpDTO),
-                    buildExpression(dataModel, expression.rightExpDTO),
-                    ComparisonOperator.EQUAL);
+            if (ExpressionDTO.isBoolExp(expression.leftExpDTO.type))
+                return new BoolComparison(
+                        buildCondition(dataModel, expression.leftExpDTO),
+                        buildCondition(dataModel, expression.rightExpDTO),
+                        ComparisonOperator.EQUAL);
+            else
+                return new Comparison(
+                        buildExpression(dataModel, expression.leftExpDTO),
+                        buildExpression(dataModel, expression.rightExpDTO),
+                        ComparisonOperator.EQUAL);
         case NOT_EQUAL:
-            return new Comparison(
-                    buildExpression(dataModel, expression.leftExpDTO),
-                    buildExpression(dataModel, expression.rightExpDTO),
-                    ComparisonOperator.NOT_EQUAL);
+            if (ExpressionDTO.isBoolExp(expression.leftExpDTO.type))
+                return new BoolComparison(
+                        buildCondition(dataModel, expression.leftExpDTO),
+                        buildCondition(dataModel, expression.rightExpDTO),
+                        ComparisonOperator.NOT_EQUAL);
+            else
+                return new Comparison(
+                        buildExpression(dataModel, expression.leftExpDTO),
+                        buildExpression(dataModel, expression.rightExpDTO),
+                        ComparisonOperator.NOT_EQUAL);
         case GREATER:
             return new Comparison(
                     buildExpression(dataModel, expression.leftExpDTO),
@@ -316,10 +376,10 @@ public class AtomicDesignInterface {
                 return new TrueCondition();
             if (expression.value.toLowerCase().equals("false"))
                 return new FalseCondition();
-            assert false;
+            assert(false);
             return null;
         default:
-            assert false;
+            assert(false);
             return null;
         }
     }
@@ -362,7 +422,7 @@ public class AtomicDesignInterface {
         case STRING:
             return new BWStringLiteral(expression.value);
         default:
-            assert false;
+            assert(false);
             return null;
         }
     }

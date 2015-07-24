@@ -30,10 +30,16 @@ public class Comparison extends Comparison_Base {
     }
 
     private void checkConsistency() {
+        log.debug("type:{}, left expression:{}, right expression:{}",
+                getComparator(), getLeftExpression(), getRightExpression());
+        if ((getLeftExpression() == null) || (getRightExpression() == null))
+            throw new BWException(BWErrorType.INCONSISTENT_EXPRESSION,
+                    getExpressionPath());
+
         if (!getLeftExpression().getType()
                 .equals(getRightExpression().getType()))
             throw new BWException(BWErrorType.INCONSISTENT_TYPE,
-                    getComparator().name());
+                    getExpressionPath());
     }
 
     public Comparison(BWAttribute attribute, String operator, String value) {
@@ -402,6 +408,11 @@ public class Comparison extends Comparison_Base {
         getRightExpression().delete();
         super.delete();
 
+    }
+
+    @Override
+    public String getExpressionPath() {
+        return super.getExpressionPath() + "." + getComparator().name();
     }
 
 }

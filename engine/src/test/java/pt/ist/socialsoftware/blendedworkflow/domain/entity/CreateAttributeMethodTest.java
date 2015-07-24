@@ -31,19 +31,19 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
                 "author", "description", "version", "UID");
         entity = new BWEntity(spec.getDataModel(), "Entity name", false);
         new BWAttribute(spec.getDataModel(), entity, null, EXISTS_NAME,
-                AttributeType.BOOLEAN, false, false);
+                AttributeType.BOOLEAN, true, false, false);
         attGroup = new BWAttributeGroup(spec.getDataModel(), entity,
-                ATT_GROUP_NAME);
+                ATT_GROUP_NAME, true);
     }
 
     @Test
     public void success() {
         BWAttribute att1 = entity.createAttribute(null, ATT_NAME_ONE,
-                AttributeType.STRING);
+                AttributeType.STRING, true);
         BWAttribute att2 = entity.createAttribute(null, ATT_NAME_TWO,
-                AttributeType.BOOLEAN);
+                AttributeType.BOOLEAN, false);
         BWAttribute att3 = entity.createAttribute(null, ATT_NAME_THREE,
-                AttributeType.NUMBER);
+                AttributeType.NUMBER, false);
 
         assertEquals(4, entity.getAttributesSet().size());
         assertEquals(ATT_NAME_ONE, att1.getName());
@@ -59,7 +59,7 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
     @Test
     public void successWithGroup() {
         BWAttribute att1 = entity.createAttribute(attGroup, ATT_NAME_ONE,
-                AttributeType.STRING);
+                AttributeType.STRING, true);
 
         assertEquals(2, entity.getAttributesSet().size());
         assertEquals(ATT_NAME_ONE, att1.getName());
@@ -73,7 +73,8 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
     @Test
     public void existsName() {
         try {
-            entity.createAttribute(null, EXISTS_NAME, AttributeType.NUMBER);
+            entity.createAttribute(null, EXISTS_NAME, AttributeType.NUMBER,
+                    true);
             fail("Able to create an attribute with the same name");
         } catch (BWException bwe) {
             assertEquals(BWErrorType.INVALID_ATTRIBUTE_NAME, bwe.getError());
@@ -83,7 +84,8 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
     @Test
     public void emptyName() {
         try {
-            entity.createAttribute(null, EMPTY_NAME, AttributeType.BOOLEAN);
+            entity.createAttribute(null, EMPTY_NAME, AttributeType.BOOLEAN,
+                    true);
             fail("Able to create an attribute with empty name");
         } catch (BWException bwe) {
             assertEquals(BWErrorType.INVALID_ATTRIBUTE_NAME, bwe.getError());
@@ -93,7 +95,7 @@ public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
     @Test
     public void nullName() {
         try {
-            entity.createAttribute(null, null, AttributeType.STRING);
+            entity.createAttribute(null, null, AttributeType.STRING, true);
             fail("Able to create an attribute with null name");
         } catch (BWException bwe) {
             assertEquals(BWErrorType.INVALID_ATTRIBUTE_NAME, bwe.getError());

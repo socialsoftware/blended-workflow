@@ -15,7 +15,14 @@ public class BWAttributeValueExpression
         super.delete();
     }
 
+    @Override
     public AttributeType getType() {
         return getAttribute().getType();
     }
+
+    @Override
+    public String getExpressionPath() {
+        return super.getExpressionPath() + "." + getAttribute().getName();
+    }
+
 }

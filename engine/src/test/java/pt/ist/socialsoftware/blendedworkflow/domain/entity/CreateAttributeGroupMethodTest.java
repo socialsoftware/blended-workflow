@@ -23,12 +23,13 @@ public class CreateAttributeGroupMethodTest extends BWDomainAndServiceTest {
         BWSpecification spec = new BWSpecification("SpecId", "My spec",
                 "author", "description", "version", "UID");
         entity = new BWEntity(spec.getDataModel(), "Entity name", false);
-        new BWAttributeGroup(spec.getDataModel(), entity, EXISTS_NAME);
+        new BWAttributeGroup(spec.getDataModel(), entity, EXISTS_NAME, true);
     }
 
     @Test
     public void success() {
-        BWAttributeGroup attGroup = entity.createAttributeGroup(ATT_GROUP_NAME);
+        BWAttributeGroup attGroup = entity.createAttributeGroup(ATT_GROUP_NAME,
+                false);
 
         assertEquals(2, entity.getAttributeGroupSet().size());
         assertEquals(ATT_GROUP_NAME, attGroup.getName());
@@ -37,7 +38,7 @@ public class CreateAttributeGroupMethodTest extends BWDomainAndServiceTest {
     @Test
     public void existsName() {
         try {
-            entity.createAttributeGroup(EXISTS_NAME);
+            entity.createAttributeGroup(EXISTS_NAME, true);
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.INVALID_ATTRIBUTE_GROUP_NAME,

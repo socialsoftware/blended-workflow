@@ -3,12 +3,21 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashMap;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class NotCondition extends NotCondition_Base {
 
     public NotCondition(Condition condition) {
         setCondition(condition);
+        checkConsistency();
+    }
+
+    private void checkConsistency() {
+        if (getCondition() == null)
+            throw new BWException(BWErrorType.INCONSISTENT_EXPRESSION,
+                    getExpressionPath());
     }
 
     @Override
@@ -117,6 +126,11 @@ public class NotCondition extends NotCondition_Base {
     public void delete() {
         getCondition().delete();
         super.delete();
+    }
+
+    @Override
+    public String getExpressionPath() {
+        return super.getExpressionPath() + "." + "NOT";
     }
 
 }

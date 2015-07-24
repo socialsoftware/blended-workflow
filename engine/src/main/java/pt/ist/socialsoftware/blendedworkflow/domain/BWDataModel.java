@@ -60,8 +60,8 @@ public class BWDataModel extends BWDataModel_Base {
         return new BWEntity(this, entityName, exists);
     }
 
-    public BWRule createRule(Condition condition) {
-        return new BWRule(this, condition);
+    public BWRule createRule(String name, Condition condition) {
+        return new BWRule(this, name, condition);
     }
 
 }

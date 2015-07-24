@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
@@ -323,6 +324,16 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
     public void delete() {
         setEntity(null);
         super.delete();
+    }
+
+    public AttributeType getType() {
+        return AttributeType.BOOLEAN;
+    }
+
+    @Override
+    public String getExpressionPath() {
+        return super.getExpressionPath() + "." + "DEF(" + getEntity().getName()
+                + ")";
     }
 
 }

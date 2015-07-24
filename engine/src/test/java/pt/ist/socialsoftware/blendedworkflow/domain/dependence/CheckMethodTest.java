@@ -49,16 +49,16 @@ public class CheckMethodTest extends BWDomainAndServiceTest {
         entThree = new BWEntity(dataModel, ENT_THREE_NAME, false);
 
         BWAttributeGroup attGroupOne = new BWAttributeGroup(dataModel, entOne,
-                GROUP_ONE_NAME);
+                GROUP_ONE_NAME, true);
 
         BWAttribute attOne = new BWAttribute(dataModel, entOne, null,
-                ATT_ONE_NAME, AttributeType.BOOLEAN, false, false);
+                ATT_ONE_NAME, AttributeType.BOOLEAN, true, false, false);
         attGroupOne.addAttribute(attOne);
         BWAttribute attTwo = new BWAttribute(dataModel, entOne, null,
-                ATT_TWO_NAME, AttributeType.NUMBER, false, false);
+                ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
 
         attThree = new BWAttribute(dataModel, entTwo, null, ATT_THREE_NAME,
-                AttributeType.STRING, false, false);
+                AttributeType.STRING, true, false, false);
 
         BWRelation relOneThree = new BWRelation(dataModel, "relOne", entOne,
                 ROLENAME_ENT_ONE, Cardinality.ONE, false, entThree,

@@ -68,11 +68,14 @@ class BWEntity extends BWProduct{
 
 class BWAttribute extends BWProduct{
 	AttributeType type;
+	boolean isMandatory;
 	boolean isKeyAttribute;
 	boolean isSystem;
 }
 
-class BWAttributeGroup extends BWProduct;
+class BWAttributeGroup extends BWProduct {
+	boolean isMandatory;
+}
 
 class BWDependence {
 	String path;
@@ -88,7 +91,9 @@ class BWRelation {
 	boolean isTwoKeyEntity;
 }
 
-class BWRule;
+class BWRule {
+	String name;
+}
 
 class BWExpression;
 
@@ -103,7 +108,7 @@ class BWNumberLiteral extends BWExpression {
 }
 
 class BWStringLiteral extends BWExpression {
-	String value;
+	String valueString;
 }
 
 class BWInstance {
@@ -186,6 +191,12 @@ class Comparison extends Condition {
 	String operator;
 	String value;
 }
+
+class BoolComparison extends Condition {
+	ComparisonOperator comparator;
+}
+
+class BWAttributeBoolCondition extends Condition;
 
 class TrueCondition extends Condition;
 
@@ -543,6 +554,23 @@ relation ComparisonHasBWExpressionLeft {
 relation ComparisonHasBWExpressionRight {
 	Comparison playsRole rightComparison { multiplicity 0..1; }
 	BWExpression playsRole rightExpression { multiplicity 0..1; }
+}
+
+// BoolComparison
+relation ComparisonHasConditionLeft {
+	BoolComparison playsRole leftBoolComparison { multiplicity 0..1; }
+	Condition playsRole leftCondition { multiplicity 0..1; }
+}
+
+relation ComparisonHasConditionRight {
+	BoolComparison playsRole rightBoolComparison { multiplicity 0..1; }
+	Condition playsRole rightCondition { multiplicity 0..1; }
+}
+
+// BWAttributeBoolCondition
+relation BWAttributeBoolConditionHasAttribute {
+	BWAttributeBoolCondition playsRole attBoolCondition { multiplicity 0..*; }
+	BWAttribute playsRole attribute { multiplicity 0..1; }
 }
 
 // BWBinaryExpression

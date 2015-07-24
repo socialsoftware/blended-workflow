@@ -19,6 +19,10 @@ public class BWBinaryExpression extends BWBinaryExpression_Base {
     }
 
     private void checkConsistency() {
+        if ((getLeftExpression() == null) || (getRightExpression() == null))
+            throw new BWException(BWErrorType.INCONSISTENT_EXPRESSION,
+                    getOperator().name());
+
         if (!getLeftExpression().getType()
                 .equals(getRightExpression().getType()))
             throw new BWException(BWErrorType.INCONSISTENT_TYPE,
@@ -41,6 +45,11 @@ public class BWBinaryExpression extends BWBinaryExpression_Base {
         checkConsistency();
 
         return getLeftExpression().getType();
+    }
+
+    @Override
+    public String getExpressionPath() {
+        return super.getExpressionPath() + "." + getOperator().name();
     }
 
 }
