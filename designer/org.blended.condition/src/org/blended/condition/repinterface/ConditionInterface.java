@@ -4,6 +4,7 @@ import org.blended.common.common.AttributeAchieveCondition;
 import org.blended.common.common.AttributeDependenceCondition;
 import org.blended.common.common.AttributeInvariantCondition;
 import org.blended.common.common.EntityAchieveCondition;
+import org.blended.common.common.EntityAchieveConditionExist;
 import org.blended.common.common.EntityDependenceCondition;
 import org.blended.common.common.EntityInvariantCondition;
 import org.blended.common.common.Specification;
@@ -48,8 +49,14 @@ public class ConditionInterface {
         log.debug("Specification: {}", eSpec.getName());
 
         for (EObject eObj : eConditionModel.getEntityAchieveConditions()) {
-            EntityAchieveCondition eEac = (EntityAchieveCondition) eObj;
-            log.debug("EntityAchieveCondition Name:{} ", eEac.getName());
+            if (eObj instanceof EntityAchieveCondition) {
+                EntityAchieveCondition eEac = (EntityAchieveCondition) eObj;
+                log.debug("EntityAchieveCondition Name:{} ", eEac.getName());
+            } else if (eObj instanceof EntityAchieveConditionExist) {
+                EntityAchieveConditionExist eEace = (EntityAchieveConditionExist) eObj;
+                log.debug("EntityAchieveConditionExists Name:{} ",
+                        eEace.getName());
+            }
         }
 
         for (EntityDependenceCondition eEpc : eConditionModel

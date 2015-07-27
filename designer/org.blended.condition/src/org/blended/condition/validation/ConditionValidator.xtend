@@ -4,34 +4,31 @@
 package org.blended.condition.validation
 
 import org.eclipse.xtext.validation.Check
-import pt.ist.socialsoftware.blendedworkflow.service.BWException
-import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface
 import static extension org.eclipse.xtext.EcoreUtil2.*
 import org.blended.condition.condition.ConditionModel
 import org.blended.condition.condition.ConditionPackage
+import org.blended.condition.repinterface.ConditionInterface
 
 /**
  * This class contains custom validation rules. 
- *
+ * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class ConditionValidator extends AbstractConditionValidator {
 
-  		@Check
-	  	def checkModel(ConditionModel model) {
-	  	  	var instance = DesignInterface.getInstance
-	  		try {
-				var fileName = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
-//	  			instance.loadConditionModel(model, fileName)
-	  		} catch (BWException bwe) {
-	  			//error('Specification with the same name already exists', ConditionPackage.Literals.SPECIFICATION__NAME, INVALID_NAME)
-	  		}
+	@Check
+	def checkModel(ConditionModel model) {
+		info('everything OK 0', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
+		var instance = ConditionInterface.getInstance
+		info('everything OK 1', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
+		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+		var notification = instance.loadConditionModel(specId, model)
+		info('everything OK 2', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
+		if (notification.hasErrors)
+			for (error : notification.error)
+				error(error.type.toString + "-" + error.value, ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
+		else
+			info('everything OK 3', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
 
-	  		//if (entity.uid == null) {
-	  		//	entity.uid = entity.hashCode().toString
-	  		//	System.out.println("UUID for entity " + entity.name + ": " + entity.uid)
-	  		//}
-	  		//else System.out.println("UUID for entity " + entity.name + "is already assigned with value: " + entity.uid)
-	  		//System.out.println("UUID for entity " + entity.name + ": " + entity.hashCode) 		
-  	}
+	}
 }
