@@ -69,9 +69,11 @@ class DataListener implements Runnable {
 		var help = new CommandHelp()
 		var ls = new CommandLs()
 		var join = new CommandJoin()
+		var split = new CommandSplit()
 		jc.addCommand("help", help)	
 		jc.addCommand("ls", ls)	
 		jc.addCommand("join", join)
+		jc.addCommand("split", split)
 		
 		try {
 			jc.parse(option.split(" "))
@@ -100,6 +102,10 @@ class DataListener implements Runnable {
 			}
 			else if (jc.getParsedCommand().equals("join")) {
 				ManageJoin.goals(model, name, join);
+				updateResource();
+			}
+			else if (jc.getParsedCommand().equals("split")) {
+				ManageSplit.goals(model, name, split);
 				updateResource();
 			}
 		}
@@ -151,14 +157,14 @@ class DataListener implements Runnable {
 	join is a command used to join together two goals in the model
 	
 	Syntax for the specification:
-	join GOAL1 GOAL2
+	join -n=NEW_GOAL GOAL1 GOAL2
 	'''
 	
 	static def helpSPLIT()'''
 	splits is a command used to splits two goals in the model
 	
 	Syntax for the specification:
-	splits XXXX
+	split -n1=NEW_GOAL1 -n2=NEW_GOAL2 GOAL
 	'''
 		
 	def updateResource() {

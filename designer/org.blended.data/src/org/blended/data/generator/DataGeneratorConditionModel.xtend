@@ -19,6 +19,7 @@ import org.eclipse.xtext.resource.SaveOptions
 import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
 import static extension org.eclipse.xtext.EcoreUtil2.*
 import org.blended.common.common.Specification
+import org.blended.common.utils.Queries
 
 /**
  * Generates code from your model files on save.
@@ -111,7 +112,7 @@ class DataGeneratorConditionModel {
 			for (d : e.dependsOn) {
 				var dep = factory.createEntityDependenceCondition
 				dep.entity1 = e.name
-				dep.entity2 = d
+				dep.entity2 = Queries.getEntityNameTo(d);
 				model.entityDependenceConditions.add(dep)
 			}		
 		}
