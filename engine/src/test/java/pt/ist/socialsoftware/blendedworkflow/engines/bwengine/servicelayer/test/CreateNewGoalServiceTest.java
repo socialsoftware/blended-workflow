@@ -166,7 +166,7 @@ public class CreateNewGoalServiceTest {
             assertEquals(NEWGOAL_NAME, newGoal.getName());
             assertEquals(NEWGOAL_DESCRIPTION, newGoal.getDescription());
             assertEquals(NEWGOAL_SUCESS_CONDITION,
-                    newGoal.getSucessCondition().toString());
+                    newGoal.getSuccessCondition().toString());
             assertEquals(1, newGoal.getActivateConditionsSet().size());
             assertEquals(NEWGOAL_PARENTGOAL_NAME,
                     newGoal.getParentGoal().getName());

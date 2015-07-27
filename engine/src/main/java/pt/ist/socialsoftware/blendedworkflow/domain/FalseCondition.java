@@ -125,8 +125,8 @@ public class FalseCondition extends FalseCondition_Base {
     }
 
     @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + "false";
+    public String getSubPath() {
+        return "false";
     }
 
 }

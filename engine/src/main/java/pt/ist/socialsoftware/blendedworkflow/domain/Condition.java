@@ -103,25 +103,6 @@ public abstract class Condition extends Condition_Base {
         return null;
     }
 
-    public String getExpressionPath() {
-        if (getRule() != null)
-            return getRule().getName();
-        if (getAndLeftCondition() != null)
-            return getAndLeftCondition().getExpressionPath();
-        if (getAndRightCondition() != null)
-            return getAndLeftCondition().getExpressionPath();
-        if (getOrLeftCondition() != null)
-            return getOrLeftCondition().getExpressionPath();
-        if (getOrRightCondition() != null)
-            return getOrLeftCondition().getExpressionPath();
-        if (getNotCondition() != null)
-            return getNotCondition().getExpressionPath();
-        if (getLeftBoolComparison() != null)
-            return getLeftBoolComparison().getExpressionPath();
-        if (getRightBoolComparison() != null)
-            return getRightBoolComparison().getExpressionPath();
-        assert(false);
-        return null;
-    }
+    public abstract String getSubPath();
 
 }

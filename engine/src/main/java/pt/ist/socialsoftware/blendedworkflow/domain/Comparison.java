@@ -34,12 +34,11 @@ public class Comparison extends Comparison_Base {
                 getComparator(), getLeftExpression(), getRightExpression());
         if ((getLeftExpression() == null) || (getRightExpression() == null))
             throw new BWException(BWErrorType.INCONSISTENT_EXPRESSION,
-                    getExpressionPath());
+                    getSubPath());
 
         if (!getLeftExpression().getType()
                 .equals(getRightExpression().getType()))
-            throw new BWException(BWErrorType.INCONSISTENT_TYPE,
-                    getExpressionPath());
+            throw new BWException(BWErrorType.INCONSISTENT_TYPE, getSubPath());
     }
 
     public Comparison(BWAttribute attribute, String operator, String value) {
@@ -411,8 +410,12 @@ public class Comparison extends Comparison_Base {
     }
 
     @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + getComparator().name();
+    public String getSubPath() {
+        String left = getLeftExpression() != null
+                ? getLeftExpression().getSubPath() : "NULL";
+        String right = getRightExpression() != null
+                ? getRightExpression().getSubPath() : "NULL";
+        return getComparator() + "(" + left + "," + right + ")";
     }
 
 }

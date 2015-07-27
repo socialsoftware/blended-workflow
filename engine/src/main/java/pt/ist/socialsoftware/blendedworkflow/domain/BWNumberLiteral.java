@@ -14,8 +14,8 @@ public class BWNumberLiteral extends BWNumberLiteral_Base {
     }
 
     @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + getValue();
+    public String getSubPath() {
+        return Integer.toString(getValue());
     }
 
 }

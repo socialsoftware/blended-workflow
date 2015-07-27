@@ -17,7 +17,7 @@ public class NotCondition extends NotCondition_Base {
     private void checkConsistency() {
         if (getCondition() == null)
             throw new BWException(BWErrorType.INCONSISTENT_EXPRESSION,
-                    getExpressionPath());
+                    getSubPath());
     }
 
     @Override
@@ -129,8 +129,11 @@ public class NotCondition extends NotCondition_Base {
     }
 
     @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + "NOT";
+    public String getSubPath() {
+        String exp = getCondition() != null ? getCondition().getSubPath()
+                : "NULL";
+
+        return "NOT(" + exp + ")";
     }
 
 }

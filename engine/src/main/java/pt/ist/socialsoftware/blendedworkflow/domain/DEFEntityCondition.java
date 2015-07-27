@@ -6,11 +6,26 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
+import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DEFEntityCondition extends DEFEntityCondition_Base {
 
-    public DEFEntityCondition(BWEntity entity) {
+    public static DEFEntityCondition getDEFEntity(BWSpecification spec,
+            String name) {
+        BWEntity entity = spec.getDataModel().getEntitiesSet().stream()
+                .filter(ent -> ent.getName().equals(name)).findFirst()
+                .orElseThrow(() -> new BWException(
+                        BWErrorType.INVALID_ENTITY_NAME, name));
+
+        if (entity.getDefEntityCondition() != null)
+            return entity.getDefEntityCondition();
+        else
+            return new DEFEntityCondition(entity);
+    }
+
+    private DEFEntityCondition(BWEntity entity) {
         setEntity(entity);
     }
 
@@ -331,9 +346,8 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
     }
 
     @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + "DEF(" + getEntity().getName()
-                + ")";
+    public String getSubPath() {
+        return "DEF(" + getEntity().getName() + ")";
     }
 
 }

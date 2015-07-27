@@ -22,8 +22,10 @@ public class CreateDependenceServiceTest extends BWDomainAndServiceTest {
     private static final String ENTITY_NAME = "Patinet";
     private static final String ATTRIBUTE_GROUP_NAME = "Medication";
     private static final String ATTRIBUTE_NAME = "Portion";
-    private static final String DEPENDENCE_ONE = "dependenceOne";
-    private static final String DEPENDENCE_TWO = "dependenceTwo";
+    private static final String DEPENDENCE_ONE = ENTITY_NAME + "."
+            + "dependenceOne";
+    private static final String DEPENDENCE_TWO = ENTITY_NAME + "."
+            + "dependenceTwo";
 
     AtomicDesignInterface designInterface;
     BWDataModel dataModel;

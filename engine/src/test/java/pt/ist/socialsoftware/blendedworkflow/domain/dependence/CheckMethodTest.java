@@ -73,18 +73,30 @@ public class CheckMethodTest extends BWDomainAndServiceTest {
     @Test
     public void successEntitytoExternalAttribute() throws BWException {
         BWDependence dep = new BWDependence(dataModel, entOne,
-                ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "."
-                        + ATT_THREE_NAME);
+                ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO
+                        + "." + ATT_THREE_NAME);
 
         dep.check();
+    }
+
+    @Test
+    public void failPrefixMIsing() throws BWException {
+        try {
+            BWDependence dep = new BWDependence(dataModel, entOne,
+                    ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "."
+                            + ATT_THREE_NAME);
+            fail();
+        } catch (BWException bwe) {
+            assertEquals(BWErrorType.INVALID_PATH, bwe.getError());
+        }
     }
 
     @Test
     public void successEntitytoExternalGroupAttributeAttribute()
             throws BWException {
         BWDependence dep = new BWDependence(dataModel, entTwo,
-                ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE + "."
-                        + GROUP_ONE_NAME + "." + ATT_ONE_NAME);
+                ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE
+                        + "." + GROUP_ONE_NAME + "." + ATT_ONE_NAME);
 
         dep.check();
     }
@@ -92,16 +104,16 @@ public class CheckMethodTest extends BWDomainAndServiceTest {
     @Test
     public void successEntitytoExternalGroupAttribute() throws BWException {
         BWDependence dep = new BWDependence(dataModel, entTwo,
-                ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE + "."
-                        + GROUP_ONE_NAME);
+                ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE
+                        + "." + GROUP_ONE_NAME);
 
         dep.check();
     }
 
     @Test
     public void successEntitytoExternalEntity() throws BWException {
-        BWDependence dep = new BWDependence(dataModel, entTwo,
-                ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE);
+        BWDependence dep = new BWDependence(dataModel, entTwo, ENT_TWO_NAME
+                + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE);
 
         dep.check();
     }
@@ -109,7 +121,7 @@ public class CheckMethodTest extends BWDomainAndServiceTest {
     @Test
     public void successEntitytoAttributeGroupAttribute() throws BWException {
         BWDependence dep = new BWDependence(dataModel, entOne,
-                GROUP_ONE_NAME + "." + ATT_ONE_NAME);
+                ENT_ONE_NAME + "." + GROUP_ONE_NAME + "." + ATT_ONE_NAME);
 
         dep.check();
     }
@@ -117,8 +129,8 @@ public class CheckMethodTest extends BWDomainAndServiceTest {
     @Test
     public void successAttributetoExternalGroupAttribute() throws BWException {
         BWDependence dep = new BWDependence(dataModel, attThree,
-                ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE + "."
-                        + GROUP_ONE_NAME + "." + ATT_ONE_NAME);
+                ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE
+                        + "." + GROUP_ONE_NAME + "." + ATT_ONE_NAME);
 
         dep.check();
     }
@@ -126,15 +138,17 @@ public class CheckMethodTest extends BWDomainAndServiceTest {
     @Test
     public void missingAttribute() throws BWException {
         BWDependence dep = new BWDependence(dataModel, entOne,
-                ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "." + "notHere");
+                ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO
+                        + "." + "notHere");
 
         try {
             dep.check();
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.INVALID_PATH, bwe.getError());
-            assertEquals(ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "."
-                    + "notHere" + ":" + "[notHere]", bwe.getMessage());
+            assertEquals(ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "."
+                    + ROLENAME_ENT_TWO + "." + "notHere" + ":" + "[notHere]",
+                    bwe.getMessage());
         }
     }
 

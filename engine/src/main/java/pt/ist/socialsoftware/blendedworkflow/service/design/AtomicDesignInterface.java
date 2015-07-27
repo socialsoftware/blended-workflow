@@ -315,8 +315,13 @@ public class AtomicDesignInterface {
                             expression.value + ":" + pathLeft));
             pathLeft.remove(0);
             // TODO: remove the cast
-            return new DEFAttributeCondition(
-                    (BWAttribute) entity.getNext(pathLeft, expression.value));
+            BWProduct product = entity.getNext(pathLeft, expression.value);
+            if (product instanceof BWAttribute)
+                return new DEFAttributeCondition((BWAttribute) product);
+            else if (product instanceof BWAttributeGroup)
+                return new DEFAttributeCondition((BWAttributeGroup) product);
+            assert(true);
+            return null;
         case ATT_VALUE:
             pathLeft = Arrays.stream(expression.value.split("\\."))
                     .collect(Collectors.toList());

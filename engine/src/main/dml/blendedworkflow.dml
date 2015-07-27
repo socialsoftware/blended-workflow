@@ -128,6 +128,8 @@ class LogRecord {
 	String author;
 }
 
+class BWConditionModel;
+
 class WorkItem {
 	String ID;
 //	WorkItemState stateDELETE;
@@ -186,6 +188,10 @@ class DEFAttributeCondition extends Condition;
 
 class DEFEntityCondition extends Condition;
 
+class MULCondition extends Condition {
+	int side;
+}
+
 class Comparison extends Condition {
 	ComparisonOperator comparator;
 	String operator;
@@ -234,6 +240,11 @@ relation BlendedWorkflowHasBWSpecifications {
 relation BWSpecificationHasBWInstances {
 	BWSpecification playsRole specification {multiplicity 0..1;}
 	BWInstance playsRole bwInstances {multiplicity 0..*;}
+}
+
+relation BWSpecificationHasBWConditionModel {
+	BWSpecification playsRole specification {multiplicity 0..1;}
+	BWConditionModel playsRole conditionModel { multiplicity 0..1;}
 }
 
 relation BWSpecificationHasBWGoalModel {
@@ -288,6 +299,39 @@ relation LogHasLogRecords {
 	LogRecord playsRole logRecords {multiplicity 0..*;}
 }
 
+// BWConditionModel
+
+relation BWConditionModelHasBWEntityAchieveConditions {
+	BWConditionModel playsRole conditionModel {multiplicity 0..1;}
+  DEFEntityCondition playsRole entityAchieveCondition {multiplicity 0..*;}
+}
+
+relation BWConditionModelHasBWEntityDependenceConditions {
+	BWConditionModel playsRole conditionModelForEntDep {multiplicity 0..1;}
+	BWDependence playsRole entityDependenceCondition {multiplicity 0..*;}
+}
+
+relation BWConditionModelHasBWEntityInvariantConditions {
+	BWConditionModel playsRole conditionModel {multiplicity 0..1;}
+	MULCondition playsRole entityInvariantCondition {multiplicity 0..*;}
+}
+
+relation BWConditionModelHasBWAttributeAchieveConditions {
+	BWConditionModel playsRole conditionModel {multiplicity 0..1;}
+	DEFAttributeCondition playsRole attributeAchieveCondition {multiplicity 0..*;}
+}
+
+relation BWConditionModelHasBWAttributeDependenceConditions {
+	BWConditionModel playsRole conditionModelForAttDep {multiplicity 0..1;}
+	BWDependence playsRole attributeDependenceCondition {multiplicity 0..*;}
+}
+
+relation BWConditionModelHasBWAttributeInvariantConditions {
+	BWConditionModel playsRole conditionModel {multiplicity 0..1;}
+	BWRule playsRole attributeInvariantCondition {multiplicity 0..*;}
+}
+
+
 // WorkItem
 relation WorkItemRefersToOutputAttributeInstances {
 	WorkItem playsRole contraintViolationWorkItems {multiplicity 0..*;}
@@ -334,7 +378,7 @@ relation AchieveGoalHasGoals {
 
 relation AchieveGoalHasSucessCondition {
 	AchieveGoal playsRole achieveGoal { multiplicity 0..1; }
-	Condition playsRole sucessCondition { multiplicity 0..1; }
+	Condition playsRole successCondition { multiplicity 0..1; }
 }
 
 relation AchieveGoalHasActivateConditions {
@@ -346,7 +390,6 @@ relation AchieveGoalHasGoalWorkItem {
 	AchieveGoal playsRole achieveGoal { multiplicity 0..1; }
 	GoalWorkItem playsRole goalWorkItems { multiplicity 0..*; }
 }
-
 
 // Task Model
 relation TaskModelHasTasks {
@@ -529,15 +572,26 @@ relation NotConditionHasConditions {
 }
 
 // DEFAttributeCondition
-relation DEFAttributeConditionHasBWAttributes {
-	DEFAttributeCondition playsRole defAttributeCondition { multiplicity 0..*; }
+relation DEFAttributeConditionHasBWAttribute {
+	DEFAttributeCondition playsRole defAttributeCondition { multiplicity 0..1; }
 	BWAttribute playsRole attribute { multiplicity 0..1; }
+}
+
+relation DEFAttributeConditionHasBWAttributeGroup {
+	DEFAttributeCondition playsRole defAttributeCondition { multiplicity 0..1; }
+	BWAttributeGroup playsRole attributeGroup { multiplicity 0..1; }
 }
 
 //DEFEntityCondition
 relation DEFBWEntityConditionHasEntities {
-	DEFEntityCondition playsRole defEntityCondition { multiplicity 0..*; }
+	DEFEntityCondition playsRole defEntityCondition { multiplicity 0..1; }
 	BWEntity playsRole entity { multiplicity 0..1; }
+}
+
+//MULCondition
+relation MULConditionHasBWRelation {
+	MULCondition playsRole mulCondition { multiplicity 0..2;}
+	BWRelation playsRole bwRelation { multiplicity 0..1; }
 }
 
 // Comparison

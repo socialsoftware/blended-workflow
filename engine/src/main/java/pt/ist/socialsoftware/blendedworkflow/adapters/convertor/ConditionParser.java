@@ -8,7 +8,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ExistsOneCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
@@ -140,7 +139,7 @@ public class ConditionParser {
         BWEntity entity = parseExistsEntityConditionArgs(existsEntityString,
                 startArgs, existsEntityString.length() - 1, elementName);
 
-        Condition existsEntityCondition = new DEFEntityCondition(entity);
+        Condition existsEntityCondition = entity.getDefEntityCondition();
         _token = endOfCondition + 1;
         return existsEntityCondition;
     }

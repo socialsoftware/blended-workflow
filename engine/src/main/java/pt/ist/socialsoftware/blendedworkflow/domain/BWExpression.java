@@ -25,17 +25,6 @@ public abstract class BWExpression extends BWExpression_Base {
 
     public abstract AttributeType getType();
 
-    public String getExpressionPath() {
-        if (getLeftComparison() != null)
-            return getLeftComparison().getExpressionPath();
-        if (getRightComparison() != null)
-            return getRightComparison().getExpressionPath();
-        if (getLeftBinary() != null)
-            return getLeftBinary().getExpressionPath();
-        if (getRightBinary() != null)
-            return getRightBinary().getExpressionPath();
-        assert(false);
-        return null;
-    }
+    public abstract String getSubPath();
 
 }

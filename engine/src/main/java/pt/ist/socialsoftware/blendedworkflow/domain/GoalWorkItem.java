@@ -46,7 +46,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
         updateInputWorkItemArguments();
 
         // Success Condition
-        setSucessCondition(goal.getSucessCondition());
+        setSucessCondition(goal.getSuccessCondition());
         getSucessCondition().assignAttributeInstances(this,
                 ConditionType.SUCESS_CONDITION);
         createOutputWorkItemArguments();

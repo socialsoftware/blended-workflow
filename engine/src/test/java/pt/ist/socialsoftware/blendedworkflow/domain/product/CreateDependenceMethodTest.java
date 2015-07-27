@@ -13,7 +13,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateDependenceMethodTest extends BWDomainAndServiceTest {
-    private static String DEPENDENCE = "rolename.attribute";
+    private static String DEPENDENCE = "Entity name" + "."
+            + "rolename.attribute";
 
     private BWEntity entity = null;
     private BWAttribute attribute = null;

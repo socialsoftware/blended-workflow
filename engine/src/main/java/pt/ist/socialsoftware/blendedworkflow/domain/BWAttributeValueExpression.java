@@ -21,8 +21,8 @@ public class BWAttributeValueExpression
     }
 
     @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + getAttribute().getName();
+    public String getSubPath() {
+        return getAttribute().getName();
     }
 
 }

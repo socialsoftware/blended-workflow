@@ -48,9 +48,9 @@ public class GoalModelInstance extends GoalModelInstance_Base {
                 achieveEntities.addAll(ac.getEntities());
             }
             achieveAttributes
-                    .addAll(achieveGoal.getSucessCondition().getAttributes());
+                    .addAll(achieveGoal.getSuccessCondition().getAttributes());
             achieveEntities
-                    .addAll(achieveGoal.getSucessCondition().getEntities());
+                    .addAll(achieveGoal.getSuccessCondition().getEntities());
 
             // Get MaintainGoal Condition Data
             Set<BWAttribute> maintainAttributes = new HashSet<BWAttribute>();
@@ -88,9 +88,9 @@ public class GoalModelInstance extends GoalModelInstance_Base {
                 Set<BWAttribute> achieveAttributes = new HashSet<BWAttribute>();
                 Set<BWEntity> achieveEntities = new HashSet<BWEntity>();
                 achieveAttributes.addAll(
-                        achieveGoal.getSucessCondition().getAttributes());
-                achieveEntities
-                        .addAll(achieveGoal.getSucessCondition().getEntities());
+                        achieveGoal.getSuccessCondition().getAttributes());
+                achieveEntities.addAll(
+                        achieveGoal.getSuccessCondition().getEntities());
 
                 // For AchieveGoal Conditions Data
                 Set<BWAttribute> agAttributes = new HashSet<BWAttribute>();
@@ -99,8 +99,8 @@ public class GoalModelInstance extends GoalModelInstance_Base {
                     agAttributes.addAll(ac.getAttributes());
                     agEntities.addAll(ac.getEntities());
                 }
-                agAttributes.addAll(ag.getSucessCondition().getAttributes());
-                agEntities.addAll(ag.getSucessCondition().getEntities());
+                agAttributes.addAll(ag.getSuccessCondition().getAttributes());
+                agEntities.addAll(ag.getSuccessCondition().getEntities());
 
                 achieveAttributes.retainAll(agAttributes);
                 achieveEntities.retainAll(agEntities);

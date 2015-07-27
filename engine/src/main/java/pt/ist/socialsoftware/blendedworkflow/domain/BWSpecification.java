@@ -34,6 +34,7 @@ public class BWSpecification extends BWSpecification_Base {
         setCreationDate(dateFormat.format(Calendar.getInstance().getTime()));
 
         setDataModel(new BWDataModel());
+        setConditionModel(new BWConditionModel());
         setTaskModel(new TaskModel());
         setGoalModel(new BWGoalModel());
         setInstanceCounter(0);
@@ -68,6 +69,7 @@ public class BWSpecification extends BWSpecification_Base {
 
     public void delete() {
         getDataModel().delete();
+        getConditionModel().delete();
         getTaskModel().delete();
         getGoalModel().delete();
 

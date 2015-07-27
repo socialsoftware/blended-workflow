@@ -84,10 +84,10 @@ public class BWAttribute extends BWAttribute_Base {
         setDataModel(null);
         setEntity(null);
         setAttributeGroup(null);
+        if (getDefAttributeCondition() != null)
+            getDefAttributeCondition().delete();
         getAttValueExpressionSet().stream()
                 .forEach(exp -> exp.setAttribute(null));
-        getDefAttributeConditionSet().stream()
-                .forEach(def -> def.setAttribute(null));
         getAttBoolConditionSet().stream()
                 .forEach(cond -> cond.setAttribute(null));
 

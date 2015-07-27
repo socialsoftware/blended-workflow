@@ -14,8 +14,8 @@ public class BWStringLiteral extends BWStringLiteral_Base {
     }
 
     @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + getValueString();
+    public String getSubPath() {
+        return getValueString();
     }
 
 }

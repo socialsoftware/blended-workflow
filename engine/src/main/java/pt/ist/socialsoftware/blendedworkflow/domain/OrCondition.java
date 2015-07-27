@@ -18,7 +18,7 @@ public class OrCondition extends OrCondition_Base {
     private void checkConsistency() {
         if ((getLeftCondition() == null) || (getRightCondition() == null))
             throw new BWException(BWErrorType.INCONSISTENT_EXPRESSION,
-                    getExpressionPath());
+                    getSubPath());
     }
 
     public Condition getConditionOne() {
@@ -168,8 +168,12 @@ public class OrCondition extends OrCondition_Base {
     }
 
     @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + "OR";
+    public String getSubPath() {
+        String left = getLeftCondition() != null
+                ? getLeftCondition().getSubPath() : "NULL";
+        String right = getRightCondition() != null
+                ? getRightCondition().getSubPath() : "NULL";
+        return "OR(" + left + "," + right + ")";
     }
 
 }

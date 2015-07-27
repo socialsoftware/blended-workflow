@@ -20,7 +20,7 @@ public class AchieveGoal extends AchieveGoal_Base {
         setGoalModel(goalModel);
         setName(name);
         setDescription(description);
-        setSucessCondition(condition);
+        setSuccessCondition(condition);
         setParentGoal(null);
         setEntityContext(context);
     }
@@ -28,14 +28,14 @@ public class AchieveGoal extends AchieveGoal_Base {
     /**
      * Create a Goal.
      */
-    public AchieveGoal(BWGoalModel goalModel, AchieveGoal parentGoal, String name,
-            String description, Condition condition, BWEntity context)
-                    throws BWException {
+    public AchieveGoal(BWGoalModel goalModel, AchieveGoal parentGoal,
+            String name, String description, Condition condition,
+            BWEntity context) throws BWException {
         checkUniqueGoalName(goalModel, name);
         setGoalModel(goalModel);
         setName(name);
         setDescription(description);
-        setSucessCondition(condition);
+        setSuccessCondition(condition);
         setParentGoal(parentGoal);
         setEntityContext(context);
     }
@@ -57,7 +57,7 @@ public class AchieveGoal extends AchieveGoal_Base {
     public void cloneGoal(GoalModelInstance goalModelInstance)
             throws BWException {
         Condition newSucessCondition = null;
-        Condition condition = getSucessCondition();
+        Condition condition = getSuccessCondition();
         if (condition != null) {
             newSucessCondition = condition.cloneCondition(goalModelInstance);
         }
@@ -90,8 +90,8 @@ public class AchieveGoal extends AchieveGoal_Base {
      * @return a string with the condition data entities.
      */
     public String getConstraintData() {
-        Set<BWEntity> entities = getSucessCondition().getEntities();
-        Set<BWAttribute> attributes = getSucessCondition().getAttributes();
+        Set<BWEntity> entities = getSuccessCondition().getEntities();
+        Set<BWAttribute> attributes = getSuccessCondition().getAttributes();
         String dataString = "";
 
         // Add Attribute entities
@@ -119,9 +119,9 @@ public class AchieveGoal extends AchieveGoal_Base {
         List<Condition> activateConditions = new ArrayList<Condition>(
                 getActivateConditionsSet());
         Set<BWEntity> entities = activateConditions.get(0).getEntities(); // FIXME:
-                                                                        // Only
-                                                                        // First
-                                                                        // ActivateConditionData
+                                                                          // Only
+                                                                          // First
+                                                                          // ActivateConditionData
         Set<BWAttribute> attributes = activateConditions.get(0).getAttributes();
         String dataString = "";
 

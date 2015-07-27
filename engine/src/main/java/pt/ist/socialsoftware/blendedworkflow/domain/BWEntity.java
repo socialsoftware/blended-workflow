@@ -23,6 +23,17 @@ public class BWEntity extends BWEntity_Base {
         super.setName(name);
     }
 
+    @Override
+    public DEFEntityCondition getDefEntityCondition() {
+        if (super.getDefEntityCondition() != null)
+            return super.getDefEntityCondition();
+        if (getDataModel() != null)
+            return DEFEntityCondition
+                    .getDEFEntity(getDataModel().getSpecification(), getName());
+        else
+            return null;
+    }
+
     public BWEntity(BWDataModel dataModel, String name, boolean exists) {
         setDataModel(dataModel);
         setName(name);
@@ -330,6 +341,8 @@ public class BWEntity extends BWEntity_Base {
         getAttributesSet().stream().forEach(att -> att.delete());
         getRelationsOneSet().stream().forEach(rel -> rel.delete());
         getRelationsTwoSet().stream().forEach(rel -> rel.delete());
+        if (getDefEntityCondition() != null)
+            getDefEntityCondition().delete();
 
         super.delete();
     }
@@ -367,7 +380,8 @@ public class BWEntity extends BWEntity_Base {
                 .findFirst();
         if (oBwRel.isPresent()) {
             pathLeft.remove(0);
-            return oBwRel.get().getEntity(element).getNext(pathLeft, path);
+            return oBwRel.get().getEntitybyRolename(element).getNext(pathLeft,
+                    path);
         }
 
         throw new BWException(BWErrorType.INVALID_PATH, path + ":" + pathLeft);

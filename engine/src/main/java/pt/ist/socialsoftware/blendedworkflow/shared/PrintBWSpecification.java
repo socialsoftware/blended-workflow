@@ -148,7 +148,8 @@ public class PrintBWSpecification {
             for (Condition ac : goal.getActivateConditionsSet()) {
                 System.out.println("ActivateCondition: " + ac);
             }
-            System.out.println("SucessCondition: " + goal.getSucessCondition());
+            System.out
+                    .println("SucessCondition: " + goal.getSuccessCondition());
             System.out.println("User: " + goal.getUser().getID() + " Role: "
                     + goal.getRole().getName());
         }
@@ -170,7 +171,8 @@ public class PrintBWSpecification {
             for (Condition ac : goal.getActivateConditionsSet()) {
                 System.out.println("ActivateCondition: " + ac);
             }
-            System.out.println("SucessCondition: " + goal.getSucessCondition());
+            System.out
+                    .println("SucessCondition: " + goal.getSuccessCondition());
             System.out.println("User: " + goal.getUser().getID() + " Role: "
                     + goal.getRole().getName());
         }

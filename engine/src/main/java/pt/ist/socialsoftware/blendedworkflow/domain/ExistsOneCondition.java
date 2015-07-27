@@ -146,4 +146,10 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
     public Boolean existTrue() {
         return false;
     }
+
+    @Override
+    public String getSubPath() {
+        return ExistsOneCondition.class.getName();
+    }
+
 }

@@ -21,8 +21,8 @@ public class ForAllCondition extends ForAllCondition_Base {
                 .getDataModelInstance();
         BWRelation relation = dataModelInstance
                 .getRelation(getForAllRelation().getName());
-        BWEntity entity = dataModelInstance.getEntity(getForAllEntity().getName())
-                .get();
+        BWEntity entity = dataModelInstance
+                .getEntity(getForAllEntity().getName()).get();
         return new ForAllCondition(relation, entity,
                 getCondition().cloneCondition(goalModelInstance));
     }
@@ -33,8 +33,8 @@ public class ForAllCondition extends ForAllCondition_Base {
                 .getDataModelInstance();
         BWRelation relation = dataModelInstance
                 .getRelation(getForAllRelation().getName());
-        BWEntity entity = dataModelInstance.getEntity(getForAllEntity().getName())
-                .get();
+        BWEntity entity = dataModelInstance
+                .getEntity(getForAllEntity().getName()).get();
         return new ForAllCondition(relation, entity,
                 getCondition().cloneCondition(taskModelInstance));
     }
@@ -146,4 +146,10 @@ public class ForAllCondition extends ForAllCondition_Base {
     public Boolean existTrue() {
         return false;
     }
+
+    @Override
+    public String getSubPath() {
+        return ForAllCondition.class.getName();
+    }
+
 }

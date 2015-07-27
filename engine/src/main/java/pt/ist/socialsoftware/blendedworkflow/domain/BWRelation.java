@@ -114,15 +114,35 @@ public class BWRelation extends BWRelation_Base {
         setEntityOne(null);
         setEntityTwo(null);
 
+        getMulConditionSet().stream().forEach(mul -> mul.delete());
+
         deleteDomainObject();
     }
 
-    public BWEntity getEntity(String element) {
-        if (getRoleNameOne().equals(element))
+    public BWEntity getEntitybyRolename(String rolename) {
+        if (getRoleNameOne().equals(rolename))
             return getEntityOne();
-        if (getRoleNameTwo().equals(element))
+        if (getRoleNameTwo().equals(rolename))
             return getEntityTwo();
         return null;
+    }
+
+    public BWEntity getSourceOfRolename(String rolename) {
+        if (getRoleNameOne().equals(rolename))
+            return getEntityTwo();
+        if (getRoleNameTwo().equals(rolename))
+            return getEntityOne();
+
+        throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolename);
+    }
+
+    public Cardinality getCardinalityByRolename(String rolename) {
+        if (getRoleNameOne().equals(rolename))
+            return getCardinalityOne();
+        if (getRoleNameTwo().equals(rolename))
+            return getCardinalityTwo();
+
+        throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolename);
     }
 
 }

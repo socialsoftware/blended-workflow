@@ -14,6 +14,10 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         setAttribute(attribute);
     }
 
+    public DEFAttributeCondition(BWAttributeGroup attributeGroup) {
+        setAttributeGroup(attributeGroup);
+    }
+
     @Override
     Condition cloneCondition(GoalModelInstance goalModelInstance) {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
@@ -216,7 +220,9 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
     @Override
     public void delete() {
+        setConditionModel(null);
         setAttribute(null);
+        setAttributeGroup(null);
         super.delete();
     }
 
@@ -225,9 +231,10 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     }
 
     @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + "DEF("
-                + getAttribute().getName() + ")";
+    public String getSubPath() {
+        String subPath = getAttribute() != null ? getAttribute().getName()
+                : getAttributeGroup().getName();
+        return "DEF(" + subPath + ")";
     }
 
 }

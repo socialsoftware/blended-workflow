@@ -48,8 +48,12 @@ public class BWBinaryExpression extends BWBinaryExpression_Base {
     }
 
     @Override
-    public String getExpressionPath() {
-        return super.getExpressionPath() + "." + getOperator().name();
+    public String getSubPath() {
+        String left = getLeftExpression() != null
+                ? getLeftExpression().getSubPath() : "NULL";
+        String right = getRightExpression() != null
+                ? getRightExpression().getSubPath() : "NULL";
+        return getOperator().name() + "(" + left + "," + right + ")";
     }
 
 }
