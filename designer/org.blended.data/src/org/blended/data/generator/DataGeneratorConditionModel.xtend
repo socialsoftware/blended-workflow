@@ -151,6 +151,7 @@ class DataGeneratorConditionModel {
 	
 	def attributeInvariantCondition(Constraint c) {
 		var inv = factory.createAttributeInvariantCondition
+		inv.name = c.name
 		inv.expression = c.constraint.copy()
 		model.attributeInvariantConditions.add(inv)
 	}

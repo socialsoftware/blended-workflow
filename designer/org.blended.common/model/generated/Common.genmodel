@@ -67,6 +67,7 @@
     <genClasses ecoreClass="Common.ecore#//NotMandatoryAttributeAchieveCondition"/>
     <genClasses ecoreClass="Common.ecore#//MandatoryAttributeAchieveCondition"/>
     <genClasses ecoreClass="Common.ecore#//AttributeInvariantCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//AttributeInvariantCondition/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Common.ecore#//AttributeInvariantCondition/expression"/>
     </genClasses>
     <genClasses ecoreClass="Common.ecore#//AttributeDependenceCondition">

@@ -68,8 +68,6 @@
 		<module>org.blended.data.ui</module>
 		<!--<module>org.blended.data.sdk</module>
 		<module>org.blended.data.updatesite</module>-->
-		
-		<module>org.blended.tests</module>
 	</modules>
 
 	<repositories>

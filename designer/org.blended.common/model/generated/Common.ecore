@@ -71,6 +71,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="MandatoryAttributeAchieveCondition"
       eSuperTypes="#//AttributeAchieveCondition"/>
   <eClassifiers xsi:type="ecore:EClass" name="AttributeInvariantCondition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="#//Expression"
         containment="true"/>
   </eClassifiers>

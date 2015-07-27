@@ -76,7 +76,7 @@ MandatoryAttributeAchieveCondition:
 ;
 
 AttributeInvariantCondition:
-	'RUL' '(' expression = Expression ')'
+	'RUL' name=ID '(' expression = Expression ')'
 ;
 
 AttributeDependenceCondition:
