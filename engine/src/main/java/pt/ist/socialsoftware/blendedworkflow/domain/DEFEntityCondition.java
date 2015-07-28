@@ -6,19 +6,12 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
-import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DEFEntityCondition extends DEFEntityCondition_Base {
 
     public static DEFEntityCondition getDEFEntity(BWSpecification spec,
-            String name) {
-        BWEntity entity = spec.getDataModel().getEntitiesSet().stream()
-                .filter(ent -> ent.getName().equals(name)).findFirst()
-                .orElseThrow(() -> new BWException(
-                        BWErrorType.INVALID_ENTITY_NAME, name));
-
+            BWEntity entity) {
         if (entity.getDefEntityCondition() != null)
             return entity.getDefEntityCondition();
         else

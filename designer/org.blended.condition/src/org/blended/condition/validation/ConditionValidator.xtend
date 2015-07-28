@@ -18,17 +18,16 @@ class ConditionValidator extends AbstractConditionValidator {
 
 	@Check
 	def checkModel(ConditionModel model) {
-//		info('everything OK 0', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
-//		var instance = ConditionInterface.getInstance
-//		info('everything OK 1', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
-//		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
-//		var notification = instance.loadConditionModel(specId, model)
-//		info('everything OK 2', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
-//		if (notification.hasErrors)
-//			for (error : notification.error)
-//				error(error.type.toString + "-" + error.value, ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
-//		else
-//			info('everything OK 3', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
-
+		info('ConditionModel OK 0', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
+		var instance = ConditionInterface.getInstance
+		info('ConditionModel OK 1', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
+		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+		var notification = instance.loadConditionModel(specId, model)
+		info('ConditionModel OK 2', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
+		if (notification.hasErrors)
+			for (error : notification.error)
+				error(error.type.toString + "-" + error.value, ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
+		else
+			info('ConditionModel OK 3', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
 	}
 }

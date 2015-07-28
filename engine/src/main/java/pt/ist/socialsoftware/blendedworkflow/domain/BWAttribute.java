@@ -87,9 +87,9 @@ public class BWAttribute extends BWAttribute_Base {
         if (getDefAttributeCondition() != null)
             getDefAttributeCondition().delete();
         getAttValueExpressionSet().stream()
-                .forEach(exp -> exp.setAttribute(null));
+                .forEach(exp -> removeAttValueExpression(exp));
         getAttBoolConditionSet().stream()
-                .forEach(cond -> cond.setAttribute(null));
+                .forEach(cond -> removeAttBoolCondition(cond));
 
         super.delete();
     }

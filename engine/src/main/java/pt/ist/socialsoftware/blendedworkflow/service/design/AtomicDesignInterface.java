@@ -18,12 +18,14 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWBinaryExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWBinaryExpression.BinaryOperator;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWNumberLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWStringLiteral;
@@ -33,7 +35,9 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.FalseCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.OrCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
@@ -42,8 +46,10 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityAchieveConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.MulInvariantDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
@@ -91,6 +97,20 @@ public class AtomicDesignInterface {
         dataModel.delete();
 
         spec.setDataModel(new BWDataModel());
+    }
+
+    @Atomic
+    public void loadConditionSpecification(SpecificationDTO specDTO) {
+        BlendedWorkflow bw = getBlendedWorkflow();
+
+        BWSpecification spec = bw.getSpecById(specDTO.specId).orElseGet(
+                () -> bw.createSpecification(specDTO.specId, specDTO.name));
+
+        BWConditionModel conditionalModel = spec.getConditionModel();
+
+        conditionalModel.delete();
+
+        spec.setConditionModel(new BWConditionModel());
     }
 
     @Atomic
@@ -201,6 +221,103 @@ public class AtomicDesignInterface {
 
         spec.getDataModel().createRule(ruleDTO.name,
                 buildCondition(spec.getDataModel(), ruleDTO.expDTO));
+    }
+
+    @Atomic
+    public void createEntityAchieveCondition(EntityAchieveConditionDTO eacDTO) {
+        log.debug("createEntityAchieveCondition Entity:{}, Value:{}",
+                eacDTO.entity, eacDTO.exists);
+        BWSpecification spec = getSpecification(eacDTO.specId);
+
+        BWEntity entity = getEntity(spec.getDataModel(), eacDTO.entity);
+
+        if (entity.getExists() != eacDTO.exists) {
+            throw new BWException(BWErrorType.INVALID_ENTITY,
+                    eacDTO.entity + " exists=" + entity.getExists());
+        }
+
+        spec.getConditionModel().addEntityAchieveCondition(
+                DEFEntityCondition.getDEFEntity(spec, entity));
+    }
+
+    @Atomic
+    public void createEntityDependenceCondition(DependenceDTO edcDTO) {
+        log.debug("createEntityDependenceCondition Entity:{}, Value:{}",
+                edcDTO.entDTO.name, edcDTO.value);
+        BWSpecification spec = getSpecification(edcDTO.specDTO.specId);
+
+        BWEntity entity = getEntity(spec.getDataModel(), edcDTO.entDTO.name);
+
+        BWDependence dependence = entity.getDependenceSet().stream()
+                .filter(dep -> dep.getPath().equals(edcDTO.value)).findFirst()
+                .orElseThrow(() -> new BWException(
+                        BWErrorType.DEPENDENCE_NOT_EXISTS, edcDTO.value));
+
+        spec.getConditionModel().addEntityDependenceCondition(dependence);
+    }
+
+    @Atomic
+    public void createEntityInvariantCondition(MulInvariantDTO miDTO) {
+        log.debug("createEntityInvariantCondition Entity:{}, Value:{}",
+                miDTO.rolePath, miDTO.cardinality);
+        BWSpecification spec = getSpecification(miDTO.specDTO.specId);
+
+        String entityName = miDTO.rolePath.split("\\.")[0];
+        String rolename = miDTO.rolePath.split("\\.")[1];
+
+        BWRelation relation = spec.getDataModel().getRelationsSet().stream()
+                .filter(rel -> (rel.getEntityOne().getName().equals(entityName)
+                        && rel.getRoleNameTwo().equals(rolename))
+                        || (rel.getEntityTwo().getName().equals(entityName)
+                                && rel.getRoleNameOne().equals(rolename)))
+                .findFirst()
+                .orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH,
+                        miDTO.rolePath));
+
+        MULCondition mulCondition = MULCondition.getMulCondition(relation,
+                rolename);
+
+        if (!mulCondition.getCardinality()
+                .equals(parseCardinality(miDTO.cardinality)))
+            new BWException(BWErrorType.INVALID_PATH, miDTO.rolePath);
+    }
+
+    @Atomic
+    public void createAttributeAchieveCondition(
+            EntityAchieveConditionDTO eacDTO) {
+        log.debug("createAttributeAchieveCondition Entity:{}, Value:{}",
+                eacDTO.entity, eacDTO.exists);
+        BWSpecification spec = getSpecification(eacDTO.specId);
+
+        BWEntity entity = getEntity(spec.getDataModel(), eacDTO.entity);
+
+        if (entity.getExists() != eacDTO.exists) {
+            throw new BWException(BWErrorType.INVALID_ENTITY,
+                    eacDTO.entity + " exists=" + entity.getExists());
+        }
+
+        spec.getConditionModel().addEntityAchieveCondition(
+                DEFEntityCondition.getDEFEntity(spec, entity));
+    }
+
+    @Atomic
+    public void writeLoadedConditionModel(String specId) {
+        BWSpecification spec = getSpecification(specId);
+
+        spec.getConditionModel().getEntityAchieveConditionSet().stream()
+                .map(def -> def.getEntity().getName() + "-"
+                        + def.getEntity().getExists())
+                .forEach(System.out::println);
+
+        // spec.getConditionModel().getEntityDependenceConditionSet().stream()
+        // .map(dep -> dep.getProduct().getName() + "-" + dep.getPath())
+        // .forEach(System.out::println);
+
+        log.debug("getEntityInvariantConditionSet().size() {}", spec
+                .getConditionModel().getEntityInvariantConditionSet().size());
+
+        spec.getConditionModel().getEntityInvariantConditionSet().stream()
+                .map(mul -> mul.getExpression()).forEach(System.out::println);
     }
 
     final static String STRING = "String";

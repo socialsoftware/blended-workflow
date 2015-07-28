@@ -31,8 +31,17 @@ public class MULCondition extends MULCondition_Base {
     }
 
     private MULCondition(BWRelation relation, int side) {
+        relation.getDataModel().getSpecification().getConditionModel()
+                .addEntityInvariantCondition(this);
         setBwRelation(relation);
         setSide(side);
+    }
+
+    public BWEntity getEntity() {
+        if (getSide() == 1)
+            return getBwRelation().getEntityTwo();
+        else
+            return getBwRelation().getEntityOne();
     }
 
     public String getRolename() {
@@ -47,6 +56,11 @@ public class MULCondition extends MULCondition_Base {
             return getBwRelation().getCardinalityOne();
         else
             return getBwRelation().getCardinalityTwo();
+    }
+
+    public String getExpression() {
+        return "MUL(" + getEntity().getName() + "." + getRolename() + ","
+                + getCardinality().name() + ")";
     }
 
     @Override

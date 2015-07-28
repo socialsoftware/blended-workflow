@@ -23,17 +23,6 @@ public class BWEntity extends BWEntity_Base {
         super.setName(name);
     }
 
-    @Override
-    public DEFEntityCondition getDefEntityCondition() {
-        if (super.getDefEntityCondition() != null)
-            return super.getDefEntityCondition();
-        if (getDataModel() != null)
-            return DEFEntityCondition
-                    .getDEFEntity(getDataModel().getSpecification(), getName());
-        else
-            return null;
-    }
-
     public BWEntity(BWDataModel dataModel, String name, boolean exists) {
         setDataModel(dataModel);
         setName(name);
