@@ -112,7 +112,7 @@ class DataGeneratorConditionModel {
 			for (d : e.dependsOn) {
 				var dep = factory.createEntityDependenceCondition
 				dep.entity1 = e.name
-				dep.entity2 = Queries.getEntityNameTo(d);
+				dep.entity2 = d;
 				model.entityDependenceConditions.add(dep)
 			}		
 		}

@@ -18,9 +18,12 @@ public class ManageJoin {
 		
 		Optional<Goal> goalO1 = getGoalByName(model, goalName1);		
 		Optional<Goal> goalO2 = getGoalByName(model, goalName2);
+		Optional<Goal> newGoalO = getGoalByName(model, join.name);
 		
 		if ((!goalO1.isPresent()) || (!goalO2.isPresent())) 
-			throw new ValueException("Parameter not valid: Two existing goals expected");		
+			throw new ValueException("Parameter not valid: Two existing goals expected");			
+		if (newGoalO.isPresent()) 
+			throw new ValueException("Parameter not valid: No existing goal expected with the same name");
 		Goal goal1 = goalO1.get();
 		Goal goal2 = goalO2.get();
 		

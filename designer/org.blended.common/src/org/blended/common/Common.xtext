@@ -38,8 +38,8 @@ QualifiedName:
 
 Association:
 	'Association' name = ID '{'
-		entity1 = [Entity] 'with' name1 = ID  '(' cardinality1 = Cardinality ')'
-		entity2 = [Entity] 'with' name2 = ID '(' cardinality2 = Cardinality ')'
+		entity1 = [Entity] 'with' name1 = QualifiedName  '(' cardinality1 = Cardinality ')'
+		entity2 = [Entity] 'with' name2 = QualifiedName '(' cardinality2 = Cardinality ')'
 	'}'
 ;
 
@@ -48,11 +48,11 @@ Constraint:
 ;
 
 EntityAchieveCondition:
-	'DEF' '(' name = ID ')'
+	'DEF' '(' name = QualifiedName ')'
 ;
 
 EntityAchieveConditionExist:
-	'EXISTS' '(' 'DEF' '(' name = ID ')' ')'
+	'EXISTS' '(' 'DEF' '(' name = QualifiedName ')' ')'
 ;
 
 EntityInvariantCondition:
@@ -60,7 +60,7 @@ EntityInvariantCondition:
 ;
 
 EntityDependenceCondition:
-	'DEP' '(' 'DEF' '(' entity1 = ID ')' ',' 'DEF' '(' entity2 = ID ')' ')'
+	'DEP' '(' 'DEF' '(' entity1 = QualifiedName ')' ',' 'DEF' '(' entity2 = QualifiedName ')' ')'
 ;
 
 AttributeAchieveCondition:

@@ -164,7 +164,7 @@ class DataListener implements Runnable {
 	splits is a command used to splits two goals in the model
 	
 	Syntax for the specification:
-	split -n1=NEW_GOAL1 -n2=NEW_GOAL2 GOAL
+	split -n=NEW_GOAL -t=[(c)hild|(s)ibling] -g=GOAL_TO_SPLIT -s=SUCCESS_ELEMENTS_SEPARATED_BY_SEMICOLON
 	'''
 		
 	def updateResource() {
