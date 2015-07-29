@@ -7,7 +7,7 @@ import org.blended.common.common.Attribute
 import org.blended.common.common.CommonPackage
 import org.blended.data.data.DataModel
 import org.blended.data.data.DataPackage
-import org.blended.data.repinterface.DataInterface
+import org.blended.data.repository.DataInterface
 import org.eclipse.xtext.validation.Check
 
 import static extension org.eclipse.xtext.EcoreUtil2.*

@@ -32,7 +32,7 @@ Export-Package: org.blended.goal,
  org.blended.goal.scoping,
  org.blended.goal.generator,
  org.blended.goal.formatting
-Bundle-ClassPath: lib/engine.jar,
- lib/jcommander-1.48.jar,
+Bundle-ClassPath: lib/jcommander-1.48.jar,
  lib/yawl-lib-2.3.jar,
- .
+ .,
+ lib/engine.jar

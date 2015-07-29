@@ -1,4 +1,4 @@
-package org.blended.condition.repinterface;
+package org.blended.condition.repository;
 
 import java.util.HashSet;
 import java.util.Set;

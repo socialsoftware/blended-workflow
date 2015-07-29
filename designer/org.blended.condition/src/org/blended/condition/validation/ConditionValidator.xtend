@@ -7,7 +7,7 @@ import org.eclipse.xtext.validation.Check
 import static extension org.eclipse.xtext.EcoreUtil2.*
 import org.blended.condition.condition.ConditionModel
 import org.blended.condition.condition.ConditionPackage
-import org.blended.condition.repinterface.ConditionInterface
+import org.blended.condition.repository.ConditionInterface
 
 /**
  * This class contains custom validation rules. 

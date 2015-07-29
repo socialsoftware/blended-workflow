@@ -27,6 +27,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWNumberLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
@@ -44,6 +45,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.OrCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
+import pt.ist.socialsoftware.blendedworkflow.service.BWError;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeAchieveConditionDTO;
@@ -54,6 +56,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityAchieveConditionD
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulInvariantDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
@@ -127,9 +130,10 @@ public class AtomicDesignInterface {
 
     @Atomic
     public void createAttribute(AttributeDTO attDTO) {
-        BWSpecification spec = getSpecification(attDTO.entDTO.specDTO.specId);
+        BWSpecification spec = getSpecification(
+                attDTO.entityDTO.specDTO.specId);
 
-        BWEntity ent = getEntity(spec.getDataModel(), attDTO.entDTO.name);
+        BWEntity ent = getEntity(spec.getDataModel(), attDTO.entityDTO.name);
 
         BWAttributeGroup attGroup = ent.getAttributeGroup(attDTO.groupDTO.name)
                 .orElse(null);
@@ -362,6 +366,83 @@ public class AtomicDesignInterface {
     }
 
     @Atomic
+    public ProductDTO getSourceOfPath(String specId, String path) {
+        BWEntity entity = null;
+        try {
+            BWSpecification spec = getSpecification(specId);
+
+            entity = getEntity(spec, path);
+        } catch (BWException bwe) {
+            return new ProductDTO(new BWError(bwe.getError(), path));
+        }
+
+        return new ProductDTO(new SpecificationDTO(specId), ProductType.ENTITY,
+                new EntityDTO(specId, entity.getName(), entity.getExists()));
+    }
+
+    @Atomic
+    public ProductDTO getTargetOfPath(String specId, String path) {
+        BWProduct product = null;
+        try {
+            BWSpecification spec = getSpecification(specId);
+
+            product = getTargetOfPath(spec, path);
+
+        } catch (BWException bwe) {
+            return new ProductDTO(new BWError(bwe.getError(), path));
+        }
+
+        if (product instanceof BWEntity) {
+            BWEntity entity = (BWEntity) product;
+            return new ProductDTO(new SpecificationDTO(specId),
+                    ProductType.ENTITY, new EntityDTO(specId, entity.getName(),
+                            entity.getExists()));
+        } else if (product instanceof BWAttributeGroup) {
+            BWAttributeGroup attributeGroup = (BWAttributeGroup) product;
+            return new ProductDTO(new SpecificationDTO(specId),
+                    ProductType.ATTRIBUTE_GROUP,
+                    new AttributeGroupDTO(specId,
+                            attributeGroup.getEntity().getName(),
+                            attributeGroup.getName(),
+                            attributeGroup.getIsMandatory()));
+        } else {
+            BWAttribute attribute = (BWAttribute) product;
+            return new ProductDTO(new SpecificationDTO(specId),
+                    ProductType.ATTRIBUTE,
+                    new AttributeDTO(
+                            new EntityDTO(specId,
+                                    attribute.getEntity().getName()),
+                            attribute.getName(), attribute.getType().name(),
+                            attribute.getIsMandatory()));
+        }
+    }
+
+    @Atomic
+    public Set<String> getDependencePaths(String specId,
+            Set<String> sucConditions) {
+        Set<String> paths = new HashSet<String>();
+        BWSpecification spec = getSpecification(specId);
+
+        for (String sucCond : sucConditions) {
+            BWProduct product = getTargetOfPath(spec, sucCond);
+
+            paths.addAll(product.getDependenceSet().stream()
+                    .map(dep -> dep.getPath()).collect(Collectors.toSet()));
+
+            if (product instanceof BWAttribute) {
+                BWAttribute attribute = (BWAttribute) product;
+                if (attribute.getAttributeGroup() != null) {
+                    paths.addAll(attribute.getDependenceSet().stream()
+                            .map(dep -> dep.getPath())
+                            .collect(Collectors.toSet()));
+                }
+            }
+        }
+
+        return paths;
+    }
+
+    @Atomic
     public void printSpecificationModels(String specId) {
         BWSpecification spec = getSpecification(specId);
 
@@ -508,6 +589,12 @@ public class AtomicDesignInterface {
                                 .collect(Collectors.joining(","))));
     }
 
+    private BWEntity getEntity(BWSpecification spec, String path) {
+        String entityName = path.split("\\.")[0];
+
+        return getEntity(spec.getDataModel(), entityName);
+    }
+
     private Set<BWAttribute> getAttributes(BWSpecification spec,
             Set<String> paths) {
         BWEntity entity = null;
@@ -515,7 +602,7 @@ public class AtomicDesignInterface {
         for (String path : paths) {
             String entityName = path.split("\\.")[0];
             String attributeName = path.split("\\.")[1];
-            BWEntity tmp = getEntity(spec.getDataModel(), entityName);
+            BWEntity tmp = getEntity(spec, entityName);
             if ((entity != null) && (entity != tmp))
                 throw new BWException(BWErrorType.INVALID_ATTRIBUTE_GROUP,
                         paths.toString());
@@ -533,6 +620,14 @@ public class AtomicDesignInterface {
 
     }
 
+    public BWProduct getTargetOfPath(BWSpecification spec, String path) {
+        List<String> pathLeft = Arrays.stream(path.split("\\."))
+                .collect(Collectors.toList());
+        BWEntity entity = getEntity(spec, pathLeft.get(0));
+        pathLeft.remove(0);
+        return entity.getNext(pathLeft, path);
+    }
+
     private Condition buildCondition(BWDataModel dataModel,
             ExpressionDTO expression) {
         switch (expression.type) {
@@ -548,14 +643,9 @@ public class AtomicDesignInterface {
             return new NotCondition(
                     buildCondition(dataModel, expression.expDTO));
         case ATT_DEF:
-            List<String> pathLeft = Arrays.stream(expression.value.split("\\."))
-                    .collect(Collectors.toList());
-            BWEntity entity = dataModel.getEntity(pathLeft.get(0))
-                    .orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH,
-                            expression.value + ":" + pathLeft));
-            pathLeft.remove(0);
             // TODO: remove the cast
-            BWProduct product = entity.getNext(pathLeft, expression.value);
+            BWProduct product = getTargetOfPath(dataModel.getSpecification(),
+                    expression.value);
             if (product instanceof BWAttribute)
                 return DEFAttributeCondition
                         .getDEFAttributeCondition((BWAttribute) product);
@@ -565,16 +655,9 @@ public class AtomicDesignInterface {
             assert(true);
             return null;
         case ATT_VALUE:
-            pathLeft = Arrays.stream(expression.value.split("\\."))
-                    .collect(Collectors.toList());
-            entity = dataModel.getEntity(pathLeft.get(0))
-                    .orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH,
-                            expression.value + ":" + pathLeft));
-            pathLeft.remove(0);
             // TODO: remove cast
-            BWAttribute att = (BWAttribute) entity.getNext(pathLeft,
-                    expression.value);
-            // if (att.getType().equals(BOOLEAN))
+            BWAttribute att = (BWAttribute) getTargetOfPath(
+                    dataModel.getSpecification(), expression.value);
             return new BWAttributeBoolCondition(att);
         case EQUAL:
             if (ExpressionDTO.isBoolExp(expression.leftExpDTO.type))
@@ -655,15 +738,10 @@ public class AtomicDesignInterface {
                     buildExpression(dataModel, expression.rightExpDTO),
                     BinaryOperator.DIV);
         case ATT_VALUE:
-            List<String> pathLeft = Arrays.stream(expression.value.split("\\."))
-                    .collect(Collectors.toList());
-            BWEntity entity = dataModel.getEntity(pathLeft.get(0))
-                    .orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH,
-                            expression.value + ":" + pathLeft));
-            pathLeft.remove(0);
             // TODO: remove cast
-            return new BWAttributeValueExpression(
-                    (BWAttribute) entity.getNext(pathLeft, expression.value));
+            BWAttribute attribute = (BWAttribute) getTargetOfPath(
+                    dataModel.getSpecification(), expression.value);
+            return new BWAttributeValueExpression(attribute);
         case INT:
             return new BWNumberLiteral(Integer.parseInt(expression.value));
         case STRING:

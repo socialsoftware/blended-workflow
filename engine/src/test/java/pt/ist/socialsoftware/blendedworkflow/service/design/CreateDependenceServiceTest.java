@@ -11,10 +11,10 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO.ProductType;
 
 public class CreateDependenceServiceTest extends BWDomainAndServiceTest {
     private static final String SPEC_ID = "ID1";

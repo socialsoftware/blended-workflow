@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 public class AttributeDTO {
-    public EntityDTO entDTO;
+    public EntityDTO entityDTO;
     public AttributeGroupDTO groupDTO;
     public String name;
     public String type;
@@ -9,7 +9,7 @@ public class AttributeDTO {
 
     public AttributeDTO(EntityDTO entDTO, String name, String type,
             boolean isMandatory) {
-        this.entDTO = entDTO;
+        this.entityDTO = entDTO;
         this.groupDTO = null;
         this.name = name;
         this.type = type;
@@ -18,8 +18,8 @@ public class AttributeDTO {
 
     public AttributeDTO(String specId, String entName, String name, String type,
             boolean isMandatory) {
-        this.entDTO = new EntityDTO(specId, entName);
-        this.groupDTO = new AttributeGroupDTO(this.entDTO, null, isMandatory);
+        this.entityDTO = new EntityDTO(specId, entName);
+        this.groupDTO = new AttributeGroupDTO(this.entityDTO, null, isMandatory);
         this.name = name;
         this.type = type;
         this.isMandatory = isMandatory;
@@ -27,8 +27,8 @@ public class AttributeDTO {
 
     public AttributeDTO(String specId, String entName, String groupName,
             String name, String type, boolean isMandatory) {
-        this.entDTO = new EntityDTO(specId, entName);
-        this.groupDTO = new AttributeGroupDTO(this.entDTO, groupName,
+        this.entityDTO = new EntityDTO(specId, entName);
+        this.groupDTO = new AttributeGroupDTO(this.entityDTO, groupName,
                 isMandatory);
         this.name = name;
         this.type = type;

@@ -29,7 +29,7 @@ public class BWDependence extends BWDependence_Base {
     private void checkPathPrefix(String value) {
         if (!value.split("\\.")[0].equals(getProduct().getEntity().getName())) {
             throw new BWException(BWErrorType.INVALID_PATH,
-                    value + " requires prefix: "
+                    value + " requires to have the Entity name as prefix: "
                             + getProduct().getEntity().getName());
         }
     }

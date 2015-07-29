@@ -31,3 +31,5 @@ Export-Package: org.blended.common,
  org.blended.common.services,
  org.blended.common.utils,
  org.blended.common.validation
+Bundle-ClassPath: lib/engine.jar,
+ .

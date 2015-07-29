@@ -1,4 +1,4 @@
-package org.blended.data.repinterface;
+package org.blended.data.repository;
 
 import java.util.List;
 

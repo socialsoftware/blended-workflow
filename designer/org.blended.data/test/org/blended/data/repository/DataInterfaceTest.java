@@ -1,4 +1,4 @@
-package org.blended.data.repinterface;
+package org.blended.data.repository;
 
 import org.blended.common.common.And;
 import org.blended.common.common.Attribute;
@@ -12,6 +12,7 @@ import org.blended.common.common.IntConstant;
 import org.blended.common.common.Specification;
 import org.blended.data.data.DataFactory;
 import org.blended.data.data.DataModel;
+import org.blended.data.repository.DataInterface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

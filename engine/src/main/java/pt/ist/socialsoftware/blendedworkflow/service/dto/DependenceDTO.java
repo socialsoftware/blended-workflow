@@ -1,9 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
+
 public class DependenceDTO {
-    public enum ProductType {
-        ATTRIBUTE, ATTRIBUTE_GROUP, ENTITY
-    }
 
     public SpecificationDTO specDTO;
     public EntityDTO entDTO;

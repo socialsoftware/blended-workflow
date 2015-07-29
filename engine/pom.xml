@@ -146,6 +146,15 @@
 									<version>${code.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
+									<outputDirectory>../designer/org.blended.common/lib</outputDirectory>
+									<destFileName>engine.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>pt.ist.socialsoftware</groupId>
+									<artifactId>engine</artifactId>
+									<version>${code.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
 									<outputDirectory>../designer/org.blended.data/lib</outputDirectory>
 									<destFileName>engine.jar</destFileName>
 								</artifactItem>
