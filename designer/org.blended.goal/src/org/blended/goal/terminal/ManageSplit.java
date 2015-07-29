@@ -7,11 +7,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.blended.common.common.AttributeInvariantCondition;
 import org.blended.common.common.EntityAchieveCondition;
+import org.blended.common.common.EntityInvariantCondition;
 import org.blended.common.common.MandatoryAttributeAchieveCondition;
 import org.blended.common.common.NotMandatoryAttributeAchieveCondition;
 import org.blended.common.common.Nothing;
 import org.blended.common.utils.ConsoleManagement;
+import org.blended.common.utils.Queries;
 import org.blended.common.utils.ValueException;
 import org.blended.goal.goal.Goal;
 import org.blended.goal.goal.GoalFactory;
@@ -31,6 +34,7 @@ public class ManageSplit {
 			successConditionsSplitted.add(part);
 		}
 		if (successConditionsSplitted.size() < 1) throw new ParameterException("Parameter not valid: One existing goal expected to be splitted");
+		List<String> serializedSuccessConditions = serializedSuccessConditions(successConditionsSplitted);
 		
 		String goalName = split.goal;
 		String newGoalName = split.name;
@@ -44,8 +48,8 @@ public class ManageSplit {
 			throw new ValueException("Parameter not valid: No existing goal expected with the same name");
 		Goal goal = goalNameO.get();
 		
-		if (goal.getSuccessConditions().size() <= 1)
-			throw new ValueException("Parameter not valid: Only one source success condition. It is not possible to split");
+		if (goal.getSuccessConditions().size() < 1)
+			throw new ValueException("Parameter not valid: No source success conditions. It is not possible to split");
 		List<EObject> succList = checkSuccessConditions(goal.getSuccessConditions(), successConditionsSplitted);
 		if (succList == null) {
 			throw new ValueException("Parameter not valid: All Achieve conditions should exist in the source goal");
@@ -54,8 +58,8 @@ public class ManageSplit {
 		//CREATE NEW GOAL
 		Goal newGoal = createNewGoal(model, newGoalName);
 		manageSuccessConditions(goal.getSuccessConditions(), newGoal, succList);
-		manageActivationConditions(goal.getSuccessConditions(), newGoal, succList);
-		manageInvariantConditions(goal.getSuccessConditions(), newGoal, succList);
+		manageActivationConditions(goal, newGoal, serializedSuccessConditions);
+		//manageInvariantConditions(goal, newGoal, serializedSuccessConditions);
 		//manageRelatives(goal.getSuccessConditions(), newGoal, succList);
 		
 		ConsoleManagement.write(name, "Operation performed. Goal " + goalName + " Splitted by creating goal " + newGoalName + " ("+ type +")");
@@ -80,44 +84,30 @@ public class ManageSplit {
 		List<EObject> result = new ArrayList<EObject>();
 		Boolean exists = false;
 		for (List<String> cond : successConditionsSplitted) {
-			System.out.println("cond: " + cond.size());
-			for (String c : cond) {
-				System.out.println("\t c: " + c);
-			}
 			exists = false;
 			for (EObject suc : goalSuccessConditions) {
-				System.out.println("SUC TYPE: " + suc.getClass().getName());
 				if (suc instanceof EntityAchieveCondition) {
 					EntityAchieveCondition o = (EntityAchieveCondition)suc;
-					if (o.getName().equals(cond)) {
-						result.add(suc); //it exists
-						exists = true;
-					}
-				}
-				else if (suc instanceof MandatoryAttributeAchieveCondition) {
-					MandatoryAttributeAchieveCondition o = (MandatoryAttributeAchieveCondition)suc;
-					if (o.getConditions().containsAll(cond)) {
+					if ((cond.size() == 1)&&(o.getName().equals(cond.get(0)))) {
 						result.add(suc); //it exists
 						exists = true;
 					}
 				}
 				if (suc instanceof NotMandatoryAttributeAchieveCondition) {
 					NotMandatoryAttributeAchieveCondition o = (NotMandatoryAttributeAchieveCondition)suc;
-					System.out.println("COND: " + cond + " O: " + o.getConditions().toString());
 					if (o.getConditions().containsAll(cond)) {
 						result.add(suc); //it exists
 						exists = true;
 					}
-					System.out.println("EXISTS: " + exists);
 				}
 				else if (suc instanceof Nothing) {
 					Nothing o = (Nothing)suc;
 					//if ((cond.size() == 1)&&(cond.get(0).equals(o.getName()))) {
-					if (o.getName().equals(cond)) {
+					if ((cond.size() == 1)&&(o.getName().equals(cond.get(0)))) {
 						result.add(suc); //it exists
 						exists = true;
 					}
-				}			
+				}	
 			}
 			if (!exists) return null;
 		}
@@ -129,28 +119,99 @@ public class ManageSplit {
 		goalSuccessConditions.removeAll(succList);
 	}
 	
-	public static void manageActivationConditions(EList<EObject> goalSuccessConditions, Goal newGoal, List<EObject> succList) {
+	public static void manageActivationConditions(Goal goal, Goal newGoal, List<String> serializedSuccessConditions) {
+		for (String cond : serializedSuccessConditions) { 
+			for (EObject act : goal.getActivationConditions()) { //Example: ACT(DEF(Episode.patient))
+				if (act instanceof EntityAchieveCondition) {
+					EntityAchieveCondition o = (EntityAchieveCondition)act;
+					String name = o.getName();
+					if (name.contains("."))
+						name = name.substring(0, name.indexOf("."));
+					if (name.equals(cond)) {
+						newGoal.getActivationConditions().add(act);
+						goal.getActivationConditions().remove(act);
+						break;
+					}
+				} //if
+				else if (act instanceof NotMandatoryAttributeAchieveCondition) {
+					NotMandatoryAttributeAchieveCondition o = (NotMandatoryAttributeAchieveCondition)act;
+					for (String c : o.getConditions()) {
+						String name = c;
+						if (name.contains("."))
+							name = name.substring(0, name.indexOf("."));
+						if (name.equals(cond)) {
+							newGoal.getActivationConditions().add(act);
+							goal.getActivationConditions().remove(act);
+							break;
+						}
+					}				
+				} //else
+			}//for	
+		} //for
 	}
 	
-	public static void manageInvariantConditions(EList<EObject> goalSuccessConditions, Goal newGoal, List<EObject> succList) {
+	public static void manageInvariantConditions(Goal goal, Goal newGoal, List<String> serializedSuccessConditions) {
+		for (String cond : serializedSuccessConditions) { 
+			System.out.println("COND: " + cond);
+			for (EObject inv : goal.getInvariantConditions()) { //Example: RUL | MUL
+				if (inv instanceof EntityInvariantCondition) {
+					EntityInvariantCondition o = (EntityInvariantCondition)inv;
+					String name = o.getName();
+					if (name.contains("."))
+						name = name.substring(0, name.indexOf("."));
+					if (name.equals(cond)) {
+						newGoal.getInvariantConditions().add(copy(inv));
+						goal.getInvariantConditions().remove(inv);
+						break;
+					}
+				} //if
+				else if (inv instanceof AttributeInvariantCondition) {
+					AttributeInvariantCondition o = (AttributeInvariantCondition)inv;
+					List<String> listExp = new ArrayList<String>();
+					Queries.getDecomposedExpression(o.getExpression(), listExp);
+					System.out.println("\nlistsize " + listExp.size());
+					for (String exp : listExp) {
+						System.out.println("\nEXP: " +exp);
+						String name = exp;
+						if (name.contains("."))
+							name = name.substring(0, name.indexOf("."));
+						if (name.equals(cond)) {
+							//newGoal.getInvariantConditions().add(copy(inv));
+							//goal.getInvariantConditions().remove(inv);
+							break;
+						}		
+					}	
+				} //else
+			}//for	
+		} //for
 	}
 	
 	public static void manageRelatives(GoalModel model, Goal goal, Goal newGoal, String type) {	
-		switch (type) {
-			case "s":
-			case "sibling":
-				for (Goal g : model.getGoals()) {
-					if (g.getChildrenGoals().contains(goal)) {
-						g.getChildrenGoals().add(newGoal);
-					}
-				}
-				break;
-			case "c":
-			case "child":
-				goal.getChildrenGoals().add(newGoal);
-				break;
-		}
+//		switch (type) {
+//			case "s":
+//			case "sibling":
+//				for (Goal g : model.getGoals()) {
+//					if (g.getChildrenGoals().contains(goal)) {
+//						g.getChildrenGoals().add(newGoal);
+//					}
+//				}
+//				break;
+//			case "c":
+//			case "child":
+//				goal.getChildrenGoals().add(newGoal);
+//				break;
+//		}
+	}
 	
+	public static List<String> serializedSuccessConditions(List<List<String>> successConditionsSplitted) {
+		List<String> result = new ArrayList<String>();
+		for (List<String> conds : successConditionsSplitted) { //Example: [Medication.name Medication.quantity Medication.heartImpact] [Report]
+			for (String cond : conds) { //Example: [Medication.name Medication.quantity Medication.heartImpact Report]
+				if (!result.contains(cond)) //we don't want to repeat any element inside. Example [Medication Report]
+					result.add(cond);
+			} //for			
+		} //for
+		return result;
 	}
 	
 }

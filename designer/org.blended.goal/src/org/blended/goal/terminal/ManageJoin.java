@@ -1,14 +1,22 @@
 package org.blended.goal.terminal;
 
 import static org.eclipse.emf.ecore.util.EcoreUtil.copyAll;
+import static org.eclipse.emf.ecore.util.EcoreUtil.copy;
 import java.util.Optional;
+
+import org.blended.common.common.Nothing;
 import org.blended.common.utils.ConsoleManagement;
 import org.blended.common.utils.ValueException;
 import org.blended.goal.goal.Goal;
 import org.blended.goal.goal.GoalFactory;
 import org.blended.goal.goal.GoalModel;
+import org.eclipse.emf.ecore.EObject;
+
 import com.beust.jcommander.ParameterException;
 
+/**
+ * I always copy everything, except SUC(nothing)
+ */
 public class ManageJoin {
 	public static void goals(GoalModel model, String name, CommandJoin join) throws ValueException  {
 		//CHECKS
@@ -28,9 +36,11 @@ public class ManageJoin {
 		Goal goal2 = goalO2.get();
 		
 		//CHECK RELATIONSHIP BETWEEN NODES
-//		NodesRelation relation = getTypeOfRelation(model, goal1, goal2);
-//		switch (relation) {
-//			case Horizontal: {
+		NodesRelation relation = getTypeOfRelation(model, goal1, goal2);
+		switch (relation) {
+			case Horizontal:
+			case VerticalParent:
+			case VerticalChild: {
 				//CREATE NEW GOAL
 				Goal newGoal = createNewGoal(model, join.name);
 				copyGoalContent(goal1, newGoal);
@@ -41,29 +51,13 @@ public class ManageJoin {
 				model.getGoals().remove(goal1);
 				model.getGoals().remove(goal2);
 				
-				ConsoleManagement.write(name, "Operation performed. New goal " + newGoal.getName() + " generated from " + goalName1 + " and " + goalName2);
-//				break;
-//			}
-//			case VerticalParent: {
-//				//CREATE NEW GOAL
-//				Goal newGoal = createNewGoal(model, join.name);
-//				copyGoalContent(goal1, newGoal);
-//				copyGoalContent(goal2, newGoal);
-//				changeReferencesByNewOne(model, goal1, goal2, newGoal);
-//				
-//				//DELETE OLD GOALS
-//				model.getGoals().remove(goal1);
-//				model.getGoals().remove(goal2);
-//				
-//				ConsoleManagement.write(name, "Operation performed. New goal " + newGoal.getName() + " generated");
-//			}
-//			case VerticalChild: {
-//				throw new ValueException("Parameter not valid: VERTICALCHILD");	
-//			}
-//			case None: {
-//				throw new ValueException("Parameter not valid: Direct relationship between nodes expected");		
-//			}
-//		}
+				ConsoleManagement.write(name, "Operation performed. New goal " + newGoal.getName() + " generated");
+				break;	
+			}
+			case NotValid: {
+				throw new ValueException("Parameter not valid: Direct relationship between nodes expected");		
+			}
+		}
 
 	}
 	
@@ -85,7 +79,11 @@ public class ManageJoin {
 	public static void copyGoalContent(Goal source, Goal target) {
 		target.getActivationConditions().addAll(copyAll(source.getActivationConditions()));
 		target.getInvariantConditions().addAll(copyAll(source.getInvariantConditions()));
-		target.getSuccessConditions().addAll(copyAll(source.getSuccessConditions()));
+		for (EObject s : source.getSuccessConditions()) {
+			if (!(s instanceof Nothing)) { //we don't want to copy SUC(Nothing)
+				target.getSuccessConditions().add(copy(s));
+			}
+		}
 		for (Goal g : source.getChildrenGoals()) {
 			target.getChildrenGoals().add(g);
 		}
@@ -107,29 +105,29 @@ public class ManageJoin {
 		}
 	}
 	
-//	public static NodesRelation getTypeOfRelation(GoalModel model, Goal goal1, Goal goal2) {
-//		NodesRelation relation = NodesRelation.None;
-//		
-//		for (Goal goal : model.getGoals()) {
-//			if (goal.getChildrenGoals().contains(goal1) && goal.getChildrenGoals().contains(goal2)) {
-//				relation = NodesRelation.Horizontal;
-//				break;
-//			}
-//			if (goal.equals(goal1) && goal.getChildrenGoals().contains(goal2)) {
-//				relation = NodesRelation.VerticalParent;
-//				break;
-//			}
-//			if (goal.equals(goal2) && goal.getChildrenGoals().contains(goal1)) {
-//				relation = NodesRelation.VerticalChild;
-//				break;
-//			}
-//		}
-//		
-//		return relation;
-//	}
+	public static NodesRelation getTypeOfRelation(GoalModel model, Goal goal1, Goal goal2) {
+		NodesRelation relation = NodesRelation.NotValid;
+		
+		for (Goal goal : model.getGoals()) {
+			if (goal.getChildrenGoals().contains(goal1) && goal.getChildrenGoals().contains(goal2)) {
+				relation = NodesRelation.Horizontal;
+				break;
+			}
+			if (goal.equals(goal1) && goal.getChildrenGoals().contains(goal2)) {
+				relation = NodesRelation.VerticalParent;
+				break;
+			}
+			if (goal.equals(goal2) && goal.getChildrenGoals().contains(goal1)) {
+				relation = NodesRelation.VerticalChild;
+				break;
+			}
+		}
+		
+		return relation;
+	}
 	
 	public enum NodesRelation {
-		Horizontal, VerticalParent, VerticalChild, None
+		Horizontal, VerticalParent, VerticalChild, NotValid
 	}
 
 }
