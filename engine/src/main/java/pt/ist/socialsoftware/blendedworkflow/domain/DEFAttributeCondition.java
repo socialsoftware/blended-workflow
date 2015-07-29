@@ -10,11 +10,33 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
-    public DEFAttributeCondition(BWAttribute attribute) {
+    public static DEFAttributeCondition getDEFAttributeCondition(
+            BWAttribute attribute) {
+        DEFAttributeCondition defAttributeCondition = attribute
+                .getDefAttributeCondition();
+        if (defAttributeCondition == null)
+            defAttributeCondition = new DEFAttributeCondition(attribute);
+        return defAttributeCondition;
+    }
+
+    public static DEFAttributeCondition getDEFAttributeCondition(
+            BWAttributeGroup attributeGroup) {
+        DEFAttributeCondition defAttributeCondition = attributeGroup
+                .getDefAttributeCondition();
+        if (defAttributeCondition == null)
+            defAttributeCondition = new DEFAttributeCondition(attributeGroup);
+        return defAttributeCondition;
+    }
+
+    private DEFAttributeCondition(BWAttribute attribute) {
+        setConditionModel(attribute.getEntity().getDataModel()
+                .getSpecification().getConditionModel());
         setAttribute(attribute);
     }
 
-    public DEFAttributeCondition(BWAttributeGroup attributeGroup) {
+    private DEFAttributeCondition(BWAttributeGroup attributeGroup) {
+        setConditionModel(attributeGroup.getEntity().getDataModel()
+                .getSpecification().getConditionModel());
         setAttributeGroup(attributeGroup);
     }
 
@@ -114,8 +136,11 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
     @Override
     public String toString() {
-        return "existsAttribute(" + getAttribute().getEntity().getName() + "."
-                + getAttribute().getName() + ")";
+        if (getAttribute() != null && getAttribute().getEntity() != null
+                && getAttribute().getEntity().getName() != null)
+            return "existsAttribute(" + getAttribute().getEntity().getName()
+                    + "." + getAttribute().getName() + ")";
+        return "DEFAttributeCondition: attribute or entity with empty value";
     }
 
     @Override

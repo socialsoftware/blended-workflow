@@ -31,19 +31,19 @@ class DataValidator extends AbstractDataValidator {
 
 	@Check(CheckType.NORMAL)
 	def checkModel(DataModel model) {
-//				info('everything OK 0', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
-//		var instance = DataInterface.getInstance
-//				info('everything OK 2', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
-//		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
-//				info('everything OK 3', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
-//		var notification = instance.loadDataModel(specId, model)
-//				info('everything OK 4', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
-//		if (notification.hasErrors)
-//			for (error : notification.error)
-//				error(error.type.toString + "-" + error.value, DataPackage.Literals.DATA_MODEL__SPECIFICATION,
-//					INVALID_NAME)
-//		else
-//			info('everything OK 2', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
+				info('everything OK 0', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
+		var instance = DataInterface.getInstance
+				info('everything OK 2', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
+		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+				info('everything OK 3', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
+		var notification = instance.loadDataModel(specId, model)
+				info('everything OK 4', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
+		if (notification.hasErrors)
+			for (error : notification.error)
+				error(error.type.toString + "-" + error.value, DataPackage.Literals.DATA_MODEL__SPECIFICATION,
+					INVALID_NAME)
+		else
+			info('everything OK 2', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
 	}
 
 }

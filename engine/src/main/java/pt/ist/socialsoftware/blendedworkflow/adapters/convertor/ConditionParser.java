@@ -104,8 +104,8 @@ public class ConditionParser {
         BWAttribute attribute = parseExistsAttributeConditionArgs(
                 existsAttributeString, startArgs,
                 existsAttributeString.length() - 1, elementName);
-        Condition existsAttributeCondition = new DEFAttributeCondition(
-                attribute);
+        Condition existsAttributeCondition = DEFAttributeCondition
+                .getDEFAttributeCondition(attribute);
         _token = endOfCondition + 1;
         return existsAttributeCondition;
     }

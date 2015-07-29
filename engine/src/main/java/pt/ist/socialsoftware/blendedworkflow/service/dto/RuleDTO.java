@@ -10,4 +10,11 @@ public class RuleDTO {
         this.name = name;
         this.expDTO = expDTO;
     }
+
+    public RuleDTO(String specId, String name) {
+        this.specDTO = new SpecificationDTO(specId);
+        this.name = name;
+        this.expDTO = null;
+    }
+
 }

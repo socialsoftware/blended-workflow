@@ -6,16 +6,17 @@ public class BWConditionModel extends BWConditionModel_Base {
         setSpecification(null);
 
         getEntityAchieveConditionSet().stream()
-                .forEach(defEnt -> defEnt.setConditionModel(null));
+                .forEach(defEnt -> removeEntityAchieveCondition(defEnt));
         getEntityDependenceConditionSet().stream()
-                .forEach(depEnt -> depEnt.setConditionModelForEntDep(null));
-        getEntityInvariantConditionSet().stream().forEach(mul -> mul.delete());
+                .forEach(depEnt -> removeEntityDependenceCondition(depEnt));
+        getEntityInvariantConditionSet().stream()
+                .forEach(mul -> removeEntityInvariantCondition(mul));
         getAttributeAchieveConditionSet().stream()
-                .forEach(defAtt -> defAtt.setConditionModel(null));
+                .forEach(defAtt -> removeAttributeAchieveCondition(defAtt));
         getAttributeDependenceConditionSet().stream()
-                .forEach(depAtt -> depAtt.setConditionModelForEntDep(null));
+                .forEach(depAtt -> removeAttributeDependenceCondition(depAtt));
         getAttributeInvariantConditionSet().stream()
-                .forEach(rule -> rule.setConditionModel(null));
+                .forEach(rule -> removeAttributeInvariantCondition(rule));
 
         deleteDomainObject();
     }

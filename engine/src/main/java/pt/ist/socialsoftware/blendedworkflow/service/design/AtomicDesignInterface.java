@@ -2,7 +2,9 @@ package pt.ist.socialsoftware.blendedworkflow.service.design;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWNumberLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWStringLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
@@ -43,6 +46,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.OrCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeAchieveConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
@@ -243,22 +247,19 @@ public class AtomicDesignInterface {
     @Atomic
     public void createEntityDependenceCondition(DependenceDTO edcDTO) {
         log.debug("createEntityDependenceCondition Entity:{}, Value:{}",
-                edcDTO.entDTO.name, edcDTO.value);
+                edcDTO.name, edcDTO.value);
         BWSpecification spec = getSpecification(edcDTO.specDTO.specId);
 
-        BWEntity entity = getEntity(spec.getDataModel(), edcDTO.entDTO.name);
+        BWEntity entity = getEntity(spec.getDataModel(), edcDTO.name);
 
-        BWDependence dependence = entity.getDependenceSet().stream()
-                .filter(dep -> dep.getPath().equals(edcDTO.value)).findFirst()
-                .orElseThrow(() -> new BWException(
-                        BWErrorType.DEPENDENCE_NOT_EXISTS, edcDTO.value));
+        BWDependence dependence = getDependence(entity, edcDTO.value);
 
         spec.getConditionModel().addEntityDependenceCondition(dependence);
     }
 
     @Atomic
     public void createEntityInvariantCondition(MulInvariantDTO miDTO) {
-        log.debug("createEntityInvariantCondition Entity:{}, Value:{}",
+        log.debug("createEntityInvariantCondition Entity:{}, Cardinality:{}",
                 miDTO.rolePath, miDTO.cardinality);
         BWSpecification spec = getSpecification(miDTO.specDTO.specId);
 
@@ -284,40 +285,125 @@ public class AtomicDesignInterface {
 
     @Atomic
     public void createAttributeAchieveCondition(
-            EntityAchieveConditionDTO eacDTO) {
-        log.debug("createAttributeAchieveCondition Entity:{}, Value:{}",
-                eacDTO.entity, eacDTO.exists);
-        BWSpecification spec = getSpecification(eacDTO.specId);
+            AttributeAchieveConditionDTO aacDTO) {
+        log.debug("createAttributeAchieveCondition Paths:{}, Mandatory:{}",
+                aacDTO.paths, aacDTO.mandatory);
+        BWSpecification spec = getSpecification(aacDTO.specDTO.specId);
 
-        BWEntity entity = getEntity(spec.getDataModel(), eacDTO.entity);
+        Set<BWAttribute> attributes = getAttributes(spec, aacDTO.paths);
 
-        if (entity.getExists() != eacDTO.exists) {
-            throw new BWException(BWErrorType.INVALID_ENTITY,
-                    eacDTO.entity + " exists=" + entity.getExists());
+        DEFAttributeCondition defAttributeCondition = null;
+        if (attributes.size() == 0)
+            throw new BWException(BWErrorType.INVALID_PATH,
+                    aacDTO.paths.toString());
+        else if (attributes.size() == 1) {
+            BWAttribute att = attributes.stream().findFirst().get();
+            if (att.getIsMandatory() != aacDTO.mandatory)
+                throw new BWException(
+                        BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY,
+                        aacDTO.paths.toString());
+            defAttributeCondition = DEFAttributeCondition
+                    .getDEFAttributeCondition(att);
+        } else {
+            BWEntity entity = attributes.stream().findFirst().get().getEntity();
+            BWAttributeGroup attributeGroup = getAttributeGroup(entity,
+                    attributes);
+            if (attributeGroup.getIsMandatory() != aacDTO.mandatory)
+                throw new BWException(
+                        BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY,
+                        aacDTO.paths.toString());
+            defAttributeCondition = DEFAttributeCondition
+                    .getDEFAttributeCondition(attributeGroup);
         }
 
-        spec.getConditionModel().addEntityAchieveCondition(
-                DEFEntityCondition.getDEFEntity(spec, entity));
+        spec.getConditionModel()
+                .addAttributeAchieveCondition(defAttributeCondition);
     }
 
     @Atomic
-    public void writeLoadedConditionModel(String specId) {
+    public void createAttributeDependenceCondition(String specId,
+            Set<String> sourceAtt, Set<String> targetAtts) {
+        log.debug(
+                "createAttributeDependenceCondition SourceAtts:{}, TargetAtts:{}",
+                sourceAtt, targetAtts);
         BWSpecification spec = getSpecification(specId);
+
+        Set<BWAttribute> attributes = getAttributes(spec, sourceAtt);
+
+        BWProduct att = null;
+        if (attributes.size() == 0)
+            throw new BWException(BWErrorType.INVALID_PATH,
+                    sourceAtt.toString());
+        else if (attributes.size() == 1) {
+            att = attributes.stream().findFirst().get();
+        } else {
+            BWEntity entity = attributes.stream().findFirst().get().getEntity();
+            att = getAttributeGroup(entity, attributes);
+        }
+
+        for (String path : targetAtts) {
+            BWDependence dependence = getDependence(att, path);
+            spec.getConditionModel()
+                    .addAttributeDependenceCondition(dependence);
+        }
+
+    }
+
+    @Atomic
+    public void createAttributeInvariantCondition(RuleDTO ruleDTO) {
+        BWSpecification spec = getSpecification(ruleDTO.specDTO.specId);
+
+        BWRule rule = spec.getDataModel().getRuleSet().stream()
+                .filter(r -> r.getName().equals(ruleDTO.name)).findFirst()
+                .orElseThrow(() -> new BWException(
+                        BWErrorType.INVALID_RULE_NAME, ruleDTO.name));
+
+        spec.getConditionModel().addAttributeInvariantCondition(rule);
+    }
+
+    @Atomic
+    public void printSpecificationModels(String specId) {
+        BWSpecification spec = getSpecification(specId);
+
+        System.out.println("SPECIFICATION: " + spec.getName());
+
+        System.out.println("Specification Data Model: " + spec.getName());
+
+        for (BWEntity entity : spec.getDataModel().getEntitiesSet()) {
+            System.out.println("Entity " + entity.getName() + " Exists:"
+                    + entity.getExists());
+        }
+
+        System.out.println("Specification Condition Model: " + spec.getName());
 
         spec.getConditionModel().getEntityAchieveConditionSet().stream()
                 .map(def -> def.getEntity().getName() + "-"
                         + def.getEntity().getExists())
                 .forEach(System.out::println);
 
-        // spec.getConditionModel().getEntityDependenceConditionSet().stream()
-        // .map(dep -> dep.getProduct().getName() + "-" + dep.getPath())
-        // .forEach(System.out::println);
-
-        log.debug("getEntityInvariantConditionSet().size() {}", spec
-                .getConditionModel().getEntityInvariantConditionSet().size());
+        spec.getConditionModel().getEntityDependenceConditionSet().stream()
+                .map(dep -> dep.getProduct().getName() + "-" + dep.getPath())
+                .forEach(System.out::println);
 
         spec.getConditionModel().getEntityInvariantConditionSet().stream()
                 .map(mul -> mul.getExpression()).forEach(System.out::println);
+
+        spec.getConditionModel().getAttributeAchieveConditionSet().stream()
+                .map(def -> (def.getAttribute() != null)
+                        ? (def.getAttribute().getEntity().getName() + "."
+                                + def.getAttribute().getName())
+                        : (def.getAttributeGroup().getEntity().getName() + "."
+                                + def.getAttributeGroup().getName()))
+                .forEach(System.out::println);
+
+        spec.getConditionModel().getAttributeDependenceConditionSet().stream()
+                .map(dep -> dep.getProduct().getName() + "-" + dep.getPath())
+                .forEach(System.out::println);
+
+        spec.getConditionModel().getAttributeInvariantConditionSet().stream()
+                .map(rule -> rule.getName() + "-"
+                        + rule.getCondition().getSubPath())
+                .forEach(System.out::println);
     }
 
     final static String STRING = "String";
@@ -410,6 +496,43 @@ public class AtomicDesignInterface {
                 BWErrorType.INVALID_ATTRIBUTE_NAME, name));
     }
 
+    private BWAttributeGroup getAttributeGroup(BWEntity entity,
+            Set<BWAttribute> attributes) {
+        return entity.getAttributeGroupSet().stream()
+                .filter(attGroup -> attGroup.getAttributeSet()
+                        .equals(attributes))
+                .findFirst()
+                .orElseThrow(() -> new BWException(
+                        BWErrorType.INVALID_ATTRIBUTE_GROUP,
+                        attributes.stream().map(att -> att.getName())
+                                .collect(Collectors.joining(","))));
+    }
+
+    private Set<BWAttribute> getAttributes(BWSpecification spec,
+            Set<String> paths) {
+        BWEntity entity = null;
+        Set<BWAttribute> attributes = new HashSet<BWAttribute>();
+        for (String path : paths) {
+            String entityName = path.split("\\.")[0];
+            String attributeName = path.split("\\.")[1];
+            BWEntity tmp = getEntity(spec.getDataModel(), entityName);
+            if ((entity != null) && (entity != tmp))
+                throw new BWException(BWErrorType.INVALID_ATTRIBUTE_GROUP,
+                        paths.toString());
+            entity = tmp;
+            attributes.add((BWAttribute) getAttribute(entity, attributeName));
+        }
+        return attributes;
+    }
+
+    private BWDependence getDependence(BWProduct product, String path) {
+        return product.getDependenceSet().stream()
+                .filter(dep -> dep.getPath().equals(path)).findFirst()
+                .orElseThrow(() -> new BWException(
+                        BWErrorType.DEPENDENCE_NOT_EXISTS, path));
+
+    }
+
     private Condition buildCondition(BWDataModel dataModel,
             ExpressionDTO expression) {
         switch (expression.type) {
@@ -434,9 +557,11 @@ public class AtomicDesignInterface {
             // TODO: remove the cast
             BWProduct product = entity.getNext(pathLeft, expression.value);
             if (product instanceof BWAttribute)
-                return new DEFAttributeCondition((BWAttribute) product);
+                return DEFAttributeCondition
+                        .getDEFAttributeCondition((BWAttribute) product);
             else if (product instanceof BWAttributeGroup)
-                return new DEFAttributeCondition((BWAttributeGroup) product);
+                return DEFAttributeCondition
+                        .getDEFAttributeCondition((BWAttributeGroup) product);
             assert(true);
             return null;
         case ATT_VALUE:
