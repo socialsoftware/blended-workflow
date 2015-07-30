@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWError;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
@@ -38,7 +39,6 @@ import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterfac
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO.Type;

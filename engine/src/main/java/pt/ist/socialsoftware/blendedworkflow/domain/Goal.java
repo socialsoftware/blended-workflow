@@ -202,6 +202,16 @@ public class Goal extends Goal_Base {
 
     public void delete() {
         setGoalModel(null);
+        setParentGoal(null);
+        getSubGoalsSet().stream().forEach(sub -> removeSubGoals(sub));
+        getSuccessConditionSet().stream()
+                .forEach(suc -> removeSuccessCondition(suc));
+        getActivationConditionSet().stream()
+                .forEach(act -> removeSuccessCondition(act));
+        getEntityInvariantConditionSet().stream()
+                .forEach(mul -> removeEntityInvariantCondition(mul));
+        getAttributeInvariantConditionSet().stream()
+                .forEach(rule -> removeAttributeInvariantCondition(rule));
 
         deleteDomainObject();
     }

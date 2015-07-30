@@ -39,6 +39,7 @@ public class BWRule extends BWRule_Base {
     public void delete() {
         setDataModel(null);
         setConditionModel(null);
+        setInvariantConditionGoal(null);
         getCondition().delete();
 
         deleteDomainObject();

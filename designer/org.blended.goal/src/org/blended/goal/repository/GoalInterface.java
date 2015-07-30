@@ -1,7 +1,5 @@
 package org.blended.goal.repository;
 
-import java.util.stream.Collectors;
-
 import org.blended.common.common.AttributeAchieveCondition;
 import org.blended.common.common.AttributeInvariantCondition;
 import org.blended.common.common.EntityAchieveCondition;
@@ -74,9 +72,9 @@ public class GoalInterface {
                 } else if (eObj instanceof AttributeAchieveCondition) {
                     AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
                     log.debug("ACT({})", aac.getConditions());
-                    adi.associateAttributeAchieveConditionToGoalActivationCondition(
-                            specId, eGoal.getName(), aac.getConditions()
-                                    .stream().collect(Collectors.toSet()));
+                    // adi.associateAttributeAchieveConditionToGoalActivationCondition(
+                    // specId, eGoal.getName(), aac.getConditions()
+                    // .stream().collect(Collectors.toSet()));
                 }
                 assert(false);
             }
@@ -91,9 +89,9 @@ public class GoalInterface {
                 } else if (eObj instanceof AttributeAchieveCondition) {
                     AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
                     log.debug("SUC({})", aac.getConditions());
-                    adi.associateAttributeAchieveConditionToGoalSuccessCondition(
-                            specId, eGoal.getName(), aac.getConditions()
-                                    .stream().collect(Collectors.toSet()));
+                    // adi.associateAttributeAchieveConditionToGoalSuccessCondition(
+                    // specId, eGoal.getName(), aac.getConditions()
+                    // .stream().collect(Collectors.toSet()));
                 }
                 assert(false);
             }
@@ -104,11 +102,14 @@ public class GoalInterface {
                     EntityInvariantCondition eic = (EntityInvariantCondition) eObj;
                     log.debug("MUL({},{})", eic.getName(),
                             eic.getCardinality());
-
+                    adi.associateMulConditionToGoalEntityInvariantCondition(
+                            specId, eGoal.getName(), eic.getName(),
+                            eic.getCardinality());
                 } else if (eObj instanceof AttributeInvariantCondition) {
                     AttributeInvariantCondition aic = (AttributeInvariantCondition) eObj;
                     log.debug("RULE({})", aic.getName());
-
+                    adi.associateRuleConditionToGoalAttributeInvariantCondition(
+                            specId, eGoal.getName(), aic.getName());
                 }
                 assert(false);
             }
@@ -128,6 +129,8 @@ public class GoalInterface {
                 }
             }
         }
+
+        adi.printSpecificationModels(specId);
 
         return notification;
     }

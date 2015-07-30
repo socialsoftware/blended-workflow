@@ -67,6 +67,7 @@ public class MULCondition extends MULCondition_Base {
     public void delete() {
         setConditionModel(null);
         setBwRelation(null);
+        setInvariantConditionGoal(null);
 
         deleteDomainObject();
     }

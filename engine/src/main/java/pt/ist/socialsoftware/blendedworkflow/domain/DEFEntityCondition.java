@@ -330,6 +330,7 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
 
     @Override
     public void delete() {
+        setConditionModel(null);
         setEntity(null);
         super.delete();
     }

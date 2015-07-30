@@ -377,13 +377,23 @@ relation GoalHasGoals {
 }
 
 relation GoalHasSucessConditions {
-	Goal playsRole goal { multiplicity 0..1; }
+	Goal playsRole successConditionGoal { multiplicity 0..1; }
 	Condition playsRole successCondition { multiplicity 0..*; }
 }
 
 relation GoalHasActivationConditions {
-	Goal playsRole activateConditionsAchieveGoal {multiplicity 0..1;}
+	Goal playsRole activateConditionGoal {multiplicity 0..1;}
 	Condition playsRole activationCondition {multiplicity 0..*;}
+}
+
+relation GoalHasEntityInvariantCondition {
+	Goal playsRole invariantConditionGoal {multiplicity 0..1;}
+	MULCondition playsRole entityInvariantCondition {multiplicity 0..*;}
+}
+
+relation GoalHasAttributeInvariantCondition {
+	Goal playsRole invariantConditionGoal {multiplicity 0..1;}
+	BWRule playsRole attributeInvariantCondition {multiplicity 0..*;}
 }
 
 relation GoalHasGoalWorkItem {
