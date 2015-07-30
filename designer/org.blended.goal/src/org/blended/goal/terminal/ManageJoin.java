@@ -18,7 +18,7 @@ import com.beust.jcommander.ParameterException;
  * I always copy everything, except SUC(nothing)
  */
 public class ManageJoin {
-	public static void goals(GoalModel model, String name, CommandJoin join) throws ValueException  {
+	public static void goals(GoalModel model, String name, CommandJoin join) throws ParameterException, ValueException  {
 		//CHECKS
 		if (join.goals.size() != 2) throw new ParameterException("The number of goals should be two (found " + join.goals.size() + ")");
 		String goalName1 = join.goals.get(0);

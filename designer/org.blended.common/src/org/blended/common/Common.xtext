@@ -48,11 +48,11 @@ Constraint:
 ;
 
 EntityAchieveCondition:
-	'DEF' '(' name = QualifiedName ')'
+	'EDEF' '(' name = QualifiedName ')'
 ;
 
 EntityAchieveConditionExist:
-	'EXISTS' '(' 'DEF' '(' name = QualifiedName ')' ')'
+	'EXISTS' '(' 'EDEF' '(' name = QualifiedName ')' ')'
 ;
 
 EntityInvariantCondition:
@@ -60,7 +60,7 @@ EntityInvariantCondition:
 ;
 
 EntityDependenceCondition:
-	'DEP' '(' 'DEF' '(' entity1 = QualifiedName ')' ',' 'DEF' '(' entity2 = QualifiedName ')' ')'
+	'DEP' '(' 'EDEF' '(' entity1 = QualifiedName ')' ',' 'EDEF' '(' entity2 = QualifiedName ')' ')'
 ;
 
 AttributeAchieveCondition:
@@ -68,11 +68,11 @@ AttributeAchieveCondition:
 ;
 
 NotMandatoryAttributeAchieveCondition:
-	'DEF' '(' conditions += QualifiedName (',' conditions += QualifiedName)* ')' 
+	'ADEF' '(' conditions += QualifiedName (',' conditions += QualifiedName)* ')' 
 ;
 
 MandatoryAttributeAchieveCondition:
-	'MAN' '(' 'DEF' '(' conditions += QualifiedName (',' conditions += QualifiedName)* ')' ')' 
+	'MAN' '(' 'ADEF' '(' conditions += QualifiedName (',' conditions += QualifiedName)* ')' ')' 
 ;
 
 AttributeInvariantCondition:
@@ -80,8 +80,8 @@ AttributeInvariantCondition:
 ;
 
 AttributeDependenceCondition:
-	'DEP' '(' 'DEF' '(' attributes1 += QualifiedName (',' attributes1 += QualifiedName)* ')' 
-		',' 'DEF' '(' attributes2 += QualifiedName (',' attributes2 += QualifiedName)* ')' 
+	'DEP' '(' 'ADEF' '(' attributes1 += QualifiedName (',' attributes1 += QualifiedName)* ')' 
+		',' 'ADEF' '(' attributes2 += QualifiedName (',' attributes2 += QualifiedName)* ')' 
 	')'
 ;
 
@@ -138,7 +138,7 @@ Primary returns Expression:
 ;
 
 Atomic returns Expression:
-	{AttributeDefinition} 'DEF' '(' name = QualifiedName ')' |
+	{AttributeDefinition} 'ADEF' '(' name = QualifiedName ')' |
 	{AttributeValue} name = QualifiedName |
 	{IntConstant} name=INT |
 	{StringConstant} name=STRING |

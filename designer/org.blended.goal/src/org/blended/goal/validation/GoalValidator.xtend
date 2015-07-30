@@ -3,6 +3,9 @@
  */
 package org.blended.goal.validation
 
+import org.eclipse.xtext.validation.Check
+import org.blended.goal.goal.GoalModel
+
 //import org.eclipse.xtext.validation.Check
 
 /**
@@ -15,11 +18,12 @@ class GoalValidator extends AbstractGoalValidator {
 //  public static val INVALID_NAME = 'invalidName'
 //
 //	@Check
-//	def checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.name.charAt(0))) {
-//			warning('Name should start with a capital', 
-//					MyDslPackage.Literals.GREETING__NAME,
-//					INVALID_NAME)
-//		}
+//	def checkGreetingStartsWithCapital(GoalModel model) {
+//		println("HOLA")
+////		if (!Character.isUpperCase(greeting.name.charAt(0))) {
+////			warning('Name should start with a capital', 
+////					MyDslPackage.Literals.GREETING__NAME,
+////					INVALID_NAME)
+////		}
 //	}
 }
