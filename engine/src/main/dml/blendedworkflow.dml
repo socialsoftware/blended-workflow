@@ -382,7 +382,7 @@ relation GoalHasSucessConditions {
 }
 
 relation GoalHasActivationConditions {
-	Goal playsRole activateConditionGoal {multiplicity 0..1;}
+	Goal playsRole activationConditionGoal {multiplicity 0..1;}
 	Condition playsRole activationCondition {multiplicity 0..*;}
 }
 

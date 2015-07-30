@@ -620,7 +620,9 @@ public class AtomicDesignInterface {
             for (Condition suc : goal.getSuccessConditionSet()) {
                 System.out.println("SUC(" + suc.getSubPath() + ")");
             }
-
+            for (MULCondition mul : goal.getEntityInvariantConditionSet()) {
+                System.out.println(mul.getExpression());
+            }
             for (BWRule rule : goal.getAttributeInvariantConditionSet()) {
                 System.out.println("RUL(" + rule.getName() + ")");
             }
@@ -736,13 +738,12 @@ public class AtomicDesignInterface {
         Set<BWAttribute> attributes = new HashSet<BWAttribute>();
         for (String path : paths) {
             String entityName = path.split("\\.")[0];
-            String attributeName = path.split("\\.")[1];
             BWEntity tmp = getEntity(spec.getDataModel(), entityName);
             if ((entity != null) && (entity != tmp))
                 throw new BWException(BWErrorType.INVALID_ATTRIBUTE_GROUP,
                         paths.toString());
             entity = tmp;
-            attributes.add((BWAttribute) getAttribute(entity, attributeName));
+            attributes.add((BWAttribute) getTargetOfPath(spec, path));
         }
         return attributes;
     }

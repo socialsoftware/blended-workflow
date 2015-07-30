@@ -207,7 +207,7 @@ public class Goal extends Goal_Base {
         getSuccessConditionSet().stream()
                 .forEach(suc -> removeSuccessCondition(suc));
         getActivationConditionSet().stream()
-                .forEach(act -> removeSuccessCondition(act));
+                .forEach(act -> removeActivationCondition(act));
         getEntityInvariantConditionSet().stream()
                 .forEach(mul -> removeEntityInvariantCondition(mul));
         getAttributeInvariantConditionSet().stream()
