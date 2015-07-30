@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
@@ -17,7 +17,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 
-public class CreateAttributeServiceTest extends BWDomainAndServiceTest {
+public class CreateAttributeServiceTest extends TeardownRollbackTest {
     private static final String SPEC_ID = "Spec ID";
     private static final String ENTITY_NAME = "Entity Name";
     private static final String ATTRIBUTE_NAME = "Attribute Name";

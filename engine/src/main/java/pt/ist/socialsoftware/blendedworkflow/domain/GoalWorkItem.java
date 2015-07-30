@@ -22,13 +22,13 @@ public class GoalWorkItem extends GoalWorkItem_Base {
     private final DateFormat dateFormat = new SimpleDateFormat(
             "yyyy/MM/dd HH:mm:ss");
 
-    public GoalWorkItem(BWInstance bwInstance, AchieveGoal goal,
+    public GoalWorkItem(BWInstance bwInstance, Goal goal,
             EntityInstance entityInstanceContext,
             Set<Condition> activateConditions,
             Set<MaintainGoal> maintainGoals) {
         log.info("New GoalWorkitem for goal " + goal.getName());
         setBwInstance(bwInstance);
-        setAchieveGoal(goal);
+        setGoal(goal);
 
         setRole(goal.getRole());
         setUser(goal.getUser());
@@ -46,7 +46,8 @@ public class GoalWorkItem extends GoalWorkItem_Base {
         updateInputWorkItemArguments();
 
         // Success Condition
-        setSucessCondition(goal.getSuccessCondition());
+        setSucessCondition(
+                goal.getSuccessConditionSet().stream().findFirst().get());
         getSucessCondition().assignAttributeInstances(this,
                 ConditionType.SUCESS_CONDITION);
         createOutputWorkItemArguments();
@@ -206,7 +207,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
         int countSubGoals = 0;
         int countSubGoalsWorkItems = 0;
 
-        for (AchieveGoal subGoal : getAchieveGoal().getSubGoalsSet()) {
+        for (Goal subGoal : getGoal().getSubGoalsSet()) {
             countSubGoalsWorkItems = 0;
 
             for (GoalWorkItem goalWorkItem : subGoal.getGoalWorkItemsSet()) {
@@ -221,12 +222,12 @@ public class GoalWorkItem extends GoalWorkItem_Base {
             }
         }
 
-        if (countSubGoals != getAchieveGoal().getSubGoalsSet().size()) {
-            log.debug(getAchieveGoal().getSubGoalsSet().size() + "SG="
+        if (countSubGoals != getGoal().getSubGoalsSet().size()) {
+            log.debug(getGoal().getSubGoalsSet().size() + "SG="
                     + TripleStateBool.FALSE);
             return TripleStateBool.FALSE;
         } else {
-            log.debug(getAchieveGoal().getSubGoalsSet().size() + "SG="
+            log.debug(getGoal().getSubGoalsSet().size() + "SG="
                     + TripleStateBool.FALSE);
             log.debug("SG=" + TripleStateBool.TRUE);
             return TripleStateBool.TRUE;
@@ -279,7 +280,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
      * Redo Methods
      ***********************************/
     public boolean checkAffectedGoals() {
-        AchieveGoal redoGoal = this.getAchieveGoal();
+        Goal redoGoal = this.getGoal();
         DataModelInstance dataModelInstance = getBwInstance()
                 .getDataModelInstance();
         GoalModelInstance goalModelInstance = getBwInstance()
@@ -287,11 +288,11 @@ public class GoalWorkItem extends GoalWorkItem_Base {
         boolean workitemExists = false;
         boolean affectedMandatory = false;
 
-        Set<AchieveGoal> affectedAchieveGoals = goalModelInstance
+        Set<Goal> affectedAchieveGoals = goalModelInstance
                 .getAchieveGoalAssociatedAchieveGoals(redoGoal);
 
         // Search All Affected Goals:
-        for (AchieveGoal affectedAG : affectedAchieveGoals) {
+        for (Goal affectedAG : affectedAchieveGoals) {
             for (EntityInstance entityInstance : affectedAG.getEntityContext()
                     .getEntityInstancesSet()) {
                 EntityInstance affectedAGEntityInstance = dataModelInstance
@@ -319,7 +320,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
                                         + affectedAGEntityInstance.getID());
                         // Create GoalWorkItem
                         Set<Condition> activateConditions = affectedAG
-                                .getActivateConditionsSet();
+                                .getActivationConditionSet();
                         Set<MaintainGoal> maintainGoals = getBwInstance()
                                 .getGoalModelInstance()
                                 .getAchieveGoalAssociatedMaintainGoals(

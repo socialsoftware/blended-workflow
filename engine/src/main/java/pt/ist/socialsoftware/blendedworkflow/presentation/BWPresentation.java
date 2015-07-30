@@ -37,7 +37,6 @@ import com.vaadin.ui.Window.Notification;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
@@ -47,6 +46,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
@@ -1310,7 +1310,7 @@ public class BWPresentation extends Application {
         }
 
         BWGoalModel goalModel = bwSpecification.getGoalModel();
-        for (AchieveGoal goal : goalModel.getAchieveGoalsSet()) {
+        for (Goal goal : goalModel.getGoalSet()) {
             Object goal1 = bwSpecJobsInfoTable.addItem(new Object[] {
                     goal.getName(), goal.getDescription(),
                     goal.getPreConstraintData(), goal.getConstraintData() },
@@ -1422,8 +1422,8 @@ public class BWPresentation extends Application {
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
         // Add Goals
-        HashMap<AchieveGoal, Object> addedGoals = new HashMap<AchieveGoal, Object>();
-        for (AchieveGoal goal : goalModelInstance.getAchieveGoalsSet()) {
+        HashMap<Goal, Object> addedGoals = new HashMap<Goal, Object>();
+        for (Goal goal : goalModelInstance.getGoalSet()) {
             Object goalItem = goalTable.addItem(
                     new Object[] { goal.getExternalId(), goal.getName() },
                     null);
@@ -1431,7 +1431,7 @@ public class BWPresentation extends Application {
         }
 
         // Goal Relations
-        for (AchieveGoal goal : goalModelInstance.getAchieveGoalsSet()) {
+        for (Goal goal : goalModelInstance.getGoalSet()) {
             if (goal.getParentGoal() != null) {
                 Object goalObject = addedGoals.get(goal);
                 Object parentGoalObject = addedGoals.get(goal.getParentGoal());
@@ -1515,7 +1515,7 @@ public class BWPresentation extends Application {
     public void updateGoalView(String OID) {
         goalInfoTable.removeAllItems();
         GoalWorkItem goalWorkItem = FenixFramework.getDomainObject(OID);
-        AchieveGoal goal = goalWorkItem.getAchieveGoal();
+        Goal goal = goalWorkItem.getGoal();
 
         String inputData = "None";
         String subGoals = "None";
@@ -1523,7 +1523,7 @@ public class BWPresentation extends Application {
         int subGoalIndex = 0;
         ArrayList<BWEntity> inputEntities = new ArrayList<BWEntity>();
 
-        for (AchieveGoal subGoal : goal.getSubGoalsSet()) {
+        for (Goal subGoal : goal.getSubGoalsSet()) {
 
             // TODO: GoalInputData
             // for (AttributeInstance attributeInstance :

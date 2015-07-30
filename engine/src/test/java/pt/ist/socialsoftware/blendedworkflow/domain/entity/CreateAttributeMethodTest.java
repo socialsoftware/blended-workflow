@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
@@ -14,7 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class CreateAttributeMethodTest extends BWDomainAndServiceTest {
+public class CreateAttributeMethodTest extends TeardownRollbackTest {
     private static String ATT_NAME_ONE = "Attribute name one";
     private static String ATT_NAME_TWO = "Attribute name two";
     private static String ATT_NAME_THREE = "Attribute name three";

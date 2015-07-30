@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 
 import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
@@ -78,7 +78,7 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
                 .getBWInstance(BWINSTANCE_ID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-        AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_1);
+        Goal goal = goalModelInstance.getGoal(GOAL_NAME_1);
         Transaction.commit();
 
         setUpData(dataModelInstance, true);
@@ -141,7 +141,7 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
                 .getBWInstance(BWINSTANCE_ID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-        AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_1);
+        Goal goal = goalModelInstance.getGoal(GOAL_NAME_1);
         Transaction.commit();
 
         setUpData(dataModelInstance, false);
@@ -206,7 +206,7 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
                 .getBWInstance(BWINSTANCE_ID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-        AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_1);
+        Goal goal = goalModelInstance.getGoal(GOAL_NAME_1);
         Transaction.commit();
 
         setUpData(dataModelInstance, true);
@@ -271,7 +271,7 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
                 .getBWInstance(BWINSTANCE_ID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-        AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_1);
+        Goal goal = goalModelInstance.getGoal(GOAL_NAME_1);
         Transaction.commit();
 
         setUpData(dataModelInstance, true);
@@ -336,7 +336,7 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
                 .getBWInstance(BWINSTANCE_ID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-        AchieveGoal goal = goalModelInstance.getGoal(GOAL_NAME_2);
+        Goal goal = goalModelInstance.getGoal(GOAL_NAME_2);
         Transaction.commit();
 
         setUpData(dataModelInstance, true);

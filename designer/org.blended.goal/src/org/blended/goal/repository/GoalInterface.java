@@ -1,5 +1,7 @@
 package org.blended.goal.repository;
 
+import java.util.stream.Collectors;
+
 import org.blended.common.common.AttributeAchieveCondition;
 import org.blended.common.common.AttributeInvariantCondition;
 import org.blended.common.common.EntityAchieveCondition;
@@ -15,6 +17,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWError;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
 
 public class GoalInterface {
     private static Logger log = LoggerFactory.getLogger(GoalInterface.class);
@@ -43,62 +46,86 @@ public class GoalInterface {
         log.debug("Specification: {}", eSpec.getName());
 
         try {
-            // load goal specification
+            adi.loadGoalSpecification(new SpecificationDTO(specId));
         } catch (BWException bwe) {
             notification
                     .addError(new BWError(bwe.getError(), bwe.getMessage()));
             log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
         }
 
-        for (Goal goal : eGoalModel.getGoals()) {
-            log.debug("Goal: {}", goal.getName());
+        for (Goal eGoal : eGoalModel.getGoals()) {
+            log.debug("Goal: {}", eGoal.getName());
 
-            log.debug("Subgoals");
-            for (Goal subGoal : goal.getChildrenGoals()) {
-                log.debug("Subgoal: {}", subGoal.getName());
+            try {
+                adi.createGoal(specId, eGoal.getName());
+            } catch (BWException bwe) {
+                notification.addError(
+                        new BWError(bwe.getError(), bwe.getMessage()));
+                log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
             }
 
             log.debug("Activation Conditions");
-            for (EObject eObj : goal.getActivationConditions()) {
+            for (EObject eObj : eGoal.getActivationConditions()) {
                 if (eObj instanceof EntityAchieveCondition) {
                     EntityAchieveCondition eac = (EntityAchieveCondition) eObj;
                     log.debug("ACT({})", eac.getName());
-
+                    adi.associateEntityAchieveConditionToGoalAtivationCondition(
+                            specId, eGoal.getName(), eac.getName());
                 } else if (eObj instanceof AttributeAchieveCondition) {
                     AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
                     log.debug("ACT({})", aac.getConditions());
-
+                    adi.associateAttributeAchieveConditionToGoalActivationCondition(
+                            specId, eGoal.getName(), aac.getConditions()
+                                    .stream().collect(Collectors.toSet()));
                 }
                 assert(false);
             }
 
             log.debug("Success Conditions");
-            for (EObject eObj : goal.getSuccessConditions()) {
+            for (EObject eObj : eGoal.getSuccessConditions()) {
                 if (eObj instanceof EntityAchieveCondition) {
                     EntityAchieveCondition eac = (EntityAchieveCondition) eObj;
                     log.debug("SUC({})", eac.getName());
-
+                    adi.associateEntityAchieveConditionToGoalSuccessCondition(
+                            specId, eGoal.getName(), eac.getName());
                 } else if (eObj instanceof AttributeAchieveCondition) {
                     AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
                     log.debug("SUC({})", aac.getConditions());
-
+                    adi.associateAttributeAchieveConditionToGoalSuccessCondition(
+                            specId, eGoal.getName(), aac.getConditions()
+                                    .stream().collect(Collectors.toSet()));
                 }
                 assert(false);
             }
 
             log.debug("Invariant Conditions");
-            for (EObject eObj : goal.getInvariantConditions()) {
+            for (EObject eObj : eGoal.getInvariantConditions()) {
                 if (eObj instanceof EntityInvariantCondition) {
                     EntityInvariantCondition eic = (EntityInvariantCondition) eObj;
-                    log.debug("INV({})", eic.getName());
+                    log.debug("MUL({},{})", eic.getName(),
+                            eic.getCardinality());
 
                 } else if (eObj instanceof AttributeInvariantCondition) {
                     AttributeInvariantCondition aic = (AttributeInvariantCondition) eObj;
-                    log.debug("INV({})", aic.getName());
+                    log.debug("RULE({})", aic.getName());
 
                 }
                 assert(false);
+            }
+        }
 
+        for (Goal eGoal : eGoalModel.getGoals()) {
+            log.debug("Subgoals");
+            for (Goal subGoal : eGoal.getChildrenGoals()) {
+                log.debug("Subgoal: {}", subGoal.getName());
+                try {
+                    adi.addSubGoal(specId, eGoal.getName(), subGoal.getName());
+                } catch (BWException bwe) {
+                    notification.addError(
+                            new BWError(bwe.getError(), bwe.getMessage()));
+                    log.debug("Error: {}, {}", bwe.getError(),
+                            bwe.getMessage());
+                }
             }
         }
 

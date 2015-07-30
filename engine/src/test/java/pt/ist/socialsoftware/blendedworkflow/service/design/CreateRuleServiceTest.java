@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeValueExpression;
@@ -28,7 +28,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO.Type;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 
-public class CreateRuleServiceTest extends BWDomainAndServiceTest {
+public class CreateRuleServiceTest extends TeardownRollbackTest {
     private static final String EXISTS_SPEC_ID = "ID0";
     private static final String NEW_SPEC_ID = "ID1";
     private static final String RULE_NAME = "Rule name";

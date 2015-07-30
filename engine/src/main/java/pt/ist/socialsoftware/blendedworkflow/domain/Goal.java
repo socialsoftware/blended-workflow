@@ -9,18 +9,28 @@ import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class AchieveGoal extends AchieveGoal_Base {
+public class Goal extends Goal_Base {
+
+    @Override
+    public void setName(String name) {
+        checkUniqueGoalName(name);
+        super.setName(name);
+    }
+
+    public Goal(BWGoalModel goalModel, String name) {
+        setGoalModel(goalModel);
+        setName(name);
+    }
 
     /**
      * Create the GoalTree root Goal.
      */
-    public AchieveGoal(BWGoalModel goalModel, String name, String description,
+    public Goal(BWGoalModel goalModel, String name, String description,
             Condition condition, BWEntity context) throws BWException {
-        checkUniqueGoalName(goalModel, name);
         setGoalModel(goalModel);
         setName(name);
         setDescription(description);
-        setSuccessCondition(condition);
+        addSuccessCondition(condition);
         setParentGoal(null);
         setEntityContext(context);
     }
@@ -28,27 +38,25 @@ public class AchieveGoal extends AchieveGoal_Base {
     /**
      * Create a Goal.
      */
-    public AchieveGoal(BWGoalModel goalModel, AchieveGoal parentGoal,
-            String name, String description, Condition condition,
-            BWEntity context) throws BWException {
-        checkUniqueGoalName(goalModel, name);
+    public Goal(BWGoalModel goalModel, Goal parentGoal, String name,
+            String description, Condition condition, BWEntity context)
+                    throws BWException {
         setGoalModel(goalModel);
         setName(name);
         setDescription(description);
-        setSuccessCondition(condition);
+        addSuccessCondition(condition);
         setParentGoal(parentGoal);
         setEntityContext(context);
     }
 
-    private void checkUniqueGoalName(BWGoalModel goalModel, String name)
-            throws BWException {
-        for (AchieveGoal goal : goalModel.getAchieveGoalsSet()) {
-            if (goal.getName().equals(name)) {
+    private void checkUniqueGoalName(String name) throws BWException {
+        for (Goal goal : this.getGoalModel().getGoalSet()) {
+            if (goal.getName() != null && goal.getName().equals(name)) {
                 throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
             }
         }
-        for (MaintainGoal goal : goalModel.getMaintainGoalsSet()) {
-            if (goal.getName().equals(name)) {
+        for (MaintainGoal goal : this.getGoalModel().getMaintainGoalsSet()) {
+            if (goal.getName() != null && goal.getName().equals(name)) {
                 throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
             }
         }
@@ -57,7 +65,8 @@ public class AchieveGoal extends AchieveGoal_Base {
     public void cloneGoal(GoalModelInstance goalModelInstance)
             throws BWException {
         Condition newSucessCondition = null;
-        Condition condition = getSuccessCondition();
+        Condition condition = getSuccessConditionSet().stream().findFirst()
+                .get();
         if (condition != null) {
             newSucessCondition = condition.cloneCondition(goalModelInstance);
         }
@@ -72,15 +81,15 @@ public class AchieveGoal extends AchieveGoal_Base {
             }
         }
 
-        AchieveGoal newGoal = new AchieveGoal(goalModelInstance, getName(),
-                getDescription(), newSucessCondition, newEntityContext);
+        Goal newGoal = new Goal(goalModelInstance, getName(), getDescription(),
+                newSucessCondition, newEntityContext);
         newGoal.setUser(getUser());
         newGoal.setRole(getRole());
 
-        for (Condition activateCondition : getActivateConditionsSet()) {
+        for (Condition activateCondition : getActivationConditionSet()) {
             Condition newActivateCondition = activateCondition
                     .cloneCondition(goalModelInstance);
-            newGoal.addActivateConditions(newActivateCondition);
+            newGoal.addActivationCondition(newActivateCondition);
         }
     }
 
@@ -90,8 +99,10 @@ public class AchieveGoal extends AchieveGoal_Base {
      * @return a string with the condition data entities.
      */
     public String getConstraintData() {
-        Set<BWEntity> entities = getSuccessCondition().getEntities();
-        Set<BWAttribute> attributes = getSuccessCondition().getAttributes();
+        Set<BWEntity> entities = getSuccessConditionSet().stream().findFirst()
+                .get().getEntities();
+        Set<BWAttribute> attributes = getSuccessConditionSet().stream()
+                .findFirst().get().getAttributes();
         String dataString = "";
 
         // Add Attribute entities
@@ -117,7 +128,7 @@ public class AchieveGoal extends AchieveGoal_Base {
 
     public String getPreConstraintData() {
         List<Condition> activateConditions = new ArrayList<Condition>(
-                getActivateConditionsSet());
+                getActivationConditionSet());
         Set<BWEntity> entities = activateConditions.get(0).getEntities(); // FIXME:
                                                                           // Only
                                                                           // First
@@ -182,11 +193,17 @@ public class AchieveGoal extends AchieveGoal_Base {
     public Set<BWEntity> getSubGoalsContext() {
         Set<BWEntity> result = new HashSet<BWEntity>();
         // result.add(getEntityContext());
-        for (AchieveGoal subGoal : getSubGoalsSet()) {
+        for (Goal subGoal : getSubGoalsSet()) {
             result.add(subGoal.getEntityContext());
         }
 
         return result;
+    }
+
+    public void delete() {
+        setGoalModel(null);
+
+        deleteDomainObject();
     }
 
 }

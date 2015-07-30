@@ -14,20 +14,20 @@ public class BWGoalModel extends BWGoalModel_Base {
             maintainGoal.cloneGoal(newGoalModelInstance);
         }
 
-        for (AchieveGoal goal : getAchieveGoalsSet()) {
+        for (Goal goal : getGoalSet()) {
             goal.cloneGoal(newGoalModelInstance);
         }
 
-        for (AchieveGoal goal : getAchieveGoalsSet()) {
-            for (AchieveGoal subgoal : goal.getSubGoalsSet()) {
+        for (Goal goal : getGoalSet()) {
+            for (Goal subgoal : goal.getSubGoalsSet()) {
                 newGoalModelInstance.getGoal(goal.getName()).addSubGoals(
                         newGoalModelInstance.getGoal(subgoal.getName()));
             }
         }
     }
 
-    public AchieveGoal getGoal(String name) throws BWException {
-        for (AchieveGoal goal : getAchieveGoalsSet()) {
+    public Goal getGoal(String name) throws BWException {
+        for (Goal goal : getGoalSet()) {
             if (goal.getName().equals(name)) {
                 return goal;
             }
@@ -46,6 +46,9 @@ public class BWGoalModel extends BWGoalModel_Base {
 
     public void delete() {
         setSpecification(null);
+
+        getGoalSet().stream().forEach(goal -> goal.delete());
+
         deleteDomainObject();
     }
 }

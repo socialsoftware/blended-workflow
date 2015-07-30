@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -14,7 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 
-public class CreateEntityServiceTest extends BWDomainAndServiceTest {
+public class CreateEntityServiceTest extends TeardownRollbackTest {
     private static final String SPEC_ID = "Spec ID";
     private static final String ENTITY_NAME = "Entity Name";
     private static final String NON_EXIST = "No Name";

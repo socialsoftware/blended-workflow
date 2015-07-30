@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.ConditionFactory;
-import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.domain.Role;
@@ -28,7 +28,7 @@ public class CreateNewGoalService implements Callable<String> {
 
     private static Logger log = LoggerFactory.getLogger("CreateGoalService");
     private final BWInstance bwInstance;
-    private final AchieveGoal parentGoal;
+    private final Goal parentGoal;
     private final String name;
     private final String description;
     private final String condition;
@@ -66,8 +66,8 @@ public class CreateNewGoalService implements Callable<String> {
             log.info("goalCondition:" + goalCondition);
 
             // Create Goal
-            AchieveGoal newGoal = new AchieveGoal(goalModelInstance, parentGoal,
-                    name, description, goalCondition, entityContext);
+            Goal newGoal = new Goal(goalModelInstance, parentGoal, name,
+                    description, goalCondition, entityContext);
             User defaultUser = BlendedWorkflow.getInstance()
                     .getOrganizationalModel().getUser("BlendedWorkflow");
             Role defaultRole = BlendedWorkflow.getInstance()
@@ -79,7 +79,7 @@ public class CreateNewGoalService implements Callable<String> {
             for (String activateConditionString : this.activateConditions) {
                 Condition activateCondition = ConditionFactory.createCondition(
                         dataModelInstance, activateConditionString);
-                newGoal.addActivateConditions(activateCondition);
+                newGoal.addActivationCondition(activateCondition);
             }
 
             BlendedWorkflow.getInstance().getWorkListManager()

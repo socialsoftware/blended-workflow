@@ -10,13 +10,13 @@ import org.slf4j.LoggerFactory;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
@@ -29,7 +29,7 @@ public class CreateGoalInstanceService implements Callable<String> {
             .getLogger("CreateGoalInstanceService");
 
     private final BWInstance bwInstance;
-    private final AchieveGoal goal;
+    private final Goal goal;
     private final Set<String> activateConditionsOID;
     private Set<Condition> activateConditions;
     private final Set<String> maintainGoalsOID;
@@ -97,7 +97,7 @@ public class CreateGoalInstanceService implements Callable<String> {
         // Parse Activate Conditions
         if (this.activateConditionsOID == null) {
             this.activateConditions = new HashSet<Condition>(
-                    this.goal.getActivateConditionsSet());
+                    this.goal.getActivationConditionSet());
         } else {
             this.activateConditions = new HashSet<Condition>();
             for (String activateConditionOID : this.activateConditionsOID) {
@@ -147,7 +147,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 
     }
 
-    private void createGoalWorkItems(BWInstance bwInstance, AchieveGoal goal,
+    private void createGoalWorkItems(BWInstance bwInstance, Goal goal,
             Set<Condition> activateConditions,
             Set<MaintainGoal> maintainGoals) {
         // NOTE: If parent goal has activated workItems change their state to
@@ -175,9 +175,9 @@ public class CreateGoalInstanceService implements Callable<String> {
         }
 
         // Recursive call for all subgoals
-        for (AchieveGoal subGoal : goal.getSubGoalsSet()) {
+        for (Goal subGoal : goal.getSubGoalsSet()) {
             Set<Condition> subGoalActivateConditions = new HashSet<Condition>(
-                    subGoal.getActivateConditionsSet());
+                    subGoal.getActivationConditionSet());
             Set<MaintainGoal> subGoalMaintainGoals = new HashSet<MaintainGoal>(
                     bwInstance.getGoalModelInstance()
                             .getAchieveGoalAssociatedMaintainGoals(subGoal));
@@ -191,7 +191,7 @@ public class CreateGoalInstanceService implements Callable<String> {
         for (WorkItem workItem : this.bwInstance.getWorkItemsSet()) {
             if (workItem instanceof GoalWorkItem) {
                 parentGoalWorkItem = (GoalWorkItem) workItem;
-                if (parentGoalWorkItem.getAchieveGoal().equals(this.goal)) {
+                if (parentGoalWorkItem.getGoal().equals(this.goal)) {
                     break;
                 }
             }

@@ -22,7 +22,7 @@ import com.vaadin.ui.Window.Notification;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
@@ -88,7 +88,7 @@ public class ActivateGoalForm extends VerticalLayout {
                 String entityInstanceOID = (String) entityInstanceContext
                         .getValue();
                 if (entityInstanceOID == "") {
-                    AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
+                    Goal goal = FenixFramework.getDomainObject(_goalOID);
                     _entities.put(goal.getEntityContext().getExternalId(),
                             null);
                 } else {
@@ -199,7 +199,7 @@ public class ActivateGoalForm extends VerticalLayout {
 
         BWInstance bwInstance = FenixFramework.getDomainObject(_bwInstanceOID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-        AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
+        Goal goal = FenixFramework.getDomainObject(_goalOID);
         BWEntity goalContext = goal.getEntityContext();
 
         for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
@@ -219,7 +219,7 @@ public class ActivateGoalForm extends VerticalLayout {
 
     private void getKeyEntities() {
 
-        AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
+        Goal goal = FenixFramework.getDomainObject(_goalOID);
         BWEntity goalContext = goal.getEntityContext();
         for (BWRelation relation : goalContext.getRelationsSet()) {
             BWEntity one = relation.getEntityOne();
@@ -239,7 +239,7 @@ public class ActivateGoalForm extends VerticalLayout {
     }
 
     private void getSubGoalsEntities() {
-        AchieveGoal goal = FenixFramework.getDomainObject(_goalOID);
+        Goal goal = FenixFramework.getDomainObject(_goalOID);
         for (BWEntity entity : goal.getSubGoalsContext()) {
             addNativeSelect(subGoalContextVL, entity);
             _entities.put(entity.getExternalId(), null);

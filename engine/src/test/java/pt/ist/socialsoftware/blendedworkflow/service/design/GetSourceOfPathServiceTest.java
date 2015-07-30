@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
@@ -14,7 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 
-public class GetSourceOfPathServiceTest extends BWDomainAndServiceTest {
+public class GetSourceOfPathServiceTest extends TeardownRollbackTest {
     private static final String ROLE_TWO = "role2";
     private static final String ROLE_ONE = "role1";
     private static final String SPEC_ID = "ID0";

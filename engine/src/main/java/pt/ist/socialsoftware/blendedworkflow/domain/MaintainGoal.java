@@ -22,7 +22,7 @@ public class MaintainGoal extends MaintainGoal_Base {
 
     private void checkUniqueGoalName(BWGoalModel goalModel, String name)
             throws BWException {
-        for (AchieveGoal goal : goalModel.getAchieveGoalsSet()) {
+        for (Goal goal : goalModel.getGoalSet()) {
             if (goal.getName().equals(name)) {
                 throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
             }

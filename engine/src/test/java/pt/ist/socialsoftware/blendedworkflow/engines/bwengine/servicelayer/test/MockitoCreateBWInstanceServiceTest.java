@@ -47,7 +47,7 @@ public class MockitoCreateBWInstanceServiceTest extends
             assertEquals(6, dataModelInstance.getEntitiesSet().size());
             assertEquals(17, dataModelInstance.getAttributesSet().size());
             assertEquals(5, dataModelInstance.getRelationsSet().size());
-            assertEquals(11, goalModelInstance.getAchieveGoalsSet().size());
+            assertEquals(11, goalModelInstance.getGoalSet().size());
             assertEquals(1, goalModelInstance.getMaintainGoalsSet().size());
             assertEquals(6, taskModelInstance.getTasksSet().size());
             assertEquals(0, bwInstance.getWorkItemsSet().size());

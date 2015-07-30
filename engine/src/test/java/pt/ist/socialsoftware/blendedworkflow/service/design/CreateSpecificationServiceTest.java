@@ -5,12 +5,12 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
 
-public class CreateSpecificationServiceTest extends BWDomainAndServiceTest {
+public class CreateSpecificationServiceTest extends TeardownRollbackTest {
     private static final String SPEC_ID = "Spec ID";
     private static final String SPEC_NAME = "Spec Name";
 

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Window.Notification;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
@@ -142,7 +142,7 @@ public class WorkListManager {
                 Notification.TYPE_ERROR_MESSAGE);
     }
 
-    public void notifyNewGoalCreated(AchieveGoal goal) {
+    public void notifyNewGoalCreated(Goal goal) {
         getBwPresentation().getMainWindow().showNotification(
                 "New Goal " + goal.getName() + " created successfully",
                 Notification.TYPE_TRAY_NOTIFICATION);

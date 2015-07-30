@@ -10,12 +10,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.integration.DesignInterfaceTest;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class GetSpecificationMethodTest extends BWDomainAndServiceTest {
+public class GetSpecificationMethodTest extends TeardownRollbackTest {
     private static final Logger logger = LoggerFactory
             .getLogger(DesignInterfaceTest.class);
 

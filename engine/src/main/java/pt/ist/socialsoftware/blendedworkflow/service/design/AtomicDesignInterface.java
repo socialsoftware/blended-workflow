@@ -25,6 +25,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWNumberLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
@@ -41,6 +42,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.FalseCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.OrCondition;
@@ -118,6 +120,20 @@ public class AtomicDesignInterface {
         conditionalModel.delete();
 
         spec.setConditionModel(new BWConditionModel());
+    }
+
+    @Atomic
+    public void loadGoalSpecification(SpecificationDTO specDTO) {
+        BlendedWorkflow bw = getBlendedWorkflow();
+
+        BWSpecification spec = bw.getSpecById(specDTO.specId).orElseGet(
+                () -> bw.createSpecification(specDTO.specId, specDTO.name));
+
+        BWGoalModel goalModel = spec.getGoalModel();
+
+        goalModel.delete();
+
+        spec.setGoalModel(new BWGoalModel());
     }
 
     @Atomic
@@ -296,29 +312,24 @@ public class AtomicDesignInterface {
 
         Set<BWAttribute> attributes = getAttributes(spec, aacDTO.paths);
 
-        DEFAttributeCondition defAttributeCondition = null;
         if (attributes.size() == 0)
             throw new BWException(BWErrorType.INVALID_PATH,
                     aacDTO.paths.toString());
-        else if (attributes.size() == 1) {
-            BWAttribute att = attributes.stream().findFirst().get();
-            if (att.getIsMandatory() != aacDTO.mandatory)
-                throw new BWException(
-                        BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY,
-                        aacDTO.paths.toString());
-            defAttributeCondition = DEFAttributeCondition
-                    .getDEFAttributeCondition(att);
-        } else {
-            BWEntity entity = attributes.stream().findFirst().get().getEntity();
-            BWAttributeGroup attributeGroup = getAttributeGroup(entity,
-                    attributes);
-            if (attributeGroup.getIsMandatory() != aacDTO.mandatory)
-                throw new BWException(
-                        BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY,
-                        aacDTO.paths.toString());
-            defAttributeCondition = DEFAttributeCondition
-                    .getDEFAttributeCondition(attributeGroup);
-        }
+
+        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
+                attributes);
+
+        if (defAttributeCondition.getAttribute() != null
+                && defAttributeCondition.getAttribute()
+                        .getIsMandatory() != aacDTO.mandatory)
+            throw new BWException(BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY,
+                    aacDTO.paths.toString());
+
+        if (defAttributeCondition.getAttributeGroup() != null
+                && defAttributeCondition.getAttributeGroup()
+                        .getIsMandatory() != aacDTO.mandatory)
+            throw new BWException(BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY,
+                    aacDTO.paths.toString());
 
         spec.getConditionModel()
                 .addAttributeAchieveCondition(defAttributeCondition);
@@ -443,12 +454,82 @@ public class AtomicDesignInterface {
     }
 
     @Atomic
+    public void createGoal(String specId, String name) {
+        BWSpecification spec = getSpecification(specId);
+
+        new Goal(spec.getGoalModel(), name);
+    }
+
+    @Atomic
+    public void associateEntityAchieveConditionToGoalSuccessCondition(
+            String specId, String goalName, String entityName) {
+        BWSpecification spec = getSpecification(specId);
+        Goal goal = getGoal(spec, goalName);
+        BWEntity entity = getEntity(spec.getDataModel(), entityName);
+
+        goal.addSuccessCondition(entity.getDefEntityCondition());
+    }
+
+    @Atomic
+    public void associateEntityAchieveConditionToGoalAtivationCondition(
+            String specId, String goalName, String entityName) {
+        BWSpecification spec = getSpecification(specId);
+        Goal goal = getGoal(spec, goalName);
+        BWEntity entity = getEntity(spec.getDataModel(), entityName);
+
+        goal.addActivationCondition(entity.getDefEntityCondition());
+    }
+
+    @Atomic
+    public void associateAttributeAchieveConditionToGoalActivationCondition(
+            String specId, String goalName, Set<String> paths) {
+        BWSpecification spec = getSpecification(specId);
+        Goal goal = getGoal(spec, goalName);
+        Set<BWAttribute> attributes = getAttributes(spec, paths);
+
+        if (attributes.size() == 0)
+            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
+
+        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
+                attributes);
+
+        goal.addActivationCondition(defAttributeCondition);
+    }
+
+    @Atomic
+    public void associateAttributeAchieveConditionToGoalSuccessCondition(
+            String specId, String goalName, Set<String> paths) {
+        BWSpecification spec = getSpecification(specId);
+        Goal goal = getGoal(spec, goalName);
+        Set<BWAttribute> attributes = getAttributes(spec, paths);
+
+        if (attributes.size() == 0)
+            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
+
+        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
+                attributes);
+
+        goal.addSuccessCondition(defAttributeCondition);
+    }
+
+    @Atomic
+    public void addGoalSub(String specId, String goalName, String subGoalName) {
+        BWSpecification spec = getSpecification(specId);
+        Goal goal = getGoal(spec, goalName);
+        Goal subGoal = getGoal(spec, subGoalName);
+        goal.addSubGoals(subGoal);
+    }
+
+    @Atomic
     public void printSpecificationModels(String specId) {
         BWSpecification spec = getSpecification(specId);
 
         System.out.println("SPECIFICATION: " + spec.getName());
 
         System.out.println("Specification Data Model: " + spec.getName());
+        System.out.println(
+                "-------------------------------------------------------"
+                        + spec.getName());
 
         for (BWEntity entity : spec.getDataModel().getEntitiesSet()) {
             System.out.println("Entity " + entity.getName() + " Exists:"
@@ -456,6 +537,9 @@ public class AtomicDesignInterface {
         }
 
         System.out.println("Specification Condition Model: " + spec.getName());
+        System.out.println(
+                "-------------------------------------------------------"
+                        + spec.getName());
 
         spec.getConditionModel().getEntityAchieveConditionSet().stream()
                 .map(def -> def.getEntity().getName() + "-"
@@ -485,6 +569,27 @@ public class AtomicDesignInterface {
                 .map(rule -> rule.getName() + "-"
                         + rule.getCondition().getSubPath())
                 .forEach(System.out::println);
+
+        System.out.println("Specification Goal Model: " + spec.getName());
+        System.out.println(
+                "-------------------------------------------------------"
+                        + spec.getName());
+
+        for (Goal goal : spec.getGoalModel().getGoalSet()) {
+            System.out.println("Goal name:" + goal.getName());
+
+            for (Goal sub : goal.getSubGoalsSet()) {
+                System.out.println("Sub goal name:" + sub.getName());
+            }
+            for (Condition act : goal.getActivationConditionSet()) {
+                System.out.println("ACT(" + act.getSubPath() + ")");
+            }
+            for (Condition suc : goal.getSuccessConditionSet()) {
+                System.out.println("ACT(" + suc.getSubPath() + ")");
+            }
+
+        }
+
     }
 
     final static String STRING = "String";
@@ -620,12 +725,37 @@ public class AtomicDesignInterface {
 
     }
 
-    public BWProduct getTargetOfPath(BWSpecification spec, String path) {
+    private BWProduct getTargetOfPath(BWSpecification spec, String path) {
         List<String> pathLeft = Arrays.stream(path.split("\\."))
                 .collect(Collectors.toList());
         BWEntity entity = getEntity(spec, pathLeft.get(0));
         pathLeft.remove(0);
         return entity.getNext(pathLeft, path);
+    }
+
+    private Goal getGoal(BWSpecification spec, String goalName) {
+        return spec.getGoalModel().getGoalSet().stream()
+                .filter(g -> g.getName().equals(goalName)).findFirst()
+                .orElseThrow(() -> new BWException(
+                        BWErrorType.INVALID_GOAL_NAME, goalName));
+    }
+
+    private DEFAttributeCondition getDefAttributeCondition(
+            Set<BWAttribute> attributes) {
+        DEFAttributeCondition defAttributeCondition = null;
+        if (attributes.size() == 1) {
+            BWAttribute att = attributes.stream().findFirst().get();
+            defAttributeCondition = DEFAttributeCondition
+                    .getDEFAttributeCondition(att);
+        } else {
+            BWEntity entity = attributes.stream().findFirst().get().getEntity();
+            BWAttributeGroup attributeGroup = getAttributeGroup(entity,
+                    attributes);
+            defAttributeCondition = DEFAttributeCondition
+                    .getDEFAttributeCondition(attributeGroup);
+        }
+
+        return defAttributeCondition;
     }
 
     private Condition buildCondition(BWDataModel dataModel,

@@ -12,7 +12,7 @@ import com.vaadin.ui.VerticalLayout;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
@@ -125,7 +125,7 @@ public class RedoGoalForm extends VerticalLayout {
 
     private void getGoals(BWInstance bwInstance) {
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-        for (AchieveGoal goal : goalModelInstance.getAchieveGoalsSet()) {
+        for (Goal goal : goalModelInstance.getGoalSet()) {
             if (goal.getGoalWorkItemsSet().size() > 0) {
                 this.parentGoal.addItem(goal.getExternalId());
                 this.parentGoal.setItemCaption(goal.getExternalId(),
@@ -136,7 +136,7 @@ public class RedoGoalForm extends VerticalLayout {
 
     private void updateWorkItemsInfo(String bwInstanceOID, String goalOID) {
         this.workItems.removeAllItems();
-        AchieveGoal goal = FenixFramework.getDomainObject(goalOID);
+        Goal goal = FenixFramework.getDomainObject(goalOID);
 
         for (GoalWorkItem goalWorkItem : goal.getGoalWorkItemsSet()) {
             if (goalWorkItem.getState().equals(GoalState.ACHIEVED)

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
@@ -15,7 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
 
 public class LoadDataModelSpecificationServiceTest
-        extends BWDomainAndServiceTest {
+        extends TeardownRollbackTest {
     private static final String EXISTS_SPEC_ID = "ID0";
     private static final String NEW_SPEC_ID = "ID1";
     private static final String NEW_SPEC_NAME = "Doctor Appointment";

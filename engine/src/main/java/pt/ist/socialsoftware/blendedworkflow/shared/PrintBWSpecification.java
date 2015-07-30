@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.shared;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
@@ -13,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
@@ -140,12 +140,12 @@ public class PrintBWSpecification {
         System.out.println("GoalModel Template");
         System.out.println(
                 "----------------------------------------------------------");
-        for (AchieveGoal goal : goalModel.getAchieveGoalsSet()) {
+        for (Goal goal : goalModel.getGoalSet()) {
             System.out.println("Goal \"" + goal.getName() + "\" has \""
                     + goal.getGoalWorkItemsSet().size()
                     + "\" WorkItems and has " + goal.getSubGoalsSet().size()
                     + " subgoals.");
-            for (Condition ac : goal.getActivateConditionsSet()) {
+            for (Condition ac : goal.getActivationConditionSet()) {
                 System.out.println("ActivateCondition: " + ac);
             }
             System.out
@@ -163,12 +163,12 @@ public class PrintBWSpecification {
         System.out.println("GoalModel Type");
         System.out.println(
                 "----------------------------------------------------------");
-        for (AchieveGoal goal : goalModelInstance.getAchieveGoalsSet()) {
+        for (Goal goal : goalModelInstance.getGoalSet()) {
             System.out.println("Goal \"" + goal.getName() + "\" has \""
                     + goal.getGoalWorkItemsSet().size()
                     + "\" WorkItems and has " + goal.getSubGoalsSet().size()
                     + " subgoals.");
-            for (Condition ac : goal.getActivateConditionsSet()) {
+            for (Condition ac : goal.getActivationConditionSet()) {
                 System.out.println("ActivateCondition: " + ac);
             }
             System.out

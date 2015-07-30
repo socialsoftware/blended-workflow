@@ -20,11 +20,11 @@ import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
-import pt.ist.socialsoftware.blendedworkflow.domain.AchieveGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
@@ -142,8 +142,7 @@ public class CreateNewGoalServiceTest {
         BWInstance bwInstance = blendedWorkflow.getBWInstance(BWINSTANCE_ID);
         String bwInstanceOID = bwInstance.getExternalId();
         GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
-        AchieveGoal parentGoal = goalModelInstance
-                .getGoal(NEWGOAL_PARENTGOAL_NAME);
+        Goal parentGoal = goalModelInstance.getGoal(NEWGOAL_PARENTGOAL_NAME);
         String parentGoalOID = parentGoal.getExternalId();
         BWEntity entity = bwInstance.getDataModelInstance()
                 .getEntity(ENTITY_NAME).get();
@@ -161,13 +160,13 @@ public class CreateNewGoalServiceTest {
         try {
             Transaction.begin();
 
-            assertEquals(14, goalModelInstance.getAchieveGoalsSet().size());
-            AchieveGoal newGoal = goalModelInstance.getGoal(NEWGOAL_NAME);
+            assertEquals(14, goalModelInstance.getGoalSet().size());
+            Goal newGoal = goalModelInstance.getGoal(NEWGOAL_NAME);
             assertEquals(NEWGOAL_NAME, newGoal.getName());
             assertEquals(NEWGOAL_DESCRIPTION, newGoal.getDescription());
             assertEquals(NEWGOAL_SUCESS_CONDITION,
-                    newGoal.getSuccessCondition().toString());
-            assertEquals(1, newGoal.getActivateConditionsSet().size());
+                    newGoal.getSuccessConditionSet().toString());
+            assertEquals(1, newGoal.getActivationConditionSet().size());
             assertEquals(NEWGOAL_PARENTGOAL_NAME,
                     newGoal.getParentGoal().getName());
             assertEquals(ENTITY_NAME, newGoal.getEntityContext().getName());

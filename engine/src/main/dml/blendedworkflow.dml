@@ -152,7 +152,7 @@ class BWGoalModel;
 
 class GoalModelInstance extends BWGoalModel;
 
-class AchieveGoal {
+class Goal {
 	String name;
 	String description;
 }
@@ -360,9 +360,9 @@ relation WorkItemArgumentRefersAttributteInstances {
 }
 
 // Goal Model
-relation BWGoalModelHasAchieveGoals {
+relation BWGoalModelHasGoals {
 	BWGoalModel playsRole goalModel { multiplicity 0..1; }
-	AchieveGoal playsRole achieveGoals { multiplicity 0..*; }
+	Goal playsRole goal { multiplicity 0..*; }
 }
 
 relation BWGoalModelHasMaintainGoals {
@@ -370,24 +370,24 @@ relation BWGoalModelHasMaintainGoals {
 	MaintainGoal playsRole maintainGoals { multiplicity 0..*; }
 }
 
-// AchieveGoal
-relation AchieveGoalHasGoals {
-	AchieveGoal playsRole parentGoal { multiplicity 0..1; }
-	AchieveGoal playsRole subGoals { multiplicity 0..*; }
+// Goal
+relation GoalHasGoals {
+	Goal playsRole parentGoal { multiplicity 0..1; }
+	Goal playsRole subGoals { multiplicity 0..*; }
 }
 
-relation AchieveGoalHasSucessCondition {
-	AchieveGoal playsRole achieveGoal { multiplicity 0..1; }
-	Condition playsRole successCondition { multiplicity 0..1; }
+relation GoalHasSucessConditions {
+	Goal playsRole goal { multiplicity 0..1; }
+	Condition playsRole successCondition { multiplicity 0..*; }
 }
 
-relation AchieveGoalHasActivateConditions {
-	AchieveGoal playsRole activateConditionsAchieveGoal {multiplicity 0..1;}
-	Condition playsRole activateConditions {multiplicity 0..*;}
+relation GoalHasActivationConditions {
+	Goal playsRole activateConditionsAchieveGoal {multiplicity 0..1;}
+	Condition playsRole activationCondition {multiplicity 0..*;}
 }
 
-relation AchieveGoalHasGoalWorkItem {
-	AchieveGoal playsRole achieveGoal { multiplicity 0..1; }
+relation GoalHasGoalWorkItem {
+	Goal playsRole goal { multiplicity 0..1; }
 	GoalWorkItem playsRole goalWorkItems { multiplicity 0..*; }
 }
 
@@ -680,13 +680,13 @@ relation TaskHasUsers {
 	User playsRole user {multiplicity 0..1;}
 }
 
-relation AchieveGoalHasRoles {
-	AchieveGoal playsRole achieveGoals {multiplicity 0..*;}
+relation GoalHasRoles {
+	Goal playsRole goal {multiplicity 0..*;}
 	Role playsRole role {multiplicity 0..1;}
 }
 
-relation AchieveGoalHasUsers {
-	AchieveGoal playsRole achieveGoals {multiplicity 0..*;}
+relation GoalHasUsers {
+	Goal playsRole goal {multiplicity 0..*;}
 	User playsRole user {multiplicity 0..1;}
 }
 
@@ -701,8 +701,8 @@ relation WorkItemHasUsers {
 }
 
 //NEWBWGoalModel Relations
-relation AchieveGoalHasBWEntity {
-	AchieveGoal playsRole achieveGoalContext {multiplicity 0..*;}
+relation GoalHasBWEntity {
+	Goal playsRole goalContext {multiplicity 0..*;}
 	BWEntity playsRole entityContext {multiplicity 0..1;}
 }
 

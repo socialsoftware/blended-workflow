@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
@@ -13,7 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 
-public class CreateRelationServiceTest extends BWDomainAndServiceTest {
+public class CreateRelationServiceTest extends TeardownRollbackTest {
     private static final String SPEC_ID = "Spec ID";
     private static final String RELATION_NAME = "Relation name";
     private static final String ENTITY_ONE_NAME = "Entity Name One";

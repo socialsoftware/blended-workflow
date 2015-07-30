@@ -11,7 +11,7 @@ import pt.ist.fenixframework.core.WriteOnReadError;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public abstract class BWDomainAndServiceTest {
+public abstract class TeardownRollbackTest {
 
     @Before
     public void setUp() throws Exception {

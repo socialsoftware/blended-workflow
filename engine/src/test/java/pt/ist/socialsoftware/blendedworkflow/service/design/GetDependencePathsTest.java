@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import pt.ist.socialsoftware.blendedworkflow.BWDomainAndServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
@@ -17,7 +17,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class GetDependencePathsTest extends BWDomainAndServiceTest {
+public class GetDependencePathsTest extends TeardownRollbackTest {
     private static final String ROLE_TWO = "role2";
     private static final String ROLE_ONE = "role1";
     private static final String SPEC_ID = "ID0";
