@@ -32,4 +32,6 @@ Export-Package: org.blended.common,
  org.blended.common.utils,
  org.blended.common.validation
 Bundle-ClassPath: lib/engine.jar,
- .
+ .,
+ lib/spring-web-4.2.0.RELEASE.jar,
+ lib/spring-core-4.2.0.RELEASE.jar

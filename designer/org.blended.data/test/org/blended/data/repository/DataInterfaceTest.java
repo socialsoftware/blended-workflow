@@ -12,16 +12,11 @@ import org.blended.common.common.IntConstant;
 import org.blended.common.common.Specification;
 import org.blended.data.data.DataFactory;
 import org.blended.data.data.DataModel;
-import org.blended.data.repository.DataInterface;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pt.ist.fenixframework.Atomic;
-import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
 
 public class DataInterfaceTest {
     private DataInterface dataInterface;
@@ -35,17 +30,15 @@ public class DataInterfaceTest {
     private static String EXISTS_ATTRIBUTE_NAME = "Exists Attribute Name";
 
     @Before
-    @Atomic
     public void setUp() {
         logger.debug("LocalSystemTest::setUp");
         dataInterface = DataInterface.getInstance();
     }
 
     @After
-    @Atomic
     public void tearDown() {
         logger.debug("LocalSystemTest::tearDown");
-        dataInterface.deleteSpecification(new SpecificationDTO(EXISTS_SPEC_ID));
+        dataInterface.deleteSpecification(EXISTS_SPEC_ID);
     }
 
     @Test
@@ -95,8 +88,8 @@ public class DataInterfaceTest {
 
         dataInterface = DataInterface.getInstance();
 
-        BWNotification notification = dataInterface
-                .loadDataModel(EXISTS_SPEC_ID, eDataModel);
+        String notification = dataInterface.loadDataModel(EXISTS_SPEC_ID,
+                eDataModel);
 
     }
 
