@@ -16,7 +16,9 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.objectweb.asm;bundle-version="[5.0.1,6.0.0)";resolution:=optional,
  org.eclipse.jface;bundle-version="3.10.2",
  org.eclipse.ui.console;bundle-version="3.5.300"
-Import-Package: org.apache.log4j
+Import-Package: org.apache.commons.logging;version="1.1.1",
+ org.apache.log4j,
+ org.slf4j;version="1.7.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.blended.common,
  org.blended.common.common,
@@ -26,6 +28,7 @@ Export-Package: org.blended.common,
  org.blended.common.generator,
  org.blended.common.parser.antlr,
  org.blended.common.parser.antlr.internal,
+ org.blended.common.repository,
  org.blended.common.scoping,
  org.blended.common.serializer,
  org.blended.common.services,
@@ -33,5 +36,4 @@ Export-Package: org.blended.common,
  org.blended.common.validation
 Bundle-ClassPath: .,
  lib/spring-web-4.2.0.RELEASE.jar,
- lib/spring-core-4.2.0.RELEASE.jar,
- lib/engine.jar
+ lib/spring-core-4.2.0.RELEASE.jar

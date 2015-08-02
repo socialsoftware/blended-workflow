@@ -3,11 +3,11 @@
  */
 package org.blended.activity;
 
-import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
-
 /**
- * Use this class to register components to be used at runtime / without the Equinox extension registry.
+ * Use this class to register components to be used at runtime / without the
+ * Equinox extension registry.
  */
-public class ActivityRuntimeModule extends org.blended.activity.AbstractActivityRuntimeModule {
-	 DesignInterface instance;
+public class ActivityRuntimeModule
+        extends org.blended.activity.AbstractActivityRuntimeModule {
+
 }

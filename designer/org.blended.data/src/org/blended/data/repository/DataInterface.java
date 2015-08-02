@@ -1,10 +1,9 @@
 package org.blended.data.repository;
 
+import org.blended.common.repository.CommonInterface;
 import org.blended.data.data.DataModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 public class DataInterface {
     final static String SERVER_ADDRESS = "http://localhost:8080/";
@@ -27,11 +26,11 @@ public class DataInterface {
         // adi.deleteSpecification(specDTO);
     }
 
-    // private AtomicDesignInterface adi = null;
-    //
-    // private DataInterface() {
-    // adi = AtomicDesignInterface.getInstance();
-    // }
+    private CommonInterface ci = null;
+
+    private DataInterface() {
+        ci = CommonInterface.getInstance();
+    }
 
     // public BWNotification createSpecification(SpecificationDTO specDTO) {
     // BWNotification notification = new BWNotification();
@@ -89,28 +88,17 @@ public class DataInterface {
 
         // BWNotification notification = new BWNotification();
 
-        RestTemplate restTemplate = new RestTemplate();
-        String result = null;
-        try {
-            result = restTemplate.getForObject(SERVER_ADDRESS, String.class);
-        } catch (RestClientException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        System.out.println(result);
-
-        return result;
-
         // try {
-        // adi.loadDataSpecification(new SpecificationDTO(specId,
-        // eDataModel.getSpecification().getName()));
+        ci.loadDataSpecification(specId,
+                eDataModel.getSpecification().getName());
+
+        return "";
         // } catch (BWException bwe) {
         // notification
         // .addError(new BWError(bwe.getError(), bwe.getMessage()));
         // log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
         // }
-        //
+
         // for (Entity eEnt : eDataModel.getEntities()) {
         // try {
         // adi.createEntity(

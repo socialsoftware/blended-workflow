@@ -1,15 +1,14 @@
 package org.blended.common.repository;
 
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 public class CommonInterface {
     private static Logger log = LoggerFactory.getLogger(CommonInterface.class);
+
+    final static String SERVER_ADDRESS = "http://localhost:8080/";
 
     private static CommonInterface instance = null;
 
@@ -20,26 +19,50 @@ public class CommonInterface {
         return instance;
     }
 
-    private AtomicDesignInterface adi = null;
+    // private AtomicDesignInterface adi = null;
+    //
+    // private CommonInterface() {
+    // adi = AtomicDesignInterface.getInstance();
+    // }
+    //
+    // public ProductDTO getSourceOfPath(String specId, String path) {
+    // log.debug("getSourceOfPath Path:{}", path);
+    // return adi.getSourceOfPath(specId, path);
+    // }
+    //
+    // public ProductDTO getTargetOfPath(String specId, String path) {
+    // log.debug("getTargetOfPath Path:{}", path);
+    // return adi.getTargetOfPath(specId, path);
+    // }
+    //
+    // public Set<String> getDependencePaths(String specId,
+    // Set<String> sucConditions) {
+    // log.debug("getDependencePaths Path:{}", sucConditions);
+    // return adi.getDependencePaths(specId, sucConditions);
+    // }
 
-    private CommonInterface() {
-        adi = AtomicDesignInterface.getInstance();
-    }
+    public String loadDataSpecification(String specId, String name) {
+        log.debug("loadDataSpecification: {}", specId);
 
-    public ProductDTO getSourceOfPath(String specId, String path) {
-        log.debug("getSourceOfPath Path:{}", path);
-        return adi.getSourceOfPath(specId, path);
-    }
+        // BWNotification notification = new BWNotification();
 
-    public ProductDTO getTargetOfPath(String specId, String path) {
-        log.debug("getTargetOfPath Path:{}", path);
-        return adi.getTargetOfPath(specId, path);
-    }
+        final String uri = SERVER_ADDRESS + "/";
+        //
+        // Map<String, String> params = new HashMap<String, String>();
+        // params.put("specId", "1");
+        //
+        RestTemplate restTemplate = new RestTemplate();
+        // restTemplate.put(uri, null, params);
 
-    public Set<String> getDependencePaths(String specId,
-            Set<String> sucConditions) {
-        log.debug("getDependencePaths Path:{}", sucConditions);
-        return adi.getDependencePaths(specId, sucConditions);
+        String result = null;
+        try {
+            result = restTemplate.getForObject(uri, String.class);
+        } catch (RestClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 }

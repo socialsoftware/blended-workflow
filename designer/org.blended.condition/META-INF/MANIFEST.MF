@@ -36,8 +36,6 @@ Export-Package: org.blended.condition,
  org.blended.condition.serializer,
  org.blended.condition.services,
  org.blended.condition.terminal,
- org.blended.condition.validation
-Bundle-ClassPath: .,
- lib/jcommander-1.48.jar,
- lib/yawl-lib-2.3.jar,
- lib/engine.jar
+ org.blended.condition.validation,
+ org.slf4j
+Bundle-ClassPath: .,lib/jcommander-1.48.jar

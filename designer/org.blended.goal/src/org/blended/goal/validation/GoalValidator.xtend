@@ -32,20 +32,20 @@ class GoalValidator extends AbstractGoalValidator {
 //				println("Goal")
 //	}
 
-	@Check(CheckType.NORMAL)
-	def checkModel(GoalModel model) {
-				info('everything OK 0', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
-		var instance = GoalInterface.getInstance
-				info('everything OK 2', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
-		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
-				info('everything OK 3', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
-		var notification = instance.loadGoalModel(specId, model)
-				info('everything OK 4', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
-		if (notification.hasErrors)
-			for (error : notification.error)
-				error(error.type.toString + "-" + error.value, GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
-		else
-			info('everything OK 2', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
-	}
+//	@Check(CheckType.NORMAL)
+//	def checkModel(GoalModel model) {
+//				info('everything OK 0', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
+//		var instance = GoalInterface.getInstance
+//				info('everything OK 2', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
+//		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+//				info('everything OK 3', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
+//		var notification = instance.loadGoalModel(specId, model)
+//				info('everything OK 4', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
+//		if (notification.hasErrors)
+//			for (error : notification.error)
+//				error(error.type.toString + "-" + error.value, GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
+//		else
+//			info('everything OK 2', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
+//	}
 
 }

@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -67,6 +69,7 @@ public class BWSpecification extends BWSpecification_Base {
         return getInstanceCounter();
     }
 
+    @Atomic(mode = TxMode.WRITE)
     public void delete() {
         getDataModel().delete();
         getConditionModel().delete();

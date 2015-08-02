@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
@@ -92,6 +93,26 @@ public class AtomicDesignInterface {
     @Atomic
     public void createSpecification(SpecificationDTO specDTO) {
         getBlendedWorkflow().createSpecification(specDTO.specId, specDTO.name);
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public void loadDataYYYSpecification(String specId, String name) {
+        BlendedWorkflow bw = getBlendedWorkflow();
+
+        BWSpecification spec = bw.getSpecById(specId)
+                .orElseGet(() -> bw.createSpecification(specId, name));
+
+        String id = spec.getSpecId();
+
+        spec.delete();
+
+        spec = bw.createSpecification(id + "-", name);
+
+        BWDataModel dataModel = spec.getDataModel();
+
+        dataModel.delete();
+
+        spec.setDataModel(new BWDataModel());
     }
 
     @Atomic
