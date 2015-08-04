@@ -6,7 +6,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
 public class DesignInterface {
     private static DesignInterface instance = null;
@@ -24,7 +24,7 @@ public class DesignInterface {
         adi = AtomicDesignInterface.getInstance();
     }
 
-    public BWNotification createSpecification(SpecificationDTO specDTO) {
+    public BWNotification createSpecification(SpecDTO specDTO) {
         BWNotification notification = new BWNotification();
         try {
             adi.createSpecification(specDTO);

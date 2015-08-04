@@ -59,7 +59,7 @@ public class GetSourceOfPathServiceTest extends TeardownRollbackTest {
         ProductDTO productDTO = designInterface.getSourceOfPath(SPEC_ID,
                 ENTITY_NAME_TWO + "." + ROLE_ONE + "." + ATTRIBUTE_NAME_ONE);
 
-        assertEquals(SPEC_ID, productDTO.specDTO.specId);
+        assertEquals(SPEC_ID, productDTO.specDTO.getSpecId());
         assertEquals(ProductType.ENTITY, productDTO.type);
         assertEquals(ENTITY_NAME_TWO, productDTO.entityDTO.name);
         assertEquals(null, productDTO.attributeGroupDTO);

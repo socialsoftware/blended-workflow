@@ -17,6 +17,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.org.mortbay.jetty.jetty.maven.plugin>8.1.8.v20121106</version.org.mortbay.jetty.jetty.maven.plugin>
 		<version.org.springframework.boot>1.2.5.RELEASE</version.org.springframework.boot>
+		<com.fasterxml.jackson.core>2.6.0</com.fasterxml.jackson.core>
 
 		<version.org.codehaus.jackson.jackson-mapper-asl>1.9.13</version.org.codehaus.jackson.jackson-mapper-asl>
 		<version.javax.servlet.jstl>1.2</version.javax.servlet.jstl>
@@ -97,106 +98,6 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<artifactSet>
-						<includes>
-							<include>pt.ist:fenix-framework-core-api:*</include>
-							<include>pt.ist:fenix-framework-core-dml:*</include>
-							<include>javax.transaction:*</include>
-							<include>pt.ist.esw:*</include>
-							<include>pt.ist:fenix-framework-core-consistency-predicates:*</include>
-							<include>jvstm:*</include>
-							<include>pt.ist:fenix-framework-core-adt-bplustree:*</include>
-							<include>pt.ist:fenix-framework-backend-jvstm-ojb-runtime:*</include>
-							<include>pt.ist:db-ojb:*</include>
-							<include>mysql:*</include>
-							<include>org.slf4j:*</include>
-							<include>ch.qos.logback:*</include>
-							<include>antlr:*</include>
-							<include>joda-time:*</include>
-							<include>commons-lang:*</include>
-							<include>commons-pool:*</include>
-							<include>com.google.code.gson:*</include>
-						</includes>
-					</artifactSet>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.10</version>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>pt.ist.socialsoftware</groupId>
-									<artifactId>engine</artifactId>
-									<version>${code.version}</version>
-									<type>jar</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>../designer/org.blended.common/lib</outputDirectory>
-									<destFileName>engine.jar</destFileName>
-								</artifactItem>
-								<artifactItem>
-									<groupId>pt.ist.socialsoftware</groupId>
-									<artifactId>engine</artifactId>
-									<version>${code.version}</version>
-									<type>jar</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>../designer/org.blended.data/lib</outputDirectory>
-									<destFileName>engine.jar</destFileName>
-								</artifactItem>
-								<artifactItem>
-									<groupId>pt.ist.socialsoftware</groupId>
-									<artifactId>engine</artifactId>
-									<version>${code.version}</version>
-									<type>jar</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>../designer/org.blended.condition/lib</outputDirectory>
-									<destFileName>engine.jar</destFileName>
-								</artifactItem>
-								<artifactItem>
-									<groupId>pt.ist.socialsoftware</groupId>
-									<artifactId>engine</artifactId>
-									<version>${code.version}</version>
-									<type>jar</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>../designer/org.blended.goal/lib</outputDirectory>
-									<destFileName>engine.jar</destFileName>
-								</artifactItem>
-								<artifactItem>
-									<groupId>pt.ist.socialsoftware</groupId>
-									<artifactId>engine</artifactId>
-									<version>${code.version}</version>
-									<type>jar</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>../designer/org.blended.activity/lib</outputDirectory>
-									<destFileName>engine.jar</destFileName>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			 -->
 		</plugins>
 	</build>
 
@@ -210,6 +111,11 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-thymeleaf</artifactId>
 			<version>${version.org.springframework.boot}</version>
+    </dependency>
+       <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${com.fasterxml.jackson.core}</version>
     </dependency>
 		
 		<dependency>

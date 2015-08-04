@@ -1,6 +1,9 @@
 package org.blended.data.repository;
 
 import org.blended.common.repository.CommonInterface;
+import org.blended.common.repository.resttemplate.BWNotification;
+import org.blended.common.repository.resttemplate.RepositoryException;
+import org.blended.common.repository.resttemplate.vo.SpecVO;
 import org.blended.data.data.DataModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,21 +86,21 @@ public class DataInterface {
     //
     // }
 
-    public String loadDataModel(String specId, DataModel eDataModel) {
+    public BWNotification loadDataModel(String specId, DataModel eDataModel) {
         log.debug("loadDataModel: {}", specId);
 
-        // BWNotification notification = new BWNotification();
+        BWNotification notification = new BWNotification();
 
-        // try {
-        ci.loadDataSpecification(specId,
-                eDataModel.getSpecification().getName());
+        SpecVO specVO = null;
+        try {
+            specVO = ci.getSpecBySpecId(specId);
+        } catch (RepositoryException re) {
+            log.debug("Error: {}", re.getMessage());
+            specVO = ci.createSpec(new SpecVO(specId,
+                    eDataModel.getSpecification().getName()));
+        }
 
-        return "";
-        // } catch (BWException bwe) {
-        // notification
-        // .addError(new BWError(bwe.getError(), bwe.getMessage()));
-        // log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
-        // }
+        String specExtId = specVO.getExternalId();
 
         // for (Entity eEnt : eDataModel.getEntities()) {
         // try {
@@ -205,8 +208,8 @@ public class DataInterface {
         // log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
         // }
         // }
-        //
-        // return notification;
+
+        return notification;
     }
 
     // private ExpressionDTO buildExpressionDTO(String specId,

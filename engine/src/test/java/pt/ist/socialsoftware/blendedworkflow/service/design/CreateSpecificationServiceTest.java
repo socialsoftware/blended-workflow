@@ -8,7 +8,7 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
 public class CreateSpecificationServiceTest extends TeardownRollbackTest {
     private static final String SPEC_ID = "Spec ID";
@@ -21,7 +21,7 @@ public class CreateSpecificationServiceTest extends TeardownRollbackTest {
     @Test
     public void success() throws BWException {
         DesignInterface.getInstance()
-                .createSpecification(new SpecificationDTO(SPEC_ID, SPEC_NAME));
+                .createSpecification(new SpecDTO(SPEC_ID, SPEC_NAME));
 
         BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID)
                 .orElse(null);

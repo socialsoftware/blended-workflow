@@ -4,14 +4,14 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWError;
 
 public class ProductDTO {
-    public SpecificationDTO specDTO;
+    public SpecDTO specDTO;
     public ProductType type;
     public EntityDTO entityDTO;
     public AttributeGroupDTO attributeGroupDTO;
     public AttributeDTO attributeDTO;
     public BWError error;
 
-    public ProductDTO(SpecificationDTO specDTO, ProductType type,
+    public ProductDTO(SpecDTO specDTO, ProductType type,
             EntityDTO entityDTO) {
         this.specDTO = specDTO;
         this.type = type;
@@ -21,7 +21,7 @@ public class ProductDTO {
         this.error = null;
     }
 
-    public ProductDTO(SpecificationDTO specDTO, ProductType type,
+    public ProductDTO(SpecDTO specDTO, ProductType type,
             AttributeGroupDTO attributeGroupDTO) {
         this.specDTO = specDTO;
         this.type = type;
@@ -31,7 +31,7 @@ public class ProductDTO {
         this.error = null;
     }
 
-    public ProductDTO(SpecificationDTO specDTO, ProductType type,
+    public ProductDTO(SpecDTO specDTO, ProductType type,
             AttributeDTO attributeDTO) {
         this.specDTO = specDTO;
         this.type = type;

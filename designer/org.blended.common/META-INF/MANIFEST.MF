@@ -29,6 +29,8 @@ Export-Package: org.blended.common,
  org.blended.common.parser.antlr,
  org.blended.common.parser.antlr.internal,
  org.blended.common.repository,
+ org.blended.common.repository.resttemplate,
+ org.blended.common.repository.resttemplate.vo,
  org.blended.common.scoping,
  org.blended.common.serializer,
  org.blended.common.services,
@@ -36,4 +38,8 @@ Export-Package: org.blended.common,
  org.blended.common.validation
 Bundle-ClassPath: .,
  lib/spring-web-4.2.0.RELEASE.jar,
- lib/spring-core-4.2.0.RELEASE.jar
+ lib/spring-core-4.2.0.RELEASE.jar,
+ lib/jackson-core-2.6.0.jar,
+ lib/jackson-databind-2.6.0.jar,
+ lib/jackson-annotations-2.6.0.jar,
+ lib/spring-beans-4.2.0.RELEASE.jar

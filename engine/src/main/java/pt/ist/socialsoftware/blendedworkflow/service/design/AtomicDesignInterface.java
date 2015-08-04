@@ -62,7 +62,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.MulInvariantDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
 public class AtomicDesignInterface {
     private static Logger log = LoggerFactory
@@ -86,27 +86,27 @@ public class AtomicDesignInterface {
 
     // to be invoked by tests only
     @Atomic
-    public void deleteSpecification(SpecificationDTO specDTO) {
-        getBlendedWorkflow().getSpecById(specDTO.specId).get().delete();
+    public void deleteSpecification(SpecDTO specDTO) {
+        getBlendedWorkflow().getSpecById(specDTO.getSpecId()).get().delete();
     }
 
-    @Atomic
-    public void createSpecification(SpecificationDTO specDTO) {
-        getBlendedWorkflow().createSpecification(specDTO.specId, specDTO.name);
+    public BWSpecification getSpecBySpecId(String specId) {
+        return getSpecification(specId);
     }
 
     @Atomic(mode = TxMode.WRITE)
-    public void loadDataYYYSpecification(String specId, String name) {
+    public BWSpecification createSpecification(SpecDTO specDTO) {
+        return getBlendedWorkflow().createSpecification(specDTO.getSpecId(),
+                specDTO.getName());
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public void loadDataSpecification(SpecDTO specDTO) {
         BlendedWorkflow bw = getBlendedWorkflow();
 
-        BWSpecification spec = bw.getSpecById(specId)
-                .orElseGet(() -> bw.createSpecification(specId, name));
-
-        String id = spec.getSpecId();
-
-        spec.delete();
-
-        spec = bw.createSpecification(id + "-", name);
+        BWSpecification spec = bw.getSpecById(specDTO.getSpecId())
+                .orElseGet(() -> bw.createSpecification(specDTO.getSpecId(),
+                        specDTO.getName()));
 
         BWDataModel dataModel = spec.getDataModel();
 
@@ -116,25 +116,12 @@ public class AtomicDesignInterface {
     }
 
     @Atomic
-    public void loadDataSpecification(SpecificationDTO specDTO) {
+    public void loadConditionSpecification(SpecDTO specDTO) {
         BlendedWorkflow bw = getBlendedWorkflow();
 
-        BWSpecification spec = bw.getSpecById(specDTO.specId).orElseGet(
-                () -> bw.createSpecification(specDTO.specId, specDTO.name));
-
-        BWDataModel dataModel = spec.getDataModel();
-
-        dataModel.delete();
-
-        spec.setDataModel(new BWDataModel());
-    }
-
-    @Atomic
-    public void loadConditionSpecification(SpecificationDTO specDTO) {
-        BlendedWorkflow bw = getBlendedWorkflow();
-
-        BWSpecification spec = bw.getSpecById(specDTO.specId).orElseGet(
-                () -> bw.createSpecification(specDTO.specId, specDTO.name));
+        BWSpecification spec = bw.getSpecById(specDTO.getSpecId())
+                .orElseGet(() -> bw.createSpecification(specDTO.getSpecId(),
+                        specDTO.getName()));
 
         BWConditionModel conditionalModel = spec.getConditionModel();
 
@@ -144,11 +131,12 @@ public class AtomicDesignInterface {
     }
 
     @Atomic
-    public void loadGoalSpecification(SpecificationDTO specDTO) {
+    public void loadGoalSpecification(SpecDTO specDTO) {
         BlendedWorkflow bw = getBlendedWorkflow();
 
-        BWSpecification spec = bw.getSpecById(specDTO.specId).orElseGet(
-                () -> bw.createSpecification(specDTO.specId, specDTO.name));
+        BWSpecification spec = bw.getSpecById(specDTO.getSpecId())
+                .orElseGet(() -> bw.createSpecification(specDTO.getSpecId(),
+                        specDTO.getName()));
 
         BWGoalModel goalModel = spec.getGoalModel();
 
@@ -159,7 +147,7 @@ public class AtomicDesignInterface {
 
     @Atomic
     public void createEntity(EntityDTO entDTO) {
-        BWSpecification spec = getSpecification(entDTO.specDTO.specId);
+        BWSpecification spec = getSpecification(entDTO.specDTO.getSpecId());
         BWDataModel dataModel = spec.getDataModel();
 
         dataModel.createEntity(entDTO.name, entDTO.exists);
@@ -168,7 +156,7 @@ public class AtomicDesignInterface {
     @Atomic
     public void createAttribute(AttributeDTO attDTO) {
         BWSpecification spec = getSpecification(
-                attDTO.entityDTO.specDTO.specId);
+                attDTO.entityDTO.specDTO.getSpecId());
 
         BWEntity ent = getEntity(spec.getDataModel(), attDTO.entityDTO.name);
 
@@ -183,7 +171,7 @@ public class AtomicDesignInterface {
     public void createRelation(RelationDTO relDTO) {
 
         BWSpecification spec = getSpecification(
-                relDTO.entOneDTO.specDTO.specId);
+                relDTO.entOneDTO.specDTO.getSpecId());
 
         BWEntity entityOne = getEntity(spec.getDataModel(),
                 relDTO.entOneDTO.name);
@@ -199,7 +187,7 @@ public class AtomicDesignInterface {
     @Atomic
     public void createAttributeGroup(AttributeGroupDTO attGroupDTO) {
         BWSpecification spec = getSpecification(
-                attGroupDTO.entDTO.specDTO.specId);
+                attGroupDTO.entDTO.specDTO.getSpecId());
 
         BWEntity entity = getEntity(spec.getDataModel(),
                 attGroupDTO.entDTO.name);
@@ -209,7 +197,7 @@ public class AtomicDesignInterface {
 
     @Atomic
     public void createDependence(DependenceDTO productDTO) {
-        BWSpecification spec = getSpecification(productDTO.specDTO.specId);
+        BWSpecification spec = getSpecification(productDTO.specDTO.getSpecId());
 
         BWProduct product = null;
         BWEntity entity = null;
@@ -233,10 +221,10 @@ public class AtomicDesignInterface {
     }
 
     @Atomic
-    public List<String> getDependencies(SpecificationDTO specDTO) {
+    public List<String> getDependencies(SpecDTO specDTO) {
         List<String> deps = new ArrayList<String>();
 
-        BWSpecification spec = getSpecification(specDTO.specId);
+        BWSpecification spec = getSpecification(specDTO.getSpecId());
 
         for (BWDependence dependence : spec.getDataModel().getDependenceSet()) {
             deps.add(dependence.getExternalId());
@@ -252,8 +240,8 @@ public class AtomicDesignInterface {
     }
 
     @Atomic
-    public void checkDependencies(SpecificationDTO specDTO) {
-        BWSpecification spec = getSpecification(specDTO.specId);
+    public void checkDependencies(SpecDTO specDTO) {
+        BWSpecification spec = getSpecification(specDTO.getSpecId());
 
         for (BWDependence dependence : spec.getDataModel().getDependenceSet()) {
             dependence.check();
@@ -262,7 +250,7 @@ public class AtomicDesignInterface {
 
     @Atomic
     public void createRule(RuleDTO ruleDTO) {
-        BWSpecification spec = getSpecification(ruleDTO.specDTO.specId);
+        BWSpecification spec = getSpecification(ruleDTO.specDTO.getSpecId());
 
         spec.getDataModel().createRule(ruleDTO.name,
                 buildCondition(spec.getDataModel(), ruleDTO.expDTO));
@@ -289,7 +277,7 @@ public class AtomicDesignInterface {
     public void createEntityDependenceCondition(DependenceDTO edcDTO) {
         log.debug("createEntityDependenceCondition Entity:{}, Value:{}",
                 edcDTO.name, edcDTO.value);
-        BWSpecification spec = getSpecification(edcDTO.specDTO.specId);
+        BWSpecification spec = getSpecification(edcDTO.specDTO.getSpecId());
 
         BWEntity entity = getEntity(spec.getDataModel(), edcDTO.name);
 
@@ -302,7 +290,7 @@ public class AtomicDesignInterface {
     public void createEntityInvariantCondition(MulInvariantDTO miDTO) {
         log.debug("createEntityInvariantCondition Entity:{}, Cardinality:{}",
                 miDTO.rolePath, miDTO.cardinality);
-        BWSpecification spec = getSpecification(miDTO.specDTO.specId);
+        BWSpecification spec = getSpecification(miDTO.specDTO.getSpecId());
 
         MULCondition mulCondition = getMULCondition(spec, miDTO.rolePath);
 
@@ -316,7 +304,7 @@ public class AtomicDesignInterface {
             AttributeAchieveConditionDTO aacDTO) {
         log.debug("createAttributeAchieveCondition Paths:{}, Mandatory:{}",
                 aacDTO.paths, aacDTO.mandatory);
-        BWSpecification spec = getSpecification(aacDTO.specDTO.specId);
+        BWSpecification spec = getSpecification(aacDTO.specDTO.getSpecId());
 
         Set<BWAttribute> attributes = getAttributes(spec, aacDTO.paths);
 
@@ -374,7 +362,7 @@ public class AtomicDesignInterface {
 
     @Atomic
     public void createAttributeInvariantCondition(RuleDTO ruleDTO) {
-        BWSpecification spec = getSpecification(ruleDTO.specDTO.specId);
+        BWSpecification spec = getSpecification(ruleDTO.specDTO.getSpecId());
 
         BWRule rule = getRule(spec, ruleDTO.name);
 
@@ -392,7 +380,7 @@ public class AtomicDesignInterface {
             return new ProductDTO(new BWError(bwe.getError(), path));
         }
 
-        return new ProductDTO(new SpecificationDTO(specId), ProductType.ENTITY,
+        return new ProductDTO(new SpecDTO(specId), ProductType.ENTITY,
                 new EntityDTO(specId, entity.getName(), entity.getExists()));
     }
 
@@ -410,12 +398,12 @@ public class AtomicDesignInterface {
 
         if (product instanceof BWEntity) {
             BWEntity entity = (BWEntity) product;
-            return new ProductDTO(new SpecificationDTO(specId),
-                    ProductType.ENTITY, new EntityDTO(specId, entity.getName(),
+            return new ProductDTO(new SpecDTO(specId), ProductType.ENTITY,
+                    new EntityDTO(specId, entity.getName(),
                             entity.getExists()));
         } else if (product instanceof BWAttributeGroup) {
             BWAttributeGroup attributeGroup = (BWAttributeGroup) product;
-            return new ProductDTO(new SpecificationDTO(specId),
+            return new ProductDTO(new SpecDTO(specId),
                     ProductType.ATTRIBUTE_GROUP,
                     new AttributeGroupDTO(specId,
                             attributeGroup.getEntity().getName(),
@@ -423,8 +411,7 @@ public class AtomicDesignInterface {
                             attributeGroup.getIsMandatory()));
         } else {
             BWAttribute attribute = (BWAttribute) product;
-            return new ProductDTO(new SpecificationDTO(specId),
-                    ProductType.ATTRIBUTE,
+            return new ProductDTO(new SpecDTO(specId), ProductType.ATTRIBUTE,
                     new AttributeDTO(
                             new EntityDTO(specId,
                                     attribute.getEntity().getName()),

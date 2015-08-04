@@ -15,7 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO.Type;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
 public class DesignInterfaceTest {
     private AtomicDesignInterface designInterface;
@@ -44,9 +44,9 @@ public class DesignInterfaceTest {
     @Test
     public void walktrough() {
         designInterface.createSpecification(
-                new SpecificationDTO(EXISTS_SPEC_ID, "First Specification"));
+                new SpecDTO(EXISTS_SPEC_ID, "First Specification"));
         designInterface.createSpecification(
-                new SpecificationDTO("id2", "Second Specification"));
+                new SpecDTO("id2", "Second Specification"));
 
         designInterface.createEntity(
                 new EntityDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, false));

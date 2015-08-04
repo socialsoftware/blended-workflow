@@ -12,7 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecificationDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
 public class LoadDataModelSpecificationServiceTest
         extends TeardownRollbackTest {
@@ -51,7 +51,7 @@ public class LoadDataModelSpecificationServiceTest
     @Test
     public void newSpec() {
         designInterface.loadDataSpecification(
-                new SpecificationDTO(NEW_SPEC_ID, NEW_SPEC_NAME));
+                new SpecDTO(NEW_SPEC_ID, NEW_SPEC_NAME));
 
         BWSpecification spec = getBlendedWorkflow().getSpecById(NEW_SPEC_ID)
                 .get();
@@ -63,7 +63,7 @@ public class LoadDataModelSpecificationServiceTest
     @Test
     public void successSpecExist() {
         designInterface.loadDataSpecification(
-                new SpecificationDTO(EXISTS_SPEC_ID, EXISTS_SPEC_NAME));
+                new SpecDTO(EXISTS_SPEC_ID, EXISTS_SPEC_NAME));
 
         BWSpecification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
                 .get();

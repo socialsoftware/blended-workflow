@@ -22,7 +22,7 @@ public class ExpressionDTO {
         return bools.contains(type);
     }
 
-    public SpecificationDTO specDTO;
+    public SpecDTO specDTO;
     public Type type;
     // when unary value
     public String value;
@@ -36,7 +36,7 @@ public class ExpressionDTO {
             ExpressionDTO rightExpDTO) {
         log.debug("type:{}", type.name());
 
-        this.specDTO = new SpecificationDTO(specId);
+        this.specDTO = new SpecDTO(specId);
         this.type = type;
         this.value = null;
         this.expDTO = null;
@@ -47,7 +47,7 @@ public class ExpressionDTO {
     public ExpressionDTO(String specId, Type type, ExpressionDTO expDTO) {
         log.debug("type:{}", type.name());
 
-        this.specDTO = new SpecificationDTO(specId);
+        this.specDTO = new SpecDTO(specId);
         this.type = type;
         this.value = null;
         this.expDTO = expDTO;
@@ -58,7 +58,7 @@ public class ExpressionDTO {
     public ExpressionDTO(String specId, Type type, String value) {
         log.debug("type:{}, value:{}", type.name(), value);
 
-        this.specDTO = new SpecificationDTO(specId);
+        this.specDTO = new SpecDTO(specId);
         this.type = type;
         this.value = value;
         this.expDTO = null;

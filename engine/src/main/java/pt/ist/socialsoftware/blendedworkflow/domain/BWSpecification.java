@@ -8,6 +8,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
 public class BWSpecification extends BWSpecification_Base {
 
@@ -78,6 +79,16 @@ public class BWSpecification extends BWSpecification_Base {
 
         setBlendedWorkflow(null);
         deleteDomainObject();
+    }
+
+    public SpecDTO getDTO() {
+        SpecDTO specDTO = new SpecDTO();
+        specDTO.setExternalId(this.getExternalId());
+        specDTO.setSpecId(this.getSpecId());
+        specDTO.setName(this.getName());
+        specDTO.setDataSpecId(this.getDataModel().getExternalId());
+
+        return specDTO;
     }
 
 }

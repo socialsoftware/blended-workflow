@@ -60,7 +60,7 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
         ProductDTO productDTO = designInterface.getTargetOfPath(SPEC_ID,
                 ENTITY_NAME_TWO + "." + ROLE_ONE + "." + ATTRIBUTE_NAME_ONE);
 
-        assertEquals(SPEC_ID, productDTO.specDTO.specId);
+        assertEquals(SPEC_ID, productDTO.specDTO.getSpecId());
         assertEquals(ProductType.ATTRIBUTE, productDTO.type);
         assertEquals(ENTITY_NAME_ONE, productDTO.attributeDTO.entityDTO.name);
         assertEquals(ATTRIBUTE_NAME_ONE, productDTO.attributeDTO.name);
@@ -73,7 +73,7 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
         ProductDTO productDTO = designInterface.getTargetOfPath(SPEC_ID,
                 ENTITY_NAME_TWO + "." + ROLE_ONE);
 
-        assertEquals(SPEC_ID, productDTO.specDTO.specId);
+        assertEquals(SPEC_ID, productDTO.specDTO.getSpecId());
         assertEquals(ProductType.ENTITY, productDTO.type);
         assertEquals(ENTITY_NAME_ONE, productDTO.entityDTO.name);
         assertEquals(null, productDTO.attributeGroupDTO);
