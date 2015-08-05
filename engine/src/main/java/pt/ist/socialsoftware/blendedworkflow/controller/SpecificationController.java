@@ -15,8 +15,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
-@RequestMapping(value = "/specs")
 @Controller
+@RequestMapping(value = "/specs")
 public class SpecificationController {
     private static Logger log = LoggerFactory
             .getLogger(SpecificationController.class);
@@ -24,6 +24,7 @@ public class SpecificationController {
     @RequestMapping(value = "/{specId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<SpecDTO> getSpecBySpecId(
             @PathVariable("specId") String specId) {
+        log.debug("getSpecBySpecId sepcId:{}", specId);
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
@@ -32,7 +33,7 @@ public class SpecificationController {
         return new ResponseEntity<SpecDTO>(spec.getDTO(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<SpecDTO> createSpec(@RequestBody SpecDTO specDTO) {
         log.debug("createSpec specId:{}, name:{}", specDTO.getSpecId(),
                 specDTO.getName());
@@ -41,18 +42,6 @@ public class SpecificationController {
         BWSpecification spec = adi.createSpecification(specDTO);
 
         return new ResponseEntity<SpecDTO>(spec.getDTO(), HttpStatus.CREATED);
-    }
-
-    @RequestMapping(value = "/dataspecification/{specId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-    public ResponseEntity<String> updateEmployee(
-            @PathVariable("specId") String specId) {
-
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
-
-        // adi.loadDataSpecification(specId, "novo");
-
-        System.out.println(specId);
-        return new ResponseEntity<String>("novo", HttpStatus.OK);
     }
 
 }

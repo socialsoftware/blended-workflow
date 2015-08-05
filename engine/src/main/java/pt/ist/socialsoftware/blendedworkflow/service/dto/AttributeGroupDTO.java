@@ -1,20 +1,13 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 public class AttributeGroupDTO {
-    public EntityDTO entDTO;
+    public String entityExtId;
     public String name;
     public boolean isMandatory;
 
-    public AttributeGroupDTO(EntityDTO entDTO, String name,
+    public AttributeGroupDTO(String entityExtId, String name,
             boolean isMandatory) {
-        this.entDTO = entDTO;
-        this.name = name;
-        this.isMandatory = isMandatory;
-    }
-
-    public AttributeGroupDTO(String specId, String entName, String name,
-            boolean isMandatory) {
-        this.entDTO = new EntityDTO(specId, entName);
+        this.entityExtId = entityExtId;
         this.name = name;
         this.isMandatory = isMandatory;
     }

@@ -13,6 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 
 public class BWEntity extends BWEntity_Base {
     private static Logger log = LoggerFactory.getLogger(BWEntity.class);
@@ -374,6 +375,16 @@ public class BWEntity extends BWEntity_Base {
         }
 
         throw new BWException(BWErrorType.INVALID_PATH, path + ":" + pathLeft);
+    }
+
+    public EntityDTO getDTO() {
+        EntityDTO entityDTO = new EntityDTO();
+        entityDTO.setExtId(getExternalId());
+        entityDTO.setDataModelExtId(getDataModel().getExternalId());
+        entityDTO.setName(getName());
+        entityDTO.setExists(getExists());
+
+        return entityDTO;
     }
 
 }

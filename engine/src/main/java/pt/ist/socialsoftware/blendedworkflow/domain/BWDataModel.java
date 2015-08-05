@@ -48,11 +48,14 @@ public class BWDataModel extends BWDataModel_Base {
         return null;
     }
 
-    public void delete() {
-        setSpecification(null);
+    public void clean() {
         getEntitiesSet().stream().forEach(ent -> ent.delete());
         getRuleSet().stream().forEach(rule -> rule.delete());
+    }
 
+    public void delete() {
+        setSpecification(null);
+        clean();
         deleteDomainObject();
     }
 

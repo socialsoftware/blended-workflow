@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -11,8 +10,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
@@ -85,7 +82,6 @@ public class AtomicDesignInterface {
     }
 
     // to be invoked by tests only
-    @Atomic
     public void deleteSpecification(SpecDTO specDTO) {
         getBlendedWorkflow().getSpecById(specDTO.getSpecId()).get().delete();
     }
@@ -94,13 +90,42 @@ public class AtomicDesignInterface {
         return getSpecification(specId);
     }
 
-    @Atomic(mode = TxMode.WRITE)
     public BWSpecification createSpecification(SpecDTO specDTO) {
         return getBlendedWorkflow().createSpecification(specDTO.getSpecId(),
                 specDTO.getName());
     }
 
-    @Atomic(mode = TxMode.WRITE)
+    public void cleanDataModel(String extId) {
+        BWDataModel dataModel = getDataModelByExtId(extId);
+
+        BWSpecification spec = dataModel.getSpecification();
+
+        dataModel.clean();
+    }
+
+    public BWEntity createEntity(EntityDTO entDTO) {
+        log.debug("createEntity dataModelExtId:{}, name:{}, exists:{}",
+                entDTO.getDataModelExtId(), entDTO.getName(),
+                entDTO.getExists());
+
+        BWDataModel dataModel = getDataModelByExtId(entDTO.getDataModelExtId());
+
+        return dataModel.createEntity(entDTO.getName(), entDTO.getExists());
+    }
+
+    public void createAttribute(AttributeDTO attDTO) {
+        log.debug("createAttribute entityExtId:{}", attDTO.entityExtId);
+        BWEntity ent = getEntityByExtId(attDTO.entityExtId);
+
+        BWAttributeGroup attGroup = null;
+        if (attDTO.groupDTO != null) {
+            attGroup = ent.getAttributeGroup(attDTO.groupDTO.name).orElse(null);
+        }
+
+        ent.createAttribute(attGroup, attDTO.name,
+                parseAttributeType(attDTO.type), attDTO.isMandatory);
+    }
+
     public void loadDataSpecification(SpecDTO specDTO) {
         BlendedWorkflow bw = getBlendedWorkflow();
 
@@ -115,7 +140,6 @@ public class AtomicDesignInterface {
         spec.setDataModel(new BWDataModel());
     }
 
-    @Atomic
     public void loadConditionSpecification(SpecDTO specDTO) {
         BlendedWorkflow bw = getBlendedWorkflow();
 
@@ -130,7 +154,6 @@ public class AtomicDesignInterface {
         spec.setConditionModel(new BWConditionModel());
     }
 
-    @Atomic
     public void loadGoalSpecification(SpecDTO specDTO) {
         BlendedWorkflow bw = getBlendedWorkflow();
 
@@ -145,110 +168,62 @@ public class AtomicDesignInterface {
         spec.setGoalModel(new BWGoalModel());
     }
 
-    @Atomic
-    public void createEntity(EntityDTO entDTO) {
-        BWSpecification spec = getSpecification(entDTO.specDTO.getSpecId());
-        BWDataModel dataModel = spec.getDataModel();
-
-        dataModel.createEntity(entDTO.name, entDTO.exists);
-    }
-
-    @Atomic
-    public void createAttribute(AttributeDTO attDTO) {
-        BWSpecification spec = getSpecification(
-                attDTO.entityDTO.specDTO.getSpecId());
-
-        BWEntity ent = getEntity(spec.getDataModel(), attDTO.entityDTO.name);
-
-        BWAttributeGroup attGroup = ent.getAttributeGroup(attDTO.groupDTO.name)
-                .orElse(null);
-
-        ent.createAttribute(attGroup, attDTO.name,
-                parseAttributeType(attDTO.type), attDTO.isMandatory);
-    }
-
-    @Atomic
     public void createRelation(RelationDTO relDTO) {
 
-        BWSpecification spec = getSpecification(
-                relDTO.entOneDTO.specDTO.getSpecId());
+        BWEntity entityOne = getEntityByExtId(relDTO.entOneExtId);
 
-        BWEntity entityOne = getEntity(spec.getDataModel(),
-                relDTO.entOneDTO.name);
+        BWEntity entityTwo = getEntityByExtId(relDTO.entTwoExtId);
 
-        BWEntity entityTwo = getEntity(spec.getDataModel(),
-                relDTO.entTwoDTO.name);
+        log.debug("createRelation entityOneExtId:{}, entityTwoExtId:{}",
+                entityOne.getExternalId(), entityTwo.getExternalId());
 
         entityOne.createRelation(relDTO.name, relDTO.rolenameOne,
                 parseCardinality(relDTO.cardinalityOne), entityTwo,
                 relDTO.rolenameTwo, parseCardinality(relDTO.cardinalityTwo));
     }
 
-    @Atomic
     public void createAttributeGroup(AttributeGroupDTO attGroupDTO) {
-        BWSpecification spec = getSpecification(
-                attGroupDTO.entDTO.specDTO.getSpecId());
-
-        BWEntity entity = getEntity(spec.getDataModel(),
-                attGroupDTO.entDTO.name);
+        BWEntity entity = getEntityByExtId(attGroupDTO.entityExtId);
 
         entity.createAttributeGroup(attGroupDTO.name, attGroupDTO.isMandatory);
     }
 
-    @Atomic
-    public void createDependence(DependenceDTO productDTO) {
-        BWSpecification spec = getSpecification(productDTO.specDTO.getSpecId());
+    public BWDependence createDependence(DependenceDTO productDTO) {
+        BWProduct product = getProductByExtId(productDTO.getProductExtId());
 
-        BWProduct product = null;
-        BWEntity entity = null;
-        switch (productDTO.type) {
-        case ENTITY:
-            product = getEntity(spec.getDataModel(), productDTO.name);
-            break;
-        case ATTRIBUTE_GROUP:
-            entity = getEntity(spec.getDataModel(), productDTO.entDTO.name);
-            product = getAttributeGroup(entity, productDTO.name);
-            break;
-        case ATTRIBUTE:
-            entity = getEntity(spec.getDataModel(), productDTO.entDTO.name);
-            product = getAttribute(entity, productDTO.name);
-            break;
-        default:
-            assert false;
-        }
-
-        product.createDependence(productDTO.value);
+        return product.createDependence(productDTO.getPath());
     }
 
-    @Atomic
-    public List<String> getDependencies(SpecDTO specDTO) {
-        List<String> deps = new ArrayList<String>();
+    public Set<BWDependence> getDependencies(String dataModelExtId) {
+        BWDataModel dataModel = getDataModelByExtId(dataModelExtId);
 
-        BWSpecification spec = getSpecification(specDTO.getSpecId());
+        Set<BWDependence> deps = new HashSet<BWDependence>();
 
-        for (BWDependence dependence : spec.getDataModel().getDependenceSet()) {
-            deps.add(dependence.getExternalId());
+        for (BWDependence dependence : dataModel.getDependenceSet()) {
+            deps.add(dependence);
         }
 
         return deps;
     }
 
-    @Atomic
-    public void checkDependence(String externalId) {
-        BWDependence dependence = FenixFramework.getDomainObject(externalId);
-        dependence.check();
+    public boolean checkDependence(String extId) {
+        BWDependence dependence = getDependenceByExtId(extId);
+        return dependence.check();
     }
 
-    @Atomic
-    public void checkDependencies(SpecDTO specDTO) {
-        BWSpecification spec = getSpecification(specDTO.getSpecId());
-
-        for (BWDependence dependence : spec.getDataModel().getDependenceSet()) {
-            dependence.check();
-        }
+    public void deleteDependence(String extId) {
+        BWDependence dependence = getDependenceByExtId(extId);
+        dependence.delete();
     }
 
-    @Atomic
+    // public void checkDependencies(SpecDTO specDTO) {
+    // BWSpecification spec = getSpecification(specDTO.getSpecId());
+    //
+    // for (BWDependence dependence : spec.getDataModel().getDependenceSet()) {
+    // dependence.check();
+    // }
+    // }
+
     public void createRule(RuleDTO ruleDTO) {
         BWSpecification spec = getSpecification(ruleDTO.specDTO.getSpecId());
 
@@ -256,13 +231,12 @@ public class AtomicDesignInterface {
                 buildCondition(spec.getDataModel(), ruleDTO.expDTO));
     }
 
-    @Atomic
     public void createEntityAchieveCondition(EntityAchieveConditionDTO eacDTO) {
         log.debug("createEntityAchieveCondition Entity:{}, Value:{}",
                 eacDTO.entity, eacDTO.exists);
         BWSpecification spec = getSpecification(eacDTO.specId);
 
-        BWEntity entity = getEntity(spec.getDataModel(), eacDTO.entity);
+        BWEntity entity = getEntityByName(spec.getDataModel(), eacDTO.entity);
 
         if (entity.getExists() != eacDTO.exists) {
             throw new BWException(BWErrorType.INVALID_ENTITY,
@@ -273,20 +247,18 @@ public class AtomicDesignInterface {
                 DEFEntityCondition.getDEFEntity(spec, entity));
     }
 
-    @Atomic
     public void createEntityDependenceCondition(DependenceDTO edcDTO) {
-        log.debug("createEntityDependenceCondition Entity:{}, Value:{}",
-                edcDTO.name, edcDTO.value);
-        BWSpecification spec = getSpecification(edcDTO.specDTO.getSpecId());
+        log.debug("createEntityDependenceCondition EntityExtId:{}, Path:{}",
+                edcDTO.getProductExtId(), edcDTO.getPath());
+        BWEntity entity = getEntityByExtId(edcDTO.getProductExtId());
 
-        BWEntity entity = getEntity(spec.getDataModel(), edcDTO.name);
+        BWDependence dependence = getDependence(entity, edcDTO.getPath());
 
-        BWDependence dependence = getDependence(entity, edcDTO.value);
-
-        spec.getConditionModel().addEntityDependenceCondition(dependence);
+        BWConditionModel conditionModel = entity.getDataModel()
+                .getSpecification().getConditionModel();
+        conditionModel.addEntityDependenceCondition(dependence);
     }
 
-    @Atomic
     public void createEntityInvariantCondition(MulInvariantDTO miDTO) {
         log.debug("createEntityInvariantCondition Entity:{}, Cardinality:{}",
                 miDTO.rolePath, miDTO.cardinality);
@@ -299,7 +271,6 @@ public class AtomicDesignInterface {
             new BWException(BWErrorType.INVALID_PATH, miDTO.rolePath);
     }
 
-    @Atomic
     public void createAttributeAchieveCondition(
             AttributeAchieveConditionDTO aacDTO) {
         log.debug("createAttributeAchieveCondition Paths:{}, Mandatory:{}",
@@ -331,7 +302,6 @@ public class AtomicDesignInterface {
                 .addAttributeAchieveCondition(defAttributeCondition);
     }
 
-    @Atomic
     public void createAttributeDependenceCondition(String specId,
             Set<String> sourceAtt, Set<String> targetAtts) {
         log.debug(
@@ -360,7 +330,6 @@ public class AtomicDesignInterface {
 
     }
 
-    @Atomic
     public void createAttributeInvariantCondition(RuleDTO ruleDTO) {
         BWSpecification spec = getSpecification(ruleDTO.specDTO.getSpecId());
 
@@ -369,22 +338,22 @@ public class AtomicDesignInterface {
         spec.getConditionModel().addAttributeInvariantCondition(rule);
     }
 
-    @Atomic
     public ProductDTO getSourceOfPath(String specId, String path) {
         BWEntity entity = null;
         try {
             BWSpecification spec = getSpecification(specId);
 
-            entity = getEntity(spec.getDataModel(), path.split("\\.")[0]);
+            entity = getEntityByName(spec.getDataModel(), path.split("\\.")[0]);
         } catch (BWException bwe) {
             return new ProductDTO(new BWError(bwe.getError(), path));
         }
 
         return new ProductDTO(new SpecDTO(specId), ProductType.ENTITY,
-                new EntityDTO(specId, entity.getName(), entity.getExists()));
+                new EntityDTO(entity.getExternalId(),
+                        entity.getDataModel().getExternalId(), entity.getName(),
+                        entity.getExists()));
     }
 
-    @Atomic
     public ProductDTO getTargetOfPath(String specId, String path) {
         BWProduct product = null;
         try {
@@ -399,28 +368,26 @@ public class AtomicDesignInterface {
         if (product instanceof BWEntity) {
             BWEntity entity = (BWEntity) product;
             return new ProductDTO(new SpecDTO(specId), ProductType.ENTITY,
-                    new EntityDTO(specId, entity.getName(),
-                            entity.getExists()));
+                    new EntityDTO(entity.getExternalId(),
+                            entity.getDataModel().getExternalId(),
+                            entity.getName(), entity.getExists()));
         } else if (product instanceof BWAttributeGroup) {
             BWAttributeGroup attributeGroup = (BWAttributeGroup) product;
             return new ProductDTO(new SpecDTO(specId),
                     ProductType.ATTRIBUTE_GROUP,
-                    new AttributeGroupDTO(specId,
-                            attributeGroup.getEntity().getName(),
+                    new AttributeGroupDTO(
+                            attributeGroup.getEntity().getExternalId(),
                             attributeGroup.getName(),
                             attributeGroup.getIsMandatory()));
         } else {
             BWAttribute attribute = (BWAttribute) product;
             return new ProductDTO(new SpecDTO(specId), ProductType.ATTRIBUTE,
-                    new AttributeDTO(
-                            new EntityDTO(specId,
-                                    attribute.getEntity().getName()),
+                    new AttributeDTO(attribute.getEntity().getExternalId(),
                             attribute.getName(), attribute.getType().name(),
                             attribute.getIsMandatory()));
         }
     }
 
-    @Atomic
     public Set<String> getDependencePaths(String specId,
             Set<String> sucConditions) {
         Set<String> paths = new HashSet<String>();
@@ -445,14 +412,12 @@ public class AtomicDesignInterface {
         return paths;
     }
 
-    @Atomic
     public void createGoal(String specId, String name) {
         BWSpecification spec = getSpecification(specId);
 
         new Goal(spec.getGoalModel(), name);
     }
 
-    @Atomic
     public void associateEntityAchieveConditionToGoalSuccessCondition(
             String specId, String goalName, String path) {
         BWSpecification spec = getSpecification(specId);
@@ -470,7 +435,6 @@ public class AtomicDesignInterface {
         }
     }
 
-    @Atomic
     public void associateEntityAchieveConditionToGoalAtivationCondition(
             String specId, String goalName, String path) {
         BWSpecification spec = getSpecification(specId);
@@ -488,7 +452,6 @@ public class AtomicDesignInterface {
         }
     }
 
-    @Atomic
     public void associateAttributeAchieveConditionToGoalActivationCondition(
             String specId, String goalName, Set<String> paths) {
         BWSpecification spec = getSpecification(specId);
@@ -508,7 +471,6 @@ public class AtomicDesignInterface {
         goal.addActivationCondition(defAttributeCondition);
     }
 
-    @Atomic
     public void associateAttributeAchieveConditionToGoalSuccessCondition(
             String specId, String goalName, Set<String> paths) {
         BWSpecification spec = getSpecification(specId);
@@ -528,7 +490,6 @@ public class AtomicDesignInterface {
         goal.addSuccessCondition(defAttributeCondition);
     }
 
-    @Atomic
     public void associateMulConditionToGoalEntityInvariantCondition(
             String specId, String goalName, String path, String cardinality) {
         BWSpecification spec = getSpecification(specId);
@@ -542,7 +503,6 @@ public class AtomicDesignInterface {
         goal.addEntityInvariantCondition(mulCondition);
     }
 
-    @Atomic
     public void associateRuleConditionToGoalAttributeInvariantCondition(
             String specId, String goalName, String ruleName) {
         BWSpecification spec = getSpecification(specId);
@@ -556,7 +516,6 @@ public class AtomicDesignInterface {
         goal.addAttributeInvariantCondition(rule);
     }
 
-    @Atomic
     public void addSubGoal(String specId, String goalName, String subGoalName) {
         BWSpecification spec = getSpecification(specId);
         Goal goal = getGoal(spec, goalName);
@@ -564,7 +523,6 @@ public class AtomicDesignInterface {
         goal.addSubGoals(subGoal);
     }
 
-    @Atomic
     public void printSpecificationModels(String specId) {
         BWSpecification spec = getSpecification(specId);
 
@@ -713,9 +671,36 @@ public class AtomicDesignInterface {
         return spec;
     }
 
-    private BWEntity getEntity(BWDataModel dataModel, String name) {
+    private BWDataModel getDataModelByExtId(String externalId) {
+        if (externalId == null || externalId.equals(""))
+            throw new BWException(BWErrorType.NOT_FOUND, externalId);
+        BWDataModel dataModel = FenixFramework.getDomainObject(externalId);
+        if (dataModel == null)
+            throw new BWException(BWErrorType.NOT_FOUND, externalId);
+        return dataModel;
+    }
+
+    private BWProduct getProductByExtId(String externalId) {
+        if (externalId == null || externalId.equals(""))
+            throw new BWException(BWErrorType.NOT_FOUND, externalId);
+        BWProduct product = FenixFramework.getDomainObject(externalId);
+        if (product == null)
+            throw new BWException(BWErrorType.NOT_FOUND, externalId);
+        return product;
+    }
+
+    private BWEntity getEntityByName(BWDataModel dataModel, String name) {
         return dataModel.getEntity(name).orElseThrow(
                 () -> new BWException(BWErrorType.INVALID_ENTITY_NAME, name));
+    }
+
+    private BWEntity getEntityByExtId(String externalId) {
+        if (externalId == null || externalId.equals(""))
+            throw new BWException(BWErrorType.NOT_FOUND, externalId);
+        BWEntity entity = FenixFramework.getDomainObject(externalId);
+        if (entity == null)
+            throw new BWException(BWErrorType.NOT_FOUND, externalId);
+        return entity;
     }
 
     private BWProduct getAttributeGroup(BWEntity entity, String name) {
@@ -746,7 +731,7 @@ public class AtomicDesignInterface {
         Set<BWAttribute> attributes = new HashSet<BWAttribute>();
         for (String path : paths) {
             String entityName = path.split("\\.")[0];
-            BWEntity tmp = getEntity(spec.getDataModel(), entityName);
+            BWEntity tmp = getEntityByName(spec.getDataModel(), entityName);
             if ((entity != null) && (entity != tmp))
                 throw new BWException(BWErrorType.INVALID_ATTRIBUTE_GROUP,
                         paths.toString());
@@ -754,6 +739,15 @@ public class AtomicDesignInterface {
             attributes.add((BWAttribute) getTargetOfPath(spec, path));
         }
         return attributes;
+    }
+
+    private BWDependence getDependenceByExtId(String externalId) {
+        if (externalId == null || externalId.equals(""))
+            throw new BWException(BWErrorType.NOT_FOUND, externalId);
+        BWDependence dependence = FenixFramework.getDomainObject(externalId);
+        if (dependence == null)
+            throw new BWException(BWErrorType.NOT_FOUND, externalId);
+        return dependence;
     }
 
     private BWDependence getDependence(BWProduct product, String path) {
@@ -767,7 +761,7 @@ public class AtomicDesignInterface {
     private BWProduct getTargetOfPath(BWSpecification spec, String path) {
         List<String> pathLeft = Arrays.stream(path.split("\\."))
                 .collect(Collectors.toList());
-        BWEntity entity = getEntity(spec.getDataModel(), pathLeft.get(0));
+        BWEntity entity = getEntityByName(spec.getDataModel(), pathLeft.get(0));
         pathLeft.remove(0);
         return entity.getNext(pathLeft, path);
     }

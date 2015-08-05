@@ -1,8 +1,13 @@
 package org.blended.data.repository;
 
+import java.util.Set;
+
+import org.blended.common.common.Entity;
 import org.blended.common.repository.CommonInterface;
 import org.blended.common.repository.resttemplate.BWNotification;
 import org.blended.common.repository.resttemplate.RepositoryException;
+import org.blended.common.repository.resttemplate.vo.DependenceVO;
+import org.blended.common.repository.resttemplate.vo.EntityVO;
 import org.blended.common.repository.resttemplate.vo.SpecVO;
 import org.blended.data.data.DataModel;
 import org.slf4j.Logger;
@@ -35,57 +40,6 @@ public class DataInterface {
         ci = CommonInterface.getInstance();
     }
 
-    // public BWNotification createSpecification(SpecificationDTO specDTO) {
-    // BWNotification notification = new BWNotification();
-    // try {
-    // adi.createSpecification(specDTO);
-    // } catch (BWException bwe) {
-    // notification
-    // .addError(new BWError(bwe.getError(), bwe.getMessage()));
-    // }
-    //
-    // return notification;
-    // }
-    //
-    // public BWNotification createEntity(EntityDTO entDTO) {
-    // BWNotification notification = new BWNotification();
-    //
-    // try {
-    // adi.createEntity(entDTO);
-    // } catch (BWException bwe) {
-    // notification
-    // .addError(new BWError(bwe.getError(), bwe.getMessage()));
-    // }
-    //
-    // return notification;
-    // }
-    //
-    // public BWNotification createAttribute(AttributeDTO attDTO) {
-    // BWNotification notification = new BWNotification();
-    //
-    // try {
-    // adi.createAttribute(attDTO);
-    // } catch (BWException bwe) {
-    // notification
-    // .addError(new BWError(bwe.getError(), bwe.getMessage()));
-    // }
-    // return notification;
-    // }
-    //
-    // public BWNotification createRelation(RelationDTO relDTO) {
-    // BWNotification notification = new BWNotification();
-    //
-    // try {
-    // adi.createRelation(relDTO);
-    // } catch (BWException bwe) {
-    // notification
-    // .addError(new BWError(bwe.getError(), bwe.getMessage()));
-    // }
-    //
-    // return notification;
-    //
-    // }
-
     public BWNotification loadDataModel(String specId, DataModel eDataModel) {
         log.debug("loadDataModel: {}", specId);
 
@@ -94,83 +48,100 @@ public class DataInterface {
         SpecVO specVO = null;
         try {
             specVO = ci.getSpecBySpecId(specId);
+
+            ci.cleanDataModel(specVO.getDataModelExtId());
         } catch (RepositoryException re) {
-            log.debug("Error: {}", re.getMessage());
-            specVO = ci.createSpec(new SpecVO(specId,
-                    eDataModel.getSpecification().getName()));
+            log.debug("getSpec: {}", re.getMessage());
+            try {
+                specVO = ci.createSpec(new SpecVO(specId,
+                        eDataModel.getSpecification().getName()));
+            } catch (RepositoryException ree) {
+                notification.addError(ree.getError());
+                log.debug("createSpec: {}", re.getMessage());
+                return notification;
+            }
         }
 
-        String specExtId = specVO.getExternalId();
+        String dataModelExtId = specVO.getDataModelExtId();
 
-        // for (Entity eEnt : eDataModel.getEntities()) {
-        // try {
-        // adi.createEntity(
-        // new EntityDTO(specId, eEnt.getName(), eEnt.isExists()));
-        //
-        // // create entity dependences
-        // for (String eDep : eEnt.getDependsOn()) {
-        // adi.createDependence(
-        // new DependenceDTO(specId, eEnt.getName(), eDep));
-        // }
-        // } catch (BWException bwe) {
-        // notification.addError(
-        // new BWError(bwe.getError(), bwe.getMessage()));
-        // log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
-        // continue;
-        // }
-        //
-        // for (EObject eObj : eEnt.getAttributes()) {
-        // if (eObj instanceof Attribute) {
-        // Attribute eAtt = (Attribute) eObj;
-        // try {
-        // adi.createAttribute(new AttributeDTO(specId,
-        // eEnt.getName(), eAtt.getName(), eAtt.getType(),
-        // eAtt.isMandatory()));
-        //
-        // // create attribute dependences
-        // for (String eDep : eAtt.getDependsOn()) {
-        // adi.createDependence(new DependenceDTO(specId,
-        // eEnt.getName(), ProductType.ATTRIBUTE,
-        // eAtt.getName(), eDep));
-        // }
-        // } catch (BWException bwe) {
-        // notification.addError(
-        // new BWError(bwe.getError(), bwe.getMessage()));
-        // log.debug("Error: {}, {}", bwe.getError(),
-        // bwe.getMessage());
-        // }
-        // } else if (eObj instanceof AttributeGroup) {
-        // AttributeGroup eAttGroup = (AttributeGroup) eObj;
-        // try {
-        // adi.createAttributeGroup(new AttributeGroupDTO(specId,
-        // eEnt.getName(), eAttGroup.getName(),
-        // eAttGroup.isMandatory()));
-        //
-        // // create group attribute dependences
-        // for (String eDep : eAttGroup.getDependsOn()) {
-        // adi.createDependence(new DependenceDTO(specId,
-        // eEnt.getName(), ProductType.ATTRIBUTE_GROUP,
-        // eAttGroup.getName(), eDep));
-        // }
-        // } catch (BWException bwe) {
-        // notification.addError(
-        // new BWError(bwe.getError(), bwe.getMessage()));
-        // log.debug("Error: {}, {}", bwe.getError(),
-        // bwe.getMessage());
-        // continue;
-        // }
-        //
-        // for (Attribute eAtt : eAttGroup.getAttributes()) {
-        // // create groupAttribute's attributes
-        // adi.createAttribute(
-        // new AttributeDTO(specId, eEnt.getName(),
-        // eAttGroup.getName(), eAtt.getName(),
-        // eAtt.getType(), eAtt.isMandatory()));
-        // }
-        // }
-        // }
-        // }
-        //
+        for (Entity eEnt : eDataModel.getEntities()) {
+            String entityExtId = null;
+            try {
+                EntityVO entVO = ci.createEntity(new EntityVO(dataModelExtId,
+                        eEnt.getName(), eEnt.isExists()));
+                entityExtId = entVO.getExtId();
+                log.debug("createdEntity: {}, {}, {}, {}", entVO.getExtId(),
+                        entVO.getDataModelExtId(), entVO.getName(),
+                        entVO.getExists());
+            } catch (RepositoryException re) {
+                notification.addError(re.getError());
+                log.debug("createEntity: {}", re.getMessage());
+                continue;
+            }
+
+            try {
+                // create entity dependences
+                for (String eDep : eEnt.getDependsOn()) {
+                    ci.createDependence(new DependenceVO(entityExtId, eDep));
+                }
+            } catch (RepositoryException re) {
+                notification.addError(re.getError());
+                log.debug("Error: {}", re.getMessage());
+                continue;
+            }
+
+            // for (EObject eObj : eEnt.getAttributes()) {
+            // if (eObj instanceof Attribute) {
+            // Attribute eAtt = (Attribute) eObj;
+            // try {
+            // adi.createAttribute(new AttributeDTO(specId,
+            // eEnt.getName(), eAtt.getName(), eAtt.getType(),
+            // eAtt.isMandatory()));
+            //
+            // // create attribute dependences
+            // for (String eDep : eAtt.getDependsOn()) {
+            // adi.createDependence(new DependenceDTO(specId,
+            // eEnt.getName(), ProductType.ATTRIBUTE,
+            // eAtt.getName(), eDep));
+            // }
+            // } catch (BWException bwe) {
+            // notification.addError(
+            // new BWError(bwe.getError(), bwe.getMessage()));
+            // log.debug("Error: {}, {}", bwe.getError(),
+            // bwe.getMessage());
+            // }
+            // } else if (eObj instanceof AttributeGroup) {
+            // AttributeGroup eAttGroup = (AttributeGroup) eObj;
+            // try {
+            // adi.createAttributeGroup(new AttributeGroupDTO(specId,
+            // eEnt.getName(), eAttGroup.getName(),
+            // eAttGroup.isMandatory()));
+            //
+            // // create group attribute dependences
+            // for (String eDep : eAttGroup.getDependsOn()) {
+            // adi.createDependence(new DependenceDTO(specId,
+            // eEnt.getName(), ProductType.ATTRIBUTE_GROUP,
+            // eAttGroup.getName(), eDep));
+            // }
+            // } catch (BWException bwe) {
+            // notification.addError(
+            // new BWError(bwe.getError(), bwe.getMessage()));
+            // log.debug("Error: {}, {}", bwe.getError(),
+            // bwe.getMessage());
+            // continue;
+            // }
+            //
+            // for (Attribute eAtt : eAttGroup.getAttributes()) {
+            // // create groupAttribute's attributes
+            // adi.createAttribute(
+            // new AttributeDTO(specId, eEnt.getName(),
+            // eAttGroup.getName(), eAtt.getName(),
+            // eAtt.getType(), eAtt.isMandatory()));
+            // }
+            // }
+            // }
+        }
+
         // for (Association assoc : eDataModel.getAssociations()) {
         // try {
         // adi.createRelation(new RelationDTO(specId, assoc.getName(),
@@ -183,19 +154,21 @@ public class DataInterface {
         // log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
         // }
         // }
-        //
-        // List<String> deps = adi.getDependencies(new
-        // SpecificationDTO(specId));
-        // for (String dep : deps) {
-        // try {
-        // adi.checkDependence(dep);
-        // } catch (BWException bwe) {
-        // notification.addError(
-        // new BWError(bwe.getError(), bwe.getMessage()));
-        // log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
-        // }
-        // }
-        //
+
+        Set<DependenceVO> deps = ci.getDependencies(dataModelExtId);
+        for (DependenceVO dep : deps) {
+            log.debug("dependence extid:{}, path:{}, productExtId:{}",
+                    dep.getExtId(), dep.getPath(), dep.getProductExtId());
+            try {
+                ci.checkDependence(dep.getExtId());
+            } catch (RepositoryException re) {
+                notification.addError(re.getError());
+                log.debug("Error: {}", re.getMessage());
+
+                ci.deleteDependence(dep.getExtId());
+            }
+        }
+
         // for (Constraint constraint : eDataModel.getConstraint()) {
         // ExpressionDTO expression = buildExpressionDTO(specId,
         // constraint.getConstraint());

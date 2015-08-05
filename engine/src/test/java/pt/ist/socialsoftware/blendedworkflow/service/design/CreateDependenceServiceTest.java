@@ -11,7 +11,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
@@ -19,7 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 public class CreateDependenceServiceTest extends TeardownRollbackTest {
     private static final String SPEC_ID = "ID1";
     private static final String SPEC_NAME = "Doctor Appointment";
-    private static final String ENTITY_NAME = "Patinet";
+    private static final String ENTITY_NAME = "Patient";
     private static final String ATTRIBUTE_GROUP_NAME = "Medication";
     private static final String ATTRIBUTE_NAME = "Portion";
     private static final String DEPENDENCE_ONE = ENTITY_NAME + "."
@@ -29,6 +28,9 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 
     AtomicDesignInterface designInterface;
     BWDataModel dataModel;
+    BWEntity entity;
+    BWAttributeGroup group;
+    BWAttribute att;
 
     @Override
     public void populate4Test() throws BWException {
@@ -39,10 +41,10 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
         dataModel = getBlendedWorkflow().getSpecById(SPEC_ID).get()
                 .getDataModel();
 
-        BWEntity entity = new BWEntity(dataModel, ENTITY_NAME, false);
-        BWAttributeGroup group = new BWAttributeGroup(dataModel, entity,
-                ATTRIBUTE_GROUP_NAME, false);
-        new BWAttribute(dataModel, entity, group, ATTRIBUTE_NAME,
+        entity = new BWEntity(dataModel, ENTITY_NAME, false);
+        group = new BWAttributeGroup(dataModel, entity, ATTRIBUTE_GROUP_NAME,
+                false);
+        att = new BWAttribute(dataModel, entity, group, ATTRIBUTE_NAME,
                 BWAttribute.AttributeType.NUMBER, true, false, false);
         entity.createDependence(DEPENDENCE_ONE);
     }
@@ -50,7 +52,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
     @Test
     public void successCreateEntityDependence() {
         designInterface.createDependence(
-                new DependenceDTO(SPEC_ID, ENTITY_NAME, DEPENDENCE_TWO));
+                new DependenceDTO(entity.getExternalId(), DEPENDENCE_TWO));
 
         assertEquals(2, dataModel.getEntity(ENTITY_NAME).get()
                 .getDependenceSet().size());
@@ -61,9 +63,8 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 
     @Test
     public void successCreateAttributeGroupDependence() {
-        designInterface.createDependence(new DependenceDTO(SPEC_ID, ENTITY_NAME,
-                ProductType.ATTRIBUTE_GROUP, ATTRIBUTE_GROUP_NAME,
-                DEPENDENCE_TWO));
+        designInterface.createDependence(
+                new DependenceDTO(group.getExternalId(), DEPENDENCE_TWO));
 
         assertEquals(1, dataModel.getEntity(ENTITY_NAME).get()
                 .getDependenceSet().size());
@@ -78,8 +79,8 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 
     @Test
     public void successCreateAttributeDependence() {
-        designInterface.createDependence(new DependenceDTO(SPEC_ID, ENTITY_NAME,
-                ProductType.ATTRIBUTE, ATTRIBUTE_NAME, DEPENDENCE_TWO));
+        designInterface.createDependence(
+                new DependenceDTO(att.getExternalId(), DEPENDENCE_TWO));
 
         assertEquals(1, dataModel.getEntity(ENTITY_NAME).get()
                 .getDependenceSet().size());

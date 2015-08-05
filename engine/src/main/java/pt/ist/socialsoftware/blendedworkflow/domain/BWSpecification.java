@@ -86,7 +86,7 @@ public class BWSpecification extends BWSpecification_Base {
         specDTO.setExternalId(this.getExternalId());
         specDTO.setSpecId(this.getSpecId());
         specDTO.setName(this.getName());
-        specDTO.setDataSpecId(this.getDataModel().getExternalId());
+        specDTO.setDataModelExtId(this.getDataModel().getExternalId());
 
         return specDTO;
     }

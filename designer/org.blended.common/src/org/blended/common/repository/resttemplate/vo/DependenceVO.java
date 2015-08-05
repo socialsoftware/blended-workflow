@@ -1,15 +1,15 @@
-package pt.ist.socialsoftware.blendedworkflow.service.dto;
+package org.blended.common.repository.resttemplate.vo;
 
-public class DependenceDTO {
+public class DependenceVO {
 
     private String extId;
     private String productExtId;
     private String path;
 
-    public DependenceDTO() {
+    public DependenceVO() {
     }
 
-    public DependenceDTO(String productExtId, String path) {
+    public DependenceVO(String productExtId, String path) {
         this.productExtId = productExtId;
         this.path = path;
     }
@@ -18,8 +18,8 @@ public class DependenceDTO {
         return extId;
     }
 
-    public void setExtId(String externalId) {
-        this.extId = externalId;
+    public void setExtId(String extId) {
+        this.extId = extId;
     }
 
     public String getProductExtId() {

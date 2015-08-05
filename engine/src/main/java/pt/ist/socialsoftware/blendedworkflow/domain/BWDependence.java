@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 
 public class BWDependence extends BWDependence_Base {
     private static Logger log = LoggerFactory.getLogger(BWDependence.class);
@@ -34,7 +35,7 @@ public class BWDependence extends BWDependence_Base {
         }
     }
 
-    public void check() {
+    public boolean check() {
         log.debug("check {}", getPath());
 
         checkPathPrefix(getPath());
@@ -47,7 +48,10 @@ public class BWDependence extends BWDependence_Base {
 
         pathLeft.remove(0);
 
-        getProduct().getEntity().getNext(pathLeft, getPath());
+        BWProduct product = getProduct().getEntity().getNext(pathLeft,
+                getPath());
+
+        return (product != null);
     }
 
     public void delete() {
@@ -55,6 +59,15 @@ public class BWDependence extends BWDependence_Base {
         setProduct(null);
 
         deleteDomainObject();
+    }
+
+    public DependenceDTO getDTO() {
+        DependenceDTO depDTO = new DependenceDTO();
+        depDTO.setExtId(getExternalId());
+        depDTO.setProductExtId(getProduct().getExternalId());
+        depDTO.setPath(getPath());
+
+        return depDTO;
     }
 
 }

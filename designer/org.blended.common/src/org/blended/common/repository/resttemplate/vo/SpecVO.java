@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SpecVO {
-    public String externalId;
-    public String specId;
-    public String name;
-    public String dataSpecId;
+    private String externalId;
+    private String specId;
+    private String name;
+    private String dataModelExtId;
 
     public String getExternalId() {
         return externalId;
@@ -33,12 +33,12 @@ public class SpecVO {
         this.name = name;
     }
 
-    public String getDataSpecId() {
-        return dataSpecId;
+    public String getDataModelExtId() {
+        return dataModelExtId;
     }
 
-    public void setDataSpecId(String dataSpecId) {
-        this.dataSpecId = dataSpecId;
+    public void setDataModelExtId(String dataModelExtId) {
+        this.dataModelExtId = dataModelExtId;
     }
 
     public SpecVO() {

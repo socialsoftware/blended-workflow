@@ -4,7 +4,7 @@ public class SpecDTO {
     private String externalId;
     private String specId;
     private String name;
-    private String dataSpecId;
+    private String dataModelExtId;
 
     public String getExternalId() {
         return externalId;
@@ -30,12 +30,12 @@ public class SpecDTO {
         this.name = name;
     }
 
-    public String getDataSpecId() {
-        return dataSpecId;
+    public String getDataModelExtId() {
+        return dataModelExtId;
     }
 
-    public void setDataSpecId(String dataSpecId) {
-        this.dataSpecId = dataSpecId;
+    public void setDataModelExtId(String dataModelExtId) {
+        this.dataModelExtId = dataModelExtId;
     }
 
     public SpecDTO() {

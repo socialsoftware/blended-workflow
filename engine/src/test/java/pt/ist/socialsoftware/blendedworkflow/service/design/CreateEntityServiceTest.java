@@ -21,17 +21,20 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
     private static final String DUP_NAME = "Exists Name";
     private static final String EMPTY_NAME = "";
 
+    BWSpecification spec;
+
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
-                "description", "version", "UID");
+        spec = new BWSpecification(SPEC_ID, "name", "author", "description",
+                "version", "UID");
         new BWEntity(spec.getDataModel(), DUP_NAME, false);
     }
 
     @Test
     public void success() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createEntity(new EntityDTO(SPEC_ID, ENTITY_NAME, false));
+                .createEntity(new EntityDTO(spec.getDataModel().getExternalId(),
+                        ENTITY_NAME, false));
 
         assertFalse(notification.hasErrors());
         BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
@@ -42,31 +45,31 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
     }
 
     @Test
-    public void nonExistentSpecification() throws BWException {
+    public void nonExistDataModelExtId() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
                 .createEntity(new EntityDTO(NON_EXIST, ENTITY_NAME, false));
 
-        assertEquals(BWErrorType.INVALID_SPECIFICATION_ID,
+        assertEquals(BWErrorType.NOT_FOUND,
                 notification.getError().get(0).getType());
         assertEquals(NON_EXIST, notification.getError().get(0).getValue());
     }
 
     @Test
-    public void emptySpecId() throws BWException {
+    public void emptyDataModelExtId() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
                 .createEntity(new EntityDTO(EMPTY_NAME, ENTITY_NAME, true));
 
-        assertEquals(BWErrorType.INVALID_SPECIFICATION_ID,
+        assertEquals(BWErrorType.NOT_FOUND,
                 notification.getError().get(0).getType());
         assertEquals(EMPTY_NAME, notification.getError().get(0).getValue());
     }
 
     @Test
-    public void nullSpecId() throws BWException {
+    public void nullDataModelExtId() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
                 .createEntity(new EntityDTO(null, ENTITY_NAME, false));
 
-        assertEquals(BWErrorType.INVALID_SPECIFICATION_ID,
+        assertEquals(BWErrorType.NOT_FOUND,
                 notification.getError().get(0).getType());
         assertEquals(null, notification.getError().get(0).getValue());
     }
@@ -74,7 +77,8 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
     @Test
     public void entityExists() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createEntity(new EntityDTO(SPEC_ID, DUP_NAME, false));
+                .createEntity(new EntityDTO(spec.getDataModel().getExternalId(),
+                        DUP_NAME, false));
 
         assertEquals(BWErrorType.INVALID_ENTITY_NAME,
                 notification.getError().get(0).getType());

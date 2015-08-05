@@ -33,6 +33,7 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
     AtomicDesignInterface designInterface;
 
     BWSpecification spec;
+    BWEntity entityOne;
 
     @Override
     public void populate4Test() throws BWException {
@@ -41,16 +42,17 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
         spec = new BWSpecification(SPEC_ID, SPEC_NAME, "author", "description",
                 "version", "UID");
 
-        BWEntity entity = new BWEntity(spec.getDataModel(), ENTITY_NAME_ONE,
-                false);
+        entityOne = new BWEntity(spec.getDataModel(), ENTITY_NAME_ONE, false);
         BWEntity entityTwo = new BWEntity(spec.getDataModel(), ENTITY_NAME_TWO,
                 false);
-        new BWAttribute(spec.getDataModel(), entity, null, ATTRIBUTE_NAME_ONE,
-                BWAttribute.AttributeType.NUMBER, true, false, false);
-        new BWAttribute(spec.getDataModel(), entity, null, ATTRIBUTE_NAME_TWO,
-                BWAttribute.AttributeType.STRING, false, false, false);
+        new BWAttribute(spec.getDataModel(), entityOne, null,
+                ATTRIBUTE_NAME_ONE, BWAttribute.AttributeType.NUMBER, true,
+                false, false);
+        new BWAttribute(spec.getDataModel(), entityOne, null,
+                ATTRIBUTE_NAME_TWO, BWAttribute.AttributeType.STRING, false,
+                false, false);
 
-        new BWRelation(spec.getDataModel(), "relation", entity, ROLE_ONE,
+        new BWRelation(spec.getDataModel(), "relation", entityOne, ROLE_ONE,
                 Cardinality.ZERO_OR_ONE, false, entityTwo, ROLE_TWO,
                 Cardinality.ONE, false);
     }
@@ -62,7 +64,8 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
 
         assertEquals(SPEC_ID, productDTO.specDTO.getSpecId());
         assertEquals(ProductType.ATTRIBUTE, productDTO.type);
-        assertEquals(ENTITY_NAME_ONE, productDTO.attributeDTO.entityDTO.name);
+        assertEquals(entityOne.getExternalId(),
+                productDTO.attributeDTO.entityExtId);
         assertEquals(ATTRIBUTE_NAME_ONE, productDTO.attributeDTO.name);
         assertEquals(null, productDTO.attributeGroupDTO);
         assertEquals(null, productDTO.entityDTO);
@@ -75,7 +78,7 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
 
         assertEquals(SPEC_ID, productDTO.specDTO.getSpecId());
         assertEquals(ProductType.ENTITY, productDTO.type);
-        assertEquals(ENTITY_NAME_ONE, productDTO.entityDTO.name);
+        assertEquals(ENTITY_NAME_ONE, productDTO.entityDTO.getName());
         assertEquals(null, productDTO.attributeGroupDTO);
         assertEquals(null, productDTO.attributeDTO);
     }
