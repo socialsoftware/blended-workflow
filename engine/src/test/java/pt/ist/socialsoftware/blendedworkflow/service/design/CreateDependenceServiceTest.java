@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
@@ -45,7 +46,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
         group = new BWAttributeGroup(dataModel, entity, ATTRIBUTE_GROUP_NAME,
                 false);
         att = new BWAttribute(dataModel, entity, group, ATTRIBUTE_NAME,
-                BWAttribute.AttributeType.NUMBER, true, false, false);
+                AttributeType.NUMBER, true, false, false);
         entity.createDependence(DEPENDENCE_ONE);
     }
 

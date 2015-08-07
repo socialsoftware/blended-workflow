@@ -4,49 +4,37 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWError;
 
 public class ProductDTO {
-    public SpecDTO specDTO;
-    public ProductType type;
-    public EntityDTO entityDTO;
-    public AttributeGroupDTO attributeGroupDTO;
-    public AttributeDTO attributeDTO;
-    public BWError error;
+    private String productExtId;
+    private ProductType type;
+    private BWError error;
 
-    public ProductDTO(SpecDTO specDTO, ProductType type,
-            EntityDTO entityDTO) {
-        this.specDTO = specDTO;
+    public ProductDTO(String productExtId, ProductType type) {
+        this.productExtId = productExtId;
         this.type = type;
-        this.entityDTO = entityDTO;
-        this.attributeGroupDTO = null;
-        this.attributeDTO = null;
         this.error = null;
     }
 
-    public ProductDTO(SpecDTO specDTO, ProductType type,
-            AttributeGroupDTO attributeGroupDTO) {
-        this.specDTO = specDTO;
-        this.type = type;
-        this.entityDTO = null;
-        this.attributeGroupDTO = attributeGroupDTO;
-        this.attributeDTO = null;
-        this.error = null;
+    public String getProductExtId() {
+        return productExtId;
     }
 
-    public ProductDTO(SpecDTO specDTO, ProductType type,
-            AttributeDTO attributeDTO) {
-        this.specDTO = specDTO;
-        this.type = type;
-        this.entityDTO = null;
-        this.attributeGroupDTO = null;
-        this.attributeDTO = attributeDTO;
-        this.error = null;
+    public void setProductExtId(String productExtId) {
+        this.productExtId = productExtId;
     }
 
-    public ProductDTO(BWError error) {
-        this.specDTO = null;
-        this.type = null;
-        this.entityDTO = null;
-        this.attributeGroupDTO = null;
-        this.attributeDTO = null;
+    public ProductType getType() {
+        return type;
+    }
+
+    public void setType(ProductType type) {
+        this.type = type;
+    }
+
+    public BWError getError() {
+        return error;
+    }
+
+    public void setError(BWError error) {
         this.error = error;
     }
 

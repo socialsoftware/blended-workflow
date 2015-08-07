@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
@@ -41,7 +42,7 @@ public class LoadDataModelSpecificationServiceTest
         BWEntity entity = new BWEntity(existingDataModel, EXISTS_ENTITY_NAME,
                 false);
         new BWAttribute(existingDataModel, entity, null, EXISTS_ATTRIBUTE_NAME,
-                BWAttribute.AttributeType.NUMBER, true, false, false);
+                AttributeType.NUMBER, true, false, false);
 
         BWRelation relation = new BWRelation(existingDataModel, "relation",
                 entity, "role1", Cardinality.ZERO_OR_ONE, false, entity,
@@ -50,8 +51,8 @@ public class LoadDataModelSpecificationServiceTest
 
     @Test
     public void newSpec() {
-        designInterface.loadDataSpecification(
-                new SpecDTO(NEW_SPEC_ID, NEW_SPEC_NAME));
+        designInterface
+                .loadDataSpecification(new SpecDTO(NEW_SPEC_ID, NEW_SPEC_NAME));
 
         BWSpecification spec = getBlendedWorkflow().getSpecById(NEW_SPEC_ID)
                 .get();

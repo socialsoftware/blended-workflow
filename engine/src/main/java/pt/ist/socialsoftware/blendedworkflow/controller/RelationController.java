@@ -10,27 +10,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 
 @Controller
-@RequestMapping(value = "/entities")
-public class EntityController {
-    private static Logger log = LoggerFactory.getLogger(EntityController.class);
+@RequestMapping(value = "/relations")
+public class RelationController {
+    private static Logger log = LoggerFactory
+            .getLogger(RelationController.class);
 
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<EntityDTO> createEntity(
-            @RequestBody EntityDTO entDTO) {
-        log.debug("createEntity dataModelExtId:{}, name:{}, exists:{}",
-                entDTO.getDataModelExtId(), entDTO.getName(),
-                entDTO.getExists());
+    public ResponseEntity<RelationDTO> createRelation(
+            @RequestBody RelationDTO relDTO) {
+        log.debug("createRelation {}, {}, {}", relDTO.getName(),
+                relDTO.getEntOneName(), relDTO.getEntTwoName());
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
-        BWEntity entity = adi.createEntity(entDTO);
+        BWRelation relation = adi.createRelation(relDTO);
 
-        return new ResponseEntity<EntityDTO>(entity.getDTO(),
+        return new ResponseEntity<RelationDTO>(relation.getDTO(),
                 HttpStatus.CREATED);
     }
 

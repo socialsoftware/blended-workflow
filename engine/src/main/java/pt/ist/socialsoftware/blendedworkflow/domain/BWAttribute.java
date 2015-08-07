@@ -1,18 +1,59 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 
 public class BWAttribute extends BWAttribute_Base {
     private static Logger log = LoggerFactory.getLogger(BWAttribute.class);
 
-    public enum AttributeType {
-        BOOLEAN, NUMBER, STRING, DATE
+    final static String ATTRIBUTE_TYPE = "(" + AttributeType.STRING + "|"
+            + AttributeType.NUMBER + "|" + AttributeType.BOOLEAN + "|"
+            + AttributeType.DATE + ")";
+
+    public static enum AttributeType {
+        BOOLEAN("Boolean"), NUMBER("Number"), STRING("String"), DATE("Date");
+        private String name;
+
+        AttributeType(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+
+        public static BWAttribute.AttributeType parseAttributeType(
+                String type) {
+            if (!Pattern.matches(ATTRIBUTE_TYPE, type))
+                throw new BWException(BWErrorType.INVALID_ATTRIBUTE_TYPE);
+
+            BWAttribute.AttributeType res = null;
+
+            if (type.equals(AttributeType.STRING.toString()))
+                return AttributeType.STRING;
+
+            if (type.equals(AttributeType.NUMBER.toString()))
+                return AttributeType.NUMBER;
+
+            if (type.equals(AttributeType.BOOLEAN.toString()))
+                return AttributeType.BOOLEAN;
+
+            if (type.equals(AttributeType.DATE.toString()))
+                return AttributeType.DATE;
+
+            assert(false);
+
+            return res;
+        }
+
     };
 
     @Override
@@ -55,6 +96,11 @@ public class BWAttribute extends BWAttribute_Base {
                 throw new BWException(BWErrorType.INVALID_ATTRIBUTE_NAME, name);
             }
         }
+    }
+
+    @Override
+    public ProductType getProductType() {
+        return ProductType.ATTRIBUTE;
     }
 
     public void cloneAttribute(DataModelInstance dataModelInstance,
@@ -102,6 +148,19 @@ public class BWAttribute extends BWAttribute_Base {
             return this;
 
         throw new BWException(BWErrorType.INVALID_PATH, path + ":" + pathLeft);
+    }
+
+    public AttributeDTO getDTO() {
+        AttributeDTO attDTO = new AttributeDTO();
+        attDTO.setExtId(getExternalId());
+        attDTO.setEntityExtId(getEntity().getExternalId());
+        attDTO.setGroupExtId(getAttributeGroup() != null
+                ? getAttributeGroup().getExternalId() : null);
+        attDTO.setName(getName());
+        attDTO.setType(getType().toString());
+        attDTO.setIsMandatory(getIsMandatory());
+
+        return attDTO;
     }
 
 }

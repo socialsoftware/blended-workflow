@@ -49,8 +49,8 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
         log.debug("success ent.getExternalId():{}", ent.getExternalId());
 
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(new AttributeDTO(ent.getExternalId(),
-                        ATTRIBUTE_NAME, NUMBER, true));
+                .createAttribute(new AttributeDTO(ent.getExternalId(), null,
+                        ATTRIBUTE_NAME, AttributeType.NUMBER.toString(), true));
 
         assertFalse(notification.hasErrors());
         BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
@@ -64,8 +64,9 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
     @Test
     public void nonExistsEntityExtId() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(new AttributeDTO(NON_EXIST, ATTRIBUTE_NAME,
-                        BOOLEAN, false));
+                .createAttribute(
+                        new AttributeDTO(NON_EXIST, null, ATTRIBUTE_NAME,
+                                AttributeType.BOOLEAN.toString(), false));
 
         assertTrue(notification.hasErrors());
         assertEquals(BWErrorType.NOT_FOUND,
@@ -76,8 +77,8 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
     @Test
     public void emptyEntityExtId() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(new AttributeDTO(EMPTY_NAME, ATTRIBUTE_NAME,
-                        STRING, true));
+                .createAttribute(new AttributeDTO(EMPTY_NAME, null,
+                        ATTRIBUTE_NAME, AttributeType.STRING.toString(), true));
 
         assertTrue(notification.hasErrors());
         assertEquals(BWErrorType.NOT_FOUND,
@@ -88,8 +89,8 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
     @Test
     public void nullEntityExtId() throws BWException {
         BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(
-                        new AttributeDTO(null, ATTRIBUTE_NAME, BOOLEAN, false));
+                .createAttribute(new AttributeDTO(null, null, ATTRIBUTE_NAME,
+                        AttributeType.BOOLEAN.toString(), false));
 
         assertTrue(notification.hasErrors());
         assertEquals(BWErrorType.NOT_FOUND,

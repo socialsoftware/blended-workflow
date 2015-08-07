@@ -1,15 +1,18 @@
-package pt.ist.socialsoftware.blendedworkflow.service.dto;
+package org.blended.common.repository.resttemplate.vo;
 
-public class AttributeGroupDTO {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class AttributeGroupVO {
     private String extId;
     private String entityExtId;
     private String name;
     private boolean isMandatory;
 
-    public AttributeGroupDTO() {
+    public AttributeGroupVO() {
     }
 
-    public AttributeGroupDTO(String entityExtId, String name,
+    public AttributeGroupVO(String entityExtId, String name,
             boolean isMandatory) {
         this.entityExtId = entityExtId;
         this.name = name;

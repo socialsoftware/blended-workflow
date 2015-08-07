@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 
 public class BWRule extends BWRule_Base {
     private static Logger log = LoggerFactory.getLogger(BWRule.class);
@@ -43,6 +44,16 @@ public class BWRule extends BWRule_Base {
         getCondition().delete();
 
         deleteDomainObject();
+    }
+
+    public RuleDTO getDTO() {
+        RuleDTO ruleDTO = new RuleDTO();
+        ruleDTO.setExtId(getExternalId());
+        ruleDTO.setDataModelExtId(getDataModel().getExternalId());
+        ruleDTO.setName(getName());
+        ruleDTO.setExpression(null);
+
+        return ruleDTO;
     }
 
 }

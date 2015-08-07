@@ -10,6 +10,7 @@ import org.blended.common.common.Entity;
 import org.blended.common.common.Greater;
 import org.blended.common.common.IntConstant;
 import org.blended.common.common.Specification;
+import org.blended.common.repository.resttemplate.BWNotification;
 import org.blended.data.data.DataFactory;
 import org.blended.data.data.DataModel;
 import org.junit.After;
@@ -88,8 +89,8 @@ public class DataInterfaceTest {
 
         dataInterface = DataInterface.getInstance();
 
-        String notification = dataInterface.loadDataModel(EXISTS_SPEC_ID,
-                eDataModel);
+        BWNotification notification = dataInterface
+                .loadDataModel(EXISTS_SPEC_ID, eDataModel);
 
     }
 

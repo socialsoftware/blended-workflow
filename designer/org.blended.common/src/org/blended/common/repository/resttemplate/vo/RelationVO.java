@@ -1,6 +1,9 @@
-package pt.ist.socialsoftware.blendedworkflow.service.dto;
+package org.blended.common.repository.resttemplate.vo;
 
-public class RelationDTO {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class RelationVO {
     private String extId;
     private String dataModelExtId;
     private String name;
@@ -13,17 +16,21 @@ public class RelationDTO {
     private String rolenameTwo;
     private String cardinalityTwo;
 
-    public RelationDTO() {
+    public RelationVO() {
     }
 
-    public RelationDTO(String name, String entOneExtId, String rolenameOne,
-            String cardinalityOne, String entTwoExtId, String rolenameTwo,
-            String cardinalityTwo) {
+    public RelationVO(String dataModelExtId, String name, String entOneName,
+            String rolenameOne, String cardinalityOne, String entTwoName,
+            String rolenameTwo, String cardinalityTwo) {
+        this.extId = null;
+        this.dataModelExtId = dataModelExtId;
         this.name = name;
-        this.entOneExtId = entOneExtId;
+        this.entOneExtId = null;
+        this.setEntOneName(entOneName);
         this.rolenameOne = rolenameOne;
         this.cardinalityOne = cardinalityOne;
-        this.entTwoExtId = entTwoExtId;
+        this.entTwoExtId = null;
+        this.setEntTwoName(entTwoName);
         this.rolenameTwo = rolenameTwo;
         this.cardinalityTwo = cardinalityTwo;
     }

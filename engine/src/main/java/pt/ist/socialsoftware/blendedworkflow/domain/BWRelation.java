@@ -2,15 +2,58 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 
 //TODO: Create two separate Relations in DML for EntityOne and EntityTwo.
 public class BWRelation extends BWRelation_Base {
 
+    private final static String ZERO_MANY = "\\*";
+    private final static String ONE_MANY = "1..\\*";
+    final static String CARDINALITY = "(" + Cardinality.ONE.toString() + "|"
+            + Cardinality.ZERO_OR_ONE.toString() + "|" + ZERO_MANY + "|"
+            + ONE_MANY + ")";
+
     public enum Cardinality {
-        ZERO_MANY, ONE_MANY, ZERO_OR_ONE, ONE
+        ZERO_MANY("*"), ONE_MANY("1..*"), ZERO_OR_ONE("0..1"), ONE("1");
+
+        private String exp;
+
+        private Cardinality(String exp) {
+            this.exp = exp;
+        }
+
+        @Override
+        public String toString() {
+            return this.exp;
+        }
+
+        public static Cardinality parseCardinality(String cardinality) {
+            if (!Pattern.matches(CARDINALITY, cardinality))
+                throw new BWException(BWErrorType.INVALID_CARDINALITY,
+                        cardinality);
+
+            Cardinality res = null;
+
+            if (cardinality.equals(Cardinality.ONE.toString()))
+                return Cardinality.ONE;
+
+            if (cardinality.equals(Cardinality.ZERO_OR_ONE.toString()))
+                return Cardinality.ZERO_OR_ONE;
+
+            if (cardinality.equals(Cardinality.ZERO_MANY.toString()))
+                return Cardinality.ZERO_MANY;
+
+            if (cardinality.equals(Cardinality.ONE_MANY.toString()))
+                return Cardinality.ONE_MANY;
+
+            assert(false);
+            return res;
+        }
+
     }
 
     @Override
@@ -143,6 +186,23 @@ public class BWRelation extends BWRelation_Base {
             return getCardinalityTwo();
 
         throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolename);
+    }
+
+    public RelationDTO getDTO() {
+        RelationDTO relDTO = new RelationDTO();
+        relDTO.setExtId(getExternalId());
+        relDTO.setDataModelExtId(getDataModel().getExternalId());
+        relDTO.setName(getName());
+        relDTO.setEntOneExtId(getEntityOne().getExternalId());
+        relDTO.setEntOneName(getEntityOne().getName());
+        relDTO.setRolenameOne(getRoleNameOne());
+        relDTO.setCardinalityOne(getCardinalityOne().toString());
+        relDTO.setEntTwoExtId(getEntityTwo().getExternalId());
+        relDTO.setEntTwoName(getEntityTwo().getName());
+        relDTO.setRolenameTwo(getRoleNameTwo());
+        relDTO.setCardinalityTwo(getCardinalityTwo().toString());
+
+        return relDTO;
     }
 
 }

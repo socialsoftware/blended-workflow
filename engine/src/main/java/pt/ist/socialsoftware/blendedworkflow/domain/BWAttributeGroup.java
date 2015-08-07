@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 
 public class BWAttributeGroup extends BWAttributeGroup_Base {
     private static Logger log = LoggerFactory.getLogger(BWAttributeGroup.class);
@@ -26,6 +27,10 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
         setIsMandatory(isMandatory);
     }
 
+    public BWAttributeGroup() {
+        // TODO Auto-generated constructor stub
+    }
+
     private void checkName(String name) {
         if ((name == null) || name.equals("")) {
             throw new BWException(BWErrorType.INVALID_ATTRIBUTE_GROUP_NAME,
@@ -36,6 +41,11 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
                 attG -> (attG != this) && attG.getName().equals(name)))
             throw new BWException(BWErrorType.INVALID_ATTRIBUTE_GROUP_NAME,
                     name);
+    }
+
+    @Override
+    public ProductType getProductType() {
+        return ProductType.ATTRIBUTE_GROUP;
     }
 
     public Optional<BWAttribute> getAttribute(String name) {
@@ -65,6 +75,16 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
 
         pathLeft.remove(0);
         return att.getNext(pathLeft, path);
+    }
+
+    public AttributeGroupDTO getDTO() {
+        AttributeGroupDTO group = new AttributeGroupDTO();
+        group.setExtId(getExternalId());
+        group.setEntityExtId(getExternalId());
+        group.setName(getName());
+        group.setMandatory(getIsMandatory());
+
+        return group;
     }
 
 }

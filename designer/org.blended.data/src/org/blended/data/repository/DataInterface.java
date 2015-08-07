@@ -2,14 +2,43 @@ package org.blended.data.repository;
 
 import java.util.Set;
 
+import org.blended.common.common.And;
+import org.blended.common.common.Association;
+import org.blended.common.common.Attribute;
+import org.blended.common.common.AttributeDefinition;
+import org.blended.common.common.AttributeGroup;
+import org.blended.common.common.AttributeValue;
+import org.blended.common.common.BoolConstant;
+import org.blended.common.common.Constraint;
+import org.blended.common.common.Div;
 import org.blended.common.common.Entity;
+import org.blended.common.common.Equal;
+import org.blended.common.common.Expression;
+import org.blended.common.common.Greater;
+import org.blended.common.common.GreaterEqual;
+import org.blended.common.common.IntConstant;
+import org.blended.common.common.Minus;
+import org.blended.common.common.Mul;
+import org.blended.common.common.Not;
+import org.blended.common.common.NotEqual;
+import org.blended.common.common.Or;
+import org.blended.common.common.Plus;
+import org.blended.common.common.Smaller;
+import org.blended.common.common.SmallerEqual;
+import org.blended.common.common.StringConstant;
 import org.blended.common.repository.CommonInterface;
 import org.blended.common.repository.resttemplate.BWNotification;
 import org.blended.common.repository.resttemplate.RepositoryException;
+import org.blended.common.repository.resttemplate.vo.AttributeGroupVO;
+import org.blended.common.repository.resttemplate.vo.AttributeVO;
 import org.blended.common.repository.resttemplate.vo.DependenceVO;
 import org.blended.common.repository.resttemplate.vo.EntityVO;
+import org.blended.common.repository.resttemplate.vo.ExpressionVO;
+import org.blended.common.repository.resttemplate.vo.RelationVO;
+import org.blended.common.repository.resttemplate.vo.RuleVO;
 import org.blended.common.repository.resttemplate.vo.SpecVO;
 import org.blended.data.data.DataModel;
+import org.eclipse.emf.ecore.EObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,82 +107,94 @@ public class DataInterface {
                 log.debug("createEntity: {}", re.getMessage());
                 continue;
             }
-
-            try {
-                // create entity dependences
-                for (String eDep : eEnt.getDependsOn()) {
+            // create entity dependences
+            for (String eDep : eEnt.getDependsOn()) {
+                try {
                     ci.createDependence(new DependenceVO(entityExtId, eDep));
+                } catch (RepositoryException re) {
+                    notification.addError(re.getError());
+                    log.debug("Error: {}", re.getMessage());
                 }
+            }
+
+            for (EObject eObj : eEnt.getAttributes()) {
+                if (eObj instanceof Attribute) {
+                    String attributeExtId;
+                    Attribute eAtt = (Attribute) eObj;
+                    try {
+                        AttributeVO attributeVO = ci
+                                .createAttribute(new AttributeVO(entityExtId,
+                                        null, eAtt.getName(), eAtt.getType(),
+                                        eAtt.isMandatory()));
+                        attributeExtId = attributeVO.getExtId();
+                    } catch (RepositoryException re) {
+                        notification.addError(re.getError());
+                        log.debug("Error: {}", re.getMessage());
+                        continue;
+                    }
+
+                    // create attribute dependences
+                    for (String eDep : eAtt.getDependsOn()) {
+                        try {
+                            ci.createDependence(
+                                    new DependenceVO(attributeExtId, eDep));
+                        } catch (RepositoryException re) {
+                            notification.addError(re.getError());
+                            log.debug("Error: {}", re.getMessage());
+                        }
+                    }
+                } else if (eObj instanceof AttributeGroup) {
+                    String groupExtId;
+                    AttributeGroup eAttGroup = (AttributeGroup) eObj;
+                    try {
+                        AttributeGroupVO groupVO = ci.createAttributeGroup(
+                                new AttributeGroupVO(entityExtId,
+                                        eAttGroup.getName(),
+                                        eAttGroup.isMandatory()));
+                        groupExtId = groupVO.getExtId();
+                    } catch (RepositoryException re) {
+                        notification.addError(re.getError());
+                        log.debug("Error: {}", re.getMessage());
+                        continue;
+                    }
+                    // create group attribute dependences
+                    for (String eDep : eAttGroup.getDependsOn()) {
+                        try {
+                            ci.createDependence(
+                                    new DependenceVO(groupExtId, eDep));
+                        } catch (RepositoryException re) {
+                            notification.addError(re.getError());
+                            log.debug("Error: {}", re.getMessage());
+                        }
+                    }
+
+                    for (Attribute eAtt : eAttGroup.getAttributes()) {
+                        // create groupAttribute's attributes
+                        try {
+                            ci.createAttribute(new AttributeVO(entityExtId,
+                                    groupExtId, eAtt.getName(), eAtt.getType(),
+                                    eAtt.isMandatory()));
+                        } catch (RepositoryException re) {
+                            notification.addError(re.getError());
+                            log.debug("Error: {}", re.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Association assoc : eDataModel.getAssociations()) {
+            try {
+                ci.createRelation(new RelationVO(dataModelExtId,
+                        assoc.getName(), assoc.getEntity1().getName(),
+                        assoc.getName1(), assoc.getCardinality1(),
+                        assoc.getEntity2().getName(), assoc.getName2(),
+                        assoc.getCardinality2()));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());
-                continue;
             }
-
-            // for (EObject eObj : eEnt.getAttributes()) {
-            // if (eObj instanceof Attribute) {
-            // Attribute eAtt = (Attribute) eObj;
-            // try {
-            // adi.createAttribute(new AttributeDTO(specId,
-            // eEnt.getName(), eAtt.getName(), eAtt.getType(),
-            // eAtt.isMandatory()));
-            //
-            // // create attribute dependences
-            // for (String eDep : eAtt.getDependsOn()) {
-            // adi.createDependence(new DependenceDTO(specId,
-            // eEnt.getName(), ProductType.ATTRIBUTE,
-            // eAtt.getName(), eDep));
-            // }
-            // } catch (BWException bwe) {
-            // notification.addError(
-            // new BWError(bwe.getError(), bwe.getMessage()));
-            // log.debug("Error: {}, {}", bwe.getError(),
-            // bwe.getMessage());
-            // }
-            // } else if (eObj instanceof AttributeGroup) {
-            // AttributeGroup eAttGroup = (AttributeGroup) eObj;
-            // try {
-            // adi.createAttributeGroup(new AttributeGroupDTO(specId,
-            // eEnt.getName(), eAttGroup.getName(),
-            // eAttGroup.isMandatory()));
-            //
-            // // create group attribute dependences
-            // for (String eDep : eAttGroup.getDependsOn()) {
-            // adi.createDependence(new DependenceDTO(specId,
-            // eEnt.getName(), ProductType.ATTRIBUTE_GROUP,
-            // eAttGroup.getName(), eDep));
-            // }
-            // } catch (BWException bwe) {
-            // notification.addError(
-            // new BWError(bwe.getError(), bwe.getMessage()));
-            // log.debug("Error: {}, {}", bwe.getError(),
-            // bwe.getMessage());
-            // continue;
-            // }
-            //
-            // for (Attribute eAtt : eAttGroup.getAttributes()) {
-            // // create groupAttribute's attributes
-            // adi.createAttribute(
-            // new AttributeDTO(specId, eEnt.getName(),
-            // eAttGroup.getName(), eAtt.getName(),
-            // eAtt.getType(), eAtt.isMandatory()));
-            // }
-            // }
-            // }
         }
-
-        // for (Association assoc : eDataModel.getAssociations()) {
-        // try {
-        // adi.createRelation(new RelationDTO(specId, assoc.getName(),
-        // assoc.getEntity1().getName(), assoc.getName1(),
-        // assoc.getCardinality1(), assoc.getEntity2().getName(),
-        // assoc.getName2(), assoc.getCardinality2()));
-        // } catch (BWException bwe) {
-        // notification.addError(
-        // new BWError(bwe.getError(), bwe.getMessage()));
-        // log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
-        // }
-        // }
 
         Set<DependenceVO> deps = ci.getDependencies(dataModelExtId);
         for (DependenceVO dep : deps) {
@@ -169,115 +210,134 @@ public class DataInterface {
             }
         }
 
-        // for (Constraint constraint : eDataModel.getConstraint()) {
-        // ExpressionDTO expression = buildExpressionDTO(specId,
-        // constraint.getConstraint());
-        // try {
-        // adi.createRule(
-        // new RuleDTO(specId, constraint.getName(), expression));
-        // } catch (BWException bwe) {
-        // notification.addError(
-        // new BWError(bwe.getError(), bwe.getMessage()));
-        // log.debug("Error: {}, {}", bwe.getError(), bwe.getMessage());
-        // }
-        // }
+        for (Constraint constraint : eDataModel.getConstraint()) {
+            ExpressionVO expression = buildExpressionVO(specId,
+                    constraint.getConstraint());
+            try {
+                ci.createRule(new RuleVO(dataModelExtId, constraint.getName(),
+                        expression));
+            } catch (RepositoryException re) {
+                notification.addError(re.getError());
+                log.debug("Error: {}", re.getMessage());
+            }
+        }
 
         return notification;
     }
 
-    // private ExpressionDTO buildExpressionDTO(String specId,
-    // Expression expression) {
-    // if (expression instanceof And) {
-    // And andExpression = (And) expression;
-    // return new ExpressionDTO(specId, Type.AND,
-    // buildExpressionDTO(specId, andExpression.getLeft()),
-    // buildExpressionDTO(specId, andExpression.getRight()));
-    // } else if (expression instanceof Or) {
-    // Or orExpression = (Or) expression;
-    // return new ExpressionDTO(specId, Type.OR,
-    // buildExpressionDTO(specId, orExpression.getLeft()),
-    // buildExpressionDTO(specId, orExpression.getRight()));
-    // } else if (expression instanceof Not) {
-    // Not notExpression = (Not) expression;
-    // return new ExpressionDTO(specId, Type.NOT,
-    // buildExpressionDTO(specId, notExpression.getExpression()));
-    // } else if (expression instanceof AttributeDefinition) {
-    // AttributeDefinition defExpression = (AttributeDefinition) expression;
-    // return new ExpressionDTO(specId, Type.ATT_DEF,
-    // defExpression.getName());
-    // } else if (expression instanceof Equal) {
-    // Equal equalExpression = (Equal) expression;
-    // return new ExpressionDTO(specId, Type.EQUAL,
-    // buildExpressionDTO(specId, equalExpression.getLeft()),
-    // buildExpressionDTO(specId, equalExpression.getRight()));
-    // } else if (expression instanceof NotEqual) {
-    // NotEqual notEqualExpression = (NotEqual) expression;
-    // return new ExpressionDTO(specId, Type.NOT_EQUAL,
-    // buildExpressionDTO(specId, notEqualExpression.getLeft()),
-    // buildExpressionDTO(specId, notEqualExpression.getRight()));
-    // } else if (expression instanceof Greater) {
-    // Greater greaterExpression = (Greater) expression;
-    // return new ExpressionDTO(specId, Type.GREATER,
-    // buildExpressionDTO(specId, greaterExpression.getLeft()),
-    // buildExpressionDTO(specId, greaterExpression.getRight()));
-    // } else if (expression instanceof GreaterEqual) {
-    // GreaterEqual greaterEqualExpression = (GreaterEqual) expression;
-    // return new ExpressionDTO(specId, Type.GREATER_EQUAL,
-    // buildExpressionDTO(specId,
-    // greaterEqualExpression.getLeft()),
-    // buildExpressionDTO(specId,
-    // greaterEqualExpression.getRight()));
-    // } else if (expression instanceof Smaller) {
-    // Smaller smallerExpression = (Smaller) expression;
-    // return new ExpressionDTO(specId, Type.SMALLER,
-    // buildExpressionDTO(specId, smallerExpression.getLeft()),
-    // buildExpressionDTO(specId, smallerExpression.getRight()));
-    // } else if (expression instanceof SmallerEqual) {
-    // SmallerEqual smallerEqualExpression = (SmallerEqual) expression;
-    // return new ExpressionDTO(specId, Type.SMALLER_EQUAL,
-    // buildExpressionDTO(specId,
-    // smallerEqualExpression.getLeft()),
-    // buildExpressionDTO(specId,
-    // smallerEqualExpression.getRight()));
-    // } else if (expression instanceof Plus) {
-    // Plus castedExpression = (Plus) expression;
-    // return new ExpressionDTO(specId, Type.PLUS,
-    // buildExpressionDTO(specId, castedExpression.getLeft()),
-    // buildExpressionDTO(specId, castedExpression.getRight()));
-    // } else if (expression instanceof Minus) {
-    // Minus castedExpression = (Minus) expression;
-    // return new ExpressionDTO(specId, Type.MINUS,
-    // buildExpressionDTO(specId, castedExpression.getLeft()),
-    // buildExpressionDTO(specId, castedExpression.getRight()));
-    // } else if (expression instanceof Mul) {
-    // Mul castedExpression = (Mul) expression;
-    // return new ExpressionDTO(specId, Type.MUL,
-    // buildExpressionDTO(specId, castedExpression.getLeft()),
-    // buildExpressionDTO(specId, castedExpression.getRight()));
-    // } else if (expression instanceof Div) {
-    // Div castedExpression = (Div) expression;
-    // return new ExpressionDTO(specId, Type.DIV,
-    // buildExpressionDTO(specId, castedExpression.getLeft()),
-    // buildExpressionDTO(specId, castedExpression.getRight()));
-    // } else if (expression instanceof AttributeValue) {
-    // AttributeValue attValue = (AttributeValue) expression;
-    // return new ExpressionDTO(specId, Type.ATT_VALUE,
-    // attValue.getName());
-    // } else if (expression instanceof StringConstant) {
-    // StringConstant castedExpression = (StringConstant) expression;
-    // return new ExpressionDTO(specId, Type.STRING,
-    // castedExpression.getName());
-    // } else if (expression instanceof IntConstant) {
-    // IntConstant castedExpression = (IntConstant) expression;
-    // return new ExpressionDTO(specId, Type.INT,
-    // String.valueOf(castedExpression.getName()));
-    // } else if (expression instanceof BoolConstant) {
-    // BoolConstant castedExpression = (BoolConstant) expression;
-    // return new ExpressionDTO(specId, Type.BOOL,
-    // castedExpression.getName());
-    // }
-    // assert(false);
-    // return null;
-    // }
+    private ExpressionVO buildExpressionVO(String dataModelExtId,
+            Expression expression) {
+        if (expression instanceof And) {
+            And andExpression = (And) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.AND,
+                    buildExpressionVO(dataModelExtId, andExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            andExpression.getRight()));
+        } else if (expression instanceof Or) {
+            Or orExpression = (Or) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.OR,
+                    buildExpressionVO(dataModelExtId, orExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId, orExpression.getRight()));
+        } else if (expression instanceof Not) {
+            Not notExpression = (Not) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.NOT,
+                    buildExpressionVO(dataModelExtId,
+                            notExpression.getExpression()));
+        } else if (expression instanceof AttributeDefinition) {
+            AttributeDefinition defExpression = (AttributeDefinition) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.ATT_DEF,
+                    defExpression.getName());
+        } else if (expression instanceof Equal) {
+            Equal equalExpression = (Equal) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.EQUAL,
+                    buildExpressionVO(dataModelExtId,
+                            equalExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            equalExpression.getRight()));
+        } else if (expression instanceof NotEqual) {
+            NotEqual notEqualExpression = (NotEqual) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.NOT_EQUAL,
+                    buildExpressionVO(dataModelExtId,
+                            notEqualExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            notEqualExpression.getRight()));
+        } else if (expression instanceof Greater) {
+            Greater greaterExpression = (Greater) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.GREATER,
+                    buildExpressionVO(dataModelExtId,
+                            greaterExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            greaterExpression.getRight()));
+        } else if (expression instanceof GreaterEqual) {
+            GreaterEqual greaterEqualExpression = (GreaterEqual) expression;
+            return new ExpressionVO(dataModelExtId,
+                    ExpressionVO.Type.GREATER_EQUAL,
+                    buildExpressionVO(dataModelExtId,
+                            greaterEqualExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            greaterEqualExpression.getRight()));
+        } else if (expression instanceof Smaller) {
+            Smaller smallerExpression = (Smaller) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.SMALLER,
+                    buildExpressionVO(dataModelExtId,
+                            smallerExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            smallerExpression.getRight()));
+        } else if (expression instanceof SmallerEqual) {
+            SmallerEqual smallerEqualExpression = (SmallerEqual) expression;
+            return new ExpressionVO(dataModelExtId,
+                    ExpressionVO.Type.SMALLER_EQUAL,
+                    buildExpressionVO(dataModelExtId,
+                            smallerEqualExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            smallerEqualExpression.getRight()));
+        } else if (expression instanceof Plus) {
+            Plus castedExpression = (Plus) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.PLUS,
+                    buildExpressionVO(dataModelExtId,
+                            castedExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            castedExpression.getRight()));
+        } else if (expression instanceof Minus) {
+            Minus castedExpression = (Minus) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.MINUS,
+                    buildExpressionVO(dataModelExtId,
+                            castedExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            castedExpression.getRight()));
+        } else if (expression instanceof Mul) {
+            Mul castedExpression = (Mul) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.MUL,
+                    buildExpressionVO(dataModelExtId,
+                            castedExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            castedExpression.getRight()));
+        } else if (expression instanceof Div) {
+            Div castedExpression = (Div) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.DIV,
+                    buildExpressionVO(dataModelExtId,
+                            castedExpression.getLeft()),
+                    buildExpressionVO(dataModelExtId,
+                            castedExpression.getRight()));
+        } else if (expression instanceof AttributeValue) {
+            AttributeValue attValue = (AttributeValue) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.ATT_VALUE,
+                    attValue.getName());
+        } else if (expression instanceof StringConstant) {
+            StringConstant castedExpression = (StringConstant) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.STRING,
+                    castedExpression.getName());
+        } else if (expression instanceof IntConstant) {
+            IntConstant castedExpression = (IntConstant) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.INT,
+                    String.valueOf(castedExpression.getName()));
+        } else if (expression instanceof BoolConstant) {
+            BoolConstant castedExpression = (BoolConstant) expression;
+            return new ExpressionVO(dataModelExtId, ExpressionVO.Type.BOOL,
+                    castedExpression.getName());
+        }
+        assert(false);
+        return null;
+    }
 
 }

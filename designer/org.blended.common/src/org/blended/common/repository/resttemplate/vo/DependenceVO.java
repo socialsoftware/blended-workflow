@@ -1,5 +1,8 @@
 package org.blended.common.repository.resttemplate.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DependenceVO {
 
     private String extId;

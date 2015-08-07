@@ -10,8 +10,12 @@ import java.util.Set;
 import org.blended.common.repository.resttemplate.BWError;
 import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.RestUtil;
+import org.blended.common.repository.resttemplate.vo.AttributeGroupVO;
+import org.blended.common.repository.resttemplate.vo.AttributeVO;
 import org.blended.common.repository.resttemplate.vo.DependenceVO;
 import org.blended.common.repository.resttemplate.vo.EntityVO;
+import org.blended.common.repository.resttemplate.vo.RelationVO;
+import org.blended.common.repository.resttemplate.vo.RuleVO;
 import org.blended.common.repository.resttemplate.vo.SpecVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,6 +186,62 @@ public class CommonInterface {
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         restTemplate.delete(uri, params);
+    }
+
+    public AttributeVO createAttribute(AttributeVO attribueVO) {
+        log.debug(
+                "createAttribute: entitityExtId:{}, groupExtId:{}, {}, {}, {}",
+                attribueVO.getEntityExtId(), attribueVO.getGroupExtId(),
+                attribueVO.getName(), attribueVO.getType(),
+                attribueVO.getIsMandatory());
+
+        final String uri = SERVER_ADDRESS + "/attributes";
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        AttributeVO result = restTemplate.postForObject(uri, attribueVO,
+                AttributeVO.class);
+
+        return result;
+    }
+
+    public AttributeGroupVO createAttributeGroup(
+            AttributeGroupVO attributeGroupVO) {
+        log.debug("createAttributeGroup: entitityExtId:{},  {}, {}",
+                attributeGroupVO.getEntityExtId(), attributeGroupVO.getName(),
+                attributeGroupVO.isMandatory());
+
+        final String uri = SERVER_ADDRESS + "/groupattributes";
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        AttributeGroupVO result = restTemplate.postForObject(uri,
+                attributeGroupVO, AttributeGroupVO.class);
+
+        return result;
+    }
+
+    public RelationVO createRelation(RelationVO relationVO) {
+        log.debug("createRelation: {}, {}, {}", relationVO.getName(),
+                relationVO.getEntOneName(), relationVO.getEntTwoName());
+
+        final String uri = SERVER_ADDRESS + "/relations";
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        RelationVO result = restTemplate.postForObject(uri, relationVO,
+                RelationVO.class);
+
+        return result;
+    }
+
+    public RuleVO createRule(RuleVO ruleVO) {
+        log.debug("createRule: {}, {}, {}", ruleVO.getDataModelExtId(),
+                ruleVO.getName(), ruleVO.getExpression());
+
+        final String uri = SERVER_ADDRESS + "/rules";
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        RuleVO result = restTemplate.postForObject(uri, ruleVO, RuleVO.class);
+
+        return result;
     }
 
     // public ProductDTO getSourceOfPath(String specId, String path) {

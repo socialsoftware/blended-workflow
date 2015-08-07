@@ -4,9 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
@@ -45,9 +48,9 @@ public class GetSourceOfPathServiceTest extends TeardownRollbackTest {
         BWEntity entityTwo = new BWEntity(spec.getDataModel(), ENTITY_NAME_TWO,
                 false);
         new BWAttribute(spec.getDataModel(), entity, null, ATTRIBUTE_NAME_ONE,
-                BWAttribute.AttributeType.NUMBER, true, false, false);
+                AttributeType.NUMBER, true, false, false);
         new BWAttribute(spec.getDataModel(), entity, null, ATTRIBUTE_NAME_TWO,
-                BWAttribute.AttributeType.STRING, false, false, false);
+                AttributeType.STRING, false, false, false);
 
         new BWRelation(spec.getDataModel(), "relation", entity, ROLE_ONE,
                 Cardinality.ZERO_OR_ONE, false, entityTwo, ROLE_TWO,
@@ -59,11 +62,16 @@ public class GetSourceOfPathServiceTest extends TeardownRollbackTest {
         ProductDTO productDTO = designInterface.getSourceOfPath(SPEC_ID,
                 ENTITY_NAME_TWO + "." + ROLE_ONE + "." + ATTRIBUTE_NAME_ONE);
 
-        assertEquals(SPEC_ID, productDTO.specDTO.getSpecId());
-        assertEquals(ProductType.ENTITY, productDTO.type);
-        assertEquals(ENTITY_NAME_TWO, productDTO.entityDTO.getName());
-        assertEquals(null, productDTO.attributeGroupDTO);
-        assertEquals(null, productDTO.attributeDTO);
+        BWProduct product = FenixFramework
+                .getDomainObject(productDTO.getProductExtId());
+
+        assertEquals(ProductType.ENTITY, product.getProductType());
+
+        BWEntity entity = (BWEntity) product;
+
+        assertEquals(SPEC_ID,
+                entity.getDataModel().getSpecification().getSpecId());
+        assertEquals(ENTITY_NAME_TWO, entity.getName());
     }
 
 }

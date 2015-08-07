@@ -1,6 +1,9 @@
-package pt.ist.socialsoftware.blendedworkflow.service.dto;
+package org.blended.common.repository.resttemplate.vo;
 
-public class AttributeDTO {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class AttributeVO {
     private String extId;
     private String entityExtId;
     private String groupExtId;
@@ -8,10 +11,10 @@ public class AttributeDTO {
     private String type;
     private boolean isMandatory;
 
-    public AttributeDTO() {
+    public AttributeVO() {
     }
 
-    public AttributeDTO(String entityExtId, String groupExtId, String name,
+    public AttributeVO(String entityExtId, String groupExtId, String name,
             String type, boolean isMandatory) {
         this.extId = null;
         this.entityExtId = entityExtId;

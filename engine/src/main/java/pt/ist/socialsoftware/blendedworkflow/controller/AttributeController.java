@@ -10,27 +10,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 
 @Controller
-@RequestMapping(value = "/entities")
-public class EntityController {
-    private static Logger log = LoggerFactory.getLogger(EntityController.class);
+@RequestMapping(value = "/attributes")
+public class AttributeController {
+    private static Logger log = LoggerFactory
+            .getLogger(AttributeController.class);
 
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<EntityDTO> createEntity(
-            @RequestBody EntityDTO entDTO) {
-        log.debug("createEntity dataModelExtId:{}, name:{}, exists:{}",
-                entDTO.getDataModelExtId(), entDTO.getName(),
-                entDTO.getExists());
+    public ResponseEntity<AttributeDTO> createAttribute(
+            @RequestBody AttributeDTO attDTO) {
+        log.debug(
+                "createAttribute entityExtId:{}, groupExtId:{}, name:{}, type:{}",
+                attDTO.getEntityExtId(), attDTO.getGroupExtId(),
+                attDTO.getName(), attDTO.getType());
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
-        BWEntity entity = adi.createEntity(entDTO);
+        BWAttribute attribute = adi.createAttribute(attDTO);
 
-        return new ResponseEntity<EntityDTO>(entity.getDTO(),
+        return new ResponseEntity<AttributeDTO>(attribute.getDTO(),
                 HttpStatus.CREATED);
     }
 

@@ -28,8 +28,6 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
     private static String ENTITY_2_ATT_1_NAME = "Age";
     private static Boolean ENTITY_1_ATT_1_KEY = true;
     private static Boolean ENTITY_2_ATT_1_KEY = true;
-    private static AttributeType ENTITY_1_ATT_1_TYPE = AttributeType.STRING;
-    private static AttributeType ENTITY_2_ATT_1_TYPE = AttributeType.STRING;
 
     private static String RELATION_1_NAME = "Person has Dog";
     private static Cardinality ENTITY_1_CARDINALITY = Cardinality.ONE;
@@ -68,7 +66,7 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
         // Entity1
         entity1 = new BWEntity(dataModelInstance, ENTITY_1_NAME, true);
         entity1Att1 = new BWAttribute(dataModelInstance, entity1, null,
-                ENTITY_1_ATT_1_NAME, ENTITY_1_ATT_1_TYPE, false,
+                ENTITY_1_ATT_1_NAME, AttributeType.STRING, false,
                 ENTITY_1_ATT_1_KEY, false);
 
         entityInstance1_1 = new EntityInstance(entity1);
@@ -84,7 +82,7 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
         // Entity2
         entity2 = new BWEntity(dataModelInstance, ENTITY_2_NAME, false);
         entity2Att1 = new BWAttribute(dataModelInstance, entity2, null,
-                ENTITY_2_ATT_1_NAME, ENTITY_2_ATT_1_TYPE, false,
+                ENTITY_2_ATT_1_NAME, AttributeType.STRING, false,
                 ENTITY_2_ATT_1_KEY, false);
 
         entityInstance2_1 = new EntityInstance(entity2);

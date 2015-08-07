@@ -1,12 +1,16 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
@@ -46,11 +50,9 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
         BWEntity entityTwo = new BWEntity(spec.getDataModel(), ENTITY_NAME_TWO,
                 false);
         new BWAttribute(spec.getDataModel(), entityOne, null,
-                ATTRIBUTE_NAME_ONE, BWAttribute.AttributeType.NUMBER, true,
-                false, false);
+                ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false, false);
         new BWAttribute(spec.getDataModel(), entityOne, null,
-                ATTRIBUTE_NAME_TWO, BWAttribute.AttributeType.STRING, false,
-                false, false);
+                ATTRIBUTE_NAME_TWO, AttributeType.STRING, false, false, false);
 
         new BWRelation(spec.getDataModel(), "relation", entityOne, ROLE_ONE,
                 Cardinality.ZERO_OR_ONE, false, entityTwo, ROLE_TWO,
@@ -62,13 +64,18 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
         ProductDTO productDTO = designInterface.getTargetOfPath(SPEC_ID,
                 ENTITY_NAME_TWO + "." + ROLE_ONE + "." + ATTRIBUTE_NAME_ONE);
 
-        assertEquals(SPEC_ID, productDTO.specDTO.getSpecId());
-        assertEquals(ProductType.ATTRIBUTE, productDTO.type);
+        BWProduct product = FenixFramework
+                .getDomainObject(productDTO.getProductExtId());
+
+        assertEquals(ProductType.ATTRIBUTE, product.getProductType());
+
+        BWAttribute attribute = (BWAttribute) product;
+
+        assertEquals(SPEC_ID,
+                attribute.getDataModel().getSpecification().getSpecId());
         assertEquals(entityOne.getExternalId(),
-                productDTO.attributeDTO.entityExtId);
-        assertEquals(ATTRIBUTE_NAME_ONE, productDTO.attributeDTO.name);
-        assertEquals(null, productDTO.attributeGroupDTO);
-        assertEquals(null, productDTO.entityDTO);
+                attribute.getEntity().getExternalId());
+        assertEquals(ATTRIBUTE_NAME_ONE, attribute.getName());
     }
 
     @Test
@@ -76,24 +83,27 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
         ProductDTO productDTO = designInterface.getTargetOfPath(SPEC_ID,
                 ENTITY_NAME_TWO + "." + ROLE_ONE);
 
-        assertEquals(SPEC_ID, productDTO.specDTO.getSpecId());
-        assertEquals(ProductType.ENTITY, productDTO.type);
-        assertEquals(ENTITY_NAME_ONE, productDTO.entityDTO.getName());
-        assertEquals(null, productDTO.attributeGroupDTO);
-        assertEquals(null, productDTO.attributeDTO);
+        BWProduct product = FenixFramework
+                .getDomainObject(productDTO.getProductExtId());
+
+        assertEquals(ProductType.ENTITY, product.getProductType());
+
+        BWEntity entity = (BWEntity) product;
+
+        assertEquals(SPEC_ID,
+                entity.getDataModel().getSpecification().getSpecId());
+        assertEquals(ENTITY_NAME_ONE, entity.getName());
     }
 
     @Test
     public void failNoAttribute() throws BWException {
-        ProductDTO productDTO = designInterface.getTargetOfPath(SPEC_ID,
-                ENTITY_NAME_TWO + "." + ROLE_ONE + "." + "blablabla");
-
-        assertEquals(null, productDTO.specDTO);
-        assertEquals(null, productDTO.type);
-        assertEquals(null, productDTO.entityDTO);
-        assertEquals(null, productDTO.attributeGroupDTO);
-        assertEquals(null, productDTO.attributeDTO);
-        assertEquals(BWErrorType.INVALID_PATH, productDTO.error.getType());
+        try {
+            designInterface.getTargetOfPath(SPEC_ID,
+                    ENTITY_NAME_TWO + "." + ROLE_ONE + "." + "blablabla");
+            fail();
+        } catch (BWException bwe) {
+            assertEquals(BWErrorType.INVALID_PATH, bwe.getError());
+        }
     }
 
 }

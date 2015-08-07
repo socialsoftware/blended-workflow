@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
@@ -48,11 +49,11 @@ public class GetDependencePathsTest extends TeardownRollbackTest {
         BWEntity entityTwo = new BWEntity(spec.getDataModel(), ENTITY_NAME_TWO,
                 false);
         BWAttribute attributeOne = new BWAttribute(spec.getDataModel(),
-                entityOne, null, ATTRIBUTE_NAME_ONE,
-                BWAttribute.AttributeType.NUMBER, true, false, false);
+                entityOne, null, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true,
+                false, false);
         BWAttribute attributeTwo = new BWAttribute(spec.getDataModel(),
-                entityOne, null, ATTRIBUTE_NAME_TWO,
-                BWAttribute.AttributeType.STRING, false, false, false);
+                entityOne, null, ATTRIBUTE_NAME_TWO, AttributeType.STRING,
+                false, false, false);
 
         new BWRelation(spec.getDataModel(), "relation", entityOne, ROLE_ONE,
                 Cardinality.ZERO_OR_ONE, false, entityTwo, ROLE_TWO,

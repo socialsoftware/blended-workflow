@@ -1,29 +1,22 @@
-package pt.ist.socialsoftware.blendedworkflow.service.dto;
+package org.blended.common.repository.resttemplate.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RuleDTO {
+public class RuleVO {
     private String extId;
     private String dataModelExtId;
     private String name;
-    private ExpressionDTO expression;
+    private ExpressionVO expression;
 
-    public RuleDTO() {
+    public RuleVO() {
     }
 
-    public RuleDTO(String dataModelExtId, String name, ExpressionDTO expDTO) {
+    public RuleVO(String dataModelExtId, String name, ExpressionVO expression) {
         this.extId = null;
         this.dataModelExtId = dataModelExtId;
         this.name = name;
-        this.expression = expDTO;
-    }
-
-    public RuleDTO(String dataModelExtId, String name) {
-        this.extId = null;
-        this.dataModelExtId = dataModelExtId;
-        this.name = name;
-        this.expression = null;
+        this.expression = expression;
     }
 
     public String getExtId() {
@@ -50,12 +43,11 @@ public class RuleDTO {
         this.name = name;
     }
 
-    public ExpressionDTO getExpression() {
+    public ExpressionVO getExpression() {
         return expression;
     }
 
-    public void setExpression(ExpressionDTO expDTO) {
-        this.expression = expDTO;
+    public void setExpression(ExpressionVO expression) {
+        this.expression = expression;
     }
-
 }

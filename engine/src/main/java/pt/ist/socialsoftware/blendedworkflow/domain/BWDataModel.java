@@ -49,8 +49,8 @@ public class BWDataModel extends BWDataModel_Base {
     }
 
     public void clean() {
-        getEntitiesSet().stream().forEach(ent -> ent.delete());
         getRuleSet().stream().forEach(rule -> rule.delete());
+        getEntitiesSet().stream().forEach(ent -> ent.delete());
     }
 
     public void delete() {

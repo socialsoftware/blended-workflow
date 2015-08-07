@@ -18,7 +18,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
 public class TransactionFilter implements Filter {
 
     @Override
-    @Atomic(mode = TxMode.WRITE, flattenNested = false)
+    @Atomic(mode = TxMode.READ)
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
         chain.doFilter(request, response);

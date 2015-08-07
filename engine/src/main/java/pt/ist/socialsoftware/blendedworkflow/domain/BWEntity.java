@@ -45,16 +45,20 @@ public class BWEntity extends BWEntity_Base {
             throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
     }
 
+    @Override
+    public ProductType getProductType() {
+        return ProductType.ENTITY;
+    }
+
     public BWAttribute createAttribute(BWAttributeGroup attGroup, String name,
             AttributeType type, boolean isMandatory) {
-        return new BWAttribute(this.getDataModel(), this, attGroup, name, type,
+        return new BWAttribute(getDataModel(), this, attGroup, name, type,
                 isMandatory, false, false);
     }
 
     public BWAttributeGroup createAttributeGroup(String name,
             boolean isMandatory) {
-        return new BWAttributeGroup(this.getDataModel(), this, name,
-                isMandatory);
+        return new BWAttributeGroup(getDataModel(), this, name, isMandatory);
     }
 
     public BWRelation createRelation(String name, String roleNameOne,

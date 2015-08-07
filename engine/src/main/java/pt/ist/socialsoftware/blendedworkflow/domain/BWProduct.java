@@ -13,6 +13,8 @@ public abstract class BWProduct extends BWProduct_Base {
 
     public abstract BWEntity getEntity();
 
+    public abstract ProductType getProductType();
+
     public abstract BWProduct getNext(List<String> pathLeft, String path);
 
     public void delete() {

@@ -7,6 +7,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ExpressionDTO {
     private static Logger log = LoggerFactory.getLogger(ExpressionDTO.class);
 
@@ -22,48 +25,111 @@ public class ExpressionDTO {
         return bools.contains(type);
     }
 
-    public SpecDTO specDTO;
-    public Type type;
+    private String dataModelExtId;
+    private String type;
     // when unary value
-    public String value;
+    private String value;
     // when unary not
-    public ExpressionDTO expDTO;
+    private ExpressionDTO unaryExpression;
     // when binary
-    public ExpressionDTO leftExpDTO;
-    public ExpressionDTO rightExpDTO;
+    private ExpressionDTO leftExpression;
+    private ExpressionDTO rightExpression;
 
-    public ExpressionDTO(String specId, Type type, ExpressionDTO leftExpDTO,
-            ExpressionDTO rightExpDTO) {
-        log.debug("type:{}", type.name());
-
-        this.specDTO = new SpecDTO(specId);
-        this.type = type;
-        this.value = null;
-        this.expDTO = null;
-        this.leftExpDTO = leftExpDTO;
-        this.rightExpDTO = rightExpDTO;
+    public ExpressionDTO() {
     }
 
-    public ExpressionDTO(String specId, Type type, ExpressionDTO expDTO) {
-        log.debug("type:{}", type.name());
+    public ExpressionDTO(String dataModelExtId, Type type,
+            ExpressionDTO leftExpDTO, ExpressionDTO rightExpDTO) {
+        log.debug("type:{}", type);
 
-        this.specDTO = new SpecDTO(specId);
-        this.type = type;
+        this.dataModelExtId = dataModelExtId;
+        this.type = type.name();
         this.value = null;
-        this.expDTO = expDTO;
-        this.leftExpDTO = null;
-        this.rightExpDTO = null;
+        this.unaryExpression = null;
+        this.leftExpression = leftExpDTO;
+        this.rightExpression = rightExpDTO;
     }
 
-    public ExpressionDTO(String specId, Type type, String value) {
-        log.debug("type:{}, value:{}", type.name(), value);
+    public ExpressionDTO(String dataModelExtId, Type type,
+            ExpressionDTO expDTO) {
+        log.debug("type:{}", type);
 
-        this.specDTO = new SpecDTO(specId);
-        this.type = type;
+        this.dataModelExtId = dataModelExtId;
+        this.type = type.name();
+        this.value = null;
+        this.unaryExpression = expDTO;
+        this.leftExpression = null;
+        this.rightExpression = null;
+    }
+
+    public ExpressionDTO(String dataModelExtId, Type type, String value) {
+        log.debug("type:{}, value:{}", type, value);
+
+        this.dataModelExtId = dataModelExtId;
+        this.type = type.name();
         this.value = value;
-        this.expDTO = null;
-        this.leftExpDTO = null;
-        this.rightExpDTO = null;
+        this.unaryExpression = null;
+        this.leftExpression = null;
+        this.rightExpression = null;
+    }
+
+    @Override
+    public String toString() {
+        if (this.value != null)
+            return getType() + "(" + getValue() + ")";
+        else if (this.unaryExpression != null)
+            return getType() + "(" + getUnaryExpression().toString() + ")";
+        else
+            return getType() + "(" + getLeftExpression().toString() + ","
+                    + getRightExpression().toString() + ")";
+    }
+
+    public String getDataModelExtId() {
+        return dataModelExtId;
+    }
+
+    public void setDataModelExtId(String dataModelExtId) {
+        this.dataModelExtId = dataModelExtId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public ExpressionDTO getUnaryExpression() {
+        return unaryExpression;
+    }
+
+    public void setUnaryExpression(ExpressionDTO unaryExpression) {
+        this.unaryExpression = unaryExpression;
+    }
+
+    public ExpressionDTO getLeftExpression() {
+        return leftExpression;
+    }
+
+    public void setLeftExpresssion(ExpressionDTO leftExpresssion) {
+        this.leftExpression = leftExpresssion;
+    }
+
+    public ExpressionDTO getRightExpression() {
+        return rightExpression;
+    }
+
+    public void setRightExpression(ExpressionDTO rightExpression) {
+        this.rightExpression = rightExpression;
     }
 
 }
