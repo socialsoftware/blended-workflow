@@ -44,11 +44,16 @@ public class BWGoalModel extends BWGoalModel_Base {
         throw new BWException(BWErrorType.NON_EXISTENT_GOAL_NAME, name);
     }
 
+    public void clean() {
+        getGoalSet().stream().forEach(goal -> goal.delete());
+    }
+
     public void delete() {
         setSpecification(null);
 
-        getGoalSet().stream().forEach(goal -> goal.delete());
+        clean();
 
         deleteDomainObject();
     }
+
 }

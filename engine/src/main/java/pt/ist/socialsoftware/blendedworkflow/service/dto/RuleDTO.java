@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class RuleDTO {
     private String extId;
     private String dataModelExtId;
+    private String conditionModelExtId;
     private String name;
     private ExpressionDTO expression;
 
@@ -15,6 +16,7 @@ public class RuleDTO {
     public RuleDTO(String dataModelExtId, String name, ExpressionDTO expDTO) {
         this.extId = null;
         this.dataModelExtId = dataModelExtId;
+        this.conditionModelExtId = null;
         this.name = name;
         this.expression = expDTO;
     }
@@ -22,6 +24,7 @@ public class RuleDTO {
     public RuleDTO(String dataModelExtId, String name) {
         this.extId = null;
         this.dataModelExtId = dataModelExtId;
+        this.conditionModelExtId = null;
         this.name = name;
         this.expression = null;
     }
@@ -40,6 +43,14 @@ public class RuleDTO {
 
     public void setDataModelExtId(String dataModelExtId) {
         this.dataModelExtId = dataModelExtId;
+    }
+
+    public String getConditionModelExtId() {
+        return conditionModelExtId;
+    }
+
+    public void setConditionModelExtId(String conditionModelExtId) {
+        this.conditionModelExtId = conditionModelExtId;
     }
 
     public String getName() {

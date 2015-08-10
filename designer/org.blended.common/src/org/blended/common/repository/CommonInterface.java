@@ -6,14 +6,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.blended.common.repository.resttemplate.BWError;
 import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.RestUtil;
 import org.blended.common.repository.resttemplate.vo.AttributeGroupVO;
 import org.blended.common.repository.resttemplate.vo.AttributeVO;
+import org.blended.common.repository.resttemplate.vo.DEFEntityConditionVO;
+import org.blended.common.repository.resttemplate.vo.DefAttributeConditionVO;
 import org.blended.common.repository.resttemplate.vo.DependenceVO;
 import org.blended.common.repository.resttemplate.vo.EntityVO;
+import org.blended.common.repository.resttemplate.vo.MulConditionVO;
+import org.blended.common.repository.resttemplate.vo.ProductVO;
 import org.blended.common.repository.resttemplate.vo.RelationVO;
 import org.blended.common.repository.resttemplate.vo.RuleVO;
 import org.blended.common.repository.resttemplate.vo.SpecVO;
@@ -40,6 +45,19 @@ public class CommonInterface {
             instance = new CommonInterface();
         }
         return instance;
+    }
+
+    public void deleteSpecification(String specId) {
+        log.debug("deleteSpecification: {}", specId);
+
+        final String uri = SERVER_ADDRESS + "/specs/{specId}";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        restTemplate.delete(uri, params);
+
     }
 
     public SpecVO getSpecBySpecId(String specId) {
@@ -134,7 +152,7 @@ public class CommonInterface {
 
     public DependenceVO createDependence(DependenceVO dependenceVO) {
         log.debug("createDependence: {}, {}", dependenceVO.getProductExtId(),
-                dependenceVO.getPath());
+                dependenceVO.getPath1());
 
         final String uri = SERVER_ADDRESS + "/dependencies";
 
@@ -240,6 +258,137 @@ public class CommonInterface {
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         RuleVO result = restTemplate.postForObject(uri, ruleVO, RuleVO.class);
+
+        return result;
+    }
+
+    public void printSpecificationModels(String specId) {
+        log.debug("printSpecificationModels: {}", specId);
+
+        final String uri = SERVER_ADDRESS + "/specs/{specId}/print";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        restTemplate.getForObject(uri, Boolean.class, params);
+    }
+
+    public void cleanConditionModel(String conditionModelExtId) {
+        log.debug("cleanConditionModel: {}", conditionModelExtId);
+
+        final String uri = SERVER_ADDRESS + "/conditionmodels/{extId}";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("extId", conditionModelExtId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        restTemplate.put(uri, null, params);
+    }
+
+    public DEFEntityConditionVO createEntityAchieveCondition(
+            DEFEntityConditionVO entityAchieveConditionVO) {
+        log.debug("createEntityAchieveCondition: {}",
+                entityAchieveConditionVO.getConditionModelExtId(),
+                entityAchieveConditionVO.getEntityName(),
+                entityAchieveConditionVO.isExists());
+
+        final String uri = SERVER_ADDRESS + "/entityachieveconditions";
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        DEFEntityConditionVO result = restTemplate.postForObject(uri,
+                entityAchieveConditionVO, DEFEntityConditionVO.class);
+
+        return result;
+    }
+
+    public DependenceVO createEntityDependenceCondition(
+            DependenceVO dependenceVO) {
+        log.debug("createEntityDependenceCondition path1:{}, path2:{}",
+                dependenceVO.getPath1(), dependenceVO.getPath2());
+
+        final String uri = SERVER_ADDRESS + "/entitydependenceconditions";
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        DependenceVO result = restTemplate.postForObject(uri, dependenceVO,
+                DependenceVO.class);
+
+        return result;
+    }
+
+    public MulConditionVO createEntityInvariantCondition(
+            MulConditionVO mulConditionVO) {
+        log.debug("createEntityInvariantCondition rolePath:{}, cardinality:{}",
+                mulConditionVO.getRolePath(), mulConditionVO.getCardinality());
+
+        final String uri = SERVER_ADDRESS + "/entityinvariantconditions";
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        MulConditionVO result = restTemplate.postForObject(uri, mulConditionVO,
+                MulConditionVO.class);
+
+        return result;
+    }
+
+    public DefAttributeConditionVO createAttributeAchieveCondition(
+            DefAttributeConditionVO defAttributeConditionVO) {
+        log.debug("createAttributeAchieveCondition paths:{}, mandatory:{}",
+                defAttributeConditionVO.getPaths().toString(),
+                defAttributeConditionVO.isMandatory());
+
+        final String uri = SERVER_ADDRESS + "/attributeachieveconditions";
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        DefAttributeConditionVO result = restTemplate.postForObject(uri,
+                defAttributeConditionVO, DefAttributeConditionVO.class);
+
+        return result;
+    }
+
+    public RuleVO createAttributeInvariantCondition(RuleVO ruleVO) {
+        log.debug(
+                "createAttributeInvariantCondition conditionModelExtId:{}, name:{}",
+                ruleVO.getConditionModelExtId(), ruleVO.getName());
+
+        final String uri = SERVER_ADDRESS + "/attributeinvariantconditions";
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        RuleVO result = restTemplate.postForObject(uri, ruleVO, RuleVO.class);
+
+        return result;
+    }
+
+    public ProductVO getProduct(String dataModelExtId, Set<String> sourceAtts) {
+        log.debug("getProduct: {}", sourceAtts.toString());
+
+        final String uri = SERVER_ADDRESS
+                + "/datamodels/{dataModelExtId}/products/{atts}/";
+
+        String atts = sourceAtts.stream().collect(Collectors.joining(","));
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("dataModelExtId", dataModelExtId);
+        params.put("atts", atts);
+
+        log.debug("getProduct: {}", atts);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        ProductVO productVO = restTemplate.getForObject(uri, ProductVO.class,
+                params);
+
+        return productVO;
+    }
+
+    public DependenceVO createAttributeDependenceCondition(
+            DependenceVO dependenceVO) {
+        log.debug("createDependenceCondition productExtId:{}, path:{}",
+                dependenceVO.getProductExtId(), dependenceVO.getPath1());
+
+        final String uri = SERVER_ADDRESS + "/attributedependenceconditions";
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        DependenceVO result = restTemplate.postForObject(uri, dependenceVO,
+                DependenceVO.class);
 
         return result;
     }

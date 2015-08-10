@@ -8,6 +8,16 @@ public class SpecVO {
     private String specId;
     private String name;
     private String dataModelExtId;
+    private String conditionModelExtId;
+    private String goalModelExtId;
+
+    public SpecVO() {
+    }
+
+    public SpecVO(String specId, String name) {
+        this.specId = specId;
+        this.name = name;
+    }
 
     public String getExternalId() {
         return externalId;
@@ -41,12 +51,20 @@ public class SpecVO {
         this.dataModelExtId = dataModelExtId;
     }
 
-    public SpecVO() {
+    public String getConditionModelExtId() {
+        return conditionModelExtId;
     }
 
-    public SpecVO(String specId, String name) {
-        this.specId = specId;
-        this.name = name;
+    public void setConditionModelExtId(String conditionModelExtId) {
+        this.conditionModelExtId = conditionModelExtId;
+    }
+
+    public String getGoalModelExtId() {
+        return goalModelExtId;
+    }
+
+    public void setGoalModelExtId(String goalModelExtId) {
+        this.goalModelExtId = goalModelExtId;
     }
 
 }

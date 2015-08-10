@@ -18,7 +18,6 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 @Controller
 @RequestMapping(value = "/dependencies")
 public class DependenceController {
-
     private static Logger log = LoggerFactory
             .getLogger(DependenceController.class);
 
@@ -26,7 +25,7 @@ public class DependenceController {
     public ResponseEntity<DependenceDTO> createDependence(
             @RequestBody DependenceDTO dependenceDTO) {
         log.debug("createDependence productExtId:{}, path:{}",
-                dependenceDTO.getProductExtId(), dependenceDTO.getPath());
+                dependenceDTO.getProductExtId(), dependenceDTO.getPath1());
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 

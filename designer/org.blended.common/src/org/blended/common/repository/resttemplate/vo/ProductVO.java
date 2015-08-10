@@ -1,15 +1,13 @@
-package pt.ist.socialsoftware.blendedworkflow.service.dto;
+package org.blended.common.repository.resttemplate.vo;
 
-public class ProductDTO {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ProductVO {
     private String productExtId;
     private String type;
 
-    public ProductDTO(String productExtId, String type) {
-        this.productExtId = productExtId;
-        this.type = type;
-    }
-
-    public ProductDTO() {
+    public ProductVO() {
     }
 
     public String getProductExtId() {

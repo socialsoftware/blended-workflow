@@ -6,15 +6,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class DependenceVO {
 
     private String extId;
+    private String conditionModelExtId;
     private String productExtId;
-    private String path;
+    private String path1;
+    private String path2;
 
     public DependenceVO() {
     }
 
     public DependenceVO(String productExtId, String path) {
         this.productExtId = productExtId;
-        this.path = path;
+        this.path1 = path;
+    }
+
+    public DependenceVO(String conditionModelExtId, String path1,
+            String path2) {
+        this.conditionModelExtId = conditionModelExtId;
+        this.path1 = path1;
+        this.path2 = path2;
     }
 
     public String getExtId() {
@@ -25,6 +34,14 @@ public class DependenceVO {
         this.extId = extId;
     }
 
+    public String getConditionModelExtId() {
+        return conditionModelExtId;
+    }
+
+    public void setConditionModelExtId(String conditionModelExtId) {
+        this.conditionModelExtId = conditionModelExtId;
+    }
+
     public String getProductExtId() {
         return productExtId;
     }
@@ -33,12 +50,20 @@ public class DependenceVO {
         this.productExtId = productExtId;
     }
 
-    public String getPath() {
-        return path;
+    public String getPath1() {
+        return path1;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setPath1(String path) {
+        this.path1 = path;
+    }
+
+    public String getPath2() {
+        return path2;
+    }
+
+    public void setPath2(String path2) {
+        this.path2 = path2;
     }
 
 }

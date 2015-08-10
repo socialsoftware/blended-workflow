@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class RuleVO {
     private String extId;
     private String dataModelExtId;
+    private String conditionModelExtId;
     private String name;
     private ExpressionVO expression;
 
@@ -15,8 +16,17 @@ public class RuleVO {
     public RuleVO(String dataModelExtId, String name, ExpressionVO expression) {
         this.extId = null;
         this.dataModelExtId = dataModelExtId;
+        this.conditionModelExtId = null;
         this.name = name;
         this.expression = expression;
+    }
+
+    public RuleVO(String conditionModelExtId, String name) {
+        this.extId = null;
+        this.dataModelExtId = null;
+        this.conditionModelExtId = conditionModelExtId;
+        this.name = name;
+        this.expression = null;
     }
 
     public String getExtId() {
@@ -33,6 +43,14 @@ public class RuleVO {
 
     public void setDataModelExtId(String dataModelExtId) {
         this.dataModelExtId = dataModelExtId;
+    }
+
+    public String getConditionModelExtId() {
+        return conditionModelExtId;
+    }
+
+    public void setConditionModelExtId(String conditionModelExtId) {
+        this.conditionModelExtId = conditionModelExtId;
     }
 
     public String getName() {

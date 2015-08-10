@@ -6,6 +6,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DEFEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DEFEntityCondition extends DEFEntityCondition_Base {
@@ -342,6 +343,16 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
     @Override
     public String getSubPath() {
         return "DEF(" + getEntity().getName() + ")";
+    }
+
+    public DEFEntityConditionDTO getDTO() {
+        DEFEntityConditionDTO eacDTO = new DEFEntityConditionDTO();
+        eacDTO.setExtId(getExternalId());
+        eacDTO.setConditionModelExtId(getConditionModel().getExternalId());
+        eacDTO.setEntityName(getEntity().getName());
+        eacDTO.setExists(getEntity().getExists());
+
+        return eacDTO;
     }
 
 }

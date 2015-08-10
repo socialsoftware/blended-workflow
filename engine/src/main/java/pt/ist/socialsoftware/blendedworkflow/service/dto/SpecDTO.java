@@ -5,6 +5,8 @@ public class SpecDTO {
     private String specId;
     private String name;
     private String dataModelExtId;
+    private String conditionModelExtId;
+    private String goalModelExtId;
 
     public String getExternalId() {
         return externalId;
@@ -48,6 +50,22 @@ public class SpecDTO {
 
     public SpecDTO(String specId) {
         this.specId = specId;
+    }
+
+    public String getConditionModelExtId() {
+        return conditionModelExtId;
+    }
+
+    public void setConditionModelExtId(String conditionModelExtId) {
+        this.conditionModelExtId = conditionModelExtId;
+    }
+
+    public String getGoalModelExtId() {
+        return goalModelExtId;
+    }
+
+    public void setGoalModelExtId(String goalModelExtId) {
+        this.goalModelExtId = goalModelExtId;
     }
 
 }

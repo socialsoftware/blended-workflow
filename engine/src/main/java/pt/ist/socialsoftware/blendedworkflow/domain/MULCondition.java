@@ -6,6 +6,7 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class MULCondition extends MULCondition_Base {
@@ -192,6 +193,16 @@ public class MULCondition extends MULCondition_Base {
             GoalWorkItem goalWorkItem, ConditionType conditionType) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public MulConditionDTO getDTO() {
+        MulConditionDTO mulConditionDTO = new MulConditionDTO();
+        mulConditionDTO
+                .setConditionModelExtId(getConditionModel().getExternalId());
+        mulConditionDTO.setRolePath(getRolename());
+        mulConditionDTO.setCardinality(getCardinality().name());
+
+        return mulConditionDTO;
     }
 
 }

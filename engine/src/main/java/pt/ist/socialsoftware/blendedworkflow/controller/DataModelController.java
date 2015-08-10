@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
 import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 
 @Controller
 @RequestMapping(value = "/datamodels")
@@ -55,6 +58,25 @@ public class DataModelController {
                 .toArray(new DependenceDTO[dependenciesDTO.size()]);
 
         return new ResponseEntity<DependenceDTO[]>(depsArray, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "{dataModelExtId}/products/{atts}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<ProductDTO> getProduct(
+            @PathVariable("dataModelExtId") String dataModelExtId,
+            @PathVariable("atts") String atts) {
+        log.debug("getProduct atts:{}", atts);
+
+        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+
+        String[] attsArray = atts.split(",");
+
+        BWProduct product = adi.getProduct(dataModelExtId,
+                Arrays.asList(attsArray));
+
+        return new ResponseEntity<ProductDTO>(
+                new ProductDTO(product.getExternalId(),
+                        product.getProductType().name()),
+                HttpStatus.OK);
     }
 
 }

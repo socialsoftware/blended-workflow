@@ -6,6 +6,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DEFAttributeCondition extends DEFAttributeCondition_Base {
@@ -260,6 +261,24 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         String subPath = getAttribute() != null ? getAttribute().getName()
                 : getAttributeGroup().getName();
         return "DEF(" + subPath + ")";
+    }
+
+    public DefAttributeConditionDTO getDTO() {
+        DefAttributeConditionDTO defConditionDTO = new DefAttributeConditionDTO();
+        defConditionDTO
+                .setConditionModelExtId(getConditionModel().getExternalId());
+        if (getAttribute() != null) {
+            defConditionDTO.setAttributeExtId(getAttribute().getExternalId());
+            defConditionDTO.setMandatory(getAttribute().getIsMandatory());
+        }
+        if (getAttributeGroup() != null) {
+            defConditionDTO.setAttributeGroupExtId(
+                    getAttributeGroup().getExternalId());
+            defConditionDTO.setMandatory(getAttributeGroup().getIsMandatory());
+
+        }
+
+        return defConditionDTO;
     }
 
 }

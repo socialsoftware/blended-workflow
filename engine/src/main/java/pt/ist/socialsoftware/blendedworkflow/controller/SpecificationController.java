@@ -21,6 +21,18 @@ public class SpecificationController {
     private static Logger log = LoggerFactory
             .getLogger(SpecificationController.class);
 
+    @RequestMapping(value = "/{specId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteSpecification(
+            @PathVariable("specId") String specId) {
+        log.debug("deleteSpecification specId:{}", specId);
+
+        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+
+        adi.deleteSpecification(specId);
+
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/{specId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<SpecDTO> getSpecBySpecId(
             @PathVariable("specId") String specId) {
@@ -42,6 +54,18 @@ public class SpecificationController {
         BWSpecification spec = adi.createSpecification(specDTO);
 
         return new ResponseEntity<SpecDTO>(spec.getDTO(), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/{specId}/print", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<Boolean> printSpecModels(
+            @PathVariable("specId") String specId) {
+        log.debug("printSpecModels specId:{}", specId);
+
+        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+
+        adi.printSpecificationModels(specId);
+
+        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
 
 }
