@@ -1,7 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
-public class AttributeDTO {
-    private String extId;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
+
+public class AttributeDTO extends ProductDTO {
     private String entityExtId;
     private String groupExtId;
     private String name;
@@ -11,22 +12,14 @@ public class AttributeDTO {
     public AttributeDTO() {
     }
 
-    public AttributeDTO(String entityExtId, String groupExtId, String name,
-            String type, boolean isMandatory) {
-        this.extId = null;
+    public AttributeDTO(String dataModelExtId, String entityExtId,
+            String groupExtId, String name, String type, boolean isMandatory) {
+        super(null, dataModelExtId, ProductType.ATTRIBUTE.name());
         this.entityExtId = entityExtId;
         this.groupExtId = groupExtId;
         this.name = name;
         this.type = type;
         this.isMandatory = isMandatory;
-    }
-
-    public String getExtId() {
-        return extId;
-    }
-
-    public void setExtId(String extId) {
-        this.extId = extId;
     }
 
     public String getEntityExtId() {

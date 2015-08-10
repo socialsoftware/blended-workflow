@@ -23,10 +23,8 @@ public class EntityDependenceConditionController {
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<DependenceDTO> createEntityDependenceCondition(
             @RequestBody DependenceDTO dependenceDTO) {
-        log.debug(
-                "createEntityDependenceCondition conditionModelExtId:{}, path1:{}, path2:{}",
-                dependenceDTO.getConditionModelExtId(),
-                dependenceDTO.getPath1(), dependenceDTO.getPath2());
+        log.debug("createEntityDependenceCondition entityExtId:{}, path:{}",
+                dependenceDTO.getProductExtId(), dependenceDTO.getPath());
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 

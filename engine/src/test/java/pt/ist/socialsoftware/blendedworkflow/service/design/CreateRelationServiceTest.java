@@ -28,6 +28,7 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
     private static final String DUP_NAME = "Exists Name";
     private static final String EMPTY_NAME = "";
 
+    String dataModelExtId;
     BWEntity entityOne;
     BWEntity entityTwo;
 
@@ -35,6 +36,7 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
     public void populate4Test() throws BWException {
         BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
+        dataModelExtId = spec.getDataModel().getExternalId();
         entityOne = new BWEntity(spec.getDataModel(), ENTITY_ONE_NAME, false);
         entityTwo = new BWEntity(spec.getDataModel(), ENTITY_TWO_NAME, false);
     }
@@ -43,7 +45,7 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
     public void success() throws BWException {
 
         BWNotification notification = DesignInterface.getInstance()
-                .createRelation(new RelationDTO(RELATION_NAME,
+                .createRelation(new RelationDTO(dataModelExtId, RELATION_NAME,
                         entityOne.getExternalId(), ROLENAME_ONE, ONE,
                         entityTwo.getExternalId(), ROLENAME_TWO, MANY));
 

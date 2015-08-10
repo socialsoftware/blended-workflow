@@ -152,7 +152,7 @@ public class CommonInterface {
 
     public DependenceVO createDependence(DependenceVO dependenceVO) {
         log.debug("createDependence: {}, {}", dependenceVO.getProductExtId(),
-                dependenceVO.getPath1());
+                dependenceVO.getPath());
 
         final String uri = SERVER_ADDRESS + "/dependencies";
 
@@ -304,8 +304,8 @@ public class CommonInterface {
 
     public DependenceVO createEntityDependenceCondition(
             DependenceVO dependenceVO) {
-        log.debug("createEntityDependenceCondition path1:{}, path2:{}",
-                dependenceVO.getPath1(), dependenceVO.getPath2());
+        log.debug("createEntityDependenceCondition entityExtId:{}, path:{}",
+                dependenceVO.getProductExtId(), dependenceVO.getPath());
 
         final String uri = SERVER_ADDRESS + "/entitydependenceconditions";
 
@@ -382,7 +382,7 @@ public class CommonInterface {
     public DependenceVO createAttributeDependenceCondition(
             DependenceVO dependenceVO) {
         log.debug("createDependenceCondition productExtId:{}, path:{}",
-                dependenceVO.getProductExtId(), dependenceVO.getPath1());
+                dependenceVO.getProductExtId(), dependenceVO.getPath());
 
         final String uri = SERVER_ADDRESS + "/attributedependenceconditions";
 
@@ -391,6 +391,23 @@ public class CommonInterface {
                 DependenceVO.class);
 
         return result;
+    }
+
+    public EntityVO getEntityByName(String dataModelExtId, String entityName) {
+        log.debug("getEntityByName: {}, {}", dataModelExtId, entityName);
+
+        final String uri = SERVER_ADDRESS
+                + "/datamodels/{dataModelExtId}/entities/{entityName}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("dataModelExtId", dataModelExtId);
+        params.put("entityName", entityName);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        EntityVO entityVO = restTemplate.getForObject(uri, EntityVO.class,
+                params);
+
+        return entityVO;
     }
 
     // public ProductDTO getSourceOfPath(String specId, String path) {

@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.List;
 
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
+
 public abstract class BWProduct extends BWProduct_Base {
     public enum ProductType {
         ATTRIBUTE, ATTRIBUTE_GROUP, ENTITY
@@ -22,5 +24,7 @@ public abstract class BWProduct extends BWProduct_Base {
 
         deleteDomainObject();
     }
+
+    public abstract ProductDTO getDTO();
 
 }

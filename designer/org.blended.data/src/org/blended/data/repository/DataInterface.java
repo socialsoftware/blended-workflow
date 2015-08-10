@@ -198,7 +198,7 @@ public class DataInterface {
         Set<DependenceVO> deps = ci.getDependencies(dataModelExtId);
         for (DependenceVO dep : deps) {
             log.debug("dependence extid:{}, path:{}, productExtId:{}",
-                    dep.getExtId(), dep.getPath1(), dep.getProductExtId());
+                    dep.getExtId(), dep.getPath(), dep.getProductExtId());
             try {
                 ci.checkDependence(dep.getExtId());
             } catch (RepositoryException re) {

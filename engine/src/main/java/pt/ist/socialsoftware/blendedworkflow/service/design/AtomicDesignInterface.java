@@ -28,6 +28,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWNumberLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
@@ -144,9 +145,19 @@ public class AtomicDesignInterface {
 
         BWDataModel dataModel = getDataModelByExtId(relDTO.getDataModelExtId());
 
-        BWEntity entityOne = getEntityByName(dataModel, relDTO.getEntOneName());
+        BWEntity entityOne;
+        if (relDTO.getEntOneExtId() != null) {
+            entityOne = getEntityByExtId(relDTO.getEntOneExtId());
+        } else {
+            entityOne = getEntityByName(dataModel, relDTO.getEntOneName());
+        }
 
-        BWEntity entityTwo = getEntityByName(dataModel, relDTO.getEntTwoName());
+        BWEntity entityTwo;
+        if (relDTO.getEntTwoExtId() != null) {
+            entityTwo = getEntityByExtId(relDTO.getEntTwoExtId());
+        } else {
+            entityTwo = getEntityByName(dataModel, relDTO.getEntTwoName());
+        }
 
         if (entityOne.getDataModel() != entityTwo.getDataModel())
             throw new BWException(BWErrorType.INVALID_RELATION,
@@ -178,7 +189,7 @@ public class AtomicDesignInterface {
     public BWDependence createDependence(DependenceDTO productDTO) {
         BWProduct product = getProductByExtId(productDTO.getProductExtId());
 
-        return product.createDependence(productDTO.getPath1());
+        return product.createDependence(productDTO.getPath());
     }
 
     public Set<BWDependence> getDependencies(String dataModelExtId) {
@@ -255,19 +266,25 @@ public class AtomicDesignInterface {
         return defCondition;
     }
 
+    public BWEntity getEntityByName(String dataModelExtId, String entityName) {
+        BWDataModel dataModel = getDataModelByExtId(dataModelExtId);
+
+        return getEntityByName(dataModel, entityName);
+    }
+
     @Atomic(mode = TxMode.WRITE)
-    public BWDependence createEntityDependenceCondition(DependenceDTO edcDTO) {
-        log.debug("createEntityDependenceCondition Path1:{}, Path2:{}",
-                edcDTO.getPath1(), edcDTO.getPath2());
-        BWConditionModel conditionModel = getConditionModelByExtId(
-                edcDTO.getConditionModelExtId());
+    public BWDependence createEntityDependenceCondition(
+            DependenceDTO dependenceDTO) {
+        log.debug("createEntityDependenceCondition entityExtId:{}, Path:{}",
+                dependenceDTO.getProductExtId(), dependenceDTO.getPath());
 
-        BWEntity entity = getEntityByName(
-                conditionModel.getSpecification().getDataModel(),
-                edcDTO.getPath1());
+        BWEntity entity = getEntityByExtId(dependenceDTO.getProductExtId());
 
-        BWDependence dependence = getDependence(entity, edcDTO.getPath2());
+        BWDependence dependence = getDependence(entity,
+                dependenceDTO.getPath());
 
+        BWConditionModel conditionModel = entity.getDataModel()
+                .getSpecification().getConditionModel();
         conditionModel.addEntityDependenceCondition(dependence);
 
         return dependence;
@@ -352,11 +369,11 @@ public class AtomicDesignInterface {
     public BWDependence createAttributeDependenceCondition(
             DependenceDTO dependenceDTO) {
         log.debug("createAttributeDependenceCondition productExtId:{}, path:{}",
-                dependenceDTO.getProductExtId(), dependenceDTO.getPath1());
+                dependenceDTO.getProductExtId(), dependenceDTO.getPath());
         BWProduct product = getProductByExtId(dependenceDTO.getProductExtId());
 
         BWDependence dependence = getDependence(product,
-                dependenceDTO.getPath1());
+                dependenceDTO.getPath());
 
         BWConditionModel conditionModel = product.getEntity().getDataModel()
                 .getSpecification().getConditionModel();
@@ -392,7 +409,8 @@ public class AtomicDesignInterface {
         BWEntity entity = getEntityByName(spec.getDataModel(),
                 path.split("\\.")[0]);
 
-        return new ProductDTO(entity.getExternalId(), "ENTITY");
+        return new ProductDTO(entity.getExternalId(),
+                spec.getDataModel().getExternalId(), ProductType.ENTITY.name());
     }
 
     public ProductDTO getTargetOfPath(String specId, String path) {
@@ -401,6 +419,7 @@ public class AtomicDesignInterface {
         BWProduct product = getTargetOfPath(spec, path);
 
         return new ProductDTO(product.getExternalId(),
+                spec.getDataModel().getExternalId(),
                 product.getProductType().name());
 
     }

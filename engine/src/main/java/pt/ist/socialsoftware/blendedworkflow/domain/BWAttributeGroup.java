@@ -77,9 +77,12 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
         return att.getNext(pathLeft, path);
     }
 
+    @Override
     public AttributeGroupDTO getDTO() {
         AttributeGroupDTO group = new AttributeGroupDTO();
         group.setExtId(getExternalId());
+        group.setDataModelExtId(getDataModel().getExternalId());
+        group.setProductType(getProductType().name());
         group.setEntityExtId(getExternalId());
         group.setName(getName());
         group.setMandatory(getIsMandatory());

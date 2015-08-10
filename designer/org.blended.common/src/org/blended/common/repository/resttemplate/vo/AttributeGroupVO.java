@@ -3,8 +3,7 @@ package org.blended.common.repository.resttemplate.vo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AttributeGroupVO {
-    private String extId;
+public class AttributeGroupVO extends ProductVO {
     private String entityExtId;
     private String name;
     private boolean isMandatory;
@@ -41,14 +40,6 @@ public class AttributeGroupVO {
 
     public void setMandatory(boolean isMandatory) {
         this.isMandatory = isMandatory;
-    }
-
-    public String getExtId() {
-        return extId;
-    }
-
-    public void setExtId(String extId) {
-        this.extId = extId;
     }
 
 }

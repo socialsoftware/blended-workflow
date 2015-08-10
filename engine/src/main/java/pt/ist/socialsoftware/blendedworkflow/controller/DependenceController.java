@@ -25,7 +25,7 @@ public class DependenceController {
     public ResponseEntity<DependenceDTO> createDependence(
             @RequestBody DependenceDTO dependenceDTO) {
         log.debug("createDependence productExtId:{}, path:{}",
-                dependenceDTO.getProductExtId(), dependenceDTO.getPath1());
+                dependenceDTO.getProductExtId(), dependenceDTO.getPath());
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 

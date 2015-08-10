@@ -24,7 +24,7 @@ public class AttributeDependenceConditionController {
     public ResponseEntity<DependenceDTO> createAttributeDependenceCondition(
             @RequestBody DependenceDTO dependenceDTO) {
         log.debug("createAttributeDependenceCondition productExtId:{}, path:{}",
-                dependenceDTO.getProductExtId(), dependenceDTO.getPath1());
+                dependenceDTO.getProductExtId(), dependenceDTO.getPath());
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 

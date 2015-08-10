@@ -8,22 +8,14 @@ public class DependenceVO {
     private String extId;
     private String conditionModelExtId;
     private String productExtId;
-    private String path1;
-    private String path2;
+    private String path;
 
     public DependenceVO() {
     }
 
     public DependenceVO(String productExtId, String path) {
         this.productExtId = productExtId;
-        this.path1 = path;
-    }
-
-    public DependenceVO(String conditionModelExtId, String path1,
-            String path2) {
-        this.conditionModelExtId = conditionModelExtId;
-        this.path1 = path1;
-        this.path2 = path2;
+        this.path = path;
     }
 
     public String getExtId() {
@@ -50,20 +42,12 @@ public class DependenceVO {
         this.productExtId = productExtId;
     }
 
-    public String getPath1() {
-        return path1;
+    public String getPath() {
+        return path;
     }
 
-    public void setPath1(String path) {
-        this.path1 = path;
-    }
-
-    public String getPath2() {
-        return path2;
-    }
-
-    public void setPath2(String path2) {
-        this.path2 = path2;
+    public void setPath(String path) {
+        this.path = path;
     }
 
 }

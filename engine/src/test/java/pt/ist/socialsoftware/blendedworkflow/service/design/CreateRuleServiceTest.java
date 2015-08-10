@@ -208,7 +208,7 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
                 new ExpressionDTO(existingDataModel.getExternalId(), Type.NOT,
                         new ExpressionDTO(existingDataModel.getExternalId(),
                                 Type.ATT_DEF,
-                                existingDataModel.getExternalId() + "."
+                                EXISTS_ENTITY_NAME + "."
                                         + EXISTS_ATTRIBUTE_NAME)),
                 new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
                         "false"));

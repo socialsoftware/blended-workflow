@@ -5,15 +5,14 @@ public class DependenceDTO {
     private String extId;
     private String conditionModelExtId;
     private String productExtId;
-    private String path1;
-    private String path2;
+    private String path;
 
     public DependenceDTO() {
     }
 
     public DependenceDTO(String productExtId, String path) {
         this.productExtId = productExtId;
-        this.path1 = path;
+        this.path = path;
     }
 
     public String getExtId() {
@@ -40,20 +39,12 @@ public class DependenceDTO {
         this.productExtId = productExtId;
     }
 
-    public String getPath1() {
-        return path1;
+    public String getPath() {
+        return path;
     }
 
-    public void setPath1(String path) {
-        this.path1 = path;
-    }
-
-    public String getPath2() {
-        return path2;
-    }
-
-    public void setPath2(String path2) {
-        this.path2 = path2;
+    public void setPath(String path) {
+        this.path = path;
     }
 
 }

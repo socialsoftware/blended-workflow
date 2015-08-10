@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
 import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 
 @Controller
@@ -73,10 +75,20 @@ public class DataModelController {
         BWProduct product = adi.getProduct(dataModelExtId,
                 Arrays.asList(attsArray));
 
-        return new ResponseEntity<ProductDTO>(
-                new ProductDTO(product.getExternalId(),
-                        product.getProductType().name()),
-                HttpStatus.OK);
+        return new ResponseEntity<ProductDTO>(product.getDTO(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "{dataModelExtId}/entities/{entityName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<EntityDTO> getEntityByName(
+            @PathVariable("dataModelExtId") String dataModelExtId,
+            @PathVariable("entityName") String entityName) {
+        log.debug("getProduct entityName:{}", entityName);
+
+        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+
+        BWEntity entity = adi.getEntityByName(dataModelExtId, entityName);
+
+        return new ResponseEntity<EntityDTO>(entity.getDTO(), HttpStatus.OK);
     }
 
 }

@@ -150,9 +150,12 @@ public class BWAttribute extends BWAttribute_Base {
         throw new BWException(BWErrorType.INVALID_PATH, path + ":" + pathLeft);
     }
 
+    @Override
     public AttributeDTO getDTO() {
         AttributeDTO attDTO = new AttributeDTO();
         attDTO.setExtId(getExternalId());
+        attDTO.setDataModelExtId(getDataModel().getExternalId());
+        attDTO.setProductType(ProductType.ATTRIBUTE.name());
         attDTO.setEntityExtId(getEntity().getExternalId());
         attDTO.setGroupExtId(getAttributeGroup() != null
                 ? getAttributeGroup().getExternalId() : null);

@@ -63,7 +63,7 @@ public class GetSourceOfPathServiceTest extends TeardownRollbackTest {
                 ENTITY_NAME_TWO + "." + ROLE_ONE + "." + ATTRIBUTE_NAME_ONE);
 
         BWProduct product = FenixFramework
-                .getDomainObject(productDTO.getProductExtId());
+                .getDomainObject(productDTO.getExtId());
 
         assertEquals(ProductType.ENTITY, product.getProductType());
 

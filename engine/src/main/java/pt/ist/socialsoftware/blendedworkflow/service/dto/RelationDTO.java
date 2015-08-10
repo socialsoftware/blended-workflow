@@ -16,9 +16,10 @@ public class RelationDTO {
     public RelationDTO() {
     }
 
-    public RelationDTO(String name, String entOneExtId, String rolenameOne,
-            String cardinalityOne, String entTwoExtId, String rolenameTwo,
-            String cardinalityTwo) {
+    public RelationDTO(String dataModelExtId, String name, String entOneExtId,
+            String rolenameOne, String cardinalityOne, String entTwoExtId,
+            String rolenameTwo, String cardinalityTwo) {
+        this.dataModelExtId = dataModelExtId;
         this.name = name;
         this.entOneExtId = entOneExtId;
         this.rolenameOne = rolenameOne;

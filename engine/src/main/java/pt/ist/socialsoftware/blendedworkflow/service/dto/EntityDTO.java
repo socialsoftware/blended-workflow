@@ -1,20 +1,25 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
-public class EntityDTO {
-    public String getDataModelExtId() {
-        return dataModelExtId;
+import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
+
+public class EntityDTO extends ProductDTO {
+    private String name;
+    private boolean exists;
+
+    public EntityDTO() {
     }
 
-    public void setDataModelExtId(String dataModelExtId) {
-        this.dataModelExtId = dataModelExtId;
+    public EntityDTO(String extId, String dataModelExtId, String name,
+            boolean exists) {
+        super(extId, dataModelExtId, ProductType.ENTITY.name());
+        this.name = name;
+        this.exists = exists;
     }
 
-    public String getExtId() {
-        return extId;
-    }
-
-    public void setExtId(String extId) {
-        this.extId = extId;
+    public EntityDTO(String dataModelExtId, String name, boolean exists) {
+        super(null, dataModelExtId, ProductType.ENTITY.name());
+        this.name = name;
+        this.exists = exists;
     }
 
     public boolean getExists() {
@@ -31,28 +36,6 @@ public class EntityDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    private String extId;
-    private String dataModelExtId;
-    private String name;
-    private boolean exists;
-
-    public EntityDTO() {
-    }
-
-    public EntityDTO(String extId, String dataModelextId, String name,
-            boolean exists) {
-        this.extId = extId;
-        this.dataModelExtId = dataModelextId;
-        this.name = name;
-        this.exists = exists;
-    }
-
-    public EntityDTO(String dataModelextId, String name, boolean exists) {
-        this.dataModelExtId = dataModelextId;
-        this.name = name;
-        this.exists = exists;
     }
 
 }

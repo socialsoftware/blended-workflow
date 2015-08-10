@@ -19,6 +19,7 @@ import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.vo.DEFEntityConditionVO;
 import org.blended.common.repository.resttemplate.vo.DefAttributeConditionVO;
 import org.blended.common.repository.resttemplate.vo.DependenceVO;
+import org.blended.common.repository.resttemplate.vo.EntityVO;
 import org.blended.common.repository.resttemplate.vo.MulConditionVO;
 import org.blended.common.repository.resttemplate.vo.ProductVO;
 import org.blended.common.repository.resttemplate.vo.RuleVO;
@@ -101,11 +102,10 @@ public class ConditionInterface {
             log.debug("EntityDependenceCondition Entity1:{}, Entity2:{}",
                     eEpc.getEntity1(), eEpc.getEntity2());
             try {
-                Set<String> ent = new HashSet<String>();
-                ent.add(eEpc.getEntity1());
-                ci.createEntityDependenceCondition(
-                        new DependenceVO(conditionModelExtId, eEpc.getEntity1(),
-                                eEpc.getEntity2()));
+                EntityVO entityVO = ci.getEntityByName(dataModelExtId,
+                        eEpc.getEntity1());
+                ci.createEntityDependenceCondition(new DependenceVO(
+                        entityVO.getExtId(), eEpc.getEntity2()));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());
@@ -161,8 +161,8 @@ public class ConditionInterface {
                 for (String path : eApc.getAttributes2().stream()
                         .collect(Collectors.toSet())) {
                     try {
-                        ci.createAttributeDependenceCondition(new DependenceVO(
-                                productVO.getProductExtId(), path));
+                        ci.createAttributeDependenceCondition(
+                                new DependenceVO(productVO.getExtId(), path));
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
                         log.debug("Error: {}", re.getMessage());

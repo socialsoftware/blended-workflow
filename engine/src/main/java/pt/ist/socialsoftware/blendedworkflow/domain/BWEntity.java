@@ -381,10 +381,12 @@ public class BWEntity extends BWEntity_Base {
         throw new BWException(BWErrorType.INVALID_PATH, path + ":" + pathLeft);
     }
 
+    @Override
     public EntityDTO getDTO() {
         EntityDTO entityDTO = new EntityDTO();
         entityDTO.setExtId(getExternalId());
         entityDTO.setDataModelExtId(getDataModel().getExternalId());
+        entityDTO.setProductType(getProductType().name());
         entityDTO.setName(getName());
         entityDTO.setExists(getExists());
 
