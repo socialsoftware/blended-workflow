@@ -219,8 +219,8 @@ public class Goal extends Goal_Base {
 
     public GoalDTO getDTO() {
         GoalDTO goalDTO = new GoalDTO();
+        goalDTO.setSpecId(getGoalModel().getSpecification().getSpecId());
         goalDTO.setExtId(getExternalId());
-        goalDTO.setGoalModelExtId(getGoalModel().getExternalId());
         goalDTO.setName(getName());
 
         return goalDTO;

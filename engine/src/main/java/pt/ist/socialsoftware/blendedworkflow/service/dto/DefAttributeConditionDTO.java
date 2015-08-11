@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.service.dto;
 import java.util.Set;
 
 public class DefAttributeConditionDTO {
-    private String conditionModelExtId;
+    private String specId;
     private Set<String> paths;
     private boolean mandatory;
     private String attributeExtId;
@@ -12,19 +12,12 @@ public class DefAttributeConditionDTO {
     public DefAttributeConditionDTO() {
     }
 
-    public DefAttributeConditionDTO(String conditionModelExtId,
-            Set<String> paths, boolean mandatory) {
-        this.conditionModelExtId = conditionModelExtId;
-        this.paths = paths;
-        this.mandatory = mandatory;
+    public String getSpecId() {
+        return specId;
     }
 
-    public String getConditionModelExtId() {
-        return conditionModelExtId;
-    }
-
-    public void setConditionModelExtId(String conditionModelExtId) {
-        this.conditionModelExtId = conditionModelExtId;
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public Set<String> getPaths() {

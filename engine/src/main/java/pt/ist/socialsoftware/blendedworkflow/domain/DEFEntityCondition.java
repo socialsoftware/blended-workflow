@@ -347,8 +347,9 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
 
     public DEFEntityConditionDTO getDTO() {
         DEFEntityConditionDTO eacDTO = new DEFEntityConditionDTO();
+        eacDTO.setSpecId(
+                getEntity().getDataModel().getSpecification().getSpecId());
         eacDTO.setExtId(getExternalId());
-        eacDTO.setConditionModelExtId(getConditionModel().getExternalId());
         eacDTO.setEntityName(getEntity().getName());
         eacDTO.setExists(getEntity().getExists());
 

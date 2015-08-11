@@ -4,29 +4,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RuleDTO {
+    private String specId;
     private String extId;
-    private String dataModelExtId;
-    private String conditionModelExtId;
     private String name;
     private ExpressionDTO expression;
 
     public RuleDTO() {
     }
 
-    public RuleDTO(String dataModelExtId, String name, ExpressionDTO expDTO) {
+    public RuleDTO(String specId, String name, ExpressionDTO expDTO) {
+        this.specId = specId;
         this.extId = null;
-        this.dataModelExtId = dataModelExtId;
-        this.conditionModelExtId = null;
         this.name = name;
         this.expression = expDTO;
     }
 
-    public RuleDTO(String dataModelExtId, String name) {
-        this.extId = null;
-        this.dataModelExtId = dataModelExtId;
-        this.conditionModelExtId = null;
-        this.name = name;
-        this.expression = null;
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getExtId() {
@@ -35,22 +33,6 @@ public class RuleDTO {
 
     public void setExtId(String extId) {
         this.extId = extId;
-    }
-
-    public String getDataModelExtId() {
-        return dataModelExtId;
-    }
-
-    public void setDataModelExtId(String dataModelExtId) {
-        this.dataModelExtId = dataModelExtId;
-    }
-
-    public String getConditionModelExtId() {
-        return conditionModelExtId;
-    }
-
-    public void setConditionModelExtId(String conditionModelExtId) {
-        this.conditionModelExtId = conditionModelExtId;
     }
 
     public String getName() {

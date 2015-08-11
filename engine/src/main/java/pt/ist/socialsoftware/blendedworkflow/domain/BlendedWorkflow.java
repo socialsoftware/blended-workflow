@@ -46,7 +46,6 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
         FenixFramework.getDomainRoot().setBlendedWorkflow(this);
     }
 
-    @Atomic(mode = TxMode.WRITE)
     public BWSpecification createSpecification(String specId, String name)
             throws BWException {
         String author = "Author";

@@ -1,13 +1,13 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 public class ProductDTO {
+    private String specId;
     private String extId;
-    private String dataModelExtId;
     private String producType;
 
-    public ProductDTO(String extId, String dataModelExtId, String productType) {
+    public ProductDTO(String specId, String extId, String productType) {
+        this.specId = specId;
         this.extId = extId;
-        this.dataModelExtId = dataModelExtId;
         this.producType = productType;
     }
 
@@ -22,20 +22,20 @@ public class ProductDTO {
         this.extId = extId;
     }
 
-    public String getDataModelExtId() {
-        return dataModelExtId;
-    }
-
-    public void setDataModelExtId(String dataModelExtId) {
-        this.dataModelExtId = dataModelExtId;
-    }
-
     public String getProductType() {
         return producType;
     }
 
     public void setProductType(String type) {
         this.producType = type;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
 }

@@ -266,7 +266,7 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     public DefAttributeConditionDTO getDTO() {
         DefAttributeConditionDTO defConditionDTO = new DefAttributeConditionDTO();
         defConditionDTO
-                .setConditionModelExtId(getConditionModel().getExternalId());
+                .setSpecId(getConditionModel().getSpecification().getSpecId());
         if (getAttribute() != null) {
             defConditionDTO.setAttributeExtId(getAttribute().getExternalId());
             defConditionDTO.setMandatory(getAttribute().getIsMandatory());

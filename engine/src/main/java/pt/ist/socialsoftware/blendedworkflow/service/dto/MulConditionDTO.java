@@ -1,26 +1,25 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 public class MulConditionDTO {
-    private String conditionModelExtId;
+    private String specId;
     private String rolePath;
     private String cardinality;
 
     public MulConditionDTO() {
     }
 
-    public MulConditionDTO(String conditionModelExtId, String rolePath,
-            String cardinality) {
-        this.conditionModelExtId = conditionModelExtId;
+    public MulConditionDTO(String specId, String rolePath, String cardinality) {
+        this.specId = specId;
         this.rolePath = rolePath;
         this.cardinality = cardinality;
     }
 
-    public String getConditionModelExtId() {
-        return conditionModelExtId;
+    public String getSpecId() {
+        return specId;
     }
 
-    public void setConditionModelExtId(String conditionModelExtId) {
-        this.conditionModelExtId = conditionModelExtId;
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getRolePath() {

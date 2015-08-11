@@ -3,7 +3,7 @@ package org.blended.common.repository.resttemplate.vo;
 import java.util.Set;
 
 public class DefAttributeConditionVO {
-    private String conditionModelExtId;
+    private String specId;
     private Set<String> paths;
     private boolean mandatory;
     private String attributeExtId;
@@ -12,19 +12,11 @@ public class DefAttributeConditionVO {
     public DefAttributeConditionVO() {
     }
 
-    public DefAttributeConditionVO(String conditionModelExtId,
-            Set<String> paths, boolean mandatory) {
-        this.conditionModelExtId = conditionModelExtId;
+    public DefAttributeConditionVO(String specId, Set<String> paths,
+            boolean mandatory) {
+        this.setSpecId(specId);
         this.paths = paths;
         this.mandatory = mandatory;
-    }
-
-    public String getConditionModelExtId() {
-        return conditionModelExtId;
-    }
-
-    public void setConditionModelExtId(String conditionModelExtId) {
-        this.conditionModelExtId = conditionModelExtId;
     }
 
     public Set<String> getPaths() {
@@ -57,6 +49,14 @@ public class DefAttributeConditionVO {
 
     public void setAttributeGroupExtId(String attributeGroupExtId) {
         this.attributeGroupExtId = attributeGroupExtId;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
 }

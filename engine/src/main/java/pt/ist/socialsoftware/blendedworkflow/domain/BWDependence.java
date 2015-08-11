@@ -63,6 +63,7 @@ public class BWDependence extends BWDependence_Base {
 
     public DependenceDTO getDTO() {
         DependenceDTO depDTO = new DependenceDTO();
+        depDTO.setSpecId(getDataModel().getSpecification().getSpecId());
         depDTO.setExtId(getExternalId());
         depDTO.setProductExtId(getProduct().getExternalId());
         depDTO.setPath(getPath());

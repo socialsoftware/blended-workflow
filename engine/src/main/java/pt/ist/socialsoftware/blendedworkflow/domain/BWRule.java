@@ -48,10 +48,8 @@ public class BWRule extends BWRule_Base {
 
     public RuleDTO getDTO() {
         RuleDTO ruleDTO = new RuleDTO();
+        ruleDTO.setSpecId(getDataModel().getSpecification().getSpecId());
         ruleDTO.setExtId(getExternalId());
-        ruleDTO.setDataModelExtId(getDataModel().getExternalId());
-        ruleDTO.setConditionModelExtId(getConditionModel() != null
-                ? getConditionModel().getExternalId() : null);
         ruleDTO.setName(getName());
         ruleDTO.setExpression(null);
 

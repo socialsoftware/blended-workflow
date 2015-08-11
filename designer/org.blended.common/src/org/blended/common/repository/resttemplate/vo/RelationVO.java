@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RelationVO {
+    private String specId;
     private String extId;
-    private String dataModelExtId;
     private String name;
     private String entOneExtId;
     private String entOneName;
@@ -19,11 +19,11 @@ public class RelationVO {
     public RelationVO() {
     }
 
-    public RelationVO(String dataModelExtId, String name, String entOneName,
+    public RelationVO(String specId, String name, String entOneName,
             String rolenameOne, String cardinalityOne, String entTwoName,
             String rolenameTwo, String cardinalityTwo) {
+        this.specId = specId;
         this.extId = null;
-        this.dataModelExtId = dataModelExtId;
         this.name = name;
         this.entOneExtId = null;
         this.setEntOneName(entOneName);
@@ -35,20 +35,20 @@ public class RelationVO {
         this.cardinalityTwo = cardinalityTwo;
     }
 
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
+    }
+
     public String getExtId() {
         return extId;
     }
 
     public void setExtId(String extId) {
         this.extId = extId;
-    }
-
-    public String getDataModelExtId() {
-        return dataModelExtId;
-    }
-
-    public void setDataModelExtId(String dataModelExtId) {
-        this.dataModelExtId = dataModelExtId;
     }
 
     public String getName() {

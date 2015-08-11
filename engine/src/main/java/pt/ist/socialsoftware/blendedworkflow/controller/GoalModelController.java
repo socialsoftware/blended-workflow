@@ -23,29 +23,29 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 
 @Controller
-@RequestMapping(value = "/goalmodels")
+@RequestMapping(value = "/specs/{specId}/goalmodel")
 public class GoalModelController {
     private static Logger log = LoggerFactory
             .getLogger(GoalModelController.class);
 
-    @RequestMapping(value = "/{extId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
     public ResponseEntity<String> cleanGoalModel(
-            @PathVariable("extId") String extId) {
-        log.debug("cleanGoalModel extId:{}", extId);
+            @PathVariable("specId") String specId) {
+        log.debug("cleanGoalModel specId:{}", specId);
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
-        adi.cleanGoalModel(extId);
+        adi.cleanGoalModel(specId);
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{goalModelExtId}/goals", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<GoalDTO> createGoal(
-            @PathVariable("goalModelExtId") String goalModelExtId,
+            @PathVariable("specId") String specId,
             @RequestBody GoalDTO goalDTO) {
-        log.debug("createGoal goalModelExtId:{}, name:{}, exists:{}",
-                goalDTO.getGoalModelExtId(), goalDTO.getName());
+        log.debug("createGoal specId:{}, name:{}, exists:{}",
+                goalDTO.getSpecId(), goalDTO.getName());
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
@@ -54,145 +54,144 @@ public class GoalModelController {
         return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{goalModelExtId}/goals/{goalName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/goals/{goalName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<GoalDTO> getGoalByName(
-            @PathVariable("goalModelExtId") String goalModelExtId,
+            @PathVariable("specId") String specId,
             @PathVariable("goalName") String goalName) {
-        log.debug("createGoal goalModelExtId:{}, name:{}", goalModelExtId,
-                goalName);
+        log.debug("createGoal specId:{}, name:{}", specId, goalName);
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
-        Goal goal = adi.getGoalByName(goalModelExtId, goalName);
+        Goal goal = adi.getGoalByName(specId, goalName);
 
         return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{goalModelExtId}/goals/{extId}/sub", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{extId}/sub", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<GoalDTO> addSubGoal(
-            @PathVariable("goalModelExtId") String goalModelExtId,
+            @PathVariable("specId") String specId,
             @PathVariable("extId") String extId, @RequestBody GoalDTO goalDTO) {
-        log.debug("createGoal goalModelExtId:{}, extId:{}, name:{}",
-                goalDTO.getGoalModelExtId(), goalDTO.getExtId(),
+        log.debug("createGoal specId:{}, extId:{}, name:{}",
+                goalDTO.getSpecId(), goalDTO.getExtId(), goalDTO.getName());
+
+        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+
+        Goal goal = adi.addSubGoal(goalDTO.getSpecId(), extId,
                 goalDTO.getName());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
-
-        Goal goal = adi.addSubGoal(goalModelExtId, extId, goalDTO.getName());
-
         return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{goalModelExtId}/goals/{goalExtId}/sucent/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{goalExtId}/sucent/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<DEFEntityConditionDTO> associateEntityAchieveConditionToGoalSuc(
-            @PathVariable("goalModelExtId") String goalModelExtId,
+            @PathVariable("specId") String specId,
             @PathVariable("goalExtId") String goalExtId,
             @PathVariable("path") String path) {
         log.debug(
-                "associateSucConditionToGoal goalModelExtId:{}, goalExtId:{}, path:{}",
-                goalModelExtId, goalExtId, path);
+                "associateSucConditionToGoal specId:{}, goalExtId:{}, path:{}",
+                specId, goalExtId, path);
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
         DEFEntityCondition defEntityCondition = adi
-                .associateEntityAchieveConditionToGoalSuccessCondition(
-                        goalModelExtId, goalExtId, path);
+                .associateEntityAchieveConditionToGoalSuccessCondition(specId,
+                        goalExtId, path);
 
         return new ResponseEntity<DEFEntityConditionDTO>(
                 defEntityCondition.getDTO(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{goalModelExtId}/goals/{goalExtId}/actent/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{goalExtId}/actent/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<DEFEntityConditionDTO> associateEntityAchieveConditionToGoalAct(
-            @PathVariable("goalModelExtId") String goalModelExtId,
+            @PathVariable("specId") String specId,
             @PathVariable("goalExtId") String goalExtId,
             @PathVariable("path") String path) {
         log.debug(
-                "associateActConditionToGoal goalModelExtId:{}, goalExtId:{}, path:{}",
-                goalModelExtId, goalExtId, path);
+                "associateActConditionToGoal specId:{}, goalExtId:{}, path:{}",
+                specId, goalExtId, path);
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
         DEFEntityCondition defEntityCondition = adi
-                .associateEntityAchieveConditionToGoalAtivationCondition(
-                        goalModelExtId, goalExtId, path);
+                .associateEntityAchieveConditionToGoalAtivationCondition(specId,
+                        goalExtId, path);
 
         return new ResponseEntity<DEFEntityConditionDTO>(
                 defEntityCondition.getDTO(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{goalModelExtId}/goals/{goalExtId}/sucatt/{paths}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{goalExtId}/sucatt/{paths}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<String> associateAttributeAchieveConditionToGoalSuc(
-            @PathVariable("goalModelExtId") String goalModelExtId,
+            @PathVariable("specId") String specId,
             @PathVariable("goalExtId") String goalExtId,
             @PathVariable("paths") String paths) {
         log.debug(
-                "associateActConditionToGoal goalModelExtId:{}, goalExtId:{}, paths:{}",
-                goalModelExtId, goalExtId, paths);
+                "associateActConditionToGoal specId:{}, goalExtId:{}, paths:{}",
+                specId, goalExtId, paths);
 
         String[] arraysPath = paths.split(",");
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
-        adi.associateAttributeAchieveConditionToGoalSuccessCondition(
-                goalModelExtId, goalExtId,
+        adi.associateAttributeAchieveConditionToGoalSuccessCondition(specId,
+                goalExtId,
                 Arrays.asList(arraysPath).stream().collect(Collectors.toSet()));
 
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{goalModelExtId}/goals/{goalExtId}/actatt/{paths}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{goalExtId}/actatt/{paths}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<String> associateAttributeAchieveConditionToGoalAct(
-            @PathVariable("goalModelExtId") String goalModelExtId,
+            @PathVariable("specId") String specId,
             @PathVariable("goalExtId") String goalExtId,
             @PathVariable("paths") String paths) {
         log.debug(
-                "associateActConditionToGoal goalModelExtId:{}, goalExtId:{}, paths:{}",
-                goalModelExtId, goalExtId, paths);
+                "associateActConditionToGoal specId:{}, goalExtId:{}, paths:{}",
+                specId, goalExtId, paths);
 
         String[] arraysPath = paths.split(",");
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
-        adi.associateAttributeAchieveConditionToGoalActivationCondition(
-                goalModelExtId, goalExtId,
+        adi.associateAttributeAchieveConditionToGoalActivationCondition(specId,
+                goalExtId,
                 Arrays.stream(arraysPath).collect(Collectors.toSet()));
 
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{goalModelExtId}/goals/{goalExtId}/invent", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{goalExtId}/invent", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<String> associateEntityInvariantConditionToGoal(
-            @PathVariable("goalModelExtId") String goalModelExtId,
+            @PathVariable("specId") String specId,
             @PathVariable("goalExtId") String goalExtId,
             @RequestBody MulConditionDTO mulConditionDTO) {
         log.debug(
-                "associateActConditionToGoal goalModelExtId:{}, goalExtId:{}, path:{}, cardinality:{}",
-                goalModelExtId, goalExtId, mulConditionDTO.getRolePath(),
+                "associateActConditionToGoal specId:{}, goalExtId:{}, path:{}, cardinality:{}",
+                specId, goalExtId, mulConditionDTO.getRolePath(),
                 mulConditionDTO.getCardinality());
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
-        adi.associateMulConditionToGoalEntityInvariantCondition(goalModelExtId,
+        adi.associateMulConditionToGoalEntityInvariantCondition(specId,
                 goalExtId, mulConditionDTO.getRolePath(),
                 mulConditionDTO.getCardinality());
 
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{goalModelExtId}/goals/{goalExtId}/invatt", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{goalExtId}/invatt", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<String> associateAttributeInvariantConditionToGoal(
-            @PathVariable("goalModelExtId") String goalModelExtId,
+            @PathVariable("specId") String specId,
             @PathVariable("goalExtId") String goalExtId,
             @RequestBody RuleDTO ruleDTO) {
         log.debug(
-                "associateActConditionToGoal goalModelExtId:{}, goalExtId:{}, rule:{}",
-                goalModelExtId, goalExtId, ruleDTO.getName());
+                "associateActConditionToGoal specId:{}, goalExtId:{}, rule:{}",
+                specId, goalExtId, ruleDTO.getName());
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
 
-        adi.associateRuleConditionToGoalAttributeInvariantCondition(
-                goalModelExtId, goalExtId, ruleDTO.getName());
+        adi.associateRuleConditionToGoalAttributeInvariantCondition(specId,
+                goalExtId, ruleDTO.getName());
 
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }

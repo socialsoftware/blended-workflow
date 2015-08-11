@@ -4,22 +4,30 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoalVO {
+    private String specId;
     private String extId;
-    private String goalModelExtId;
     private String name;
 
     public GoalVO() {
     }
 
-    public GoalVO(String goalModelExtId, String name) {
-        this.goalModelExtId = goalModelExtId;
+    public GoalVO(String specId, String name) {
+        this.specId = specId;
         this.name = name;
     }
 
-    public GoalVO(String extId, String goalModelExtId, String name) {
+    public GoalVO(String specId, String extId, String name) {
         this.extId = extId;
-        this.goalModelExtId = goalModelExtId;
+        this.specId = specId;
         this.name = name;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getExtId() {
@@ -28,14 +36,6 @@ public class GoalVO {
 
     public void setExtId(String extId) {
         this.extId = extId;
-    }
-
-    public String getGoalModelExtId() {
-        return goalModelExtId;
-    }
-
-    public void setGoalModelExtId(String goalModelExtId) {
-        this.goalModelExtId = goalModelExtId;
     }
 
     public String getName() {

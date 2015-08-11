@@ -151,8 +151,8 @@ public class BWAttribute extends BWAttribute_Base {
     @Override
     public AttributeDTO getDTO() {
         AttributeDTO attDTO = new AttributeDTO();
+        attDTO.setSpecId(getDataModel().getSpecification().getSpecId());
         attDTO.setExtId(getExternalId());
-        attDTO.setDataModelExtId(getDataModel().getExternalId());
         attDTO.setProductType(ProductType.ATTRIBUTE.name());
         attDTO.setEntityExtId(getEntity().getExternalId());
         attDTO.setGroupExtId(getAttributeGroup() != null

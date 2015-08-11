@@ -384,8 +384,8 @@ public class BWEntity extends BWEntity_Base {
     @Override
     public EntityDTO getDTO() {
         EntityDTO entityDTO = new EntityDTO();
+        entityDTO.setSpecId(getDataModel().getSpecification().getSpecId());
         entityDTO.setExtId(getExternalId());
-        entityDTO.setDataModelExtId(getDataModel().getExternalId());
         entityDTO.setProductType(getProductType().name());
         entityDTO.setName(getName());
         entityDTO.setExists(getExists());

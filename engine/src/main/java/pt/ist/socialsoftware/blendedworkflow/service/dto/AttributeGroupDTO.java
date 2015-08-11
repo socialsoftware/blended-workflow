@@ -10,9 +10,9 @@ public class AttributeGroupDTO extends ProductDTO {
     public AttributeGroupDTO() {
     }
 
-    public AttributeGroupDTO(String dataModelExtId, String entityExtId,
-            String name, boolean isMandatory) {
-        super(null, dataModelExtId, ProductType.ATTRIBUTE_GROUP.name());
+    public AttributeGroupDTO(String specId, String entityExtId, String name,
+            boolean isMandatory) {
+        super(specId, null, ProductType.ATTRIBUTE_GROUP.name());
         this.entityExtId = entityExtId;
         this.name = name;
         this.isMandatory = isMandatory;

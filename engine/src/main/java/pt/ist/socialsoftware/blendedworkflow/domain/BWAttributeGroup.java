@@ -82,8 +82,8 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
     @Override
     public AttributeGroupDTO getDTO() {
         AttributeGroupDTO group = new AttributeGroupDTO();
+        group.setSpecId(getDataModel().getSpecification().getSpecId());
         group.setExtId(getExternalId());
-        group.setDataModelExtId(getDataModel().getExternalId());
         group.setProductType(getProductType().name());
         group.setEntityExtId(getExternalId());
         group.setName(getName());

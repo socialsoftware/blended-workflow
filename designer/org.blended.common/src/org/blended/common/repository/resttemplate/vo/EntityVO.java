@@ -10,8 +10,8 @@ public class EntityVO extends ProductVO {
     public EntityVO() {
     }
 
-    public EntityVO(String dataModelExtId, String name, boolean exists) {
-        setDataModelExtId(dataModelExtId);
+    public EntityVO(String specId, String name, boolean exists) {
+        setSpecId(specId);
         this.name = name;
         this.exists = exists;
     }

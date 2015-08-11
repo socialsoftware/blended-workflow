@@ -4,29 +4,34 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RuleVO {
+    private String specId;
     private String extId;
-    private String dataModelExtId;
-    private String conditionModelExtId;
     private String name;
     private ExpressionVO expression;
 
     public RuleVO() {
     }
 
-    public RuleVO(String dataModelExtId, String name, ExpressionVO expression) {
+    public RuleVO(String specId, String name, ExpressionVO expression) {
+        this.specId = specId;
         this.extId = null;
-        this.dataModelExtId = dataModelExtId;
-        this.conditionModelExtId = null;
         this.name = name;
         this.expression = expression;
     }
 
-    public RuleVO(String conditionModelExtId, String name) {
+    public RuleVO(String specId, String name) {
+        this.specId = specId;
         this.extId = null;
-        this.dataModelExtId = null;
-        this.conditionModelExtId = conditionModelExtId;
         this.name = name;
         this.expression = null;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getExtId() {
@@ -35,22 +40,6 @@ public class RuleVO {
 
     public void setExtId(String extId) {
         this.extId = extId;
-    }
-
-    public String getDataModelExtId() {
-        return dataModelExtId;
-    }
-
-    public void setDataModelExtId(String dataModelExtId) {
-        this.dataModelExtId = dataModelExtId;
-    }
-
-    public String getConditionModelExtId() {
-        return conditionModelExtId;
-    }
-
-    public void setConditionModelExtId(String conditionModelExtId) {
-        this.conditionModelExtId = conditionModelExtId;
     }
 
     public String getName() {

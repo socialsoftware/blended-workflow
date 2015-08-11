@@ -13,8 +13,9 @@ public class AttributeVO extends ProductVO {
     public AttributeVO() {
     }
 
-    public AttributeVO(String entityExtId, String groupExtId, String name,
-            String type, boolean isMandatory) {
+    public AttributeVO(String specId, String entityExtId, String groupExtId,
+            String name, String type, boolean isMandatory) {
+        setSpecId(specId);
         this.entityExtId = entityExtId;
         this.groupExtId = groupExtId;
         this.name = name;

@@ -1,20 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 public class SpecDTO {
-    private String externalId;
     private String specId;
     private String name;
-    private String dataModelExtId;
-    private String conditionModelExtId;
-    private String goalModelExtId;
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
 
     public String getSpecId() {
         return specId;
@@ -32,14 +20,6 @@ public class SpecDTO {
         this.name = name;
     }
 
-    public String getDataModelExtId() {
-        return dataModelExtId;
-    }
-
-    public void setDataModelExtId(String dataModelExtId) {
-        this.dataModelExtId = dataModelExtId;
-    }
-
     public SpecDTO() {
     }
 
@@ -50,22 +30,6 @@ public class SpecDTO {
 
     public SpecDTO(String specId) {
         this.specId = specId;
-    }
-
-    public String getConditionModelExtId() {
-        return conditionModelExtId;
-    }
-
-    public void setConditionModelExtId(String conditionModelExtId) {
-        this.conditionModelExtId = conditionModelExtId;
-    }
-
-    public String getGoalModelExtId() {
-        return goalModelExtId;
-    }
-
-    public void setGoalModelExtId(String goalModelExtId) {
-        this.goalModelExtId = goalModelExtId;
     }
 
 }

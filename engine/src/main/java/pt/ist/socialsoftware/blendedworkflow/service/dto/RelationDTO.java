@@ -1,8 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 public class RelationDTO {
+    private String specId;
     private String extId;
-    private String dataModelExtId;
     private String name;
     private String entOneExtId;
     private String entOneName;
@@ -16,10 +16,10 @@ public class RelationDTO {
     public RelationDTO() {
     }
 
-    public RelationDTO(String dataModelExtId, String name, String entOneExtId,
+    public RelationDTO(String specId, String name, String entOneExtId,
             String rolenameOne, String cardinalityOne, String entTwoExtId,
             String rolenameTwo, String cardinalityTwo) {
-        this.dataModelExtId = dataModelExtId;
+        this.specId = specId;
         this.name = name;
         this.entOneExtId = entOneExtId;
         this.rolenameOne = rolenameOne;
@@ -29,20 +29,20 @@ public class RelationDTO {
         this.cardinalityTwo = cardinalityTwo;
     }
 
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
+    }
+
     public String getExtId() {
         return extId;
     }
 
     public void setExtId(String extId) {
         this.extId = extId;
-    }
-
-    public String getDataModelExtId() {
-        return dataModelExtId;
-    }
-
-    public void setDataModelExtId(String dataModelExtId) {
-        this.dataModelExtId = dataModelExtId;
     }
 
     public String getName() {

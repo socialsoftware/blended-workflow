@@ -45,7 +45,7 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
     public void success() throws BWException {
 
         BWNotification notification = DesignInterface.getInstance()
-                .createRelation(new RelationDTO(dataModelExtId, RELATION_NAME,
+                .createRelation(new RelationDTO(SPEC_ID, RELATION_NAME,
                         entityOne.getExternalId(), ROLENAME_ONE, ONE,
                         entityTwo.getExternalId(), ROLENAME_TWO, MANY));
 

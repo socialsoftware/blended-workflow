@@ -73,15 +73,13 @@ public class DataInterface {
 
         BWNotification notification = new BWNotification();
 
-        SpecVO specVO = null;
         try {
-            specVO = ci.getSpecBySpecId(specId);
-
-            ci.cleanDataModel(specVO.getDataModelExtId());
+            ci.getSpecBySpecId(specId);
+            ci.cleanDataModel(specId);
         } catch (RepositoryException re) {
             log.debug("getSpec: {}", re.getMessage());
             try {
-                specVO = ci.createSpec(new SpecVO(specId,
+                ci.createSpec(new SpecVO(specId,
                         eDataModel.getSpecification().getName()));
             } catch (RepositoryException ree) {
                 notification.addError(ree.getError());
@@ -90,17 +88,14 @@ public class DataInterface {
             }
         }
 
-        String dataModelExtId = specVO.getDataModelExtId();
-
         for (Entity eEnt : eDataModel.getEntities()) {
             String entityExtId = null;
             try {
-                EntityVO entVO = ci.createEntity(new EntityVO(dataModelExtId,
-                        eEnt.getName(), eEnt.isExists()));
+                EntityVO entVO = ci.createEntity(
+                        new EntityVO(specId, eEnt.getName(), eEnt.isExists()));
                 entityExtId = entVO.getExtId();
-                log.debug("createdEntity: {}, {}, {}, {}", entVO.getExtId(),
-                        entVO.getDataModelExtId(), entVO.getName(),
-                        entVO.getExists());
+                log.debug("createdEntity: {}, {}, {}", entVO.getExtId(),
+                        entVO.getName(), entVO.getExists());
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("createEntity: {}", re.getMessage());
@@ -109,7 +104,8 @@ public class DataInterface {
             // create entity dependences
             for (String eDep : eEnt.getDependsOn()) {
                 try {
-                    ci.createDependence(new DependenceVO(entityExtId, eDep));
+                    ci.createDependence(
+                            new DependenceVO(specId, entityExtId, eDep));
                 } catch (RepositoryException re) {
                     notification.addError(re.getError());
                     log.debug("Error: {}", re.getMessage());
@@ -122,9 +118,9 @@ public class DataInterface {
                     Attribute eAtt = (Attribute) eObj;
                     try {
                         AttributeVO attributeVO = ci
-                                .createAttribute(new AttributeVO(entityExtId,
-                                        null, eAtt.getName(), eAtt.getType(),
-                                        eAtt.isMandatory()));
+                                .createAttribute(new AttributeVO(specId,
+                                        entityExtId, null, eAtt.getName(),
+                                        eAtt.getType(), eAtt.isMandatory()));
                         attributeExtId = attributeVO.getExtId();
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
@@ -135,8 +131,8 @@ public class DataInterface {
                     // create attribute dependences
                     for (String eDep : eAtt.getDependsOn()) {
                         try {
-                            ci.createDependence(
-                                    new DependenceVO(attributeExtId, eDep));
+                            ci.createDependence(new DependenceVO(specId,
+                                    attributeExtId, eDep));
                         } catch (RepositoryException re) {
                             notification.addError(re.getError());
                             log.debug("Error: {}", re.getMessage());
@@ -147,7 +143,7 @@ public class DataInterface {
                     AttributeGroup eAttGroup = (AttributeGroup) eObj;
                     try {
                         AttributeGroupVO groupVO = ci.createAttributeGroup(
-                                new AttributeGroupVO(entityExtId,
+                                new AttributeGroupVO(specId, entityExtId,
                                         eAttGroup.getName(),
                                         eAttGroup.isMandatory()));
                         groupExtId = groupVO.getExtId();
@@ -160,7 +156,7 @@ public class DataInterface {
                     for (String eDep : eAttGroup.getDependsOn()) {
                         try {
                             ci.createDependence(
-                                    new DependenceVO(groupExtId, eDep));
+                                    new DependenceVO(specId, groupExtId, eDep));
                         } catch (RepositoryException re) {
                             notification.addError(re.getError());
                             log.debug("Error: {}", re.getMessage());
@@ -170,9 +166,9 @@ public class DataInterface {
                     for (Attribute eAtt : eAttGroup.getAttributes()) {
                         // create groupAttribute's attributes
                         try {
-                            ci.createAttribute(new AttributeVO(entityExtId,
-                                    groupExtId, eAtt.getName(), eAtt.getType(),
-                                    eAtt.isMandatory()));
+                            ci.createAttribute(new AttributeVO(specId,
+                                    entityExtId, groupExtId, eAtt.getName(),
+                                    eAtt.getType(), eAtt.isMandatory()));
                         } catch (RepositoryException re) {
                             notification.addError(re.getError());
                             log.debug("Error: {}", re.getMessage());
@@ -184,28 +180,27 @@ public class DataInterface {
 
         for (Association assoc : eDataModel.getAssociations()) {
             try {
-                ci.createRelation(new RelationVO(dataModelExtId,
-                        assoc.getName(), assoc.getEntity1().getName(),
-                        assoc.getName1(), assoc.getCardinality1(),
-                        assoc.getEntity2().getName(), assoc.getName2(),
-                        assoc.getCardinality2()));
+                ci.createRelation(new RelationVO(specId, assoc.getName(),
+                        assoc.getEntity1().getName(), assoc.getName1(),
+                        assoc.getCardinality1(), assoc.getEntity2().getName(),
+                        assoc.getName2(), assoc.getCardinality2()));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());
             }
         }
 
-        Set<DependenceVO> deps = ci.getDependencies(dataModelExtId);
+        Set<DependenceVO> deps = ci.getDependencies(specId);
         for (DependenceVO dep : deps) {
-            log.debug("dependence extid:{}, path:{}, productExtId:{}",
+            log.debug("dependence extId:{}, path:{}, productExtId:{}",
                     dep.getExtId(), dep.getPath(), dep.getProductExtId());
             try {
-                ci.checkDependence(dep.getExtId());
+                ci.checkDependence(specId, dep.getExtId());
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());
 
-                ci.deleteDependence(dep.getExtId());
+                ci.deleteDependence(specId, dep.getExtId());
             }
         }
 
@@ -213,8 +208,8 @@ public class DataInterface {
             ExpressionVO expression = buildExpressionVO(specId,
                     constraint.getConstraint());
             try {
-                ci.createRule(new RuleVO(dataModelExtId, constraint.getName(),
-                        expression));
+                ci.createRule(
+                        new RuleVO(specId, constraint.getName(), expression));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());

@@ -9,15 +9,14 @@ public class EntityDTO extends ProductDTO {
     public EntityDTO() {
     }
 
-    public EntityDTO(String extId, String dataModelExtId, String name,
-            boolean exists) {
-        super(extId, dataModelExtId, ProductType.ENTITY.name());
+    public EntityDTO(String specId, String extId, String name, boolean exists) {
+        super(specId, extId, ProductType.ENTITY.name());
         this.name = name;
         this.exists = exists;
     }
 
-    public EntityDTO(String dataModelExtId, String name, boolean exists) {
-        super(null, dataModelExtId, ProductType.ENTITY.name());
+    public EntityDTO(String specId, String name, boolean exists) {
+        super(specId, null, ProductType.ENTITY.name());
         this.name = name;
         this.exists = exists;
     }

@@ -4,19 +4,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DEFEntityConditionVO {
+    private String specId;
     private String extId;
-    private String conditionModelExtId;
     private String entityName;
     private boolean exists;
 
     public DEFEntityConditionVO() {
     }
 
-    public DEFEntityConditionVO(String conditionModelExtId,
-            String entityName, boolean exists) {
-        this.conditionModelExtId = conditionModelExtId;
+    public DEFEntityConditionVO(String specId, String entityName,
+            boolean exists) {
+        this.specId = specId;
         this.entityName = entityName;
         this.exists = exists;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getExtId() {
@@ -25,14 +33,6 @@ public class DEFEntityConditionVO {
 
     public void setExtId(String extId) {
         this.extId = extId;
-    }
-
-    public String getConditionModelExtId() {
-        return conditionModelExtId;
-    }
-
-    public void setConditionModelExtId(String conditionModelExtId) {
-        this.conditionModelExtId = conditionModelExtId;
     }
 
     public String getEntityName() {

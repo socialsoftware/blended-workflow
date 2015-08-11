@@ -83,12 +83,8 @@ public class BWSpecification extends BWSpecification_Base {
 
     public SpecDTO getDTO() {
         SpecDTO specDTO = new SpecDTO();
-        specDTO.setExternalId(getExternalId());
         specDTO.setSpecId(getSpecId());
         specDTO.setName(getName());
-        specDTO.setDataModelExtId(getDataModel().getExternalId());
-        specDTO.setConditionModelExtId(getConditionModel().getExternalId());
-        specDTO.setGoalModelExtId(getGoalModel().getExternalId());
 
         return specDTO;
     }

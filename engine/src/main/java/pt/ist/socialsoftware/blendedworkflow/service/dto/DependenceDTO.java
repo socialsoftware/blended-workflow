@@ -1,9 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 public class DependenceDTO {
-
+    private String specId;
     private String extId;
-    private String conditionModelExtId;
     private String productExtId;
     private String path;
 
@@ -23,14 +22,6 @@ public class DependenceDTO {
         this.extId = externalId;
     }
 
-    public String getConditionModelExtId() {
-        return conditionModelExtId;
-    }
-
-    public void setConditionModelExtId(String conditionModelExtId) {
-        this.conditionModelExtId = conditionModelExtId;
-    }
-
     public String getProductExtId() {
         return productExtId;
     }
@@ -45,6 +36,14 @@ public class DependenceDTO {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
 }

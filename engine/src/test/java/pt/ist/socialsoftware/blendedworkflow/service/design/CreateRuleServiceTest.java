@@ -78,8 +78,8 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
                         Type.ATT_VALUE,
                         EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME));
 
-        designInterface.createRule(new RuleDTO(
-                existingDataModel.getExternalId(), RULE_NAME, expDTO));
+        designInterface
+                .createRule(new RuleDTO(EXISTS_SPEC_ID, RULE_NAME, expDTO));
 
         BWSpecification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
                 .get();
@@ -119,8 +119,8 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
                 new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
                         "true"));
 
-        designInterface.createRule(new RuleDTO(
-                existingDataModel.getExternalId(), RULE_NAME, expDTO));
+        designInterface
+                .createRule(new RuleDTO(EXISTS_SPEC_ID, RULE_NAME, expDTO));
 
         BWSpecification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
                 .get();
@@ -166,8 +166,8 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
                 new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
                         "true"));
 
-        designInterface.createRule(new RuleDTO(
-                existingDataModel.getExternalId(), RULE_NAME, expDTO));
+        designInterface
+                .createRule(new RuleDTO(EXISTS_SPEC_ID, RULE_NAME, expDTO));
     }
 
     @Test(expected = BWException.class)
@@ -185,8 +185,8 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
                 new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
                         "true"));
 
-        designInterface.createRule(new RuleDTO(
-                existingDataModel.getExternalId(), RULE_NAME, expDTO));
+        designInterface
+                .createRule(new RuleDTO(EXISTS_SPEC_ID, RULE_NAME, expDTO));
     }
 
     @Test
@@ -197,8 +197,8 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
                         Type.ATT_DEF,
                         EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME));
 
-        designInterface.createRule(new RuleDTO(
-                existingDataModel.getExternalId(), RULE_NAME, expDTO));
+        designInterface
+                .createRule(new RuleDTO(EXISTS_SPEC_ID, RULE_NAME, expDTO));
     }
 
     @Test
@@ -213,8 +213,8 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
                 new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
                         "false"));
 
-        designInterface.createRule(new RuleDTO(
-                existingDataModel.getExternalId(), RULE_NAME, expDTO));
+        designInterface
+                .createRule(new RuleDTO(EXISTS_SPEC_ID, RULE_NAME, expDTO));
     }
 
     @Test
@@ -229,8 +229,8 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
                 new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
                         "false"));
 
-        designInterface.createRule(new RuleDTO(
-                existingDataModel.getExternalId(), RULE_NAME, expDTO));
+        designInterface
+                .createRule(new RuleDTO(EXISTS_SPEC_ID, RULE_NAME, expDTO));
     }
 
     @Test
@@ -243,8 +243,8 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
                         Type.ATT_VALUE, EXISTS_ENTITY_NAME + "."
                                 + EXISTS_ATTRIBUTE_NAME_STRING));
 
-        designInterface.createRule(new RuleDTO(
-                existingDataModel.getExternalId(), RULE_NAME, expDTO));
+        designInterface
+                .createRule(new RuleDTO(EXISTS_SPEC_ID, RULE_NAME, expDTO));
     }
 
 }

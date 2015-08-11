@@ -4,18 +4,26 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DependenceVO {
-
+    private String specId;
     private String extId;
-    private String conditionModelExtId;
     private String productExtId;
     private String path;
 
     public DependenceVO() {
     }
 
-    public DependenceVO(String productExtId, String path) {
+    public DependenceVO(String specId, String productExtId, String path) {
+        this.specId = specId;
         this.productExtId = productExtId;
         this.path = path;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getExtId() {
@@ -24,14 +32,6 @@ public class DependenceVO {
 
     public void setExtId(String extId) {
         this.extId = extId;
-    }
-
-    public String getConditionModelExtId() {
-        return conditionModelExtId;
-    }
-
-    public void setConditionModelExtId(String conditionModelExtId) {
-        this.conditionModelExtId = conditionModelExtId;
     }
 
     public String getProductExtId() {

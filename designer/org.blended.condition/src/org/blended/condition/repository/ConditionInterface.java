@@ -23,7 +23,6 @@ import org.blended.common.repository.resttemplate.vo.EntityVO;
 import org.blended.common.repository.resttemplate.vo.MulConditionVO;
 import org.blended.common.repository.resttemplate.vo.ProductVO;
 import org.blended.common.repository.resttemplate.vo.RuleVO;
-import org.blended.common.repository.resttemplate.vo.SpecVO;
 import org.blended.condition.condition.ConditionModel;
 import org.eclipse.emf.ecore.EObject;
 import org.slf4j.Logger;
@@ -60,15 +59,10 @@ public class ConditionInterface {
         Specification eSpec = eConditionModel.getSpecification();
         log.debug("Specification: {}", eSpec.getName());
 
-        SpecVO specVO = null;
-        String conditionModelExtId = null;
-        String dataModelExtId = null;
         try {
-            specVO = ci.getSpecBySpecId(specId);
+            ci.getSpecBySpecId(specId);
 
-            conditionModelExtId = specVO.getConditionModelExtId();
-            dataModelExtId = specVO.getDataModelExtId();
-            ci.cleanConditionModel(conditionModelExtId);
+            ci.cleanConditionModel(specId);
         } catch (RepositoryException re) {
             log.debug("loadConditionModel: {}", re.getMessage());
             // a data model is required
@@ -89,8 +83,8 @@ public class ConditionInterface {
             }
             try {
                 log.debug("EntityAchieveConditionExists Name:{} ", entityName);
-                ci.createEntityAchieveCondition(new DEFEntityConditionVO(
-                        conditionModelExtId, entityName, exists));
+                ci.createEntityAchieveCondition(
+                        new DEFEntityConditionVO(specId, entityName, exists));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());
@@ -102,9 +96,9 @@ public class ConditionInterface {
             log.debug("EntityDependenceCondition Entity1:{}, Entity2:{}",
                     eEpc.getEntity1(), eEpc.getEntity2());
             try {
-                EntityVO entityVO = ci.getEntityByName(dataModelExtId,
+                EntityVO entityVO = ci.getEntityByName(specId,
                         eEpc.getEntity1());
-                ci.createEntityDependenceCondition(new DependenceVO(
+                ci.createEntityDependenceCondition(new DependenceVO(specId,
                         entityVO.getExtId(), eEpc.getEntity2()));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
@@ -117,9 +111,8 @@ public class ConditionInterface {
             log.debug("EntityInvariantCondition Name:{}, Cardinality:{}",
                     eEic.getName(), eEic.getCardinality());
             try {
-                ci.createEntityInvariantCondition(
-                        new MulConditionVO(conditionModelExtId, eEic.getName(),
-                                eEic.getCardinality()));
+                ci.createEntityInvariantCondition(new MulConditionVO(specId,
+                        eEic.getName(), eEic.getCardinality()));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());
@@ -141,8 +134,8 @@ public class ConditionInterface {
                 paths.add(path);
             }
             try {
-                ci.createAttributeAchieveCondition(new DefAttributeConditionVO(
-                        conditionModelExtId, paths, mandatory));
+                ci.createAttributeAchieveCondition(
+                        new DefAttributeConditionVO(specId, paths, mandatory));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());
@@ -157,12 +150,12 @@ public class ConditionInterface {
             try {
                 Set<String> sourceAtts = eApc.getAttributes1().stream()
                         .collect(Collectors.toSet());
-                ProductVO productVO = ci.getProduct(dataModelExtId, sourceAtts);
+                ProductVO productVO = ci.getProduct(specId, sourceAtts);
                 for (String path : eApc.getAttributes2().stream()
                         .collect(Collectors.toSet())) {
                     try {
-                        ci.createAttributeDependenceCondition(
-                                new DependenceVO(productVO.getExtId(), path));
+                        ci.createAttributeDependenceCondition(new DependenceVO(
+                                specId, productVO.getExtId(), path));
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
                         log.debug("Error: {}", re.getMessage());
@@ -179,7 +172,7 @@ public class ConditionInterface {
             log.debug("AttributeInvariantCondition Name:{}", eAic.getName());
             try {
                 ci.createAttributeInvariantCondition(
-                        new RuleVO(conditionModelExtId, eAic.getName()));
+                        new RuleVO(specId, eAic.getName()));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());

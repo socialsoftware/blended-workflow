@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductVO {
+    private String specId;
     private String extId;
-    private String dataModelExtId;
     private String producType;
 
     public ProductVO() {
@@ -19,20 +19,20 @@ public class ProductVO {
         this.extId = extId;
     }
 
-    public String getDataModelExtId() {
-        return dataModelExtId;
-    }
-
-    public void setDataModelExtId(String dataModelExtId) {
-        this.dataModelExtId = dataModelExtId;
-    }
-
     public String getProducType() {
         return producType;
     }
 
     public void setProducType(String producType) {
         this.producType = producType;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
 }

@@ -190,8 +190,8 @@ public class BWRelation extends BWRelation_Base {
 
     public RelationDTO getDTO() {
         RelationDTO relDTO = new RelationDTO();
+        relDTO.setSpecId(getDataModel().getSpecification().getSpecId());
         relDTO.setExtId(getExternalId());
-        relDTO.setDataModelExtId(getDataModel().getExternalId());
         relDTO.setName(getName());
         relDTO.setEntOneExtId(getEntityOne().getExternalId());
         relDTO.setEntOneName(getEntityOne().getName());

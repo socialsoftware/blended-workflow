@@ -1,19 +1,20 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 public class DEFEntityConditionDTO {
+    private String specId;
     private String extId;
-    private String conditionModelExtId;
     private String entityName;
     private boolean exists;
 
     public DEFEntityConditionDTO() {
     }
 
-    public DEFEntityConditionDTO(String conditionModelExtId,
-            String entityName, boolean exists) {
-        this.conditionModelExtId = conditionModelExtId;
-        this.entityName = entityName;
-        this.exists = exists;
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getExtId() {
@@ -22,14 +23,6 @@ public class DEFEntityConditionDTO {
 
     public void setExtId(String extId) {
         this.extId = extId;
-    }
-
-    public String getConditionModelExtId() {
-        return conditionModelExtId;
-    }
-
-    public void setConditionModelExtId(String conditionModelExtId) {
-        this.conditionModelExtId = conditionModelExtId;
     }
 
     public String getEntityName() {
