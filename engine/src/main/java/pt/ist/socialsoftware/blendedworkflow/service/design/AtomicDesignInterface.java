@@ -517,14 +517,6 @@ public class AtomicDesignInterface {
         return subGoal;
     }
 
-    // public void checkDependencies(SpecDTO specDTO) {
-    // BWSpecification spec = getSpecification(specDTO.getSpecId());
-    //
-    // for (BWDependence dependence : spec.getDataModel().getDependenceSet()) {
-    // dependence.check();
-    // }
-    // }
-
     public ProductDTO getSourceOfPath(String specId, String path) {
         BWSpecification spec = getSpecBySpecId(specId);
 

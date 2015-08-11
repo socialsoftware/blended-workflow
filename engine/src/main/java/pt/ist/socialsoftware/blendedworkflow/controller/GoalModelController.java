@@ -156,7 +156,7 @@ public class GoalModelController {
 
         adi.associateAttributeAchieveConditionToGoalActivationCondition(
                 goalModelExtId, goalExtId,
-                Arrays.asList(arraysPath).stream().collect(Collectors.toSet()));
+                Arrays.stream(arraysPath).collect(Collectors.toSet()));
 
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }

@@ -595,20 +595,52 @@ public class CommonInterface {
         restTemplate.postForObject(uri, ruleVO, RuleVO.class, params);
     }
 
-    // public ProductDTO getSourceOfPath(String specId, String path) {
-    // log.debug("getSourceOfPath Path:{}", path);
-    // return adi.getSourceOfPath(specId, path);
-    // }
-    //
-    // public ProductDTO getTargetOfPath(String specId, String path) {
-    // log.debug("getTargetOfPath Path:{}", path);
-    // return adi.getTargetOfPath(specId, path);
-    // }
-    //
-    // public Set<String> getDependencePaths(String specId,
-    // Set<String> sucConditions) {
-    // log.debug("getDependencePaths Path:{}", sucConditions);
-    // return adi.getDependencePaths(specId, sucConditions);
-    // }
+    public ProductVO getSourceOfPath(String specId, String path) {
+        log.debug("getSourceOfPath specId:{} path:{}", specId, path);
+
+        final String uri = SERVER_ADDRESS
+                + "/specs/{specId}/pathsource/{path}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("path", path);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        ProductVO productVO = restTemplate.getForObject(uri, ProductVO.class,
+                params);
+
+        return productVO;
+    }
+
+    public ProductVO getTargetOfPath(String specId, String path) {
+        log.debug("getTargetOfPath specId:{} path:{}", specId, path);
+        final String uri = SERVER_ADDRESS
+                + "/specs/{specId}/pathtarget/{path}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("path", path);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        ProductVO productVO = restTemplate.getForObject(uri, ProductVO.class,
+                params);
+
+        return productVO;
+    }
+
+    public Set<String> getDependencePaths(String specId, Set<String> paths) {
+        log.debug("getDependencePaths paths:{}", paths);
+        final String uri = SERVER_ADDRESS + "/specs/{specId}/pathdep/{paths}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("paths", paths.stream().collect(Collectors.joining(",")));
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        String[] result = restTemplate.getForObject(uri, String[].class,
+                params);
+
+        return Arrays.stream(result).collect(Collectors.toSet());
+    }
 
 }
