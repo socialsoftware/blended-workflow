@@ -57,6 +57,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO.Type;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
@@ -395,6 +396,127 @@ public class AtomicDesignInterface {
         return rule;
     }
 
+    @Atomic(mode = TxMode.WRITE)
+    public Goal createGoal(GoalDTO goalDTO) {
+        BWGoalModel goalModel = getGoalModelByExtId(
+                goalDTO.getGoalModelExtId());
+
+        return new Goal(goalModel, goalDTO.getName());
+    }
+
+    public Goal getGoalByName(String goalModelExtId, String goalName) {
+        BWGoalModel goalModel = getGoalModelByExtId(goalModelExtId);
+
+        return getGoalByName(goalModel.getSpecification(), goalName);
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public DEFEntityCondition associateEntityAchieveConditionToGoalSuccessCondition(
+            String goalModelExtId, String goalExtId, String path) {
+        BWGoalModel goalModel = getGoalModelByExtId(goalModelExtId);
+        Goal goal = getGoalByExtId(goalExtId);
+
+        BWProduct product = getTargetOfPath(goalModel.getSpecification(), path);
+        if (product.getProductType() != ProductType.ENTITY)
+            throw new BWException(BWErrorType.INVALID_PATH, path);
+
+        DEFEntityCondition defEntityCondition = ((BWEntity) product)
+                .getDefEntityCondition();
+        goal.addSuccessCondition(defEntityCondition);
+
+        return defEntityCondition;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public DEFEntityCondition associateEntityAchieveConditionToGoalAtivationCondition(
+            String goalModelExtId, String goalExtId, String path) {
+        BWGoalModel goalModel = getGoalModelByExtId(goalModelExtId);
+        Goal goal = getGoalByExtId(goalExtId);
+
+        BWProduct product = getTargetOfPath(goalModel.getSpecification(), path);
+        if (product.getProductType() != ProductType.ENTITY)
+            throw new BWException(BWErrorType.INVALID_PATH, path);
+
+        DEFEntityCondition defEntityCondition = ((BWEntity) product)
+                .getDefEntityCondition();
+        goal.addActivationCondition(defEntityCondition);
+
+        return defEntityCondition;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public DEFAttributeCondition associateAttributeAchieveConditionToGoalActivationCondition(
+            String goalModelExtId, String goalExtId, Set<String> paths) {
+        BWGoalModel goalModel = getGoalModelByExtId(goalModelExtId);
+        Goal goal = getGoalByExtId(goalExtId);
+        Set<BWAttribute> attributes = getAttributes(
+                goalModel.getSpecification(), paths);
+
+        if (attributes.size() == 0)
+            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
+
+        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
+                attributes);
+
+        goal.addActivationCondition(defAttributeCondition);
+
+        return defAttributeCondition;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public DEFAttributeCondition associateAttributeAchieveConditionToGoalSuccessCondition(
+            String goalModelExtId, String goalExtId, Set<String> paths) {
+        BWGoalModel goalModel = getGoalModelByExtId(goalModelExtId);
+        Goal goal = getGoalByExtId(goalExtId);
+        Set<BWAttribute> attributes = getAttributes(
+                goalModel.getSpecification(), paths);
+
+        if (attributes.size() == 0)
+            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
+
+        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
+                attributes);
+
+        goal.addSuccessCondition(defAttributeCondition);
+
+        return defAttributeCondition;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public void associateMulConditionToGoalEntityInvariantCondition(
+            String goalModelExtId, String goalExtId, String path,
+            String cardinality) {
+        BWGoalModel goalModel = getGoalModelByExtId(goalModelExtId);
+        Goal goal = getGoalByExtId(goalExtId);
+
+        MULCondition mulCondition = getMULCondition(
+                goalModel.getSpecification(), path);
+
+        goal.addEntityInvariantCondition(mulCondition);
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public void associateRuleConditionToGoalAttributeInvariantCondition(
+            String goalModelExtId, String goalExtId, String ruleName) {
+        BWGoalModel goalModel = getGoalModelByExtId(goalModelExtId);
+        Goal goal = getGoalByExtId(goalExtId);
+
+        BWRule rule = getRule(goalModel.getSpecification(), ruleName);
+
+        goal.addAttributeInvariantCondition(rule);
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public Goal addSubGoal(String goalModelExtId, String extId,
+            String subGoalName) {
+        BWGoalModel goalModel = getGoalModelByExtId(goalModelExtId);
+        Goal goal = getGoalByExtId(extId);
+        Goal subGoal = getGoalByName(goalModel.getSpecification(), subGoalName);
+        goal.addSubGoals(subGoal);
+
+        return subGoal;
+    }
+
     // public void checkDependencies(SpecDTO specDTO) {
     // BWSpecification spec = getSpecification(specDTO.getSpecId());
     //
@@ -446,117 +568,6 @@ public class AtomicDesignInterface {
         }
 
         return paths;
-    }
-
-    public void createGoal(String specId, String name) {
-        BWSpecification spec = getSpecBySpecId(specId);
-
-        new Goal(spec.getGoalModel(), name);
-    }
-
-    public void associateEntityAchieveConditionToGoalSuccessCondition(
-            String specId, String goalName, String path) {
-        BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoal(spec, goalName);
-
-        BWProduct product = getTargetOfPath(spec, path);
-        if (product instanceof BWEntity) {
-            BWEntity entity = (BWEntity) product;
-            log.debug(
-                    "associateEntityAchieveConditionToGoalSuccessCondition Condition:{}",
-                    entity.getDefEntityCondition().getSubPath());
-            goal.addSuccessCondition(entity.getDefEntityCondition());
-        } else {
-            throw new BWException(BWErrorType.INVALID_PATH, path);
-        }
-    }
-
-    public void associateEntityAchieveConditionToGoalAtivationCondition(
-            String specId, String goalName, String path) {
-        BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoal(spec, goalName);
-
-        BWProduct product = getTargetOfPath(spec, path);
-        if (product instanceof BWEntity) {
-            BWEntity entity = (BWEntity) product;
-            log.debug(
-                    "associateEntityAchieveConditionToGoalAtivationCondition Condition:{}",
-                    entity.getDefEntityCondition().getSubPath());
-            goal.addActivationCondition(entity.getDefEntityCondition());
-        } else {
-            throw new BWException(BWErrorType.INVALID_PATH, path);
-        }
-    }
-
-    public void associateAttributeAchieveConditionToGoalActivationCondition(
-            String specId, String goalName, Set<String> paths) {
-        BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoal(spec, goalName);
-        Set<BWAttribute> attributes = getAttributes(spec, paths);
-
-        if (attributes.size() == 0)
-            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
-
-        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
-                attributes);
-
-        log.debug(
-                "associateEntityAchieveConditionToGoalAtivationCondition condition:{}",
-                defAttributeCondition.getSubPath());
-
-        goal.addActivationCondition(defAttributeCondition);
-    }
-
-    public void associateAttributeAchieveConditionToGoalSuccessCondition(
-            String specId, String goalName, Set<String> paths) {
-        BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoal(spec, goalName);
-        Set<BWAttribute> attributes = getAttributes(spec, paths);
-
-        if (attributes.size() == 0)
-            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
-
-        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
-                attributes);
-
-        log.debug(
-                "associateAttributeAchieveConditionToGoalSuccessCondition condition:{}",
-                defAttributeCondition.getSubPath());
-
-        goal.addSuccessCondition(defAttributeCondition);
-    }
-
-    public void associateMulConditionToGoalEntityInvariantCondition(
-            String specId, String goalName, String path, String cardinality) {
-        BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoal(spec, goalName);
-        MULCondition mulCondition = getMULCondition(spec, path);
-
-        log.debug(
-                "associateMulConditionToGoalEntityInvariantCondition condition:{}",
-                mulCondition.getSubPath());
-
-        goal.addEntityInvariantCondition(mulCondition);
-    }
-
-    public void associateRuleConditionToGoalAttributeInvariantCondition(
-            String specId, String goalName, String ruleName) {
-        BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoal(spec, goalName);
-        BWRule rule = getRule(spec, ruleName);
-
-        log.debug(
-                "associateRuleConditionToGoalAttributeInvariantCondition rule:{}",
-                rule.getName());
-
-        goal.addAttributeInvariantCondition(rule);
-    }
-
-    public void addSubGoal(String specId, String goalName, String subGoalName) {
-        BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoal(spec, goalName);
-        Goal subGoal = getGoal(spec, subGoalName);
-        goal.addSubGoals(subGoal);
     }
 
     public void printSpecificationModels(String specId) {
@@ -639,15 +650,6 @@ public class AtomicDesignInterface {
             }
         }
 
-    }
-
-    private BWSpecification getSpecByExtId(String externalId) {
-        if (externalId == null || externalId.equals(""))
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        BWSpecification spec = FenixFramework.getDomainObject(externalId);
-        if (spec == null)
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        return spec;
     }
 
     private BWDataModel getDataModelByExtId(String externalId) {
@@ -765,11 +767,20 @@ public class AtomicDesignInterface {
         return entity.getNext(pathLeft, path);
     }
 
-    private Goal getGoal(BWSpecification spec, String goalName) {
+    private Goal getGoalByName(BWSpecification spec, String goalName) {
         return spec.getGoalModel().getGoalSet().stream()
                 .filter(g -> g.getName().equals(goalName)).findFirst()
                 .orElseThrow(() -> new BWException(
                         BWErrorType.INVALID_GOAL_NAME, goalName));
+    }
+
+    private Goal getGoalByExtId(String externalId) {
+        if (externalId == null || externalId.equals(""))
+            throw new BWException(BWErrorType.NOT_FOUND, externalId);
+        Goal goal = FenixFramework.getDomainObject(externalId);
+        if (goal == null)
+            throw new BWException(BWErrorType.NOT_FOUND, externalId);
+        return goal;
     }
 
     private DEFAttributeCondition getDefAttributeCondition(

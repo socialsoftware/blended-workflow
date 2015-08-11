@@ -8,6 +8,7 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
 
 public class Goal extends Goal_Base {
 
@@ -214,6 +215,15 @@ public class Goal extends Goal_Base {
                 .forEach(rule -> removeAttributeInvariantCondition(rule));
 
         deleteDomainObject();
+    }
+
+    public GoalDTO getDTO() {
+        GoalDTO goalDTO = new GoalDTO();
+        goalDTO.setExtId(getExternalId());
+        goalDTO.setGoalModelExtId(getGoalModel().getExternalId());
+        goalDTO.setName(getName());
+
+        return goalDTO;
     }
 
 }

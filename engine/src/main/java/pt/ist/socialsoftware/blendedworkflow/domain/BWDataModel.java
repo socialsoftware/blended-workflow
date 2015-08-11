@@ -49,13 +49,16 @@ public class BWDataModel extends BWDataModel_Base {
     }
 
     public void clean() {
+        if (getSpecification().getConditionModel() != null)
+            getSpecification().getConditionModel().clean();
         getRuleSet().stream().forEach(rule -> rule.delete());
+        getDependenceSet().stream().forEach(dep -> dep.delete());
         getEntitiesSet().stream().forEach(ent -> ent.delete());
     }
 
     public void delete() {
-        setSpecification(null);
         clean();
+        setSpecification(null);
         deleteDomainObject();
     }
 

@@ -132,10 +132,8 @@ public class BWAttribute extends BWAttribute_Base {
         setAttributeGroup(null);
         if (getDefAttributeCondition() != null)
             getDefAttributeCondition().delete();
-        getAttValueExpressionSet().stream()
-                .forEach(exp -> removeAttValueExpression(exp));
-        getAttBoolConditionSet().stream()
-                .forEach(cond -> removeAttBoolCondition(cond));
+        getAttValueExpressionSet().stream().forEach(exp -> exp.delete());
+        getAttBoolConditionSet().stream().forEach(cond -> cond.delete());
 
         super.delete();
     }

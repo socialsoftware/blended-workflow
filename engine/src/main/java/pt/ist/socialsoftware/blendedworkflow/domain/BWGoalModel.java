@@ -49,9 +49,8 @@ public class BWGoalModel extends BWGoalModel_Base {
     }
 
     public void delete() {
-        setSpecification(null);
-
         clean();
+        setSpecification(null);
 
         deleteDomainObject();
     }

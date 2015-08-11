@@ -57,6 +57,8 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
     public void delete() {
         setDataModel(null);
         setEntity(null);
+        if (getDefAttributeCondition() != null)
+            getDefAttributeCondition().delete();
         getAttributeSet().stream().forEach(att -> att.delete());
 
         super.delete();

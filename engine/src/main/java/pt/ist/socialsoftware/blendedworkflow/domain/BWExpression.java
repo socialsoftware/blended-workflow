@@ -7,6 +7,8 @@ public abstract class BWExpression extends BWExpression_Base {
     public void delete() {
         setLeftComparison(null);
         setRightComparison(null);
+        setLeftBinary(null);
+        setRightBinary(null);
         deleteDomainObject();
     }
 

@@ -3,6 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 public class BWConditionModel extends BWConditionModel_Base {
 
     public void clean() {
+        if (getSpecification().getGoalModel() != null)
+            getSpecification().getGoalModel().clean();
         getEntityAchieveConditionSet().stream()
                 .forEach(defEnt -> removeEntityAchieveCondition(defEnt));
         getEntityDependenceConditionSet().stream()
@@ -18,9 +20,8 @@ public class BWConditionModel extends BWConditionModel_Base {
     }
 
     public void delete() {
-        setSpecification(null);
-
         clean();
+        setSpecification(null);
 
         deleteDomainObject();
     }

@@ -17,6 +17,7 @@ import org.blended.common.repository.resttemplate.vo.DEFEntityConditionVO;
 import org.blended.common.repository.resttemplate.vo.DefAttributeConditionVO;
 import org.blended.common.repository.resttemplate.vo.DependenceVO;
 import org.blended.common.repository.resttemplate.vo.EntityVO;
+import org.blended.common.repository.resttemplate.vo.GoalVO;
 import org.blended.common.repository.resttemplate.vo.MulConditionVO;
 import org.blended.common.repository.resttemplate.vo.ProductVO;
 import org.blended.common.repository.resttemplate.vo.RelationVO;
@@ -408,6 +409,190 @@ public class CommonInterface {
                 params);
 
         return entityVO;
+    }
+
+    public void cleanGoalModel(String goalModelExtId) {
+        log.debug("cleanGoalModel: {}", goalModelExtId);
+
+        final String uri = SERVER_ADDRESS + "/goalmodels/{extId}";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("extId", goalModelExtId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        restTemplate.put(uri, null, params);
+    }
+
+    public GoalVO createGoal(GoalVO goalVO) {
+        log.debug("createGoal goalModelExtId:{}, name:{}",
+                goalVO.getGoalModelExtId(), goalVO.getName());
+
+        final String uri = SERVER_ADDRESS
+                + "/goalmodels/{goalModelExtId}/goals";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("goalModelExtId", goalVO.getGoalModelExtId());
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        GoalVO result = restTemplate.postForObject(uri, goalVO, GoalVO.class,
+                params);
+
+        return result;
+    }
+
+    public GoalVO getGoalByName(String goalModelExtId, String goalName) {
+        log.debug("getGoalByName: {}, {}", goalModelExtId, goalName);
+
+        final String uri = SERVER_ADDRESS
+                + "/goalmodels/{goalModelExtId}/goals/{goalName}";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("goalModelExtId", goalModelExtId);
+        params.put("goalName", goalName);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        GoalVO goalVO = restTemplate.getForObject(uri, GoalVO.class, params);
+
+        return goalVO;
+    }
+
+    public GoalVO addSubGoal(GoalVO goalVO) {
+        log.debug("addSubGoal goalModelExtId:{}, extId:{}, name:{}",
+                goalVO.getGoalModelExtId(), goalVO.getExtId(),
+                goalVO.getName());
+
+        final String uri = SERVER_ADDRESS
+                + "/goalmodels/{goalModelExtId}/goals/{extId}/sub";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("goalModelExtId", goalVO.getGoalModelExtId());
+        params.put("extId", goalVO.getExtId());
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        GoalVO result = restTemplate.postForObject(uri, goalVO, GoalVO.class,
+                params);
+
+        return result;
+    }
+
+    public DEFEntityConditionVO associateEntityAchieveConditionToGoalSucCondition(
+            String goalModelExtId, String goalExtId, String path) {
+        log.debug(
+                "associatedSucConditionToGoal goalModelExtId:{}, goalExtId:{}, path:{}",
+                goalModelExtId, goalExtId, path);
+
+        final String uri = SERVER_ADDRESS
+                + "/goalmodels/{goalModelExtId}/goals/{goalExtId}/sucent/{path}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("goalModelExtId", goalModelExtId);
+        params.put("goalExtId", goalExtId);
+        params.put("path", path);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        DEFEntityConditionVO result = restTemplate.postForObject(uri, null,
+                DEFEntityConditionVO.class, params);
+
+        return result;
+    }
+
+    public DEFEntityConditionVO associateEntityAchieveConditionToGoalActCondition(
+            String goalModelExtId, String goalExtId, String path) {
+        log.debug(
+                "associatedActConditionToGoal goalModelExtId:{}, goalExtId:{}, path:{}",
+                goalModelExtId, goalExtId, path);
+
+        final String uri = SERVER_ADDRESS
+                + "/goalmodels/{goalModelExtId}/goals/{goalExtId}/actent/{path}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("goalModelExtId", goalModelExtId);
+        params.put("goalExtId", goalExtId);
+        params.put("path", path);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        DEFEntityConditionVO result = restTemplate.postForObject(uri, null,
+                DEFEntityConditionVO.class, params);
+
+        return result;
+    }
+
+    public void associateAttributeAchieveConditionToGoalActCondition(
+            String goalModelExtId, String goalExtId, Set<String> paths) {
+        log.debug(
+                "associateAttributeAchieveConditionToGoalActCondition goalModelExtId:{}, goalExtId:{}, paths:{}",
+                goalModelExtId, goalExtId, paths);
+
+        String pathsParam = paths.stream().collect(Collectors.joining(","));
+
+        final String uri = SERVER_ADDRESS
+                + "/goalmodels/{goalModelExtId}/goals/{goalExtId}/actatt/{paths}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("goalModelExtId", goalModelExtId);
+        params.put("goalExtId", goalExtId);
+        params.put("paths", pathsParam);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        restTemplate.postForObject(uri, null, String.class, params);
+    }
+
+    public void associateAttributeAchieveConditionToGoalSucCondition(
+            String goalModelExtId, String goalExtId, Set<String> paths) {
+        log.debug(
+                "associateAttributeAchieveConditionToGoalActCondition goalModelExtId:{}, goalExtId:{}, paths:{}",
+                goalModelExtId, goalExtId, paths);
+
+        String pathsParam = paths.stream().collect(Collectors.joining(","));
+
+        final String uri = SERVER_ADDRESS
+                + "/goalmodels/{goalModelExtId}/goals/{goalExtId}/sucatt/{paths}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("goalModelExtId", goalModelExtId);
+        params.put("goalExtId", goalExtId);
+        params.put("paths", pathsParam);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        restTemplate.postForObject(uri, null, String.class, params);
+    }
+
+    public void associateMulConditionToGoalEntityInvariantCondition(
+            String goalModelExtId, String goalExtId,
+            MulConditionVO mulConditionVO) {
+        log.debug(
+                "associateMulConditionToGoalEntityInvariantCondition goalModelExtId:{}, goalExtId:{}, path:{}, cardinality:{}",
+                goalModelExtId, goalExtId, mulConditionVO.getRolePath(),
+                mulConditionVO.getCardinality());
+
+        final String uri = SERVER_ADDRESS
+                + "/goalmodels/{goalModelExtId}/goals/{goalExtId}/invent";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("goalModelExtId", goalModelExtId);
+        params.put("goalExtId", goalExtId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        restTemplate.postForObject(uri, mulConditionVO, MulConditionVO.class,
+                params);
+    }
+
+    public void associateRuleConditionToGoalAttributeInvariantCondition(
+            String goalModelExtId, String goalExtId, RuleVO ruleVO) {
+        // TODO Auto-generated method stub
+        log.debug(
+                "associateRuleConditionToGoalAttributeInvariantCondition goalModelExtId:{}, goalExtId:{}, rule:{}",
+                goalModelExtId, goalExtId, goalExtId, ruleVO.getName());
+
+        final String uri = SERVER_ADDRESS
+                + "/goalmodels/{goalModelExtId}/goals/{goalExtId}/invatt";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("goalModelExtId", goalModelExtId);
+        params.put("goalExtId", goalExtId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        restTemplate.postForObject(uri, ruleVO, RuleVO.class, params);
     }
 
     // public ProductDTO getSourceOfPath(String specId, String path) {
