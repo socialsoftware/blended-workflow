@@ -17,7 +17,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.org.mortbay.jetty.jetty.maven.plugin>8.1.8.v20121106</version.org.mortbay.jetty.jetty.maven.plugin>
 		<version.org.springframework.boot>1.2.5.RELEASE</version.org.springframework.boot>
-		<com.fasterxml.jackson.core>2.6.0</com.fasterxml.jackson.core>
+		<version.com.jayway.jsonpath>2.0.0</version.com.jayway.jsonpath>
+		<version.com.fasterxml.jackson.core>2.6.0</version.com.fasterxml.jackson.core>
 
 		<version.org.codehaus.jackson.jackson-mapper-asl>1.9.13</version.org.codehaus.jackson.jackson-mapper-asl>
 		<version.javax.servlet.jstl>1.2</version.javax.servlet.jstl>
@@ -107,17 +108,29 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${version.org.springframework.boot}</version>
 		</dependency>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 			<version>${version.org.springframework.boot}</version>
-    </dependency>
-       <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${com.fasterxml.jackson.core}</version>
-    </dependency>
-		
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<version>${version.org.springframework.boot}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${version.com.fasterxml.jackson.core}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>${version.com.jayway.jsonpath}</version>
+			<scope>test</scope>
+		</dependency>
+			
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
