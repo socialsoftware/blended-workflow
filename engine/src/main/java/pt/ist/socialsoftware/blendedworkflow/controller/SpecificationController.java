@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
@@ -73,10 +74,10 @@ public class SpecificationController {
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{specId}/pathsource/{path}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/{specId}/pathsource", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<ProductDTO> getSourceOfPath(
-            @PathVariable("specId") String specId,
-            @PathVariable("path") String path) {
+            @PathVariable(value = "specId") String specId,
+            @RequestParam(value = "path") String path) {
         log.debug("getSourceOfPath specId:{}, path:{}", specId, path);
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
@@ -86,10 +87,10 @@ public class SpecificationController {
         return new ResponseEntity<ProductDTO>(productDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{specId}/pathtarget/{path}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/{specId}/pathtarget", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<ProductDTO> getTargetOfPath(
             @PathVariable("specId") String specId,
-            @PathVariable("path") String path) {
+            @RequestParam("path") String path) {
         log.debug("getTargetOfPath specId:{}, path:{}", specId, path);
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
@@ -99,10 +100,10 @@ public class SpecificationController {
         return new ResponseEntity<ProductDTO>(productDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{specId}/pathdep/{paths}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/{specId}/pathdep", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<String[]> getDependencesOfPaths(
             @PathVariable("specId") String specId,
-            @PathVariable("paths") String paths) {
+            @RequestParam("paths") String paths) {
         log.debug("getDependencesOfPaths specId:{}, pathss:{}", specId, paths);
 
         AtomicDesignInterface adi = AtomicDesignInterface.getInstance();

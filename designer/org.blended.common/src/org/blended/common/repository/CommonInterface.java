@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CommonInterface {
     private static Logger log = LoggerFactory.getLogger(CommonInterface.class);
 
-    final static String SERVER_ADDRESS = "http://localhost:8080";
+    final static String BASE_URL = "http://localhost:8080";
 
     private static CommonInterface instance = null;
 
@@ -51,7 +51,7 @@ public class CommonInterface {
     public void deleteSpecification(String specId) {
         log.debug("deleteSpecification: {}", specId);
 
-        final String uri = SERVER_ADDRESS + "/specs/{specId}";
+        final String uri = BASE_URL + "/specs/{specId}";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
@@ -64,7 +64,7 @@ public class CommonInterface {
     public SpecVO getSpecBySpecId(String specId) {
         log.debug("getSpecBySpecId: {}", specId);
 
-        final String uri = SERVER_ADDRESS + "/specs/{specId}";
+        final String uri = BASE_URL + "/specs/{specId}";
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
 
@@ -98,7 +98,7 @@ public class CommonInterface {
     public SpecVO createSpec(SpecVO specVO) {
         log.debug("createSpec: {}, {}", specVO.getSpecId(), specVO.getName());
 
-        final String uri = SERVER_ADDRESS + "/specs";
+        final String uri = BASE_URL + "/specs";
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
 
@@ -129,7 +129,7 @@ public class CommonInterface {
     public void cleanDataModel(String specId) {
         log.debug("cleanDataModel: {}", specId);
 
-        final String uri = SERVER_ADDRESS + "/specs/{specId}/datamodel";
+        final String uri = BASE_URL + "/specs/{specId}/datamodel";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
@@ -142,8 +142,7 @@ public class CommonInterface {
         log.debug("createEntity: {}, {}, {}", entityVO.getSpecId(),
                 entityVO.getName(), entityVO.getExists());
 
-        final String uri = SERVER_ADDRESS
-                + "/specs/{specId}/datamodel/entities";
+        final String uri = BASE_URL + "/specs/{specId}/datamodel/entities";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", entityVO.getSpecId());
@@ -159,8 +158,7 @@ public class CommonInterface {
         log.debug("createDependence: {}, {}", dependenceVO.getProductExtId(),
                 dependenceVO.getPath());
 
-        final String uri = SERVER_ADDRESS
-                + "/specs/{specId}/datamodel/dependencies";
+        final String uri = BASE_URL + "/specs/{specId}/datamodel/dependencies";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", dependenceVO.getSpecId());
@@ -175,8 +173,7 @@ public class CommonInterface {
     public Set<DependenceVO> getDependencies(String specId) {
         log.debug("getDependencies: {}", specId);
 
-        final String uri = SERVER_ADDRESS
-                + "specs/{specId}/datamodel/dependencies";
+        final String uri = BASE_URL + "specs/{specId}/datamodel/dependencies";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
@@ -191,7 +188,7 @@ public class CommonInterface {
     public boolean checkDependence(String specId, String extId) {
         log.debug("checkDependence: {}", extId);
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/datamodel/dependencies/{depExtId}/check";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -208,7 +205,7 @@ public class CommonInterface {
     public void deleteDependence(String specId, String extId) {
         log.debug("deleteDependence: {}", extId);
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/datamodel/dependencies/{depExtId}";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -226,8 +223,7 @@ public class CommonInterface {
                 attribueVO.getName(), attribueVO.getType(),
                 attribueVO.getIsMandatory());
 
-        final String uri = SERVER_ADDRESS
-                + "/specs/{specId}/datamodel/attributes";
+        final String uri = BASE_URL + "/specs/{specId}/datamodel/attributes";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", attribueVO.getSpecId());
@@ -245,7 +241,7 @@ public class CommonInterface {
                 attributeGroupVO.getEntityExtId(), attributeGroupVO.getName(),
                 attributeGroupVO.isMandatory());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/datamodel/attributegroups";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -262,8 +258,7 @@ public class CommonInterface {
         log.debug("createRelation: {}, {}, {}", relationVO.getName(),
                 relationVO.getEntOneName(), relationVO.getEntTwoName());
 
-        final String uri = SERVER_ADDRESS
-                + "/specs/{specId}/datamodel/relations";
+        final String uri = BASE_URL + "/specs/{specId}/datamodel/relations";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", relationVO.getSpecId());
@@ -279,7 +274,7 @@ public class CommonInterface {
         log.debug("createRule: {}, {}, {}", ruleVO.getSpecId(),
                 ruleVO.getName(), ruleVO.getExpression());
 
-        final String uri = SERVER_ADDRESS + "/specs/{specId}/datamodel/rules";
+        final String uri = BASE_URL + "/specs/{specId}/datamodel/rules";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", ruleVO.getSpecId());
@@ -294,7 +289,7 @@ public class CommonInterface {
     public void printSpecificationModels(String specId) {
         log.debug("printSpecificationModels: {}", specId);
 
-        final String uri = SERVER_ADDRESS + "/specs/{specId}/print";
+        final String uri = BASE_URL + "/specs/{specId}/print";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
@@ -306,7 +301,7 @@ public class CommonInterface {
     public void cleanConditionModel(String specId) {
         log.debug("cleanConditionModel: {}", specId);
 
-        final String uri = SERVER_ADDRESS + "/specs/{specId}/conditionmodel";
+        final String uri = BASE_URL + "/specs/{specId}/conditionmodel";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
@@ -322,7 +317,7 @@ public class CommonInterface {
                 entityAchieveConditionVO.getEntityName(),
                 entityAchieveConditionVO.isExists());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/conditionmodel/entityachieveconditions";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -340,7 +335,7 @@ public class CommonInterface {
         log.debug("createEntityDependenceCondition entityExtId:{}, path:{}",
                 dependenceVO.getProductExtId(), dependenceVO.getPath());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/conditionmodel/entitydependenceconditions";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -358,7 +353,7 @@ public class CommonInterface {
         log.debug("createEntityInvariantCondition rolePath:{}, cardinality:{}",
                 mulConditionVO.getRolePath(), mulConditionVO.getCardinality());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/conditionmodel/entityinvariantconditions";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -377,7 +372,7 @@ public class CommonInterface {
                 defAttributeConditionVO.getPaths().toString(),
                 defAttributeConditionVO.isMandatory());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/conditionmodel/attributeachieveconditions";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -395,7 +390,7 @@ public class CommonInterface {
         log.debug("createDependenceCondition productExtId:{}, path:{}",
                 dependenceVO.getProductExtId(), dependenceVO.getPath());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/conditionmodel/attributedependenceconditions";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -413,7 +408,7 @@ public class CommonInterface {
                 "createAttributeInvariantCondition conditionModelExtId:{}, name:{}",
                 ruleVO.getSpecId(), ruleVO.getName());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/conditionmodel/attributeinvariantconditions";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -429,7 +424,7 @@ public class CommonInterface {
     public ProductVO getProduct(String specId, Set<String> sourceAtts) {
         log.debug("getProduct: {}", sourceAtts.toString());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/datamodel/products/{atts}/";
 
         String atts = sourceAtts.stream().collect(Collectors.joining(","));
@@ -450,7 +445,7 @@ public class CommonInterface {
     public EntityVO getEntityByName(String specId, String entityName) {
         log.debug("getEntityByName: {}, {}", specId, entityName);
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/datamodel/entities/{entityName}/";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -467,7 +462,7 @@ public class CommonInterface {
     public void cleanGoalModel(String specId) {
         log.debug("cleanGoalModel: {}", specId);
 
-        final String uri = SERVER_ADDRESS + "/specs/{specId}/goalmodel";
+        final String uri = BASE_URL + "/specs/{specId}/goalmodel";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
@@ -480,7 +475,7 @@ public class CommonInterface {
         log.debug("createGoal specId:{}, name:{}", goalVO.getSpecId(),
                 goalVO.getName());
 
-        final String uri = SERVER_ADDRESS + "/specs/{specId}/goalmodel/goals";
+        final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", goalVO.getSpecId());
@@ -495,7 +490,7 @@ public class CommonInterface {
     public GoalVO getGoalByName(String specId, String goalName) {
         log.debug("getGoalByName: {}, {}", specId, goalName);
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/{goalName}";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -512,7 +507,7 @@ public class CommonInterface {
         log.debug("addSubGoal specId:{}, extId:{}, name:{}", goalVO.getSpecId(),
                 goalVO.getExtId(), goalVO.getName());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/{extId}/sub";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -532,7 +527,7 @@ public class CommonInterface {
                 "associatedSucConditionToGoal specId:{}, goalExtId:{}, path:{}",
                 specId, goalExtId, path);
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/{goalExtId}/sucent/{path}/";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -553,7 +548,7 @@ public class CommonInterface {
                 "associatedActConditionToGoal specId:{}, goalExtId:{}, path:{}",
                 specId, goalExtId, path);
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/{goalExtId}/actent/{path}/";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -576,7 +571,7 @@ public class CommonInterface {
 
         String pathsParam = paths.stream().collect(Collectors.joining(","));
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/{goalExtId}/actatt/{paths}/";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -596,7 +591,7 @@ public class CommonInterface {
 
         String pathsParam = paths.stream().collect(Collectors.joining(","));
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/{goalExtId}/sucatt/{paths}/";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -615,7 +610,7 @@ public class CommonInterface {
                 specId, goalExtId, mulConditionVO.getRolePath(),
                 mulConditionVO.getCardinality());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/{goalExtId}/invent";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -633,7 +628,7 @@ public class CommonInterface {
                 "associateRuleConditionToGoalAttributeInvariantCondition specId:{}, goalExtId:{}, rule:{}",
                 specId, goalExtId, goalExtId, ruleVO.getName());
 
-        final String uri = SERVER_ADDRESS
+        final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/{goalExtId}/invatt";
 
         Map<String, String> params = new HashMap<String, String>();
@@ -647,47 +642,35 @@ public class CommonInterface {
     public ProductVO getSourceOfPath(String specId, String path) {
         log.debug("getSourceOfPath specId:{} path:{}", specId, path);
 
-        final String uri = SERVER_ADDRESS
-                + "/specs/{specId}/pathsource/{path}/";
-
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("specId", specId);
-        params.put("path", path);
+        final String uri = BASE_URL + "/specs/{specId}/pathsource?path={path}";
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         ProductVO productVO = restTemplate.getForObject(uri, ProductVO.class,
-                params);
+                specId, path);
 
         return productVO;
     }
 
     public ProductVO getTargetOfPath(String specId, String path) {
         log.debug("getTargetOfPath specId:{} path:{}", specId, path);
-        final String uri = SERVER_ADDRESS
-                + "/specs/{specId}/pathtarget/{path}/";
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("specId", specId);
-        params.put("path", path);
+        final String uri = BASE_URL + "/specs/{specId}/pathtarget?path={path}";
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         ProductVO productVO = restTemplate.getForObject(uri, ProductVO.class,
-                params);
+                specId, path);
 
         return productVO;
     }
 
     public Set<String> getDependencePaths(String specId, Set<String> paths) {
         log.debug("getDependencePaths paths:{}", paths);
-        final String uri = SERVER_ADDRESS + "/specs/{specId}/pathdep/{paths}/";
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("specId", specId);
-        params.put("paths", paths.stream().collect(Collectors.joining(",")));
+        final String uri = BASE_URL + "/specs/{specId}/pathdep?paths={paths}";
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        String[] result = restTemplate.getForObject(uri, String[].class,
-                params);
+        String[] result = restTemplate.getForObject(uri, String[].class, specId,
+                paths.stream().collect(Collectors.joining(",")));
 
         return Arrays.stream(result).collect(Collectors.toSet());
     }
