@@ -32,7 +32,7 @@ public class HomeController {
             log.debug("showHome  createSpec {}", spec);
         }
 
-        di.cleanDataModel(spec.getDataModel().getExternalId());
+        di.cleanDataModel(spec.getSpecId());
 
         return "home";
     }
