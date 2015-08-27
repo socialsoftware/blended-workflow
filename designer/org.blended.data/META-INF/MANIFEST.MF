@@ -35,7 +35,5 @@ Export-Package: org.blended.data,
  org.blended.data.scoping,
  org.blended.data.generator,
  org.blended.data.formatting
-Bundle-ClassPath: lib/jcommander-1.48.jar,
- .,
- lib/spring-core-4.2.0.RELEASE.jar,
- lib/spring-web-4.2.0.RELEASE.jar
+Bundle-ClassPath: .,
+ lib/jcommander-1.48.jar

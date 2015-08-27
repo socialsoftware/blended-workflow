@@ -18,7 +18,7 @@ class ConditionGenerator implements IGenerator {
 		var goalModel = new ConditionGeneratorGoalModel(resource, fsa)
 		goalModel.doGenerate
 		
-//		var activityModel = new ConditionGeneratorActivityModel(resource, fsa)
-//		activityModel.doGenerate
+		var activityModel = new ConditionGeneratorActivityModel(resource, fsa)
+		activityModel.doGenerate
 	}
 }

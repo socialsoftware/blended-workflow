@@ -23,7 +23,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
 Import-Package: org.apache.log4j,
  org.eclipse.swt.graphics,
  org.eclipse.swt.widgets,
- org.slf4j
+ org.slf4j;version="1.7.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.blended.condition,
  org.blended.condition.condition,
@@ -37,6 +37,5 @@ Export-Package: org.blended.condition,
  org.blended.condition.serializer,
  org.blended.condition.services,
  org.blended.condition.terminal,
- org.blended.condition.validation,
- org.slf4j
+ org.blended.condition.validation
 Bundle-ClassPath: .,lib/jcommander-1.48.jar
