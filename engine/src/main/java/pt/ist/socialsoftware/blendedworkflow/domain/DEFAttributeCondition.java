@@ -32,7 +32,7 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     private DEFAttributeCondition(BWAttribute attribute) {
         setConditionModel(attribute.getEntity().getDataModel()
                 .getSpecification().getConditionModel());
-        setAttribute(attribute);
+        setAttributeOfDef(attribute);
     }
 
     private DEFAttributeCondition(BWAttributeGroup attributeGroup) {
@@ -46,8 +46,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
         BWEntity entity = dataModelInstance
-                .getEntity(getAttribute().getEntity().getName()).get();
-        BWAttribute attribute = entity.getAttribute(getAttribute().getName())
+                .getEntity(getAttributeOfDef().getEntity().getName()).get();
+        BWAttribute attribute = entity.getAttribute(getAttributeOfDef().getName())
                 .orElse(null);
         return new DEFAttributeCondition(attribute);
     }
@@ -57,8 +57,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
         BWEntity entity = dataModelInstance
-                .getEntity(getAttribute().getEntity().getName()).get();
-        BWAttribute attribute = entity.getAttribute(getAttribute().getName())
+                .getEntity(getAttributeOfDef().getEntity().getName()).get();
+        BWAttribute attribute = entity.getAttribute(getAttributeOfDef().getName())
                 .orElse(null);
         return new DEFAttributeCondition(attribute);
     }
@@ -66,15 +66,15 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     @Override
     public void assignAttributeInstances(GoalWorkItem goalWorkItem,
             ConditionType conditionType) {
-        getAttribute().getEntity().assignAttributeInstances(goalWorkItem,
-                getAttribute(), conditionType);
+        getAttributeOfDef().getEntity().assignAttributeInstances(goalWorkItem,
+                getAttributeOfDef(), conditionType);
     }
 
     @Override
     public void assignAttributeInstances(TaskWorkItem taskWorkItem,
             ConditionType conditionType) {
-        getAttribute().getEntity().assignAttributeInstances(taskWorkItem,
-                getAttribute(), conditionType);
+        getAttributeOfDef().getEntity().assignAttributeInstances(taskWorkItem,
+                getAttributeOfDef(), conditionType);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     @Override
     public Set<BWAttribute> getAttributes() {
         Set<BWAttribute> attribute = new HashSet<BWAttribute>();
-        attribute.add(getAttribute());
+        attribute.add(getAttributeOfDef());
         return attribute;
     }
 
@@ -97,8 +97,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     @Override
     public String getRdrUndefinedCondition() {
         String condition = "(";
-        String attributeName = getAttribute().getName().replaceAll(" ", "");
-        String entityName = getAttribute().getEntity().getName().replaceAll(" ",
+        String attributeName = getAttributeOfDef().getName().replaceAll(" ", "");
+        String entityName = getAttributeOfDef().getEntity().getName().replaceAll(" ",
                 "");
 
         condition += entityName + "_" + attributeName + "_State = "
@@ -109,8 +109,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     @Override
     public String getRdrSkippedCondition() {
         String condition = "(";
-        String attributeName = getAttribute().getName().replaceAll(" ", "");
-        String entityName = getAttribute().getEntity().getName().replaceAll(" ",
+        String attributeName = getAttributeOfDef().getName().replaceAll(" ", "");
+        String entityName = getAttributeOfDef().getEntity().getName().replaceAll(" ",
                 "");
 
         condition += entityName + "_" + attributeName + "_State = "
@@ -121,8 +121,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     @Override
     public String getRdrTrueCondition() {
         String condition = "(";
-        String attributeName = getAttribute().getName().replaceAll(" ", "");
-        String entityName = getAttribute().getEntity().getName().replaceAll(" ",
+        String attributeName = getAttributeOfDef().getName().replaceAll(" ", "");
+        String entityName = getAttributeOfDef().getEntity().getName().replaceAll(" ",
                 "");
 
         condition += entityName + "_" + attributeName + "_State = "
@@ -137,10 +137,10 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
     @Override
     public String toString() {
-        if (getAttribute() != null && getAttribute().getEntity() != null
-                && getAttribute().getEntity().getName() != null)
-            return "existsAttribute(" + getAttribute().getEntity().getName()
-                    + "." + getAttribute().getName() + ")";
+        if (getAttributeOfDef() != null && getAttributeOfDef().getEntity() != null
+                && getAttributeOfDef().getEntity().getName() != null)
+            return "existsAttribute(" + getAttributeOfDef().getEntity().getName()
+                    + "." + getAttributeOfDef().getName() + ")";
         return "DEFAttributeCondition: attribute or entity with empty value";
     }
 
@@ -178,7 +178,7 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
             for (WorkItemArgument workItemArgument : arguments) {
                 BWAttribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                BWAttribute conditionAttribute = getAttribute();
+                BWAttribute conditionAttribute = getAttributeOfDef();
                 if (workItemAttribute == conditionAttribute) {
                     if (workItemArgument.getState().equals(DataState.SKIPPED)) {
                         return TripleStateBool.SKIPPED;
@@ -198,7 +198,7 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         for (AttributeInstance attributeInstance : entityInstance
                 .getAttributeInstancesSet()) {
             BWAttribute attribute = attributeInstance.getAttribute();
-            BWAttribute conditionAttribute = getAttribute();
+            BWAttribute conditionAttribute = getAttributeOfDef();
 
             if (attribute == conditionAttribute) {
                 DataState state = getWorkItemState(attributeInstance,
@@ -247,7 +247,7 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     @Override
     public void delete() {
         setConditionModel(null);
-        setAttribute(null);
+        setAttributeOfDef(null);
         setAttributeGroup(null);
         super.delete();
     }
@@ -258,7 +258,7 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
     @Override
     public String getSubPath() {
-        String subPath = getAttribute() != null ? getAttribute().getName()
+        String subPath = getAttributeOfDef() != null ? getAttributeOfDef().getName()
                 : getAttributeGroup().getName();
         return "DEF(" + subPath + ")";
     }
@@ -267,9 +267,9 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         DefAttributeConditionDTO defConditionDTO = new DefAttributeConditionDTO();
         defConditionDTO
                 .setSpecId(getConditionModel().getSpecification().getSpecId());
-        if (getAttribute() != null) {
-            defConditionDTO.setAttributeExtId(getAttribute().getExternalId());
-            defConditionDTO.setMandatory(getAttribute().getIsMandatory());
+        if (getAttributeOfDef() != null) {
+            defConditionDTO.setAttributeExtId(getAttributeOfDef().getExternalId());
+            defConditionDTO.setMandatory(getAttributeOfDef().getIsMandatory());
         }
         if (getAttributeGroup() != null) {
             defConditionDTO.setAttributeGroupExtId(

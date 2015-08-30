@@ -42,7 +42,7 @@ public class Comparison extends Comparison_Base {
     }
 
     public Comparison(BWAttribute attribute, String operator, String value) {
-        setAttribute(attribute);
+        setAttributeOfComparison(attribute);
         setOperator(operator);
         setValue(value);
     }
@@ -52,8 +52,8 @@ public class Comparison extends Comparison_Base {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
         BWEntity entity = dataModelInstance
-                .getEntity(getAttribute().getEntity().getName()).get();
-        BWAttribute attribute = entity.getAttribute(getAttribute().getName())
+                .getEntity(getAttributeOfComparison().getEntity().getName()).get();
+        BWAttribute attribute = entity.getAttribute(getAttributeOfComparison().getName())
                 .orElse(null);
         return new Comparison(attribute, getOperator(), getValue());
     }
@@ -63,8 +63,8 @@ public class Comparison extends Comparison_Base {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
         BWEntity entity = dataModelInstance
-                .getEntity(getAttribute().getEntity().getName()).get();
-        BWAttribute attribute = entity.getAttribute(getAttribute().getName())
+                .getEntity(getAttributeOfComparison().getEntity().getName()).get();
+        BWAttribute attribute = entity.getAttribute(getAttributeOfComparison().getName())
                 .orElse(null);
         return new Comparison(attribute, getOperator(), getValue());
     }
@@ -72,15 +72,15 @@ public class Comparison extends Comparison_Base {
     @Override
     public void assignAttributeInstances(GoalWorkItem goalWorkItem,
             ConditionType conditionType) {
-        getAttribute().getEntity().assignAttributeInstances(goalWorkItem,
-                getAttribute(), conditionType);
+        getAttributeOfComparison().getEntity().assignAttributeInstances(goalWorkItem,
+                getAttributeOfComparison(), conditionType);
     }
 
     @Override
     public void assignAttributeInstances(TaskWorkItem taskWorkItem,
             ConditionType conditionType) {
-        getAttribute().getEntity().assignAttributeInstances(taskWorkItem,
-                getAttribute(), conditionType);
+        getAttributeOfComparison().getEntity().assignAttributeInstances(taskWorkItem,
+                getAttributeOfComparison(), conditionType);
     }
 
     @Override
@@ -91,22 +91,22 @@ public class Comparison extends Comparison_Base {
     @Override
     public Set<BWAttribute> getAttributes() {
         Set<BWAttribute> attribute = new HashSet<BWAttribute>();
-        attribute.add(getAttribute());
+        attribute.add(getAttributeOfComparison());
         return attribute;
     }
 
     @Override
     public HashMap<BWAttribute, String> getcompareConditionValues() {
         HashMap<BWAttribute, String> result = new HashMap<BWAttribute, String>();
-        result.put(getAttribute(), getValue());
+        result.put(getAttributeOfComparison(), getValue());
         return result;
     }
 
     @Override
     public String getRdrUndefinedCondition() {
         String condition = "(";
-        String attributeName = getAttribute().getName().replaceAll(" ", "");
-        String entityName = getAttribute().getEntity().getName().replaceAll(" ",
+        String attributeName = getAttributeOfComparison().getName().replaceAll(" ", "");
+        String entityName = getAttributeOfComparison().getEntity().getName().replaceAll(" ",
                 "");
 
         condition += entityName + "_" + attributeName + "_State = "
@@ -117,8 +117,8 @@ public class Comparison extends Comparison_Base {
     @Override
     public String getRdrSkippedCondition() {
         String condition = "(";
-        String attributeName = getAttribute().getName().replaceAll(" ", "");
-        String entityName = getAttribute().getEntity().getName().replaceAll(" ",
+        String attributeName = getAttributeOfComparison().getName().replaceAll(" ", "");
+        String entityName = getAttributeOfComparison().getEntity().getName().replaceAll(" ",
                 "");
 
         condition += entityName + "_" + attributeName + "_State = "
@@ -129,8 +129,8 @@ public class Comparison extends Comparison_Base {
     @Override
     public String getRdrTrueCondition() {
         String condition = "(";
-        String attributeName = getAttribute().getName().replaceAll(" ", "");
-        String entityName = getAttribute().getEntity().getName().replaceAll(" ",
+        String attributeName = getAttributeOfComparison().getName().replaceAll(" ", "");
+        String entityName = getAttributeOfComparison().getEntity().getName().replaceAll(" ",
                 "");
         String value = getValue();
         if (getValue().equals("$TODAY$")) {
@@ -149,8 +149,8 @@ public class Comparison extends Comparison_Base {
 
     @Override
     public String toString() {
-        return "compareAttributeTo(" + getAttribute().getEntity().getName()
-                + "." + getAttribute().getName() + " " + getOperator() + " "
+        return "compareAttributeTo(" + getAttributeOfComparison().getEntity().getName()
+                + "." + getAttributeOfComparison().getName() + " " + getOperator() + " "
                 + getValue() + ")";
     }
 
@@ -183,7 +183,7 @@ public class Comparison extends Comparison_Base {
             for (WorkItemArgument workItemArgument : arguments) {
                 BWAttribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                BWAttribute conditionAttribute = getAttribute();
+                BWAttribute conditionAttribute = getAttributeOfComparison();
                 if (workItemAttribute == conditionAttribute) {
                     if (workItemArgument.getState()
                             .equals(DataState.UNDEFINED)) {
@@ -218,7 +218,7 @@ public class Comparison extends Comparison_Base {
             for (WorkItemArgument workItemArgument : arguments) {
                 BWAttribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                BWAttribute conditionAttribute = getAttribute();
+                BWAttribute conditionAttribute = getAttributeOfComparison();
                 if (workItemAttribute == conditionAttribute) {
                     if (workItemArgument.getState()
                             .equals(DataState.UNDEFINED)) {
@@ -249,7 +249,7 @@ public class Comparison extends Comparison_Base {
         else {
             for (AttributeInstance attributeInstance : entityInstance
                     .getAttributeInstancesSet()) {
-                if (attributeInstance.getAttribute().equals(getAttribute())) {
+                if (attributeInstance.getAttribute().equals(getAttributeOfComparison())) {
                     DataState state = getWorkItemState(attributeInstance,
                             goalWorkItem, conditionType);
                     if (state == null) {
@@ -328,8 +328,8 @@ public class Comparison extends Comparison_Base {
             conditionValueString = BlendedWorkflow.getInstance().getToday();
         }
 
-        if (((getAttribute().getType().equals(AttributeType.STRING)
-                || (getAttribute().getType().equals(AttributeType.BOOLEAN))))) {
+        if (((getAttributeOfComparison().getType().equals(AttributeType.STRING)
+                || (getAttributeOfComparison().getType().equals(AttributeType.BOOLEAN))))) {
             if (getOperator().equals("=")) {
                 if (evaluateValue.equals(conditionValueString)) {
                     return true;
@@ -346,7 +346,7 @@ public class Comparison extends Comparison_Base {
                 log.error("Invalid operator for String or Boolean type.");
                 return false;
             }
-        } else if (getAttribute().getType().equals(AttributeType.NUMBER)) {
+        } else if (getAttributeOfComparison().getType().equals(AttributeType.NUMBER)) {
             Integer value = Integer.parseInt(evaluateValue);
             Integer conditionValue = Integer.parseInt(getValue());
             if (getOperator().equals("<")) {
@@ -402,7 +402,7 @@ public class Comparison extends Comparison_Base {
 
     @Override
     public void delete() {
-        setAttribute(null);
+        setAttributeOfComparison(null);
         getLeftExpression().delete();
         getRightExpression().delete();
         super.delete();

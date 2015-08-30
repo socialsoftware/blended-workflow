@@ -584,7 +584,7 @@ relation NotConditionHasConditions {
 // DEFAttributeCondition
 relation DEFAttributeConditionHasBWAttribute {
 	DEFAttributeCondition playsRole defAttributeCondition { multiplicity 0..1; }
-	BWAttribute playsRole attribute { multiplicity 0..1; }
+	BWAttribute playsRole attributeOfDef { multiplicity 0..1; }
 }
 
 relation DEFAttributeConditionHasBWAttributeGroup {
@@ -607,7 +607,7 @@ relation MULConditionHasBWRelation {
 // Comparison
 relation ComparisonHasAttributes {
 	Comparison playsRole comparison { multiplicity 0..*; }
-	BWAttribute playsRole attribute { multiplicity 0..1; }
+	BWAttribute playsRole attributeOfComparison { multiplicity 0..1; }
 }
 
 relation ComparisonHasBWExpressionLeft {
@@ -634,7 +634,7 @@ relation ComparisonHasConditionRight {
 // BWAttributeBoolCondition
 relation BWAttributeBoolConditionHasAttribute {
 	BWAttributeBoolCondition playsRole attBoolCondition { multiplicity 0..*; }
-	BWAttribute playsRole attribute { multiplicity 0..1; }
+	BWAttribute playsRole attributeOfBool { multiplicity 0..1; }
 }
 
 // BWBinaryExpression

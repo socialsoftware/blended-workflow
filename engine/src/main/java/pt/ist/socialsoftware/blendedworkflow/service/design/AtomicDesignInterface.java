@@ -334,8 +334,8 @@ public class AtomicDesignInterface {
         DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
                 attributes);
 
-        if (defAttributeCondition.getAttribute() != null
-                && defAttributeCondition.getAttribute()
+        if (defAttributeCondition.getAttributeOfDef() != null
+                && defAttributeCondition.getAttributeOfDef()
                         .getIsMandatory() != aacDTO.isMandatory())
             throw new BWException(BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY,
                     aacDTO.getPaths().toString());
@@ -600,11 +600,11 @@ public class AtomicDesignInterface {
 
         spec.getConditionModel().getAttributeAchieveConditionSet()
                 .stream().map(
-                        def -> (def.getAttribute() != null)
+                        def -> (def.getAttributeOfDef() != null)
                                 ? ("DEF("
-                                        + def.getAttribute().getEntity()
+                                        + def.getAttributeOfDef().getEntity()
                                                 .getName()
-                                        + "." + def.getAttribute().getName()
+                                        + "." + def.getAttributeOfDef().getName()
                                         + ")")
                                 : ("DEF("
                                         + def.getAttributeGroup().getEntity()

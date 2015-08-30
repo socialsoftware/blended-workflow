@@ -8,18 +8,18 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 public class BWAttributeBoolCondition extends BWAttributeBoolCondition_Base {
 
     public BWAttributeBoolCondition(BWAttribute att) {
-        setAttribute(att);
+        setAttributeOfBool(att);
     }
 
     @Override
     public void delete() {
-        setAttribute(null);
+        setAttributeOfBool(null);
         super.delete();
     }
 
     @Override
     public String getSubPath() {
-        return getAttribute().getName();
+        return getAttributeOfBool().getName();
     }
 
     @Override
