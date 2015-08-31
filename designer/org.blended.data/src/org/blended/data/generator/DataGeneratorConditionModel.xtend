@@ -7,6 +7,7 @@ import org.blended.common.common.AttributeGroup
 import org.blended.common.common.CommonFactory
 import org.blended.common.common.Constraint
 import org.blended.common.common.Entity
+import org.blended.common.common.Specification
 import org.blended.condition.ConditionRuntimeModule
 import org.blended.condition.condition.ConditionFactory
 import org.blended.condition.condition.ConditionModel
@@ -18,8 +19,6 @@ import org.eclipse.xtext.resource.SaveOptions
 
 import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import org.blended.common.common.Specification
-import org.blended.common.utils.Queries
 
 /**
  * Generates code from your model files on save.

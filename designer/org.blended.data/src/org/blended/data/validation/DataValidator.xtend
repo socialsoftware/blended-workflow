@@ -32,12 +32,18 @@ class DataValidator extends AbstractDataValidator {
 	@Check(CheckType.NORMAL)
 	def checkModel(DataModel model) {
 				info('everything OK 0', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
+				System.out.println("0");
 		var instance = DataInterface.getInstance
 				info('everything OK 2', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
+				System.out.println("2");
 		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
 				info('everything OK 3', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
+				System.out.println("3");
+				System.out.println("SPECID:" + specId);
+				System.out.println("MODEL:"+model);
 		var notification = instance.loadDataModel(specId, model)
 				info('everything OK 4', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
+				System.out.println("4");
 		if (notification.hasErrors)
 			for (error : notification.error)
 				error(error.message, DataPackage.Literals.DATA_MODEL__SPECIFICATION,

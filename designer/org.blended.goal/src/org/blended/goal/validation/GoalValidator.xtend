@@ -34,7 +34,7 @@ class GoalValidator extends AbstractGoalValidator {
 
 	@Check(CheckType.NORMAL)
 	def checkModel(GoalModel model) {
-				info('everything OK 0', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
+	/*			info('everything OK 0', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
 		var instance = GoalInterface.getInstance
 				info('everything OK 2', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
 		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
@@ -45,7 +45,7 @@ class GoalValidator extends AbstractGoalValidator {
 			for (error : notification.error)
 				error(error.type.toString + "-" + error.value, GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
 		else
-			info('everything OK 2', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
+			info('everything OK 2', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)*/
 	}
 
 }

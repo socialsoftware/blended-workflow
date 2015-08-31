@@ -77,7 +77,7 @@ public class CommonInterface {
         HttpEntity<String> entity = new HttpEntity<String>(headers);
         ResponseEntity<String> response = restTemplate.exchange(uri,
                 HttpMethod.GET, entity, String.class, uriVariables);
-
+ 
         ObjectMapper mapper = new ObjectMapper();
         String responseBody = response.getBody();
         log.debug("getSpecBySpecId responseBody: {}", responseBody);
