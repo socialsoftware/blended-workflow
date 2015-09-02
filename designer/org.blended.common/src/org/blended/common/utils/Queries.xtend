@@ -1,6 +1,8 @@
 package org.blended.common.utils
 
+import java.util.HashSet
 import java.util.List
+import java.util.Set
 import org.blended.common.common.And
 import org.blended.common.common.AttributeDefinition
 import org.blended.common.common.AttributeValue
@@ -17,9 +19,6 @@ import org.blended.common.common.Or
 import org.blended.common.common.Plus
 import org.blended.common.common.Smaller
 import org.blended.common.common.SmallerEqual
-import java.util.ArrayList
-import java.util.Set
-import java.util.HashSet
 
 class Queries {
 	static def Object getDecomposedExpression(Expression e, List<String> list) {	
@@ -89,34 +88,35 @@ class Queries {
 	}
 	
 	static def getEntityNameTo(String name) {
-		return name.substring(name.indexOf('.')+1).toFirstUpper //TO CHANGE FOR THE ENGINE!!
+		var name2 = name.substring(0, name.lastIndexOf('.'));
+		return name2.substring(name2.lastIndexOf('.')+1).toFirstUpper //TO CHANGE FOR THE ENGINE!!
 	}
 	
 	static def getAttributeName(String name) {
-		return name.substring(name.indexOf('.')+1) //TO CHANGE FOR THE ENGINE!!
+		return name.substring(name.lastIndexOf('.')+1) //TO CHANGE FOR THE ENGINE!!
 	}
 	
-	static def getDependenciesForElement(Set<String> names) { //TO CHANGE FOR THE ENGINE!!
-		var list = new HashSet<String>()
-		if (names.size == 1 && names.get(0).equals("Episode")) {
-			list.add("Episode.patient")
-		}
-		else if (names.size == 1 && names.get(0).equals("Prescription.description")) {
-			list.add("Prescription.episode.report.description")
-		}
-		else if (names.contains("Medication.name")&& names.contains("Medication.quantity") && names.contains("Medication.heartImpact")) {
-			list.add("Medication.prescription.description")
-		}
-		return list
-	}
-	
-	static def getAttributesRelatedToRule(Set<String> names) { //TO CHANGE FOR THE ENGINE!!
-		var list = new HashSet<String>()
-		if (names.contains("Medication.heartImpact")&& names.contains("Medication.quantity")) {
-			list.add("Medication.name")
-			list.add("Medication.quantity")
-			list.add("Medication.quantity")
-		}
-		return list
-	}
+//	static def getDependenciesForElement(Set<String> names) { //TO CHANGE FOR THE ENGINE!!
+//		var list = new HashSet<String>()
+//		if (names.size == 1 && names.get(0).equals("Episode")) {
+//			list.add("Episode.patient")
+//		}
+//		else if (names.size == 1 && names.get(0).equals("Prescription.description")) {
+//			list.add("Prescription.episode.report.description")
+//		}
+//		else if (names.contains("Medication.name")&& names.contains("Medication.quantity") && names.contains("Medication.heartImpact")) {
+//			list.add("Medication.prescription.description")
+//		}
+//		return list
+//	}
+//	
+//	static def getAttributesRelatedToRule(Set<String> names) { //TO CHANGE FOR THE ENGINE!!
+//		var list = new HashSet<String>()
+//		if (names.contains("Medication.heartImpact")&& names.contains("Medication.quantity")) {
+//			list.add("Medication.name")
+//			list.add("Medication.quantity")
+//			list.add("Medication.quantity")
+//		}
+//		return list
+//	}
 }

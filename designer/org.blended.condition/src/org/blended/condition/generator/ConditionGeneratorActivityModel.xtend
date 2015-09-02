@@ -131,7 +131,7 @@ class ConditionGeneratorActivityModel {
 			for (EObject p : activity.post) { //we get all the elements in POST
 				if (p instanceof NotMandatoryAttributeAchieveCondition) { //only for attributes of the activity
 					for (String element : p.conditions) { //for each of the attributes
-						var entityName = element.substring(0, element.indexOf(".")) //we get the name
+						var entityName = Queries.getEntityNameFrom(element) //we get the name
 						if ((!contains(activity.post, entityName))&&(!contains(activity.pre, entityName))) { //if we don't find it -> we put the entity in PRE
 							var apre2 = factory.createEntityAchieveCondition
 							apre2.name = entityName
@@ -169,7 +169,7 @@ class ConditionGeneratorActivityModel {
 		var listElementsInvolved = new ArrayList<PairOfElements>()
 		for (String element : listElements) {
 			//call to the engine to know the entity/attribute each of them are pointing to
-			var entityName = Queries.getEntityNameFrom(element)
+			var entityName = Queries.getEntityNameTo(element)
 			var attributeName = Queries.getAttributeName(element)
 			var data = new PairOfElements(entityName, attributeName)
 			listElementsInvolved.add(data)		
@@ -179,7 +179,9 @@ class ConditionGeneratorActivityModel {
 		var listActivitiesInvolved = new ArrayList<Activity>()
 		for (PairOfElements pair : listElementsInvolved) {
 			var act = getFirstActivityWithAttributePost(pair.entityName + "." + pair.attributeName)
-			listActivitiesInvolved.add(act)
+			if (act != null) {
+				listActivitiesInvolved.add(act)
+			}
 		}
 		
 		//getting the last one of the activities
