@@ -1,0 +1,19 @@
+Specification: "Doctor appointment"
+
+g0: SUC(nothing), SUB(g1, g2, g3, g4, g5)
+g1: SUC(EDEF(Episode)), ACT(EDEF(Episode.patient)), INV(MUL(Episode.patient, 1), MUL(Episode.prescription, 0..1), MUL(Episode.data, 1), MUL(Episode.report, 1)), SUB(g6, g7, g8)
+g2: SUC(EDEF(Prescription)), INV(MUL(Prescription.episode, 1), MUL(Prescription.medication, 1..*)), SUB(g9)
+g3: SUC(EDEF(Report)), INV(MUL(Report.episode, 1)), SUB(g10)
+g4: SUC(EDEF(Data)), INV(MUL(Data.episode, 1)), SUB(g11, g12, g13, g14)
+g5: SUC(EDEF(Medication)), INV(MUL(Medication.prescription, 1)), SUB(g15)
+g6: SUC(ADEF(Episode.reserveDate))
+g7: SUC(ADEF(Episode.checkin))
+g8: SUC(ADEF(Episode.checkout))
+g9: SUC(ADEF(Prescription.description)), ACT(ADEF(Prescription.episode.report.description))
+g10: SUC(ADEF(Report.description)), ACT(ADEF(Report.episode.data.bloodPressure))
+g11: SUC(ADEF(Data.height))
+g12: SUC(ADEF(Data.weight))
+g13: SUC(ADEF(Data.bloodPressure))
+g14: SUC(ADEF(Data.physicalCondition))
+g15: SUC(ADEF(Medication.name, Medication.quantity, Medication.heartImpact)), ACT(ADEF(Medication.prescription.description)), INV(RUL HeartAttackConstraint(Medication.quantity > 6 AND
+NOT(ADEF(Medication.heartImpact) OR NOT Medication.heartImpact OR NOT Medication.prescription.episode.patient.heartProblems)))

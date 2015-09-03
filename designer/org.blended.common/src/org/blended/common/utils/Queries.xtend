@@ -96,27 +96,27 @@ class Queries {
 		return name.substring(name.lastIndexOf('.')+1) //TO CHANGE FOR THE ENGINE!!
 	}
 	
-//	static def getDependenciesForElement(Set<String> names) { //TO CHANGE FOR THE ENGINE!!
-//		var list = new HashSet<String>()
-//		if (names.size == 1 && names.get(0).equals("Episode")) {
-//			list.add("Episode.patient")
-//		}
-//		else if (names.size == 1 && names.get(0).equals("Prescription.description")) {
-//			list.add("Prescription.episode.report.description")
-//		}
-//		else if (names.contains("Medication.name")&& names.contains("Medication.quantity") && names.contains("Medication.heartImpact")) {
-//			list.add("Medication.prescription.description")
-//		}
-//		return list
-//	}
-//	
-//	static def getAttributesRelatedToRule(Set<String> names) { //TO CHANGE FOR THE ENGINE!!
-//		var list = new HashSet<String>()
-//		if (names.contains("Medication.heartImpact")&& names.contains("Medication.quantity")) {
-//			list.add("Medication.name")
-//			list.add("Medication.quantity")
-//			list.add("Medication.quantity")
-//		}
-//		return list
-//	}
+	static def getDependenciesForElement(Set<String> names) { //TO CHANGE FOR THE ENGINE!!
+		var list = new HashSet<String>()
+		if (names.size == 1 && names.get(0).equals("Episode")) {
+			list.add("Episode.patient")
+		}
+		else if (names.size == 1 && names.get(0).equals("Prescription.description")) {
+			list.add("Prescription.episode.report.description")
+		}
+		else if (names.contains("Medication.name")&& names.contains("Medication.quantity") && names.contains("Medication.heartImpact")) {
+			list.add("Medication.prescription.description")
+		}
+		return list
+	}
+	
+	static def getAttributesRelatedToRule(Set<String> names) { //TO CHANGE FOR THE ENGINE!!
+		var list = new HashSet<String>()
+		if (names.contains("Medication.heartImpact")&& names.contains("Medication.quantity")) {
+			list.add("Medication.name")
+			list.add("Medication.quantity")
+			list.add("Medication.quantity")
+		}
+		return list
+	}
 }
