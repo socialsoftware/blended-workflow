@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
 @Controller
@@ -20,7 +20,7 @@ public class HomeController {
     public String showHome(Model model) {
         log.debug("showHome()");
 
-        AtomicDesignInterface di = AtomicDesignInterface.getInstance();
+        DesignInterface di = DesignInterface.getInstance();
 
         BWSpecification spec;
         try {

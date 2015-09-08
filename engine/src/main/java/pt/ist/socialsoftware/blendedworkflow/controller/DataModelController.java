@@ -22,7 +22,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
-import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
@@ -42,7 +42,7 @@ public class DataModelController {
             @PathVariable("specId") String specId) {
         log.debug("cleanDataModel specId:{}", specId);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         adi.cleanDataModel(specId);
 
@@ -55,7 +55,7 @@ public class DataModelController {
             @PathVariable("atts") String atts) {
         log.debug("getProduct atts:{}", atts);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         String[] attsArray = atts.split(",");
 
@@ -70,7 +70,7 @@ public class DataModelController {
             @PathVariable("entityName") String entityName) {
         log.debug("getProduct entityName:{}", entityName);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWEntity entity = adi.getEntityByName(specId, entityName);
 
@@ -84,7 +84,7 @@ public class DataModelController {
         log.debug("createEntity specId:{}, name:{}, exists:{}", specId,
                 entDTO.getName(), entDTO.getExists());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWEntity entity = adi.createEntity(entDTO);
 
@@ -101,7 +101,7 @@ public class DataModelController {
                 attDTO.getEntityExtId(), attDTO.getGroupExtId(),
                 attDTO.getName(), attDTO.getType());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWAttribute attribute = adi.createAttribute(attDTO);
 
@@ -117,7 +117,7 @@ public class DataModelController {
                 groupAttributeDTO.getEntityExtId(), groupAttributeDTO.getName(),
                 groupAttributeDTO.isMandatory());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWAttributeGroup group = adi.createAttributeGroup(groupAttributeDTO);
 
@@ -132,7 +132,7 @@ public class DataModelController {
         log.debug("createRelation {}, {}, {}", relDTO.getName(),
                 relDTO.getEntOneName(), relDTO.getEntTwoName());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWRelation relation = adi.createRelation(relDTO);
 
@@ -148,7 +148,7 @@ public class DataModelController {
                 ruleDTO.getSpecId(), ruleDTO.getName(),
                 ruleDTO.getExpression().toString());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWRule rule = adi.createRule(ruleDTO);
 
@@ -162,7 +162,7 @@ public class DataModelController {
         log.debug("createDependence productExtId:{}, path:{}",
                 dependenceDTO.getProductExtId(), dependenceDTO.getPath());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWDependence dependence = adi.createDependence(dependenceDTO);
 
@@ -175,7 +175,7 @@ public class DataModelController {
             @PathVariable("specId") String specId) {
         log.debug("getDependencies specId:{}", specId);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         Set<BWDependence> dependencies = adi.getDependencies(specId);
 
@@ -198,7 +198,7 @@ public class DataModelController {
             @PathVariable("depExtId") String depExtId) {
         log.debug("checkDependence productExtId:{}", depExtId);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         boolean result = adi.checkDependence(depExtId);
 
@@ -211,7 +211,7 @@ public class DataModelController {
             @PathVariable("depExtId") String depExtId) {
         log.debug("deleteDependence productExtId:{}", depExtId);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         adi.deleteDependence(depExtId);
 

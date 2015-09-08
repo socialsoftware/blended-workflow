@@ -27,7 +27,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
     private static final String DEPENDENCE_TWO = ENTITY_NAME + "."
             + "dependenceTwo";
 
-    AtomicDesignInterface designInterface;
+    DesignInterface designInterface;
     BWDataModel dataModel;
     BWEntity entity;
     BWAttributeGroup group;
@@ -35,7 +35,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 
     @Override
     public void populate4Test() throws BWException {
-        designInterface = AtomicDesignInterface.getInstance();
+        designInterface = DesignInterface.getInstance();
 
         new BWSpecification(SPEC_ID, SPEC_NAME, "author", "description",
                 "version", "UID");

@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.domain.product;
+package pt.ist.socialsoftware.blendedworkflow.domain.dependence;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
@@ -12,7 +11,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 
 public class CreateRelationServiceTest extends TeardownRollbackTest {
@@ -43,13 +41,10 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
 
     @Test
     public void success() throws BWException {
-
-        BWNotification notification = DesignInterface.getInstance()
+        DesignInterface.getInstance()
                 .createRelation(new RelationDTO(SPEC_ID, RELATION_NAME,
                         entityOne.getExternalId(), ROLENAME_ONE, ONE,
                         entityTwo.getExternalId(), ROLENAME_TWO, MANY));
-
-        assertFalse(notification.hasErrors());
 
         BWRelation relation = entityOne.getRelationsOneSet().stream()
                 .filter(rel -> rel.getRoleNameOne().equals(ROLENAME_ONE))

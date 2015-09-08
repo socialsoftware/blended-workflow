@@ -42,12 +42,12 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
     private static final String EXISTS_ATTRIBUTE_NAME_STRING = "Exists Attribute Name String";
     private static final String ATTRIBUTE_GROUP_NAME = "Attribute Group Name";
 
-    AtomicDesignInterface designInterface;
+    DesignInterface designInterface;
     BWDataModel existingDataModel;
 
     @Override
     public void populate4Test() {
-        designInterface = AtomicDesignInterface.getInstance();
+        designInterface = DesignInterface.getInstance();
 
         BWSpecification spec = new BWSpecification(EXISTS_SPEC_ID,
                 EXISTS_SPEC_NAME, "author", "description", "version", "UID");

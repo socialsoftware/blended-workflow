@@ -32,13 +32,13 @@ public class GetSourceOfPathServiceTest extends TeardownRollbackTest {
     private static final String ATTRIBUTE_NAME_TWO = "Exists Attribute Name String";
     private static final String ATTRIBUTE_GROUP_NAME = "Attribute Group Name";
 
-    AtomicDesignInterface designInterface;
+    DesignInterface designInterface;
 
     BWSpecification spec;
 
     @Override
     public void populate4Test() throws BWException {
-        designInterface = AtomicDesignInterface.getInstance();
+        designInterface = DesignInterface.getInstance();
 
         spec = new BWSpecification(SPEC_ID, SPEC_NAME, "author", "description",
                 "version", "UID");

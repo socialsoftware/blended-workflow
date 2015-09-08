@@ -16,7 +16,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
 import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
-import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DEFEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
@@ -34,7 +34,7 @@ public class ConditionModelController {
             @PathVariable("specId") String specId) {
         log.debug("cleanConditionModel specId:{}", specId);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         adi.cleanConditionModel(specId);
 
@@ -48,7 +48,7 @@ public class ConditionModelController {
         log.debug("createEntityAchieveCondition entityName:{}, exists:{}",
                 eacDTO.getEntityName(), eacDTO.isExists());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         DEFEntityCondition defCondition = adi
                 .createEntityAchieveCondition(eacDTO);
@@ -64,7 +64,7 @@ public class ConditionModelController {
         log.debug("createAttributeAchieveCondition paths:{}, mandatory:{}",
                 aacDTO.getPaths(), aacDTO.isMandatory());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         DEFAttributeCondition defCondition = adi
                 .createAttributeAchieveCondition(aacDTO);
@@ -80,7 +80,7 @@ public class ConditionModelController {
         log.debug("createEntityDependenceCondition entityExtId:{}, path:{}",
                 dependenceDTO.getProductExtId(), dependenceDTO.getPath());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWDependence dependence = adi
                 .createEntityDependenceCondition(dependenceDTO);
@@ -96,7 +96,7 @@ public class ConditionModelController {
         log.debug("createAttributeDependenceCondition productExtId:{}, path:{}",
                 dependenceDTO.getProductExtId(), dependenceDTO.getPath());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWDependence dependence = adi
                 .createAttributeDependenceCondition(dependenceDTO);
@@ -113,7 +113,7 @@ public class ConditionModelController {
                 mulConditionDTO.getSpecId(), mulConditionDTO.getRolePath(),
                 mulConditionDTO.getCardinality());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         MULCondition mulCondition = adi
                 .createEntityInvariantCondition(mulConditionDTO);
@@ -129,7 +129,7 @@ public class ConditionModelController {
         log.debug("createAttributeInvariantCondition specId:{}, name:{}",
                 ruleDTO.getSpecId(), ruleDTO.getName());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWRule rule = adi.createAttributeInvariantCondition(ruleDTO);
 

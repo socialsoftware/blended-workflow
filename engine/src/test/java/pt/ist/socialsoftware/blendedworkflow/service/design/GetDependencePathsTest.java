@@ -33,13 +33,13 @@ public class GetDependencePathsTest extends TeardownRollbackTest {
     private static final String DEPENDENCE_TWO = ENTITY_NAME_ONE + "."
             + "Dependence Two";
 
-    AtomicDesignInterface designInterface;
+    DesignInterface designInterface;
 
     BWSpecification spec;
 
     @Override
     public void populate4Test() throws BWException {
-        designInterface = AtomicDesignInterface.getInstance();
+        designInterface = DesignInterface.getInstance();
 
         spec = new BWSpecification(SPEC_ID, SPEC_NAME, "author", "description",
                 "version", "UID");

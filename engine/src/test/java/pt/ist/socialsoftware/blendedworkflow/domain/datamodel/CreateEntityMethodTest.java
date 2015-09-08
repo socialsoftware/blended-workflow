@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.domain.specification;
+package pt.ist.socialsoftware.blendedworkflow.domain.datamodel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

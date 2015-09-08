@@ -55,4 +55,9 @@ public class BWGoalModel extends BWGoalModel_Base {
         deleteDomainObject();
     }
 
+    public Goal merge(Goal goalOne, Goal goalTwo) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

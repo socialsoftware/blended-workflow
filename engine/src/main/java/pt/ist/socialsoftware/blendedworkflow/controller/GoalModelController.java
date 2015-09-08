@@ -3,6 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.controller;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import javax.websocket.server.PathParam;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DEFEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
@@ -33,7 +35,7 @@ public class GoalModelController {
             @PathVariable("specId") String specId) {
         log.debug("cleanGoalModel specId:{}", specId);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         adi.cleanGoalModel(specId);
 
@@ -47,7 +49,7 @@ public class GoalModelController {
         log.debug("createGoal specId:{}, name:{}, exists:{}",
                 goalDTO.getSpecId(), goalDTO.getName());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         Goal goal = adi.createGoal(goalDTO);
 
@@ -60,7 +62,7 @@ public class GoalModelController {
             @PathVariable("goalName") String goalName) {
         log.debug("createGoal specId:{}, name:{}", specId, goalName);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         Goal goal = adi.getGoalByName(specId, goalName);
 
@@ -74,7 +76,7 @@ public class GoalModelController {
         log.debug("createGoal specId:{}, extId:{}, name:{}",
                 goalDTO.getSpecId(), goalDTO.getExtId(), goalDTO.getName());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         Goal goal = adi.addSubGoal(goalDTO.getSpecId(), extId,
                 goalDTO.getName());
@@ -91,7 +93,7 @@ public class GoalModelController {
                 "associateSucConditionToGoal specId:{}, goalExtId:{}, path:{}",
                 specId, goalExtId, path);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         DEFEntityCondition defEntityCondition = adi
                 .associateEntityAchieveConditionToGoalSuccessCondition(specId,
@@ -110,7 +112,7 @@ public class GoalModelController {
                 "associateActConditionToGoal specId:{}, goalExtId:{}, path:{}",
                 specId, goalExtId, path);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         DEFEntityCondition defEntityCondition = adi
                 .associateEntityAchieveConditionToGoalAtivationCondition(specId,
@@ -131,7 +133,7 @@ public class GoalModelController {
 
         String[] arraysPath = paths.split(",");
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         adi.associateAttributeAchieveConditionToGoalSuccessCondition(specId,
                 goalExtId,
@@ -151,7 +153,7 @@ public class GoalModelController {
 
         String[] arraysPath = paths.split(",");
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         adi.associateAttributeAchieveConditionToGoalActivationCondition(specId,
                 goalExtId,
@@ -170,7 +172,7 @@ public class GoalModelController {
                 specId, goalExtId, mulConditionDTO.getRolePath(),
                 mulConditionDTO.getCardinality());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         adi.associateMulConditionToGoalEntityInvariantCondition(specId,
                 goalExtId, mulConditionDTO.getRolePath(),
@@ -188,12 +190,27 @@ public class GoalModelController {
                 "associateActConditionToGoal specId:{}, goalExtId:{}, rule:{}",
                 specId, goalExtId, ruleDTO.getName());
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         adi.associateRuleConditionToGoalAttributeInvariantCondition(specId,
                 goalExtId, ruleDTO.getName());
 
         return new ResponseEntity<String>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/goals/merge", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public ResponseEntity<GoalDTO> mergeGoals(
+            @PathVariable("specId") String specId,
+            @PathParam("goalNameOne") String goalNameOne,
+            @PathParam("goalNameTwo") String goalNameTwo) {
+        log.debug("mergeGoals specId:{}, goalNameOne:{}, goalNameTwo:{}",
+                specId, goalNameOne, goalNameTwo);
+
+        DesignInterface adi = DesignInterface.getInstance();
+
+        Goal goal = adi.mergeGoals(specId, goalNameOne, goalNameTwo);
+
+        return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
     }
 
 }

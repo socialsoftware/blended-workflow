@@ -1,9 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 
 public class CreateAttributeServiceTest extends TeardownRollbackTest {
@@ -48,12 +46,11 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
     public void success() throws BWException {
         log.debug("success ent.getExternalId():{}", ent.getExternalId());
 
-        BWNotification notification = DesignInterface.getInstance()
+        DesignInterface.getInstance()
                 .createAttribute(new AttributeDTO(SPEC_ID, ent.getExternalId(),
                         null, ATTRIBUTE_NAME, AttributeType.NUMBER.toString(),
                         true));
 
-        assertFalse(notification.hasErrors());
         BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
         BWEntity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
         BWAttribute att = entity.getAttribute(ATTRIBUTE_NAME).orElse(null);
@@ -64,40 +61,47 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 
     @Test
     public void nonExistsEntityExtId() throws BWException {
-        BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(new AttributeDTO(SPEC_ID, NON_EXIST, null,
-                        ATTRIBUTE_NAME, AttributeType.BOOLEAN.toString(),
-                        false));
+        try {
+            DesignInterface.getInstance()
+                    .createAttribute(new AttributeDTO(SPEC_ID, NON_EXIST, null,
+                            ATTRIBUTE_NAME, AttributeType.BOOLEAN.toString(),
+                            false));
+            fail();
+        } catch (BWException bwe) {
+            assertEquals(BWErrorType.NOT_FOUND, bwe.getError());
+            assertEquals(NON_EXIST, bwe.getMessage());
+        }
 
-        assertTrue(notification.hasErrors());
-        assertEquals(BWErrorType.NOT_FOUND,
-                notification.getError().get(0).getType());
-        assertEquals(NON_EXIST, notification.getError().get(0).getValue());
     }
 
     @Test
     public void emptyEntityExtId() throws BWException {
-        BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(new AttributeDTO(SPEC_ID, EMPTY_NAME, null,
-                        ATTRIBUTE_NAME, AttributeType.STRING.toString(), true));
+        try {
+            DesignInterface.getInstance()
+                    .createAttribute(new AttributeDTO(SPEC_ID, EMPTY_NAME, null,
+                            ATTRIBUTE_NAME, AttributeType.STRING.toString(),
+                            true));
+            fail();
+        } catch (BWException bwe) {
+            assertEquals(BWErrorType.NOT_FOUND, bwe.getError());
+            assertEquals(EMPTY_NAME, bwe.getMessage());
+        }
 
-        assertTrue(notification.hasErrors());
-        assertEquals(BWErrorType.NOT_FOUND,
-                notification.getError().get(0).getType());
-        assertEquals(EMPTY_NAME, notification.getError().get(0).getValue());
     }
 
     @Test
     public void nullEntityExtId() throws BWException {
-        BWNotification notification = DesignInterface.getInstance()
-                .createAttribute(
-                        new AttributeDTO(SPEC_ID, null, null, ATTRIBUTE_NAME,
-                                AttributeType.BOOLEAN.toString(), false));
+        try {
+            DesignInterface.getInstance()
+                    .createAttribute(new AttributeDTO(SPEC_ID, null, null,
+                            ATTRIBUTE_NAME, AttributeType.BOOLEAN.toString(),
+                            false));
+            fail();
+        } catch (BWException bwe) {
+            assertEquals(BWErrorType.NOT_FOUND, bwe.getError());
+            assertEquals(null, bwe.getMessage());
+        }
 
-        assertTrue(notification.hasErrors());
-        assertEquals(BWErrorType.NOT_FOUND,
-                notification.getError().get(0).getType());
-        assertEquals(null, notification.getError().get(0).getValue());
     }
 
 }

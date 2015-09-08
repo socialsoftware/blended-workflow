@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.service.design.AtomicDesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
@@ -32,7 +32,7 @@ public class SpecificationController {
             @PathVariable("specId") String specId) {
         log.debug("deleteSpecification specId:{}", specId);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         adi.deleteSpecification(specId);
 
@@ -44,7 +44,7 @@ public class SpecificationController {
             @PathVariable("specId") String specId) {
         log.debug("getSpecBySpecId sepcId:{}", specId);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWSpecification spec = adi.getSpecBySpecId(specId);
 
@@ -55,7 +55,7 @@ public class SpecificationController {
     public ResponseEntity<SpecDTO> createSpec(@RequestBody SpecDTO specDTO) {
         log.debug("createSpec specId:{}, name:{}", specDTO.getSpecId(),
                 specDTO.getName());
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         BWSpecification spec = adi.createSpecification(specDTO);
 
@@ -67,7 +67,7 @@ public class SpecificationController {
             @PathVariable("specId") String specId) {
         log.debug("printSpecModels specId:{}", specId);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         adi.printSpecificationModels(specId);
 
@@ -80,7 +80,7 @@ public class SpecificationController {
             @RequestParam(value = "path") String path) {
         log.debug("getSourceOfPath specId:{}, path:{}", specId, path);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         ProductDTO productDTO = adi.getSourceOfPath(specId, path);
 
@@ -93,7 +93,7 @@ public class SpecificationController {
             @RequestParam("path") String path) {
         log.debug("getTargetOfPath specId:{}, path:{}", specId, path);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         ProductDTO productDTO = adi.getTargetOfPath(specId, path);
 
@@ -106,7 +106,7 @@ public class SpecificationController {
             @RequestParam("paths") String paths) {
         log.debug("getDependencesOfPaths specId:{}, pathss:{}", specId, paths);
 
-        AtomicDesignInterface adi = AtomicDesignInterface.getInstance();
+        DesignInterface adi = DesignInterface.getInstance();
 
         Set<String> result = adi.getDependencePaths(specId, Arrays
                 .asList(paths.split(",")).stream().collect(Collectors.toSet()));
