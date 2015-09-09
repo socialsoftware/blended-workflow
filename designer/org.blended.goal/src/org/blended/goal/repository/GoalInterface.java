@@ -58,11 +58,10 @@ public class GoalInterface {
 
         for (Goal eGoal : eGoalModel.getGoals()) {
             log.debug("Goal: {}", eGoal.getName());
-            String goalExtId = null;
+            String goalName = eGoal.getName();
             try {
                 GoalVO goalVO = ci
                         .createGoal(new GoalVO(specId, eGoal.getName()));
-                goalExtId = goalVO.getExtId();
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());
@@ -75,7 +74,7 @@ public class GoalInterface {
                     log.debug("ACT({})", eac.getName());
                     try {
                         ci.associateEntityAchieveConditionToGoalActCondition(
-                                specId, goalExtId, eac.getName());
+                                specId, goalName, eac.getName());
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
                         log.debug("Error: {}", re.getMessage());
@@ -85,7 +84,7 @@ public class GoalInterface {
                     log.debug("ACT({})", aac.getConditions());
                     try {
                         ci.associateAttributeAchieveConditionToGoalActCondition(
-                                specId, goalExtId, aac.getConditions().stream()
+                                specId, goalName, aac.getConditions().stream()
                                         .collect(Collectors.toSet()));
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
@@ -102,7 +101,7 @@ public class GoalInterface {
                     log.debug("SUC({})", eac.getName());
                     try {
                         ci.associateEntityAchieveConditionToGoalSucCondition(
-                                specId, goalExtId, eac.getName());
+                                specId, goalName, eac.getName());
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
                         log.debug("Error: {}", re.getMessage());
@@ -112,7 +111,7 @@ public class GoalInterface {
                     log.debug("SUC({})", aac.getConditions());
                     try {
                         ci.associateAttributeAchieveConditionToGoalSucCondition(
-                                specId, goalExtId, aac.getConditions().stream()
+                                specId, goalName, aac.getConditions().stream()
                                         .collect(Collectors.toSet()));
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
@@ -130,7 +129,7 @@ public class GoalInterface {
                             eic.getCardinality());
                     try {
                         ci.associateMulConditionToGoalEntityInvariantCondition(
-                                specId, goalExtId, new MulConditionVO(specId,
+                                specId, goalName, new MulConditionVO(specId,
                                         eic.getName(), eic.getCardinality()));
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
@@ -141,7 +140,7 @@ public class GoalInterface {
                     log.debug("RULE({})", aic.getName());
                     try {
                         ci.associateRuleConditionToGoalAttributeInvariantCondition(
-                                specId, goalExtId,
+                                specId, goalName,
                                 new RuleVO(specId, aic.getName()));
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
@@ -154,12 +153,11 @@ public class GoalInterface {
 
         for (Goal eGoal : eGoalModel.getGoals()) {
             log.debug("Subgoals");
-            GoalVO goalVO = ci.getGoalByName(specId, eGoal.getName());
             for (Goal subGoal : eGoal.getChildrenGoals()) {
                 log.debug("Subgoal: {}", subGoal.getName());
                 try {
-                    ci.addSubGoal(new GoalVO(specId, goalVO.getExtId(),
-                            subGoal.getName()));
+                    ci.addSubGoal(eGoal.getName(),
+                            new GoalVO(specId, subGoal.getName()));
                 } catch (RepositoryException re) {
                     notification.addError(re.getError());
                     log.debug("Error: {}", re.getMessage());

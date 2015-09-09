@@ -413,9 +413,9 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public DEFEntityCondition associateEntityAchieveConditionToGoalSuccessCondition(
-            String specId, String goalExtId, String path) {
+            String specId, String goalName, String path) {
         BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByExtId(goalExtId);
+        Goal goal = getGoalByName(spec, goalName);
 
         BWProduct product = getTargetOfPath(spec, path);
         if (product.getProductType() != ProductType.ENTITY)
@@ -430,9 +430,9 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public DEFEntityCondition associateEntityAchieveConditionToGoalAtivationCondition(
-            String specId, String goalExtId, String path) {
+            String specId, String goalName, String path) {
         BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByExtId(goalExtId);
+        Goal goal = getGoalByName(spec, goalName);
 
         BWProduct product = getTargetOfPath(spec, path);
         if (product.getProductType() != ProductType.ENTITY)
@@ -447,9 +447,9 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public DEFAttributeCondition associateAttributeAchieveConditionToGoalActivationCondition(
-            String specId, String goalExtId, Set<String> paths) {
+            String specId, String goalName, Set<String> paths) {
         BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByExtId(goalExtId);
+        Goal goal = getGoalByName(spec, goalName);
         Set<BWAttribute> attributes = getAttributes(spec, paths);
 
         if (attributes.size() == 0)
@@ -465,9 +465,9 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public DEFAttributeCondition associateAttributeAchieveConditionToGoalSuccessCondition(
-            String specId, String goalExtId, Set<String> paths) {
+            String specId, String goalName, Set<String> paths) {
         BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByExtId(goalExtId);
+        Goal goal = getGoalByName(spec, goalName);
         Set<BWAttribute> attributes = getAttributes(spec, paths);
 
         if (attributes.size() == 0)
@@ -483,9 +483,9 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public void associateMulConditionToGoalEntityInvariantCondition(
-            String specId, String goalExtId, String path, String cardinality) {
+            String specId, String goalName, String path, String cardinality) {
         BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByExtId(goalExtId);
+        Goal goal = getGoalByName(spec, goalName);
 
         MULCondition mulCondition = getMULCondition(spec, path);
 
@@ -494,9 +494,9 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public void associateRuleConditionToGoalAttributeInvariantCondition(
-            String specId, String goalExtId, String ruleName) {
+            String specId, String goalName, String ruleName) {
         BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByExtId(goalExtId);
+        Goal goal = getGoalByName(spec, goalName);
 
         BWRule rule = getRule(spec, ruleName);
 
@@ -504,9 +504,9 @@ public class DesignInterface {
     }
 
     @Atomic(mode = TxMode.WRITE)
-    public Goal addSubGoal(String specId, String extId, String subGoalName) {
+    public Goal addSubGoal(String specId, String goalName, String subGoalName) {
         BWSpecification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByExtId(extId);
+        Goal goal = getGoalByName(spec, goalName);
         Goal subGoal = getGoalByName(spec, subGoalName);
         goal.addSubGoal(subGoal);
 

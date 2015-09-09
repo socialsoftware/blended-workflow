@@ -505,16 +505,16 @@ public class CommonInterface {
         return goalVO;
     }
 
-    public GoalVO addSubGoal(GoalVO goalVO) {
-        log.debug("addSubGoal specId:{}, extId:{}, name:{}", goalVO.getSpecId(),
-                goalVO.getExtId(), goalVO.getName());
+    public GoalVO addSubGoal(String parentName, GoalVO goalVO) {
+        log.debug("addSubGoal specId:{}, parentName:{}, childName:{}",
+                goalVO.getSpecId(), parentName, goalVO.getName());
 
         final String uri = BASE_URL
-                + "/specs/{specId}/goalmodel/goals/{extId}/sub";
+                + "/specs/{specId}/goalmodel/goals/{goalName}/sub";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", goalVO.getSpecId());
-        params.put("extId", goalVO.getExtId());
+        params.put("goalName", parentName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         GoalVO result = restTemplate.postForObject(uri, goalVO, GoalVO.class,
@@ -524,17 +524,17 @@ public class CommonInterface {
     }
 
     public DEFEntityConditionVO associateEntityAchieveConditionToGoalSucCondition(
-            String specId, String goalExtId, String path) {
+            String specId, String goalName, String path) {
         log.debug(
-                "associatedSucConditionToGoal specId:{}, goalExtId:{}, path:{}",
-                specId, goalExtId, path);
+                "associatedSucConditionToGoal specId:{}, goalName:{}, path:{}",
+                specId, goalName, path);
 
         final String uri = BASE_URL
-                + "/specs/{specId}/goalmodel/goals/{goalExtId}/sucent/{path}/";
+                + "/specs/{specId}/goalmodel/goals/{goalName}/sucent/{path}/";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
-        params.put("goalExtId", goalExtId);
+        params.put("goalName", goalName);
         params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
@@ -545,17 +545,17 @@ public class CommonInterface {
     }
 
     public DEFEntityConditionVO associateEntityAchieveConditionToGoalActCondition(
-            String specId, String goalExtId, String path) {
+            String specId, String goalName, String path) {
         log.debug(
-                "associatedActConditionToGoal specId:{}, goalExtId:{}, path:{}",
-                specId, goalExtId, path);
+                "associatedActConditionToGoal specId:{}, goalName:{}, path:{}",
+                specId, goalName, path);
 
         final String uri = BASE_URL
-                + "/specs/{specId}/goalmodel/goals/{goalExtId}/actent/{path}/";
+                + "/specs/{specId}/goalmodel/goals/{goalName}/actent/{path}/";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
-        params.put("goalExtId", goalExtId);
+        params.put("goalName", goalName);
         params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
@@ -566,19 +566,19 @@ public class CommonInterface {
     }
 
     public void associateAttributeAchieveConditionToGoalActCondition(
-            String specId, String goalExtId, Set<String> paths) {
+            String specId, String goalName, Set<String> paths) {
         log.debug(
-                "associateAttributeAchieveConditionToGoalActCondition specId:{}, goalExtId:{}, paths:{}",
-                specId, goalExtId, paths);
+                "associateAttributeAchieveConditionToGoalActCondition specId:{}, goalName:{}, paths:{}",
+                specId, goalName, paths);
 
         String pathsParam = paths.stream().collect(Collectors.joining(","));
 
         final String uri = BASE_URL
-                + "/specs/{specId}/goalmodel/goals/{goalExtId}/actatt/{paths}/";
+                + "/specs/{specId}/goalmodel/goals/{goalName}/actatt/{paths}/";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
-        params.put("goalExtId", goalExtId);
+        params.put("goalName", goalName);
         params.put("paths", pathsParam);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
@@ -586,19 +586,19 @@ public class CommonInterface {
     }
 
     public void associateAttributeAchieveConditionToGoalSucCondition(
-            String specId, String goalExtId, Set<String> paths) {
+            String specId, String goalName, Set<String> paths) {
         log.debug(
-                "associateAttributeAchieveConditionToGoalActCondition specId:{}, goalExtId:{}, paths:{}",
-                specId, goalExtId, paths);
+                "associateAttributeAchieveConditionToGoalActCondition specId:{}, goalName:{}, paths:{}",
+                specId, goalName, paths);
 
         String pathsParam = paths.stream().collect(Collectors.joining(","));
 
         final String uri = BASE_URL
-                + "/specs/{specId}/goalmodel/goals/{goalExtId}/sucatt/{paths}/";
+                + "/specs/{specId}/goalmodel/goals/{goalName}/sucatt/{paths}/";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
-        params.put("goalExtId", goalExtId);
+        params.put("goalName", goalName);
         params.put("paths", pathsParam);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
@@ -606,18 +606,18 @@ public class CommonInterface {
     }
 
     public void associateMulConditionToGoalEntityInvariantCondition(
-            String specId, String goalExtId, MulConditionVO mulConditionVO) {
+            String specId, String goalName, MulConditionVO mulConditionVO) {
         log.debug(
-                "associateMulConditionToGoalEntityInvariantCondition specId:{}, goalExtId:{}, path:{}, cardinality:{}",
-                specId, goalExtId, mulConditionVO.getRolePath(),
+                "associateMulConditionToGoalEntityInvariantCondition specId:{}, goalName:{}, path:{}, cardinality:{}",
+                specId, goalName, mulConditionVO.getRolePath(),
                 mulConditionVO.getCardinality());
 
         final String uri = BASE_URL
-                + "/specs/{specId}/goalmodel/goals/{goalExtId}/invent";
+                + "/specs/{specId}/goalmodel/goals/{goalName}/invent";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
-        params.put("goalExtId", goalExtId);
+        params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         restTemplate.postForObject(uri, mulConditionVO, MulConditionVO.class,
@@ -625,17 +625,17 @@ public class CommonInterface {
     }
 
     public void associateRuleConditionToGoalAttributeInvariantCondition(
-            String specId, String goalExtId, RuleVO ruleVO) {
+            String specId, String goalName, RuleVO ruleVO) {
         log.debug(
-                "associateRuleConditionToGoalAttributeInvariantCondition specId:{}, goalExtId:{}, rule:{}",
-                specId, goalExtId, ruleVO.getName());
+                "associateRuleConditionToGoalAttributeInvariantCondition specId:{}, goalName:{}, rule:{}",
+                specId, goalName, ruleVO.getName());
 
         final String uri = BASE_URL
-                + "/specs/{specId}/goalmodel/goals/{goalExtId}/invatt";
+                + "/specs/{specId}/goalmodel/goals/{goalName}/invatt";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
-        params.put("goalExtId", goalExtId);
+        params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         restTemplate.postForObject(uri, ruleVO, RuleVO.class, params);

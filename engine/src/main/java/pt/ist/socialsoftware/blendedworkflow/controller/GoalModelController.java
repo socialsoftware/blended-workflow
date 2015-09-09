@@ -69,35 +69,34 @@ public class GoalModelController {
         return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/goals/{extId}/sub", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{goalName}/sub", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<GoalDTO> addSubGoal(
             @PathVariable("specId") String specId,
-            @PathVariable("extId") String extId, @RequestBody GoalDTO goalDTO) {
-        log.debug("createGoal specId:{}, extId:{}, name:{}",
-                goalDTO.getSpecId(), goalDTO.getExtId(), goalDTO.getName());
+            @PathVariable("goalName") String goalName,
+            @RequestBody GoalDTO goalDTO) {
+        log.debug("createGoal specId:{}, parentName:{}, childName:{}", specId,
+                goalName, goalDTO.getName());
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        Goal goal = adi.addSubGoal(goalDTO.getSpecId(), extId,
-                goalDTO.getName());
+        Goal goal = adi.addSubGoal(specId, goalName, goalDTO.getName());
 
         return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/goals/{goalExtId}/sucent/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{goalName}/sucent/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<DEFEntityConditionDTO> associateEntityAchieveConditionToGoalSuc(
             @PathVariable("specId") String specId,
-            @PathVariable("goalExtId") String goalExtId,
+            @PathVariable("goalName") String goalName,
             @PathVariable("path") String path) {
-        log.debug(
-                "associateSucConditionToGoal specId:{}, goalExtId:{}, path:{}",
-                specId, goalExtId, path);
+        log.debug("associateSucConditionToGoal specId:{}, goalName:{}, path:{}",
+                specId, goalName, path);
 
         DesignInterface adi = DesignInterface.getInstance();
 
         DEFEntityCondition defEntityCondition = adi
                 .associateEntityAchieveConditionToGoalSuccessCondition(specId,
-                        goalExtId, path);
+                        goalName, path);
 
         return new ResponseEntity<DEFEntityConditionDTO>(
                 defEntityCondition.getDTO(), HttpStatus.CREATED);
