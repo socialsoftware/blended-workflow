@@ -120,7 +120,7 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 
         DataModelInstance dataModelInstance = getBwInstance()
                 .getDataModelInstance();
-        for (Goal subGoal : topGoal.getSubGoalsSet()) {
+        for (Goal subGoal : topGoal.getSubGoalSet()) {
             result.addAll(dataModelInstance.getRelations(
                     topGoal.getEntityContext(), subGoal.getEntityContext()));
         }

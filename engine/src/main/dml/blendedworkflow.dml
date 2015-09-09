@@ -373,7 +373,7 @@ relation BWGoalModelHasMaintainGoals {
 // Goal
 relation GoalHasGoals {
 	Goal playsRole parentGoal { multiplicity 0..1; }
-	Goal playsRole subGoals { multiplicity 0..*; }
+	Goal playsRole subGoal { multiplicity 0..*; }
 }
 
 relation GoalHasSucessConditions {

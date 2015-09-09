@@ -11,7 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
-    public static DEFAttributeCondition getDEFAttributeCondition(
+    public static DEFAttributeCondition getDEFAttribute(
             BWAttribute attribute) {
         DEFAttributeCondition defAttributeCondition = attribute
                 .getDefAttributeCondition();

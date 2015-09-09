@@ -11,8 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DEFEntityCondition extends DEFEntityCondition_Base {
 
-    public static DEFEntityCondition getDEFEntity(BWSpecification spec,
-            BWEntity entity) {
+    public static DEFEntityCondition getDEFEntity(BWEntity entity) {
         if (entity.getDefEntityCondition() != null)
             return entity.getDefEntityCondition();
         else

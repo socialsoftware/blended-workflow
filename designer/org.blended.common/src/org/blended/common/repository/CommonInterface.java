@@ -30,6 +30,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -77,7 +79,7 @@ public class CommonInterface {
         HttpEntity<String> entity = new HttpEntity<String>(headers);
         ResponseEntity<String> response = restTemplate.exchange(uri,
                 HttpMethod.GET, entity, String.class, uriVariables);
- 
+
         ObjectMapper mapper = new ObjectMapper();
         String responseBody = response.getBody();
         log.debug("getSpecBySpecId responseBody: {}", responseBody);
@@ -626,7 +628,7 @@ public class CommonInterface {
             String specId, String goalExtId, RuleVO ruleVO) {
         log.debug(
                 "associateRuleConditionToGoalAttributeInvariantCondition specId:{}, goalExtId:{}, rule:{}",
-                specId, goalExtId, goalExtId, ruleVO.getName());
+                specId, goalExtId, ruleVO.getName());
 
         final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/{goalExtId}/invatt";
@@ -637,6 +639,25 @@ public class CommonInterface {
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         restTemplate.postForObject(uri, ruleVO, RuleVO.class, params);
+    }
+
+    public GoalVO mergeGoals(String specId, String goalNameOne,
+            String goalNameTwo) {
+        log.debug("mergeGoals specId:{}, goalNameOne:{}, goalNameTwo:{}",
+                specId, goalNameOne, goalNameTwo);
+
+        final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/merge";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        MultiValueMap<String, Object> variablesMap = new LinkedMultiValueMap<String, Object>();
+        variablesMap.add("goalNameOne", goalNameOne);
+        variablesMap.add("goalNameTwo", goalNameTwo);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        return restTemplate.postForObject(uri, variablesMap, GoalVO.class,
+                params);
     }
 
     public ProductVO getSourceOfPath(String specId, String path) {

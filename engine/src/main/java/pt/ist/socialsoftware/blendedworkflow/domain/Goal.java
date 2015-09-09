@@ -3,7 +3,9 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -11,6 +13,9 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
 
 public class Goal extends Goal_Base {
+    public enum GoalRelation {
+        CHILD, PARENT, SIBLING, OTHER;
+    }
 
     @Override
     public void setName(String name) {
@@ -194,7 +199,7 @@ public class Goal extends Goal_Base {
     public Set<BWEntity> getSubGoalsContext() {
         Set<BWEntity> result = new HashSet<BWEntity>();
         // result.add(getEntityContext());
-        for (Goal subGoal : getSubGoalsSet()) {
+        for (Goal subGoal : getSubGoalSet()) {
             result.add(subGoal.getEntityContext());
         }
 
@@ -204,7 +209,7 @@ public class Goal extends Goal_Base {
     public void delete() {
         setGoalModel(null);
         setParentGoal(null);
-        getSubGoalsSet().stream().forEach(sub -> removeSubGoals(sub));
+        getSubGoalSet().stream().forEach(sub -> removeSubGoal(sub));
         getSuccessConditionSet().stream()
                 .forEach(suc -> removeSuccessCondition(suc));
         getActivationConditionSet().stream()
@@ -224,6 +229,52 @@ public class Goal extends Goal_Base {
         goalDTO.setName(getName());
 
         return goalDTO;
+    }
+
+    public GoalRelation getGoalRelation(Goal goalTwo) {
+        if (getSubGoalSet().contains(goalTwo))
+            return GoalRelation.CHILD;
+
+        if (goalTwo.getSubGoalSet().contains(this))
+            return GoalRelation.PARENT;
+
+        if ((getParentGoal() != null)
+                && (getParentGoal().getSubGoalSet().contains(goalTwo)))
+            return GoalRelation.SIBLING;
+
+        return GoalRelation.OTHER;
+    }
+
+    public void purgeActivationCondition() {
+        for (Condition cond : getActivationConditionSet()) {
+            if (getSuccessConditionSet().contains(cond))
+                removeActivationCondition(cond);
+        }
+
+    }
+
+    private Stream<Goal> flattened() {
+        return Stream.concat(Stream.of(this),
+                getSubGoalSet().stream().flatMap(Goal::flattened));
+    }
+
+    public void checkCanMergeChild(Goal childGoal) {
+        Optional<Goal> oGoal = flattened().filter(goal -> (goal != this
+                && goal != childGoal && checkGoalActIntersectsAnotherGoalSuc(childGoal, goal)))
+                .findAny();
+
+        if (oGoal.isPresent()) {
+            throw new BWException(BWErrorType.UNMERGEABLE_GOALS);
+        }
+    }
+
+    private boolean checkGoalActIntersectsAnotherGoalSuc(Goal childGoal, Goal goal) {
+        for (Condition act : childGoal.getActivationConditionSet()) {
+            if (goal.getSuccessConditionSet().contains(act)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

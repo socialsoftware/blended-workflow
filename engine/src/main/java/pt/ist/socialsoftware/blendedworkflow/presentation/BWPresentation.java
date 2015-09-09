@@ -1436,7 +1436,7 @@ public class BWPresentation extends Application {
                 Object goalObject = addedGoals.get(goal);
                 Object parentGoalObject = addedGoals.get(goal.getParentGoal());
                 goalTable.setParent(goalObject, parentGoalObject);
-                if (goal.getSubGoalsSet().size() == 0) {
+                if (goal.getSubGoalSet().size() == 0) {
                     goalTable.setChildrenAllowed(goalObject, false);
                 }
             }
@@ -1523,7 +1523,7 @@ public class BWPresentation extends Application {
         int subGoalIndex = 0;
         ArrayList<BWEntity> inputEntities = new ArrayList<BWEntity>();
 
-        for (Goal subGoal : goal.getSubGoalsSet()) {
+        for (Goal subGoal : goal.getSubGoalSet()) {
 
             // TODO: GoalInputData
             // for (AttributeInstance attributeInstance :

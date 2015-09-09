@@ -143,7 +143,7 @@ public class PrintBWSpecification {
         for (Goal goal : goalModel.getGoalSet()) {
             System.out.println("Goal \"" + goal.getName() + "\" has \""
                     + goal.getGoalWorkItemsSet().size()
-                    + "\" WorkItems and has " + goal.getSubGoalsSet().size()
+                    + "\" WorkItems and has " + goal.getSubGoalSet().size()
                     + " subgoals.");
             for (Condition ac : goal.getActivationConditionSet()) {
                 System.out.println("ActivateCondition: " + ac);
@@ -166,7 +166,7 @@ public class PrintBWSpecification {
         for (Goal goal : goalModelInstance.getGoalSet()) {
             System.out.println("Goal \"" + goal.getName() + "\" has \""
                     + goal.getGoalWorkItemsSet().size()
-                    + "\" WorkItems and has " + goal.getSubGoalsSet().size()
+                    + "\" WorkItems and has " + goal.getSubGoalSet().size()
                     + " subgoals.");
             for (Condition ac : goal.getActivationConditionSet()) {
                 System.out.println("ActivateCondition: " + ac);

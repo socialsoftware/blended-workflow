@@ -175,7 +175,7 @@ public class CreateGoalInstanceService implements Callable<String> {
         }
 
         // Recursive call for all subgoals
-        for (Goal subGoal : goal.getSubGoalsSet()) {
+        for (Goal subGoal : goal.getSubGoalSet()) {
             Set<Condition> subGoalActivateConditions = new HashSet<Condition>(
                     subGoal.getActivationConditionSet());
             Set<MaintainGoal> subGoalMaintainGoals = new HashSet<MaintainGoal>(

@@ -64,8 +64,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
 public class DesignInterface {
-    private static Logger log = LoggerFactory
-            .getLogger(DesignInterface.class);
+    private static Logger log = LoggerFactory.getLogger(DesignInterface.class);
 
     private static DesignInterface instance;
 
@@ -268,8 +267,8 @@ public class DesignInterface {
                     eacDTO.getEntityName() + " exists=" + entity.getExists());
         }
 
-        DEFEntityCondition defCondition = DEFEntityCondition.getDEFEntity(spec,
-                entity);
+        DEFEntityCondition defCondition = DEFEntityCondition
+                .getDEFEntity(entity);
         spec.getConditionModel().addEntityAchieveCondition(defCondition);
 
         return defCondition;
@@ -509,7 +508,7 @@ public class DesignInterface {
         BWSpecification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByExtId(extId);
         Goal subGoal = getGoalByName(spec, subGoalName);
-        goal.addSubGoals(subGoal);
+        goal.addSubGoal(subGoal);
 
         return subGoal;
     }
@@ -521,7 +520,7 @@ public class DesignInterface {
         Goal goalOne = getGoalByName(spec, goalNameOne);
         Goal goalTwo = getGoalByName(spec, goalNameTwo);
 
-        return spec.getGoalModel().merge(goalOne, goalTwo);
+        return spec.getGoalModel().mergeGoals(goalOne, goalTwo);
     }
 
     public ProductDTO getSourceOfPath(String specId, String path) {
@@ -640,7 +639,7 @@ public class DesignInterface {
         for (Goal goal : spec.getGoalModel().getGoalSet()) {
             System.out.println("Goal name:" + goal.getName());
 
-            for (Goal sub : goal.getSubGoalsSet()) {
+            for (Goal sub : goal.getSubGoalSet()) {
                 System.out.println("Sub goal name:" + sub.getName());
             }
             for (Condition act : goal.getActivationConditionSet()) {
@@ -767,8 +766,7 @@ public class DesignInterface {
         DEFAttributeCondition defAttributeCondition = null;
         if (attributes.size() == 1) {
             BWAttribute att = attributes.stream().findFirst().get();
-            defAttributeCondition = DEFAttributeCondition
-                    .getDEFAttributeCondition(att);
+            defAttributeCondition = DEFAttributeCondition.getDEFAttribute(att);
         } else {
             BWEntity entity = attributes.stream().findFirst().get().getEntity();
             BWAttributeGroup attributeGroup = getAttributeGroup(entity,
@@ -823,7 +821,7 @@ public class DesignInterface {
                     expression.getValue());
             if (product instanceof BWAttribute)
                 return DEFAttributeCondition
-                        .getDEFAttributeCondition((BWAttribute) product);
+                        .getDEFAttribute((BWAttribute) product);
             else if (product instanceof BWAttributeGroup)
                 return DEFAttributeCondition
                         .getDEFAttributeCondition((BWAttributeGroup) product);

@@ -40,9 +40,9 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-public class DesignInterfaceTest {
+public class RestDesignInterfaceTest {
     private static final Logger logger = LoggerFactory
-            .getLogger(DesignInterfaceTest.class);
+            .getLogger(RestDesignInterfaceTest.class);
 
     @Autowired
     private TransactionFilter transactionFilter;

@@ -70,4 +70,9 @@ public class BWDataModel extends BWDataModel_Base {
         return new BWRule(this, name, condition);
     }
 
+    public BWRule getRule(String name) {
+        return getRuleSet().stream().filter(rule -> rule.getName().equals(name))
+                .findFirst().orElse(null);
+    }
+
 }

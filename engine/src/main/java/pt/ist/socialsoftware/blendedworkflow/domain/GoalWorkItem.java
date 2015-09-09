@@ -207,7 +207,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
         int countSubGoals = 0;
         int countSubGoalsWorkItems = 0;
 
-        for (Goal subGoal : getGoal().getSubGoalsSet()) {
+        for (Goal subGoal : getGoal().getSubGoalSet()) {
             countSubGoalsWorkItems = 0;
 
             for (GoalWorkItem goalWorkItem : subGoal.getGoalWorkItemsSet()) {
@@ -222,12 +222,12 @@ public class GoalWorkItem extends GoalWorkItem_Base {
             }
         }
 
-        if (countSubGoals != getGoal().getSubGoalsSet().size()) {
-            log.debug(getGoal().getSubGoalsSet().size() + "SG="
+        if (countSubGoals != getGoal().getSubGoalSet().size()) {
+            log.debug(getGoal().getSubGoalSet().size() + "SG="
                     + TripleStateBool.FALSE);
             return TripleStateBool.FALSE;
         } else {
-            log.debug(getGoal().getSubGoalsSet().size() + "SG="
+            log.debug(getGoal().getSubGoalSet().size() + "SG="
                     + TripleStateBool.FALSE);
             log.debug("SG=" + TripleStateBool.TRUE);
             return TripleStateBool.TRUE;

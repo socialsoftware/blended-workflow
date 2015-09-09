@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.integration.DesignInterfaceTest;
+import pt.ist.socialsoftware.blendedworkflow.integration.RestDesignInterfaceTest;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class GetSpecificationMethodTest extends TeardownRollbackTest {
     private static final Logger logger = LoggerFactory
-            .getLogger(DesignInterfaceTest.class);
+            .getLogger(RestDesignInterfaceTest.class);
 
     private static final String SPEC_ID = "SpecId";
     private static final String SPEC_NAME = "Spec Name";
