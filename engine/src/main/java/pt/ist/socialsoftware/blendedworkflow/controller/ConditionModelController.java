@@ -99,7 +99,7 @@ public class ConditionModelController {
         DesignInterface adi = DesignInterface.getInstance();
 
         BWDependence dependence = adi
-                .createAttributeDependenceCondition(dependenceDTO);
+                .createAttributeDependence(dependenceDTO);
 
         return new ResponseEntity<DependenceDTO>(dependence.getDTO(),
                 HttpStatus.CREATED);
@@ -131,7 +131,7 @@ public class ConditionModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWRule rule = adi.createAttributeInvariantCondition(ruleDTO);
+        BWRule rule = adi.createAttributeInvariant(ruleDTO);
 
         return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
     }

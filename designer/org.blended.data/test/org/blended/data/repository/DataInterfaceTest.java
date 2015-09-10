@@ -43,7 +43,7 @@ public class DataInterfaceTest {
     }
 
     @Test
-    public void walktrough() {
+    public void walkthrough() {
 
         CommonFactory commonFactory = CommonFactory.eINSTANCE;
         DataFactory dataFactory = DataFactory.eINSTANCE;

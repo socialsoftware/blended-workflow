@@ -199,7 +199,8 @@ public class MULCondition extends MULCondition_Base {
         MulConditionDTO mulConditionDTO = new MulConditionDTO();
         mulConditionDTO.setSpecId(
                 getConditionModel().getSpecification().getExternalId());
-        mulConditionDTO.setRolePath(getRolename());
+        mulConditionDTO
+                .setRolePath(getEntity().getName() + "." + getRolename());
         mulConditionDTO.setCardinality(getCardinality().name());
 
         return mulConditionDTO;

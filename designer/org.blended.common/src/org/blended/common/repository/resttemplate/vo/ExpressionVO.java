@@ -10,7 +10,7 @@ public class ExpressionVO {
         AND, OR, NOT, ATT_DEF, EQUAL, NOT_EQUAL, GREATER, GREATER_EQUAL, SMALLER, SMALLER_EQUAL, PLUS, MINUS, MUL, DIV, ATT_VALUE, STRING, INT, BOOL
     }
 
-    private String dataModelExtId;
+    private String specId;
     private String type;
     // when unary value
     private String value;
@@ -23,9 +23,9 @@ public class ExpressionVO {
     public ExpressionVO() {
     }
 
-    public ExpressionVO(String dataModelExtId, Type type,
-            ExpressionVO leftExpresssion, ExpressionVO rightExpression) {
-        this.dataModelExtId = dataModelExtId;
+    public ExpressionVO(String specId, Type type, ExpressionVO leftExpresssion,
+            ExpressionVO rightExpression) {
+        this.specId = specId;
         this.type = type.name();
         this.value = null;
         this.unaryExpression = null;
@@ -33,9 +33,9 @@ public class ExpressionVO {
         this.rightExpression = rightExpression;
     }
 
-    public ExpressionVO(String dataModelExtId, Type type,
+    public ExpressionVO(String specId, Type type,
             ExpressionVO unaryExpression) {
-        this.dataModelExtId = dataModelExtId;
+        this.specId = specId;
         this.type = type.name();
         this.value = null;
         this.unaryExpression = unaryExpression;
@@ -43,8 +43,8 @@ public class ExpressionVO {
         this.rightExpression = null;
     }
 
-    public ExpressionVO(String dataModelExtId, Type type, String value) {
-        this.dataModelExtId = dataModelExtId;
+    public ExpressionVO(String specId, Type type, String value) {
+        this.specId = specId;
         this.type = type.name();
         this.value = value;
         this.unaryExpression = null;
@@ -52,12 +52,12 @@ public class ExpressionVO {
         this.rightExpression = null;
     }
 
-    public String getDataModelExtId() {
-        return dataModelExtId;
+    public String getSpecId() {
+        return specId;
     }
 
-    public void setDataModelExtId(String dataModelExtId) {
-        this.dataModelExtId = dataModelExtId;
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getType() {

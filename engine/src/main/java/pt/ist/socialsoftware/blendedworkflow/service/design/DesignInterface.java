@@ -280,6 +280,10 @@ public class DesignInterface {
         return getEntityByName(spec.getDataModel(), entityName);
     }
 
+    public BWAttribute getAttributeByExtId(String extId) {
+        return FenixFramework.getDomainObject(extId);
+    }
+
     @Atomic(mode = TxMode.WRITE)
     public BWDependence createEntityDependenceCondition(
             DependenceDTO dependenceDTO) {
@@ -371,8 +375,7 @@ public class DesignInterface {
     }
 
     @Atomic(mode = TxMode.WRITE)
-    public BWDependence createAttributeDependenceCondition(
-            DependenceDTO dependenceDTO) {
+    public BWDependence createAttributeDependence(DependenceDTO dependenceDTO) {
         log.debug("createAttributeDependenceCondition productExtId:{}, path:{}",
                 dependenceDTO.getProductExtId(), dependenceDTO.getPath());
         BWProduct product = getProductByExtId(dependenceDTO.getProductExtId());
@@ -388,7 +391,7 @@ public class DesignInterface {
     }
 
     @Atomic(mode = TxMode.WRITE)
-    public BWRule createAttributeInvariantCondition(RuleDTO ruleDTO) {
+    public BWRule createAttributeInvariant(RuleDTO ruleDTO) {
         BWSpecification spec = getSpecBySpecId(ruleDTO.getSpecId());
 
         BWRule rule = getRule(spec, ruleDTO.getName());
@@ -411,9 +414,20 @@ public class DesignInterface {
         return getGoalByName(spec, goalName);
     }
 
+    public Set<DEFEntityCondition> getGoalSuccessEntitySet(String specId,
+            String goalName) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Goal goal = getGoalByName(spec, goalName);
+
+        return goal.getSuccessConditionSet().stream()
+                .filter(DEFEntityCondition.class::isInstance)
+                .map(DEFEntityCondition.class::cast)
+                .collect(Collectors.toSet());
+    }
+
     @Atomic(mode = TxMode.WRITE)
-    public DEFEntityCondition associateEntityAchieveConditionToGoalSuccessCondition(
-            String specId, String goalName, String path) {
+    public DEFEntityCondition associateEntityToGoalSuccess(String specId,
+            String goalName, String path) {
         BWSpecification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
 
@@ -428,9 +442,49 @@ public class DesignInterface {
         return defEntityCondition;
     }
 
+    public Set<DEFAttributeCondition> getGoalSuccessAttributeSet(String specId,
+            String goalName) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Goal goal = getGoalByName(spec, goalName);
+
+        return goal.getSuccessConditionSet().stream()
+                .filter(DEFAttributeCondition.class::isInstance)
+                .map(DEFAttributeCondition.class::cast)
+                .collect(Collectors.toSet());
+    }
+
     @Atomic(mode = TxMode.WRITE)
-    public DEFEntityCondition associateEntityAchieveConditionToGoalAtivationCondition(
-            String specId, String goalName, String path) {
+    public DEFAttributeCondition associateAttributeToGoalSuccess(String specId,
+            String goalName, Set<String> paths) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Goal goal = getGoalByName(spec, goalName);
+        Set<BWAttribute> attributes = getAttributes(spec, paths);
+
+        if (attributes.size() == 0)
+            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
+
+        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
+                attributes);
+
+        goal.addSuccessCondition(defAttributeCondition);
+
+        return defAttributeCondition;
+    }
+
+    public Set<DEFEntityCondition> getGoalActivationEntitySet(String specId,
+            String goalName) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Goal goal = getGoalByName(spec, goalName);
+
+        return goal.getActivationConditionSet().stream()
+                .filter(DEFEntityCondition.class::isInstance)
+                .map(DEFEntityCondition.class::cast)
+                .collect(Collectors.toSet());
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public DEFEntityCondition associateEntityToGoalAtivation(String specId,
+            String goalName, String path) {
         BWSpecification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
 
@@ -445,8 +499,19 @@ public class DesignInterface {
         return defEntityCondition;
     }
 
+    public Set<DEFAttributeCondition> getGoalActivationAttributeSet(
+            String specId, String goalName) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Goal goal = getGoalByName(spec, goalName);
+
+        return goal.getActivationConditionSet().stream()
+                .filter(DEFAttributeCondition.class::isInstance)
+                .map(DEFAttributeCondition.class::cast)
+                .collect(Collectors.toSet());
+    }
+
     @Atomic(mode = TxMode.WRITE)
-    public DEFAttributeCondition associateAttributeAchieveConditionToGoalActivationCondition(
+    public DEFAttributeCondition associateAttributeToGoalActivation(
             String specId, String goalName, Set<String> paths) {
         BWSpecification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
@@ -463,27 +528,16 @@ public class DesignInterface {
         return defAttributeCondition;
     }
 
-    @Atomic(mode = TxMode.WRITE)
-    public DEFAttributeCondition associateAttributeAchieveConditionToGoalSuccessCondition(
-            String specId, String goalName, Set<String> paths) {
+    public Set<MULCondition> getGoalMulInvSet(String specId, String goalName) {
         BWSpecification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
-        Set<BWAttribute> attributes = getAttributes(spec, paths);
 
-        if (attributes.size() == 0)
-            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
-
-        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
-                attributes);
-
-        goal.addSuccessCondition(defAttributeCondition);
-
-        return defAttributeCondition;
+        return goal.getEntityInvariantConditionSet();
     }
 
     @Atomic(mode = TxMode.WRITE)
-    public void associateMulConditionToGoalEntityInvariantCondition(
-            String specId, String goalName, String path, String cardinality) {
+    public void associateMulToGoalInvariant(String specId, String goalName,
+            String path, String cardinality) {
         BWSpecification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
 
@@ -492,15 +546,36 @@ public class DesignInterface {
         goal.addEntityInvariantCondition(mulCondition);
     }
 
+    public Set<BWRule> getGoalRuleInvSet(String specId, String goalName) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Goal goal = getGoalByName(spec, goalName);
+
+        return goal.getAttributeInvariantConditionSet();
+    }
+
     @Atomic(mode = TxMode.WRITE)
-    public void associateRuleConditionToGoalAttributeInvariantCondition(
-            String specId, String goalName, String ruleName) {
+    public void associateRuleToGoalInvariant(String specId, String goalName,
+            String ruleName) {
         BWSpecification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
 
         BWRule rule = getRule(spec, ruleName);
 
         goal.addAttributeInvariantCondition(rule);
+    }
+
+    public Set<Goal> getSubGoals(String specId, String goalName) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Goal goal = getGoalByName(spec, goalName);
+
+        return goal.getSubGoalSet();
+    }
+
+    public Goal getParentGoal(String specId, String goalName) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Goal goal = getGoalByName(spec, goalName);
+
+        return goal.getParentGoal();
     }
 
     @Atomic(mode = TxMode.WRITE)

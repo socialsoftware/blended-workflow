@@ -3,6 +3,8 @@
  */
 package org.blended.common;
 
+import org.blended.common.CommonStandaloneSetupGenerated;
+
 /**
  * Initialization support for running Xtext languages 
  * without equinox extension registry

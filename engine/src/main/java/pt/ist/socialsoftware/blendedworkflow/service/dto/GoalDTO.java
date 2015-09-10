@@ -8,6 +8,12 @@ public class GoalDTO {
     public GoalDTO() {
     }
 
+    public GoalDTO(String specId) {
+        this.specId = specId;
+        this.extId = null;
+        this.name = null;
+    }
+
     public String getSpecId() {
         return specId;
     }

@@ -36,6 +36,7 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
     BWEntity entityTwo;
     BWAttribute attributeOne;
     BWAttribute attributeTwo;
+    BWAttribute attributeThree;
     BWRelation relation;
     Goal topGoal;
     Goal childGoalOne;
@@ -54,6 +55,9 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
                 "att2", AttributeType.NUMBER, true, false, false);
 
         entityTwo = new BWEntity(spec.getDataModel(), "Entity two name", false);
+        attributeThree = new BWAttribute(spec.getDataModel(), entityTwo, null,
+                "att3", AttributeType.BOOLEAN, true, false, false);
+
         relation = new BWRelation(spec.getDataModel(), "name", entityOne,
                 ROLENAME_ONE, Cardinality.ONE, false, entityTwo, ROLENAME_TWO,
                 Cardinality.ZERO_MANY, false);
@@ -78,9 +82,9 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
                 DEFAttributeCondition.getDEFAttribute(attributeTwo));
 
         topGoal.addEntityInvariantCondition(
-                MULCondition.getMulCondition(relation, ROLENAME_ONE));
-        childGoalTwo.addEntityInvariantCondition(
                 MULCondition.getMulCondition(relation, ROLENAME_TWO));
+        childGoalTwo.addEntityInvariantCondition(
+                MULCondition.getMulCondition(relation, ROLENAME_ONE));
 
         BWRule rule = new BWRule(spec.getDataModel(), RULE_CONDITION, null);
 
@@ -110,7 +114,7 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
         assertEquals(0, merged.getActivationConditionSet().size());
         assertEquals(1, merged.getEntityInvariantConditionSet().size());
         assertTrue(merged.getEntityInvariantConditionSet().contains(
-                MULCondition.getMulCondition(relation, ROLENAME_TWO)));
+                MULCondition.getMulCondition(relation, ROLENAME_ONE)));
         assertEquals(1, merged.getAttributeInvariantConditionSet().size());
         assertTrue(merged.getAttributeInvariantConditionSet()
                 .contains(spec.getDataModel().getRule(RULE_CONDITION)));

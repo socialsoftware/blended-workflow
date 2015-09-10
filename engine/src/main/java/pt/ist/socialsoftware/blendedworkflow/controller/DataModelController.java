@@ -92,6 +92,19 @@ public class DataModelController {
                 HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/attributes/{extId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<AttributeDTO> getAttributeByExtId(
+            @PathVariable("extId") String extId) {
+        log.debug("getAttributeByExtId specId:{} extId:{}", extId);
+
+        DesignInterface adi = DesignInterface.getInstance();
+
+        BWAttribute attribute = adi.getAttributeByExtId(extId);
+
+        return new ResponseEntity<AttributeDTO>(attribute.getDTO(),
+                HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/attributes", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<AttributeDTO> createAttribute(
             @PathVariable("specId") String specId,

@@ -73,7 +73,7 @@ public class GoalInterface {
                     EntityAchieveCondition eac = (EntityAchieveCondition) eObj;
                     log.debug("ACT({})", eac.getName());
                     try {
-                        ci.associateEntityAchieveConditionToGoalActCondition(
+                        ci.associateEntityToGoalActivation(
                                 specId, goalName, eac.getName());
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
@@ -83,7 +83,7 @@ public class GoalInterface {
                     AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
                     log.debug("ACT({})", aac.getConditions());
                     try {
-                        ci.associateAttributeAchieveConditionToGoalActCondition(
+                        ci.associateAttributeToGoalActivation(
                                 specId, goalName, aac.getConditions().stream()
                                         .collect(Collectors.toSet()));
                     } catch (RepositoryException re) {
@@ -100,7 +100,7 @@ public class GoalInterface {
                     EntityAchieveCondition eac = (EntityAchieveCondition) eObj;
                     log.debug("SUC({})", eac.getName());
                     try {
-                        ci.associateEntityAchieveConditionToGoalSucCondition(
+                        ci.associateEntityToGoalSuccess(
                                 specId, goalName, eac.getName());
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
@@ -110,7 +110,7 @@ public class GoalInterface {
                     AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
                     log.debug("SUC({})", aac.getConditions());
                     try {
-                        ci.associateAttributeAchieveConditionToGoalSucCondition(
+                        ci.associateAttributeToGoalSuccess(
                                 specId, goalName, aac.getConditions().stream()
                                         .collect(Collectors.toSet()));
                     } catch (RepositoryException re) {
@@ -128,7 +128,7 @@ public class GoalInterface {
                     log.debug("MUL({},{})", eic.getName(),
                             eic.getCardinality());
                     try {
-                        ci.associateMulConditionToGoalEntityInvariantCondition(
+                        ci.associateMulToGoalInvariant(
                                 specId, goalName, new MulConditionVO(specId,
                                         eic.getName(), eic.getCardinality()));
                     } catch (RepositoryException re) {
@@ -139,7 +139,7 @@ public class GoalInterface {
                     AttributeInvariantCondition aic = (AttributeInvariantCondition) eObj;
                     log.debug("RULE({})", aic.getName());
                     try {
-                        ci.associateRuleConditionToGoalAttributeInvariantCondition(
+                        ci.associateRuleToGoalInvariant(
                                 specId, goalName,
                                 new RuleVO(specId, aic.getName()));
                     } catch (RepositoryException re) {
