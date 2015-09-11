@@ -198,7 +198,14 @@ public class GoalModelTest {
         ci.associateRuleToGoalInvariant(TEST_SPEC_ID, SUB_GOAL_TWO,
                 new RuleVO(TEST_SPEC_ID, RULE_NAME));
 
-        // do merge between the siblings
+        // fail to merge parent and child goals due to a conflict
+        try {
+            goalVO = ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, SUB_GOAL_ONE);
+        } catch (RepositoryException re) {
+            assertEquals("UNMERGEABLE_GOALS", re.getError().getType());
+        }
+
+        // merge siblings
         goalVO = ci.mergeGoals(TEST_SPEC_ID, SUB_GOAL_ONE, SUB_GOAL_TWO);
 
         assertEquals(SUB_GOAL_ONE + "-" + SUB_GOAL_TWO, goalVO.getName());
@@ -250,6 +257,11 @@ public class GoalModelTest {
         assertEquals(1, rulesVO.size());
         assertEquals(RULE_NAME, rulesVO.stream().map((r) -> r.getName())
                 .collect(Collectors.joining()));
+
+        // merge parent and child - returns the top goal (changed)
+        goalVO = ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, goalVO.getName());
+
+        assertEquals(TOP_GOAL, goalVO.getName());
     }
 
 }
