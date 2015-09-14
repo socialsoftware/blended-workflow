@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AttributeGroupVO extends ProductVO {
     private String entityExtId;
+    private String entityName;
     private String name;
     private boolean isMandatory;
 
@@ -25,6 +26,14 @@ public class AttributeGroupVO extends ProductVO {
 
     public void setEntityExtId(String entityExtId) {
         this.entityExtId = entityExtId;
+    }
+
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 
     public String getName() {

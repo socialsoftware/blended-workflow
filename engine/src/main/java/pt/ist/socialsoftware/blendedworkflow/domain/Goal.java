@@ -57,7 +57,8 @@ public class Goal extends Goal_Base {
 
     private void checkUniqueGoalName(String name) throws BWException {
         for (Goal goal : this.getGoalModel().getGoalSet()) {
-            if (goal.getName() != null && goal.getName().equals(name)) {
+            if (goal.getName() != null && goal != this
+                    && goal.getName().equals(name)) {
                 throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
             }
         }
@@ -260,7 +261,8 @@ public class Goal extends Goal_Base {
 
     public void checkCanMergeChild(Goal childGoal) {
         Optional<Goal> oGoal = flattened().filter(goal -> (goal != this
-                && goal != childGoal && checkGoalActIntersectsAnotherGoalSuc(childGoal, goal)))
+                && goal != childGoal
+                && checkGoalActIntersectsAnotherGoalSuc(childGoal, goal)))
                 .findAny();
 
         if (oGoal.isPresent()) {
@@ -268,7 +270,8 @@ public class Goal extends Goal_Base {
         }
     }
 
-    private boolean checkGoalActIntersectsAnotherGoalSuc(Goal childGoal, Goal goal) {
+    private boolean checkGoalActIntersectsAnotherGoalSuc(Goal childGoal,
+            Goal goal) {
         for (Condition act : childGoal.getActivationConditionSet()) {
             if (goal.getSuccessConditionSet().contains(act)) {
                 return true;

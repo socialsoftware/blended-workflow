@@ -13,8 +13,8 @@ import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.RestUtil;
 import org.blended.common.repository.resttemplate.vo.AttributeGroupVO;
 import org.blended.common.repository.resttemplate.vo.AttributeVO;
-import org.blended.common.repository.resttemplate.vo.DEFEntityConditionVO;
 import org.blended.common.repository.resttemplate.vo.DefAttributeConditionVO;
+import org.blended.common.repository.resttemplate.vo.DefEntityConditionVO;
 import org.blended.common.repository.resttemplate.vo.DependenceVO;
 import org.blended.common.repository.resttemplate.vo.EntityVO;
 import org.blended.common.repository.resttemplate.vo.GoalVO;
@@ -328,8 +328,8 @@ public class CommonInterface {
         restTemplate.put(uri, null, params);
     }
 
-    public DEFEntityConditionVO createEntityAchieveCondition(
-            DEFEntityConditionVO entityAchieveConditionVO) {
+    public DefEntityConditionVO createEntityAchieveCondition(
+            DefEntityConditionVO entityAchieveConditionVO) {
         log.debug("createEntityAchieveCondition: {}, {}, {}",
                 entityAchieveConditionVO.getSpecId(),
                 entityAchieveConditionVO.getEntityName(),
@@ -342,8 +342,8 @@ public class CommonInterface {
         params.put("specId", entityAchieveConditionVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DEFEntityConditionVO result = restTemplate.postForObject(uri,
-                entityAchieveConditionVO, DEFEntityConditionVO.class, params);
+        DefEntityConditionVO result = restTemplate.postForObject(uri,
+                entityAchieveConditionVO, DefEntityConditionVO.class, params);
 
         return result;
     }
@@ -572,7 +572,7 @@ public class CommonInterface {
         return result;
     }
 
-    public Set<DEFEntityConditionVO> getGoalSuccessEntitySet(String specId,
+    public Set<DefEntityConditionVO> getGoalSuccessEntitySet(String specId,
             String goalName) {
         log.debug("getGoalSucEntityAchieveCondition: {}, {}", specId, goalName);
 
@@ -584,13 +584,13 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DEFEntityConditionVO[] defsVO = restTemplate.getForObject(uri,
-                DEFEntityConditionVO[].class, params);
+        DefEntityConditionVO[] defsVO = restTemplate.getForObject(uri,
+                DefEntityConditionVO[].class, params);
 
-        return new HashSet<DEFEntityConditionVO>(Arrays.asList(defsVO));
+        return new HashSet<DefEntityConditionVO>(Arrays.asList(defsVO));
     }
 
-    public DEFEntityConditionVO associateEntityToGoalSuccess(String specId,
+    public DefEntityConditionVO associateEntityToGoalSuccess(String specId,
             String goalName, String path) {
         log.debug(
                 "associatedSucConditionToGoal specId:{}, goalName:{}, path:{}",
@@ -605,8 +605,8 @@ public class CommonInterface {
         params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DEFEntityConditionVO result = restTemplate.postForObject(uri, null,
-                DEFEntityConditionVO.class, params);
+        DefEntityConditionVO result = restTemplate.postForObject(uri, null,
+                DefEntityConditionVO.class, params);
 
         return result;
     }
@@ -649,7 +649,7 @@ public class CommonInterface {
         restTemplate.postForObject(uri, null, String.class, params);
     }
 
-    public Set<DEFEntityConditionVO> getGoalActivationEntitySet(String specId,
+    public Set<DefEntityConditionVO> getGoalActivationEntitySet(String specId,
             String goalName) {
         log.debug("getGoalActivationEntitySet: {}, {}", specId, goalName);
 
@@ -661,13 +661,13 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DEFEntityConditionVO[] defsVO = restTemplate.getForObject(uri,
-                DEFEntityConditionVO[].class, params);
+        DefEntityConditionVO[] defsVO = restTemplate.getForObject(uri,
+                DefEntityConditionVO[].class, params);
 
-        return new HashSet<DEFEntityConditionVO>(Arrays.asList(defsVO));
+        return new HashSet<DefEntityConditionVO>(Arrays.asList(defsVO));
     }
 
-    public DEFEntityConditionVO associateEntityToGoalActivation(String specId,
+    public DefEntityConditionVO associateEntityToGoalActivation(String specId,
             String goalName, String path) {
         log.debug(
                 "associatedActConditionToGoal specId:{}, goalName:{}, path:{}",
@@ -682,8 +682,8 @@ public class CommonInterface {
         params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DEFEntityConditionVO result = restTemplate.postForObject(uri, null,
-                DEFEntityConditionVO.class, params);
+        DefEntityConditionVO result = restTemplate.postForObject(uri, null,
+                DefEntityConditionVO.class, params);
 
         return result;
     }
@@ -797,10 +797,11 @@ public class CommonInterface {
         restTemplate.postForObject(uri, ruleVO, RuleVO.class, params);
     }
 
-    public GoalVO mergeGoals(String specId, String goalNameOne,
-            String goalNameTwo) {
-        log.debug("mergeGoals specId:{}, goalNameOne:{}, goalNameTwo:{}",
-                specId, goalNameOne, goalNameTwo);
+    public GoalVO mergeGoals(String specId, String newGoalName,
+            String goalNameOne, String goalNameTwo) {
+        log.debug(
+                "mergeGoals specId:{}, newGoalName:{} goalNameOne:{}, goalNameTwo:{}",
+                specId, newGoalName, goalNameOne, goalNameTwo);
 
         final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/merge";
 
@@ -808,8 +809,39 @@ public class CommonInterface {
         params.put("specId", specId);
 
         MultiValueMap<String, Object> variablesMap = new LinkedMultiValueMap<String, Object>();
+        variablesMap.add("newGoalName", newGoalName);
         variablesMap.add("goalNameOne", goalNameOne);
         variablesMap.add("goalNameTwo", goalNameTwo);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        return restTemplate.postForObject(uri, variablesMap, GoalVO.class,
+                params);
+    }
+
+    public GoalVO extractSiblingGoal(String specId, String goalName,
+            Set<DefEntityConditionVO> entDefs,
+            Set<DefAttributeConditionVO> attDefs) {
+        log.debug(
+                "extractSiblingGoal specId:{}, goalName:{}, entDefs:{}, attDefs:{}",
+                specId, goalName,
+                entDefs.stream().map((def) -> def.getEntityName())
+                        .collect(
+                                Collectors.joining(",")),
+                attDefs.stream()
+                        .map((def) -> def.getPaths().stream()
+                                .collect(Collectors.joining(",")))
+                        .collect(Collectors.joining("|")));
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/goalmodel/goals/extractsibling";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        MultiValueMap<String, Object> variablesMap = new LinkedMultiValueMap<String, Object>();
+        variablesMap.add("goalName", goalName);
+        variablesMap.add("entDefs", entDefs);
+        variablesMap.add("attDefs", attDefs);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         return restTemplate.postForObject(uri, variablesMap, GoalVO.class,

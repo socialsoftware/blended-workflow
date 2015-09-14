@@ -155,6 +155,7 @@ public class BWAttribute extends BWAttribute_Base {
         attDTO.setExtId(getExternalId());
         attDTO.setProductType(ProductType.ATTRIBUTE.name());
         attDTO.setEntityExtId(getEntity().getExternalId());
+        attDTO.setEntityName(getEntity().getName());
         attDTO.setGroupExtId(getAttributeGroup() != null
                 ? getAttributeGroup().getExternalId() : null);
         attDTO.setName(getName());

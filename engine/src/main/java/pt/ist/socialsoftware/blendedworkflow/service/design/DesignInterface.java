@@ -50,8 +50,8 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DEFEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
@@ -254,7 +254,7 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public DEFEntityCondition createEntityAchieveCondition(
-            DEFEntityConditionDTO eacDTO) {
+            DefEntityConditionDTO eacDTO) {
         log.debug("createEntityAchieveCondition Entity:{}, Value:{}",
                 eacDTO.getEntityName(), eacDTO.isExists());
         BWSpecification spec = getSpecBySpecId(eacDTO.getSpecId());
@@ -589,13 +589,13 @@ public class DesignInterface {
     }
 
     @Atomic(mode = TxMode.WRITE)
-    public Goal mergeGoals(String specId, String goalNameOne,
-            String goalNameTwo) {
+    public Goal mergeGoals(String specId, String newGoalName,
+            String goalNameOne, String goalNameTwo) {
         BWSpecification spec = getSpecBySpecId(specId);
         Goal goalOne = getGoalByName(spec, goalNameOne);
         Goal goalTwo = getGoalByName(spec, goalNameTwo);
 
-        return spec.getGoalModel().mergeGoals(goalOne, goalTwo);
+        return spec.getGoalModel().mergeGoals(newGoalName, goalOne, goalTwo);
     }
 
     public ProductDTO getSourceOfPath(String specId, String path) {

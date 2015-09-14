@@ -95,13 +95,13 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 
     @Test
     public void siblingsMerge() {
-        Goal merged = spec.getGoalModel().mergeGoals(childGoalOne,
-                childGoalTwo);
+        Goal merged = spec.getGoalModel().mergeGoals(
+                CHILD_GOAL_ONE + CHILD_GOAL_TWO, childGoalOne, childGoalTwo);
 
         assertFalse(spec.getGoalModel().existsGoal(CHILD_GOAL_ONE));
         assertFalse(spec.getGoalModel().existsGoal(CHILD_GOAL_TWO));
         assertEquals(topGoal, merged.getParentGoal());
-        assertEquals(CHILD_GOAL_ONE + "-" + CHILD_GOAL_TWO, merged.getName());
+        assertEquals(CHILD_GOAL_ONE + CHILD_GOAL_TWO, merged.getName());
         assertEquals(1, merged.getSubGoalSet().size());
         assertTrue(merged.getSubGoalSet().contains(childGoalTwoOne));
         assertEquals(3, merged.getSuccessConditionSet().size());
@@ -122,7 +122,8 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 
     @Test
     public void parentChildMerge() {
-        Goal result = spec.getGoalModel().mergeGoals(childGoalTwo, topGoal);
+        Goal result = spec.getGoalModel().mergeGoals(TOP_GOAL, childGoalTwo,
+                topGoal);
 
         assertFalse(spec.getGoalModel().existsGoal(CHILD_GOAL_TWO));
         assertTrue(spec.getGoalModel().existsGoal(TOP_GOAL));
@@ -152,20 +153,22 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 
     @Test
     public void siblingsMergeNameAlreadyExits() {
-        new Goal(spec.getGoalModel(), CHILD_GOAL_ONE + "-" + CHILD_GOAL_TWO);
+        new Goal(spec.getGoalModel(), CHILD_GOAL_ONE + CHILD_GOAL_TWO);
 
-        Goal merged = spec.getGoalModel().mergeGoals(childGoalOne,
-                childGoalTwo);
-
-        assertEquals(CHILD_GOAL_ONE + "-" + CHILD_GOAL_TWO + ".1",
-                merged.getName());
-
+        try {
+            spec.getGoalModel().mergeGoals(CHILD_GOAL_ONE + CHILD_GOAL_TWO,
+                    childGoalOne, childGoalTwo);
+        } catch (BWException bwe) {
+            assertEquals(BWErrorType.INVALID_GOAL_NAME, bwe.getError());
+            assertEquals(CHILD_GOAL_ONE + CHILD_GOAL_TWO, bwe.getMessage());
+        }
     }
 
     @Test
     public void nonSiblingsAndNonParentChildGoals() {
         try {
-            spec.getGoalModel().mergeGoals(childGoalOne, childGoalTwoOne);
+            spec.getGoalModel().mergeGoals("Name", childGoalOne,
+                    childGoalTwoOne);
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.UNMERGEABLE_GOALS, bwe.getError());
@@ -176,7 +179,7 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
     @Test
     public void parentChildConflict() {
         try {
-            spec.getGoalModel().mergeGoals(topGoal, childGoalOne);
+            spec.getGoalModel().mergeGoals("Name", topGoal, childGoalOne);
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.UNMERGEABLE_GOALS, bwe.getError());

@@ -4,6 +4,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
 
 public class AttributeDTO extends ProductDTO {
     private String entityExtId;
+    private String entityName;
     private String groupExtId;
     private String name;
     private String type;
@@ -28,6 +29,14 @@ public class AttributeDTO extends ProductDTO {
 
     public void setEntityExtId(String entityExtId) {
         this.entityExtId = entityExtId;
+    }
+
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 
     public String getGroupExtId() {

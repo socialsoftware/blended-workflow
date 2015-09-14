@@ -16,7 +16,7 @@ import org.blended.common.common.Specification;
 import org.blended.common.repository.CommonInterface;
 import org.blended.common.repository.resttemplate.BWNotification;
 import org.blended.common.repository.resttemplate.RepositoryException;
-import org.blended.common.repository.resttemplate.vo.DEFEntityConditionVO;
+import org.blended.common.repository.resttemplate.vo.DefEntityConditionVO;
 import org.blended.common.repository.resttemplate.vo.DefAttributeConditionVO;
 import org.blended.common.repository.resttemplate.vo.DependenceVO;
 import org.blended.common.repository.resttemplate.vo.EntityVO;
@@ -84,7 +84,7 @@ public class ConditionInterface {
             try {
                 log.debug("EntityAchieveConditionExists Name:{} ", entityName);
                 ci.createEntityAchieveCondition(
-                        new DEFEntityConditionVO(specId, entityName, exists));
+                        new DefEntityConditionVO(specId, entityName, exists));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());

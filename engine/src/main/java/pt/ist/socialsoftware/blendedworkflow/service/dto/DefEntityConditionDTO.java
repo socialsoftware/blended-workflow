@@ -1,12 +1,12 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
-public class DEFEntityConditionDTO {
+public class DefEntityConditionDTO {
     private String specId;
     private String extId;
     private String entityName;
     private boolean exists;
 
-    public DEFEntityConditionDTO() {
+    public DefEntityConditionDTO() {
     }
 
     public String getSpecId() {

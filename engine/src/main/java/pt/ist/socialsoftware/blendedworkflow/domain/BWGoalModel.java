@@ -63,7 +63,7 @@ public class BWGoalModel extends BWGoalModel_Base {
         deleteDomainObject();
     }
 
-    public Goal mergeGoals(Goal goalOne, Goal goalTwo) {
+    public Goal mergeGoals(String newGoalName, Goal goalOne, Goal goalTwo) {
         Goal result = null;
 
         GoalRelation relation = goalOne.getGoalRelation(goalTwo);
@@ -71,52 +71,56 @@ public class BWGoalModel extends BWGoalModel_Base {
         if (relation == GoalRelation.OTHER) {
             throw new BWException(BWErrorType.UNMERGEABLE_GOALS);
         } else if (relation == GoalRelation.SIBLING) {
-            result = mergeSiblingGoals(goalOne, goalTwo);
+            result = mergeSiblingGoals(newGoalName, goalOne, goalTwo);
         } else if (relation == GoalRelation.PARENT) {
-            result = mergeParentChildGoals(goalTwo, goalOne);
+            result = mergeParentChildGoals(newGoalName, goalTwo, goalOne);
         } else if (relation == GoalRelation.CHILD) {
-            result = mergeParentChildGoals(goalOne, goalTwo);
+            result = mergeParentChildGoals(newGoalName, goalOne, goalTwo);
         }
 
         return result;
     }
 
-    private Goal mergeSiblingGoals(Goal goalOne, Goal goalTwo) {
-        Goal result;
-        String name = goalOne.getName() + "-" + goalTwo.getName();
-        while (existsGoal(name))
-            name = name + ".1";
+    private Goal mergeSiblingGoals(String newGoalName, Goal goalOne,
+            Goal goalTwo) {
+        String tmpName = goalOne.getName() + "-" + goalTwo.getName();
+        while (existsGoal(tmpName))
+            tmpName = tmpName + ".1";
 
-        result = new Goal(this, name);
-        result.setParentGoal(goalOne.getParentGoal());
+        Goal newGoal = new Goal(this, tmpName);
+        newGoal.setParentGoal(goalOne.getParentGoal());
 
         Stream.concat(goalOne.getSubGoalSet().stream(),
                 goalTwo.getSubGoalSet().stream())
-                .forEach((goal) -> result.addSubGoal(goal));
+                .forEach((goal) -> newGoal.addSubGoal(goal));
 
         Stream.concat(goalOne.getSuccessConditionSet().stream(),
                 goalTwo.getSuccessConditionSet().stream())
-                .forEach((cond) -> result.addSuccessCondition(cond));
+                .forEach((cond) -> newGoal.addSuccessCondition(cond));
 
         Stream.concat(goalOne.getActivationConditionSet().stream(),
                 goalTwo.getActivationConditionSet().stream())
-                .forEach((cond) -> result.addActivationCondition(cond));
-        result.purgeActivationCondition();
+                .forEach((cond) -> newGoal.addActivationCondition(cond));
+        newGoal.purgeActivationCondition();
 
         Stream.concat(goalOne.getEntityInvariantConditionSet().stream(),
                 goalTwo.getEntityInvariantConditionSet().stream())
-                .forEach((cond) -> result.addEntityInvariantCondition(cond));
+                .forEach((cond) -> newGoal.addEntityInvariantCondition(cond));
 
         Stream.concat(goalOne.getAttributeInvariantConditionSet().stream(),
                 goalTwo.getAttributeInvariantConditionSet().stream())
-                .forEach((rule) -> result.addAttributeInvariantCondition(rule));
+                .forEach((rule) -> newGoal.addAttributeInvariantCondition(rule));
 
         goalOne.delete();
         goalTwo.delete();
-        return result;
+
+        newGoal.setName(newGoalName);
+
+        return newGoal;
     }
 
-    private Goal mergeParentChildGoals(Goal parentGoal, Goal childGoal) {
+    private Goal mergeParentChildGoals(String newGoalName, Goal parentGoal,
+            Goal childGoal) {
         parentGoal.checkCanMergeChild(childGoal);
 
         childGoal.getSubGoalSet().stream()
@@ -136,6 +140,8 @@ public class BWGoalModel extends BWGoalModel_Base {
                 (rule) -> parentGoal.addAttributeInvariantCondition(rule));
 
         childGoal.delete();
+
+        parentGoal.setName(newGoalName);
 
         return parentGoal;
     }

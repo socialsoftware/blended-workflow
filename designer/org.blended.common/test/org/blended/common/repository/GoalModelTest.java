@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 
 import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.vo.AttributeVO;
-import org.blended.common.repository.resttemplate.vo.DEFEntityConditionVO;
 import org.blended.common.repository.resttemplate.vo.DefAttributeConditionVO;
+import org.blended.common.repository.resttemplate.vo.DefEntityConditionVO;
 import org.blended.common.repository.resttemplate.vo.EntityVO;
 import org.blended.common.repository.resttemplate.vo.ExpressionVO;
 import org.blended.common.repository.resttemplate.vo.GoalVO;
@@ -61,7 +61,7 @@ public class GoalModelTest {
         EntityVO entityVO = ci
                 .createEntity(new EntityVO(TEST_SPEC_ID, ENTITY_ONE, false));
         ci.createEntityAchieveCondition(
-                new DEFEntityConditionVO(TEST_SPEC_ID, ENTITY_ONE, false));
+                new DefEntityConditionVO(TEST_SPEC_ID, ENTITY_ONE, false));
 
         ci.createAttribute(new AttributeVO(TEST_SPEC_ID, entityVO.getExtId(),
                 null, ATT_ONE, "Boolean", false));
@@ -72,7 +72,7 @@ public class GoalModelTest {
         entityVO = ci
                 .createEntity(new EntityVO(TEST_SPEC_ID, ENTITY_TWO, false));
         ci.createEntityAchieveCondition(
-                new DEFEntityConditionVO(TEST_SPEC_ID, ENTITY_TWO, false));
+                new DefEntityConditionVO(TEST_SPEC_ID, ENTITY_TWO, false));
 
         ci.createAttribute(new AttributeVO(TEST_SPEC_ID, entityVO.getExtId(),
                 null, ATT_THREE, "String", false));
@@ -124,7 +124,7 @@ public class GoalModelTest {
         // add suc conditions
         ci.associateEntityToGoalSuccess(TEST_SPEC_ID, TOP_GOAL, ENTITY_ONE);
 
-        Set<DEFEntityConditionVO> defsEnt = ci
+        Set<DefEntityConditionVO> defsEnt = ci
                 .getGoalSuccessEntitySet(TEST_SPEC_ID, TOP_GOAL);
         assertEquals(1, defsEnt.size());
         assertEquals(
@@ -200,15 +200,17 @@ public class GoalModelTest {
 
         // fail to merge parent and child goals due to a conflict
         try {
-            goalVO = ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, SUB_GOAL_ONE);
+            goalVO = ci.mergeGoals(TEST_SPEC_ID, SUB_GOAL_ONE + SUB_GOAL_TWO,
+                    TOP_GOAL, SUB_GOAL_ONE);
         } catch (RepositoryException re) {
             assertEquals("UNMERGEABLE_GOALS", re.getError().getType());
         }
 
         // merge siblings
-        goalVO = ci.mergeGoals(TEST_SPEC_ID, SUB_GOAL_ONE, SUB_GOAL_TWO);
+        goalVO = ci.mergeGoals(TEST_SPEC_ID, SUB_GOAL_ONE + SUB_GOAL_TWO,
+                SUB_GOAL_ONE, SUB_GOAL_TWO);
 
-        assertEquals(SUB_GOAL_ONE + "-" + SUB_GOAL_TWO, goalVO.getName());
+        assertEquals(SUB_GOAL_ONE + SUB_GOAL_TWO, goalVO.getName());
 
         // get super goal
         GoalVO parentGoalVO = ci.getParentGoal(TEST_SPEC_ID, goalVO.getName());
@@ -259,9 +261,23 @@ public class GoalModelTest {
                 .collect(Collectors.joining()));
 
         // merge parent and child - returns the top goal (changed)
-        goalVO = ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, goalVO.getName());
+        goalVO = ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, TOP_GOAL,
+                goalVO.getName());
 
         assertEquals(TOP_GOAL, goalVO.getName());
+
+        // Set<DefEntityConditionVO> entDefs = new
+        // HashSet<DefEntityConditionVO>();
+        // entDefs.add(new DefEntityConditionVO("SSS", "EEE", true));
+        //
+        // Set<DefAttributeConditionVO> attDefs = new
+        // HashSet<DefAttributeConditionVO>();
+        // Set<String> pathx = new HashSet<String>();
+        // paths.add("p1");
+        // paths.add("p2");
+        // attDefs.add(new DefAttributeConditionVO("SSS", pathx, true));
+        //
+        // ci.extractSiblingGoal(TEST_SPEC_ID, TOP_GOAL, entDefs, attDefs);
     }
 
 }

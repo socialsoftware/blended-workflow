@@ -17,7 +17,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DEFEntityConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
@@ -42,9 +42,9 @@ public class ConditionModelController {
     }
 
     @RequestMapping(value = "/entityachieveconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<DEFEntityConditionDTO> createEntityAchieveCondition(
+    public ResponseEntity<DefEntityConditionDTO> createEntityAchieveCondition(
             @PathVariable("specId") String specId,
-            @RequestBody DEFEntityConditionDTO eacDTO) {
+            @RequestBody DefEntityConditionDTO eacDTO) {
         log.debug("createEntityAchieveCondition entityName:{}, exists:{}",
                 eacDTO.getEntityName(), eacDTO.isExists());
 
@@ -53,7 +53,7 @@ public class ConditionModelController {
         DEFEntityCondition defCondition = adi
                 .createEntityAchieveCondition(eacDTO);
 
-        return new ResponseEntity<DEFEntityConditionDTO>(defCondition.getDTO(),
+        return new ResponseEntity<DefEntityConditionDTO>(defCondition.getDTO(),
                 HttpStatus.CREATED);
     }
 

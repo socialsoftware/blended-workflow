@@ -85,7 +85,8 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
         group.setSpecId(getDataModel().getSpecification().getSpecId());
         group.setExtId(getExternalId());
         group.setProductType(getProductType().name());
-        group.setEntityExtId(getExternalId());
+        group.setEntityExtId(getEntity().getExternalId());
+        group.setEntityName(getEntity().getName());
         group.setName(getName());
         group.setMandatory(getIsMandatory());
 
