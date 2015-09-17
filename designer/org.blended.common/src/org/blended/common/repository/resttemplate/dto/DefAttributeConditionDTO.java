@@ -1,18 +1,21 @@
-package org.blended.common.repository.resttemplate.vo;
+package org.blended.common.repository.resttemplate.dto;
 
 import java.util.Set;
 
-public class DefAttributeConditionVO {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DefAttributeConditionDTO {
     private String specId;
     private Set<String> paths;
     private boolean mandatory;
     private String attributeExtId;
     private String attributeGroupExtId;
 
-    public DefAttributeConditionVO() {
+    public DefAttributeConditionDTO() {
     }
 
-    public DefAttributeConditionVO(String specId, Set<String> paths,
+    public DefAttributeConditionDTO(String specId, Set<String> paths,
             boolean mandatory) {
         this.setSpecId(specId);
         this.paths = paths;

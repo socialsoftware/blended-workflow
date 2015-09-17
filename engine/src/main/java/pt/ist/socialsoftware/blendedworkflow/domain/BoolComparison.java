@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -65,8 +67,10 @@ public class BoolComparison extends BoolComparison_Base {
 
     @Override
     public Set<BWAttribute> getAttributes() {
-        // TODO Auto-generated method stub
-        return null;
+        return Stream
+                .concat(getRightCondition().getAttributes().stream(),
+                        getLeftCondition().getAttributes().stream())
+                .collect(Collectors.toSet());
     }
 
     @Override

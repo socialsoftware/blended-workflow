@@ -163,6 +163,7 @@ public class RestDesignInterfaceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsBytes(ruleDTO)))
                 .andExpect(status().isCreated());
+
     }
 
 }

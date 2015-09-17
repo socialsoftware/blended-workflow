@@ -1,18 +1,18 @@
-package org.blended.common.repository.resttemplate.vo;
+package org.blended.common.repository.resttemplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DependenceVO {
+public class DependenceDTO {
     private String specId;
     private String extId;
     private String productExtId;
     private String path;
 
-    public DependenceVO() {
+    public DependenceDTO() {
     }
 
-    public DependenceVO(String specId, String productExtId, String path) {
+    public DependenceDTO(String specId, String productExtId, String path) {
         this.specId = specId;
         this.productExtId = productExtId;
         this.path = path;

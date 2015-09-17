@@ -1,5 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -54,6 +58,14 @@ public class BWBinaryExpression extends BWBinaryExpression_Base {
         String right = getRightExpression() != null
                 ? getRightExpression().getSubPath() : "NULL";
         return getOperator().name() + "(" + left + "," + right + ")";
+    }
+
+    @Override
+    public Set<BWAttribute> getAttributes() {
+        return Stream
+                .concat(getRightExpression().getAttributes().stream(),
+                        getLeftExpression().getAttributes().stream())
+                .collect(Collectors.toSet());
     }
 
 }

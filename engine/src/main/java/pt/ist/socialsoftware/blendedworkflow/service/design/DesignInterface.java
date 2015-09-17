@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,6 +61,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.SuccessConditionDTO;
 
 public class DesignInterface {
     private static Logger log = LoggerFactory.getLogger(DesignInterface.class);
@@ -431,7 +431,7 @@ public class DesignInterface {
         BWSpecification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
 
-        BWProduct product = getTargetOfPath(spec, path);
+        BWProduct product = spec.getDataModel().getTargetOfPath(path);
         if (product.getProductType() != ProductType.ENTITY)
             throw new BWException(BWErrorType.INVALID_PATH, path);
 
@@ -488,7 +488,7 @@ public class DesignInterface {
         BWSpecification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
 
-        BWProduct product = getTargetOfPath(spec, path);
+        BWProduct product = spec.getDataModel().getTargetOfPath(path);
         if (product.getProductType() != ProductType.ENTITY)
             throw new BWException(BWErrorType.INVALID_PATH, path);
 
@@ -598,6 +598,26 @@ public class DesignInterface {
         return spec.getGoalModel().mergeGoals(newGoalName, goalOne, goalTwo);
     }
 
+    @Atomic(mode = TxMode.WRITE)
+    public Goal extractSiblingGoal(String specId, String newGoalName,
+            String goalName, SuccessConditionDTO successConditionDTO) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Goal parentGoal = getGoalByName(spec, goalName);
+
+        Set<Condition> successConditions = successConditionDTO.getDefEnts()
+                .stream()
+                .map((def) -> DEFEntityCondition.getDEFEntity(getEntityByName(
+                        spec.getDataModel(), def.getEntityName())))
+                .collect(Collectors.toSet());
+
+        successConditions.addAll(successConditionDTO.getDefAtts().stream()
+                .map((def) -> getDefAttributeCondition(
+                        getAttributes(spec, def.getPaths())))
+                .collect(Collectors.toSet()));
+
+        return parentGoal.extractSibling(newGoalName, successConditions);
+    }
+
     public ProductDTO getSourceOfPath(String specId, String path) {
         BWSpecification spec = getSpecBySpecId(specId);
 
@@ -611,7 +631,7 @@ public class DesignInterface {
     public ProductDTO getTargetOfPath(String specId, String path) {
         BWSpecification spec = getSpecBySpecId(specId);
 
-        BWProduct product = getTargetOfPath(spec, path);
+        BWProduct product = spec.getDataModel().getTargetOfPath(path);
 
         return new ProductDTO(specId, product.getExternalId(),
                 product.getProductType().name());
@@ -624,7 +644,7 @@ public class DesignInterface {
         BWSpecification spec = getSpecBySpecId(specId);
 
         for (String sucCond : sucConditions) {
-            BWProduct product = getTargetOfPath(spec, sucCond);
+            BWProduct product = spec.getDataModel().getTargetOfPath(sucCond);
 
             paths.addAll(product.getDependenceSet().stream()
                     .map(dep -> dep.getPath()).collect(Collectors.toSet()));
@@ -790,7 +810,8 @@ public class DesignInterface {
                 throw new BWException(BWErrorType.INVALID_ATTRIBUTE_GROUP,
                         paths.toString());
             entity = tmp;
-            attributes.add((BWAttribute) getTargetOfPath(spec, path));
+            attributes.add(
+                    (BWAttribute) spec.getDataModel().getTargetOfPath(path));
         }
         return attributes;
     }
@@ -812,28 +833,11 @@ public class DesignInterface {
 
     }
 
-    private BWProduct getTargetOfPath(BWSpecification spec, String path) {
-        List<String> pathLeft = Arrays.stream(path.split("\\."))
-                .collect(Collectors.toList());
-        BWEntity entity = getEntityByName(spec.getDataModel(), pathLeft.get(0));
-        pathLeft.remove(0);
-        return entity.getNext(pathLeft, path);
-    }
-
     private Goal getGoalByName(BWSpecification spec, String goalName) {
         return spec.getGoalModel().getGoalSet().stream()
                 .filter(g -> g.getName().equals(goalName)).findFirst()
                 .orElseThrow(() -> new BWException(
                         BWErrorType.INVALID_GOAL_NAME, goalName));
-    }
-
-    private Goal getGoalByExtId(String externalId) {
-        if (externalId == null || externalId.equals(""))
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        Goal goal = FenixFramework.getDomainObject(externalId);
-        if (goal == null)
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        return goal;
     }
 
     private DEFAttributeCondition getDefAttributeCondition(
@@ -847,7 +851,7 @@ public class DesignInterface {
             BWAttributeGroup attributeGroup = getAttributeGroup(entity,
                     attributes);
             defAttributeCondition = DEFAttributeCondition
-                    .getDEFAttributeCondition(attributeGroup);
+                    .getDEFAttribute(attributeGroup);
         }
 
         return defAttributeCondition;
@@ -892,20 +896,20 @@ public class DesignInterface {
                     buildCondition(dataModel, expression.getUnaryExpression()));
         case ATT_DEF:
             // TODO: remove the cast
-            BWProduct product = getTargetOfPath(dataModel.getSpecification(),
-                    expression.getValue());
+            BWProduct product = dataModel
+                    .getTargetOfPath(expression.getValue());
             if (product instanceof BWAttribute)
                 return DEFAttributeCondition
                         .getDEFAttribute((BWAttribute) product);
             else if (product instanceof BWAttributeGroup)
                 return DEFAttributeCondition
-                        .getDEFAttributeCondition((BWAttributeGroup) product);
+                        .getDEFAttribute((BWAttributeGroup) product);
             assert(true);
             return null;
         case ATT_VALUE:
             // TODO: remove cast
-            BWAttribute att = (BWAttribute) getTargetOfPath(
-                    dataModel.getSpecification(), expression.getValue());
+            BWAttribute att = (BWAttribute) dataModel
+                    .getTargetOfPath(expression.getValue());
             return new BWAttributeBoolCondition(att);
         case EQUAL:
             if (ExpressionDTO.isBoolExp(
@@ -997,8 +1001,8 @@ public class DesignInterface {
                     BinaryOperator.DIV);
         case ATT_VALUE:
             // TODO: remove cast
-            BWAttribute attribute = (BWAttribute) getTargetOfPath(
-                    dataModel.getSpecification(), expression.getValue());
+            BWAttribute attribute = (BWAttribute) dataModel
+                    .getTargetOfPath(expression.getValue());
             return new BWAttributeValueExpression(attribute);
         case INT:
             return new BWNumberLiteral(Integer.parseInt(expression.getValue()));

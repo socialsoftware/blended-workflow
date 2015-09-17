@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
@@ -56,8 +57,10 @@ public class BWAttributeBoolCondition extends BWAttributeBoolCondition_Base {
 
     @Override
     public Set<BWAttribute> getAttributes() {
-        // TODO Auto-generated method stub
-        return null;
+        Set<BWAttribute> attributes = new HashSet<BWAttribute>();
+        attributes.add(getAttributeOfBool());
+
+        return attributes;
     }
 
     @Override

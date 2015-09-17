@@ -1,16 +1,16 @@
-package org.blended.common.repository.resttemplate.vo;
+package org.blended.common.repository.resttemplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityVO extends ProductVO {
+public class EntityDTO extends ProductDTO {
     private String name;
     private boolean exists;
 
-    public EntityVO() {
+    public EntityDTO() {
     }
 
-    public EntityVO(String specId, String name, boolean exists) {
+    public EntityDTO(String specId, String name, boolean exists) {
         setSpecId(specId);
         this.name = name;
         this.exists = exists;

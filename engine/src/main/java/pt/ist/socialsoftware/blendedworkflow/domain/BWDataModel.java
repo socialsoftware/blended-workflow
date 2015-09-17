@@ -1,7 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class BWDataModel extends BWDataModel_Base {
@@ -73,6 +77,16 @@ public class BWDataModel extends BWDataModel_Base {
     public BWRule getRule(String name) {
         return getRuleSet().stream().filter(rule -> rule.getName().equals(name))
                 .findFirst().orElse(null);
+    }
+
+    public BWProduct getTargetOfPath(String path) {
+        List<String> pathLeft = Arrays.stream(path.split("\\."))
+                .collect(Collectors.toList());
+        BWEntity entity = getEntity(pathLeft.get(0)).orElseThrow(
+                () -> new BWException(BWErrorType.INVALID_ENTITY_NAME,
+                        pathLeft.get(0)));
+        pathLeft.remove(0);
+        return entity.getNext(pathLeft, path);
     }
 
 }

@@ -165,4 +165,9 @@ public class BWAttribute extends BWAttribute_Base {
         return attDTO;
     }
 
+    @Override
+    public Condition getDefCondition() {
+        return DEFAttributeCondition.getDEFAttribute(this);
+    }
+
 }

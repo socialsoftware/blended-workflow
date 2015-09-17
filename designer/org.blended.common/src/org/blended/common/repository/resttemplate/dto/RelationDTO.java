@@ -1,9 +1,9 @@
-package org.blended.common.repository.resttemplate.vo;
+package org.blended.common.repository.resttemplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RelationVO {
+public class RelationDTO {
     private String specId;
     private String extId;
     private String name;
@@ -16,10 +16,10 @@ public class RelationVO {
     private String rolenameTwo;
     private String cardinalityTwo;
 
-    public RelationVO() {
+    public RelationDTO() {
     }
 
-    public RelationVO(String specId, String name, String entOneName,
+    public RelationDTO(String specId, String name, String entOneName,
             String rolenameOne, String cardinalityOne, String entTwoName,
             String rolenameTwo, String cardinalityTwo) {
         this.specId = specId;

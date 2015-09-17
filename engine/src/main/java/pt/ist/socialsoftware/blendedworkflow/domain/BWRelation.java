@@ -137,14 +137,6 @@ public class BWRelation extends BWRelation_Base {
                 getIsTwoKeyEntity());
     }
 
-    public BWEntity getEntity(BWEntity entity) {
-        if (entity.equals(getEntityOne())) {
-            return getEntityOne();
-        } else {
-            return getEntityTwo();
-        }
-    }
-
     public Set<BWEntity> getEntitiesSet() {
         Set<BWEntity> entities = new HashSet<BWEntity>();
         entities.add(this.getEntityOne());
@@ -203,6 +195,14 @@ public class BWRelation extends BWRelation_Base {
         relDTO.setCardinalityTwo(getCardinalityTwo().toString());
 
         return relDTO;
+    }
+
+    public MULCondition getMulCondition(BWEntity entity) {
+        if (getEntityOne() == entity)
+            return MULCondition.getMulCondition(this, getRoleNameTwo());
+        if (getEntityTwo() == entity)
+            return MULCondition.getMulCondition(this, getRoleNameOne());
+        return null;
     }
 
 }

@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -51,7 +52,7 @@ public class NotCondition extends NotCondition_Base {
 
     @Override
     public Set<BWAttribute> getAttributes() {
-        return null;
+        return new HashSet<BWAttribute>();
     }
 
     @Override

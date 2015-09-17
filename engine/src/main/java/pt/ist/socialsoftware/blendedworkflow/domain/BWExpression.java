@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Set;
+
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 
 public abstract class BWExpression extends BWExpression_Base {
@@ -28,5 +30,7 @@ public abstract class BWExpression extends BWExpression_Base {
     public abstract AttributeType getType();
 
     public abstract String getSubPath();
+
+    public abstract Set<BWAttribute> getAttributes();
 
 }

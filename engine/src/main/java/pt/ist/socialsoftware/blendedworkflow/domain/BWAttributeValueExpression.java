@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
 
 public class BWAttributeValueExpression
@@ -23,6 +26,13 @@ public class BWAttributeValueExpression
     @Override
     public String getSubPath() {
         return getAttribute().getName();
+    }
+
+    @Override
+    public Set<BWAttribute> getAttributes() {
+        Set<BWAttribute> attributes = new HashSet<BWAttribute>();
+        attributes.add(getAttribute());
+        return attributes;
     }
 
 }

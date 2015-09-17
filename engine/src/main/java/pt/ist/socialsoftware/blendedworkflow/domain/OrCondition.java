@@ -68,8 +68,7 @@ public class OrCondition extends OrCondition_Base {
     @Override
     public Set<BWAttribute> getAttributes() {
         Set<BWAttribute> attributesOne = getConditionOne().getAttributes();
-        Set<BWAttribute> attributesTwo = getConditionTwo().getAttributes();
-        attributesOne.addAll(attributesTwo);
+        attributesOne.addAll(getConditionTwo().getAttributes());
         return attributesOne;
     }
 

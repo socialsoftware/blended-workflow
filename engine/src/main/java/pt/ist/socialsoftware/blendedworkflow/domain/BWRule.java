@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +56,10 @@ public class BWRule extends BWRule_Base {
         ruleDTO.setExpression(null);
 
         return ruleDTO;
+    }
+
+    public Set<BWAttribute> getAttributes() {
+        return getCondition().getAttributes();
     }
 
 }

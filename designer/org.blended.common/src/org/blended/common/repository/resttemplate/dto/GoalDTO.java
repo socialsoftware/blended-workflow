@@ -1,16 +1,23 @@
-package org.blended.common.repository.resttemplate.vo;
+package org.blended.common.repository.resttemplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SpecVO {
+public class GoalDTO {
     private String specId;
+    private String extId;
     private String name;
 
-    public SpecVO() {
+    public GoalDTO() {
     }
 
-    public SpecVO(String specId, String name) {
+    public GoalDTO(String specId, String name) {
+        this.specId = specId;
+        this.name = name;
+    }
+
+    public GoalDTO(String specId, String extId, String name) {
+        this.extId = extId;
         this.specId = specId;
         this.name = name;
     }
@@ -21,6 +28,14 @@ public class SpecVO {
 
     public void setSpecId(String specId) {
         this.specId = specId;
+    }
+
+    public String getExtId() {
+        return extId;
+    }
+
+    public void setExtId(String extId) {
+        this.extId = extId;
     }
 
     public String getName() {

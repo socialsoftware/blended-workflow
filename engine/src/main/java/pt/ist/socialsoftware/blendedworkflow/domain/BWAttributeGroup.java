@@ -93,4 +93,9 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
         return group;
     }
 
+    @Override
+    public Condition getDefCondition() {
+        return DEFAttributeCondition.getDEFAttribute(this);
+    }
+
 }

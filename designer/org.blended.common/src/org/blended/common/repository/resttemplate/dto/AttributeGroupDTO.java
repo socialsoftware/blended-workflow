@@ -1,26 +1,22 @@
-package org.blended.common.repository.resttemplate.vo;
+package org.blended.common.repository.resttemplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AttributeVO extends ProductVO {
+public class AttributeGroupDTO extends ProductDTO {
     private String entityExtId;
     private String entityName;
-    private String groupExtId;
     private String name;
-    private String type;
     private boolean isMandatory;
 
-    public AttributeVO() {
+    public AttributeGroupDTO() {
     }
 
-    public AttributeVO(String specId, String entityExtId, String groupExtId,
-            String name, String type, boolean isMandatory) {
+    public AttributeGroupDTO(String specId, String entityExtId, String name,
+            boolean isMandatory) {
         setSpecId(specId);
         this.entityExtId = entityExtId;
-        this.groupExtId = groupExtId;
         this.name = name;
-        this.type = type;
         this.isMandatory = isMandatory;
     }
 
@@ -40,14 +36,6 @@ public class AttributeVO extends ProductVO {
         this.entityName = entityName;
     }
 
-    public String getGroupExtId() {
-        return groupExtId;
-    }
-
-    public void setGroupExtId(String groupExtId) {
-        this.groupExtId = groupExtId;
-    }
-
     public String getName() {
         return name;
     }
@@ -56,19 +44,11 @@ public class AttributeVO extends ProductVO {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public boolean getIsMandatory() {
+    public boolean isMandatory() {
         return isMandatory;
     }
 
-    public void setIsMandatory(boolean isMandatory) {
+    public void setMandatory(boolean isMandatory) {
         this.isMandatory = isMandatory;
     }
 

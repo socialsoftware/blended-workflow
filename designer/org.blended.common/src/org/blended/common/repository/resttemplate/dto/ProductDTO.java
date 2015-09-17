@@ -1,14 +1,14 @@
-package org.blended.common.repository.resttemplate.vo;
+package org.blended.common.repository.resttemplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProductVO {
+public class ProductDTO {
     private String specId;
     private String extId;
     private String producType;
 
-    public ProductVO() {
+    public ProductDTO() {
     }
 
     public String getExtId() {

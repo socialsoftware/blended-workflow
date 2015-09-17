@@ -90,7 +90,6 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 
         childGoalOne.addAttributeInvariantCondition(rule);
         childGoalTwo.addAttributeInvariantCondition(rule);
-
     }
 
     @Test

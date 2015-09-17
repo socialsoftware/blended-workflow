@@ -11,18 +11,20 @@ import java.util.stream.Collectors;
 import org.blended.common.repository.resttemplate.BWError;
 import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.RestUtil;
-import org.blended.common.repository.resttemplate.vo.AttributeGroupVO;
-import org.blended.common.repository.resttemplate.vo.AttributeVO;
-import org.blended.common.repository.resttemplate.vo.DefAttributeConditionVO;
-import org.blended.common.repository.resttemplate.vo.DefEntityConditionVO;
-import org.blended.common.repository.resttemplate.vo.DependenceVO;
-import org.blended.common.repository.resttemplate.vo.EntityVO;
-import org.blended.common.repository.resttemplate.vo.GoalVO;
-import org.blended.common.repository.resttemplate.vo.MulConditionVO;
-import org.blended.common.repository.resttemplate.vo.ProductVO;
-import org.blended.common.repository.resttemplate.vo.RelationVO;
-import org.blended.common.repository.resttemplate.vo.RuleVO;
-import org.blended.common.repository.resttemplate.vo.SpecVO;
+import org.blended.common.repository.resttemplate.dto.AttributeDTO;
+import org.blended.common.repository.resttemplate.dto.AttributeGroupDTO;
+import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DependenceDTO;
+import org.blended.common.repository.resttemplate.dto.EntityDTO;
+import org.blended.common.repository.resttemplate.dto.GoalDTO;
+import org.blended.common.repository.resttemplate.dto.MulConditionDTO;
+import org.blended.common.repository.resttemplate.dto.ProductDTO;
+import org.blended.common.repository.resttemplate.dto.RelationDTO;
+import org.blended.common.repository.resttemplate.dto.RuleDTO;
+import org.blended.common.repository.resttemplate.dto.SpecDTO;
+import org.blended.common.repository.resttemplate.dto.SuccessConditionDTO;
+import org.blended.common.repository.resttemplate.req.ExtractSiblingGoalReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -63,7 +65,7 @@ public class CommonInterface {
 
     }
 
-    public SpecVO getSpecBySpecId(String specId) {
+    public SpecDTO getSpecBySpecId(String specId) {
         log.debug("getSpecBySpecId: {}", specId);
 
         final String uri = BASE_URL + "/specs/{specId}";
@@ -88,7 +90,7 @@ public class CommonInterface {
                 BWError error = mapper.readValue(responseBody, BWError.class);
                 throw new RepositoryException(error);
             } else {
-                SpecVO specVO = mapper.readValue(responseBody, SpecVO.class);
+                SpecDTO specVO = mapper.readValue(responseBody, SpecDTO.class);
                 return specVO;
             }
         } catch (IOException e) {
@@ -97,7 +99,7 @@ public class CommonInterface {
 
     }
 
-    public SpecVO createSpec(SpecVO specVO) {
+    public SpecDTO createSpec(SpecDTO specVO) {
         log.debug("createSpec: {}, {}", specVO.getSpecId(), specVO.getName());
 
         final String uri = BASE_URL + "/specs";
@@ -107,7 +109,7 @@ public class CommonInterface {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 
-        HttpEntity<SpecVO> entity = new HttpEntity<SpecVO>(specVO, headers);
+        HttpEntity<SpecDTO> entity = new HttpEntity<SpecDTO>(specVO, headers);
         ResponseEntity<String> response = restTemplate.exchange(uri,
                 HttpMethod.POST, entity, String.class);
 
@@ -119,7 +121,8 @@ public class CommonInterface {
                 BWError error = mapper.readValue(responseBody, BWError.class);
                 throw new RepositoryException(error);
             } else {
-                SpecVO newSpecVO = mapper.readValue(responseBody, SpecVO.class);
+                SpecDTO newSpecVO = mapper.readValue(responseBody,
+                        SpecDTO.class);
                 return newSpecVO;
             }
         } catch (IOException e) {
@@ -140,7 +143,7 @@ public class CommonInterface {
         restTemplate.put(uri, null, params);
     }
 
-    public EntityVO createEntity(EntityVO entityVO) {
+    public EntityDTO createEntity(EntityDTO entityVO) {
         log.debug("createEntity: {}, {}, {}", entityVO.getSpecId(),
                 entityVO.getName(), entityVO.getExists());
 
@@ -150,13 +153,13 @@ public class CommonInterface {
         params.put("specId", entityVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        EntityVO result = restTemplate.postForObject(uri, entityVO,
-                EntityVO.class, params);
+        EntityDTO result = restTemplate.postForObject(uri, entityVO,
+                EntityDTO.class, params);
 
         return result;
     }
 
-    public DependenceVO createDependence(DependenceVO dependenceVO) {
+    public DependenceDTO createDependence(DependenceDTO dependenceVO) {
         log.debug("createDependence: {}, {}", dependenceVO.getProductExtId(),
                 dependenceVO.getPath());
 
@@ -166,13 +169,13 @@ public class CommonInterface {
         params.put("specId", dependenceVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DependenceVO result = restTemplate.postForObject(uri, dependenceVO,
-                DependenceVO.class, params);
+        DependenceDTO result = restTemplate.postForObject(uri, dependenceVO,
+                DependenceDTO.class, params);
 
         return result;
     }
 
-    public Set<DependenceVO> getDependencies(String specId) {
+    public Set<DependenceDTO> getDependencies(String specId) {
         log.debug("getDependencies: {}", specId);
 
         final String uri = BASE_URL + "specs/{specId}/datamodel/dependencies";
@@ -181,10 +184,10 @@ public class CommonInterface {
         params.put("specId", specId);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DependenceVO[] result = restTemplate.getForObject(uri,
-                DependenceVO[].class, params);
+        DependenceDTO[] result = restTemplate.getForObject(uri,
+                DependenceDTO[].class, params);
 
-        return new HashSet<DependenceVO>(Arrays.asList(result));
+        return new HashSet<DependenceDTO>(Arrays.asList(result));
     }
 
     public boolean checkDependence(String specId, String extId) {
@@ -218,7 +221,7 @@ public class CommonInterface {
         restTemplate.delete(uri, params);
     }
 
-    public AttributeVO getAttribute(String specId, String extId) {
+    public AttributeDTO getAttribute(String specId, String extId) {
         log.debug("getAttribute specId:{} extId:{}", specId, extId);
 
         final String uri = BASE_URL
@@ -228,13 +231,13 @@ public class CommonInterface {
         params.put("extId", extId);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        AttributeVO result = restTemplate.getForObject(uri, AttributeVO.class,
+        AttributeDTO result = restTemplate.getForObject(uri, AttributeDTO.class,
                 params);
 
         return result;
     }
 
-    public AttributeVO createAttribute(AttributeVO attribueVO) {
+    public AttributeDTO createAttribute(AttributeDTO attribueVO) {
         log.debug(
                 "createAttribute: entitityExtId:{}, groupExtId:{}, {}, {}, {}",
                 attribueVO.getEntityExtId(), attribueVO.getGroupExtId(),
@@ -247,14 +250,14 @@ public class CommonInterface {
         params.put("specId", attribueVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        AttributeVO result = restTemplate.postForObject(uri, attribueVO,
-                AttributeVO.class, params);
+        AttributeDTO result = restTemplate.postForObject(uri, attribueVO,
+                AttributeDTO.class, params);
 
         return result;
     }
 
-    public AttributeGroupVO createAttributeGroup(
-            AttributeGroupVO attributeGroupVO) {
+    public AttributeGroupDTO createAttributeGroup(
+            AttributeGroupDTO attributeGroupVO) {
         log.debug("createAttributeGroup: entitityExtId:{},  {}, {}",
                 attributeGroupVO.getEntityExtId(), attributeGroupVO.getName(),
                 attributeGroupVO.isMandatory());
@@ -266,13 +269,13 @@ public class CommonInterface {
         params.put("specId", attributeGroupVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        AttributeGroupVO result = restTemplate.postForObject(uri,
-                attributeGroupVO, AttributeGroupVO.class, params);
+        AttributeGroupDTO result = restTemplate.postForObject(uri,
+                attributeGroupVO, AttributeGroupDTO.class, params);
 
         return result;
     }
 
-    public RelationVO createRelation(RelationVO relationVO) {
+    public RelationDTO createRelation(RelationDTO relationVO) {
         log.debug("createRelation: {}, {}, {}", relationVO.getName(),
                 relationVO.getEntOneName(), relationVO.getEntTwoName());
 
@@ -282,13 +285,13 @@ public class CommonInterface {
         params.put("specId", relationVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        RelationVO result = restTemplate.postForObject(uri, relationVO,
-                RelationVO.class, params);
+        RelationDTO result = restTemplate.postForObject(uri, relationVO,
+                RelationDTO.class, params);
 
         return result;
     }
 
-    public RuleVO createRule(RuleVO ruleVO) {
+    public RuleDTO createRule(RuleDTO ruleVO) {
         log.debug("createRule: {}, {}, {}", ruleVO.getSpecId(),
                 ruleVO.getName(), ruleVO.getExpression());
 
@@ -298,7 +301,7 @@ public class CommonInterface {
         params.put("specId", ruleVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        RuleVO result = restTemplate.postForObject(uri, ruleVO, RuleVO.class,
+        RuleDTO result = restTemplate.postForObject(uri, ruleVO, RuleDTO.class,
                 params);
 
         return result;
@@ -328,8 +331,8 @@ public class CommonInterface {
         restTemplate.put(uri, null, params);
     }
 
-    public DefEntityConditionVO createEntityAchieveCondition(
-            DefEntityConditionVO entityAchieveConditionVO) {
+    public DefEntityConditionDTO createEntityAchieveCondition(
+            DefEntityConditionDTO entityAchieveConditionVO) {
         log.debug("createEntityAchieveCondition: {}, {}, {}",
                 entityAchieveConditionVO.getSpecId(),
                 entityAchieveConditionVO.getEntityName(),
@@ -342,14 +345,14 @@ public class CommonInterface {
         params.put("specId", entityAchieveConditionVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DefEntityConditionVO result = restTemplate.postForObject(uri,
-                entityAchieveConditionVO, DefEntityConditionVO.class, params);
+        DefEntityConditionDTO result = restTemplate.postForObject(uri,
+                entityAchieveConditionVO, DefEntityConditionDTO.class, params);
 
         return result;
     }
 
-    public DependenceVO createEntityDependenceCondition(
-            DependenceVO dependenceVO) {
+    public DependenceDTO createEntityDependenceCondition(
+            DependenceDTO dependenceVO) {
         log.debug("createEntityDependenceCondition entityExtId:{}, path:{}",
                 dependenceVO.getProductExtId(), dependenceVO.getPath());
 
@@ -360,14 +363,14 @@ public class CommonInterface {
         params.put("specId", dependenceVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DependenceVO result = restTemplate.postForObject(uri, dependenceVO,
-                DependenceVO.class, params);
+        DependenceDTO result = restTemplate.postForObject(uri, dependenceVO,
+                DependenceDTO.class, params);
 
         return result;
     }
 
-    public MulConditionVO createEntityInvariantCondition(
-            MulConditionVO mulConditionVO) {
+    public MulConditionDTO createEntityInvariantCondition(
+            MulConditionDTO mulConditionVO) {
         log.debug("createEntityInvariantCondition rolePath:{}, cardinality:{}",
                 mulConditionVO.getRolePath(), mulConditionVO.getCardinality());
 
@@ -378,14 +381,14 @@ public class CommonInterface {
         params.put("specId", mulConditionVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        MulConditionVO result = restTemplate.postForObject(uri, mulConditionVO,
-                MulConditionVO.class, params);
+        MulConditionDTO result = restTemplate.postForObject(uri, mulConditionVO,
+                MulConditionDTO.class, params);
 
         return result;
     }
 
-    public DefAttributeConditionVO createAttributeAchieveCondition(
-            DefAttributeConditionVO defAttributeConditionVO) {
+    public DefAttributeConditionDTO createAttributeAchieveCondition(
+            DefAttributeConditionDTO defAttributeConditionVO) {
         log.debug("createAttributeAchieveCondition paths:{}, mandatory:{}",
                 defAttributeConditionVO.getPaths().toString(),
                 defAttributeConditionVO.isMandatory());
@@ -397,14 +400,15 @@ public class CommonInterface {
         params.put("specId", defAttributeConditionVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DefAttributeConditionVO result = restTemplate.postForObject(uri,
-                defAttributeConditionVO, DefAttributeConditionVO.class, params);
+        DefAttributeConditionDTO result = restTemplate.postForObject(uri,
+                defAttributeConditionVO, DefAttributeConditionDTO.class,
+                params);
 
         return result;
     }
 
-    public DependenceVO createAttributeDependenceCondition(
-            DependenceVO dependenceVO) {
+    public DependenceDTO createAttributeDependenceCondition(
+            DependenceDTO dependenceVO) {
         log.debug("createDependenceCondition productExtId:{}, path:{}",
                 dependenceVO.getProductExtId(), dependenceVO.getPath());
 
@@ -415,13 +419,13 @@ public class CommonInterface {
         params.put("specId", dependenceVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DependenceVO result = restTemplate.postForObject(uri, dependenceVO,
-                DependenceVO.class, params);
+        DependenceDTO result = restTemplate.postForObject(uri, dependenceVO,
+                DependenceDTO.class, params);
 
         return result;
     }
 
-    public RuleVO createAttributeInvariantCondition(RuleVO ruleVO) {
+    public RuleDTO createAttributeInvariantCondition(RuleDTO ruleVO) {
         log.debug(
                 "createAttributeInvariantCondition conditionModelExtId:{}, name:{}",
                 ruleVO.getSpecId(), ruleVO.getName());
@@ -433,13 +437,13 @@ public class CommonInterface {
         params.put("specId", ruleVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        RuleVO result = restTemplate.postForObject(uri, ruleVO, RuleVO.class,
+        RuleDTO result = restTemplate.postForObject(uri, ruleVO, RuleDTO.class,
                 params);
 
         return result;
     }
 
-    public ProductVO getProduct(String specId, Set<String> sourceAtts) {
+    public ProductDTO getProduct(String specId, Set<String> sourceAtts) {
         log.debug("getProduct: {}", sourceAtts.toString());
 
         final String uri = BASE_URL
@@ -454,13 +458,13 @@ public class CommonInterface {
         log.debug("getProduct: {}", atts);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        ProductVO productVO = restTemplate.getForObject(uri, ProductVO.class,
+        ProductDTO productVO = restTemplate.getForObject(uri, ProductDTO.class,
                 params);
 
         return productVO;
     }
 
-    public EntityVO getEntityByName(String specId, String entityName) {
+    public EntityDTO getEntityByName(String specId, String entityName) {
         log.debug("getEntityByName: {}, {}", specId, entityName);
 
         final String uri = BASE_URL
@@ -471,7 +475,7 @@ public class CommonInterface {
         params.put("entityName", entityName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        EntityVO entityVO = restTemplate.getForObject(uri, EntityVO.class,
+        EntityDTO entityVO = restTemplate.getForObject(uri, EntityDTO.class,
                 params);
 
         return entityVO;
@@ -489,7 +493,7 @@ public class CommonInterface {
         restTemplate.put(uri, null, params);
     }
 
-    public GoalVO getGoalByName(String specId, String goalName) {
+    public GoalDTO getGoalByName(String specId, String goalName) {
         log.debug("getGoalByName: {}, {}", specId, goalName);
 
         final String uri = BASE_URL
@@ -500,12 +504,12 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        GoalVO goalVO = restTemplate.getForObject(uri, GoalVO.class, params);
+        GoalDTO goalVO = restTemplate.getForObject(uri, GoalDTO.class, params);
 
         return goalVO;
     }
 
-    public GoalVO createGoal(GoalVO goalVO) {
+    public GoalDTO createGoal(GoalDTO goalVO) {
         log.debug("createGoal specId:{}, name:{}", goalVO.getSpecId(),
                 goalVO.getName());
 
@@ -515,13 +519,13 @@ public class CommonInterface {
         params.put("specId", goalVO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        GoalVO result = restTemplate.postForObject(uri, goalVO, GoalVO.class,
+        GoalDTO result = restTemplate.postForObject(uri, goalVO, GoalDTO.class,
                 params);
 
         return result;
     }
 
-    public Set<GoalVO> getSubGoals(String specId, String goalName) {
+    public Set<GoalDTO> getSubGoals(String specId, String goalName) {
         log.debug("getsubGoals: {}, {}", specId, goalName);
 
         final String uri = BASE_URL
@@ -532,13 +536,13 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        GoalVO[] goalsVO = restTemplate.getForObject(uri, GoalVO[].class,
+        GoalDTO[] goalsVO = restTemplate.getForObject(uri, GoalDTO[].class,
                 params);
 
-        return new HashSet<GoalVO>(Arrays.asList(goalsVO));
+        return new HashSet<GoalDTO>(Arrays.asList(goalsVO));
     }
 
-    public GoalVO getParentGoal(String specId, String goalName) {
+    public GoalDTO getParentGoal(String specId, String goalName) {
         log.debug("getParentGoal: {}, {}", specId, goalName);
 
         final String uri = BASE_URL
@@ -549,12 +553,12 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        GoalVO goalVO = restTemplate.getForObject(uri, GoalVO.class, params);
+        GoalDTO goalVO = restTemplate.getForObject(uri, GoalDTO.class, params);
 
         return goalVO;
     }
 
-    public GoalVO addSubGoal(String parentName, GoalVO goalVO) {
+    public GoalDTO addSubGoal(String parentName, GoalDTO goalVO) {
         log.debug("addSubGoal specId:{}, parentName:{}, childName:{}",
                 goalVO.getSpecId(), parentName, goalVO.getName());
 
@@ -566,13 +570,13 @@ public class CommonInterface {
         params.put("goalName", parentName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        GoalVO result = restTemplate.postForObject(uri, goalVO, GoalVO.class,
+        GoalDTO result = restTemplate.postForObject(uri, goalVO, GoalDTO.class,
                 params);
 
         return result;
     }
 
-    public Set<DefEntityConditionVO> getGoalSuccessEntitySet(String specId,
+    public Set<DefEntityConditionDTO> getGoalSuccessEntitySet(String specId,
             String goalName) {
         log.debug("getGoalSucEntityAchieveCondition: {}, {}", specId, goalName);
 
@@ -584,13 +588,13 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DefEntityConditionVO[] defsVO = restTemplate.getForObject(uri,
-                DefEntityConditionVO[].class, params);
+        DefEntityConditionDTO[] defsVO = restTemplate.getForObject(uri,
+                DefEntityConditionDTO[].class, params);
 
-        return new HashSet<DefEntityConditionVO>(Arrays.asList(defsVO));
+        return new HashSet<DefEntityConditionDTO>(Arrays.asList(defsVO));
     }
 
-    public DefEntityConditionVO associateEntityToGoalSuccess(String specId,
+    public DefEntityConditionDTO associateEntityToGoalSuccess(String specId,
             String goalName, String path) {
         log.debug(
                 "associatedSucConditionToGoal specId:{}, goalName:{}, path:{}",
@@ -605,13 +609,13 @@ public class CommonInterface {
         params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DefEntityConditionVO result = restTemplate.postForObject(uri, null,
-                DefEntityConditionVO.class, params);
+        DefEntityConditionDTO result = restTemplate.postForObject(uri, null,
+                DefEntityConditionDTO.class, params);
 
         return result;
     }
 
-    public Set<DefAttributeConditionVO> getGoalSuccessAttributeSet(
+    public Set<DefAttributeConditionDTO> getGoalSuccessAttributeSet(
             String specId, String goalName) {
         log.debug("getGoalSuccessAttributeSet: {}, {}", specId, goalName);
 
@@ -623,10 +627,10 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DefAttributeConditionVO[] defsVO = restTemplate.getForObject(uri,
-                DefAttributeConditionVO[].class, params);
+        DefAttributeConditionDTO[] defsVO = restTemplate.getForObject(uri,
+                DefAttributeConditionDTO[].class, params);
 
-        return new HashSet<DefAttributeConditionVO>(Arrays.asList(defsVO));
+        return new HashSet<DefAttributeConditionDTO>(Arrays.asList(defsVO));
     }
 
     public void associateAttributeToGoalSuccess(String specId, String goalName,
@@ -649,7 +653,7 @@ public class CommonInterface {
         restTemplate.postForObject(uri, null, String.class, params);
     }
 
-    public Set<DefEntityConditionVO> getGoalActivationEntitySet(String specId,
+    public Set<DefEntityConditionDTO> getGoalActivationEntitySet(String specId,
             String goalName) {
         log.debug("getGoalActivationEntitySet: {}, {}", specId, goalName);
 
@@ -661,13 +665,13 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DefEntityConditionVO[] defsVO = restTemplate.getForObject(uri,
-                DefEntityConditionVO[].class, params);
+        DefEntityConditionDTO[] defsVO = restTemplate.getForObject(uri,
+                DefEntityConditionDTO[].class, params);
 
-        return new HashSet<DefEntityConditionVO>(Arrays.asList(defsVO));
+        return new HashSet<DefEntityConditionDTO>(Arrays.asList(defsVO));
     }
 
-    public DefEntityConditionVO associateEntityToGoalActivation(String specId,
+    public DefEntityConditionDTO associateEntityToGoalActivation(String specId,
             String goalName, String path) {
         log.debug(
                 "associatedActConditionToGoal specId:{}, goalName:{}, path:{}",
@@ -682,13 +686,13 @@ public class CommonInterface {
         params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DefEntityConditionVO result = restTemplate.postForObject(uri, null,
-                DefEntityConditionVO.class, params);
+        DefEntityConditionDTO result = restTemplate.postForObject(uri, null,
+                DefEntityConditionDTO.class, params);
 
         return result;
     }
 
-    public Set<DefAttributeConditionVO> getGoalActivationAttributeSet(
+    public Set<DefAttributeConditionDTO> getGoalActivationAttributeSet(
             String specId, String goalName) {
         log.debug("getGoalActivationAttributeSet: {}, {}", specId, goalName);
 
@@ -700,10 +704,10 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DefAttributeConditionVO[] defsVO = restTemplate.getForObject(uri,
-                DefAttributeConditionVO[].class, params);
+        DefAttributeConditionDTO[] defsVO = restTemplate.getForObject(uri,
+                DefAttributeConditionDTO[].class, params);
 
-        return new HashSet<DefAttributeConditionVO>(Arrays.asList(defsVO));
+        return new HashSet<DefAttributeConditionDTO>(Arrays.asList(defsVO));
     }
 
     public void associateAttributeToGoalActivation(String specId,
@@ -726,7 +730,7 @@ public class CommonInterface {
         restTemplate.postForObject(uri, null, String.class, params);
     }
 
-    public Set<MulConditionVO> getGoalMulInvSet(String specId,
+    public Set<MulConditionDTO> getGoalMulInvSet(String specId,
             String goalName) {
         log.debug("getGoalMulInvSet: {}, {}", specId, goalName);
 
@@ -738,14 +742,14 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        MulConditionVO[] mulsVO = restTemplate.getForObject(uri,
-                MulConditionVO[].class, params);
+        MulConditionDTO[] mulsVO = restTemplate.getForObject(uri,
+                MulConditionDTO[].class, params);
 
-        return new HashSet<MulConditionVO>(Arrays.asList(mulsVO));
+        return new HashSet<MulConditionDTO>(Arrays.asList(mulsVO));
     }
 
     public void associateMulToGoalInvariant(String specId, String goalName,
-            MulConditionVO mulConditionVO) {
+            MulConditionDTO mulConditionVO) {
         log.debug(
                 "associateMulConditionToGoalEntityInvariantCondition specId:{}, goalName:{}, path:{}, cardinality:{}",
                 specId, goalName, mulConditionVO.getRolePath(),
@@ -759,11 +763,11 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        restTemplate.postForObject(uri, mulConditionVO, MulConditionVO.class,
+        restTemplate.postForObject(uri, mulConditionVO, MulConditionDTO.class,
                 params);
     }
 
-    public Set<RuleVO> getGoalRuleInvSet(String specId, String goalName) {
+    public Set<RuleDTO> getGoalRuleInvSet(String specId, String goalName) {
         log.debug("getGoalRuleInvSet: {}, {}", specId, goalName);
 
         final String uri = BASE_URL
@@ -774,14 +778,14 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        RuleVO[] rulesVO = restTemplate.getForObject(uri, RuleVO[].class,
+        RuleDTO[] rulesVO = restTemplate.getForObject(uri, RuleDTO[].class,
                 params);
 
-        return new HashSet<RuleVO>(Arrays.asList(rulesVO));
+        return new HashSet<RuleDTO>(Arrays.asList(rulesVO));
     }
 
     public void associateRuleToGoalInvariant(String specId, String goalName,
-            RuleVO ruleVO) {
+            RuleDTO ruleVO) {
         log.debug(
                 "associateRuleConditionToGoalAttributeInvariantCondition specId:{}, goalName:{}, rule:{}",
                 specId, goalName, ruleVO.getName());
@@ -794,10 +798,10 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        restTemplate.postForObject(uri, ruleVO, RuleVO.class, params);
+        restTemplate.postForObject(uri, ruleVO, RuleDTO.class, params);
     }
 
-    public GoalVO mergeGoals(String specId, String newGoalName,
+    public GoalDTO mergeGoals(String specId, String newGoalName,
             String goalNameOne, String goalNameTwo) {
         log.debug(
                 "mergeGoals specId:{}, newGoalName:{} goalNameOne:{}, goalNameTwo:{}",
@@ -814,20 +818,19 @@ public class CommonInterface {
         variablesMap.add("goalNameTwo", goalNameTwo);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        return restTemplate.postForObject(uri, variablesMap, GoalVO.class,
+        return restTemplate.postForObject(uri, variablesMap, GoalDTO.class,
                 params);
     }
 
-    public GoalVO extractSiblingGoal(String specId, String goalName,
-            Set<DefEntityConditionVO> entDefs,
-            Set<DefAttributeConditionVO> attDefs) {
+    public GoalDTO extractSiblingGoal(String specId, String newGoalName,
+            String goalName, SuccessConditionDTO successCondition) {
         log.debug(
-                "extractSiblingGoal specId:{}, goalName:{}, entDefs:{}, attDefs:{}",
-                specId, goalName,
-                entDefs.stream().map((def) -> def.getEntityName())
-                        .collect(
+                "extractSiblingGoal specId:{}, newGoalName:{}, goalName:{}, entDefs:{}, attDefs:{}",
+                specId, newGoalName, goalName,
+                successCondition.getDefEnts().stream()
+                        .map((def) -> def.getEntityName()).collect(
                                 Collectors.joining(",")),
-                attDefs.stream()
+                successCondition.getDefAtts().stream()
                         .map((def) -> def.getPaths().stream()
                                 .collect(Collectors.joining(",")))
                         .collect(Collectors.joining("|")));
@@ -838,35 +841,34 @@ public class CommonInterface {
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
 
-        MultiValueMap<String, Object> variablesMap = new LinkedMultiValueMap<String, Object>();
-        variablesMap.add("goalName", goalName);
-        variablesMap.add("entDefs", entDefs);
-        variablesMap.add("attDefs", attDefs);
+        ExtractSiblingGoalReq req = new ExtractSiblingGoalReq();
+        req.setNewGoalName(newGoalName);
+        req.setGoalName(goalName);
+        req.setSuccessCondition(successCondition);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        return restTemplate.postForObject(uri, variablesMap, GoalVO.class,
-                params);
+        return restTemplate.postForObject(uri, req, GoalDTO.class, params);
     }
 
-    public ProductVO getSourceOfPath(String specId, String path) {
+    public ProductDTO getSourceOfPath(String specId, String path) {
         log.debug("getSourceOfPath specId:{} path:{}", specId, path);
 
         final String uri = BASE_URL + "/specs/{specId}/pathsource?path={path}";
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        ProductVO productVO = restTemplate.getForObject(uri, ProductVO.class,
+        ProductDTO productVO = restTemplate.getForObject(uri, ProductDTO.class,
                 specId, path);
 
         return productVO;
     }
 
-    public ProductVO getTargetOfPath(String specId, String path) {
+    public ProductDTO getTargetOfPath(String specId, String path) {
         log.debug("getTargetOfPath specId:{} path:{}", specId, path);
 
         final String uri = BASE_URL + "/specs/{specId}/pathtarget?path={path}";
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        ProductVO productVO = restTemplate.getForObject(uri, ProductVO.class,
+        ProductDTO productVO = restTemplate.getForObject(uri, ProductDTO.class,
                 specId, path);
 
         return productVO;

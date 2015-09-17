@@ -11,8 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
-    public static DEFAttributeCondition getDEFAttribute(
-            BWAttribute attribute) {
+    public static DEFAttributeCondition getDEFAttribute(BWAttribute attribute) {
         DEFAttributeCondition defAttributeCondition = attribute
                 .getDefAttributeCondition();
         if (defAttributeCondition == null)
@@ -20,7 +19,7 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         return defAttributeCondition;
     }
 
-    public static DEFAttributeCondition getDEFAttributeCondition(
+    public static DEFAttributeCondition getDEFAttribute(
             BWAttributeGroup attributeGroup) {
         DEFAttributeCondition defAttributeCondition = attributeGroup
                 .getDefAttributeCondition();
@@ -47,8 +46,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
                 .getDataModelInstance();
         BWEntity entity = dataModelInstance
                 .getEntity(getAttributeOfDef().getEntity().getName()).get();
-        BWAttribute attribute = entity.getAttribute(getAttributeOfDef().getName())
-                .orElse(null);
+        BWAttribute attribute = entity
+                .getAttribute(getAttributeOfDef().getName()).orElse(null);
         return new DEFAttributeCondition(attribute);
     }
 
@@ -58,8 +57,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
                 .getDataModelInstance();
         BWEntity entity = dataModelInstance
                 .getEntity(getAttributeOfDef().getEntity().getName()).get();
-        BWAttribute attribute = entity.getAttribute(getAttributeOfDef().getName())
-                .orElse(null);
+        BWAttribute attribute = entity
+                .getAttribute(getAttributeOfDef().getName()).orElse(null);
         return new DEFAttributeCondition(attribute);
     }
 
@@ -85,7 +84,13 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     @Override
     public Set<BWAttribute> getAttributes() {
         Set<BWAttribute> attribute = new HashSet<BWAttribute>();
-        attribute.add(getAttributeOfDef());
+        if (getAttributeOfDef() != null) {
+            attribute.add(getAttributeOfDef());
+            return attribute;
+        }
+        if (getAttributeGroup() != null)
+            return getAttributeGroup().getAttributeSet();
+
         return attribute;
     }
 
@@ -97,9 +102,10 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     @Override
     public String getRdrUndefinedCondition() {
         String condition = "(";
-        String attributeName = getAttributeOfDef().getName().replaceAll(" ", "");
-        String entityName = getAttributeOfDef().getEntity().getName().replaceAll(" ",
+        String attributeName = getAttributeOfDef().getName().replaceAll(" ",
                 "");
+        String entityName = getAttributeOfDef().getEntity().getName()
+                .replaceAll(" ", "");
 
         condition += entityName + "_" + attributeName + "_State = "
                 + DataState.UNDEFINED + ")";
@@ -109,9 +115,10 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     @Override
     public String getRdrSkippedCondition() {
         String condition = "(";
-        String attributeName = getAttributeOfDef().getName().replaceAll(" ", "");
-        String entityName = getAttributeOfDef().getEntity().getName().replaceAll(" ",
+        String attributeName = getAttributeOfDef().getName().replaceAll(" ",
                 "");
+        String entityName = getAttributeOfDef().getEntity().getName()
+                .replaceAll(" ", "");
 
         condition += entityName + "_" + attributeName + "_State = "
                 + DataState.SKIPPED + ")";
@@ -121,9 +128,10 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     @Override
     public String getRdrTrueCondition() {
         String condition = "(";
-        String attributeName = getAttributeOfDef().getName().replaceAll(" ", "");
-        String entityName = getAttributeOfDef().getEntity().getName().replaceAll(" ",
+        String attributeName = getAttributeOfDef().getName().replaceAll(" ",
                 "");
+        String entityName = getAttributeOfDef().getEntity().getName()
+                .replaceAll(" ", "");
 
         condition += entityName + "_" + attributeName + "_State = "
                 + DataState.DEFINED + ")";
@@ -137,10 +145,12 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
     @Override
     public String toString() {
-        if (getAttributeOfDef() != null && getAttributeOfDef().getEntity() != null
+        if (getAttributeOfDef() != null
+                && getAttributeOfDef().getEntity() != null
                 && getAttributeOfDef().getEntity().getName() != null)
-            return "existsAttribute(" + getAttributeOfDef().getEntity().getName()
-                    + "." + getAttributeOfDef().getName() + ")";
+            return "existsAttribute("
+                    + getAttributeOfDef().getEntity().getName() + "."
+                    + getAttributeOfDef().getName() + ")";
         return "DEFAttributeCondition: attribute or entity with empty value";
     }
 
@@ -258,8 +268,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
     @Override
     public String getSubPath() {
-        String subPath = getAttributeOfDef() != null ? getAttributeOfDef().getName()
-                : getAttributeGroup().getName();
+        String subPath = getAttributeOfDef() != null
+                ? getAttributeOfDef().getName() : getAttributeGroup().getName();
         return "DEF(" + subPath + ")";
     }
 
@@ -268,7 +278,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         defConditionDTO
                 .setSpecId(getConditionModel().getSpecification().getSpecId());
         if (getAttributeOfDef() != null) {
-            defConditionDTO.setAttributeExtId(getAttributeOfDef().getExternalId());
+            defConditionDTO
+                    .setAttributeExtId(getAttributeOfDef().getExternalId());
             defConditionDTO.setMandatory(getAttributeOfDef().getIsMandatory());
         }
         if (getAttributeGroup() != null) {
@@ -279,6 +290,20 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         }
 
         return defConditionDTO;
+    }
+
+    public BWEntity getEntity() {
+        if (getAttributeOfDef() != null)
+            return getAttributeOfDef().getEntity();
+        else
+            return getAttributeGroup().getEntity();
+    }
+
+    public BWProduct getProduct() {
+        if (getAttributeOfDef() != null)
+            return getAttributeOfDef();
+        else
+            return getAttributeGroup();
     }
 
 }

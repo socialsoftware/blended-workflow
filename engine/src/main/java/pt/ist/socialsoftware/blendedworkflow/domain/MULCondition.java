@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
@@ -116,8 +117,7 @@ public class MULCondition extends MULCondition_Base {
 
     @Override
     public Set<BWAttribute> getAttributes() {
-        // TODO Auto-generated method stub
-        return null;
+        return new HashSet<BWAttribute>();
     }
 
     @Override

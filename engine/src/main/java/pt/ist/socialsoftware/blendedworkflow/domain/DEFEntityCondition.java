@@ -64,11 +64,12 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
     @Override
     public Set<BWAttribute> getAttributes() {
         Set<BWAttribute> attributes = new HashSet<BWAttribute>();
-        for (BWAttribute attribute : getEntity().getAttributesSet()) {
-            if (attribute.getIsKeyAttribute()) {
-                attributes.add(attribute);
-            }
-        }
+        // TODO: Removed but may be impact in execution
+        // for (BWAttribute attribute : getEntity().getAttributesSet()) {
+        // if (attribute.getIsKeyAttribute()) {
+        // attributes.add(attribute);
+        // }
+        // }
         return attributes;
     }
 

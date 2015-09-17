@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -391,6 +393,19 @@ public class BWEntity extends BWEntity_Base {
         entityDTO.setExists(getExists());
 
         return entityDTO;
+    }
+
+    public Set<MULCondition> getMultConditions() {
+        return Stream
+                .concat(getRelationsOneSet().stream(),
+                        getRelationsTwoSet().stream())
+                .map((r) -> r.getMulCondition(this))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Condition getDefCondition() {
+        return DEFEntityCondition.getDEFEntity(this);
     }
 
 }

@@ -1,9 +1,9 @@
-package org.blended.common.repository.resttemplate.vo;
+package org.blended.common.repository.resttemplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ExpressionVO {
+public class ExpressionDTO {
 
     // copy from the equivalent in engine ExpressionDTO
     public enum Type {
@@ -15,16 +15,16 @@ public class ExpressionVO {
     // when unary value
     private String value;
     // when unary not
-    private ExpressionVO unaryExpression;
+    private ExpressionDTO unaryExpression;
     // when binary
-    private ExpressionVO leftExpression;
-    private ExpressionVO rightExpression;
+    private ExpressionDTO leftExpression;
+    private ExpressionDTO rightExpression;
 
-    public ExpressionVO() {
+    public ExpressionDTO() {
     }
 
-    public ExpressionVO(String specId, Type type, ExpressionVO leftExpresssion,
-            ExpressionVO rightExpression) {
+    public ExpressionDTO(String specId, Type type, ExpressionDTO leftExpresssion,
+            ExpressionDTO rightExpression) {
         this.specId = specId;
         this.type = type.name();
         this.value = null;
@@ -33,8 +33,8 @@ public class ExpressionVO {
         this.rightExpression = rightExpression;
     }
 
-    public ExpressionVO(String specId, Type type,
-            ExpressionVO unaryExpression) {
+    public ExpressionDTO(String specId, Type type,
+            ExpressionDTO unaryExpression) {
         this.specId = specId;
         this.type = type.name();
         this.value = null;
@@ -43,7 +43,7 @@ public class ExpressionVO {
         this.rightExpression = null;
     }
 
-    public ExpressionVO(String specId, Type type, String value) {
+    public ExpressionDTO(String specId, Type type, String value) {
         this.specId = specId;
         this.type = type.name();
         this.value = value;
@@ -76,27 +76,27 @@ public class ExpressionVO {
         this.value = value;
     }
 
-    public ExpressionVO getUnaryExpression() {
+    public ExpressionDTO getUnaryExpression() {
         return unaryExpression;
     }
 
-    public void setUnaryExpression(ExpressionVO unaryExpression) {
+    public void setUnaryExpression(ExpressionDTO unaryExpression) {
         this.unaryExpression = unaryExpression;
     }
 
-    public ExpressionVO getLeftExpression() {
+    public ExpressionDTO getLeftExpression() {
         return leftExpression;
     }
 
-    public void setLeftExpression(ExpressionVO leftExpression) {
+    public void setLeftExpression(ExpressionDTO leftExpression) {
         this.leftExpression = leftExpression;
     }
 
-    public ExpressionVO getRightExpression() {
+    public ExpressionDTO getRightExpression() {
         return rightExpression;
     }
 
-    public void setRightExpression(ExpressionVO rightExpression) {
+    public void setRightExpression(ExpressionDTO rightExpression) {
         this.rightExpression = rightExpression;
     }
 

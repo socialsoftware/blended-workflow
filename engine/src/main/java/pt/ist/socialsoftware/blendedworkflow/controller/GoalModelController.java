@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
 import java.util.Arrays;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.websocket.server.PathParam;
@@ -25,6 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.req.ExtractSiblingGoalReq;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/goalmodel")
@@ -346,25 +346,24 @@ public class GoalModelController {
     @RequestMapping(value = "/goals/extractsibling", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<GoalDTO> extractSiblingGoal(
             @PathVariable("specId") String specId,
-            @PathParam("goalName") String goalName,
-            @PathParam("entDefs") Set<DefEntityConditionDTO> entDefs,
-            @PathParam("attDefs") Set<DefAttributeConditionDTO> attDefs) {
+            @RequestBody ExtractSiblingGoalReq req) {
         log.debug(
-                "extractSiblingGoal specId:{}, goalName:{}, entDefs:{}, attDefs",
-                specId, goalName,
-                entDefs.stream().map((def) -> def.getEntityName())
-                        .collect(
+                "extractSiblingGoal specId:{}, newGoalName:{}, goalName:{}, defEnts:{}, defAtts:{}",
+                specId, req.getNewGoalName(), req.getGoalName(),
+                req.getSuccessCondition().getDefEnts().stream()
+                        .map((def) -> def.getEntityName()).collect(
                                 Collectors.joining(",")),
-                attDefs.stream()
+                req.getSuccessCondition().getDefAtts().stream()
                         .map((def) -> def.getPaths().stream()
                                 .collect(Collectors.joining(",")))
                         .collect(Collectors.joining("|")));
 
-        // DesignInterface adi = DesignInterface.getInstance();
-        //
-        // Goal goal = adi.extractSiblingGoal(specId, goalName, goalNameTwo);
+        DesignInterface adi = DesignInterface.getInstance();
 
-        return new ResponseEntity<GoalDTO>(new GoalDTO(), HttpStatus.CREATED);
+        Goal goal = adi.extractSiblingGoal(specId, req.getNewGoalName(),
+                req.getGoalName(), req.getSuccessCondition());
+
+        return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
     }
 
 }

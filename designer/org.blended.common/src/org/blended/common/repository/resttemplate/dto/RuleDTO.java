@@ -1,25 +1,25 @@
-package org.blended.common.repository.resttemplate.vo;
+package org.blended.common.repository.resttemplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RuleVO {
+public class RuleDTO {
     private String specId;
     private String extId;
     private String name;
-    private ExpressionVO expression;
+    private ExpressionDTO expression;
 
-    public RuleVO() {
+    public RuleDTO() {
     }
 
-    public RuleVO(String specId, String name, ExpressionVO expression) {
+    public RuleDTO(String specId, String name, ExpressionDTO expression) {
         this.specId = specId;
         this.extId = null;
         this.name = name;
         this.expression = expression;
     }
 
-    public RuleVO(String specId, String name) {
+    public RuleDTO(String specId, String name) {
         this.specId = specId;
         this.extId = null;
         this.name = name;
@@ -50,11 +50,11 @@ public class RuleVO {
         this.name = name;
     }
 
-    public ExpressionVO getExpression() {
+    public ExpressionDTO getExpression() {
         return expression;
     }
 
-    public void setExpression(ExpressionVO expression) {
+    public void setExpression(ExpressionDTO expression) {
         this.expression = expression;
     }
 }

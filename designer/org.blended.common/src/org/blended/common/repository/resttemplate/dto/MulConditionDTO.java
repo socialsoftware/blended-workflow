@@ -1,17 +1,17 @@
-package org.blended.common.repository.resttemplate.vo;
+package org.blended.common.repository.resttemplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MulConditionVO {
+public class MulConditionDTO {
     private String specId;
     private String rolePath;
     private String cardinality;
 
-    public MulConditionVO() {
+    public MulConditionDTO() {
     }
 
-    public MulConditionVO(String specId, String rolePath, String cardinality) {
+    public MulConditionDTO(String specId, String rolePath, String cardinality) {
         this.specId = specId;
         this.rolePath = rolePath;
         this.cardinality = cardinality;

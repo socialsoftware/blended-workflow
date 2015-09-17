@@ -71,4 +71,8 @@ public class BWDependence extends BWDependence_Base {
         return depDTO;
     }
 
+    public BWProduct getTarget() {
+        return getDataModel().getTargetOfPath(getPath());
+    }
+
 }
