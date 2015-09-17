@@ -22,6 +22,11 @@ public class DefAttributeConditionDTO {
         this.mandatory = mandatory;
     }
 
+    public DefAttributeConditionDTO(String specId, Set<String> paths) {
+        this.setSpecId(specId);
+        this.paths = paths;
+    }
+
     public Set<String> getPaths() {
         return paths;
     }

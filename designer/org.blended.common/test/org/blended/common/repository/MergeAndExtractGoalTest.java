@@ -12,8 +12,10 @@ import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
 import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
+import org.blended.common.repository.resttemplate.dto.ExpressionDTO.Type;
 import org.blended.common.repository.resttemplate.dto.GoalDTO;
 import org.blended.common.repository.resttemplate.dto.MulConditionDTO;
 import org.blended.common.repository.resttemplate.dto.RelationDTO;
@@ -26,7 +28,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GoalModelTest {
+public class MergeAndExtractGoalTest {
     private static final String RULE_NAME = "ruleName";
     private static final String ROLENAME_TWO = "entityTwo";
     private static final String ROLENAME_ONE = "entityOne";
@@ -41,7 +43,7 @@ public class GoalModelTest {
     private static final String TOP_GOAL = "TopGoal";
     private static final String TEST_SPEC_ID = "TestSpecId";
 
-    private static Logger log = LoggerFactory.getLogger(GoalModelTest.class);
+    private static Logger log = LoggerFactory.getLogger(MergeAndExtractGoalTest.class);
 
     private CommonInterface ci;
 
@@ -59,31 +61,39 @@ public class GoalModelTest {
         }
         ci.createSpec(new SpecDTO(TEST_SPEC_ID, "spec model"));
 
-        EntityDTO entityVO = ci
+        EntityDTO entityDTO = ci
                 .createEntity(new EntityDTO(TEST_SPEC_ID, ENTITY_ONE, false));
         ci.createEntityAchieveCondition(
                 new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE, false));
 
-        ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, entityVO.getExtId(),
-                null, ATT_ONE, "Boolean", false));
+        AttributeDTO attOneDTO = ci
+                .createAttribute(new AttributeDTO(TEST_SPEC_ID,
+                        entityDTO.getExtId(), null, ATT_ONE, "Number", false));
 
-        ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, entityVO.getExtId(),
+        ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, entityDTO.getExtId(),
                 null, ATT_TWO, "Number", false));
 
-        entityVO = ci
+        entityDTO = ci
                 .createEntity(new EntityDTO(TEST_SPEC_ID, ENTITY_TWO, false));
         ci.createEntityAchieveCondition(
                 new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO, false));
 
-        ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, entityVO.getExtId(),
+        ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, entityDTO.getExtId(),
                 null, ATT_THREE, "String", false));
 
         ci.createRelation(
                 new RelationDTO(TEST_SPEC_ID, "RelationName", ENTITY_ONE,
                         ROLENAME_ONE, "0..1", ENTITY_TWO, ROLENAME_TWO, "*"));
 
-        ci.createRule(new RuleDTO(TEST_SPEC_ID, RULE_NAME, new ExpressionDTO(
-                TEST_SPEC_ID, ExpressionDTO.Type.BOOL, "True")));
+        ci.createDependence(new DependenceDTO(TEST_SPEC_ID,
+                attOneDTO.getExtId(), ENTITY_ONE + "." + ATT_TWO));
+
+        ci.createRule(new RuleDTO(TEST_SPEC_ID, RULE_NAME,
+                new ExpressionDTO(TEST_SPEC_ID, ExpressionDTO.Type.EQUAL,
+                        new ExpressionDTO(TEST_SPEC_ID, Type.ATT_VALUE,
+                                ENTITY_ONE + "." + ATT_ONE),
+                        new ExpressionDTO(TEST_SPEC_ID, Type.ATT_VALUE,
+                                ENTITY_ONE + "." + ATT_TWO))));
     }
 
     @After
@@ -97,7 +107,7 @@ public class GoalModelTest {
     }
 
     @Test
-    public void createGoalModel() {
+    public void mergeAndExtractGoals() {
         // create goals
         ci.createGoal(new GoalDTO(TEST_SPEC_ID, TOP_GOAL));
 
@@ -267,21 +277,65 @@ public class GoalModelTest {
 
         assertEquals(TOP_GOAL, goalVO.getName());
 
+        // extract sibling from parent
+
         Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
-        defEnts.add(new DefEntityConditionDTO("SSS", "EEE", true));
 
         Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-        Set<String> pathx = new HashSet<String>();
-        pathx.add("p1");
-        pathx.add("p2");
-        defAtts.add(new DefAttributeConditionDTO("SSS", pathx, true));
+        Set<String> defPath = new HashSet<String>();
+        defPath.add(ENTITY_ONE + "." + ATT_ONE);
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
 
         SuccessConditionDTO successCondition = new SuccessConditionDTO();
         successCondition.setDefEnts(defEnts);
         successCondition.setDefAtts(defAtts);
 
-        ci.extractSiblingGoal(TEST_SPEC_ID, "newGoal", TOP_GOAL,
+        goalVO = ci.extractSiblingGoal(TEST_SPEC_ID, SUB_GOAL_ONE, TOP_GOAL,
                 successCondition);
+
+        // get super goal
+        parentGoalVO = ci.getParentGoal(TEST_SPEC_ID, goalVO.getName());
+        assertEquals(TOP_GOAL, parentGoalVO.getName());
+
+        // get sub goals
+        subGoals = ci.getSubGoals(TEST_SPEC_ID, goalVO.getName());
+        assertEquals(0, subGoals.size());
+
+        // get activation entity achieve conditions
+        defsEnt = ci.getGoalActivationEntitySet(TEST_SPEC_ID, goalVO.getName());
+        assertEquals(0, defsEnt.size());
+
+        // get activation attribute achieve conditions
+        defsAtt = ci.getGoalActivationAttributeSet(TEST_SPEC_ID,
+                goalVO.getName());
+        assertEquals(1, defsAtt.size());
+        assertEquals(ATT_TWO,
+                ci.getAttribute(TEST_SPEC_ID,
+                        defsAtt.stream().findFirst().get().getAttributeExtId())
+                .getName());
+
+        // get success entity achieve conditions
+        defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, goalVO.getName());
+        assertEquals(0, defsEnt.size());
+
+        // get success attribute achieve conditions
+        defsAtt = ci.getGoalSuccessAttributeSet(TEST_SPEC_ID, goalVO.getName());
+        assertEquals(1, defsAtt.size());
+        assertEquals(ATT_ONE,
+                ci.getAttribute(TEST_SPEC_ID,
+                        defsAtt.stream().findFirst().get().getAttributeExtId())
+                .getName());
+
+        // get multiplicity invariants
+        mulsVO = ci.getGoalMulInvSet(TEST_SPEC_ID, goalVO.getName());
+        assertEquals(0, mulsVO.size());
+
+        // get rule invariants
+        rulesVO = ci.getGoalRuleInvSet(TEST_SPEC_ID, goalVO.getName());
+        assertEquals(1, rulesVO.size());
+        assertEquals(RULE_NAME, rulesVO.stream().map((r) -> r.getName())
+                .collect(Collectors.joining()));
+
     }
 
 }
