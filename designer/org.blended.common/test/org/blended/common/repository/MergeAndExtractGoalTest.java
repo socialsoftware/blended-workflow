@@ -290,7 +290,7 @@ public class MergeAndExtractGoalTest {
         successCondition.setDefEnts(defEnts);
         successCondition.setDefAtts(defAtts);
 
-        goalVO = ci.extractSiblingGoal(TEST_SPEC_ID, SUB_GOAL_ONE, TOP_GOAL,
+        goalVO = ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_ONE, TOP_GOAL,
                 successCondition);
 
         // get super goal

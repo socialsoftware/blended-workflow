@@ -24,7 +24,7 @@ import org.blended.common.repository.resttemplate.dto.RelationDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.blended.common.repository.resttemplate.dto.SpecDTO;
 import org.blended.common.repository.resttemplate.dto.SuccessConditionDTO;
-import org.blended.common.repository.resttemplate.req.ExtractSiblingGoalReq;
+import org.blended.common.repository.resttemplate.req.ExtractChildGoalReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -822,11 +822,11 @@ public class CommonInterface {
                 params);
     }
 
-    public GoalDTO extractSiblingGoal(String specId, String newGoalName,
-            String goalName, SuccessConditionDTO successCondition) {
+    public GoalDTO extractChildGoal(String specId, String newGoalName,
+            String parentGoalName, SuccessConditionDTO successCondition) {
         log.debug(
-                "extractSiblingGoal specId:{}, newGoalName:{}, goalName:{}, entDefs:{}, attDefs:{}",
-                specId, newGoalName, goalName,
+                "extractChildGoal specId:{}, newGoalName:{}, parentGoalName:{}, entDefs:{}, attDefs:{}",
+                specId, newGoalName, parentGoalName,
                 successCondition.getDefEnts().stream()
                         .map((def) -> def.getEntityName()).collect(
                                 Collectors.joining(",")),
@@ -836,14 +836,14 @@ public class CommonInterface {
                         .collect(Collectors.joining("|")));
 
         final String uri = BASE_URL
-                + "/specs/{specId}/goalmodel/goals/extractsibling";
+                + "/specs/{specId}/goalmodel/goals/extractchild";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
 
-        ExtractSiblingGoalReq req = new ExtractSiblingGoalReq();
+        ExtractChildGoalReq req = new ExtractChildGoalReq();
         req.setNewGoalName(newGoalName);
-        req.setGoalName(goalName);
+        req.setParentGoalName(parentGoalName);
         req.setSuccessCondition(successCondition);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();

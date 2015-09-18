@@ -599,10 +599,10 @@ public class DesignInterface {
     }
 
     @Atomic(mode = TxMode.WRITE)
-    public Goal extractSiblingGoal(String specId, String newGoalName,
-            String goalName, SuccessConditionDTO successConditionDTO) {
+    public Goal extractChildGoal(String specId, String newGoalName,
+            String parentGoalName, SuccessConditionDTO successConditionDTO) {
         BWSpecification spec = getSpecBySpecId(specId);
-        Goal parentGoal = getGoalByName(spec, goalName);
+        Goal parentGoal = getGoalByName(spec, parentGoalName);
 
         Set<Condition> successConditions = successConditionDTO.getDefEnts()
                 .stream()

@@ -1,16 +1,16 @@
-package pt.ist.socialsoftware.blendedworkflow.service.req;
+package org.blended.common.repository.resttemplate.req;
+
+import org.blended.common.repository.resttemplate.dto.SuccessConditionDTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import pt.ist.socialsoftware.blendedworkflow.service.dto.SuccessConditionDTO;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ExtractSiblingGoalReq {
+public class ExtractChildGoalReq {
     private String newGoalName;
-    private String goalName;
+    private String parentGoalName;
     private SuccessConditionDTO successCondition;
 
-    public ExtractSiblingGoalReq() {
+    public ExtractChildGoalReq() {
     }
 
     public String getNewGoalName() {
@@ -21,12 +21,12 @@ public class ExtractSiblingGoalReq {
         this.newGoalName = newGoalName;
     }
 
-    public String getGoalName() {
-        return goalName;
+    public String getParentGoalName() {
+        return parentGoalName;
     }
 
-    public void setGoalName(String goalName) {
-        this.goalName = goalName;
+    public void setParentGoalName(String parentGoalName) {
+        this.parentGoalName = parentGoalName;
     }
 
     public SuccessConditionDTO getSuccessCondition() {

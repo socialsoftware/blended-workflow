@@ -30,7 +30,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class ExtractSiblingGoalTest extends TeardownRollbackTest {
+public class ExtractChildGoalTest extends TeardownRollbackTest {
     private static final String CHILD_GOAL_TWO_TWO = "childGoalTwoTwo";
     private static final String ATTRIBUTE_NAME_TWO = "att2";
     private static final String ENTITY_TWO_NAME = "Entity two name";
