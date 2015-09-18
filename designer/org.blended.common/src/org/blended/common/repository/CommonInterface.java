@@ -24,7 +24,7 @@ import org.blended.common.repository.resttemplate.dto.RelationDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.blended.common.repository.resttemplate.dto.SpecDTO;
 import org.blended.common.repository.resttemplate.dto.SuccessConditionDTO;
-import org.blended.common.repository.resttemplate.req.ExtractChildGoalReq;
+import org.blended.common.repository.resttemplate.req.ExtractGoalReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -823,10 +823,10 @@ public class CommonInterface {
     }
 
     public GoalDTO extractChildGoal(String specId, String newGoalName,
-            String parentGoalName, SuccessConditionDTO successCondition) {
+            String sourceGoalName, SuccessConditionDTO successCondition) {
         log.debug(
-                "extractChildGoal specId:{}, newGoalName:{}, parentGoalName:{}, entDefs:{}, attDefs:{}",
-                specId, newGoalName, parentGoalName,
+                "extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}",
+                specId, newGoalName, sourceGoalName,
                 successCondition.getDefEnts().stream()
                         .map((def) -> def.getEntityName()).collect(
                                 Collectors.joining(",")),
@@ -841,9 +841,37 @@ public class CommonInterface {
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
 
-        ExtractChildGoalReq req = new ExtractChildGoalReq();
+        ExtractGoalReq req = new ExtractGoalReq();
         req.setNewGoalName(newGoalName);
-        req.setParentGoalName(parentGoalName);
+        req.setSourceGoalName(sourceGoalName);
+        req.setSuccessCondition(successCondition);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        return restTemplate.postForObject(uri, req, GoalDTO.class, params);
+    }
+
+    public GoalDTO extractSiblingGoal(String specId, String newGoalName,
+            String sourceGoalName, SuccessConditionDTO successCondition) {
+        log.debug(
+                "extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}",
+                specId, newGoalName, sourceGoalName,
+                successCondition.getDefEnts().stream()
+                        .map((def) -> def.getEntityName()).collect(
+                                Collectors.joining(",")),
+                successCondition.getDefAtts().stream()
+                        .map((def) -> def.getPaths().stream()
+                                .collect(Collectors.joining(",")))
+                        .collect(Collectors.joining("|")));
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/goalmodel/goals/extractsibling";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        ExtractGoalReq req = new ExtractGoalReq();
+        req.setNewGoalName(newGoalName);
+        req.setSourceGoalName(sourceGoalName);
         req.setSuccessCondition(successCondition);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();

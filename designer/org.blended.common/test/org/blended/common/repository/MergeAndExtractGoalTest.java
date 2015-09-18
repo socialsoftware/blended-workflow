@@ -43,7 +43,8 @@ public class MergeAndExtractGoalTest {
     private static final String TOP_GOAL = "TopGoal";
     private static final String TEST_SPEC_ID = "TestSpecId";
 
-    private static Logger log = LoggerFactory.getLogger(MergeAndExtractGoalTest.class);
+    private static Logger log = LoggerFactory
+            .getLogger(MergeAndExtractGoalTest.class);
 
     private CommonInterface ci;
 
@@ -111,25 +112,25 @@ public class MergeAndExtractGoalTest {
         // create goals
         ci.createGoal(new GoalDTO(TEST_SPEC_ID, TOP_GOAL));
 
-        GoalDTO goalVO = ci.getGoalByName(TEST_SPEC_ID, TOP_GOAL);
-        assertEquals(TEST_SPEC_ID, goalVO.getSpecId());
-        assertEquals(TOP_GOAL, goalVO.getName());
+        GoalDTO goalDTO = ci.getGoalByName(TEST_SPEC_ID, TOP_GOAL);
+        assertEquals(TEST_SPEC_ID, goalDTO.getSpecId());
+        assertEquals(TOP_GOAL, goalDTO.getName());
 
-        goalVO = ci.createGoal(new GoalDTO(TEST_SPEC_ID, SUB_GOAL_ONE));
-        ci.addSubGoal(TOP_GOAL, goalVO);
+        goalDTO = ci.createGoal(new GoalDTO(TEST_SPEC_ID, SUB_GOAL_ONE));
+        ci.addSubGoal(TOP_GOAL, goalDTO);
 
-        goalVO = ci.createGoal(new GoalDTO(TEST_SPEC_ID, SUB_GOAL_TWO));
-        ci.addSubGoal(TOP_GOAL, goalVO);
+        goalDTO = ci.createGoal(new GoalDTO(TEST_SPEC_ID, SUB_GOAL_TWO));
+        ci.addSubGoal(TOP_GOAL, goalDTO);
 
-        goalVO = ci.createGoal(new GoalDTO(TEST_SPEC_ID, SUB_GOAL_TWO_ONE));
-        ci.addSubGoal(SUB_GOAL_TWO, goalVO);
+        goalDTO = ci.createGoal(new GoalDTO(TEST_SPEC_ID, SUB_GOAL_TWO_ONE));
+        ci.addSubGoal(SUB_GOAL_TWO, goalDTO);
 
         // add subgoals
-        Set<GoalDTO> goalsVO = ci.getSubGoals(TEST_SPEC_ID, TOP_GOAL);
-        assertEquals(2, goalsVO.size());
-        assertTrue(goalsVO.stream().map((g) -> g.getName())
+        Set<GoalDTO> goalsDTO = ci.getSubGoals(TEST_SPEC_ID, TOP_GOAL);
+        assertEquals(2, goalsDTO.size());
+        assertTrue(goalsDTO.stream().map((g) -> g.getName())
                 .anyMatch((n) -> n.equals(SUB_GOAL_ONE)));
-        assertTrue(goalsVO.stream().map((g) -> g.getName())
+        assertTrue(goalsDTO.stream().map((g) -> g.getName())
                 .anyMatch((n) -> n.equals(SUB_GOAL_TWO)));
 
         // add suc conditions
@@ -192,18 +193,19 @@ public class MergeAndExtractGoalTest {
                 new MulConditionDTO(TEST_SPEC_ID,
                         ENTITY_TWO + "." + ROLENAME_ONE, "0..1"));
 
-        Set<MulConditionDTO> mulsVO = ci.getGoalMulInvSet(TEST_SPEC_ID,
+        Set<MulConditionDTO> mulsDTO = ci.getGoalMulInvSet(TEST_SPEC_ID,
                 TOP_GOAL);
-        assertEquals(1, mulsVO.size());
-        assertEquals(ENTITY_ONE + "." + ROLENAME_TWO, mulsVO.stream()
+        assertEquals(1, mulsDTO.size());
+        assertEquals(ENTITY_ONE + "." + ROLENAME_TWO, mulsDTO.stream()
                 .map((m) -> m.getRolePath()).collect(Collectors.joining()));
 
         // add rule condition
         ci.associateRuleToGoalInvariant(TEST_SPEC_ID, SUB_GOAL_ONE,
                 new RuleDTO(TEST_SPEC_ID, RULE_NAME));
-        Set<RuleDTO> rulesVO = ci.getGoalRuleInvSet(TEST_SPEC_ID, SUB_GOAL_ONE);
-        assertEquals(1, rulesVO.size());
-        assertEquals(RULE_NAME, rulesVO.stream().map((r) -> r.getName())
+        Set<RuleDTO> rulesDTO = ci.getGoalRuleInvSet(TEST_SPEC_ID,
+                SUB_GOAL_ONE);
+        assertEquals(1, rulesDTO.size());
+        assertEquals(RULE_NAME, rulesDTO.stream().map((r) -> r.getName())
                 .collect(Collectors.joining()));
 
         ci.associateRuleToGoalInvariant(TEST_SPEC_ID, SUB_GOAL_TWO,
@@ -211,45 +213,48 @@ public class MergeAndExtractGoalTest {
 
         // fail to merge parent and child goals due to a conflict
         try {
-            goalVO = ci.mergeGoals(TEST_SPEC_ID, SUB_GOAL_ONE + SUB_GOAL_TWO,
+            goalDTO = ci.mergeGoals(TEST_SPEC_ID, SUB_GOAL_ONE + SUB_GOAL_TWO,
                     TOP_GOAL, SUB_GOAL_ONE);
         } catch (RepositoryException re) {
             assertEquals("UNMERGEABLE_GOALS", re.getError().getType());
         }
 
         // merge siblings
-        goalVO = ci.mergeGoals(TEST_SPEC_ID, SUB_GOAL_ONE + SUB_GOAL_TWO,
+        goalDTO = ci.mergeGoals(TEST_SPEC_ID, SUB_GOAL_ONE + SUB_GOAL_TWO,
                 SUB_GOAL_ONE, SUB_GOAL_TWO);
 
-        assertEquals(SUB_GOAL_ONE + SUB_GOAL_TWO, goalVO.getName());
+        assertEquals(SUB_GOAL_ONE + SUB_GOAL_TWO, goalDTO.getName());
 
         // get super goal
-        GoalDTO parentGoalVO = ci.getParentGoal(TEST_SPEC_ID, goalVO.getName());
-        assertEquals(TOP_GOAL, parentGoalVO.getName());
+        GoalDTO parentGoalDTO = ci.getParentGoal(TEST_SPEC_ID,
+                goalDTO.getName());
+        assertEquals(TOP_GOAL, parentGoalDTO.getName());
 
         // get sub goals
-        Set<GoalDTO> subGoals = ci.getSubGoals(TEST_SPEC_ID, goalVO.getName());
+        Set<GoalDTO> subGoals = ci.getSubGoals(TEST_SPEC_ID, goalDTO.getName());
         assertEquals(SUB_GOAL_TWO_ONE, subGoals.stream().map((g) -> g.getName())
                 .collect(Collectors.joining()));
 
         // get activation entity achieve conditions
-        defsEnt = ci.getGoalActivationEntitySet(TEST_SPEC_ID, goalVO.getName());
+        defsEnt = ci.getGoalActivationEntitySet(TEST_SPEC_ID,
+                goalDTO.getName());
         assertEquals(0, defsEnt.size());
 
         // get activation attribute achieve conditions
         defsAtt = ci.getGoalActivationAttributeSet(TEST_SPEC_ID,
-                goalVO.getName());
+                goalDTO.getName());
         assertEquals(0, defsAtt.size());
 
         // get success entity achieve conditions
-        defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, goalVO.getName());
+        defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, goalDTO.getName());
         assertEquals(1, defsEnt.size());
         assertEquals(Stream.of(ENTITY_TWO).collect(Collectors.joining()),
                 defsEnt.stream().map((def) -> def.getEntityName())
                         .collect(Collectors.joining()));
 
         // get success attribute achieve conditions
-        defsAtt = ci.getGoalSuccessAttributeSet(TEST_SPEC_ID, goalVO.getName());
+        defsAtt = ci.getGoalSuccessAttributeSet(TEST_SPEC_ID,
+                goalDTO.getName());
         assertEquals(2, defsAtt.size());
         assertEquals(
                 Stream.of(ATT_ONE, ATT_TWO).sorted()
@@ -260,25 +265,24 @@ public class MergeAndExtractGoalTest {
                         .sorted().collect(Collectors.joining()));
 
         // get multiplicity invariants
-        mulsVO = ci.getGoalMulInvSet(TEST_SPEC_ID, goalVO.getName());
-        assertEquals(1, mulsVO.size());
-        assertEquals(ENTITY_TWO + "." + ROLENAME_ONE, mulsVO.stream()
+        mulsDTO = ci.getGoalMulInvSet(TEST_SPEC_ID, goalDTO.getName());
+        assertEquals(1, mulsDTO.size());
+        assertEquals(ENTITY_TWO + "." + ROLENAME_ONE, mulsDTO.stream()
                 .map((m) -> m.getRolePath()).collect(Collectors.joining()));
 
         // get rule invariants
-        rulesVO = ci.getGoalRuleInvSet(TEST_SPEC_ID, goalVO.getName());
-        assertEquals(1, rulesVO.size());
-        assertEquals(RULE_NAME, rulesVO.stream().map((r) -> r.getName())
+        rulesDTO = ci.getGoalRuleInvSet(TEST_SPEC_ID, goalDTO.getName());
+        assertEquals(1, rulesDTO.size());
+        assertEquals(RULE_NAME, rulesDTO.stream().map((r) -> r.getName())
                 .collect(Collectors.joining()));
 
         // merge parent and child - returns the top goal (changed)
-        goalVO = ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, TOP_GOAL,
-                goalVO.getName());
+        goalDTO = ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, TOP_GOAL,
+                goalDTO.getName());
 
-        assertEquals(TOP_GOAL, goalVO.getName());
+        assertEquals(TOP_GOAL, goalDTO.getName());
 
-        // extract sibling from parent
-
+        // extract child from parent
         Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
 
         Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
@@ -290,24 +294,25 @@ public class MergeAndExtractGoalTest {
         successCondition.setDefEnts(defEnts);
         successCondition.setDefAtts(defAtts);
 
-        goalVO = ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_ONE, TOP_GOAL,
+        goalDTO = ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_ONE, TOP_GOAL,
                 successCondition);
 
         // get super goal
-        parentGoalVO = ci.getParentGoal(TEST_SPEC_ID, goalVO.getName());
-        assertEquals(TOP_GOAL, parentGoalVO.getName());
+        parentGoalDTO = ci.getParentGoal(TEST_SPEC_ID, goalDTO.getName());
+        assertEquals(TOP_GOAL, parentGoalDTO.getName());
 
         // get sub goals
-        subGoals = ci.getSubGoals(TEST_SPEC_ID, goalVO.getName());
+        subGoals = ci.getSubGoals(TEST_SPEC_ID, goalDTO.getName());
         assertEquals(0, subGoals.size());
 
         // get activation entity achieve conditions
-        defsEnt = ci.getGoalActivationEntitySet(TEST_SPEC_ID, goalVO.getName());
+        defsEnt = ci.getGoalActivationEntitySet(TEST_SPEC_ID,
+                goalDTO.getName());
         assertEquals(0, defsEnt.size());
 
         // get activation attribute achieve conditions
         defsAtt = ci.getGoalActivationAttributeSet(TEST_SPEC_ID,
-                goalVO.getName());
+                goalDTO.getName());
         assertEquals(1, defsAtt.size());
         assertEquals(ATT_TWO,
                 ci.getAttribute(TEST_SPEC_ID,
@@ -315,11 +320,12 @@ public class MergeAndExtractGoalTest {
                 .getName());
 
         // get success entity achieve conditions
-        defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, goalVO.getName());
+        defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, goalDTO.getName());
         assertEquals(0, defsEnt.size());
 
         // get success attribute achieve conditions
-        defsAtt = ci.getGoalSuccessAttributeSet(TEST_SPEC_ID, goalVO.getName());
+        defsAtt = ci.getGoalSuccessAttributeSet(TEST_SPEC_ID,
+                goalDTO.getName());
         assertEquals(1, defsAtt.size());
         assertEquals(ATT_ONE,
                 ci.getAttribute(TEST_SPEC_ID,
@@ -327,14 +333,19 @@ public class MergeAndExtractGoalTest {
                 .getName());
 
         // get multiplicity invariants
-        mulsVO = ci.getGoalMulInvSet(TEST_SPEC_ID, goalVO.getName());
-        assertEquals(0, mulsVO.size());
+        mulsDTO = ci.getGoalMulInvSet(TEST_SPEC_ID, goalDTO.getName());
+        assertEquals(0, mulsDTO.size());
 
         // get rule invariants
-        rulesVO = ci.getGoalRuleInvSet(TEST_SPEC_ID, goalVO.getName());
-        assertEquals(1, rulesVO.size());
-        assertEquals(RULE_NAME, rulesVO.stream().map((r) -> r.getName())
+        rulesDTO = ci.getGoalRuleInvSet(TEST_SPEC_ID, goalDTO.getName());
+        assertEquals(1, rulesDTO.size());
+        assertEquals(RULE_NAME, rulesDTO.stream().map((r) -> r.getName())
                 .collect(Collectors.joining()));
+
+        // extract sibling
+        goalDTO = ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_TWO, SUB_GOAL_ONE,
+                successCondition);
+        assertEquals(SUB_GOAL_TWO, goalDTO.getName());
 
     }
 

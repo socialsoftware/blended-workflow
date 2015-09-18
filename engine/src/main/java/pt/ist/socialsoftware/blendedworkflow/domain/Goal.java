@@ -286,7 +286,7 @@ public class Goal extends Goal_Base {
         return false;
     }
 
-    public Goal extractSibling(String newGoalName,
+    public Goal extractChild(String newGoalName,
             Set<Condition> successConditions) {
         checkCanExtractChild(successConditions);
 
@@ -312,6 +312,36 @@ public class Goal extends Goal_Base {
 
         addRuleConditions();
         newGoal.addRuleConditions();
+
+        return newGoal;
+    }
+
+    public Goal extractSibling(String newGoalName,
+            Set<Condition> successConditions) {
+        // checkCanExtractChild(successConditions);
+
+        successConditions.stream()
+                .forEach((def) -> removeSuccessCondition(def));
+        getActivationConditionSet().stream()
+                .forEach((def) -> removeActivationCondition(def));
+        getEntityInvariantConditionSet().stream()
+                .forEach((mul) -> removeEntityInvariantCondition(mul));
+        getAttributeInvariantConditionSet().stream()
+                .forEach((rul) -> removeAttributeInvariantCondition(rul));
+
+        Goal newGoal = new Goal(getGoalModel(), newGoalName);
+        // successConditions.stream()
+        // .forEach((def) -> newGoal.addSuccessCondition(def));
+        // newGoal.setParentGoal(this);
+        //
+        // addActivationConditions();
+        // newGoal.addActivationConditions();
+        //
+        // addMultiplicityConditions();
+        // newGoal.addMultiplicityConditions();
+        //
+        // addRuleConditions();
+        // newGoal.addRuleConditions();
 
         return newGoal;
     }
@@ -349,11 +379,41 @@ public class Goal extends Goal_Base {
     }
 
     private void checkCanExtractChild(Set<Condition> successConditions) {
-        entityAttributeConstraint(successConditions);
-        dependenceConstraint(successConditions);
+        checkConditionsNotEmpty(successConditions);
+        checkNotAllConditionsAreExtracted(successConditions);
+        checkConditionsExistInSource(successConditions);
+        checkAttributeConstraint(successConditions);
+        checkDependenceConstraint(successConditions);
     }
 
-    private void entityAttributeConstraint(Set<Condition> successConditions) {
+    private void checkConditionsNotEmpty(Set<Condition> successConditions) {
+        if (successConditions.isEmpty())
+            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL);
+    }
+
+    private void checkNotAllConditionsAreExtracted(
+            Set<Condition> successConditions) {
+        Set<Condition> sourceConditions = new HashSet<Condition>(
+                getSuccessConditionSet());
+        successConditions.stream().forEach((c) -> sourceConditions.remove(c));
+
+        if (sourceConditions.isEmpty())
+            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL);
+    }
+
+    private void checkConditionsExistInSource(
+            Set<Condition> successConditions) {
+        Optional<Condition> oCond = successConditions.stream()
+                .filter((def) -> !getSuccessConditionSet().contains(def))
+                .findFirst();
+
+        if (oCond.isPresent())
+            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
+                    oCond.get().getSubPath());
+
+    }
+
+    private void checkAttributeConstraint(Set<Condition> successConditions) {
         Set<BWEntity> entities = getEntitiesOfDefEntitySet(successConditions);
 
         Optional<BWEntity> oEntity = flattened()
@@ -364,11 +424,11 @@ public class Goal extends Goal_Base {
                 .filter((e) -> entities.contains(e)).findFirst();
 
         if (oEntity.isPresent())
-            throw new BWException(BWErrorType.CANNOT_EXTRACT_CHILD,
+            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
                     oEntity.get().getName());
     }
 
-    private void dependenceConstraint(Set<Condition> successConditions) {
+    private void checkDependenceConstraint(Set<Condition> successConditions) {
         BWDataModel dataModel = getGoalModel().getSpecification()
                 .getDataModel();
 
@@ -394,7 +454,7 @@ public class Goal extends Goal_Base {
                 .filter((p) -> succProducts.contains(p)).findFirst();
 
         if (oProduct.isPresent())
-            throw new BWException(BWErrorType.CANNOT_EXTRACT_CHILD,
+            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
                     oProduct.get().getName());
 
     }

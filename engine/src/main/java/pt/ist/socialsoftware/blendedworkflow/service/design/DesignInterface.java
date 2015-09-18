@@ -600,22 +600,26 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public Goal extractChildGoal(String specId, String newGoalName,
-            String parentGoalName, SuccessConditionDTO successConditionDTO) {
+            String sourceGoalName, SuccessConditionDTO successConditionDTO) {
         BWSpecification spec = getSpecBySpecId(specId);
-        Goal parentGoal = getGoalByName(spec, parentGoalName);
+        Goal parentGoal = getGoalByName(spec, sourceGoalName);
 
-        Set<Condition> successConditions = successConditionDTO.getDefEnts()
-                .stream()
-                .map((def) -> DEFEntityCondition.getDEFEntity(getEntityByName(
-                        spec.getDataModel(), def.getEntityName())))
-                .collect(Collectors.toSet());
+        Set<Condition> successConditions = getSuccessConditions(
+                successConditionDTO, spec);
 
-        successConditions.addAll(successConditionDTO.getDefAtts().stream()
-                .map((def) -> getDefAttributeCondition(
-                        getAttributes(spec, def.getPaths())))
-                .collect(Collectors.toSet()));
+        return parentGoal.extractChild(newGoalName, successConditions);
+    }
 
-        return parentGoal.extractSibling(newGoalName, successConditions);
+    @Atomic(mode = TxMode.WRITE)
+    public Goal extractSiblingGoal(String specId, String newGoalName,
+            String sourceGoalName, SuccessConditionDTO successConditionDTO) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Goal sourceGoal = getGoalByName(spec, sourceGoalName);
+
+        Set<Condition> successConditions = getSuccessConditions(
+                successConditionDTO, spec);
+
+        return sourceGoal.extractSibling(newGoalName, successConditions);
     }
 
     public ProductDTO getSourceOfPath(String specId, String path) {
@@ -878,6 +882,21 @@ public class DesignInterface {
                         () -> new BWException(BWErrorType.INVALID_PATH, path));
 
         return MULCondition.getMulCondition(relation, rolename);
+    }
+
+    private Set<Condition> getSuccessConditions(
+            SuccessConditionDTO successConditionDTO, BWSpecification spec) {
+        Set<Condition> successConditions = successConditionDTO.getDefEnts()
+                .stream()
+                .map((def) -> DEFEntityCondition.getDEFEntity(getEntityByName(
+                        spec.getDataModel(), def.getEntityName())))
+                .collect(Collectors.toSet());
+
+        successConditions.addAll(successConditionDTO.getDefAtts().stream()
+                .map((def) -> getDefAttributeCondition(
+                        getAttributes(spec, def.getPaths())))
+                .collect(Collectors.toSet()));
+        return successConditions;
     }
 
     private Condition buildCondition(BWDataModel dataModel,

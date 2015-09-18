@@ -24,7 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.req.ExtractChildGoalReq;
+import pt.ist.socialsoftware.blendedworkflow.service.req.ExtractGoalReq;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/goalmodel")
@@ -346,10 +346,10 @@ public class GoalModelController {
     @RequestMapping(value = "/goals/extractchild", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<GoalDTO> extractChildGoal(
             @PathVariable("specId") String specId,
-            @RequestBody ExtractChildGoalReq req) {
+            @RequestBody ExtractGoalReq req) {
         log.debug(
-                "extractChildGoal specId:{}, newGoalName:{}, parentGoalName:{}, defEnts:{}, defAtts:{}",
-                specId, req.getNewGoalName(), req.getParentGoalName(),
+                "extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defEnts:{}, defAtts:{}",
+                specId, req.getNewGoalName(), req.getSourceGoalName(),
                 req.getSuccessCondition().getDefEnts().stream()
                         .map((def) -> def.getEntityName()).collect(
                                 Collectors.joining(",")),
@@ -361,7 +361,30 @@ public class GoalModelController {
         DesignInterface adi = DesignInterface.getInstance();
 
         Goal goal = adi.extractChildGoal(specId, req.getNewGoalName(),
-                req.getParentGoalName(), req.getSuccessCondition());
+                req.getSourceGoalName(), req.getSuccessCondition());
+
+        return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/goals/extractsibling", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public ResponseEntity<GoalDTO> extractSiblingGoal(
+            @PathVariable("specId") String specId,
+            @RequestBody ExtractGoalReq req) {
+        log.debug(
+                "extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defEnts:{}, defAtts:{}",
+                specId, req.getNewGoalName(), req.getSourceGoalName(),
+                req.getSuccessCondition().getDefEnts().stream()
+                        .map((def) -> def.getEntityName()).collect(
+                                Collectors.joining(",")),
+                req.getSuccessCondition().getDefAtts().stream()
+                        .map((def) -> def.getPaths().stream()
+                                .collect(Collectors.joining(",")))
+                        .collect(Collectors.joining("|")));
+
+        DesignInterface adi = DesignInterface.getInstance();
+
+        Goal goal = adi.extractSiblingGoal(specId, req.getNewGoalName(),
+                req.getSourceGoalName(), req.getSuccessCondition());
 
         return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
     }

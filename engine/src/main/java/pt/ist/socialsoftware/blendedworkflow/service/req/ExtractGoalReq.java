@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SuccessConditionDTO;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ExtractChildGoalReq {
+public class ExtractGoalReq {
     private String newGoalName;
-    private String parentGoalName;
+    private String sourceGoalName;
     private SuccessConditionDTO successCondition;
 
-    public ExtractChildGoalReq() {
+    public ExtractGoalReq() {
     }
 
     public String getNewGoalName() {
@@ -21,12 +21,12 @@ public class ExtractChildGoalReq {
         this.newGoalName = newGoalName;
     }
 
-    public String getParentGoalName() {
-        return parentGoalName;
+    public String getSourceGoalName() {
+        return sourceGoalName;
     }
 
-    public void setParentGoalName(String parentGoalName) {
-        this.parentGoalName = parentGoalName;
+    public void setSourceGoalName(String sourceGoalName) {
+        this.sourceGoalName = sourceGoalName;
     }
 
     public SuccessConditionDTO getSuccessCondition() {
