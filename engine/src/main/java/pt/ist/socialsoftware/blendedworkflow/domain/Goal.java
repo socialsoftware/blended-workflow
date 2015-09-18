@@ -32,6 +32,7 @@ public class Goal extends Goal_Base {
     public Goal(BWGoalModel goalModel, String name) {
         setGoalModel(goalModel);
         setName(name);
+        setParentGoal(null);
     }
 
     /**
@@ -318,7 +319,7 @@ public class Goal extends Goal_Base {
 
     public Goal extractSibling(String newGoalName,
             Set<Condition> successConditions) {
-        // checkCanExtractChild(successConditions);
+        checkCanExtractSibling(successConditions);
 
         successConditions.stream()
                 .forEach((def) -> removeSuccessCondition(def));
@@ -330,18 +331,19 @@ public class Goal extends Goal_Base {
                 .forEach((rul) -> removeAttributeInvariantCondition(rul));
 
         Goal newGoal = new Goal(getGoalModel(), newGoalName);
-        // successConditions.stream()
-        // .forEach((def) -> newGoal.addSuccessCondition(def));
-        // newGoal.setParentGoal(this);
-        //
-        // addActivationConditions();
-        // newGoal.addActivationConditions();
-        //
-        // addMultiplicityConditions();
-        // newGoal.addMultiplicityConditions();
-        //
-        // addRuleConditions();
-        // newGoal.addRuleConditions();
+
+        successConditions.stream()
+                .forEach((def) -> newGoal.addSuccessCondition(def));
+        newGoal.setParentGoal(getParentGoal());
+
+        addActivationConditions();
+        newGoal.addActivationConditions();
+
+        addMultiplicityConditions();
+        newGoal.addMultiplicityConditions();
+
+        addRuleConditions();
+        newGoal.addRuleConditions();
 
         return newGoal;
     }
@@ -378,12 +380,25 @@ public class Goal extends Goal_Base {
                 .forEach((m) -> addEntityInvariantCondition(m));
     }
 
+    private void checkCanExtractSibling(Set<Condition> successConditions) {
+        checkConditionsNotEmpty(successConditions);
+        checkIsNotTopGoal();
+        checkNotAllConditionsAreExtracted(successConditions);
+        checkConditionsExistInSource(successConditions);
+        checkSiblingsAttributeConstraint(successConditions);
+    }
+
     private void checkCanExtractChild(Set<Condition> successConditions) {
         checkConditionsNotEmpty(successConditions);
         checkNotAllConditionsAreExtracted(successConditions);
         checkConditionsExistInSource(successConditions);
-        checkAttributeConstraint(successConditions);
+        checkParentChildAttributeConstraint(successConditions);
         checkDependenceConstraint(successConditions);
+    }
+
+    private void checkIsNotTopGoal() {
+        if (getParentGoal() == null)
+            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL);
     }
 
     private void checkConditionsNotEmpty(Set<Condition> successConditions) {
@@ -413,7 +428,36 @@ public class Goal extends Goal_Base {
 
     }
 
-    private void checkAttributeConstraint(Set<Condition> successConditions) {
+    private void checkSiblingsAttributeConstraint(
+            Set<Condition> successConditions) {
+        Set<Condition> conditionsLeft = new HashSet<Condition>(
+                getSuccessConditionSet());
+        conditionsLeft.removeAll(successConditions);
+        checkSiblingsAttributeConstraintBasic(successConditions,
+                conditionsLeft);
+        checkSiblingsAttributeConstraintBasic(conditionsLeft,
+                successConditions);
+    }
+
+    private void checkSiblingsAttributeConstraintBasic(
+            Set<Condition> successConditionsOne,
+            Set<Condition> successConditionsTwo) {
+        Set<BWEntity> entities = getEntitiesOfDefEntitySet(
+                successConditionsOne);
+
+        Optional<BWEntity> oEntity = successConditionsTwo.stream()
+                .filter(DEFAttributeCondition.class::isInstance)
+                .map(DEFAttributeCondition.class::cast)
+                .map((def) -> def.getEntity())
+                .filter((e) -> entities.contains(e)).findFirst();
+
+        if (oEntity.isPresent())
+            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
+                    oEntity.get().getName());
+    }
+
+    private void checkParentChildAttributeConstraint(
+            Set<Condition> successConditions) {
         Set<BWEntity> entities = getEntitiesOfDefEntitySet(successConditions);
 
         Optional<BWEntity> oEntity = flattened()
