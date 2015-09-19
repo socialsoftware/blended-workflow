@@ -426,8 +426,7 @@ public class CommonInterface {
     }
 
     public RuleDTO createAttributeInvariantCondition(RuleDTO ruleVO) {
-        log.debug(
-                "createAttributeInvariantCondition conditionModelExtId:{}, name:{}",
+        log.debug("createAttributeInvariantCondition specId:{}, name:{}",
                 ruleVO.getSpecId(), ruleVO.getName());
 
         final String uri = BASE_URL

@@ -158,7 +158,8 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-            assertEquals("DEF(" + entityTwo.getName() + ")", bwe.getMessage());
+            assertEquals("checkConditionsExistInSource:" + "DEF("
+                    + entityTwo.getName() + ")", bwe.getMessage());
         }
 
     }
@@ -173,7 +174,8 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-            assertEquals(entityTwo.getName(), bwe.getMessage());
+            assertEquals("checkParentChildAttributeConstraint:"
+                    + entityTwo.getName(), bwe.getMessage());
         }
 
     }
@@ -193,7 +195,8 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-            assertEquals(entityTwo.getName(), bwe.getMessage());
+            assertEquals("checkParentChildAttributeConstraint:"
+                    + entityTwo.getName(), bwe.getMessage());
         }
 
     }
@@ -209,7 +212,8 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-            assertEquals(attributeTwo.getName(), bwe.getMessage());
+            assertEquals("checkDependenceConstraint:" + attributeTwo.getName(),
+                    bwe.getMessage());
         }
 
     }

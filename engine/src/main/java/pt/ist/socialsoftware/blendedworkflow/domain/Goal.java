@@ -289,16 +289,11 @@ public class Goal extends Goal_Base {
 
     public Goal extractChild(String newGoalName,
             Set<Condition> successConditions) {
-        checkCanExtractChild(successConditions);
+        checkConditionsNotEmpty(successConditions);
+        checkConditionsExistInSource(successConditions);
+        removeConditionsFromSource(successConditions);
 
-        successConditions.stream()
-                .forEach((def) -> removeSuccessCondition(def));
-        getActivationConditionSet().stream()
-                .forEach((def) -> removeActivationCondition(def));
-        getEntityInvariantConditionSet().stream()
-                .forEach((mul) -> removeEntityInvariantCondition(mul));
-        getAttributeInvariantConditionSet().stream()
-                .forEach((rul) -> removeAttributeInvariantCondition(rul));
+        checkCanExtractChild(successConditions);
 
         Goal newGoal = new Goal(getGoalModel(), newGoalName);
         successConditions.stream()
@@ -319,16 +314,11 @@ public class Goal extends Goal_Base {
 
     public Goal extractSibling(String newGoalName,
             Set<Condition> successConditions) {
-        checkCanExtractSibling(successConditions);
+        checkConditionsNotEmpty(successConditions);
+        checkConditionsExistInSource(successConditions);
+        removeConditionsFromSource(successConditions);
 
-        successConditions.stream()
-                .forEach((def) -> removeSuccessCondition(def));
-        getActivationConditionSet().stream()
-                .forEach((def) -> removeActivationCondition(def));
-        getEntityInvariantConditionSet().stream()
-                .forEach((mul) -> removeEntityInvariantCondition(mul));
-        getAttributeInvariantConditionSet().stream()
-                .forEach((rul) -> removeAttributeInvariantCondition(rul));
+        checkCanExtractSibling(successConditions);
 
         Goal newGoal = new Goal(getGoalModel(), newGoalName);
 
@@ -381,39 +371,25 @@ public class Goal extends Goal_Base {
     }
 
     private void checkCanExtractSibling(Set<Condition> successConditions) {
-        checkConditionsNotEmpty(successConditions);
         checkIsNotTopGoal();
-        checkNotAllConditionsAreExtracted(successConditions);
-        checkConditionsExistInSource(successConditions);
         checkSiblingsAttributeConstraint(successConditions);
     }
 
     private void checkCanExtractChild(Set<Condition> successConditions) {
-        checkConditionsNotEmpty(successConditions);
-        checkNotAllConditionsAreExtracted(successConditions);
-        checkConditionsExistInSource(successConditions);
         checkParentChildAttributeConstraint(successConditions);
         checkDependenceConstraint(successConditions);
     }
 
     private void checkIsNotTopGoal() {
         if (getParentGoal() == null)
-            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL);
+            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
+                    "checkIsNotTopGoal");
     }
 
     private void checkConditionsNotEmpty(Set<Condition> successConditions) {
         if (successConditions.isEmpty())
-            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL);
-    }
-
-    private void checkNotAllConditionsAreExtracted(
-            Set<Condition> successConditions) {
-        Set<Condition> sourceConditions = new HashSet<Condition>(
-                getSuccessConditionSet());
-        successConditions.stream().forEach((c) -> sourceConditions.remove(c));
-
-        if (sourceConditions.isEmpty())
-            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL);
+            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
+                    "checkConditionsNotEmpty");
     }
 
     private void checkConditionsExistInSource(
@@ -424,7 +400,23 @@ public class Goal extends Goal_Base {
 
         if (oCond.isPresent())
             throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
-                    oCond.get().getSubPath());
+                    "checkConditionsExistInSource:" + oCond.get().getSubPath());
+
+    }
+
+    private void removeConditionsFromSource(Set<Condition> successConditions) {
+        successConditions.stream()
+                .forEach((def) -> removeSuccessCondition(def));
+        getActivationConditionSet().stream()
+                .forEach((def) -> removeActivationCondition(def));
+        getEntityInvariantConditionSet().stream()
+                .forEach((mul) -> removeEntityInvariantCondition(mul));
+        getAttributeInvariantConditionSet().stream()
+                .forEach((rul) -> removeAttributeInvariantCondition(rul));
+
+        if (getSuccessConditionSet().isEmpty())
+            throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
+                    "checkNotAllConditionsAreExtracted");
 
     }
 
@@ -453,7 +445,8 @@ public class Goal extends Goal_Base {
 
         if (oEntity.isPresent())
             throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
-                    oEntity.get().getName());
+                    "checkSiblingsAttributeConstraintBasic:"
+                            + oEntity.get().getName());
     }
 
     private void checkParentChildAttributeConstraint(
@@ -469,7 +462,8 @@ public class Goal extends Goal_Base {
 
         if (oEntity.isPresent())
             throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
-                    oEntity.get().getName());
+                    "checkParentChildAttributeConstraint:"
+                            + oEntity.get().getName());
     }
 
     private void checkDependenceConstraint(Set<Condition> successConditions) {
@@ -499,7 +493,7 @@ public class Goal extends Goal_Base {
 
         if (oProduct.isPresent())
             throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
-                    oProduct.get().getName());
+                    "checkDependenceConstraint:" + oProduct.get().getName());
 
     }
 

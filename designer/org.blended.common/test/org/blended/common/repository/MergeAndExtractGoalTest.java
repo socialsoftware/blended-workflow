@@ -40,6 +40,7 @@ public class MergeAndExtractGoalTest {
     private static final String SUB_GOAL_ONE = "SubGoalOne";
     private static final String SUB_GOAL_TWO = "SubGoalTwo";
     private static final String SUB_GOAL_TWO_ONE = "SubGoalTwoOne";
+    private static final String SUB_GOAL_THREE = "SubGoalThree";
     private static final String TOP_GOAL = "TopGoal";
     private static final String TEST_SPEC_ID = "TestSpecId";
 
@@ -65,7 +66,7 @@ public class MergeAndExtractGoalTest {
         EntityDTO entityDTO = ci
                 .createEntity(new EntityDTO(TEST_SPEC_ID, ENTITY_ONE, false));
         ci.createEntityAchieveCondition(
-                new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE, false));
+                new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE));
 
         AttributeDTO attOneDTO = ci
                 .createAttribute(new AttributeDTO(TEST_SPEC_ID,
@@ -77,7 +78,7 @@ public class MergeAndExtractGoalTest {
         entityDTO = ci
                 .createEntity(new EntityDTO(TEST_SPEC_ID, ENTITY_TWO, false));
         ci.createEntityAchieveCondition(
-                new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO, false));
+                new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
 
         ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, entityDTO.getExtId(),
                 null, ATT_THREE, "String", false));
@@ -219,7 +220,7 @@ public class MergeAndExtractGoalTest {
             assertEquals("UNMERGEABLE_GOALS", re.getError().getType());
         }
 
-        // merge siblings
+        // merge siblings goalOne + golaTwo
         goalDTO = ci.mergeGoals(TEST_SPEC_ID, SUB_GOAL_ONE + SUB_GOAL_TWO,
                 SUB_GOAL_ONE, SUB_GOAL_TWO);
 
@@ -276,13 +277,15 @@ public class MergeAndExtractGoalTest {
         assertEquals(RULE_NAME, rulesDTO.stream().map((r) -> r.getName())
                 .collect(Collectors.joining()));
 
-        // merge parent and child - returns the top goal (changed)
+        // merge parent and child - returns the top goal (changed): after there
+        // are 2 goals Top and goalTwoOne
         goalDTO = ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, TOP_GOAL,
                 goalDTO.getName());
 
         assertEquals(TOP_GOAL, goalDTO.getName());
 
-        // extract child from parent
+        // extract childOne from parent: after there are 3 goals Top, goalOne
+        // and goalTwoOne
         Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
 
         Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
@@ -342,10 +345,78 @@ public class MergeAndExtractGoalTest {
         assertEquals(RULE_NAME, rulesDTO.stream().map((r) -> r.getName())
                 .collect(Collectors.joining()));
 
-        // extract sibling
-        // goalDTO = ci.extractSiblingGoal(TEST_SPEC_ID, SUB_GOAL_TWO,
-        // SUB_GOAL_ONE, successCondition);
-        // assertEquals(SUB_GOAL_TWO, goalDTO.getName());
+        // merge childTwoOne with topGoal
+        ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, SUB_GOAL_TWO_ONE, TOP_GOAL);
+
+        // extract childTwo + childTwoOne from parent
+        defEnts.clear();
+        defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
+
+        defAtts.clear();
+        defPath = new HashSet<String>();
+        defPath.add(ENTITY_ONE + "." + ATT_TWO);
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
+
+        defPath = new HashSet<String>();
+        defPath.add(ENTITY_TWO + "." + ATT_THREE);
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
+
+        ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_TWO, TOP_GOAL,
+                new SuccessConditionDTO(defEnts, defAtts));
+
+        // extract childThree from childTwo
+        defEnts.clear();
+        defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
+
+        defAtts.clear();
+        defPath = new HashSet<String>();
+        defPath.add(ENTITY_TWO + "." + ATT_THREE);
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
+
+        goalDTO = ci.extractSiblingGoal(TEST_SPEC_ID, SUB_GOAL_THREE,
+                SUB_GOAL_TWO, new SuccessConditionDTO(defEnts, defAtts));
+        assertEquals(SUB_GOAL_THREE, goalDTO.getName());
+
+        // get super goal
+        parentGoalDTO = ci.getParentGoal(TEST_SPEC_ID, goalDTO.getName());
+        assertEquals(TOP_GOAL, parentGoalDTO.getName());
+
+        // get sub goals
+        subGoals = ci.getSubGoals(TEST_SPEC_ID, goalDTO.getName());
+        assertEquals(0, subGoals.size());
+
+        // get activation entity achieve conditions
+        defsEnt = ci.getGoalActivationEntitySet(TEST_SPEC_ID,
+                goalDTO.getName());
+        assertEquals(0, defsEnt.size());
+
+        // get activation attribute achieve conditions
+        defsAtt = ci.getGoalActivationAttributeSet(TEST_SPEC_ID,
+                goalDTO.getName());
+        assertEquals(0, defsAtt.size());
+
+        // get success entity achieve conditions
+        defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, goalDTO.getName());
+        assertEquals(1, defsEnt.size());
+        assertEquals(ENTITY_TWO,
+                defsEnt.stream().findFirst().get().getEntityName());
+
+        // get success attribute achieve conditions
+        defsAtt = ci.getGoalSuccessAttributeSet(TEST_SPEC_ID,
+                goalDTO.getName());
+        assertEquals(1, defsAtt.size());
+        assertEquals(ATT_THREE,
+                ci.getAttribute(TEST_SPEC_ID,
+                        defsAtt.stream().findFirst().get().getAttributeExtId())
+                .getName());
+
+        // get multiplicity invariants
+        mulsDTO = ci.getGoalMulInvSet(TEST_SPEC_ID, goalDTO.getName());
+        assertEquals(1, mulsDTO.size());
+
+        // get rule invariants
+        rulesDTO = ci.getGoalRuleInvSet(TEST_SPEC_ID, goalDTO.getName());
+        assertEquals(0, rulesDTO.size());
 
     }
 

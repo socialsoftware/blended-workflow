@@ -139,8 +139,8 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-            assertEquals("DEF(" + attributeTwo.getName() + ")",
-                    bwe.getMessage());
+            assertEquals("checkConditionsExistInSource:" + "DEF("
+                    + attributeTwo.getName() + ")", bwe.getMessage());
         }
     }
 
@@ -194,7 +194,8 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-            assertEquals(entityTwo.getName(), bwe.getMessage());
+            assertEquals("checkSiblingsAttributeConstraintBasic:"
+                    + entityTwo.getName(), bwe.getMessage());
         }
     }
 
@@ -208,7 +209,8 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-            assertEquals(entityTwo.getName(), bwe.getMessage());
+            assertEquals("checkSiblingsAttributeConstraintBasic:"
+                    + entityTwo.getName(), bwe.getMessage());
         }
     }
 

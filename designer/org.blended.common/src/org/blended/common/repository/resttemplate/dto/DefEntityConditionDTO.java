@@ -19,6 +19,11 @@ public class DefEntityConditionDTO {
         this.exists = exists;
     }
 
+    public DefEntityConditionDTO(String specId, String entityName) {
+        this.specId = specId;
+        this.entityName = entityName;
+    }
+
     public String getSpecId() {
         return specId;
     }

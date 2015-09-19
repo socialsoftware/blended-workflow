@@ -12,6 +12,12 @@ public class SuccessConditionDTO {
     public SuccessConditionDTO() {
     }
 
+    public SuccessConditionDTO(Set<DefEntityConditionDTO> defEnts,
+            Set<DefAttributeConditionDTO> defAtts) {
+        this.defEnts = defEnts;
+        this.defAtts = defAtts;
+    }
+
     public Set<DefEntityConditionDTO> getDefEnts() {
         return defEnts;
     }
