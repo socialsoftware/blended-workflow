@@ -15,6 +15,10 @@ public class TaskModel extends TaskModel_Base {
         }
     }
 
+    public Task createTask(String name, String description) {
+        return new Task(this, name, description);
+    }
+
     public Task getTask(String name) throws BWException {
         for (Task task : getTasksSet()) {
             if (task.getName().equals(name)) {
@@ -24,8 +28,14 @@ public class TaskModel extends TaskModel_Base {
         throw new BWException(BWErrorType.NON_EXISTENT_TASK_NAME, name);
     }
 
+    public void clean() {
+        getTasksSet().stream().forEach(t -> t.delete());
+    }
+
     public void delete() {
+        clean();
         setSpecification(null);
+
         deleteDomainObject();
     }
 

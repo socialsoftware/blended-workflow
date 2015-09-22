@@ -70,6 +70,7 @@ public class MULCondition extends MULCondition_Base {
         setConditionModel(null);
         setBwRelation(null);
         setInvariantConditionGoal(null);
+        setTaskWithMultiplicity(null);
 
         deleteDomainObject();
     }

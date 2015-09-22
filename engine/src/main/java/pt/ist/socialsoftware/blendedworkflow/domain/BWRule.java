@@ -43,6 +43,7 @@ public class BWRule extends BWRule_Base {
         setDataModel(null);
         setConditionModel(null);
         setInvariantConditionGoal(null);
+        setTaskWithRule(null);
         getCondition().delete();
 
         deleteDomainObject();

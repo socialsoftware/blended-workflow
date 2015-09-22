@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,6 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
+import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
@@ -45,9 +53,9 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        // Task task = adi.createActivity(activityDTO);
+        Task task = adi.createActivity(activityDTO);
 
-        return new ResponseEntity<ActivityDTO>(new ActivityDTO(),
+        return new ResponseEntity<ActivityDTO>(task.getDTO(),
                 HttpStatus.CREATED);
     }
 
@@ -62,11 +70,11 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        // DEFEntityCondition defEntityCondition = adi
-        // .associateEntityToActivityPre(specId, activityName, path);
+        DEFEntityCondition defEntityCondition = adi
+                .associateEntityToActivityPre(specId, activityName, path);
 
         return new ResponseEntity<DefEntityConditionDTO>(
-                new DefEntityConditionDTO(), HttpStatus.CREATED);
+                defEntityCondition.getDTO(), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/activities/{activityName}/preatt/{paths}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -82,11 +90,13 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        // adi.associateAttributeToActivityPre(specId, activityName,
-        // Arrays.asList(arraysPath).stream().collect(Collectors.toSet()));
+        DEFAttributeCondition defAttributeCondition = adi
+                .associateAttributeToActivityPre(specId, activityName,
+                        Arrays.asList(arraysPath).stream()
+                                .collect(Collectors.toSet()));
 
         return new ResponseEntity<DefAttributeConditionDTO>(
-                new DefAttributeConditionDTO(), HttpStatus.CREATED);
+                defAttributeCondition.getDTO(), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/activities/{activityName}/postent/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -100,11 +110,11 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        // DEFEntityCondition defEntityCondition = adi
-        // .associateEntityToActivityPost(specId, activityName, path);
+        DEFEntityCondition defEntityCondition = adi
+                .associateEntityToActivityPost(specId, activityName, path);
 
         return new ResponseEntity<DefEntityConditionDTO>(
-                new DefEntityConditionDTO(), HttpStatus.CREATED);
+                defEntityCondition.getDTO(), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/activities/{activityName}/postatt/{paths}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -120,11 +130,13 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        // adi.associateAttributeToActivityPost(specId, activityName,
-        // Arrays.asList(arraysPath).stream().collect(Collectors.toSet()));
+        DEFAttributeCondition defAttributeCondition = adi
+                .associateAttributeToActivityPost(specId, activityName,
+                        Arrays.asList(arraysPath).stream()
+                                .collect(Collectors.toSet()));
 
         return new ResponseEntity<DefAttributeConditionDTO>(
-                new DefAttributeConditionDTO(), HttpStatus.CREATED);
+                defAttributeCondition.getDTO(), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/activities/{activityName}/postmul", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -139,11 +151,11 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        // adi.associateMulToActivityPost(specId, activityName,
-        // mulConditionDTO.getRolePath(),
-        // mulConditionDTO.getCardinality());
+        MULCondition mulCondition = adi.associateMulToActivityPost(specId,
+                activityName, mulConditionDTO.getRolePath(),
+                mulConditionDTO.getCardinality());
 
-        return new ResponseEntity<MulConditionDTO>(new MulConditionDTO(),
+        return new ResponseEntity<MulConditionDTO>(mulCondition.getDTO(),
                 HttpStatus.CREATED);
     }
 
@@ -158,10 +170,10 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        // adi.associateRuleToGoalInvariant(specId, activityName,
-        // ruleDTO.getName());
+        BWRule rule = adi.associateRuleToActivityPost(specId, activityName,
+                ruleDTO.getName());
 
-        return new ResponseEntity<RuleDTO>(new RuleDTO(), HttpStatus.CREATED);
+        return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/check", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)

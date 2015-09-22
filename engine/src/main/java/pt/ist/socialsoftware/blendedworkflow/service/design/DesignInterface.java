@@ -264,7 +264,7 @@ public class DesignInterface {
         if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
             throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
 
-        // spec.getActivityModel().clean();
+        spec.getTaskModel().clean();
     }
 
     @Atomic(mode = TxMode.WRITE)
@@ -639,11 +639,108 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public Task createActivity(ActivityDTO activityDTO) {
-        // BWSpecification spec = getSpecBySpecId(activityDTO.getSpecId());
+        BWSpecification spec = getSpecBySpecId(activityDTO.getSpecId());
 
-        // TODO
+        return spec.getTaskModel().createTask(activityDTO.getName(),
+                activityDTO.getDescription());
+    }
 
-        return null;
+    @Atomic(mode = TxMode.WRITE)
+    public DEFEntityCondition associateEntityToActivityPre(String specId,
+            String activityName, String path) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Task task = getTaskByName(spec, activityName);
+
+        BWProduct product = spec.getDataModel().getTargetOfPath(path);
+        if (product.getProductType() != ProductType.ENTITY)
+            throw new BWException(BWErrorType.INVALID_PATH, path);
+
+        DEFEntityCondition defEntityCondition = ((BWEntity) product)
+                .getDefEntityCondition();
+
+        task.addPreCondition(defEntityCondition);
+
+        return defEntityCondition;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public DEFAttributeCondition associateAttributeToActivityPre(String specId,
+            String activityName, Set<String> paths) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Task task = getTaskByName(spec, activityName);
+        Set<BWAttribute> attributes = getAttributes(spec, paths);
+
+        if (attributes.size() == 0)
+            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
+
+        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
+                attributes);
+
+        task.addPreCondition(defAttributeCondition);
+
+        return defAttributeCondition;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public DEFEntityCondition associateEntityToActivityPost(String specId,
+            String activityName, String path) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Task task = getTaskByName(spec, activityName);
+
+        BWProduct product = spec.getDataModel().getTargetOfPath(path);
+        if (product.getProductType() != ProductType.ENTITY)
+            throw new BWException(BWErrorType.INVALID_PATH, path);
+
+        DEFEntityCondition defEntityCondition = ((BWEntity) product)
+                .getDefEntityCondition();
+
+        task.addPostCondition(defEntityCondition);
+
+        return defEntityCondition;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public DEFAttributeCondition associateAttributeToActivityPost(String specId,
+            String activityName, Set<String> paths) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Task task = getTaskByName(spec, activityName);
+        Set<BWAttribute> attributes = getAttributes(spec, paths);
+
+        if (attributes.size() == 0)
+            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
+
+        DEFAttributeCondition defAttributeCondition = getDefAttributeCondition(
+                attributes);
+
+        task.addPostCondition(defAttributeCondition);
+
+        return defAttributeCondition;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public MULCondition associateMulToActivityPost(String specId,
+            String activityName, String path, String cardinality) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Task task = getTaskByName(spec, activityName);
+
+        MULCondition mulCondition = getMULCondition(spec, path);
+
+        task.addMultiplicityInvariant(mulCondition);
+
+        return mulCondition;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public BWRule associateRuleToActivityPost(String specId,
+            String activityName, String ruleName) {
+        BWSpecification spec = getSpecBySpecId(specId);
+        Task task = getTaskByName(spec, activityName);
+
+        BWRule rule = getRule(spec, ruleName);
+
+        task.addRuleInvariant(rule);
+
+        return rule;
     }
 
     public ProductDTO getSourceOfPath(String specId, String path) {
@@ -695,6 +792,10 @@ public class DesignInterface {
 
         System.out.println("SPECIFICATION: " + spec.getName());
 
+        System.out.println(
+                "-------------------------------------------------------");
+        System.out.println(
+                "-------------------------------------------------------");
         System.out.println("Specification Data Model: " + spec.getName());
         System.out.println(
                 "-------------------------------------------------------");
@@ -713,6 +814,10 @@ public class DesignInterface {
                         + rule.getCondition().getSubPath())
                 .forEach(System.out::println);
 
+        System.out.println(
+                "-------------------------------------------------------");
+        System.out.println(
+                "-------------------------------------------------------");
         System.out.println("Specification Condition Model: " + spec.getName());
         System.out.println(
                 "-------------------------------------------------------");
@@ -755,6 +860,10 @@ public class DesignInterface {
                         + rule.getCondition().getSubPath())
                 .forEach(System.out::println);
 
+        System.out.println(
+                "-------------------------------------------------------");
+        System.out.println(
+                "-------------------------------------------------------");
         System.out.println("Specification Goal Model: " + spec.getName());
         System.out.println(
                 "-------------------------------------------------------");
@@ -779,6 +888,10 @@ public class DesignInterface {
             }
         }
 
+        System.out.println(
+                "-------------------------------------------------------");
+        System.out.println(
+                "-------------------------------------------------------");
         System.out.println("Specification Activity Model: " + spec.getName());
         System.out.println(
                 "-------------------------------------------------------");
@@ -943,6 +1056,13 @@ public class DesignInterface {
                         getAttributes(spec, def.getPaths())))
                 .collect(Collectors.toSet()));
         return successConditions;
+    }
+
+    private Task getTaskByName(BWSpecification spec, String name) {
+        return spec.getTaskModel().getTasksSet().stream()
+                .filter(t -> t.getName().equals(name)).findFirst().orElseThrow(
+                        () -> new BWException(BWErrorType.INVALID_TASK_NAME,
+                                name));
     }
 
     private Condition buildCondition(BWDataModel dataModel,

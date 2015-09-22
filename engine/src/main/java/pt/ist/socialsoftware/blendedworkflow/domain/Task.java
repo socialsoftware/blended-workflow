@@ -9,11 +9,22 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 
 public class Task extends Task_Base {
 
+    @Override
+    public void setName(String name) {
+        checkUniqueTaskName(name);
+        super.setName(name);
+    }
+
+    public Task(TaskModel taskModel, String name, String description) {
+        setTaskModel(taskModel);
+        setName(name);
+        setDescription(description);
+    }
+
     public Task(TaskModel taskModel, String name, String description,
             Set<Condition> preConditions, Set<Condition> postCondition,
             String previous, String joinCode, String splitCode)
                     throws BWException {
-        checkUniqueTaskName(taskModel, name);
         setTaskModel(taskModel);
         setName(name);
         getPreConditionSet().addAll(preConditions);
@@ -24,13 +35,11 @@ public class Task extends Task_Base {
         setSplitCode(splitCode);
     }
 
-    private void checkUniqueTaskName(TaskModel taskModel, String name)
-            throws BWException {
-        for (Task task : taskModel.getTasksSet()) {
-            if (task.getName().equals(name)) {
-                throw new BWException(BWErrorType.INVALID_TASK_NAME, name);
-            }
-        }
+    private void checkUniqueTaskName(String name) throws BWException {
+        if (getTaskModel().getTasksSet().stream()
+                .filter(t -> t != this && t.getName().equals(name)).findFirst()
+                .isPresent())
+            throw new BWException(BWErrorType.INVALID_TASK_NAME, name);
     }
 
     public void cloneTask(TaskModelInstance taskModelInstance)
@@ -103,8 +112,13 @@ public class Task extends Task_Base {
     }
 
     public void delete() {
-        getPreConditionSet().forEach((cond) -> cond.delete());
-        getPostConditionSet().forEach((cond) -> cond.delete());
+        setTaskModel(null);
+        getPreConditionSet().forEach(c -> removePreCondition(c));
+        getPostConditionSet().forEach(c -> removePostCondition(c));
+        getMultiplicityInvariantSet()
+                .forEach(m -> removeMultiplicityInvariant(m));
+        getRuleInvariantSet().forEach(r -> removeRuleInvariant(r));
+
         deleteDomainObject();
     }
 
