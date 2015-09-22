@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.blended.common.repository.resttemplate.BWError;
 import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.RestUtil;
+import org.blended.common.repository.resttemplate.dto.ActivityDTO;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.AttributeGroupDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
@@ -508,17 +509,17 @@ public class CommonInterface {
         return goalVO;
     }
 
-    public GoalDTO createGoal(GoalDTO goalVO) {
-        log.debug("createGoal specId:{}, name:{}", goalVO.getSpecId(),
-                goalVO.getName());
+    public GoalDTO createGoal(GoalDTO goalDTO) {
+        log.debug("createGoal specId:{}, name:{}", goalDTO.getSpecId(),
+                goalDTO.getName());
 
         final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals";
 
         Map<String, String> params = new HashMap<String, String>();
-        params.put("specId", goalVO.getSpecId());
+        params.put("specId", goalDTO.getSpecId());
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        GoalDTO result = restTemplate.postForObject(uri, goalVO, GoalDTO.class,
+        GoalDTO result = restTemplate.postForObject(uri, goalDTO, GoalDTO.class,
                 params);
 
         return result;
@@ -783,11 +784,11 @@ public class CommonInterface {
         return new HashSet<RuleDTO>(Arrays.asList(rulesVO));
     }
 
-    public void associateRuleToGoalInvariant(String specId, String goalName,
-            RuleDTO ruleVO) {
+    public RuleDTO associateRuleToGoalInvariant(String specId, String goalName,
+            RuleDTO ruleDTO) {
         log.debug(
                 "associateRuleConditionToGoalAttributeInvariantCondition specId:{}, goalName:{}, rule:{}",
-                specId, goalName, ruleVO.getName());
+                specId, goalName, ruleDTO.getName());
 
         final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/{goalName}/invatt";
@@ -797,7 +798,7 @@ public class CommonInterface {
         params.put("goalName", goalName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        restTemplate.postForObject(uri, ruleVO, RuleDTO.class, params);
+        return restTemplate.postForObject(uri, ruleDTO, RuleDTO.class, params);
     }
 
     public GoalDTO mergeGoals(String specId, String newGoalName,
@@ -875,6 +876,172 @@ public class CommonInterface {
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         return restTemplate.postForObject(uri, req, GoalDTO.class, params);
+    }
+
+    public void cleanActivityModel(String specId) {
+        log.debug("cleanActivityModel: {}", specId);
+
+        final String uri = BASE_URL + "/specs/{specId}/activitymodel";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        restTemplate.put(uri, null, params);
+    }
+
+    public ActivityDTO createActivity(String specId, String name,
+            String description) {
+        log.debug("createActivity specId:{}, name:{}, description:{}", specId,
+                name, description);
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        ActivityDTO activityDTO = new ActivityDTO(specId, name, description);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        return restTemplate.postForObject(uri, activityDTO, ActivityDTO.class,
+                params);
+    }
+
+    public DefEntityConditionDTO associateEntityToActivityPre(String specId,
+            String activityName, String path) {
+        log.debug(
+                "associateEntityToActivityPre specId:{}, activityName:{}, path:{}",
+                specId, activityName, path);
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities/{activityName}/preent/{path}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("activityName", activityName);
+        params.put("path", path);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        DefEntityConditionDTO result = restTemplate.postForObject(uri, null,
+                DefEntityConditionDTO.class, params);
+
+        return result;
+    }
+
+    public DefAttributeConditionDTO associateAttributeToActivityPre(
+            String specId, String activityName, Set<String> paths) {
+        log.debug(
+                "associateAttributeToActivityPre specId:{}, activityName:{}, paths:{}",
+                specId, activityName, paths);
+
+        String pathsParam = paths.stream().collect(Collectors.joining(","));
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities/{activityName}/preatt/{paths}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("activityName", activityName);
+        params.put("paths", pathsParam);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        return restTemplate.postForObject(uri, null,
+                DefAttributeConditionDTO.class, params);
+    }
+
+    public DefEntityConditionDTO associateEntityToActivityPost(String specId,
+            String activityName, String path) {
+        log.debug(
+                "associateEntityToActivityPost specId:{}, activityName:{}, path:{}",
+                specId, activityName, path);
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities/{activityName}/postent/{path}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("activityName", activityName);
+        params.put("path", path);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        DefEntityConditionDTO result = restTemplate.postForObject(uri, null,
+                DefEntityConditionDTO.class, params);
+
+        return result;
+    }
+
+    public DefAttributeConditionDTO associateAttributeToActivityPost(
+            String specId, String activityName, Set<String> paths) {
+        log.debug(
+                "associateAttributeToActivityPost specId:{}, activityName:{}, paths:{}",
+                specId, activityName, paths);
+
+        String pathsParam = paths.stream().collect(Collectors.joining(","));
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities/{activityName}/postatt/{paths}/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("activityName", activityName);
+        params.put("paths", pathsParam);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        return restTemplate.postForObject(uri, null,
+                DefAttributeConditionDTO.class, params);
+    }
+
+    public MulConditionDTO associateMulToActivityPost(String specId,
+            String activityName, MulConditionDTO mulConditionDTO) {
+        log.debug(
+                "associateMulToActivityPost specId:{}, goalName:{}, path:{}, cardinality:{}",
+                specId, activityName, mulConditionDTO.getRolePath(),
+                mulConditionDTO.getCardinality());
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities/{activityName}/postmul";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("activityName", activityName);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        return restTemplate.postForObject(uri, mulConditionDTO,
+                MulConditionDTO.class, params);
+
+    }
+
+    public RuleDTO associateRuleToActivityPost(String specId,
+            String activityName, RuleDTO ruleDTO) {
+        log.debug(
+                "associateRuleConditionToGoalAttributeInvariantCondition specId:{}, activityName:{}, rule:{}",
+                specId, activityName, ruleDTO.getName());
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities/{activityName}/postrule";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("activityName", activityName);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        return restTemplate.postForObject(uri, ruleDTO, RuleDTO.class, params);
+    }
+
+    public Boolean checkActivityModelConsistency(String specId) {
+        log.debug("checkActivityModelConsistency specId:{}", specId);
+
+        final String uri = BASE_URL + "/specs/{specId}/activitymodel/check";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        Boolean response = restTemplate.getForObject(uri, Boolean.class,
+                params);
+
+        return response;
     }
 
     public ProductDTO getSourceOfPath(String specId, String path) {

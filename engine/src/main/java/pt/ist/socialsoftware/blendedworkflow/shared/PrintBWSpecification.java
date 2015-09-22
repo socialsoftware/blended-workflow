@@ -188,8 +188,12 @@ public class PrintBWSpecification {
                 "----------------------------------------------------------");
         for (Task task : taskModel.getTasksSet()) {
             System.out.println("Task \"" + task.getName() + "\".");
-            System.out.println("Pre Condition: " + task.getPreConstraint());
-            System.out.println("Post Condition: " + task.getPostConstraint());
+            System.out.println("Pre Condition: ");
+            task.getPreConditionSet().stream()
+                    .forEach((cond) -> System.out.println(cond));
+            System.out.println("Post Condition: ");
+            task.getPostConditionSet().stream()
+                    .forEach((cond) -> System.out.println(cond));
             System.out.println("User: " + task.getUser().getID() + " Role: "
                     + task.getRole().getName());
         }
@@ -205,8 +209,12 @@ public class PrintBWSpecification {
                 "----------------------------------------------------------");
         for (Task task : taskModelInstance.getTasksSet()) {
             System.out.println("Task \"" + task.getName() + "\".");
-            System.out.println("Pre Condition: " + task.getPreConstraint());
-            System.out.println("Post Condition: " + task.getPostConstraint());
+            System.out.println("Pre Condition: ");
+            task.getPreConditionSet().stream()
+                    .forEach((cond) -> System.out.println(cond));
+            System.out.println("Post Condition: ");
+            task.getPostConditionSet().stream()
+                    .forEach((cond) -> System.out.println(cond));
             System.out.println("User: " + task.getUser().getID() + " Role: "
                     + task.getRole().getName());
         }

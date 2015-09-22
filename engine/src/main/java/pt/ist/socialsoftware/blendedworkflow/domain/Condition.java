@@ -75,8 +75,13 @@ public abstract class Condition extends Condition_Base {
 
     public void delete() {
         setRule(null);
+
+        setTaskWithPreCondition(null);
+        setTaskWithPostCondition(null);
+
         setActivationConditionGoal(null);
         setSuccessConditionGoal(null);
+
         setAndLeftCondition(null);
         setAndRightCondition(null);
         setOrLeftCondition(null);

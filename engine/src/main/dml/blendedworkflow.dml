@@ -413,14 +413,24 @@ relation TaskHasNextTask {
 	Task playsRole nextTasks { multiplicity 0..*; }
 }
 
-relation TaskHasPreCondition {
-	Task playsRole taskPreCondition { multiplicity 0..1; }
-	Condition playsRole preConstraint { multiplicity 0..1; }
+relation TaskHasPreConditions {
+	Task playsRole taskWithPreCondition { multiplicity 0..1; }
+	Condition playsRole preCondition { multiplicity 0..*; }
 }
 
-relation TaskHasPostCondition {
-	Task playsRole taskPosCondition { multiplicity 0..1; }
-	Condition playsRole postConstraint { multiplicity 0..1; }
+relation TaskHasPostConditions {
+	Task playsRole taskWithPostCondition { multiplicity 0..1; }
+	Condition playsRole postCondition { multiplicity 0..*; }
+}
+
+relation TaskHasMultiplicityInvariants {
+	Task playsRole taskWithMultiplicity { multiplicity 0..1; }
+	MULCondition playsRole multiplicityInvariant { multiplicity 0..*; }
+}
+
+relation TaskHasRuleInvariants {
+	Task playsRole taskWithRule { multiplicity 0..1; }
+	BWRule playsRole ruleInvariant { multiplicity 0..*; }
 }
 
 relation TaskHasTaskWorkItem {

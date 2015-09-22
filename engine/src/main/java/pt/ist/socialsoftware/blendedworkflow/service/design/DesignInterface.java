@@ -44,9 +44,11 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.OrCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
@@ -250,6 +252,19 @@ public class DesignInterface {
             throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
 
         spec.getGoalModel().clean();
+    }
+
+    @Atomic(mode = TxMode.WRITE)
+    public void cleanActivityModel(String specId) {
+        BWSpecification spec = getSpecBySpecId(specId);
+
+        if (spec.getDataModel().getEntitiesSet().size() == 0)
+            throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+
+        if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
+            throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
+
+        // spec.getActivityModel().clean();
     }
 
     @Atomic(mode = TxMode.WRITE)
@@ -622,6 +637,15 @@ public class DesignInterface {
         return sourceGoal.extractSibling(newGoalName, successConditions);
     }
 
+    @Atomic(mode = TxMode.WRITE)
+    public Task createActivity(ActivityDTO activityDTO) {
+        // BWSpecification spec = getSpecBySpecId(activityDTO.getSpecId());
+
+        // TODO
+
+        return null;
+    }
+
     public ProductDTO getSourceOfPath(String specId, String path) {
         BWSpecification spec = getSpecBySpecId(specId);
 
@@ -753,6 +777,28 @@ public class DesignInterface {
             for (BWRule rule : goal.getAttributeInvariantConditionSet()) {
                 System.out.println("RUL(" + rule.getName() + ")");
             }
+        }
+
+        System.out.println("Specification Activity Model: " + spec.getName());
+        System.out.println(
+                "-------------------------------------------------------");
+
+        for (Task task : spec.getTaskModel().getTasksSet()) {
+            System.out.println("Task name:" + task.getName() + ", description:"
+                    + task.getDescription());
+
+            task.getPreConditionSet().stream().forEach((c) -> System.out
+                    .println("PreCondition:" + c.getSubPath()));
+
+            task.getPostConditionSet().stream().forEach((c) -> System.out
+                    .println("PostCondition:" + c.getSubPath()));
+
+            task.getMultiplicityInvariantSet().stream()
+                    .forEach((m) -> System.out.println(
+                            "MultiplicityInvariant:" + m.getExpression()));
+
+            task.getRuleInvariantSet().stream().forEach((r) -> System.out
+                    .println("MultiplicityInvariant:" + r.getName()));
         }
 
     }

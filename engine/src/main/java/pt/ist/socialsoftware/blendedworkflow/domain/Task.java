@@ -1,20 +1,23 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 
 public class Task extends Task_Base {
 
     public Task(TaskModel taskModel, String name, String description,
-            Condition preConstrain, Condition postConstrain, String previous,
-            String joinCode, String splitCode) throws BWException {
+            Set<Condition> preConditions, Set<Condition> postCondition,
+            String previous, String joinCode, String splitCode)
+                    throws BWException {
         checkUniqueTaskName(taskModel, name);
         setTaskModel(taskModel);
         setName(name);
-        setPreConstraint(preConstrain);
-        setPostConstraint(postConstrain);
+        getPreConditionSet().addAll(preConditions);
+        getPostConditionSet().addAll(postCondition);
         setDescription(description);
         setPrevious(previous);
         setJoinCode(joinCode);
@@ -32,17 +35,21 @@ public class Task extends Task_Base {
 
     public void cloneTask(TaskModelInstance taskModelInstance)
             throws BWException {
-        Condition newPreCondition = null;
-        Condition preCondition = getPreConstraint();
-        Condition newPostCondition = null;
-        Condition postCondition = getPostConstraint();
-        if (preCondition != null && postCondition != null) {
-            newPreCondition = preCondition.cloneCondition(taskModelInstance);
-            newPostCondition = postCondition.cloneCondition(taskModelInstance);
+        Set<Condition> newPreConditions = null;
+        Set<Condition> preConditions = getPreConditionSet();
+        Set<Condition> newPostCondition = null;
+        Set<Condition> postCondition = getPostConditionSet();
+        if (!preConditions.isEmpty() && !getPostConditionSet().isEmpty()) {
+            newPreConditions = preConditions.stream()
+                    .map((cond) -> cond.cloneCondition(taskModelInstance))
+                    .collect(Collectors.toSet());
+            newPostCondition = postCondition.stream()
+                    .map((cond) -> cond.cloneCondition(taskModelInstance))
+                    .collect(Collectors.toSet());
         }
         Task newTask = new Task(taskModelInstance, getName(), getDescription(),
-                newPreCondition, newPostCondition, getPrevious(), getJoinCode(),
-                getSplitCode());
+                newPreConditions, newPostCondition, getPrevious(),
+                getJoinCode(), getSplitCode());
         newTask.setUser(getUser());
         newTask.setRole(getRole());
     }
@@ -59,11 +66,19 @@ public class Task extends Task_Base {
 
         // Get Condition Data
         if (isPreConstraint) {
-            entities = getPreConstraint().getEntities();
-            attributes = getPreConstraint().getAttributes();
+            entities = getPreConditionSet().stream()
+                    .flatMap((cond) -> cond.getEntities().stream())
+                    .collect(Collectors.toSet());
+            attributes = getPreConditionSet().stream()
+                    .flatMap((cond) -> cond.getAttributes().stream())
+                    .collect(Collectors.toSet());
         } else {
-            entities = getPostConstraint().getEntities();
-            attributes = getPostConstraint().getAttributes();
+            entities = getPostConditionSet().stream()
+                    .flatMap((cond) -> cond.getEntities().stream())
+                    .collect(Collectors.toSet());
+            attributes = getPostConditionSet().stream()
+                    .flatMap((cond) -> cond.getAttributes().stream())
+                    .collect(Collectors.toSet());
         }
 
         // Add Attribute entities
@@ -85,6 +100,17 @@ public class Task extends Task_Base {
             count++;
         }
         return dataString;
+    }
+
+    public void delete() {
+        getPreConditionSet().forEach((cond) -> cond.delete());
+        getPostConditionSet().forEach((cond) -> cond.delete());
+        deleteDomainObject();
+    }
+
+    public ActivityDTO getDTO() {
+        return new ActivityDTO(getTaskModel().getSpecification().getSpecId(),
+                getName(), getDescription());
     }
 
 }

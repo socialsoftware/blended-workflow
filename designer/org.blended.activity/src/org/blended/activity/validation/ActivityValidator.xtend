@@ -3,7 +3,13 @@
  */
 package org.blended.activity.validation
 
-//import org.eclipse.xtext.validation.Check
+import org.blended.activity.activity.ActivityModel
+import org.blended.activity.activity.ActivityPackage
+import org.blended.activity.repository.ActivityInterface
+import org.eclipse.xtext.validation.Check
+import org.eclipse.xtext.validation.CheckType
+
+import static extension org.eclipse.xtext.EcoreUtil2.*
 
 /**
  * This class contains custom validation rules. 
@@ -22,4 +28,21 @@ class ActivityValidator extends AbstractActivityValidator {
 //					INVALID_NAME)
 //		}
 //	}
+
+	@Check(CheckType.NORMAL)
+	def checkModel(ActivityModel model) {
+				info('everything OK 0', ActivityPackage.Literals.ACTIVITY_MODEL__SPECIFICATION)
+		var instance = ActivityInterface.getInstance
+				info('everything OK 2', ActivityPackage.Literals.ACTIVITY_MODEL__SPECIFICATION)
+		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
+				info('everything OK 3', ActivityPackage.Literals.ACTIVITY_MODEL__SPECIFICATION)
+		var notification = instance.loadActivityModel(specId, model)
+				info('everything OK 4', ActivityPackage.Literals.ACTIVITY_MODEL__SPECIFICATION)
+		if (notification.hasErrors)
+			for (error : notification.error)
+				error(error.type.toString + "-" + error.value, ActivityPackage.Literals.ACTIVITY_MODEL__SPECIFICATION)
+		else
+			info('everything OK 2', ActivityPackage.Literals.ACTIVITY_MODEL__SPECIFICATION)
+	}
+
 }

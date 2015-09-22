@@ -29,12 +29,12 @@ public class TaskWorkItem extends TaskWorkItem_Base {
         setRole(task.getRole());
         setUser(task.getUser());
 
-        task.getPreConstraint().assignAttributeInstances(this,
-                ConditionType.PRE_CONDITION);
+        task.getPreConditionSet().stream().forEach((cond) -> cond
+                .assignAttributeInstances(this, ConditionType.PRE_CONDITION));
         createInputWorkItemArguments();
 
-        task.getPostConstraint().assignAttributeInstances(this,
-                ConditionType.POS_CONDITION);
+        task.getPostConditionSet().stream().forEach((c) -> c
+                .assignAttributeInstances(this, ConditionType.POS_CONDITION));
         createOutputWorkItemArguments();
     }
 

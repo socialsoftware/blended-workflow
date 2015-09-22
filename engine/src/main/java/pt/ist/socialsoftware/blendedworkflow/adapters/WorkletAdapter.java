@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.jdom.Element;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.yawlfoundation.yawl.worklet.rdr.RdrNode;
 import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 import org.yawlfoundation.yawl.worklet.support.WorkletGatewayClient;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
@@ -23,12 +25,14 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState;
+import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -199,40 +203,43 @@ public class WorkletAdapter {
         for (Task task : taskModel.getTasksSet()) {
             String taskName = generateYAWLTaskName(task);
 
+            Condition preCondition = task.getPreConditionSet().stream().reduce(
+                    new TrueCondition(), (c1, c2) -> new AndCondition(c1, c2));
+
             // PreCondition Tree
-            if (!task.getPreConstraint().existTrue()) {
+            if (!preCondition.existTrue()) {
                 // Undefined Node
                 eCornerstone = getCornerstoneData(task, true, "UNDEFINED");
-                condition = task.getPreConstraint().getRdrUndefinedCondition();
+                condition = preCondition.getRdrUndefinedCondition();
                 eConclusion = createRdrConclusion("UNDEFINED", true);
                 addNode(yawlSpecID, taskName, condition, eCornerstone,
                         eConclusion, RuleType.ItemPreconstraint);
 
                 // Skipped Node
                 eCornerstone = getCornerstoneData(task, true, "SKIPPED");
-                condition = task.getPreConstraint().getRdrSkippedCondition();
+                condition = preCondition.getRdrSkippedCondition();
                 eConclusion = createRdrConclusion("SKIPPED", true);
                 addNode(yawlSpecID, taskName, condition, eCornerstone,
                         eConclusion, RuleType.ItemPreconstraint);
 
                 // True Node
                 eCornerstone = getCornerstoneData(task, true, "DEFINED");
-                condition = task.getPreConstraint().getRdrTrueCondition();
+                condition = preCondition.getRdrTrueCondition();
                 eConclusion = createRdrConclusion("TRUE", true);
                 addNode(yawlSpecID, taskName, condition, eCornerstone,
                         eConclusion, RuleType.ItemPreconstraint);
 
                 // False Node
-                if (task.getPreConstraint().existCompareAttributeToValue()) {
+                if (preCondition.existCompareAttributeToValue()) {
                     eCornerstone = getCornerstoneData(task, true, "DEFINED");
-                    condition = task.getPreConstraint().getRdrFalseCondition();
+                    condition = preCondition.getRdrFalseCondition();
                     eConclusion = createRdrConclusion("FALSE", true);
                     addNode(yawlSpecID, taskName, condition, eCornerstone,
                             eConclusion, RuleType.ItemPreconstraint);
                 }
             } else {
                 eCornerstone = getCornerstoneData(task, true, "DEFINED");
-                condition = task.getPreConstraint().getRdrTrueCondition();
+                condition = preCondition.getRdrTrueCondition();
                 eConclusion = createRdrConclusion("TRUE", true);
                 addNode(yawlSpecID, taskName, condition, eCornerstone,
                         eConclusion, RuleType.ItemPreconstraint);
@@ -240,30 +247,35 @@ public class WorkletAdapter {
 
             // PostCondition Tree
             // Undefined Node
+
+            Condition postCondition = task.getPostConditionSet().stream()
+                    .reduce(new TrueCondition(),
+                            (c1, c2) -> new AndCondition(c1, c2));
+
             eCornerstone = getCornerstoneData(task, false, "UNDEFINED");
-            condition = task.getPostConstraint().getRdrUndefinedCondition();
+            condition = postCondition.getRdrUndefinedCondition();
             eConclusion = createRdrConclusion("UNDEFINED", false);
             addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
                     RuleType.ItemConstraintViolation);
 
             // Skipped Node
             eCornerstone = getCornerstoneData(task, false, "SKIPPED");
-            condition = task.getPostConstraint().getRdrSkippedCondition();
+            condition = postCondition.getRdrSkippedCondition();
             eConclusion = createRdrConclusion("SKIPPED", false);
             addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
                     RuleType.ItemConstraintViolation);
 
             // True Node
             eCornerstone = getCornerstoneData(task, false, "DEFINED");
-            condition = task.getPostConstraint().getRdrTrueCondition();
+            condition = postCondition.getRdrTrueCondition();
             eConclusion = createRdrConclusion("TRUE", false);
             addNode(yawlSpecID, taskName, condition, eCornerstone, eConclusion,
                     RuleType.ItemConstraintViolation);
 
             // False Node
-            if (task.getPostConstraint().existCompareAttributeToValue()) {
+            if (postCondition.existCompareAttributeToValue()) {
                 eCornerstone = getCornerstoneData(task, false, "DEFINED");
-                condition = task.getPostConstraint().getRdrFalseCondition();
+                condition = postCondition.getRdrFalseCondition();
                 eConclusion = createRdrConclusion("FALSE", false);
                 addNode(yawlSpecID, taskName, condition, eCornerstone,
                         eConclusion, RuleType.ItemConstraintViolation);
@@ -295,14 +307,27 @@ public class WorkletAdapter {
 
         // Get Condition Data
         if (task != null && isPreCondition) {
-            entities = task.getPreConstraint().getEntities();
-            attributes = task.getPreConstraint().getAttributes();
-            attributesValues = task.getPreConstraint()
+            entities = task.getPreConditionSet().stream()
+                    .flatMap((cond) -> cond.getEntities().stream())
+                    .collect(Collectors.toSet());
+            attributes = task.getPreConditionSet().stream()
+                    .flatMap((cond) -> cond.getAttributes().stream())
+                    .collect(Collectors.toSet());
+            attributesValues = task.getPreConditionSet().stream()
+                    .reduce(new TrueCondition(),
+                            (c1, c2) -> new AndCondition(c1, c2))
                     .getcompareConditionValues();
+
         } else if (task != null) {
-            entities = task.getPostConstraint().getEntities();
-            attributes = task.getPostConstraint().getAttributes();
-            attributesValues = task.getPostConstraint()
+            entities = task.getPreConditionSet().stream()
+                    .flatMap((cond) -> cond.getEntities().stream())
+                    .collect(Collectors.toSet());
+            attributes = task.getPreConditionSet().stream()
+                    .flatMap((cond) -> cond.getAttributes().stream())
+                    .collect(Collectors.toSet());
+            attributesValues = task.getPostConditionSet().stream()
+                    .reduce(new TrueCondition(),
+                            (c1, c2) -> new AndCondition(c1, c2))
                     .getcompareConditionValues();
         }
 
