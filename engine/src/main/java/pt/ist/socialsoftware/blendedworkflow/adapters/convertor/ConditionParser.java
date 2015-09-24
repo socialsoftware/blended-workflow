@@ -1,13 +1,13 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ExistsOneCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
@@ -22,10 +22,10 @@ public class ConditionParser {
 
     private static String _cond;
 
-    private final BWDataModel dataModel;
+    private final DataModel dataModel;
     private int _token;
 
-    public ConditionParser(BWDataModel dataModel, String condition)
+    public ConditionParser(DataModel dataModel, String condition)
             throws BWException {
         if (condition == null || condition.equals("")) {
             throw new BWException(BWErrorType.EMPTY_CONDITION_STRING);
@@ -101,16 +101,16 @@ public class ConditionParser {
         StringBuilder elementName = new StringBuilder();
         int startArgs = "existsAttribute(".length();
 
-        BWAttribute attribute = parseExistsAttributeConditionArgs(
+        Attribute attribute = parseExistsAttributeConditionArgs(
                 existsAttributeString, startArgs,
                 existsAttributeString.length() - 1, elementName);
-        Condition existsAttributeCondition = DEFAttributeCondition
-                .getDEFAttribute(attribute);
+        Condition existsAttributeCondition = DefAttributeCondition
+                .getDefAttribute(attribute);
         _token = endOfCondition + 1;
         return existsAttributeCondition;
     }
 
-    protected BWAttribute parseExistsAttributeConditionArgs(
+    protected Attribute parseExistsAttributeConditionArgs(
             String existsAttributeCondition, int startArgs, int endArgs,
             StringBuilder elementName) throws BWException {
         if (startArgs > endArgs)
@@ -122,7 +122,7 @@ public class ConditionParser {
 
         String[] elementArr = elementName.toString().split("\\.");
 
-        BWEntity entity = parseEntity(elementArr);
+        Entity entity = parseEntity(elementArr);
         return parseAttribute(elementArr, entity);
 
     }
@@ -136,7 +136,7 @@ public class ConditionParser {
         String existsEntityString = _cond.substring(_token, endOfCondition + 1);
         StringBuilder elementName = new StringBuilder();
         int startArgs = "existsEntity(".length();
-        BWEntity entity = parseExistsEntityConditionArgs(existsEntityString,
+        Entity entity = parseExistsEntityConditionArgs(existsEntityString,
                 startArgs, existsEntityString.length() - 1, elementName);
 
         Condition existsEntityCondition = entity.getDefEntityCondition();
@@ -144,7 +144,7 @@ public class ConditionParser {
         return existsEntityCondition;
     }
 
-    protected BWEntity parseExistsEntityConditionArgs(
+    protected Entity parseExistsEntityConditionArgs(
             String existsEntityCondition, int startArgs, int endArgs,
             StringBuilder elementName) throws BWException {
         if (startArgs > endArgs)
@@ -156,7 +156,7 @@ public class ConditionParser {
         if (dataModel.getEntity(elementName.toString()) != null)
             return dataModel.getEntity(elementName.toString()).get();
         else
-            return new BWEntity(dataModel, elementName.toString(), false);
+            return new Entity(dataModel, elementName.toString(), false);
     }
 
     protected Condition parseCompareAttributeToCondition() throws BWException {
@@ -172,7 +172,7 @@ public class ConditionParser {
         StringBuilder elementTo = new StringBuilder();
         int startArgs = "compareAttributeTo(".length();
 
-        BWAttribute attribute;
+        Attribute attribute;
         String operator;
         String value;
 
@@ -184,7 +184,7 @@ public class ConditionParser {
         elementName.append(
                 compareAttributeToString.substring(startArgs, subToken));
         String[] elementArr = elementName.toString().split("\\.");
-        BWEntity entity = parseEntity(elementArr);
+        Entity entity = parseEntity(elementArr);
         attribute = parseAttribute(elementArr, entity);
 
         // Parse Operator and Value
@@ -219,8 +219,8 @@ public class ConditionParser {
         // Parse Entity and Relation
         relationString.append(forAllString.substring(startArgs, subToken));
         String[] elementArr = relationString.toString().split("\\.");
-        BWEntity entity = parseEntity(elementArr);
-        BWRelation relation = parseRelation(elementArr[1]);
+        Entity entity = parseEntity(elementArr);
+        RelationBW relation = parseRelation(elementArr[1]);
         // Parse condition
         subConditionString
                 .append(forAllString.substring(subToken + 1, endArgs).trim());
@@ -252,8 +252,8 @@ public class ConditionParser {
         // Parse Entity and Relation
         relationString.append(exitsOneString.substring(startArgs, subToken));
         String[] elementArr = relationString.toString().split("\\.");
-        BWEntity entity = parseEntity(elementArr);
-        BWRelation relation = parseRelation(elementArr[1]);
+        Entity entity = parseEntity(elementArr);
+        RelationBW relation = parseRelation(elementArr[1]);
         // Parse condition
         subConditionString
                 .append(exitsOneString.substring(subToken + 1, endArgs).trim());
@@ -296,17 +296,17 @@ public class ConditionParser {
         return new OrCondition(parsedCondition, parseConditionType());
     }
 
-    private BWEntity parseEntity(String[] elementArr) throws BWException {
-        BWEntity entity;
+    private Entity parseEntity(String[] elementArr) throws BWException {
+        Entity entity;
         if (dataModel.getEntity(elementArr[0]) != null)
             entity = dataModel.getEntity(elementArr[0]).get();
         else
-            entity = new BWEntity(dataModel, elementArr[0], false);
+            entity = new Entity(dataModel, elementArr[0], false);
         return entity;
     }
 
-    private BWRelation parseRelation(String relationName) throws BWException {
-        BWRelation relation;
+    private RelationBW parseRelation(String relationName) throws BWException {
+        RelationBW relation;
         if (dataModel.getRelation(relationName) != null)
             relation = dataModel.getRelation(relationName);
         else
@@ -314,7 +314,7 @@ public class ConditionParser {
         return relation;
     }
 
-    private BWAttribute parseAttribute(String[] elementArr, BWEntity entity)
+    private Attribute parseAttribute(String[] elementArr, Entity entity)
             throws BWException {
         // AttributeType type;
         // boolean iskeyAttribute;

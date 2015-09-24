@@ -141,7 +141,12 @@ public class ActivityInterface {
             }
         }
 
-        ci.checkActivityModelConsistency(specId);
+        try {
+            ci.checkActivityModelConsistency(specId);
+        } catch (RepositoryException re) {
+            notification.addError(re.getError());
+            log.debug("Error: {}", re.getMessage());
+        }
 
         ci.printSpecificationModels(specId);
 

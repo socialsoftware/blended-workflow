@@ -4,24 +4,24 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class YAWLSpecificationFactory {
 
-    private BWSpecification bwSpecification;
+    private Specification bwSpecification;
     private String specificationURI;
     private int lovalVariablesIndex = 0;
     private int taskIndex = 3;
     private int inputOutputParamIndex = 0;
     private final HashMap<String, String> taskYAWLID = new HashMap<String, String>();
 
-    public String parseYAWLSpecificationFactory(BWSpecification bwSpecification)
+    public String parseYAWLSpecificationFactory(Specification bwSpecification)
             throws BWException {
 
         this.bwSpecification = bwSpecification;
@@ -75,8 +75,8 @@ public class YAWLSpecificationFactory {
         String localVariables = "<decomposition id=\"" + specificationURI
                 + "\" isRootNet=\"true\" xsi:type=\"NetFactsType\">";
 
-        BWDataModel dataModel = bwSpecification.getDataModel();
-        for (BWAttribute attribute : dataModel.getAttributesSet()) {
+        DataModel dataModel = bwSpecification.getDataModel();
+        for (Attribute attribute : dataModel.getAttributesSet()) {
             String entityName = attribute.getEntity().getName().replaceAll(" ",
                     "");
             String attributeName = attribute.getName().replaceAll(" ", "");
@@ -105,7 +105,7 @@ public class YAWLSpecificationFactory {
     }
 
     private String processControlElements() {
-        Set<BWAttribute> attributes;
+        Set<Attribute> attributes;
         String processControlElements = "";
         String element = "";
         String startingMappings = "";
@@ -165,7 +165,7 @@ public class YAWLSpecificationFactory {
                     .collect(Collectors.toSet());
             if (attributes.size() > 0) {
                 startingMappings += "<startingMappings>";
-                for (BWAttribute attribute : attributes) {
+                for (Attribute attribute : attributes) {
                     String entityName = attribute.getEntity().getName()
                             .replaceAll(" ", "");
                     String attributeName = attribute.getName().replaceAll(" ",
@@ -199,7 +199,7 @@ public class YAWLSpecificationFactory {
                     .collect(Collectors.toSet());
             if (attributes.size() > 0) {
                 completedMappings += "<completedMappings>";
-                for (BWAttribute attribute : attributes) {
+                for (Attribute attribute : attributes) {
                     String entityName = attribute.getEntity().getName()
                             .replaceAll(" ", "");
                     String attributeName = attribute.getName().replaceAll(" ",
@@ -239,7 +239,7 @@ public class YAWLSpecificationFactory {
     }
 
     private String inputOutputParam() {
-        Set<BWAttribute> attributes;
+        Set<Attribute> attributes;
         String inputOutputParameters = "";
         String inputParam = "";
         String outputParam = "";
@@ -259,7 +259,7 @@ public class YAWLSpecificationFactory {
             attributes = task.getPreConditionSet().stream()
                     .flatMap((cond) -> cond.getAttributes().stream())
                     .collect(Collectors.toSet());
-            for (BWAttribute attribute : attributes) {
+            for (Attribute attribute : attributes) {
                 String entityName = attribute.getEntity().getName()
                         .replaceAll(" ", "");
                 String attributeName = attribute.getName().replaceAll(" ", "");
@@ -287,7 +287,7 @@ public class YAWLSpecificationFactory {
             attributes = task.getPostConditionSet().stream()
                     .flatMap((c) -> c.getAttributes().stream())
                     .collect(Collectors.toSet());
-            for (BWAttribute attribute : attributes) {
+            for (Attribute attribute : attributes) {
                 String entityName = attribute.getEntity().getName()
                         .replaceAll(" ", "");
                 String attributeName = attribute.getName().replaceAll(" ", "");

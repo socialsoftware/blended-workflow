@@ -1,13 +1,13 @@
 package pt.ist.socialsoftware.blendedworkflow.shared;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
@@ -28,9 +28,9 @@ public class PrintBWSpecification {
     // private static Logger log = Logger.getLogger("PrintBWSpecification");
 
     private static BlendedWorkflow blendedWorkflow;
-    private static BWSpecification bwSpecification;
-    private static BWDataModel dataModelTemplate;
-    private static BWGoalModel goalModel;
+    private static Specification bwSpecification;
+    private static DataModel dataModelTemplate;
+    private static GoalModel goalModel;
     private static TaskModel taskModel;
     private static BWInstance bwInstance;
     private static DataModelInstance dataModelInstance;
@@ -91,7 +91,7 @@ public class PrintBWSpecification {
         System.out.println("DataModel Template");
         System.out.println(
                 "----------------------------------------------------------");
-        for (BWEntity entity : dataModelTemplate.getEntitiesSet()) {
+        for (Entity entity : dataModelTemplate.getEntitiesSet()) {
             System.out.println("Entity \"" + entity.getName() + "\" has "
                     + entity.getEntityInstancesSet().size() + " Instances");
             for (EntityInstance ei : entity.getEntityInstancesSet()) {
@@ -99,13 +99,13 @@ public class PrintBWSpecification {
                         + ei.getState());
             }
 
-            for (BWAttribute attribute : entity.getAttributesSet()) {
+            for (Attribute attribute : entity.getAttributesSet()) {
                 System.out.println("Attribute \"" + attribute.getName() + "\"");
             }
             System.out.println(
                     "----------------------------------------------------------");
         }
-        for (BWRelation relation : dataModelTemplate.getRelationsSet()) {
+        for (RelationBW relation : dataModelTemplate.getRelationsSet()) {
             System.out.println("Relation \"" + relation.getName() + "\"");
         }
     }
@@ -118,16 +118,16 @@ public class PrintBWSpecification {
         System.out.println("DataModel Type");
         System.out.println(
                 "----------------------------------------------------------");
-        for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitiesSet()) {
             System.out.println("Entity \"" + entity.getName() + "\"");
 
-            for (BWAttribute attribute : entity.getAttributesSet()) {
+            for (Attribute attribute : entity.getAttributesSet()) {
                 System.out.println("Attribute \"" + attribute.getName() + "\"");
             }
             System.out.println(
                     "----------------------------------------------------------");
         }
-        for (BWRelation relation : dataModelInstance.getRelationsSet()) {
+        for (RelationBW relation : dataModelInstance.getRelationsSet()) {
             System.out.println("Relation \"" + relation.getName() + "\"");
         }
     }
@@ -228,7 +228,7 @@ public class PrintBWSpecification {
         System.out.println("DataModel Instance");
         System.out.println(
                 "----------------------------------------------------------");
-        for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitiesSet()) {
             System.out.println("Entity \"" + entity.getName() + "\" has "
                     + entity.getEntityInstancesSet().size() + " instances.");
             if (entity.getEntityInstancesSet().size() > 0) {
@@ -251,7 +251,7 @@ public class PrintBWSpecification {
             System.out.println(
                     "----------------------------------------------------------");
         }
-        for (BWRelation relation : dataModelInstance.getRelationsSet()) {
+        for (RelationBW relation : dataModelInstance.getRelationsSet()) {
             System.out.println("Relation \"" + relation.getName() + "\" has "
                     + relation.getRelationInstancesSet().size()
                     + " instances.");

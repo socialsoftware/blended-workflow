@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
@@ -146,7 +146,7 @@ public class GoalModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        DEFEntityCondition defEntityCondition = adi
+        DefEntityCondition defEntityCondition = adi
                 .associateEntityToGoalSuccess(specId, goalName, path);
 
         return new ResponseEntity<DefEntityConditionDTO>(
@@ -218,7 +218,7 @@ public class GoalModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        DEFEntityCondition defEntityCondition = adi
+        DefEntityCondition defEntityCondition = adi
                 .associateEntityToGoalAtivation(specId, goalExtId, path);
 
         return new ResponseEntity<DefEntityConditionDTO>(

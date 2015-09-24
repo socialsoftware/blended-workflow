@@ -25,7 +25,7 @@ import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -92,13 +92,13 @@ public abstract class MockitoAbstractServiceTest {
                 any(YSpecificationID.class), anyString(), any(RuleType.class),
                 any(RdrNode.class), anyString());
         verify(bwManager)
-                .notifyLoadedBWSpecification(any(BWSpecification.class));
+                .notifyLoadedBWSpecification(any(Specification.class));
     }
 
     protected void initializeBWInstance() throws BWException, Exception {
         when(yawlAdapter.launchCase(anyString())).thenReturn(YAWLCASE_ID);
 
-        final BWSpecification bwSpecification = getBWSpecification(
+        final Specification bwSpecification = getBWSpecification(
                 BWSPECIFICATION_NAME);
         new CreateBWInstanceService(bwSpecification.getExternalId(), "",
                 USER_ID).call();
@@ -117,10 +117,10 @@ public abstract class MockitoAbstractServiceTest {
 
     }
 
-    protected BWSpecification getBWSpecification(String name)
+    protected Specification getBWSpecification(String name)
             throws BWException {
         Transaction.begin();
-        final BWSpecification bwSpecification = BlendedWorkflow.getInstance()
+        final Specification bwSpecification = BlendedWorkflow.getInstance()
                 .getSpecById(name).orElseThrow(() -> new BWException(
                         BWErrorType.INVALID_SPECIFICATION_NAME, name));
         Transaction.commit();

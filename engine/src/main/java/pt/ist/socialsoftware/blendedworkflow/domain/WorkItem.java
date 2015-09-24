@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 
 public abstract class WorkItem extends WorkItem_Base {
 

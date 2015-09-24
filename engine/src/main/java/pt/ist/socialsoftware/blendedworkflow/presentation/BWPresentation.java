@@ -38,11 +38,11 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
@@ -1118,7 +1118,7 @@ public class BWPresentation extends Application {
     }
 
     public void generateAddSubGoalsContextWindow(EntityInstance entityContext,
-            HashMap<BWEntity, BWRelation> neededEntityInstances) {
+            HashMap<Entity, RelationBW> neededEntityInstances) {
         Window newGoalWindow = new Window("SubGoals Context");
         newGoalWindow.setContent(new NewAddSubGoalsContextForm(entityContext,
                 neededEntityInstances));
@@ -1268,7 +1268,7 @@ public class BWPresentation extends Application {
     public void updateBWSpecificationInfo(String OID) {
         bwSpecInfoTable.removeAllItems();
         bwSpecJobsInfoTable.removeAllItems();
-        BWSpecification bwSpecification = FenixFramework.getDomainObject(OID);
+        Specification bwSpecification = FenixFramework.getDomainObject(OID);
 
         // BW Info
         bwSpecInfoTable.addItem(
@@ -1309,7 +1309,7 @@ public class BWPresentation extends Application {
             bwSpecJobsInfoTable.setChildrenAllowed(task1, false);
         }
 
-        BWGoalModel goalModel = bwSpecification.getGoalModel();
+        GoalModel goalModel = bwSpecification.getGoalModel();
         for (Goal goal : goalModel.getGoalSet()) {
             Object goal1 = bwSpecJobsInfoTable.addItem(new Object[] {
                     goal.getName(), goal.getDescription(),
@@ -1379,7 +1379,7 @@ public class BWPresentation extends Application {
         BWInstance bwInstance = FenixFramework.getDomainObject(OID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 
-        for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitiesSet()) {
             Object entityItem = entitydetailsTreetable
                     .addItem(new Object[] { entity.getName(), "", "" }, null);
             for (EntityInstance entityInstance : entity
@@ -1458,15 +1458,15 @@ public class BWPresentation extends Application {
 
         String inputData = "";
         int inputIndex = 0;
-        ArrayList<BWEntity> inputEntities = new ArrayList<BWEntity>();
+        ArrayList<Entity> inputEntities = new ArrayList<Entity>();
         for (AttributeInstance attributeInstance : taskWorkItem
                 .getInputAttributeInstancesSet()) {
-            BWEntity entity = attributeInstance.getAttribute().getEntity();
+            Entity entity = attributeInstance.getAttribute().getEntity();
             if (!inputEntities.contains(entity)) {
                 inputEntities.add(entity);
             }
         }
-        for (BWEntity entity : inputEntities) {
+        for (Entity entity : inputEntities) {
             if (inputIndex == 0) {
                 inputData += entity.getName();
             } else {
@@ -1477,15 +1477,15 @@ public class BWPresentation extends Application {
 
         String outputData = "";
         int outputIndex = 0;
-        ArrayList<BWEntity> outputEntities = new ArrayList<BWEntity>();
+        ArrayList<Entity> outputEntities = new ArrayList<Entity>();
         for (AttributeInstance attributeInstance : taskWorkItem
                 .getOutputAttributeInstancesSet()) {
-            BWEntity entity = attributeInstance.getAttribute().getEntity();
+            Entity entity = attributeInstance.getAttribute().getEntity();
             if (!outputEntities.contains(entity)) {
                 outputEntities.add(entity);
             }
         }
-        for (BWEntity entity : outputEntities) {
+        for (Entity entity : outputEntities) {
             if (outputIndex == 0) {
                 outputData += entity.getName();
             } else {
@@ -1521,7 +1521,7 @@ public class BWPresentation extends Application {
         String subGoals = "None";
         int inputIndex = 0;
         int subGoalIndex = 0;
-        ArrayList<BWEntity> inputEntities = new ArrayList<BWEntity>();
+        ArrayList<Entity> inputEntities = new ArrayList<Entity>();
 
         for (Goal subGoal : goal.getSubGoalSet()) {
 
@@ -1542,7 +1542,7 @@ public class BWPresentation extends Application {
             subGoalIndex++;
         }
 
-        for (BWEntity entity : inputEntities) {
+        for (Entity entity : inputEntities) {
             if (inputIndex == 0) {
                 inputData = entity.getName();
             } else {
@@ -1553,15 +1553,15 @@ public class BWPresentation extends Application {
 
         String outputData = "";
         int outputIndex = 0;
-        ArrayList<BWEntity> outputEntities = new ArrayList<BWEntity>();
+        ArrayList<Entity> outputEntities = new ArrayList<Entity>();
         for (AttributeInstance attributeInstance : goalWorkItem
                 .getOutputAttributeInstancesSet()) {
-            BWEntity entity = attributeInstance.getAttribute().getEntity();
+            Entity entity = attributeInstance.getAttribute().getEntity();
             if (!outputEntities.contains(entity)) {
                 outputEntities.add(entity);
             }
         }
-        for (BWEntity entity : outputEntities) {
+        for (Entity entity : outputEntities) {
             if (outputIndex == 0) {
                 outputData += entity.getName();
             } else {

@@ -6,12 +6,13 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 
-public class BWAttributeGroup extends BWAttributeGroup_Base {
-    private static Logger log = LoggerFactory.getLogger(BWAttributeGroup.class);
+public class AttributeGroup extends AttributeGroup_Base {
+    private static Logger log = LoggerFactory.getLogger(AttributeGroup.class);
 
     @Override
     public void setName(String name) {
@@ -19,7 +20,7 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
         super.setName(name);
     }
 
-    public BWAttributeGroup(BWDataModel dataModel, BWEntity entity, String name,
+    public AttributeGroup(DataModel dataModel, Entity entity, String name,
             boolean isMandatory) {
         setDataModel(dataModel);
         setEntity(entity);
@@ -27,7 +28,7 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
         setIsMandatory(isMandatory);
     }
 
-    public BWAttributeGroup() {
+    public AttributeGroup() {
         // TODO Auto-generated constructor stub
     }
 
@@ -48,7 +49,7 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
         return ProductType.ATTRIBUTE_GROUP;
     }
 
-    public Optional<BWAttribute> getAttribute(String name) {
+    public Optional<Attribute> getAttribute(String name) {
         return getAttributeSet().stream()
                 .filter(att -> att.getName().equals(name)).findFirst();
     }
@@ -65,13 +66,13 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
     }
 
     @Override
-    public BWProduct getNext(List<String> pathLeft, String path) {
+    public Product getNext(List<String> pathLeft, String path) {
         log.debug("getNext {}:{}", path, pathLeft);
 
         if (pathLeft.isEmpty())
             return this;
 
-        BWAttribute att = getAttribute(pathLeft.get(0))
+        Attribute att = getAttribute(pathLeft.get(0))
                 .orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH,
                         path + ":" + pathLeft));
 
@@ -95,7 +96,7 @@ public class BWAttributeGroup extends BWAttributeGroup_Base {
 
     @Override
     public Condition getDefCondition() {
-        return DEFAttributeCondition.getDEFAttribute(this);
+        return DefAttributeCondition.getDefAttribute(this);
     }
 
 }

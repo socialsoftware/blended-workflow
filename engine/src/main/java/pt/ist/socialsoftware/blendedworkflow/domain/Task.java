@@ -1,13 +1,19 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 
 public class Task extends Task_Base {
+    private static Logger log = LoggerFactory.getLogger(Task.class);
 
     @Override
     public void setName(String name) {
@@ -69,8 +75,8 @@ public class Task extends Task_Base {
      * @return a string with the condition data entities.
      */
     public String getConstraintData(Boolean isPreConstraint) {
-        Set<BWEntity> entities;
-        Set<BWAttribute> attributes;
+        Set<Entity> entities;
+        Set<Attribute> attributes;
         String dataString = "";
 
         // Get Condition Data
@@ -91,13 +97,13 @@ public class Task extends Task_Base {
         }
 
         // Add Attribute entities
-        for (BWAttribute attribute : attributes) {
+        for (Attribute attribute : attributes) {
             entities.add(attribute.getEntity());
         }
 
         // Create String
         int count = 0;
-        for (BWEntity entity : entities) {
+        for (Entity entity : entities) {
             if (entities.size() == 1) {
                 dataString += entity.getName();
             } else if (count < entities.size() - 1) {
@@ -125,6 +131,116 @@ public class Task extends Task_Base {
     public ActivityDTO getDTO() {
         return new ActivityDTO(getTaskModel().getSpecification().getSpecId(),
                 getName(), getDescription());
+    }
+
+    public boolean checkConsistency() {
+        checkPostConditionContainsAtLeastOneDef();
+        checkEntityOfDefAttributeIsDefined();
+        checkDependenceConstraint();
+        checkMultiplicityConstraint();
+        checkRuleConstraint();
+
+        return true;
+    }
+
+    private void checkRuleConstraint() {
+        Set<Product> attributes = ConditionModel
+                .getProductsOfDefAttributeSet(getPreConditionSet());
+        Set<Product> postAttributes = ConditionModel
+                .getProductsOfDefAttributeSet(getPostConditionSet());
+        attributes.addAll(postAttributes);
+
+        Optional<Rule> oRule = getRuleInvariantSet().stream()
+                .filter(r -> !attributes.containsAll(r.getProducts()))
+                .findFirst();
+
+        if (oRule.isPresent())
+            throw new BWException(BWErrorType.INCONSISTENT_RULE_CONDITION,
+                    getName() + ":" + oRule.get().getName());
+
+        // at least an attribute is defined in the task
+        for (Rule rule : getRuleInvariantSet())
+            if (!rule.getProducts().stream()
+                    .anyMatch((a) -> postAttributes.contains(a)))
+                throw new BWException(BWErrorType.INCONSISTENT_RULE_CONDITION,
+                        getName() + ":" + rule.getName());
+    }
+
+    private void checkMultiplicityConstraint() {
+        Set<Entity> entities = ConditionModel
+                .getEntitiesOfDefEntitySet(getPreConditionSet());
+        Set<Entity> postEntities = ConditionModel
+                .getEntitiesOfDefEntitySet(getPostConditionSet());
+        entities.addAll(postEntities);
+
+        Optional<MulCondition> oMul = getMultiplicityInvariantSet().stream()
+                .filter(m -> !entities
+                        .contains(m.getRelationBW().getEntityOne())
+                        || !entities.contains(m.getRelationBW().getEntityTwo()))
+                .findFirst();
+
+        if (oMul.isPresent())
+            throw new BWException(BWErrorType.INCONSISTENT_MUL_CONDITION,
+                    getName() + ":" + oMul.get().getEntity().getName());
+
+        // at least one entity definition is done here
+        oMul = getMultiplicityInvariantSet().stream()
+                .filter(m -> !(postEntities.contains(
+                        m.getRelationBW().getEntityOne())
+                || postEntities.contains(m.getRelationBW().getEntityTwo())))
+                .findFirst();
+
+        if (oMul.isPresent())
+            throw new BWException(BWErrorType.INCONSISTENT_MUL_CONDITION,
+                    getName() + ":" + oMul.get().getEntity().getName());
+    }
+
+    private void checkDependenceConstraint() {
+        Set<Product> postProducts = ConditionModel
+                .getProductsOfDefConditions(getPostConditionSet());
+
+        Set<Product> preProducts = ConditionModel
+                .getProductsOfDefConditions(getPreConditionSet());
+
+        Optional<Dependence> oDep = getTaskModel().getSpecification()
+                .getDataModel().getDependenceSet().stream()
+                .filter(d -> postProducts.contains(d.getProduct())
+                        && !preProducts.contains(d.getTarget())
+                        && !postProducts.contains(d.getTarget()))
+                .findFirst();
+
+        if (oDep.isPresent())
+            throw new BWException(BWErrorType.MISSING_DEF_IN_PRE,
+                    getName() + ":" + oDep.get().getProduct().getName());
+    }
+
+    private void checkEntityOfDefAttributeIsDefined() {
+        Set<Entity> entities = Stream.concat(
+                ConditionModel.getDefEntityConditions(getPreConditionSet())
+                        .stream().map(d -> d.getEntity()),
+                ConditionModel.getDefEntityConditions(getPostConditionSet())
+                        .stream().map(d -> d.getEntity()))
+                .collect(Collectors.toSet());
+
+        Optional<DefAttributeCondition> oDef = ConditionModel
+                .getDefAttributeConditions(getPostConditionSet()).stream()
+                .filter(d -> !entities.contains(d.getEntity())).findFirst();
+
+        if (oDef.isPresent())
+            throw new BWException(BWErrorType.MISSING_DEF_IN_PRE,
+                    getName() + ":" + oDef.get().getEntity().getName());
+    }
+
+    private void checkPostConditionContainsAtLeastOneDef() {
+        if (ConditionModel.getDefAttributeConditions(getPostConditionSet())
+                .size() > 0)
+            return;
+
+        if (ConditionModel.getDefEntityConditions(getPostConditionSet())
+                .size() > 0)
+            return;
+
+        throw new BWException(BWErrorType.NO_DEF_CONDITION_IN_POST, getName());
     }
 
 }

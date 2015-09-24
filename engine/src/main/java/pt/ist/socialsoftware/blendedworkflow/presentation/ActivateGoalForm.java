@@ -23,9 +23,9 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
@@ -126,7 +126,7 @@ public class ActivateGoalForm extends VerticalLayout {
                     DataModelInstance dataModelInstance = bwInstance
                             .getDataModelInstance();
                     log.info("|" + selec.getCaption() + "|");
-                    BWEntity subGoalEntity = dataModelInstance
+                    Entity subGoalEntity = dataModelInstance
                             .getEntity(selec.getCaption()).get();
                     if (subEntityInstanceOID == "") {
                         _entities.put(subGoalEntity.getExternalId(), null);
@@ -200,9 +200,9 @@ public class ActivateGoalForm extends VerticalLayout {
         BWInstance bwInstance = FenixFramework.getDomainObject(_bwInstanceOID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         Goal goal = FenixFramework.getDomainObject(_goalOID);
-        BWEntity goalContext = goal.getEntityContext();
+        Entity goalContext = goal.getEntityContext();
 
-        for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitiesSet()) {
             if (entity.equals(goalContext)) {
                 for (EntityInstance entityInstance : entity
                         .getEntityInstancesSet()) {
@@ -220,10 +220,10 @@ public class ActivateGoalForm extends VerticalLayout {
     private void getKeyEntities() {
 
         Goal goal = FenixFramework.getDomainObject(_goalOID);
-        BWEntity goalContext = goal.getEntityContext();
-        for (BWRelation relation : goalContext.getRelationsSet()) {
-            BWEntity one = relation.getEntityOne();
-            BWEntity two = relation.getEntityTwo();
+        Entity goalContext = goal.getEntityContext();
+        for (RelationBW relation : goalContext.getRelationsSet()) {
+            Entity one = relation.getEntityOne();
+            Entity two = relation.getEntityTwo();
             if (goalContext.equals(one) && relation.getIsTwoKeyEntity()) {
                 addNativeSelect(keyRelationsVL, two);
             }
@@ -240,7 +240,7 @@ public class ActivateGoalForm extends VerticalLayout {
 
     private void getSubGoalsEntities() {
         Goal goal = FenixFramework.getDomainObject(_goalOID);
-        for (BWEntity entity : goal.getSubGoalsContext()) {
+        for (Entity entity : goal.getSubGoalsContext()) {
             addNativeSelect(subGoalContextVL, entity);
             _entities.put(entity.getExternalId(), null);
         }
@@ -250,7 +250,7 @@ public class ActivateGoalForm extends VerticalLayout {
         }
     }
 
-    protected void addNativeSelect(Layout l, BWEntity entity) {
+    protected void addNativeSelect(Layout l, Entity entity) {
         NativeSelect ns = new NativeSelect(entity.getName());
         ns.setImmediate(true);
         ns.addStyleName("h2");

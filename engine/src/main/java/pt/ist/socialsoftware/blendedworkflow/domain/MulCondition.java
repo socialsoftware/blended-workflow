@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class MULCondition extends MULCondition_Base {
+public class MulCondition extends MulCondition_Base {
 
-    public static MULCondition getMulCondition(BWRelation relation,
+    public static MulCondition getMulCondition(RelationBW relation,
             String rolename) {
-        for (MULCondition mulCondition : relation.getMulConditionSet()) {
+        for (MulCondition mulCondition : relation.getMulConditionSet()) {
             if (mulCondition.getRolename().equals(rolename))
                 return mulCondition;
         }
@@ -23,41 +23,46 @@ public class MULCondition extends MULCondition_Base {
             throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolename);
 
         if (relation.getRoleNameOne().equals(rolename))
-            return new MULCondition(relation, 1);
+            return new MulCondition(relation, 1);
 
         if (relation.getRoleNameTwo().equals(rolename))
-            return new MULCondition(relation, 2);
+            return new MulCondition(relation, 2);
 
         assert(false);
         return null;
     }
 
-    private MULCondition(BWRelation relation, int side) {
+    public static void createMUlConditions(RelationBW relation) {
+        getMulCondition(relation, relation.getRoleNameOne());
+        getMulCondition(relation, relation.getRoleNameTwo());
+    }
+
+    private MulCondition(RelationBW relation, int side) {
         relation.getDataModel().getSpecification().getConditionModel()
                 .addEntityInvariantCondition(this);
-        setBwRelation(relation);
+        setRelationBW(relation);
         setSide(side);
     }
 
-    public BWEntity getEntity() {
+    public Entity getEntity() {
         if (getSide() == 1)
-            return getBwRelation().getEntityTwo();
+            return getRelationBW().getEntityTwo();
         else
-            return getBwRelation().getEntityOne();
+            return getRelationBW().getEntityOne();
     }
 
     public String getRolename() {
         if (getSide() == 1)
-            return getBwRelation().getRoleNameOne();
+            return getRelationBW().getRoleNameOne();
         else
-            return getBwRelation().getRoleNameTwo();
+            return getRelationBW().getRoleNameTwo();
     }
 
     public Cardinality getCardinality() {
         if (getSide() == 1)
-            return getBwRelation().getCardinalityOne();
+            return getRelationBW().getCardinalityOne();
         else
-            return getBwRelation().getCardinalityTwo();
+            return getRelationBW().getCardinalityTwo();
     }
 
     public String getExpression() {
@@ -68,7 +73,7 @@ public class MULCondition extends MULCondition_Base {
     @Override
     public void delete() {
         setConditionModel(null);
-        setBwRelation(null);
+        setRelationBW(null);
         setInvariantConditionGoal(null);
         setTaskWithMultiplicity(null);
 
@@ -78,9 +83,9 @@ public class MULCondition extends MULCondition_Base {
     @Override
     public String getSubPath() {
         return "MUL("
-                + getBwRelation().getSourceOfRolename(getRolename()).getName()
+                + getRelationBW().getSourceOfRolename(getRolename()).getName()
                 + "."
-                + getBwRelation().getCardinalityByRolename(getRolename()).name()
+                + getRelationBW().getCardinalityByRolename(getRolename()).name()
                 + ")";
     }
 
@@ -111,18 +116,18 @@ public class MULCondition extends MULCondition_Base {
     }
 
     @Override
-    public Set<BWEntity> getEntities() {
+    public Set<Entity> getEntities() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
-        return new HashSet<BWAttribute>();
+    public Set<Attribute> getAttributes() {
+        return new HashSet<Attribute>();
     }
 
     @Override
-    public HashMap<BWAttribute, String> getcompareConditionValues() {
+    public HashMap<Attribute, String> getcompareConditionValues() {
         // TODO Auto-generated method stub
         return null;
     }

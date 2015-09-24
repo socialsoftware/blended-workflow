@@ -12,7 +12,7 @@ import com.vaadin.ui.Window.Notification;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
@@ -157,7 +157,7 @@ public class WorkListManager {
      * Update the BWPresentation with all the active WorkItems.
      */
     public void updateBWPresentation() {
-        for (BWSpecification bwSpecification : BlendedWorkflow.getInstance()
+        for (Specification bwSpecification : BlendedWorkflow.getInstance()
                 .getSpecificationSet()) {
             for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
                 for (WorkItem workItem : bwInstance.getWorkItemsSet()) {

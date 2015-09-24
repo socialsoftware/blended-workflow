@@ -7,14 +7,14 @@ import org.junit.Test;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Product;
+import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
@@ -36,25 +36,25 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
 
     DesignInterface designInterface;
 
-    BWSpecification spec;
-    BWEntity entityOne;
+    Specification spec;
+    Entity entityOne;
 
     @Override
     public void populate4Test() throws BWException {
         designInterface = DesignInterface.getInstance();
 
-        spec = new BWSpecification(SPEC_ID, SPEC_NAME, "author", "description",
+        spec = new Specification(SPEC_ID, SPEC_NAME, "author", "description",
                 "version", "UID");
 
-        entityOne = new BWEntity(spec.getDataModel(), ENTITY_NAME_ONE, false);
-        BWEntity entityTwo = new BWEntity(spec.getDataModel(), ENTITY_NAME_TWO,
+        entityOne = new Entity(spec.getDataModel(), ENTITY_NAME_ONE, false);
+        Entity entityTwo = new Entity(spec.getDataModel(), ENTITY_NAME_TWO,
                 false);
-        new BWAttribute(spec.getDataModel(), entityOne, null,
+        new Attribute(spec.getDataModel(), entityOne, null,
                 ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false, false);
-        new BWAttribute(spec.getDataModel(), entityOne, null,
+        new Attribute(spec.getDataModel(), entityOne, null,
                 ATTRIBUTE_NAME_TWO, AttributeType.STRING, false, false, false);
 
-        new BWRelation(spec.getDataModel(), "relation", entityOne, ROLE_ONE,
+        new RelationBW(spec.getDataModel(), "relation", entityOne, ROLE_ONE,
                 Cardinality.ZERO_OR_ONE, false, entityTwo, ROLE_TWO,
                 Cardinality.ONE, false);
     }
@@ -64,12 +64,12 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
         ProductDTO productDTO = designInterface.getTargetOfPath(SPEC_ID,
                 ENTITY_NAME_TWO + "." + ROLE_ONE + "." + ATTRIBUTE_NAME_ONE);
 
-        BWProduct product = FenixFramework
+        Product product = FenixFramework
                 .getDomainObject(productDTO.getExtId());
 
         assertEquals(ProductType.ATTRIBUTE, product.getProductType());
 
-        BWAttribute attribute = (BWAttribute) product;
+        Attribute attribute = (Attribute) product;
 
         assertEquals(SPEC_ID,
                 attribute.getDataModel().getSpecification().getSpecId());
@@ -83,12 +83,12 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
         ProductDTO productDTO = designInterface.getTargetOfPath(SPEC_ID,
                 ENTITY_NAME_TWO + "." + ROLE_ONE);
 
-        BWProduct product = FenixFramework
+        Product product = FenixFramework
                 .getDomainObject(productDTO.getExtId());
 
         assertEquals(ProductType.ENTITY, product.getProductType());
 
-        BWEntity entity = (BWEntity) product;
+        Entity entity = (Entity) product;
 
         assertEquals(SPEC_ID,
                 entity.getDataModel().getSpecification().getSpecId());

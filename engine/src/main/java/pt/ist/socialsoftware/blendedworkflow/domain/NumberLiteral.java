@@ -3,11 +3,11 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 
-public class BWNumberLiteral extends BWNumberLiteral_Base {
+public class NumberLiteral extends NumberLiteral_Base {
 
-    public BWNumberLiteral(int name) {
+    public NumberLiteral(int name) {
         setValue(name);
     }
 
@@ -22,8 +22,8 @@ public class BWNumberLiteral extends BWNumberLiteral_Base {
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
-        return new HashSet<BWAttribute>();
+    public Set<Attribute> getAttributes() {
+        return new HashSet<Attribute>();
     }
 
 }

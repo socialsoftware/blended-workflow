@@ -26,10 +26,10 @@ import com.vaadin.ui.Window.Notification;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
 
@@ -116,13 +116,13 @@ public class PreTaskForm extends VerticalLayout {
         TaskWorkItem taskWorkItem = FenixFramework
                 .getDomainObject(taskWorkItemOID);
 
-        BWEntity previousEntity = null;
+        Entity previousEntity = null;
         Boolean first = true;
         for (WorkItemArgument workItemArgument : taskWorkItem
                 .getInputWorkItemArgumentsSet()) {
-            BWAttribute attribute = workItemArgument.getAttributeInstance()
+            Attribute attribute = workItemArgument.getAttributeInstance()
                     .getAttribute();
-            BWEntity entity = attribute.getEntity();
+            Entity entity = attribute.getEntity();
 
             if (first) {
                 previousEntity = entity;

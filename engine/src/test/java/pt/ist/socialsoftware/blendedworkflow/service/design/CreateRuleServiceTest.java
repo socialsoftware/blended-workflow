@@ -10,17 +10,17 @@ import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeValueExpression;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWExpression;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWNumberLiteral;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Expression;
+import pt.ist.socialsoftware.blendedworkflow.domain.NumberLiteral;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
@@ -43,27 +43,27 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
     private static final String ATTRIBUTE_GROUP_NAME = "Attribute Group Name";
 
     DesignInterface designInterface;
-    BWDataModel existingDataModel;
+    DataModel existingDataModel;
 
     @Override
     public void populate4Test() {
         designInterface = DesignInterface.getInstance();
 
-        BWSpecification spec = new BWSpecification(EXISTS_SPEC_ID,
+        Specification spec = new Specification(EXISTS_SPEC_ID,
                 EXISTS_SPEC_NAME, "author", "description", "version", "UID");
         existingDataModel = spec.getDataModel();
 
-        BWEntity entity = new BWEntity(existingDataModel, EXISTS_ENTITY_NAME,
+        Entity entity = new Entity(existingDataModel, EXISTS_ENTITY_NAME,
                 false);
-        BWEntity entityTwo = new BWEntity(existingDataModel, ENTITY_NAME,
+        Entity entityTwo = new Entity(existingDataModel, ENTITY_NAME,
                 false);
-        new BWAttribute(existingDataModel, entity, null, EXISTS_ATTRIBUTE_NAME,
+        new Attribute(existingDataModel, entity, null, EXISTS_ATTRIBUTE_NAME,
                 AttributeType.NUMBER, true, false, false);
-        new BWAttribute(existingDataModel, entity, null,
+        new Attribute(existingDataModel, entity, null,
                 EXISTS_ATTRIBUTE_NAME_STRING, AttributeType.STRING, false,
                 false, false);
 
-        BWRelation relation = new BWRelation(existingDataModel, "relation",
+        RelationBW relation = new RelationBW(existingDataModel, "relation",
                 entity, "role1", Cardinality.ZERO_OR_ONE, false, entityTwo,
                 "role2", Cardinality.ONE, false);
     }
@@ -81,26 +81,26 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
         designInterface
                 .createRule(new RuleDTO(EXISTS_SPEC_ID, RULE_NAME, expDTO));
 
-        BWSpecification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
+        Specification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
                 .get();
         assertNotNull(spec);
         assertEquals(1, spec.getDataModel().getRuleSet().size());
-        BWRule rule = spec.getDataModel().getRuleSet().stream()
+        Rule rule = spec.getDataModel().getRuleSet().stream()
                 .collect(Collectors.toList()).get(0);
         assertTrue(rule.getCondition() instanceof Comparison);
         Comparison comparison = (Comparison) rule.getCondition();
         assertEquals(Comparison.ComparisonOperator.GREATER,
                 comparison.getComparator());
-        BWExpression leftExpression = comparison.getLeftExpression();
-        BWExpression righExpression = comparison.getRightExpression();
+        Expression leftExpression = comparison.getLeftExpression();
+        Expression righExpression = comparison.getRightExpression();
 
-        BWNumberLiteral literal = (BWNumberLiteral) leftExpression;
+        NumberLiteral literal = (NumberLiteral) leftExpression;
         assertEquals(6, literal.getValue());
 
-        BWAttributeValueExpression attValue = (BWAttributeValueExpression) righExpression;
-        BWEntity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME)
+        AttributeValueExpression attValue = (AttributeValueExpression) righExpression;
+        Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME)
                 .get();
-        BWAttribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
+        Attribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
         assertEquals(att, attValue.getAttribute());
     }
 
@@ -122,11 +122,11 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
         designInterface
                 .createRule(new RuleDTO(EXISTS_SPEC_ID, RULE_NAME, expDTO));
 
-        BWSpecification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
+        Specification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID)
                 .get();
         assertNotNull(spec);
         assertEquals(1, spec.getDataModel().getRuleSet().size());
-        BWRule rule = spec.getDataModel().getRuleSet().stream()
+        Rule rule = spec.getDataModel().getRuleSet().stream()
                 .collect(Collectors.toList()).get(0);
         assertTrue(rule.getCondition() instanceof AndCondition);
         AndCondition andCondition = (AndCondition) rule.getCondition();
@@ -138,16 +138,16 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
         Comparison comparison = (Comparison) leftCondition;
         assertEquals(Comparison.ComparisonOperator.GREATER,
                 comparison.getComparator());
-        BWExpression leftExpression = comparison.getLeftExpression();
-        BWExpression righExpression = comparison.getRightExpression();
+        Expression leftExpression = comparison.getLeftExpression();
+        Expression righExpression = comparison.getRightExpression();
 
-        BWNumberLiteral literal = (BWNumberLiteral) leftExpression;
+        NumberLiteral literal = (NumberLiteral) leftExpression;
         assertEquals(6, literal.getValue());
 
-        BWAttributeValueExpression attValue = (BWAttributeValueExpression) righExpression;
-        BWEntity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME)
+        AttributeValueExpression attValue = (AttributeValueExpression) righExpression;
+        Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME)
                 .get();
-        BWAttribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
+        Attribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
         assertEquals(att, attValue.getAttribute());
     }
 

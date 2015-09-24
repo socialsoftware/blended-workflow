@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
@@ -23,7 +23,7 @@ public class CreateSpecificationServiceTest extends TeardownRollbackTest {
         DesignInterface.getInstance()
                 .createSpecification(new SpecDTO(SPEC_ID, SPEC_NAME));
 
-        BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID)
+        Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID)
                 .orElse(null);
         assertNotNull(spec);
         assertEquals(SPEC_ID, spec.getSpecId());

@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
+import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
@@ -50,7 +50,7 @@ public class ConditionModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        DEFEntityCondition defCondition = adi
+        DefEntityCondition defCondition = adi
                 .createEntityAchieveCondition(eacDTO);
 
         return new ResponseEntity<DefEntityConditionDTO>(defCondition.getDTO(),
@@ -66,7 +66,7 @@ public class ConditionModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        DEFAttributeCondition defCondition = adi
+        DefAttributeCondition defCondition = adi
                 .createAttributeAchieveCondition(aacDTO);
 
         return new ResponseEntity<DefAttributeConditionDTO>(
@@ -82,7 +82,7 @@ public class ConditionModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWDependence dependence = adi
+        Dependence dependence = adi
                 .createEntityDependenceCondition(dependenceDTO);
 
         return new ResponseEntity<DependenceDTO>(dependence.getDTO(),
@@ -98,7 +98,7 @@ public class ConditionModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWDependence dependence = adi
+        Dependence dependence = adi
                 .createAttributeDependence(dependenceDTO);
 
         return new ResponseEntity<DependenceDTO>(dependence.getDTO(),
@@ -115,7 +115,7 @@ public class ConditionModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        MULCondition mulCondition = adi
+        MulCondition mulCondition = adi
                 .createEntityInvariantCondition(mulConditionDTO);
 
         return new ResponseEntity<MulConditionDTO>(mulCondition.getDTO(),
@@ -131,7 +131,7 @@ public class ConditionModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWRule rule = adi.createAttributeInvariant(ruleDTO);
+        Rule rule = adi.createAttributeInvariant(ruleDTO);
 
         return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
     }

@@ -18,7 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 
 @SuppressWarnings("serial")
 public class RedoGoalForm extends VerticalLayout {
@@ -151,7 +151,7 @@ public class RedoGoalForm extends VerticalLayout {
 
     @Atomic(mode = TxMode.WRITE)
     private void getBWInstances() {
-        for (BWSpecification bwSpecification : BlendedWorkflow.getInstance()
+        for (Specification bwSpecification : BlendedWorkflow.getInstance()
                 .getSpecificationSet()) {
             for (BWInstance bwInstance : bwSpecification.getBwInstancesSet()) {
                 this.bwInstances.addItem(bwInstance.getExternalId());

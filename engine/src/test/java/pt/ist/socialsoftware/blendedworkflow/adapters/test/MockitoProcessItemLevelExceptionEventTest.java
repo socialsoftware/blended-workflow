@@ -24,8 +24,8 @@ import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.MockitoAbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.adapters.ProcessItemLevelExceptionEvent;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
@@ -162,7 +162,7 @@ public class MockitoProcessItemLevelExceptionEventTest
                 .getDataModelInstance();
         final TaskModel taskModel = bwInstance.getTaskModelInstance();
 
-        final BWEntity episodeType = dataModelInstance.getEntity("Episode")
+        final Entity episodeType = dataModelInstance.getEntity("Episode")
                 .get();
         // final EntityInstance episodeOne = new
         // EntityInstance(dataModelInstance, episodeType);

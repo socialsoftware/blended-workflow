@@ -11,8 +11,8 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 
-public class BWDependence extends BWDependence_Base {
-    private static Logger log = LoggerFactory.getLogger(BWDependence.class);
+public class Dependence extends Dependence_Base {
+    private static Logger log = LoggerFactory.getLogger(Dependence.class);
 
     @Override
     public void setPath(String value) {
@@ -20,8 +20,7 @@ public class BWDependence extends BWDependence_Base {
         super.setPath(value);
     }
 
-    public BWDependence(BWDataModel dataModel, BWProduct product,
-            String value) {
+    public Dependence(DataModel dataModel, Product product, String value) {
         setDataModel(dataModel);
         setProduct(product);
         setPath(value);
@@ -48,8 +47,7 @@ public class BWDependence extends BWDependence_Base {
 
         pathLeft.remove(0);
 
-        BWProduct product = getProduct().getEntity().getNext(pathLeft,
-                getPath());
+        Product product = getProduct().getEntity().getNext(pathLeft, getPath());
 
         return (product != null);
     }
@@ -71,7 +69,7 @@ public class BWDependence extends BWDependence_Base {
         return depDTO;
     }
 
-    public BWProduct getTarget() {
+    public Product getTarget() {
         return getDataModel().getTargetOfPath(getPath());
     }
 

@@ -7,10 +7,10 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -21,23 +21,23 @@ public class CreateRelationMethodTest extends TeardownRollbackTest {
     private static String EXISTS_ROLE_NAME = "Role name exist";
     private static String EMPTY_NAME = "";
 
-    private BWEntity entityOne = null;
-    private BWEntity entityTwo = null;
+    private Entity entityOne = null;
+    private Entity entityTwo = null;
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification("SpecId", "My spec",
+        Specification spec = new Specification("SpecId", "My spec",
                 "author", "description", "version", "UID");
-        entityOne = new BWEntity(spec.getDataModel(), "Entity one name", false);
-        entityTwo = new BWEntity(spec.getDataModel(), "Entity two name", false);
-        new BWRelation(spec.getDataModel(), "name", entityOne, EXISTS_ROLE_NAME,
+        entityOne = new Entity(spec.getDataModel(), "Entity one name", false);
+        entityTwo = new Entity(spec.getDataModel(), "Entity two name", false);
+        new RelationBW(spec.getDataModel(), "name", entityOne, EXISTS_ROLE_NAME,
                 Cardinality.ONE, false, entityTwo, EXISTS_ROLE_NAME,
                 Cardinality.ZERO_MANY, false);
     }
 
     @Test
     public void success() {
-        BWRelation relation = entityOne.createRelation(RELATION_NAME,
+        RelationBW relation = entityOne.createRelation(RELATION_NAME,
                 ROLE_NAME_ONE, Cardinality.ZERO_MANY, entityTwo, ROLE_NAME_TWO,
                 Cardinality.ONE);
 

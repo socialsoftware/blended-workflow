@@ -14,8 +14,8 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
@@ -65,15 +65,15 @@ public class PrescriptionMedicationForm extends VerticalLayout {
                         .getDataModelInstance();
 
                 // PrescriptionMedication
-                BWEntity prescriptionMedication = dataModelInstance
+                Entity prescriptionMedication = dataModelInstance
                         .getEntity("Prescription Medication").get();
-                BWAttribute numberAtt = prescriptionMedication
+                Attribute numberAtt = prescriptionMedication
                         .getAttribute("Number").orElse(null);
-                BWAttribute nameAtt = prescriptionMedication
+                Attribute nameAtt = prescriptionMedication
                         .getAttribute("Name").orElse(null);
-                BWAttribute quantityAtt = prescriptionMedication
+                Attribute quantityAtt = prescriptionMedication
                         .getAttribute("Quantity").orElse(null);
-                BWAttribute heartImpactAtt = prescriptionMedication
+                Attribute heartImpactAtt = prescriptionMedication
                         .getAttribute("Heart Impact").orElse(null);
 
                 EntityInstance prescriptionMedication1 = new EntityInstance(
@@ -92,7 +92,7 @@ public class PrescriptionMedicationForm extends VerticalLayout {
                 prescriptionMedication1HeartImpact.setValue(heartImpact);
 
                 // Relation to Medical Prescription
-                BWEntity medicalPrescription = dataModelInstance
+                Entity medicalPrescription = dataModelInstance
                         .getEntity("Medical Prescription").get();
                 String medicalPrescription1OID = medicalPrescription
                         .getEntityInstance("Medical Prescription.1")

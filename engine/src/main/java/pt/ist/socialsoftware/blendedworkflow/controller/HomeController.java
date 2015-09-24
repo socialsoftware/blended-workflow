@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
@@ -22,7 +22,7 @@ public class HomeController {
 
         DesignInterface di = DesignInterface.getInstance();
 
-        BWSpecification spec;
+        Specification spec;
         try {
             spec = di.getSpecBySpecId("novo");
             log.debug("showHome  getSpec {}:", spec);

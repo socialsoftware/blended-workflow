@@ -4,15 +4,15 @@ import java.util.HashMap;
 
 import com.vaadin.ui.VerticalLayout;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 
 //TODO: Class
 @SuppressWarnings("serial")
 public class NewAddSubGoalsContextForm extends VerticalLayout {
 	
-	public NewAddSubGoalsContextForm(EntityInstance entityContext, HashMap<BWEntity, BWRelation> neededEntityInstances) {
+	public NewAddSubGoalsContextForm(EntityInstance entityContext, HashMap<Entity, RelationBW> neededEntityInstances) {
 		
 	}
 

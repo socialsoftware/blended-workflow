@@ -6,15 +6,15 @@ import java.util.List;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.vaadin.ui.AbstractField;
@@ -125,15 +125,15 @@ public class TaskForm extends VerticalLayout {
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
 
-		BWEntity previousEntity = null;
+		Entity previousEntity = null;
 		Boolean first = true;
 		Boolean posAttribute = false;
 		for (WorkItemArgument preWorkItemArgument : taskWorkItem
 				.getInputWorkItemArgumentsSet()) {
 			AttributeInstance preAttributeInstance = preWorkItemArgument
 					.getAttributeInstance();
-			BWAttribute attribute = preAttributeInstance.getAttribute();
-			BWEntity entity = attribute.getEntity();
+			Attribute attribute = preAttributeInstance.getAttribute();
+			Entity entity = attribute.getEntity();
 			String value = preWorkItemArgument.getValue();
 
 			for (WorkItemArgument posWorkItemArgument : taskWorkItem
@@ -172,13 +172,13 @@ public class TaskForm extends VerticalLayout {
 		TaskWorkItem taskWorkItem = FenixFramework
 				.getDomainObject(taskWorkItemOID);
 
-		BWEntity previousEntity = null;
+		Entity previousEntity = null;
 		Boolean first = true;
 		for (WorkItemArgument workItemArgument : taskWorkItem
 				.getOutputWorkItemArgumentsSet()) {
-			BWAttribute attribute = workItemArgument.getAttributeInstance()
+			Attribute attribute = workItemArgument.getAttributeInstance()
 					.getAttribute();
-			BWEntity entity = attribute.getEntity();
+			Entity entity = attribute.getEntity();
 
 			if (first) {
 				previousEntity = entity;

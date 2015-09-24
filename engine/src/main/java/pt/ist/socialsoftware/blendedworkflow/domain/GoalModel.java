@@ -6,7 +6,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Goal.GoalRelation;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class BWGoalModel extends BWGoalModel_Base {
+public class GoalModel extends GoalModel_Base {
 
     /**
      * Clone the GoalModel tree
@@ -108,8 +108,8 @@ public class BWGoalModel extends BWGoalModel_Base {
                 .forEach((cond) -> newGoal.addEntityInvariantCondition(cond));
 
         Stream.concat(goalOne.getAttributeInvariantConditionSet().stream(),
-                goalTwo.getAttributeInvariantConditionSet().stream())
-                .forEach((rule) -> newGoal.addAttributeInvariantCondition(rule));
+                goalTwo.getAttributeInvariantConditionSet().stream()).forEach(
+                        (rule) -> newGoal.addAttributeInvariantCondition(rule));
 
         goalOne.delete();
         goalTwo.delete();

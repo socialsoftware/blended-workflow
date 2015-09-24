@@ -60,13 +60,13 @@ public class BoolComparison extends BoolComparison_Base {
     }
 
     @Override
-    public Set<BWEntity> getEntities() {
+    public Set<Entity> getEntities() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
+    public Set<Attribute> getAttributes() {
         return Stream
                 .concat(getRightCondition().getAttributes().stream(),
                         getLeftCondition().getAttributes().stream())
@@ -74,7 +74,7 @@ public class BoolComparison extends BoolComparison_Base {
     }
 
     @Override
-    public HashMap<BWAttribute, String> getcompareConditionValues() {
+    public HashMap<Attribute, String> getcompareConditionValues() {
         // TODO Auto-generated method stub
         return null;
     }

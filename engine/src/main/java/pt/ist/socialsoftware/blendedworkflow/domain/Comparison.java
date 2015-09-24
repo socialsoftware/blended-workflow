@@ -9,8 +9,8 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
@@ -23,7 +23,7 @@ public class Comparison extends Comparison_Base {
         EQUAL, NOT_EQUAL, GREATER, GREATER_EQUAL, SMALLER, SMALLER_EQUAL
     }
 
-    public Comparison(BWExpression leftExpression, BWExpression rightExpression,
+    public Comparison(Expression leftExpression, Expression rightExpression,
             ComparisonOperator comparator) {
         setLeftExpression(leftExpression);
         setRightExpression(rightExpression);
@@ -43,7 +43,7 @@ public class Comparison extends Comparison_Base {
             throw new BWException(BWErrorType.INCONSISTENT_TYPE, getSubPath());
     }
 
-    public Comparison(BWAttribute attribute, String operator, String value) {
+    public Comparison(Attribute attribute, String operator, String value) {
         setAttributeOfComparison(attribute);
         setOperator(operator);
         setValue(value);
@@ -53,10 +53,10 @@ public class Comparison extends Comparison_Base {
     Condition cloneCondition(GoalModelInstance goalModelInstance) {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
-        BWEntity entity = dataModelInstance
+        Entity entity = dataModelInstance
                 .getEntity(getAttributeOfComparison().getEntity().getName())
                 .get();
-        BWAttribute attribute = entity
+        Attribute attribute = entity
                 .getAttribute(getAttributeOfComparison().getName())
                 .orElse(null);
         return new Comparison(attribute, getOperator(), getValue());
@@ -66,10 +66,10 @@ public class Comparison extends Comparison_Base {
     Condition cloneCondition(TaskModelInstance taskModelInstance) {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
-        BWEntity entity = dataModelInstance
+        Entity entity = dataModelInstance
                 .getEntity(getAttributeOfComparison().getEntity().getName())
                 .get();
-        BWAttribute attribute = entity
+        Attribute attribute = entity
                 .getAttribute(getAttributeOfComparison().getName())
                 .orElse(null);
         return new Comparison(attribute, getOperator(), getValue());
@@ -90,14 +90,14 @@ public class Comparison extends Comparison_Base {
     }
 
     @Override
-    public Set<BWEntity> getEntities() {
-        return new HashSet<BWEntity>();
+    public Set<Entity> getEntities() {
+        return new HashSet<Entity>();
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
+    public Set<Attribute> getAttributes() {
         if (getAttributeOfComparison() != null) {
-            Set<BWAttribute> attributes = new HashSet<BWAttribute>();
+            Set<Attribute> attributes = new HashSet<Attribute>();
             attributes.add(getAttributeOfComparison());
             return attributes;
         } else {
@@ -109,8 +109,8 @@ public class Comparison extends Comparison_Base {
     }
 
     @Override
-    public HashMap<BWAttribute, String> getcompareConditionValues() {
-        HashMap<BWAttribute, String> result = new HashMap<BWAttribute, String>();
+    public HashMap<Attribute, String> getcompareConditionValues() {
+        HashMap<Attribute, String> result = new HashMap<Attribute, String>();
         result.put(getAttributeOfComparison(), getValue());
         return result;
     }
@@ -198,9 +198,9 @@ public class Comparison extends Comparison_Base {
         }
         if (arguments != null) {
             for (WorkItemArgument workItemArgument : arguments) {
-                BWAttribute workItemAttribute = workItemArgument
+                Attribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                BWAttribute conditionAttribute = getAttributeOfComparison();
+                Attribute conditionAttribute = getAttributeOfComparison();
                 if (workItemAttribute == conditionAttribute) {
                     if (workItemArgument.getState()
                             .equals(DataState.UNDEFINED)) {
@@ -233,9 +233,9 @@ public class Comparison extends Comparison_Base {
         }
         if (arguments != null) {
             for (WorkItemArgument workItemArgument : arguments) {
-                BWAttribute workItemAttribute = workItemArgument
+                Attribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                BWAttribute conditionAttribute = getAttributeOfComparison();
+                Attribute conditionAttribute = getAttributeOfComparison();
                 if (workItemAttribute == conditionAttribute) {
                     if (workItemArgument.getState()
                             .equals(DataState.UNDEFINED)) {

@@ -18,7 +18,7 @@ import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
@@ -47,7 +47,7 @@ public class CreateGoalInstanceServiceTest extends AbstractServiceTest {
             Boolean checkInValue) {
         Transaction.begin();
         // Episode.1
-        BWEntity episodeType = dataModelInstance.getEntity("Episode").get();
+        Entity episodeType = dataModelInstance.getEntity("Episode").get();
         EntityInstance episodeOne = new EntityInstance(episodeType);
         List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
                 dataModelInstance.getEntity("Patient").get()

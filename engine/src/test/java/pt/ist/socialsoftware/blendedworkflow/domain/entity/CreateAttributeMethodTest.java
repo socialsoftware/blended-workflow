@@ -6,11 +6,11 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -22,27 +22,27 @@ public class CreateAttributeMethodTest extends TeardownRollbackTest {
     private static String EXISTS_NAME = "Attribute name exist";
     private static String EMPTY_NAME = "";
 
-    private BWEntity entity;
-    private BWAttributeGroup attGroup;
+    private Entity entity;
+    private AttributeGroup attGroup;
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification("SpecId", "My spec",
+        Specification spec = new Specification("SpecId", "My spec",
                 "author", "description", "version", "UID");
-        entity = new BWEntity(spec.getDataModel(), "Entity name", false);
-        new BWAttribute(spec.getDataModel(), entity, null, EXISTS_NAME,
+        entity = new Entity(spec.getDataModel(), "Entity name", false);
+        new Attribute(spec.getDataModel(), entity, null, EXISTS_NAME,
                 AttributeType.BOOLEAN, true, false, false);
-        attGroup = new BWAttributeGroup(spec.getDataModel(), entity,
+        attGroup = new AttributeGroup(spec.getDataModel(), entity,
                 ATT_GROUP_NAME, true);
     }
 
     @Test
     public void success() {
-        BWAttribute att1 = entity.createAttribute(null, ATT_NAME_ONE,
+        Attribute att1 = entity.createAttribute(null, ATT_NAME_ONE,
                 AttributeType.STRING, true);
-        BWAttribute att2 = entity.createAttribute(null, ATT_NAME_TWO,
+        Attribute att2 = entity.createAttribute(null, ATT_NAME_TWO,
                 AttributeType.BOOLEAN, false);
-        BWAttribute att3 = entity.createAttribute(null, ATT_NAME_THREE,
+        Attribute att3 = entity.createAttribute(null, ATT_NAME_THREE,
                 AttributeType.NUMBER, false);
 
         assertEquals(4, entity.getAttributesSet().size());
@@ -58,7 +58,7 @@ public class CreateAttributeMethodTest extends TeardownRollbackTest {
 
     @Test
     public void successWithGroup() {
-        BWAttribute att1 = entity.createAttribute(attGroup, ATT_NAME_ONE,
+        Attribute att1 = entity.createAttribute(attGroup, ATT_NAME_ONE,
                 AttributeType.STRING, true);
 
         assertEquals(2, entity.getAttributesSet().size());

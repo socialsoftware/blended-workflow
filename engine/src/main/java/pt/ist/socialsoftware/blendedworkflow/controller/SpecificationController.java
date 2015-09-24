@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
@@ -46,7 +46,7 @@ public class SpecificationController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWSpecification spec = adi.getSpecBySpecId(specId);
+        Specification spec = adi.getSpecBySpecId(specId);
 
         return new ResponseEntity<SpecDTO>(spec.getDTO(), HttpStatus.OK);
     }
@@ -57,7 +57,7 @@ public class SpecificationController {
                 specDTO.getName());
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWSpecification spec = adi.createSpecification(specDTO);
+        Specification spec = adi.createSpecification(specDTO);
 
         return new ResponseEntity<SpecDTO>(spec.getDTO(), HttpStatus.CREATED);
     }

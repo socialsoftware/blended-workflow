@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class BWAttributeBoolCondition extends BWAttributeBoolCondition_Base {
+public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 
-    public BWAttributeBoolCondition(BWAttribute att) {
+    public AttributeBoolCondition(Attribute att) {
         setAttributeOfBool(att);
     }
 
@@ -50,21 +51,21 @@ public class BWAttributeBoolCondition extends BWAttributeBoolCondition_Base {
     }
 
     @Override
-    public Set<BWEntity> getEntities() {
+    public Set<Entity> getEntities() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
-        Set<BWAttribute> attributes = new HashSet<BWAttribute>();
+    public Set<Attribute> getAttributes() {
+        Set<Attribute> attributes = new HashSet<Attribute>();
         attributes.add(getAttributeOfBool());
 
         return attributes;
     }
 
     @Override
-    public HashMap<BWAttribute, String> getcompareConditionValues() {
+    public HashMap<Attribute, String> getcompareConditionValues() {
         // TODO Auto-generated method stub
         return null;
     }

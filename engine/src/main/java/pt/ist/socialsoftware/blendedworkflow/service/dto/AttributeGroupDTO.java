@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct.ProductType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
 
 public class AttributeGroupDTO extends ProductDTO {
     private String entityExtId;

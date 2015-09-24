@@ -21,7 +21,7 @@ import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
 import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -91,7 +91,7 @@ public abstract class AbstractServiceTest {
                         with(any(String.class)), with(any(RuleType.class)),
                         with(any(RdrNode.class)), with(any(String.class)));
                 oneOf(bwManager).notifyLoadedBWSpecification(
-                        with(any(BWSpecification.class)));
+                        with(any(Specification.class)));
             }
         };
     }
@@ -114,7 +114,7 @@ public abstract class AbstractServiceTest {
             }
         });
 
-        final BWSpecification bwSpecification = getBWSpecification(
+        final Specification bwSpecification = getBWSpecification(
                 BWSPECIFICATION_NAME);
         new CreateBWInstanceService(bwSpecification.getExternalId(), "",
                 USER_ID).call();
@@ -125,17 +125,17 @@ public abstract class AbstractServiceTest {
         Bootstrap.clean();
     }
 
-    protected BWSpecification getBWSpecification(String name)
+    protected Specification getBWSpecification(String name)
             throws BWException {
         Transaction.begin();
-        final BWSpecification bwSpecification = BlendedWorkflow.getInstance()
+        final Specification bwSpecification = BlendedWorkflow.getInstance()
                 .getSpecById(name).orElseThrow(() -> new BWException(
                         BWErrorType.INVALID_SPECIFICATION_NAME, name));
         Transaction.commit();
         return bwSpecification;
     }
 
-    protected BWInstance getBWInstance(BWSpecification bwSpecification) {
+    protected BWInstance getBWInstance(Specification bwSpecification) {
         Transaction.begin();
         List<BWInstance> bwInstances = new ArrayList<BWInstance>(
                 bwSpecification.getBwInstancesSet());

@@ -19,11 +19,11 @@ import org.yawlfoundation.yawl.worklet.support.WorkletGatewayClient;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
@@ -192,7 +192,7 @@ public class WorkletAdapter {
      *            the BWSpecification.
      * @throws BWException
      */
-    public void loadRdrSet(BWSpecification bwSpecification) throws BWException {
+    public void loadRdrSet(Specification bwSpecification) throws BWException {
         TaskModel taskModel = bwSpecification.getTaskModel();
         YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
         String condition = null;
@@ -301,9 +301,9 @@ public class WorkletAdapter {
     private Element getCornerstoneData(Task task, Boolean isPreCondition,
             String type) {
         String cornerStr = "<cornerstone>";
-        Set<BWEntity> entities = null;
-        Set<BWAttribute> attributes = null;
-        HashMap<BWAttribute, String> attributesValues = null;
+        Set<Entity> entities = null;
+        Set<Attribute> attributes = null;
+        HashMap<Attribute, String> attributesValues = null;
 
         // Get Condition Data
         if (task != null && isPreCondition) {
@@ -332,10 +332,10 @@ public class WorkletAdapter {
         }
 
         if (attributes != null) {
-            Iterator<BWAttribute> it = attributes.iterator();
+            Iterator<Attribute> it = attributes.iterator();
             while (it.hasNext()) {
-                BWAttribute attribute = it.next();
-                BWEntity entity = attribute.getEntity();
+                Attribute attribute = it.next();
+                Entity entity = attribute.getEntity();
                 if (entities.contains(entity)
                         && !attributesValues.containsKey(attribute)
                         && attribute.getIsKeyAttribute()) {
@@ -345,9 +345,9 @@ public class WorkletAdapter {
         }
         if (entities != null) {
             // Parse complete entities
-            for (BWEntity entity : entities) {
+            for (Entity entity : entities) {
                 String entityName = entity.getName().replaceAll(" ", "");
-                for (BWAttribute attribute : entity.getAttributesSet()) {
+                for (Attribute attribute : entity.getAttributesSet()) {
                     if (attribute.getIsKeyAttribute()) {
                         String attributeName = attribute.getName()
                                 .replaceAll(" ", "");
@@ -371,7 +371,7 @@ public class WorkletAdapter {
         }
         // Parse single attributes
         if (attributes != null) {
-            for (BWAttribute attribute : attributes) {
+            for (Attribute attribute : attributes) {
                 String entityName = attribute.getEntity().getName()
                         .replaceAll(" ", "");
                 String attributeName = attribute.getName().replaceAll(" ", "");
@@ -642,7 +642,7 @@ public class WorkletAdapter {
      */
     public void evaluatePreCondition(TaskWorkItem taskWorkItem)
             throws BWException {
-        BWSpecification bwSpecification = taskWorkItem.getBwInstance()
+        Specification bwSpecification = taskWorkItem.getBwInstance()
                 .getSpecification();
         YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
 
@@ -710,7 +710,7 @@ public class WorkletAdapter {
      * @throws BWException
      */
     private YSpecificationID getYAWLSpecificationID(
-            BWSpecification bwSpecification) throws BWException {
+            Specification bwSpecification) throws BWException {
         String yawlCaseID = bwSpecification.getYawlSpecficationID();
         YSpecificationID yawlSpecID = null;
         for (YSpecificationID ySpecificationID : BlendedWorkflow.getInstance()

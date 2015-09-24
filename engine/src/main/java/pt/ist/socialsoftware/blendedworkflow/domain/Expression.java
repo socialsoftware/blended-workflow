@@ -2,9 +2,9 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 
-public abstract class BWExpression extends BWExpression_Base {
+public abstract class Expression extends Expression_Base {
 
     public void delete() {
         setLeftComparison(null);
@@ -14,7 +14,7 @@ public abstract class BWExpression extends BWExpression_Base {
         deleteDomainObject();
     }
 
-    public BWDataModel getDataModel() {
+    public DataModel getDataModel() {
         if (getLeftComparison() != null)
             return getLeftComparison().getDataModel();
         if (getRightComparison() != null)
@@ -31,6 +31,6 @@ public abstract class BWExpression extends BWExpression_Base {
 
     public abstract String getSubPath();
 
-    public abstract Set<BWAttribute> getAttributes();
+    public abstract Set<Attribute> getAttributes();
 
 }

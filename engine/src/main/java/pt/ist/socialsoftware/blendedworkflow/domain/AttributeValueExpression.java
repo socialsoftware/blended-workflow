@@ -3,12 +3,11 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 
-public class BWAttributeValueExpression
-        extends BWAttributeValueExpression_Base {
+public class AttributeValueExpression extends AttributeValueExpression_Base {
 
-    public BWAttributeValueExpression(BWAttribute att) {
+    public AttributeValueExpression(Attribute att) {
         setAttribute(att);
     }
 
@@ -29,9 +28,10 @@ public class BWAttributeValueExpression
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
-        Set<BWAttribute> attributes = new HashSet<BWAttribute>();
-        attributes.add(getAttribute());
+    public Set<Attribute> getAttributes() {
+        Set<Attribute> attributes = new HashSet<Attribute>();
+        if (!getAttribute().getEntity().getExists())
+            attributes.add(getAttribute());
         return attributes;
     }
 

@@ -5,9 +5,9 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
@@ -30,11 +30,11 @@ public class BWSpecificationFactory {
         String identifier = caseInfo.getChildText("identifier", bwNamespace);
 
         // TODO. We will need to generate unique specIds
-        BWSpecification bwSpecification = new BWSpecification("specID", name,
+        Specification bwSpecification = new Specification("specID", name,
                 author, description, version, identifier);
 
         // Data Model
-        BWDataModel dataModel = bwSpecification.getDataModel();
+        DataModel dataModel = bwSpecification.getDataModel();
         new DataModelFactory().parseXMLDataModel(dataModel, bwXML);
         new DataModelInstanceFactory().parseXMLDataModel(dataModel, bwXML);
 
@@ -43,7 +43,7 @@ public class BWSpecificationFactory {
         new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, bwXML);
 
         // Goal Model
-        BWGoalModel goalModel = bwSpecification.getGoalModel();
+        GoalModel goalModel = bwSpecification.getGoalModel();
         new GoalModelFactory().parseXMLGoalModel(dataModel, goalModel, bwXML);
 
         // Create YAWL Specification

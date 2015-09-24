@@ -11,7 +11,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.OrganizationalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Role;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.LoadBWSpecificationService;
 
@@ -54,7 +54,7 @@ public class Bootstrap {
         // try {
         // Transaction.begin();
         BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-        Set<BWSpecification> allBWSpecifications = blendedWorkflow
+        Set<Specification> allBWSpecifications = blendedWorkflow
                 .getSpecificationSet();
         allBWSpecifications.clear();
         // Transaction.commit();

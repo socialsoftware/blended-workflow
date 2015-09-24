@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -20,7 +20,7 @@ public class CreateSpecificationMethodTest extends TeardownRollbackTest {
 
     @Override
     public void populate4Test() throws BWException {
-        new BWSpecification(DUP_ID, DUP_NAME, "author", "description",
+        new Specification(DUP_ID, DUP_NAME, "author", "description",
                 "version", "UID");
     }
 
@@ -28,7 +28,7 @@ public class CreateSpecificationMethodTest extends TeardownRollbackTest {
     public void success() throws BWException {
         getBlendedWorkflow().createSpecification(SPEC_ID, SPEC_NAME);
 
-        BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID)
+        Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID)
                 .orElse(null);
         assertNotNull(spec);
         assertEquals(SPEC_ID, spec.getSpecId());

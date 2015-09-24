@@ -4,18 +4,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class BWBinaryExpression extends BWBinaryExpression_Base {
+public class BinaryExpression extends BinaryExpression_Base {
 
     public static enum BinaryOperator {
         PLUS, MINUS, MUL, DIV
     }
 
-    public BWBinaryExpression(BWExpression leftExpression,
-            BWExpression rightExpression, BinaryOperator operator) {
+    public BinaryExpression(Expression leftExpression,
+            Expression rightExpression, BinaryOperator operator) {
         setLeftExpression(leftExpression);
         setRightExpression(rightExpression);
         setOperator(operator);
@@ -61,7 +61,7 @@ public class BWBinaryExpression extends BWBinaryExpression_Base {
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
+    public Set<Attribute> getAttributes() {
         return Stream
                 .concat(getRightExpression().getAttributes().stream(),
                         getLeftExpression().getAttributes().stream())

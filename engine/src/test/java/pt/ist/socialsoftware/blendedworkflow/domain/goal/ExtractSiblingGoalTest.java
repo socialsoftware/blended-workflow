@@ -10,22 +10,22 @@ import java.util.Set;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeValueExpression;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -44,17 +44,17 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
     private static final String CHILD_GOAL_TWO_ONE_ONE = "childGoalTwoOneOne";
     private static final String CHILD_GOAL_TWO_TWO = "childGoalTwoTwo";
 
-    BWSpecification spec;
-    BWEntity entityOne;
-    BWEntity entityTwo;
-    BWEntity entityThree;
-    BWAttribute attributeOne;
-    BWAttribute attributeTwo;
-    BWAttribute attributeThree;
-    BWAttribute attributeFour;
-    BWAttribute attributeFive;
-    BWRelation relation;
-    BWRule rule;
+    Specification spec;
+    Entity entityOne;
+    Entity entityTwo;
+    Entity entityThree;
+    Attribute attributeOne;
+    Attribute attributeTwo;
+    Attribute attributeThree;
+    Attribute attributeFour;
+    Attribute attributeFive;
+    RelationBW relation;
+    Rule rule;
     Goal topGoal;
     Goal childGoalOne;
     Goal childGoalTwo;
@@ -62,29 +62,29 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 
     @Override
     public void populate4Test() throws BWException {
-        spec = new BWSpecification("SpecId", "My spec", "author", "description",
+        spec = new Specification("SpecId", "My spec", "author", "description",
                 "version", "UID");
 
-        entityOne = new BWEntity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-        attributeOne = new BWAttribute(spec.getDataModel(), entityOne, null,
+        entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
+        attributeOne = new Attribute(spec.getDataModel(), entityOne, null,
                 "att1", AttributeType.NUMBER, true, false, false);
-        attributeTwo = new BWAttribute(spec.getDataModel(), entityOne, null,
+        attributeTwo = new Attribute(spec.getDataModel(), entityOne, null,
                 ATTRIBUTE_NAME_TWO, AttributeType.NUMBER, true, false, false);
 
-        entityTwo = new BWEntity(spec.getDataModel(), ENTITY_TWO_NAME, false);
-        attributeThree = new BWAttribute(spec.getDataModel(), entityTwo, null,
+        entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
+        attributeThree = new Attribute(spec.getDataModel(), entityTwo, null,
                 "att3", AttributeType.BOOLEAN, true, false, false);
-        attributeFour = new BWAttribute(spec.getDataModel(), entityTwo, null,
+        attributeFour = new Attribute(spec.getDataModel(), entityTwo, null,
                 "att4", AttributeType.STRING, true, false, false);
 
-        entityThree = new BWEntity(spec.getDataModel(), "Entity three name",
+        entityThree = new Entity(spec.getDataModel(), "Entity three name",
                 false);
 
-        relation = new BWRelation(spec.getDataModel(), "name", entityOne,
+        relation = new RelationBW(spec.getDataModel(), "name", entityOne,
                 ROLENAME_ONE, Cardinality.ONE, false, entityTwo, ROLENAME_TWO,
                 Cardinality.ZERO_MANY, false);
 
-        BWDependence dependence = new BWDependence(spec.getDataModel(),
+        Dependence dependence = new Dependence(spec.getDataModel(),
                 attributeThree, ENTITY_TWO_NAME + "." + ROLENAME_ONE + "."
                         + ATTRIBUTE_NAME_TWO);
         dependence.check();
@@ -97,31 +97,31 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
         topGoal.addSubGoal(childGoalTwo);
         childGoalTwo.addSubGoal(childGoalTwoOne);
 
-        topGoal.addSuccessCondition(DEFEntityCondition.getDEFEntity(entityOne));
+        topGoal.addSuccessCondition(DefEntityCondition.getDefEntity(entityOne));
         topGoal.addSuccessCondition(
-                DEFEntityCondition.getDEFEntity(entityThree));
+                DefEntityCondition.getDefEntity(entityThree));
         childGoalOne.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeOne));
+                DefAttributeCondition.getDefAttribute(attributeOne));
         childGoalTwo.addSuccessCondition(
-                DEFEntityCondition.getDEFEntity(entityTwo));
+                DefEntityCondition.getDefEntity(entityTwo));
         childGoalTwo.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeTwo));
+                DefAttributeCondition.getDefAttribute(attributeTwo));
         childGoalTwo.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeThree));
+                DefAttributeCondition.getDefAttribute(attributeThree));
         childGoalTwoOne.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeFour));
+                DefAttributeCondition.getDefAttribute(attributeFour));
 
         childGoalOne.addActivationCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeTwo));
+                DefAttributeCondition.getDefAttribute(attributeTwo));
 
         topGoal.addEntityInvariantCondition(
-                MULCondition.getMulCondition(relation, ROLENAME_TWO));
+                MulCondition.getMulCondition(relation, ROLENAME_TWO));
         childGoalTwo.addEntityInvariantCondition(
-                MULCondition.getMulCondition(relation, ROLENAME_ONE));
+                MulCondition.getMulCondition(relation, ROLENAME_ONE));
 
-        rule = new BWRule(spec.getDataModel(), RULE_CONDITION,
-                new Comparison(new BWAttributeValueExpression(attributeOne),
-                        new BWAttributeValueExpression(attributeTwo),
+        rule = new Rule(spec.getDataModel(), RULE_CONDITION,
+                new Comparison(new AttributeValueExpression(attributeOne),
+                        new AttributeValueExpression(attributeTwo),
                         ComparisonOperator.EQUAL));
 
         childGoalOne.addAttributeInvariantCondition(rule);
@@ -132,7 +132,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
     public void sourceDoesNotContainCondition() {
         Set<Condition> successConditions = new HashSet<Condition>();
         successConditions
-                .add(DEFAttributeCondition.getDEFAttribute(attributeTwo));
+                .add(DefAttributeCondition.getDefAttribute(attributeTwo));
 
         try {
             childGoalOne.extractSibling(CHILD_GOAL_THREE, successConditions);
@@ -147,7 +147,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
     @Test
     public void cannotExtractSiblingOfTopGoal() {
         Set<Condition> successConditions = new HashSet<Condition>();
-        successConditions.add(DEFEntityCondition.getDEFEntity(entityThree));
+        successConditions.add(DefEntityCondition.getDefEntity(entityThree));
 
         try {
             topGoal.extractSibling("secondTop", successConditions);
@@ -161,7 +161,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
     public void sourceCannotEndWithEmptySuccessCondition() {
         Set<Condition> successConditions = new HashSet<Condition>();
         successConditions
-                .add(DEFAttributeCondition.getDEFAttribute(attributeOne));
+                .add(DefAttributeCondition.getDefAttribute(attributeOne));
 
         try {
             childGoalOne.extractSibling(CHILD_GOAL_THREE, successConditions);
@@ -187,7 +187,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
     public void cannotSeparateDefAttFromDefEnt() {
         Set<Condition> successConditions = new HashSet<Condition>();
         successConditions
-                .add(DEFAttributeCondition.getDEFAttribute(attributeThree));
+                .add(DefAttributeCondition.getDefAttribute(attributeThree));
 
         try {
             childGoalTwo.extractSibling(CHILD_GOAL_THREE, successConditions);
@@ -202,7 +202,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
     @Test
     public void cannotSeparateDefEntFromDefAtt() {
         Set<Condition> successConditions = new HashSet<Condition>();
-        successConditions.add(DEFEntityCondition.getDEFEntity(entityTwo));
+        successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
 
         try {
             childGoalTwo.extractSibling(CHILD_GOAL_THREE, successConditions);
@@ -218,7 +218,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
     public void successOne() {
         Set<Condition> successConditions = new HashSet<Condition>();
         successConditions
-                .add(DEFAttributeCondition.getDEFAttribute(attributeTwo));
+                .add(DefAttributeCondition.getDefAttribute(attributeTwo));
 
         Goal childGoalThree = childGoalTwo.extractSibling(CHILD_GOAL_THREE,
                 successConditions);
@@ -230,7 +230,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
         assertEquals(0, childGoalThree.getSubGoalSet().size());
         assertEquals(1, childGoalThree.getSuccessConditionSet().size());
         assertTrue(childGoalThree.getSuccessConditionSet()
-                .contains(DEFAttributeCondition.getDEFAttribute(attributeTwo)));
+                .contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
         assertEquals(0, childGoalThree.getActivationConditionSet().size());
         assertEquals(0, childGoalThree.getEntityInvariantConditionSet().size());
         assertEquals(1,
@@ -243,12 +243,12 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
         assertEquals(1, childGoalTwo.getSubGoalSet().size());
         assertEquals(2, childGoalTwo.getSuccessConditionSet().size());
         assertTrue(childGoalTwo.getSuccessConditionSet()
-                .contains(DEFEntityCondition.getDEFEntity(entityTwo)));
+                .contains(DefEntityCondition.getDefEntity(entityTwo)));
         assertTrue(childGoalTwo.getSuccessConditionSet().contains(
-                DEFAttributeCondition.getDEFAttribute(attributeThree)));
+                DefAttributeCondition.getDefAttribute(attributeThree)));
         assertEquals(1, childGoalTwo.getActivationConditionSet().size());
         assertTrue(childGoalTwo.getActivationConditionSet()
-                .contains(DEFAttributeCondition.getDEFAttribute(attributeTwo)));
+                .contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
         assertEquals(1, childGoalTwo.getEntityInvariantConditionSet().size());
         assertEquals(ENTITY_TWO_NAME,
                 childGoalTwo.getEntityInvariantConditionSet().stream()
@@ -263,11 +263,11 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
                 childGoalTwo, childGoalTwoOne);
 
         Set<Condition> successConditions = new HashSet<Condition>();
-        successConditions.add(DEFEntityCondition.getDEFEntity(entityTwo));
+        successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
         successConditions
-                .add(DEFAttributeCondition.getDEFAttribute(attributeThree));
+                .add(DefAttributeCondition.getDefAttribute(attributeThree));
         successConditions
-                .add(DEFAttributeCondition.getDEFAttribute(attributeFour));
+                .add(DefAttributeCondition.getDefAttribute(attributeFour));
 
         Goal childGoalThree = childGoalTwo.extractSibling(CHILD_GOAL_THREE,
                 successConditions);
@@ -279,14 +279,14 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
         assertEquals(0, childGoalThree.getSubGoalSet().size());
         assertEquals(3, childGoalThree.getSuccessConditionSet().size());
         assertTrue(childGoalThree.getSuccessConditionSet()
-                .contains(DEFEntityCondition.getDEFEntity(entityTwo)));
+                .contains(DefEntityCondition.getDefEntity(entityTwo)));
         assertTrue(childGoalThree.getSuccessConditionSet().contains(
-                DEFAttributeCondition.getDEFAttribute(attributeThree)));
+                DefAttributeCondition.getDefAttribute(attributeThree)));
         assertTrue(childGoalThree.getSuccessConditionSet().contains(
-                DEFAttributeCondition.getDEFAttribute(attributeFour)));
+                DefAttributeCondition.getDefAttribute(attributeFour)));
         assertEquals(1, childGoalThree.getActivationConditionSet().size());
         assertTrue(childGoalThree.getActivationConditionSet()
-                .contains(DEFAttributeCondition.getDEFAttribute(attributeTwo)));
+                .contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
         assertEquals(1, childGoalThree.getEntityInvariantConditionSet().size());
         assertEquals(ENTITY_TWO_NAME,
                 childGoalThree.getEntityInvariantConditionSet().stream()
@@ -299,7 +299,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
         assertEquals(0, childGoalTwo.getSubGoalSet().size());
         assertEquals(1, childGoalTwo.getSuccessConditionSet().size());
         assertTrue(childGoalTwo.getSuccessConditionSet()
-                .contains(DEFAttributeCondition.getDEFAttribute(attributeTwo)));
+                .contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
         assertEquals(0, childGoalTwo.getActivationConditionSet().size());
         assertEquals(0, childGoalTwo.getEntityInvariantConditionSet().size());
         assertEquals(1,

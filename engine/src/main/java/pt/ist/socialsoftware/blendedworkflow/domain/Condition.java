@@ -37,11 +37,11 @@ public abstract class Condition extends Condition_Base {
     abstract void assignAttributeInstances(TaskWorkItem taskWorkItem,
             ConditionType conditionType);
 
-    public abstract Set<BWEntity> getEntities();
+    public abstract Set<Entity> getEntities();
 
-    public abstract Set<BWAttribute> getAttributes();
+    public abstract Set<Attribute> getAttributes();
 
-    public abstract HashMap<BWAttribute, String> getcompareConditionValues();
+    public abstract HashMap<Attribute, String> getcompareConditionValues();
 
     public abstract String getRdrUndefinedCondition();
 
@@ -76,7 +76,8 @@ public abstract class Condition extends Condition_Base {
     public void delete() {
         setRule(null);
 
-        setTaskWithPreCondition(null);
+        getTaskWithPreConditionSet().stream()
+                .forEach(t -> t.removePreCondition(this));
         setTaskWithPostCondition(null);
 
         setActivationConditionGoal(null);
@@ -93,7 +94,7 @@ public abstract class Condition extends Condition_Base {
         deleteDomainObject();
     }
 
-    public BWDataModel getDataModel() {
+    public DataModel getDataModel() {
         if (getRule() != null)
             return getRule().getDataModel();
         if (getAndLeftCondition() != null)

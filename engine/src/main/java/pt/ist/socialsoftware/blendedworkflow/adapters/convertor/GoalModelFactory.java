@@ -6,9 +6,9 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWGoalModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
@@ -20,7 +20,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class GoalModelFactory {
 
-    public void parseXMLGoalModel(BWDataModel dataModel, BWGoalModel goalModel,
+    public void parseXMLGoalModel(DataModel dataModel, GoalModel goalModel,
             String specificationXML) throws BWException {
         User defaultUser = BlendedWorkflow.getInstance()
                 .getOrganizationalModel().getUser("BlendedWorkflow");
@@ -47,7 +47,7 @@ public class GoalModelFactory {
 
         String entityContextName = rootGoalXML.getChildText("Context",
                 bwNamespace);
-        BWEntity entityContext = dataModel.getEntity(entityContextName).get();
+        Entity entityContext = dataModel.getEntity(entityContextName).get();
 
         Goal rootGoal = new Goal(goalModel, rootGoalName, rootGoalDescription,
                 rootGoalCondition, entityContext);

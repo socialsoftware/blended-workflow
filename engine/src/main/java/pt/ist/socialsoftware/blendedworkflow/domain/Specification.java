@@ -10,7 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
-public class BWSpecification extends BWSpecification_Base {
+public class Specification extends Specification_Base {
 
     @Override
     public void setSpecId(String specId) {
@@ -24,7 +24,7 @@ public class BWSpecification extends BWSpecification_Base {
         super.setName(name);
     }
 
-    public BWSpecification(String specId, String name, String author,
+    public Specification(String specId, String name, String author,
             String description, String version, String UID) throws BWException {
         setSpecId(specId);
         setName(name);
@@ -36,10 +36,10 @@ public class BWSpecification extends BWSpecification_Base {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         setCreationDate(dateFormat.format(Calendar.getInstance().getTime()));
 
-        setDataModel(new BWDataModel());
-        setConditionModel(new BWConditionModel());
+        setDataModel(new DataModel());
+        setConditionModel(new ConditionModel());
         setTaskModel(new TaskModel());
-        setGoalModel(new BWGoalModel());
+        setGoalModel(new GoalModel());
         setInstanceCounter(0);
         BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
         blendedWorkflow.addSpecification(this);

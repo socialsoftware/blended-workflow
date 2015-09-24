@@ -6,36 +6,36 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class GetMulConditionMethodTest extends TeardownRollbackTest {
     private static String ROLENAME_ONE = "Role name one";
     private static String ROLENAME_TWO = "Role name two";
 
-    BWRelation relation;
+    RelationBW relation;
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification("SpecId", "My spec",
+        Specification spec = new Specification("SpecId", "My spec",
                 "author", "description", "version", "UID");
 
-        BWEntity entityOne = new BWEntity(spec.getDataModel(),
+        Entity entityOne = new Entity(spec.getDataModel(),
                 "Entity one name", false);
-        BWEntity entityTwo = new BWEntity(spec.getDataModel(),
+        Entity entityTwo = new Entity(spec.getDataModel(),
                 "Entity two name", false);
-        relation = new BWRelation(spec.getDataModel(), "name", entityOne,
+        relation = new RelationBW(spec.getDataModel(), "name", entityOne,
                 ROLENAME_ONE, Cardinality.ONE, false, entityTwo, ROLENAME_TWO,
                 Cardinality.ZERO_MANY, false);
     }
 
     @Test
     public void successOneCreation() {
-        MULCondition mulCondition = MULCondition.getMulCondition(relation,
+        MulCondition mulCondition = MulCondition.getMulCondition(relation,
                 ROLENAME_ONE);
 
         assertNotNull(mulCondition);
@@ -47,8 +47,8 @@ public class GetMulConditionMethodTest extends TeardownRollbackTest {
 
     @Test
     public void successTwoCreation() {
-        MULCondition.getMulCondition(relation, ROLENAME_ONE);
-        MULCondition mulCondition = MULCondition.getMulCondition(relation,
+        MulCondition.getMulCondition(relation, ROLENAME_ONE);
+        MulCondition mulCondition = MulCondition.getMulCondition(relation,
                 ROLENAME_TWO);
 
         assertNotNull(mulCondition);
@@ -60,9 +60,9 @@ public class GetMulConditionMethodTest extends TeardownRollbackTest {
 
     @Test
     public void successThreeCreation() {
-        MULCondition.getMulCondition(relation, ROLENAME_ONE);
-        MULCondition.getMulCondition(relation, ROLENAME_TWO);
-        MULCondition mulCondition = MULCondition.getMulCondition(relation,
+        MulCondition.getMulCondition(relation, ROLENAME_ONE);
+        MulCondition.getMulCondition(relation, ROLENAME_TWO);
+        MulCondition mulCondition = MulCondition.getMulCondition(relation,
                 ROLENAME_ONE);
 
         assertNotNull(mulCondition);

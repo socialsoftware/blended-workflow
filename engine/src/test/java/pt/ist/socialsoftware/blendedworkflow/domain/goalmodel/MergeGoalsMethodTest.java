@@ -8,17 +8,17 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -31,13 +31,13 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
     private static final String CHILD_GOAL_TWO = "childGoalTwo";
     private static final String CHILD_GOAL_ONE = "childGoalOne";
 
-    BWSpecification spec;
-    BWEntity entityOne;
-    BWEntity entityTwo;
-    BWAttribute attributeOne;
-    BWAttribute attributeTwo;
-    BWAttribute attributeThree;
-    BWRelation relation;
+    Specification spec;
+    Entity entityOne;
+    Entity entityTwo;
+    Attribute attributeOne;
+    Attribute attributeTwo;
+    Attribute attributeThree;
+    RelationBW relation;
     Goal topGoal;
     Goal childGoalOne;
     Goal childGoalTwo;
@@ -45,20 +45,20 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 
     @Override
     public void populate4Test() throws BWException {
-        spec = new BWSpecification("SpecId", "My spec", "author", "description",
+        spec = new Specification("SpecId", "My spec", "author", "description",
                 "version", "UID");
 
-        entityOne = new BWEntity(spec.getDataModel(), "Entity one name", false);
-        attributeOne = new BWAttribute(spec.getDataModel(), entityOne, null,
+        entityOne = new Entity(spec.getDataModel(), "Entity one name", false);
+        attributeOne = new Attribute(spec.getDataModel(), entityOne, null,
                 "att1", AttributeType.BOOLEAN, true, false, false);
-        attributeTwo = new BWAttribute(spec.getDataModel(), entityOne, null,
+        attributeTwo = new Attribute(spec.getDataModel(), entityOne, null,
                 "att2", AttributeType.NUMBER, true, false, false);
 
-        entityTwo = new BWEntity(spec.getDataModel(), "Entity two name", false);
-        attributeThree = new BWAttribute(spec.getDataModel(), entityTwo, null,
+        entityTwo = new Entity(spec.getDataModel(), "Entity two name", false);
+        attributeThree = new Attribute(spec.getDataModel(), entityTwo, null,
                 "att3", AttributeType.BOOLEAN, true, false, false);
 
-        relation = new BWRelation(spec.getDataModel(), "name", entityOne,
+        relation = new RelationBW(spec.getDataModel(), "name", entityOne,
                 ROLENAME_ONE, Cardinality.ONE, false, entityTwo, ROLENAME_TWO,
                 Cardinality.ZERO_MANY, false);
 
@@ -70,23 +70,23 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
         topGoal.addSubGoal(childGoalTwo);
         childGoalTwo.addSubGoal(childGoalTwoOne);
 
-        topGoal.addSuccessCondition(DEFEntityCondition.getDEFEntity(entityOne));
+        topGoal.addSuccessCondition(DefEntityCondition.getDefEntity(entityOne));
         childGoalOne.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeOne));
+                DefAttributeCondition.getDefAttribute(attributeOne));
         childGoalTwo.addSuccessCondition(
-                DEFEntityCondition.getDEFEntity(entityTwo));
+                DefEntityCondition.getDefEntity(entityTwo));
         childGoalTwo.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeTwo));
+                DefAttributeCondition.getDefAttribute(attributeTwo));
 
         childGoalOne.addActivationCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeTwo));
+                DefAttributeCondition.getDefAttribute(attributeTwo));
 
         topGoal.addEntityInvariantCondition(
-                MULCondition.getMulCondition(relation, ROLENAME_TWO));
+                MulCondition.getMulCondition(relation, ROLENAME_TWO));
         childGoalTwo.addEntityInvariantCondition(
-                MULCondition.getMulCondition(relation, ROLENAME_ONE));
+                MulCondition.getMulCondition(relation, ROLENAME_ONE));
 
-        BWRule rule = new BWRule(spec.getDataModel(), RULE_CONDITION, null);
+        Rule rule = new Rule(spec.getDataModel(), RULE_CONDITION, null);
 
         childGoalOne.addAttributeInvariantCondition(rule);
         childGoalTwo.addAttributeInvariantCondition(rule);
@@ -105,15 +105,15 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
         assertTrue(merged.getSubGoalSet().contains(childGoalTwoOne));
         assertEquals(3, merged.getSuccessConditionSet().size());
         assertTrue(merged.getSuccessConditionSet()
-                .contains(DEFAttributeCondition.getDEFAttribute(attributeOne)));
+                .contains(DefAttributeCondition.getDefAttribute(attributeOne)));
         assertTrue(merged.getSuccessConditionSet()
-                .contains(DEFEntityCondition.getDEFEntity(entityTwo)));
+                .contains(DefEntityCondition.getDefEntity(entityTwo)));
         assertTrue(merged.getSuccessConditionSet()
-                .contains(DEFAttributeCondition.getDEFAttribute(attributeTwo)));
+                .contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
         assertEquals(0, merged.getActivationConditionSet().size());
         assertEquals(1, merged.getEntityInvariantConditionSet().size());
         assertTrue(merged.getEntityInvariantConditionSet().contains(
-                MULCondition.getMulCondition(relation, ROLENAME_ONE)));
+                MulCondition.getMulCondition(relation, ROLENAME_ONE)));
         assertEquals(1, merged.getAttributeInvariantConditionSet().size());
         assertTrue(merged.getAttributeInvariantConditionSet()
                 .contains(spec.getDataModel().getRule(RULE_CONDITION)));
@@ -133,17 +133,17 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
         assertTrue(result.getSubGoalSet().contains(childGoalTwoOne));
         assertEquals(3, result.getSuccessConditionSet().size());
         assertTrue(result.getSuccessConditionSet()
-                .contains(DEFEntityCondition.getDEFEntity(entityOne)));
+                .contains(DefEntityCondition.getDefEntity(entityOne)));
         assertTrue(result.getSuccessConditionSet()
-                .contains(DEFEntityCondition.getDEFEntity(entityTwo)));
+                .contains(DefEntityCondition.getDefEntity(entityTwo)));
         assertTrue(result.getSuccessConditionSet()
-                .contains(DEFAttributeCondition.getDEFAttribute(attributeTwo)));
+                .contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
         assertEquals(0, result.getActivationConditionSet().size());
         assertEquals(2, result.getEntityInvariantConditionSet().size());
         assertTrue(result.getEntityInvariantConditionSet().contains(
-                MULCondition.getMulCondition(relation, ROLENAME_ONE)));
+                MulCondition.getMulCondition(relation, ROLENAME_ONE)));
         assertTrue(result.getEntityInvariantConditionSet().contains(
-                MULCondition.getMulCondition(relation, ROLENAME_TWO)));
+                MulCondition.getMulCondition(relation, ROLENAME_TWO)));
         assertEquals(1, result.getAttributeInvariantConditionSet().size());
         assertTrue(result.getAttributeInvariantConditionSet()
                 .contains(spec.getDataModel().getRule(RULE_CONDITION)));

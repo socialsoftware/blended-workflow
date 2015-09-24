@@ -9,13 +9,13 @@ import java.util.Set;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class GetDependencePathsTest extends TeardownRollbackTest {
@@ -35,32 +35,32 @@ public class GetDependencePathsTest extends TeardownRollbackTest {
 
     DesignInterface designInterface;
 
-    BWSpecification spec;
+    Specification spec;
 
     @Override
     public void populate4Test() throws BWException {
         designInterface = DesignInterface.getInstance();
 
-        spec = new BWSpecification(SPEC_ID, SPEC_NAME, "author", "description",
+        spec = new Specification(SPEC_ID, SPEC_NAME, "author", "description",
                 "version", "UID");
 
-        BWEntity entityOne = new BWEntity(spec.getDataModel(), ENTITY_NAME_ONE,
+        Entity entityOne = new Entity(spec.getDataModel(), ENTITY_NAME_ONE,
                 false);
-        BWEntity entityTwo = new BWEntity(spec.getDataModel(), ENTITY_NAME_TWO,
+        Entity entityTwo = new Entity(spec.getDataModel(), ENTITY_NAME_TWO,
                 false);
-        BWAttribute attributeOne = new BWAttribute(spec.getDataModel(),
+        Attribute attributeOne = new Attribute(spec.getDataModel(),
                 entityOne, null, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true,
                 false, false);
-        BWAttribute attributeTwo = new BWAttribute(spec.getDataModel(),
+        Attribute attributeTwo = new Attribute(spec.getDataModel(),
                 entityOne, null, ATTRIBUTE_NAME_TWO, AttributeType.STRING,
                 false, false, false);
 
-        new BWRelation(spec.getDataModel(), "relation", entityOne, ROLE_ONE,
+        new RelationBW(spec.getDataModel(), "relation", entityOne, ROLE_ONE,
                 Cardinality.ZERO_OR_ONE, false, entityTwo, ROLE_TWO,
                 Cardinality.ONE, false);
 
-        new BWDependence(spec.getDataModel(), entityOne, DEPENDENCE_ONE);
-        new BWDependence(spec.getDataModel(), attributeTwo, DEPENDENCE_TWO);
+        new Dependence(spec.getDataModel(), entityOne, DEPENDENCE_ONE);
+        new Dependence(spec.getDataModel(), attributeTwo, DEPENDENCE_TWO);
 
     }
 

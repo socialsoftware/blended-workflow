@@ -6,13 +6,13 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
@@ -37,11 +37,11 @@ public class ForAllConditionTest extends AbstractDomainTest {
     private static Boolean ENTITY_2_KEY = false;
 
     private DataModelInstance dataModelInstance;
-    private BWEntity entity1;
-    private BWAttribute entity1Att1;
-    private BWEntity entity2;
-    private BWAttribute entity2Att1;
-    private BWRelation relation;
+    private Entity entity1;
+    private Attribute entity1Att1;
+    private Entity entity2;
+    private Attribute entity2Att1;
+    private RelationBW relation;
 
     private EntityInstance entityInstance1_1;
     private AttributeInstance entityInstance1_1Att1;
@@ -53,7 +53,7 @@ public class ForAllConditionTest extends AbstractDomainTest {
     private EntityInstance entityInstance2_2;
     private AttributeInstance entityInstance2_2Att1;
 
-    private DEFEntityCondition existsEntityCondition;
+    private DefEntityCondition existsEntityCondition;
     private ForAllCondition forAllCondition;
 
     @Override
@@ -61,8 +61,8 @@ public class ForAllConditionTest extends AbstractDomainTest {
         dataModelInstance = new DataModelInstance();
 
         // Entity1
-        entity1 = new BWEntity(dataModelInstance, ENTITY_1_NAME, false);
-        entity1Att1 = new BWAttribute(dataModelInstance, entity1, null,
+        entity1 = new Entity(dataModelInstance, ENTITY_1_NAME, false);
+        entity1Att1 = new Attribute(dataModelInstance, entity1, null,
                 ENTITY_1_ATT_1_NAME, AttributeType.STRING, false,
                 ENTITY_1_ATT_1_KEY, false);
 
@@ -77,8 +77,8 @@ public class ForAllConditionTest extends AbstractDomainTest {
         entityInstance1_2Att1.setValue(" ");
 
         // Entity2
-        entity2 = new BWEntity(dataModelInstance, ENTITY_2_NAME, false);
-        entity2Att1 = new BWAttribute(dataModelInstance, entity2, null,
+        entity2 = new Entity(dataModelInstance, ENTITY_2_NAME, false);
+        entity2Att1 = new Attribute(dataModelInstance, entity2, null,
                 ENTITY_2_ATT_1_NAME, AttributeType.STRING, false,
                 ENTITY_2_ATT_1_KEY, false);
 
@@ -90,7 +90,7 @@ public class ForAllConditionTest extends AbstractDomainTest {
                 entityInstance2_2);
 
         // Relation
-        relation = new BWRelation(dataModelInstance, RELATION_1_NAME, entity1,
+        relation = new RelationBW(dataModelInstance, RELATION_1_NAME, entity1,
                 entity1.getClass().getName(), ENTITY_1_CARDINALITY,
                 ENTITY_1_KEY, entity2, entity2.getClass().getName(),
                 ENTITY_2_CARDINALITY, ENTITY_2_KEY);

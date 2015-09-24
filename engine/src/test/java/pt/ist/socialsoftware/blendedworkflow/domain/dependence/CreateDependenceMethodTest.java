@@ -5,29 +5,29 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateDependenceMethodTest extends TeardownRollbackTest {
     private static String DEPENDENCE = "Entity name" + "."
             + "rolename.attribute";
 
-    private BWEntity entity = null;
-    private BWAttribute attribute = null;
-    private BWAttributeGroup attributeGroup = null;
+    private Entity entity = null;
+    private Attribute attribute = null;
+    private AttributeGroup attributeGroup = null;
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification("SpecId", "My spec",
+        Specification spec = new Specification("SpecId", "My spec",
                 "author", "description", "version", "UID");
-        entity = new BWEntity(spec.getDataModel(), "Entity name", false);
-        attributeGroup = new BWAttributeGroup(spec.getDataModel(), entity,
+        entity = new Entity(spec.getDataModel(), "Entity name", false);
+        attributeGroup = new AttributeGroup(spec.getDataModel(), entity,
                 "name", true);
-        attribute = new BWAttribute(spec.getDataModel(), entity, null, "name",
+        attribute = new Attribute(spec.getDataModel(), entity, null, "name",
                 AttributeType.BOOLEAN, true, false, false);
     }
 

@@ -4,37 +4,37 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class DEFAttributeCondition extends DEFAttributeCondition_Base {
+public class DefAttributeCondition extends DefAttributeCondition_Base {
 
-    public static DEFAttributeCondition getDEFAttribute(BWAttribute attribute) {
-        DEFAttributeCondition defAttributeCondition = attribute
+    public static DefAttributeCondition getDefAttribute(Attribute attribute) {
+        DefAttributeCondition defAttributeCondition = attribute
                 .getDefAttributeCondition();
         if (defAttributeCondition == null)
-            defAttributeCondition = new DEFAttributeCondition(attribute);
+            defAttributeCondition = new DefAttributeCondition(attribute);
         return defAttributeCondition;
     }
 
-    public static DEFAttributeCondition getDEFAttribute(
-            BWAttributeGroup attributeGroup) {
-        DEFAttributeCondition defAttributeCondition = attributeGroup
+    public static DefAttributeCondition getDefAttribute(
+            AttributeGroup attributeGroup) {
+        DefAttributeCondition defAttributeCondition = attributeGroup
                 .getDefAttributeCondition();
         if (defAttributeCondition == null)
-            defAttributeCondition = new DEFAttributeCondition(attributeGroup);
+            defAttributeCondition = new DefAttributeCondition(attributeGroup);
         return defAttributeCondition;
     }
 
-    private DEFAttributeCondition(BWAttribute attribute) {
+    private DefAttributeCondition(Attribute attribute) {
         setConditionModel(attribute.getEntity().getDataModel()
                 .getSpecification().getConditionModel());
         setAttributeOfDef(attribute);
     }
 
-    private DEFAttributeCondition(BWAttributeGroup attributeGroup) {
+    private DefAttributeCondition(AttributeGroup attributeGroup) {
         setConditionModel(attributeGroup.getEntity().getDataModel()
                 .getSpecification().getConditionModel());
         setAttributeGroup(attributeGroup);
@@ -44,22 +44,22 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     Condition cloneCondition(GoalModelInstance goalModelInstance) {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
-        BWEntity entity = dataModelInstance
+        Entity entity = dataModelInstance
                 .getEntity(getAttributeOfDef().getEntity().getName()).get();
-        BWAttribute attribute = entity
-                .getAttribute(getAttributeOfDef().getName()).orElse(null);
-        return new DEFAttributeCondition(attribute);
+        Attribute attribute = entity.getAttribute(getAttributeOfDef().getName())
+                .orElse(null);
+        return new DefAttributeCondition(attribute);
     }
 
     @Override
     Condition cloneCondition(TaskModelInstance taskModelInstance) {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
-        BWEntity entity = dataModelInstance
+        Entity entity = dataModelInstance
                 .getEntity(getAttributeOfDef().getEntity().getName()).get();
-        BWAttribute attribute = entity
-                .getAttribute(getAttributeOfDef().getName()).orElse(null);
-        return new DEFAttributeCondition(attribute);
+        Attribute attribute = entity.getAttribute(getAttributeOfDef().getName())
+                .orElse(null);
+        return new DefAttributeCondition(attribute);
     }
 
     @Override
@@ -77,13 +77,13 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     }
 
     @Override
-    public Set<BWEntity> getEntities() {
-        return new HashSet<BWEntity>();
+    public Set<Entity> getEntities() {
+        return new HashSet<Entity>();
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
-        Set<BWAttribute> attribute = new HashSet<BWAttribute>();
+    public Set<Attribute> getAttributes() {
+        Set<Attribute> attribute = new HashSet<Attribute>();
         if (getAttributeOfDef() != null) {
             attribute.add(getAttributeOfDef());
             return attribute;
@@ -95,8 +95,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
     }
 
     @Override
-    public HashMap<BWAttribute, String> getcompareConditionValues() {
-        return new HashMap<BWAttribute, String>();
+    public HashMap<Attribute, String> getcompareConditionValues() {
+        return new HashMap<Attribute, String>();
     }
 
     @Override
@@ -186,9 +186,9 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
 
         if (arguments != null) {
             for (WorkItemArgument workItemArgument : arguments) {
-                BWAttribute workItemAttribute = workItemArgument
+                Attribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                BWAttribute conditionAttribute = getAttributeOfDef();
+                Attribute conditionAttribute = getAttributeOfDef();
                 if (workItemAttribute == conditionAttribute) {
                     if (workItemArgument.getState().equals(DataState.SKIPPED)) {
                         return TripleStateBool.SKIPPED;
@@ -207,8 +207,8 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
             GoalWorkItem goalWorkItem, ConditionType conditionType) {
         for (AttributeInstance attributeInstance : entityInstance
                 .getAttributeInstancesSet()) {
-            BWAttribute attribute = attributeInstance.getAttribute();
-            BWAttribute conditionAttribute = getAttributeOfDef();
+            Attribute attribute = attributeInstance.getAttribute();
+            Attribute conditionAttribute = getAttributeOfDef();
 
             if (attribute == conditionAttribute) {
                 DataState state = getWorkItemState(attributeInstance,
@@ -292,18 +292,25 @@ public class DEFAttributeCondition extends DEFAttributeCondition_Base {
         return defConditionDTO;
     }
 
-    public BWEntity getEntity() {
+    public Entity getEntity() {
         if (getAttributeOfDef() != null)
             return getAttributeOfDef().getEntity();
         else
             return getAttributeGroup().getEntity();
     }
 
-    public BWProduct getProduct() {
+    public Product getProduct() {
         if (getAttributeOfDef() != null)
             return getAttributeOfDef();
         else
             return getAttributeGroup();
+    }
+
+    public String getName() {
+        if (getAttributeOfDef() != null)
+            return getAttributeOfDef().getName();
+        else
+            return getAttributeGroup().getName();
     }
 
 }

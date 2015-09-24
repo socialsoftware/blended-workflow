@@ -22,10 +22,10 @@ import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.adapters.ProcessItemLevelExceptionEvent;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
@@ -124,7 +124,7 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
         boolean committed = false;
         try {
             Transaction.begin();
-            BWSpecification bwSpecification = BlendedWorkflow.getInstance()
+            Specification bwSpecification = BlendedWorkflow.getInstance()
                     .getSpecById(BWSPECIFICATION_NAME).orElse(null);
             List<BWInstance> bwInstances = new ArrayList<BWInstance>(
                     bwSpecification.getBwInstancesSet());
@@ -150,14 +150,14 @@ public class ProcessItemLevelExceptionEventTest extends AbstractServiceTest {
 
     private void setUpBookingActivity() throws BWException {
         Transaction.begin();
-        BWSpecification bwSpecification = BlendedWorkflow.getInstance()
+        Specification bwSpecification = BlendedWorkflow.getInstance()
                 .getSpecById(BWSPECIFICATION_NAME).orElse(null);
         List<BWInstance> bwInstances = new ArrayList<BWInstance>(
                 bwSpecification.getBwInstancesSet());
         BWInstance bwInstance = bwInstances.get(0);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         TaskModel taskModel = bwInstance.getTaskModelInstance();
-        BWEntity episodeType = dataModelInstance.getEntity("Episode").get();
+        Entity episodeType = dataModelInstance.getEntity("Episode").get();
         EntityInstance episodeOne = new EntityInstance(episodeType);
         List<EntityInstance> entityInstances = new ArrayList<EntityInstance>(
                 dataModelInstance.getEntity("Patient").get()

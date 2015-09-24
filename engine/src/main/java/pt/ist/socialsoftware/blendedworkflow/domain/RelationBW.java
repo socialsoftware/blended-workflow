@@ -9,7 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 
 //TODO: Create two separate Relations in DML for EntityOne and EntityTwo.
-public class BWRelation extends BWRelation_Base {
+public class RelationBW extends RelationBW_Base {
 
     private final static String ZERO_MANY = "\\*";
     private final static String ONE_MANY = "1..\\*";
@@ -74,9 +74,9 @@ public class BWRelation extends BWRelation_Base {
         super.setRoleNameTwo(roleNameTwo);
     }
 
-    public BWRelation(BWDataModel dataModel, String name, BWEntity entityOne,
+    public RelationBW(DataModel dataModel, String name, Entity entityOne,
             String roleNameOne, Cardinality cardinalityOne,
-            boolean isOneKeyEntity, BWEntity entityTwo, String roleNameTwo,
+            boolean isOneKeyEntity, Entity entityTwo, String roleNameTwo,
             Cardinality cardinalityTwo, boolean isTwoKeyEntity)
                     throws BWException {
         setDataModel(dataModel);
@@ -120,7 +120,7 @@ public class BWRelation extends BWRelation_Base {
         checkUniqueRolename(getEntityOne(), roleNameTwo);
     }
 
-    private void checkUniqueRolename(BWEntity entity, String roleName) {
+    private void checkUniqueRolename(Entity entity, String roleName) {
         if (entity.getRelationsSet().stream().filter(rel -> rel != this)
                 .anyMatch(rel -> (rel.getRoleNameOne().equals(roleName)
                         && rel.getEntityTwo() == entity)
@@ -130,15 +130,15 @@ public class BWRelation extends BWRelation_Base {
     }
 
     public void cloneRelation(DataModelInstance dataModelInstance,
-            BWEntity entityOne, BWEntity entityTwo) throws BWException {
-        new BWRelation(dataModelInstance, getName(), entityOne,
+            Entity entityOne, Entity entityTwo) throws BWException {
+        new RelationBW(dataModelInstance, getName(), entityOne,
                 getRoleNameOne(), getCardinalityOne(), getIsOneKeyEntity(),
                 entityTwo, getRoleNameTwo(), getCardinalityTwo(),
                 getIsTwoKeyEntity());
     }
 
-    public Set<BWEntity> getEntitiesSet() {
-        Set<BWEntity> entities = new HashSet<BWEntity>();
+    public Set<Entity> getEntitiesSet() {
+        Set<Entity> entities = new HashSet<Entity>();
         entities.add(this.getEntityOne());
         entities.add(this.getEntityTwo());
         return entities;
@@ -154,7 +154,7 @@ public class BWRelation extends BWRelation_Base {
         deleteDomainObject();
     }
 
-    public BWEntity getEntitybyRolename(String rolename) {
+    public Entity getEntitybyRolename(String rolename) {
         if (getRoleNameOne().equals(rolename))
             return getEntityOne();
         if (getRoleNameTwo().equals(rolename))
@@ -162,7 +162,7 @@ public class BWRelation extends BWRelation_Base {
         return null;
     }
 
-    public BWEntity getSourceOfRolename(String rolename) {
+    public Entity getSourceOfRolename(String rolename) {
         if (getRoleNameOne().equals(rolename))
             return getEntityTwo();
         if (getRoleNameTwo().equals(rolename))
@@ -197,11 +197,11 @@ public class BWRelation extends BWRelation_Base {
         return relDTO;
     }
 
-    public MULCondition getMulCondition(BWEntity entity) {
+    public MulCondition getMulCondition(Entity entity) {
         if (getEntityOne() == entity)
-            return MULCondition.getMulCondition(this, getRoleNameTwo());
+            return MulCondition.getMulCondition(this, getRoleNameTwo());
         if (getEntityTwo() == entity)
-            return MULCondition.getMulCondition(this, getRoleNameOne());
+            return MulCondition.getMulCondition(this, getRoleNameOne());
         return null;
     }
 

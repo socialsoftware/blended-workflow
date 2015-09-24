@@ -9,7 +9,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -18,7 +18,7 @@ public class CreateBWInstanceService implements Callable<String> {
 
     private static Logger log = LoggerFactory
             .getLogger("CreateBWInstanceService");
-    private final BWSpecification bwSpecification;
+    private final Specification bwSpecification;
     private final String name;
     private final String userID;
 
@@ -44,7 +44,7 @@ public class CreateBWInstanceService implements Callable<String> {
                     user);
 
             // Launch case on YAWL
-            BWSpecification bwSpecification = bwInstance.getSpecification();
+            Specification bwSpecification = bwInstance.getSpecification();
             String yawlSpecificationID = bwSpecification
                     .getYawlSpecficationID();
             String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter()

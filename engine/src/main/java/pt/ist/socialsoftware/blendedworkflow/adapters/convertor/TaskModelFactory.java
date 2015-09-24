@@ -8,7 +8,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Role;
@@ -20,7 +20,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class TaskModelFactory {
 
-    public void parseXMLTaskModel(BWDataModel dataModel, TaskModel taskModel,
+    public void parseXMLTaskModel(DataModel dataModel, TaskModel taskModel,
             String specificationXML) throws BWException {
         User defaultUser = BlendedWorkflow.getInstance()
                 .getOrganizationalModel().getUser("BlendedWorkflow");

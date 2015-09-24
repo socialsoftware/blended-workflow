@@ -32,18 +32,18 @@ public class TrueCondition extends TrueCondition_Base {
     }
 
     @Override
-    public Set<BWEntity> getEntities() {
-        return new HashSet<BWEntity>();
+    public Set<Entity> getEntities() {
+        return new HashSet<Entity>();
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
-        return new HashSet<BWAttribute>();
+    public Set<Attribute> getAttributes() {
+        return new HashSet<Attribute>();
     }
 
     @Override
-    public HashMap<BWAttribute, String> getcompareConditionValues() {
-        return new HashMap<BWAttribute, String>();
+    public HashMap<Attribute, String> getcompareConditionValues() {
+        return new HashMap<Attribute, String>();
     }
 
     @Override

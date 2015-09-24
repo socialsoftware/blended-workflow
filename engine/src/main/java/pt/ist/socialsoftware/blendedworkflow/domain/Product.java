@@ -4,22 +4,22 @@ import java.util.List;
 
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 
-public abstract class BWProduct extends BWProduct_Base {
+public abstract class Product extends Product_Base {
     public enum ProductType {
         ATTRIBUTE, ATTRIBUTE_GROUP, ENTITY
     }
 
-    public BWDependence createDependence(String value) {
-        return new BWDependence(this.getEntity().getDataModel(), this, value);
+    public Dependence createDependence(String value) {
+        return new Dependence(this.getEntity().getDataModel(), this, value);
     }
 
-    public abstract BWEntity getEntity();
+    public abstract Entity getEntity();
 
     public abstract Condition getDefCondition();
 
     public abstract ProductType getProductType();
 
-    public abstract BWProduct getNext(List<String> pathLeft, String path);
+    public abstract Product getNext(List<String> pathLeft, String path);
 
     public void delete() {
         getDependenceSet().stream().forEach(dep -> dep.delete());

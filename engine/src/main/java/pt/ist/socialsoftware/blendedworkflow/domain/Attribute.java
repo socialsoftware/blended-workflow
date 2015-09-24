@@ -6,12 +6,13 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 
-public class BWAttribute extends BWAttribute_Base {
-    private static Logger log = LoggerFactory.getLogger(BWAttribute.class);
+public class Attribute extends Attribute_Base {
+    private static Logger log = LoggerFactory.getLogger(Attribute.class);
 
     final static String ATTRIBUTE_TYPE = "(" + AttributeType.STRING + "|"
             + AttributeType.NUMBER + "|" + AttributeType.BOOLEAN + "|"
@@ -30,12 +31,11 @@ public class BWAttribute extends BWAttribute_Base {
             return name;
         }
 
-        public static BWAttribute.AttributeType parseAttributeType(
-                String type) {
+        public static Attribute.AttributeType parseAttributeType(String type) {
             if (!Pattern.matches(ATTRIBUTE_TYPE, type))
                 throw new BWException(BWErrorType.INVALID_ATTRIBUTE_TYPE);
 
-            BWAttribute.AttributeType res = null;
+            Attribute.AttributeType res = null;
 
             if (type.equals(AttributeType.STRING.toString()))
                 return AttributeType.STRING;
@@ -62,9 +62,9 @@ public class BWAttribute extends BWAttribute_Base {
         super.setName(name);
     }
 
-    public BWAttribute(BWDataModel dataModel, BWEntity entity,
-            BWAttributeGroup group, String name, AttributeType type,
-            boolean isMandatory, boolean isKeyAttribute, boolean isSystem) {
+    public Attribute(DataModel dataModel, Entity entity, AttributeGroup group,
+            String name, AttributeType type, boolean isMandatory,
+            boolean isKeyAttribute, boolean isSystem) {
         setDataModel(dataModel);
         setEntity(entity);
         setAttributeGroup(group);
@@ -91,7 +91,7 @@ public class BWAttribute extends BWAttribute_Base {
         // new BWException(BlendedWorkflowError.INVALID_ATTRIBUTE_NAME, name);
         // }
 
-        for (BWAttribute attribute : getEntity().getAttributesSet()) {
+        for (Attribute attribute : getEntity().getAttributesSet()) {
             if ((attribute != this) && attribute.getName().equals(name)) {
                 throw new BWException(BWErrorType.INVALID_ATTRIBUTE_NAME, name);
             }
@@ -104,9 +104,9 @@ public class BWAttribute extends BWAttribute_Base {
     }
 
     public void cloneAttribute(DataModelInstance dataModelInstance,
-            BWEntity entity) throws BWException {
-        new BWAttribute(dataModelInstance, entity, getAttributeGroup(),
-                getName(), getType(), getIsMandatory(), getIsKeyAttribute(),
+            Entity entity) throws BWException {
+        new Attribute(dataModelInstance, entity, getAttributeGroup(), getName(),
+                getType(), getIsMandatory(), getIsKeyAttribute(),
                 getIsSystem());
     }
 
@@ -139,7 +139,7 @@ public class BWAttribute extends BWAttribute_Base {
     }
 
     @Override
-    public BWProduct getNext(List<String> pathLeft, String path) {
+    public Product getNext(List<String> pathLeft, String path) {
         log.debug("getNext {}:{}", path, pathLeft);
 
         if (pathLeft.size() == 0)
@@ -167,7 +167,7 @@ public class BWAttribute extends BWAttribute_Base {
 
     @Override
     public Condition getDefCondition() {
-        return DEFAttributeCondition.getDEFAttribute(this);
+        return DefAttributeCondition.getDefAttribute(this);
     }
 
 }

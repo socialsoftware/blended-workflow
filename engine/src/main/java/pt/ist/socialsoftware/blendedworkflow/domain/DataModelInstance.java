@@ -9,10 +9,10 @@ public class DataModelInstance extends DataModelInstance_Base {
     private ArrayList<EntityInstance> foundEntityInstancePath = new ArrayList<EntityInstance>();
     private final ArrayList<EntityInstance> visitedEntityInstanceNodes = new ArrayList<EntityInstance>();
 
-    private BWEntity foundEntity = null;
-    private ArrayList<BWEntity> foundEntityPath = new ArrayList<BWEntity>();
-    private ArrayList<BWRelation> foundRelationPath = new ArrayList<BWRelation>();
-    private final ArrayList<BWEntity> visitedEntityNodes = new ArrayList<BWEntity>();
+    private Entity foundEntity = null;
+    private ArrayList<Entity> foundEntityPath = new ArrayList<Entity>();
+    private ArrayList<RelationBW> foundRelationPath = new ArrayList<RelationBW>();
+    private final ArrayList<Entity> visitedEntityNodes = new ArrayList<Entity>();
 
     /**********************
      * Getters and Setters
@@ -35,19 +35,19 @@ public class DataModelInstance extends DataModelInstance_Base {
         this.visitedEntityInstanceNodes.clear();
     }
 
-    public BWEntity getFoundEntity() {
+    public Entity getFoundEntity() {
         return foundEntity;
     }
 
-    public ArrayList<BWEntity> getFoundEntityPath() {
+    public ArrayList<Entity> getFoundEntityPath() {
         return foundEntityPath;
     }
 
-    public ArrayList<BWRelation> getFoundRelationPath() {
+    public ArrayList<RelationBW> getFoundRelationPath() {
         return foundRelationPath;
     }
 
-    public ArrayList<BWEntity> getVisitedEntityNodes() {
+    public ArrayList<Entity> getVisitedEntityNodes() {
         return visitedEntityNodes;
     }
 
@@ -60,9 +60,9 @@ public class DataModelInstance extends DataModelInstance_Base {
     /********************
      * Search Algorithms
      ********************/
-    public void searchEntity(BWEntity initNode, BWEntity targetNode, BWRelation edge,
-            ArrayList<BWEntity> currentEntityPath,
-            ArrayList<BWRelation> currentRelationPath) {
+    public void searchEntity(Entity initNode, Entity targetNode, RelationBW edge,
+            ArrayList<Entity> currentEntityPath,
+            ArrayList<RelationBW> currentRelationPath) {
         visitedEntityNodes.add(initNode);
 
         if (foundEntityInstance == null) {
@@ -77,11 +77,11 @@ public class DataModelInstance extends DataModelInstance_Base {
             this.foundEntityPath = currentEntityPath;
             this.foundRelationPath = currentRelationPath;
         } else {
-            for (BWRelation relation : initNode.getRelationsSet()) {
-                BWEntity one = relation.getEntityOne();
-                BWEntity two = relation.getEntityTwo();
+            for (RelationBW relation : initNode.getRelationsSet()) {
+                Entity one = relation.getEntityOne();
+                Entity two = relation.getEntityTwo();
 
-                BWEntity newInitNode = null;
+                Entity newInitNode = null;
                 if (initNode.equals(one)) {
                     newInitNode = two;
                 } else {
@@ -150,19 +150,19 @@ public class DataModelInstance extends DataModelInstance_Base {
         return result;
     }
 
-    public BWEntity getEntity(BWEntity startEntity, BWEntity targetEntity) {
-        searchEntity(startEntity, targetEntity, null, new ArrayList<BWEntity>(),
-                new ArrayList<BWRelation>());
-        BWEntity result = getFoundEntity();
+    public Entity getEntity(Entity startEntity, Entity targetEntity) {
+        searchEntity(startEntity, targetEntity, null, new ArrayList<Entity>(),
+                new ArrayList<RelationBW>());
+        Entity result = getFoundEntity();
         clearSearchEntityVariables();
         return result;
     }
 
-    public ArrayList<BWRelation> getRelations(BWEntity startEntity,
-            BWEntity targetEntity) {
-        searchEntity(startEntity, targetEntity, null, new ArrayList<BWEntity>(),
-                new ArrayList<BWRelation>());
-        ArrayList<BWRelation> result = getFoundRelationPath();
+    public ArrayList<RelationBW> getRelations(Entity startEntity,
+            Entity targetEntity) {
+        searchEntity(startEntity, targetEntity, null, new ArrayList<Entity>(),
+                new ArrayList<RelationBW>());
+        ArrayList<RelationBW> result = getFoundRelationPath();
         clearSearchEntityVariables();
         return result;
     }
@@ -172,12 +172,12 @@ public class DataModelInstance extends DataModelInstance_Base {
             EntityInstance e2) {
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 
-        BWEntity entity1 = e1.getEntity();
-        BWEntity entity2 = e2.getEntity();
+        Entity entity1 = e1.getEntity();
+        Entity entity2 = e2.getEntity();
         boolean exists = false;
 
         // Check if relation instance already exists
-        for (BWRelation relation : dataModelInstance.getRelationsSet()) {
+        for (RelationBW relation : dataModelInstance.getRelationsSet()) {
             for (RelationInstance relationInstance : relation
                     .getRelationInstancesSet()) {
                 EntityInstance one = relationInstance.getEntityInstanceOne();
@@ -192,9 +192,9 @@ public class DataModelInstance extends DataModelInstance_Base {
 
         // Create only if no previous RelationInstance exists
         if (!exists) {
-            for (BWRelation relation : dataModelInstance.getRelationsSet()) {
-                BWEntity one = relation.getEntityOne();
-                BWEntity two = relation.getEntityTwo();
+            for (RelationBW relation : dataModelInstance.getRelationsSet()) {
+                Entity one = relation.getEntityOne();
+                Entity two = relation.getEntityTwo();
                 if ((one.equals(entity1) && two.equals(entity2))) {
                     new RelationInstance(relation, e1, e2,
                             e1.getNewRelationInstanceID());

@@ -9,10 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
@@ -31,14 +31,14 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
     private static final String STRING = "String";
     private static final String NUMBER = "Number";
 
-    BWEntity ent;
+    Entity ent;
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
+        Specification spec = new Specification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
-        ent = new BWEntity(spec.getDataModel(), ENTITY_NAME, false);
-        new BWAttribute(spec.getDataModel(), ent, null, DUP_NAME,
+        ent = new Entity(spec.getDataModel(), ENTITY_NAME, false);
+        new Attribute(spec.getDataModel(), ent, null, DUP_NAME,
                 AttributeType.NUMBER, false, false, false);
     }
 
@@ -51,9 +51,9 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
                         null, ATTRIBUTE_NAME, AttributeType.NUMBER.toString(),
                         true));
 
-        BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
-        BWEntity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
-        BWAttribute att = entity.getAttribute(ATTRIBUTE_NAME).orElse(null);
+        Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
+        Entity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
+        Attribute att = entity.getAttribute(ATTRIBUTE_NAME).orElse(null);
         assertNotNull(att);
         assertEquals(ATTRIBUTE_NAME, att.getName());
         assertEquals(AttributeType.NUMBER, att.getType());

@@ -4,21 +4,24 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class DEFEntityCondition extends DEFEntityCondition_Base {
+public class DefEntityCondition extends DefEntityCondition_Base {
 
-    public static DEFEntityCondition getDEFEntity(BWEntity entity) {
+    public static DefEntityCondition getDefEntity(Entity entity) {
         if (entity.getDefEntityCondition() != null)
             return entity.getDefEntityCondition();
         else
-            return new DEFEntityCondition(entity);
+            return new DefEntityCondition(entity);
     }
 
-    private DEFEntityCondition(BWEntity entity) {
+    private DefEntityCondition(Entity entity) {
+        setConditionModel(
+                entity.getDataModel().getSpecification().getConditionModel());
         setEntity(entity);
     }
 
@@ -26,18 +29,18 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
     Condition cloneCondition(GoalModelInstance goalModelInstance) {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
-        BWEntity entity = dataModelInstance.getEntity(getEntity().getName())
+        Entity entity = dataModelInstance.getEntity(getEntity().getName())
                 .get();
-        return new DEFEntityCondition(entity);
+        return new DefEntityCondition(entity);
     }
 
     @Override
     Condition cloneCondition(TaskModelInstance taskModelInstance) {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
-        BWEntity entity = dataModelInstance.getEntity(getEntity().getName())
+        Entity entity = dataModelInstance.getEntity(getEntity().getName())
                 .get();
-        return new DEFEntityCondition(entity);
+        return new DefEntityCondition(entity);
     }
 
     @Override
@@ -55,15 +58,15 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
     }
 
     @Override
-    public Set<BWEntity> getEntities() {
-        Set<BWEntity> entity = new HashSet<BWEntity>();
+    public Set<Entity> getEntities() {
+        Set<Entity> entity = new HashSet<Entity>();
         entity.add(getEntity());
         return entity;
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
-        Set<BWAttribute> attributes = new HashSet<BWAttribute>();
+    public Set<Attribute> getAttributes() {
+        Set<Attribute> attributes = new HashSet<Attribute>();
         // TODO: Removed but may be impact in execution
         // for (BWAttribute attribute : getEntity().getAttributesSet()) {
         // if (attribute.getIsKeyAttribute()) {
@@ -74,8 +77,8 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
     }
 
     @Override
-    public HashMap<BWAttribute, String> getcompareConditionValues() {
-        return new HashMap<BWAttribute, String>();
+    public HashMap<Attribute, String> getcompareConditionValues() {
+        return new HashMap<Attribute, String>();
     }
 
     @Override
@@ -84,7 +87,7 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
         String entityName = getEntity().getName().replaceAll(" ", "");
         Boolean first = true;
 
-        for (BWAttribute attribute : getEntity().getAttributesSet()) {
+        for (Attribute attribute : getEntity().getAttributesSet()) {
             if (attribute.getIsKeyAttribute()) {
 
                 if (first) {
@@ -112,7 +115,7 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
         String entityName = getEntity().getName().replaceAll(" ", "");
         Boolean first = true;
 
-        for (BWAttribute attribute : getEntity().getAttributesSet()) {
+        for (Attribute attribute : getEntity().getAttributesSet()) {
             if (attribute.getIsKeyAttribute()) {
 
                 if (first) {
@@ -140,7 +143,7 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
 
         Boolean first = true;
 
-        for (BWAttribute attribute : getEntity().getAttributesSet()) {
+        for (Attribute attribute : getEntity().getAttributesSet()) {
             if (attribute.getIsKeyAttribute()) {
 
                 if (first) {
@@ -207,9 +210,9 @@ public class DEFEntityCondition extends DEFEntityCondition_Base {
         // Exists Entity
         if (arguments != null) {
             for (WorkItemArgument workItemArgument : arguments) {
-                BWAttribute workItemAttribute = workItemArgument
+                Attribute workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                BWAttribute conditionAttribute = getEntity()
+                Attribute conditionAttribute = getEntity()
                         .getAttribute(workItemAttribute.getName()).orElse(null);
                 if (conditionAttribute != null
                         && conditionAttribute.getIsKeyAttribute()) {

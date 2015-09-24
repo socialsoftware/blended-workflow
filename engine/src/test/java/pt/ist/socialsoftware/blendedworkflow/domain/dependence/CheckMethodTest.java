@@ -6,15 +6,15 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -32,39 +32,39 @@ public class CheckMethodTest extends TeardownRollbackTest {
     private static final String ROLENAME_ENT_TWO = "entTwo";
     private static final String ROLENAME_ENT_THREE = "entThree";
 
-    BWDataModel dataModel;
-    BWEntity entOne;
-    BWEntity entTwo;
-    BWEntity entThree;
-    BWAttribute attThree;
+    DataModel dataModel;
+    Entity entOne;
+    Entity entTwo;
+    Entity entThree;
+    Attribute attThree;
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
+        Specification spec = new Specification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
         dataModel = spec.getDataModel();
 
-        entOne = new BWEntity(dataModel, ENT_ONE_NAME, false);
-        entTwo = new BWEntity(dataModel, ENT_TWO_NAME, false);
-        entThree = new BWEntity(dataModel, ENT_THREE_NAME, false);
+        entOne = new Entity(dataModel, ENT_ONE_NAME, false);
+        entTwo = new Entity(dataModel, ENT_TWO_NAME, false);
+        entThree = new Entity(dataModel, ENT_THREE_NAME, false);
 
-        BWAttributeGroup attGroupOne = new BWAttributeGroup(dataModel, entOne,
+        AttributeGroup attGroupOne = new AttributeGroup(dataModel, entOne,
                 GROUP_ONE_NAME, true);
 
-        BWAttribute attOne = new BWAttribute(dataModel, entOne, null,
+        Attribute attOne = new Attribute(dataModel, entOne, null,
                 ATT_ONE_NAME, AttributeType.BOOLEAN, true, false, false);
         attGroupOne.addAttribute(attOne);
-        BWAttribute attTwo = new BWAttribute(dataModel, entOne, null,
+        Attribute attTwo = new Attribute(dataModel, entOne, null,
                 ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
 
-        attThree = new BWAttribute(dataModel, entTwo, null, ATT_THREE_NAME,
+        attThree = new Attribute(dataModel, entTwo, null, ATT_THREE_NAME,
                 AttributeType.STRING, true, false, false);
 
-        BWRelation relOneThree = new BWRelation(dataModel, "relOne", entOne,
+        RelationBW relOneThree = new RelationBW(dataModel, "relOne", entOne,
                 ROLENAME_ENT_ONE, Cardinality.ONE, false, entThree,
                 ROLENAME_ENT_THREE, Cardinality.ONE_MANY, false);
 
-        BWRelation relThreeTwo = new BWRelation(dataModel, "relThree", entThree,
+        RelationBW relThreeTwo = new RelationBW(dataModel, "relThree", entThree,
                 ROLENAME_ENT_THREE, Cardinality.ZERO_MANY, false, entTwo,
                 ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);
 
@@ -72,7 +72,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
 
     @Test
     public void successEntitytoExternalAttribute() throws BWException {
-        BWDependence dep = new BWDependence(dataModel, entOne,
+        Dependence dep = new Dependence(dataModel, entOne,
                 ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO
                         + "." + ATT_THREE_NAME);
 
@@ -82,7 +82,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
     @Test
     public void failPrefixMIsing() throws BWException {
         try {
-            BWDependence dep = new BWDependence(dataModel, entOne,
+            Dependence dep = new Dependence(dataModel, entOne,
                     ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "."
                             + ATT_THREE_NAME);
             fail();
@@ -94,7 +94,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
     @Test
     public void successEntitytoExternalGroupAttributeAttribute()
             throws BWException {
-        BWDependence dep = new BWDependence(dataModel, entTwo,
+        Dependence dep = new Dependence(dataModel, entTwo,
                 ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE
                         + "." + GROUP_ONE_NAME + "." + ATT_ONE_NAME);
 
@@ -103,7 +103,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
 
     @Test
     public void successEntitytoExternalGroupAttribute() throws BWException {
-        BWDependence dep = new BWDependence(dataModel, entTwo,
+        Dependence dep = new Dependence(dataModel, entTwo,
                 ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE
                         + "." + GROUP_ONE_NAME);
 
@@ -112,7 +112,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
 
     @Test
     public void successEntitytoExternalEntity() throws BWException {
-        BWDependence dep = new BWDependence(dataModel, entTwo, ENT_TWO_NAME
+        Dependence dep = new Dependence(dataModel, entTwo, ENT_TWO_NAME
                 + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE);
 
         dep.check();
@@ -120,7 +120,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
 
     @Test
     public void successEntitytoAttributeGroupAttribute() throws BWException {
-        BWDependence dep = new BWDependence(dataModel, entOne,
+        Dependence dep = new Dependence(dataModel, entOne,
                 ENT_ONE_NAME + "." + GROUP_ONE_NAME + "." + ATT_ONE_NAME);
 
         dep.check();
@@ -128,7 +128,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
 
     @Test
     public void successAttributetoExternalGroupAttribute() throws BWException {
-        BWDependence dep = new BWDependence(dataModel, attThree,
+        Dependence dep = new Dependence(dataModel, attThree,
                 ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE
                         + "." + GROUP_ONE_NAME + "." + ATT_ONE_NAME);
 
@@ -137,7 +137,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
 
     @Test
     public void missingAttribute() throws BWException {
-        BWDependence dep = new BWDependence(dataModel, entOne,
+        Dependence dep = new Dependence(dataModel, entOne,
                 ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO
                         + "." + "notHere");
 

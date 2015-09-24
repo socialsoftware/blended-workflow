@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.ConditionFactory;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
@@ -33,7 +33,7 @@ public class CreateNewGoalService implements Callable<String> {
     private final String description;
     private final String condition;
     private final ArrayList<String> activateConditions;
-    private final BWEntity entityContext;
+    private final Entity entityContext;
     private final String userID;
 
     public CreateNewGoalService(String bwInstanceOID, String name,

@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
@@ -35,7 +35,7 @@ public class CreateGoalInstanceService implements Callable<String> {
     private final Set<String> maintainGoalsOID;
     private Set<MaintainGoal> maintainGoals;
     private final Map<String, String> entitiesOID;
-    private final Set<BWRelation> relations;
+    private final Set<RelationBW> relations;
 
     // private ArrayList<String> relationsOID;
 
@@ -48,7 +48,7 @@ public class CreateGoalInstanceService implements Callable<String> {
         this.activateConditionsOID = activateConditionsOID;
         this.maintainGoalsOID = maintainGoalsOID;
         this.entitiesOID = entitiesOID;
-        this.relations = new HashSet<BWRelation>();
+        this.relations = new HashSet<RelationBW>();
     }
 
     @Override
@@ -63,10 +63,10 @@ public class CreateGoalInstanceService implements Callable<String> {
         // Get Key Relations if the Context is new
         if (this.entitiesOID
                 .get(this.goal.getEntityContext().getExternalId()) == null) {
-            for (BWRelation relation : this.goal.getEntityContext()
+            for (RelationBW relation : this.goal.getEntityContext()
                     .getRelationsSet()) {
-                BWEntity one = relation.getEntityOne();
-                BWEntity two = relation.getEntityTwo();
+                Entity one = relation.getEntityOne();
+                Entity two = relation.getEntityTwo();
                 if (this.goal.getEntityContext().equals(one)
                         && relation.getIsTwoKeyEntity()) {
                     this.relations.add(relation);
@@ -87,7 +87,7 @@ public class CreateGoalInstanceService implements Callable<String> {
         // Create EntityInstances that do not exist
         for (Map.Entry<String, String> entry : entitiesOID.entrySet()) {
             if (entry.getValue() == null) {
-                BWEntity entity = FenixFramework
+                Entity entity = FenixFramework
                         .getDomainObject(entry.getKey());
                 EntityInstance newEntityInstance = new EntityInstance(entity);
                 entry.setValue(newEntityInstance.getExternalId());
@@ -122,7 +122,7 @@ public class CreateGoalInstanceService implements Callable<String> {
         }
 
         // Create RelationInstances
-        for (BWRelation relation : this.relations) {
+        for (RelationBW relation : this.relations) {
             EntityInstance entityInstanceOne = FenixFramework
                     .getDomainObject(this.entitiesOID
                             .get(relation.getEntityOne().getExternalId()));

@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 
@@ -28,24 +28,24 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
             + "dependenceTwo";
 
     DesignInterface designInterface;
-    BWDataModel dataModel;
-    BWEntity entity;
-    BWAttributeGroup group;
-    BWAttribute att;
+    DataModel dataModel;
+    Entity entity;
+    AttributeGroup group;
+    Attribute att;
 
     @Override
     public void populate4Test() throws BWException {
         designInterface = DesignInterface.getInstance();
 
-        new BWSpecification(SPEC_ID, SPEC_NAME, "author", "description",
+        new Specification(SPEC_ID, SPEC_NAME, "author", "description",
                 "version", "UID");
         dataModel = getBlendedWorkflow().getSpecById(SPEC_ID).get()
                 .getDataModel();
 
-        entity = new BWEntity(dataModel, ENTITY_NAME, false);
-        group = new BWAttributeGroup(dataModel, entity, ATTRIBUTE_GROUP_NAME,
+        entity = new Entity(dataModel, ENTITY_NAME, false);
+        group = new AttributeGroup(dataModel, entity, ATTRIBUTE_GROUP_NAME,
                 false);
-        att = new BWAttribute(dataModel, entity, group, ATTRIBUTE_NAME,
+        att = new Attribute(dataModel, entity, group, ATTRIBUTE_NAME,
                 AttributeType.NUMBER, true, false, false);
         entity.createDependence(DEPENDENCE_ONE);
     }

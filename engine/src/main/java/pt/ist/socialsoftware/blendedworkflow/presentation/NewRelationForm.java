@@ -17,9 +17,9 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 @SuppressWarnings("serial")
@@ -133,9 +133,9 @@ public class NewRelationForm extends VerticalLayout {
         DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
         int relationIndex = 1;
-        for (BWRelation relation : dataModel.getRelationsSet()) {
-            BWEntity entityOne = relation.getEntityOne();
-            BWEntity entityTwo = relation.getEntityTwo();
+        for (RelationBW relation : dataModel.getRelationsSet()) {
+            Entity entityOne = relation.getEntityOne();
+            Entity entityTwo = relation.getEntityTwo();
             if (entityOne.getName().equals(entityName)
                     || entityTwo.getName().equals(entityName)) {
 
@@ -161,7 +161,7 @@ public class NewRelationForm extends VerticalLayout {
         BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
         DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
-        for (BWEntity entity : dataModel.getEntitiesSet()) {
+        for (Entity entity : dataModel.getEntitiesSet()) {
             if (!entity.getName().equals(entityName)) {
                 this.otherEntity.addItem(entity.getName());
             }
@@ -175,13 +175,13 @@ public class NewRelationForm extends VerticalLayout {
         BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
         DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
-        BWEntity entityOne = dataModel.getEntity(entityOneName).get();
-        BWEntity entityTwo = dataModel.getEntity(entityTwoName).get();
+        Entity entityOne = dataModel.getEntity(entityOneName).get();
+        Entity entityTwo = dataModel.getEntity(entityTwoName).get();
 
         Cardinality cardinalityOne = parseThisCardinality(cardinality);
         Cardinality cardinalityTwo = parseOtherCardinality(cardinality);
 
-        new BWRelation(dataModel, name, entityOne, "", cardinalityOne,
+        new RelationBW(dataModel, name, entityOne, "", cardinalityOne,
                 isOneKeyEntity, entityTwo, "", cardinalityTwo, isTwoKeyEntity);
 
     }

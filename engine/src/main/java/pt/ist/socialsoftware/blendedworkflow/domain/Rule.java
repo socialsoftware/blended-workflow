@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +10,8 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 
-public class BWRule extends BWRule_Base {
-    private static Logger log = LoggerFactory.getLogger(BWRule.class);
+public class Rule extends Rule_Base {
+    private static Logger log = LoggerFactory.getLogger(Rule.class);
 
     @Override
     public void setName(String name) {
@@ -18,7 +19,7 @@ public class BWRule extends BWRule_Base {
         super.setName(name);
     }
 
-    public BWRule(BWDataModel dataModel, String name, Condition condition) {
+    public Rule(DataModel dataModel, String name, Condition condition) {
         setDataModel(dataModel);
         setName(name);
         setCondition(condition);
@@ -43,7 +44,7 @@ public class BWRule extends BWRule_Base {
         setDataModel(null);
         setConditionModel(null);
         setInvariantConditionGoal(null);
-        setTaskWithRule(null);
+        getTaskWithRuleSet().stream().forEach(t -> t.removeRuleInvariant(this));
         getCondition().delete();
 
         deleteDomainObject();
@@ -59,8 +60,15 @@ public class BWRule extends BWRule_Base {
         return ruleDTO;
     }
 
-    public Set<BWAttribute> getAttributes() {
+    public Set<Attribute> getAttributes() {
         return getCondition().getAttributes();
+    }
+
+    public Set<Product> getProducts() {
+        return getCondition().getAttributes()
+                .stream().map(a -> a.getAttributeGroup() != null
+                        ? a.getAttributeGroup() : a)
+                .collect(Collectors.toSet());
     }
 
 }

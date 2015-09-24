@@ -6,7 +6,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -22,7 +22,7 @@ public class CreateTaskMethodTest extends TeardownRollbackTest {
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
+        Specification spec = new Specification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
         taskModel = spec.getTaskModel();
         new Task(taskModel, TASK_ONE, "this is a description");

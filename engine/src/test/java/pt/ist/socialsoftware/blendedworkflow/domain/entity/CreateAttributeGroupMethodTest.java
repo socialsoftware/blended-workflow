@@ -6,9 +6,9 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -16,19 +16,19 @@ public class CreateAttributeGroupMethodTest extends TeardownRollbackTest {
     private static String ATT_GROUP_NAME = "Attribute group name";
     private static String EXISTS_NAME = "Exists name";
 
-    private BWEntity entity = null;
+    private Entity entity = null;
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification("SpecId", "My spec",
+        Specification spec = new Specification("SpecId", "My spec",
                 "author", "description", "version", "UID");
-        entity = new BWEntity(spec.getDataModel(), "Entity name", false);
-        new BWAttributeGroup(spec.getDataModel(), entity, EXISTS_NAME, true);
+        entity = new Entity(spec.getDataModel(), "Entity name", false);
+        new AttributeGroup(spec.getDataModel(), entity, EXISTS_NAME, true);
     }
 
     @Test
     public void success() {
-        BWAttributeGroup attGroup = entity.createAttributeGroup(ATT_GROUP_NAME,
+        AttributeGroup attGroup = entity.createAttributeGroup(ATT_GROUP_NAME,
                 false);
 
         assertEquals(2, entity.getAttributeGroupSet().size());

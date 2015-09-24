@@ -5,12 +5,12 @@ import java.util.List;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.vaadin.ui.AbstractField;
@@ -106,13 +106,13 @@ public class PreGoalForm extends VerticalLayout {
 		GoalWorkItem goalWorkItem = FenixFramework
 				.getDomainObject(goalWorkItemOID);
 
-		BWEntity previousEntity = null;
+		Entity previousEntity = null;
 		Boolean first = true;
 		for (WorkItemArgument workItemArgument : goalWorkItem
 				.getInputWorkItemArgumentsSet()) {
-			BWAttribute attribute = workItemArgument.getAttributeInstance()
+			Attribute attribute = workItemArgument.getAttributeInstance()
 					.getAttribute();
-			BWEntity entity = attribute.getEntity();
+			Entity entity = attribute.getEntity();
 
 			if (first) {
 				previousEntity = entity;

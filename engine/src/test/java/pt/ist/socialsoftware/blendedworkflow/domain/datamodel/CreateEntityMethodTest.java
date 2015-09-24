@@ -8,9 +8,9 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -20,22 +20,22 @@ public class CreateEntityMethodTest extends TeardownRollbackTest {
     private static final String DUP_NAME = "Exists Name";
     private static final String EMPTY_NAME = "";
 
-    BWDataModel dataModel = null;
+    DataModel dataModel = null;
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
+        Specification spec = new Specification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
         dataModel = spec.getDataModel();
-        new BWEntity(dataModel, DUP_NAME, false);
+        new Entity(dataModel, DUP_NAME, false);
     }
 
     @Test
     public void success() throws BWException {
         dataModel.createEntity(ENTITY_NAME, true);
 
-        BWSpecification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
-        BWEntity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
+        Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
+        Entity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
         assertNotNull(entity);
         assertEquals(ENTITY_NAME, entity.getName());
         assertTrue(entity.getExists());

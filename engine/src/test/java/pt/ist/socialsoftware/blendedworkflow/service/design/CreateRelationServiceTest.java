@@ -6,10 +6,10 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 
@@ -27,16 +27,16 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
     private static final String EMPTY_NAME = "";
 
     String dataModelExtId;
-    BWEntity entityOne;
-    BWEntity entityTwo;
+    Entity entityOne;
+    Entity entityTwo;
 
     @Override
     public void populate4Test() throws BWException {
-        BWSpecification spec = new BWSpecification(SPEC_ID, "name", "author",
+        Specification spec = new Specification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
         dataModelExtId = spec.getDataModel().getExternalId();
-        entityOne = new BWEntity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-        entityTwo = new BWEntity(spec.getDataModel(), ENTITY_TWO_NAME, false);
+        entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
+        entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
                         entityOne.getExternalId(), ROLENAME_ONE, ONE,
                         entityTwo.getExternalId(), ROLENAME_TWO, MANY));
 
-        BWRelation relation = entityOne.getRelationsOneSet().stream()
+        RelationBW relation = entityOne.getRelationsOneSet().stream()
                 .filter(rel -> rel.getRoleNameOne().equals(ROLENAME_ONE))
                 .findFirst().orElse(null);
 

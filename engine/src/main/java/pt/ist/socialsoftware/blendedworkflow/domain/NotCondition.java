@@ -46,18 +46,18 @@ public class NotCondition extends NotCondition_Base {
     }
 
     @Override
-    public Set<BWEntity> getEntities() {
+    public Set<Entity> getEntities() {
         return null;
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
-        return new HashSet<BWAttribute>();
+    public Set<Attribute> getAttributes() {
+        return new HashSet<Attribute>();
     }
 
     @Override
-    public HashMap<BWAttribute, String> getcompareConditionValues() {
-        return new HashMap<BWAttribute, String>();
+    public HashMap<Attribute, String> getcompareConditionValues() {
+        return new HashMap<Attribute, String>();
     }
 
     @Override

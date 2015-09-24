@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
@@ -70,7 +70,7 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        DEFEntityCondition defEntityCondition = adi
+        DefEntityCondition defEntityCondition = adi
                 .associateEntityToActivityPre(specId, activityName, path);
 
         return new ResponseEntity<DefEntityConditionDTO>(
@@ -90,7 +90,7 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        DEFAttributeCondition defAttributeCondition = adi
+        DefAttributeCondition defAttributeCondition = adi
                 .associateAttributeToActivityPre(specId, activityName,
                         Arrays.asList(arraysPath).stream()
                                 .collect(Collectors.toSet()));
@@ -110,7 +110,7 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        DEFEntityCondition defEntityCondition = adi
+        DefEntityCondition defEntityCondition = adi
                 .associateEntityToActivityPost(specId, activityName, path);
 
         return new ResponseEntity<DefEntityConditionDTO>(
@@ -130,7 +130,7 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        DEFAttributeCondition defAttributeCondition = adi
+        DefAttributeCondition defAttributeCondition = adi
                 .associateAttributeToActivityPost(specId, activityName,
                         Arrays.asList(arraysPath).stream()
                                 .collect(Collectors.toSet()));
@@ -151,7 +151,7 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        MULCondition mulCondition = adi.associateMulToActivityPost(specId,
+        MulCondition mulCondition = adi.associateMulToActivityPost(specId,
                 activityName, mulConditionDTO.getRolePath(),
                 mulConditionDTO.getCardinality());
 
@@ -170,7 +170,7 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWRule rule = adi.associateRuleToActivityPost(specId, activityName,
+        Rule rule = adi.associateRuleToActivityPost(specId, activityName,
                 ruleDTO.getName());
 
         return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
@@ -183,7 +183,7 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        // boolean result = adi.checkActivityModel(specId);
+        boolean result = adi.checkActivityModel(specId);
 
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }

@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeGroup;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWProduct;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Product;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
@@ -59,7 +59,7 @@ public class DataModelController {
 
         String[] attsArray = atts.split(",");
 
-        BWProduct product = adi.getProduct(specId, Arrays.asList(attsArray));
+        Product product = adi.getProduct(specId, Arrays.asList(attsArray));
 
         return new ResponseEntity<ProductDTO>(product.getDTO(), HttpStatus.OK);
     }
@@ -72,7 +72,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWEntity entity = adi.getEntityByName(specId, entityName);
+        Entity entity = adi.getEntityByName(specId, entityName);
 
         return new ResponseEntity<EntityDTO>(entity.getDTO(), HttpStatus.OK);
     }
@@ -86,7 +86,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWEntity entity = adi.createEntity(entDTO);
+        Entity entity = adi.createEntity(entDTO);
 
         return new ResponseEntity<EntityDTO>(entity.getDTO(),
                 HttpStatus.CREATED);
@@ -99,7 +99,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWAttribute attribute = adi.getAttributeByExtId(extId);
+        Attribute attribute = adi.getAttributeByExtId(extId);
 
         return new ResponseEntity<AttributeDTO>(attribute.getDTO(),
                 HttpStatus.OK);
@@ -116,7 +116,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWAttribute attribute = adi.createAttribute(attDTO);
+        Attribute attribute = adi.createAttribute(attDTO);
 
         return new ResponseEntity<AttributeDTO>(attribute.getDTO(),
                 HttpStatus.CREATED);
@@ -132,7 +132,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWAttributeGroup group = adi.createAttributeGroup(groupAttributeDTO);
+        AttributeGroup group = adi.createAttributeGroup(groupAttributeDTO);
 
         return new ResponseEntity<AttributeGroupDTO>(group.getDTO(),
                 HttpStatus.CREATED);
@@ -147,7 +147,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWRelation relation = adi.createRelation(relDTO);
+        RelationBW relation = adi.createRelation(relDTO);
 
         return new ResponseEntity<RelationDTO>(relation.getDTO(),
                 HttpStatus.CREATED);
@@ -163,7 +163,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWRule rule = adi.createRule(ruleDTO);
+        Rule rule = adi.createRule(ruleDTO);
 
         return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
     }
@@ -177,7 +177,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        BWDependence dependence = adi.createDependence(dependenceDTO);
+        Dependence dependence = adi.createDependence(dependenceDTO);
 
         return new ResponseEntity<DependenceDTO>(dependence.getDTO(),
                 HttpStatus.CREATED);
@@ -190,7 +190,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        Set<BWDependence> dependencies = adi.getDependencies(specId);
+        Set<Dependence> dependencies = adi.getDependencies(specId);
 
         Set<DependenceDTO> dependenciesDTO;
         dependenciesDTO = dependencies.stream().map(dep -> dep.getDTO())

@@ -46,29 +46,29 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
         FenixFramework.getDomainRoot().setBlendedWorkflow(this);
     }
 
-    public BWSpecification createSpecification(String specId, String name)
+    public Specification createSpecification(String specId, String name)
             throws BWException {
         String author = "Author";
         String description = "Description";
         String version = "Version";
         String UID = "UID";
-        return new BWSpecification(specId, name, author, description, version,
+        return new Specification(specId, name, author, description, version,
                 UID);
     }
 
-    public Set<BWSpecification> getSpecByName(String name) {
+    public Set<Specification> getSpecByName(String name) {
         return getSpecificationSet().stream()
                 .filter(spec -> spec.getName().equals(name))
                 .collect(Collectors.toSet());
     }
 
-    public Optional<BWSpecification> getSpecById(String specId) {
+    public Optional<Specification> getSpecById(String specId) {
         return getSpecificationSet().stream()
                 .filter(spec -> spec.getSpecId().equals(specId)).findFirst();
     }
 
     public BWInstance getBWInstance(String ID) throws BWException {
-        for (BWSpecification specificationpecification : getSpecificationSet()) {
+        for (Specification specificationpecification : getSpecificationSet()) {
             for (BWInstance bwInstance : specificationpecification
                     .getBwInstancesSet()) {
                 if (bwInstance.getID().equals(ID))
@@ -80,7 +80,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 
     public BWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID)
             throws BWException {
-        for (BWSpecification specification : getSpecificationSet()) {
+        for (Specification specification : getSpecificationSet()) {
             for (BWInstance bwInstance : specification.getBwInstancesSet()) {
                 if (bwInstance.getYawlCaseID().equals(yawlCaseID))
                     return bwInstance;

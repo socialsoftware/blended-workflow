@@ -9,8 +9,8 @@ public class MaintainGoal extends MaintainGoal_Base {
         DEACTIVATED, ENABLED
     };
 
-    public MaintainGoal(BWGoalModel goalModel, String name, String description,
-            Condition condition, BWEntity context) throws BWException {
+    public MaintainGoal(GoalModel goalModel, String name, String description,
+            Condition condition, Entity context) throws BWException {
         checkUniqueGoalName(goalModel, name);
         setGoalModel(goalModel);
         setName(name);
@@ -20,7 +20,7 @@ public class MaintainGoal extends MaintainGoal_Base {
         setState(MaintainGoalState.ENABLED);
     }
 
-    private void checkUniqueGoalName(BWGoalModel goalModel, String name)
+    private void checkUniqueGoalName(GoalModel goalModel, String name)
             throws BWException {
         for (Goal goal : goalModel.getGoalSet()) {
             if (goal.getName().equals(name)) {
@@ -45,8 +45,8 @@ public class MaintainGoal extends MaintainGoal_Base {
         // Get EntityTypeContext from Template
         BWInstance bwInstance = goalModelInstance.getBwInstance();
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-        BWEntity newEntityContext = null;
-        for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
+        Entity newEntityContext = null;
+        for (Entity entity : dataModelInstance.getEntitiesSet()) {
             if (getMaintainGoalEntityContext().getName()
                     .equals(entity.getName())) {
                 newEntityContext = entity;

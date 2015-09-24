@@ -29,7 +29,7 @@ public class Goal extends Goal_Base {
         super.setName(name);
     }
 
-    public Goal(BWGoalModel goalModel, String name) {
+    public Goal(GoalModel goalModel, String name) {
         setGoalModel(goalModel);
         setName(name);
         setParentGoal(null);
@@ -38,8 +38,8 @@ public class Goal extends Goal_Base {
     /**
      * Create the GoalTree root Goal.
      */
-    public Goal(BWGoalModel goalModel, String name, String description,
-            Condition condition, BWEntity context) throws BWException {
+    public Goal(GoalModel goalModel, String name, String description,
+            Condition condition, Entity context) throws BWException {
         setGoalModel(goalModel);
         setName(name);
         setDescription(description);
@@ -51,8 +51,8 @@ public class Goal extends Goal_Base {
     /**
      * Create a Goal.
      */
-    public Goal(BWGoalModel goalModel, Goal parentGoal, String name,
-            String description, Condition condition, BWEntity context)
+    public Goal(GoalModel goalModel, Goal parentGoal, String name,
+            String description, Condition condition, Entity context)
                     throws BWException {
         setGoalModel(goalModel);
         setName(name);
@@ -88,8 +88,8 @@ public class Goal extends Goal_Base {
         // Get EntityTypeContext from Template
         BWInstance bwInstance = goalModelInstance.getBwInstance();
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-        BWEntity newEntityContext = null;
-        for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
+        Entity newEntityContext = null;
+        for (Entity entity : dataModelInstance.getEntitiesSet()) {
             if (getEntityContext().getName().equals(entity.getName())) {
                 newEntityContext = entity;
             }
@@ -113,20 +113,20 @@ public class Goal extends Goal_Base {
      * @return a string with the condition data entities.
      */
     public String getConstraintData() {
-        Set<BWEntity> entities = getSuccessConditionSet().stream().findFirst()
+        Set<Entity> entities = getSuccessConditionSet().stream().findFirst()
                 .get().getEntities();
-        Set<BWAttribute> attributes = getSuccessConditionSet().stream()
+        Set<Attribute> attributes = getSuccessConditionSet().stream()
                 .findFirst().get().getAttributes();
         String dataString = "";
 
         // Add Attribute entities
-        for (BWAttribute attribute : attributes) {
+        for (Attribute attribute : attributes) {
             entities.add(attribute.getEntity());
         }
 
         // Create String
         int count = 0;
-        for (BWEntity entity : entities) {
+        for (Entity entity : entities) {
             if (entities.size() == 1) {
                 dataString += entity.getName();
             } else if (count < entities.size() - 1) {
@@ -143,21 +143,21 @@ public class Goal extends Goal_Base {
     public String getPreConstraintData() {
         List<Condition> activateConditions = new ArrayList<Condition>(
                 getActivationConditionSet());
-        Set<BWEntity> entities = activateConditions.get(0).getEntities(); // FIXME:
+        Set<Entity> entities = activateConditions.get(0).getEntities(); // FIXME:
                                                                           // Only
                                                                           // First
                                                                           // ActivateConditionData
-        Set<BWAttribute> attributes = activateConditions.get(0).getAttributes();
+        Set<Attribute> attributes = activateConditions.get(0).getAttributes();
         String dataString = "";
 
         // Add Attribute entities
-        for (BWAttribute attribute : attributes) {
+        for (Attribute attribute : attributes) {
             entities.add(attribute.getEntity());
         }
 
         // Create String
         int count = 0;
-        for (BWEntity entity : entities) {
+        for (Entity entity : entities) {
             if (entities.size() == 1) {
                 dataString += entity.getName();
             } else if (count < entities.size() - 1) {
@@ -204,8 +204,8 @@ public class Goal extends Goal_Base {
     }
 
     // TODO:
-    public Set<BWEntity> getSubGoalsContext() {
-        Set<BWEntity> result = new HashSet<BWEntity>();
+    public Set<Entity> getSubGoalsContext() {
+        Set<Entity> result = new HashSet<Entity>();
         // result.add(getEntityContext());
         for (Goal subGoal : getSubGoalSet()) {
             result.add(subGoal.getEntityContext());
@@ -339,11 +339,11 @@ public class Goal extends Goal_Base {
     }
 
     private void addActivationConditions() {
-        Set<Condition> defs = getProductsOfDefConditions(
-                getSuccessConditionSet()).stream()
-                        .flatMap((p) -> p.getDependenceSet().stream())
-                        .map((d) -> d.getTarget().getDefCondition())
-                        .collect(Collectors.toSet());
+        Set<Condition> defs = ConditionModel
+                .getProductsOfDefConditions(getSuccessConditionSet()).stream()
+                .flatMap((p) -> p.getDependenceSet().stream())
+                .map((d) -> d.getTarget().getDefCondition())
+                .collect(Collectors.toSet());
 
         for (Condition def : defs) {
             if (!getSuccessConditionSet().contains(def))
@@ -352,7 +352,7 @@ public class Goal extends Goal_Base {
     }
 
     private void addRuleConditions() {
-        for (BWRule rule : getGoalModel().getSpecification().getDataModel()
+        for (Rule rule : getGoalModel().getSpecification().getDataModel()
                 .getRuleSet()) {
             if (getSuccessConditionSet().stream()
                     .flatMap((c) -> c.getAttributes().stream())
@@ -363,8 +363,8 @@ public class Goal extends Goal_Base {
     }
 
     private void addMultiplicityConditions() {
-        Set<BWEntity> entities = getEntitiesOfDefEntitySet(
-                getSuccessConditionSet());
+        Set<Entity> entities = ConditionModel
+                .getEntitiesOfDefEntitySet(getSuccessConditionSet());
 
         entities.stream().flatMap((e) -> e.getMultConditions().stream())
                 .forEach((m) -> addEntityInvariantCondition(m));
@@ -434,12 +434,12 @@ public class Goal extends Goal_Base {
     private void checkSiblingsAttributeConstraintBasic(
             Set<Condition> successConditionsOne,
             Set<Condition> successConditionsTwo) {
-        Set<BWEntity> entities = getEntitiesOfDefEntitySet(
-                successConditionsOne);
+        Set<Entity> entities = ConditionModel
+                .getEntitiesOfDefEntitySet(successConditionsOne);
 
-        Optional<BWEntity> oEntity = successConditionsTwo.stream()
-                .filter(DEFAttributeCondition.class::isInstance)
-                .map(DEFAttributeCondition.class::cast)
+        Optional<Entity> oEntity = successConditionsTwo.stream()
+                .filter(DefAttributeCondition.class::isInstance)
+                .map(DefAttributeCondition.class::cast)
                 .map((def) -> def.getEntity())
                 .filter((e) -> entities.contains(e)).findFirst();
 
@@ -451,12 +451,13 @@ public class Goal extends Goal_Base {
 
     private void checkParentChildAttributeConstraint(
             Set<Condition> successConditions) {
-        Set<BWEntity> entities = getEntitiesOfDefEntitySet(successConditions);
+        Set<Entity> entities = ConditionModel
+                .getEntitiesOfDefEntitySet(successConditions);
 
-        Optional<BWEntity> oEntity = flattened()
+        Optional<Entity> oEntity = flattened()
                 .flatMap((g) -> g.getSuccessConditionSet().stream()
-                        .filter(DEFAttributeCondition.class::isInstance))
-                .map(DEFAttributeCondition.class::cast)
+                        .filter(DefAttributeCondition.class::isInstance))
+                .map(DefAttributeCondition.class::cast)
                 .map((def) -> def.getEntity())
                 .filter((e) -> entities.contains(e)).findFirst();
 
@@ -467,7 +468,7 @@ public class Goal extends Goal_Base {
     }
 
     private void checkDependenceConstraint(Set<Condition> successConditions) {
-        BWDataModel dataModel = getGoalModel().getSpecification()
+        DataModel dataModel = getGoalModel().getSpecification()
                 .getDataModel();
 
         Set<Condition> topSuccessConditions = new HashSet<Condition>();
@@ -476,17 +477,17 @@ public class Goal extends Goal_Base {
 
         log.debug("topSuccessConditions size:{}", topSuccessConditions.size());
 
-        Set<BWProduct> topProducts = getProductsOfDefConditions(
-                topSuccessConditions);
+        Set<Product> topProducts = ConditionModel
+                .getProductsOfDefConditions(topSuccessConditions);
         log.debug("topProducts {}", topProducts.stream().map((p) -> p.getName())
                 .collect(Collectors.joining(",")));
 
-        Set<BWProduct> succProducts = getProductsOfDefConditions(
-                successConditions);
+        Set<Product> succProducts = ConditionModel
+                .getProductsOfDefConditions(successConditions);
         log.debug("succProducts {}", succProducts.stream()
                 .map((p) -> p.getName()).collect(Collectors.joining(",")));
 
-        Optional<BWProduct> oProduct = topProducts.stream()
+        Optional<Product> oProduct = topProducts.stream()
                 .flatMap((p) -> p.getDependenceSet().stream())
                 .map((d) -> dataModel.getTargetOfPath(d.getPath()))
                 .filter((p) -> succProducts.contains(p)).findFirst();
@@ -495,33 +496,6 @@ public class Goal extends Goal_Base {
             throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
                     "checkDependenceConstraint:" + oProduct.get().getName());
 
-    }
-
-    private Set<BWProduct> getProductsOfDefConditions(
-            Set<Condition> defConditions) {
-        Set<BWProduct> products = new HashSet<BWProduct>();
-        products.addAll(getEntitiesOfDefEntitySet(defConditions));
-        products.addAll(getProductsOfDefAttributeSet(defConditions));
-
-        return products;
-    }
-
-    private Set<BWEntity> getEntitiesOfDefEntitySet(
-            Set<Condition> defEntities) {
-        Set<BWEntity> entities = defEntities.stream()
-                .filter(DEFEntityCondition.class::isInstance)
-                .map(DEFEntityCondition.class::cast)
-                .map((def) -> def.getEntity()).collect(Collectors.toSet());
-        return entities;
-    }
-
-    private Set<BWProduct> getProductsOfDefAttributeSet(
-            Set<Condition> defAttributes) {
-        Set<BWProduct> attributes = defAttributes.stream()
-                .filter(DEFAttributeCondition.class::isInstance)
-                .map(DEFAttributeCondition.class::cast)
-                .map((def) -> def.getProduct()).collect(Collectors.toSet());
-        return attributes;
     }
 
 }

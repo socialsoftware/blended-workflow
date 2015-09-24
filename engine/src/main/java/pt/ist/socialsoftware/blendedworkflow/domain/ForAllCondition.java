@@ -8,7 +8,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ForAllCondition extends ForAllCondition_Base {
 
-    public ForAllCondition(BWRelation relation, BWEntity entity,
+    public ForAllCondition(RelationBW relation, Entity entity,
             Condition condition) {
         setForAllEntity(entity);
         setForAllRelation(relation);
@@ -19,9 +19,9 @@ public class ForAllCondition extends ForAllCondition_Base {
     Condition cloneCondition(GoalModelInstance goalModelInstance) {
         DataModelInstance dataModelInstance = goalModelInstance.getBwInstance()
                 .getDataModelInstance();
-        BWRelation relation = dataModelInstance
+        RelationBW relation = dataModelInstance
                 .getRelation(getForAllRelation().getName());
-        BWEntity entity = dataModelInstance
+        Entity entity = dataModelInstance
                 .getEntity(getForAllEntity().getName()).get();
         return new ForAllCondition(relation, entity,
                 getCondition().cloneCondition(goalModelInstance));
@@ -31,9 +31,9 @@ public class ForAllCondition extends ForAllCondition_Base {
     Condition cloneCondition(TaskModelInstance taskModelInstance) {
         DataModelInstance dataModelInstance = taskModelInstance.getBwInstance()
                 .getDataModelInstance();
-        BWRelation relation = dataModelInstance
+        RelationBW relation = dataModelInstance
                 .getRelation(getForAllRelation().getName());
-        BWEntity entity = dataModelInstance
+        Entity entity = dataModelInstance
                 .getEntity(getForAllEntity().getName()).get();
         return new ForAllCondition(relation, entity,
                 getCondition().cloneCondition(taskModelInstance));
@@ -52,20 +52,20 @@ public class ForAllCondition extends ForAllCondition_Base {
     }
 
     @Override
-    public Set<BWEntity> getEntities() {
-        Set<BWEntity> entity = new HashSet<BWEntity>();
+    public Set<Entity> getEntities() {
+        Set<Entity> entity = new HashSet<Entity>();
         entity.add(getForAllEntity());
         return entity;
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
+    public Set<Attribute> getAttributes() {
         return getCondition().getAttributes();
     }
 
     @Override
-    public HashMap<BWAttribute, String> getcompareConditionValues() {
-        return new HashMap<BWAttribute, String>();
+    public HashMap<Attribute, String> getcompareConditionValues() {
+        return new HashMap<Attribute, String>();
     }
 
     @Override

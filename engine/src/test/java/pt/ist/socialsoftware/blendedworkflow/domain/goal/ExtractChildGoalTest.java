@@ -11,22 +11,22 @@ import java.util.Set;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttributeValueExpression;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDependence;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation.Cardinality;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRule;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWSpecification;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DEFEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.domain.MULCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -45,14 +45,14 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
     private static final String CHILD_GOAL_TWO_ONE_ONE = "childGoalTwoOneOne";
     private static final String CHILD_GOAL_TWO_TWO = "childGoalTwoTwo";
 
-    BWSpecification spec;
-    BWEntity entityOne;
-    BWEntity entityTwo;
-    BWAttribute attributeOne;
-    BWAttribute attributeTwo;
-    BWAttribute attributeThree;
-    BWAttribute attributeFour;
-    BWRelation relation;
+    Specification spec;
+    Entity entityOne;
+    Entity entityTwo;
+    Attribute attributeOne;
+    Attribute attributeTwo;
+    Attribute attributeThree;
+    Attribute attributeFour;
+    RelationBW relation;
     Goal topGoal;
     Goal childGoalOne;
     Goal childGoalTwo;
@@ -60,26 +60,26 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 
     @Override
     public void populate4Test() throws BWException {
-        spec = new BWSpecification("SpecId", "My spec", "author", "description",
+        spec = new Specification("SpecId", "My spec", "author", "description",
                 "version", "UID");
 
-        entityOne = new BWEntity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-        attributeOne = new BWAttribute(spec.getDataModel(), entityOne, null,
+        entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
+        attributeOne = new Attribute(spec.getDataModel(), entityOne, null,
                 "att1", AttributeType.NUMBER, true, false, false);
-        attributeTwo = new BWAttribute(spec.getDataModel(), entityOne, null,
+        attributeTwo = new Attribute(spec.getDataModel(), entityOne, null,
                 ATTRIBUTE_NAME_TWO, AttributeType.NUMBER, true, false, false);
 
-        entityTwo = new BWEntity(spec.getDataModel(), ENTITY_TWO_NAME, false);
-        attributeThree = new BWAttribute(spec.getDataModel(), entityTwo, null,
+        entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
+        attributeThree = new Attribute(spec.getDataModel(), entityTwo, null,
                 "att3", AttributeType.BOOLEAN, true, false, false);
-        attributeFour = new BWAttribute(spec.getDataModel(), entityTwo, null,
+        attributeFour = new Attribute(spec.getDataModel(), entityTwo, null,
                 "att4", AttributeType.STRING, true, false, false);
 
-        relation = new BWRelation(spec.getDataModel(), "name", entityOne,
+        relation = new RelationBW(spec.getDataModel(), "name", entityOne,
                 ROLENAME_ONE, Cardinality.ONE, false, entityTwo, ROLENAME_TWO,
                 Cardinality.ZERO_MANY, false);
 
-        BWDependence dependence = new BWDependence(spec.getDataModel(),
+        Dependence dependence = new Dependence(spec.getDataModel(),
                 attributeThree, ENTITY_TWO_NAME + "." + ROLENAME_ONE + "."
                         + ATTRIBUTE_NAME_TWO);
         dependence.check();
@@ -92,29 +92,29 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
         topGoal.addSubGoal(childGoalTwo);
         childGoalTwo.addSubGoal(childGoalTwoOne);
 
-        topGoal.addSuccessCondition(DEFEntityCondition.getDEFEntity(entityOne));
+        topGoal.addSuccessCondition(DefEntityCondition.getDefEntity(entityOne));
         childGoalOne.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeOne));
+                DefAttributeCondition.getDefAttribute(attributeOne));
         childGoalTwo.addSuccessCondition(
-                DEFEntityCondition.getDEFEntity(entityTwo));
+                DefEntityCondition.getDefEntity(entityTwo));
         childGoalTwo.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeTwo));
+                DefAttributeCondition.getDefAttribute(attributeTwo));
         childGoalTwo.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeThree));
+                DefAttributeCondition.getDefAttribute(attributeThree));
         childGoalTwoOne.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeFour));
+                DefAttributeCondition.getDefAttribute(attributeFour));
 
         childGoalOne.addActivationCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeTwo));
+                DefAttributeCondition.getDefAttribute(attributeTwo));
 
         topGoal.addEntityInvariantCondition(
-                MULCondition.getMulCondition(relation, ROLENAME_TWO));
+                MulCondition.getMulCondition(relation, ROLENAME_TWO));
         childGoalTwo.addEntityInvariantCondition(
-                MULCondition.getMulCondition(relation, ROLENAME_ONE));
+                MulCondition.getMulCondition(relation, ROLENAME_ONE));
 
-        BWRule rule = new BWRule(spec.getDataModel(), RULE_CONDITION,
-                new Comparison(new BWAttributeValueExpression(attributeOne),
-                        new BWAttributeValueExpression(attributeTwo),
+        Rule rule = new Rule(spec.getDataModel(), RULE_CONDITION,
+                new Comparison(new AttributeValueExpression(attributeOne),
+                        new AttributeValueExpression(attributeTwo),
                         ComparisonOperator.EQUAL));
 
         childGoalOne.addAttributeInvariantCondition(rule);
@@ -137,7 +137,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
     public void parentCannotEndUpWithEmptySuccessCondition() {
         Set<Condition> successConditions = new HashSet<Condition>();
         successConditions
-                .add(DEFAttributeCondition.getDEFAttribute(attributeFour));
+                .add(DefAttributeCondition.getDefAttribute(attributeFour));
 
         try {
             childGoalTwoOne.extractChild(CHILD_GOAL_TWO_ONE_ONE,
@@ -151,7 +151,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
     @Test
     public void parentDoesNotContainCondition() {
         Set<Condition> successConditions = new HashSet<Condition>();
-        successConditions.add(DEFEntityCondition.getDEFEntity(entityTwo));
+        successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
 
         try {
             childGoalTwoOne.extractChild(CHILD_GOAL_TWO_TWO, successConditions);
@@ -167,7 +167,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
     @Test
     public void defAttributeInParent() {
         Set<Condition> successConditions = new HashSet<Condition>();
-        successConditions.add(DEFEntityCondition.getDEFEntity(entityTwo));
+        successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
 
         try {
             childGoalTwo.extractChild(CHILD_GOAL_TWO_TWO, successConditions);
@@ -183,12 +183,12 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
     @Test
     public void defAttributeInChild() {
         Set<Condition> successConditions = new HashSet<Condition>();
-        successConditions.add(DEFEntityCondition.getDEFEntity(entityTwo));
+        successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
 
         childGoalTwo.removeSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeThree));
+                DefAttributeCondition.getDefAttribute(attributeThree));
         childGoalTwoOne.addSuccessCondition(
-                DEFAttributeCondition.getDEFAttribute(attributeFour));
+                DefAttributeCondition.getDefAttribute(attributeFour));
 
         try {
             childGoalTwo.extractChild(CHILD_GOAL_TWO_TWO, successConditions);
@@ -205,7 +205,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
     public void parentAttributeDependsOnChildAttribute() {
         Set<Condition> successConditions = new HashSet<Condition>();
         successConditions
-                .add(DEFAttributeCondition.getDEFAttribute(attributeTwo));
+                .add(DefAttributeCondition.getDefAttribute(attributeTwo));
 
         try {
             childGoalTwo.extractChild(CHILD_GOAL_TWO_TWO, successConditions);
@@ -222,7 +222,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
     public void successAndOnlyChangesSuccCondition() {
         Set<Condition> successConditions = new HashSet<Condition>();
         successConditions
-                .add(DEFAttributeCondition.getDEFAttribute(attributeThree));
+                .add(DefAttributeCondition.getDefAttribute(attributeThree));
 
         Goal newGoal = childGoalTwo.extractChild(CHILD_GOAL_TWO_TWO,
                 successConditions);
@@ -232,19 +232,19 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
         assertEquals(0, newGoal.getSubGoalSet().size());
         assertEquals(1, newGoal.getSuccessConditionSet().size());
         assertTrue(newGoal.getSuccessConditionSet().contains(
-                DEFAttributeCondition.getDEFAttribute(attributeThree)));
+                DefAttributeCondition.getDefAttribute(attributeThree)));
         assertEquals(1, newGoal.getActivationConditionSet().size());
-        assertEquals(DEFAttributeCondition.getDEFAttribute(attributeTwo),
+        assertEquals(DefAttributeCondition.getDefAttribute(attributeTwo),
                 newGoal.getActivationConditionSet().stream().findFirst().get());
         assertEquals(0, newGoal.getEntityInvariantConditionSet().size());
         assertEquals(0, newGoal.getAttributeInvariantConditionSet().size());
 
         assertEquals(2, childGoalTwo.getSuccessConditionSet().size());
         assertFalse(childGoalTwo.getSuccessConditionSet().contains(
-                DEFAttributeCondition.getDEFAttribute(attributeThree)));
+                DefAttributeCondition.getDefAttribute(attributeThree)));
         assertEquals(0, childGoalTwo.getActivationConditionSet().size());
         assertEquals(1, childGoalTwo.getEntityInvariantConditionSet().size());
-        assertEquals(MULCondition.getMulCondition(relation, ROLENAME_ONE),
+        assertEquals(MulCondition.getMulCondition(relation, ROLENAME_ONE),
                 childGoalTwo.getEntityInvariantConditionSet().stream()
                         .findFirst().get());
         assertEquals(1,

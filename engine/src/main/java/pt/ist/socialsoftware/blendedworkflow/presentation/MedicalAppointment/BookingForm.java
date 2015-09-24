@@ -20,9 +20,9 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWDataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
@@ -132,7 +132,7 @@ public class BookingForm extends VerticalLayout {
                 .getDomainObject(taskWorkItemOID);
         BWInstance bwInstance = taskWorkItem.getBwInstance();
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-        BWEntity patient = dataModelInstance.getEntity("Patient").get();
+        Entity patient = dataModelInstance.getEntity("Patient").get();
         for (EntityInstance entityInstance : patient.getEntityInstancesSet()) {
             patientNS.addItem(entityInstance.getExternalId());
             patientNS.setItemCaption(entityInstance.getExternalId(),

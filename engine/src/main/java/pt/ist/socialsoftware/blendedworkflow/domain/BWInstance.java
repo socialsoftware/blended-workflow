@@ -18,7 +18,7 @@ public class BWInstance extends BWInstance_Base {
      * Create a new BWInstance, and clones the Data, Task and Goal models from
      * its parent BWSpecification
      */
-    public BWInstance(BWSpecification bwSpecification, String name, User user)
+    public BWInstance(Specification bwSpecification, String name, User user)
             throws BWException {
         setSpecification(bwSpecification);
         setID(getSpecification().getName() + "."

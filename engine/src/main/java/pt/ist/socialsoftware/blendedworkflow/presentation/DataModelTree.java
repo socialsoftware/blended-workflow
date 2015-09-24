@@ -2,11 +2,11 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWRelation;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.vaadin.event.Action;
@@ -184,14 +184,14 @@ public class DataModelTree extends VerticalLayout {
 	@Atomic(mode = TxMode.WRITE)
 	public void getDataModel(String bwInstanceOID) {
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
-		BWEntity context = FenixFramework.getDomainObject(entityOID);
+		Entity context = FenixFramework.getDomainObject(entityOID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-		for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
+		for (Entity entity : dataModelInstance.getEntitiesSet()) {
 
 			if (entity.equals(context)) {
 				String entityName = entity.getName();
 				treetable.addItem(entityName);
-				for (BWAttribute attribute : entity.getAttributesSet()) {
+				for (Attribute attribute : entity.getAttributesSet()) {
 					String attributeName = attribute.getName();
 					treetable.addItem(attributeName);
 					treetable.setParent(attributeName, entityName);
@@ -201,15 +201,15 @@ public class DataModelTree extends VerticalLayout {
 			}
 		}
 
-		for (BWRelation relation : dataModelInstance.getRelationsSet()) {
+		for (RelationBW relation : dataModelInstance.getRelationsSet()) {
 			if (context.equals(relation.getEntityOne())) {
 				relationtable.addItem(relation.getName());
 
-				BWEntity e = relation.getEntityTwo();
+				Entity e = relation.getEntityTwo();
 				relationtable.addItem(e.getName());
 				relationtable.setParent(e.getName(), relation.getName());
 
-				for (BWAttribute attribute : e.getAttributesSet()) {
+				for (Attribute attribute : e.getAttributesSet()) {
 					String attributeName = attribute.getName();
 					relationtable.addItem(attributeName);
 					relationtable.setParent(attributeName, e.getName());
@@ -219,10 +219,10 @@ public class DataModelTree extends VerticalLayout {
 			} else if (context.equals(relation.getEntityTwo())) {
 				relationtable.addItem(relation.getName());
 
-				BWEntity e = relation.getEntityOne();
+				Entity e = relation.getEntityOne();
 				relationtable.addItem(e.getName());
 				relationtable.setParent(e.getName(), relation.getName());
-				for (BWAttribute attribute : e.getAttributesSet()) {
+				for (Attribute attribute : e.getAttributesSet()) {
 					String attributeName = attribute.getName();
 					relationtable.addItem(attributeName);
 					relationtable.setParent(attributeName, e.getName());

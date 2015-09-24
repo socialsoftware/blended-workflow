@@ -58,25 +58,25 @@ public class OrCondition extends OrCondition_Base {
     }
 
     @Override
-    public Set<BWEntity> getEntities() {
-        Set<BWEntity> entitiesOne = getConditionOne().getEntities();
-        Set<BWEntity> entitiesTwo = getConditionTwo().getEntities();
+    public Set<Entity> getEntities() {
+        Set<Entity> entitiesOne = getConditionOne().getEntities();
+        Set<Entity> entitiesTwo = getConditionTwo().getEntities();
         entitiesOne.addAll(entitiesTwo);
         return entitiesOne;
     }
 
     @Override
-    public Set<BWAttribute> getAttributes() {
-        Set<BWAttribute> attributesOne = getConditionOne().getAttributes();
+    public Set<Attribute> getAttributes() {
+        Set<Attribute> attributesOne = getConditionOne().getAttributes();
         attributesOne.addAll(getConditionTwo().getAttributes());
         return attributesOne;
     }
 
     @Override
-    public HashMap<BWAttribute, String> getcompareConditionValues() {
-        HashMap<BWAttribute, String> attributesOne = getConditionOne()
+    public HashMap<Attribute, String> getcompareConditionValues() {
+        HashMap<Attribute, String> attributesOne = getConditionOne()
                 .getcompareConditionValues();
-        HashMap<BWAttribute, String> attributesTwo = getConditionTwo()
+        HashMap<Attribute, String> attributesTwo = getConditionTwo()
                 .getcompareConditionValues();
         attributesOne.putAll(attributesTwo);
         return attributesOne;

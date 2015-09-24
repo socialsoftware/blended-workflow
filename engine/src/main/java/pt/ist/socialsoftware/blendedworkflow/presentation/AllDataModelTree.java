@@ -2,10 +2,10 @@ package pt.ist.socialsoftware.blendedworkflow.presentation;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWAttribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWEntity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.vaadin.event.Action;
@@ -105,12 +105,12 @@ public class AllDataModelTree extends VerticalLayout {
 	public void getDataModel(String bwInstanceOID) {
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-		for (BWEntity entity : dataModelInstance.getEntitiesSet()) {
+		for (Entity entity : dataModelInstance.getEntitiesSet()) {
 			String entityName = entity.getName();
 			String entityOID = entity.getExternalId();
 			treetable.addItem(entityOID);
 			treetable.setItemCaption(entityOID, entityName);
-			for (BWAttribute attribute : entity.getAttributesSet()) {
+			for (Attribute attribute : entity.getAttributesSet()) {
 				String attributeName = attribute.getName();
 				String attributeOID = attribute.getExternalId();
 				treetable.addItem(attributeOID);

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class BWDataModel extends BWDataModel_Base {
+public class DataModel extends DataModel_Base {
 
     public enum DataState {
         DEFINED, UNDEFINED, SKIPPED
@@ -19,15 +19,15 @@ public class BWDataModel extends BWDataModel_Base {
      */
     public DataModelInstance cloneDataModel() throws BWException {
         DataModelInstance newDataModelInstance = new DataModelInstance();
-        BWEntity relationEntityOne;
-        BWEntity relationEntityTwo;
+        Entity relationEntityOne;
+        Entity relationEntityTwo;
 
-        for (BWEntity entity : getEntitiesSet()) {
+        for (Entity entity : getEntitiesSet()) {
             entity.cloneEntity(newDataModelInstance);
         }
 
         // Get relation -> Get new Entities -> Clone with new Entities
-        for (BWRelation relation : getRelationsSet()) {
+        for (RelationBW relation : getRelationsSet()) {
             relationEntityOne = newDataModelInstance
                     .getEntity(relation.getEntityOne().getName()).get();
             relationEntityTwo = newDataModelInstance
@@ -38,13 +38,13 @@ public class BWDataModel extends BWDataModel_Base {
         return newDataModelInstance;
     }
 
-    public Optional<BWEntity> getEntity(String name) {
+    public Optional<Entity> getEntity(String name) {
         return getEntitiesSet().stream()
                 .filter(ent -> ent.getName().equals(name)).findFirst();
     }
 
-    public BWRelation getRelation(String name) {
-        for (BWRelation relation : getRelationsSet()) {
+    public RelationBW getRelation(String name) {
+        for (RelationBW relation : getRelationsSet()) {
             if (relation.getName().equals(name)) {
                 return relation;
             }
@@ -66,23 +66,23 @@ public class BWDataModel extends BWDataModel_Base {
         deleteDomainObject();
     }
 
-    public BWEntity createEntity(String entityName, Boolean exists) {
-        return new BWEntity(this, entityName, exists);
+    public Entity createEntity(String entityName, Boolean exists) {
+        return new Entity(this, entityName, exists);
     }
 
-    public BWRule createRule(String name, Condition condition) {
-        return new BWRule(this, name, condition);
+    public Rule createRule(String name, Condition condition) {
+        return new Rule(this, name, condition);
     }
 
-    public BWRule getRule(String name) {
+    public Rule getRule(String name) {
         return getRuleSet().stream().filter(rule -> rule.getName().equals(name))
                 .findFirst().orElse(null);
     }
 
-    public BWProduct getTargetOfPath(String path) {
+    public Product getTargetOfPath(String path) {
         List<String> pathLeft = Arrays.stream(path.split("\\."))
                 .collect(Collectors.toList());
-        BWEntity entity = getEntity(pathLeft.get(0)).orElseThrow(
+        Entity entity = getEntity(pathLeft.get(0)).orElseThrow(
                 () -> new BWException(BWErrorType.INVALID_ENTITY_NAME,
                         pathLeft.get(0)));
         pathLeft.remove(0);
