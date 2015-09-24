@@ -7,8 +7,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
@@ -47,12 +47,12 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
     Entity entityOne;
     Entity entityTwo;
     Entity entityThree;
-    Attribute attributeOne;
-    Attribute attributeTwo;
-    Attribute attributeThree;
+    AttributeBasic attributeOne;
+    AttributeBasic attributeTwo;
+    AttributeBasic attributeThree;
     AttributeGroup attributeFour;
-    Attribute attributeFourOne;
-    Attribute attributeFourTwo;
+    AttributeBasic attributeFourOne;
+    AttributeBasic attributeFourTwo;
     RelationBW relation;
     Rule ruleOne;
     Rule ruleTwo;
@@ -67,14 +67,14 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
                 "version", "UID");
 
         entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-        attributeOne = new Attribute(spec.getDataModel(), entityOne, null,
+        attributeOne = new AttributeBasic(spec.getDataModel(), entityOne, null,
                 ATTRIBUTE_ONE_NAME, AttributeType.NUMBER, true, false, false);
-        attributeTwo = new Attribute(spec.getDataModel(), entityOne, null,
+        attributeTwo = new AttributeBasic(spec.getDataModel(), entityOne, null,
                 ATTRIBUTE_TWO_NAME, AttributeType.NUMBER, true, false, false);
 
         entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
-        attributeThree = new Attribute(spec.getDataModel(), entityTwo, null,
-                ATTRIBUTE_THREE_NAME, AttributeType.BOOLEAN, true, false,
+        attributeThree = new AttributeBasic(spec.getDataModel(), entityTwo,
+                null, ATTRIBUTE_THREE_NAME, AttributeType.BOOLEAN, true, false,
                 false);
 
         relation = new RelationBW(spec.getDataModel(), "name", entityOne,
@@ -84,10 +84,10 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
         entityThree = new Entity(spec.getDataModel(), ENTITY_THREE_NAME, false);
         attributeFour = new AttributeGroup(spec.getDataModel(), entityThree,
                 ATTRIBUTE_FOUR_NAME, false);
-        attributeFourOne = new Attribute(spec.getDataModel(), entityThree,
+        attributeFourOne = new AttributeBasic(spec.getDataModel(), entityThree,
                 attributeFour, "att41", AttributeType.NUMBER, false, false,
                 false);
-        attributeFourTwo = new Attribute(spec.getDataModel(), entityThree,
+        attributeFourTwo = new AttributeBasic(spec.getDataModel(), entityThree,
                 attributeFour, "att42", AttributeType.NUMBER, false, false,
                 false);
 
@@ -221,7 +221,8 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.MISSING_DEF_IN_PRE, bwe.getError());
-            assertEquals(TASK_THREE + ":" + ENTITY_TWO_NAME, bwe.getMessage());
+            assertEquals(TASK_THREE + ":" + ENTITY_TWO_NAME + "."
+                    + ATTRIBUTE_THREE_NAME, bwe.getMessage());
         }
     }
 

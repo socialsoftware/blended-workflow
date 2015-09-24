@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -61,7 +61,7 @@ public class BinaryExpression extends BinaryExpression_Base {
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
+    public Set<AttributeBasic> getAttributes() {
         return Stream
                 .concat(getRightExpression().getAttributes().stream(),
                         getLeftExpression().getAttributes().stream())

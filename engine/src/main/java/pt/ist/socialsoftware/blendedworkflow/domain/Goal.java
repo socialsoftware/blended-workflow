@@ -115,12 +115,12 @@ public class Goal extends Goal_Base {
     public String getConstraintData() {
         Set<Entity> entities = getSuccessConditionSet().stream().findFirst()
                 .get().getEntities();
-        Set<Attribute> attributes = getSuccessConditionSet().stream()
-                .findFirst().get().getAttributes();
+        Set<AttributeBasic> attributes = getSuccessConditionSet().stream()
+                .findFirst().get().getAttributeBasicSet();
         String dataString = "";
 
         // Add Attribute entities
-        for (Attribute attribute : attributes) {
+        for (AttributeBasic attribute : attributes) {
             entities.add(attribute.getEntity());
         }
 
@@ -144,14 +144,15 @@ public class Goal extends Goal_Base {
         List<Condition> activateConditions = new ArrayList<Condition>(
                 getActivationConditionSet());
         Set<Entity> entities = activateConditions.get(0).getEntities(); // FIXME:
-                                                                          // Only
-                                                                          // First
-                                                                          // ActivateConditionData
-        Set<Attribute> attributes = activateConditions.get(0).getAttributes();
+                                                                        // Only
+                                                                        // First
+                                                                        // ActivateConditionData
+        Set<AttributeBasic> attributes = activateConditions.get(0)
+                .getAttributeBasicSet();
         String dataString = "";
 
         // Add Attribute entities
-        for (Attribute attribute : attributes) {
+        for (AttributeBasic attribute : attributes) {
             entities.add(attribute.getEntity());
         }
 
@@ -355,8 +356,8 @@ public class Goal extends Goal_Base {
         for (Rule rule : getGoalModel().getSpecification().getDataModel()
                 .getRuleSet()) {
             if (getSuccessConditionSet().stream()
-                    .flatMap((c) -> c.getAttributes().stream())
-                    .anyMatch((a) -> rule.getAttributes().contains(a))) {
+                    .flatMap((c) -> c.getAttributeBasicSet().stream())
+                    .anyMatch((a) -> rule.getAttributeBasicSet().contains(a))) {
                 addAttributeInvariantCondition(rule);
             }
         }
@@ -440,7 +441,7 @@ public class Goal extends Goal_Base {
         Optional<Entity> oEntity = successConditionsTwo.stream()
                 .filter(DefAttributeCondition.class::isInstance)
                 .map(DefAttributeCondition.class::cast)
-                .map((def) -> def.getEntity())
+                .map((def) -> def.getAttributeOfDef().getEntity())
                 .filter((e) -> entities.contains(e)).findFirst();
 
         if (oEntity.isPresent())
@@ -458,7 +459,7 @@ public class Goal extends Goal_Base {
                 .flatMap((g) -> g.getSuccessConditionSet().stream()
                         .filter(DefAttributeCondition.class::isInstance))
                 .map(DefAttributeCondition.class::cast)
-                .map((def) -> def.getEntity())
+                .map((def) -> def.getAttributeOfDef().getEntity())
                 .filter((e) -> entities.contains(e)).findFirst();
 
         if (oEntity.isPresent())
@@ -468,8 +469,7 @@ public class Goal extends Goal_Base {
     }
 
     private void checkDependenceConstraint(Set<Condition> successConditions) {
-        DataModel dataModel = getGoalModel().getSpecification()
-                .getDataModel();
+        DataModel dataModel = getGoalModel().getSpecification().getDataModel();
 
         Set<Condition> topSuccessConditions = new HashSet<Condition>();
         topSuccessConditions.addAll(getSuccessConditionSet());

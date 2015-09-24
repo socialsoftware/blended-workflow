@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -57,9 +57,9 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
                 false);
         Entity entityTwo = new Entity(existingDataModel, ENTITY_NAME,
                 false);
-        new Attribute(existingDataModel, entity, null, EXISTS_ATTRIBUTE_NAME,
+        new AttributeBasic(existingDataModel, entity, null, EXISTS_ATTRIBUTE_NAME,
                 AttributeType.NUMBER, true, false, false);
-        new Attribute(existingDataModel, entity, null,
+        new AttributeBasic(existingDataModel, entity, null,
                 EXISTS_ATTRIBUTE_NAME_STRING, AttributeType.STRING, false,
                 false, false);
 
@@ -100,7 +100,7 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
         AttributeValueExpression attValue = (AttributeValueExpression) righExpression;
         Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME)
                 .get();
-        Attribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
+        AttributeBasic att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
         assertEquals(att, attValue.getAttribute());
     }
 
@@ -147,7 +147,7 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
         AttributeValueExpression attValue = (AttributeValueExpression) righExpression;
         Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME)
                 .get();
-        Attribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
+        AttributeBasic att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
         assertEquals(att, attValue.getAttribute());
     }
 

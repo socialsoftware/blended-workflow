@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -31,7 +31,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
     DataModel dataModel;
     Entity entity;
     AttributeGroup group;
-    Attribute att;
+    AttributeBasic att;
 
     @Override
     public void populate4Test() throws BWException {
@@ -45,7 +45,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
         entity = new Entity(dataModel, ENTITY_NAME, false);
         group = new AttributeGroup(dataModel, entity, ATTRIBUTE_GROUP_NAME,
                 false);
-        att = new Attribute(dataModel, entity, group, ATTRIBUTE_NAME,
+        att = new AttributeBasic(dataModel, entity, group, ATTRIBUTE_NAME,
                 AttributeType.NUMBER, true, false, false);
         entity.createDependence(DEPENDENCE_ONE);
     }

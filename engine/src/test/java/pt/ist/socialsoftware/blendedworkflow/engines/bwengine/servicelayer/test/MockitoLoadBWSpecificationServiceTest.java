@@ -48,7 +48,7 @@ public class MockitoLoadBWSpecificationServiceTest
         final TaskModel taskModel = bwSpecification.getTaskModel();
 
         assertEquals(6, dataModel.getEntitiesSet().size());
-        assertEquals(17, dataModel.getAttributesSet().size());
+        assertEquals(17, dataModel.getAttributeSet().size());
         assertEquals(5, dataModel.getRelationsSet().size());
         assertEquals(11, goalModel.getGoalSet().size());
         assertEquals(1, goalModel.getMaintainGoalsSet().size());

@@ -9,8 +9,8 @@ import java.util.Set;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
@@ -48,10 +48,10 @@ public class GetDependencePathsTest extends TeardownRollbackTest {
                 false);
         Entity entityTwo = new Entity(spec.getDataModel(), ENTITY_NAME_TWO,
                 false);
-        Attribute attributeOne = new Attribute(spec.getDataModel(),
+        AttributeBasic attributeOne = new AttributeBasic(spec.getDataModel(),
                 entityOne, null, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true,
                 false, false);
-        Attribute attributeTwo = new Attribute(spec.getDataModel(),
+        AttributeBasic attributeTwo = new AttributeBasic(spec.getDataModel(),
                 entityOne, null, ATTRIBUTE_NAME_TWO, AttributeType.STRING,
                 false, false, false);
 

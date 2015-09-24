@@ -2,23 +2,17 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 
 public class AttributeGroup extends AttributeGroup_Base {
     private static Logger log = LoggerFactory.getLogger(AttributeGroup.class);
-
-    @Override
-    public void setName(String name) {
-        checkName(name);
-        super.setName(name);
-    }
 
     public AttributeGroup(DataModel dataModel, Entity entity, String name,
             boolean isMandatory) {
@@ -28,28 +22,12 @@ public class AttributeGroup extends AttributeGroup_Base {
         setIsMandatory(isMandatory);
     }
 
-    public AttributeGroup() {
-        // TODO Auto-generated constructor stub
-    }
-
-    private void checkName(String name) {
-        if ((name == null) || name.equals("")) {
-            throw new BWException(BWErrorType.INVALID_ATTRIBUTE_GROUP_NAME,
-                    name);
-        }
-
-        if (getEntity().getAttributeGroupSet().stream().anyMatch(
-                attG -> (attG != this) && attG.getName().equals(name)))
-            throw new BWException(BWErrorType.INVALID_ATTRIBUTE_GROUP_NAME,
-                    name);
-    }
-
     @Override
     public ProductType getProductType() {
         return ProductType.ATTRIBUTE_GROUP;
     }
 
-    public Optional<Attribute> getAttribute(String name) {
+    public Optional<AttributeBasic> getAttribute(String name) {
         return getAttributeSet().stream()
                 .filter(att -> att.getName().equals(name)).findFirst();
     }
@@ -72,7 +50,7 @@ public class AttributeGroup extends AttributeGroup_Base {
         if (pathLeft.isEmpty())
             return this;
 
-        Attribute att = getAttribute(pathLeft.get(0))
+        AttributeBasic att = getAttribute(pathLeft.get(0))
                 .orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH,
                         path + ":" + pathLeft));
 
@@ -97,6 +75,11 @@ public class AttributeGroup extends AttributeGroup_Base {
     @Override
     public Condition getDefCondition() {
         return DefAttributeCondition.getDefAttribute(this);
+    }
+
+    @Override
+    public Set<AttributeBasic> getAttributeBasicSet() {
+        return getAttributeSet();
     }
 
 }

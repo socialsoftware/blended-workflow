@@ -1,21 +1,21 @@
 package pt.ist.socialsoftware.blendedworkflow.shared;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModelInstance;
@@ -99,7 +99,7 @@ public class PrintBWSpecification {
                         + ei.getState());
             }
 
-            for (Attribute attribute : entity.getAttributesSet()) {
+            for (AttributeBasic attribute : entity.getAttributeBasicSet()) {
                 System.out.println("Attribute \"" + attribute.getName() + "\"");
             }
             System.out.println(
@@ -121,7 +121,7 @@ public class PrintBWSpecification {
         for (Entity entity : dataModelInstance.getEntitiesSet()) {
             System.out.println("Entity \"" + entity.getName() + "\"");
 
-            for (Attribute attribute : entity.getAttributesSet()) {
+            for (AttributeBasic attribute : entity.getAttributeBasicSet()) {
                 System.out.println("Attribute \"" + attribute.getName() + "\"");
             }
             System.out.println(

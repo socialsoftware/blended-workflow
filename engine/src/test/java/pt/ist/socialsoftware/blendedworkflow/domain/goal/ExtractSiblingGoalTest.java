@@ -10,8 +10,8 @@ import java.util.Set;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -48,11 +48,11 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
     Entity entityOne;
     Entity entityTwo;
     Entity entityThree;
-    Attribute attributeOne;
-    Attribute attributeTwo;
-    Attribute attributeThree;
-    Attribute attributeFour;
-    Attribute attributeFive;
+    AttributeBasic attributeOne;
+    AttributeBasic attributeTwo;
+    AttributeBasic attributeThree;
+    AttributeBasic attributeFour;
+    AttributeBasic attributeFive;
     RelationBW relation;
     Rule rule;
     Goal topGoal;
@@ -66,15 +66,15 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
                 "version", "UID");
 
         entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-        attributeOne = new Attribute(spec.getDataModel(), entityOne, null,
+        attributeOne = new AttributeBasic(spec.getDataModel(), entityOne, null,
                 "att1", AttributeType.NUMBER, true, false, false);
-        attributeTwo = new Attribute(spec.getDataModel(), entityOne, null,
+        attributeTwo = new AttributeBasic(spec.getDataModel(), entityOne, null,
                 ATTRIBUTE_NAME_TWO, AttributeType.NUMBER, true, false, false);
 
         entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
-        attributeThree = new Attribute(spec.getDataModel(), entityTwo, null,
+        attributeThree = new AttributeBasic(spec.getDataModel(), entityTwo, null,
                 "att3", AttributeType.BOOLEAN, true, false, false);
-        attributeFour = new Attribute(spec.getDataModel(), entityTwo, null,
+        attributeFour = new AttributeBasic(spec.getDataModel(), entityTwo, null,
                 "att4", AttributeType.STRING, true, false, false);
 
         entityThree = new Entity(spec.getDataModel(), "Entity three name",

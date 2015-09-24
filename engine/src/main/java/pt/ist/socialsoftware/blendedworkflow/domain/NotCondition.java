@@ -51,13 +51,13 @@ public class NotCondition extends NotCondition_Base {
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        return new HashSet<Attribute>();
+    public Set<AttributeBasic> getAttributeBasicSet() {
+        return new HashSet<AttributeBasic>();
     }
 
     @Override
-    public HashMap<Attribute, String> getcompareConditionValues() {
-        return new HashMap<Attribute, String>();
+    public HashMap<AttributeBasic, String> getcompareConditionValues() {
+        return new HashMap<AttributeBasic, String>();
     }
 
     @Override

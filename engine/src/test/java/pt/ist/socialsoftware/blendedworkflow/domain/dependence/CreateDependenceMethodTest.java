@@ -5,8 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
@@ -17,18 +17,18 @@ public class CreateDependenceMethodTest extends TeardownRollbackTest {
             + "rolename.attribute";
 
     private Entity entity = null;
-    private Attribute attribute = null;
+    private AttributeBasic attributeBasic = null;
     private AttributeGroup attributeGroup = null;
 
     @Override
     public void populate4Test() throws BWException {
-        Specification spec = new Specification("SpecId", "My spec",
-                "author", "description", "version", "UID");
+        Specification spec = new Specification("SpecId", "My spec", "author",
+                "description", "version", "UID");
         entity = new Entity(spec.getDataModel(), "Entity name", false);
-        attributeGroup = new AttributeGroup(spec.getDataModel(), entity,
-                "name", true);
-        attribute = new Attribute(spec.getDataModel(), entity, null, "name",
-                AttributeType.BOOLEAN, true, false, false);
+        attributeGroup = new AttributeGroup(spec.getDataModel(), entity, "att1",
+                true);
+        attributeBasic = new AttributeBasic(spec.getDataModel(), entity, null,
+                "att2", AttributeType.BOOLEAN, true, false, false);
     }
 
     @Test
@@ -51,10 +51,10 @@ public class CreateDependenceMethodTest extends TeardownRollbackTest {
 
     @Test
     public void successAttribute() {
-        attribute.createDependence(DEPENDENCE);
+        attributeBasic.createDependence(DEPENDENCE);
 
-        assertEquals(1, attribute.getDependenceSet().size());
-        assertEquals(DEPENDENCE, attribute.getDependenceSet().stream()
+        assertEquals(1, attributeBasic.getDependenceSet().size());
+        assertEquals(DEPENDENCE, attributeBasic.getDependenceSet().stream()
                 .findFirst().get().getPath());
     }
 

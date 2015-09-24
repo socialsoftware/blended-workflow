@@ -2,7 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 
 public abstract class Expression extends Expression_Base {
 
@@ -31,6 +31,6 @@ public abstract class Expression extends Expression_Base {
 
     public abstract String getSubPath();
 
-    public abstract Set<Attribute> getAttributes();
+    public abstract Set<AttributeBasic> getAttributes();
 
 }

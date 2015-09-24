@@ -60,12 +60,12 @@ public class Rule extends Rule_Base {
         return ruleDTO;
     }
 
-    public Set<Attribute> getAttributes() {
-        return getCondition().getAttributes();
+    public Set<AttributeBasic> getAttributeBasicSet() {
+        return getCondition().getAttributeBasicSet();
     }
 
     public Set<Product> getProducts() {
-        return getCondition().getAttributes()
+        return getCondition().getAttributeBasicSet()
                 .stream().map(a -> a.getAttributeGroup() != null
                         ? a.getAttributeGroup() : a)
                 .collect(Collectors.toSet());

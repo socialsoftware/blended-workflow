@@ -14,8 +14,8 @@ import com.vaadin.ui.Window.Notification;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
@@ -106,7 +106,7 @@ public class NewAttributeForm extends VerticalLayout {
             type = AttributeType.BOOLEAN;
         }
 
-        new Attribute(dataModel, entity, null, name, type, true,
+        new AttributeBasic(dataModel, entity, null, name, type, true,
                 isKeyAttribute, false); // FIXME:
         // isSystem
     }

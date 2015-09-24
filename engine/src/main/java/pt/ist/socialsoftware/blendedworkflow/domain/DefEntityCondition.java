@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
@@ -65,8 +64,8 @@ public class DefEntityCondition extends DefEntityCondition_Base {
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        Set<Attribute> attributes = new HashSet<Attribute>();
+    public Set<AttributeBasic> getAttributeBasicSet() {
+        Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
         // TODO: Removed but may be impact in execution
         // for (BWAttribute attribute : getEntity().getAttributesSet()) {
         // if (attribute.getIsKeyAttribute()) {
@@ -77,8 +76,8 @@ public class DefEntityCondition extends DefEntityCondition_Base {
     }
 
     @Override
-    public HashMap<Attribute, String> getcompareConditionValues() {
-        return new HashMap<Attribute, String>();
+    public HashMap<AttributeBasic, String> getcompareConditionValues() {
+        return new HashMap<AttributeBasic, String>();
     }
 
     @Override
@@ -87,7 +86,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
         String entityName = getEntity().getName().replaceAll(" ", "");
         Boolean first = true;
 
-        for (Attribute attribute : getEntity().getAttributesSet()) {
+        for (AttributeBasic attribute : getEntity().getAttributeBasicSet()) {
             if (attribute.getIsKeyAttribute()) {
 
                 if (first) {
@@ -115,7 +114,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
         String entityName = getEntity().getName().replaceAll(" ", "");
         Boolean first = true;
 
-        for (Attribute attribute : getEntity().getAttributesSet()) {
+        for (AttributeBasic attribute : getEntity().getAttributeBasicSet()) {
             if (attribute.getIsKeyAttribute()) {
 
                 if (first) {
@@ -143,7 +142,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 
         Boolean first = true;
 
-        for (Attribute attribute : getEntity().getAttributesSet()) {
+        for (AttributeBasic attribute : getEntity().getAttributeBasicSet()) {
             if (attribute.getIsKeyAttribute()) {
 
                 if (first) {
@@ -210,9 +209,9 @@ public class DefEntityCondition extends DefEntityCondition_Base {
         // Exists Entity
         if (arguments != null) {
             for (WorkItemArgument workItemArgument : arguments) {
-                Attribute workItemAttribute = workItemArgument
+                AttributeBasic workItemAttribute = workItemArgument
                         .getAttributeInstance().getAttribute();
-                Attribute conditionAttribute = getEntity()
+                AttributeBasic conditionAttribute = getEntity()
                         .getAttribute(workItemAttribute.getName()).orElse(null);
                 if (conditionAttribute != null
                         && conditionAttribute.getIsKeyAttribute()) {

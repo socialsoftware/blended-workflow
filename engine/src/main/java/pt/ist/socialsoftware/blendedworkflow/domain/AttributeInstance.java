@@ -4,7 +4,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 
 public class AttributeInstance extends AttributeInstance_Base {
 
-    public AttributeInstance(Attribute attribute,
+    public AttributeInstance(AttributeBasic attribute,
             EntityInstance entityInstance) {
         setEntityInstance(entityInstance);
         setAttribute(attribute);

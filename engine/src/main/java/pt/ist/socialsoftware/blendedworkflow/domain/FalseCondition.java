@@ -45,12 +45,12 @@ public class FalseCondition extends FalseCondition_Base {
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        return new HashSet<Attribute>();
+    public Set<AttributeBasic> getAttributeBasicSet() {
+        return new HashSet<AttributeBasic>();
     }
 
     @Override
-    public HashMap<Attribute, String> getcompareConditionValues() {
+    public HashMap<AttributeBasic, String> getcompareConditionValues() {
         // TODO Auto-generated method stub
         return null;
     }

@@ -6,7 +6,7 @@ enum pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal.MaintainGoalState
 //enum pt.ist.socialsoftware.blendedworkflow.domain.WorkItem.WorkItemState as WorkItemState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState as ActivityState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState as GoalState;
-enum pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType as AttributeType;
+enum pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality as Cardinality;
 enum pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator as ComparisonOperator;
 enum pt.ist.socialsoftware.blendedworkflow.domain.BinaryExpression.BinaryOperator as BinaryOperator;
@@ -61,20 +61,22 @@ class Product {
 	String name;
 }
 
-class Entity extends Product{
+class Entity extends Product {
 	boolean exists;
 	Integer entityInstanceCounter;
 }
 
-class Attribute extends Product{
-	AttributeType type;
+class Attribute extends Product {
 	boolean isMandatory;
+}
+
+class AttributeBasic extends Attribute {
+	AttributeType type;
 	boolean isKeyAttribute;
 	boolean isSystem;
 }
 
-class AttributeGroup extends Product {
-	boolean isMandatory;
+class AttributeGroup extends Attribute {
 }
 
 class Dependence {
@@ -446,12 +448,7 @@ relation DataModelHasEntities {
 
 relation DataModelHasAttributes {
 	DataModel playsRole dataModel { multiplicity 0..1; }
-	Attribute playsRole attributes { multiplicity 0..*; }
-}
-
-relation DataModelHasAttributeGroup {
-	DataModel playsRole dataModel { multiplicity 0..1; }
-	AttributeGroup playsRole attributeGroup { multiplicity 0..*; }
+	Attribute playsRole attribute { multiplicity 0..*; }
 }
 
 relation DataModelHasRelationBW {
@@ -478,14 +475,8 @@ relation ProductHasDependence {
 // Entity
 relation EntityHasAttributes {
 	Entity playsRole entity { multiplicity 0..1; }
-	Attribute playsRole attributes { multiplicity 0..*; }
+	Attribute playsRole attribute { multiplicity 0..*; }
 }
-
-relation EntityHasAttributeGroups {
-	Entity playsRole entity { multiplicity 0..1; }
-	AttributeGroup playsRole attributeGroup { multiplicity 0..*; }
-}
-
 
 relation EntityHasEntityInstances {
 	Entity playsRole entity { multiplicity 0..1; }
@@ -500,14 +491,14 @@ relation RelationBWHasRelationInstances {
 
 // Attributes
 relation AttributeHasAttributeInstances {
-	Attribute playsRole attribute { multiplicity 0..1; }
+	AttributeBasic playsRole attribute { multiplicity 0..1; }
 	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
 }
 
 // AttributeGroup
-relation AttributeGroupHasAttributes {
+relation AttributeGroupHasAttributeBasic {
 	AttributeGroup playsRole attributeGroup { multiplicity 0..1; }
-	Attribute playsRole attribute { multiplicity 0..*; }
+	AttributeBasic playsRole attribute { multiplicity 0..*; }
 }
 
 // Rule
@@ -597,11 +588,6 @@ relation DefAttributeConditionHasAttribute {
 	Attribute playsRole attributeOfDef { multiplicity 0..1; }
 }
 
-relation DefAttributeConditionHasAttributeGroup {
-	DefAttributeCondition playsRole defAttributeCondition { multiplicity 0..1; }
-	AttributeGroup playsRole attributeGroup { multiplicity 0..1; }
-}
-
 //DefEntityCondition
 relation DefEntityConditionHasEntities {
 	DefEntityCondition playsRole defEntityCondition { multiplicity 0..1; }
@@ -615,9 +601,9 @@ relation MulConditionHasRelationBW {
 }
 
 // Comparison
-relation ComparisonHasAttributes {
+relation ComparisonHasAttributeBasic {
 	Comparison playsRole comparison { multiplicity 0..*; }
-	Attribute playsRole attributeOfComparison { multiplicity 0..1; }
+	AttributeBasic playsRole attributeOfComparison { multiplicity 0..1; }
 }
 
 relation ComparisonHasExpressionLeft {
@@ -642,9 +628,9 @@ relation ComparisonHasConditionRight {
 }
 
 // AttributeBoolCondition
-relation AttributeBoolConditionHasAttribute {
+relation AttributeBoolConditionHasAttributeBasic {
 	AttributeBoolCondition playsRole attBoolCondition { multiplicity 0..*; }
-	Attribute playsRole attributeOfBool { multiplicity 0..1; }
+	AttributeBasic playsRole attributeOfBool { multiplicity 0..1; }
 }
 
 // BinaryExpression
@@ -659,9 +645,9 @@ relation BinaryExpressionHasExpressionRight {
 }
 
 // AttributeValueExpression
-relation AttributeValueExpressionHasAttribute {
+relation AttributeValueExpressionHasAttributeBasic {
 	AttributeValueExpression playsRole attValueExpression { multiplicity 0..*; }
-	Attribute playsRole attribute { multiplicity 0..1; }
+	AttributeBasic playsRole attribute { multiplicity 0..1; }
 }
 
 //OrganizationalModel

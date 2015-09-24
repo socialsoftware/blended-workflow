@@ -41,22 +41,22 @@ public class GoalModelInstance extends GoalModelInstance_Base {
 
         for (MaintainGoal maintainGoal : getMaintainGoalsSet()) {
             // Get AchieveGoal Conditions Data
-            Set<Attribute> achieveAttributes = new HashSet<Attribute>();
+            Set<AttributeBasic> achieveAttributes = new HashSet<AttributeBasic>();
             Set<Entity> achieveEntities = new HashSet<Entity>();
             for (Condition ac : achieveGoal.getActivationConditionSet()) {
-                achieveAttributes.addAll(ac.getAttributes());
+                achieveAttributes.addAll(ac.getAttributeBasicSet());
                 achieveEntities.addAll(ac.getEntities());
             }
             achieveAttributes.addAll(achieveGoal.getSuccessConditionSet()
-                    .stream().findFirst().get().getAttributes());
+                    .stream().findFirst().get().getAttributeBasicSet());
             achieveEntities.addAll(achieveGoal.getSuccessConditionSet().stream()
                     .findFirst().get().getEntities());
 
             // Get MaintainGoal Condition Data
-            Set<Attribute> maintainAttributes = new HashSet<Attribute>();
+            Set<AttributeBasic> maintainAttributes = new HashSet<AttributeBasic>();
             Set<Entity> maintainEntities = new HashSet<Entity>();
             maintainAttributes.addAll(
-                    maintainGoal.getMaintainCondition().getAttributes());
+                    maintainGoal.getMaintainCondition().getAttributeBasicSet());
             maintainEntities
                     .addAll(maintainGoal.getMaintainCondition().getEntities());
 
@@ -84,22 +84,22 @@ public class GoalModelInstance extends GoalModelInstance_Base {
         for (Goal ag : getGoalSet()) {
             if (!achieveGoal.equals(ag)) {
                 // Given AchieveGoal Conditions Data
-                Set<Attribute> achieveAttributes = new HashSet<Attribute>();
+                Set<AttributeBasic> achieveAttributes = new HashSet<AttributeBasic>();
                 Set<Entity> achieveEntities = new HashSet<Entity>();
                 achieveAttributes.addAll(achieveGoal.getSuccessConditionSet()
-                        .stream().findFirst().get().getAttributes());
+                        .stream().findFirst().get().getAttributeBasicSet());
                 achieveEntities.addAll(achieveGoal.getSuccessConditionSet()
                         .stream().findFirst().get().getEntities());
 
                 // For AchieveGoal Conditions Data
-                Set<Attribute> agAttributes = new HashSet<Attribute>();
+                Set<AttributeBasic> agAttributes = new HashSet<AttributeBasic>();
                 Set<Entity> agEntities = new HashSet<Entity>();
                 for (Condition ac : ag.getActivationConditionSet()) {
-                    agAttributes.addAll(ac.getAttributes());
+                    agAttributes.addAll(ac.getAttributeBasicSet());
                     agEntities.addAll(ac.getEntities());
                 }
                 agAttributes.addAll(ag.getSuccessConditionSet().stream()
-                        .findFirst().get().getAttributes());
+                        .findFirst().get().getAttributeBasicSet());
                 agEntities.addAll(ag.getSuccessConditionSet().stream()
                         .findFirst().get().getEntities());
 

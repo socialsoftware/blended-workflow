@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
@@ -47,9 +47,9 @@ public class GetSourceOfPathServiceTest extends TeardownRollbackTest {
                 false);
         Entity entityTwo = new Entity(spec.getDataModel(), ENTITY_NAME_TWO,
                 false);
-        new Attribute(spec.getDataModel(), entity, null, ATTRIBUTE_NAME_ONE,
+        new AttributeBasic(spec.getDataModel(), entity, null, ATTRIBUTE_NAME_ONE,
                 AttributeType.NUMBER, true, false, false);
-        new Attribute(spec.getDataModel(), entity, null, ATTRIBUTE_NAME_TWO,
+        new AttributeBasic(spec.getDataModel(), entity, null, ATTRIBUTE_NAME_TWO,
                 AttributeType.STRING, false, false, false);
 
         new RelationBW(spec.getDataModel(), "relation", entity, ROLE_ONE,

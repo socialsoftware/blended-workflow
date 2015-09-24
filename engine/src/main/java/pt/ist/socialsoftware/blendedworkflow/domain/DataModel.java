@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -87,6 +88,12 @@ public class DataModel extends DataModel_Base {
                         pathLeft.get(0)));
         pathLeft.remove(0);
         return entity.getNext(pathLeft, path);
+    }
+
+    public Set<AttributeBasic> getAttributeBasicSet() {
+        return getAttributeSet().stream()
+                .filter(AttributeBasic.class::isInstance)
+                .map(AttributeBasic.class::cast).collect(Collectors.toSet());
     }
 
 }

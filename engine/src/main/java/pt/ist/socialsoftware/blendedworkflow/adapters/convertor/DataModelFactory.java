@@ -6,8 +6,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
@@ -65,7 +65,7 @@ public class DataModelFactory {
                 .parseBoolean(attributeXML.getChildText("isKey", dmNamespace));
         boolean isSystem = Boolean.parseBoolean(
                 attributeXML.getChildText("isSystem", dmNamespace));
-        new Attribute(dataModel, entity, null, attName,
+        new AttributeBasic(dataModel, entity, null, attName,
                 AttributeType.parseAttributeType(attType), true, isKey,
                 isSystem);
     }

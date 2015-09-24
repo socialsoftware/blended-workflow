@@ -19,7 +19,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
@@ -149,7 +149,7 @@ public class DoctorAppointmentForm extends VerticalLayout {
 
         Entity medicalPrescription = dataModelInstance
                 .getEntity("Medical Prescription").get();
-        Attribute description = medicalPrescription
+        AttributeBasic description = medicalPrescription
                 .getAttribute("Description").orElse(null);
 
         EntityInstance medicalPrescription1 = new EntityInstance(

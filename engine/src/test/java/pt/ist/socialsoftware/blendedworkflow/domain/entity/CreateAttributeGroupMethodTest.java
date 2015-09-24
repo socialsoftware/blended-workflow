@@ -20,8 +20,8 @@ public class CreateAttributeGroupMethodTest extends TeardownRollbackTest {
 
     @Override
     public void populate4Test() throws BWException {
-        Specification spec = new Specification("SpecId", "My spec",
-                "author", "description", "version", "UID");
+        Specification spec = new Specification("SpecId", "My spec", "author",
+                "description", "version", "UID");
         entity = new Entity(spec.getDataModel(), "Entity name", false);
         new AttributeGroup(spec.getDataModel(), entity, EXISTS_NAME, true);
     }
@@ -41,8 +41,7 @@ public class CreateAttributeGroupMethodTest extends TeardownRollbackTest {
             entity.createAttributeGroup(EXISTS_NAME, true);
             fail();
         } catch (BWException bwe) {
-            assertEquals(BWErrorType.INVALID_ATTRIBUTE_GROUP_NAME,
-                    bwe.getError());
+            assertEquals(BWErrorType.INVALID_ATTRIBUTE_NAME, bwe.getError());
         }
     }
 

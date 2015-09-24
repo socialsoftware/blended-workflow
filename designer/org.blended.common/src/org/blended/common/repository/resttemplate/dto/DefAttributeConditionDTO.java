@@ -10,7 +10,6 @@ public class DefAttributeConditionDTO {
     private Set<String> paths;
     private boolean mandatory;
     private String attributeExtId;
-    private String attributeGroupExtId;
 
     public DefAttributeConditionDTO() {
     }
@@ -49,14 +48,6 @@ public class DefAttributeConditionDTO {
 
     public void setAttributeExtId(String attributeExtId) {
         this.attributeExtId = attributeExtId;
-    }
-
-    public String getAttributeGroupExtId() {
-        return attributeGroupExtId;
-    }
-
-    public void setAttributeGroupExtId(String attributeGroupExtId) {
-        this.attributeGroupExtId = attributeGroupExtId;
     }
 
     public String getSpecId() {

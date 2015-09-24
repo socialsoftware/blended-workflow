@@ -26,8 +26,8 @@ import com.vaadin.ui.Window.Notification;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
@@ -120,7 +120,7 @@ public class PreTaskForm extends VerticalLayout {
         Boolean first = true;
         for (WorkItemArgument workItemArgument : taskWorkItem
                 .getInputWorkItemArgumentsSet()) {
-            Attribute attribute = workItemArgument.getAttributeInstance()
+            AttributeBasic attribute = workItemArgument.getAttributeInstance()
                     .getAttribute();
             Entity entity = attribute.getEntity();
 

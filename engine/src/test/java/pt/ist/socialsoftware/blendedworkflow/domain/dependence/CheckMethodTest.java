@@ -6,8 +6,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
@@ -36,7 +36,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
     Entity entOne;
     Entity entTwo;
     Entity entThree;
-    Attribute attThree;
+    AttributeBasic attThree;
 
     @Override
     public void populate4Test() throws BWException {
@@ -51,13 +51,13 @@ public class CheckMethodTest extends TeardownRollbackTest {
         AttributeGroup attGroupOne = new AttributeGroup(dataModel, entOne,
                 GROUP_ONE_NAME, true);
 
-        Attribute attOne = new Attribute(dataModel, entOne, null,
+        AttributeBasic attOne = new AttributeBasic(dataModel, entOne, null,
                 ATT_ONE_NAME, AttributeType.BOOLEAN, true, false, false);
         attGroupOne.addAttribute(attOne);
-        Attribute attTwo = new Attribute(dataModel, entOne, null,
+        AttributeBasic attTwo = new AttributeBasic(dataModel, entOne, null,
                 ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
 
-        attThree = new Attribute(dataModel, entTwo, null, ATT_THREE_NAME,
+        attThree = new AttributeBasic(dataModel, entTwo, null, ATT_THREE_NAME,
                 AttributeType.STRING, true, false, false);
 
         RelationBW relOneThree = new RelationBW(dataModel, "relOne", entOne,

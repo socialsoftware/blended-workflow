@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
@@ -76,7 +76,7 @@ public class YAWLSpecificationFactory {
                 + "\" isRootNet=\"true\" xsi:type=\"NetFactsType\">";
 
         DataModel dataModel = bwSpecification.getDataModel();
-        for (Attribute attribute : dataModel.getAttributesSet()) {
+        for (AttributeBasic attribute : dataModel.getAttributeBasicSet()) {
             String entityName = attribute.getEntity().getName().replaceAll(" ",
                     "");
             String attributeName = attribute.getName().replaceAll(" ", "");
@@ -105,7 +105,7 @@ public class YAWLSpecificationFactory {
     }
 
     private String processControlElements() {
-        Set<Attribute> attributes;
+        Set<AttributeBasic> attributes;
         String processControlElements = "";
         String element = "";
         String startingMappings = "";
@@ -161,11 +161,11 @@ public class YAWLSpecificationFactory {
 
             // Starting Mapping
             attributes = task.getPreConditionSet().stream()
-                    .flatMap((cond) -> cond.getAttributes().stream())
+                    .flatMap((cond) -> cond.getAttributeBasicSet().stream())
                     .collect(Collectors.toSet());
             if (attributes.size() > 0) {
                 startingMappings += "<startingMappings>";
-                for (Attribute attribute : attributes) {
+                for (AttributeBasic attribute : attributes) {
                     String entityName = attribute.getEntity().getName()
                             .replaceAll(" ", "");
                     String attributeName = attribute.getName().replaceAll(" ",
@@ -195,11 +195,11 @@ public class YAWLSpecificationFactory {
 
             // Complete Mapping
             attributes = task.getPostConditionSet().stream()
-                    .flatMap((c) -> c.getAttributes().stream())
+                    .flatMap((c) -> c.getAttributeBasicSet().stream())
                     .collect(Collectors.toSet());
             if (attributes.size() > 0) {
                 completedMappings += "<completedMappings>";
-                for (Attribute attribute : attributes) {
+                for (AttributeBasic attribute : attributes) {
                     String entityName = attribute.getEntity().getName()
                             .replaceAll(" ", "");
                     String attributeName = attribute.getName().replaceAll(" ",
@@ -239,7 +239,7 @@ public class YAWLSpecificationFactory {
     }
 
     private String inputOutputParam() {
-        Set<Attribute> attributes;
+        Set<AttributeBasic> attributes;
         String inputOutputParameters = "";
         String inputParam = "";
         String outputParam = "";
@@ -257,9 +257,9 @@ public class YAWLSpecificationFactory {
 
             // Input Parameters
             attributes = task.getPreConditionSet().stream()
-                    .flatMap((cond) -> cond.getAttributes().stream())
+                    .flatMap((cond) -> cond.getAttributeBasicSet().stream())
                     .collect(Collectors.toSet());
-            for (Attribute attribute : attributes) {
+            for (AttributeBasic attribute : attributes) {
                 String entityName = attribute.getEntity().getName()
                         .replaceAll(" ", "");
                 String attributeName = attribute.getName().replaceAll(" ", "");
@@ -285,9 +285,9 @@ public class YAWLSpecificationFactory {
 
             // Output Parameters
             attributes = task.getPostConditionSet().stream()
-                    .flatMap((c) -> c.getAttributes().stream())
+                    .flatMap((c) -> c.getAttributeBasicSet().stream())
                     .collect(Collectors.toSet());
-            for (Attribute attribute : attributes) {
+            for (AttributeBasic attribute : attributes) {
                 String entityName = attribute.getEntity().getName()
                         .replaceAll(" ", "");
                 String attributeName = attribute.getName().replaceAll(" ", "");

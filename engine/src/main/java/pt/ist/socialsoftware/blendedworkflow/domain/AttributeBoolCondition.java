@@ -9,7 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 
-    public AttributeBoolCondition(Attribute att) {
+    public AttributeBoolCondition(AttributeBasic att) {
         setAttributeOfBool(att);
     }
 
@@ -57,15 +57,15 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        Set<Attribute> attributes = new HashSet<Attribute>();
+    public Set<AttributeBasic> getAttributeBasicSet() {
+        Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
         attributes.add(getAttributeOfBool());
 
         return attributes;
     }
 
     @Override
-    public HashMap<Attribute, String> getcompareConditionValues() {
+    public HashMap<AttributeBasic, String> getcompareConditionValues() {
         // TODO Auto-generated method stub
         return null;
     }

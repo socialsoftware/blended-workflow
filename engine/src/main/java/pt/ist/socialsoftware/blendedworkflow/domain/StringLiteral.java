@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 
 public class StringLiteral extends StringLiteral_Base {
 
@@ -22,8 +22,8 @@ public class StringLiteral extends StringLiteral_Base {
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        return new HashSet<Attribute>();
+    public Set<AttributeBasic> getAttributes() {
+        return new HashSet<AttributeBasic>();
     }
 
 }

@@ -6,7 +6,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 
 public abstract class Product extends Product_Base {
     public enum ProductType {
-        ATTRIBUTE, ATTRIBUTE_GROUP, ENTITY
+        ATTRIBUTE_BASIC, ATTRIBUTE_GROUP, ENTITY
     }
 
     public Dependence createDependence(String value) {

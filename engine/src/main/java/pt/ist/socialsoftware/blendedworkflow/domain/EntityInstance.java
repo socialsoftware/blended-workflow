@@ -18,7 +18,7 @@ public class EntityInstance extends EntityInstance_Base {
      * Create and assign EntityInstances and AttributesInstances to Workitems
      */
     public void assignAttributeInstances(GoalWorkItem goalWorkItem,
-            Attribute attribute, ConditionType conditionType) {
+            AttributeBasic attribute, ConditionType conditionType) {
         boolean exists = false;
         for (AttributeInstance attributeInstance : getAttributeInstancesSet()) {
             if (attributeInstance.getAttribute().equals(attribute)) {
@@ -44,7 +44,7 @@ public class EntityInstance extends EntityInstance_Base {
     }
 
     public void assignAttributeInstances(TaskWorkItem taskWorkItem,
-            Attribute attribute, ConditionType conditionType) {
+            AttributeBasic attribute, ConditionType conditionType) {
         boolean exists = false;
         boolean existsOne = false;
         for (AttributeInstance attributeInstance : getAttributeInstancesSet()) {

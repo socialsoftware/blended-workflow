@@ -50,7 +50,7 @@ public class CreateBWInstanceServiceTest extends AbstractServiceTest {
             assertEquals(6, dataModelInstance.getEntitiesCount());
             assertEquals(2, dataModelInstance.getEntity("Patient").get()
                     .getEntityInstancesCount());
-            assertEquals(17, dataModelInstance.getAttributesCount());
+            assertEquals(17, dataModelInstance.getAttributeCount());
             assertEquals(5, dataModelInstance.getRelationsCount());
             assertEquals(11, goalModelInstance.getGoalSet().size());
             assertEquals(1, goalModelInstance.getMaintainGoalsCount());

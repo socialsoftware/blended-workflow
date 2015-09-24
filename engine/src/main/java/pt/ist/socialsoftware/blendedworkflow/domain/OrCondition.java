@@ -66,17 +66,17 @@ public class OrCondition extends OrCondition_Base {
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        Set<Attribute> attributesOne = getConditionOne().getAttributes();
-        attributesOne.addAll(getConditionTwo().getAttributes());
+    public Set<AttributeBasic> getAttributeBasicSet() {
+        Set<AttributeBasic> attributesOne = getConditionOne().getAttributeBasicSet();
+        attributesOne.addAll(getConditionTwo().getAttributeBasicSet());
         return attributesOne;
     }
 
     @Override
-    public HashMap<Attribute, String> getcompareConditionValues() {
-        HashMap<Attribute, String> attributesOne = getConditionOne()
+    public HashMap<AttributeBasic, String> getcompareConditionValues() {
+        HashMap<AttributeBasic, String> attributesOne = getConditionOne()
                 .getcompareConditionValues();
-        HashMap<Attribute, String> attributesTwo = getConditionTwo()
+        HashMap<AttributeBasic, String> attributesTwo = getConditionTwo()
                 .getcompareConditionValues();
         attributesOne.putAll(attributesTwo);
         return attributesOne;

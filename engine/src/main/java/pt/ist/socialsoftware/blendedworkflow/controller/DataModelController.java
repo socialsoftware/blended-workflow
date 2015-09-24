@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -99,7 +99,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        Attribute attribute = adi.getAttributeByExtId(extId);
+        AttributeBasic attribute = adi.getAttributeByExtId(extId);
 
         return new ResponseEntity<AttributeDTO>(attribute.getDTO(),
                 HttpStatus.OK);
@@ -116,7 +116,7 @@ public class DataModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        Attribute attribute = adi.createAttribute(attDTO);
+        AttributeBasic attribute = adi.createAttribute(attDTO);
 
         return new ResponseEntity<AttributeDTO>(attribute.getDTO(),
                 HttpStatus.CREATED);

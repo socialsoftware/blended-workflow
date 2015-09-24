@@ -18,15 +18,15 @@ import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 import org.yawlfoundation.yawl.worklet.support.WorkletGatewayClient;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModelInstance;
@@ -302,8 +302,8 @@ public class WorkletAdapter {
             String type) {
         String cornerStr = "<cornerstone>";
         Set<Entity> entities = null;
-        Set<Attribute> attributes = null;
-        HashMap<Attribute, String> attributesValues = null;
+        Set<AttributeBasic> attributes = null;
+        HashMap<AttributeBasic, String> attributesValues = null;
 
         // Get Condition Data
         if (task != null && isPreCondition) {
@@ -311,7 +311,7 @@ public class WorkletAdapter {
                     .flatMap((cond) -> cond.getEntities().stream())
                     .collect(Collectors.toSet());
             attributes = task.getPreConditionSet().stream()
-                    .flatMap((cond) -> cond.getAttributes().stream())
+                    .flatMap((cond) -> cond.getAttributeBasicSet().stream())
                     .collect(Collectors.toSet());
             attributesValues = task.getPreConditionSet().stream()
                     .reduce(new TrueCondition(),
@@ -323,7 +323,7 @@ public class WorkletAdapter {
                     .flatMap((cond) -> cond.getEntities().stream())
                     .collect(Collectors.toSet());
             attributes = task.getPreConditionSet().stream()
-                    .flatMap((cond) -> cond.getAttributes().stream())
+                    .flatMap((cond) -> cond.getAttributeBasicSet().stream())
                     .collect(Collectors.toSet());
             attributesValues = task.getPostConditionSet().stream()
                     .reduce(new TrueCondition(),
@@ -332,9 +332,9 @@ public class WorkletAdapter {
         }
 
         if (attributes != null) {
-            Iterator<Attribute> it = attributes.iterator();
+            Iterator<AttributeBasic> it = attributes.iterator();
             while (it.hasNext()) {
-                Attribute attribute = it.next();
+                AttributeBasic attribute = it.next();
                 Entity entity = attribute.getEntity();
                 if (entities.contains(entity)
                         && !attributesValues.containsKey(attribute)
@@ -347,7 +347,7 @@ public class WorkletAdapter {
             // Parse complete entities
             for (Entity entity : entities) {
                 String entityName = entity.getName().replaceAll(" ", "");
-                for (Attribute attribute : entity.getAttributesSet()) {
+                for (AttributeBasic attribute : entity.getAttributeBasicSet()) {
                     if (attribute.getIsKeyAttribute()) {
                         String attributeName = attribute.getName()
                                 .replaceAll(" ", "");
@@ -371,7 +371,7 @@ public class WorkletAdapter {
         }
         // Parse single attributes
         if (attributes != null) {
-            for (Attribute attribute : attributes) {
+            for (AttributeBasic attribute : attributes) {
                 String entityName = attribute.getEntity().getName()
                         .replaceAll(" ", "");
                 String attributeName = attribute.getName().replaceAll(" ", "");

@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -38,7 +38,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
         Specification spec = new Specification(SPEC_ID, "name", "author",
                 "description", "version", "UID");
         ent = new Entity(spec.getDataModel(), ENTITY_NAME, false);
-        new Attribute(spec.getDataModel(), ent, null, DUP_NAME,
+        new AttributeBasic(spec.getDataModel(), ent, null, DUP_NAME,
                 AttributeType.NUMBER, false, false, false);
     }
 
@@ -53,7 +53,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 
         Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
         Entity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
-        Attribute att = entity.getAttribute(ATTRIBUTE_NAME).orElse(null);
+        AttributeBasic att = entity.getAttribute(ATTRIBUTE_NAME).orElse(null);
         assertNotNull(att);
         assertEquals(ATTRIBUTE_NAME, att.getName());
         assertEquals(AttributeType.NUMBER, att.getType());

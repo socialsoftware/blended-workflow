@@ -14,7 +14,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
@@ -67,13 +67,13 @@ public class PrescriptionMedicationForm extends VerticalLayout {
                 // PrescriptionMedication
                 Entity prescriptionMedication = dataModelInstance
                         .getEntity("Prescription Medication").get();
-                Attribute numberAtt = prescriptionMedication
+                AttributeBasic numberAtt = prescriptionMedication
                         .getAttribute("Number").orElse(null);
-                Attribute nameAtt = prescriptionMedication
+                AttributeBasic nameAtt = prescriptionMedication
                         .getAttribute("Name").orElse(null);
-                Attribute quantityAtt = prescriptionMedication
+                AttributeBasic quantityAtt = prescriptionMedication
                         .getAttribute("Quantity").orElse(null);
-                Attribute heartImpactAtt = prescriptionMedication
+                AttributeBasic heartImpactAtt = prescriptionMedication
                         .getAttribute("Heart Impact").orElse(null);
 
                 EntityInstance prescriptionMedication1 = new EntityInstance(

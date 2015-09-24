@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
@@ -49,9 +49,9 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
         entityOne = new Entity(spec.getDataModel(), ENTITY_NAME_ONE, false);
         Entity entityTwo = new Entity(spec.getDataModel(), ENTITY_NAME_TWO,
                 false);
-        new Attribute(spec.getDataModel(), entityOne, null,
+        new AttributeBasic(spec.getDataModel(), entityOne, null,
                 ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false, false);
-        new Attribute(spec.getDataModel(), entityOne, null,
+        new AttributeBasic(spec.getDataModel(), entityOne, null,
                 ATTRIBUTE_NAME_TWO, AttributeType.STRING, false, false, false);
 
         new RelationBW(spec.getDataModel(), "relation", entityOne, ROLE_ONE,
@@ -67,9 +67,9 @@ public class GetTargetOfPathServiceTest extends TeardownRollbackTest {
         Product product = FenixFramework
                 .getDomainObject(productDTO.getExtId());
 
-        assertEquals(ProductType.ATTRIBUTE, product.getProductType());
+        assertEquals(ProductType.ATTRIBUTE_BASIC, product.getProductType());
 
-        Attribute attribute = (Attribute) product;
+        AttributeBasic attribute = (AttributeBasic) product;
 
         assertEquals(SPEC_ID,
                 attribute.getDataModel().getSpecification().getSpecId());

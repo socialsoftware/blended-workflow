@@ -6,8 +6,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
@@ -27,10 +27,10 @@ public class CreateAttributeMethodTest extends TeardownRollbackTest {
 
     @Override
     public void populate4Test() throws BWException {
-        Specification spec = new Specification("SpecId", "My spec",
-                "author", "description", "version", "UID");
+        Specification spec = new Specification("SpecId", "My spec", "author",
+                "description", "version", "UID");
         entity = new Entity(spec.getDataModel(), "Entity name", false);
-        new Attribute(spec.getDataModel(), entity, null, EXISTS_NAME,
+        new AttributeBasic(spec.getDataModel(), entity, null, EXISTS_NAME,
                 AttributeType.BOOLEAN, true, false, false);
         attGroup = new AttributeGroup(spec.getDataModel(), entity,
                 ATT_GROUP_NAME, true);
@@ -38,14 +38,14 @@ public class CreateAttributeMethodTest extends TeardownRollbackTest {
 
     @Test
     public void success() {
-        Attribute att1 = entity.createAttribute(null, ATT_NAME_ONE,
+        AttributeBasic att1 = entity.createAttribute(null, ATT_NAME_ONE,
                 AttributeType.STRING, true);
-        Attribute att2 = entity.createAttribute(null, ATT_NAME_TWO,
+        AttributeBasic att2 = entity.createAttribute(null, ATT_NAME_TWO,
                 AttributeType.BOOLEAN, false);
-        Attribute att3 = entity.createAttribute(null, ATT_NAME_THREE,
+        AttributeBasic att3 = entity.createAttribute(null, ATT_NAME_THREE,
                 AttributeType.NUMBER, false);
 
-        assertEquals(4, entity.getAttributesSet().size());
+        assertEquals(5, entity.getAttributeSet().size());
         assertEquals(ATT_NAME_ONE, att1.getName());
         assertEquals(att1, entity.getAttribute(ATT_NAME_ONE).orElse(null));
         assertEquals(att2, entity.getAttribute(ATT_NAME_TWO).orElse(null));
@@ -58,10 +58,10 @@ public class CreateAttributeMethodTest extends TeardownRollbackTest {
 
     @Test
     public void successWithGroup() {
-        Attribute att1 = entity.createAttribute(attGroup, ATT_NAME_ONE,
+        AttributeBasic att1 = entity.createAttribute(attGroup, ATT_NAME_ONE,
                 AttributeType.STRING, true);
 
-        assertEquals(2, entity.getAttributesSet().size());
+        assertEquals(3, entity.getAttributeSet().size());
         assertEquals(ATT_NAME_ONE, att1.getName());
         assertEquals(att1, entity.getAttribute(ATT_NAME_ONE).orElse(null));
         assertEquals(AttributeType.STRING, att1.getType());

@@ -76,7 +76,7 @@ public class Task extends Task_Base {
      */
     public String getConstraintData(Boolean isPreConstraint) {
         Set<Entity> entities;
-        Set<Attribute> attributes;
+        Set<AttributeBasic> attributes;
         String dataString = "";
 
         // Get Condition Data
@@ -85,19 +85,19 @@ public class Task extends Task_Base {
                     .flatMap((cond) -> cond.getEntities().stream())
                     .collect(Collectors.toSet());
             attributes = getPreConditionSet().stream()
-                    .flatMap((cond) -> cond.getAttributes().stream())
+                    .flatMap((cond) -> cond.getAttributeBasicSet().stream())
                     .collect(Collectors.toSet());
         } else {
             entities = getPostConditionSet().stream()
                     .flatMap((cond) -> cond.getEntities().stream())
                     .collect(Collectors.toSet());
             attributes = getPostConditionSet().stream()
-                    .flatMap((cond) -> cond.getAttributes().stream())
+                    .flatMap((cond) -> cond.getAttributeBasicSet().stream())
                     .collect(Collectors.toSet());
         }
 
         // Add Attribute entities
-        for (Attribute attribute : attributes) {
+        for (AttributeBasic attribute : attributes) {
             entities.add(attribute.getEntity());
         }
 
@@ -224,11 +224,16 @@ public class Task extends Task_Base {
 
         Optional<DefAttributeCondition> oDef = ConditionModel
                 .getDefAttributeConditions(getPostConditionSet()).stream()
-                .filter(d -> !entities.contains(d.getEntity())).findFirst();
+                .filter(d -> !entities
+                        .contains(d.getAttributeOfDef().getEntity()))
+                .findFirst();
 
         if (oDef.isPresent())
             throw new BWException(BWErrorType.MISSING_DEF_IN_PRE,
-                    getName() + ":" + oDef.get().getEntity().getName());
+                    getName() + ":"
+                            + oDef.get().getAttributeOfDef().getEntity()
+                                    .getName()
+                            + "." + oDef.get().getAttributeOfDef().getName());
     }
 
     private void checkPostConditionContainsAtLeastOneDef() {

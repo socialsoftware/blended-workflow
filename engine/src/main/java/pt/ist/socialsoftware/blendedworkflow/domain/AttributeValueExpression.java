@@ -3,11 +3,11 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 
 public class AttributeValueExpression extends AttributeValueExpression_Base {
 
-    public AttributeValueExpression(Attribute att) {
+    public AttributeValueExpression(AttributeBasic att) {
         setAttribute(att);
     }
 
@@ -28,8 +28,8 @@ public class AttributeValueExpression extends AttributeValueExpression_Base {
     }
 
     @Override
-    public Set<Attribute> getAttributes() {
-        Set<Attribute> attributes = new HashSet<Attribute>();
+    public Set<AttributeBasic> getAttributes() {
+        Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
         if (!getAttribute().getEntity().getExists())
             attributes.add(getAttribute());
         return attributes;

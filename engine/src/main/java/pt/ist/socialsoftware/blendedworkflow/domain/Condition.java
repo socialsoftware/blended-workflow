@@ -39,9 +39,9 @@ public abstract class Condition extends Condition_Base {
 
     public abstract Set<Entity> getEntities();
 
-    public abstract Set<Attribute> getAttributes();
+    public abstract Set<AttributeBasic> getAttributeBasicSet();
 
-    public abstract HashMap<Attribute, String> getcompareConditionValues();
+    public abstract HashMap<AttributeBasic, String> getcompareConditionValues();
 
     public abstract String getRdrUndefinedCondition();
 

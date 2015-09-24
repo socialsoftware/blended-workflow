@@ -8,8 +8,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
@@ -34,9 +34,9 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
     Specification spec;
     Entity entityOne;
     Entity entityTwo;
-    Attribute attributeOne;
-    Attribute attributeTwo;
-    Attribute attributeThree;
+    AttributeBasic attributeOne;
+    AttributeBasic attributeTwo;
+    AttributeBasic attributeThree;
     RelationBW relation;
     Goal topGoal;
     Goal childGoalOne;
@@ -49,13 +49,13 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
                 "version", "UID");
 
         entityOne = new Entity(spec.getDataModel(), "Entity one name", false);
-        attributeOne = new Attribute(spec.getDataModel(), entityOne, null,
+        attributeOne = new AttributeBasic(spec.getDataModel(), entityOne, null,
                 "att1", AttributeType.BOOLEAN, true, false, false);
-        attributeTwo = new Attribute(spec.getDataModel(), entityOne, null,
+        attributeTwo = new AttributeBasic(spec.getDataModel(), entityOne, null,
                 "att2", AttributeType.NUMBER, true, false, false);
 
         entityTwo = new Entity(spec.getDataModel(), "Entity two name", false);
-        attributeThree = new Attribute(spec.getDataModel(), entityTwo, null,
+        attributeThree = new AttributeBasic(spec.getDataModel(), entityTwo, null,
                 "att3", AttributeType.BOOLEAN, true, false, false);
 
         relation = new RelationBW(spec.getDataModel(), "name", entityOne,

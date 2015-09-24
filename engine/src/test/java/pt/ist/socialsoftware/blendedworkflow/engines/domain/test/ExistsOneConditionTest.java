@@ -5,8 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
@@ -41,9 +41,9 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
 
     private DataModelInstance dataModelInstance;
     private Entity entity1;
-    private Attribute entity1Att1;
+    private AttributeBasic entity1Att1;
     private Entity entity2;
-    private Attribute entity2Att1;
+    private AttributeBasic entity2Att1;
     private RelationBW relation;
 
     private EntityInstance entityInstance1_1;
@@ -65,7 +65,7 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
 
         // Entity1
         entity1 = new Entity(dataModelInstance, ENTITY_1_NAME, true);
-        entity1Att1 = new Attribute(dataModelInstance, entity1, null,
+        entity1Att1 = new AttributeBasic(dataModelInstance, entity1, null,
                 ENTITY_1_ATT_1_NAME, AttributeType.STRING, false,
                 ENTITY_1_ATT_1_KEY, false);
 
@@ -81,7 +81,7 @@ public class ExistsOneConditionTest extends AbstractDomainTest {
 
         // Entity2
         entity2 = new Entity(dataModelInstance, ENTITY_2_NAME, false);
-        entity2Att1 = new Attribute(dataModelInstance, entity2, null,
+        entity2Att1 = new AttributeBasic(dataModelInstance, entity2, null,
                 ENTITY_2_ATT_1_NAME, AttributeType.STRING, false,
                 ENTITY_2_ATT_1_KEY, false);
 

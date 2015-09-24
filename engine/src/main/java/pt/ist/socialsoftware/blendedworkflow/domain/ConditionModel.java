@@ -38,11 +38,15 @@ public class ConditionModel extends ConditionModel_Base {
         dataModel.getEntitiesSet().stream().filter(e -> !e.getExists())
                 .forEach(e -> DefEntityCondition.getDefEntity(e));
 
-        dataModel.getAttributesSet().stream()
+        dataModel.getAttributeSet().stream()
+                .filter(AttributeBasic.class::isInstance)
+                .map(AttributeBasic.class::cast)
                 .filter(a -> a.getAttributeGroup() == null)
                 .forEach(a -> DefAttributeCondition.getDefAttribute(a));
 
-        dataModel.getAttributeGroupSet().stream()
+        dataModel.getAttributeSet().stream()
+                .filter(AttributeGroup.class::isInstance)
+                .map(AttributeGroup.class::cast)
                 .forEach(a -> DefAttributeCondition.getDefAttribute(a));
 
         dataModel.getRelationsSet().stream()
@@ -86,7 +90,8 @@ public class ConditionModel extends ConditionModel_Base {
         Set<Product> attributes = defAttributes.stream()
                 .filter(DefAttributeCondition.class::isInstance)
                 .map(DefAttributeCondition.class::cast)
-                .map((def) -> def.getProduct()).collect(Collectors.toSet());
+                .map((def) -> def.getAttributeOfDef())
+                .collect(Collectors.toSet());
         return attributes;
     }
 
