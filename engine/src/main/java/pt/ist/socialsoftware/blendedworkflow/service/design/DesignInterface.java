@@ -246,6 +246,18 @@ public class DesignInterface {
     }
 
     @Atomic(mode = TxMode.WRITE)
+    public boolean generateConditionModel(String specId) {
+        Specification spec = getSpecBySpecId(specId);
+
+        if (spec.getDataModel().getEntitySet().size() == 0)
+            throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+
+        spec.getConditionModel().generateConditions();
+
+        return true;
+    }
+
+    @Atomic(mode = TxMode.WRITE)
     public void cleanGoalModel(String specId) {
         Specification spec = getSpecBySpecId(specId);
 

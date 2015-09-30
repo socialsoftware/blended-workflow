@@ -333,6 +333,18 @@ public class CommonInterface {
         restTemplate.put(uri, null, params);
     }
 
+    public Boolean generateConditionModel(String specId) {
+        log.debug("generateConditionModel: {}", specId);
+
+        final String uri = BASE_URL + "/specs/{specId}/conditionmodel";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        return restTemplate.postForObject(uri, null, Boolean.class, params);
+    }
+
     public DefEntityConditionDTO createEntityAchieveCondition(
             DefEntityConditionDTO entityAchieveConditionVO) {
         log.debug("createEntityAchieveCondition: {}, {}, {}",

@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
-import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
@@ -39,6 +39,18 @@ public class ConditionModelController {
         adi.cleanConditionModel(specId);
 
         return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public ResponseEntity<Boolean> generateConditionModel(
+            @PathVariable("specId") String specId) {
+        log.debug("generateConditionModel specId:{}", specId);
+
+        DesignInterface adi = DesignInterface.getInstance();
+
+        boolean result = adi.generateConditionModel(specId);
+
+        return new ResponseEntity<Boolean>(result, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/entityachieveconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -98,8 +110,7 @@ public class ConditionModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        Dependence dependence = adi
-                .createAttributeDependence(dependenceDTO);
+        Dependence dependence = adi.createAttributeDependence(dependenceDTO);
 
         return new ResponseEntity<DependenceDTO>(dependence.getDTO(),
                 HttpStatus.CREATED);

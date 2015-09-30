@@ -10,6 +10,13 @@ public class AddActivityReq {
     private String description;
     private DefConditionSetDTO postConditionSet;
 
+    public AddActivityReq(String activityName, String description,
+            DefConditionSetDTO postConditionSet) {
+        this.activityName = activityName;
+        this.description = description;
+        this.postConditionSet = postConditionSet;
+    }
+
     public AddActivityReq() {
     }
 
