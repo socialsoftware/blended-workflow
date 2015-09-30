@@ -59,7 +59,7 @@ public class CreateRelationMethodTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.INVALID_ROLE_NAME, bwe.getError());
-            assertEquals(2, entityOne.getRelationsSet().size());
+            assertEquals(2, entityOne.getRelationSet().size());
         }
     }
 
@@ -72,7 +72,7 @@ public class CreateRelationMethodTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.INVALID_ROLE_NAME, bwe.getError());
-            assertEquals(2, entityOne.getRelationsSet().size());
+            assertEquals(2, entityOne.getRelationSet().size());
         }
     }
 

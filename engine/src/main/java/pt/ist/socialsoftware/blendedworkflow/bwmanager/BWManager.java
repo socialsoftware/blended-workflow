@@ -8,14 +8,14 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.ui.Window.Notification;
 
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.presentation.BWPresentation;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.CreateBWInstanceService;
@@ -119,7 +119,7 @@ public class BWManager {
         boolean exists = false;
 
         // Check if relation instance already exists
-        for (RelationBW relation : dataModelInstance.getRelationsSet()) {
+        for (RelationBW relation : dataModelInstance.getRelationBWSet()) {
             for (RelationInstance relationInstance : relation
                     .getRelationInstancesSet()) {
                 EntityInstance one = relationInstance.getEntityInstanceOne();
@@ -134,7 +134,7 @@ public class BWManager {
 
         // Create only if no previous RelationInstance exists
         if (!exists) {
-            for (RelationBW relation : dataModelInstance.getRelationsSet()) {
+            for (RelationBW relation : dataModelInstance.getRelationBWSet()) {
                 Entity one = relation.getEntityOne();
                 Entity two = relation.getEntityTwo();
                 if ((one.equals(entity1) && two.equals(entity2))) {

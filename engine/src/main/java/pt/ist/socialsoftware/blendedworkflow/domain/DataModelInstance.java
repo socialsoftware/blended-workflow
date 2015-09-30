@@ -60,8 +60,8 @@ public class DataModelInstance extends DataModelInstance_Base {
     /********************
      * Search Algorithms
      ********************/
-    public void searchEntity(Entity initNode, Entity targetNode, RelationBW edge,
-            ArrayList<Entity> currentEntityPath,
+    public void searchEntity(Entity initNode, Entity targetNode,
+            RelationBW edge, ArrayList<Entity> currentEntityPath,
             ArrayList<RelationBW> currentRelationPath) {
         visitedEntityNodes.add(initNode);
 
@@ -77,7 +77,7 @@ public class DataModelInstance extends DataModelInstance_Base {
             this.foundEntityPath = currentEntityPath;
             this.foundRelationPath = currentRelationPath;
         } else {
-            for (RelationBW relation : initNode.getRelationsSet()) {
+            for (RelationBW relation : initNode.getRelationSet()) {
                 Entity one = relation.getEntityOne();
                 Entity two = relation.getEntityTwo();
 
@@ -177,7 +177,7 @@ public class DataModelInstance extends DataModelInstance_Base {
         boolean exists = false;
 
         // Check if relation instance already exists
-        for (RelationBW relation : dataModelInstance.getRelationsSet()) {
+        for (RelationBW relation : dataModelInstance.getRelationBWSet()) {
             for (RelationInstance relationInstance : relation
                     .getRelationInstancesSet()) {
                 EntityInstance one = relationInstance.getEntityInstanceOne();
@@ -192,7 +192,7 @@ public class DataModelInstance extends DataModelInstance_Base {
 
         // Create only if no previous RelationInstance exists
         if (!exists) {
-            for (RelationBW relation : dataModelInstance.getRelationsSet()) {
+            for (RelationBW relation : dataModelInstance.getRelationBWSet()) {
                 Entity one = relation.getEntityOne();
                 Entity two = relation.getEntityTwo();
                 if ((one.equals(entity1) && two.equals(entity2))) {

@@ -190,7 +190,7 @@ public class DataModelTree extends VerticalLayout {
         BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
         Entity context = FenixFramework.getDomainObject(entityOID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitySet()) {
 
             if (entity.equals(context)) {
                 String entityName = entity.getName();
@@ -205,7 +205,7 @@ public class DataModelTree extends VerticalLayout {
             }
         }
 
-        for (RelationBW relation : dataModelInstance.getRelationsSet()) {
+        for (RelationBW relation : dataModelInstance.getRelationBWSet()) {
             if (context.equals(relation.getEntityOne())) {
                 relationtable.addItem(relation.getName());
 

@@ -41,7 +41,7 @@ public class Entity extends Entity_Base {
     }
 
     private void checkUniqueEntityName(String name) throws BWException {
-        boolean exists = getDataModel().getEntitiesSet().stream().anyMatch(
+        boolean exists = getDataModel().getEntitySet().stream().anyMatch(
                 ent -> (ent.getName() != null) && (ent.getName().equals(name)));
         if (exists)
             throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
@@ -248,10 +248,10 @@ public class Entity extends Entity_Base {
         Entity relationEntityTwo = null;
         EntityInstance relationEntityInstanceTwo = null;
         // Relation Type Exists?
-        if (this.getRelationsCount() > 0) {
-            for (RelationBW relation : this.getRelationsSet()) {
+        if (this.getRelationCount() > 0) {
+            for (RelationBW relation : this.getRelationSet()) {
                 // Get the other relation entity
-                for (Entity entity : relation.getEntitiesSet()) {
+                for (Entity entity : relation.getEntitySet()) {
                     if (!this.getName().equals(entity.getName())) {
                         relationEntityTwo = entity; // entity2
                     }
@@ -314,15 +314,15 @@ public class Entity extends Entity_Base {
         return null;
     }
 
-    public Set<RelationBW> getRelationsSet() {
+    public Set<RelationBW> getRelationSet() {
         Set<RelationBW> relations = new HashSet<RelationBW>(
-                this.getRelationsOneSet());
-        relations.addAll(getRelationsTwoSet());
+                this.getRelationOneSet());
+        relations.addAll(getRelationTwoSet());
         return relations;
     }
 
-    public int getRelationsCount() {
-        return getRelationsOneSet().size() + getRelationsTwoSet().size();
+    public int getRelationCount() {
+        return getRelationOneSet().size() + getRelationTwoSet().size();
     }
 
     public Optional<AttributeGroup> getAttributeGroup(String name) {
@@ -336,8 +336,8 @@ public class Entity extends Entity_Base {
         setDataModel(null);
         getAttributeGroupSet().stream().forEach(attGroup -> attGroup.delete());
         getAttributeSet().stream().forEach(att -> att.delete());
-        getRelationsOneSet().stream().forEach(rel -> rel.delete());
-        getRelationsTwoSet().stream().forEach(rel -> rel.delete());
+        getRelationOneSet().stream().forEach(rel -> rel.delete());
+        getRelationTwoSet().stream().forEach(rel -> rel.delete());
         if (getDefEntityCondition() != null)
             getDefEntityCondition().delete();
 
@@ -369,7 +369,7 @@ public class Entity extends Entity_Base {
             return oBwAtt.get().getNext(pathLeft, path);
         }
 
-        Optional<RelationBW> oBwRel = getRelationsSet().stream()
+        Optional<RelationBW> oBwRel = getRelationSet().stream()
                 .filter(rel -> (rel.getRoleNameOne().equals(element)
                         && rel.getEntityTwo() == this)
                         || (rel.getRoleNameTwo().equals(element)
@@ -398,8 +398,8 @@ public class Entity extends Entity_Base {
 
     public Set<MulCondition> getMultConditions() {
         return Stream
-                .concat(getRelationsOneSet().stream(),
-                        getRelationsTwoSet().stream())
+                .concat(getRelationOneSet().stream(),
+                        getRelationTwoSet().stream())
                 .map((r) -> r.getMulCondition(this))
                 .collect(Collectors.toSet());
     }

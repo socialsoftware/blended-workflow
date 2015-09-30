@@ -23,12 +23,12 @@ public class DataModel extends DataModel_Base {
         Entity relationEntityOne;
         Entity relationEntityTwo;
 
-        for (Entity entity : getEntitiesSet()) {
+        for (Entity entity : getEntitySet()) {
             entity.cloneEntity(newDataModelInstance);
         }
 
         // Get relation -> Get new Entities -> Clone with new Entities
-        for (RelationBW relation : getRelationsSet()) {
+        for (RelationBW relation : getRelationBWSet()) {
             relationEntityOne = newDataModelInstance
                     .getEntity(relation.getEntityOne().getName()).get();
             relationEntityTwo = newDataModelInstance
@@ -40,12 +40,12 @@ public class DataModel extends DataModel_Base {
     }
 
     public Optional<Entity> getEntity(String name) {
-        return getEntitiesSet().stream()
+        return getEntitySet().stream()
                 .filter(ent -> ent.getName().equals(name)).findFirst();
     }
 
     public RelationBW getRelation(String name) {
-        for (RelationBW relation : getRelationsSet()) {
+        for (RelationBW relation : getRelationBWSet()) {
             if (relation.getName().equals(name)) {
                 return relation;
             }
@@ -58,7 +58,7 @@ public class DataModel extends DataModel_Base {
             getSpecification().getConditionModel().clean();
         getRuleSet().stream().forEach(rule -> rule.delete());
         getDependenceSet().stream().forEach(dep -> dep.delete());
-        getEntitiesSet().stream().forEach(ent -> ent.delete());
+        getEntitySet().stream().forEach(ent -> ent.delete());
     }
 
     public void delete() {

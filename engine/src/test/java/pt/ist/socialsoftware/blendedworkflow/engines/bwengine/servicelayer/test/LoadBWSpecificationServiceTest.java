@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
 
 import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.AbstractServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.execution.LoadBWSpecificationService;
@@ -55,11 +55,11 @@ public class LoadBWSpecificationServiceTest extends AbstractServiceTest {
         final GoalModel goalModel = bwSpecification.getGoalModel();
         final TaskModel taskModel = bwSpecification.getTaskModel();
 
-        assertEquals(6, dataModel.getEntitiesSet().size());
+        assertEquals(6, dataModel.getEntitySet().size());
         assertEquals(2, dataModel.getEntity("Patient").get()
                 .getEntityInstancesSet().size());
         assertEquals(17, dataModel.getAttributeSet().size());
-        assertEquals(5, dataModel.getRelationsSet().size());
+        assertEquals(5, dataModel.getRelationBWSet().size());
         assertEquals(11, goalModel.getGoalSet().size());
         assertEquals(1, goalModel.getMaintainGoalsSet().size());
         assertEquals(6, taskModel.getTasksSet().size());

@@ -47,15 +47,15 @@ public class CreateBWInstanceServiceTest extends AbstractServiceTest {
             TaskModelInstance taskModelInstance = bwInstance
                     .getTaskModelInstance();
 
-            assertEquals(6, dataModelInstance.getEntitiesCount());
+            assertEquals(6, dataModelInstance.getEntitySet().size());
             assertEquals(2, dataModelInstance.getEntity("Patient").get()
-                    .getEntityInstancesCount());
-            assertEquals(17, dataModelInstance.getAttributeCount());
-            assertEquals(5, dataModelInstance.getRelationsCount());
+                    .getEntityInstancesSet().size());
+            assertEquals(17, dataModelInstance.getAttributeSet().size());
+            assertEquals(5, dataModelInstance.getRelationBWSet().size());
             assertEquals(11, goalModelInstance.getGoalSet().size());
-            assertEquals(1, goalModelInstance.getMaintainGoalsCount());
-            assertEquals(6, taskModelInstance.getTasksCount());
-            assertEquals(0, bwInstance.getWorkItemsCount());
+            assertEquals(1, goalModelInstance.getMaintainGoalsSet().size());
+            assertEquals(6, taskModelInstance.getTasksSet().size());
+            assertEquals(0, bwInstance.getWorkItemsSet().size());
 
             assertEquals(YAWLCASE_ID, bwInstance.getYawlCaseID());
 

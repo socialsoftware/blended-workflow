@@ -431,7 +431,7 @@ relation TaskHasMultiplicityInvariants {
 }
 
 relation TaskHasRuleInvariants {
-	Task playsRole taskWithRule { multiplicity 0..*; }
+	Task playsRole taskWithRule { multiplicity 0..1; }
 	Rule playsRole ruleInvariant { multiplicity 0..*; }
 }
 
@@ -443,7 +443,7 @@ relation TaskHasTaskWorkItem {
 // DataModel
 relation DataModelHasEntities {
 	DataModel playsRole dataModel { multiplicity 0..1; }
-	Entity playsRole entities { multiplicity 0..*; }
+	Entity playsRole entity { multiplicity 0..*; }
 }
 
 relation DataModelHasAttributes {
@@ -453,7 +453,7 @@ relation DataModelHasAttributes {
 
 relation DataModelHasRelationBW {
 	DataModel playsRole dataModel { multiplicity 0..1; }
-	RelationBW playsRole relations { multiplicity 0..*; }
+	RelationBW playsRole relationBW { multiplicity 0..*; }
 }
 
 relation DataModelHasDependence {
@@ -514,12 +514,12 @@ relation EntityInstanceHasAttributeInstances {
 }
 
 relation RelationBWHasEntityOne {
-	RelationBW playsRole relationsOne { multiplicity 0..*; }
+	RelationBW playsRole relationOne { multiplicity 0..*; }
 	Entity playsRole entityOne { multiplicity 1..1; }
 }
 
 relation RelationBWHasEntityTwo {
-	RelationBW playsRole relationsTwo { multiplicity 0..*; }
+	RelationBW playsRole relationTwo { multiplicity 0..*; }
 	Entity playsRole entityTwo { multiplicity 1..1; }
 }
 

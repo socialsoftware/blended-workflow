@@ -64,7 +64,7 @@ public class CreateGoalInstanceService implements Callable<String> {
         if (this.entitiesOID
                 .get(this.goal.getEntityContext().getExternalId()) == null) {
             for (RelationBW relation : this.goal.getEntityContext()
-                    .getRelationsSet()) {
+                    .getRelationSet()) {
                 Entity one = relation.getEntityOne();
                 Entity two = relation.getEntityTwo();
                 if (this.goal.getEntityContext().equals(one)

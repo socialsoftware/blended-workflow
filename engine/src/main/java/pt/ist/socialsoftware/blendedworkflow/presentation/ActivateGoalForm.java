@@ -202,7 +202,7 @@ public class ActivateGoalForm extends VerticalLayout {
         Goal goal = FenixFramework.getDomainObject(_goalOID);
         Entity goalContext = goal.getEntityContext();
 
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitySet()) {
             if (entity.equals(goalContext)) {
                 for (EntityInstance entityInstance : entity
                         .getEntityInstancesSet()) {
@@ -221,7 +221,7 @@ public class ActivateGoalForm extends VerticalLayout {
 
         Goal goal = FenixFramework.getDomainObject(_goalOID);
         Entity goalContext = goal.getEntityContext();
-        for (RelationBW relation : goalContext.getRelationsSet()) {
+        for (RelationBW relation : goalContext.getRelationSet()) {
             Entity one = relation.getEntityOne();
             Entity two = relation.getEntityTwo();
             if (goalContext.equals(one) && relation.getIsTwoKeyEntity()) {

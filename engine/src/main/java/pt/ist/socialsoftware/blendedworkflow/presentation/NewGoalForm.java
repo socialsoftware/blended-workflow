@@ -219,7 +219,7 @@ public class NewGoalForm extends VerticalLayout {
 		BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
 
 		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-		for (Entity entity : dataModelInstance.getEntitiesSet()) {
+		for (Entity entity : dataModelInstance.getEntitySet()) {
 			this.entityContext.addItem(entity.getExternalId());
 			this.entityContext.setItemCaption(entity.getExternalId(),
 					entity.getName());

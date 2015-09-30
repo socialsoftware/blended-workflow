@@ -91,7 +91,7 @@ public class PrintBWSpecification {
         System.out.println("DataModel Template");
         System.out.println(
                 "----------------------------------------------------------");
-        for (Entity entity : dataModelTemplate.getEntitiesSet()) {
+        for (Entity entity : dataModelTemplate.getEntitySet()) {
             System.out.println("Entity \"" + entity.getName() + "\" has "
                     + entity.getEntityInstancesSet().size() + " Instances");
             for (EntityInstance ei : entity.getEntityInstancesSet()) {
@@ -105,7 +105,7 @@ public class PrintBWSpecification {
             System.out.println(
                     "----------------------------------------------------------");
         }
-        for (RelationBW relation : dataModelTemplate.getRelationsSet()) {
+        for (RelationBW relation : dataModelTemplate.getRelationBWSet()) {
             System.out.println("Relation \"" + relation.getName() + "\"");
         }
     }
@@ -118,7 +118,7 @@ public class PrintBWSpecification {
         System.out.println("DataModel Type");
         System.out.println(
                 "----------------------------------------------------------");
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitySet()) {
             System.out.println("Entity \"" + entity.getName() + "\"");
 
             for (AttributeBasic attribute : entity.getAttributeBasicSet()) {
@@ -127,7 +127,7 @@ public class PrintBWSpecification {
             System.out.println(
                     "----------------------------------------------------------");
         }
-        for (RelationBW relation : dataModelInstance.getRelationsSet()) {
+        for (RelationBW relation : dataModelInstance.getRelationBWSet()) {
             System.out.println("Relation \"" + relation.getName() + "\"");
         }
     }
@@ -228,7 +228,7 @@ public class PrintBWSpecification {
         System.out.println("DataModel Instance");
         System.out.println(
                 "----------------------------------------------------------");
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitySet()) {
             System.out.println("Entity \"" + entity.getName() + "\" has "
                     + entity.getEntityInstancesSet().size() + " instances.");
             if (entity.getEntityInstancesSet().size() > 0) {
@@ -251,7 +251,7 @@ public class PrintBWSpecification {
             System.out.println(
                     "----------------------------------------------------------");
         }
-        for (RelationBW relation : dataModelInstance.getRelationsSet()) {
+        for (RelationBW relation : dataModelInstance.getRelationBWSet()) {
             System.out.println("Relation \"" + relation.getName() + "\" has "
                     + relation.getRelationInstancesSet().size()
                     + " instances.");

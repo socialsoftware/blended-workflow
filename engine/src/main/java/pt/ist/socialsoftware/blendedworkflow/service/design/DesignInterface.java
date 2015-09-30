@@ -235,7 +235,7 @@ public class DesignInterface {
     public void cleanConditionModel(String specId) {
         Specification spec = getSpecBySpecId(specId);
 
-        if (spec.getDataModel().getEntitiesSet().size() == 0)
+        if (spec.getDataModel().getEntitySet().size() == 0)
             throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
 
         spec.getConditionModel().clean();
@@ -245,7 +245,7 @@ public class DesignInterface {
     public void cleanGoalModel(String specId) {
         Specification spec = getSpecBySpecId(specId);
 
-        if (spec.getDataModel().getEntitiesSet().size() == 0)
+        if (spec.getDataModel().getEntitySet().size() == 0)
             throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
 
         if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
@@ -258,7 +258,7 @@ public class DesignInterface {
     public void cleanActivityModel(String specId) {
         Specification spec = getSpecBySpecId(specId);
 
-        if (spec.getDataModel().getEntitiesSet().size() == 0)
+        if (spec.getDataModel().getEntitySet().size() == 0)
             throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
 
         if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
@@ -798,7 +798,7 @@ public class DesignInterface {
         System.out.println(
                 "-------------------------------------------------------");
 
-        for (Entity entity : spec.getDataModel().getEntitiesSet()) {
+        for (Entity entity : spec.getDataModel().getEntitySet()) {
             System.out.println("Entity " + entity.getName() + " Exists:"
                     + entity.getExists());
         }
@@ -1019,7 +1019,7 @@ public class DesignInterface {
         String entityName = path.split("\\.")[0];
         String rolename = path.split("\\.")[1];
 
-        RelationBW relation = spec.getDataModel().getRelationsSet().stream()
+        RelationBW relation = spec.getDataModel().getRelationBWSet().stream()
                 .filter(rel -> (rel.getEntityOne().getName().equals(entityName)
                         && rel.getRoleNameTwo().equals(rolename))
                         || (rel.getEntityTwo().getName().equals(entityName)

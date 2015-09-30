@@ -46,7 +46,7 @@ public class MaintainGoal extends MaintainGoal_Base {
         BWInstance bwInstance = goalModelInstance.getBwInstance();
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         Entity newEntityContext = null;
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitySet()) {
             if (getMaintainGoalEntityContext().getName()
                     .equals(entity.getName())) {
                 newEntityContext = entity;

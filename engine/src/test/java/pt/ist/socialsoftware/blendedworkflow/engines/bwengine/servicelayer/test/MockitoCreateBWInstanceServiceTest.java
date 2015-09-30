@@ -2,12 +2,12 @@ package pt.ist.socialsoftware.blendedworkflow.engines.bwengine.servicelayer.test
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import jvstm.Transaction;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.MockitoAbstractServiceTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
@@ -16,8 +16,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class MockitoCreateBWInstanceServiceTest extends
-        MockitoAbstractServiceTest {
+public class MockitoCreateBWInstanceServiceTest
+        extends MockitoAbstractServiceTest {
 
     @Before
     public void setUp() throws Exception, BWException {
@@ -44,9 +44,9 @@ public class MockitoCreateBWInstanceServiceTest extends
             final TaskModelInstance taskModelInstance = bwInstance
                     .getTaskModelInstance();
 
-            assertEquals(6, dataModelInstance.getEntitiesSet().size());
+            assertEquals(6, dataModelInstance.getEntitySet().size());
             assertEquals(17, dataModelInstance.getAttributeSet().size());
-            assertEquals(5, dataModelInstance.getRelationsSet().size());
+            assertEquals(5, dataModelInstance.getRelationBWSet().size());
             assertEquals(11, goalModelInstance.getGoalSet().size());
             assertEquals(1, goalModelInstance.getMaintainGoalsSet().size());
             assertEquals(6, taskModelInstance.getTasksSet().size());

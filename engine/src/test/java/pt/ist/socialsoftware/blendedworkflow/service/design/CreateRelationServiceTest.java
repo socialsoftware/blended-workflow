@@ -46,7 +46,7 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
                         entityOne.getExternalId(), ROLENAME_ONE, ONE,
                         entityTwo.getExternalId(), ROLENAME_TWO, MANY));
 
-        RelationBW relation = entityOne.getRelationsOneSet().stream()
+        RelationBW relation = entityOne.getRelationOneSet().stream()
                 .filter(rel -> rel.getRoleNameOne().equals(ROLENAME_ONE))
                 .findFirst().orElse(null);
 

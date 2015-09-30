@@ -108,7 +108,7 @@ public class AllDataModelTree extends VerticalLayout {
     public void getDataModel(String bwInstanceOID) {
         BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitySet()) {
             String entityName = entity.getName();
             String entityOID = entity.getExternalId();
             treetable.addItem(entityOID);

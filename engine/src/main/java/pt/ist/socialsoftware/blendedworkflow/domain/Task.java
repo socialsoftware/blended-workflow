@@ -151,7 +151,7 @@ public class Task extends Task_Base {
         attributes.addAll(postAttributes);
 
         Optional<Rule> oRule = getRuleInvariantSet().stream()
-                .filter(r -> !attributes.containsAll(r.getProducts()))
+                .filter(r -> !attributes.containsAll(r.getAttributeSet()))
                 .findFirst();
 
         if (oRule.isPresent())
@@ -160,7 +160,7 @@ public class Task extends Task_Base {
 
         // at least an attribute is defined in the task
         for (Rule rule : getRuleInvariantSet())
-            if (!rule.getProducts().stream()
+            if (!rule.getAttributeSet().stream()
                     .anyMatch((a) -> postAttributes.contains(a)))
                 throw new BWException(BWErrorType.INCONSISTENT_RULE_CONDITION,
                         getName() + ":" + rule.getName());

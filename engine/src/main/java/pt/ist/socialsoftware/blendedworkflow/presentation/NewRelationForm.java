@@ -133,7 +133,7 @@ public class NewRelationForm extends VerticalLayout {
         DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
         int relationIndex = 1;
-        for (RelationBW relation : dataModel.getRelationsSet()) {
+        for (RelationBW relation : dataModel.getRelationBWSet()) {
             Entity entityOne = relation.getEntityOne();
             Entity entityTwo = relation.getEntityTwo();
             if (entityOne.getName().equals(entityName)
@@ -161,7 +161,7 @@ public class NewRelationForm extends VerticalLayout {
         BWInstance bwInstance = FenixFramework.getDomainObject(bwInstanceOID);
         DataModelInstance dataModel = bwInstance.getDataModelInstance();
 
-        for (Entity entity : dataModel.getEntitiesSet()) {
+        for (Entity entity : dataModel.getEntitySet()) {
             if (!entity.getName().equals(entityName)) {
                 this.otherEntity.addItem(entity.getName());
             }

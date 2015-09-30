@@ -35,7 +35,7 @@ public class ConditionModel extends ConditionModel_Base {
     public void generateConditions() {
         DataModel dataModel = getSpecification().getDataModel();
 
-        dataModel.getEntitiesSet().stream().filter(e -> !e.getExists())
+        dataModel.getEntitySet().stream().filter(e -> !e.getExists())
                 .forEach(e -> DefEntityCondition.getDefEntity(e));
 
         dataModel.getAttributeSet().stream()
@@ -49,7 +49,7 @@ public class ConditionModel extends ConditionModel_Base {
                 .map(AttributeGroup.class::cast)
                 .forEach(a -> DefAttributeCondition.getDefAttribute(a));
 
-        dataModel.getRelationsSet().stream()
+        dataModel.getRelationBWSet().stream()
                 .forEach(r -> MulCondition.createMUlConditions(r));
 
         dataModel.getRuleSet().stream()

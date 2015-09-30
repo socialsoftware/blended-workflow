@@ -44,7 +44,7 @@ public class Rule extends Rule_Base {
         setDataModel(null);
         setConditionModel(null);
         setInvariantConditionGoal(null);
-        getTaskWithRuleSet().stream().forEach(t -> t.removeRuleInvariant(this));
+        setTaskWithRule(null);
         getCondition().delete();
 
         deleteDomainObject();
@@ -64,7 +64,7 @@ public class Rule extends Rule_Base {
         return getCondition().getAttributeBasicSet();
     }
 
-    public Set<Product> getProducts() {
+    public Set<Attribute> getAttributeSet() {
         return getCondition().getAttributeBasicSet()
                 .stream().map(a -> a.getAttributeGroup() != null
                         ? a.getAttributeGroup() : a)

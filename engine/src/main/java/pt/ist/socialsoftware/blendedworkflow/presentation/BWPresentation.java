@@ -1379,7 +1379,7 @@ public class BWPresentation extends Application {
         BWInstance bwInstance = FenixFramework.getDomainObject(OID);
         DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 
-        for (Entity entity : dataModelInstance.getEntitiesSet()) {
+        for (Entity entity : dataModelInstance.getEntitySet()) {
             Object entityItem = entitydetailsTreetable
                     .addItem(new Object[] { entity.getName(), "", "" }, null);
             for (EntityInstance entityInstance : entity

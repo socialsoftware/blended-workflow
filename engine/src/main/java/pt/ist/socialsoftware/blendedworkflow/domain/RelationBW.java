@@ -99,7 +99,7 @@ public class RelationBW extends RelationBW_Base {
     }
 
     private void checkUniqueRelationName(String name) throws BWException {
-        Boolean find = getDataModel().getRelationsSet().stream().anyMatch(
+        Boolean find = getDataModel().getRelationBWSet().stream().anyMatch(
                 rel -> ((rel != this) && (rel.getName().equals(name))));
 
         if (find)
@@ -121,7 +121,7 @@ public class RelationBW extends RelationBW_Base {
     }
 
     private void checkUniqueRolename(Entity entity, String roleName) {
-        if (entity.getRelationsSet().stream().filter(rel -> rel != this)
+        if (entity.getRelationSet().stream().filter(rel -> rel != this)
                 .anyMatch(rel -> (rel.getRoleNameOne().equals(roleName)
                         && rel.getEntityTwo() == entity)
                         || (rel.getRoleNameTwo().equals(roleName)
@@ -137,7 +137,7 @@ public class RelationBW extends RelationBW_Base {
                 getIsTwoKeyEntity());
     }
 
-    public Set<Entity> getEntitiesSet() {
+    public Set<Entity> getEntitySet() {
         Set<Entity> entities = new HashSet<Entity>();
         entities.add(this.getEntityOne());
         entities.add(this.getEntityTwo());

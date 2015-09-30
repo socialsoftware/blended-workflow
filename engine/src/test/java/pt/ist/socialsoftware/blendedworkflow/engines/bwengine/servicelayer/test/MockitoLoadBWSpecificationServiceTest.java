@@ -8,10 +8,10 @@ import org.junit.Test;
 
 import jvstm.Transaction;
 import pt.ist.socialsoftware.blendedworkflow.MockitoAbstractServiceTest;
+import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -47,9 +47,9 @@ public class MockitoLoadBWSpecificationServiceTest
         final GoalModel goalModel = bwSpecification.getGoalModel();
         final TaskModel taskModel = bwSpecification.getTaskModel();
 
-        assertEquals(6, dataModel.getEntitiesSet().size());
+        assertEquals(6, dataModel.getEntitySet().size());
         assertEquals(17, dataModel.getAttributeSet().size());
-        assertEquals(5, dataModel.getRelationsSet().size());
+        assertEquals(5, dataModel.getRelationBWSet().size());
         assertEquals(11, goalModel.getGoalSet().size());
         assertEquals(1, goalModel.getMaintainGoalsSet().size());
         assertEquals(6, taskModel.getTasksSet().size());
