@@ -21,7 +21,7 @@ import org.blended.common.repository.resttemplate.dto.MulConditionDTO;
 import org.blended.common.repository.resttemplate.dto.RelationDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.blended.common.repository.resttemplate.dto.SpecDTO;
-import org.blended.common.repository.resttemplate.dto.SuccessConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DefConditionSetDTO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -293,7 +293,7 @@ public class MergeAndExtractGoalTest {
         defPath.add(ENTITY_ONE + "." + ATT_ONE);
         defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
 
-        SuccessConditionDTO successCondition = new SuccessConditionDTO();
+        DefConditionSetDTO successCondition = new DefConditionSetDTO();
         successCondition.setDefEnts(defEnts);
         successCondition.setDefAtts(defAtts);
 
@@ -362,7 +362,7 @@ public class MergeAndExtractGoalTest {
         defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
 
         ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_TWO, TOP_GOAL,
-                new SuccessConditionDTO(defEnts, defAtts));
+                new DefConditionSetDTO(defEnts, defAtts));
 
         // extract childThree from childTwo
         defEnts.clear();
@@ -374,7 +374,7 @@ public class MergeAndExtractGoalTest {
         defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
 
         goalDTO = ci.extractSiblingGoal(TEST_SPEC_ID, SUB_GOAL_THREE,
-                SUB_GOAL_TWO, new SuccessConditionDTO(defEnts, defAtts));
+                SUB_GOAL_TWO, new DefConditionSetDTO(defEnts, defAtts));
         assertEquals(SUB_GOAL_THREE, goalDTO.getName());
 
         // get super goal

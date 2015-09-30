@@ -59,7 +59,8 @@ public class DataModelController {
 
         String[] attsArray = atts.split(",");
 
-        Product product = adi.getProduct(specId, Arrays.asList(attsArray));
+        Product product = adi.getAttribute(specId,
+                Arrays.stream(attsArray).collect(Collectors.toSet()));
 
         return new ResponseEntity<ProductDTO>(product.getDTO(), HttpStatus.OK);
     }

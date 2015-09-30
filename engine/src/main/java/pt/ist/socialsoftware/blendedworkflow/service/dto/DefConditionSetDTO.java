@@ -2,11 +2,11 @@ package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 import java.util.Set;
 
-public class SuccessConditionDTO {
+public class DefConditionSetDTO {
     private Set<DefEntityConditionDTO> defEnts;
     private Set<DefAttributeConditionDTO> defAtts;
 
-    public SuccessConditionDTO() {
+    public DefConditionSetDTO() {
     }
 
     public Set<DefEntityConditionDTO> getDefEnts() {

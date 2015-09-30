@@ -2,13 +2,13 @@ package pt.ist.socialsoftware.blendedworkflow.service.req;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import pt.ist.socialsoftware.blendedworkflow.service.dto.SuccessConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefConditionSetDTO;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtractGoalReq {
     private String newGoalName;
     private String sourceGoalName;
-    private SuccessConditionDTO successCondition;
+    private DefConditionSetDTO successCondition;
 
     public ExtractGoalReq() {
     }
@@ -29,11 +29,11 @@ public class ExtractGoalReq {
         this.sourceGoalName = sourceGoalName;
     }
 
-    public SuccessConditionDTO getSuccessCondition() {
+    public DefConditionSetDTO getSuccessCondition() {
         return successCondition;
     }
 
-    public void setSuccessCondition(SuccessConditionDTO successCondition) {
+    public void setSuccessCondition(DefConditionSetDTO successCondition) {
         this.successCondition = successCondition;
     }
 

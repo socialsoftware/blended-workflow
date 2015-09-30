@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
@@ -25,6 +25,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDT
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.req.AddActivityReq;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/activitymodel")
@@ -54,6 +55,21 @@ public class ActivityModelController {
         DesignInterface adi = DesignInterface.getInstance();
 
         Task task = adi.createActivity(activityDTO);
+
+        return new ResponseEntity<ActivityDTO>(task.getDTO(),
+                HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/activities/add", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public ResponseEntity<ActivityDTO> addActivity(
+            @PathVariable("specId") String specId,
+            @RequestBody AddActivityReq request) {
+        log.debug("addActivity specId:{}, name:{}, description:{}", specId,
+                request.getActivityName(), request.getDescription());
+
+        DesignInterface adi = DesignInterface.getInstance();
+
+        Task task = adi.addActivity(specId, request);
 
         return new ResponseEntity<ActivityDTO>(task.getDTO(),
                 HttpStatus.CREATED);
@@ -185,7 +201,7 @@ public class ActivityModelController {
 
         boolean result = adi.checkActivityModel(specId);
 
-        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+        return new ResponseEntity<Boolean>(result, HttpStatus.OK);
     }
 
 }

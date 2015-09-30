@@ -1,6 +1,6 @@
 package org.blended.common.repository.resttemplate.req;
 
-import org.blended.common.repository.resttemplate.dto.SuccessConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DefConditionSetDTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class ExtractGoalReq {
     private String newGoalName;
     private String sourceGoalName;
-    private SuccessConditionDTO successCondition;
+    private DefConditionSetDTO successCondition;
 
     public ExtractGoalReq() {
     }
@@ -29,11 +29,11 @@ public class ExtractGoalReq {
         this.sourceGoalName = sourceGoalName;
     }
 
-    public SuccessConditionDTO getSuccessCondition() {
+    public DefConditionSetDTO getSuccessCondition() {
         return successCondition;
     }
 
-    public void setSuccessCondition(SuccessConditionDTO successCondition) {
+    public void setSuccessCondition(DefConditionSetDTO successCondition) {
         this.successCondition = successCondition;
     }
 

@@ -15,6 +15,7 @@ import org.blended.common.repository.resttemplate.dto.ActivityDTO;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.AttributeGroupDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DefConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
@@ -24,7 +25,7 @@ import org.blended.common.repository.resttemplate.dto.ProductDTO;
 import org.blended.common.repository.resttemplate.dto.RelationDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.blended.common.repository.resttemplate.dto.SpecDTO;
-import org.blended.common.repository.resttemplate.dto.SuccessConditionDTO;
+import org.blended.common.repository.resttemplate.req.AddActivityReq;
 import org.blended.common.repository.resttemplate.req.ExtractGoalReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -823,7 +824,7 @@ public class CommonInterface {
     }
 
     public GoalDTO extractChildGoal(String specId, String newGoalName,
-            String sourceGoalName, SuccessConditionDTO successCondition) {
+            String sourceGoalName, DefConditionSetDTO successCondition) {
         log.debug(
                 "extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}",
                 specId, newGoalName, sourceGoalName,
@@ -851,7 +852,7 @@ public class CommonInterface {
     }
 
     public GoalDTO extractSiblingGoal(String specId, String newGoalName,
-            String sourceGoalName, SuccessConditionDTO successCondition) {
+            String sourceGoalName, DefConditionSetDTO successCondition) {
         log.debug(
                 "extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}",
                 specId, newGoalName, sourceGoalName,
@@ -905,6 +906,21 @@ public class CommonInterface {
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         return restTemplate.postForObject(uri, activityDTO, ActivityDTO.class,
+                params);
+    }
+
+    public ActivityDTO addActivity(String specId, AddActivityReq request) {
+        log.debug("addActivity specId:{}, name:{}, description:{}", specId,
+                request.getActivityName(), request.getDescription());
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities/add";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        return restTemplate.postForObject(uri, request, ActivityDTO.class,
                 params);
     }
 

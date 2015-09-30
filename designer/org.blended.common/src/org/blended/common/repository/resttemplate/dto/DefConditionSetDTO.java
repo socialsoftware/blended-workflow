@@ -5,14 +5,14 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SuccessConditionDTO {
+public class DefConditionSetDTO {
     private Set<DefEntityConditionDTO> defEnts;
     private Set<DefAttributeConditionDTO> defAtts;
 
-    public SuccessConditionDTO() {
+    public DefConditionSetDTO() {
     }
 
-    public SuccessConditionDTO(Set<DefEntityConditionDTO> defEnts,
+    public DefConditionSetDTO(Set<DefEntityConditionDTO> defEnts,
             Set<DefAttributeConditionDTO> defAtts) {
         this.defEnts = defEnts;
         this.defAtts = defAtts;
