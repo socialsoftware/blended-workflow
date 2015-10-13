@@ -251,6 +251,9 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
         DefAttributeConditionDTO defConditionDTO = new DefAttributeConditionDTO();
         defConditionDTO
                 .setSpecId(getConditionModel().getSpecification().getSpecId());
+        Set<String> paths = new HashSet<String>();
+        paths.add(getAttributeOfDef().getName());
+        defConditionDTO.setPaths(paths);
         defConditionDTO.setAttributeExtId(getAttributeOfDef().getExternalId());
         defConditionDTO.setMandatory(getAttributeOfDef().getIsMandatory());
 

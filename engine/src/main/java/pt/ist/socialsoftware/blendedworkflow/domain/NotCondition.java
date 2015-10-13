@@ -125,7 +125,8 @@ public class NotCondition extends NotCondition_Base {
 
     @Override
     public void delete() {
-        getCondition().delete();
+        if (getCondition() != null)
+            getCondition().delete();
         super.delete();
     }
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -936,6 +937,25 @@ public class CommonInterface {
                 params);
     }
 
+    public DefConditionSetDTO getActivityPreConditionSet(String specId,
+            String activityName) {
+        log.debug("getActivityPreConditionSet specId:{}, activityName:{}",
+                specId, activityName);
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities/{activityName}/pre";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("activityName", activityName);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        DefConditionSetDTO result = restTemplate.getForObject(uri,
+                DefConditionSetDTO.class, params);
+
+        return result;
+    }
+
     public DefEntityConditionDTO associateEntityToActivityPre(String specId,
             String activityName, String path) {
         log.debug(
@@ -1020,10 +1040,29 @@ public class CommonInterface {
                 DefAttributeConditionDTO.class, params);
     }
 
+    public List<MulConditionDTO> getActivityMulConditions(String specId,
+            String activityName) {
+        log.debug("getActivityMulConditions specId:{}, activityName:{}", specId,
+                activityName);
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities/{activityName}/postmul";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("activityName", activityName);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        MulConditionDTO[] mulConditionDTOs = restTemplate.getForObject(uri,
+                MulConditionDTO[].class, params);
+
+        return Arrays.asList(mulConditionDTOs);
+    }
+
     public MulConditionDTO associateMulToActivityPost(String specId,
             String activityName, MulConditionDTO mulConditionDTO) {
         log.debug(
-                "associateMulToActivityPost specId:{}, goalName:{}, path:{}, cardinality:{}",
+                "associateMulToActivityPost specId:{}, activityName:{}, path:{}, cardinality:{}",
                 specId, activityName, mulConditionDTO.getRolePath(),
                 mulConditionDTO.getCardinality());
 
@@ -1038,6 +1077,25 @@ public class CommonInterface {
         return restTemplate.postForObject(uri, mulConditionDTO,
                 MulConditionDTO.class, params);
 
+    }
+
+    public List<RuleDTO> getActivityRuleConditions(String specId,
+            String activityName) {
+        log.debug("getActivityRuleConditions specId:{}, activityName:{}",
+                specId, activityName);
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/activitymodel/activities/{activityName}/postrule";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("activityName", activityName);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        RuleDTO[] ruleDTOs = restTemplate.getForObject(uri, RuleDTO[].class,
+                params);
+
+        return Arrays.asList(ruleDTOs);
     }
 
     public RuleDTO associateRuleToActivityPost(String specId,

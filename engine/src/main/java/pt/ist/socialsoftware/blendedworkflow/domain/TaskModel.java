@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -80,7 +81,11 @@ public class TaskModel extends TaskModel_Base {
         Set<RelationBW> relations = ConditionModel
                 .getDefEntityConditions(postConditionSet).stream()
                 .flatMap(d -> d.getEntity().getRelationSet().stream())
-                .filter(r -> definedEntities.containsAll(r.getEntitySet()))
+                .filter(r -> definedEntities.containsAll(r.getEntitySet())
+                        || (!Collections.disjoint(definedEntities,
+                                r.getEntitySet())
+                                && r.getEntitySet().stream()
+                                        .anyMatch(e -> e.getExists())))
                 .collect(Collectors.toSet());
 
         relations.stream().forEach(r -> task.getMultiplicityInvariantSet()

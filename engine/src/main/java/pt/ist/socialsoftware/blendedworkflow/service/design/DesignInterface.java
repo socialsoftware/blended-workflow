@@ -626,6 +626,14 @@ public class DesignInterface {
                 getConditionSet(spec, request.getPostConditionSet()));
     }
 
+    public Set<Condition> getActivityPreCondition(String specId,
+            String activityName) {
+        Specification spec = getSpecBySpecId(specId);
+        Task task = getTaskByName(spec, activityName);
+
+        return task.getPreConditionSet();
+    }
+
     @Atomic(mode = TxMode.WRITE)
     public DefEntityCondition associateEntityToActivityPre(String specId,
             String activityName, String path) {
@@ -688,6 +696,14 @@ public class DesignInterface {
         return defAttributeCondition;
     }
 
+    public Set<MulCondition> getActivityMulConditions(String specId,
+            String activityName) {
+        Specification spec = getSpecBySpecId(specId);
+        Task task = getTaskByName(spec, activityName);
+
+        return task.getMultiplicityInvariantSet();
+    }
+
     @Atomic(mode = TxMode.WRITE)
     public MulCondition associateMulToActivityPost(String specId,
             String activityName, String path, String cardinality) {
@@ -699,6 +715,14 @@ public class DesignInterface {
         task.addMultiplicityInvariant(mulCondition);
 
         return mulCondition;
+    }
+
+    public Set<Rule> getActivityRuleConditions(String specId,
+            String activityName) {
+        Specification spec = getSpecBySpecId(specId);
+        Task task = getTaskByName(spec, activityName);
+
+        return task.getRuleInvariantSet();
     }
 
     @Atomic(mode = TxMode.WRITE)

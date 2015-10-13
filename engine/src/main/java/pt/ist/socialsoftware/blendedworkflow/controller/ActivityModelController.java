@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
+import pt.ist.socialsoftware.blendedworkflow.domain.ConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
@@ -22,6 +25,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefConditionSetDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
@@ -73,6 +77,30 @@ public class ActivityModelController {
 
         return new ResponseEntity<ActivityDTO>(task.getDTO(),
                 HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/activities/{activityName}/pre", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<DefConditionSetDTO> getActivityPreCondition(
+            @PathVariable("specId") String specId,
+            @PathVariable("activityName") String activityName) {
+        log.debug("getActivityPreCondition specId:{}, activityName:{}", specId,
+                activityName);
+
+        DesignInterface adi = DesignInterface.getInstance();
+
+        Set<Condition> preConditionSet = adi.getActivityPreCondition(specId,
+                activityName);
+
+        DefConditionSetDTO defConditionSetDTO = new DefConditionSetDTO();
+        defConditionSetDTO.setDefEnts(
+                ConditionModel.getDefEntityConditions(preConditionSet).stream()
+                        .map(d -> d.getDTO()).collect(Collectors.toSet()));
+        defConditionSetDTO.setDefAtts(ConditionModel
+                .getDefAttributeConditions(preConditionSet).stream()
+                .map(d -> d.getDTO()).collect(Collectors.toSet()));
+
+        return new ResponseEntity<DefConditionSetDTO>(defConditionSetDTO,
+                HttpStatus.OK);
     }
 
     @RequestMapping(value = "/activities/{activityName}/preent/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -155,6 +183,24 @@ public class ActivityModelController {
                 defAttributeCondition.getDTO(), HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/activities/{activityName}/postmul", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<MulConditionDTO[]> getActivityMultConditions(
+            @PathVariable("specId") String specId,
+            @PathVariable("activityName") String activityName) {
+        log.debug("getActivityMultConditions specId:{}, activityName:{}",
+                specId, activityName);
+
+        DesignInterface adi = DesignInterface.getInstance();
+
+        Set<MulCondition> mulConditions = adi.getActivityMulConditions(specId,
+                activityName);
+
+        return new ResponseEntity<MulConditionDTO[]>(
+                mulConditions.stream().map(mul -> mul.getDTO()).toArray(
+                        size -> new MulConditionDTO[size]),
+                HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/activities/{activityName}/postmul", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<MulConditionDTO> associateMultiplicityToActivityPost(
             @PathVariable("specId") String specId,
@@ -173,6 +219,22 @@ public class ActivityModelController {
 
         return new ResponseEntity<MulConditionDTO>(mulCondition.getDTO(),
                 HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/activities/{activityName}/postrule", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<RuleDTO[]> getActivityRuleConditions(
+            @PathVariable("specId") String specId,
+            @PathVariable("activityName") String activityName) {
+        log.debug("getActivityRuleConditions specId:{}, activityName:{}",
+                specId, activityName);
+
+        DesignInterface adi = DesignInterface.getInstance();
+
+        Set<Rule> rules = adi.getActivityRuleConditions(specId, activityName);
+
+        return new ResponseEntity<RuleDTO[]>(rules.stream()
+                .map(rule -> rule.getDTO()).toArray(size -> new RuleDTO[size]),
+                HttpStatus.OK);
     }
 
     @RequestMapping(value = "/activities/{activityName}/postrule", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
