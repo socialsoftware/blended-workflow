@@ -82,7 +82,7 @@ class ConditionGeneratorActivityModel {
 				defEnts.add(new DefEntityConditionDTO(specId, o.getName()))
 			}
 			if (o instanceof AttributeAchieveCondition) {							
-				defAtts.add(new DefAttributeConditionDTO(specId, o.getConditions().stream().collect(Collectors.toSet())))
+				defAtts.add(new DefAttributeConditionDTO(specId, o.getConditions().stream().findFirst().get()))
 			}
 			var AddActivityReq request = new AddActivityReq(activity.name, activity.description,
 				new DefConditionSetDTO(defEnts, defAtts))
@@ -102,13 +102,11 @@ class ConditionGeneratorActivityModel {
 				if (defAttribute.mandatory) {
 					// TODO should be a MandatoryFactory
 					var apre = factory.createNotMandatoryAttributeAchieveCondition
-					for (String path : defAttribute.paths)
-						apre.conditions.add(path)
+					apre.conditions.add(defAttribute.path)
 					activity.pre.add(apre)
 				} else {
 					var apre = factory.createNotMandatoryAttributeAchieveCondition
-					for (String path : defAttribute.paths)
-						apre.conditions.add(path)
+					apre.conditions.add(defAttribute.path)
 					activity.pre.add(apre)
 				}
 			}

@@ -73,8 +73,8 @@ public class ConditionModelController {
     public ResponseEntity<DefAttributeConditionDTO> createAttributeAchieveCondition(
             @PathVariable("specId") String specId,
             @RequestBody DefAttributeConditionDTO aacDTO) {
-        log.debug("createAttributeAchieveCondition paths:{}, mandatory:{}",
-                aacDTO.getPaths(), aacDTO.isMandatory());
+        log.debug("createAttributeAchieveCondition path:{}, mandatory:{}",
+                aacDTO.getPath(), aacDTO.isMandatory());
 
         DesignInterface adi = DesignInterface.getInstance();
 

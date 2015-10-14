@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -121,23 +120,19 @@ public class ActivityModelController {
                 defEntityCondition.getDTO(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/activities/{activityName}/preatt/{paths}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/activities/{activityName}/preatt/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<DefAttributeConditionDTO> associateAttributeAchieveConditionToActivityPre(
             @PathVariable("specId") String specId,
             @PathVariable("activityName") String activityName,
-            @PathVariable("paths") String paths) {
+            @PathVariable("path") String path) {
         log.debug(
-                "associateActConditionToGoal specId:{}, activityName:{}, paths:{}",
-                specId, activityName, paths);
-
-        String[] arraysPath = paths.split(",");
+                "associateActConditionToGoal specId:{}, activityName:{}, path:{}",
+                specId, activityName, path);
 
         DesignInterface adi = DesignInterface.getInstance();
 
         DefAttributeCondition defAttributeCondition = adi
-                .associateAttributeToActivityPre(specId, activityName,
-                        Arrays.asList(arraysPath).stream()
-                                .collect(Collectors.toSet()));
+                .associateAttributeToActivityPre(specId, activityName, path);
 
         return new ResponseEntity<DefAttributeConditionDTO>(
                 defAttributeCondition.getDTO(), HttpStatus.CREATED);
@@ -161,23 +156,19 @@ public class ActivityModelController {
                 defEntityCondition.getDTO(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/activities/{activityName}/postatt/{paths}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/activities/{activityName}/postatt/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<DefAttributeConditionDTO> associateAttributeAchieveConditionToActivityPost(
             @PathVariable("specId") String specId,
             @PathVariable("activityName") String activityName,
-            @PathVariable("paths") String paths) {
+            @PathVariable("path") String path) {
         log.debug(
-                "associateAttributeAchieveConditionToActivityPost specId:{}, activityName:{}, paths:{}",
-                specId, activityName, paths);
-
-        String[] arraysPath = paths.split(",");
+                "associateAttributeAchieveConditionToActivityPost specId:{}, activityName:{}, path:{}",
+                specId, activityName, path);
 
         DesignInterface adi = DesignInterface.getInstance();
 
         DefAttributeCondition defAttributeCondition = adi
-                .associateAttributeToActivityPost(specId, activityName,
-                        Arrays.asList(arraysPath).stream()
-                                .collect(Collectors.toSet()));
+                .associateAttributeToActivityPost(specId, activityName, path);
 
         return new ResponseEntity<DefAttributeConditionDTO>(
                 defAttributeCondition.getDTO(), HttpStatus.CREATED);

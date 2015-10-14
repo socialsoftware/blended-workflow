@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DefConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
@@ -21,7 +22,6 @@ import org.blended.common.repository.resttemplate.dto.MulConditionDTO;
 import org.blended.common.repository.resttemplate.dto.RelationDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.blended.common.repository.resttemplate.dto.SpecDTO;
-import org.blended.common.repository.resttemplate.dto.DefConditionSetDTO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -289,9 +289,8 @@ public class MergeAndExtractGoalTest {
         Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
 
         Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-        Set<String> defPath = new HashSet<String>();
-        defPath.add(ENTITY_ONE + "." + ATT_ONE);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_ONE + "." + ATT_ONE));
 
         DefConditionSetDTO successCondition = new DefConditionSetDTO();
         successCondition.setDefEnts(defEnts);
@@ -353,13 +352,10 @@ public class MergeAndExtractGoalTest {
         defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
 
         defAtts.clear();
-        defPath = new HashSet<String>();
-        defPath.add(ENTITY_ONE + "." + ATT_TWO);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
-
-        defPath = new HashSet<String>();
-        defPath.add(ENTITY_TWO + "." + ATT_THREE);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_ONE + "." + ATT_TWO));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_TWO + "." + ATT_THREE));
 
         ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_TWO, TOP_GOAL,
                 new DefConditionSetDTO(defEnts, defAtts));
@@ -369,9 +365,8 @@ public class MergeAndExtractGoalTest {
         defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
 
         defAtts.clear();
-        defPath = new HashSet<String>();
-        defPath.add(ENTITY_TWO + "." + ATT_THREE);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, defPath));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_TWO + "." + ATT_THREE));
 
         goalDTO = ci.extractSiblingGoal(TEST_SPEC_ID, SUB_GOAL_THREE,
                 SUB_GOAL_TWO, new DefConditionSetDTO(defEnts, defAtts));

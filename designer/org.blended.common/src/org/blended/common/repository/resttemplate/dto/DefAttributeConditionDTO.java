@@ -1,37 +1,35 @@
 package org.blended.common.repository.resttemplate.dto;
 
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DefAttributeConditionDTO {
     private String specId;
-    private Set<String> paths;
+    private String path;
     private boolean mandatory;
     private String attributeExtId;
 
     public DefAttributeConditionDTO() {
     }
 
-    public DefAttributeConditionDTO(String specId, Set<String> paths,
+    public DefAttributeConditionDTO(String specId, String path,
             boolean mandatory) {
         this.setSpecId(specId);
-        this.paths = paths;
+        this.path = path;
         this.mandatory = mandatory;
     }
 
-    public DefAttributeConditionDTO(String specId, Set<String> paths) {
+    public DefAttributeConditionDTO(String specId, String path) {
         this.setSpecId(specId);
-        this.paths = paths;
+        this.path = path;
     }
 
-    public Set<String> getPaths() {
-        return paths;
+    public String getPath() {
+        return path;
     }
 
-    public void setPaths(Set<String> paths) {
-        this.paths = paths;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public boolean isMandatory() {

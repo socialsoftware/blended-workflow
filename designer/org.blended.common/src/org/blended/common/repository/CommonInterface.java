@@ -404,8 +404,8 @@ public class CommonInterface {
 
     public DefAttributeConditionDTO createAttributeAchieveCondition(
             DefAttributeConditionDTO defAttributeConditionVO) {
-        log.debug("createAttributeAchieveCondition paths:{}, mandatory:{}",
-                defAttributeConditionVO.getPaths().toString(),
+        log.debug("createAttributeAchieveCondition path:{}, mandatory:{}",
+                defAttributeConditionVO.getPath().toString(),
                 defAttributeConditionVO.isMandatory());
 
         final String uri = BASE_URL
@@ -842,12 +842,11 @@ public class CommonInterface {
                 "extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}",
                 specId, newGoalName, sourceGoalName,
                 successCondition.getDefEnts().stream()
-                        .map((def) -> def.getEntityName()).collect(
-                                Collectors.joining(",")),
+                        .map((def) -> def.getEntityName())
+                        .collect(Collectors.joining(",")),
                 successCondition.getDefAtts().stream()
-                        .map((def) -> def.getPaths().stream()
-                                .collect(Collectors.joining(",")))
-                        .collect(Collectors.joining("|")));
+                        .map((def) -> def.getPath())
+                        .collect(Collectors.joining(",")));
 
         final String uri = BASE_URL
                 + "/specs/{specId}/goalmodel/goals/extractchild";
@@ -870,11 +869,10 @@ public class CommonInterface {
                 "extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}",
                 specId, newGoalName, sourceGoalName,
                 successCondition.getDefEnts().stream()
-                        .map((def) -> def.getEntityName()).collect(
-                                Collectors.joining(",")),
+                        .map((def) -> def.getEntityName())
+                        .collect(Collectors.joining(",")),
                 successCondition.getDefAtts().stream()
-                        .map((def) -> def.getPaths().stream()
-                                .collect(Collectors.joining(",")))
+                        .map((def) -> def.getPath())
                         .collect(Collectors.joining("|")));
 
         final String uri = BASE_URL

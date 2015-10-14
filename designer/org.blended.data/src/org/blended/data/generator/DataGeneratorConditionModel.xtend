@@ -31,42 +31,42 @@ class DataGeneratorConditionModel {
 	CommonFactory factory
 	ConditionFactory conFactory
 	ConditionModel model
-	
-	new (Resource resource, IFileSystemAccess fsa) {
+
+	new(Resource resource, IFileSystemAccess fsa) {
 		this.resource = resource
 		this.fsa = fsa
 		this.factory = CommonFactory.eINSTANCE
 		this.conFactory = ConditionFactory.eINSTANCE
 		this.model = conFactory.createConditionModel
 	}
-	
+
 	def doGenerate() {
-		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy 
-		
+		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy
+
 		for (r : resource.allContents.toIterable.filter(typeof(Entity))) {
 			entityAchieveCondition(r, model)
 		}
-		
+
 		for (r : resource.allContents.toIterable.filter(typeof(Association))) {
 			entityInvariantCondition(r)
 		}
-		
+
 		for (r : resource.allContents.toIterable.filter(typeof(Entity))) {
 			entityDependenceCondition(r)
-		}	
-		
+		}
+
 		for (r : resource.allContents.toIterable.filter(typeof(Entity))) {
 			attributeAchieveCondition(r)
 		}
-		
+
 		for (r : resource.allContents.toIterable.filter(typeof(Constraint))) {
-			attributeInvariantCondition(r)		
+			attributeInvariantCondition(r)
 		}
-		
+
 		for (r : resource.allContents.toIterable.filter(typeof(Entity))) {
 			attributeDependenceCondition(r)
-		}		
-		
+		}
+
 		// TO SERIALIZE THE DATA MODEL ACCORDING TO THE ACTIVITY FORMATTER
 		val injector = Guice.createInjector(new ConditionRuntimeModule)
 		var rs = injector.getInstance(ResourceSet)
@@ -77,35 +77,34 @@ class DataGeneratorConditionModel {
 		builder.format
 		r.save(builder.options.toOptionsMap)
 	}
-	 
+
 	def entityAchieveCondition(Entity e, ConditionModel model) {
 		if (!e.exists) {
 			var eac = factory.createEntityAchieveCondition
 			eac.name = e.name
 			model.entityAchieveConditions.add(eac)
-		}
-		else {
+		} else {
 			var eace = factory.createEntityAchieveConditionExist
 			eace.name = e.name
 			model.entityAchieveConditions.add(eace)
 		}
 	}
-	
+
 	def entityInvariantCondition(Association a) {
 		if (!a.entity1.exists) {
 			var inv = factory.createEntityInvariantCondition
 			inv.name = a.entity1.name + "." + a.name2
 			inv.cardinality = a.cardinality2
-			model.entityInvariantConditions.add(inv)	
+			model.entityInvariantConditions.add(inv)
 		}
 		if (!a.entity2.exists) {
 			var inv = factory.createEntityInvariantCondition
 			inv.name = a.entity2.name + "." + a.name1
 			inv.cardinality = a.cardinality1
-			model.entityInvariantConditions.add(inv)	
+			model.entityInvariantConditions.add(inv)
 		}
 	}
-	
+
 	def entityDependenceCondition(Entity e) {
 		if ((!e.exists) && (e.dependsOn.size > 0)) {
 			for (d : e.dependsOn) {
@@ -113,63 +112,62 @@ class DataGeneratorConditionModel {
 				dep.entity1 = e.name
 				dep.entity2 = d;
 				model.entityDependenceConditions.add(dep)
-			}		
+			}
 		}
 	}
-	
+
 	def attributeAchieveCondition(Entity e) {
 		if (!e.exists) {
-			e.attributes.forEach[a | 
+			e.attributes.forEach [ a |
 				if (a instanceof Attribute) {
 					if (a.mandatory) {
 						var attM = factory.createMandatoryAttributeAchieveCondition
 						attM.conditions.add(e.name + '.' + a.name)
 						model.attributeAchieveConditions.add(attM)
-					} 
-					else {
+					} else {
 						var attNM = factory.createNotMandatoryAttributeAchieveCondition
 						attNM.conditions.add(e.name + '.' + a.name)
 						model.attributeAchieveConditions.add(attNM)
-					}			
-				}
-				else if (a instanceof AttributeGroup) {
+					}
+				} else if (a instanceof AttributeGroup) {
 					if (a.mandatory) {
 						var attM = factory.createMandatoryAttributeAchieveCondition
-						attM.conditions.addAll(a.attributes.map[e.name + '.' + it.name])
+						attM.conditions.add(e.name + '.' + a.name)
+//						attM.conditions.addAll(a.attributes.map[e.name + '.' + it.name])
 						model.attributeAchieveConditions.add(attM)
-					}
-					else {
+					} else {
 						var attNM = factory.createNotMandatoryAttributeAchieveCondition
-						attNM.conditions.addAll(a.attributes.map[e.name + '.' + it.name])
+						attNM.conditions.add(e.name + '.' + a.name)
+//						attNM.conditions.addAll(a.attributes.map[e.name + '.' + it.name])
 						model.attributeAchieveConditions.add(attNM)
 					}
 				}
 			]
 		}
 	}
-	
+
 	def attributeInvariantCondition(Constraint c) {
 		var inv = factory.createAttributeInvariantCondition
 		inv.name = c.name
 		inv.expression = c.constraint.copy()
 		model.attributeInvariantConditions.add(inv)
 	}
-	
+
 	def attributeDependenceCondition(Entity e) {
 		if (!e.exists) {
-			e.attributes.forEach[a | 
+			e.attributes.forEach [ a |
 				if (a instanceof Attribute) {
 					if (a.dependsOn.size > 0) {
 						var dep = factory.createAttributeDependenceCondition
 						dep.attributes1.add(e.name + '.' + a.name)
 						dep.attributes2.addAll(a.dependsOn)
 						model.attributeDependenceConditions.add(dep)
-					} 		
-				}
-				else if (a instanceof AttributeGroup) {
+					}
+				} else if (a instanceof AttributeGroup) {
 					if (a.dependsOn.size > 0) {
 						var dep = factory.createAttributeDependenceCondition
-						dep.attributes1.addAll(a.attributes.map[e.name + '.' + name])
+						dep.attributes1.add(e.name + '.' + a.name)
+					//	dep.attributes1.addAll(a.attributes.map[e.name + '.' + name])
 						dep.attributes2.addAll(a.dependsOn)
 						model.attributeDependenceConditions.add(dep)
 					}

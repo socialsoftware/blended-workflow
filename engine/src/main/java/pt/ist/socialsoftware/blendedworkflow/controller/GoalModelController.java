@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import javax.websocket.server.PathParam;
@@ -171,21 +170,18 @@ public class GoalModelController {
                 HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/goals/{goalExtId}/sucatt/{paths}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{goalExtId}/sucatt/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<String> associateAttributeAchieveConditionToGoalSuc(
             @PathVariable("specId") String specId,
             @PathVariable("goalExtId") String goalExtId,
-            @PathVariable("paths") String paths) {
+            @PathVariable("path") String path) {
         log.debug(
-                "associateActConditionToGoal specId:{}, goalExtId:{}, paths:{}",
-                specId, goalExtId, paths);
-
-        String[] arraysPath = paths.split(",");
+                "associateActConditionToGoal specId:{}, goalExtId:{}, path:{}",
+                specId, goalExtId, path);
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        adi.associateAttributeToGoalSuccess(specId, goalExtId,
-                Arrays.asList(arraysPath).stream().collect(Collectors.toSet()));
+        adi.associateAttributeToGoalSuccess(specId, goalExtId, path);
 
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
@@ -243,21 +239,17 @@ public class GoalModelController {
                 HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/goals/{goalExtId}/actatt/{paths}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/goals/{goalName}/actatt/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<String> associateAttributeAchieveConditionToGoalAct(
             @PathVariable("specId") String specId,
-            @PathVariable("goalExtId") String goalExtId,
-            @PathVariable("paths") String paths) {
-        log.debug(
-                "associateActConditionToGoal specId:{}, goalExtId:{}, paths:{}",
-                specId, goalExtId, paths);
-
-        String[] arraysPath = paths.split(",");
+            @PathVariable("goalName") String goalName,
+            @PathVariable("path") String path) {
+        log.debug("associateActConditionToGoal specId:{}, goalName:{}, path:{}",
+                specId, goalName, path);
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        adi.associateAttributeToGoalActivation(specId, goalExtId,
-                Arrays.stream(arraysPath).collect(Collectors.toSet()));
+        adi.associateAttributeToGoalActivation(specId, goalName, path);
 
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
@@ -351,11 +343,10 @@ public class GoalModelController {
                 "extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defEnts:{}, defAtts:{}",
                 specId, req.getNewGoalName(), req.getSourceGoalName(),
                 req.getSuccessCondition().getDefEnts().stream()
-                        .map((def) -> def.getEntityName()).collect(
-                                Collectors.joining(",")),
+                        .map((def) -> def.getEntityName())
+                        .collect(Collectors.joining(",")),
                 req.getSuccessCondition().getDefAtts().stream()
-                        .map((def) -> def.getPaths().stream()
-                                .collect(Collectors.joining(",")))
+                        .map((def) -> def.getPath())
                         .collect(Collectors.joining("|")));
 
         DesignInterface adi = DesignInterface.getInstance();
@@ -374,11 +365,10 @@ public class GoalModelController {
                 "extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defEnts:{}, defAtts:{}",
                 specId, req.getNewGoalName(), req.getSourceGoalName(),
                 req.getSuccessCondition().getDefEnts().stream()
-                        .map((def) -> def.getEntityName()).collect(
-                                Collectors.joining(",")),
+                        .map((def) -> def.getEntityName())
+                        .collect(Collectors.joining(",")),
                 req.getSuccessCondition().getDefAtts().stream()
-                        .map((def) -> def.getPaths().stream()
-                                .collect(Collectors.joining(",")))
+                        .map((def) -> def.getPath())
                         .collect(Collectors.joining("|")));
 
         DesignInterface adi = DesignInterface.getInstance();

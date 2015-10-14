@@ -140,8 +140,8 @@ public class DesignInterface {
         return attribute;
     }
 
-    public Attribute getAttribute(String specId, Set<String> paths) {
-        return getAttribute(getSpecBySpecId(specId), paths);
+    public Attribute getAttribute(String specId, String path) {
+        return getAttribute(getSpecBySpecId(specId), path);
     }
 
     @Atomic(mode = TxMode.WRITE)
@@ -352,19 +352,19 @@ public class DesignInterface {
     @Atomic(mode = TxMode.WRITE)
     public DefAttributeCondition createAttributeAchieveCondition(
             DefAttributeConditionDTO aacDTO) {
-        log.debug("createAttributeAchieveCondition Paths:{}, Mandatory:{}",
-                aacDTO.getPaths(), aacDTO.isMandatory());
+        log.debug("createAttributeAchieveCondition path:{}, mandatory:{}",
+                aacDTO.getPath(), aacDTO.isMandatory());
 
         Specification spec = getSpecBySpecId(aacDTO.getSpecId());
 
         DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(getAttribute(spec, aacDTO.getPaths()));
+                .getDefAttribute(getAttribute(spec, aacDTO.getPath()));
 
         if (defAttributeCondition.getAttributeOfDef() != null
                 && defAttributeCondition.getAttributeOfDef()
                         .getIsMandatory() != aacDTO.isMandatory())
             throw new BWException(BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY,
-                    aacDTO.getPaths().toString());
+                    aacDTO.getPath().toString());
 
         spec.getConditionModel()
                 .addAttributeAchieveCondition(defAttributeCondition);
@@ -452,11 +452,11 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public DefAttributeCondition associateAttributeToGoalSuccess(String specId,
-            String goalName, Set<String> paths) {
+            String goalName, String path) {
         Specification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
         DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(getAttribute(spec, paths));
+                .getDefAttribute(getAttribute(spec, path));
 
         goal.addSuccessCondition(defAttributeCondition);
 
@@ -504,11 +504,11 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public DefAttributeCondition associateAttributeToGoalActivation(
-            String specId, String goalName, Set<String> paths) {
+            String specId, String goalName, String path) {
         Specification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
         DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(getAttribute(spec, paths));
+                .getDefAttribute(getAttribute(spec, path));
 
         goal.addActivationCondition(defAttributeCondition);
 
@@ -654,11 +654,11 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public DefAttributeCondition associateAttributeToActivityPre(String specId,
-            String activityName, Set<String> paths) {
+            String activityName, String path) {
         Specification spec = getSpecBySpecId(specId);
         Task task = getTaskByName(spec, activityName);
         DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(getAttribute(spec, paths));
+                .getDefAttribute(getAttribute(spec, path));
 
         task.addPreCondition(defAttributeCondition);
 
@@ -685,11 +685,11 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public DefAttributeCondition associateAttributeToActivityPost(String specId,
-            String activityName, Set<String> paths) {
+            String activityName, String path) {
         Specification spec = getSpecBySpecId(specId);
         Task task = getTaskByName(spec, activityName);
         DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(getAttribute(spec, paths));
+                .getDefAttribute(getAttribute(spec, path));
 
         task.addPostCondition(defAttributeCondition);
 
@@ -939,39 +939,9 @@ public class DesignInterface {
         return attributeGroup;
     }
 
-    private Attribute getAttribute(Specification spec, Set<String> paths) {
-        log.debug("getAttributes paths:{}", paths);
-        Entity entity = null;
-        Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
-        for (String path : paths) {
-            String entityName = path.split("\\.")[0];
-            Entity tmp = getEntityByName(spec.getDataModel(), entityName);
-            if ((entity != null) && (entity != tmp))
-                throw new BWException(BWErrorType.INVALID_ATTRIBUTE_GROUP,
-                        paths.toString());
-            entity = tmp;
-            attributes.add(
-                    (AttributeBasic) spec.getDataModel().getTargetOfPath(path));
-        }
-
-        if (attributes.size() == 0)
-            throw new BWException(BWErrorType.INVALID_PATH, paths.toString());
-        else if (attributes.size() == 1)
-            return attributes.stream().findFirst().get();
-        else
-            return getAttributeGroup(entity, attributes);
-    }
-
-    private AttributeGroup getAttributeGroup(Entity entity,
-            Set<AttributeBasic> attributes) {
-        return entity.getAttributeGroupSet().stream()
-                .filter(attGroup -> attGroup.getAttributeSet()
-                        .equals(attributes))
-                .findFirst()
-                .orElseThrow(() -> new BWException(
-                        BWErrorType.INVALID_ATTRIBUTE_GROUP,
-                        attributes.stream().map(att -> att.getName())
-                                .collect(Collectors.joining(","))));
+    private Attribute getAttribute(Specification spec, String path) {
+        log.debug("getAttribute path:{}", path);
+        return (Attribute) spec.getDataModel().getTargetOfPath(path);
     }
 
     private Dependence getDependenceByExtId(String externalId) {
@@ -1029,7 +999,7 @@ public class DesignInterface {
 
         conditions.addAll(defConditionSetDTO.getDefAtts().stream()
                 .map((def) -> DefAttributeCondition
-                        .getDefAttribute(getAttribute(spec, def.getPaths())))
+                        .getDefAttribute(getAttribute(spec, def.getPath())))
                 .collect(Collectors.toSet()));
         return conditions;
     }

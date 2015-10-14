@@ -98,16 +98,14 @@ public class CreateActivityModelTest {
 
     @Test
     public void createActivityModelOne() {
-        Set<String> paths = new HashSet<String>();
-        paths.add(ENTITY_ONE + "." + ATT_ONE);
         Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
         Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_ONE + "." + ATT_ONE));
         AddActivityReq request = new AddActivityReq("ActivityOne",
                 "Description", new DefConditionSetDTO(defEnts, defAtts));
         ci.addActivity(TEST_SPEC_ID, request);
 
-        paths.clear();
         defEnts.clear();
         defAtts.clear();
         defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE));
@@ -115,25 +113,22 @@ public class CreateActivityModelTest {
                 new DefConditionSetDTO(defEnts, defAtts));
         ci.addActivity(TEST_SPEC_ID, request);
 
-        paths.clear();
         defEnts.clear();
         defAtts.clear();
-        paths.add(ENTITY_ONE + "." + ATT_TWO);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_ONE + "." + ATT_TWO));
         request = new AddActivityReq("ActivityThree", "Description",
                 new DefConditionSetDTO(defEnts, defAtts));
         ci.addActivity(TEST_SPEC_ID, request);
 
-        paths.clear();
         defEnts.clear();
         defAtts.clear();
-        paths.add(ENTITY_TWO + "." + ATT_THREE);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_TWO + "." + ATT_THREE));
         request = new AddActivityReq("ActivityFour", "Description",
                 new DefConditionSetDTO(defEnts, defAtts));
         ci.addActivity(TEST_SPEC_ID, request);
 
-        paths.clear();
         defEnts.clear();
         defAtts.clear();
         defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
@@ -146,17 +141,15 @@ public class CreateActivityModelTest {
 
     @Test
     public void createActivityModelTwo() {
-        Set<String> paths = new HashSet<String>();
         Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
         Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-        paths.add(ENTITY_ONE + "." + ATT_ONE);
         defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE));
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_ONE + "." + ATT_ONE));
         AddActivityReq request = new AddActivityReq("ActivityOne",
                 "Description", new DefConditionSetDTO(defEnts, defAtts));
         ci.addActivity(TEST_SPEC_ID, request);
 
-        paths.clear();
         defEnts.clear();
         defAtts.clear();
         defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
@@ -164,14 +157,12 @@ public class CreateActivityModelTest {
                 new DefConditionSetDTO(defEnts, defAtts));
         ci.addActivity(TEST_SPEC_ID, request);
 
-        paths.clear();
         defEnts.clear();
         defAtts.clear();
-        paths.add(ENTITY_ONE + "." + ATT_TWO);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
-        paths = new HashSet<String>();
-        paths.add(ENTITY_TWO + "." + ATT_THREE);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_ONE + "." + ATT_TWO));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_TWO + "." + ATT_THREE));
         request = new AddActivityReq("ActivityThree", "Description",
                 new DefConditionSetDTO(defEnts, defAtts));
         ci.addActivity(TEST_SPEC_ID, request);
@@ -181,24 +172,21 @@ public class CreateActivityModelTest {
 
     @Test
     public void createActivityModelThree() {
-        Set<String> paths = new HashSet<String>();
         Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
         Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-        paths.add(ENTITY_ONE + "." + ATT_ONE);
         defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE));
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_ONE + "." + ATT_ONE));
         AddActivityReq request = new AddActivityReq("ActivityOne",
                 "Description", new DefConditionSetDTO(defEnts, defAtts));
         ci.addActivity(TEST_SPEC_ID, request);
 
-        paths.clear();
         defEnts.clear();
         defAtts.clear();
-        paths.add(ENTITY_ONE + "." + ATT_TWO);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
-        paths = new HashSet<String>();
-        paths.add(ENTITY_TWO + "." + ATT_THREE);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_ONE + "." + ATT_TWO));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_TWO + "." + ATT_THREE));
         defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
         request = new AddActivityReq("ActivityTwo", "Description",
                 new DefConditionSetDTO(defEnts, defAtts));
@@ -209,19 +197,16 @@ public class CreateActivityModelTest {
 
     @Test
     public void createActivityModelFour() {
-        Set<String> paths = new HashSet<String>();
         Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
         Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
         defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE));
         defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
-        paths.add(ENTITY_ONE + "." + ATT_ONE);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
-        paths = new HashSet<String>();
-        paths.add(ENTITY_ONE + "." + ATT_TWO);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
-        paths = new HashSet<String>();
-        paths.add(ENTITY_TWO + "." + ATT_THREE);
-        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, paths));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_ONE + "." + ATT_ONE));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_ONE + "." + ATT_TWO));
+        defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
+                ENTITY_TWO + "." + ATT_THREE));
         AddActivityReq request = new AddActivityReq("ActivityTwo",
                 "Description", new DefConditionSetDTO(defEnts, defAtts));
         ci.addActivity(TEST_SPEC_ID, request);

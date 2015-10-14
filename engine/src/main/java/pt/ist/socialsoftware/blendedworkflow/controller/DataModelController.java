@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,18 +48,15 @@ public class DataModelController {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/products/{atts}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/products/{att}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<ProductDTO> getProduct(
             @PathVariable("specId") String specId,
-            @PathVariable("atts") String atts) {
-        log.debug("getProduct atts:{}", atts);
+            @PathVariable("att") String att) {
+        log.debug("getProduct att:{}", att);
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        String[] attsArray = atts.split(",");
-
-        Product product = adi.getAttribute(specId,
-                Arrays.stream(attsArray).collect(Collectors.toSet()));
+        Product product = adi.getAttribute(specId, att);
 
         return new ResponseEntity<ProductDTO>(product.getDTO(), HttpStatus.OK);
     }

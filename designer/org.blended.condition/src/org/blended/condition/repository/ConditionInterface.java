@@ -1,6 +1,5 @@
 package org.blended.condition.repository;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -129,13 +128,10 @@ public class ConditionInterface {
             } else {
                 mandatory = true;
             }
-            Set<String> paths = new HashSet<String>();
-            for (String path : eAac.getConditions()) {
-                paths.add(path);
-            }
+            String path = eAac.getConditions().stream().findFirst().get();
             try {
                 ci.createAttributeAchieveCondition(
-                        new DefAttributeConditionDTO(specId, paths, mandatory));
+                        new DefAttributeConditionDTO(specId, path, mandatory));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());

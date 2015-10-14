@@ -1,10 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
-import java.util.Set;
-
 public class DefAttributeConditionDTO {
     private String specId;
-    private Set<String> paths;
+    private String path;
     private boolean mandatory;
     private String attributeExtId;
 
@@ -19,12 +17,12 @@ public class DefAttributeConditionDTO {
         this.specId = specId;
     }
 
-    public Set<String> getPaths() {
-        return paths;
+    public String getPath() {
+        return path;
     }
 
-    public void setPaths(Set<String> paths) {
-        this.paths = paths;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public boolean isMandatory() {
