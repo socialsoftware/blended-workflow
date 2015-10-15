@@ -28,9 +28,9 @@ public class Task extends Task_Base {
     }
 
     public Task(TaskModel taskModel, String name, String description,
-            Set<Condition> preConditions, Set<Condition> postCondition,
-            String previous, String joinCode, String splitCode)
-                    throws BWException {
+            Set<DefProductCondition> preConditions,
+            Set<DefProductCondition> postCondition, String previous,
+            String joinCode, String splitCode) throws BWException {
         setTaskModel(taskModel);
         setName(name);
         getPreConditionSet().addAll(preConditions);
@@ -50,16 +50,18 @@ public class Task extends Task_Base {
 
     public void cloneTask(TaskModelInstance taskModelInstance)
             throws BWException {
-        Set<Condition> newPreConditions = null;
-        Set<Condition> preConditions = getPreConditionSet();
-        Set<Condition> newPostCondition = null;
-        Set<Condition> postCondition = getPostConditionSet();
+        Set<DefProductCondition> newPreConditions = null;
+        Set<DefProductCondition> preConditions = getPreConditionSet();
+        Set<DefProductCondition> newPostCondition = null;
+        Set<DefProductCondition> postCondition = getPostConditionSet();
         if (!preConditions.isEmpty() && !getPostConditionSet().isEmpty()) {
             newPreConditions = preConditions.stream()
-                    .map((cond) -> cond.cloneCondition(taskModelInstance))
+                    .map((cond) -> (DefProductCondition) cond
+                            .cloneCondition(taskModelInstance))
                     .collect(Collectors.toSet());
             newPostCondition = postCondition.stream()
-                    .map((cond) -> cond.cloneCondition(taskModelInstance))
+                    .map((cond) -> (DefProductCondition) cond
+                            .cloneCondition(taskModelInstance))
                     .collect(Collectors.toSet());
         }
         Task newTask = new Task(taskModelInstance, getName(), getDescription(),
@@ -144,9 +146,9 @@ public class Task extends Task_Base {
     }
 
     private void checkRuleConstraint() {
-        Set<Product> attributes = ConditionModel
+        Set<Product> attributes = getConditionModel()
                 .getProductsOfDefAttributeSet(getPreConditionSet());
-        Set<Product> postAttributes = ConditionModel
+        Set<Product> postAttributes = getConditionModel()
                 .getProductsOfDefAttributeSet(getPostConditionSet());
         attributes.addAll(postAttributes);
 
@@ -167,9 +169,9 @@ public class Task extends Task_Base {
     }
 
     private void checkMultiplicityConstraint() {
-        Set<Entity> entities = ConditionModel
+        Set<Entity> entities = getConditionModel()
                 .getEntitiesOfDefEntitySet(getPreConditionSet());
-        Set<Entity> postEntities = ConditionModel
+        Set<Entity> postEntities = getConditionModel()
                 .getEntitiesOfDefEntitySet(getPostConditionSet());
         entities.addAll(postEntities);
 
@@ -196,10 +198,10 @@ public class Task extends Task_Base {
     }
 
     private void checkDependenceConstraint() {
-        Set<Product> postProducts = ConditionModel
+        Set<Product> postProducts = getConditionModel()
                 .getProductsOfDefConditions(getPostConditionSet());
 
-        Set<Product> preProducts = ConditionModel
+        Set<Product> preProducts = getConditionModel()
                 .getProductsOfDefConditions(getPreConditionSet());
 
         Optional<Dependence> oDep = getTaskModel().getSpecification()
@@ -216,13 +218,14 @@ public class Task extends Task_Base {
 
     private void checkEntityOfDefAttributeIsDefined() {
         Set<Entity> entities = Stream.concat(
-                ConditionModel.getDefEntityConditions(getPreConditionSet())
+                getConditionModel().getDefEntityConditions(getPreConditionSet())
                         .stream().map(d -> d.getEntity()),
-                ConditionModel.getDefEntityConditions(getPostConditionSet())
-                        .stream().map(d -> d.getEntity()))
+                getConditionModel()
+                        .getDefEntityConditions(getPostConditionSet()).stream()
+                        .map(d -> d.getEntity()))
                 .collect(Collectors.toSet());
 
-        Optional<DefAttributeCondition> oDef = ConditionModel
+        Optional<DefAttributeCondition> oDef = getConditionModel()
                 .getDefAttributeConditions(getPostConditionSet()).stream()
                 .filter(d -> !entities
                         .contains(d.getAttributeOfDef().getEntity()))
@@ -237,15 +240,19 @@ public class Task extends Task_Base {
     }
 
     private void checkPostConditionContainsAtLeastOneDef() {
-        if (ConditionModel.getDefAttributeConditions(getPostConditionSet())
+        if (getConditionModel().getDefAttributeConditions(getPostConditionSet())
                 .size() > 0)
             return;
 
-        if (ConditionModel.getDefEntityConditions(getPostConditionSet())
+        if (getConditionModel().getDefEntityConditions(getPostConditionSet())
                 .size() > 0)
             return;
 
         throw new BWException(BWErrorType.NO_DEF_CONDITION_IN_POST, getName());
+    }
+
+    private ConditionModel getConditionModel() {
+        return this.getTaskModel().getSpecification().getConditionModel();
     }
 
 }

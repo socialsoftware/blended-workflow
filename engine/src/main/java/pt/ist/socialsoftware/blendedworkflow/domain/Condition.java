@@ -76,13 +76,6 @@ public abstract class Condition extends Condition_Base {
     public void delete() {
         setRule(null);
 
-        getTaskWithPreConditionSet().stream()
-                .forEach(t -> t.removePreCondition(this));
-        setTaskWithPostCondition(null);
-
-        setActivationConditionGoal(null);
-        setSuccessConditionGoal(null);
-
         setAndLeftCondition(null);
         setAndRightCondition(null);
         setOrLeftCondition(null);

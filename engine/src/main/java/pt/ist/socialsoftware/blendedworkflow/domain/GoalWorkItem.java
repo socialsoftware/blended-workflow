@@ -8,8 +8,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class GoalWorkItem extends GoalWorkItem_Base {
@@ -24,7 +24,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
     public GoalWorkItem(BWInstance bwInstance, Goal goal,
             EntityInstance entityInstanceContext,
-            Set<Condition> activateConditions,
+            Set<DefProductCondition> activateConditions,
             Set<MaintainGoal> maintainGoals) {
         log.info("New GoalWorkitem for goal " + goal.getName());
         setBwInstance(bwInstance);
@@ -319,7 +319,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
                                 "Goal does not have GoalWorkItems for EntityInstance: "
                                         + affectedAGEntityInstance.getID());
                         // Create GoalWorkItem
-                        Set<Condition> activateConditions = affectedAG
+                        Set<DefProductCondition> activateConditions = affectedAG
                                 .getActivationConditionSet();
                         Set<MaintainGoal> maintainGoals = getBwInstance()
                                 .getGoalModelInstance()

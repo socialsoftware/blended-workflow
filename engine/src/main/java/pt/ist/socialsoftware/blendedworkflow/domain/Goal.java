@@ -39,7 +39,7 @@ public class Goal extends Goal_Base {
      * Create the GoalTree root Goal.
      */
     public Goal(GoalModel goalModel, String name, String description,
-            Condition condition, Entity context) throws BWException {
+            DefProductCondition condition, Entity context) throws BWException {
         setGoalModel(goalModel);
         setName(name);
         setDescription(description);
@@ -52,7 +52,7 @@ public class Goal extends Goal_Base {
      * Create a Goal.
      */
     public Goal(GoalModel goalModel, Goal parentGoal, String name,
-            String description, Condition condition, Entity context)
+            String description, DefProductCondition condition, Entity context)
                     throws BWException {
         setGoalModel(goalModel);
         setName(name);
@@ -78,11 +78,12 @@ public class Goal extends Goal_Base {
 
     public void cloneGoal(GoalModelInstance goalModelInstance)
             throws BWException {
-        Condition newSucessCondition = null;
-        Condition condition = getSuccessConditionSet().stream().findFirst()
-                .get();
+        DefProductCondition newSucessCondition = null;
+        DefProductCondition condition = getSuccessConditionSet().stream()
+                .findFirst().get();
         if (condition != null) {
-            newSucessCondition = condition.cloneCondition(goalModelInstance);
+            newSucessCondition = (DefProductCondition) condition
+                    .cloneCondition(goalModelInstance);
         }
 
         // Get EntityTypeContext from Template
@@ -100,8 +101,8 @@ public class Goal extends Goal_Base {
         newGoal.setUser(getUser());
         newGoal.setRole(getRole());
 
-        for (Condition activateCondition : getActivationConditionSet()) {
-            Condition newActivateCondition = activateCondition
+        for (DefProductCondition activateCondition : getActivationConditionSet()) {
+            DefProductCondition newActivateCondition = (DefProductCondition) activateCondition
                     .cloneCondition(goalModelInstance);
             newGoal.addActivationCondition(newActivateCondition);
         }
@@ -255,7 +256,7 @@ public class Goal extends Goal_Base {
     }
 
     public void purgeActivationCondition() {
-        for (Condition cond : getActivationConditionSet()) {
+        for (DefProductCondition cond : getActivationConditionSet()) {
             if (getSuccessConditionSet().contains(cond))
                 removeActivationCondition(cond);
         }
@@ -289,7 +290,7 @@ public class Goal extends Goal_Base {
     }
 
     public Goal extractChild(String newGoalName,
-            Set<Condition> successConditions) {
+            Set<DefProductCondition> successConditions) {
         checkConditionsNotEmpty(successConditions);
         checkConditionsExistInSource(successConditions);
         removeConditionsFromSource(successConditions);
@@ -314,7 +315,7 @@ public class Goal extends Goal_Base {
     }
 
     public Goal extractSibling(String newGoalName,
-            Set<Condition> successConditions) {
+            Set<DefProductCondition> successConditions) {
         checkConditionsNotEmpty(successConditions);
         checkConditionsExistInSource(successConditions);
         removeConditionsFromSource(successConditions);
@@ -340,13 +341,13 @@ public class Goal extends Goal_Base {
     }
 
     private void addActivationConditions() {
-        Set<Condition> defs = ConditionModel
+        Set<DefProductCondition> defs = getConditionModel()
                 .getProductsOfDefConditions(getSuccessConditionSet()).stream()
                 .flatMap((p) -> p.getDependenceSet().stream())
                 .map((d) -> d.getTarget().getDefCondition())
                 .collect(Collectors.toSet());
 
-        for (Condition def : defs) {
+        for (DefProductCondition def : defs) {
             if (!getSuccessConditionSet().contains(def))
                 addActivationCondition(def);
         }
@@ -364,19 +365,21 @@ public class Goal extends Goal_Base {
     }
 
     private void addMultiplicityConditions() {
-        Set<Entity> entities = ConditionModel
+        Set<Entity> entities = getConditionModel()
                 .getEntitiesOfDefEntitySet(getSuccessConditionSet());
 
         entities.stream().flatMap((e) -> e.getMultConditions().stream())
                 .forEach((m) -> addEntityInvariantCondition(m));
     }
 
-    private void checkCanExtractSibling(Set<Condition> successConditions) {
+    private void checkCanExtractSibling(
+            Set<DefProductCondition> successConditions) {
         checkIsNotTopGoal();
         checkSiblingsAttributeConstraint(successConditions);
     }
 
-    private void checkCanExtractChild(Set<Condition> successConditions) {
+    private void checkCanExtractChild(
+            Set<DefProductCondition> successConditions) {
         checkParentChildAttributeConstraint(successConditions);
         checkDependenceConstraint(successConditions);
     }
@@ -387,15 +390,16 @@ public class Goal extends Goal_Base {
                     "checkIsNotTopGoal");
     }
 
-    private void checkConditionsNotEmpty(Set<Condition> successConditions) {
+    private void checkConditionsNotEmpty(
+            Set<DefProductCondition> successConditions) {
         if (successConditions.isEmpty())
             throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
                     "checkConditionsNotEmpty");
     }
 
     private void checkConditionsExistInSource(
-            Set<Condition> successConditions) {
-        Optional<Condition> oCond = successConditions.stream()
+            Set<DefProductCondition> successConditions) {
+        Optional<DefProductCondition> oCond = successConditions.stream()
                 .filter((def) -> !getSuccessConditionSet().contains(def))
                 .findFirst();
 
@@ -405,7 +409,8 @@ public class Goal extends Goal_Base {
 
     }
 
-    private void removeConditionsFromSource(Set<Condition> successConditions) {
+    private void removeConditionsFromSource(
+            Set<DefProductCondition> successConditions) {
         successConditions.stream()
                 .forEach((def) -> removeSuccessCondition(def));
         getActivationConditionSet().stream()
@@ -422,8 +427,8 @@ public class Goal extends Goal_Base {
     }
 
     private void checkSiblingsAttributeConstraint(
-            Set<Condition> successConditions) {
-        Set<Condition> conditionsLeft = new HashSet<Condition>(
+            Set<DefProductCondition> successConditions) {
+        Set<DefProductCondition> conditionsLeft = new HashSet<DefProductCondition>(
                 getSuccessConditionSet());
         conditionsLeft.removeAll(successConditions);
         checkSiblingsAttributeConstraintBasic(successConditions,
@@ -433,9 +438,9 @@ public class Goal extends Goal_Base {
     }
 
     private void checkSiblingsAttributeConstraintBasic(
-            Set<Condition> successConditionsOne,
-            Set<Condition> successConditionsTwo) {
-        Set<Entity> entities = ConditionModel
+            Set<DefProductCondition> successConditionsOne,
+            Set<DefProductCondition> successConditionsTwo) {
+        Set<Entity> entities = getConditionModel()
                 .getEntitiesOfDefEntitySet(successConditionsOne);
 
         Optional<Entity> oEntity = successConditionsTwo.stream()
@@ -451,8 +456,8 @@ public class Goal extends Goal_Base {
     }
 
     private void checkParentChildAttributeConstraint(
-            Set<Condition> successConditions) {
-        Set<Entity> entities = ConditionModel
+            Set<DefProductCondition> successConditions) {
+        Set<Entity> entities = getConditionModel()
                 .getEntitiesOfDefEntitySet(successConditions);
 
         Optional<Entity> oEntity = flattened()
@@ -468,21 +473,22 @@ public class Goal extends Goal_Base {
                             + oEntity.get().getName());
     }
 
-    private void checkDependenceConstraint(Set<Condition> successConditions) {
+    private void checkDependenceConstraint(
+            Set<DefProductCondition> successConditions) {
         DataModel dataModel = getGoalModel().getSpecification().getDataModel();
 
-        Set<Condition> topSuccessConditions = new HashSet<Condition>();
+        Set<DefProductCondition> topSuccessConditions = new HashSet<DefProductCondition>();
         topSuccessConditions.addAll(getSuccessConditionSet());
         topSuccessConditions.removeAll(successConditions);
 
         log.debug("topSuccessConditions size:{}", topSuccessConditions.size());
 
-        Set<Product> topProducts = ConditionModel
+        Set<Product> topProducts = getConditionModel()
                 .getProductsOfDefConditions(topSuccessConditions);
         log.debug("topProducts {}", topProducts.stream().map((p) -> p.getName())
                 .collect(Collectors.joining(",")));
 
-        Set<Product> succProducts = ConditionModel
+        Set<Product> succProducts = getConditionModel()
                 .getProductsOfDefConditions(successConditions);
         log.debug("succProducts {}", succProducts.stream()
                 .map((p) -> p.getName()).collect(Collectors.joining(",")));
@@ -496,6 +502,10 @@ public class Goal extends Goal_Base {
             throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
                     "checkDependenceConstraint:" + oProduct.get().getName());
 
+    }
+
+    private ConditionModel getConditionModel() {
+        return getGoalModel().getSpecification().getConditionModel();
     }
 
 }

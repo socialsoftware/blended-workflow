@@ -22,6 +22,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
         setConditionModel(
                 entity.getDataModel().getSpecification().getConditionModel());
         setEntity(entity);
+        setPath(entity.getName());
     }
 
     @Override
@@ -344,7 +345,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 
     @Override
     public String getSubPath() {
-        return "DEF(" + getEntity().getName() + ")";
+        return "DEF(" + getEntity().getFullPath() + ")";
     }
 
     public DefEntityConditionDTO getDTO() {

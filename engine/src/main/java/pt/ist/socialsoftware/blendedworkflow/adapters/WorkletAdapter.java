@@ -203,8 +203,9 @@ public class WorkletAdapter {
         for (Task task : taskModel.getTasksSet()) {
             String taskName = generateYAWLTaskName(task);
 
-            Condition preCondition = task.getPreConditionSet().stream().reduce(
-                    new TrueCondition(), (c1, c2) -> new AndCondition(c1, c2));
+            Condition preCondition = task.getPreConditionSet().stream()
+                    .map(Condition.class::cast).reduce(new TrueCondition(),
+                            (c1, c2) -> new AndCondition(c1, c2));
 
             // PreCondition Tree
             if (!preCondition.existTrue()) {
@@ -249,7 +250,7 @@ public class WorkletAdapter {
             // Undefined Node
 
             Condition postCondition = task.getPostConditionSet().stream()
-                    .reduce(new TrueCondition(),
+                    .map(Condition.class::cast).reduce(new TrueCondition(),
                             (c1, c2) -> new AndCondition(c1, c2));
 
             eCornerstone = getCornerstoneData(task, false, "UNDEFINED");
@@ -314,6 +315,7 @@ public class WorkletAdapter {
                     .flatMap((cond) -> cond.getAttributeBasicSet().stream())
                     .collect(Collectors.toSet());
             attributesValues = task.getPreConditionSet().stream()
+                    .map(Condition.class::cast)
                     .reduce(new TrueCondition(),
                             (c1, c2) -> new AndCondition(c1, c2))
                     .getcompareConditionValues();
@@ -326,6 +328,7 @@ public class WorkletAdapter {
                     .flatMap((cond) -> cond.getAttributeBasicSet().stream())
                     .collect(Collectors.toSet());
             attributesValues = task.getPostConditionSet().stream()
+                    .map(Condition.class::cast)
                     .reduce(new TrueCondition(),
                             (c1, c2) -> new AndCondition(c1, c2))
                     .getcompareConditionValues();

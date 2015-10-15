@@ -3,13 +3,16 @@ package pt.ist.socialsoftware.blendedworkflow.service.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DefAttributeConditionDTO {
+public class DefDependenceConditionDTO {
     private String specId;
     private String path;
-    private boolean mandatory;
-    private String attributeExtId;
 
-    public DefAttributeConditionDTO() {
+    public DefDependenceConditionDTO() {
+    }
+
+    public DefDependenceConditionDTO(String specId, String path) {
+        this.specId = specId;
+        this.path = path;
     }
 
     public String getSpecId() {
@@ -26,22 +29,6 @@ public class DefAttributeConditionDTO {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public boolean isMandatory() {
-        return mandatory;
-    }
-
-    public void setMandatory(boolean mandatory) {
-        this.mandatory = mandatory;
-    }
-
-    public String getAttributeExtId() {
-        return attributeExtId;
-    }
-
-    public void setAttributeExtId(String attributeExtId) {
-        this.attributeExtId = attributeExtId;
     }
 
 }

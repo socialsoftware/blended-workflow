@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -69,17 +68,16 @@ public class ConditionModel extends ConditionModel_Base {
 
     }
 
-    public static Set<Product> getProductsOfDefConditions(
-            Set<Condition> defConditions) {
-        Set<Product> products = new HashSet<Product>();
-        products.addAll(getEntitiesOfDefEntitySet(defConditions));
-        products.addAll(getProductsOfDefAttributeSet(defConditions));
-
-        return products;
+    public Set<Product> getProductsOfDefConditions(
+            Set<DefProductCondition> defConditions) {
+        DataModel dataModel = this.getSpecification().getDataModel();
+        return defConditions.stream()
+                .map(d -> dataModel.getTargetOfPath(d.getPath()))
+                .collect(Collectors.toSet());
     }
 
-    public static Set<Entity> getEntitiesOfDefEntitySet(
-            Set<Condition> defEntities) {
+    public Set<Entity> getEntitiesOfDefEntitySet(
+            Set<DefProductCondition> defEntities) {
         Set<Entity> entities = defEntities.stream()
                 .filter(DefEntityCondition.class::isInstance)
                 .map(DefEntityCondition.class::cast)
@@ -87,8 +85,8 @@ public class ConditionModel extends ConditionModel_Base {
         return entities;
     }
 
-    public static Set<Product> getProductsOfDefAttributeSet(
-            Set<Condition> defAttributes) {
+    public Set<Product> getProductsOfDefAttributeSet(
+            Set<DefProductCondition> defAttributes) {
         Set<Product> attributes = defAttributes.stream()
                 .filter(DefAttributeCondition.class::isInstance)
                 .map(DefAttributeCondition.class::cast)
@@ -97,18 +95,35 @@ public class ConditionModel extends ConditionModel_Base {
         return attributes;
     }
 
-    public static Set<DefEntityCondition> getDefEntityConditions(
-            Set<Condition> conditions) {
+    public Set<Product> getProductsOfDefDependenceSet(
+            Set<DefProductCondition> defDependencies) {
+        Set<Product> products = defDependencies.stream()
+                .filter(DefDependenceCondition.class::isInstance)
+                .map(DefDependenceCondition.class::cast)
+                .map((def) -> def.getTarget()).collect(Collectors.toSet());
+        return products;
+    }
+
+    public Set<DefEntityCondition> getDefEntityConditions(
+            Set<DefProductCondition> conditions) {
         return conditions.stream().filter(DefEntityCondition.class::isInstance)
                 .map(DefEntityCondition.class::cast)
                 .collect(Collectors.toSet());
     }
 
-    public static Set<DefAttributeCondition> getDefAttributeConditions(
-            Set<Condition> conditions) {
+    public Set<DefAttributeCondition> getDefAttributeConditions(
+            Set<DefProductCondition> conditions) {
         return conditions.stream()
                 .filter(DefAttributeCondition.class::isInstance)
                 .map(DefAttributeCondition.class::cast)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<DefDependenceCondition> getDefDependenceConditions(
+            Set<DefProductCondition> conditions) {
+        return conditions.stream()
+                .filter(DefDependenceCondition.class::isInstance)
+                .map(DefDependenceCondition.class::cast)
                 .collect(Collectors.toSet());
     }
 

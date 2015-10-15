@@ -16,9 +16,10 @@ import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefDependenceCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
@@ -45,6 +46,8 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
     private static final String ATTRIBUTE_THREE_NAME = "att3";
     private static final String ATTRIBUTE_FOUR_NAME = "att4";
     private static final String ROLENAME_ONE = "theOne";
+    private static final String DEPENDENCE_PATH_ONE = ENTITY_TWO_NAME + "."
+            + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME;
     private static final String ROLENAME_TWO = "theTwo";
     private static final String RULE_ONE_NAME = "ruleOne";
     private static final String RULE_TWO_NAME = "ruleTwo";
@@ -98,8 +101,8 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
                 attributeFour, "att42", AttributeType.NUMBER, false, false,
                 false);
 
-        new Dependence(spec.getDataModel(), attributeThree, ENTITY_TWO_NAME
-                + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME);
+        new Dependence(spec.getDataModel(), attributeThree,
+                DEPENDENCE_PATH_ONE);
 
         ruleOne = new Rule(spec.getDataModel(), RULE_ONE_NAME,
                 new Comparison(new AttributeValueExpression(attributeOne),
@@ -151,7 +154,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
                 DefAttributeCondition.getDefAttribute(attributeTwo));
 
         try {
-            Set<Condition> postConditions = new HashSet<Condition>();
+            Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
             taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
             fail();
         } catch (BWException bwe) {
@@ -163,7 +166,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
     @Test
     public void allActivitiesWereCreated() {
         try {
-            Set<Condition> postConditions = new HashSet<Condition>();
+            Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
             postConditions.add(DefEntityCondition.getDefEntity(entityOne));
             taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
             fail();
@@ -180,7 +183,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
         taskThree.removePostCondition(
                 DefAttributeCondition.getDefAttribute(attributeTwo));
         try {
-            Set<Condition> postConditions = new HashSet<Condition>();
+            Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
             postConditions.add(DefEntityCondition.getDefEntity(entityOne));
             taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
             fail();
@@ -194,7 +197,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
     public void successWithOutMultiplicityFisrts() {
         taskThree.delete();
 
-        Set<Condition> postConditions = new HashSet<Condition>();
+        Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
         postConditions
                 .add(DefAttributeCondition.getDefAttribute(attributeThree));
         postConditions
@@ -213,8 +216,8 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
                 .contains(DefEntityCondition.getDefEntity(entityTwo)));
         assertTrue(task.getPreConditionSet()
                 .contains(DefEntityCondition.getDefEntity(entityThree)));
-        assertTrue(task.getPreConditionSet()
-                .contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
+        assertTrue(task.getPreConditionSet().contains(DefDependenceCondition
+                .getDefDependence(spec, DEPENDENCE_PATH_ONE)));
         assertEquals(0, task.getMultiplicityInvariantSet().size());
         assertEquals(1, task.getRuleInvariantSet().size());
         assertTrue(task.getRuleInvariantSet().contains(ruleTwo));
@@ -225,7 +228,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
     public void successWithOutMultiplicitySecond() {
         taskOne.delete();
 
-        Set<Condition> postConditions = new HashSet<Condition>();
+        Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
         postConditions.add(DefEntityCondition.getDefEntity(entityOne));
         postConditions.add(DefAttributeCondition.getDefAttribute(attributeOne));
         postConditions.add(DefAttributeCondition.getDefAttribute(attributeTwo));
@@ -241,7 +244,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
     public void successWithMultiplicity() {
         taskTwo.delete();
 
-        Set<Condition> postConditions = new HashSet<Condition>();
+        Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
         postConditions.add(DefEntityCondition.getDefEntity(entityTwo));
         postConditions.add(DefEntityCondition.getDefEntity(entityThree));
         Task task = taskModel.addTask(NEW_TASK_NAME, "Description",

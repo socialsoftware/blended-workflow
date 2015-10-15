@@ -55,6 +55,8 @@ public class Dependence extends Dependence_Base {
     public void delete() {
         setDataModel(null);
         setProduct(null);
+        if (getDefDependenceCondition() != null)
+            getDefDependenceCondition().delete();
 
         deleteDomainObject();
     }

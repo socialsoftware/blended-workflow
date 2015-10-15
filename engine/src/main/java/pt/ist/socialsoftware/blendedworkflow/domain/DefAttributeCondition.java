@@ -11,6 +11,13 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DefAttributeCondition extends DefAttributeCondition_Base {
 
+    public static DefAttributeCondition getDefAttribute(Specification spec,
+            String path) {
+        Attribute attribute = (Attribute) spec.getDataModel()
+                .getTargetOfPath(path);
+        return DefAttributeCondition.getDefAttribute(attribute);
+    }
+
     public static DefAttributeCondition getDefAttribute(Attribute attribute) {
         DefAttributeCondition defAttributeCondition = attribute
                 .getDefAttributeCondition();
@@ -23,6 +30,7 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
         setConditionModel(attribute.getEntity().getDataModel()
                 .getSpecification().getConditionModel());
         setAttributeOfDef(attribute);
+        setPath(attribute.getEntity().getName() + "." + attribute.getName());
     }
 
     @Override
@@ -244,14 +252,14 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 
     @Override
     public String getSubPath() {
-        return "DEF(" + getAttributeOfDef().getName() + ")";
+        return "DEF(" + getAttributeOfDef().getFullPath() + ")";
     }
 
     public DefAttributeConditionDTO getDTO() {
         DefAttributeConditionDTO defConditionDTO = new DefAttributeConditionDTO();
         defConditionDTO
                 .setSpecId(getConditionModel().getSpecification().getSpecId());
-        defConditionDTO.setPath(getAttributeOfDef().getName());
+        defConditionDTO.setPath(getPath());
         defConditionDTO.setAttributeExtId(getAttributeOfDef().getExternalId());
         defConditionDTO.setMandatory(getAttributeOfDef().getIsMandatory());
 

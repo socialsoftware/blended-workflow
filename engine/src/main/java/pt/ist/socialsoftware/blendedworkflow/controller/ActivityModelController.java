@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DefConditionSetDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.req.AddActivityReq;
@@ -79,7 +79,7 @@ public class ActivityModelController {
     }
 
     @RequestMapping(value = "/activities/{activityName}/pre", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<DefConditionSetDTO> getActivityPreCondition(
+    public ResponseEntity<DefProductConditionSetDTO> getActivityPreCondition(
             @PathVariable("specId") String specId,
             @PathVariable("activityName") String activityName) {
         log.debug("getActivityPreCondition specId:{}, activityName:{}", specId,
@@ -87,18 +87,24 @@ public class ActivityModelController {
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        Set<Condition> preConditionSet = adi.getActivityPreCondition(specId,
-                activityName);
+        Set<DefProductCondition> preConditionSet = adi
+                .getActivityPreCondition(specId, activityName);
 
-        DefConditionSetDTO defConditionSetDTO = new DefConditionSetDTO();
+        ConditionModel conditionModel = adi.getSpecBySpecId(specId)
+                .getConditionModel();
+
+        DefProductConditionSetDTO defConditionSetDTO = new DefProductConditionSetDTO();
         defConditionSetDTO.setDefEnts(
-                ConditionModel.getDefEntityConditions(preConditionSet).stream()
+                conditionModel.getDefEntityConditions(preConditionSet).stream()
                         .map(d -> d.getDTO()).collect(Collectors.toSet()));
-        defConditionSetDTO.setDefAtts(ConditionModel
+        defConditionSetDTO.setDefAtts(conditionModel
                 .getDefAttributeConditions(preConditionSet).stream()
                 .map(d -> d.getDTO()).collect(Collectors.toSet()));
+        defConditionSetDTO.setDefDeps(conditionModel
+                .getDefDependenceConditions(preConditionSet).stream()
+                .map(d -> d.getDTO()).collect(Collectors.toSet()));
 
-        return new ResponseEntity<DefConditionSetDTO>(defConditionSetDTO,
+        return new ResponseEntity<DefProductConditionSetDTO>(defConditionSetDTO,
                 HttpStatus.OK);
     }
 

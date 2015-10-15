@@ -160,7 +160,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
         } catch (BWException bwe) {
             assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
                     bwe.getError());
-            assertEquals("DEF(" + ATTRIBUTE_TWO_NAME + ")", bwe.getMessage());
+            assertEquals(
+                    "DEF(" + ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME + ")",
+                    bwe.getMessage());
         }
     }
 
@@ -175,7 +177,8 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
         } catch (BWException bwe) {
             assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
                     bwe.getError());
-            assertEquals("DEF(" + ATTRIBUTE_FOUR_NAME + ")", bwe.getMessage());
+            assertEquals("DEF(" + ENTITY_THREE_NAME + "." + ATTRIBUTE_FOUR_NAME
+                    + ")", bwe.getMessage());
         }
     }
 

@@ -8,9 +8,9 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
@@ -47,17 +47,17 @@ public class TaskModelFactory {
             // ConditionFactory.getRelationDependencies(dataModel,
             // taskPreConditionString);
 
-            Set<Condition> taskPreCondition = new HashSet<Condition>();
-            taskPreCondition.add(ConditionFactory.createCondition(dataModel,
-                    taskPreConditionString));
+            Set<DefProductCondition> taskPreCondition = new HashSet<DefProductCondition>();
+            taskPreCondition.add((DefProductCondition) ConditionFactory
+                    .createCondition(dataModel, taskPreConditionString));
             String taskPostConditionString = taskXML
                     .getChildText("PostCondition", bwNamespace);
             // taskPostConditionString =
             // ConditionFactory.getRelationDependencies(dataModel,
             // taskPostConditionString);
-            Set<Condition> taskPostCondition = new HashSet<Condition>();
-            taskPostCondition.add(ConditionFactory.createCondition(dataModel,
-                    taskPostConditionString));
+            Set<DefProductCondition> taskPostCondition = new HashSet<DefProductCondition>();
+            taskPostCondition.add((DefProductCondition) ConditionFactory
+                    .createCondition(dataModel, taskPostConditionString));
 
             String flowType = taskXML.getChildText("FlowType", bwNamespace);
             String joinCode = taskXML.getChildText("JoinCode", bwNamespace);

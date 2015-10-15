@@ -2,13 +2,13 @@ package pt.ist.socialsoftware.blendedworkflow.service.req;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DefConditionSetDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetDTO;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AddActivityReq {
     private String activityName;
     private String description;
-    private DefConditionSetDTO postConditionSet;
+    private DefProductConditionSetDTO postConditionSet;
 
     public AddActivityReq() {
     }
@@ -29,11 +29,11 @@ public class AddActivityReq {
         this.description = description;
     }
 
-    public DefConditionSetDTO getPostConditionSet() {
+    public DefProductConditionSetDTO getPostConditionSet() {
         return postConditionSet;
     }
 
-    public void setPostConditionSet(DefConditionSetDTO postConditionSet) {
+    public void setPostConditionSet(DefProductConditionSetDTO postConditionSet) {
         this.postConditionSet = postConditionSet;
     }
 

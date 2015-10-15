@@ -23,6 +23,11 @@ public abstract class Attribute extends Attribute_Base {
             throw new BWException(BWErrorType.INVALID_ATTRIBUTE_NAME, name);
     }
 
+    @Override
+    public String getFullPath() {
+        return getEntity().getFullPath() + "." + getName();
+    }
+
     public abstract Set<AttributeBasic> getAttributeBasicSet();
 
 }

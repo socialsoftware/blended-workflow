@@ -10,17 +10,17 @@ import org.slf4j.LoggerFactory;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
 
 public class CreateGoalInstanceService implements Callable<String> {
@@ -31,7 +31,7 @@ public class CreateGoalInstanceService implements Callable<String> {
     private final BWInstance bwInstance;
     private final Goal goal;
     private final Set<String> activateConditionsOID;
-    private Set<Condition> activateConditions;
+    private Set<DefProductCondition> activateConditions;
     private final Set<String> maintainGoalsOID;
     private Set<MaintainGoal> maintainGoals;
     private final Map<String, String> entitiesOID;
@@ -87,8 +87,7 @@ public class CreateGoalInstanceService implements Callable<String> {
         // Create EntityInstances that do not exist
         for (Map.Entry<String, String> entry : entitiesOID.entrySet()) {
             if (entry.getValue() == null) {
-                Entity entity = FenixFramework
-                        .getDomainObject(entry.getKey());
+                Entity entity = FenixFramework.getDomainObject(entry.getKey());
                 EntityInstance newEntityInstance = new EntityInstance(entity);
                 entry.setValue(newEntityInstance.getExternalId());
             }
@@ -96,12 +95,12 @@ public class CreateGoalInstanceService implements Callable<String> {
 
         // Parse Activate Conditions
         if (this.activateConditionsOID == null) {
-            this.activateConditions = new HashSet<Condition>(
+            this.activateConditions = new HashSet<DefProductCondition>(
                     this.goal.getActivationConditionSet());
         } else {
-            this.activateConditions = new HashSet<Condition>();
+            this.activateConditions = new HashSet<DefProductCondition>();
             for (String activateConditionOID : this.activateConditionsOID) {
-                Condition activateCondition = FenixFramework
+                DefProductCondition activateCondition = FenixFramework
                         .getDomainObject(activateConditionOID);
                 this.activateConditions.add(activateCondition);
             }
@@ -148,7 +147,7 @@ public class CreateGoalInstanceService implements Callable<String> {
     }
 
     private void createGoalWorkItems(BWInstance bwInstance, Goal goal,
-            Set<Condition> activateConditions,
+            Set<DefProductCondition> activateConditions,
             Set<MaintainGoal> maintainGoals) {
         // NOTE: If parent goal has activated workItems change their state to
         // ACTIVATED
@@ -176,7 +175,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 
         // Recursive call for all subgoals
         for (Goal subGoal : goal.getSubGoalSet()) {
-            Set<Condition> subGoalActivateConditions = new HashSet<Condition>(
+            Set<DefProductCondition> subGoalActivateConditions = new HashSet<DefProductCondition>(
                     subGoal.getActivationConditionSet());
             Set<MaintainGoal> subGoalMaintainGoals = new HashSet<MaintainGoal>(
                     bwInstance.getGoalModelInstance()

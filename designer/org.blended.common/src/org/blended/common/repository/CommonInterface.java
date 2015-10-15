@@ -16,7 +16,7 @@ import org.blended.common.repository.resttemplate.dto.ActivityDTO;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.AttributeGroupDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
-import org.blended.common.repository.resttemplate.dto.DefConditionSetDTO;
+import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
@@ -837,7 +837,7 @@ public class CommonInterface {
     }
 
     public GoalDTO extractChildGoal(String specId, String newGoalName,
-            String sourceGoalName, DefConditionSetDTO successCondition) {
+            String sourceGoalName, DefProductConditionSetDTO successCondition) {
         log.debug(
                 "extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}",
                 specId, newGoalName, sourceGoalName,
@@ -864,7 +864,7 @@ public class CommonInterface {
     }
 
     public GoalDTO extractSiblingGoal(String specId, String newGoalName,
-            String sourceGoalName, DefConditionSetDTO successCondition) {
+            String sourceGoalName, DefProductConditionSetDTO successCondition) {
         log.debug(
                 "extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}",
                 specId, newGoalName, sourceGoalName,
@@ -935,7 +935,7 @@ public class CommonInterface {
                 params);
     }
 
-    public DefConditionSetDTO getActivityPreConditionSet(String specId,
+    public DefProductConditionSetDTO getActivityPreConditionSet(String specId,
             String activityName) {
         log.debug("getActivityPreConditionSet specId:{}, activityName:{}",
                 specId, activityName);
@@ -948,8 +948,8 @@ public class CommonInterface {
         params.put("activityName", activityName);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
-        DefConditionSetDTO result = restTemplate.getForObject(uri,
-                DefConditionSetDTO.class, params);
+        DefProductConditionSetDTO result = restTemplate.getForObject(uri,
+                DefProductConditionSetDTO.class, params);
 
         return result;
     }

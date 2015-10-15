@@ -13,9 +13,11 @@ public abstract class Product extends Product_Base {
         return new Dependence(this.getEntity().getDataModel(), this, value);
     }
 
+    public abstract String getFullPath();
+
     public abstract Entity getEntity();
 
-    public abstract Condition getDefCondition();
+    public abstract DefProductCondition getDefCondition();
 
     public abstract ProductType getProductType();
 

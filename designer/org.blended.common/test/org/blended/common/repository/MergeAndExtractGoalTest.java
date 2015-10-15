@@ -11,8 +11,8 @@ import java.util.stream.Stream;
 import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
-import org.blended.common.repository.resttemplate.dto.DefConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
 import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
@@ -292,9 +292,8 @@ public class MergeAndExtractGoalTest {
         defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID,
                 ENTITY_ONE + "." + ATT_ONE));
 
-        DefConditionSetDTO successCondition = new DefConditionSetDTO();
-        successCondition.setDefEnts(defEnts);
-        successCondition.setDefAtts(defAtts);
+        DefProductConditionSetDTO successCondition = new DefProductConditionSetDTO(
+                defEnts, defAtts);
 
         goalDTO = ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_ONE, TOP_GOAL,
                 successCondition);
@@ -358,7 +357,7 @@ public class MergeAndExtractGoalTest {
                 ENTITY_TWO + "." + ATT_THREE));
 
         ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_TWO, TOP_GOAL,
-                new DefConditionSetDTO(defEnts, defAtts));
+                new DefProductConditionSetDTO(defEnts, defAtts));
 
         // extract childThree from childTwo
         defEnts.clear();
@@ -369,7 +368,7 @@ public class MergeAndExtractGoalTest {
                 ENTITY_TWO + "." + ATT_THREE));
 
         goalDTO = ci.extractSiblingGoal(TEST_SPEC_ID, SUB_GOAL_THREE,
-                SUB_GOAL_TWO, new DefConditionSetDTO(defEnts, defAtts));
+                SUB_GOAL_TWO, new DefProductConditionSetDTO(defEnts, defAtts));
         assertEquals(SUB_GOAL_THREE, goalDTO.getName());
 
         // get super goal

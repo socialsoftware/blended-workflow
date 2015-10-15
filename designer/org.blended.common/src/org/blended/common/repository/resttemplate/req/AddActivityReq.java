@@ -1,6 +1,6 @@
 package org.blended.common.repository.resttemplate.req;
 
-import org.blended.common.repository.resttemplate.dto.DefConditionSetDTO;
+import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -8,10 +8,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class AddActivityReq {
     private String activityName;
     private String description;
-    private DefConditionSetDTO postConditionSet;
+    private DefProductConditionSetDTO postConditionSet;
 
     public AddActivityReq(String activityName, String description,
-            DefConditionSetDTO postConditionSet) {
+            DefProductConditionSetDTO postConditionSet) {
         this.activityName = activityName;
         this.description = description;
         this.postConditionSet = postConditionSet;
@@ -36,11 +36,11 @@ public class AddActivityReq {
         this.description = description;
     }
 
-    public DefConditionSetDTO getPostConditionSet() {
+    public DefProductConditionSetDTO getPostConditionSet() {
         return postConditionSet;
     }
 
-    public void setPostConditionSet(DefConditionSetDTO postConditionSet) {
+    public void setPostConditionSet(DefProductConditionSetDTO postConditionSet) {
         this.postConditionSet = postConditionSet;
     }
 }

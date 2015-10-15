@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DefEntityConditionDTO {
     private String specId;
     private String extId;

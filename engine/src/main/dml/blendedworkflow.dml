@@ -186,9 +186,15 @@ class OrCondition extends Condition;
 
 class NotCondition extends Condition;
 
-class DefAttributeCondition extends Condition;
+class DefProductCondition extends Condition {
+  String path;
+}
 
-class DefEntityCondition extends Condition;
+class DefEntityCondition extends DefProductCondition;
+
+class DefAttributeCondition extends DefProductCondition;
+
+class DefDependenceCondition extends DefProductCondition;
 
 class MulCondition extends Condition {
 	int side;
@@ -380,12 +386,12 @@ relation GoalHasGoals {
 
 relation GoalHasSucessConditions {
 	Goal playsRole successConditionGoal { multiplicity 0..1; }
-	Condition playsRole successCondition { multiplicity 0..*; }
+	DefProductCondition playsRole successCondition { multiplicity 0..*; }
 }
 
 relation GoalHasActivationConditions {
 	Goal playsRole activationConditionGoal {multiplicity 0..1;}
-	Condition playsRole activationCondition {multiplicity 0..*;}
+	DefProductCondition playsRole activationCondition {multiplicity 0..*;}
 }
 
 relation GoalHasEntityInvariantCondition {
@@ -417,12 +423,12 @@ relation TaskHasNextTask {
 
 relation TaskHasPreConditions {
 	Task playsRole taskWithPreCondition { multiplicity 0..*; }
-	Condition playsRole preCondition { multiplicity 0..*; }
+	DefProductCondition playsRole preCondition { multiplicity 0..*; }
 }
 
 relation TaskHasPostConditions {
 	Task playsRole taskWithPostCondition { multiplicity 0..1; }
-	Condition playsRole postCondition { multiplicity 0..*; }
+	DefProductCondition playsRole postCondition { multiplicity 0..*; }
 }
 
 relation TaskHasMultiplicityInvariants {
@@ -582,16 +588,22 @@ relation NotConditionHasConditions {
 	Condition playsRole condition { multiplicity 0..1; }
 }
 
+//DefEntityCondition
+relation DefEntityConditionHasEntities {
+	DefEntityCondition playsRole defEntityCondition { multiplicity 0..1; }
+	Entity playsRole entity { multiplicity 0..1; }
+}
+
 // DefAttributeCondition
 relation DefAttributeConditionHasAttribute {
 	DefAttributeCondition playsRole defAttributeCondition { multiplicity 0..1; }
 	Attribute playsRole attributeOfDef { multiplicity 0..1; }
 }
 
-//DefEntityCondition
-relation DefEntityConditionHasEntities {
-	DefEntityCondition playsRole defEntityCondition { multiplicity 0..1; }
-	Entity playsRole entity { multiplicity 0..1; }
+//DefDependenceCondition
+relation DefDependenceConditionHasEntities {
+	DefDependenceCondition playsRole defDependenceCondition { multiplicity 0..1; }
+	Dependence playsRole dependence { multiplicity 0..1; }
 }
 
 //MulCondition

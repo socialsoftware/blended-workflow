@@ -1,21 +1,16 @@
-package org.blended.common.repository.resttemplate.dto;
+package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DefConditionSetDTO {
+public class DefProductConditionSetDTO {
     private Set<DefEntityConditionDTO> defEnts;
     private Set<DefAttributeConditionDTO> defAtts;
+    private Set<DefDependenceConditionDTO> defDeps;
 
-    public DefConditionSetDTO() {
-    }
-
-    public DefConditionSetDTO(Set<DefEntityConditionDTO> defEnts,
-            Set<DefAttributeConditionDTO> defAtts) {
-        this.defEnts = defEnts;
-        this.defAtts = defAtts;
+    public DefProductConditionSetDTO() {
     }
 
     public Set<DefEntityConditionDTO> getDefEnts() {
@@ -32,6 +27,14 @@ public class DefConditionSetDTO {
 
     public void setDefAtts(Set<DefAttributeConditionDTO> defAtts) {
         this.defAtts = defAtts;
+    }
+
+    public Set<DefDependenceConditionDTO> getDefDeps() {
+        return defDeps;
+    }
+
+    public void setDefDeps(Set<DefDependenceConditionDTO> defDeps) {
+        this.defDeps = defDeps;
     }
 
 }

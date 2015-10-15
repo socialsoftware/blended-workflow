@@ -34,12 +34,13 @@ import org.blended.common.repository.resttemplate.req.AddActivityReq
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO
 import java.util.Set
-import org.blended.common.repository.resttemplate.dto.DefConditionSetDTO
 import java.util.stream.Collectors
 import org.blended.common.repository.resttemplate.dto.ActivityDTO
 import org.blended.common.repository.resttemplate.dto.MulConditionDTO
 import java.util.List
 import org.blended.common.repository.resttemplate.dto.RuleDTO
+import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO
+import org.blended.common.repository.resttemplate.dto.DefDependenceConditionDTO
 
 /**
  * Generates code from your model files on save.
@@ -85,20 +86,20 @@ class ConditionGeneratorActivityModel {
 				defAtts.add(new DefAttributeConditionDTO(specId, o.getConditions().stream().findFirst().get()))
 			}
 			var AddActivityReq request = new AddActivityReq(activity.name, activity.description,
-				new DefConditionSetDTO(defEnts, defAtts))
+				new DefProductConditionSetDTO(defEnts, defAtts))
 			var ActivityDTO activityDTO = ci.addActivity(specId, request)
 
 			generatePostConditionSet(activity, o)
 			
-			var DefConditionSetDTO defConditionSet = ci.getActivityPreConditionSet(specId, activityDTO.name)
+			var DefProductConditionSetDTO defConditionSet = ci.getActivityPreConditionSet(specId, activityDTO.name)
 			
-			for (DefEntityConditionDTO defEntity : defConditionSet.defEnts) {
+			for (DefEntityConditionDTO defEntity : defConditionSet.getDefEnts) {
 					var apre = factory.createEntityAchieveCondition
 					apre.name = defEntity.entityName
 					activity.pre.add(apre)
 			}
 			
-			for (DefAttributeConditionDTO defAttribute : defConditionSet.defAtts) {
+			for (DefAttributeConditionDTO defAttribute : defConditionSet.getDefAtts) {
 				if (defAttribute.mandatory) {
 					// TODO should be a MandatoryFactory
 					var apre = factory.createNotMandatoryAttributeAchieveCondition
@@ -109,6 +110,12 @@ class ConditionGeneratorActivityModel {
 					apre.conditions.add(defAttribute.path)
 					activity.pre.add(apre)
 				}
+			}
+			
+			for (DefDependenceConditionDTO defDependence : defConditionSet.getDefDeps) {
+					var apre = factory.createNotMandatoryAttributeAchieveCondition
+					apre.conditions.add(defDependence.path)
+					activity.pre.add(apre)
 			}
 			
 			var List<MulConditionDTO> mulConditionDTOs = ci.getActivityMulConditions(specId, activityDTO.name)

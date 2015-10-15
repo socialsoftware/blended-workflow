@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.ConditionFactory;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.LogRecord;
@@ -61,7 +61,7 @@ public class CreateNewGoalService implements Callable<String> {
                     .getGoalModelInstance();
 
             // Create Condition
-            Condition goalCondition = ConditionFactory
+            DefProductCondition goalCondition = (DefProductCondition) ConditionFactory
                     .createCondition(dataModelInstance, condition);
             log.info("goalCondition:" + goalCondition);
 
@@ -77,8 +77,9 @@ public class CreateNewGoalService implements Callable<String> {
 
             // Add activate conditions
             for (String activateConditionString : this.activateConditions) {
-                Condition activateCondition = ConditionFactory.createCondition(
-                        dataModelInstance, activateConditionString);
+                DefProductCondition activateCondition = (DefProductCondition) ConditionFactory
+                        .createCondition(dataModelInstance,
+                                activateConditionString);
                 newGoal.addActivationCondition(activateCondition);
             }
 

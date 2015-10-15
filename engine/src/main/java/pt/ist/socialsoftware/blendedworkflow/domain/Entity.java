@@ -405,7 +405,7 @@ public class Entity extends Entity_Base {
     }
 
     @Override
-    public Condition getDefCondition() {
+    public DefProductCondition getDefCondition() {
         return DefEntityCondition.getDefEntity(this);
     }
 
@@ -419,6 +419,11 @@ public class Entity extends Entity_Base {
         return getAttributeSet().stream()
                 .filter(AttributeGroup.class::isInstance)
                 .map(AttributeGroup.class::cast).collect(Collectors.toSet());
+    }
+
+    @Override
+    public String getFullPath() {
+        return getName();
     }
 
 }

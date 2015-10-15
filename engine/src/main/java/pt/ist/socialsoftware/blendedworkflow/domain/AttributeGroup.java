@@ -73,7 +73,7 @@ public class AttributeGroup extends AttributeGroup_Base {
     }
 
     @Override
-    public Condition getDefCondition() {
+    public DefProductCondition getDefCondition() {
         return DefAttributeCondition.getDefAttribute(this);
     }
 

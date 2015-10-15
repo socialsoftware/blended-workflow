@@ -26,7 +26,9 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefDependenceCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Expression;
@@ -51,8 +53,8 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DefConditionSetDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
@@ -358,7 +360,7 @@ public class DesignInterface {
         Specification spec = getSpecBySpecId(aacDTO.getSpecId());
 
         DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(getAttribute(spec, aacDTO.getPath()));
+                .getDefAttribute(spec, aacDTO.getPath());
 
         if (defAttributeCondition.getAttributeOfDef() != null
                 && defAttributeCondition.getAttributeOfDef()
@@ -456,7 +458,7 @@ public class DesignInterface {
         Specification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
         DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(getAttribute(spec, path));
+                .getDefAttribute(spec, path);
 
         goal.addSuccessCondition(defAttributeCondition);
 
@@ -508,7 +510,7 @@ public class DesignInterface {
         Specification spec = getSpecBySpecId(specId);
         Goal goal = getGoalByName(spec, goalName);
         DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(getAttribute(spec, path));
+                .getDefAttribute(spec, path);
 
         goal.addActivationCondition(defAttributeCondition);
 
@@ -587,11 +589,12 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public Goal extractChildGoal(String specId, String newGoalName,
-            String sourceGoalName, DefConditionSetDTO successConditionDTO) {
+            String sourceGoalName,
+            DefProductConditionSetDTO successConditionDTO) {
         Specification spec = getSpecBySpecId(specId);
         Goal parentGoal = getGoalByName(spec, sourceGoalName);
 
-        Set<Condition> successConditions = getConditionSet(spec,
+        Set<DefProductCondition> successConditions = getConditionSet(spec,
                 successConditionDTO);
 
         return parentGoal.extractChild(newGoalName, successConditions);
@@ -599,11 +602,12 @@ public class DesignInterface {
 
     @Atomic(mode = TxMode.WRITE)
     public Goal extractSiblingGoal(String specId, String newGoalName,
-            String sourceGoalName, DefConditionSetDTO successConditionDTO) {
+            String sourceGoalName,
+            DefProductConditionSetDTO successConditionDTO) {
         Specification spec = getSpecBySpecId(specId);
         Goal sourceGoal = getGoalByName(spec, sourceGoalName);
 
-        Set<Condition> successConditions = getConditionSet(spec,
+        Set<DefProductCondition> successConditions = getConditionSet(spec,
                 successConditionDTO);
 
         return sourceGoal.extractSibling(newGoalName, successConditions);
@@ -626,7 +630,7 @@ public class DesignInterface {
                 getConditionSet(spec, request.getPostConditionSet()));
     }
 
-    public Set<Condition> getActivityPreCondition(String specId,
+    public Set<DefProductCondition> getActivityPreCondition(String specId,
             String activityName) {
         Specification spec = getSpecBySpecId(specId);
         Task task = getTaskByName(spec, activityName);
@@ -658,7 +662,7 @@ public class DesignInterface {
         Specification spec = getSpecBySpecId(specId);
         Task task = getTaskByName(spec, activityName);
         DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(getAttribute(spec, path));
+                .getDefAttribute(spec, path);
 
         task.addPreCondition(defAttributeCondition);
 
@@ -689,7 +693,7 @@ public class DesignInterface {
         Specification spec = getSpecBySpecId(specId);
         Task task = getTaskByName(spec, activityName);
         DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(getAttribute(spec, path));
+                .getDefAttribute(spec, path);
 
         task.addPostCondition(defAttributeCondition);
 
@@ -806,8 +810,8 @@ public class DesignInterface {
                     + entity.getExists());
         }
 
-        spec.getDataModel().getDependenceSet().stream()
-                .map(dep -> dep.getProduct().getName() + ":" + dep.getPath())
+        spec.getDataModel().getDependenceSet().stream().map(
+                dep -> dep.getProduct().getFullPath() + ":" + dep.getPath())
                 .forEach(System.out::println);
 
         spec.getDataModel().getRuleSet().stream()
@@ -836,9 +840,7 @@ public class DesignInterface {
                 .map(mul -> mul.getExpression()).forEach(System.out::println);
 
         spec.getConditionModel().getAttributeAchieveConditionSet().stream()
-                .map(def -> "DEF("
-                        + def.getAttributeOfDef().getEntity().getName() + "."
-                        + def.getAttributeOfDef().getName() + ")")
+                .map(def -> "DEF(" + def.getPath() + ")")
                 .forEach(System.out::println);
 
         spec.getConditionModel().getAttributeDependenceConditionSet().stream()
@@ -990,17 +992,24 @@ public class DesignInterface {
         return MulCondition.getMulCondition(relation, rolename);
     }
 
-    private Set<Condition> getConditionSet(Specification spec,
-            DefConditionSetDTO defConditionSetDTO) {
-        Set<Condition> conditions = defConditionSetDTO.getDefEnts().stream()
+    private Set<DefProductCondition> getConditionSet(Specification spec,
+            DefProductConditionSetDTO defConditionSetDTO) {
+        Set<DefProductCondition> conditions = defConditionSetDTO.getDefEnts()
+                .stream()
                 .map((def) -> DefEntityCondition.getDefEntity(getEntityByName(
                         spec.getDataModel(), def.getEntityName())))
                 .collect(Collectors.toSet());
 
-        conditions.addAll(defConditionSetDTO.getDefAtts().stream()
-                .map((def) -> DefAttributeCondition
-                        .getDefAttribute(getAttribute(spec, def.getPath())))
+        conditions.addAll(defConditionSetDTO.getDefAtts()
+                .stream().map((def) -> DefAttributeCondition
+                        .getDefAttribute(spec, def.getPath()))
                 .collect(Collectors.toSet()));
+
+        conditions.addAll(defConditionSetDTO.getDefDeps()
+                .stream().map((def) -> DefDependenceCondition
+                        .getDefDependence(spec, def.getPath()))
+                .collect(Collectors.toSet()));
+
         return conditions;
     }
 

@@ -49,7 +49,7 @@ public class TaskModel extends TaskModel_Base {
     }
 
     public Task addTask(String taskName, String taskDescription,
-            Set<Condition> postConditionSet) {
+            Set<DefProductCondition> postConditionSet) {
         checkNonEmptyPreCondition(postConditionSet);
 
         checkModelNotCompletelyCreated();
@@ -70,15 +70,15 @@ public class TaskModel extends TaskModel_Base {
         return task;
     }
 
-    private void applyMultiplicityToPostAndPre(Set<Condition> postConditionSet,
-            Task task) {
+    private void applyMultiplicityToPostAndPre(
+            Set<DefProductCondition> postConditionSet, Task task) {
         Set<Entity> definedEntities = getTasksSet().stream()
-                .flatMap(t -> ConditionModel
+                .flatMap(t -> getConditionModel()
                         .getDefEntityConditions(t.getPostConditionSet())
                         .stream())
                 .map(def -> def.getEntity()).collect(Collectors.toSet());
 
-        Set<RelationBW> relations = ConditionModel
+        Set<RelationBW> relations = getConditionModel()
                 .getDefEntityConditions(postConditionSet).stream()
                 .flatMap(d -> d.getEntity().getRelationSet().stream())
                 .filter(r -> definedEntities.containsAll(r.getEntitySet())
@@ -100,7 +100,7 @@ public class TaskModel extends TaskModel_Base {
 
     private void applyRuleConditionToPostAndPre(Task task) {
         Set<Attribute> definedAttributes = getTasksSet().stream()
-                .flatMap(t -> ConditionModel
+                .flatMap(t -> getConditionModel()
                         .getDefAttributeConditions(t.getPostConditionSet())
                         .stream())
                 .flatMap(def -> def.getAttributeOfDef().getAttributeBasicSet()
@@ -123,21 +123,21 @@ public class TaskModel extends TaskModel_Base {
                         DefAttributeCondition.getDefAttribute(att)));
     }
 
-    private void applyDependenceConditionsToPre(Set<Condition> postConditionSet,
-            Task task) {
-        Set<Product> postProducts = ConditionModel
+    private void applyDependenceConditionsToPre(
+            Set<DefProductCondition> postConditionSet, Task task) {
+        Set<Product> postProducts = getConditionModel()
                 .getProductsOfDefConditions(postConditionSet);
         getSpecification().getDataModel().getDependenceSet().stream()
                 .filter(d -> postProducts.contains(d.getProduct())
                         && !postProducts.contains(d.getTarget()))
-                .forEach(d -> task
-                        .addPreCondition(d.getTarget().getDefCondition()));
+                .forEach(d -> task.addPreCondition(
+                        DefDependenceCondition.getDefDependence(d)));
     }
 
     private void applyAttributeEntityDependenceToPre(
-            Set<Condition> postConditionSet, Task task) {
-        ConditionModel.getDefAttributeConditions(postConditionSet).stream()
-                .filter(def -> !ConditionModel
+            Set<DefProductCondition> postConditionSet, Task task) {
+        getConditionModel().getDefAttributeConditions(postConditionSet).stream()
+                .filter(def -> !getConditionModel()
                         .getDefEntityConditions(postConditionSet)
                         .contains(DefEntityCondition.getDefEntity(
                                 def.getAttributeOfDef().getEntity())))
@@ -145,7 +145,8 @@ public class TaskModel extends TaskModel_Base {
                         .getDefEntity(def.getAttributeOfDef().getEntity())));
     }
 
-    private void checkPostConditionsNotUsed(Set<Condition> postConditionSet) {
+    private void checkPostConditionsNotUsed(
+            Set<DefProductCondition> postConditionSet) {
         if (getTasksSet().stream()
                 .flatMap(t -> t.getPostConditionSet().stream())
                 .anyMatch(c -> postConditionSet.contains(c)))
@@ -163,7 +164,8 @@ public class TaskModel extends TaskModel_Base {
                     "all achieve conditions already belong to a post condition");
     }
 
-    private void checkNonEmptyPreCondition(Set<Condition> postConditionSet) {
+    private void checkNonEmptyPreCondition(
+            Set<DefProductCondition> postConditionSet) {
         if (postConditionSet.isEmpty())
             throw new BWException(BWErrorType.CANNOT_ADD_TASK,
                     "empty post condition set");
@@ -179,32 +181,33 @@ public class TaskModel extends TaskModel_Base {
     private void checkAllConditionsAreUsedInPost() {
         ConditionModel conditionModel = getSpecification().getConditionModel();
 
-        Set<Condition> allConditions = new HashSet<Condition>(
+        Set<DefProductCondition> allDefConditions = new HashSet<DefProductCondition>(
                 conditionModel.getEntityAchieveConditionSet().stream()
                         .filter(d -> !d.getEntity().getExists())
                         .collect(Collectors.toSet()));
 
-        allConditions.addAll(conditionModel.getAttributeAchieveConditionSet()
+        allDefConditions.addAll(conditionModel.getAttributeAchieveConditionSet()
                 .stream().collect(Collectors.toSet()));
-        allConditions.removeAll(getTasksSet().stream()
+        allDefConditions.removeAll(getTasksSet().stream()
                 .flatMap(t -> t.getPostConditionSet().stream())
                 .collect(Collectors.toSet()));
-        if (!allConditions.isEmpty())
+        if (!allDefConditions.isEmpty())
             throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
-                    allConditions.stream().map(c -> c.getSubPath())
+                    allDefConditions.stream()
+                            .map(c -> "DEF(" + c.getPath() + ")")
                             .collect(Collectors.joining(",")));
 
-        allConditions = new HashSet<Condition>(
+        Set<MulCondition> allMulConditions = new HashSet<MulCondition>(
                 conditionModel.getEntityInvariantConditionSet());
-        allConditions
+        allMulConditions
                 .removeAll(
                         getTasksSet()
                                 .stream().flatMap(t -> t
                                         .getMultiplicityInvariantSet().stream())
                                 .collect(Collectors.toSet()));
-        if (!allConditions.isEmpty())
+        if (!allMulConditions.isEmpty())
             throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
-                    allConditions.stream().map(c -> c.getSubPath())
+                    allMulConditions.stream().map(c -> c.getSubPath())
                             .collect(Collectors.joining(",")));
 
         Set<Rule> allRules = new HashSet<Rule>(
@@ -218,4 +221,7 @@ public class TaskModel extends TaskModel_Base {
                             .collect(Collectors.joining(",")));
     }
 
+    private ConditionModel getConditionModel() {
+        return getSpecification().getConditionModel();
+    }
 }
