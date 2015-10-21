@@ -14,6 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBoolCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.BinaryExpression;
@@ -28,6 +29,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefDependenceCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefExpressionCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -1035,25 +1037,11 @@ public class DesignInterface {
             return new NotCondition(
                     buildCondition(dataModel, expression.getUnaryExpression()));
         case ATT_DEF:
-            // TODO: remove the cast
-            Product product = dataModel.getTargetOfPath(expression.getValue());
-
-            return product.getDefCondition();
-        // if (product instanceof AttributeBasic)
-        // return DefAttributeCondition
-        // .getDefAttribute((AttributeBasic) product);
-        // else if (product instanceof AttributeGroup)
-        // return DefAttributeCondition
-        // .getDefAttribute((AttributeGroup) product);
-        // assert(true);
-        // return null;
+            return new DefExpressionCondition(dataModel, expression.getValue());
         case ATT_VALUE:
-            // TODO: remove cast
-            // AttributeBasic att = (AttributeBasic) dataModel
-            // .getTargetOfPath(expression.getValue());
-            // return new AttributeBoolCondition(att);
-            return dataModel.getTargetOfPath(expression.getValue())
-                    .getDefCondition();
+            return new AttributeBoolCondition(expression.getValue(),
+                    (AttributeBasic) dataModel
+                            .getTargetOfPath(expression.getValue()));
         case EQUAL:
             if (ExpressionDTO.isBoolExp(
                     Type.valueOf(expression.getLeftExpression().getType())))
@@ -1111,10 +1099,10 @@ public class DesignInterface {
                 return new TrueCondition();
             if (expression.getValue().toLowerCase().equals("false"))
                 return new FalseCondition();
-            assert(false);
+            assert (false);
             return null;
         default:
-            assert(false);
+            assert (false);
             return null;
         }
     }
@@ -1143,16 +1131,16 @@ public class DesignInterface {
                     buildExpression(dataModel, expression.getRightExpression()),
                     BinaryOperator.DIV);
         case ATT_VALUE:
-            // TODO: remove cast
             AttributeBasic attribute = (AttributeBasic) dataModel
                     .getTargetOfPath(expression.getValue());
-            return new AttributeValueExpression(attribute);
+            return new AttributeValueExpression(expression.getValue(),
+                    attribute);
         case INT:
             return new NumberLiteral(Integer.parseInt(expression.getValue()));
         case STRING:
             return new StringLiteral(expression.getValue());
         default:
-            assert(false);
+            assert (false);
             return null;
         }
     }

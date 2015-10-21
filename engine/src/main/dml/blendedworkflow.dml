@@ -103,7 +103,9 @@ class BinaryExpression extends Expression {
 	BinaryOperator operator;
 }
 
-class AttributeValueExpression extends Expression;
+class AttributeValueExpression extends Expression {
+	String path;
+}
 
 class NumberLiteral extends Expression {
 	int value;
@@ -196,6 +198,8 @@ class DefAttributeCondition extends DefProductCondition;
 
 class DefDependenceCondition extends DefProductCondition;
 
+class DefExpressionCondition extends DefProductCondition;
+
 class MulCondition extends Condition {
 	int side;
 }
@@ -210,7 +214,9 @@ class BoolComparison extends Condition {
 	ComparisonOperator comparator;
 }
 
-class AttributeBoolCondition extends Condition;
+class AttributeBoolCondition extends Condition {
+	String path;
+}
 
 class TrueCondition extends Condition;
 
@@ -589,7 +595,7 @@ relation NotConditionHasConditions {
 }
 
 //DefEntityCondition
-relation DefEntityConditionHasEntities {
+relation DefEntityConditionHasEntity {
 	DefEntityCondition playsRole defEntityCondition { multiplicity 0..1; }
 	Entity playsRole entity { multiplicity 0..1; }
 }
@@ -601,9 +607,15 @@ relation DefAttributeConditionHasAttribute {
 }
 
 //DefDependenceCondition
-relation DefDependenceConditionHasEntities {
+relation DefDependenceConditionHasDependence {
 	DefDependenceCondition playsRole defDependenceCondition { multiplicity 0..1; }
 	Dependence playsRole dependence { multiplicity 0..1; }
+}
+
+//DefExpressionCondition
+relation DefExpressionConditionHasProduct {
+	DefExpressionCondition playsRole defExpressionCondition { multiplicity 0..*; }
+	Product playsRole product { multiplicity 0..1; }
 }
 
 //MulCondition

@@ -30,9 +30,10 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class ExtractSiblingGoalTest extends TeardownRollbackTest {
-    private static final String ATTRIBUTE_NAME_TWO = "att2";
     private static final String ENTITY_TWO_NAME = "Entity two name";
     private static final String ENTITY_ONE_NAME = "Entity one name";
+    private static final String ATTRIBUTE_ONE_NAME = "att1";
+    private static final String ATTRIBUTE_TWO_NAME = "att2";
     private static final String TOP_GOAL = "topGoal";
     private static final String RULE_CONDITION = "rule";
     private static final String ROLENAME_ONE = "theOne";
@@ -67,9 +68,9 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 
         entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
         attributeOne = new AttributeBasic(spec.getDataModel(), entityOne, null,
-                "att1", AttributeType.NUMBER, true, false, false);
+                ATTRIBUTE_ONE_NAME, AttributeType.NUMBER, true, false, false);
         attributeTwo = new AttributeBasic(spec.getDataModel(), entityOne, null,
-                ATTRIBUTE_NAME_TWO, AttributeType.NUMBER, true, false, false);
+                ATTRIBUTE_TWO_NAME, AttributeType.NUMBER, true, false, false);
 
         entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
         attributeThree = new AttributeBasic(spec.getDataModel(), entityTwo,
@@ -86,7 +87,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 
         Dependence dependence = new Dependence(spec.getDataModel(),
                 attributeThree, ENTITY_TWO_NAME + "." + ROLENAME_ONE + "."
-                        + ATTRIBUTE_NAME_TWO);
+                        + ATTRIBUTE_TWO_NAME);
         dependence.check();
 
         topGoal = new Goal(spec.getGoalModel(), TOP_GOAL);
@@ -120,8 +121,13 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
                 MulCondition.getMulCondition(relation, ROLENAME_ONE));
 
         rule = new Rule(spec.getDataModel(), RULE_CONDITION,
-                new Comparison(new AttributeValueExpression(attributeOne),
-                        new AttributeValueExpression(attributeTwo),
+                new Comparison(
+                        new AttributeValueExpression(
+                                ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME,
+                                attributeOne),
+                        new AttributeValueExpression(
+                                ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME,
+                                attributeTwo),
                         ComparisonOperator.EQUAL));
 
         childGoalOne.addAttributeInvariantCondition(rule);
@@ -139,8 +145,10 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
             fail();
         } catch (BWException bwe) {
             assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-            assertEquals("checkConditionsExistInSource:" + "DEF("
-                    + attributeTwo.getName() + ")", bwe.getMessage());
+            assertEquals(
+                    "checkConditionsExistInSource:" + "DEF(" + ENTITY_ONE_NAME
+                            + "." + attributeTwo.getName() + ")",
+                    bwe.getMessage());
         }
     }
 

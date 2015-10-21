@@ -8,6 +8,8 @@ import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.ConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -15,8 +17,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
-import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class GenerateConditionsMethodTest extends TeardownRollbackTest {
@@ -50,8 +50,8 @@ public class GenerateConditionsMethodTest extends TeardownRollbackTest {
                 ATTRIBUTE_TWO_NAME, AttributeType.NUMBER, true, false, false);
 
         entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
-        attributeThree = new AttributeBasic(spec.getDataModel(), entityTwo, null,
-                ATTRIBUTE_THREE_NAME, AttributeType.BOOLEAN, true, false,
+        attributeThree = new AttributeBasic(spec.getDataModel(), entityTwo,
+                null, ATTRIBUTE_THREE_NAME, AttributeType.BOOLEAN, true, false,
                 false);
 
         relation = new RelationBW(spec.getDataModel(), "name", entityOne,
@@ -65,8 +65,13 @@ public class GenerateConditionsMethodTest extends TeardownRollbackTest {
                 + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME);
 
         new Rule(spec.getDataModel(), RULE_NAME,
-                new Comparison(new AttributeValueExpression(attributeOne),
-                        new AttributeValueExpression(attributeTwo),
+                new Comparison(
+                        new AttributeValueExpression(
+                                ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME,
+                                attributeOne),
+                        new AttributeValueExpression(
+                                ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME,
+                                attributeTwo),
                         ComparisonOperator.EQUAL));
     }
 

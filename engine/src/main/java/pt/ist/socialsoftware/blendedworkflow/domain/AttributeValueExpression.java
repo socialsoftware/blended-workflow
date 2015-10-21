@@ -7,7 +7,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType
 
 public class AttributeValueExpression extends AttributeValueExpression_Base {
 
-    public AttributeValueExpression(AttributeBasic att) {
+    public AttributeValueExpression(String path, AttributeBasic att) {
+        setPath(path);
         setAttribute(att);
     }
 
@@ -24,7 +25,7 @@ public class AttributeValueExpression extends AttributeValueExpression_Base {
 
     @Override
     public String getSubPath() {
-        return getAttribute().getName();
+        return getPath();
     }
 
     @Override

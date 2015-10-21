@@ -6,22 +6,11 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class AttributeBoolCondition extends AttributeBoolCondition_Base {
+public class DefExpressionCondition extends DefExpressionCondition_Base {
 
-    public AttributeBoolCondition(String path, AttributeBasic att) {
+    public DefExpressionCondition(DataModel dataModel, String path) {
         setPath(path);
-        setAttributeOfBool(att);
-    }
-
-    @Override
-    public void delete() {
-        setAttributeOfBool(null);
-        super.delete();
-    }
-
-    @Override
-    public String getSubPath() {
-        return getPath();
+        setProduct(dataModel.getTargetOfPath(path));
     }
 
     @Override
@@ -52,14 +41,23 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 
     @Override
     public Set<Entity> getEntities() {
-        // TODO Auto-generated method stub
-        return null;
+        Set<Entity> entities = new HashSet<Entity>();
+        if (getProduct() instanceof Entity) {
+            entities.add((Entity) getProduct());
+        }
+
+        return entities;
     }
 
     @Override
     public Set<AttributeBasic> getAttributeBasicSet() {
         Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
-        attributes.add(getAttributeOfBool());
+        if (getProduct() instanceof AttributeBasic) {
+            attributes.add((AttributeBasic) getProduct());
+        } else if (getProduct() instanceof AttributeGroup) {
+            attributes.addAll(
+                    ((AttributeGroup) getProduct()).getAttributeBasicSet());
+        }
 
         return attributes;
     }
@@ -137,6 +135,17 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
             GoalWorkItem goalWorkItem, ConditionType conditionType) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public String getSubPath() {
+        return "DEF(" + getPath() + ")";
+    }
+
+    @Override
+    public void delete() {
+        setProduct(null);
+        super.delete();
     }
 
 }
