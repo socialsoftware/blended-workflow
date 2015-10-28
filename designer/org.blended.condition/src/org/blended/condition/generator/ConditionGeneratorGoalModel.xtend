@@ -26,6 +26,8 @@ import org.blended.common.utils.Queries
 import org.blended.common.common.EntityInvariantCondition
 import org.blended.common.common.AttributeInvariantCondition
 import java.util.ArrayList
+import java.util.stream.Collectors
+import org.blended.common.repository.CommonInterface
 
 /**
  * Generates code from your model files on save.
@@ -48,9 +50,9 @@ class ConditionGeneratorGoalModel {
 	}
 
 	def doGenerate() {
-		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy 
+		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy
 
-		//first goal (g0)
+		// first goal (g0)
 		var goal0 = goalFactory.createGoal
 		goal0.name = 'g0'
 		var nothing = factory.createNothing
@@ -63,53 +65,54 @@ class ConditionGeneratorGoalModel {
 			var goal = goalFactory.createGoal
 			goal.name = 'g' + i++
 			model.goals.add(goal)
-			
-			//SUC			
-			goal.successConditions.add(o.copy)
-			
-			//SUB
-			goal0.childrenGoals.add(goal) 
 
-			//ACT
+			// SUC			
+			goal.successConditions.add(o.copy)
+
+			// SUB
+			goal0.childrenGoals.add(goal)
+
+			// ACT
 			for (dep : resource.allContents.toIterable.filter(typeof(EntityDependenceCondition))) {
 				step2(goal, o.name, dep)
 			}
-			
-			//INV
+
+			// INV
 			for (inv : resource.allContents.toIterable.filter(typeof(EntityInvariantCondition))) {
 				step3(goal, o.name, inv)
 			}
 		}
-		
+
 		for (o : resource.allContents.toIterable.filter(typeof(AttributeAchieveCondition))) {
 			var goal = goalFactory.createGoal
 			goal.name = 'g' + i++
 			model.goals.add(goal)
-			
-			//SUC
-			if(o instanceof MandatoryAttributeAchieveCondition) {
+
+			// SUC
+			if (o instanceof MandatoryAttributeAchieveCondition) {
 				var nma = factory.createNotMandatoryAttributeAchieveCondition
-				nma.conditions.addAll(o.conditions)	
-				goal.successConditions.add(nma)		
-			}
-			else {
+				nma.conditions.addAll(o.conditions)
+				goal.successConditions.add(nma)
+			} else {
 				goal.successConditions.add(o.copy)
 			}
-			
-			//SUB
+
+			// SUB
 			step1(goal, o)
-			
-			//ACT
+
+			// ACT
 			for (dep : resource.allContents.toIterable.filter(typeof(AttributeDependenceCondition))) {
 				step2(goal, o, dep)
 			}
-			
-			//INV 
+
+			var specId = resource.normalizedURI.lastSegment.split("\\.").get(0)
+
+			// INV 
 			for (inv : resource.allContents.toIterable.filter(typeof(AttributeInvariantCondition))) {
-				step3(goal, o, inv)
+				step3(specId, goal, o, inv)
 			}
 		}
-		
+
 		// TO SERIALIZE THE ACTIVITY MODEL ACCORDING TO THE GOAL FORMATTER
 		val injector = Guice.createInjector(new GoalRuntimeModule)
 		var rs = injector.getInstance(ResourceSet)
@@ -120,7 +123,7 @@ class ConditionGeneratorGoalModel {
 		builder.format
 		r.save(builder.options.toOptionsMap)
 	}
-	
+
 	def step1(Goal goal, EObject o) {
 		if (o instanceof NotMandatoryAttributeAchieveCondition) {
 			for (String c : o.conditions) {
@@ -128,8 +131,7 @@ class ConditionGeneratorGoalModel {
 				var entityGoal = getEntityGoalFromName(entity)
 				entityGoal.childrenGoals.add(goal)
 			}
-		} 
-		else if (o instanceof MandatoryAttributeAchieveCondition) {
+		} else if (o instanceof MandatoryAttributeAchieveCondition) {
 			for (String c : o.conditions) {
 				var entity = Queries.getEntityNameFrom(c)
 				var entityGoal = getEntityGoalFromName(entity)
@@ -137,16 +139,16 @@ class ConditionGeneratorGoalModel {
 			}
 		}
 	}
-	
+
 	def getEntityGoalFromName(String entity) {
 		for (Goal g : model.goals) {
-			for (suc : g.successConditions) {	
+			for (suc : g.successConditions) {
 				if (suc instanceof EntityAchieveCondition)
-					if (suc.name.equals(entity)) return g
-			} 
+					if(suc.name.equals(entity)) return g
+			}
 		}
 	}
-	
+
 	def step2(Goal goal, String name, EntityDependenceCondition dep) {
 		if (name.equals(dep.entity1)) {
 			var eac = factory.createEntityAchieveCondition
@@ -154,7 +156,7 @@ class ConditionGeneratorGoalModel {
 			goal.activationConditions.add(eac)
 		}
 	}
-	
+
 	def step2(Goal goal, EObject o, AttributeDependenceCondition dep) {
 		if (o instanceof NotMandatoryAttributeAchieveCondition) {
 			var done = false
@@ -165,11 +167,10 @@ class ConditionGeneratorGoalModel {
 						aac.conditions.addAll(dep.attributes2)
 						goal.activationConditions.add(aac)
 						done = true
-					}		
+					}
 				}
-			}			
-		}
-		else if (o instanceof MandatoryAttributeAchieveCondition) {
+			}
+		} else if (o instanceof MandatoryAttributeAchieveCondition) {
 			var done = false
 			for (String c : o.conditions) {
 				if (!done) {
@@ -178,44 +179,32 @@ class ConditionGeneratorGoalModel {
 						aac.conditions.addAll(dep.attributes2)
 						goal.activationConditions.add(aac)
 						done = true
-					}		
+					}
 				}
-			}			
+			}
 		}
 	}
-	
+
 	def step3(Goal goal, String name, EntityInvariantCondition inv) {
 		if (name.equals(Queries.getEntityNameFrom(inv.name))) {
 			goal.invariantConditions.add(inv.copy)
 		}
 	}
-	
-	def step3(Goal goal, EObject o, AttributeInvariantCondition inv) {
-		var list = new ArrayList<String>()
-		Queries.getDecomposedExpression(inv.expression, list)
+
+	def step3(String specId, Goal goal, EObject o, AttributeInvariantCondition inv) {
+		var ci = CommonInterface.getInstance
+
 		if (o instanceof NotMandatoryAttributeAchieveCondition) {
-			var done = false
-			for (String c : o.conditions) {
-				if (!done) {
-					if (list.contains(c)) {
-						goal.invariantConditions.add(inv.copy)
-						done = true
-					}		
-				}
+			if (ci.ruleUsesAnyAttribute(specId, inv.name, o.conditions.stream().collect(Collectors.toSet()))) {
+				goal.invariantConditions.add(inv.copy)
+			}
+		} else if (o instanceof MandatoryAttributeAchieveCondition) {
+			if (ci.ruleUsesAnyAttribute(specId, inv.name, o.conditions.stream().collect(Collectors.toSet()))) {
+				goal.invariantConditions.add(inv.copy)
 			}
 		}
-		else if (o instanceof MandatoryAttributeAchieveCondition) {	
-			var done = false
-			for (String c : o.conditions) {
-				if (!done) {
-					if (list.contains(c)) {
-						goal.invariantConditions.add(inv.copy)
-						done = true
-					}		
-				}
-			}	
-		}		
 	}
 	
 }
+
 

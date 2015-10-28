@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
@@ -163,6 +165,22 @@ public class DataModelController {
         Rule rule = adi.createRule(ruleDTO);
 
         return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/rules/{ruleName}/anyAttribute", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<Boolean> ruleUsesAnyAttribute(
+            @PathVariable("specId") String specId,
+            @PathVariable("ruleName") String ruleName,
+            @RequestParam("paths") String paths) {
+        log.debug("ruleUsesAnyAttribute specId:{}, ruleName:{}, paths:{}",
+                specId, ruleName, paths);
+
+        DesignInterface adi = DesignInterface.getInstance();
+
+        boolean result = adi.ruleUsesAnyAttribute(specId, ruleName,
+                Arrays.stream(paths.split(",")).collect(Collectors.toSet()));
+
+        return new ResponseEntity<Boolean>(result, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/dependencies", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)

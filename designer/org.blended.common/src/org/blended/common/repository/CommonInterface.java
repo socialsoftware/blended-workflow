@@ -16,8 +16,8 @@ import org.blended.common.repository.resttemplate.dto.ActivityDTO;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.AttributeGroupDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
-import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
 import org.blended.common.repository.resttemplate.dto.GoalDTO;
@@ -306,6 +306,25 @@ public class CommonInterface {
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         RuleDTO result = restTemplate.postForObject(uri, ruleVO, RuleDTO.class,
                 params);
+
+        return result;
+    }
+
+    public boolean ruleUsesAnyAttribute(String specId, String ruleName,
+            Set<String> paths) {
+        log.debug("ruleUsesAnyAttribute: {}, {}, {}", specId, ruleName,
+                paths.stream().collect(Collectors.joining(",")));
+
+        final String uri = BASE_URL
+                + "/specs/{specId}/datamodel/rules/{ruleName}/anyAttribute?paths={paths}";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+        params.put("ruleName", ruleName);
+        params.put("paths", paths.stream().collect(Collectors.joining(",")));
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        Boolean result = restTemplate.getForObject(uri, Boolean.class, params);
 
         return result;
     }

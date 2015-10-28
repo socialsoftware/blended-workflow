@@ -104,7 +104,7 @@ public class SpecificationController {
     public ResponseEntity<String[]> getDependencesOfPaths(
             @PathVariable("specId") String specId,
             @RequestParam("paths") String paths) {
-        log.debug("getDependencesOfPaths specId:{}, pathss:{}", specId, paths);
+        log.debug("getDependencesOfPaths specId:{}, paths:{}", specId, paths);
 
         DesignInterface adi = DesignInterface.getInstance();
 

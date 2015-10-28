@@ -239,6 +239,17 @@ public class DesignInterface {
         return rule;
     }
 
+    public boolean ruleUsesAnyAttribute(String specId, String ruleName,
+            Set<String> paths) {
+        Specification spec = getSpecBySpecId(specId);
+
+        Rule rule = getRule(spec, ruleName);
+
+        return paths.stream().map(p -> getAttribute(spec, p))
+                .flatMap(att -> att.getAttributeBasicSet().stream())
+                .anyMatch(att -> rule.getAttributeBasicSet().contains(att));
+    }
+
     @Atomic(mode = TxMode.WRITE)
     public void cleanConditionModel(String specId) {
         Specification spec = getSpecBySpecId(specId);

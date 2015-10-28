@@ -14,6 +14,12 @@ public class DefProductConditionSetDTO {
     public DefProductConditionSetDTO() {
     }
 
+    public DefProductConditionSetDTO(Set<DefAttributeConditionDTO> defAtts) {
+        this.defEnts = new HashSet<DefEntityConditionDTO>();
+        this.defAtts = defAtts;
+        this.defDeps = new HashSet<DefDependenceConditionDTO>();
+    }
+
     public DefProductConditionSetDTO(Set<DefEntityConditionDTO> defEnts,
             Set<DefAttributeConditionDTO> defAtts) {
         this.defEnts = defEnts;
