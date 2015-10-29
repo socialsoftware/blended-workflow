@@ -311,17 +311,17 @@ public class CommonInterface {
     }
 
     public boolean ruleUsesAnyAttribute(String specId, String ruleName,
-            Set<String> paths) {
-        log.debug("ruleUsesAnyAttribute: {}, {}, {}", specId, ruleName,
-                paths.stream().collect(Collectors.joining(",")));
+            String path) {
+        log.debug("ruleUsesAnyAttribute specId:{}, ruleName:{}, path:{}",
+                specId, ruleName, path);
 
         final String uri = BASE_URL
-                + "/specs/{specId}/datamodel/rules/{ruleName}/anyAttribute?paths={paths}";
+                + "/specs/{specId}/datamodel/rules/{ruleName}/anyAttribute?path={path}";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
         params.put("ruleName", ruleName);
-        params.put("paths", paths.stream().collect(Collectors.joining(",")));
+        params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         Boolean result = restTemplate.getForObject(uri, Boolean.class, params);
@@ -476,19 +476,15 @@ public class CommonInterface {
         return result;
     }
 
-    public ProductDTO getProduct(String specId, Set<String> sourceAtts) {
-        log.debug("getProduct: {}", sourceAtts.toString());
+    public ProductDTO getProduct(String specId, String path) {
+        log.debug("getProduct path:{}", path);
 
         final String uri = BASE_URL
-                + "/specs/{specId}/datamodel/products/{atts}/";
-
-        String atts = sourceAtts.stream().collect(Collectors.joining(","));
+                + "/specs/{specId}/datamodel/products/{path}/";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
-        params.put("atts", atts);
-
-        log.debug("getProduct: {}", atts);
+        params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         ProductDTO productVO = restTemplate.getForObject(uri, ProductDTO.class,
@@ -667,20 +663,18 @@ public class CommonInterface {
     }
 
     public void associateAttributeToGoalSuccess(String specId, String goalName,
-            Set<String> paths) {
+            String path) {
         log.debug(
-                "associateAttributeAchieveConditionToGoalActCondition specId:{}, goalName:{}, paths:{}",
-                specId, goalName, paths);
-
-        String pathsParam = paths.stream().collect(Collectors.joining(","));
+                "associateAttributeToGoalSuccess specId:{}, goalName:{}, path:{}",
+                specId, goalName, path);
 
         final String uri = BASE_URL
-                + "/specs/{specId}/goalmodel/goals/{goalName}/sucatt/{paths}/";
+                + "/specs/{specId}/goalmodel/goals/{goalName}/sucatt/{path}/";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
         params.put("goalName", goalName);
-        params.put("paths", pathsParam);
+        params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         restTemplate.postForObject(uri, null, String.class, params);
@@ -744,20 +738,18 @@ public class CommonInterface {
     }
 
     public void associateAttributeToGoalActivation(String specId,
-            String goalName, Set<String> paths) {
+            String goalName, String path) {
         log.debug(
-                "associateAttributeAchieveConditionToGoalActCondition specId:{}, goalName:{}, paths:{}",
-                specId, goalName, paths);
-
-        String pathsParam = paths.stream().collect(Collectors.joining(","));
+                "associateAttributeAchieveConditionToGoalActCondition specId:{}, goalName:{}, path:{}",
+                specId, goalName, path);
 
         final String uri = BASE_URL
-                + "/specs/{specId}/goalmodel/goals/{goalName}/actatt/{paths}/";
+                + "/specs/{specId}/goalmodel/goals/{goalName}/actatt/{path}/";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
         params.put("goalName", goalName);
-        params.put("paths", pathsParam);
+        params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         restTemplate.postForObject(uri, null, String.class, params);
@@ -995,20 +987,18 @@ public class CommonInterface {
     }
 
     public DefAttributeConditionDTO associateAttributeToActivityPre(
-            String specId, String activityName, Set<String> paths) {
+            String specId, String activityName, String path) {
         log.debug(
-                "associateAttributeToActivityPre specId:{}, activityName:{}, paths:{}",
-                specId, activityName, paths);
-
-        String pathsParam = paths.stream().collect(Collectors.joining(","));
+                "associateAttributeToActivityPre specId:{}, activityName:{}, path:{}",
+                specId, activityName, path);
 
         final String uri = BASE_URL
-                + "/specs/{specId}/activitymodel/activities/{activityName}/preatt/{paths}/";
+                + "/specs/{specId}/activitymodel/activities/{activityName}/preatt/{path}/";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
         params.put("activityName", activityName);
-        params.put("paths", pathsParam);
+        params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         return restTemplate.postForObject(uri, null,
@@ -1037,20 +1027,18 @@ public class CommonInterface {
     }
 
     public DefAttributeConditionDTO associateAttributeToActivityPost(
-            String specId, String activityName, Set<String> paths) {
+            String specId, String activityName, String path) {
         log.debug(
-                "associateAttributeToActivityPost specId:{}, activityName:{}, paths:{}",
-                specId, activityName, paths);
-
-        String pathsParam = paths.stream().collect(Collectors.joining(","));
+                "associateAttributeToActivityPost specId:{}, activityName:{}, path:{}",
+                specId, activityName, path);
 
         final String uri = BASE_URL
-                + "/specs/{specId}/activitymodel/activities/{activityName}/postatt/{paths}/";
+                + "/specs/{specId}/activitymodel/activities/{activityName}/postatt/{path}/";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("specId", specId);
         params.put("activityName", activityName);
-        params.put("paths", pathsParam);
+        params.put("path", path);
 
         RestTemplate restTemplate = RestUtil.getRestTemplate();
         return restTemplate.postForObject(uri, null,

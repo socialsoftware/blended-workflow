@@ -79,14 +79,14 @@ class ConditionListener implements Runnable {
 				}
 			}
 			case "4": {
-				ConsoleManagement.write(name, "List of Attribute Achive Conditions:")
+				ConsoleManagement.write(name, "List of Attribute Achieve Conditions:")
 				for (r : resource.allContents.toIterable.filter(typeof(AttributeAchieveCondition))){
 					if (r instanceof MandatoryAttributeAchieveCondition) {
 						ConsoleManagement.write(name, ConsoleManagement.TypeOutput.OutputData, 
-						'MAN(DEF(' + r.conditions.join(", ") +'))') }
+						'MAN(DEF(' + r.attribute +'))') }
 					else {
 						ConsoleManagement.write(name, ConsoleManagement.TypeOutput.OutputData, 
-						'DEF(' + r.conditions.join(", ") +')')
+						'DEF(' + r.attribute +')')
 					}
 				}
 			}

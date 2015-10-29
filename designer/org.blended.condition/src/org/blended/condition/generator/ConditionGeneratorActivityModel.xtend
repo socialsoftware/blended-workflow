@@ -83,7 +83,7 @@ class ConditionGeneratorActivityModel {
 				defEnts.add(new DefEntityConditionDTO(specId, o.getName()))
 			}
 			if (o instanceof AttributeAchieveCondition) {							
-				defAtts.add(new DefAttributeConditionDTO(specId, o.getConditions().stream().findFirst().get()))
+				defAtts.add(new DefAttributeConditionDTO(specId, o.attribute))
 			}
 			var AddActivityReq request = new AddActivityReq(activity.name, activity.description,
 				new DefProductConditionSetDTO(defEnts, defAtts))
@@ -103,18 +103,18 @@ class ConditionGeneratorActivityModel {
 				if (defAttribute.mandatory) {
 					// TODO should be a MandatoryFactory
 					var apre = factory.createNotMandatoryAttributeAchieveCondition
-					apre.conditions.add(defAttribute.path)
+					apre.attribute = defAttribute.path
 					activity.pre.add(apre)
 				} else {
 					var apre = factory.createNotMandatoryAttributeAchieveCondition
-					apre.conditions.add(defAttribute.path)
+					apre.attribute = defAttribute.path
 					activity.pre.add(apre)
 				}
 			}
 			
 			for (DefDependenceConditionDTO defDependence : defConditionSet.getDefDeps) {
 					var apre = factory.createNotMandatoryAttributeAchieveCondition
-					apre.conditions.add(defDependence.path)
+					apre.attribute = defDependence.path
 					activity.pre.add(apre)
 			}
 			
@@ -167,55 +167,55 @@ class ConditionGeneratorActivityModel {
 			activity.post.add(o.copy)
 		} else if (o instanceof MandatoryAttributeAchieveCondition) {
 			val post = factory.createNotMandatoryAttributeAchieveCondition
-			post.conditions.addAll(o.conditions) // o.conditions.forall[e | post.conditions.add(e)]
+			post.attribute = o.attribute // o.conditions.forall[e | post.conditions.add(e)]
 			activity.post.add(post)
 		}
 	}
 
-	def step2(Activity activity, EObject o) {
-		if (o instanceof EntityAchieveCondition) {
-			for (r : resource.allContents.toIterable.filter(typeof(EntityDependenceCondition))) {
-				if (r.entity1.equals(o.name)) { // there is a dependency
-					var apre = factory.createEntityAchieveCondition
-					apre.name = r.entity2
-					activity.pre.add(apre)
-				}
-			}
-		} else if (o instanceof NotMandatoryAttributeAchieveCondition) {
-			for (r : resource.allContents.toIterable.filter(typeof(AttributeDependenceCondition))) {
-				if (r.attributes1.toString.contains(o.conditions.toString)) { // there is a dependency
-					var apre = factory.createNotMandatoryAttributeAchieveCondition
-					apre.conditions.addAll(r.attributes2)
-					activity.pre.add(apre)
-				}
-			}
-		} else if (o instanceof MandatoryAttributeAchieveCondition) {
-			for (r : resource.allContents.toIterable.filter(typeof(AttributeDependenceCondition))) {
-				if (r.attributes1.toString.contains(o.conditions.toString)) { // there is a dependency
-					var apre = factory.createNotMandatoryAttributeAchieveCondition
-					apre.conditions.addAll(r.attributes2)
-					activity.pre.add(apre)
-				}
-			}
-		}
-	}
-
-	def step3(Activity activity, EObject o) {
-		if (o instanceof NotMandatoryAttributeAchieveCondition || o instanceof MandatoryAttributeAchieveCondition) { // only for attributes of the model
-			for (EObject p : activity.post) { // we get all the elements in POST
-				if (p instanceof NotMandatoryAttributeAchieveCondition) { // only for attributes of the activity
-					for (String element : p.conditions) { // for each of the attributes
-						var entityName = Queries.getEntityNameFrom(element) // we get the name
-						if ((!contains(activity.post, entityName)) && (!contains(activity.pre, entityName))) { // if we don't find it -> we put the entity in PRE
-							var apre2 = factory.createEntityAchieveCondition
-							apre2.name = entityName
-							activity.pre.add(apre2)
-						}
-					}
-				}
-			}
-		}
-	}
+//	def step2(Activity activity, EObject o) {
+//		if (o instanceof EntityAchieveCondition) {
+//			for (r : resource.allContents.toIterable.filter(typeof(EntityDependenceCondition))) {
+//				if (r.entity1.equals(o.name)) { // there is a dependency
+//					var apre = factory.createEntityAchieveCondition
+//					apre.name = r.entity2
+//					activity.pre.add(apre)
+//				}
+//			}
+//		} else if (o instanceof NotMandatoryAttributeAchieveCondition) {
+//			for (r : resource.allContents.toIterable.filter(typeof(AttributeDependenceCondition))) {
+//				if (r.attributes1.toString.contains(o.conditions.toString)) { // there is a dependency
+//					var apre = factory.createNotMandatoryAttributeAchieveCondition
+//					apre.conditions.addAll(r.attributes2)
+//					activity.pre.add(apre)
+//				}
+//			}
+//		} else if (o instanceof MandatoryAttributeAchieveCondition) {
+//			for (r : resource.allContents.toIterable.filter(typeof(AttributeDependenceCondition))) {
+//				if (r.attributes1.toString.contains(o.conditions.toString)) { // there is a dependency
+//					var apre = factory.createNotMandatoryAttributeAchieveCondition
+//					apre.conditions.addAll(r.attributes2)
+//					activity.pre.add(apre)
+//				}
+//			}
+//		}
+//	}
+//
+//	def step3(Activity activity, EObject o) {
+//		if (o instanceof NotMandatoryAttributeAchieveCondition || o instanceof MandatoryAttributeAchieveCondition) { // only for attributes of the model
+//			for (EObject p : activity.post) { // we get all the elements in POST
+//				if (p instanceof NotMandatoryAttributeAchieveCondition) { // only for attributes of the activity
+//					for (String element : p.conditions) { // for each of the attributes
+//						var entityName = Queries.getEntityNameFrom(element) // we get the name
+//						if ((!contains(activity.post, entityName)) && (!contains(activity.pre, entityName))) { // if we don't find it -> we put the entity in PRE
+//							var apre2 = factory.createEntityAchieveCondition
+//							apre2.name = entityName
+//							activity.pre.add(apre2)
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 
 	def step4(EntityInvariantCondition o) {
 		// we need to know which one of the entities involved in the MUL was defined last in the ACTIVITY MODEL and put the MUL in the POST of that entity
@@ -263,16 +263,16 @@ class ConditionGeneratorActivityModel {
 		actForRUL.post.add(o.copy)
 	}
 
-	def contains(EList<EObject> list, String name) {
-		for (EObject o : list) {
-			if (o instanceof EntityAchieveCondition) {
-				if(o.name.equals(name)) return true
-			} else if (o instanceof NotMandatoryAttributeAchieveCondition) {
-				if(o.conditions.contains(name)) return true
-			}
-		}
-		return false
-	}
+//	def contains(EList<EObject> list, String name) {
+//		for (EObject o : list) {
+//			if (o instanceof EntityAchieveCondition) {
+//				if(o.name.equals(name)) return true
+//			} else if (o instanceof NotMandatoryAttributeAchieveCondition) {
+//				if(o.conditions.contains(name)) return true
+//			}
+//		}
+//		return false
+//	}
 
 	def getFirstActivityWithEntityPost(String entityName) {
 		for (Activity activity : model.activities) {
@@ -288,7 +288,7 @@ class ConditionGeneratorActivityModel {
 		for (Activity activity : model.activities) {
 			for (EObject o : activity.post) {
 				if (o instanceof NotMandatoryAttributeAchieveCondition) {
-					if(o.conditions.contains(attributeName)) return activity
+					if(o.attribute.equals(attributeName)) return activity
 				}
 			}
 		}

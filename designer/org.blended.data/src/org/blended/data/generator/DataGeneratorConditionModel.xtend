@@ -122,22 +122,22 @@ class DataGeneratorConditionModel {
 				if (a instanceof Attribute) {
 					if (a.mandatory) {
 						var attM = factory.createMandatoryAttributeAchieveCondition
-						attM.conditions.add(e.name + '.' + a.name)
+						attM.attribute = e.name + '.' + a.name
 						model.attributeAchieveConditions.add(attM)
 					} else {
 						var attNM = factory.createNotMandatoryAttributeAchieveCondition
-						attNM.conditions.add(e.name + '.' + a.name)
+						attNM.attribute = e.name + '.' + a.name
 						model.attributeAchieveConditions.add(attNM)
 					}
 				} else if (a instanceof AttributeGroup) {
 					if (a.mandatory) {
 						var attM = factory.createMandatoryAttributeAchieveCondition
-						attM.conditions.add(e.name + '.' + a.name)
+						attM.attribute = e.name + '.' + a.name
 //						attM.conditions.addAll(a.attributes.map[e.name + '.' + it.name])
 						model.attributeAchieveConditions.add(attM)
 					} else {
 						var attNM = factory.createNotMandatoryAttributeAchieveCondition
-						attNM.conditions.add(e.name + '.' + a.name)
+						attNM.attribute = e.name + '.' + a.name
 //						attNM.conditions.addAll(a.attributes.map[e.name + '.' + it.name])
 						model.attributeAchieveConditions.add(attNM)
 					}
@@ -157,18 +157,17 @@ class DataGeneratorConditionModel {
 		if (!e.exists) {
 			e.attributes.forEach [ a |
 				if (a instanceof Attribute) {
-					if (a.dependsOn.size > 0) {
+					for (path : a.dependsOn) {
 						var dep = factory.createAttributeDependenceCondition
-						dep.attributes1.add(e.name + '.' + a.name)
-						dep.attributes2.addAll(a.dependsOn)
+						dep.attribute1 = e.name + '.' + a.name
+						dep.attribute2 = path
 						model.attributeDependenceConditions.add(dep)
 					}
 				} else if (a instanceof AttributeGroup) {
-					if (a.dependsOn.size > 0) {
+					for (path : a.dependsOn) {
 						var dep = factory.createAttributeDependenceCondition
-						dep.attributes1.add(e.name + '.' + a.name)
-					//	dep.attributes1.addAll(a.attributes.map[e.name + '.' + name])
-						dep.attributes2.addAll(a.dependsOn)
+						dep.attribute1 = e.name + '.' + a.name
+						dep.attribute2 = path
 						model.attributeDependenceConditions.add(dep)
 					}
 				}

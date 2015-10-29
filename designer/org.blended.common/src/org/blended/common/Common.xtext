@@ -68,11 +68,11 @@ AttributeAchieveCondition:
 ;
 
 NotMandatoryAttributeAchieveCondition:
-	'ADEF' '(' conditions += QualifiedName (',' conditions += QualifiedName)* ')' 
+	'ADEF' '(' attribute = QualifiedName ')' 
 ;
 
 MandatoryAttributeAchieveCondition:
-	'MAN' '(' 'ADEF' '(' conditions += QualifiedName (',' conditions += QualifiedName)* ')' ')' 
+	'MAN' '(' 'ADEF' '(' attribute = QualifiedName ')' 
 ;
 
 AttributeInvariantCondition:
@@ -80,8 +80,8 @@ AttributeInvariantCondition:
 ;
 
 AttributeDependenceCondition:
-	'DEP' '(' 'ADEF' '(' attributes1 += QualifiedName (',' attributes1 += QualifiedName)* ')' 
-		',' 'ADEF' '(' attributes2 += QualifiedName (',' attributes2 += QualifiedName)* ')' 
+	'DEP' '(' 'ADEF' '(' attribute1 = QualifiedName ')' 
+		',' 'ADEF' '(' attribute2 = QualifiedName ')'  
 	')'
 ;
 

@@ -79,7 +79,7 @@ class ConditionLabelProvider extends DefaultEObjectLabelProvider {
 	}
 	
 	def text(AttributeAchieveCondition aac) {
-		'Achieve: ' + aac.conditions
+		'Achieve: ' + aac.attribute
 	}
 	
 	def image(AttributeInvariantCondition aic) {
@@ -107,6 +107,6 @@ class ConditionLabelProvider extends DefaultEObjectLabelProvider {
 	}
 	
 	def text(AttributeDependenceCondition edc) {
-		'Dependence on: [' + edc.attributes2.join(',') + ']'
+		'Dependence on: [' + edc.attribute2 + ']'
 	}
 }

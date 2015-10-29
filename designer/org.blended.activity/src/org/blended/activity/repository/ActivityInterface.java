@@ -1,7 +1,5 @@
 package org.blended.activity.repository;
 
-import java.util.stream.Collectors;
-
 import org.blended.activity.activity.Activity;
 import org.blended.activity.activity.ActivityModel;
 import org.blended.common.common.AttributeAchieveCondition;
@@ -77,17 +75,16 @@ public class ActivityInterface {
                     }
                 } else if (eObj instanceof AttributeAchieveCondition) {
                     AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
-                    log.debug("PRE({})", aac.getConditions());
+                    log.debug("PRE({})", aac.getAttribute());
                     try {
                         ci.associateAttributeToActivityPre(specId,
-                                eActivity.getName(), aac.getConditions()
-                                        .stream().collect(Collectors.toSet()));
+                                eActivity.getName(), aac.getAttribute());
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
                         log.debug("Error: {}", re.getMessage());
                     }
                 }
-                assert(false);
+                assert (false);
 
             }
 
@@ -104,11 +101,10 @@ public class ActivityInterface {
                     }
                 } else if (eObj instanceof AttributeAchieveCondition) {
                     AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
-                    log.debug("POST({})", aac.getConditions());
+                    log.debug("POST({})", aac.getAttribute());
                     try {
                         ci.associateAttributeToActivityPost(specId,
-                                eActivity.getName(), aac.getConditions()
-                                        .stream().collect(Collectors.toSet()));
+                                eActivity.getName(), aac.getAttribute());
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
                         log.debug("Error: {}", re.getMessage());
@@ -137,7 +133,7 @@ public class ActivityInterface {
                         log.debug("Error: {}", re.getMessage());
                     }
                 }
-                assert(false);
+                assert (false);
             }
         }
 

@@ -91,7 +91,7 @@ class ConditionGeneratorGoalModel {
 			// SUC
 			if (o instanceof MandatoryAttributeAchieveCondition) {
 				var nma = factory.createNotMandatoryAttributeAchieveCondition
-				nma.conditions.addAll(o.conditions)
+				nma.attribute = o.attribute
 				goal.successConditions.add(nma)
 			} else {
 				goal.successConditions.add(o.copy)
@@ -126,17 +126,13 @@ class ConditionGeneratorGoalModel {
 
 	def step1(Goal goal, EObject o) {
 		if (o instanceof NotMandatoryAttributeAchieveCondition) {
-			for (String c : o.conditions) {
-				var entity = Queries.getEntityNameFrom(c)
+				var entity = Queries.getEntityNameFrom(o.attribute)
 				var entityGoal = getEntityGoalFromName(entity)
 				entityGoal.childrenGoals.add(goal)
-			}
 		} else if (o instanceof MandatoryAttributeAchieveCondition) {
-			for (String c : o.conditions) {
-				var entity = Queries.getEntityNameFrom(c)
+				var entity = Queries.getEntityNameFrom(o.attribute)
 				var entityGoal = getEntityGoalFromName(entity)
 				entityGoal.childrenGoals.add(goal)
-			}
 		}
 	}
 
@@ -159,29 +155,17 @@ class ConditionGeneratorGoalModel {
 
 	def step2(Goal goal, EObject o, AttributeDependenceCondition dep) {
 		if (o instanceof NotMandatoryAttributeAchieveCondition) {
-			var done = false
-			for (String c : o.conditions) {
-				if (!done) {
-					if (dep.attributes1.contains(c)) {
+					if (dep.attribute1.equals(o.attribute)) {
 						var aac = factory.createNotMandatoryAttributeAchieveCondition
-						aac.conditions.addAll(dep.attributes2)
+						aac.attribute = dep.attribute2
 						goal.activationConditions.add(aac)
-						done = true
 					}
-				}
-			}
 		} else if (o instanceof MandatoryAttributeAchieveCondition) {
-			var done = false
-			for (String c : o.conditions) {
-				if (!done) {
-					if (dep.attributes1.contains(c)) {
+					if (dep.attribute1.equals(o.attribute)) {
 						var aac = factory.createNotMandatoryAttributeAchieveCondition
-						aac.conditions.addAll(dep.attributes2)
+						aac.attribute = dep.attribute2
 						goal.activationConditions.add(aac)
-						done = true
 					}
-				}
-			}
 		}
 	}
 
@@ -195,11 +179,11 @@ class ConditionGeneratorGoalModel {
 		var ci = CommonInterface.getInstance
 
 		if (o instanceof NotMandatoryAttributeAchieveCondition) {
-			if (ci.ruleUsesAnyAttribute(specId, inv.name, o.conditions.stream().collect(Collectors.toSet()))) {
+			if (ci.ruleUsesAnyAttribute(specId, inv.name, o.attribute)) {
 				goal.invariantConditions.add(inv.copy)
 			}
 		} else if (o instanceof MandatoryAttributeAchieveCondition) {
-			if (ci.ruleUsesAnyAttribute(specId, inv.name, o.conditions.stream().collect(Collectors.toSet()))) {
+			if (ci.ruleUsesAnyAttribute(specId, inv.name, o.attribute)) {
 				goal.invariantConditions.add(inv.copy)
 			}
 		}

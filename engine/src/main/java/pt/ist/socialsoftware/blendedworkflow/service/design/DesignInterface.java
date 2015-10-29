@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -144,8 +145,8 @@ public class DesignInterface {
         return attribute;
     }
 
-    public Attribute getAttribute(String specId, String path) {
-        return getAttribute(getSpecBySpecId(specId), path);
+    public Product getProduct(String specId, String path) {
+        return getSpecBySpecId(specId).getDataModel().getTargetOfPath(path);
     }
 
     @Atomic(mode = TxMode.WRITE)
@@ -240,14 +241,13 @@ public class DesignInterface {
     }
 
     public boolean ruleUsesAnyAttribute(String specId, String ruleName,
-            Set<String> paths) {
+            String path) {
         Specification spec = getSpecBySpecId(specId);
 
         Rule rule = getRule(spec, ruleName);
 
-        return paths.stream().map(p -> getAttribute(spec, p))
-                .flatMap(att -> att.getAttributeBasicSet().stream())
-                .anyMatch(att -> rule.getAttributeBasicSet().contains(att));
+        return !Collections.disjoint(rule.getAttributeBasicSet(),
+                getAttribute(spec, path).getAttributeBasicSet());
     }
 
     @Atomic(mode = TxMode.WRITE)

@@ -145,15 +145,13 @@ public class MergeAndExtractGoalTest {
                 defsEnt.stream().map((def) -> def.getEntityName()).sorted()
                         .collect(Collectors.joining(",")));
 
-        Set<String> paths = new HashSet<String>();
-        paths.add(ENTITY_ONE + "." + ATT_ONE);
-        ci.associateAttributeToGoalSuccess(TEST_SPEC_ID, SUB_GOAL_ONE, paths);
+        ci.associateAttributeToGoalSuccess(TEST_SPEC_ID, SUB_GOAL_ONE,
+                ENTITY_ONE + "." + ATT_ONE);
 
         ci.associateEntityToGoalSuccess(TEST_SPEC_ID, SUB_GOAL_TWO, ENTITY_TWO);
 
-        paths.clear();
-        paths.add(ENTITY_ONE + "." + ATT_TWO);
-        ci.associateAttributeToGoalSuccess(TEST_SPEC_ID, SUB_GOAL_TWO, paths);
+        ci.associateAttributeToGoalSuccess(TEST_SPEC_ID, SUB_GOAL_TWO,
+                ENTITY_ONE + "." + ATT_TWO);
 
         defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, SUB_GOAL_TWO);
         assertEquals(1, defsEnt.size());
@@ -168,16 +166,12 @@ public class MergeAndExtractGoalTest {
                         defsAtt.stream().findAny().get().getAttributeExtId())
                 .getName());
 
-        paths.clear();
-        paths.add(ENTITY_TWO + "." + ATT_THREE);
         ci.associateAttributeToGoalSuccess(TEST_SPEC_ID, SUB_GOAL_TWO_ONE,
-                paths);
+                ENTITY_TWO + "." + ATT_THREE);
 
         // add act conditions
-        paths.clear();
-        paths.add(ENTITY_ONE + "." + ATT_TWO);
         ci.associateAttributeToGoalActivation(TEST_SPEC_ID, SUB_GOAL_ONE,
-                paths);
+                ENTITY_ONE + "." + ATT_TWO);
         defsAtt = ci.getGoalActivationAttributeSet(TEST_SPEC_ID, SUB_GOAL_ONE);
         assertEquals(1, defsAtt.size());
         assertEquals(ATT_TWO,

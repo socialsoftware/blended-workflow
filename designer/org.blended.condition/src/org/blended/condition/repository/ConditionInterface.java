@@ -1,8 +1,5 @@
 package org.blended.condition.repository;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.blended.common.common.AttributeAchieveCondition;
 import org.blended.common.common.AttributeDependenceCondition;
 import org.blended.common.common.AttributeInvariantCondition;
@@ -121,14 +118,14 @@ public class ConditionInterface {
         for (AttributeAchieveCondition eAac : eConditionModel
                 .getAttributeAchieveConditions()) {
             log.debug("AttributeAchieveCondition Conditions:{} ",
-                    eAac.getConditions());
+                    eAac.getAttribute());
             boolean mandatory;
             if (eAac instanceof NotMandatoryAttributeAchieveCondition) {
                 mandatory = false;
             } else {
                 mandatory = true;
             }
-            String path = eAac.getConditions().stream().findFirst().get();
+            String path = eAac.getAttribute();
             try {
                 ci.createAttributeAchieveCondition(
                         new DefAttributeConditionDTO(specId, path, mandatory));
@@ -141,22 +138,13 @@ public class ConditionInterface {
         for (AttributeDependenceCondition eApc : eConditionModel
                 .getAttributeDependenceConditions()) {
             log.debug(
-                    "AttributeDependenceCondition Attributes1:{}, Attributes2:{}",
-                    eApc.getAttributes1(), eApc.getAttributes2());
+                    "AttributeDependenceCondition Attribute1:{}, Attribute2:{}",
+                    eApc.getAttribute1(), eApc.getAttribute2());
             try {
-                Set<String> sourceAtts = eApc.getAttributes1().stream()
-                        .collect(Collectors.toSet());
-                ProductDTO productDTO = ci.getProduct(specId, sourceAtts);
-                for (String path : eApc.getAttributes2().stream()
-                        .collect(Collectors.toSet())) {
-                    try {
-                        ci.createAttributeDependenceCondition(new DependenceDTO(
-                                specId, productDTO.getExtId(), path));
-                    } catch (RepositoryException re) {
-                        notification.addError(re.getError());
-                        log.debug("Error: {}", re.getMessage());
-                    }
-                }
+                ProductDTO productDTO = ci.getProduct(specId,
+                        eApc.getAttribute1());
+                ci.createAttributeDependenceCondition(new DependenceDTO(specId,
+                        productDTO.getExtId(), eApc.getAttribute2()));
             } catch (RepositoryException re) {
                 notification.addError(re.getError());
                 log.debug("Error: {}", re.getMessage());

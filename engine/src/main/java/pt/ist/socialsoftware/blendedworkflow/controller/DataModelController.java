@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,15 +49,15 @@ public class DataModelController {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/products/{att}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/products/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<ProductDTO> getProduct(
             @PathVariable("specId") String specId,
-            @PathVariable("att") String att) {
-        log.debug("getProduct att:{}", att);
+            @PathVariable("path") String path) {
+        log.debug("getProduct path:{}", path);
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        Product product = adi.getAttribute(specId, att);
+        Product product = adi.getProduct(specId, path);
 
         return new ResponseEntity<ProductDTO>(product.getDTO(), HttpStatus.OK);
     }
@@ -171,14 +170,13 @@ public class DataModelController {
     public ResponseEntity<Boolean> ruleUsesAnyAttribute(
             @PathVariable("specId") String specId,
             @PathVariable("ruleName") String ruleName,
-            @RequestParam("paths") String paths) {
-        log.debug("ruleUsesAnyAttribute specId:{}, ruleName:{}, paths:{}",
-                specId, ruleName, paths);
+            @RequestParam("path") String path) {
+        log.debug("ruleUsesAnyAttribute specId:{}, ruleName:{}, path:{}",
+                specId, ruleName, path);
 
         DesignInterface adi = DesignInterface.getInstance();
 
-        boolean result = adi.ruleUsesAnyAttribute(specId, ruleName,
-                Arrays.stream(paths.split(",")).collect(Collectors.toSet()));
+        boolean result = adi.ruleUsesAnyAttribute(specId, ruleName, path);
 
         return new ResponseEntity<Boolean>(result, HttpStatus.OK);
     }

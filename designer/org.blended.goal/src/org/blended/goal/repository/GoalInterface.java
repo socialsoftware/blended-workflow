@@ -1,7 +1,5 @@
 package org.blended.goal.repository;
 
-import java.util.stream.Collectors;
-
 import org.blended.common.common.AttributeAchieveCondition;
 import org.blended.common.common.AttributeInvariantCondition;
 import org.blended.common.common.EntityAchieveCondition;
@@ -80,17 +78,16 @@ public class GoalInterface {
                     }
                 } else if (eObj instanceof AttributeAchieveCondition) {
                     AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
-                    log.debug("ACT({})", aac.getConditions());
+                    log.debug("ACT({})", aac.getAttribute());
                     try {
                         ci.associateAttributeToGoalActivation(specId, goalName,
-                                aac.getConditions().stream()
-                                        .collect(Collectors.toSet()));
+                                aac.getAttribute());
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
                         log.debug("Error: {}", re.getMessage());
                     }
                 }
-                assert(false);
+                assert (false);
             }
 
             log.debug("Success Conditions");
@@ -107,17 +104,16 @@ public class GoalInterface {
                     }
                 } else if (eObj instanceof AttributeAchieveCondition) {
                     AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
-                    log.debug("SUC({})", aac.getConditions());
+                    log.debug("SUC({})", aac.getAttribute());
                     try {
                         ci.associateAttributeToGoalSuccess(specId, goalName,
-                                aac.getConditions().stream()
-                                        .collect(Collectors.toSet()));
+                                aac.getAttribute());
                     } catch (RepositoryException re) {
                         notification.addError(re.getError());
                         log.debug("Error: {}", re.getMessage());
                     }
                 }
-                assert(false);
+                assert (false);
             }
 
             log.debug("Invariant Conditions");
@@ -145,7 +141,7 @@ public class GoalInterface {
                         log.debug("Error: {}", re.getMessage());
                     }
                 }
-                assert(false);
+                assert (false);
             }
         }
 
