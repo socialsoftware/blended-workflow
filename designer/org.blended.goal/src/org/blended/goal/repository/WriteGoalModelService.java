@@ -17,25 +17,25 @@ import org.eclipse.emf.ecore.EObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GoalInterface {
-    private static Logger log = LoggerFactory.getLogger(GoalInterface.class);
+public class WriteGoalModelService {
+    private static Logger log = LoggerFactory.getLogger(WriteGoalModelService.class);
 
-    private static GoalInterface instance = null;
+    private static WriteGoalModelService instance = null;
 
-    public static GoalInterface getInstance() {
+    public static WriteGoalModelService getInstance() {
         if (instance == null) {
-            instance = new GoalInterface();
+            instance = new WriteGoalModelService();
         }
         return instance;
     }
 
     private CommonInterface ci = null;
 
-    private GoalInterface() {
+    private WriteGoalModelService() {
         ci = CommonInterface.getInstance();
     }
 
-    public BWNotification loadGoalModel(String specId, GoalModel eGoalModel) {
+    public BWNotification write(String specId, GoalModel eGoalModel) {
         log.debug("loadGoalModel: {}", specId);
 
         BWNotification notification = new BWNotification();

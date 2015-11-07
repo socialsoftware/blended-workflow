@@ -3,9 +3,14 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashMap;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public abstract class Condition extends Condition_Base {
+
+    public enum BooleanOperator {
+        AND, OR, NOT, ATT_DEF, ATT_VALUE, BOOL
+    };
 
     public enum ConditionType {
         PRE_CONDITION, POS_CONDITION, ACTIVATE_CONDITION, SUCESS_CONDITION, MAINTAIN_CONDITION
@@ -100,10 +105,12 @@ public abstract class Condition extends Condition_Base {
             return getOrLeftCondition().getDataModel();
         if (getNotCondition() != null)
             return getNotCondition().getDataModel();
-        assert(false);
+        assert (false);
         return null;
     }
 
     public abstract String getSubPath();
+
+    public abstract ExpressionDTO getDTO(String specId);
 
 }

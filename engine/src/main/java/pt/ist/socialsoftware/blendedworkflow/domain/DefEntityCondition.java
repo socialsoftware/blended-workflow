@@ -7,6 +7,7 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DefEntityCondition extends DefEntityCondition_Base {
@@ -357,6 +358,11 @@ public class DefEntityCondition extends DefEntityCondition_Base {
         eacDTO.setExists(getEntity().getExists());
 
         return eacDTO;
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, BooleanOperator.ATT_DEF, getPath());
     }
 
 }

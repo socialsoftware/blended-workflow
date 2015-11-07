@@ -522,6 +522,21 @@ public class CommonInterface {
         restTemplate.put(uri, null, params);
     }
 
+    public Set<GoalDTO> getGoalSet(String specId) {
+        log.debug("getGoalSet: {}", specId);
+
+        final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("specId", specId);
+
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        GoalDTO[] goalsVO = restTemplate.getForObject(uri, GoalDTO[].class,
+                params);
+
+        return Arrays.stream(goalsVO).collect(Collectors.toSet());
+    }
+
     public GoalDTO getGoalByName(String specId, String goalName) {
         log.debug("getGoalByName: {}, {}", specId, goalName);
 

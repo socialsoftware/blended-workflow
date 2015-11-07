@@ -11,45 +11,29 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBoolCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
-import pt.ist.socialsoftware.blendedworkflow.domain.BinaryExpression;
-import pt.ist.socialsoftware.blendedworkflow.domain.BinaryExpression.BinaryOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.BoolComparison;
-import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
-import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefDependenceCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DefExpressionCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.domain.Expression;
-import pt.ist.socialsoftware.blendedworkflow.domain.FalseCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.NumberLiteral;
-import pt.ist.socialsoftware.blendedworkflow.domain.OrCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.StringLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
@@ -60,8 +44,6 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO.Type;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
@@ -233,7 +215,7 @@ public class DesignInterface {
         Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
 
         Rule rule = spec.getDataModel().createRule(ruleDTO.getName(),
-                buildCondition(spec.getDataModel(), ruleDTO.getExpression()));
+                ruleDTO.getExpression().buildCondition(spec.getDataModel()));
 
         log.debug("createRule expression:{}", rule.getCondition().getSubPath());
 
@@ -411,6 +393,12 @@ public class DesignInterface {
         spec.getConditionModel().addAttributeInvariantCondition(rule);
 
         return rule;
+    }
+
+    public Set<Goal> getGoals(String specId) {
+        Specification spec = getSpecBySpecId(specId);
+
+        return spec.getGoalModel().getGoalSet();
     }
 
     @Atomic(mode = TxMode.WRITE)
@@ -1031,129 +1019,6 @@ public class DesignInterface {
                 .filter(t -> t.getName().equals(name)).findFirst().orElseThrow(
                         () -> new BWException(BWErrorType.INVALID_TASK_NAME,
                                 name));
-    }
-
-    private Condition buildCondition(DataModel dataModel,
-            ExpressionDTO expression) {
-        switch (Type.valueOf(expression.getType())) {
-        case AND:
-            return new AndCondition(
-                    buildCondition(dataModel, expression.getLeftExpression()),
-                    buildCondition(dataModel, expression.getRightExpression()));
-        case OR:
-            return new OrCondition(
-                    buildCondition(dataModel, expression.getLeftExpression()),
-                    buildCondition(dataModel, expression.getRightExpression()));
-        case NOT:
-            return new NotCondition(
-                    buildCondition(dataModel, expression.getUnaryExpression()));
-        case ATT_DEF:
-            return new DefExpressionCondition(dataModel, expression.getValue());
-        case ATT_VALUE:
-            return new AttributeBoolCondition(expression.getValue(),
-                    (AttributeBasic) dataModel
-                            .getTargetOfPath(expression.getValue()));
-        case EQUAL:
-            if (ExpressionDTO.isBoolExp(
-                    Type.valueOf(expression.getLeftExpression().getType())))
-                return new BoolComparison(
-                        buildCondition(dataModel,
-                                expression.getLeftExpression()),
-                        buildCondition(dataModel,
-                                expression.getRightExpression()),
-                        ComparisonOperator.EQUAL);
-            else
-                return new Comparison(
-                        buildExpression(dataModel,
-                                expression.getLeftExpression()),
-                        buildExpression(dataModel,
-                                expression.getRightExpression()),
-                        ComparisonOperator.EQUAL);
-        case NOT_EQUAL:
-            if (ExpressionDTO.isBoolExp(
-                    Type.valueOf(expression.getLeftExpression().getType())))
-                return new BoolComparison(
-                        buildCondition(dataModel,
-                                expression.getLeftExpression()),
-                        buildCondition(dataModel,
-                                expression.getRightExpression()),
-                        ComparisonOperator.NOT_EQUAL);
-            else
-                return new Comparison(
-                        buildExpression(dataModel,
-                                expression.getLeftExpression()),
-                        buildExpression(dataModel,
-                                expression.getRightExpression()),
-                        ComparisonOperator.NOT_EQUAL);
-        case GREATER:
-            return new Comparison(
-                    buildExpression(dataModel, expression.getLeftExpression()),
-                    buildExpression(dataModel, expression.getRightExpression()),
-                    ComparisonOperator.GREATER);
-        case GREATER_EQUAL:
-            return new Comparison(
-                    buildExpression(dataModel, expression.getLeftExpression()),
-                    buildExpression(dataModel, expression.getRightExpression()),
-                    ComparisonOperator.GREATER_EQUAL);
-        case SMALLER:
-            return new Comparison(
-                    buildExpression(dataModel, expression.getLeftExpression()),
-                    buildExpression(dataModel, expression.getRightExpression()),
-                    ComparisonOperator.SMALLER);
-        case SMALLER_EQUAL:
-            return new Comparison(
-                    buildExpression(dataModel, expression.getLeftExpression()),
-                    buildExpression(dataModel, expression.getRightExpression()),
-                    ComparisonOperator.SMALLER_EQUAL);
-        case BOOL:
-            if (expression.getValue().toLowerCase().equals("true"))
-                return new TrueCondition();
-            if (expression.getValue().toLowerCase().equals("false"))
-                return new FalseCondition();
-            assert (false);
-            return null;
-        default:
-            assert (false);
-            return null;
-        }
-    }
-
-    private Expression buildExpression(DataModel dataModel,
-            ExpressionDTO expression) {
-        switch (Type.valueOf(expression.getType())) {
-        case PLUS:
-            return new BinaryExpression(
-                    buildExpression(dataModel, expression.getLeftExpression()),
-                    buildExpression(dataModel, expression.getRightExpression()),
-                    BinaryOperator.PLUS);
-        case MINUS:
-            return new BinaryExpression(
-                    buildExpression(dataModel, expression.getLeftExpression()),
-                    buildExpression(dataModel, expression.getRightExpression()),
-                    BinaryOperator.MINUS);
-        case MUL:
-            return new BinaryExpression(
-                    buildExpression(dataModel, expression.getLeftExpression()),
-                    buildExpression(dataModel, expression.getRightExpression()),
-                    BinaryOperator.MUL);
-        case DIV:
-            return new BinaryExpression(
-                    buildExpression(dataModel, expression.getLeftExpression()),
-                    buildExpression(dataModel, expression.getRightExpression()),
-                    BinaryOperator.DIV);
-        case ATT_VALUE:
-            AttributeBasic attribute = (AttributeBasic) dataModel
-                    .getTargetOfPath(expression.getValue());
-            return new AttributeValueExpression(expression.getValue(),
-                    attribute);
-        case INT:
-            return new NumberLiteral(Integer.parseInt(expression.getValue()));
-        case STRING:
-            return new StringLiteral(expression.getValue());
-        default:
-            assert (false);
-            return null;
-        }
     }
 
 }

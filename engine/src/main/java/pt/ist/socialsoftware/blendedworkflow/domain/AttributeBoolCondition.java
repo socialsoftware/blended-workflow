@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class AttributeBoolCondition extends AttributeBoolCondition_Base {
@@ -137,6 +138,11 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
             GoalWorkItem goalWorkItem, ConditionType conditionType) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, BooleanOperator.ATT_VALUE, getPath());
     }
 
 }

@@ -79,7 +79,7 @@ class ConditionGeneratorGoalModel {
 
 			// INV
 			for (inv : resource.allContents.toIterable.filter(typeof(EntityInvariantCondition))) {
-				step3(goal, o.name, inv)
+				associateRulesToGoal(goal, o.name, inv)
 			}
 		}
 
@@ -109,7 +109,7 @@ class ConditionGeneratorGoalModel {
 
 			// INV 
 			for (inv : resource.allContents.toIterable.filter(typeof(AttributeInvariantCondition))) {
-				step3(specId, goal, o, inv)
+				associateRulesToGoal(specId, goal, o, inv)
 			}
 		}
 
@@ -162,20 +162,20 @@ class ConditionGeneratorGoalModel {
 					}
 		} else if (o instanceof MandatoryAttributeAchieveCondition) {
 					if (dep.attribute1.equals(o.attribute)) {
-						var aac = factory.createNotMandatoryAttributeAchieveCondition
+						var aac = factory.createMandatoryAttributeAchieveCondition
 						aac.attribute = dep.attribute2
 						goal.activationConditions.add(aac)
 					}
 		}
 	}
 
-	def step3(Goal goal, String name, EntityInvariantCondition inv) {
+	def associateRulesToGoal(Goal goal, String name, EntityInvariantCondition inv) {
 		if (name.equals(Queries.getEntityNameFrom(inv.name))) {
 			goal.invariantConditions.add(inv.copy)
 		}
 	}
 
-	def step3(String specId, Goal goal, EObject o, AttributeInvariantCondition inv) {
+	def associateRulesToGoal(String specId, Goal goal, EObject o, AttributeInvariantCondition inv) {
 		var ci = CommonInterface.getInstance
 
 		if (o instanceof NotMandatoryAttributeAchieveCondition) {

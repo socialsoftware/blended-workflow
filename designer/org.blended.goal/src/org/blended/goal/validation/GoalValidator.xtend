@@ -5,11 +5,11 @@ package org.blended.goal.validation
 
 import org.blended.goal.goal.GoalModel
 import org.blended.goal.goal.GoalPackage
-import org.blended.goal.repository.GoalInterface
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.CheckType
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.blended.goal.repository.WriteGoalModelService
 
 /**
  * This class contains custom validation rules. 
@@ -35,11 +35,11 @@ class GoalValidator extends AbstractGoalValidator {
 	@Check(CheckType.NORMAL)
 	def checkModel(GoalModel model) {
 				info('everything OK 0', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
-		var instance = GoalInterface.getInstance
+		var instance = WriteGoalModelService.getInstance
 				info('everything OK 2', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
 		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
 				info('everything OK 3', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
-		var notification = instance.loadGoalModel(specId, model)
+		var notification = instance.write(specId, model)
 				info('everything OK 4', GoalPackage.Literals.GOAL_MODEL__SPECIFICATION)
 		if (notification.hasErrors)
 			for (error : notification.error)

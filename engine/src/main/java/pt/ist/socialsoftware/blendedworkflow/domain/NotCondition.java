@@ -6,6 +6,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class NotCondition extends NotCondition_Base {
@@ -136,6 +137,12 @@ public class NotCondition extends NotCondition_Base {
                 : "NULL";
 
         return "NOT(" + exp + ")";
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, BooleanOperator.NOT,
+                getCondition().getDTO(specId));
     }
 
 }

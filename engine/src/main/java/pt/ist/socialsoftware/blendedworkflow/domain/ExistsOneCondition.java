@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ExistsOneCondition extends ExistsOneCondition_Base {
@@ -150,6 +151,12 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
     @Override
     public String getSubPath() {
         return ExistsOneCondition.class.getName();
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class FalseCondition extends FalseCondition_Base {
@@ -127,6 +128,11 @@ public class FalseCondition extends FalseCondition_Base {
     @Override
     public String getSubPath() {
         return "false";
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, BooleanOperator.BOOL, "false");
     }
 
 }

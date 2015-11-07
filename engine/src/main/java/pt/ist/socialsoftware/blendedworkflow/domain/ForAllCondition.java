@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class ForAllCondition extends ForAllCondition_Base {
@@ -21,8 +22,8 @@ public class ForAllCondition extends ForAllCondition_Base {
                 .getDataModelInstance();
         RelationBW relation = dataModelInstance
                 .getRelation(getForAllRelation().getName());
-        Entity entity = dataModelInstance
-                .getEntity(getForAllEntity().getName()).get();
+        Entity entity = dataModelInstance.getEntity(getForAllEntity().getName())
+                .get();
         return new ForAllCondition(relation, entity,
                 getCondition().cloneCondition(goalModelInstance));
     }
@@ -33,8 +34,8 @@ public class ForAllCondition extends ForAllCondition_Base {
                 .getDataModelInstance();
         RelationBW relation = dataModelInstance
                 .getRelation(getForAllRelation().getName());
-        Entity entity = dataModelInstance
-                .getEntity(getForAllEntity().getName()).get();
+        Entity entity = dataModelInstance.getEntity(getForAllEntity().getName())
+                .get();
         return new ForAllCondition(relation, entity,
                 getCondition().cloneCondition(taskModelInstance));
     }
@@ -150,6 +151,12 @@ public class ForAllCondition extends ForAllCondition_Base {
     @Override
     public String getSubPath() {
         return ForAllCondition.class.getName();
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

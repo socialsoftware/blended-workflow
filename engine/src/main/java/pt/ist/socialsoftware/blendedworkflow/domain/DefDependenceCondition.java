@@ -7,6 +7,7 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefDependenceConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DefDependenceCondition extends DefDependenceCondition_Base {
@@ -177,5 +178,10 @@ public class DefDependenceCondition extends DefDependenceCondition_Base {
         dto.setPath(getPath());
 
         return dto;
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, BooleanOperator.ATT_DEF, getPath());
     }
 }

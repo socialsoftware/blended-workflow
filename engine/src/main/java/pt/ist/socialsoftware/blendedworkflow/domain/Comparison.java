@@ -13,6 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class Comparison extends Comparison_Base {
@@ -436,6 +437,13 @@ public class Comparison extends Comparison_Base {
         String right = getRightExpression() != null
                 ? getRightExpression().getSubPath() : "NULL";
         return getComparator() + "(" + left + "," + right + ")";
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, getComparator(),
+                getLeftExpression().getDTO(specId),
+                getRightExpression().getDTO(specId));
     }
 
 }

@@ -7,6 +7,7 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DefAttributeCondition extends DefAttributeCondition_Base {
@@ -264,6 +265,11 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
         defConditionDTO.setMandatory(getAttributeOfDef().getIsMandatory());
 
         return defConditionDTO;
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, BooleanOperator.ATT_DEF, getPath());
     }
 
 }

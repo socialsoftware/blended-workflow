@@ -5,6 +5,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class AndCondition extends AndCondition_Base {
@@ -67,8 +68,10 @@ public class AndCondition extends AndCondition_Base {
 
     @Override
     public Set<AttributeBasic> getAttributeBasicSet() {
-        Set<AttributeBasic> attributesOne = getConditionOne().getAttributeBasicSet();
-        Set<AttributeBasic> attributesTwo = getConditionTwo().getAttributeBasicSet();
+        Set<AttributeBasic> attributesOne = getConditionOne()
+                .getAttributeBasicSet();
+        Set<AttributeBasic> attributesTwo = getConditionTwo()
+                .getAttributeBasicSet();
         attributesOne.addAll(attributesTwo);
         return attributesOne;
     }
@@ -176,6 +179,13 @@ public class AndCondition extends AndCondition_Base {
         String right = getRightCondition() != null
                 ? getRightCondition().getSubPath() : "NULL";
         return "AND(" + right + "," + left + ")";
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, BooleanOperator.AND,
+                getLeftCondition().getDTO(specId),
+                getRightCondition().getDTO(specId));
     }
 
 }

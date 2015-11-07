@@ -28,11 +28,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.Application;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
+import pt.ist.socialsoftware.blendedworkflow.domain.Expression.ExpressionAtom;
 import pt.ist.socialsoftware.blendedworkflow.filter.TransactionFilter;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO.Type;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
@@ -154,9 +155,10 @@ public class RestDesignInterfaceTest {
                 .content(mapper.writeValueAsBytes(relationDTO)))
                 .andExpect(status().isCreated());
 
-        ExpressionDTO expressionDTO = new ExpressionDTO(SPEC_ID, Type.GREATER,
-                new ExpressionDTO(SPEC_ID, Type.STRING, "today"),
-                new ExpressionDTO(SPEC_ID, Type.ATT_VALUE,
+        ExpressionDTO expressionDTO = new ExpressionDTO(SPEC_ID,
+                ComparisonOperator.GREATER,
+                new ExpressionDTO(SPEC_ID, ExpressionAtom.STRING, "today"),
+                new ExpressionDTO(SPEC_ID, ExpressionAtom.ATT_VALUE,
                         ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME_STRING));
         RuleDTO ruleDTO = new RuleDTO(SPEC_ID, "myRule", expressionDTO);
         mockMvc.perform(post("/specs/{specId}/datamodel/rules", SPEC_ID)

@@ -22,15 +22,14 @@ import org.blended.common.utils.ValueException;
 import org.blended.goal.goal.Goal;
 import org.blended.goal.goal.GoalFactory;
 import org.blended.goal.goal.GoalModel;
-import org.blended.goal.terminal.ManageJoin.NodesRelation;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 import com.beust.jcommander.ParameterException;
 
 public class ManageSplit {
-    public static void goals(GoalModel model, String name, CommandSplit split)
-            throws ParameterException, ValueException {
+    public static void goals(GoalModel model, String name, String specId,
+            CommandSplit split) throws ParameterException, ValueException {
         // CHECKS
         List<String> successConditions1 = Arrays
                 .asList(split.successConditions.split(";")); // different

@@ -13,20 +13,22 @@ import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
+import pt.ist.socialsoftware.blendedworkflow.domain.Condition.BooleanOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Expression;
+import pt.ist.socialsoftware.blendedworkflow.domain.Expression.ExpressionAtom;
 import pt.ist.socialsoftware.blendedworkflow.domain.NumberLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO.Type;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 
 public class CreateRuleServiceTest extends TeardownRollbackTest {
@@ -49,16 +51,16 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
     public void populate4Test() {
         designInterface = DesignInterface.getInstance();
 
-        Specification spec = new Specification(EXISTS_SPEC_ID,
-                EXISTS_SPEC_NAME, "author", "description", "version", "UID");
+        Specification spec = new Specification(EXISTS_SPEC_ID, EXISTS_SPEC_NAME,
+                "author", "description", "version", "UID");
         existingDataModel = spec.getDataModel();
 
         Entity entity = new Entity(existingDataModel, EXISTS_ENTITY_NAME,
                 false);
-        Entity entityTwo = new Entity(existingDataModel, ENTITY_NAME,
+        Entity entityTwo = new Entity(existingDataModel, ENTITY_NAME, false);
+        new AttributeBasic(existingDataModel, entity, null,
+                EXISTS_ATTRIBUTE_NAME, AttributeType.NUMBER, true, false,
                 false);
-        new AttributeBasic(existingDataModel, entity, null, EXISTS_ATTRIBUTE_NAME,
-                AttributeType.NUMBER, true, false, false);
         new AttributeBasic(existingDataModel, entity, null,
                 EXISTS_ATTRIBUTE_NAME_STRING, AttributeType.STRING, false,
                 false, false);
@@ -70,12 +72,10 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
     @Test
     public void successNewCreateComparatorRule() {
-        ExpressionDTO expDTO = new ExpressionDTO(
-                existingDataModel.getExternalId(), Type.GREATER,
-                new ExpressionDTO(existingDataModel.getExternalId(), Type.INT,
-                        "6"),
-                new ExpressionDTO(existingDataModel.getExternalId(),
-                        Type.ATT_VALUE,
+        ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID,
+                ComparisonOperator.GREATER,
+                new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"),
+                new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.ATT_VALUE,
                         EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME));
 
         designInterface
@@ -98,25 +98,23 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
         assertEquals(6, literal.getValue());
 
         AttributeValueExpression attValue = (AttributeValueExpression) righExpression;
-        Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME)
-                .get();
+        Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME).get();
         AttributeBasic att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
         assertEquals(att, attValue.getAttribute());
     }
 
     @Test
     public void successNewCreateAndConstraint() {
-        ExpressionDTO expDTO = new ExpressionDTO(
-                existingDataModel.getExternalId(), Type.AND,
-                new ExpressionDTO(existingDataModel.getExternalId(),
-                        Type.GREATER,
-                        new ExpressionDTO(existingDataModel.getExternalId(),
-                                Type.INT, "6"),
-                        new ExpressionDTO(existingDataModel.getExternalId(),
-                                Type.ATT_VALUE,
+        ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID,
+                BooleanOperator.AND,
+                new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
+                        new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.INT,
+                                "6"),
+                        new ExpressionDTO(EXISTS_SPEC_ID,
+                                ExpressionAtom.ATT_VALUE,
                                 EXISTS_ENTITY_NAME + "."
                                         + EXISTS_ATTRIBUTE_NAME)),
-                new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
+                new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL,
                         "true"));
 
         designInterface
@@ -145,25 +143,23 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
         assertEquals(6, literal.getValue());
 
         AttributeValueExpression attValue = (AttributeValueExpression) righExpression;
-        Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME)
-                .get();
+        Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME).get();
         AttributeBasic att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
         assertEquals(att, attValue.getAttribute());
     }
 
     @Test(expected = BWException.class)
     public void failCauseofWrongAttributeName() {
-        ExpressionDTO expDTO = new ExpressionDTO(
-                existingDataModel.getExternalId(), Type.AND,
-                new ExpressionDTO(existingDataModel.getExternalId(),
-                        Type.GREATER,
-                        new ExpressionDTO(existingDataModel.getExternalId(),
-                                Type.INT, "6"),
-                        new ExpressionDTO(existingDataModel.getExternalId(),
-                                Type.ATT_VALUE,
+        ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID,
+                BooleanOperator.AND,
+                new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
+                        new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.INT,
+                                "6"),
+                        new ExpressionDTO(EXISTS_SPEC_ID,
+                                ExpressionAtom.ATT_VALUE,
                                 EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME
                                         + "x")),
-                new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
+                new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL,
                         "true"));
 
         designInterface
@@ -172,17 +168,16 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
     @Test(expected = BWException.class)
     public void failCauseofWrongRoleName() {
-        ExpressionDTO expDTO = new ExpressionDTO(
-                existingDataModel.getExternalId(), Type.AND,
-                new ExpressionDTO(existingDataModel.getExternalId(),
-                        Type.GREATER,
-                        new ExpressionDTO(existingDataModel.getExternalId(),
-                                Type.INT, "6"),
-                        new ExpressionDTO(existingDataModel.getExternalId(),
-                                Type.ATT_VALUE,
+        ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID,
+                BooleanOperator.AND,
+                new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
+                        new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.INT,
+                                "6"),
+                        new ExpressionDTO(EXISTS_SPEC_ID,
+                                ExpressionAtom.ATT_VALUE,
                                 ENTITY_NAME + "." + "rolex" + "."
                                         + EXISTS_ATTRIBUTE_NAME)),
-                new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
+                new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL,
                         "true"));
 
         designInterface
@@ -191,10 +186,9 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
     @Test
     public void expressionWithNotAndDef() {
-        ExpressionDTO expDTO = new ExpressionDTO(
-                existingDataModel.getExternalId(), Type.NOT,
-                new ExpressionDTO(existingDataModel.getExternalId(),
-                        Type.ATT_DEF,
+        ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID,
+                BooleanOperator.NOT,
+                new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.ATT_DEF,
                         EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME));
 
         designInterface
@@ -203,14 +197,14 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
     @Test
     public void expressionWithNotAndAndDef() {
-        ExpressionDTO expDTO = new ExpressionDTO(
-                existingDataModel.getExternalId(), Type.AND,
-                new ExpressionDTO(existingDataModel.getExternalId(), Type.NOT,
-                        new ExpressionDTO(existingDataModel.getExternalId(),
-                                Type.ATT_DEF,
+        ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID,
+                BooleanOperator.AND,
+                new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.NOT,
+                        new ExpressionDTO(EXISTS_SPEC_ID,
+                                BooleanOperator.ATT_DEF,
                                 EXISTS_ENTITY_NAME + "."
                                         + EXISTS_ATTRIBUTE_NAME)),
-                new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
+                new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL,
                         "false"));
 
         designInterface
@@ -219,14 +213,14 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
     @Test
     public void expressionWithNotAndDefAndNotEqual() {
-        ExpressionDTO expDTO = new ExpressionDTO(
-                existingDataModel.getExternalId(), Type.NOT_EQUAL,
-                new ExpressionDTO(existingDataModel.getExternalId(), Type.NOT,
-                        new ExpressionDTO(existingDataModel.getExternalId(),
-                                Type.ATT_DEF,
+        ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID,
+                ComparisonOperator.NOT_EQUAL,
+                new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.NOT,
+                        new ExpressionDTO(EXISTS_SPEC_ID,
+                                BooleanOperator.ATT_DEF,
                                 EXISTS_ENTITY_NAME + "."
                                         + EXISTS_ATTRIBUTE_NAME)),
-                new ExpressionDTO(existingDataModel.getExternalId(), Type.BOOL,
+                new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL,
                         "false"));
 
         designInterface
@@ -235,12 +229,12 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
     @Test
     public void expressionWithGreaterAndAttributeAndStringLiteral() {
-        ExpressionDTO expDTO = new ExpressionDTO(
-                existingDataModel.getExternalId(), Type.GREATER,
-                new ExpressionDTO(existingDataModel.getExternalId(),
-                        Type.STRING, "today"),
-                new ExpressionDTO(existingDataModel.getExternalId(),
-                        Type.ATT_VALUE, EXISTS_ENTITY_NAME + "."
+        ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID,
+                ComparisonOperator.GREATER,
+                new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.STRING,
+                        "today"),
+                new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.ATT_VALUE,
+                        EXISTS_ENTITY_NAME + "."
                                 + EXISTS_ATTRIBUTE_NAME_STRING));
 
         designInterface

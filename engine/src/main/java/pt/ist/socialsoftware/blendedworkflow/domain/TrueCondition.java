@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class TrueCondition extends TrueCondition_Base {
@@ -110,6 +111,11 @@ public class TrueCondition extends TrueCondition_Base {
     @Override
     public String getSubPath() {
         return "true";
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, BooleanOperator.BOOL, "true");
     }
 
 }

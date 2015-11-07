@@ -3,8 +3,12 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 
 public abstract class Expression extends Expression_Base {
+    public enum ExpressionAtom {
+        ATT_VALUE, INT, STRING
+    };
 
     public void delete() {
         setLeftComparison(null);
@@ -32,5 +36,7 @@ public abstract class Expression extends Expression_Base {
     public abstract String getSubPath();
 
     public abstract Set<AttributeBasic> getAttributes();
+
+    public abstract ExpressionDTO getDTO(String specId);
 
 }

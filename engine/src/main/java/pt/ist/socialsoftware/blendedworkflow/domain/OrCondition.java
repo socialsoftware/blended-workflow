@@ -5,6 +5,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class OrCondition extends OrCondition_Base {
@@ -67,7 +68,8 @@ public class OrCondition extends OrCondition_Base {
 
     @Override
     public Set<AttributeBasic> getAttributeBasicSet() {
-        Set<AttributeBasic> attributesOne = getConditionOne().getAttributeBasicSet();
+        Set<AttributeBasic> attributesOne = getConditionOne()
+                .getAttributeBasicSet();
         attributesOne.addAll(getConditionTwo().getAttributeBasicSet());
         return attributesOne;
     }
@@ -173,6 +175,13 @@ public class OrCondition extends OrCondition_Base {
         String right = getRightCondition() != null
                 ? getRightCondition().getSubPath() : "NULL";
         return "OR(" + left + "," + right + ")";
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, BooleanOperator.OR,
+                getLeftCondition().getDTO(specId),
+                getRightCondition().getDTO(specId));
     }
 
 }

@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 
 public class BinaryExpression extends BinaryExpression_Base {
 
@@ -66,6 +67,13 @@ public class BinaryExpression extends BinaryExpression_Base {
                 .concat(getRightExpression().getAttributes().stream(),
                         getLeftExpression().getAttributes().stream())
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, getOperator(),
+                getLeftExpression().getDTO(specId),
+                getRightExpression().getDTO(specId));
     }
 
 }

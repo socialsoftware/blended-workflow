@@ -13,6 +13,7 @@ import org.blended.common.utils.ValueException
 
 class DataListener implements Runnable {
 	package String name
+	package String specId
 	package Resource resource
 	package GoalModel model
 	package IOConsole myConsole
@@ -28,6 +29,7 @@ class DataListener implements Runnable {
     }
 
 	new(String name, Resource resource) {
+		this.specId = resource.URI.lastSegment.split("\\.").get(0)
 		this.name = name
 		setModel(resource)
 		this.terminate = false
@@ -101,11 +103,11 @@ class DataListener implements Runnable {
 				ManageLs.goals(model, name, ls);
 			}
 			else if (jc.getParsedCommand().equals("join")) {
-				ManageJoin.goals(model, name, join);
+				ManageJoin.goals(model, name, this.specId, join);
 				updateResource();
 			}
 			else if (jc.getParsedCommand().equals("split")) {
-				ManageSplit.goals(model, name, split);
+				ManageSplit.goals(model, name, this.specId, split);
 				updateResource();
 			}
 		}

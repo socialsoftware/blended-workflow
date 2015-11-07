@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.websocket.server.PathParam;
@@ -43,11 +44,25 @@ public class GoalModelController {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/goals", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseEntity<GoalDTO[]> getGoalSet(
+            @PathVariable("specId") String specId) {
+        log.debug("getGoalSet specId:{}", specId);
+
+        DesignInterface adi = DesignInterface.getInstance();
+
+        Set<Goal> goals = adi.getGoals(specId);
+
+        return new ResponseEntity<GoalDTO[]>(
+                goals.stream().map(g -> g.getDTO()).toArray(GoalDTO[]::new),
+                HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/goals/{goalName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     public ResponseEntity<GoalDTO> getGoalByName(
             @PathVariable("specId") String specId,
             @PathVariable("goalName") String goalName) {
-        log.debug("createGoal specId:{}, name:{}", specId, goalName);
+        log.debug("getGoalByName specId:{}, name:{}", specId, goalName);
 
         DesignInterface adi = DesignInterface.getInstance();
 

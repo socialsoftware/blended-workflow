@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DefExpressionCondition extends DefExpressionCondition_Base {
@@ -146,6 +147,11 @@ public class DefExpressionCondition extends DefExpressionCondition_Base {
     public void delete() {
         setProduct(null);
         super.delete();
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        return new ExpressionDTO(specId, BooleanOperator.ATT_DEF, getPath());
     }
 
 }

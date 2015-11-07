@@ -7,6 +7,7 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
@@ -28,7 +29,7 @@ public class MulCondition extends MulCondition_Base {
         if (relation.getRoleNameTwo().equals(rolename))
             return new MulCondition(relation, 2);
 
-        assert(false);
+        assert (false);
         return null;
     }
 
@@ -207,9 +208,15 @@ public class MulCondition extends MulCondition_Base {
                 getConditionModel().getSpecification().getExternalId());
         mulConditionDTO
                 .setRolePath(getEntity().getName() + "." + getRolename());
-        mulConditionDTO.setCardinality(getCardinality().name());
+        mulConditionDTO.setCardinality(getCardinality().toString());
 
         return mulConditionDTO;
+    }
+
+    @Override
+    public ExpressionDTO getDTO(String specId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
