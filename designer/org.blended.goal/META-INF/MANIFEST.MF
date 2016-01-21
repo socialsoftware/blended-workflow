@@ -22,16 +22,17 @@ Import-Package: org.apache.log4j,
  org.slf4j;version="1.7.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.blended.goal,
- org.blended.goal.services,
+ org.blended.goal.formatting,
+ org.blended.goal.generator,
  org.blended.goal.goal,
  org.blended.goal.goal.impl,
  org.blended.goal.goal.util,
- org.blended.goal.serializer,
  org.blended.goal.parser.antlr,
  org.blended.goal.parser.antlr.internal,
- org.blended.goal.validation,
+ org.blended.goal.repository,
  org.blended.goal.scoping,
- org.blended.goal.generator,
- org.blended.goal.formatting
+ org.blended.goal.serializer,
+ org.blended.goal.services,
+ org.blended.goal.validation
 Bundle-ClassPath: lib/jcommander-1.48.jar,
  .

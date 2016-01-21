@@ -23,6 +23,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
@@ -194,7 +195,7 @@ public class TaskForm extends VerticalLayout {
 				PopupDateField datetime;
 				datetime = new PopupDateField(attribute.getName());
 				datetime.setValue(new java.util.Date());
-				datetime.setResolution(PopupDateField.RESOLUTION_DAY);
+				datetime.setResolution(DateField.RESOLUTION_DAY);
 				datetime.setImmediate(true);
 				data.addComponent(datetime);
 				// TODO:

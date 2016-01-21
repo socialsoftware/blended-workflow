@@ -8,6 +8,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
@@ -55,7 +56,7 @@ public class BookingForm extends VerticalLayout {
 
         reserveDatePDF = new PopupDateField("Reserve Date");
         reserveDatePDF.setValue(new java.util.Date());
-        reserveDatePDF.setResolution(PopupDateField.RESOLUTION_DAY);
+        reserveDatePDF.setResolution(DateField.RESOLUTION_DAY);
         reserveDatePDF.setImmediate(true);
         addComponent(reserveDatePDF);
 

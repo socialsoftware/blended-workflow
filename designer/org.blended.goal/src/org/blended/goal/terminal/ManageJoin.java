@@ -7,6 +7,7 @@ import java.util.Set;
 import org.blended.common.repository.CommonInterface;
 import org.blended.common.repository.resttemplate.dto.GoalDTO;
 import org.blended.common.utils.ConsoleManagement;
+import org.blended.common.utils.Utils;
 import org.blended.common.utils.ValueException;
 import org.blended.goal.goal.Goal;
 import org.blended.goal.goal.GoalModel;
@@ -21,7 +22,7 @@ import com.beust.jcommander.ParameterException;
  */
 public class ManageJoin {
     private static Logger log = LoggerFactory
-            .getLogger(ReadGoalModelService.class);
+            .getLogger(ManageJoin.class);
 
     public static void goals(GoalModel model, String name, String specId,
             CommandJoin join) throws ParameterException, ValueException {
@@ -35,9 +36,9 @@ public class ManageJoin {
         String goalName1 = join.goals.get(0);
         String goalName2 = join.goals.get(1);
 
-        Optional<Goal> goalO1 = getGoalByName(model, goalName1);
-        Optional<Goal> goalO2 = getGoalByName(model, goalName2);
-        Optional<Goal> newGoalO = getGoalByName(model, join.name);
+        Optional<Goal> goalO1 = Utils.getGoalByName(model, goalName1);
+        Optional<Goal> goalO2 = Utils.getGoalByName(model, goalName2);
+        Optional<Goal> newGoalO = Utils.getGoalByName(model, join.name);
 
         if ((!goalO1.isPresent()) || (!goalO2.isPresent()))
             throw new ValueException(
@@ -60,34 +61,9 @@ public class ManageJoin {
 
             log.debug("after merge");
 
-            Set<Goal> goals = new HashSet<Goal>();
-            goals.addAll(model.getGoals());
+            Utils.removeGoalModel(model);
 
-            for (Goal goal : goals) {
-                log.debug("goal {}", goal.getName());
-                model.getGoals().remove(goal);
-            }
-
-            // model.getGoals().stream().forEach(g ->
-            // model.getGoals().remove(g));
-
-            ReadGoalModelService readGoalService = ReadGoalModelService
-                    .getInstance();
-            readGoalService.read(specId, model);
-
-            // // DELETE OLD GOALS
-            // model.getGoals().stream()
-            // .filter(g -> g.getChildrenGoals().contains(goal1))
-            // .forEach(g -> g.getChildrenGoals().remove(goal1));
-            // model.getGoals().remove(goal1);
-            // model.getGoals().stream()
-            // .filter(g -> g.getChildrenGoals().contains(goal2))
-            // .forEach(g -> g.getChildrenGoals().remove(goal2));
-            // model.getGoals().remove(goal2);
-            //
-            // // CREATE NEW GOAL
-            // ReadGoalService readGoalService = ReadGoalService.getInstance();
-            // Goal newGoal = readGoalService.read(specId, goalDTO, model);
+            Utils.loadGoalModelFromServer(model, specId);
 
             ConsoleManagement.write(name, "Operation performed. New goal "
                     + goalDTO.getName() + " generated");
@@ -99,12 +75,6 @@ public class ManageJoin {
         }
         }
 
-    }
-
-    private static Optional<Goal> getGoalByName(GoalModel model, String name) {
-        Optional<Goal> goal = model.getGoals().stream()
-                .filter(e -> e.getName().equals(name)).findFirst();
-        return goal;
     }
 
     private static NodesRelation getTypeOfRelation(GoalModel model, Goal goal1,
