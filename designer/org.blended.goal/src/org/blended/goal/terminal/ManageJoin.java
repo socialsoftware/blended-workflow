@@ -1,21 +1,19 @@
 package org.blended.goal.terminal;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import org.blended.common.repository.CommonInterface;
 import org.blended.common.repository.resttemplate.dto.GoalDTO;
 import org.blended.common.utils.ConsoleManagement;
-import org.blended.common.utils.Utils;
 import org.blended.common.utils.ValueException;
 import org.blended.goal.goal.Goal;
 import org.blended.goal.goal.GoalModel;
-import org.blended.goal.repository.ReadGoalModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.beust.jcommander.ParameterException;
+
+import utils.Utils;
 
 /**
  * I always copy everything, except SUC(nothing)

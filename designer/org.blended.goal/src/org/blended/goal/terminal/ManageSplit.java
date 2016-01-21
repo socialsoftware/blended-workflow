@@ -9,12 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.blended.common.common.AttributeInvariantCondition;
-import org.blended.common.common.CommonFactory;
 import org.blended.common.common.EntityAchieveCondition;
-import org.blended.common.common.EntityInvariantCondition;
 import org.blended.common.common.MandatoryAttributeAchieveCondition;
 import org.blended.common.common.NotMandatoryAttributeAchieveCondition;
 import org.blended.common.common.Nothing;
@@ -24,19 +20,17 @@ import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.GoalDTO;
 import org.blended.common.utils.ConsoleManagement;
-import org.blended.common.utils.Queries;
-import org.blended.common.utils.Utils;
 import org.blended.common.utils.ValueException;
 import org.blended.goal.goal.Goal;
-import org.blended.goal.goal.GoalFactory;
 import org.blended.goal.goal.GoalModel;
-import org.blended.goal.repository.ReadGoalModelService;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.beust.jcommander.ParameterException;
+
+import utils.Utils;
 
 public class ManageSplit {
     private static Logger log = LoggerFactory

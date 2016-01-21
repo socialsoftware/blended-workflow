@@ -1,4 +1,4 @@
-package org.blended.common.utils;
+package utils;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -34,6 +34,5 @@ public class Utils {
 		    model.getGoals().remove(goal);
 		}
 	}
-
 
 }
