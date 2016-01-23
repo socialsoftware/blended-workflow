@@ -91,22 +91,24 @@ class DataGeneratorConditionModel {
 	}
 
 	def entityInvariantCondition(Association a) {
-		if (!a.entity1.exists) {
+	//	if (!a.entity1.exists) {
 			var inv = factory.createEntityInvariantCondition
 			inv.name = a.entity1.name + "." + a.name2
 			inv.cardinality = a.cardinality2
 			model.entityInvariantConditions.add(inv)
-		}
-		if (!a.entity2.exists) {
-			var inv = factory.createEntityInvariantCondition
+//		}
+//		if (!a.entity2.exists) {
+			 inv = factory.createEntityInvariantCondition
 			inv.name = a.entity2.name + "." + a.name1
 			inv.cardinality = a.cardinality1
 			model.entityInvariantConditions.add(inv)
-		}
+//		}
 	}
 
 	def entityDependenceCondition(Entity e) {
-		if ((!e.exists) && (e.dependsOn.size > 0)) {
+		if (//(!e.exists) && 
+			(e.dependsOn.size > 0)
+		) {
 			for (d : e.dependsOn) {
 				var dep = factory.createEntityDependenceCondition
 				dep.entity1 = e.name

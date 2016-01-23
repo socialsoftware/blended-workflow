@@ -14,7 +14,7 @@ class CommandSplit {
 	@Parameter(description = "Activity to be spplited", names = "-g", validateWith = ValidateName.class, required = true)
 	public String goal;
 	
-	@Parameter(description = "The list of success conditions used for the new spplited goal", names = "-s", required = true)
+	@Parameter(description = "The list of success conditions used for the new spplited activity", names = "-s", required = true)
 	public String successConditions;
 }
 

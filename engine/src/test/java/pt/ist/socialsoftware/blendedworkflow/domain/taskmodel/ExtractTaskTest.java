@@ -2,7 +2,6 @@ package pt.ist.socialsoftware.blendedworkflow.domain.taskmodel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +16,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DefDependenceCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
@@ -32,7 +30,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class AddTaskMethodTest extends TeardownRollbackTest {
+public class ExtractTaskTest extends TeardownRollbackTest {
+	private static final String DESCRIPTION = "Description";
 	private static final String ATTRIBUTE_FOURTWO_NAME = "att42";
 	private static final String ATTRIBUTE_FOURONE_NAME = "att41";
 	private static final String TASK_ONE = "TaskOne";
@@ -112,20 +111,20 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 
 		taskModel = spec.getTaskModel();
 
-		taskOne = new Task(spec.getTaskModel(), TASK_ONE, "Description");
+		taskOne = new Task(spec.getTaskModel(), TASK_ONE, DESCRIPTION);
 		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entityOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
 		taskOne.addRuleInvariant(ruleOne);
 
-		taskTwo = new Task(spec.getTaskModel(), TASK_TWO, "Description");
+		taskTwo = new Task(spec.getTaskModel(), TASK_TWO, DESCRIPTION);
 		taskTwo.addPreCondition(DefEntityCondition.getDefEntity(entityOne));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameTwo()));
 
-		taskThree = new Task(spec.getTaskModel(), TASK_THREE, "Description");
+		taskThree = new Task(spec.getTaskModel(), TASK_THREE, DESCRIPTION);
 		taskThree.addPreCondition(DefEntityCondition.getDefEntity(entityTwo));
 		taskThree.addPreCondition(DefEntityCondition.getDefEntity(entityThree));
 		taskThree.addPreCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
@@ -136,103 +135,61 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 	}
 
 	@Test
-	public void emptyPostConditionSet() {
-		taskThree.removePostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
-
+	public void extractEmptyPostCodition() {
+		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
 		try {
-			Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
-			taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
-			fail();
+			taskModel.extractTask(taskOne, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.CANNOT_ADD_TASK, bwe.getError());
-			assertEquals("empty post condition set", bwe.getMessage());
+			assertEquals(3, taskModel.getTasksSet().size());
 		}
 	}
 
 	@Test
-	public void allActivitiesWereCreated() {
-		try {
-			Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
-			postConditions.add(DefEntityCondition.getDefEntity(entityOne));
-			taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CANNOT_ADD_TASK, bwe.getError());
-			assertEquals("all achieve conditions already belong to a post condition", bwe.getMessage());
-		}
-	}
+	public void extractDefEntity() {
+		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
+		postConditionSet.add(DefEntityCondition.getDefEntity(entityOne));
+		Task task = taskModel.extractTask(taskOne, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
-	@Test
-	public void conditionBelongsToOtherPostCondition() {
-		taskThree.removePostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
-		try {
-			Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
-			postConditions.add(DefEntityCondition.getDefEntity(entityOne));
-			taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CANNOT_ADD_TASK, bwe.getError());
-			assertEquals("condition already used", bwe.getMessage());
-		}
-	}
-
-	@Test
-	public void successWithOutMultiplicityFisrts() {
-		taskThree.delete();
-
-		Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
-		postConditions.add(DefAttributeCondition.getDefAttribute(attributeThree));
-		postConditions.add(DefAttributeCondition.getDefAttribute(attributeFour));
-		Task task = taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
-
-		assertEquals(NEW_TASK_NAME, task.getName());
-		assertEquals(2, task.getPostConditionSet().size());
-		assertTrue(task.getPostConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeThree)));
-		assertTrue(task.getPostConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeFour)));
-		assertEquals(3, task.getPreConditionSet().size());
-		assertTrue(task.getPreConditionSet().contains(DefEntityCondition.getDefEntity(entityTwo)));
-		assertTrue(task.getPreConditionSet().contains(DefEntityCondition.getDefEntity(entityThree)));
+		assertEquals(4, taskModel.getTasksSet().size());
 		assertTrue(
-				task.getPreConditionSet().contains(DefDependenceCondition.getDefDependence(spec, DEPENDENCE_PATH_ONE)));
-		assertEquals(0, task.getMultiplicityInvariantSet().size());
-		assertEquals(1, task.getRuleInvariantSet().size());
-		assertTrue(task.getRuleInvariantSet().contains(ruleTwo));
+				taskModel.getTask(TASK_ONE).getPreConditionSet().contains(DefEntityCondition.getDefEntity(entityOne)));
+
+		assertTrue(task.checkConsistency());
+		assertTrue(taskModel.getTask(TASK_ONE).checkConsistency());
 		assertTrue(taskModel.checkModel());
 	}
 
 	@Test
-	public void successWithOutMultiplicitySecond() {
-		taskOne.delete();
+	public void extractDefAttribute() {
+		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
+		postConditionSet.add(DefAttributeCondition.getDefAttribute(attributeOne));
+		postConditionSet.add(DefAttributeCondition.getDefAttribute(attributeTwo));
+		Task task = taskModel.extractTask(taskOne, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
-		Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
-		postConditions.add(DefEntityCondition.getDefEntity(entityOne));
-		postConditions.add(DefAttributeCondition.getDefAttribute(attributeOne));
-		postConditions.add(DefAttributeCondition.getDefAttribute(attributeTwo));
-		Task task = taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
+		assertEquals(4, taskModel.getTasksSet().size());
+		assertTrue(task.getRuleInvariantSet().contains(ruleOne));
 
-		assertEquals(NEW_TASK_NAME, task.getName());
-		assertEquals(3, task.getPostConditionSet().size());
+		assertTrue(task.checkConsistency());
+		assertTrue(taskModel.getTask(TASK_ONE).checkConsistency());
 		assertTrue(taskModel.checkModel());
 	}
 
 	@Test
-	public void successWithMultiplicity() {
-		taskTwo.delete();
+	public void extractWithMultiplicityImpact() {
+		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
+		postConditionSet.add(DefEntityCondition.getDefEntity(entityTwo));
+		Task task = taskModel.extractTask(taskTwo, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
-		Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
-		postConditions.add(DefEntityCondition.getDefEntity(entityTwo));
-		postConditions.add(DefEntityCondition.getDefEntity(entityThree));
-		Task task = taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
-
-		assertEquals(NEW_TASK_NAME, task.getName());
-		assertEquals(2, task.getPostConditionSet().size());
-
-		assertEquals(2, task.getMultiplicityInvariantSet().size());
+		assertEquals(4, taskModel.getTasksSet().size());
 		assertTrue(task.getMultiplicityInvariantSet()
 				.contains(MulCondition.getMulCondition(relation, relation.getRoleNameOne())));
 		assertTrue(task.getMultiplicityInvariantSet()
 				.contains(MulCondition.getMulCondition(relation, relation.getRoleNameTwo())));
+		assertEquals(0, taskModel.getTask(TASK_TWO).getMultiplicityInvariantSet().size());
 
+		assertTrue(task.checkConsistency());
+		assertTrue(taskModel.getTask(TASK_TWO).checkConsistency());
 		assertTrue(taskModel.checkModel());
 	}
 
