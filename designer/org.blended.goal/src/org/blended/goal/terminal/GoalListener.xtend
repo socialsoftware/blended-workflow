@@ -114,17 +114,17 @@ class DataListener implements Runnable {
 		catch (ParameterException pex) {
 			ConsoleManagement.write(name, "Parameter not valid: " + pex.message);
 			ConsoleManagement.write(name, "Type -help to know the available commands");
-			ConsoleManagement.write(name, "Type help -c=COMMAND for specific help");
+			ConsoleManagement.write(name, "Type help -c COMMAND for specific help");
 		}
 		catch (ValueException vex) {
 			ConsoleManagement.write(name, vex.message);
 			ConsoleManagement.write(name, "Type -help to know the available commands");
-			ConsoleManagement.write(name, "Type help -c=COMMAND for specific help");
+			ConsoleManagement.write(name, "Type help -c COMMAND for specific help");
 		}
 		catch (Exception e) {
 			ConsoleManagement.write(name, "Option not valid: " + e.message);
 			ConsoleManagement.write(name, "Type -help to know the available commands");
-			ConsoleManagement.write(name, "Type help -c=COMMAND for specific help");
+			ConsoleManagement.write(name, "Type help -c COMMAND for specific help");
 		}
 	}
 	
@@ -142,10 +142,10 @@ class DataListener implements Runnable {
 	help is a command used to show help to users
 	
 	Syntax:
-	help -c=C
+	help -c command
 	
 	Options:
-	-c=C	Command that needs to be explained (C string)
+	-c command	Command that needs to be explained (C string)
 	'''
 	
 	static def helpLS()'''
@@ -159,14 +159,14 @@ class DataListener implements Runnable {
 	join is a command used to join together two goals in the model
 	
 	Syntax for the specification:
-	join -n=NEW_GOAL GOAL1 GOAL2
+	join -n NEW_GOAL GOAL1 GOAL2
 	'''
 	
 	static def helpSPLIT()'''
 	splits is a command used to splits two goals in the model
 	
 	Syntax for the specification:
-	split -n=NEW_GOAL -t=[(c)hild|(s)ibling] -g=GOAL_TO_SPLIT -s=SUCCESS_ELEMENTS_SEPARATED_BY_SEMICOLON
+	split -n NEW_GOAL -t=[(c)hild|(s)ibling] -g GOAL_TO_SPLIT -s SUCCESS_ELEMENTS_SEPARATED_BY_SEMICOLON
 	'''
 		
 	def updateResource() {

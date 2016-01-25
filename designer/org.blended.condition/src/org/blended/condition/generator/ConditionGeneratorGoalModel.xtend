@@ -25,9 +25,9 @@ import org.blended.common.common.AttributeDependenceCondition
 import org.blended.common.utils.Queries
 import org.blended.common.common.EntityInvariantCondition
 import org.blended.common.common.AttributeInvariantCondition
-import java.util.ArrayList
-import java.util.stream.Collectors
 import org.blended.common.repository.CommonInterface
+import org.slf4j.LoggerFactory
+import org.slf4j.Logger
 
 /**
  * Generates code from your model files on save.
@@ -35,6 +35,8 @@ import org.blended.common.repository.CommonInterface
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class ConditionGeneratorGoalModel {
+	private static Logger logger = LoggerFactory.getLogger("ConditionGeneratorGoalModel")
+
 	Resource resource
 	IFileSystemAccess fsa
 	CommonFactory factory
@@ -74,7 +76,7 @@ class ConditionGeneratorGoalModel {
 
 			// ACT
 			for (dep : resource.allContents.toIterable.filter(typeof(EntityDependenceCondition))) {
-				step2(goal, o.name, dep)
+				createEntityDependence(goal, o.name, dep)
 			}
 
 			// INV
@@ -90,19 +92,21 @@ class ConditionGeneratorGoalModel {
 
 			// SUC
 			if (o instanceof MandatoryAttributeAchieveCondition) {
-				var nma = factory.createNotMandatoryAttributeAchieveCondition
+				var nma = factory.createMandatoryAttributeAchieveCondition
 				nma.attribute = o.attribute
 				goal.successConditions.add(nma)
+				logger.debug("MandatoryAttributeAchieveCondition attribute:{}", nma.attribute)
 			} else {
 				goal.successConditions.add(o.copy)
+				logger.debug("NoMandatoryAttributeAchieveCondition attribute:{}", o.attribute)
 			}
 
 			// SUB
-			step1(goal, o)
+			createSubGoals(goal, o)
 
 			// ACT
 			for (dep : resource.allContents.toIterable.filter(typeof(AttributeDependenceCondition))) {
-				step2(goal, o, dep)
+				createAttributeDependence(goal, o, dep)
 			}
 
 			var specId = resource.normalizedURI.lastSegment.split("\\.").get(0)
@@ -113,7 +117,7 @@ class ConditionGeneratorGoalModel {
 			}
 		}
 
-		// TO SERIALIZE THE ACTIVITY MODEL ACCORDING TO THE GOAL FORMATTER
+		// TO SERIALIZE THE GOAL MODEL ACCORDING TO THE GOAL FORMATTER
 		val injector = Guice.createInjector(new GoalRuntimeModule)
 		var rs = injector.getInstance(ResourceSet)
 		var r = rs.createResource(URI.createURI(resource.normalizedURI.toString.replace(".cm", ".gm")))
@@ -124,7 +128,7 @@ class ConditionGeneratorGoalModel {
 		r.save(builder.options.toOptionsMap)
 	}
 
-	def step1(Goal goal, EObject o) {
+	def createSubGoals(Goal goal, EObject o) {
 		if (o instanceof NotMandatoryAttributeAchieveCondition) {
 				var entity = Queries.getEntityNameFrom(o.attribute)
 				var entityGoal = getEntityGoalFromName(entity)
@@ -145,7 +149,7 @@ class ConditionGeneratorGoalModel {
 		}
 	}
 
-	def step2(Goal goal, String name, EntityDependenceCondition dep) {
+	def createEntityDependence(Goal goal, String name, EntityDependenceCondition dep) {
 		if (name.equals(dep.entity1)) {
 			var eac = factory.createEntityAchieveCondition
 			eac.name = dep.entity2
@@ -153,18 +157,19 @@ class ConditionGeneratorGoalModel {
 		}
 	}
 
-	def step2(Goal goal, EObject o, AttributeDependenceCondition dep) {
+	def createAttributeDependence(Goal goal, EObject o, AttributeDependenceCondition dep) {		
+		
 		if (o instanceof NotMandatoryAttributeAchieveCondition) {
 					if (dep.attribute1.equals(o.attribute)) {
 						var aac = factory.createNotMandatoryAttributeAchieveCondition
 						aac.attribute = dep.attribute2
-						goal.activationConditions.add(aac)
+						goal.activationConditions.add(aac.copy)
 					}
 		} else if (o instanceof MandatoryAttributeAchieveCondition) {
 					if (dep.attribute1.equals(o.attribute)) {
 						var aac = factory.createMandatoryAttributeAchieveCondition
 						aac.attribute = dep.attribute2
-						goal.activationConditions.add(aac)
+						goal.activationConditions.add(aac.copy)
 					}
 		}
 	}
@@ -188,6 +193,22 @@ class ConditionGeneratorGoalModel {
 			}
 		}
 	}
+	
+	def AttributeAchieveCondition getAttribute(String name) {
+		for (o : resource.allContents.toIterable.filter(typeof(AttributeAchieveCondition))) {
+			if (o instanceof NotMandatoryAttributeAchieveCondition) {		
+				if (o.attribute.equals(name)) {
+					return o;
+				}
+			} else if (o instanceof MandatoryAttributeAchieveCondition) {
+				if (o.attribute.equals(name)) {
+					return o;
+				}
+			}
+		}
+	}
+	
+	
 	
 }
 

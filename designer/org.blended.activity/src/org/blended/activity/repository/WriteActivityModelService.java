@@ -16,26 +16,26 @@ import org.eclipse.emf.ecore.EObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ActivityInterface {
+public class WriteActivityModelService {
     private static Logger log = LoggerFactory
-            .getLogger(ActivityInterface.class);
+            .getLogger(WriteActivityModelService.class);
 
-    private static ActivityInterface instance = null;
+    private static WriteActivityModelService instance = null;
 
-    public static ActivityInterface getInstance() {
+    public static WriteActivityModelService getInstance() {
         if (instance == null) {
-            instance = new ActivityInterface();
+            instance = new WriteActivityModelService();
         }
         return instance;
     }
 
     private CommonInterface ci = null;
 
-    private ActivityInterface() {
+    private WriteActivityModelService() {
         ci = CommonInterface.getInstance();
     }
 
-    public BWNotification loadActivityModel(String specId,
+    public BWNotification write(String specId,
             ActivityModel eActivityModel) {
         log.debug("loadActivityModel: {}", specId);
 

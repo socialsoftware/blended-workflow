@@ -16,7 +16,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.ConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
@@ -53,972 +52,875 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.req.AddActivityReq;
 
 public class DesignInterface {
-    private static Logger log = LoggerFactory.getLogger(DesignInterface.class);
-
-    private static DesignInterface instance;
-
-    public static DesignInterface getInstance() {
-        if (instance == null) {
-            instance = new DesignInterface();
-        }
-        return instance;
-    }
-
-    private DesignInterface() {
-    }
-
-    private BlendedWorkflow getBlendedWorkflow() {
-        return BlendedWorkflow.getInstance();
-    }
-
-    // to be invoked by tests only
-    @Atomic(mode = TxMode.WRITE)
-    public void deleteSpecification(String specId) {
-        getSpecBySpecId(specId).delete();
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    public Specification getSpecBySpecId(String specId) {
-        Specification spec = getBlendedWorkflow().getSpecById(specId)
-                .orElseThrow(() -> new BWException(
-                        BWErrorType.INVALID_SPECIFICATION_ID, specId));
-        return spec;
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    public Specification createSpecification(SpecDTO specDTO) {
-        return getBlendedWorkflow().createSpecification(specDTO.getSpecId(),
-                specDTO.getName());
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    public void cleanDataModel(String specId) {
-        Specification spec = getSpecBySpecId(specId);
-
-        spec.getDataModel().clean();
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    public Entity createEntity(EntityDTO entDTO) {
-        log.debug("createEntity specId:{}, name:{}, exists:{}",
-                entDTO.getSpecId(), entDTO.getName(), entDTO.getExists());
-
-        Specification spec = getSpecBySpecId(entDTO.getSpecId());
-
-        return spec.getDataModel().createEntity(entDTO.getName(),
-                entDTO.getExists());
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    public AttributeBasic createAttribute(AttributeDTO attDTO) {
-        log.debug("createAttribute entityExtId:{}", attDTO.getEntityExtId());
-        Entity ent = getEntityByExtId(attDTO.getEntityExtId());
-
-        AttributeGroup attGroup = null;
-        if (attDTO.getGroupExtId() != null) {
-            attGroup = getAttributeGroupByExtId(attDTO.getGroupExtId());
-        }
-
-        AttributeBasic attribute = ent.createAttribute(attGroup,
-                attDTO.getName(),
-                AttributeType.parseAttributeType(attDTO.getType()),
-                attDTO.getIsMandatory());
-
-        return attribute;
-    }
-
-    public Product getProduct(String specId, String path) {
-        return getSpecBySpecId(specId).getDataModel().getTargetOfPath(path);
-    }
-
-    @Atomic(mode = TxMode.WRITE)
-    public RelationBW createRelation(RelationDTO relDTO) {
-        log.debug("createRelation {}, entityOneName:{}, entityTwoName:{}",
-                relDTO.getSpecId(), relDTO.getEntOneName(),
-                relDTO.getEntTwoName());
-
-        Specification spec = getSpecBySpecId(relDTO.getSpecId());
-
-        Entity entityOne;
-        if (relDTO.getEntOneExtId() != null) {
-            entityOne = getEntityByExtId(relDTO.getEntOneExtId());
-        } else {
-            entityOne = getEntityByName(spec.getDataModel(),
-                    relDTO.getEntOneName());
-        }
-
-        Entity entityTwo;
-        if (relDTO.getEntTwoExtId() != null) {
-            entityTwo = getEntityByExtId(relDTO.getEntTwoExtId());
-        } else {
-            entityTwo = getEntityByName(spec.getDataModel(),
-                    relDTO.getEntTwoName());
-        }
+	private static Logger log = LoggerFactory.getLogger(DesignInterface.class);
+
+	private static DesignInterface instance;
+
+	public static DesignInterface getInstance() {
+		if (instance == null) {
+			instance = new DesignInterface();
+		}
+		return instance;
+	}
+
+	private DesignInterface() {
+	}
+
+	private BlendedWorkflow getBlendedWorkflow() {
+		return BlendedWorkflow.getInstance();
+	}
+
+	// to be invoked by tests only
+	@Atomic(mode = TxMode.WRITE)
+	public void deleteSpecification(String specId) {
+		getSpecBySpecId(specId).delete();
+	}
+
+	@Atomic(mode = TxMode.WRITE)
+	public Specification getSpecBySpecId(String specId) {
+		Specification spec = getBlendedWorkflow().getSpecById(specId)
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID, specId));
+		return spec;
+	}
 
-        if (entityOne.getDataModel() != entityTwo.getDataModel())
-            throw new BWException(BWErrorType.INVALID_RELATION,
-                    entityOne.getDataModel().getSpecification().getSpecId()
-                            + "!=" + entityTwo.getDataModel().getSpecification()
-                                    .getSpecId());
+	@Atomic(mode = TxMode.WRITE)
+	public Specification createSpecification(SpecDTO specDTO) {
+		return getBlendedWorkflow().createSpecification(specDTO.getSpecId(), specDTO.getName());
+	}
 
-        RelationBW relation = entityOne.createRelation(relDTO.getName(),
-                relDTO.getRolenameOne(),
-                Cardinality.parseCardinality(relDTO.getCardinalityOne()),
-                entityTwo, relDTO.getRolenameTwo(),
-                Cardinality.parseCardinality(relDTO.getCardinalityTwo()));
+	@Atomic(mode = TxMode.WRITE)
+	public void cleanDataModel(String specId) {
+		Specification spec = getSpecBySpecId(specId);
 
-        return relation;
-    }
+		spec.getDataModel().clean();
+	}
+
+	@Atomic(mode = TxMode.WRITE)
+	public Entity createEntity(EntityDTO entDTO) {
+		log.debug("createEntity specId:{}, name:{}, exists:{}", entDTO.getSpecId(), entDTO.getName(),
+				entDTO.getExists());
+
+		Specification spec = getSpecBySpecId(entDTO.getSpecId());
+
+		return spec.getDataModel().createEntity(entDTO.getName(), entDTO.getExists());
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public AttributeGroup createAttributeGroup(AttributeGroupDTO attGroupDTO) {
-        Entity entity = getEntityByExtId(attGroupDTO.getEntityExtId());
+	@Atomic(mode = TxMode.WRITE)
+	public AttributeBasic createAttribute(AttributeDTO attDTO) {
+		log.debug("createAttribute entityExtId:{}", attDTO.getEntityExtId());
+		Entity ent = getEntityByExtId(attDTO.getEntityExtId());
 
-        AttributeGroup group = entity.createAttributeGroup(
-                attGroupDTO.getName(), attGroupDTO.isMandatory());
+		AttributeGroup attGroup = null;
+		if (attDTO.getGroupExtId() != null) {
+			attGroup = getAttributeGroupByExtId(attDTO.getGroupExtId());
+		}
 
-        return group;
-    }
+		AttributeBasic attribute = ent.createAttribute(attGroup, attDTO.getName(),
+				AttributeType.parseAttributeType(attDTO.getType()), attDTO.getIsMandatory());
 
-    @Atomic(mode = TxMode.WRITE)
-    public Dependence createDependence(DependenceDTO productDTO) {
-        Product product = getProductByExtId(productDTO.getProductExtId());
+		return attribute;
+	}
 
-        return product.createDependence(productDTO.getPath());
-    }
+	public Product getProduct(String specId, String path) {
+		return getSpecBySpecId(specId).getDataModel().getTargetOfPath(path);
+	}
 
-    public Set<Dependence> getDependencies(String specId) {
-        Specification spec = getSpecBySpecId(specId);
+	@Atomic(mode = TxMode.WRITE)
+	public RelationBW createRelation(RelationDTO relDTO) {
+		log.debug("createRelation {}, entityOneName:{}, entityTwoName:{}", relDTO.getSpecId(), relDTO.getEntOneName(),
+				relDTO.getEntTwoName());
 
-        Set<Dependence> deps = new HashSet<Dependence>();
+		Specification spec = getSpecBySpecId(relDTO.getSpecId());
 
-        for (Dependence dependence : spec.getDataModel().getDependenceSet()) {
-            deps.add(dependence);
-        }
+		Entity entityOne;
+		if (relDTO.getEntOneExtId() != null) {
+			entityOne = getEntityByExtId(relDTO.getEntOneExtId());
+		} else {
+			entityOne = getEntityByName(spec.getDataModel(), relDTO.getEntOneName());
+		}
 
-        return deps;
-    }
+		Entity entityTwo;
+		if (relDTO.getEntTwoExtId() != null) {
+			entityTwo = getEntityByExtId(relDTO.getEntTwoExtId());
+		} else {
+			entityTwo = getEntityByName(spec.getDataModel(), relDTO.getEntTwoName());
+		}
 
-    public boolean checkDependence(String extId) {
-        Dependence dependence = getDependenceByExtId(extId);
-        return dependence.check();
-    }
+		if (entityOne.getDataModel() != entityTwo.getDataModel())
+			throw new BWException(BWErrorType.INVALID_RELATION, entityOne.getDataModel().getSpecification().getSpecId()
+					+ "!=" + entityTwo.getDataModel().getSpecification().getSpecId());
 
-    @Atomic(mode = TxMode.WRITE)
-    public void deleteDependence(String extId) {
-        Dependence dependence = getDependenceByExtId(extId);
-        dependence.delete();
-    }
+		RelationBW relation = entityOne.createRelation(relDTO.getName(), relDTO.getRolenameOne(),
+				Cardinality.parseCardinality(relDTO.getCardinalityOne()), entityTwo, relDTO.getRolenameTwo(),
+				Cardinality.parseCardinality(relDTO.getCardinalityTwo()));
 
-    @Atomic(mode = TxMode.WRITE)
-    public Rule createRule(RuleDTO ruleDTO) {
-        Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
+		return relation;
+	}
 
-        Rule rule = spec.getDataModel().createRule(ruleDTO.getName(),
-                ruleDTO.getExpression().buildCondition(spec.getDataModel()));
+	@Atomic(mode = TxMode.WRITE)
+	public AttributeGroup createAttributeGroup(AttributeGroupDTO attGroupDTO) {
+		Entity entity = getEntityByExtId(attGroupDTO.getEntityExtId());
 
-        log.debug("createRule expression:{}", rule.getCondition().getSubPath());
+		AttributeGroup group = entity.createAttributeGroup(attGroupDTO.getName(), attGroupDTO.isMandatory());
 
-        return rule;
-    }
+		return group;
+	}
 
-    public boolean ruleUsesAnyAttribute(String specId, String ruleName,
-            String path) {
-        Specification spec = getSpecBySpecId(specId);
+	@Atomic(mode = TxMode.WRITE)
+	public Dependence createDependence(DependenceDTO productDTO) {
+		Product product = getProductByExtId(productDTO.getProductExtId());
 
-        Rule rule = getRule(spec, ruleName);
+		return product.createDependence(productDTO.getPath());
+	}
 
-        return !Collections.disjoint(rule.getAttributeBasicSet(),
-                getAttribute(spec, path).getAttributeBasicSet());
-    }
+	public Set<Dependence> getDependencies(String specId) {
+		Specification spec = getSpecBySpecId(specId);
 
-    @Atomic(mode = TxMode.WRITE)
-    public void cleanConditionModel(String specId) {
-        Specification spec = getSpecBySpecId(specId);
+		Set<Dependence> deps = new HashSet<Dependence>();
 
-        if (spec.getDataModel().getEntitySet().size() == 0)
-            throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+		for (Dependence dependence : spec.getDataModel().getDependenceSet()) {
+			deps.add(dependence);
+		}
 
-        spec.getConditionModel().clean();
-    }
+		return deps;
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public boolean generateConditionModel(String specId) {
-        Specification spec = getSpecBySpecId(specId);
+	public boolean checkDependence(String extId) {
+		Dependence dependence = getDependenceByExtId(extId);
+		return dependence.check();
+	}
 
-        if (spec.getDataModel().getEntitySet().size() == 0)
-            throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+	@Atomic(mode = TxMode.WRITE)
+	public void deleteDependence(String extId) {
+		Dependence dependence = getDependenceByExtId(extId);
+		dependence.delete();
+	}
 
-        spec.getConditionModel().generateConditions();
+	@Atomic(mode = TxMode.WRITE)
+	public Rule createRule(RuleDTO ruleDTO) {
+		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
 
-        return true;
-    }
+		Rule rule = spec.getDataModel().createRule(ruleDTO.getName(),
+				ruleDTO.getExpression().buildCondition(spec.getDataModel()));
 
-    @Atomic(mode = TxMode.WRITE)
-    public void cleanGoalModel(String specId) {
-        Specification spec = getSpecBySpecId(specId);
+		log.debug("createRule expression:{}", rule.getCondition().getSubPath());
 
-        if (spec.getDataModel().getEntitySet().size() == 0)
-            throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+		return rule;
+	}
 
-        if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
-            throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
+	public boolean ruleUsesAnyAttribute(String specId, String ruleName, String path) {
+		Specification spec = getSpecBySpecId(specId);
 
-        spec.getGoalModel().clean();
-    }
+		Rule rule = getRule(spec, ruleName);
 
-    @Atomic(mode = TxMode.WRITE)
-    public void cleanActivityModel(String specId) {
-        Specification spec = getSpecBySpecId(specId);
+		return !Collections.disjoint(rule.getAttributeBasicSet(), getAttribute(spec, path).getAttributeBasicSet());
+	}
 
-        if (spec.getDataModel().getEntitySet().size() == 0)
-            throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+	@Atomic(mode = TxMode.WRITE)
+	public void cleanConditionModel(String specId) {
+		Specification spec = getSpecBySpecId(specId);
 
-        if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
-            throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
+		if (spec.getDataModel().getEntitySet().size() == 0)
+			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
 
-        spec.getTaskModel().clean();
-    }
+		spec.getConditionModel().clean();
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public DefEntityCondition createEntityAchieveCondition(
-            DefEntityConditionDTO eacDTO) {
-        log.debug("createEntityAchieveCondition Entity:{}, Value:{}",
-                eacDTO.getEntityName(), eacDTO.isExists());
-        Specification spec = getSpecBySpecId(eacDTO.getSpecId());
+	@Atomic(mode = TxMode.WRITE)
+	public boolean generateConditionModel(String specId) {
+		Specification spec = getSpecBySpecId(specId);
 
-        Entity entity = getEntityByName(spec.getDataModel(),
-                eacDTO.getEntityName());
+		if (spec.getDataModel().getEntitySet().size() == 0)
+			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
 
-        if (entity.getExists() != eacDTO.isExists()) {
-            throw new BWException(BWErrorType.INVALID_ENTITY,
-                    eacDTO.getEntityName() + " exists=" + entity.getExists());
-        }
+		spec.getConditionModel().generateConditions();
 
-        DefEntityCondition defCondition = DefEntityCondition
-                .getDefEntity(entity);
-        spec.getConditionModel().addEntityAchieveCondition(defCondition);
+		return true;
+	}
 
-        return defCondition;
-    }
+	@Atomic(mode = TxMode.WRITE)
+	public void cleanGoalModel(String specId) {
+		Specification spec = getSpecBySpecId(specId);
 
-    public Entity getEntityByName(String specId, String entityName) {
-        Specification spec = getSpecBySpecId(specId);
+		if (spec.getDataModel().getEntitySet().size() == 0)
+			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
 
-        return getEntityByName(spec.getDataModel(), entityName);
-    }
+		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
+			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
 
-    public AttributeBasic getAttributeByExtId(String extId) {
-        return FenixFramework.getDomainObject(extId);
-    }
+		spec.getGoalModel().clean();
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public Dependence createEntityDependenceCondition(
-            DependenceDTO dependenceDTO) {
-        log.debug("createEntityDependenceCondition entityExtId:{}, Path:{}",
-                dependenceDTO.getProductExtId(), dependenceDTO.getPath());
+	@Atomic(mode = TxMode.WRITE)
+	public void cleanActivityModel(String specId) {
+		Specification spec = getSpecBySpecId(specId);
 
-        Entity entity = getEntityByExtId(dependenceDTO.getProductExtId());
+		if (spec.getDataModel().getEntitySet().size() == 0)
+			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
 
-        Dependence dependence = getDependence(entity, dependenceDTO.getPath());
+		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
+			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
 
-        ConditionModel conditionModel = entity.getDataModel().getSpecification()
-                .getConditionModel();
-        conditionModel.addEntityDependenceCondition(dependence);
+		spec.getTaskModel().clean();
+	}
 
-        return dependence;
-    }
+	@Atomic(mode = TxMode.WRITE)
+	public DefEntityCondition createEntityAchieveCondition(DefEntityConditionDTO eacDTO) {
+		log.debug("createEntityAchieveCondition Entity:{}, Value:{}", eacDTO.getEntityName(), eacDTO.isExists());
+		Specification spec = getSpecBySpecId(eacDTO.getSpecId());
 
-    @Atomic(mode = TxMode.WRITE)
-    public MulCondition createEntityInvariantCondition(MulConditionDTO miDTO) {
-        log.debug("createEntityInvariantCondition Entity:{}, Cardinality:{}",
-                miDTO.getRolePath(), miDTO.getCardinality());
-        Specification spec = getSpecBySpecId(miDTO.getSpecId());
+		Entity entity = getEntityByName(spec.getDataModel(), eacDTO.getEntityName());
 
-        MulCondition mulCondition = getMULCondition(spec, miDTO.getRolePath());
+		if (entity.getExists() != eacDTO.isExists()) {
+			throw new BWException(BWErrorType.INVALID_ENTITY, eacDTO.getEntityName() + " exists=" + entity.getExists());
+		}
 
-        if (!mulCondition.getCardinality().equals(miDTO.getCardinality()))
-            new BWException(BWErrorType.INVALID_CARDINALITY,
-                    miDTO.getCardinality());
+		DefEntityCondition defCondition = DefEntityCondition.getDefEntity(entity);
+		spec.getConditionModel().addEntityAchieveCondition(defCondition);
 
-        spec.getConditionModel().addEntityInvariantCondition(mulCondition);
+		return defCondition;
+	}
 
-        return mulCondition;
-    }
+	public Entity getEntityByName(String specId, String entityName) {
+		Specification spec = getSpecBySpecId(specId);
 
-    @Atomic(mode = TxMode.WRITE)
-    public DefAttributeCondition createAttributeAchieveCondition(
-            DefAttributeConditionDTO aacDTO) {
-        log.debug("createAttributeAchieveCondition path:{}, mandatory:{}",
-                aacDTO.getPath(), aacDTO.isMandatory());
+		return getEntityByName(spec.getDataModel(), entityName);
+	}
 
-        Specification spec = getSpecBySpecId(aacDTO.getSpecId());
+	public AttributeBasic getAttributeByExtId(String extId) {
+		return FenixFramework.getDomainObject(extId);
+	}
 
-        DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(spec, aacDTO.getPath());
+	@Atomic(mode = TxMode.WRITE)
+	public Dependence createEntityDependenceCondition(DependenceDTO dependenceDTO) {
+		log.debug("createEntityDependenceCondition entityExtId:{}, Path:{}", dependenceDTO.getProductExtId(),
+				dependenceDTO.getPath());
 
-        if (defAttributeCondition.getAttributeOfDef() != null
-                && defAttributeCondition.getAttributeOfDef()
-                        .getIsMandatory() != aacDTO.isMandatory())
-            throw new BWException(BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY,
-                    aacDTO.getPath().toString());
+		Entity entity = getEntityByExtId(dependenceDTO.getProductExtId());
 
-        spec.getConditionModel()
-                .addAttributeAchieveCondition(defAttributeCondition);
+		Dependence dependence = getDependence(entity, dependenceDTO.getPath());
 
-        return defAttributeCondition;
-    }
+		ConditionModel conditionModel = entity.getDataModel().getSpecification().getConditionModel();
+		conditionModel.addEntityDependenceCondition(dependence);
 
-    @Atomic(mode = TxMode.WRITE)
-    public Dependence createAttributeDependence(DependenceDTO dependenceDTO) {
-        log.debug("createAttributeDependenceCondition productExtId:{}, path:{}",
-                dependenceDTO.getProductExtId(), dependenceDTO.getPath());
-        Product product = getProductByExtId(dependenceDTO.getProductExtId());
+		return dependence;
+	}
 
-        Dependence dependence = getDependence(product, dependenceDTO.getPath());
+	@Atomic(mode = TxMode.WRITE)
+	public MulCondition createEntityInvariantCondition(MulConditionDTO miDTO) {
+		log.debug("createEntityInvariantCondition Entity:{}, Cardinality:{}", miDTO.getRolePath(),
+				miDTO.getCardinality());
+		Specification spec = getSpecBySpecId(miDTO.getSpecId());
 
-        ConditionModel conditionModel = product.getEntity().getDataModel()
-                .getSpecification().getConditionModel();
-        conditionModel.addAttributeDependenceCondition(dependence);
+		MulCondition mulCondition = getMULCondition(spec, miDTO.getRolePath());
 
-        return dependence;
-    }
+		if (!mulCondition.getCardinality().equals(miDTO.getCardinality()))
+			new BWException(BWErrorType.INVALID_CARDINALITY, miDTO.getCardinality());
 
-    @Atomic(mode = TxMode.WRITE)
-    public Rule createAttributeInvariant(RuleDTO ruleDTO) {
-        Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
+		spec.getConditionModel().addEntityInvariantCondition(mulCondition);
 
-        Rule rule = getRule(spec, ruleDTO.getName());
+		return mulCondition;
+	}
 
-        spec.getConditionModel().addAttributeInvariantCondition(rule);
+	@Atomic(mode = TxMode.WRITE)
+	public DefAttributeCondition createAttributeAchieveCondition(DefAttributeConditionDTO aacDTO) {
+		log.debug("createAttributeAchieveCondition path:{}, mandatory:{}", aacDTO.getPath(), aacDTO.isMandatory());
 
-        return rule;
-    }
+		Specification spec = getSpecBySpecId(aacDTO.getSpecId());
 
-    public Set<Goal> getGoals(String specId) {
-        Specification spec = getSpecBySpecId(specId);
+		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, aacDTO.getPath());
 
-        return spec.getGoalModel().getGoalSet();
-    }
+		if (defAttributeCondition.getAttributeOfDef() != null
+				&& defAttributeCondition.getAttributeOfDef().getIsMandatory() != aacDTO.isMandatory())
+			throw new BWException(BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY, aacDTO.getPath().toString());
 
-    @Atomic(mode = TxMode.WRITE)
-    public Goal createGoal(GoalDTO goalDTO) {
-        Specification spec = getSpecBySpecId(goalDTO.getSpecId());
+		spec.getConditionModel().addAttributeAchieveCondition(defAttributeCondition);
 
-        return new Goal(spec.getGoalModel(), goalDTO.getName());
-    }
+		return defAttributeCondition;
+	}
 
-    public Goal getGoalByName(String specId, String goalName) {
-        Specification spec = getSpecBySpecId(specId);
+	@Atomic(mode = TxMode.WRITE)
+	public Dependence createAttributeDependence(DependenceDTO dependenceDTO) {
+		log.debug("createAttributeDependenceCondition productExtId:{}, path:{}", dependenceDTO.getProductExtId(),
+				dependenceDTO.getPath());
+		Product product = getProductByExtId(dependenceDTO.getProductExtId());
 
-        return getGoalByName(spec, goalName);
-    }
+		Dependence dependence = getDependence(product, dependenceDTO.getPath());
 
-    public Set<DefEntityCondition> getGoalSuccessEntitySet(String specId,
-            String goalName) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+		ConditionModel conditionModel = product.getEntity().getDataModel().getSpecification().getConditionModel();
+		conditionModel.addAttributeDependenceCondition(dependence);
 
-        return goal.getSuccessConditionSet().stream()
-                .filter(DefEntityCondition.class::isInstance)
-                .map(DefEntityCondition.class::cast)
-                .collect(Collectors.toSet());
-    }
+		return dependence;
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public DefEntityCondition associateEntityToGoalSuccess(String specId,
-            String goalName, String path) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+	@Atomic(mode = TxMode.WRITE)
+	public Rule createAttributeInvariant(RuleDTO ruleDTO) {
+		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
 
-        Product product = spec.getDataModel().getTargetOfPath(path);
-        if (product.getProductType() != ProductType.ENTITY)
-            throw new BWException(BWErrorType.INVALID_PATH, path);
+		Rule rule = getRule(spec, ruleDTO.getName());
 
-        DefEntityCondition defEntityCondition = ((Entity) product)
-                .getDefEntityCondition();
-        goal.addSuccessCondition(defEntityCondition);
+		spec.getConditionModel().addAttributeInvariantCondition(rule);
 
-        return defEntityCondition;
-    }
+		return rule;
+	}
 
-    public Set<DefAttributeCondition> getGoalSuccessAttributeSet(String specId,
-            String goalName) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+	public Set<Goal> getGoals(String specId) {
+		Specification spec = getSpecBySpecId(specId);
 
-        return goal.getSuccessConditionSet().stream()
-                .filter(DefAttributeCondition.class::isInstance)
-                .map(DefAttributeCondition.class::cast)
-                .collect(Collectors.toSet());
-    }
+		return spec.getGoalModel().getGoalSet();
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public DefAttributeCondition associateAttributeToGoalSuccess(String specId,
-            String goalName, String path) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
-        DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(spec, path);
+	@Atomic(mode = TxMode.WRITE)
+	public Goal createGoal(GoalDTO goalDTO) {
+		Specification spec = getSpecBySpecId(goalDTO.getSpecId());
 
-        goal.addSuccessCondition(defAttributeCondition);
+		return new Goal(spec.getGoalModel(), goalDTO.getName());
+	}
 
-        return defAttributeCondition;
-    }
+	public Goal getGoalByName(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
 
-    public Set<DefEntityCondition> getGoalActivationEntitySet(String specId,
-            String goalName) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+		return getGoalByName(spec, goalName);
+	}
 
-        return goal.getActivationConditionSet().stream()
-                .filter(DefEntityCondition.class::isInstance)
-                .map(DefEntityCondition.class::cast)
-                .collect(Collectors.toSet());
-    }
+	public Set<DefEntityCondition> getGoalSuccessEntitySet(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-    @Atomic(mode = TxMode.WRITE)
-    public DefEntityCondition associateEntityToGoalAtivation(String specId,
-            String goalName, String path) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+		return goal.getSuccessConditionSet().stream().filter(DefEntityCondition.class::isInstance)
+				.map(DefEntityCondition.class::cast).collect(Collectors.toSet());
+	}
 
-        Product product = spec.getDataModel().getTargetOfPath(path);
-        if (product.getProductType() != ProductType.ENTITY)
-            throw new BWException(BWErrorType.INVALID_PATH, path);
+	@Atomic(mode = TxMode.WRITE)
+	public DefEntityCondition associateEntityToGoalSuccess(String specId, String goalName, String path) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-        DefEntityCondition defEntityCondition = ((Entity) product)
-                .getDefEntityCondition();
-        goal.addActivationCondition(defEntityCondition);
+		Product product = spec.getDataModel().getTargetOfPath(path);
+		if (product.getProductType() != ProductType.ENTITY)
+			throw new BWException(BWErrorType.INVALID_PATH, path);
 
-        return defEntityCondition;
-    }
+		DefEntityCondition defEntityCondition = ((Entity) product).getDefEntityCondition();
+		goal.addSuccessCondition(defEntityCondition);
 
-    public Set<DefAttributeCondition> getGoalActivationAttributeSet(
-            String specId, String goalName) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+		return defEntityCondition;
+	}
 
-        return goal.getActivationConditionSet().stream()
-                .filter(DefAttributeCondition.class::isInstance)
-                .map(DefAttributeCondition.class::cast)
-                .collect(Collectors.toSet());
-    }
+	public Set<DefAttributeCondition> getGoalSuccessAttributeSet(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-    @Atomic(mode = TxMode.WRITE)
-    public DefAttributeCondition associateAttributeToGoalActivation(
-            String specId, String goalName, String path) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
-        DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(spec, path);
+		return goal.getSuccessConditionSet().stream().filter(DefAttributeCondition.class::isInstance)
+				.map(DefAttributeCondition.class::cast).collect(Collectors.toSet());
+	}
 
-        goal.addActivationCondition(defAttributeCondition);
+	@Atomic(mode = TxMode.WRITE)
+	public DefAttributeCondition associateAttributeToGoalSuccess(String specId, String goalName, String path) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
+		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, path);
 
-        return defAttributeCondition;
-    }
+		goal.addSuccessCondition(defAttributeCondition);
 
-    public Set<MulCondition> getGoalMulInvSet(String specId, String goalName) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+		return defAttributeCondition;
+	}
 
-        return goal.getEntityInvariantConditionSet();
-    }
+	public Set<DefEntityCondition> getGoalActivationEntitySet(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-    @Atomic(mode = TxMode.WRITE)
-    public void associateMulToGoalInvariant(String specId, String goalName,
-            String path, String cardinality) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+		return goal.getActivationConditionSet().stream().filter(DefEntityCondition.class::isInstance)
+				.map(DefEntityCondition.class::cast).collect(Collectors.toSet());
+	}
 
-        MulCondition mulCondition = getMULCondition(spec, path);
+	@Atomic(mode = TxMode.WRITE)
+	public DefEntityCondition associateEntityToGoalAtivation(String specId, String goalName, String path) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-        goal.addEntityInvariantCondition(mulCondition);
-    }
+		Product product = spec.getDataModel().getTargetOfPath(path);
+		if (product.getProductType() != ProductType.ENTITY)
+			throw new BWException(BWErrorType.INVALID_PATH, path);
 
-    public Set<Rule> getGoalRuleInvSet(String specId, String goalName) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+		DefEntityCondition defEntityCondition = ((Entity) product).getDefEntityCondition();
+		goal.addActivationCondition(defEntityCondition);
 
-        return goal.getAttributeInvariantConditionSet();
-    }
+		return defEntityCondition;
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public void associateRuleToGoalInvariant(String specId, String goalName,
-            String ruleName) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+	public Set<DefAttributeCondition> getGoalActivationAttributeSet(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-        Rule rule = getRule(spec, ruleName);
+		return goal.getActivationConditionSet().stream().filter(DefAttributeCondition.class::isInstance)
+				.map(DefAttributeCondition.class::cast).collect(Collectors.toSet());
+	}
 
-        goal.addAttributeInvariantCondition(rule);
-    }
+	@Atomic(mode = TxMode.WRITE)
+	public DefAttributeCondition associateAttributeToGoalActivation(String specId, String goalName, String path) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
+		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, path);
 
-    public Set<Goal> getSubGoals(String specId, String goalName) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+		goal.addActivationCondition(defAttributeCondition);
 
-        return goal.getSubGoalSet();
-    }
+		return defAttributeCondition;
+	}
 
-    public Goal getParentGoal(String specId, String goalName) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
+	public Set<MulCondition> getGoalMulInvSet(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-        return goal.getParentGoal();
-    }
+		return goal.getEntityInvariantConditionSet();
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public Goal addSubGoal(String specId, String goalName, String subGoalName) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goal = getGoalByName(spec, goalName);
-        Goal subGoal = getGoalByName(spec, subGoalName);
-        goal.addSubGoal(subGoal);
+	@Atomic(mode = TxMode.WRITE)
+	public void associateMulToGoalInvariant(String specId, String goalName, String path, String cardinality) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-        return subGoal;
-    }
+		MulCondition mulCondition = getMULCondition(spec, path);
 
-    @Atomic(mode = TxMode.WRITE)
-    public Goal mergeGoals(String specId, String newGoalName,
-            String goalNameOne, String goalNameTwo) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal goalOne = getGoalByName(spec, goalNameOne);
-        Goal goalTwo = getGoalByName(spec, goalNameTwo);
+		goal.addEntityInvariantCondition(mulCondition);
+	}
 
-        return spec.getGoalModel().mergeGoals(newGoalName, goalOne, goalTwo);
-    }
+	public Set<Rule> getGoalRuleInvSet(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-    @Atomic(mode = TxMode.WRITE)
-    public Goal extractChildGoal(String specId, String newGoalName,
-            String sourceGoalName,
-            DefProductConditionSetDTO successConditionDTO) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal parentGoal = getGoalByName(spec, sourceGoalName);
+		return goal.getAttributeInvariantConditionSet();
+	}
 
-        Set<DefProductCondition> successConditions = getConditionSet(spec,
-                successConditionDTO);
+	@Atomic(mode = TxMode.WRITE)
+	public void associateRuleToGoalInvariant(String specId, String goalName, String ruleName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-        return parentGoal.extractChild(newGoalName, successConditions);
-    }
+		Rule rule = getRule(spec, ruleName);
 
-    @Atomic(mode = TxMode.WRITE)
-    public Goal extractSiblingGoal(String specId, String newGoalName,
-            String sourceGoalName,
-            DefProductConditionSetDTO successConditionDTO) {
-        Specification spec = getSpecBySpecId(specId);
-        Goal sourceGoal = getGoalByName(spec, sourceGoalName);
+		goal.addAttributeInvariantCondition(rule);
+	}
 
-        Set<DefProductCondition> successConditions = getConditionSet(spec,
-                successConditionDTO);
+	public Set<Goal> getSubGoals(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-        return sourceGoal.extractSibling(newGoalName, successConditions);
-    }
+		return goal.getSubGoalSet();
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public Task createActivity(ActivityDTO activityDTO) {
-        Specification spec = getSpecBySpecId(activityDTO.getSpecId());
+	public Goal getParentGoal(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
 
-        return spec.getTaskModel().createTask(activityDTO.getName(),
-                activityDTO.getDescription());
-    }
+		return goal.getParentGoal();
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public Task addActivity(String specId, AddActivityReq request) {
-        Specification spec = getSpecBySpecId(specId);
+	@Atomic(mode = TxMode.WRITE)
+	public Goal addSubGoal(String specId, String goalName, String subGoalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
+		Goal subGoal = getGoalByName(spec, subGoalName);
+		goal.addSubGoal(subGoal);
 
-        return spec.getTaskModel().addTask(request.getActivityName(),
-                request.getDescription(),
-                getConditionSet(spec, request.getPostConditionSet()));
-    }
+		return subGoal;
+	}
 
-    public Set<DefProductCondition> getActivityPreCondition(String specId,
-            String activityName) {
-        Specification spec = getSpecBySpecId(specId);
-        Task task = getTaskByName(spec, activityName);
+	@Atomic(mode = TxMode.WRITE)
+	public Goal mergeGoals(String specId, String newGoalName, String goalNameOne, String goalNameTwo) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goalOne = getGoalByName(spec, goalNameOne);
+		Goal goalTwo = getGoalByName(spec, goalNameTwo);
 
-        return task.getPreConditionSet();
-    }
+		return spec.getGoalModel().mergeGoals(newGoalName, goalOne, goalTwo);
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public DefEntityCondition associateEntityToActivityPre(String specId,
-            String activityName, String path) {
-        Specification spec = getSpecBySpecId(specId);
-        Task task = getTaskByName(spec, activityName);
+	@Atomic(mode = TxMode.WRITE)
+	public Goal extractChildGoal(String specId, String newGoalName, String sourceGoalName,
+			DefProductConditionSetDTO successConditionDTO) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal parentGoal = getGoalByName(spec, sourceGoalName);
 
-        Product product = spec.getDataModel().getTargetOfPath(path);
-        if (product.getProductType() != ProductType.ENTITY)
-            throw new BWException(BWErrorType.INVALID_PATH, path);
+		Set<DefProductCondition> successConditions = getConditionSet(spec, successConditionDTO);
 
-        DefEntityCondition defEntityCondition = ((Entity) product)
-                .getDefEntityCondition();
+		return parentGoal.extractChild(newGoalName, successConditions);
+	}
 
-        task.addPreCondition(defEntityCondition);
+	@Atomic(mode = TxMode.WRITE)
+	public Goal extractSiblingGoal(String specId, String newGoalName, String sourceGoalName,
+			DefProductConditionSetDTO successConditionDTO) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal sourceGoal = getGoalByName(spec, sourceGoalName);
 
-        return defEntityCondition;
-    }
+		Set<DefProductCondition> successConditions = getConditionSet(spec, successConditionDTO);
 
-    @Atomic(mode = TxMode.WRITE)
-    public DefAttributeCondition associateAttributeToActivityPre(String specId,
-            String activityName, String path) {
-        Specification spec = getSpecBySpecId(specId);
-        Task task = getTaskByName(spec, activityName);
-        DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(spec, path);
+		return sourceGoal.extractSibling(newGoalName, successConditions);
+	}
 
-        task.addPreCondition(defAttributeCondition);
+	@Atomic(mode = TxMode.WRITE)
+	public Task createActivity(ActivityDTO activityDTO) {
+		Specification spec = getSpecBySpecId(activityDTO.getSpecId());
 
-        return defAttributeCondition;
-    }
+		return spec.getTaskModel().createTask(activityDTO.getName(), activityDTO.getDescription());
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public DefEntityCondition associateEntityToActivityPost(String specId,
-            String activityName, String path) {
-        Specification spec = getSpecBySpecId(specId);
-        Task task = getTaskByName(spec, activityName);
+	@Atomic(mode = TxMode.WRITE)
+	public Task addActivity(String specId, AddActivityReq request) {
+		Specification spec = getSpecBySpecId(specId);
 
-        Product product = spec.getDataModel().getTargetOfPath(path);
-        if (product.getProductType() != ProductType.ENTITY)
-            throw new BWException(BWErrorType.INVALID_PATH, path);
+		return spec.getTaskModel().addTask(request.getActivityName(), request.getDescription(),
+				getConditionSet(spec, request.getPostConditionSet()));
+	}
 
-        DefEntityCondition defEntityCondition = ((Entity) product)
-                .getDefEntityCondition();
+	public Set<Task> getActivities(String specId) {
+		Specification spec = getSpecBySpecId(specId);
 
-        task.addPostCondition(defEntityCondition);
+		return spec.getTaskModel().getTasksSet();
+	}
 
-        return defEntityCondition;
-    }
+	public Set<DefProductCondition> getActivityPreCondition(String specId, String activityName) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
 
-    @Atomic(mode = TxMode.WRITE)
-    public DefAttributeCondition associateAttributeToActivityPost(String specId,
-            String activityName, String path) {
-        Specification spec = getSpecBySpecId(specId);
-        Task task = getTaskByName(spec, activityName);
-        DefAttributeCondition defAttributeCondition = DefAttributeCondition
-                .getDefAttribute(spec, path);
+		return task.getPreConditionSet();
+	}
 
-        task.addPostCondition(defAttributeCondition);
+	@Atomic(mode = TxMode.WRITE)
+	public DefEntityCondition associateEntityToActivityPre(String specId, String activityName, String path) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
 
-        return defAttributeCondition;
-    }
+		Product product = spec.getDataModel().getTargetOfPath(path);
+		if (product.getProductType() != ProductType.ENTITY)
+			throw new BWException(BWErrorType.INVALID_PATH, path);
 
-    public Set<MulCondition> getActivityMulConditions(String specId,
-            String activityName) {
-        Specification spec = getSpecBySpecId(specId);
-        Task task = getTaskByName(spec, activityName);
+		DefEntityCondition defEntityCondition = ((Entity) product).getDefEntityCondition();
 
-        return task.getMultiplicityInvariantSet();
-    }
+		task.addPreCondition(defEntityCondition);
 
-    @Atomic(mode = TxMode.WRITE)
-    public MulCondition associateMulToActivityPost(String specId,
-            String activityName, String path, String cardinality) {
-        Specification spec = getSpecBySpecId(specId);
-        Task task = getTaskByName(spec, activityName);
+		return defEntityCondition;
+	}
 
-        MulCondition mulCondition = getMULCondition(spec, path);
+	@Atomic(mode = TxMode.WRITE)
+	public DefAttributeCondition associateAttributeToActivityPre(String specId, String activityName, String path) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
+		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, path);
 
-        task.addMultiplicityInvariant(mulCondition);
+		task.addPreCondition(defAttributeCondition);
 
-        return mulCondition;
-    }
+		return defAttributeCondition;
+	}
 
-    public Set<Rule> getActivityRuleConditions(String specId,
-            String activityName) {
-        Specification spec = getSpecBySpecId(specId);
-        Task task = getTaskByName(spec, activityName);
+	public Set<DefProductCondition> getActivityPostCondition(String specId, String activityName) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
 
-        return task.getRuleInvariantSet();
-    }
+		return task.getPostConditionSet();
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public Rule associateRuleToActivityPost(String specId, String activityName,
-            String ruleName) {
-        Specification spec = getSpecBySpecId(specId);
-        Task task = getTaskByName(spec, activityName);
+	@Atomic(mode = TxMode.WRITE)
+	public DefEntityCondition associateEntityToActivityPost(String specId, String activityName, String path) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
 
-        Rule rule = getRule(spec, ruleName);
+		Product product = spec.getDataModel().getTargetOfPath(path);
+		if (product.getProductType() != ProductType.ENTITY)
+			throw new BWException(BWErrorType.INVALID_PATH, path);
 
-        task.addRuleInvariant(rule);
+		DefEntityCondition defEntityCondition = ((Entity) product).getDefEntityCondition();
 
-        return rule;
-    }
+		task.addPostCondition(defEntityCondition);
 
-    public boolean checkActivityModel(String specId) {
-        Specification spec = getSpecBySpecId(specId);
+		return defEntityCondition;
+	}
 
-        return spec.getTaskModel().checkModel();
-    }
+	@Atomic(mode = TxMode.WRITE)
+	public DefAttributeCondition associateAttributeToActivityPost(String specId, String activityName, String path) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
+		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, path);
 
-    public ProductDTO getSourceOfPath(String specId, String path) {
-        Specification spec = getSpecBySpecId(specId);
+		task.addPostCondition(defAttributeCondition);
 
-        Entity entity = getEntityByName(spec.getDataModel(),
-                path.split("\\.")[0]);
+		return defAttributeCondition;
+	}
 
-        return new ProductDTO(specId, entity.getExternalId(),
-                ProductType.ENTITY.name());
-    }
+	public Set<MulCondition> getActivityMulConditions(String specId, String activityName) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
 
-    public ProductDTO getTargetOfPath(String specId, String path) {
-        Specification spec = getSpecBySpecId(specId);
+		return task.getMultiplicityInvariantSet();
+	}
 
-        Product product = spec.getDataModel().getTargetOfPath(path);
+	@Atomic(mode = TxMode.WRITE)
+	public MulCondition associateMulToActivityPost(String specId, String activityName, String path,
+			String cardinality) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
 
-        return new ProductDTO(specId, product.getExternalId(),
-                product.getProductType().name());
+		MulCondition mulCondition = getMULCondition(spec, path);
 
-    }
+		task.addMultiplicityInvariant(mulCondition);
 
-    public Set<String> getDependencePaths(String specId,
-            Set<String> sucConditions) {
-        Set<String> paths = new HashSet<String>();
-        Specification spec = getSpecBySpecId(specId);
+		return mulCondition;
+	}
 
-        for (String sucCond : sucConditions) {
-            Product product = spec.getDataModel().getTargetOfPath(sucCond);
+	public Set<Rule> getActivityRuleConditions(String specId, String activityName) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
 
-            paths.addAll(product.getDependenceSet().stream()
-                    .map(dep -> dep.getPath()).collect(Collectors.toSet()));
+		return task.getRuleInvariantSet();
+	}
 
-            if (product instanceof AttributeBasic) {
-                AttributeBasic attribute = (AttributeBasic) product;
-                if (attribute.getAttributeGroup() != null) {
-                    paths.addAll(attribute.getDependenceSet().stream()
-                            .map(dep -> dep.getPath())
-                            .collect(Collectors.toSet()));
-                }
-            }
-        }
+	@Atomic(mode = TxMode.WRITE)
+	public Rule associateRuleToActivityPost(String specId, String activityName, String ruleName) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
 
-        return paths;
-    }
+		Rule rule = getRule(spec, ruleName);
 
-    public void printSpecificationModels(String specId) {
-        Specification spec = getSpecBySpecId(specId);
+		task.addRuleInvariant(rule);
 
-        System.out.println("SPECIFICATION: " + spec.getName());
+		return rule;
+	}
 
-        System.out.println(
-                "-------------------------------------------------------");
-        System.out.println(
-                "-------------------------------------------------------");
-        System.out.println("Specification Data Model: " + spec.getName());
-        System.out.println(
-                "-------------------------------------------------------");
+	public boolean checkActivityModel(String specId) {
+		Specification spec = getSpecBySpecId(specId);
 
-        for (Entity entity : spec.getDataModel().getEntitySet()) {
-            System.out.println("Entity " + entity.getName() + " Exists:"
-                    + entity.getExists());
-        }
+		return spec.getTaskModel().checkModel();
+	}
 
-        spec.getDataModel().getDependenceSet().stream().map(
-                dep -> dep.getProduct().getFullPath() + ":" + dep.getPath())
-                .forEach(System.out::println);
+	@Atomic(mode = TxMode.WRITE)
+	public Task mergeActivities(String specId, String newActivityName, String description, String activityNameOne,
+			String activityNameTwo) {
+		Specification spec = getSpecBySpecId(specId);
+		Task activityOne = getTaskByName(spec, activityNameOne);
+		Task activityTwo = getTaskByName(spec, activityNameTwo);
 
-        spec.getDataModel().getRuleSet().stream()
-                .map(rule -> rule.getName() + ":"
-                        + rule.getCondition().getSubPath())
-                .forEach(System.out::println);
+		return spec.getTaskModel().mergeTasks(newActivityName, description, activityOne, activityTwo);
+	}
 
-        System.out.println(
-                "-------------------------------------------------------");
-        System.out.println(
-                "-------------------------------------------------------");
-        System.out.println("Specification Condition Model: " + spec.getName());
-        System.out.println(
-                "-------------------------------------------------------");
+	public ProductDTO getSourceOfPath(String specId, String path) {
+		Specification spec = getSpecBySpecId(specId);
 
-        spec.getConditionModel().getEntityAchieveConditionSet().stream()
-                .map(def -> "DEF(" + def.getEntity().getName() + ") "
-                        + def.getEntity().getExists())
-                .forEach(System.out::println);
+		Entity entity = getEntityByName(spec.getDataModel(), path.split("\\.")[0]);
 
-        spec.getConditionModel().getEntityDependenceConditionSet().stream()
-                .map(dep -> dep.getProduct().getName() + "-" + dep.getPath())
-                .forEach(System.out::println);
-
-        spec.getConditionModel().getEntityInvariantConditionSet().stream()
-                .map(mul -> mul.getExpression()).forEach(System.out::println);
-
-        spec.getConditionModel().getAttributeAchieveConditionSet().stream()
-                .map(def -> "DEF(" + def.getPath() + ")")
-                .forEach(System.out::println);
-
-        spec.getConditionModel().getAttributeDependenceConditionSet().stream()
-                .map(dep -> dep.getProduct().getName() + "-" + dep.getPath())
-                .forEach(System.out::println);
-
-        spec.getConditionModel().getAttributeInvariantConditionSet().stream()
-                .map(rule -> rule.getName() + "-"
-                        + rule.getCondition().getSubPath())
-                .forEach(System.out::println);
-
-        System.out.println(
-                "-------------------------------------------------------");
-        System.out.println(
-                "-------------------------------------------------------");
-        System.out.println("Specification Goal Model: " + spec.getName());
-        System.out.println(
-                "-------------------------------------------------------");
-
-        for (Goal goal : spec.getGoalModel().getGoalSet()) {
-            System.out.println("Goal name:" + goal.getName());
-
-            for (Goal sub : goal.getSubGoalSet()) {
-                System.out.println("Sub goal name:" + sub.getName());
-            }
-            for (Condition act : goal.getActivationConditionSet()) {
-                System.out.println("ACT(" + act.getSubPath() + ")");
-            }
-            for (Condition suc : goal.getSuccessConditionSet()) {
-                System.out.println("SUC(" + suc.getSubPath() + ")");
-            }
-            for (MulCondition mul : goal.getEntityInvariantConditionSet()) {
-                System.out.println(mul.getExpression());
-            }
-            for (Rule rule : goal.getAttributeInvariantConditionSet()) {
-                System.out.println("RUL(" + rule.getName() + ")");
-            }
-        }
-
-        System.out.println(
-                "-------------------------------------------------------");
-        System.out.println(
-                "-------------------------------------------------------");
-        System.out.println("Specification Activity Model: " + spec.getName());
-        System.out.println(
-                "-------------------------------------------------------");
-
-        for (Task task : spec.getTaskModel().getTasksSet()) {
-            System.out.println("Task name:" + task.getName() + ", description:"
-                    + task.getDescription());
-
-            task.getPreConditionSet().stream().forEach((c) -> System.out
-                    .println("PreCondition:" + c.getSubPath()));
-
-            task.getPostConditionSet().stream().forEach((c) -> System.out
-                    .println("PostCondition:" + c.getSubPath()));
-
-            task.getMultiplicityInvariantSet().stream()
-                    .forEach((m) -> System.out.println(
-                            "MultiplicityInvariant:" + m.getExpression()));
-
-            task.getRuleInvariantSet().stream().forEach((r) -> System.out
-                    .println("MultiplicityInvariant:" + r.getName()));
-        }
-
-    }
-
-    private Product getProductByExtId(String externalId) {
-        if (externalId == null || externalId.equals(""))
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        Product product = FenixFramework.getDomainObject(externalId);
-        if (product == null)
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        return product;
-    }
-
-    private Entity getEntityByName(DataModel dataModel, String name) {
-        return dataModel.getEntity(name).orElseThrow(
-                () -> new BWException(BWErrorType.INVALID_ENTITY_NAME, name));
-    }
-
-    private Entity getEntityByExtId(String externalId) {
-        if (externalId == null || externalId.equals(""))
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        Entity entity = FenixFramework.getDomainObject(externalId);
-        if (entity == null)
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        return entity;
-    }
-
-    private AttributeGroup getAttributeGroupByExtId(String externalId) {
-        if (externalId == null || externalId.equals(""))
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        AttributeGroup attributeGroup = FenixFramework
-                .getDomainObject(externalId);
-        if (attributeGroup == null)
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        return attributeGroup;
-    }
-
-    private Attribute getAttribute(Specification spec, String path) {
-        log.debug("getAttribute path:{}", path);
-        return (Attribute) spec.getDataModel().getTargetOfPath(path);
-    }
-
-    private Dependence getDependenceByExtId(String externalId) {
-        if (externalId == null || externalId.equals(""))
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        Dependence dependence = FenixFramework.getDomainObject(externalId);
-        if (dependence == null)
-            throw new BWException(BWErrorType.NOT_FOUND, externalId);
-        return dependence;
-    }
-
-    private Dependence getDependence(Product product, String path) {
-        return product.getDependenceSet().stream()
-                .filter(dep -> dep.getPath().equals(path)).findFirst()
-                .orElseThrow(() -> new BWException(
-                        BWErrorType.DEPENDENCE_NOT_EXISTS, path));
-
-    }
-
-    private Goal getGoalByName(Specification spec, String goalName) {
-        return spec.getGoalModel().getGoalSet().stream()
-                .filter(g -> g.getName().equals(goalName)).findFirst()
-                .orElseThrow(() -> new BWException(
-                        BWErrorType.INVALID_GOAL_NAME, goalName));
-    }
-
-    private Rule getRule(Specification spec, String ruleName) {
-        return spec.getDataModel().getRuleSet().stream()
-                .filter(r -> r.getName().equals(ruleName)).findFirst()
-                .orElseThrow(() -> new BWException(
-                        BWErrorType.INVALID_RULE_NAME, ruleName));
-    }
-
-    private MulCondition getMULCondition(Specification spec, String path) {
-        String entityName = path.split("\\.")[0];
-        String rolename = path.split("\\.")[1];
-
-        RelationBW relation = spec.getDataModel().getRelationBWSet().stream()
-                .filter(rel -> (rel.getEntityOne().getName().equals(entityName)
-                        && rel.getRoleNameTwo().equals(rolename))
-                        || (rel.getEntityTwo().getName().equals(entityName)
-                                && rel.getRoleNameOne().equals(rolename)))
-                .findFirst().orElseThrow(
-                        () -> new BWException(BWErrorType.INVALID_PATH, path));
-
-        return MulCondition.getMulCondition(relation, rolename);
-    }
-
-    private Set<DefProductCondition> getConditionSet(Specification spec,
-            DefProductConditionSetDTO defConditionSetDTO) {
-        Set<DefProductCondition> conditions = defConditionSetDTO.getDefEnts()
-                .stream()
-                .map((def) -> DefEntityCondition.getDefEntity(getEntityByName(
-                        spec.getDataModel(), def.getEntityName())))
-                .collect(Collectors.toSet());
-
-        conditions.addAll(defConditionSetDTO.getDefAtts()
-                .stream().map((def) -> DefAttributeCondition
-                        .getDefAttribute(spec, def.getPath()))
-                .collect(Collectors.toSet()));
-
-        conditions.addAll(defConditionSetDTO.getDefDeps()
-                .stream().map((def) -> DefDependenceCondition
-                        .getDefDependence(spec, def.getPath()))
-                .collect(Collectors.toSet()));
-
-        return conditions;
-    }
-
-    private Task getTaskByName(Specification spec, String name) {
-        return spec.getTaskModel().getTasksSet().stream()
-                .filter(t -> t.getName().equals(name)).findFirst().orElseThrow(
-                        () -> new BWException(BWErrorType.INVALID_TASK_NAME,
-                                name));
-    }
+		return new ProductDTO(specId, entity.getExternalId(), ProductType.ENTITY.name());
+	}
+
+	public ProductDTO getTargetOfPath(String specId, String path) {
+		Specification spec = getSpecBySpecId(specId);
+
+		Product product = spec.getDataModel().getTargetOfPath(path);
+
+		return new ProductDTO(specId, product.getExternalId(), product.getProductType().name());
+
+	}
+
+	public Set<String> getDependencePaths(String specId, Set<String> sucConditions) {
+		Set<String> paths = new HashSet<String>();
+		Specification spec = getSpecBySpecId(specId);
+
+		for (String sucCond : sucConditions) {
+			Product product = spec.getDataModel().getTargetOfPath(sucCond);
+
+			paths.addAll(product.getDependenceSet().stream().map(dep -> dep.getPath()).collect(Collectors.toSet()));
+
+			if (product instanceof AttributeBasic) {
+				AttributeBasic attribute = (AttributeBasic) product;
+				if (attribute.getAttributeGroup() != null) {
+					paths.addAll(attribute.getDependenceSet().stream().map(dep -> dep.getPath())
+							.collect(Collectors.toSet()));
+				}
+			}
+		}
+
+		return paths;
+	}
+
+	public void printSpecificationModels(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		System.out.println("SPECIFICATION: " + spec.getName());
+
+		System.out.println("-------------------------------------------------------");
+		System.out.println("-------------------------------------------------------");
+		System.out.println("Specification Data Model: " + spec.getName());
+		System.out.println("-------------------------------------------------------");
+
+		for (Entity entity : spec.getDataModel().getEntitySet()) {
+			System.out.println("Entity " + entity.getName() + " Exists:" + entity.getExists());
+		}
+
+		spec.getDataModel().getDependenceSet().stream().map(dep -> dep.getProduct().getFullPath() + ":" + dep.getPath())
+				.forEach(System.out::println);
+
+		spec.getDataModel().getRuleSet().stream().map(rule -> rule.getName() + ":" + rule.getCondition().getSubPath())
+				.forEach(System.out::println);
+
+		System.out.println("-------------------------------------------------------");
+		System.out.println("-------------------------------------------------------");
+		System.out.println("Specification Condition Model: " + spec.getName());
+		System.out.println("-------------------------------------------------------");
+
+		spec.getConditionModel().getEntityAchieveConditionSet().stream()
+				.map(def -> "DEF(" + def.getEntity().getName() + ") " + def.getEntity().getExists())
+				.forEach(System.out::println);
+
+		spec.getConditionModel().getEntityDependenceConditionSet().stream()
+				.map(dep -> dep.getProduct().getName() + "-" + dep.getPath()).forEach(System.out::println);
+
+		spec.getConditionModel().getEntityInvariantConditionSet().stream().map(mul -> mul.getExpression())
+				.forEach(System.out::println);
+
+		spec.getConditionModel().getAttributeAchieveConditionSet().stream().map(def -> "DEF(" + def.getPath() + ")")
+				.forEach(System.out::println);
+
+		spec.getConditionModel().getAttributeDependenceConditionSet().stream()
+				.map(dep -> dep.getProduct().getName() + "-" + dep.getPath()).forEach(System.out::println);
+
+		spec.getConditionModel().getAttributeInvariantConditionSet().stream()
+				.map(rule -> rule.getName() + "-" + rule.getCondition().getSubPath()).forEach(System.out::println);
+
+		System.out.println("-------------------------------------------------------");
+		System.out.println("-------------------------------------------------------");
+		System.out.println("Specification Goal Model: " + spec.getName());
+		System.out.println("-------------------------------------------------------");
+
+		for (Goal goal : spec.getGoalModel().getGoalSet()) {
+			System.out.println("Goal name:" + goal.getName());
+
+			for (Goal sub : goal.getSubGoalSet()) {
+				System.out.println("Sub goal name:" + sub.getName());
+			}
+			for (DefProductCondition act : goal.getActivationConditionSet()) {
+				System.out.println("ACT(" + act.getSubPath() + ")");
+			}
+			for (DefProductCondition suc : goal.getSuccessConditionSet()) {
+				System.out.println("SUC(" + suc.getSubPath() + ")");
+			}
+			for (MulCondition mul : goal.getEntityInvariantConditionSet()) {
+				System.out.println(mul.getExpression());
+			}
+			for (Rule rule : goal.getAttributeInvariantConditionSet()) {
+				System.out.println("RUL(" + rule.getName() + ")");
+			}
+		}
+
+		System.out.println("-------------------------------------------------------");
+		System.out.println("-------------------------------------------------------");
+		System.out.println("Specification Activity Model: " + spec.getName());
+		System.out.println("-------------------------------------------------------");
+
+		for (Task task : spec.getTaskModel().getTasksSet()) {
+			System.out.println("Task name:" + task.getName() + ", description:" + task.getDescription());
+
+			task.getPreConditionSet().stream().forEach((c) -> System.out.println("PreCondition:" + c.getSubPath()));
+
+			task.getPostConditionSet().stream().forEach((c) -> System.out.println("PostCondition:" + c.getSubPath()));
+
+			task.getMultiplicityInvariantSet().stream()
+					.forEach((m) -> System.out.println("MultiplicityInvariant:" + m.getExpression()));
+
+			task.getRuleInvariantSet().stream()
+					.forEach((r) -> System.out.println("MultiplicityInvariant:" + r.getName()));
+		}
+
+	}
+
+	private Product getProductByExtId(String externalId) {
+		if (externalId == null || externalId.equals(""))
+			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		Product product = FenixFramework.getDomainObject(externalId);
+		if (product == null)
+			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		return product;
+	}
+
+	private Entity getEntityByName(DataModel dataModel, String name) {
+		return dataModel.getEntity(name).orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, name));
+	}
+
+	private Entity getEntityByExtId(String externalId) {
+		if (externalId == null || externalId.equals(""))
+			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		Entity entity = FenixFramework.getDomainObject(externalId);
+		if (entity == null)
+			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		return entity;
+	}
+
+	private AttributeGroup getAttributeGroupByExtId(String externalId) {
+		if (externalId == null || externalId.equals(""))
+			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		AttributeGroup attributeGroup = FenixFramework.getDomainObject(externalId);
+		if (attributeGroup == null)
+			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		return attributeGroup;
+	}
+
+	private Attribute getAttribute(Specification spec, String path) {
+		log.debug("getAttribute path:{}", path);
+		return (Attribute) spec.getDataModel().getTargetOfPath(path);
+	}
+
+	private Dependence getDependenceByExtId(String externalId) {
+		if (externalId == null || externalId.equals(""))
+			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		Dependence dependence = FenixFramework.getDomainObject(externalId);
+		if (dependence == null)
+			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		return dependence;
+	}
+
+	private Dependence getDependence(Product product, String path) {
+		return product.getDependenceSet().stream().filter(dep -> dep.getPath().equals(path)).findFirst()
+				.orElseThrow(() -> new BWException(BWErrorType.DEPENDENCE_NOT_EXISTS, path));
+
+	}
+
+	private Goal getGoalByName(Specification spec, String goalName) {
+		return spec.getGoalModel().getGoalSet().stream().filter(g -> g.getName().equals(goalName)).findFirst()
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_GOAL_NAME, goalName));
+	}
+
+	private Rule getRule(Specification spec, String ruleName) {
+		return spec.getDataModel().getRuleSet().stream().filter(r -> r.getName().equals(ruleName)).findFirst()
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_RULE_NAME, ruleName));
+	}
+
+	private MulCondition getMULCondition(Specification spec, String path) {
+		String entityName = path.split("\\.")[0];
+		String rolename = path.split("\\.")[1];
+
+		RelationBW relation = spec.getDataModel().getRelationBWSet().stream()
+				.filter(rel -> (rel.getEntityOne().getName().equals(entityName)
+						&& rel.getRoleNameTwo().equals(rolename))
+						|| (rel.getEntityTwo().getName().equals(entityName) && rel.getRoleNameOne().equals(rolename)))
+				.findFirst().orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH, path));
+
+		return MulCondition.getMulCondition(relation, rolename);
+	}
+
+	private Set<DefProductCondition> getConditionSet(Specification spec, DefProductConditionSetDTO defConditionSetDTO) {
+		Set<DefProductCondition> conditions = defConditionSetDTO.getDefEnts().stream()
+				.map((def) -> DefEntityCondition
+						.getDefEntity(getEntityByName(spec.getDataModel(), def.getEntityName())))
+				.collect(Collectors.toSet());
+
+		conditions.addAll(defConditionSetDTO.getDefAtts().stream()
+				.map((def) -> DefAttributeCondition.getDefAttribute(spec, def.getPath())).collect(Collectors.toSet()));
+
+		conditions.addAll(defConditionSetDTO.getDefDeps().stream()
+				.map((def) -> DefDependenceCondition.getDefDependence(spec, def.getPath()))
+				.collect(Collectors.toSet()));
+
+		return conditions;
+	}
+
+	private Task getTaskByName(Specification spec, String name) {
+		return spec.getTaskModel().getTasksSet().stream().filter(t -> t.getName().equals(name)).findFirst()
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_TASK_NAME, name));
+	}
 
 }
