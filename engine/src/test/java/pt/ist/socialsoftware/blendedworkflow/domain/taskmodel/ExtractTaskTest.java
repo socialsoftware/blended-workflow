@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain.taskmodel;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
@@ -190,6 +191,22 @@ public class ExtractTaskTest extends TeardownRollbackTest {
 
 		assertTrue(task.checkConsistency());
 		assertTrue(taskModel.getTask(TASK_TWO).checkConsistency());
+		assertTrue(taskModel.checkModel());
+	}
+
+	@Test
+	public void extractWithDependence() {
+		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
+		postConditionSet.add(DefAttributeCondition.getDefAttribute(attributeThree));
+		Task task = taskModel.extractTask(taskThree, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
+
+		assertEquals(4, taskModel.getTasksSet().size());
+		assertTrue(task.getPreConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
+		assertFalse(taskModel.getTask(TASK_TWO).getPreConditionSet()
+				.contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
+
+		assertTrue(task.checkConsistency());
+		assertTrue(taskModel.getTask(TASK_THREE).checkConsistency());
 		assertTrue(taskModel.checkModel());
 	}
 

@@ -1,8 +1,5 @@
 package org.blended.goal.terminal;
 
-import static org.eclipse.emf.ecore.util.EcoreUtil.copy;
-import static org.eclipse.emf.ecore.util.EcoreUtil.copyAll;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -33,11 +30,12 @@ import com.beust.jcommander.ParameterException;
 import utils.Utils;
 
 public class ManageSplit {
-    private static Logger log = LoggerFactory
-            .getLogger(ManageSplit.class);
+	private static Logger log = LoggerFactory.getLogger(ManageSplit.class);
 
-    enum Type {SIBLING, CHILD}
-	
+	enum Type {
+		SIBLING, CHILD
+	}
+
 	public static void goals(GoalModel model, String name, String specId, CommandSplit split)
 			throws ParameterException, ValueException {
 		// CHECKS
@@ -66,51 +64,54 @@ public class ManageSplit {
 		}
 
 		// change goals in the server
-		 CommonInterface ci = CommonInterface.getInstance();
-		 GoalDTO goalDTO = null;
+		CommonInterface ci = CommonInterface.getInstance();
+		GoalDTO goalDTO = null;
 		if (type.equals(Type.SIBLING)) {
-			goalDTO = ci.extractSiblingGoal( specId,  newGoalName,
-		             sourceGoalName, getDefProductConditionSet(sourceGoal, specId, successConditionsToSplit));
+			goalDTO = ci.extractSiblingGoal(specId, newGoalName, sourceGoalName,
+					getDefProductConditionSet(sourceGoal, specId, successConditionsToSplit));
 		} else if (type.equals(Type.CHILD)) {
-			 goalDTO = ci.extractChildGoal(specId, newGoalName,
-		            sourceGoalName, getDefProductConditionSet(sourceGoal, specId, successConditionsToSplit));
+			goalDTO = ci.extractChildGoal(specId, newGoalName, sourceGoalName,
+					getDefProductConditionSet(sourceGoal, specId, successConditionsToSplit));
 		} else {
 			assert false : "wrong type for spliting goals";
 		}
-				
-        Utils.removeGoalModel(model);
 
-        Utils.loadGoalModelFromServer(model, specId);
+		Utils.removeGoalModel(model);
+
+		Utils.loadGoalModelFromServer(model, specId);
 
 		ConsoleManagement.write(name, "Operation performed. Goal " + sourceGoalName + " Splitted by creating goal "
 				+ goalDTO.getName() + " (" + type + ")");
 	}
 
-	private static DefProductConditionSetDTO getDefProductConditionSet(Goal goal, String specId, List<String> successConditionsToSplit) {
+	private static DefProductConditionSetDTO getDefProductConditionSet(Goal goal, String specId,
+			List<String> successConditionsToSplit) {
 		Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
-	    Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-		
+		Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
+
 		for (String condition : successConditionsToSplit) {
 			EObject eo = getGoalSuccessCondition(goal, condition);
 			if (eo instanceof EntityAchieveCondition) {
-				defEnts.add(new DefEntityConditionDTO(specId, ((EntityAchieveCondition)eo).getName()));
+				defEnts.add(new DefEntityConditionDTO(specId, ((EntityAchieveCondition) eo).getName()));
 			} else if (eo instanceof MandatoryAttributeAchieveCondition) {
-				defAtts.add(new DefAttributeConditionDTO(specId, ((MandatoryAttributeAchieveCondition)eo).getAttribute(), true));
+				defAtts.add(new DefAttributeConditionDTO(specId,
+						((MandatoryAttributeAchieveCondition) eo).getAttribute(), true));
 			} else if (eo instanceof NotMandatoryAttributeAchieveCondition) {
-				defAtts.add(new DefAttributeConditionDTO(specId, ((NotMandatoryAttributeAchieveCondition)eo).getAttribute(), false));
+				defAtts.add(new DefAttributeConditionDTO(specId,
+						((NotMandatoryAttributeAchieveCondition) eo).getAttribute(), false));
 			} else {
 				assert false;
 			}
 		}
-	    
-		DefProductConditionSetDTO defProductConditionSetDTO = new DefProductConditionSetDTO(defEnts,defAtts);
+
+		DefProductConditionSetDTO defProductConditionSetDTO = new DefProductConditionSetDTO(defEnts, defAtts);
 		return defProductConditionSetDTO;
 	}
 
 	private static Type getType(String type) {
 		switch (type) {
 		case "s":
-		case "sibling" :
+		case "sibling":
 			return Type.SIBLING;
 		case "c":
 		case "child":
@@ -119,47 +120,43 @@ public class ManageSplit {
 		return null;
 	}
 
-	public static List<EObject> checkSuccessConditionsToSplitAreContainedInGoal(
-            Goal goal,
-            List<String> successConditionsToSplit) {
-        List<EObject> result = new ArrayList<EObject>();
-        for (String cond : successConditionsToSplit) {
-        	EObject eo = getGoalSuccessCondition(goal, cond);
-        	if (eo != null)
-        		result.add(eo);
-        	else 
-                return null;
-        }
-        return result;
-    }
+	public static List<EObject> checkSuccessConditionsToSplitAreContainedInGoal(Goal goal,
+			List<String> successConditionsToSplit) {
+		List<EObject> result = new ArrayList<EObject>();
+		for (String cond : successConditionsToSplit) {
+			EObject eo = getGoalSuccessCondition(goal, cond);
+			if (eo != null)
+				result.add(eo);
+			else
+				return null;
+		}
+		return result;
+	}
 
 	private static EObject getGoalSuccessCondition(Goal goal, String cond) {
 		EList<EObject> goalSuccessConditions = goal.getSuccessConditions();
 		for (EObject suc : goalSuccessConditions) {
-		    if (suc instanceof EntityAchieveCondition) {
-		        EntityAchieveCondition o = (EntityAchieveCondition) suc;
-		        if (o.getName().equals(cond)) {
-		            return suc; 
-		        }
-		    } 
-		    else if (suc instanceof NotMandatoryAttributeAchieveCondition) {
-		        NotMandatoryAttributeAchieveCondition o = (NotMandatoryAttributeAchieveCondition) suc;
-		        if (cond.equals(o.getAttribute())) {
-		            return suc; 
-		        }
-		    } 
-		    else if (suc instanceof MandatoryAttributeAchieveCondition) {
-		           MandatoryAttributeAchieveCondition o = (MandatoryAttributeAchieveCondition) suc;
-		            if (cond.equals(o.getAttribute())) {
-		                return suc; 
-		            }
-		    } 
-		    else if (suc instanceof Nothing) {
-		        Nothing o = (Nothing) suc;
-		        if (o.getName().equals(cond)) {
-		             return suc; 
-		        }
-		    }
+			if (suc instanceof EntityAchieveCondition) {
+				EntityAchieveCondition o = (EntityAchieveCondition) suc;
+				if (o.getName().equals(cond)) {
+					return suc;
+				}
+			} else if (suc instanceof NotMandatoryAttributeAchieveCondition) {
+				NotMandatoryAttributeAchieveCondition o = (NotMandatoryAttributeAchieveCondition) suc;
+				if (cond.equals(o.getAttribute())) {
+					return suc;
+				}
+			} else if (suc instanceof MandatoryAttributeAchieveCondition) {
+				MandatoryAttributeAchieveCondition o = (MandatoryAttributeAchieveCondition) suc;
+				if (cond.equals(o.getAttribute())) {
+					return suc;
+				}
+			} else if (suc instanceof Nothing) {
+				Nothing o = (Nothing) suc;
+				if (o.getName().equals(cond)) {
+					return suc;
+				}
+			}
 		}
 		return null;
 	}

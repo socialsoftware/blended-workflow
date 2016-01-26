@@ -8,9 +8,9 @@ class CommandSplit {
 	@Parameter(description = "Name of the new splitted activity", names = "-n", validateWith = ValidateName.class, required = true)
 	public String name;
 
-	@Parameter(description = "Activity to be spplited", names = "-a", validateWith = ValidateName.class, required = true)
+	@Parameter(description = "Activity to be splitted", names = "-a", validateWith = ValidateName.class, required = true)
 	public String activity;
 
-	@Parameter(description = "The list of success conditions used for the new spplited activity", names = "-s", required = true)
-	public String successConditions;
+	@Parameter(description = "The list of post conditions used for the new spplited activity", names = "-p", required = true)
+	public String postConditions;
 }

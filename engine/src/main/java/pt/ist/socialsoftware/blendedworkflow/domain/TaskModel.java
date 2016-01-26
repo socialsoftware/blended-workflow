@@ -56,11 +56,11 @@ public class TaskModel extends TaskModel_Base {
 		Task task = createTask(taskName, taskDescription);
 		postConditionSet.stream().forEach(c -> task.addPostCondition(c));
 
-		applyAttributeEntityDependenceToPre(postConditionSet, task);
+		applyAttributeEntityDependenceToPre(task);
 
-		applyDependenceConditionsToPre(postConditionSet, task);
+		applyDependenceConditionsToPre(task);
 
-		applyMultiplicityToPostAndPre(postConditionSet, task);
+		applyMultiplicityToPostAndPre(task);
 
 		applyRuleConditionToPostAndPre(task);
 
@@ -123,7 +123,9 @@ public class TaskModel extends TaskModel_Base {
 				.forEach(att -> task.addPreCondition(DefAttributeCondition.getDefAttribute(att)));
 	}
 
-	private void applyMultiplicityToPostAndPre(Set<DefProductCondition> postConditionSet, Task task) {
+	private void applyMultiplicityToPostAndPre(Task task) {
+		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>(task.getPostConditionSet());
+
 		Set<Entity> definedEntities = getDefinedEntities();
 
 		Set<Entity> entitiesToBeDefined = getConditionModel().getDefEntityConditions(postConditionSet).stream()
@@ -162,14 +164,20 @@ public class TaskModel extends TaskModel_Base {
 		return definedEntities;
 	}
 
-	private void applyDependenceConditionsToPre(Set<DefProductCondition> postConditionSet, Task task) {
-		Set<Product> postProducts = getConditionModel().getProductsOfDefConditions(postConditionSet);
+	private void applyDependenceConditionsToPre(Task task) {
+		Set<Product> postProducts = getConditionModel().getProductsOfDefConditions(task.getPostConditionSet());
+		Set<Product> preProducts = getConditionModel().getProductsOfDefConditions(task.getPreConditionSet());
+
 		getSpecification().getDataModel().getDependenceSet().stream()
-				.filter(d -> postProducts.contains(d.getProduct()) && !postProducts.contains(d.getTarget()))
-				.forEach(d -> task.addPreCondition(DefDependenceCondition.getDefDependence(d)));
+				.filter(d -> postProducts.contains(d.getProduct()) && !postProducts.contains(d.getTarget())
+						&& !preProducts.contains(d.getTarget()))
+				.forEach(d -> task
+						.addPreCondition(DefAttributeCondition.getDefAttribute(getSpecification(), d.getPath())));
+
 	}
 
-	private void applyAttributeEntityDependenceToPre(Set<DefProductCondition> postConditionSet, Task task) {
+	private void applyAttributeEntityDependenceToPre(Task task) {
+		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>(task.getPostConditionSet());
 		getConditionModel().getDefAttributeConditions(postConditionSet).stream()
 				.filter(def -> !getConditionModel().getDefEntityConditions(postConditionSet)
 						.contains(DefEntityCondition.getDefEntity(def.getAttributeOfDef().getEntity())))

@@ -31,15 +31,16 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetD
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.req.AddActivityReq;
+import pt.ist.socialsoftware.blendedworkflow.service.req.ExtractActivityReq;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/activitymodel")
 public class ActivityModelController {
-	private static Logger log = LoggerFactory.getLogger(ActivityModelController.class);
+	private static Logger logger = LoggerFactory.getLogger(ActivityModelController.class);
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public ResponseEntity<String> cleanActivityModel(@PathVariable("specId") String specId) {
-		log.debug("cleanActivityModel specId:{}", specId);
+		logger.debug("cleanActivityModel specId:{}", specId);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
@@ -51,7 +52,7 @@ public class ActivityModelController {
 	@RequestMapping(value = "/activities", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<ActivityDTO> createActivity(@PathVariable("specId") String specId,
 			@RequestBody ActivityDTO activityDTO) {
-		log.debug("createActivity specId:{}, name:{}, description:{}", specId, activityDTO.getName(),
+		logger.debug("createActivity specId:{}, name:{}, description:{}", specId, activityDTO.getName(),
 				activityDTO.getDescription());
 
 		DesignInterface adi = DesignInterface.getInstance();
@@ -64,7 +65,7 @@ public class ActivityModelController {
 	@RequestMapping(value = "/activities/add", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<ActivityDTO> addActivity(@PathVariable("specId") String specId,
 			@RequestBody AddActivityReq request) {
-		log.debug("addActivity specId:{}, name:{}, description:{}", specId, request.getActivityName(),
+		logger.debug("addActivity specId:{}, name:{}, description:{}", specId, request.getActivityName(),
 				request.getDescription());
 
 		DesignInterface adi = DesignInterface.getInstance();
@@ -76,7 +77,7 @@ public class ActivityModelController {
 
 	@RequestMapping(value = "/activities", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<ActivityDTO[]> getActivitySet(@PathVariable("specId") String specId) {
-		log.debug("getActivitySet specId:{}", specId);
+		logger.debug("getActivitySet specId:{}", specId);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
@@ -89,7 +90,7 @@ public class ActivityModelController {
 	@RequestMapping(value = "/activities/{activityName}/pre", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<DefProductConditionSetDTO> getActivityPreCondition(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
-		log.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
+		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
@@ -112,7 +113,7 @@ public class ActivityModelController {
 	public ResponseEntity<DefEntityConditionDTO> associateEntityAchieveConditionToActivityPre(
 			@PathVariable("specId") String specId, @PathVariable("activityName") String activityName,
 			@PathVariable("path") String path) {
-		log.debug("associateEntityAchieveConditionToActivityPre specId:{}, activityName:{}, path:{}", specId,
+		logger.debug("associateEntityAchieveConditionToActivityPre specId:{}, activityName:{}, path:{}", specId,
 				activityName, path);
 
 		DesignInterface adi = DesignInterface.getInstance();
@@ -126,7 +127,7 @@ public class ActivityModelController {
 	public ResponseEntity<DefAttributeConditionDTO> associateAttributeAchieveConditionToActivityPre(
 			@PathVariable("specId") String specId, @PathVariable("activityName") String activityName,
 			@PathVariable("path") String path) {
-		log.debug("associateActConditionToGoal specId:{}, activityName:{}, path:{}", specId, activityName, path);
+		logger.debug("associateActConditionToGoal specId:{}, activityName:{}, path:{}", specId, activityName, path);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
@@ -138,7 +139,7 @@ public class ActivityModelController {
 	@RequestMapping(value = "/activities/{activityName}/post", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<DefProductConditionSetDTO> getActivityPostCondition(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
-		log.debug("getActivityPostCondition specId:{}, activityName:{}", specId, activityName);
+		logger.debug("getActivityPostCondition specId:{}, activityName:{}", specId, activityName);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
@@ -161,7 +162,7 @@ public class ActivityModelController {
 	public ResponseEntity<DefEntityConditionDTO> associateEntityAchieveConditionToActivityPost(
 			@PathVariable("specId") String specId, @PathVariable("activityName") String activityName,
 			@PathVariable("path") String path) {
-		log.debug("associateEntityAchieveConditionToActivityPost specId:{}, activityName:{}, path:{}", specId,
+		logger.debug("associateEntityAchieveConditionToActivityPost specId:{}, activityName:{}, path:{}", specId,
 				activityName, path);
 
 		DesignInterface adi = DesignInterface.getInstance();
@@ -175,7 +176,7 @@ public class ActivityModelController {
 	public ResponseEntity<DefAttributeConditionDTO> associateAttributeAchieveConditionToActivityPost(
 			@PathVariable("specId") String specId, @PathVariable("activityName") String activityName,
 			@PathVariable("path") String path) {
-		log.debug("associateAttributeAchieveConditionToActivityPost specId:{}, activityName:{}, path:{}", specId,
+		logger.debug("associateAttributeAchieveConditionToActivityPost specId:{}, activityName:{}, path:{}", specId,
 				activityName, path);
 
 		DesignInterface adi = DesignInterface.getInstance();
@@ -188,7 +189,7 @@ public class ActivityModelController {
 	@RequestMapping(value = "/activities/{activityName}/postmul", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<MulConditionDTO[]> getActivityMultConditions(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
-		log.debug("getActivityMultConditions specId:{}, activityName:{}", specId, activityName);
+		logger.debug("getActivityMultConditions specId:{}, activityName:{}", specId, activityName);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
@@ -202,7 +203,7 @@ public class ActivityModelController {
 	@RequestMapping(value = "/activities/{activityName}/postmul", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<MulConditionDTO> associateMultiplicityToActivityPost(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName, @RequestBody MulConditionDTO mulConditionDTO) {
-		log.debug("associateActConditionToGoal specId:{}, activityName:{}, path:{}, cardinality:{}", specId,
+		logger.debug("associateActConditionToGoal specId:{}, activityName:{}, path:{}, cardinality:{}", specId,
 				activityName, mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
 
 		DesignInterface adi = DesignInterface.getInstance();
@@ -216,7 +217,7 @@ public class ActivityModelController {
 	@RequestMapping(value = "/activities/{activityName}/postrule", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<RuleDTO[]> getActivityRuleConditions(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
-		log.debug("getActivityRuleConditions specId:{}, activityName:{}", specId, activityName);
+		logger.debug("getActivityRuleConditions specId:{}, activityName:{}", specId, activityName);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
@@ -230,7 +231,7 @@ public class ActivityModelController {
 	public ResponseEntity<RuleDTO> associateAttributeInvariantConditionActivityPost(
 			@PathVariable("specId") String specId, @PathVariable("activityName") String activityName,
 			@RequestBody RuleDTO ruleDTO) {
-		log.debug("associateActConditionToGoal specId:{}, activityName:{}, rule:{}", specId, activityName,
+		logger.debug("associateActConditionToGoal specId:{}, activityName:{}, rule:{}", specId, activityName,
 				ruleDTO.getName());
 
 		DesignInterface adi = DesignInterface.getInstance();
@@ -242,7 +243,7 @@ public class ActivityModelController {
 
 	@RequestMapping(value = "/check", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<Boolean> checkActivityModel(@PathVariable("specId") String specId) {
-		log.debug("checkActivityModel specId:{}", specId);
+		logger.debug("checkActivityModel specId:{}", specId);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
@@ -252,16 +253,35 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/merge", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public ResponseEntity<ActivityDTO> mergeGoals(@PathVariable("specId") String specId,
+	public ResponseEntity<ActivityDTO> mergeActivities(@PathVariable("specId") String specId,
 			@PathParam("newActivityName") String newActivityName, @PathParam("activityNameOne") String activityNameOne,
 			@PathParam("activityNameTwo") String activityNameTwo) {
-		log.debug("mergeGoals specId:{}, newActivityName:{}, activityNameOne:{}, activityNameTwo:{}", specId,
+		logger.debug("mergeActivities specId:{}, newActivityName:{}, activityNameOne:{}, activityNameTwo:{}", specId,
 				newActivityName, activityNameOne, activityNameTwo);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
 		Task task = adi.mergeActivities(specId, newActivityName, "merged: " + activityNameOne + " " + activityNameTwo,
 				activityNameOne, activityNameTwo);
+
+		return new ResponseEntity<ActivityDTO>(task.getDTO(), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/activities/extract", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<ActivityDTO> extractActivity(@PathVariable("specId") String specId,
+			@RequestBody ExtractActivityReq request) {
+		logger.debug("extractActivity specId:{}, newActivityName:{}, sourceActivityName:{}, entDefs:{}, attDefs:{}",
+				specId, request.getNewActivityName(), request.getSourceActivityName(),
+				request.getSuccessCondition().getDefEnts().stream().map((def) -> def.getEntityName())
+						.collect(Collectors.joining(",")),
+				request.getSuccessCondition().getDefAtts().stream().map((def) -> def.getPath())
+						.collect(Collectors.joining("|")));
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		Task task = adi.extractActivity(specId, request.getNewActivityName(),
+				"splitted from activity " + request.getSourceActivityName(), request.getSourceActivityName(),
+				request.getSuccessCondition());
 
 		return new ResponseEntity<ActivityDTO>(task.getDTO(), HttpStatus.CREATED);
 	}

@@ -700,6 +700,16 @@ public class DesignInterface {
 		return spec.getTaskModel().mergeTasks(newActivityName, description, activityOne, activityTwo);
 	}
 
+	@Atomic(mode = TxMode.WRITE)
+	public Task extractActivity(String specId, String newActivityName, String description, String sourceActivityName,
+			DefProductConditionSetDTO successCondition) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, sourceActivityName);
+
+		return spec.getTaskModel().extractTask(task, newActivityName, description,
+				getConditionSet(spec, successCondition));
+	}
+
 	public ProductDTO getSourceOfPath(String specId, String path) {
 		Specification spec = getSpecBySpecId(specId);
 

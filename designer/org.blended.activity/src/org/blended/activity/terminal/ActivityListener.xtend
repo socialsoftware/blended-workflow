@@ -157,17 +157,17 @@ class ActivityListener implements Runnable {
 	'''
 	
 	static def helpJoin()'''
-	joint is a command used to join two activities
+	join is a command used to join two activities
 	
 	Syntax:
-	joint -n NEW_ACTIVITY_NAME ACTIVITY_TO_JOIN_ONE ACTIVITY_TO_JOIN_TWO
+	join -n NEW_ACTIVITY_NAME ACTIVITY_TO_JOIN_ONE ACTIVITY_TO_JOIN_TWO
 	'''
 	
 	static def helpSplit()'''
 	split is a command used to split an activity in two
 	
 	Syntax:
-	split -n EXTRACTED_ACTIVITY_NAME extracted-activty-name -s SUCCESS_ELEMENTS_SEPARATED_BY_SEMICOLON
+	split -n NEW_ACTIVITY_NAME -a SOUCE_ACTIVITY -p POST_ELEMENTS_SEPARATED_BY_SEMICOLON
 	'''
 	
 	def updateResource() {

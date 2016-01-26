@@ -27,6 +27,7 @@ import org.blended.common.repository.resttemplate.dto.RelationDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.blended.common.repository.resttemplate.dto.SpecDTO;
 import org.blended.common.repository.resttemplate.req.AddActivityReq;
+import org.blended.common.repository.resttemplate.req.ExtractActivityReq;
 import org.blended.common.repository.resttemplate.req.ExtractGoalReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1036,6 +1037,28 @@ public class CommonInterface {
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
 		return restTemplate.postForObject(uri, variablesMap, ActivityDTO.class, params);
+	}
+
+	public ActivityDTO extractActivity(String specId, String newActivityName, String sourceActivityName,
+			DefProductConditionSetDTO successCondition) {
+		log.debug("extractActivity specId:{}, newActivityName:{}, sourceActivityName:{}, entDefs:{}, attDefs:{}",
+				specId, newActivityName, sourceActivityName,
+				successCondition.getDefEnts().stream().map((def) -> def.getEntityName())
+						.collect(Collectors.joining(",")),
+				successCondition.getDefAtts().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
+
+		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/extract";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+
+		ExtractActivityReq req = new ExtractActivityReq();
+		req.setNewActivityName(newActivityName);
+		req.setSourceActivityName(sourceActivityName);
+		req.setSuccessCondition(successCondition);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		return restTemplate.postForObject(uri, req, ActivityDTO.class, params);
 	}
 
 	public ProductDTO getSourceOfPath(String specId, String path) {

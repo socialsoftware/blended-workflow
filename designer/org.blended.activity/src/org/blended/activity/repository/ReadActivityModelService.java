@@ -56,17 +56,14 @@ public class ReadActivityModelService {
 			defProductConditionSetDTO = ci.getActivityPostConditionSet(specId, activityDTO.getName());
 			for (DefEntityConditionDTO defEntityConditionDTO : defProductConditionSetDTO.getDefEnts()) {
 				activity.getPost().add(defEntityConditionDTO.createEntityAchieveCondition(factory));
-				log.debug("POST-CONDITION entity:{}", defEntityConditionDTO.getEntityName());
 			}
 			for (DefAttributeConditionDTO defAttributeConditionDTO : defProductConditionSetDTO.getDefAtts()) {
 				activity.getPost().add(defAttributeConditionDTO.createAttributeAchieveCondition(factory));
-				log.debug("POST-CONDITION atribute:{}", defAttributeConditionDTO.getPath());
 			}
 
 			List<MulConditionDTO> mulConditions = ci.getActivityMulConditions(specId, activityDTO.getName());
 			for (MulConditionDTO mulConditionDTO : mulConditions) {
 				activity.getPost().add(mulConditionDTO.createEntityInvariantCondition(factory));
-				log.debug("MUL-CONDITIONS path:{}", mulConditionDTO.getRolePath());
 			}
 
 			List<RuleDTO> rules = ci.getActivityRuleConditions(specId, activityDTO.getName());
