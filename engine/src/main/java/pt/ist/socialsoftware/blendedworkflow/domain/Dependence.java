@@ -12,67 +12,63 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 
 public class Dependence extends Dependence_Base {
-    private static Logger log = LoggerFactory.getLogger(Dependence.class);
+	private static Logger log = LoggerFactory.getLogger(Dependence.class);
 
-    @Override
-    public void setPath(String value) {
-        checkPathPrefix(value);
-        super.setPath(value);
-    }
+	@Override
+	public void setPath(String value) {
+		checkPathPrefix(value);
+		super.setPath(value);
+	}
 
-    public Dependence(DataModel dataModel, Product product, String value) {
-        setDataModel(dataModel);
-        setProduct(product);
-        setPath(value);
-    }
+	public Dependence(DataModel dataModel, Product product, String value) {
+		setDataModel(dataModel);
+		setProduct(product);
+		setPath(value);
+	}
 
-    private void checkPathPrefix(String value) {
-        if (!value.split("\\.")[0].equals(getProduct().getEntity().getName())) {
-            throw new BWException(BWErrorType.INVALID_PATH,
-                    value + " requires to have the Entity name as prefix: "
-                            + getProduct().getEntity().getName());
-        }
-    }
+	private void checkPathPrefix(String value) {
+		if (!value.split("\\.")[0].equals(getProduct().getEntity().getName())) {
+			throw new BWException(BWErrorType.INVALID_PATH,
+					value + " requires to have the Entity name as prefix: " + getProduct().getEntity().getName());
+		}
+	}
 
-    public boolean check() {
-        log.debug("check {}", getPath());
+	public boolean check() {
+		log.debug("check {}", getPath());
 
-        checkPathPrefix(getPath());
+		checkPathPrefix(getPath());
 
-        List<String> pathLeft = Arrays.stream(getPath().split("\\."))
-                .collect(Collectors.toList());
-        if (pathLeft.size() == 1) {
-            throw new BWException(BWErrorType.INVALID_PATH, getPath());
-        }
+		List<String> pathLeft = Arrays.stream(getPath().split("\\.")).collect(Collectors.toList());
+		if (pathLeft.size() == 1) {
+			throw new BWException(BWErrorType.INVALID_PATH, getPath());
+		}
 
-        pathLeft.remove(0);
+		pathLeft.remove(0);
 
-        Product product = getProduct().getEntity().getNext(pathLeft, getPath());
+		Product product = getProduct().getEntity().getNext(pathLeft, getPath());
 
-        return (product != null);
-    }
+		return (product != null);
+	}
 
-    public void delete() {
-        setDataModel(null);
-        setProduct(null);
-        if (getDefDependenceCondition() != null)
-            getDefDependenceCondition().delete();
+	public void delete() {
+		setDataModel(null);
+		setProduct(null);
 
-        deleteDomainObject();
-    }
+		deleteDomainObject();
+	}
 
-    public DependenceDTO getDTO() {
-        DependenceDTO depDTO = new DependenceDTO();
-        depDTO.setSpecId(getDataModel().getSpecification().getSpecId());
-        depDTO.setExtId(getExternalId());
-        depDTO.setProductExtId(getProduct().getExternalId());
-        depDTO.setPath(getPath());
+	public DependenceDTO getDTO() {
+		DependenceDTO depDTO = new DependenceDTO();
+		depDTO.setSpecId(getDataModel().getSpecification().getSpecId());
+		depDTO.setExtId(getExternalId());
+		depDTO.setProductExtId(getProduct().getExternalId());
+		depDTO.setPath(getPath());
 
-        return depDTO;
-    }
+		return depDTO;
+	}
 
-    public Product getTarget() {
-        return getDataModel().getTargetOfPath(getPath());
-    }
+	public Product getTarget() {
+		return getDataModel().getTargetOfPath(getPath());
+	}
 
 }

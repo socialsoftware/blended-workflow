@@ -103,8 +103,6 @@ public class ActivityModelController {
 				.map(d -> d.getDTO()).collect(Collectors.toSet()));
 		defConditionSetDTO.setDefAtts(conditionModel.getDefAttributeConditions(preConditionSet).stream()
 				.map(d -> d.getDTO()).collect(Collectors.toSet()));
-		defConditionSetDTO.setDefDeps(conditionModel.getDefDependenceConditions(preConditionSet).stream()
-				.map(d -> d.getDTO()).collect(Collectors.toSet()));
 
 		return new ResponseEntity<DefProductConditionSetDTO>(defConditionSetDTO, HttpStatus.OK);
 	}
@@ -151,8 +149,6 @@ public class ActivityModelController {
 		defConditionSetDTO.setDefEnts(conditionModel.getDefEntityConditions(preConditionSet).stream()
 				.map(d -> d.getDTO()).collect(Collectors.toSet()));
 		defConditionSetDTO.setDefAtts(conditionModel.getDefAttributeConditions(preConditionSet).stream()
-				.map(d -> d.getDTO()).collect(Collectors.toSet()));
-		defConditionSetDTO.setDefDeps(conditionModel.getDefDependenceConditions(preConditionSet).stream()
 				.map(d -> d.getDTO()).collect(Collectors.toSet()));
 
 		return new ResponseEntity<DefProductConditionSetDTO>(defConditionSetDTO, HttpStatus.OK);

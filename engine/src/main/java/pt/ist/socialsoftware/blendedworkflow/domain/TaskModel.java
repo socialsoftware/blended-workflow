@@ -11,7 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class TaskModel extends TaskModel_Base {
-	private static Logger log = LoggerFactory.getLogger(TaskModel.class);
+	private static Logger logger = LoggerFactory.getLogger(TaskModel.class);
 
 	/**
 	 * Clone the TaskModel

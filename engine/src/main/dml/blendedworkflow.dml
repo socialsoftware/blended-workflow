@@ -196,9 +196,7 @@ class DefEntityCondition extends DefProductCondition;
 
 class DefAttributeCondition extends DefProductCondition;
 
-class DefDependenceCondition extends DefProductCondition;
-
-class DefExpressionCondition extends DefProductCondition;
+class DefPathCondition extends DefProductCondition;
 
 class MulCondition extends Condition {
 	int side;
@@ -606,15 +604,9 @@ relation DefAttributeConditionHasAttribute {
 	Attribute playsRole attributeOfDef { multiplicity 0..1; }
 }
 
-//DefDependenceCondition
-relation DefDependenceConditionHasDependence {
-	DefDependenceCondition playsRole defDependenceCondition { multiplicity 0..1; }
-	Dependence playsRole dependence { multiplicity 0..1; }
-}
-
-//DefExpressionCondition
-relation DefExpressionConditionHasProduct {
-	DefExpressionCondition playsRole defExpressionCondition { multiplicity 0..*; }
+//DefPathCondition
+relation DefPathConditionHasProduct {
+	DefPathCondition playsRole defPathCondition { multiplicity 0..*; }
 	Product playsRole product { multiplicity 0..1; }
 }
 
