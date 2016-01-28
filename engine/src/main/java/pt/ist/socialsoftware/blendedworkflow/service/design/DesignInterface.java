@@ -19,7 +19,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.ConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DefDependenceCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
@@ -200,8 +199,7 @@ public class DesignInterface {
 	public Rule createRule(RuleDTO ruleDTO) {
 		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
 
-		Rule rule = spec.getDataModel().createRule(ruleDTO.getName(),
-				ruleDTO.getExpression().buildCondition(spec.getDataModel()));
+		Rule rule = spec.getDataModel().createRule(ruleDTO.getName(), ruleDTO.getExpression().buildCondition(spec));
 
 		log.debug("createRule expression:{}", rule.getCondition().getSubPath());
 
@@ -920,10 +918,6 @@ public class DesignInterface {
 
 		conditions.addAll(defConditionSetDTO.getDefAtts().stream()
 				.map((def) -> DefAttributeCondition.getDefAttribute(spec, def.getPath())).collect(Collectors.toSet()));
-
-		conditions.addAll(defConditionSetDTO.getDefDeps().stream()
-				.map((def) -> DefDependenceCondition.getDefDependence(spec, def.getPath()))
-				.collect(Collectors.toSet()));
 
 		return conditions;
 	}

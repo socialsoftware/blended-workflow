@@ -68,12 +68,6 @@ public class ConditionModel extends ConditionModel_Base {
 		return attributes;
 	}
 
-	public Set<Product> getProductsOfDefDependenceSet(Set<DefProductCondition> defDependencies) {
-		Set<Product> products = defDependencies.stream().filter(DefDependenceCondition.class::isInstance)
-				.map(DefDependenceCondition.class::cast).map((def) -> def.getTarget()).collect(Collectors.toSet());
-		return products;
-	}
-
 	public Set<DefEntityCondition> getDefEntityConditions(Set<DefProductCondition> conditions) {
 		return conditions.stream().filter(DefEntityCondition.class::isInstance).map(DefEntityCondition.class::cast)
 				.collect(Collectors.toSet());
@@ -82,11 +76,6 @@ public class ConditionModel extends ConditionModel_Base {
 	public Set<DefAttributeCondition> getDefAttributeConditions(Set<DefProductCondition> conditions) {
 		return conditions.stream().filter(DefAttributeCondition.class::isInstance)
 				.map(DefAttributeCondition.class::cast).collect(Collectors.toSet());
-	}
-
-	public Set<DefDependenceCondition> getDefDependenceConditions(Set<DefProductCondition> conditions) {
-		return conditions.stream().filter(DefDependenceCondition.class::isInstance)
-				.map(DefDependenceCondition.class::cast).collect(Collectors.toSet());
 	}
 
 }

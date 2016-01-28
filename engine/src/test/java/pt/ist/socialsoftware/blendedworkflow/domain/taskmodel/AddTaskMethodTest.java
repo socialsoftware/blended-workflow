@@ -17,7 +17,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DefDependenceCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
@@ -177,7 +176,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 	}
 
 	@Test
-	public void successWithOutMultiplicityFisrts() {
+	public void successWithoutMultiplicityFirsts() {
 		taskThree.delete();
 
 		Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
@@ -192,8 +191,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		assertEquals(3, task.getPreConditionSet().size());
 		assertTrue(task.getPreConditionSet().contains(DefEntityCondition.getDefEntity(entityTwo)));
 		assertTrue(task.getPreConditionSet().contains(DefEntityCondition.getDefEntity(entityThree)));
-		assertTrue(
-				task.getPreConditionSet().contains(DefDependenceCondition.getDefDependence(spec, DEPENDENCE_PATH_ONE)));
+		assertTrue(task.getPreConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
 		assertEquals(0, task.getMultiplicityInvariantSet().size());
 		assertEquals(1, task.getRuleInvariantSet().size());
 		assertTrue(task.getRuleInvariantSet().contains(ruleTwo));

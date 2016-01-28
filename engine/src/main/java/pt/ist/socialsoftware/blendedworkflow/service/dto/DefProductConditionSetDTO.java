@@ -6,35 +6,26 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DefProductConditionSetDTO {
-    private Set<DefEntityConditionDTO> defEnts;
-    private Set<DefAttributeConditionDTO> defAtts;
-    private Set<DefDependenceConditionDTO> defDeps;
+	private Set<DefEntityConditionDTO> defEnts;
+	private Set<DefAttributeConditionDTO> defAtts;
 
-    public DefProductConditionSetDTO() {
-    }
+	public DefProductConditionSetDTO() {
+	}
 
-    public Set<DefEntityConditionDTO> getDefEnts() {
-        return defEnts;
-    }
+	public Set<DefEntityConditionDTO> getDefEnts() {
+		return defEnts;
+	}
 
-    public void setDefEnts(Set<DefEntityConditionDTO> defEnts) {
-        this.defEnts = defEnts;
-    }
+	public void setDefEnts(Set<DefEntityConditionDTO> defEnts) {
+		this.defEnts = defEnts;
+	}
 
-    public Set<DefAttributeConditionDTO> getDefAtts() {
-        return defAtts;
-    }
+	public Set<DefAttributeConditionDTO> getDefAtts() {
+		return defAtts;
+	}
 
-    public void setDefAtts(Set<DefAttributeConditionDTO> defAtts) {
-        this.defAtts = defAtts;
-    }
-
-    public Set<DefDependenceConditionDTO> getDefDeps() {
-        return defDeps;
-    }
-
-    public void setDefDeps(Set<DefDependenceConditionDTO> defDeps) {
-        this.defDeps = defDeps;
-    }
+	public void setDefAtts(Set<DefAttributeConditionDTO> defAtts) {
+		this.defAtts = defAtts;
+	}
 
 }
