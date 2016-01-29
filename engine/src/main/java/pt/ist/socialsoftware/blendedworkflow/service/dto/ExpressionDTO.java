@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBoolCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.BinaryExpression;
@@ -254,8 +253,7 @@ public class ExpressionDTO {
 		case ATT_DEF:
 			return new DefPathCondition(spec, getValue());
 		case ATT_VALUE:
-			return new AttributeBoolCondition(getValue(),
-					(AttributeBasic) spec.getDataModel().getTargetOfPath(getValue()));
+			return new AttributeBoolCondition(spec, getValue());
 		case EQUAL:
 			if (ExpressionDTO.isBoolExp(Type.valueOf(getLeftExpression().getType())))
 				return new BoolComparison(getLeftExpression().buildCondition(spec),
@@ -310,8 +308,7 @@ public class ExpressionDTO {
 			return new BinaryExpression(getLeftExpression().buildExpression(spec),
 					getRightExpression().buildExpression(spec), BinaryOperator.DIV);
 		case ATT_VALUE:
-			AttributeBasic attribute = (AttributeBasic) spec.getDataModel().getTargetOfPath(getValue());
-			return new AttributeValueExpression(getValue(), attribute);
+			return new AttributeValueExpression(spec, getValue());
 		case INT:
 			return new NumberLiteral(Integer.parseInt(getValue()));
 		case STRING:

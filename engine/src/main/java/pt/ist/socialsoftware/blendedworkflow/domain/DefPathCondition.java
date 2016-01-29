@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition.BooleanOperator;
-import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
@@ -14,6 +12,11 @@ public class DefPathCondition extends DefPathCondition_Base {
 	public DefPathCondition(Specification spec, String path) {
 		setPath(path);
 		setProduct(spec.getDataModel().getTargetOfPath(path));
+	}
+
+	@Override
+	public Product getTargetOfPath() {
+		return getProduct();
 	}
 
 	@Override

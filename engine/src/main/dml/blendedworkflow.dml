@@ -79,9 +79,11 @@ class AttributeBasic extends Attribute {
 class AttributeGroup extends Attribute {
 }
 
-class Dependence {
-	String path;
+class Path {
+	String value;
 }
+
+class Dependence;
 
 class RelationBW {
 	String name;
@@ -103,9 +105,7 @@ class BinaryExpression extends Expression {
 	BinaryOperator operator;
 }
 
-class AttributeValueExpression extends Expression {
-	String path;
-}
+class AttributeValueExpression extends Expression;
 
 class NumberLiteral extends Expression {
 	int value;
@@ -188,15 +188,15 @@ class OrCondition extends Condition;
 
 class NotCondition extends Condition;
 
-class DefProductCondition extends Condition {
-  String path;
-}
+class DefProductCondition extends Condition;
 
 class DefEntityCondition extends DefProductCondition;
 
 class DefAttributeCondition extends DefProductCondition;
 
-class DefPathCondition extends DefProductCondition;
+class DefPathCondition extends DefProductCondition {
+  String path;
+}
 
 class MulCondition extends Condition {
 	int side;
@@ -212,9 +212,7 @@ class BoolComparison extends Condition {
 	ComparisonOperator comparator;
 }
 
-class AttributeBoolCondition extends Condition {
-	String path;
-}
+class AttributeBoolCondition extends Condition;
 
 class TrueCondition extends Condition;
 
@@ -461,6 +459,11 @@ relation DataModelHasAttributes {
 	Attribute playsRole attribute { multiplicity 0..*; }
 }
 
+relation DataModelHasPaths {
+	DataModel playsRole dataModel { multiplicity 0..1; }
+	Path playsRole path { multiplicity 0..*; }
+}
+
 relation DataModelHasRelationBW {
 	DataModel playsRole dataModel { multiplicity 0..1; }
 	RelationBW playsRole relationBW { multiplicity 0..*; }
@@ -509,6 +512,22 @@ relation AttributeHasAttributeInstances {
 relation AttributeGroupHasAttributeBasic {
 	AttributeGroup playsRole attributeGroup { multiplicity 0..1; }
 	AttributeBasic playsRole attribute { multiplicity 0..*; }
+}
+
+// Path
+relation DependenceHasPath {
+	Dependence playsRole dependence { multiplicity 0..1; }
+	Path playsRole path { multiplicity 1..1; }
+}
+
+relation AttributeBoolConditionHasPath {
+	AttributeBoolCondition playsRole attributeBoolCondition { multiplicity 0..1; }
+	Path playsRole path { multiplicity 1..1; }
+}
+
+relation AttributeValueExpressionHasPath {
+	AttributeValueExpression playsRole attributeValueExpression { multiplicity 0..1; }
+	Path playsRole path { multiplicity 1..1; }
 }
 
 // Rule

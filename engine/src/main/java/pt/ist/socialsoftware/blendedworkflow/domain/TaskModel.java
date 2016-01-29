@@ -171,8 +171,8 @@ public class TaskModel extends TaskModel_Base {
 		getSpecification().getDataModel().getDependenceSet().stream()
 				.filter(d -> postProducts.contains(d.getProduct()) && !postProducts.contains(d.getTarget())
 						&& !preProducts.contains(d.getTarget()))
-				.forEach(d -> task
-						.addPreCondition(DefAttributeCondition.getDefAttribute(getSpecification(), d.getPath())));
+				.forEach(d -> task.addPreCondition(
+						DefAttributeCondition.getDefAttribute(getSpecification(), d.getPath().getValue())));
 
 	}
 

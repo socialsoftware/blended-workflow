@@ -55,6 +55,8 @@ public class DataModel extends DataModel_Base {
 		getRuleSet().stream().forEach(rule -> rule.delete());
 		getDependenceSet().stream().forEach(dep -> dep.delete());
 		getEntitySet().stream().forEach(ent -> ent.delete());
+		getAttributeSet().stream().forEach(a -> a.delete());
+		getPathSet().stream().forEach(p -> p.delete());
 	}
 
 	public void delete() {
@@ -75,6 +77,7 @@ public class DataModel extends DataModel_Base {
 		return getRuleSet().stream().filter(rule -> rule.getName().equals(name)).findFirst().orElse(null);
 	}
 
+	@Deprecated
 	public Product getTargetOfPath(String path) {
 		List<String> pathLeft = Arrays.stream(path.split("\\.")).collect(Collectors.toList());
 		Entity entity = getEntity(pathLeft.get(0))
