@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.domain.dependence;
+package pt.ist.socialsoftware.blendedworkflow.domain.path;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -10,15 +10,15 @@ import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.domain.Path;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class CheckMethodTest extends TeardownRollbackTest {
+public class CheckPathMethodTest extends TeardownRollbackTest {
 
 	private static final String SPEC_ID = "SpecId";
 	private static final String ENT_ONE_NAME = "EntOne";
@@ -68,21 +68,73 @@ public class CheckMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void successEntitytoExternalAttribute() throws BWException {
-		Dependence dep = new Dependence(dataModel, entOne,
+		Path path = new Path(dataModel,
 				ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
 
-		dep.check();
+		path.check();
 	}
 
 	@Test
 	public void failPrefixMissing() throws BWException {
 		try {
-			Dependence dep = new Dependence(dataModel, entTwo,
-					ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
-			dep.check();
+			Path path = new Path(dataModel, ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
+			path.check();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INVALID_PATH, bwe.getError());
+		}
+	}
+
+	@Test
+	public void successEntitytoExternalGroupAttributeAttribute() throws BWException {
+		Path path = new Path(dataModel, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE + "."
+				+ GROUP_ONE_NAME + "." + ATT_ONE_NAME);
+
+		path.check();
+	}
+
+	@Test
+	public void successEntitytoExternalGroupAttribute() throws BWException {
+		Path path = new Path(dataModel,
+				ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE + "." + GROUP_ONE_NAME);
+
+		path.check();
+	}
+
+	@Test
+	public void successEntitytoExternalEntity() throws BWException {
+		Path path = new Path(dataModel, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE);
+
+		path.check();
+	}
+
+	@Test
+	public void successEntitytoAttributeGroupAttribute() throws BWException {
+		Path path = new Path(dataModel, ENT_ONE_NAME + "." + GROUP_ONE_NAME + "." + ATT_ONE_NAME);
+
+		path.check();
+	}
+
+	@Test
+	public void successAttributetoExternalGroupAttribute() throws BWException {
+		Path path = new Path(dataModel, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE + "."
+				+ GROUP_ONE_NAME + "." + ATT_ONE_NAME);
+
+		path.check();
+	}
+
+	@Test
+	public void missingAttribute() throws BWException {
+		Path path = new Path(dataModel,
+				ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "." + "notHere");
+
+		try {
+			path.check();
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.INVALID_PATH, bwe.getError());
+			assertEquals(ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "." + "notHere" + ":"
+					+ "[notHere]", bwe.getMessage());
 		}
 	}
 

@@ -1061,28 +1061,6 @@ public class CommonInterface {
 		return restTemplate.postForObject(uri, req, ActivityDTO.class, params);
 	}
 
-	public ProductDTO getSourceOfPath(String specId, String path) {
-		log.debug("getSourceOfPath specId:{} path:{}", specId, path);
-
-		final String uri = BASE_URL + "/specs/{specId}/pathsource?path={path}";
-
-		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		ProductDTO productVO = restTemplate.getForObject(uri, ProductDTO.class, specId, path);
-
-		return productVO;
-	}
-
-	public ProductDTO getTargetOfPath(String specId, String path) {
-		log.debug("getTargetOfPath specId:{} path:{}", specId, path);
-
-		final String uri = BASE_URL + "/specs/{specId}/pathtarget?path={path}";
-
-		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		ProductDTO productVO = restTemplate.getForObject(uri, ProductDTO.class, specId, path);
-
-		return productVO;
-	}
-
 	public Set<String> getDependencePaths(String specId, Set<String> paths) {
 		log.debug("getDependencePaths paths:{}", paths);
 

@@ -52,7 +52,7 @@ public class ConditionModel extends ConditionModel_Base {
 
 	public Set<Product> getProductsOfDefConditions(Set<DefProductCondition> defConditions) {
 		DataModel dataModel = this.getSpecification().getDataModel();
-		return defConditions.stream().map(d -> dataModel.getTargetOfPath(d.getPath())).collect(Collectors.toSet());
+		return defConditions.stream().map(d -> d.getTargetOfPath()).collect(Collectors.toSet());
 	}
 
 	public Set<Entity> getEntitiesOfDefEntitySet(Set<DefProductCondition> defEntities) {

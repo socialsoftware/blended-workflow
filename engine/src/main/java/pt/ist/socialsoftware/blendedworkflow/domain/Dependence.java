@@ -15,21 +15,26 @@ public class Dependence extends Dependence_Base {
 	private static Logger log = LoggerFactory.getLogger(Dependence.class);
 
 	@Override
-	public void setPath(String value) {
-		checkPathPrefix(value);
-		super.setPath(value);
+	public void setPath(Path path) {
+		checkPathPrefix(path);
+		super.setPath(path);
 	}
 
 	public Dependence(DataModel dataModel, Product product, String value) {
 		setDataModel(dataModel);
 		setProduct(product);
-		setPath(value);
+		setPath(new Path(this, value));
 	}
 
-	private void checkPathPrefix(String value) {
-		if (!value.split("\\.")[0].equals(getProduct().getEntity().getName())) {
-			throw new BWException(BWErrorType.INVALID_PATH,
-					value + " requires to have the Entity name as prefix: " + getProduct().getEntity().getName());
+	private void checkPathPrefix(Path path) {
+		List<String> elements = Arrays.stream(getPath().getValue().split("\\.")).collect(Collectors.toList());
+		if (elements.size() == 1) {
+			throw new BWException(BWErrorType.INVALID_PATH, getPath().getValue());
+		}
+
+		if (!elements.get(0).equals(getProduct().getEntity().getName())) {
+			throw new BWException(BWErrorType.INVALID_PATH, path.getValue()
+					+ " requires to have the Entity name as prefix: " + getProduct().getEntity().getName());
 		}
 	}
 
@@ -38,21 +43,13 @@ public class Dependence extends Dependence_Base {
 
 		checkPathPrefix(getPath());
 
-		List<String> pathLeft = Arrays.stream(getPath().split("\\.")).collect(Collectors.toList());
-		if (pathLeft.size() == 1) {
-			throw new BWException(BWErrorType.INVALID_PATH, getPath());
-		}
-
-		pathLeft.remove(0);
-
-		Product product = getProduct().getEntity().getNext(pathLeft, getPath());
-
-		return (product != null);
+		return getPath().check();
 	}
 
 	public void delete() {
 		setDataModel(null);
 		setProduct(null);
+		getPath().delete();
 
 		deleteDomainObject();
 	}
@@ -62,13 +59,13 @@ public class Dependence extends Dependence_Base {
 		depDTO.setSpecId(getDataModel().getSpecification().getSpecId());
 		depDTO.setExtId(getExternalId());
 		depDTO.setProductExtId(getProduct().getExternalId());
-		depDTO.setPath(getPath());
+		depDTO.setPath(getPath().getValue());
 
 		return depDTO;
 	}
 
 	public Product getTarget() {
-		return getDataModel().getTargetOfPath(getPath());
+		return getPath().getTargetOfPath();
 	}
 
 }

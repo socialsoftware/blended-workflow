@@ -732,12 +732,13 @@ public class DesignInterface {
 		for (String sucCond : sucConditions) {
 			Product product = spec.getDataModel().getTargetOfPath(sucCond);
 
-			paths.addAll(product.getDependenceSet().stream().map(dep -> dep.getPath()).collect(Collectors.toSet()));
+			paths.addAll(product.getDependenceSet().stream().map(dep -> dep.getPath().getValue())
+					.collect(Collectors.toSet()));
 
 			if (product instanceof AttributeBasic) {
 				AttributeBasic attribute = (AttributeBasic) product;
 				if (attribute.getAttributeGroup() != null) {
-					paths.addAll(attribute.getDependenceSet().stream().map(dep -> dep.getPath())
+					paths.addAll(attribute.getDependenceSet().stream().map(dep -> dep.getPath().getValue())
 							.collect(Collectors.toSet()));
 				}
 			}
@@ -785,7 +786,7 @@ public class DesignInterface {
 				.forEach(System.out::println);
 
 		spec.getConditionModel().getAttributeDependenceConditionSet().stream()
-				.map(dep -> dep.getProduct().getName() + "-" + dep.getPath()).forEach(System.out::println);
+				.map(dep -> dep.getProduct().getName() + "-" + dep.getPath().getValue()).forEach(System.out::println);
 
 		spec.getConditionModel().getAttributeInvariantConditionSet().stream()
 				.map(rule -> rule.getName() + "-" + rule.getCondition().getSubPath()).forEach(System.out::println);
@@ -882,7 +883,7 @@ public class DesignInterface {
 	}
 
 	private Dependence getDependence(Product product, String path) {
-		return product.getDependenceSet().stream().filter(dep -> dep.getPath().equals(path)).findFirst()
+		return product.getDependenceSet().stream().filter(dep -> dep.getPath().getValue().equals(path)).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.DEPENDENCE_NOT_EXISTS, path));
 
 	}
