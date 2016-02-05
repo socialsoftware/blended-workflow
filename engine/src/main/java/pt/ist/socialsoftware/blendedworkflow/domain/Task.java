@@ -13,7 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 
 public class Task extends Task_Base {
-	private static Logger log = LoggerFactory.getLogger(Task.class);
+	private static Logger logger = LoggerFactory.getLogger(Task.class);
 
 	@Override
 	public void setName(String name) {
@@ -27,7 +27,7 @@ public class Task extends Task_Base {
 		setDescription(description);
 	}
 
-	public Task(TaskModel taskModel, String name, String description, Set<DefProductCondition> preConditions,
+	public Task(TaskModel taskModel, String name, String description, Set<DefPathCondition> preConditions,
 			Set<DefProductCondition> postCondition, String previous, String joinCode, String splitCode)
 					throws BWException {
 		setTaskModel(taskModel);
@@ -47,13 +47,13 @@ public class Task extends Task_Base {
 	}
 
 	public void cloneTask(TaskModelInstance taskModelInstance) throws BWException {
-		Set<DefProductCondition> newPreConditions = null;
-		Set<DefProductCondition> preConditions = getPreConditionSet();
+		Set<DefPathCondition> newPreConditions = null;
+		Set<DefPathCondition> preConditions = getPreConditionSet();
 		Set<DefProductCondition> newPostCondition = null;
 		Set<DefProductCondition> postCondition = getPostConditionSet();
 		if (!preConditions.isEmpty() && !getPostConditionSet().isEmpty()) {
 			newPreConditions = preConditions.stream()
-					.map((cond) -> (DefProductCondition) cond.cloneCondition(taskModelInstance))
+					.map((cond) -> (DefPathCondition) cond.cloneCondition(taskModelInstance))
 					.collect(Collectors.toSet());
 			newPostCondition = postCondition.stream()
 					.map((cond) -> (DefProductCondition) cond.cloneCondition(taskModelInstance))
@@ -134,9 +134,10 @@ public class Task extends Task_Base {
 	}
 
 	private void checkRuleConstraint() {
-		Set<Product> attributes = getConditionModel().getProductsOfDefAttributeSet(getPreConditionSet());
-		Set<Product> postAttributes = getConditionModel().getProductsOfDefAttributeSet(getPostConditionSet());
-		attributes.addAll(postAttributes);
+		Set<AttributeBasic> attributes = getTaskModel().getDefinedAttributes();
+
+		Set<AttributeBasic> postAttributes = getConditionModel()
+				.getBasicAtributesOfDefAttributeSet(getPostConditionSet());
 
 		Optional<Rule> oRule = getRuleInvariantSet().stream().filter(r -> !attributes.containsAll(r.getAttributeSet()))
 				.findFirst();
@@ -152,7 +153,11 @@ public class Task extends Task_Base {
 
 	private void checkMultiplicityConstraint() {
 		Set<Entity> allEntities = getConditionModel().getEntitiesOfDefEntitySet(getPreConditionSet());
+		System.out.println("preEntities");
+		allEntities.stream().forEach(e -> System.out.println(e.getName()));
 		Set<Entity> postEntities = getConditionModel().getEntitiesOfDefEntitySet(getPostConditionSet());
+		System.out.println("postEntities");
+		postEntities.stream().forEach(e -> System.out.println(e.getName()));
 		allEntities.addAll(postEntities);
 
 		Optional<MulCondition> oMul = getMultiplicityInvariantSet().stream()
@@ -161,8 +166,11 @@ public class Task extends Task_Base {
 				.findFirst();
 
 		if (oMul.isPresent())
+			System.out.println("breaks" + oMul.get().getEntity().getName() + "." + oMul.get().getRolename());
+
+		if (oMul.isPresent())
 			throw new BWException(BWErrorType.INCONSISTENT_MUL_CONDITION,
-					getName() + ":" + oMul.get().getEntity().getName());
+					getName() + ":" + oMul.get().getEntity().getName() + "." + oMul.get().getRolename());
 
 		// at least one entity definition is done here
 		oMul = getMultiplicityInvariantSet().stream()
@@ -192,9 +200,8 @@ public class Task extends Task_Base {
 
 	private void checkEntityOfDefAttributeIsDefined() {
 		Set<Entity> entities = Stream
-				.concat(getConditionModel().getDefEntityConditions(getPreConditionSet()).stream()
-						.map(d -> d.getEntity()),
-				getConditionModel().getDefEntityConditions(getPostConditionSet()).stream().map(d -> d.getEntity()))
+				.concat(getConditionModel().getEntitiesOfDefEntitySet(getPreConditionSet()).stream(),
+						getConditionModel().getEntitiesOfDefEntitySet(getPostConditionSet()).stream())
 				.collect(Collectors.toSet());
 
 		Optional<DefAttributeCondition> oDef = getConditionModel().getDefAttributeConditions(getPostConditionSet())
@@ -218,6 +225,15 @@ public class Task extends Task_Base {
 
 	private ConditionModel getConditionModel() {
 		return this.getTaskModel().getSpecification().getConditionModel();
+	}
+
+	public void removePreCondition(String entityTwoName) {
+		for (DefPathCondition defPathCondition : getPreConditionSet()) {
+			if (defPathCondition.getPath().equals(entityTwoName)) {
+				removePreCondition(defPathCondition);
+			}
+		}
+
 	}
 
 }

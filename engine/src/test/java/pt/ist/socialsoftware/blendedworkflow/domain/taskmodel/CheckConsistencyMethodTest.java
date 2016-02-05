@@ -15,6 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
@@ -42,6 +43,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	private static final String ATTRIBUTE_THREE_NAME = "att3";
 	private static final String ATTRIBUTE_FOUR_NAME = "att4";
 	private static final String ROLENAME_ONE = "theOne";
+	private static final String DEPENDENCE_PATH = ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME;
 	private static final String ROLENAME_TWO = "theTwo";
 	private static final String RULE_ONE_NAME = "ruleOne";
 	private static final String RULE_TWO_NAME = "ruleTwo";
@@ -90,8 +92,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		attributeFourTwo = new AttributeBasic(spec.getDataModel(), entityThree, attributeFour, ATTRIBUTE_FOURTWO_NAME,
 				AttributeType.NUMBER, false, false, false);
 
-		new Dependence(spec.getDataModel(), attributeThree,
-				ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME);
+		new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH);
 
 		ruleOne = new Rule(spec.getDataModel(), RULE_ONE_NAME,
 				new Comparison(new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
@@ -110,7 +111,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		spec.getConditionModel().generateConditions();
 
 		taskOne = new Task(spec.getTaskModel(), TASK_ONE, "Description");
-		taskOne.addPreCondition(DefEntityCondition.getDefEntity(existsEntity));
+		taskOne.addPreCondition(DefPathCondition.getDefPathCondition(spec, EXISTS_ENTITY));
 		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entityOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
@@ -121,7 +122,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskOne.addRuleInvariant(ruleOne);
 
 		taskTwo = new Task(spec.getTaskModel(), TASK_TWO, "Description");
-		taskTwo.addPreCondition(DefEntityCondition.getDefEntity(entityOne));
+		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_ONE_NAME));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
 		taskTwo.addMultiplicityInvariant(
@@ -130,9 +131,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameTwo()));
 
 		taskThree = new Task(spec.getTaskModel(), TASK_THREE, "Description");
-		taskThree.addPreCondition(DefEntityCondition.getDefEntity(entityTwo));
-		taskThree.addPreCondition(DefEntityCondition.getDefEntity(entityThree));
-		taskThree.addPreCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
+		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_THREE_NAME));
+		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH));
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeThree));
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
 		taskThree.addRuleInvariant(ruleTwo);
@@ -209,7 +210,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void defAttributeDoesNotDependOnDefEntity() {
-		taskThree.removePreCondition(DefEntityCondition.getDefEntity(entityTwo));
+		taskThree.removePreCondition(ENTITY_TWO_NAME);
 
 		try {
 			spec.getTaskModel().checkModel();
@@ -222,7 +223,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void defAttributeDoesNotEnforceDependenceConstraint() {
-		taskThree.removePreCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskThree.removePreCondition(DEPENDENCE_PATH);
 
 		try {
 			spec.getTaskModel().checkModel();
@@ -245,7 +246,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_MUL_CONDITION, bwe.getError());
-			assertEquals(TASK_ONE + ":" + ENTITY_TWO_NAME, bwe.getMessage());
+			assertEquals(TASK_ONE + ":" + ENTITY_TWO_NAME + "." + ROLENAME_ONE, bwe.getMessage());
 		}
 	}
 
@@ -261,7 +262,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_MUL_CONDITION, bwe.getError());
-			assertEquals(TASK_THREE + ":" + ENTITY_TWO_NAME, bwe.getMessage());
+			assertEquals(TASK_THREE + ":" + ENTITY_TWO_NAME + "." + ROLENAME_ONE, bwe.getMessage());
 		}
 	}
 
@@ -283,8 +284,10 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	public void ruleConditionDoesNotHaveDefAttribute() {
 		taskOne.removeRuleInvariant(ruleOne);
 		taskTwo.addRuleInvariant(ruleOne);
-		taskTwo.addPreCondition(DefAttributeCondition.getDefAttribute(attributeOne));
-		taskTwo.addPreCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec,
+				DefAttributeCondition.getDefAttribute(attributeOne).getPath()));
+		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec,
+				DefAttributeCondition.getDefAttribute(attributeTwo).getPath()));
 
 		try {
 			spec.getTaskModel().checkModel();
@@ -299,7 +302,8 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	public void ruleConditionDoesNotHaveDefAttributeGroup() {
 		taskThree.removeRuleInvariant(ruleTwo);
 		taskTwo.addRuleInvariant(ruleTwo);
-		taskTwo.addPreCondition(DefAttributeCondition.getDefAttribute(attributeFour));
+		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec,
+				DefAttributeCondition.getDefAttribute(attributeFour).getPath()));
 
 		try {
 			spec.getTaskModel().checkModel();
@@ -325,14 +329,14 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void existsEntityFailureNoPreCondition() {
-		taskOne.removePreCondition(DefEntityCondition.getDefEntity(existsEntity));
+		taskOne.removePreCondition(EXISTS_ENTITY);
 
 		try {
 			spec.getTaskModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_MUL_CONDITION, bwe.getError());
-			assertEquals(TASK_ONE + ":" + EXISTS_ENTITY, bwe.getMessage());
+			assertEquals(TASK_ONE + ":" + EXISTS_ENTITY + "." + ROLENAME_ONE, bwe.getMessage());
 		}
 	}
 

@@ -83,12 +83,12 @@ public class ExpressionDTO {
 	}
 
 	private enum Type {
-		AND, OR, NOT, ATT_DEF, EQUAL, NOT_EQUAL, GREATER, GREATER_EQUAL, SMALLER, SMALLER_EQUAL, PLUS, MINUS, MUL, DIV, ATT_VALUE, STRING, INT, BOOL;
+		AND, OR, NOT, PATH_DEF, EQUAL, NOT_EQUAL, GREATER, GREATER_EQUAL, SMALLER, SMALLER_EQUAL, PLUS, MINUS, MUL, DIV, ATT_VALUE, STRING, INT, BOOL;
 
 	}
 
 	public static boolean isBoolExp(Type type) {
-		Set<Type> bools = new HashSet<>(Arrays.asList(Type.AND, Type.OR, Type.NOT, Type.ATT_DEF, Type.EQUAL,
+		Set<Type> bools = new HashSet<>(Arrays.asList(Type.AND, Type.OR, Type.NOT, Type.PATH_DEF, Type.EQUAL,
 				Type.NOT_EQUAL, Type.GREATER, Type.GREATER_EQUAL, Type.SMALLER, Type.SMALLER_EQUAL, Type.BOOL));
 		return bools.contains(type);
 	}
@@ -183,8 +183,8 @@ public class ExpressionDTO {
 			return Type.NOT.name();
 		case OR:
 			return Type.OR.name();
-		case ATT_DEF:
-			return Type.ATT_DEF.name();
+		case PATH_DEF:
+			return Type.PATH_DEF.name();
 		case ATT_VALUE:
 			return Type.ATT_VALUE.name();
 		case BOOL:
@@ -250,8 +250,8 @@ public class ExpressionDTO {
 			return new OrCondition(getLeftExpression().buildCondition(spec), getRightExpression().buildCondition(spec));
 		case NOT:
 			return new NotCondition(getUnaryExpression().buildCondition(spec));
-		case ATT_DEF:
-			return new DefPathCondition(spec, getValue());
+		case PATH_DEF:
+			return DefPathCondition.getDefPathCondition(spec, getValue());
 		case ATT_VALUE:
 			return new AttributeBoolCondition(spec, getValue());
 		case EQUAL:

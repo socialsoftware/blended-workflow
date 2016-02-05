@@ -8,14 +8,11 @@ import org.blended.activity.activity.ActivityModel
 import org.blended.common.utils.Queries
 import org.blended.common.common.CommonFactory
 import org.blended.common.common.AttributeAchieveCondition
-import org.blended.common.common.AttributeDependenceCondition
 import org.blended.common.common.AttributeInvariantCondition
 import org.blended.common.common.EntityAchieveCondition
-import org.blended.common.common.EntityDependenceCondition
 import org.blended.common.common.EntityInvariantCondition
 import org.blended.common.common.MandatoryAttributeAchieveCondition
 import org.blended.common.common.NotMandatoryAttributeAchieveCondition
-import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
@@ -34,13 +31,14 @@ import org.blended.common.repository.resttemplate.req.AddActivityReq
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO
 import java.util.Set
-import java.util.stream.Collectors
 import org.blended.common.repository.resttemplate.dto.ActivityDTO
 import org.blended.common.repository.resttemplate.dto.MulConditionDTO
 import java.util.List
 import org.blended.common.repository.resttemplate.dto.RuleDTO
 import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO
-import org.blended.common.repository.resttemplate.dto.DefDependenceConditionDTO
+import org.blended.common.repository.resttemplate.dto.ExpressionDTO
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Generates code from your model files on save.
@@ -48,6 +46,8 @@ import org.blended.common.repository.resttemplate.dto.DefDependenceConditionDTO
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class ConditionGeneratorActivityModel {
+		private static Logger logger = LoggerFactory.getLogger("ConditionGeneratorActivityModel")
+	
 	Resource resource
 	IFileSystemAccess fsa
 	CommonFactory factory
@@ -65,6 +65,11 @@ class ConditionGeneratorActivityModel {
 	def doGenerate() {
 		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy
 
+		var specId = resource.normalizedURI.lastSegment.split("\\.").get(0)
+
+		var ci = CommonInterface.getInstance
+		ci.cleanActivityModel(specId);
+
 		var i = 1 // number of the activity
 		for (o : resource.allContents.toIterable.filter(typeof(EntityAchieveCondition)) +
 			resource.allContents.toIterable.filter(typeof(AttributeAchieveCondition))) {
@@ -72,10 +77,6 @@ class ConditionGeneratorActivityModel {
 			activity.name = 'a' + i
 			activity.description = "Activity number " + i++
 			model.activities.add(activity)
-
-			var specId = resource.normalizedURI.lastSegment.split("\\.").get(0)
-
-			var ci = CommonInterface.getInstance
 
 			var Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>()
 			var Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>()
@@ -91,33 +92,12 @@ class ConditionGeneratorActivityModel {
 
 			generatePostConditionSet(activity, o)
 			
-			var DefProductConditionSetDTO defConditionSet = ci.getActivityPreConditionSet(specId, activityDTO.name)
+			var Set<ExpressionDTO> preConditionSet = ci.getActivityPreConditionSet(specId, activityDTO.name)
 			
-			for (DefEntityConditionDTO defEntity : defConditionSet.getDefEnts) {
-					var apre = factory.createEntityAchieveCondition
-					apre.name = defEntity.entityName
-					activity.pre.add(apre)
+			for (ExpressionDTO defPath : preConditionSet) {
+					activity.pre.add(defPath.buildExpression)
 			}
-			
-			for (DefAttributeConditionDTO defAttribute : defConditionSet.getDefAtts) {
-				if (defAttribute.mandatory) {
-					// TODO should be a MandatoryFactory
-					var apre = factory.createNotMandatoryAttributeAchieveCondition
-					apre.attribute = defAttribute.path
-					activity.pre.add(apre)
-				} else {
-					var apre = factory.createNotMandatoryAttributeAchieveCondition
-					apre.attribute = defAttribute.path
-					activity.pre.add(apre)
-				}
-			}
-			
-			for (DefDependenceConditionDTO defDependence : defConditionSet.getDefDeps) {
-					var apre = factory.createNotMandatoryAttributeAchieveCondition
-					apre.attribute = defDependence.path
-					activity.pre.add(apre)
-			}
-			
+						
 			var List<MulConditionDTO> mulConditionDTOs = ci.getActivityMulConditions(specId, activityDTO.name)
 			
 			for (MulConditionDTO mulConditionDTO : mulConditionDTOs) {
@@ -132,6 +112,7 @@ class ConditionGeneratorActivityModel {
 			
 			for (RuleDTO ruleDTO : ruleDTOs) {
 				for (rule : resource.allContents.toIterable.filter(typeof(AttributeInvariantCondition))) {
+					
 					if (rule.name.equals(ruleDTO.name)) {
 						activity.post.add(rule.copy)
 					}

@@ -54,8 +54,7 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 
 	@Override
 	public Set<Entity> getEntities() {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<Entity>();
 	}
 
 	@Override
@@ -64,6 +63,14 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 		attributes.add(getAttributeOfBool());
 
 		return attributes;
+	}
+
+	@Override
+	public Set<String> getPathSet() {
+		Set<String> paths = new HashSet<String>();
+		paths.add(getPath().getValue());
+
+		return paths;
 	}
 
 	@Override

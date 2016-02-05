@@ -20,6 +20,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.ConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -575,7 +576,7 @@ public class DesignInterface {
 		return spec.getTaskModel().getTasksSet();
 	}
 
-	public Set<DefProductCondition> getActivityPreCondition(String specId, String activityName) {
+	public Set<DefPathCondition> getActivityPreCondition(String specId, String activityName) {
 		Specification spec = getSpecBySpecId(specId);
 		Task task = getTaskByName(spec, activityName);
 
@@ -583,30 +584,17 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public DefEntityCondition associateEntityToActivityPre(String specId, String activityName, String path) {
+	public DefPathCondition associateDefPathToActivityPre(String specId, String activityName, String path) {
 		Specification spec = getSpecBySpecId(specId);
 		Task task = getTaskByName(spec, activityName);
 
-		Product product = spec.getDataModel().getTargetOfPath(path);
-		if (product.getProductType() != ProductType.ENTITY)
-			throw new BWException(BWErrorType.INVALID_PATH, path);
+		spec.getDataModel().getTargetOfPath(path);
 
-		DefEntityCondition defEntityCondition = ((Entity) product).getDefEntityCondition();
+		DefPathCondition defPathCondition = DefPathCondition.getDefPathCondition(spec, path);
 
-		task.addPreCondition(defEntityCondition);
+		task.addPreCondition(defPathCondition);
 
-		return defEntityCondition;
-	}
-
-	@Atomic(mode = TxMode.WRITE)
-	public DefAttributeCondition associateAttributeToActivityPre(String specId, String activityName, String path) {
-		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
-		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, path);
-
-		task.addPreCondition(defAttributeCondition);
-
-		return defAttributeCondition;
+		return defPathCondition;
 	}
 
 	public Set<DefProductCondition> getActivityPostCondition(String specId, String activityName) {

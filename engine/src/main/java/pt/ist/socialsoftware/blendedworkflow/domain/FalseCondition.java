@@ -9,130 +9,130 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class FalseCondition extends FalseCondition_Base {
 
-    public FalseCondition() {
-        super();
-    }
+	public FalseCondition() {
+		super();
+	}
 
-    @Override
-    Condition cloneCondition(GoalModelInstance goalModelInstance) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	Condition cloneCondition(GoalModelInstance goalModelInstance) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    Condition cloneCondition(TaskModelInstance taskModelInstance) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public void assignAttributeInstances(GoalWorkItem goalWorkItem,
-            ConditionType conditionType) {
-        // TODO Auto-generated method stub
+	@Override
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
-    @Override
-    void assignAttributeInstances(TaskWorkItem taskWorkItem,
-            ConditionType conditionType) {
-        // TODO Auto-generated method stub
+	@Override
+	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
-    @Override
-    public Set<Entity> getEntities() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public Set<Entity> getEntities() {
+		return new HashSet<Entity>();
+	}
 
-    @Override
-    public Set<AttributeBasic> getAttributeBasicSet() {
-        return new HashSet<AttributeBasic>();
-    }
+	@Override
+	public Set<AttributeBasic> getAttributeBasicSet() {
+		return new HashSet<AttributeBasic>();
+	}
 
-    @Override
-    public HashMap<AttributeBasic, String> getcompareConditionValues() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public Set<String> getPathSet() {
+		return new HashSet<String>();
+	}
 
-    @Override
-    public String getRdrUndefinedCondition() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public HashMap<AttributeBasic, String> getcompareConditionValues() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public String getRdrSkippedCondition() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public String getRdrUndefinedCondition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public String getRdrTrueCondition() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public String getRdrSkippedCondition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public String getRdrFalseCondition() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public String getRdrTrueCondition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public String toString() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public String getRdrFalseCondition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public Boolean existExistEntity() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public Boolean existCompareAttributeToValue() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public Boolean existExistEntity() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public Boolean existTrue() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public Boolean existCompareAttributeToValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public TripleStateBool evaluate(GoalWorkItem goalWorkItem,
-            ConditionType conditionType) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public Boolean existTrue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem,
-            ConditionType conditionType) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance,
-            GoalWorkItem goalWorkItem, ConditionType conditionType) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public String getSubPath() {
-        return "false";
-    }
+	@Override
+	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
+			ConditionType conditionType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public ExpressionDTO getDTO(String specId) {
-        return new ExpressionDTO(specId, BooleanOperator.BOOL, "false");
-    }
+	@Override
+	public String getSubPath() {
+		return "false";
+	}
+
+	@Override
+	public ExpressionDTO getDTO(String specId) {
+		return new ExpressionDTO(specId, BooleanOperator.BOOL, "false");
+	}
 
 }

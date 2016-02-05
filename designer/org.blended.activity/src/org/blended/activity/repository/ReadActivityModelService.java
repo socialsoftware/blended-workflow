@@ -12,6 +12,7 @@ import org.blended.common.repository.resttemplate.dto.ActivityDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
+import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
 import org.blended.common.repository.resttemplate.dto.MulConditionDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.slf4j.Logger;
@@ -43,17 +44,14 @@ public class ReadActivityModelService {
 		for (ActivityDTO activityDTO : activities) {
 			Activity activity = createActivity(model, activityDTO);
 
-			DefProductConditionSetDTO defProductConditionSetDTO = ci.getActivityPreConditionSet(specId,
+			Set<ExpressionDTO> expressionsDTO = ci.getActivityPreConditionSet(specId, activityDTO.getName());
+
+			for (ExpressionDTO expressionDTO : expressionsDTO) {
+				activity.getPre().add(expressionDTO.buildExpression());
+			}
+
+			DefProductConditionSetDTO defProductConditionSetDTO = ci.getActivityPostConditionSet(specId,
 					activityDTO.getName());
-
-			for (DefEntityConditionDTO defEntityConditionDTO : defProductConditionSetDTO.getDefEnts()) {
-				activity.getPre().add(defEntityConditionDTO.createEntityAchieveCondition(factory));
-			}
-			for (DefAttributeConditionDTO defAttributeConditionDTO : defProductConditionSetDTO.getDefAtts()) {
-				activity.getPre().add(defAttributeConditionDTO.createAttributeAchieveCondition(factory));
-			}
-
-			defProductConditionSetDTO = ci.getActivityPostConditionSet(specId, activityDTO.getName());
 			for (DefEntityConditionDTO defEntityConditionDTO : defProductConditionSetDTO.getDefEnts()) {
 				activity.getPost().add(defEntityConditionDTO.createEntityAchieveCondition(factory));
 			}

@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -18,6 +19,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -41,29 +43,37 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 	private static final String ENTITY_ONE_NAME = "EntityOne";
 	private static final String ENTITY_TWO_NAME = "EntityTwo";
 	private static final String ENTITY_THREE_NAME = "EntityThree";
+	private static final String ENTITY_EXISTS = "EntityExists";
 	private static final String ATTRIBUTE_ONE_NAME = "att1";
 	private static final String ATTRIBUTE_TWO_NAME = "att2";
 	private static final String ATTRIBUTE_THREE_NAME = "att3";
 	private static final String ATTRIBUTE_FOUR_NAME = "att4";
+	private static final String ATTRIBUTE_FIVE_NAME = "att5";
 	private static final String ROLENAME_ONE = "theOne";
 	private static final String DEPENDENCE_PATH_ONE = ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME;
 	private static final String ROLENAME_TWO = "theTwo";
+	private static final String ROLENAME_EXISTS = "theExists";
 	private static final String RULE_ONE_NAME = "ruleOne";
 	private static final String RULE_TWO_NAME = "ruleTwo";
+	private static final String RULE_THREE_NAME = "ruleThree";
 
 	Specification spec;
 	Entity entityOne;
 	Entity entityTwo;
 	Entity entityThree;
+	Entity entityExists;
 	AttributeBasic attributeOne;
 	AttributeBasic attributeTwo;
 	AttributeBasic attributeThree;
 	AttributeGroup attributeFour;
 	AttributeBasic attributeFourOne;
 	AttributeBasic attributeFourTwo;
+	AttributeBasic attributeFive;
 	RelationBW relation;
+	RelationBW relationExists;
 	Rule ruleOne;
 	Rule ruleTwo;
+	Rule ruleThree;
 
 	TaskModel taskModel;
 	Task taskOne;
@@ -94,6 +104,13 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		attributeFourTwo = new AttributeBasic(spec.getDataModel(), entityThree, attributeFour, ATTRIBUTE_FOURTWO_NAME,
 				AttributeType.NUMBER, false, false, false);
 
+		entityExists = new Entity(spec.getDataModel(), ENTITY_EXISTS, true);
+		attributeFive = new AttributeBasic(spec.getDataModel(), entityExists, null, ATTRIBUTE_FIVE_NAME,
+				AttributeType.NUMBER, true, false, false);
+
+		relationExists = new RelationBW(spec.getDataModel(), "nameTwo", entityOne, ROLENAME_ONE, Cardinality.ONE, false,
+				entityExists, ROLENAME_EXISTS, Cardinality.ZERO_MANY, false);
+
 		new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH_ONE);
 
 		ruleOne = new Rule(spec.getDataModel(), RULE_ONE_NAME,
@@ -106,27 +123,37 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 						new AttributeValueExpression(spec, ENTITY_THREE_NAME + "." + ATTRIBUTE_FOURTWO_NAME),
 						ComparisonOperator.EQUAL));
 
+		ruleThree = new Rule(spec.getDataModel(), RULE_THREE_NAME,
+				new Comparison(new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
+						new AttributeValueExpression(spec,
+								ENTITY_ONE_NAME + "." + ROLENAME_EXISTS + "." + ATTRIBUTE_FIVE_NAME),
+				ComparisonOperator.EQUAL));
+
 		spec.getConditionModel().generateConditions();
 
 		taskModel = spec.getTaskModel();
 
 		taskOne = new Task(spec.getTaskModel(), TASK_ONE, "Description");
+		taskOne.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_EXISTS));
 		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entityOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskOne.addMultiplicityInvariant(MulCondition.getMulCondition(relationExists, relationExists.getRoleNameOne()));
+		taskOne.addMultiplicityInvariant(MulCondition.getMulCondition(relationExists, relationExists.getRoleNameTwo()));
 		taskOne.addRuleInvariant(ruleOne);
+		taskOne.addRuleInvariant(ruleThree);
 
 		taskTwo = new Task(spec.getTaskModel(), TASK_TWO, "Description");
-		taskTwo.addPreCondition(DefEntityCondition.getDefEntity(entityOne));
+		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_ONE_NAME));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameTwo()));
 
 		taskThree = new Task(spec.getTaskModel(), TASK_THREE, "Description");
-		taskThree.addPreCondition(DefEntityCondition.getDefEntity(entityTwo));
-		taskThree.addPreCondition(DefEntityCondition.getDefEntity(entityThree));
-		taskThree.addPreCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
+		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_THREE_NAME));
+		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH_ONE));
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeThree));
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
 		taskThree.addRuleInvariant(ruleTwo);
@@ -156,7 +183,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.CANNOT_ADD_TASK, bwe.getError());
-			assertEquals("all achieve conditions already belong to a post condition", bwe.getMessage());
+			assertEquals("condition already used", bwe.getMessage());
 		}
 	}
 
@@ -175,7 +202,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 	}
 
 	@Test
-	public void successWithoutMultiplicityFirsts() {
+	public void successWithoutMultiplicityFirst() {
 		taskThree.delete();
 
 		Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
@@ -187,13 +214,18 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		assertEquals(2, task.getPostConditionSet().size());
 		assertTrue(task.getPostConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeThree)));
 		assertTrue(task.getPostConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeFour)));
+		task.getPreConditionSet().stream().forEach(e -> System.out.println(e.getPath()));
 		assertEquals(3, task.getPreConditionSet().size());
-		assertTrue(task.getPreConditionSet().contains(DefEntityCondition.getDefEntity(entityTwo)));
-		assertTrue(task.getPreConditionSet().contains(DefEntityCondition.getDefEntity(entityThree)));
-		assertTrue(task.getPreConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
+		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath()).collect(Collectors.toSet())
+				.contains(ENTITY_TWO_NAME));
+		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath()).collect(Collectors.toSet())
+				.contains(ENTITY_THREE_NAME));
+		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath()).collect(Collectors.toSet())
+				.contains(DEPENDENCE_PATH_ONE));
 		assertEquals(0, task.getMultiplicityInvariantSet().size());
 		assertEquals(1, task.getRuleInvariantSet().size());
 		assertTrue(task.getRuleInvariantSet().contains(ruleTwo));
+		assertTrue(task.checkConsistency());
 		assertTrue(taskModel.checkModel());
 	}
 
@@ -208,7 +240,19 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		Task task = taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
 
 		assertEquals(NEW_TASK_NAME, task.getName());
+		assertEquals(1, task.getPreConditionSet().size());
+		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath()).collect(Collectors.toSet())
+				.contains(ENTITY_EXISTS));
+		// assertTrue(task.getPreConditionSet().stream().map(d ->
+		// d.getPath()).collect(Collectors.toSet())
+		// .contains(ENTITY_ONE_NAME + "." + ROLENAME_EXISTS + "." +
+		// ATTRIBUTE_FIVE_NAME));
 		assertEquals(3, task.getPostConditionSet().size());
+		assertEquals(2, task.getRuleInvariantSet().size());
+		assertTrue(task.getRuleInvariantSet().contains(ruleOne));
+		assertTrue(task.getRuleInvariantSet().contains(ruleThree));
+
+		assertTrue(task.checkConsistency());
 		assertTrue(taskModel.checkModel());
 	}
 
@@ -230,6 +274,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		assertTrue(task.getMultiplicityInvariantSet()
 				.contains(MulCondition.getMulCondition(relation, relation.getRoleNameTwo())));
 
+		assertTrue(task.checkConsistency());
 		assertTrue(taskModel.checkModel());
 	}
 

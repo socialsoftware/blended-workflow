@@ -76,9 +76,11 @@ public class TaskModel extends TaskModel_Base {
 		newTask.getPostConditionSet().addAll(taskOne.getPostConditionSet());
 		newTask.getPostConditionSet().addAll(taskTwo.getPostConditionSet());
 
-		for (DefProductCondition defProductCondition : newTask.getPreConditionSet()) {
-			if (newTask.getPostConditionSet().contains(defProductCondition))
-				newTask.removePreCondition(defProductCondition);
+		Set<Product> postProducts = getConditionModel().getProductsOfDefConditions(newTask.getPostConditionSet());
+
+		for (DefPathCondition defPathCondition : newTask.getPreConditionSet()) {
+			if (postProducts.contains(defPathCondition.getPathObject().getTargetOfPath()))
+				newTask.removePreCondition(defPathCondition);
 		}
 
 		newTask.getMultiplicityInvariantSet().addAll(taskOne.getMultiplicityInvariantSet());
@@ -109,36 +111,57 @@ public class TaskModel extends TaskModel_Base {
 	}
 
 	private void applyRuleConditionToPostAndPre(Task task) {
-		Set<Attribute> definedAttributes = getTasksSet().stream()
-				.flatMap(t -> getConditionModel().getDefAttributeConditions(t.getPostConditionSet()).stream())
-				.flatMap(def -> def.getAttributeOfDef().getAttributeBasicSet().stream()).collect(Collectors.toSet());
+		Set<AttributeBasic> definedAttributes = getDefinedAttributes();
 
 		getSpecification().getDataModel().getRuleSet().stream()
 				.filter(r -> r.getTaskWithRule() == null && definedAttributes.containsAll(r.getAttributeBasicSet()))
 				.forEach(r -> task.addRuleInvariant(r));
 
-		task.getRuleInvariantSet().stream().flatMap(r -> r.getAttributeSet().stream())
-				.filter(att -> !task.getPostConditionSet().contains(DefAttributeCondition.getDefAttribute(att))
-						&& !task.getPreConditionSet().contains(DefAttributeCondition.getDefAttribute(att)))
-				.forEach(att -> task.addPreCondition(DefAttributeCondition.getDefAttribute(att)));
+		Set<AttributeBasic> postAttributes = getConditionModel()
+				.getBasicAtributesOfDefAttributeSet(task.getPostConditionSet());
+		Set<Product> preAttributes = task.getPreConditionSet().stream().map(d -> d.getPathObject().getTargetOfPath())
+				.collect(Collectors.toSet());
+		preAttributes.addAll(getDataModel().getEntitySet().stream().filter(e -> e.getExists())
+				.flatMap(e -> e.getAttributeBasicSet().stream()).collect(Collectors.toSet()));
+
+		task.getRuleInvariantSet().stream().flatMap(r -> r.getPathSet().stream())
+				.filter(path -> !postAttributes.contains(getDataModel().getTargetOfPath(path))
+						&& !preAttributes.contains(getDataModel().getTargetOfPath(path)))
+				.forEach(path -> task.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(), path)));
+	}
+
+	public Set<AttributeBasic> getDefinedAttributes() {
+		Set<AttributeBasic> definedAttributes = getTasksSet().stream()
+				.flatMap(t -> getConditionModel().getDefAttributeConditions(t.getPostConditionSet()).stream())
+				.flatMap(def -> def.getAttributeOfDef().getAttributeBasicSet().stream()).collect(Collectors.toSet());
+
+		definedAttributes.addAll(getDataModel().getEntitySet().stream().filter(e -> e.getExists())
+				.flatMap(e -> e.getAttributeBasicSet().stream()).collect(Collectors.toSet()));
+
+		return definedAttributes;
 	}
 
 	private void applyMultiplicityToPostAndPre(Task task) {
-		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>(task.getPostConditionSet());
-
 		Set<Entity> definedEntities = getDefinedEntities();
 
-		Set<Entity> entitiesToBeDefined = getConditionModel().getDefEntityConditions(postConditionSet).stream()
-				.map(def -> def.getEntity()).collect(Collectors.toSet());
-
-		definedEntities.addAll(entitiesToBeDefined);
+		// System.out.println("definedEntities");
+		// definedEntities.stream().forEach(e ->
+		// System.out.println(e.getName()));
 
 		Set<MulCondition> definedMulConditions = getTasksSet().stream()
 				.flatMap(t -> t.getMultiplicityInvariantSet().stream()).collect(Collectors.toSet());
 
+		// System.out.println("definedMulConditions");
+		// definedMulConditions.stream().forEach(e ->
+		// System.out.println(e.getRolename()));
+
 		Set<MulCondition> undefinedMulConditions = new HashSet<MulCondition>(
 				getConditionModel().getEntityInvariantConditionSet());
 		undefinedMulConditions.removeAll(definedMulConditions);
+
+		// System.out.println("undefinedMulConditions");
+		// undefinedMulConditions.stream().forEach(e ->
+		// System.out.println(e.getRolename()));
 
 		Set<MulCondition> mulConditionsToDefine = undefinedMulConditions.stream()
 				.filter(m -> definedEntities.containsAll(m.getRelationBW().getEntitySet())).collect(Collectors.toSet());
@@ -146,15 +169,16 @@ public class TaskModel extends TaskModel_Base {
 		mulConditionsToDefine.forEach(m -> task.getMultiplicityInvariantSet().add(m));
 
 		mulConditionsToDefine.stream()
-				.filter(m -> !task.getPostConditionSet().contains(DefEntityCondition.getDefEntity(m.getEntity())))
-				.forEach(m -> task.addPreCondition(DefEntityCondition.getDefEntity(m.getEntity())));
-
+				.filter(m -> !getConditionModel().getEntitiesOfDefEntitySet(task.getPostConditionSet())
+						.contains(m.getEntity()))
+				.forEach(m -> task.addPreCondition(
+						DefPathCondition.getDefPathCondition(getSpecification(), m.getEntity().getName())));
 	}
 
 	public Set<Entity> getDefinedEntities() {
 		Set<Entity> definedEntities = getTasksSet().stream()
-				.flatMap(t -> getConditionModel().getDefEntityConditions(t.getPostConditionSet()).stream())
-				.map(def -> def.getEntity()).collect(Collectors.toSet());
+				.flatMap(t -> getConditionModel().getEntitiesOfDefEntitySet(t.getPostConditionSet()).stream())
+				.collect(Collectors.toSet());
 
 		Set<Entity> existEntities = getConditionModel().getEntityAchieveConditionSet().stream()
 				.map(eac -> eac.getEntity()).filter(e -> e.getEntity().getExists()).collect(Collectors.toSet());
@@ -172,17 +196,17 @@ public class TaskModel extends TaskModel_Base {
 				.filter(d -> postProducts.contains(d.getProduct()) && !postProducts.contains(d.getTarget())
 						&& !preProducts.contains(d.getTarget()))
 				.forEach(d -> task.addPreCondition(
-						DefAttributeCondition.getDefAttribute(getSpecification(), d.getPath().getValue())));
+						DefPathCondition.getDefPathCondition(getSpecification(), d.getPath().getValue())));
 
 	}
 
 	private void applyAttributeEntityDependenceToPre(Task task) {
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>(task.getPostConditionSet());
 		getConditionModel().getDefAttributeConditions(postConditionSet).stream()
-				.filter(def -> !getConditionModel().getDefEntityConditions(postConditionSet)
-						.contains(DefEntityCondition.getDefEntity(def.getAttributeOfDef().getEntity())))
-				.forEach(def -> task
-						.addPreCondition(DefEntityCondition.getDefEntity(def.getAttributeOfDef().getEntity())));
+				.filter(def -> !getConditionModel().getEntitiesOfDefEntitySet(postConditionSet)
+						.contains(def.getAttributeOfDef().getEntity()))
+				.forEach(def -> task.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(),
+						def.getAttributeOfDef().getEntity().getName())));
 	}
 
 	private void checkPostConditionsNotUsed(Set<DefProductCondition> postConditionSet) {
@@ -218,7 +242,8 @@ public class TaskModel extends TaskModel_Base {
 				conditionModel.getEntityAchieveConditionSet().stream().filter(d -> !d.getEntity().getExists())
 						.collect(Collectors.toSet()));
 
-		allDefConditions.addAll(conditionModel.getAttributeAchieveConditionSet().stream().collect(Collectors.toSet()));
+		allDefConditions.addAll(conditionModel.getAttributeAchieveConditionSet().stream()
+				.filter(d -> !d.getAttributeOfDef().getEntity().getExists()).collect(Collectors.toSet()));
 		allDefConditions.removeAll(
 				getTasksSet().stream().flatMap(t -> t.getPostConditionSet().stream()).collect(Collectors.toSet()));
 		if (!allDefConditions.isEmpty())
@@ -242,6 +267,10 @@ public class TaskModel extends TaskModel_Base {
 
 	private ConditionModel getConditionModel() {
 		return getSpecification().getConditionModel();
+	}
+
+	private DataModel getDataModel() {
+		return getSpecification().getDataModel();
 	}
 
 }

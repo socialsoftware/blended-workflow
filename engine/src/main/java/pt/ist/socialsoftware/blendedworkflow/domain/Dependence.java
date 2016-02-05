@@ -23,13 +23,14 @@ public class Dependence extends Dependence_Base {
 	public Dependence(DataModel dataModel, Product product, String value) {
 		setDataModel(dataModel);
 		setProduct(product);
-		setPath(new Path(this, value));
+		Path path = new Path(dataModel, value);
+		setPath(path);
 	}
 
 	private void checkPathPrefix(Path path) {
-		List<String> elements = Arrays.stream(getPath().getValue().split("\\.")).collect(Collectors.toList());
+		List<String> elements = Arrays.stream(path.getValue().split("\\.")).collect(Collectors.toList());
 		if (elements.size() == 1) {
-			throw new BWException(BWErrorType.INVALID_PATH, getPath().getValue());
+			throw new BWException(BWErrorType.INVALID_PATH, path.getValue());
 		}
 
 		if (!elements.get(0).equals(getProduct().getEntity().getName())) {

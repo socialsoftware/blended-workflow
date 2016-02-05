@@ -194,9 +194,7 @@ class DefEntityCondition extends DefProductCondition;
 
 class DefAttributeCondition extends DefProductCondition;
 
-class DefPathCondition extends DefProductCondition {
-  String path;
-}
+class DefPathCondition extends DefProductCondition;
 
 class MulCondition extends Condition {
 	int side;
@@ -309,11 +307,16 @@ relation LogHasLogRecords {
 	LogRecord playsRole logRecords {multiplicity 0..*;}
 }
 
-// ConditionModel
+// DataModel
+relation DataModelHasDefPathConditions {
+	DataModel playsRole dataModel {multiplicity 0..1;}
+	DefPathCondition playsRole defPathCondition {multiplicity 0..*;}
+}
 
+// ConditionModel
 relation ConditionModelHasEntityAchieveConditions {
 	ConditionModel playsRole conditionModel {multiplicity 0..1;}
-  DefEntityCondition playsRole entityAchieveCondition {multiplicity 0..*;}
+  	DefEntityCondition playsRole entityAchieveCondition {multiplicity 0..*;}
 }
 
 relation ConditionModelHasEntityDependenceConditions {
@@ -425,7 +428,7 @@ relation TaskHasNextTask {
 
 relation TaskHasPreConditions {
 	Task playsRole taskWithPreCondition { multiplicity 0..*; }
-	DefProductCondition playsRole preCondition { multiplicity 0..*; }
+	DefPathCondition playsRole preCondition { multiplicity 0..*; }
 }
 
 relation TaskHasPostConditions {
@@ -530,6 +533,11 @@ relation AttributeValueExpressionHasPath {
 	Path playsRole path { multiplicity 1..1; }
 }
 
+relation DefPathConditionHasPath {
+	DefPathCondition playsRole defPathCondition { multiplicity 0..1; }
+	Path playsRole pathObject { multiplicity 1..1; }
+}
+
 // Rule
 relation RuleHasCondition {
 	Rule playsRole rule { multiplicity 0..1; }
@@ -621,12 +629,6 @@ relation DefEntityConditionHasEntity {
 relation DefAttributeConditionHasAttribute {
 	DefAttributeCondition playsRole defAttributeCondition { multiplicity 0..1; }
 	Attribute playsRole attributeOfDef { multiplicity 0..1; }
-}
-
-//DefPathCondition
-relation DefPathConditionHasProduct {
-	DefPathCondition playsRole defPathCondition { multiplicity 0..*; }
-	Product playsRole product { multiplicity 0..1; }
 }
 
 //MulCondition

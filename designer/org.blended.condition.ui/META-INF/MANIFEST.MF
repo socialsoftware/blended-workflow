@@ -22,5 +22,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.blended.condition.ui.quickfix,
  org.blended.condition.ui.contentassist,
  org.blended.condition.ui.internal,
- org.blended.condition.ui.contentassist.antlr
+ org.blended.condition.ui.contentassist.antlr,
+ org.blended.condition.ui.contentassist.antlr.internal
 Bundle-Activator: org.blended.condition.ui.internal.ConditionActivator

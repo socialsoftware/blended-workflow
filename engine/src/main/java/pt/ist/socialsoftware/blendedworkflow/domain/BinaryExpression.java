@@ -11,69 +11,69 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 
 public class BinaryExpression extends BinaryExpression_Base {
 
-    public static enum BinaryOperator {
-        PLUS, MINUS, MUL, DIV
-    }
+	public static enum BinaryOperator {
+		PLUS, MINUS, MUL, DIV
+	}
 
-    public BinaryExpression(Expression leftExpression,
-            Expression rightExpression, BinaryOperator operator) {
-        setLeftExpression(leftExpression);
-        setRightExpression(rightExpression);
-        setOperator(operator);
-        checkConsistency();
-    }
+	public BinaryExpression(Expression leftExpression, Expression rightExpression, BinaryOperator operator) {
+		setLeftExpression(leftExpression);
+		setRightExpression(rightExpression);
+		setOperator(operator);
+		checkConsistency();
+	}
 
-    private void checkConsistency() {
-        if ((getLeftExpression() == null) || (getRightExpression() == null))
-            throw new BWException(BWErrorType.INCONSISTENT_EXPRESSION,
-                    getOperator().name());
+	private void checkConsistency() {
+		if ((getLeftExpression() == null) || (getRightExpression() == null))
+			throw new BWException(BWErrorType.INCONSISTENT_EXPRESSION, getOperator().name());
 
-        if (!getLeftExpression().getType()
-                .equals(getRightExpression().getType()))
-            throw new BWException(BWErrorType.INCONSISTENT_TYPE,
-                    getOperator().name());
+		if (!getLeftExpression().getType().equals(getRightExpression().getType()))
+			throw new BWException(BWErrorType.INCONSISTENT_TYPE, getOperator().name());
 
-        if (!getLeftExpression().getType().equals(AttributeType.NUMBER))
-            throw new BWException(BWErrorType.INCONSISTENT_TYPE,
-                    getOperator().name());
-    }
+		if (!getLeftExpression().getType().equals(AttributeType.NUMBER))
+			throw new BWException(BWErrorType.INCONSISTENT_TYPE, getOperator().name());
+	}
 
-    @Override
-    public void delete() {
-        getLeftExpression().delete();
-        getRightExpression().delete();
-        super.delete();
-    }
+	@Override
+	public void delete() {
+		getLeftExpression().delete();
+		getRightExpression().delete();
+		super.delete();
+	}
 
-    @Override
-    public AttributeType getType() {
-        checkConsistency();
+	@Override
+	public AttributeType getType() {
+		checkConsistency();
 
-        return getLeftExpression().getType();
-    }
+		return getLeftExpression().getType();
+	}
 
-    @Override
-    public String getSubPath() {
-        String left = getLeftExpression() != null
-                ? getLeftExpression().getSubPath() : "NULL";
-        String right = getRightExpression() != null
-                ? getRightExpression().getSubPath() : "NULL";
-        return getOperator().name() + "(" + left + "," + right + ")";
-    }
+	@Override
+	public String getSubPath() {
+		String left = getLeftExpression() != null ? getLeftExpression().getSubPath() : "NULL";
+		String right = getRightExpression() != null ? getRightExpression().getSubPath() : "NULL";
+		return getOperator().name() + "(" + left + "," + right + ")";
+	}
 
-    @Override
-    public Set<AttributeBasic> getAttributes() {
-        return Stream
-                .concat(getRightExpression().getAttributes().stream(),
-                        getLeftExpression().getAttributes().stream())
-                .collect(Collectors.toSet());
-    }
+	@Override
+	public Set<AttributeBasic> getAttributes() {
+		return Stream
+				.concat(getRightExpression().getAttributes().stream(), getLeftExpression().getAttributes().stream())
+				.collect(Collectors.toSet());
+	}
 
-    @Override
-    public ExpressionDTO getDTO(String specId) {
-        return new ExpressionDTO(specId, getOperator(),
-                getLeftExpression().getDTO(specId),
-                getRightExpression().getDTO(specId));
-    }
+	@Override
+	public Set<String> getPathSet() {
+		Set<String> pathsOne = getRightExpression().getPathSet();
+		Set<String> pathsTwo = getLeftExpression().getPathSet();
+		pathsOne.addAll(pathsTwo);
+
+		return pathsOne;
+	}
+
+	@Override
+	public ExpressionDTO getDTO(String specId) {
+		return new ExpressionDTO(specId, getOperator(), getLeftExpression().getDTO(specId),
+				getRightExpression().getDTO(specId));
+	}
 
 }
