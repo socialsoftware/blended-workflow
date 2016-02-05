@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.stream.Collectors;
+
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
@@ -15,6 +17,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
@@ -111,16 +114,16 @@ public class MergeTasksTest extends TeardownRollbackTest {
 		taskOne.addRuleInvariant(ruleOne);
 
 		taskTwo = new Task(spec.getTaskModel(), TASK_TWO, "Description");
-		taskTwo.addPreCondition(DefEntityCondition.getDefEntity(entityOne));
+		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_ONE_NAME));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameTwo()));
 
 		taskThree = new Task(spec.getTaskModel(), TASK_THREE, "Description");
-		taskThree.addPreCondition(DefEntityCondition.getDefEntity(entityTwo));
-		taskThree.addPreCondition(DefEntityCondition.getDefEntity(entityThree));
-		taskThree.addPreCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
+		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_THREE_NAME));
+		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH_ONE));
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeThree));
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
 		taskThree.addRuleInvariant(ruleTwo);
@@ -133,7 +136,8 @@ public class MergeTasksTest extends TeardownRollbackTest {
 
 		assertEquals(2, taskModel.getTasksSet().size());
 
-		assertFalse(task.getPreConditionSet().contains(DefEntityCondition.getDefEntity(entityOne)));
+		assertFalse(task.getPreConditionSet().stream().map(d -> d.getTargetOfPath()).collect(Collectors.toSet())
+				.contains(ENTITY_ONE_NAME));
 
 		assertTrue(taskModel.checkModel());
 		assertTrue(task.checkConsistency());

@@ -138,7 +138,7 @@ Primary returns Expression:
 ;
 
 Atomic returns Expression:
-	{AttributeDefinition} 'ADEF' '(' name = QualifiedName ')' |
+	{PathDefinition} 'DEF' '(' path = QualifiedName ')' |
 	{AttributeValue} name = QualifiedName |
 	{IntConstant} name=INT |
 	{StringConstant} name=STRING |

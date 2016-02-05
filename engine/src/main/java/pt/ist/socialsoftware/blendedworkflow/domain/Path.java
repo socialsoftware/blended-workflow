@@ -15,17 +15,12 @@ public class Path extends Path_Base {
 		setValue(value);
 	}
 
-	public Path(Dependence dependence, String value) {
-		setDataModel(dependence.getDataModel());
-		setDependence(dependence);
-		setValue(value);
-	}
-
 	public void delete() {
 		setDataModel(null);
 		setDependence(null);
 		setAttributeBoolCondition(null);
 		setAttributeValueExpression(null);
+		setDefPathCondition(null);
 
 		deleteDomainObject();
 	}

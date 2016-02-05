@@ -78,6 +78,14 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	}
 
 	@Override
+	public Set<String> getPathSet() {
+		Set<String> paths = new HashSet<String>();
+		paths.add(getPath());
+
+		return paths;
+	}
+
+	@Override
 	public HashMap<AttributeBasic, String> getcompareConditionValues() {
 		return new HashMap<AttributeBasic, String>();
 	}
@@ -245,7 +253,7 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 
 	@Override
 	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.ATT_DEF, getPath());
+		return new ExpressionDTO(specId, BooleanOperator.PATH_DEF, getPath());
 	}
 
 }

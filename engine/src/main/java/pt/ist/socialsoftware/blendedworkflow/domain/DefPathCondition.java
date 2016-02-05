@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
@@ -9,14 +10,24 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DefPathCondition extends DefPathCondition_Base {
 
-	public DefPathCondition(Specification spec, String path) {
-		setPath(path);
-		setProduct(spec.getDataModel().getTargetOfPath(path));
+	public static DefPathCondition getDefPathCondition(Specification spec, String value) {
+		Optional<DefPathCondition> oDef = spec.getDataModel().getDefPathConditionSet().stream()
+				.filter(d -> d.getPath().equals(value)).findFirst();
+		if (oDef.isPresent())
+			return oDef.get();
+		else
+			return new DefPathCondition(spec, value);
+	}
+
+	private DefPathCondition(Specification spec, String value) {
+		Path path = new Path(spec.getDataModel(), value);
+		setPathObject(path);
+		setDataModel(spec.getDataModel());
 	}
 
 	@Override
 	public Product getTargetOfPath() {
-		return getProduct();
+		return getPathObject().getTargetOfPath();
 	}
 
 	@Override
@@ -46,8 +57,8 @@ public class DefPathCondition extends DefPathCondition_Base {
 	@Override
 	public Set<Entity> getEntities() {
 		Set<Entity> entities = new HashSet<Entity>();
-		if (getProduct() instanceof Entity) {
-			entities.add((Entity) getProduct());
+		if (getTargetOfPath() instanceof Entity) {
+			entities.add((Entity) getTargetOfPath());
 		}
 
 		return entities;
@@ -56,13 +67,21 @@ public class DefPathCondition extends DefPathCondition_Base {
 	@Override
 	public Set<AttributeBasic> getAttributeBasicSet() {
 		Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
-		if (getProduct() instanceof AttributeBasic) {
-			attributes.add((AttributeBasic) getProduct());
-		} else if (getProduct() instanceof AttributeGroup) {
-			attributes.addAll(((AttributeGroup) getProduct()).getAttributeBasicSet());
+		if (getTargetOfPath() instanceof AttributeBasic) {
+			attributes.add((AttributeBasic) getTargetOfPath());
+		} else if (getTargetOfPath() instanceof AttributeGroup) {
+			attributes.addAll(((AttributeGroup) getTargetOfPath()).getAttributeBasicSet());
 		}
 
 		return attributes;
+	}
+
+	@Override
+	public Set<String> getPathSet() {
+		Set<String> paths = new HashSet<String>();
+		paths.add(getPath());
+
+		return paths;
 	}
 
 	@Override
@@ -140,18 +159,26 @@ public class DefPathCondition extends DefPathCondition_Base {
 
 	@Override
 	public String getSubPath() {
-		return "DEF(" + getPath() + ")";
+		return "DEF(" + getPathObject().getValue() + ")";
 	}
 
 	@Override
 	public void delete() {
-		setProduct(null);
+		getTaskWithPreConditionSet().stream().forEach(d -> removeTaskWithPreCondition(d));
+		getPathObject().delete();
+		setDataModel(null);
+
 		super.delete();
 	}
 
 	@Override
 	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.ATT_DEF, getPath());
+		return new ExpressionDTO(specId, BooleanOperator.PATH_DEF, getPathObject().getValue());
+	}
+
+	@Override
+	public String getPath() {
+		return getPathObject().getValue();
 	}
 
 }

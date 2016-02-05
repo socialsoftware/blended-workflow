@@ -11,65 +11,66 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 
 public class Rule extends Rule_Base {
-    private static Logger log = LoggerFactory.getLogger(Rule.class);
+	private static Logger log = LoggerFactory.getLogger(Rule.class);
 
-    @Override
-    public void setName(String name) {
-        checkName(name);
-        super.setName(name);
-    }
+	@Override
+	public void setName(String name) {
+		checkName(name);
+		super.setName(name);
+	}
 
-    public Rule(DataModel dataModel, String name, Condition condition) {
-        setDataModel(dataModel);
-        setName(name);
-        setCondition(condition);
-    }
+	public Rule(DataModel dataModel, String name, Condition condition) {
+		setDataModel(dataModel);
+		setName(name);
+		setCondition(condition);
+	}
 
-    private void checkName(String name) {
-        if ((name == null) || (name.equals("")))
-            throw new BWException(BWErrorType.INVALID_RULE_NAME, name);
+	private void checkName(String name) {
+		if ((name == null) || (name.equals("")))
+			throw new BWException(BWErrorType.INVALID_RULE_NAME, name);
 
-        checkUniqueName(name);
-    }
+		checkUniqueName(name);
+	}
 
-    private void checkUniqueName(String name) throws BWException {
-        boolean exists = getDataModel().getRuleSet().stream()
-                .anyMatch(rule -> (rule.getName() != null)
-                        && (rule.getName().equals(name)));
-        if (exists)
-            throw new BWException(BWErrorType.INVALID_RULE_NAME, name);
-    }
+	private void checkUniqueName(String name) throws BWException {
+		boolean exists = getDataModel().getRuleSet().stream()
+				.anyMatch(rule -> (rule.getName() != null) && (rule.getName().equals(name)));
+		if (exists)
+			throw new BWException(BWErrorType.INVALID_RULE_NAME, name);
+	}
 
-    public void delete() {
-        setDataModel(null);
-        setConditionModel(null);
-        setInvariantConditionGoal(null);
-        setTaskWithRule(null);
-        getCondition().delete();
+	public void delete() {
+		setDataModel(null);
+		setConditionModel(null);
+		setInvariantConditionGoal(null);
+		setTaskWithRule(null);
+		getCondition().delete();
 
-        deleteDomainObject();
-    }
+		deleteDomainObject();
+	}
 
-    public RuleDTO getDTO() {
-        RuleDTO ruleDTO = new RuleDTO();
-        ruleDTO.setSpecId(getDataModel().getSpecification().getSpecId());
-        ruleDTO.setExtId(getExternalId());
-        ruleDTO.setName(getName());
-        ruleDTO.setExpression(getCondition()
-                .getDTO(getDataModel().getSpecification().getSpecId()));
+	public RuleDTO getDTO() {
+		RuleDTO ruleDTO = new RuleDTO();
+		ruleDTO.setSpecId(getDataModel().getSpecification().getSpecId());
+		ruleDTO.setExtId(getExternalId());
+		ruleDTO.setName(getName());
+		ruleDTO.setExpression(getCondition().getDTO(getDataModel().getSpecification().getSpecId()));
 
-        return ruleDTO;
-    }
+		return ruleDTO;
+	}
 
-    public Set<AttributeBasic> getAttributeBasicSet() {
-        return getCondition().getAttributeBasicSet();
-    }
+	public Set<AttributeBasic> getAttributeBasicSet() {
+		return getAttributeSet().stream().flatMap(a -> a.getAttributeBasicSet().stream()).collect(Collectors.toSet());
+	}
 
-    public Set<Attribute> getAttributeSet() {
-        return getCondition().getAttributeBasicSet()
-                .stream().map(a -> a.getAttributeGroup() != null
-                        ? a.getAttributeGroup() : a)
-                .collect(Collectors.toSet());
-    }
+	public Set<Attribute> getAttributeSet() {
+		Set<String> paths = getPathSet();
+		return paths.stream().map(p -> getDataModel().getTargetOfPath(p)).filter(Attribute.class::isInstance)
+				.map(Attribute.class::cast).collect(Collectors.toSet());
+	}
+
+	public Set<String> getPathSet() {
+		return getCondition().getPathSet();
+	}
 
 }

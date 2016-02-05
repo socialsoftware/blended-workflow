@@ -34,213 +34,180 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 @RestController
 @RequestMapping(value = "/specs/{specId}/datamodel")
 public class DataModelController {
-    private static Logger log = LoggerFactory
-            .getLogger(DataModelController.class);
+	private static Logger log = LoggerFactory.getLogger(DataModelController.class);
 
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-    public ResponseEntity<String> cleanDataModel(
-            @PathVariable("specId") String specId) {
-        log.debug("cleanDataModel specId:{}", specId);
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public ResponseEntity<String> cleanDataModel(@PathVariable("specId") String specId) {
+		log.debug("cleanDataModel specId:{}", specId);
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        adi.cleanDataModel(specId);
+		adi.cleanDataModel(specId);
 
-        return new ResponseEntity<String>(HttpStatus.OK);
-    }
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/products/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<ProductDTO> getProduct(
-            @PathVariable("specId") String specId,
-            @PathVariable("path") String path) {
-        log.debug("getProduct path:{}", path);
+	@RequestMapping(value = "/products/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<ProductDTO> getProduct(@PathVariable("specId") String specId,
+			@PathVariable("path") String path) {
+		log.debug("getProduct path:{}", path);
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        Product product = adi.getProduct(specId, path);
+		Product product = adi.getProduct(specId, path);
 
-        return new ResponseEntity<ProductDTO>(product.getDTO(), HttpStatus.OK);
-    }
+		return new ResponseEntity<ProductDTO>(product.getDTO(), HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/entities/{entityName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<EntityDTO> getEntityByName(
-            @PathVariable("specId") String specId,
-            @PathVariable("entityName") String entityName) {
-        log.debug("getProduct entityName:{}", entityName);
+	@RequestMapping(value = "/entities/{entityName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<EntityDTO> getEntityByName(@PathVariable("specId") String specId,
+			@PathVariable("entityName") String entityName) {
+		log.debug("getProduct entityName:{}", entityName);
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        Entity entity = adi.getEntityByName(specId, entityName);
+		Entity entity = adi.getEntityByName(specId, entityName);
 
-        return new ResponseEntity<EntityDTO>(entity.getDTO(), HttpStatus.OK);
-    }
+		return new ResponseEntity<EntityDTO>(entity.getDTO(), HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/entities", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<EntityDTO> createEntity(
-            @PathVariable("specId") String specId,
-            @RequestBody EntityDTO entDTO) {
-        log.debug("createEntity specId:{}, name:{}, exists:{}", specId,
-                entDTO.getName(), entDTO.getExists());
+	@RequestMapping(value = "/entities", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<EntityDTO> createEntity(@PathVariable("specId") String specId,
+			@RequestBody EntityDTO entDTO) {
+		log.debug("createEntity specId:{}, name:{}, exists:{}", specId, entDTO.getName(), entDTO.getExists());
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        Entity entity = adi.createEntity(entDTO);
+		Entity entity = adi.createEntity(entDTO);
 
-        return new ResponseEntity<EntityDTO>(entity.getDTO(),
-                HttpStatus.CREATED);
-    }
+		return new ResponseEntity<EntityDTO>(entity.getDTO(), HttpStatus.CREATED);
+	}
 
-    @RequestMapping(value = "/attributes/{extId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<AttributeDTO> getAttributeByExtId(
-            @PathVariable("extId") String extId) {
-        log.debug("getAttributeByExtId specId:{} extId:{}", extId);
+	@RequestMapping(value = "/attributes/{extId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<AttributeDTO> getAttributeByExtId(@PathVariable("extId") String extId) {
+		log.debug("getAttributeByExtId specId:{} extId:{}", extId);
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        AttributeBasic attribute = adi.getAttributeByExtId(extId);
+		AttributeBasic attribute = adi.getAttributeByExtId(extId);
 
-        return new ResponseEntity<AttributeDTO>(attribute.getDTO(),
-                HttpStatus.OK);
-    }
+		return new ResponseEntity<AttributeDTO>(attribute.getDTO(), HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/attributes", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<AttributeDTO> createAttribute(
-            @PathVariable("specId") String specId,
-            @RequestBody AttributeDTO attDTO) {
-        log.debug(
-                "createAttribute entityExtId:{}, groupExtId:{}, name:{}, type:{}",
-                attDTO.getEntityExtId(), attDTO.getGroupExtId(),
-                attDTO.getName(), attDTO.getType());
+	@RequestMapping(value = "/attributes", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<AttributeDTO> createAttribute(@PathVariable("specId") String specId,
+			@RequestBody AttributeDTO attDTO) {
+		log.debug("createAttribute entityExtId:{}, groupExtId:{}, name:{}, type:{}", attDTO.getEntityExtId(),
+				attDTO.getGroupExtId(), attDTO.getName(), attDTO.getType());
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        AttributeBasic attribute = adi.createAttribute(attDTO);
+		AttributeBasic attribute = adi.createAttribute(attDTO);
 
-        return new ResponseEntity<AttributeDTO>(attribute.getDTO(),
-                HttpStatus.CREATED);
-    }
+		return new ResponseEntity<AttributeDTO>(attribute.getDTO(), HttpStatus.CREATED);
+	}
 
-    @RequestMapping(value = "/attributegroups", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<AttributeGroupDTO> createGroupAttribute(
-            @PathVariable("specId") String specId,
-            @RequestBody AttributeGroupDTO groupAttributeDTO) {
-        log.debug("createGroupAttribute entityExtId:{},  name:{}, mandatory:{}",
-                groupAttributeDTO.getEntityExtId(), groupAttributeDTO.getName(),
-                groupAttributeDTO.isMandatory());
+	@RequestMapping(value = "/attributegroups", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<AttributeGroupDTO> createGroupAttribute(@PathVariable("specId") String specId,
+			@RequestBody AttributeGroupDTO groupAttributeDTO) {
+		log.debug("createGroupAttribute entityExtId:{},  name:{}, mandatory:{}", groupAttributeDTO.getEntityExtId(),
+				groupAttributeDTO.getName(), groupAttributeDTO.isMandatory());
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        AttributeGroup group = adi.createAttributeGroup(groupAttributeDTO);
+		AttributeGroup group = adi.createAttributeGroup(groupAttributeDTO);
 
-        return new ResponseEntity<AttributeGroupDTO>(group.getDTO(),
-                HttpStatus.CREATED);
-    }
+		return new ResponseEntity<AttributeGroupDTO>(group.getDTO(), HttpStatus.CREATED);
+	}
 
-    @RequestMapping(value = "/relations", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<RelationDTO> createRelation(
-            @PathVariable("specId") String specId,
-            @RequestBody RelationDTO relDTO) {
-        log.debug("createRelation {}, {}, {}", relDTO.getName(),
-                relDTO.getEntOneName(), relDTO.getEntTwoName());
+	@RequestMapping(value = "/relations", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<RelationDTO> createRelation(@PathVariable("specId") String specId,
+			@RequestBody RelationDTO relDTO) {
+		log.debug("createRelation {}, {}, {}", relDTO.getName(), relDTO.getEntOneName(), relDTO.getEntTwoName());
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        RelationBW relation = adi.createRelation(relDTO);
+		RelationBW relation = adi.createRelation(relDTO);
 
-        return new ResponseEntity<RelationDTO>(relation.getDTO(),
-                HttpStatus.CREATED);
-    }
+		return new ResponseEntity<RelationDTO>(relation.getDTO(), HttpStatus.CREATED);
+	}
 
-    @RequestMapping(value = "/rules", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<RuleDTO> createEntity(
-            @PathVariable("specId") String specId,
-            @RequestBody RuleDTO ruleDTO) {
-        log.debug("createEntity specId:{}, name:{}, expression:{}",
-                ruleDTO.getSpecId(), ruleDTO.getName(),
-                ruleDTO.getExpression().toString());
+	@RequestMapping(value = "/rules", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<RuleDTO> createRule(@PathVariable("specId") String specId, @RequestBody RuleDTO ruleDTO) {
+		log.debug("createEntity specId:{}, name:{}, expression:{}", ruleDTO.getSpecId(), ruleDTO.getName(),
+				ruleDTO.getExpression().toString());
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        Rule rule = adi.createRule(ruleDTO);
+		Rule rule = adi.createRule(ruleDTO);
 
-        return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
-    }
+		return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
+	}
 
-    @RequestMapping(value = "/rules/{ruleName}/anyAttribute", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<Boolean> ruleUsesAnyAttribute(
-            @PathVariable("specId") String specId,
-            @PathVariable("ruleName") String ruleName,
-            @RequestParam("path") String path) {
-        log.debug("ruleUsesAnyAttribute specId:{}, ruleName:{}, path:{}",
-                specId, ruleName, path);
+	@RequestMapping(value = "/rules/{ruleName}/anyAttribute", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<Boolean> ruleUsesAnyAttribute(@PathVariable("specId") String specId,
+			@PathVariable("ruleName") String ruleName, @RequestParam("path") String path) {
+		log.debug("ruleUsesAnyAttribute specId:{}, ruleName:{}, path:{}", specId, ruleName, path);
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        boolean result = adi.ruleUsesAnyAttribute(specId, ruleName, path);
+		boolean result = adi.ruleUsesAnyAttribute(specId, ruleName, path);
 
-        return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-    }
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/dependencies", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<DependenceDTO> createDependence(
-            @PathVariable("specId") String specId,
-            @RequestBody DependenceDTO dependenceDTO) {
-        log.debug("createDependence productExtId:{}, path:{}",
-                dependenceDTO.getProductExtId(), dependenceDTO.getPath());
+	@RequestMapping(value = "/dependencies", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<DependenceDTO> createDependence(@PathVariable("specId") String specId,
+			@RequestBody DependenceDTO dependenceDTO) {
+		log.debug("createDependence productExtId:{}, path:{}", dependenceDTO.getProductExtId(),
+				dependenceDTO.getPath());
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        Dependence dependence = adi.createDependence(dependenceDTO);
+		Dependence dependence = adi.createDependence(dependenceDTO);
 
-        return new ResponseEntity<DependenceDTO>(dependence.getDTO(),
-                HttpStatus.CREATED);
-    }
+		return new ResponseEntity<DependenceDTO>(dependence.getDTO(), HttpStatus.CREATED);
+	}
 
-    @RequestMapping(value = "/dependencies", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<DependenceDTO[]> getDependencies(
-            @PathVariable("specId") String specId) {
-        log.debug("getDependencies specId:{}", specId);
+	@RequestMapping(value = "/dependencies", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<DependenceDTO[]> getDependencies(@PathVariable("specId") String specId) {
+		log.debug("getDependencies specId:{}", specId);
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        Set<Dependence> dependencies = adi.getDependencies(specId);
+		Set<Dependence> dependencies = adi.getDependencies(specId);
 
-        Set<DependenceDTO> dependenciesDTO;
-        dependenciesDTO = dependencies.stream().map(dep -> dep.getDTO())
-                .collect(Collectors.toSet());
+		Set<DependenceDTO> dependenciesDTO;
+		dependenciesDTO = dependencies.stream().map(dep -> dep.getDTO()).collect(Collectors.toSet());
 
-        log.debug("getDependencies dependenciesDTO.size:{}",
-                dependenciesDTO.size());
+		log.debug("getDependencies dependenciesDTO.size:{}", dependenciesDTO.size());
 
-        DependenceDTO[] depsArray = dependenciesDTO
-                .toArray(new DependenceDTO[dependenciesDTO.size()]);
+		DependenceDTO[] depsArray = dependenciesDTO.toArray(new DependenceDTO[dependenciesDTO.size()]);
 
-        return new ResponseEntity<DependenceDTO[]>(depsArray, HttpStatus.OK);
-    }
+		return new ResponseEntity<DependenceDTO[]>(depsArray, HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/dependencies/{depExtId}/check", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<Boolean> checkDependence(
-            @PathVariable("specId") String specId,
-            @PathVariable("depExtId") String depExtId) {
-        log.debug("checkDependence productExtId:{}", depExtId);
+	@RequestMapping(value = "/dependencies/{depExtId}/check", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<Boolean> checkDependence(@PathVariable("specId") String specId,
+			@PathVariable("depExtId") String depExtId) {
+		log.debug("checkDependence productExtId:{}", depExtId);
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        boolean result = adi.checkDependence(depExtId);
+		boolean result = adi.checkDependence(depExtId);
 
-        return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-    }
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+	}
 
-    @RequestMapping(value = "/dependencies/{depExtId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteDependence(
-            @PathVariable("specId") String specId,
-            @PathVariable("depExtId") String depExtId) {
-        log.debug("deleteDependence productExtId:{}", depExtId);
+	@RequestMapping(value = "/dependencies/{depExtId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public ResponseEntity<String> deleteDependence(@PathVariable("specId") String specId,
+			@PathVariable("depExtId") String depExtId) {
+		log.debug("deleteDependence productExtId:{}", depExtId);
 
-        DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = DesignInterface.getInstance();
 
-        adi.deleteDependence(depExtId);
+		adi.deleteDependence(depExtId);
 
-        return new ResponseEntity<String>(HttpStatus.OK);
-    }
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
 }

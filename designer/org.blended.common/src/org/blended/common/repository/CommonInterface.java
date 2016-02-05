@@ -20,6 +20,7 @@ import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
+import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
 import org.blended.common.repository.resttemplate.dto.GoalDTO;
 import org.blended.common.repository.resttemplate.dto.MulConditionDTO;
 import org.blended.common.repository.resttemplate.dto.ProductDTO;
@@ -275,7 +276,7 @@ public class CommonInterface {
 	}
 
 	public RuleDTO createRule(RuleDTO ruleVO) {
-		log.debug("createRule: {}, {}, {}", ruleVO.getSpecId(), ruleVO.getName(), ruleVO.getExpression());
+		log.debug("createRule: {}, {}, {}", ruleVO.getSpecId(), ruleVO.getName(), ruleVO.getExpression().toString());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/rules";
 
@@ -856,7 +857,7 @@ public class CommonInterface {
 		return restTemplate.postForObject(uri, request, ActivityDTO.class, params);
 	}
 
-	public DefProductConditionSetDTO getActivityPreConditionSet(String specId, String activityName) {
+	public Set<ExpressionDTO> getActivityPreConditionSet(String specId, String activityName) {
 		log.debug("getActivityPreConditionSet specId:{}, activityName:{}", specId, activityName);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/pre";
@@ -866,15 +867,15 @@ public class CommonInterface {
 		params.put("activityName", activityName);
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		DefProductConditionSetDTO result = restTemplate.getForObject(uri, DefProductConditionSetDTO.class, params);
+		ExpressionDTO[] result = restTemplate.getForObject(uri, ExpressionDTO[].class, params);
 
-		return result;
+		return Arrays.stream(result).collect(Collectors.toSet());
 	}
 
-	public DefEntityConditionDTO associateEntityToActivityPre(String specId, String activityName, String path) {
-		log.debug("associateEntityToActivityPre specId:{}, activityName:{}, path:{}", specId, activityName, path);
+	public ExpressionDTO associateDefPathToActivityPre(String specId, String activityName, String path) {
+		log.debug("associateDefPathToActivityPre specId:{}, activityName:{}, path:{}", specId, activityName, path);
 
-		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/preent/{path}/";
+		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/pre/{path}/";
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("specId", specId);
@@ -882,23 +883,9 @@ public class CommonInterface {
 		params.put("path", path);
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		DefEntityConditionDTO result = restTemplate.postForObject(uri, null, DefEntityConditionDTO.class, params);
+		ExpressionDTO result = restTemplate.postForObject(uri, null, ExpressionDTO.class, params);
 
 		return result;
-	}
-
-	public DefAttributeConditionDTO associateAttributeToActivityPre(String specId, String activityName, String path) {
-		log.debug("associateAttributeToActivityPre specId:{}, activityName:{}, path:{}", specId, activityName, path);
-
-		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/preatt/{path}/";
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("specId", specId);
-		params.put("activityName", activityName);
-		params.put("path", path);
-
-		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		return restTemplate.postForObject(uri, null, DefAttributeConditionDTO.class, params);
 	}
 
 	public DefProductConditionSetDTO getActivityPostConditionSet(String specId, String activityName) {
@@ -988,6 +975,9 @@ public class CommonInterface {
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
 		RuleDTO[] ruleDTOs = restTemplate.getForObject(uri, RuleDTO[].class, params);
+
+		log.debug("getActivityRuleConditions specId:{}, activityName:{}, size:{}", specId, activityName,
+				ruleDTOs.length);
 
 		return Arrays.asList(ruleDTOs);
 	}

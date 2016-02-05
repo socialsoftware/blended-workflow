@@ -4,7 +4,7 @@ import java.util.HashSet
 import java.util.List
 import java.util.Set
 import org.blended.common.common.And
-import org.blended.common.common.AttributeDefinition
+import org.blended.common.common.PathDefinition
 import org.blended.common.common.AttributeValue
 import org.blended.common.common.Div
 import org.blended.common.common.Equal
@@ -72,7 +72,7 @@ class Queries {
 				e.right.getDecomposedExpression(list)			
 			}
 			Not: e.expression.getDecomposedExpression(list)
-			AttributeDefinition: list.add(e.name)
+			PathDefinition: list.add(e.path)
 			AttributeValue: list.add(e.name)
 			//IntConstant: list.add(String.valueOf(e.name))
 			//StringConstant: list.add(e.name)

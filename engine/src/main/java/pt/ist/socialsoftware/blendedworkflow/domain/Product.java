@@ -24,7 +24,6 @@ public abstract class Product extends Product_Base {
 	public abstract Product getNext(List<String> pathLeft, String path);
 
 	public void delete() {
-		getDefPathConditionSet().stream().forEach(def -> def.delete());
 		getDependenceSet().stream().forEach(dep -> dep.delete());
 
 		deleteDomainObject();

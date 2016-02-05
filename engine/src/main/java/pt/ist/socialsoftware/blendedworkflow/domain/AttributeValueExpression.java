@@ -40,6 +40,14 @@ public class AttributeValueExpression extends AttributeValueExpression_Base {
 	}
 
 	@Override
+	public Set<String> getPathSet() {
+		Set<String> paths = new HashSet<String>();
+		paths.add(getPath().getValue());
+
+		return paths;
+	}
+
+	@Override
 	public ExpressionDTO getDTO(String specId) {
 		return new ExpressionDTO(specId, ExpressionAtom.ATT_VALUE, getPath().getValue());
 	}
