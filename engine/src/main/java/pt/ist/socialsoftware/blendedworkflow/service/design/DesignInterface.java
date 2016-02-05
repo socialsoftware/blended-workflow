@@ -424,46 +424,23 @@ public class DesignInterface {
 		return defAttributeCondition;
 	}
 
-	public Set<DefEntityCondition> getGoalActivationEntitySet(String specId, String goalName) {
+	public Set<DefPathCondition> getGoalActivationDefPathConditionSet(String specId, String goalName) {
 		Specification spec = getSpecBySpecId(specId);
 		Goal goal = getGoalByName(spec, goalName);
 
-		return goal.getActivationConditionSet().stream().filter(DefEntityCondition.class::isInstance)
-				.map(DefEntityCondition.class::cast).collect(Collectors.toSet());
+		return goal.getActivationConditionSet();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public DefEntityCondition associateEntityToGoalAtivation(String specId, String goalName, String path) {
+	public DefPathCondition associateDefPathConditionToGoalActivation(String specId, String goalName, String path) {
 		Specification spec = getSpecBySpecId(specId);
 		Goal goal = getGoalByName(spec, goalName);
 
-		Product product = spec.getDataModel().getTargetOfPath(path);
-		if (product.getProductType() != ProductType.ENTITY)
-			throw new BWException(BWErrorType.INVALID_PATH, path);
+		DefPathCondition defPathCondition = DefPathCondition.getDefPathCondition(spec, path);
 
-		DefEntityCondition defEntityCondition = ((Entity) product).getDefEntityCondition();
-		goal.addActivationCondition(defEntityCondition);
+		goal.addActivationCondition(defPathCondition);
 
-		return defEntityCondition;
-	}
-
-	public Set<DefAttributeCondition> getGoalActivationAttributeSet(String specId, String goalName) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, goalName);
-
-		return goal.getActivationConditionSet().stream().filter(DefAttributeCondition.class::isInstance)
-				.map(DefAttributeCondition.class::cast).collect(Collectors.toSet());
-	}
-
-	@Atomic(mode = TxMode.WRITE)
-	public DefAttributeCondition associateAttributeToGoalActivation(String specId, String goalName, String path) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, goalName);
-		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, path);
-
-		goal.addActivationCondition(defAttributeCondition);
-
-		return defAttributeCondition;
+		return defPathCondition;
 	}
 
 	public Set<MulCondition> getGoalMulInvSet(String specId, String goalName) {

@@ -8,10 +8,12 @@ import org.blended.common.common.AttributeInvariantCondition;
 import org.blended.common.common.CommonFactory;
 import org.blended.common.common.EntityAchieveCondition;
 import org.blended.common.common.EntityInvariantCondition;
+import org.blended.common.common.Expression;
 import org.blended.common.common.Nothing;
 import org.blended.common.repository.CommonInterface;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
+import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
 import org.blended.common.repository.resttemplate.dto.GoalDTO;
 import org.blended.common.repository.resttemplate.dto.MulConditionDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
@@ -47,11 +49,8 @@ public class ReadGoalModelService {
 		for (GoalDTO goalDTO : goals) {
 			Goal newGoal = createNewGoal(model, goalDTO.getName());
 
-			Set<DefEntityConditionDTO> defsEnt = ci.getGoalActivationEntitySet(specId, goalDTO.getName());
-			addActivationEntityAchieveConditions(newGoal, defsEnt);
-
-			Set<DefAttributeConditionDTO> defsAtt = ci.getGoalActivationAttributeSet(specId, goalDTO.getName());
-			addActivationAttributeAchieveConditions(newGoal, defsAtt);
+			Set<ExpressionDTO> paths = ci.getGoalActivationDefPathConditionSet(specId, goalDTO.getName());
+			addActivationDefPathConditions(newGoal, paths);
 
 			addSuccessCondition(specId, goalDTO, newGoal);
 
@@ -102,17 +101,10 @@ public class ReadGoalModelService {
 		}
 	}
 
-	private void addActivationEntityAchieveConditions(Goal newGoal, Set<DefEntityConditionDTO> defsEnt) {
-		for (DefEntityConditionDTO defEnt : defsEnt) {
-			EntityAchieveCondition entityAchieveCondition = defEnt.createEntityAchieveCondition(factory);
-			newGoal.getActivationConditions().add(entityAchieveCondition);
-		}
-	}
-
-	private void addActivationAttributeAchieveConditions(Goal newGoal, Set<DefAttributeConditionDTO> defsAtt) {
-		for (DefAttributeConditionDTO defAtt : defsAtt) {
-			AttributeAchieveCondition achieveCondition = defAtt.createAttributeAchieveCondition(factory);
-			newGoal.getActivationConditions().add(achieveCondition);
+	private void addActivationDefPathConditions(Goal newGoal, Set<ExpressionDTO> paths) {
+		for (ExpressionDTO path : paths) {
+			Expression pathDefinition = path.buildExpression();
+			newGoal.getActivationConditions().add(pathDefinition);
 		}
 	}
 

@@ -165,6 +165,7 @@ public class DefPathCondition extends DefPathCondition_Base {
 	@Override
 	public void delete() {
 		getTaskWithPreConditionSet().stream().forEach(d -> removeTaskWithPreCondition(d));
+		getActivationConditionGoalSet().stream().forEach(d -> removeActivationConditionGoal(d));
 		getPathObject().delete();
 		setDataModel(null);
 
