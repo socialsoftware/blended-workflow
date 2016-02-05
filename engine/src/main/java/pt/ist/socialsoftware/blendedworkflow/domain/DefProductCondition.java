@@ -6,7 +6,6 @@ public abstract class DefProductCondition extends DefProductCondition_Base {
 	public void delete() {
 		setTaskWithPostCondition(null);
 
-		setActivationConditionGoal(null);
 		setSuccessConditionGoal(null);
 
 		super.delete();

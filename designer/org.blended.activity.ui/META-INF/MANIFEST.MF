@@ -22,5 +22,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.blended.activity.ui.quickfix,
  org.blended.activity.ui.contentassist,
  org.blended.activity.ui.internal,
- org.blended.activity.ui.contentassist.antlr
+ org.blended.activity.ui.contentassist.antlr,
+ org.blended.activity.ui.contentassist.antlr.internal
 Bundle-Activator: org.blended.activity.ui.internal.ActivityActivator

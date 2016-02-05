@@ -395,8 +395,8 @@ relation GoalHasSucessConditions {
 }
 
 relation GoalHasActivationConditions {
-	Goal playsRole activationConditionGoal {multiplicity 0..1;}
-	DefProductCondition playsRole activationCondition {multiplicity 0..*;}
+	Goal playsRole activationConditionGoal {multiplicity 0..*;}
+	DefPathCondition playsRole activationCondition {multiplicity 0..*;}
 }
 
 relation GoalHasEntityInvariantCondition {

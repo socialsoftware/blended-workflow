@@ -21,5 +21,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.blended.common.ui.quickfix,
  org.blended.common.ui.contentassist,
  org.blended.common.ui.internal,
- org.blended.common.ui.contentassist.antlr
+ org.blended.common.ui.contentassist.antlr,
+ org.blended.common.ui.contentassist.antlr.internal
 Bundle-Activator: org.blended.common.ui.internal.CommonActivator

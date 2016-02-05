@@ -11,8 +11,8 @@ Goal:
 	name = ID ':'
 	'SUC' '(' successConditions += (EntityAchieveCondition | AttributeAchieveCondition | Nothing)
 		(',' successConditions += (EntityAchieveCondition | AttributeAchieveCondition | Nothing))* ')'
-	(',' 'ACT' '(' activationConditions +=  (EntityAchieveCondition | AttributeAchieveCondition)
-		(',' activationConditions +=  (EntityAchieveCondition | AttributeAchieveCondition))* ')')?
+	(',' 'ACT' '(' activationConditions +=  (Expression)
+		(',' activationConditions +=  (Expression))* ')')?
 	(',' 'INV' '(' invariantConditions += (EntityInvariantCondition|AttributeInvariantCondition) 
 		(',' invariantConditions += (EntityInvariantCondition|AttributeInvariantCondition))* ')'
 	)?

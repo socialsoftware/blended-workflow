@@ -623,25 +623,25 @@ public class CommonInterface {
 		restTemplate.postForObject(uri, null, String.class, params);
 	}
 
-	public Set<DefEntityConditionDTO> getGoalActivationEntitySet(String specId, String goalName) {
-		log.debug("getGoalActivationEntitySet: {}, {}", specId, goalName);
+	public Set<ExpressionDTO> getGoalActivationDefPathConditionSet(String specId, String goalName) {
+		log.debug("getGoalActivationDefPathConditionSet: {}, {}", specId, goalName);
 
-		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/actent";
+		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/act";
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("specId", specId);
 		params.put("goalName", goalName);
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		DefEntityConditionDTO[] defsVO = restTemplate.getForObject(uri, DefEntityConditionDTO[].class, params);
+		ExpressionDTO[] defsVO = restTemplate.getForObject(uri, ExpressionDTO[].class, params);
 
-		return new HashSet<DefEntityConditionDTO>(Arrays.asList(defsVO));
+		return new HashSet<ExpressionDTO>(Arrays.asList(defsVO));
 	}
 
-	public DefEntityConditionDTO associateEntityToGoalActivation(String specId, String goalName, String path) {
-		log.debug("associatedActConditionToGoal specId:{}, goalName:{}, path:{}", specId, goalName, path);
+	public ExpressionDTO associatePathConditionToGoalActivation(String specId, String goalName, String path) {
+		log.debug("associatePathConditionToGoalActivation specId:{}, goalName:{}, path:{}", specId, goalName, path);
 
-		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/actent/{path}/";
+		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/act/{path}/";
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("specId", specId);
@@ -649,39 +649,9 @@ public class CommonInterface {
 		params.put("path", path);
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		DefEntityConditionDTO result = restTemplate.postForObject(uri, null, DefEntityConditionDTO.class, params);
+		ExpressionDTO result = restTemplate.postForObject(uri, null, ExpressionDTO.class, params);
 
 		return result;
-	}
-
-	public Set<DefAttributeConditionDTO> getGoalActivationAttributeSet(String specId, String goalName) {
-		log.debug("getGoalActivationAttributeSet: {}, {}", specId, goalName);
-
-		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/actatt";
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("specId", specId);
-		params.put("goalName", goalName);
-
-		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		DefAttributeConditionDTO[] defsVO = restTemplate.getForObject(uri, DefAttributeConditionDTO[].class, params);
-
-		return new HashSet<DefAttributeConditionDTO>(Arrays.asList(defsVO));
-	}
-
-	public void associateAttributeToGoalActivation(String specId, String goalName, String path) {
-		log.debug("associateAttributeAchieveConditionToGoalActCondition specId:{}, goalName:{}, path:{}", specId,
-				goalName, path);
-
-		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/actatt/{path}/";
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("specId", specId);
-		params.put("goalName", goalName);
-		params.put("path", path);
-
-		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		restTemplate.postForObject(uri, null, String.class, params);
 	}
 
 	public Set<MulConditionDTO> getGoalMulInvSet(String specId, String goalName) {

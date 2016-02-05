@@ -151,9 +151,9 @@ class ConditionGeneratorGoalModel {
 
 	def createEntityDependence(Goal goal, String name, EntityDependenceCondition dep) {
 		if (name.equals(dep.entity1)) {
-			var eac = factory.createEntityAchieveCondition
-			eac.name = dep.entity2
-			goal.activationConditions.add(eac)
+			var pd = factory.createPathDefinition
+			pd.path = dep.entity2
+			goal.activationConditions.add(pd)
 		}
 	}
 
@@ -161,15 +161,15 @@ class ConditionGeneratorGoalModel {
 		
 		if (o instanceof NotMandatoryAttributeAchieveCondition) {
 					if (dep.attribute1.equals(o.attribute)) {
-						var aac = factory.createNotMandatoryAttributeAchieveCondition
-						aac.attribute = dep.attribute2
-						goal.activationConditions.add(aac.copy)
+						var pd = factory.createPathDefinition
+						pd.path = dep.attribute2
+						goal.activationConditions.add(pd)
 					}
 		} else if (o instanceof MandatoryAttributeAchieveCondition) {
 					if (dep.attribute1.equals(o.attribute)) {
-						var aac = factory.createMandatoryAttributeAchieveCondition
-						aac.attribute = dep.attribute2
-						goal.activationConditions.add(aac.copy)
+						var pd = factory.createPathDefinition
+						pd.path = dep.attribute2
+						goal.activationConditions.add(pd)
 					}
 		}
 	}

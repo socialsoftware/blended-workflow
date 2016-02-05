@@ -18,6 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -38,6 +39,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 	private static final String TOP_GOAL = "topGoal";
 	private static final String RULE_CONDITION = "rule";
 	private static final String ROLENAME_ONE = "theOne";
+	private static final String DEPENDENCE_PATH = ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME;
 	private static final String ROLENAME_TWO = "theTwo";
 	private static final String CHILD_GOAL_TWO = "childGoalTwo";
 	private static final String CHILD_GOAL_ONE = "childGoalOne";
@@ -78,8 +80,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		relation = new RelationBW(spec.getDataModel(), "name", entityOne, ROLENAME_ONE, Cardinality.ONE, false,
 				entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
-		Dependence dependence = new Dependence(spec.getDataModel(), attributeThree,
-				ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME);
+		Dependence dependence = new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH);
 		dependence.check();
 
 		topGoal = new Goal(spec.getGoalModel(), TOP_GOAL);
@@ -97,7 +98,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeThree));
 		childGoalTwoOne.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeFour));
 
-		childGoalOne.addActivationCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		childGoalOne.addActivationCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH));
 
 		topGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_TWO));
 		childGoalTwo.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_ONE));
@@ -212,8 +213,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		assertEquals(1, newGoal.getSuccessConditionSet().size());
 		assertTrue(newGoal.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeThree)));
 		assertEquals(1, newGoal.getActivationConditionSet().size());
-		assertEquals(DefAttributeCondition.getDefAttribute(attributeTwo),
-				newGoal.getActivationConditionSet().stream().findFirst().get());
+		assertEquals(DEPENDENCE_PATH, newGoal.getActivationConditionSet().stream().findFirst().get().getPath());
 		assertEquals(0, newGoal.getEntityInvariantConditionSet().size());
 		assertEquals(0, newGoal.getAttributeInvariantConditionSet().size());
 

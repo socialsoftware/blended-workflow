@@ -95,8 +95,8 @@ public class Goal extends Goal_Base {
 		newGoal.setUser(getUser());
 		newGoal.setRole(getRole());
 
-		for (DefProductCondition activateCondition : getActivationConditionSet()) {
-			DefProductCondition newActivateCondition = (DefProductCondition) activateCondition
+		for (DefPathCondition activateCondition : getActivationConditionSet()) {
+			DefPathCondition newActivateCondition = (DefPathCondition) activateCondition
 					.cloneCondition(goalModelInstance);
 			newGoal.addActivationCondition(newActivateCondition);
 		}
@@ -218,7 +218,7 @@ public class Goal extends Goal_Base {
 
 	public GoalDTO getDTO() {
 		GoalDTO goalDTO = new GoalDTO();
-		goalDTO.setSpecId(getGoalModel().getSpecification().getSpecId());
+		goalDTO.setSpecId(getSpecification().getSpecId());
 		goalDTO.setExtId(getExternalId());
 		goalDTO.setName(getName());
 
@@ -239,9 +239,10 @@ public class Goal extends Goal_Base {
 	}
 
 	public void purgeActivationCondition() {
-		for (DefProductCondition cond : getActivationConditionSet()) {
-			if (getSuccessConditionSet().contains(cond))
-				removeActivationCondition(cond);
+		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
+			Set<Product> successProducts = getConditionModel().getProductsOfDefConditions(getSuccessConditionSet());
+			if (successProducts.contains(defPathCondition.getTargetOfPath()))
+				removeActivationCondition(defPathCondition);
 		}
 
 	}
@@ -261,8 +262,10 @@ public class Goal extends Goal_Base {
 	}
 
 	private boolean checkGoalActIntersectsAnotherGoalSuc(Goal childGoal, Goal goal) {
-		for (Condition act : childGoal.getActivationConditionSet()) {
-			if (goal.getSuccessConditionSet().contains(act)) {
+		for (DefPathCondition defPathCondition : childGoal.getActivationConditionSet()) {
+			Set<Product> successProducts = getConditionModel()
+					.getProductsOfDefConditions(goal.getSuccessConditionSet());
+			if (successProducts.contains(defPathCondition.getTargetOfPath())) {
 				return true;
 			}
 		}
@@ -317,18 +320,19 @@ public class Goal extends Goal_Base {
 	}
 
 	private void addActivationConditions() {
-		Set<DefProductCondition> defs = getConditionModel().getProductsOfDefConditions(getSuccessConditionSet())
-				.stream().flatMap((p) -> p.getDependenceSet().stream()).map((d) -> d.getTarget().getDefCondition())
+		Set<String> paths = getConditionModel().getProductsOfDefConditions(getSuccessConditionSet()).stream()
+				.flatMap((p) -> p.getDependenceSet().stream()).map((d) -> d.getPath().getValue())
 				.collect(Collectors.toSet());
 
-		for (DefProductCondition def : defs) {
-			if (!getSuccessConditionSet().contains(def))
-				addActivationCondition(def);
+		for (String path : paths) {
+			if (!getConditionModel().getEntitiesOfDefEntitySet(getSuccessConditionSet())
+					.contains(getDataModel().getTargetOfPath(path)))
+				addActivationCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
 		}
 	}
 
 	private void addRuleConditions() {
-		for (Rule rule : getGoalModel().getSpecification().getDataModel().getRuleSet()) {
+		for (Rule rule : getDataModel().getRuleSet()) {
 			if (getSuccessConditionSet().stream().flatMap((c) -> c.getAttributeBasicSet().stream())
 					.anyMatch((a) -> rule.getAttributeBasicSet().contains(a))) {
 				addAttributeInvariantCondition(rule);
@@ -439,7 +443,15 @@ public class Goal extends Goal_Base {
 	}
 
 	private ConditionModel getConditionModel() {
-		return getGoalModel().getSpecification().getConditionModel();
+		return getSpecification().getConditionModel();
+	}
+
+	private DataModel getDataModel() {
+		return getSpecification().getDataModel();
+	}
+
+	private Specification getSpecification() {
+		return getGoalModel().getSpecification();
 	}
 
 }
