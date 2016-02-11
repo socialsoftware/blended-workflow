@@ -4,12 +4,12 @@
 package org.blended.goal.generator
 
 import org.blended.common.utils.ConsoleManagement
-import org.blended.goal.terminal.DataListener
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.blended.goal.terminal.GoalListener
 
 /**
  * Generates code from your model files on save.
@@ -19,7 +19,7 @@ import static extension org.eclipse.xtext.EcoreUtil2.*
 class GoalGenerator implements IGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {	
 		var consoleName = ConsoleManagement.GOAL_CONSOLE + " (" + resource.normalizedURI.lastSegment + ")"
-		var manager = DataListener.getInstance(consoleName, resource)	
+		var manager = GoalListener.getInstance(consoleName, resource)	
 		if (!manager.isRunning) {
 			var thread = new Thread(manager)					
 			thread.start()	

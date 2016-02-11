@@ -7,7 +7,7 @@ import org.eclipse.xtext.validation.Check
 import static extension org.eclipse.xtext.EcoreUtil2.*
 import org.blended.condition.condition.ConditionModel
 import org.blended.condition.condition.ConditionPackage
-import org.blended.condition.repository.ConditionInterface
+import org.blended.condition.repository.WriteConditionModelService
 
 /**
  * This class contains custom validation rules. 
@@ -19,10 +19,10 @@ class ConditionValidator extends AbstractConditionValidator {
 	@Check
 	def checkModel(ConditionModel model) {
 	 	info('ConditionModel OK 0', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
-		var instance = ConditionInterface.getInstance
+		var instance = WriteConditionModelService.getInstance
 		info('ConditionModel OK 1', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
 		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
-		var notification = instance.loadConditionModel(specId, model)
+		var notification = instance.write(specId, model)
 		info('ConditionModel OK 2', ConditionPackage.Literals.CONDITION_MODEL__SPECIFICATION)
 		if (notification.hasErrors)
 			for (error : notification.error)

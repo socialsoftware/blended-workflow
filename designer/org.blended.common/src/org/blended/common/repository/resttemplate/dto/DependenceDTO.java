@@ -4,50 +4,50 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DependenceDTO {
-    private String specId;
-    private String extId;
-    private String productExtId;
-    private String path;
+	private String specId;
+	private String extId;
+	private String product;
+	private String path;
 
-    public DependenceDTO() {
-    }
+	public DependenceDTO() {
+	}
 
-    public DependenceDTO(String specId, String productExtId, String path) {
-        this.specId = specId;
-        this.productExtId = productExtId;
-        this.path = path;
-    }
+	public DependenceDTO(String specId, String product, String path) {
+		this.specId = specId;
+		this.product = product;
+		this.path = path;
+	}
 
-    public String getSpecId() {
-        return specId;
-    }
+	public String getExtId() {
+		return extId;
+	}
 
-    public void setSpecId(String specId) {
-        this.specId = specId;
-    }
+	public void setExtId(String externalId) {
+		this.extId = externalId;
+	}
 
-    public String getExtId() {
-        return extId;
-    }
+	public String getPath() {
+		return path;
+	}
 
-    public void setExtId(String extId) {
-        this.extId = extId;
-    }
+	public void setPath(String path) {
+		this.path = path;
+	}
 
-    public String getProductExtId() {
-        return productExtId;
-    }
+	public String getSpecId() {
+		return specId;
+	}
 
-    public void setProductExtId(String productExtId) {
-        this.productExtId = productExtId;
-    }
+	public void setSpecId(String specId) {
+		this.specId = specId;
+	}
 
-    public String getPath() {
-        return path;
-    }
+	public String getProduct() {
+		return product;
+	}
 
-    public void setPath(String path) {
-        this.path = path;
-    }
+	public void setProduct(String product) {
+		this.product = product;
+	}
 
 }

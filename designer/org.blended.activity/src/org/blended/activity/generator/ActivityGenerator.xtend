@@ -16,7 +16,6 @@ import org.blended.common.utils.ConsoleManagement
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class ActivityGenerator implements IGenerator {
-	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		var consoleName = ConsoleManagement.ACTIVITY_CONSOLE + " (" + resource.normalizedURI.lastSegment + ")"
 		var manager = ActivityListener.getInstance(consoleName, resource)	
