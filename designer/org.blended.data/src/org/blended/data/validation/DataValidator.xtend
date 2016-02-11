@@ -7,11 +7,11 @@ import org.blended.common.common.Attribute
 import org.blended.common.common.CommonPackage
 import org.blended.data.data.DataModel
 import org.blended.data.data.DataPackage
-import org.blended.data.repository.DataInterface
 import org.eclipse.xtext.validation.Check
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
 import org.eclipse.xtext.validation.CheckType
+import org.blended.data.repository.WriteDataModelService
 
 /**
  * This class contains custom validation rules. 
@@ -32,11 +32,11 @@ class DataValidator extends AbstractDataValidator {
 	@Check(CheckType.NORMAL)
 	def checkModel(DataModel model) {
 				info('everything OK 0', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
-		var instance = DataInterface.getInstance
+		var instance = WriteDataModelService.getInstance
 				info('everything OK 2', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
 		var specId = model.eResource.normalizedURI.lastSegment.split("\\.").get(0)
 				info('everything OK 3', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
-		var notification = instance.loadDataModel(specId, model)
+		var notification = instance.write(specId, model)
 				info('everything OK 4', DataPackage.Literals.DATA_MODEL__SPECIFICATION)
 		if (notification.hasErrors)
 			for (error : notification.error)

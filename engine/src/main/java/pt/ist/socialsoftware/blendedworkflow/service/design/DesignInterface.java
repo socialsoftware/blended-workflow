@@ -168,7 +168,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public Dependence createDependence(DependenceDTO productDTO) {
-		Product product = getProductByExtId(productDTO.getProductExtId());
+		Product product = getProductByName(productDTO.getSpecId(), productDTO.getProduct());
 
 		return product.createDependence(productDTO.getPath());
 	}
@@ -263,6 +263,12 @@ public class DesignInterface {
 		spec.getTaskModel().clean();
 	}
 
+	public Set<DefEntityCondition> getEntityAchieveConditionSet(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getConditionModel().getEntityAchieveConditionSet();
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public DefEntityCondition createEntityAchieveCondition(DefEntityConditionDTO eacDTO) {
 		log.debug("createEntityAchieveCondition Entity:{}, Value:{}", eacDTO.getEntityName(), eacDTO.isExists());
@@ -290,12 +296,19 @@ public class DesignInterface {
 		return FenixFramework.getDomainObject(extId);
 	}
 
+	public Set<Dependence> getEntityDependenceConditionSet(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getConditionModel().getEntityDependenceConditionSet();
+
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public Dependence createEntityDependenceCondition(DependenceDTO dependenceDTO) {
-		log.debug("createEntityDependenceCondition entityExtId:{}, Path:{}", dependenceDTO.getProductExtId(),
+		log.debug("createEntityDependenceCondition entity:{}, Path:{}", dependenceDTO.getProduct(),
 				dependenceDTO.getPath());
 
-		Entity entity = getEntityByExtId(dependenceDTO.getProductExtId());
+		Entity entity = getEntityByName(dependenceDTO.getSpecId(), dependenceDTO.getProduct());
 
 		Dependence dependence = getDependence(entity, dependenceDTO.getPath());
 
@@ -303,6 +316,14 @@ public class DesignInterface {
 		conditionModel.addEntityDependenceCondition(dependence);
 
 		return dependence;
+	}
+
+	public Set<MulCondition> getEntityInvariantConditionSet(String specId) {
+		log.debug("getEntityInvariantConditionSet specId:{}", specId);
+
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getConditionModel().getEntityInvariantConditionSet();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -319,6 +340,14 @@ public class DesignInterface {
 		spec.getConditionModel().addEntityInvariantCondition(mulCondition);
 
 		return mulCondition;
+	}
+
+	public Set<DefAttributeCondition> getAttributeAchieveConditionSet(String specId) {
+		log.debug("getAttributeAchieveConditionSet specId:{}", specId);
+
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getConditionModel().getAttributeAchieveConditionSet();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -338,11 +367,17 @@ public class DesignInterface {
 		return defAttributeCondition;
 	}
 
+	public Set<Dependence> getAttributeDependenceConditionSet(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getConditionModel().getAttributeDependenceConditionSet();
+	}
+
 	@Atomic(mode = TxMode.WRITE)
-	public Dependence createAttributeDependence(DependenceDTO dependenceDTO) {
-		log.debug("createAttributeDependenceCondition productExtId:{}, path:{}", dependenceDTO.getProductExtId(),
+	public Dependence createAttributeDependenceCondition(DependenceDTO dependenceDTO) {
+		log.debug("createAttributeDependenceCondition product:{}, path:{}", dependenceDTO.getProduct(),
 				dependenceDTO.getPath());
-		Product product = getProductByExtId(dependenceDTO.getProductExtId());
+		Product product = getProductByName(dependenceDTO.getSpecId(), dependenceDTO.getProduct());
 
 		Dependence dependence = getDependence(product, dependenceDTO.getPath());
 
@@ -350,6 +385,12 @@ public class DesignInterface {
 		conditionModel.addAttributeDependenceCondition(dependence);
 
 		return dependence;
+	}
+
+	public Set<Rule> getAttributeInvariantConditionSet(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getConditionModel().getAttributeInvariantConditionSet();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -802,13 +843,10 @@ public class DesignInterface {
 
 	}
 
-	private Product getProductByExtId(String externalId) {
-		if (externalId == null || externalId.equals(""))
-			throw new BWException(BWErrorType.NOT_FOUND, externalId);
-		Product product = FenixFramework.getDomainObject(externalId);
-		if (product == null)
-			throw new BWException(BWErrorType.NOT_FOUND, externalId);
-		return product;
+	private Product getProductByName(String specId, String productPath) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getDataModel().getTargetOfPath(productPath);
 	}
 
 	private Entity getEntityByName(DataModel dataModel, String name) {

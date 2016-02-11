@@ -59,7 +59,7 @@ public class Dependence extends Dependence_Base {
 		DependenceDTO depDTO = new DependenceDTO();
 		depDTO.setSpecId(getDataModel().getSpecification().getSpecId());
 		depDTO.setExtId(getExternalId());
-		depDTO.setProductExtId(getProduct().getExternalId());
+		depDTO.setProduct(getProduct().getFullPath());
 		depDTO.setPath(getPath().getValue());
 
 		return depDTO;

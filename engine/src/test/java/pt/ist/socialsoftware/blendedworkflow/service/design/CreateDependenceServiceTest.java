@@ -46,7 +46,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void successCreateEntityDependence() {
-		designInterface.createDependence(new DependenceDTO(entity.getExternalId(), DEPENDENCE_TWO));
+		designInterface.createDependence(new DependenceDTO(SPEC_ID, entity.getFullPath(), DEPENDENCE_TWO));
 
 		assertEquals(2, dataModel.getEntity(ENTITY_NAME).get().getDependenceSet().size());
 		assertEquals(DEPENDENCE_ONE + "," + DEPENDENCE_TWO, dataModel.getDependenceSet().stream()
@@ -55,7 +55,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void successCreateAttributeGroupDependence() {
-		designInterface.createDependence(new DependenceDTO(group.getExternalId(), DEPENDENCE_TWO));
+		designInterface.createDependence(new DependenceDTO(SPEC_ID, group.getFullPath(), DEPENDENCE_TWO));
 
 		assertEquals(1, dataModel.getEntity(ENTITY_NAME).get().getDependenceSet().size());
 		assertEquals(1, dataModel.getEntity(ENTITY_NAME).get().getAttributeGroup(ATTRIBUTE_GROUP_NAME).get()
@@ -66,7 +66,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void successCreateAttributeDependence() {
-		designInterface.createDependence(new DependenceDTO(att.getExternalId(), DEPENDENCE_TWO));
+		designInterface.createDependence(new DependenceDTO(SPEC_ID, att.getFullPath(), DEPENDENCE_TWO));
 
 		assertEquals(1, dataModel.getEntity(ENTITY_NAME).get().getDependenceSet().size());
 		assertEquals(1,

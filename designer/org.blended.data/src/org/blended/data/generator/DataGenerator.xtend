@@ -25,38 +25,9 @@ import org.eclipse.xtext.resource.SaveOptions
  */
 class DataGenerator implements IGenerator {
 	
-	override void doGenerate(Resource resource, IFileSystemAccess fsa) {	
-		//BY THE MOMENT, WE WILL NOT USE A CONSOLE		
-//		var consoleName = ConsoleManagement.DATA_CONSOLE + " (" + resource.normalizedURI.lastSegment + ")"
-//		var manager = DataListener.getInstance(consoleName, resource)	
-//		if (!manager.isRunning) {
-//			var thread = new Thread(manager)					
-//			thread.start()	
-//			ConsoleManagement.write(consoleName, "DATA MODEL " + resource.normalizedURI.lastSegment + " UPDATED. TYPE -help TO SEE THE OPTIONS")
-//		} else manager.setModel(resource)
-		
-
+	override void doGenerate(Resource resource, IFileSystemAccess fsa) {			
 		var conditionModel = new DataGeneratorConditionModel(resource, fsa)
 		conditionModel.doGenerate	
 		
-	
-
-
-
-	/* 	new org.eclipse.emf.mwe.utils.StandaloneSetup()
-		var file = resource.normalizedURI.toString.replace(".dm", ".cm")
-		
-		//file = resource.normalizedURI.lastSegment.replace(".dm", ".cm")
-		var injector = new ConditionStandaloneSetup().createInjectorAndDoEMFRegistration()
-		var resourceSet = injector.getInstance(typeof(XtextResourceSet))
-		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE)
-		var r = resourceSet.getResource(URI.createURI(file), true)
-
-		var builder = SaveOptions.newBuilder()
-		builder.noValidation
-		builder.format
-		r.save(builder.options.toOptionsMap)
-		//var model = (Model) resource.getContents().get(0)
-		//System.out.println(r.getClass().toString())*/
 	}
 }

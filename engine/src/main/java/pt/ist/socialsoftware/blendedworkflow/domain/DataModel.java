@@ -56,8 +56,8 @@ public class DataModel extends DataModel_Base {
 		getDependenceSet().stream().forEach(dep -> dep.delete());
 		getEntitySet().stream().forEach(ent -> ent.delete());
 		getAttributeSet().stream().forEach(a -> a.delete());
-		getPathSet().stream().forEach(p -> p.delete());
 		getDefPathConditionSet().stream().forEach(d -> d.delete());
+		getPathSet().stream().forEach(p -> p.delete());
 	}
 
 	public void delete() {

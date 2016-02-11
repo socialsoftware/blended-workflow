@@ -11,7 +11,7 @@ import org.eclipse.ui.console.IOConsoleInputStream
 import org.eclipse.xtext.resource.SaveOptions
 import org.blended.common.utils.ValueException
 
-class DataListener implements Runnable {
+class GoalListener implements Runnable {
 	package String name
 	package String specId
 	package Resource resource
@@ -19,11 +19,11 @@ class DataListener implements Runnable {
 	package IOConsole myConsole
 	package Boolean terminate
 	package Boolean	running
-	private static DataListener instance = null
+	private static GoalListener instance = null
 	
     def static getInstance(String name, Resource resource) {
         if (instance == null) {
-            instance = new DataListener(name, resource);
+            instance = new GoalListener(name, resource);
         }
         return instance;
     }

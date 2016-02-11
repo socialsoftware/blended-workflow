@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DataInterfaceTest {
-    private DataInterface dataInterface;
+    private WriteDataModelService dataInterface;
 
     private static final Logger logger = LoggerFactory
             .getLogger(DataInterfaceTest.class);
@@ -33,7 +33,7 @@ public class DataInterfaceTest {
     @Before
     public void setUp() {
         logger.debug("LocalSystemTest::setUp");
-        dataInterface = DataInterface.getInstance();
+        dataInterface = WriteDataModelService.getInstance();
     }
 
     @After
@@ -87,10 +87,10 @@ public class DataInterfaceTest {
         andExpression.setRight(boolConstant);
         boolConstant.setName("true");
 
-        dataInterface = DataInterface.getInstance();
+        dataInterface = WriteDataModelService.getInstance();
 
         BWNotification notification = dataInterface
-                .loadDataModel(EXISTS_SPEC_ID, eDataModel);
+                .write(EXISTS_SPEC_ID, eDataModel);
 
     }
 

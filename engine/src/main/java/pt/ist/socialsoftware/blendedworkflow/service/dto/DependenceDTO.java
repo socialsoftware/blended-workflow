@@ -1,49 +1,50 @@
 package pt.ist.socialsoftware.blendedworkflow.service.dto;
 
 public class DependenceDTO {
-    private String specId;
-    private String extId;
-    private String productExtId;
-    private String path;
+	private String specId;
+	private String extId;
+	private String product;
+	private String path;
 
-    public DependenceDTO() {
-    }
+	public DependenceDTO() {
+	}
 
-    public DependenceDTO(String productExtId, String path) {
-        this.productExtId = productExtId;
-        this.path = path;
-    }
+	public DependenceDTO(String specId, String product, String path) {
+		this.specId = specId;
+		this.product = product;
+		this.path = path;
+	}
 
-    public String getExtId() {
-        return extId;
-    }
+	public String getExtId() {
+		return extId;
+	}
 
-    public void setExtId(String externalId) {
-        this.extId = externalId;
-    }
+	public void setExtId(String externalId) {
+		this.extId = externalId;
+	}
 
-    public String getProductExtId() {
-        return productExtId;
-    }
+	public String getPath() {
+		return path;
+	}
 
-    public void setProductExtId(String productExtId) {
-        this.productExtId = productExtId;
-    }
+	public void setPath(String path) {
+		this.path = path;
+	}
 
-    public String getPath() {
-        return path;
-    }
+	public String getSpecId() {
+		return specId;
+	}
 
-    public void setPath(String path) {
-        this.path = path;
-    }
+	public void setSpecId(String specId) {
+		this.specId = specId;
+	}
 
-    public String getSpecId() {
-        return specId;
-    }
+	public String getProduct() {
+		return product;
+	}
 
-    public void setSpecId(String specId) {
-        this.specId = specId;
-    }
+	public void setProduct(String product) {
+		this.product = product;
+	}
 
 }

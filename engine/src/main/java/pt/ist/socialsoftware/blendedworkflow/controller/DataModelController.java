@@ -159,8 +159,7 @@ public class DataModelController {
 	@RequestMapping(value = "/dependencies", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<DependenceDTO> createDependence(@PathVariable("specId") String specId,
 			@RequestBody DependenceDTO dependenceDTO) {
-		log.debug("createDependence productExtId:{}, path:{}", dependenceDTO.getProductExtId(),
-				dependenceDTO.getPath());
+		log.debug("createDependence product:{}, path:{}", dependenceDTO.getProduct(), dependenceDTO.getPath());
 
 		DesignInterface adi = DesignInterface.getInstance();
 

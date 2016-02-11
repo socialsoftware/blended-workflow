@@ -33,10 +33,11 @@ public class ConditionModel extends ConditionModel_Base {
 		dataModel.getEntitySet().stream().forEach(e -> DefEntityCondition.getDefEntity(e));
 
 		dataModel.getAttributeSet().stream().filter(AttributeBasic.class::isInstance).map(AttributeBasic.class::cast)
-				.filter(a -> a.getAttributeGroup() == null).forEach(a -> DefAttributeCondition.getDefAttribute(a));
+				.filter(a -> a.getAttributeGroup() == null && !a.getEntity().getExists())
+				.forEach(a -> DefAttributeCondition.getDefAttribute(a));
 
 		dataModel.getAttributeSet().stream().filter(AttributeGroup.class::isInstance).map(AttributeGroup.class::cast)
-				.forEach(a -> DefAttributeCondition.getDefAttribute(a));
+				.filter(a -> !a.getEntity().getExists()).forEach(a -> DefAttributeCondition.getDefAttribute(a));
 
 		dataModel.getRelationBWSet().stream().forEach(r -> MulCondition.createMUlConditions(r));
 

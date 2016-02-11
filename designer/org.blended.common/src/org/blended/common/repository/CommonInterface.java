@@ -44,7 +44,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CommonInterface {
-	private static Logger log = LoggerFactory.getLogger(CommonInterface.class);
+	private static Logger logger = LoggerFactory.getLogger(CommonInterface.class);
 
 	final static String BASE_URL = "http://localhost:8080";
 
@@ -58,7 +58,7 @@ public class CommonInterface {
 	}
 
 	public void deleteSpecification(String specId) {
-		log.debug("deleteSpecification: {}", specId);
+		logger.debug("deleteSpecification: {}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}";
 
@@ -71,7 +71,7 @@ public class CommonInterface {
 	}
 
 	public SpecDTO getSpecBySpecId(String specId) {
-		log.debug("getSpecBySpecId: {}", specId);
+		logger.debug("getSpecBySpecId: {}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}";
 
@@ -89,7 +89,7 @@ public class CommonInterface {
 
 		ObjectMapper mapper = new ObjectMapper();
 		String responseBody = response.getBody();
-		log.debug("getSpecBySpecId responseBody: {}", responseBody);
+		logger.debug("getSpecBySpecId responseBody: {}", responseBody);
 		try {
 			if (RestUtil.isError(response.getStatusCode())) {
 				BWError error = mapper.readValue(responseBody, BWError.class);
@@ -105,7 +105,7 @@ public class CommonInterface {
 	}
 
 	public SpecDTO createSpec(SpecDTO specVO) {
-		log.debug("createSpec: {}, {}", specVO.getSpecId(), specVO.getName());
+		logger.debug("createSpec: {}, {}", specVO.getSpecId(), specVO.getName());
 
 		final String uri = BASE_URL + "/specs";
 
@@ -119,7 +119,7 @@ public class CommonInterface {
 
 		ObjectMapper mapper = new ObjectMapper();
 		String responseBody = response.getBody();
-		log.debug("createSpec responseBody: {}", responseBody);
+		logger.debug("createSpec responseBody: {}", responseBody);
 		try {
 			if (RestUtil.isError(response.getStatusCode())) {
 				BWError error = mapper.readValue(responseBody, BWError.class);
@@ -135,7 +135,7 @@ public class CommonInterface {
 	}
 
 	public void cleanDataModel(String specId) {
-		log.debug("cleanDataModel: {}", specId);
+		logger.debug("cleanDataModel: {}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel";
 
@@ -147,7 +147,7 @@ public class CommonInterface {
 	}
 
 	public EntityDTO createEntity(EntityDTO entityVO) {
-		log.debug("createEntity: {}, {}, {}", entityVO.getSpecId(), entityVO.getName(), entityVO.getExists());
+		logger.debug("createEntity: {}, {}, {}", entityVO.getSpecId(), entityVO.getName(), entityVO.getExists());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/entities";
 
@@ -161,7 +161,7 @@ public class CommonInterface {
 	}
 
 	public DependenceDTO createDependence(DependenceDTO dependenceVO) {
-		log.debug("createDependence: {}, {}", dependenceVO.getProductExtId(), dependenceVO.getPath());
+		logger.debug("createDependence: {}, {}", dependenceVO.getProduct(), dependenceVO.getPath());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/dependencies";
 
@@ -175,7 +175,7 @@ public class CommonInterface {
 	}
 
 	public Set<DependenceDTO> getDependencies(String specId) {
-		log.debug("getDependencies: {}", specId);
+		logger.debug("getDependencies: {}", specId);
 
 		final String uri = BASE_URL + "specs/{specId}/datamodel/dependencies";
 
@@ -189,7 +189,7 @@ public class CommonInterface {
 	}
 
 	public boolean checkDependence(String specId, String extId) {
-		log.debug("checkDependence: {}", extId);
+		logger.debug("checkDependence: {}", extId);
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/dependencies/{depExtId}/check";
 
@@ -204,7 +204,7 @@ public class CommonInterface {
 	}
 
 	public void deleteDependence(String specId, String extId) {
-		log.debug("deleteDependence: {}", extId);
+		logger.debug("deleteDependence: {}", extId);
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/dependencies/{depExtId}";
 
@@ -217,7 +217,7 @@ public class CommonInterface {
 	}
 
 	public AttributeDTO getAttribute(String specId, String extId) {
-		log.debug("getAttribute specId:{} extId:{}", specId, extId);
+		logger.debug("getAttribute specId:{} extId:{}", specId, extId);
 
 		final String uri = BASE_URL + "specs/{specId}/datamodel/attributes/{extId}";
 		Map<String, String> params = new HashMap<String, String>();
@@ -231,7 +231,7 @@ public class CommonInterface {
 	}
 
 	public AttributeDTO createAttribute(AttributeDTO attribueVO) {
-		log.debug("createAttribute: entitityExtId:{}, groupExtId:{}, {}, {}, {}", attribueVO.getEntityExtId(),
+		logger.debug("createAttribute: entitityExtId:{}, groupExtId:{}, {}, {}, {}", attribueVO.getEntityExtId(),
 				attribueVO.getGroupExtId(), attribueVO.getName(), attribueVO.getType(), attribueVO.getIsMandatory());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/attributes";
@@ -246,7 +246,7 @@ public class CommonInterface {
 	}
 
 	public AttributeGroupDTO createAttributeGroup(AttributeGroupDTO attributeGroupVO) {
-		log.debug("createAttributeGroup: entitityExtId:{},  {}, {}", attributeGroupVO.getEntityExtId(),
+		logger.debug("createAttributeGroup: entitityExtId:{},  {}, {}", attributeGroupVO.getEntityExtId(),
 				attributeGroupVO.getName(), attributeGroupVO.isMandatory());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/attributegroups";
@@ -261,7 +261,7 @@ public class CommonInterface {
 	}
 
 	public RelationDTO createRelation(RelationDTO relationVO) {
-		log.debug("createRelation: {}, {}, {}", relationVO.getName(), relationVO.getEntOneName(),
+		logger.debug("createRelation: {}, {}, {}", relationVO.getName(), relationVO.getEntOneName(),
 				relationVO.getEntTwoName());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/relations";
@@ -276,7 +276,7 @@ public class CommonInterface {
 	}
 
 	public RuleDTO createRule(RuleDTO ruleVO) {
-		log.debug("createRule: {}, {}, {}", ruleVO.getSpecId(), ruleVO.getName(), ruleVO.getExpression().toString());
+		logger.debug("createRule: {}, {}, {}", ruleVO.getSpecId(), ruleVO.getName(), ruleVO.getExpression().toString());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/rules";
 
@@ -290,7 +290,7 @@ public class CommonInterface {
 	}
 
 	public boolean ruleUsesAnyAttribute(String specId, String ruleName, String path) {
-		log.debug("ruleUsesAnyAttribute specId:{}, ruleName:{}, path:{}", specId, ruleName, path);
+		logger.debug("ruleUsesAnyAttribute specId:{}, ruleName:{}, path:{}", specId, ruleName, path);
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/rules/{ruleName}/anyAttribute?path={path}";
 
@@ -306,7 +306,7 @@ public class CommonInterface {
 	}
 
 	public void printSpecificationModels(String specId) {
-		log.debug("printSpecificationModels: {}", specId);
+		logger.debug("printSpecificationModels: {}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}/print";
 
@@ -318,7 +318,7 @@ public class CommonInterface {
 	}
 
 	public void cleanConditionModel(String specId) {
-		log.debug("cleanConditionModel: {}", specId);
+		logger.debug("cleanConditionModel: {}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}/conditionmodel";
 
@@ -330,7 +330,7 @@ public class CommonInterface {
 	}
 
 	public Boolean generateConditionModel(String specId) {
-		log.debug("generateConditionModel: {}", specId);
+		logger.debug("generateConditionModel: {}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}/conditionmodel";
 
@@ -341,24 +341,52 @@ public class CommonInterface {
 		return restTemplate.postForObject(uri, null, Boolean.class, params);
 	}
 
-	public DefEntityConditionDTO createEntityAchieveCondition(DefEntityConditionDTO entityAchieveConditionVO) {
-		log.debug("createEntityAchieveCondition: {}, {}, {}", entityAchieveConditionVO.getSpecId(),
-				entityAchieveConditionVO.getEntityName(), entityAchieveConditionVO.isExists());
+	public Set<DefEntityConditionDTO> getEntityAchieveConditionSet(String specId) {
+		logger.debug("getEntityAchieveConditionSet specId:{}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/entityachieveconditions";
 
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("specId", entityAchieveConditionVO.getSpecId());
+		params.put("specId", specId);
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		DefEntityConditionDTO result = restTemplate.postForObject(uri, entityAchieveConditionVO,
+		DefEntityConditionDTO[] defsDTO = restTemplate.getForObject(uri, DefEntityConditionDTO[].class, params);
+
+		return Arrays.stream(defsDTO).collect(Collectors.toSet());
+	}
+
+	public DefEntityConditionDTO createEntityAchieveCondition(DefEntityConditionDTO entityAchieveConditionDTO) {
+		logger.debug("createEntityAchieveCondition: {}, {}, {}", entityAchieveConditionDTO.getSpecId(),
+				entityAchieveConditionDTO.getEntityName(), entityAchieveConditionDTO.isExists());
+
+		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/entityachieveconditions";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", entityAchieveConditionDTO.getSpecId());
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		DefEntityConditionDTO result = restTemplate.postForObject(uri, entityAchieveConditionDTO,
 				DefEntityConditionDTO.class, params);
 
 		return result;
 	}
 
+	public Set<DependenceDTO> getEntityDependenceConditionSet(String specId) {
+		logger.debug("getEntityDependenceConditionSet specId:{}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/entitydependenceconditions";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		DependenceDTO[] depsDTO = restTemplate.getForObject(uri, DependenceDTO[].class, params);
+
+		return Arrays.stream(depsDTO).collect(Collectors.toSet());
+	}
+
 	public DependenceDTO createEntityDependenceCondition(DependenceDTO dependenceVO) {
-		log.debug("createEntityDependenceCondition entityExtId:{}, path:{}", dependenceVO.getProductExtId(),
+		logger.debug("createEntityDependenceCondition entityExtId:{}, path:{}", dependenceVO.getProduct(),
 				dependenceVO.getPath());
 
 		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/entitydependenceconditions";
@@ -372,8 +400,22 @@ public class CommonInterface {
 		return result;
 	}
 
+	public Set<MulConditionDTO> getEntityInvariantConditionSet(String specId) {
+		logger.debug("getEntityInvariantConditionSet specId:{}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/entityinvariantconditions";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		MulConditionDTO[] mulsDTO = restTemplate.getForObject(uri, MulConditionDTO[].class, params);
+
+		return Arrays.stream(mulsDTO).collect(Collectors.toSet());
+	}
+
 	public MulConditionDTO createEntityInvariantCondition(MulConditionDTO mulConditionVO) {
-		log.debug("createEntityInvariantCondition rolePath:{}, cardinality:{}", mulConditionVO.getRolePath(),
+		logger.debug("createEntityInvariantCondition rolePath:{}, cardinality:{}", mulConditionVO.getRolePath(),
 				mulConditionVO.getCardinality());
 
 		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/entityinvariantconditions";
@@ -387,9 +429,23 @@ public class CommonInterface {
 		return result;
 	}
 
+	public Set<DefAttributeConditionDTO> getAttributeAchieveConditionSet(String specId) {
+		logger.debug("getAttributeAchieveConditionSet specId:{}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/attributeachieveconditions";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		DefAttributeConditionDTO[] defsDTO = restTemplate.getForObject(uri, DefAttributeConditionDTO[].class, params);
+
+		return Arrays.stream(defsDTO).collect(Collectors.toSet());
+	}
+
 	public DefAttributeConditionDTO createAttributeAchieveCondition(DefAttributeConditionDTO defAttributeConditionVO) {
-		log.debug("createAttributeAchieveCondition path:{}, mandatory:{}", defAttributeConditionVO.getPath().toString(),
-				defAttributeConditionVO.isMandatory());
+		logger.debug("createAttributeAchieveCondition path:{}, mandatory:{}",
+				defAttributeConditionVO.getPath().toString(), defAttributeConditionVO.isMandatory());
 
 		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/attributeachieveconditions";
 
@@ -403,8 +459,22 @@ public class CommonInterface {
 		return result;
 	}
 
+	public Set<DependenceDTO> getAttributeDependenceConditionSet(String specId) {
+		logger.debug("getAttributeDependenceConditionSet specId:{}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/attributedependenceconditions";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		DependenceDTO[] depsDTO = restTemplate.getForObject(uri, DependenceDTO[].class, params);
+
+		return Arrays.stream(depsDTO).collect(Collectors.toSet());
+	}
+
 	public DependenceDTO createAttributeDependenceCondition(DependenceDTO dependenceVO) {
-		log.debug("createDependenceCondition productExtId:{}, path:{}", dependenceVO.getProductExtId(),
+		logger.debug("createDependenceCondition productExtId:{}, path:{}", dependenceVO.getProduct(),
 				dependenceVO.getPath());
 
 		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/attributedependenceconditions";
@@ -418,8 +488,22 @@ public class CommonInterface {
 		return result;
 	}
 
+	public Set<RuleDTO> getAttributeInvariantConditionSet(String specId) {
+		logger.debug("getAttributeInvariantConditionSet specId:{}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/attributeinvariantconditions";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		RuleDTO[] rulesDTO = restTemplate.getForObject(uri, RuleDTO[].class, params);
+
+		return Arrays.stream(rulesDTO).collect(Collectors.toSet());
+	}
+
 	public RuleDTO createAttributeInvariantCondition(RuleDTO ruleVO) {
-		log.debug("createAttributeInvariantCondition specId:{}, name:{}", ruleVO.getSpecId(), ruleVO.getName());
+		logger.debug("createAttributeInvariantCondition specId:{}, name:{}", ruleVO.getSpecId(), ruleVO.getName());
 
 		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/attributeinvariantconditions";
 
@@ -433,7 +517,7 @@ public class CommonInterface {
 	}
 
 	public ProductDTO getProduct(String specId, String path) {
-		log.debug("getProduct path:{}", path);
+		logger.debug("getProduct path:{}", path);
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/products/{path}/";
 
@@ -448,7 +532,7 @@ public class CommonInterface {
 	}
 
 	public EntityDTO getEntityByName(String specId, String entityName) {
-		log.debug("getEntityByName: {}, {}", specId, entityName);
+		logger.debug("getEntityByName: {}, {}", specId, entityName);
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/entities/{entityName}/";
 
@@ -463,7 +547,7 @@ public class CommonInterface {
 	}
 
 	public void cleanGoalModel(String specId) {
-		log.debug("cleanGoalModel: {}", specId);
+		logger.debug("cleanGoalModel: {}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel";
 
@@ -475,7 +559,7 @@ public class CommonInterface {
 	}
 
 	public Set<GoalDTO> getGoalSet(String specId) {
-		log.debug("getGoalSet: {}", specId);
+		logger.debug("getGoalSet: {}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals";
 
@@ -489,7 +573,7 @@ public class CommonInterface {
 	}
 
 	public GoalDTO getGoalByName(String specId, String goalName) {
-		log.debug("getGoalByName: {}, {}", specId, goalName);
+		logger.debug("getGoalByName: {}, {}", specId, goalName);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}";
 
@@ -504,7 +588,7 @@ public class CommonInterface {
 	}
 
 	public GoalDTO createGoal(GoalDTO goalDTO) {
-		log.debug("createGoal specId:{}, name:{}", goalDTO.getSpecId(), goalDTO.getName());
+		logger.debug("createGoal specId:{}, name:{}", goalDTO.getSpecId(), goalDTO.getName());
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals";
 
@@ -518,7 +602,7 @@ public class CommonInterface {
 	}
 
 	public Set<GoalDTO> getSubGoals(String specId, String goalName) {
-		log.debug("getsubGoals: {}, {}", specId, goalName);
+		logger.debug("getsubGoals: {}, {}", specId, goalName);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/sub";
 
@@ -533,7 +617,7 @@ public class CommonInterface {
 	}
 
 	public GoalDTO getParentGoal(String specId, String goalName) {
-		log.debug("getParentGoal: {}, {}", specId, goalName);
+		logger.debug("getParentGoal: {}, {}", specId, goalName);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/sup";
 
@@ -548,7 +632,7 @@ public class CommonInterface {
 	}
 
 	public GoalDTO addSubGoal(String parentName, GoalDTO goalVO) {
-		log.debug("addSubGoal specId:{}, parentName:{}, childName:{}", goalVO.getSpecId(), parentName,
+		logger.debug("addSubGoal specId:{}, parentName:{}, childName:{}", goalVO.getSpecId(), parentName,
 				goalVO.getName());
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/sub";
@@ -564,7 +648,7 @@ public class CommonInterface {
 	}
 
 	public Set<DefEntityConditionDTO> getGoalSuccessEntitySet(String specId, String goalName) {
-		log.debug("getGoalSucEntityAchieveCondition: {}, {}", specId, goalName);
+		logger.debug("getGoalSucEntityAchieveCondition: {}, {}", specId, goalName);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/sucent";
 
@@ -579,7 +663,7 @@ public class CommonInterface {
 	}
 
 	public DefEntityConditionDTO associateEntityToGoalSuccess(String specId, String goalName, String path) {
-		log.debug("associatedSucConditionToGoal specId:{}, goalName:{}, path:{}", specId, goalName, path);
+		logger.debug("associatedSucConditionToGoal specId:{}, goalName:{}, path:{}", specId, goalName, path);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/sucent/{path}/";
 
@@ -595,7 +679,7 @@ public class CommonInterface {
 	}
 
 	public Set<DefAttributeConditionDTO> getGoalSuccessAttributeSet(String specId, String goalName) {
-		log.debug("getGoalSuccessAttributeSet: {}, {}", specId, goalName);
+		logger.debug("getGoalSuccessAttributeSet: {}, {}", specId, goalName);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/sucatt";
 
@@ -610,7 +694,7 @@ public class CommonInterface {
 	}
 
 	public void associateAttributeToGoalSuccess(String specId, String goalName, String path) {
-		log.debug("associateAttributeToGoalSuccess specId:{}, goalName:{}, path:{}", specId, goalName, path);
+		logger.debug("associateAttributeToGoalSuccess specId:{}, goalName:{}, path:{}", specId, goalName, path);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/sucatt/{path}/";
 
@@ -624,7 +708,7 @@ public class CommonInterface {
 	}
 
 	public Set<ExpressionDTO> getGoalActivationDefPathConditionSet(String specId, String goalName) {
-		log.debug("getGoalActivationDefPathConditionSet: {}, {}", specId, goalName);
+		logger.debug("getGoalActivationDefPathConditionSet: {}, {}", specId, goalName);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/act";
 
@@ -639,7 +723,7 @@ public class CommonInterface {
 	}
 
 	public ExpressionDTO associatePathConditionToGoalActivation(String specId, String goalName, String path) {
-		log.debug("associatePathConditionToGoalActivation specId:{}, goalName:{}, path:{}", specId, goalName, path);
+		logger.debug("associatePathConditionToGoalActivation specId:{}, goalName:{}, path:{}", specId, goalName, path);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/act/{path}/";
 
@@ -655,7 +739,7 @@ public class CommonInterface {
 	}
 
 	public Set<MulConditionDTO> getGoalMulInvSet(String specId, String goalName) {
-		log.debug("getGoalMulInvSet: {}, {}", specId, goalName);
+		logger.debug("getGoalMulInvSet: {}, {}", specId, goalName);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/invent";
 
@@ -670,7 +754,8 @@ public class CommonInterface {
 	}
 
 	public void associateMulToGoalInvariant(String specId, String goalName, MulConditionDTO mulConditionVO) {
-		log.debug("associateMulConditionToGoalEntityInvariantCondition specId:{}, goalName:{}, path:{}, cardinality:{}",
+		logger.debug(
+				"associateMulConditionToGoalEntityInvariantCondition specId:{}, goalName:{}, path:{}, cardinality:{}",
 				specId, goalName, mulConditionVO.getRolePath(), mulConditionVO.getCardinality());
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/invent";
@@ -684,7 +769,7 @@ public class CommonInterface {
 	}
 
 	public Set<RuleDTO> getGoalRuleInvSet(String specId, String goalName) {
-		log.debug("getGoalRuleInvSet: {}, {}", specId, goalName);
+		logger.debug("getGoalRuleInvSet: {}, {}", specId, goalName);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/invatt";
 
@@ -699,7 +784,7 @@ public class CommonInterface {
 	}
 
 	public RuleDTO associateRuleToGoalInvariant(String specId, String goalName, RuleDTO ruleDTO) {
-		log.debug("associateRuleConditionToGoalAttributeInvariantCondition specId:{}, goalName:{}, rule:{}", specId,
+		logger.debug("associateRuleConditionToGoalAttributeInvariantCondition specId:{}, goalName:{}, rule:{}", specId,
 				goalName, ruleDTO.getName());
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/invatt";
@@ -713,7 +798,7 @@ public class CommonInterface {
 	}
 
 	public GoalDTO mergeGoals(String specId, String newGoalName, String goalNameOne, String goalNameTwo) {
-		log.debug("mergeGoals specId:{}, newGoalName:{} goalNameOne:{}, goalNameTwo:{}", specId, newGoalName,
+		logger.debug("mergeGoals specId:{}, newGoalName:{} goalNameOne:{}, goalNameTwo:{}", specId, newGoalName,
 				goalNameOne, goalNameTwo);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/merge";
@@ -732,7 +817,7 @@ public class CommonInterface {
 
 	public GoalDTO extractChildGoal(String specId, String newGoalName, String sourceGoalName,
 			DefProductConditionSetDTO successCondition) {
-		log.debug("extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}", specId,
+		logger.debug("extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}", specId,
 				newGoalName, sourceGoalName,
 				successCondition.getDefEnts().stream().map((def) -> def.getEntityName())
 						.collect(Collectors.joining(",")),
@@ -754,7 +839,7 @@ public class CommonInterface {
 
 	public GoalDTO extractSiblingGoal(String specId, String newGoalName, String sourceGoalName,
 			DefProductConditionSetDTO successCondition) {
-		log.debug("extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}", specId,
+		logger.debug("extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}", specId,
 				newGoalName, sourceGoalName,
 				successCondition.getDefEnts().stream().map((def) -> def.getEntityName())
 						.collect(Collectors.joining(",")),
@@ -775,7 +860,7 @@ public class CommonInterface {
 	}
 
 	public void cleanActivityModel(String specId) {
-		log.debug("cleanActivityModel: {}", specId);
+		logger.debug("cleanActivityModel: {}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel";
 
@@ -787,7 +872,7 @@ public class CommonInterface {
 	}
 
 	public Set<ActivityDTO> getActivitySet(String specId) {
-		log.debug("getActivitySet: {}", specId);
+		logger.debug("getActivitySet: {}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities";
 
@@ -801,7 +886,7 @@ public class CommonInterface {
 	}
 
 	public ActivityDTO createActivity(String specId, String name, String description) {
-		log.debug("createActivity specId:{}, name:{}, description:{}", specId, name, description);
+		logger.debug("createActivity specId:{}, name:{}, description:{}", specId, name, description);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities";
 
@@ -815,7 +900,7 @@ public class CommonInterface {
 	}
 
 	public ActivityDTO addActivity(String specId, AddActivityReq request) {
-		log.debug("addActivity specId:{}, name:{}, description:{}", specId, request.getActivityName(),
+		logger.debug("addActivity specId:{}, name:{}, description:{}", specId, request.getActivityName(),
 				request.getDescription());
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/add";
@@ -828,7 +913,7 @@ public class CommonInterface {
 	}
 
 	public Set<ExpressionDTO> getActivityPreConditionSet(String specId, String activityName) {
-		log.debug("getActivityPreConditionSet specId:{}, activityName:{}", specId, activityName);
+		logger.debug("getActivityPreConditionSet specId:{}, activityName:{}", specId, activityName);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/pre";
 
@@ -843,7 +928,7 @@ public class CommonInterface {
 	}
 
 	public ExpressionDTO associateDefPathToActivityPre(String specId, String activityName, String path) {
-		log.debug("associateDefPathToActivityPre specId:{}, activityName:{}, path:{}", specId, activityName, path);
+		logger.debug("associateDefPathToActivityPre specId:{}, activityName:{}, path:{}", specId, activityName, path);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/pre/{path}/";
 
@@ -859,7 +944,7 @@ public class CommonInterface {
 	}
 
 	public DefProductConditionSetDTO getActivityPostConditionSet(String specId, String activityName) {
-		log.debug("getActivityPostConditionSet specId:{}, activityName:{}", specId, activityName);
+		logger.debug("getActivityPostConditionSet specId:{}, activityName:{}", specId, activityName);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/post";
 
@@ -874,7 +959,7 @@ public class CommonInterface {
 	}
 
 	public DefEntityConditionDTO associateEntityToActivityPost(String specId, String activityName, String path) {
-		log.debug("associateEntityToActivityPost specId:{}, activityName:{}, path:{}", specId, activityName, path);
+		logger.debug("associateEntityToActivityPost specId:{}, activityName:{}, path:{}", specId, activityName, path);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/postent/{path}/";
 
@@ -890,7 +975,8 @@ public class CommonInterface {
 	}
 
 	public DefAttributeConditionDTO associateAttributeToActivityPost(String specId, String activityName, String path) {
-		log.debug("associateAttributeToActivityPost specId:{}, activityName:{}, path:{}", specId, activityName, path);
+		logger.debug("associateAttributeToActivityPost specId:{}, activityName:{}, path:{}", specId, activityName,
+				path);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/postatt/{path}/";
 
@@ -904,7 +990,7 @@ public class CommonInterface {
 	}
 
 	public List<MulConditionDTO> getActivityMulConditions(String specId, String activityName) {
-		log.debug("getActivityMulConditions specId:{}, activityName:{}", specId, activityName);
+		logger.debug("getActivityMulConditions specId:{}, activityName:{}", specId, activityName);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/postmul";
 
@@ -920,7 +1006,7 @@ public class CommonInterface {
 
 	public MulConditionDTO associateMulToActivityPost(String specId, String activityName,
 			MulConditionDTO mulConditionDTO) {
-		log.debug("associateMulToActivityPost specId:{}, activityName:{}, path:{}, cardinality:{}", specId,
+		logger.debug("associateMulToActivityPost specId:{}, activityName:{}, path:{}, cardinality:{}", specId,
 				activityName, mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/postmul";
@@ -935,7 +1021,7 @@ public class CommonInterface {
 	}
 
 	public List<RuleDTO> getActivityRuleConditions(String specId, String activityName) {
-		log.debug("getActivityRuleConditions specId:{}, activityName:{}", specId, activityName);
+		logger.debug("getActivityRuleConditions specId:{}, activityName:{}", specId, activityName);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/postrule";
 
@@ -946,15 +1032,15 @@ public class CommonInterface {
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
 		RuleDTO[] ruleDTOs = restTemplate.getForObject(uri, RuleDTO[].class, params);
 
-		log.debug("getActivityRuleConditions specId:{}, activityName:{}, size:{}", specId, activityName,
+		logger.debug("getActivityRuleConditions specId:{}, activityName:{}, size:{}", specId, activityName,
 				ruleDTOs.length);
 
 		return Arrays.asList(ruleDTOs);
 	}
 
 	public RuleDTO associateRuleToActivityPost(String specId, String activityName, RuleDTO ruleDTO) {
-		log.debug("associateRuleConditionToGoalAttributeInvariantCondition specId:{}, activityName:{}, rule:{}", specId,
-				activityName, ruleDTO.getName());
+		logger.debug("associateRuleConditionToGoalAttributeInvariantCondition specId:{}, activityName:{}, rule:{}",
+				specId, activityName, ruleDTO.getName());
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/postrule";
 
@@ -967,7 +1053,7 @@ public class CommonInterface {
 	}
 
 	public Boolean checkActivityModelConsistency(String specId) {
-		log.debug("checkActivityModelConsistency specId:{}", specId);
+		logger.debug("checkActivityModelConsistency specId:{}", specId);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/check";
 
@@ -982,7 +1068,7 @@ public class CommonInterface {
 
 	public ActivityDTO mergeActivities(String specId, String newActivityName, String activityNameOne,
 			String activityNameTwo) {
-		log.debug("mergeActivities specId:{}, newActivityName:{} activityNameOne:{}, activityNameOne:{}", specId,
+		logger.debug("mergeActivities specId:{}, newActivityName:{} activityNameOne:{}, activityNameOne:{}", specId,
 				newActivityName, activityNameOne, activityNameTwo);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/merge";
@@ -1001,7 +1087,7 @@ public class CommonInterface {
 
 	public ActivityDTO extractActivity(String specId, String newActivityName, String sourceActivityName,
 			DefProductConditionSetDTO successCondition) {
-		log.debug("extractActivity specId:{}, newActivityName:{}, sourceActivityName:{}, entDefs:{}, attDefs:{}",
+		logger.debug("extractActivity specId:{}, newActivityName:{}, sourceActivityName:{}, entDefs:{}, attDefs:{}",
 				specId, newActivityName, sourceActivityName,
 				successCondition.getDefEnts().stream().map((def) -> def.getEntityName())
 						.collect(Collectors.joining(",")),
@@ -1022,7 +1108,7 @@ public class CommonInterface {
 	}
 
 	public Set<String> getDependencePaths(String specId, Set<String> paths) {
-		log.debug("getDependencePaths paths:{}", paths);
+		logger.debug("getDependencePaths paths:{}", paths);
 
 		final String uri = BASE_URL + "/specs/{specId}/pathdep?paths={paths}";
 
