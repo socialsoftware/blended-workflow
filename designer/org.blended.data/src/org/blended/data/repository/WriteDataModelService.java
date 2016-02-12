@@ -185,16 +185,6 @@ public class WriteDataModelService {
 
 		ci.printSpecificationModels(specId);
 
-		// System.out.println(
-		// ci.getSourceOfPath(specId, "Episode.patient").getExtId());
-		// System.out.println(
-		// ci.getTargetOfPath(specId, "Episode.patient").getExtId());
-		// Set<String> paths = new HashSet<String>();
-		// paths.add("Episode.patient.episode");
-		// paths.add("Prescription.description");
-		// System.out.println(ci.getDependencePaths(specId, paths).stream()
-		// .collect(Collectors.joining(",")));
-
 		return notification;
 	}
 

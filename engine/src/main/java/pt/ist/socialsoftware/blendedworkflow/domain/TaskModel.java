@@ -46,6 +46,30 @@ public class TaskModel extends TaskModel_Base {
 		deleteDomainObject();
 	}
 
+	public void generateActivities() {
+		ConditionModel conditionModel = getSpecification().getConditionModel();
+
+		int activityCounter = 1;
+
+		for (DefEntityCondition defEntityCondition : conditionModel.getEntityAchieveConditionSet()) {
+			if (!defEntityCondition.getEntity().getExists()) {
+				HashSet<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
+				postConditionSet.add(defEntityCondition);
+				addTask("a" + activityCounter, "Activity number " + activityCounter, postConditionSet);
+				activityCounter++;
+			}
+		}
+
+		for (DefAttributeCondition defEntityCondition : conditionModel.getAttributeAchieveConditionSet()) {
+			HashSet<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
+			postConditionSet.add(defEntityCondition);
+			addTask("a" + activityCounter, "Activity number " + activityCounter, postConditionSet);
+			activityCounter++;
+		}
+
+		checkModel();
+	}
+
 	public Task addTask(String taskName, String taskDescription, Set<DefProductCondition> postConditionSet) {
 		checkNonEmptyPostCondition(postConditionSet);
 

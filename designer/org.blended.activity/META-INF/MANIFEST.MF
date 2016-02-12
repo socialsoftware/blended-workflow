@@ -23,16 +23,17 @@ Import-Package: org.apache.log4j,
  org.eclipse.swt.graphics
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.blended.activity,
- org.blended.activity.services,
  org.blended.activity.activity,
  org.blended.activity.activity.impl,
  org.blended.activity.activity.util,
- org.blended.activity.serializer,
+ org.blended.activity.formatting,
+ org.blended.activity.generator,
  org.blended.activity.parser.antlr,
  org.blended.activity.parser.antlr.internal,
- org.blended.activity.validation,
+ org.blended.activity.repository,
  org.blended.activity.scoping,
- org.blended.activity.generator,
- org.blended.activity.formatting
+ org.blended.activity.serializer,
+ org.blended.activity.services,
+ org.blended.activity.validation
 Bundle-ClassPath: .,
  lib/jcommander-1.48.jar

@@ -52,6 +52,10 @@ public class DataModel extends DataModel_Base {
 	public void clean() {
 		if (getSpecification().getConditionModel() != null)
 			getSpecification().getConditionModel().clean();
+		if (getSpecification().getGoalModel() != null)
+			getSpecification().getGoalModel().clean();
+		if (getSpecification().getTaskModel() != null)
+			getSpecification().getTaskModel().clean();
 		getRuleSet().stream().forEach(rule -> rule.delete());
 		getDependenceSet().stream().forEach(dep -> dep.delete());
 		getEntitySet().stream().forEach(ent -> ent.delete());

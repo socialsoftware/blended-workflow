@@ -44,6 +44,17 @@ public class GoalModelController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<Boolean> generateGoalModel(@PathVariable("specId") String specId) {
+		log.debug("generateGoalModel specId:{}", specId);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		boolean result = adi.generateGoalModel(specId);
+
+		return new ResponseEntity<Boolean>(result, HttpStatus.CREATED);
+	}
+
 	@RequestMapping(value = "/goals", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<GoalDTO[]> getGoalSet(@PathVariable("specId") String specId) {
 		log.debug("getGoalSet specId:{}", specId);

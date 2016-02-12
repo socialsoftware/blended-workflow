@@ -51,6 +51,17 @@ public class ActivityModelController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<Boolean> generateActivityModel(@PathVariable("specId") String specId) {
+		logger.debug("generateActivityModel specId:{}", specId);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		boolean result = adi.generateActivityModel(specId);
+
+		return new ResponseEntity<Boolean>(result, HttpStatus.CREATED);
+	}
+
 	@RequestMapping(value = "/activities", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<ActivityDTO> createActivity(@PathVariable("specId") String specId,
 			@RequestBody ActivityDTO activityDTO) {
