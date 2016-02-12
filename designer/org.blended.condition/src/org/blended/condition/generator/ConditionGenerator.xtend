@@ -15,10 +15,7 @@ import org.eclipse.xtext.generator.IGenerator
 class ConditionGenerator implements IGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		var goalModel = new ConditionGeneratorGoalModel(resource, fsa)
-		goalModel.doGenerate
 		
-		var activityModel = new ConditionGeneratorActivityModel(resource, fsa)
-		activityModel.doGenerate
 	}
+	
 }

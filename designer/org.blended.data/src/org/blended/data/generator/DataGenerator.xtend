@@ -29,5 +29,10 @@ class DataGenerator implements IGenerator {
 		var conditionModel = new DataGeneratorConditionModel(resource, fsa)
 		conditionModel.doGenerate	
 		
+		var goalModel = new DataGeneratorGoalModel(resource, fsa)
+		goalModel.doGenerate
+		
+		var activityModel = new DataGeneratorActivityModel(resource, fsa)
+		activityModel.doGenerate
 	}
 }

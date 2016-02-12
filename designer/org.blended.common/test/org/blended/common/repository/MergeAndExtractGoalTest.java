@@ -147,11 +147,10 @@ public class MergeAndExtractGoalTest {
 		ci.associateAttributeToGoalSuccess(TEST_SPEC_ID, SUB_GOAL_TWO_ONE, ENTITY_TWO + "." + ATT_THREE);
 
 		// add act conditions
-		ci.associateAttributeToGoalActivation(TEST_SPEC_ID, SUB_GOAL_ONE, ENTITY_ONE + "." + ATT_TWO);
-		defsAtt = ci.getGoalActivationAttributeSet(TEST_SPEC_ID, SUB_GOAL_ONE);
-		assertEquals(1, defsAtt.size());
-		assertEquals(ATT_TWO,
-				ci.getAttribute(TEST_SPEC_ID, defsAtt.stream().findAny().get().getAttributeExtId()).getName());
+		ci.associatePathConditionToGoalActivation(TEST_SPEC_ID, SUB_GOAL_ONE, ENTITY_ONE + "." + ATT_TWO);
+		Set<ExpressionDTO> defPaths = ci.getGoalActivationDefPathConditionSet(TEST_SPEC_ID, SUB_GOAL_ONE);
+		assertEquals(1, defPaths.size());
+		assertEquals("PATH_DEF(" + ENTITY_ONE + "." + ATT_TWO + ")", defPaths.stream().findAny().get().toString());
 
 		// add mul conditions
 		ci.associateMulToGoalInvariant(TEST_SPEC_ID, TOP_GOAL,
@@ -193,13 +192,9 @@ public class MergeAndExtractGoalTest {
 		Set<GoalDTO> subGoals = ci.getSubGoals(TEST_SPEC_ID, goalDTO.getName());
 		assertEquals(SUB_GOAL_TWO_ONE, subGoals.stream().map((g) -> g.getName()).collect(Collectors.joining()));
 
-		// get activation entity achieve conditions
-		defsEnt = ci.getGoalActivationEntitySet(TEST_SPEC_ID, goalDTO.getName());
-		assertEquals(0, defsEnt.size());
-
-		// get activation attribute achieve conditions
-		defsAtt = ci.getGoalActivationAttributeSet(TEST_SPEC_ID, goalDTO.getName());
-		assertEquals(0, defsAtt.size());
+		// get activation def path conditions
+		defPaths = ci.getGoalActivationDefPathConditionSet(TEST_SPEC_ID, goalDTO.getName());
+		assertEquals(0, defPaths.size());
 
 		// get success entity achieve conditions
 		defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, goalDTO.getName());
@@ -250,15 +245,10 @@ public class MergeAndExtractGoalTest {
 		subGoals = ci.getSubGoals(TEST_SPEC_ID, goalDTO.getName());
 		assertEquals(0, subGoals.size());
 
-		// get activation entity achieve conditions
-		defsEnt = ci.getGoalActivationEntitySet(TEST_SPEC_ID, goalDTO.getName());
-		assertEquals(0, defsEnt.size());
-
-		// get activation attribute achieve conditions
-		defsAtt = ci.getGoalActivationAttributeSet(TEST_SPEC_ID, goalDTO.getName());
-		assertEquals(1, defsAtt.size());
-		assertEquals(ATT_TWO,
-				ci.getAttribute(TEST_SPEC_ID, defsAtt.stream().findFirst().get().getAttributeExtId()).getName());
+		// get activation def path conditions
+		defPaths = ci.getGoalActivationDefPathConditionSet(TEST_SPEC_ID, goalDTO.getName());
+		assertEquals(1, defPaths.size());
+		assertEquals("PATH_DEF(" + ENTITY_ONE + "." + ATT_TWO + ")", defPaths.stream().findFirst().get().toString());
 
 		// get success entity achieve conditions
 		defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, goalDTO.getName());
@@ -311,13 +301,9 @@ public class MergeAndExtractGoalTest {
 		subGoals = ci.getSubGoals(TEST_SPEC_ID, goalDTO.getName());
 		assertEquals(0, subGoals.size());
 
-		// get activation entity achieve conditions
-		defsEnt = ci.getGoalActivationEntitySet(TEST_SPEC_ID, goalDTO.getName());
-		assertEquals(0, defsEnt.size());
-
-		// get activation attribute achieve conditions
-		defsAtt = ci.getGoalActivationAttributeSet(TEST_SPEC_ID, goalDTO.getName());
-		assertEquals(0, defsAtt.size());
+		// get activation def path conditions
+		defPaths = ci.getGoalActivationDefPathConditionSet(TEST_SPEC_ID, goalDTO.getName());
+		assertEquals(0, defPaths.size());
 
 		// get success entity achieve conditions
 		defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, goalDTO.getName());

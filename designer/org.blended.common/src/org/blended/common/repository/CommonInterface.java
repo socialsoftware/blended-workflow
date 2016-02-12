@@ -558,6 +558,18 @@ public class CommonInterface {
 		restTemplate.put(uri, null, params);
 	}
 
+	public Boolean generateGoalModel(String specId) {
+		logger.debug("generateGoalModel: {}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/goalmodel";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		return restTemplate.postForObject(uri, null, Boolean.class, params);
+	}
+
 	public Set<GoalDTO> getGoalSet(String specId) {
 		logger.debug("getGoalSet: {}", specId);
 
@@ -869,6 +881,18 @@ public class CommonInterface {
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
 		restTemplate.put(uri, null, params);
+	}
+
+	public Boolean generateActivityModel(String specId) {
+		logger.debug("generateActivityModel: {}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/activitymodel";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		return restTemplate.postForObject(uri, null, Boolean.class, params);
 	}
 
 	public Set<ActivityDTO> getActivitySet(String specId) {

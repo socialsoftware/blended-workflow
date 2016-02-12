@@ -251,6 +251,21 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
+	public boolean generateGoalModel(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		if (spec.getDataModel().getEntitySet().size() == 0)
+			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+
+		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
+			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
+
+		spec.getGoalModel().generateGoals();
+
+		return true;
+	}
+
+	@Atomic(mode = TxMode.WRITE)
 	public void cleanActivityModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
@@ -261,6 +276,21 @@ public class DesignInterface {
 			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
 
 		spec.getTaskModel().clean();
+	}
+
+	@Atomic(mode = TxMode.WRITE)
+	public boolean generateActivityModel(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		if (spec.getDataModel().getEntitySet().size() == 0)
+			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+
+		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
+			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
+
+		spec.getTaskModel().generateActivities();
+
+		return true;
 	}
 
 	public Set<DefEntityCondition> getEntityAchieveConditionSet(String specId) {
