@@ -89,7 +89,7 @@ public abstract class Condition extends Condition_Base {
 
 	public DataModel getDataModel() {
 		if (getRule() != null)
-			return getRule().getDataModel();
+			return getRule().getEntity().getDataModel();
 		if (getAndLeftCondition() != null)
 			return getAndLeftCondition().getDataModel();
 		if (getAndRightCondition() != null)

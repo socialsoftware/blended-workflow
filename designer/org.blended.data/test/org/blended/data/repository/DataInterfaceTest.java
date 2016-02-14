@@ -20,78 +20,74 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DataInterfaceTest {
-    private WriteDataModelService dataInterface;
+	private WriteDataModelService dataInterface;
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(DataInterfaceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(DataInterfaceTest.class);
 
-    private static String EXISTS_SPEC_ID = "ID0";
-    private static String EXISTS_SPEC_NAME = "Old Doctor Appointment Specification";
-    private static String EXISTS_ENTITY_NAME = "Exists Entity Name";
-    private static String EXISTS_ATTRIBUTE_NAME = "Exists Attribute Name";
+	private static String EXISTS_SPEC_ID = "ID0";
+	private static String EXISTS_SPEC_NAME = "Old Doctor Appointment Specification";
+	private static String EXISTS_ENTITY_NAME = "Exists Entity Name";
+	private static String EXISTS_ATTRIBUTE_NAME = "Exists Attribute Name";
 
-    @Before
-    public void setUp() {
-        logger.debug("LocalSystemTest::setUp");
-        dataInterface = WriteDataModelService.getInstance();
-    }
+	@Before
+	public void setUp() {
+		logger.debug("LocalSystemTest::setUp");
+		dataInterface = WriteDataModelService.getInstance();
+	}
 
-    @After
-    public void tearDown() {
-        logger.debug("LocalSystemTest::tearDown");
-        dataInterface.deleteSpecification(EXISTS_SPEC_ID);
-    }
+	@After
+	public void tearDown() {
+		logger.debug("LocalSystemTest::tearDown");
+		dataInterface.deleteSpecification(EXISTS_SPEC_ID);
+	}
 
-    @Test
-    public void walkthrough() {
+	@Test
+	public void walkthrough() {
 
-        CommonFactory commonFactory = CommonFactory.eINSTANCE;
-        DataFactory dataFactory = DataFactory.eINSTANCE;
-        DataModel eDataModel;
+		CommonFactory commonFactory = CommonFactory.eINSTANCE;
+		DataFactory dataFactory = DataFactory.eINSTANCE;
+		DataModel eDataModel;
 
-        eDataModel = dataFactory.createDataModel();
+		eDataModel = dataFactory.createDataModel();
 
-        Specification eSpec = commonFactory.createSpecification();
-        eSpec.setName(EXISTS_SPEC_NAME);
-        eDataModel.setSpecification(eSpec);
+		Specification eSpec = commonFactory.createSpecification();
+		eSpec.setName(EXISTS_SPEC_NAME);
+		eDataModel.setSpecification(eSpec);
 
-        Entity eEntOne = commonFactory.createEntity();
-        eEntOne.setName(EXISTS_ENTITY_NAME);
-        eEntOne.setExists(false);
-        eDataModel.getEntities().add(eEntOne);
-        Attribute eAtt = commonFactory.createAttribute();
-        eEntOne.getAttributes().add(eAtt);
-        eAtt.setName(EXISTS_ATTRIBUTE_NAME);
-        eAtt.setType("Number");
+		Entity eEntOne = commonFactory.createEntity();
+		eEntOne.setName(EXISTS_ENTITY_NAME);
+		eEntOne.setExists(false);
+		eDataModel.getEntities().add(eEntOne);
+		Attribute eAtt = commonFactory.createAttribute();
+		eEntOne.getAttributes().add(eAtt);
+		eAtt.setName(EXISTS_ATTRIBUTE_NAME);
+		eAtt.setType("Number");
 
-        Constraint constraint = commonFactory.createConstraint();
-        eDataModel.getConstraint().add(constraint);
+		Constraint constraint = commonFactory.createConstraint();
+		eEntOne.getConstraint().add(constraint);
 
-        And andExpression = commonFactory.createAnd();
-        constraint.setConstraint(andExpression);
+		And andExpression = commonFactory.createAnd();
+		constraint.setConstraint(andExpression);
 
-        Greater greaterExpression = commonFactory.createGreater();
-        andExpression.setLeft(greaterExpression);
+		Greater greaterExpression = commonFactory.createGreater();
+		andExpression.setLeft(greaterExpression);
 
-        IntConstant intExpression = commonFactory.createIntConstant();
-        greaterExpression.setLeft(intExpression);
-        intExpression.setName(6);
+		IntConstant intExpression = commonFactory.createIntConstant();
+		greaterExpression.setLeft(intExpression);
+		intExpression.setName(6);
 
-        AttributeValue attValueExpression = commonFactory
-                .createAttributeValue();
-        greaterExpression.setRight(attValueExpression);
-        attValueExpression
-                .setName(EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME);
+		AttributeValue attValueExpression = commonFactory.createAttributeValue();
+		greaterExpression.setRight(attValueExpression);
+		attValueExpression.setName(EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME);
 
-        BoolConstant boolConstant = commonFactory.createBoolConstant();
-        andExpression.setRight(boolConstant);
-        boolConstant.setName("true");
+		BoolConstant boolConstant = commonFactory.createBoolConstant();
+		andExpression.setRight(boolConstant);
+		boolConstant.setName("true");
 
-        dataInterface = WriteDataModelService.getInstance();
+		dataInterface = WriteDataModelService.getInstance();
 
-        BWNotification notification = dataInterface
-                .write(EXISTS_SPEC_ID, eDataModel);
+		BWNotification notification = dataInterface.write(EXISTS_SPEC_ID, eDataModel);
 
-    }
+	}
 
 }

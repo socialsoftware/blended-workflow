@@ -17,6 +17,7 @@ Specification:
 Entity:
 	'Entity' name = ID (exists ?= 'exists')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? '{' 
 		attributes += (AttributeGroup | Attribute)*
+		constraint += Constraint*
 	'}'
 ;
 
@@ -76,7 +77,7 @@ MandatoryAttributeAchieveCondition:
 ;
 
 AttributeInvariantCondition:
-	'RUL' name=ID '(' expression = Expression ')'
+	'RULE' '(' context = ID ',' name = ID ')' '=' '(' expression = Expression ')'
 ;
 
 AttributeDependenceCondition:

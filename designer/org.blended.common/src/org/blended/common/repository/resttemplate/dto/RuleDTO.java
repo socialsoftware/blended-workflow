@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RuleDTO {
 	private String specId;
+	private String entityName;
 	private String extId;
 	private String name;
 	private ExpressionDTO expression;
@@ -15,15 +16,17 @@ public class RuleDTO {
 	public RuleDTO() {
 	}
 
-	public RuleDTO(String specId, String name, ExpressionDTO expression) {
+	public RuleDTO(String specId, String entityName, String name, ExpressionDTO expression) {
 		this.specId = specId;
+		this.entityName = entityName;
 		this.extId = null;
 		this.name = name;
 		this.expression = expression;
 	}
 
-	public RuleDTO(String specId, String name) {
+	public RuleDTO(String specId, String entityName, String name) {
 		this.specId = specId;
+		this.entityName = entityName;
 		this.extId = null;
 		this.name = name;
 		this.expression = null;
@@ -31,6 +34,7 @@ public class RuleDTO {
 
 	public AttributeInvariantCondition createAttributeInvariantCondition(CommonFactory factory) {
 		AttributeInvariantCondition attributeInvariantCondition = factory.createAttributeInvariantCondition();
+		attributeInvariantCondition.setContext(getEntityName());
 		attributeInvariantCondition.setName(getName());
 		attributeInvariantCondition.setExpression(getExpression().buildExpression());
 		return attributeInvariantCondition;
@@ -67,4 +71,13 @@ public class RuleDTO {
 	public void setExpression(ExpressionDTO expression) {
 		this.expression = expression;
 	}
+
+	public String getEntityName() {
+		return entityName;
+	}
+
+	public void setEntityName(String entityName) {
+		this.entityName = entityName;
+	}
+
 }

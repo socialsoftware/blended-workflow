@@ -255,7 +255,7 @@ public class GoalModelController {
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		adi.associateRuleToGoalInvariant(specId, goalName, ruleDTO.getName());
+		adi.associateRuleToGoalInvariant(ruleDTO, goalName);
 
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}

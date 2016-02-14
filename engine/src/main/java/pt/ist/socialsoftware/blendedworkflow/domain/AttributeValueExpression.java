@@ -11,7 +11,7 @@ public class AttributeValueExpression extends AttributeValueExpression_Base {
 	public AttributeValueExpression(Specification spec, String value) {
 		Path path = new Path(spec.getDataModel(), value);
 		setPath(path);
-		setAttribute((AttributeBasic) path.getTargetOfPath());
+		setAttribute((AttributeBasic) spec.getDataModel().getTargetOfPath(value));
 	}
 
 	@Override

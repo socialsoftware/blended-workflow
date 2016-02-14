@@ -81,7 +81,7 @@ public class MergeAndExtractGoalTest {
 		ci.createDependence(new DependenceDTO(TEST_SPEC_ID, attOneDTO.getEntityName() + "." + attOneDTO.getName(),
 				ENTITY_ONE + "." + ATT_TWO));
 
-		ci.createRule(new RuleDTO(TEST_SPEC_ID, RULE_NAME,
+		ci.createRule(new RuleDTO(TEST_SPEC_ID, ENTITY_ONE, RULE_NAME,
 				new ExpressionDTO(TEST_SPEC_ID, ExpressionDTO.Type.EQUAL,
 						new ExpressionDTO(TEST_SPEC_ID, Type.ATT_VALUE, ENTITY_ONE + "." + ATT_ONE),
 						new ExpressionDTO(TEST_SPEC_ID, Type.ATT_VALUE, ENTITY_ONE + "." + ATT_TWO))));
@@ -165,12 +165,10 @@ public class MergeAndExtractGoalTest {
 				mulsDTO.stream().map((m) -> m.getRolePath()).collect(Collectors.joining()));
 
 		// add rule condition
-		ci.associateRuleToGoalInvariant(TEST_SPEC_ID, SUB_GOAL_ONE, new RuleDTO(TEST_SPEC_ID, RULE_NAME));
-		Set<RuleDTO> rulesDTO = ci.getGoalRuleInvSet(TEST_SPEC_ID, SUB_GOAL_ONE);
+		ci.associateRuleToGoalInvariant(TEST_SPEC_ID, TOP_GOAL, new RuleDTO(TEST_SPEC_ID, ENTITY_ONE, RULE_NAME));
+		Set<RuleDTO> rulesDTO = ci.getGoalRuleInvSet(TEST_SPEC_ID, TOP_GOAL);
 		assertEquals(1, rulesDTO.size());
 		assertEquals(RULE_NAME, rulesDTO.stream().map((r) -> r.getName()).collect(Collectors.joining()));
-
-		ci.associateRuleToGoalInvariant(TEST_SPEC_ID, SUB_GOAL_TWO, new RuleDTO(TEST_SPEC_ID, RULE_NAME));
 
 		// fail to merge parent and child goals due to a conflict
 		try {
@@ -217,8 +215,7 @@ public class MergeAndExtractGoalTest {
 
 		// get rule invariants
 		rulesDTO = ci.getGoalRuleInvSet(TEST_SPEC_ID, goalDTO.getName());
-		assertEquals(1, rulesDTO.size());
-		assertEquals(RULE_NAME, rulesDTO.stream().map((r) -> r.getName()).collect(Collectors.joining()));
+		assertEquals(0, rulesDTO.size());
 
 		// merge parent and child - returns the top goal (changed): after there
 		// are 2 goals Top and goalTwoOne
@@ -266,8 +263,7 @@ public class MergeAndExtractGoalTest {
 
 		// get rule invariants
 		rulesDTO = ci.getGoalRuleInvSet(TEST_SPEC_ID, goalDTO.getName());
-		assertEquals(1, rulesDTO.size());
-		assertEquals(RULE_NAME, rulesDTO.stream().map((r) -> r.getName()).collect(Collectors.joining()));
+		assertEquals(0, rulesDTO.size());
 
 		// merge childTwoOne with topGoal
 		ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, SUB_GOAL_TWO_ONE, TOP_GOAL);
@@ -296,6 +292,11 @@ public class MergeAndExtractGoalTest {
 		// get super goal
 		parentGoalDTO = ci.getParentGoal(TEST_SPEC_ID, goalDTO.getName());
 		assertEquals(TOP_GOAL, parentGoalDTO.getName());
+
+		// get rule invariants
+		rulesDTO = ci.getGoalRuleInvSet(TEST_SPEC_ID, parentGoalDTO.getName());
+		assertEquals(1, rulesDTO.size());
+		assertEquals(RULE_NAME, rulesDTO.stream().map((r) -> r.getName()).collect(Collectors.joining()));
 
 		// get sub goals
 		subGoals = ci.getSubGoals(TEST_SPEC_ID, goalDTO.getName());

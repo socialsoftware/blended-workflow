@@ -24,11 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WriteConditionModelService {
-	private static Logger log = LoggerFactory.getLogger(WriteConditionModelService.class);
+	private static Logger logger = LoggerFactory.getLogger(WriteConditionModelService.class);
 
 	private static WriteConditionModelService instance = null;
 
 	public static WriteConditionModelService getInstance() {
+		logger.debug("getInstance");
 		if (instance == null) {
 			instance = new WriteConditionModelService();
 		}
@@ -50,14 +51,14 @@ public class WriteConditionModelService {
 		BWNotification notification = new BWNotification();
 
 		Specification eSpec = eConditionModel.getSpecification();
-		log.debug("Specification: {}", eSpec.getName());
+		// logger.debug("Specification: {}", eSpec.getName());
 
 		try {
 			ci.getSpecBySpecId(specId);
 
 			ci.cleanConditionModel(specId);
 		} catch (RepositoryException re) {
-			log.debug("loadConditionModel: {}", re.getMessage());
+			// logger.debug("loadConditionModel: {}", re.getMessage());
 			// a data model is required
 			return notification;
 		}
@@ -75,37 +76,41 @@ public class WriteConditionModelService {
 				exists = true;
 			}
 			try {
-				log.debug("EntityAchieveConditionExists Name:{} ", entityName);
+				// logger.debug("EntityAchieveConditionExists Name:{} ",
+				// entityName);
 				ci.createEntityAchieveCondition(new DefEntityConditionDTO(specId, entityName, exists));
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
-				log.debug("Error: {}", re.getMessage());
+				// logger.debug("Error: {}", re.getMessage());
 			}
 		}
 
 		for (EntityDependenceCondition eEpc : eConditionModel.getEntityDependenceConditions()) {
-			log.debug("EntityDependenceCondition Entity1:{}, Entity2:{}", eEpc.getEntity1(), eEpc.getEntity2());
+			// logger.debug("EntityDependenceCondition Entity1:{}, Entity2:{}",
+			// eEpc.getEntity1(), eEpc.getEntity2());
 			try {
 				EntityDTO entityDTO = ci.getEntityByName(specId, eEpc.getEntity1());
 				ci.createEntityDependenceCondition(new DependenceDTO(specId, entityDTO.getName(), eEpc.getEntity2()));
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
-				log.debug("Error: {}", re.getMessage());
+				// logger.debug("Error: {}", re.getMessage());
 			}
 		}
 
 		for (EntityInvariantCondition eEic : eConditionModel.getEntityInvariantConditions()) {
-			log.debug("EntityInvariantCondition Name:{}, Cardinality:{}", eEic.getName(), eEic.getCardinality());
+			// logger.debug("EntityInvariantCondition Name:{}, Cardinality:{}",
+			// eEic.getName(), eEic.getCardinality());
 			try {
 				ci.createEntityInvariantCondition(new MulConditionDTO(specId, eEic.getName(), eEic.getCardinality()));
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
-				log.debug("Error: {}", re.getMessage());
+				// logger.debug("Error: {}", re.getMessage());
 			}
 		}
 
 		for (AttributeAchieveCondition eAac : eConditionModel.getAttributeAchieveConditions()) {
-			log.debug("AttributeAchieveCondition Conditions:{} ", eAac.getAttribute());
+			// logger.debug("AttributeAchieveCondition Conditions:{} ",
+			// eAac.getAttribute());
 			boolean mandatory;
 			if (eAac instanceof NotMandatoryAttributeAchieveCondition) {
 				mandatory = false;
@@ -117,29 +122,30 @@ public class WriteConditionModelService {
 				ci.createAttributeAchieveCondition(new DefAttributeConditionDTO(specId, path, mandatory));
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
-				log.debug("Error: {}", re.getMessage());
+				// logger.debug("Error: {}", re.getMessage());
 			}
 		}
 
 		for (AttributeDependenceCondition eApc : eConditionModel.getAttributeDependenceConditions()) {
-			log.debug("AttributeDependenceCondition Attribute1:{}, Attribute2:{}", eApc.getAttribute1(),
-					eApc.getAttribute2());
+			// logger.debug("AttributeDependenceCondition Attribute1:{},
+			// Attribute2:{}", eApc.getAttribute1(),eApc.getAttribute2());
 			try {
 				ci.createAttributeDependenceCondition(
 						new DependenceDTO(specId, eApc.getAttribute1(), eApc.getAttribute2()));
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
-				log.debug("Error: {}", re.getMessage());
+				// logger.debug("Error: {}", re.getMessage());
 			}
 		}
 
 		for (AttributeInvariantCondition eAic : eConditionModel.getAttributeInvariantConditions()) {
-			log.debug("AttributeInvariantCondition Name:{}", eAic.getName());
+			// logger.debug("AttributeInvariantCondition Name:{}",
+			// eAic.getName());
 			try {
-				ci.createAttributeInvariantCondition(new RuleDTO(specId, eAic.getName()));
+				ci.createAttributeInvariantCondition(new RuleDTO(specId, eAic.getContext(), eAic.getName()));
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
-				log.debug("Error: {}", re.getMessage());
+				// logger.debug("Error: {}", re.getMessage());
 			}
 		}
 

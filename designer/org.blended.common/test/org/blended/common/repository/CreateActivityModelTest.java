@@ -6,13 +6,11 @@ import java.util.Set;
 import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
-import org.blended.common.repository.resttemplate.dto.DefDependenceConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
 import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
-import org.blended.common.repository.resttemplate.dto.ExpressionDTO.Type;
 import org.blended.common.repository.resttemplate.dto.RelationDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.blended.common.repository.resttemplate.dto.SpecDTO;
@@ -69,10 +67,10 @@ public class CreateActivityModelTest {
 		ci.createDependence(new DependenceDTO(TEST_SPEC_ID, attOneDTO.getEntityName() + "." + attOneDTO.getName(),
 				ENTITY_ONE + "." + ROLENAME_TWO + "." + ATT_THREE));
 
-		ci.createRule(new RuleDTO(TEST_SPEC_ID, RULE_NAME,
+		ci.createRule(new RuleDTO(TEST_SPEC_ID, ENTITY_ONE, RULE_NAME,
 				new ExpressionDTO(TEST_SPEC_ID, ExpressionDTO.Type.EQUAL,
-						new ExpressionDTO(TEST_SPEC_ID, Type.ATT_VALUE, ENTITY_ONE + "." + ATT_ONE),
-						new ExpressionDTO(TEST_SPEC_ID, Type.ATT_VALUE, ENTITY_ONE + "." + ATT_TWO))));
+						new ExpressionDTO(TEST_SPEC_ID, ExpressionDTO.Type.ATT_VALUE, ENTITY_ONE + "." + ATT_ONE),
+						new ExpressionDTO(TEST_SPEC_ID, ExpressionDTO.Type.ATT_VALUE, ENTITY_ONE + "." + ATT_TWO))));
 
 		ci.generateConditionModel(TEST_SPEC_ID);
 	}
@@ -91,38 +89,33 @@ public class CreateActivityModelTest {
 	public void createActivityModelOne() {
 		Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
 		Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-		Set<DefDependenceConditionDTO> defDeps = new HashSet<DefDependenceConditionDTO>();
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_ONE));
 		AddActivityReq request = new AddActivityReq("ActivityOne", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+				new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		defEnts.clear();
 		defAtts.clear();
 		defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE));
-		request = new AddActivityReq("ActivityTwo", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+		request = new AddActivityReq("ActivityTwo", "Description", new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		defEnts.clear();
 		defAtts.clear();
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_TWO));
-		request = new AddActivityReq("ActivityThree", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+		request = new AddActivityReq("ActivityThree", "Description", new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		defEnts.clear();
 		defAtts.clear();
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_TWO + "." + ATT_THREE));
-		request = new AddActivityReq("ActivityFour", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+		request = new AddActivityReq("ActivityFour", "Description", new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		defEnts.clear();
 		defAtts.clear();
 		defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
-		request = new AddActivityReq("ActivityFive", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+		request = new AddActivityReq("ActivityFive", "Description", new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		ci.checkActivityModelConsistency(TEST_SPEC_ID);
@@ -132,26 +125,23 @@ public class CreateActivityModelTest {
 	public void createActivityModelTwo() {
 		Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
 		Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-		Set<DefDependenceConditionDTO> defDeps = new HashSet<DefDependenceConditionDTO>();
 		defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE));
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_ONE));
 		AddActivityReq request = new AddActivityReq("ActivityOne", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+				new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		defEnts.clear();
 		defAtts.clear();
 		defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
-		request = new AddActivityReq("ActivityTwo", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+		request = new AddActivityReq("ActivityTwo", "Description", new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		defEnts.clear();
 		defAtts.clear();
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_TWO));
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_TWO + "." + ATT_THREE));
-		request = new AddActivityReq("ActivityThree", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+		request = new AddActivityReq("ActivityThree", "Description", new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		ci.checkActivityModelConsistency(TEST_SPEC_ID);
@@ -161,11 +151,10 @@ public class CreateActivityModelTest {
 	public void createActivityModelThree() {
 		Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
 		Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-		Set<DefDependenceConditionDTO> defDeps = new HashSet<DefDependenceConditionDTO>();
 		defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE));
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_ONE));
 		AddActivityReq request = new AddActivityReq("ActivityOne", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+				new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		defEnts.clear();
@@ -173,8 +162,7 @@ public class CreateActivityModelTest {
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_TWO));
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_TWO + "." + ATT_THREE));
 		defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
-		request = new AddActivityReq("ActivityTwo", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+		request = new AddActivityReq("ActivityTwo", "Description", new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		ci.checkActivityModelConsistency(TEST_SPEC_ID);
@@ -184,14 +172,13 @@ public class CreateActivityModelTest {
 	public void createActivityModelFour() {
 		Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
 		Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-		Set<DefDependenceConditionDTO> defDeps = new HashSet<DefDependenceConditionDTO>();
 		defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE));
 		defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_ONE));
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_TWO));
 		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_TWO + "." + ATT_THREE));
 		AddActivityReq request = new AddActivityReq("ActivityTwo", "Description",
-				new DefProductConditionSetDTO(defEnts, defAtts, defDeps));
+				new DefProductConditionSetDTO(defEnts, defAtts));
 		ci.addActivity(TEST_SPEC_ID, request);
 
 		ci.checkActivityModelConsistency(TEST_SPEC_ID);

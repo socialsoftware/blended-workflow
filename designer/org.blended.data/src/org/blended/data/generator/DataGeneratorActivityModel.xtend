@@ -44,8 +44,6 @@ class DataGeneratorActivityModel {
 
 		var specId = resource.normalizedURI.lastSegment.split("\\.").get(0)
 		
-		ci.cleanActivityModel(specId)
-		
 		ci.generateActivityModel(specId)
 		
 		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy

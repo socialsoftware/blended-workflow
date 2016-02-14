@@ -12,7 +12,7 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 	public AttributeBoolCondition(Specification spec, String value) {
 		Path path = new Path(spec.getDataModel(), value);
 		setPath(path);
-		setAttributeOfBool((AttributeBasic) path.getTargetOfPath());
+		setAttributeOfBool((AttributeBasic) spec.getDataModel().getTargetOfPath(value));
 	}
 
 	@Override

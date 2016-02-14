@@ -44,8 +44,6 @@ class DataGeneratorGoalModel {
 		
 		var specId = resource.normalizedURI.lastSegment.split("\\.").get(0)
 		
-		ci.cleanGoalModel(specId)
-		
 		ci.generateGoalModel(specId)
 		
 		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy

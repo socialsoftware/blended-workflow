@@ -11,12 +11,13 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 public class Path extends Path_Base {
 
 	public Path(DataModel dataModel, String value) {
-		setDataModel(dataModel);
 		setValue(value);
+		setDataModel(dataModel);
 	}
 
 	public void delete() {
 		setDataModel(null);
+
 		setDependence(null);
 		setAttributeBoolCondition(null);
 		setAttributeValueExpression(null);

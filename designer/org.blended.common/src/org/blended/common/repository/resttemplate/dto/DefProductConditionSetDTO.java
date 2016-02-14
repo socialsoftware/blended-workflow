@@ -23,12 +23,6 @@ public class DefProductConditionSetDTO {
 		this.defAtts = defAtts;
 	}
 
-	public DefProductConditionSetDTO(Set<DefEntityConditionDTO> defEnts, Set<DefAttributeConditionDTO> defAtts,
-			Set<DefDependenceConditionDTO> defDeps) {
-		this.defEnts = defEnts;
-		this.defAtts = defAtts;
-	}
-
 	public Set<DefEntityConditionDTO> getDefEnts() {
 		return defEnts;
 	}

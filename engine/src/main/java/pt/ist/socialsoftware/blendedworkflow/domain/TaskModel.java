@@ -100,7 +100,7 @@ public class TaskModel extends TaskModel_Base {
 		newTask.getPostConditionSet().addAll(taskOne.getPostConditionSet());
 		newTask.getPostConditionSet().addAll(taskTwo.getPostConditionSet());
 
-		Set<Product> postProducts = getConditionModel().getProductsOfDefConditions(newTask.getPostConditionSet());
+		Set<Product> postProducts = ConditionModel.getProductsOfDefConditions(newTask.getPostConditionSet());
 
 		for (DefPathCondition defPathCondition : newTask.getPreConditionSet()) {
 			if (postProducts.contains(defPathCondition.getPathObject().getTargetOfPath()))
@@ -137,12 +137,16 @@ public class TaskModel extends TaskModel_Base {
 	private void applyRuleConditionToPostAndPre(Task task) {
 		Set<AttributeBasic> definedAttributes = getDefinedAttributes();
 
-		getSpecification().getDataModel().getRuleSet().stream()
-				.filter(r -> r.getTaskWithRule() == null && definedAttributes.containsAll(r.getAttributeBasicSet()))
+		Set<Entity> entitiesInContext = ConditionModel.getBasicAtributesOfDefConditionSet(task.getPostConditionSet())
+				.stream().map(def -> def.getEntity()).collect(Collectors.toSet());
+
+		entitiesInContext.stream().flatMap(e -> e.getRuleSet().stream())
+				.filter(r -> r.getTaskWithRule() == null
+						&& definedAttributes.containsAll(getAttributesInEntitiesContext(r, entitiesInContext)))
 				.forEach(r -> task.addRuleInvariant(r));
 
-		Set<AttributeBasic> postAttributes = getConditionModel()
-				.getBasicAtributesOfDefAttributeSet(task.getPostConditionSet());
+		Set<AttributeBasic> postAttributes = ConditionModel
+				.getBasicAtributesOfDefConditionSet(task.getPostConditionSet());
 		Set<Product> preAttributes = task.getPreConditionSet().stream().map(d -> d.getPathObject().getTargetOfPath())
 				.collect(Collectors.toSet());
 		preAttributes.addAll(getDataModel().getEntitySet().stream().filter(e -> e.getExists())
@@ -154,9 +158,14 @@ public class TaskModel extends TaskModel_Base {
 				.forEach(path -> task.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(), path)));
 	}
 
+	private Set<AttributeBasic> getAttributesInEntitiesContext(Rule r, Set<Entity> entitiesInContext) {
+		return r.getAttributeBasicSet().stream().filter(a -> entitiesInContext.contains(a.getEntity()))
+				.collect(Collectors.toSet());
+	}
+
 	public Set<AttributeBasic> getDefinedAttributes() {
 		Set<AttributeBasic> definedAttributes = getTasksSet().stream()
-				.flatMap(t -> getConditionModel().getDefAttributeConditions(t.getPostConditionSet()).stream())
+				.flatMap(t -> ConditionModel.getDefAttributeConditions(t.getPostConditionSet()).stream())
 				.flatMap(def -> def.getAttributeOfDef().getAttributeBasicSet().stream()).collect(Collectors.toSet());
 
 		definedAttributes.addAll(getDataModel().getEntitySet().stream().filter(e -> e.getExists())
@@ -193,7 +202,7 @@ public class TaskModel extends TaskModel_Base {
 		mulConditionsToDefine.forEach(m -> task.getMultiplicityInvariantSet().add(m));
 
 		mulConditionsToDefine.stream()
-				.filter(m -> !getConditionModel().getEntitiesOfDefEntitySet(task.getPostConditionSet())
+				.filter(m -> !ConditionModel.getEntitiesOfDefConditionSet(task.getPostConditionSet())
 						.contains(m.getEntity()))
 				.forEach(m -> task.addPreCondition(
 						DefPathCondition.getDefPathCondition(getSpecification(), m.getEntity().getName())));
@@ -201,7 +210,7 @@ public class TaskModel extends TaskModel_Base {
 
 	public Set<Entity> getDefinedEntities() {
 		Set<Entity> definedEntities = getTasksSet().stream()
-				.flatMap(t -> getConditionModel().getEntitiesOfDefEntitySet(t.getPostConditionSet()).stream())
+				.flatMap(t -> ConditionModel.getEntitiesOfDefConditionSet(t.getPostConditionSet()).stream())
 				.collect(Collectors.toSet());
 
 		Set<Entity> existEntities = getConditionModel().getEntityAchieveConditionSet().stream()
@@ -213,8 +222,8 @@ public class TaskModel extends TaskModel_Base {
 	}
 
 	private void applyDependenceConditionsToPre(Task task) {
-		Set<Product> postProducts = getConditionModel().getProductsOfDefConditions(task.getPostConditionSet());
-		Set<Product> preProducts = getConditionModel().getProductsOfDefConditions(task.getPreConditionSet());
+		Set<Product> postProducts = ConditionModel.getProductsOfDefConditions(task.getPostConditionSet());
+		Set<Product> preProducts = ConditionModel.getProductsOfDefConditions(task.getPreConditionSet());
 
 		getSpecification().getDataModel().getDependenceSet().stream()
 				.filter(d -> postProducts.contains(d.getProduct()) && !postProducts.contains(d.getTarget())
@@ -226,8 +235,8 @@ public class TaskModel extends TaskModel_Base {
 
 	private void applyAttributeEntityDependenceToPre(Task task) {
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>(task.getPostConditionSet());
-		getConditionModel().getDefAttributeConditions(postConditionSet).stream()
-				.filter(def -> !getConditionModel().getEntitiesOfDefEntitySet(postConditionSet)
+		ConditionModel.getDefAttributeConditions(postConditionSet).stream()
+				.filter(def -> !ConditionModel.getEntitiesOfDefConditionSet(postConditionSet)
 						.contains(def.getAttributeOfDef().getEntity()))
 				.forEach(def -> task.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(),
 						def.getAttributeOfDef().getEntity().getName())));
@@ -260,7 +269,7 @@ public class TaskModel extends TaskModel_Base {
 	}
 
 	private void checkAllConditionsAreUsedInPost() {
-		ConditionModel conditionModel = getSpecification().getConditionModel();
+		ConditionModel conditionModel = getConditionModel();
 
 		Set<DefProductCondition> allDefConditions = new HashSet<DefProductCondition>(
 				conditionModel.getEntityAchieveConditionSet().stream().filter(d -> !d.getEntity().getExists())

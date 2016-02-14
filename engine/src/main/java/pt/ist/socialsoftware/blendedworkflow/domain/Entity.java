@@ -18,412 +18,368 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 
 public class Entity extends Entity_Base {
-    private static Logger log = LoggerFactory.getLogger(Entity.class);
+	private static Logger log = LoggerFactory.getLogger(Entity.class);
 
-    @Override
-    public void setName(String name) {
-        checkEntityName(name);
-        super.setName(name);
-    }
+	@Override
+	public void setName(String name) {
+		checkEntityName(name);
+		super.setName(name);
+	}
 
-    public Entity(DataModel dataModel, String name, boolean exists) {
-        setDataModel(dataModel);
-        setName(name);
-        setExists(exists);
-        setEntityInstanceCounter(0);
-    }
+	public Entity(DataModel dataModel, String name, boolean exists) {
+		setDataModel(dataModel);
+		setName(name);
+		setExists(exists);
+		setEntityInstanceCounter(0);
+	}
 
-    private void checkEntityName(String name) {
-        if ((name == null) || (name.equals("")))
-            throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
+	private void checkEntityName(String name) {
+		if ((name == null) || (name.equals("")))
+			throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
 
-        checkUniqueEntityName(name);
-    }
+		checkUniqueEntityName(name);
+	}
 
-    private void checkUniqueEntityName(String name) throws BWException {
-        boolean exists = getDataModel().getEntitySet().stream().anyMatch(
-                ent -> (ent.getName() != null) && (ent.getName().equals(name)));
-        if (exists)
-            throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
-    }
+	private void checkUniqueEntityName(String name) throws BWException {
+		boolean exists = getDataModel().getEntitySet().stream()
+				.anyMatch(ent -> (ent.getName() != null) && (ent.getName().equals(name)));
+		if (exists)
+			throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
+	}
 
-    @Override
-    public ProductType getProductType() {
-        return ProductType.ENTITY;
-    }
+	@Override
+	public ProductType getProductType() {
+		return ProductType.ENTITY;
+	}
 
-    public AttributeBasic createAttribute(AttributeGroup attGroup, String name,
-            AttributeType type, boolean isMandatory) {
-        return new AttributeBasic(getDataModel(), this, attGroup, name, type,
-                isMandatory, false, false);
-    }
+	public AttributeBasic createAttribute(AttributeGroup attGroup, String name, AttributeType type,
+			boolean isMandatory) {
+		return new AttributeBasic(getDataModel(), this, attGroup, name, type, isMandatory, false, false);
+	}
 
-    public AttributeGroup createAttributeGroup(String name,
-            boolean isMandatory) {
-        return new AttributeGroup(getDataModel(), this, name, isMandatory);
-    }
+	public AttributeGroup createAttributeGroup(String name, boolean isMandatory) {
+		return new AttributeGroup(getDataModel(), this, name, isMandatory);
+	}
 
-    public RelationBW createRelation(String name, String roleNameOne,
-            Cardinality cardinalityOne, Entity entityTwo, String roleNameTwo,
-            Cardinality cardinalityTwo) {
-        return new RelationBW(getDataModel(), name, this, roleNameOne,
-                cardinalityOne, false, entityTwo, roleNameTwo, cardinalityTwo,
-                false);
-    }
+	public Rule createRule(String name, Condition condition) {
+		return new Rule(this, name, condition);
+	}
 
-    public void cloneEntity(DataModelInstance dataModelInstance)
-            throws BWException {
-        Entity newEntity = new Entity(dataModelInstance, getName(), false);
-        for (AttributeBasic attribute : getAttributeBasicSet()) {
-            attribute.cloneAttribute(dataModelInstance, newEntity);
-        }
+	public Rule getRule(String name) {
+		return getRuleSet().stream().filter(rule -> rule.getName().equals(name)).findFirst().orElse(null);
+	}
 
-        for (EntityInstance ei : getEntityInstancesSet()) {
-            ei.cloneEntityInstance(dataModelInstance, newEntity);
-        }
-    }
+	public RelationBW createRelation(String name, String roleNameOne, Cardinality cardinalityOne, Entity entityTwo,
+			String roleNameTwo, Cardinality cardinalityTwo) {
+		return new RelationBW(getDataModel(), name, this, roleNameOne, cardinalityOne, false, entityTwo, roleNameTwo,
+				cardinalityTwo, false);
+	}
 
-    /**
-     * Create and assign EntityInstances and AttributesInstances to Workitems
-     */
-    public void assignAttributeInstances(GoalWorkItem goalWorkItem,
-            AttributeBasic attribute, ConditionType conditionType) {
-        EntityInstance entityInstanceContext = goalWorkItem
-                .getEntityInstanceContext();
-        Entity entityContext = entityInstanceContext.getEntity();
+	public void cloneEntity(DataModelInstance dataModelInstance) throws BWException {
+		Entity newEntity = new Entity(dataModelInstance, getName(), false);
+		for (AttributeBasic attribute : getAttributeBasicSet()) {
+			attribute.cloneAttribute(dataModelInstance, newEntity);
+		}
 
-        if (this.equals(entityContext)) {
-            entityInstanceContext.assignAttributeInstances(goalWorkItem,
-                    attribute, conditionType);
-        } else {
-            for (RelationInstance relationInstance : entityInstanceContext
-                    .getEntityInstanceOneRelationInstancesSet()) {
-                Entity relationEntityContext = relationInstance
-                        .getEntityInstanceTwo().getEntity();
-                EntityInstance relationEntityInstanceContext = relationInstance
-                        .getEntityInstanceTwo();
-                if (relationEntityContext.equals(this)) {
-                    relationEntityInstanceContext.assignAttributeInstances(
-                            goalWorkItem, attribute, conditionType);
-                }
-            }
+		for (EntityInstance ei : getEntityInstancesSet()) {
+			ei.cloneEntityInstance(dataModelInstance, newEntity);
+		}
+	}
 
-            for (RelationInstance relationInstance : entityInstanceContext
-                    .getEntityInstanceTwoRelationInstancesSet()) {
-                Entity relationEntityContext = relationInstance
-                        .getEntityInstanceOne().getEntity();
-                EntityInstance relationEntityInstanceContext = relationInstance
-                        .getEntityInstanceOne();
-                if (relationEntityContext.equals(this)) {
-                    relationEntityInstanceContext.assignAttributeInstances(
-                            goalWorkItem, attribute, conditionType);
-                } else {
-                    for (RelationInstance r2 : relationEntityInstanceContext
-                            .getEntityInstanceTwoRelationInstancesSet()) {
-                        if (r2.getEntityInstanceOne().getEntity()
-                                .equals(this)) {
-                            r2.getEntityInstanceOne().assignAttributeInstances(
-                                    goalWorkItem, attribute, conditionType);
-                        }
-                    }
-                }
-            }
-        }
-    }
+	/**
+	 * Create and assign EntityInstances and AttributesInstances to Workitems
+	 */
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem, AttributeBasic attribute,
+			ConditionType conditionType) {
+		EntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
+		Entity entityContext = entityInstanceContext.getEntity();
 
-    public void assignAttributeInstances(TaskWorkItem taskWorkItem,
-            AttributeBasic attribute, ConditionType conditionType) {
-        DataModelInstance dataModelInstance = taskWorkItem.getBwInstance()
-                .getDataModelInstance();
-        if (getEntityInstancesSet().isEmpty()) {
-            // EntityInstance entityInstance = new
-            // EntityInstance(dataModelInstance, this); //OLD
-            EntityInstance entityInstance = new EntityInstance(this);
-            entityInstance.assignAttributeInstances(taskWorkItem, attribute,
-                    conditionType);
+		if (this.equals(entityContext)) {
+			entityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
+		} else {
+			for (RelationInstance relationInstance : entityInstanceContext.getEntityInstanceOneRelationInstancesSet()) {
+				Entity relationEntityContext = relationInstance.getEntityInstanceTwo().getEntity();
+				EntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceTwo();
+				if (relationEntityContext.equals(this)) {
+					relationEntityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
+				}
+			}
 
-            // FIXME: Bad Hack!
-            if (!taskWorkItem.getTask().getName().equals("Booking")) {
-                createRelationInstances(dataModelInstance, entityInstance);
-            }
-        } else {
-            for (EntityInstance entityInstance : getEntityInstancesSet()) { // FIXME:
-                                                                            // only
-                                                                            // 1
-                                                                            // entityInstance
-                entityInstance.assignAttributeInstances(taskWorkItem, attribute,
-                        conditionType);
-            }
-        }
-    }
+			for (RelationInstance relationInstance : entityInstanceContext.getEntityInstanceTwoRelationInstancesSet()) {
+				Entity relationEntityContext = relationInstance.getEntityInstanceOne().getEntity();
+				EntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceOne();
+				if (relationEntityContext.equals(this)) {
+					relationEntityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
+				} else {
+					for (RelationInstance r2 : relationEntityInstanceContext
+							.getEntityInstanceTwoRelationInstancesSet()) {
+						if (r2.getEntityInstanceOne().getEntity().equals(this)) {
+							r2.getEntityInstanceOne().assignAttributeInstances(goalWorkItem, attribute, conditionType);
+						}
+					}
+				}
+			}
+		}
+	}
 
-    public void assignAllAttributeInstances(GoalWorkItem goalWorkItem,
-            Entity entity, ConditionType conditionType) {
-        EntityInstance entityInstanceContext = goalWorkItem
-                .getEntityInstanceContext();
-        Entity entityContext = entityInstanceContext.getEntity();
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, AttributeBasic attribute,
+			ConditionType conditionType) {
+		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
+		if (getEntityInstancesSet().isEmpty()) {
+			// EntityInstance entityInstance = new
+			// EntityInstance(dataModelInstance, this); //OLD
+			EntityInstance entityInstance = new EntityInstance(this);
+			entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 
-        if (this.equals(entityContext)) {
-            for (AttributeBasic attribute : entityContext
-                    .getAttributeBasicSet()) {
-                if (attribute.getIsKeyAttribute()) {
-                    entityInstanceContext.assignAttributeInstances(goalWorkItem,
-                            attribute, conditionType);
-                }
-            }
-        } else {
-            for (RelationInstance relationInstance : entityInstanceContext
-                    .getEntityInstanceOneRelationInstancesSet()) {
-                Entity relationEntityContext = relationInstance
-                        .getEntityInstanceTwo().getEntity();
-                EntityInstance relationEntityInstanceContext = relationInstance
-                        .getEntityInstanceTwo();
-                if (relationEntityContext.equals(this)) {
-                    for (AttributeBasic attribute : relationEntityContext
-                            .getAttributeBasicSet()) {
-                        if (attribute.getIsKeyAttribute()) {
-                            relationEntityInstanceContext
-                                    .assignAttributeInstances(goalWorkItem,
-                                            attribute, conditionType);
-                        }
-                    }
-                }
-            }
+			// FIXME: Bad Hack!
+			if (!taskWorkItem.getTask().getName().equals("Booking")) {
+				createRelationInstances(dataModelInstance, entityInstance);
+			}
+		} else {
+			for (EntityInstance entityInstance : getEntityInstancesSet()) { // FIXME:
+																			// only
+																			// 1
+																			// entityInstance
+				entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
+			}
+		}
+	}
 
-            for (RelationInstance relationInstance : entityInstanceContext
-                    .getEntityInstanceTwoRelationInstancesSet()) {
-                Entity relationEntityContext = relationInstance
-                        .getEntityInstanceOne().getEntity();
-                EntityInstance relationEntityInstanceContext = relationInstance
-                        .getEntityInstanceOne();
-                if (relationEntityContext.equals(this)) {
-                    for (AttributeBasic attribute : relationEntityContext
-                            .getAttributeBasicSet()) {
-                        if (attribute.getIsKeyAttribute()) {
-                            relationEntityInstanceContext
-                                    .assignAttributeInstances(goalWorkItem,
-                                            attribute, conditionType);
-                        }
-                    }
-                }
-            }
-        }
-    }
+	public void assignAllAttributeInstances(GoalWorkItem goalWorkItem, Entity entity, ConditionType conditionType) {
+		EntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
+		Entity entityContext = entityInstanceContext.getEntity();
 
-    public void assignAllAttributeInstances(TaskWorkItem taskWorkItem,
-            Entity entity, ConditionType conditionType) {
-        DataModelInstance dataModelInstance = taskWorkItem.getBwInstance()
-                .getDataModelInstance();
+		if (this.equals(entityContext)) {
+			for (AttributeBasic attribute : entityContext.getAttributeBasicSet()) {
+				if (attribute.getIsKeyAttribute()) {
+					entityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
+				}
+			}
+		} else {
+			for (RelationInstance relationInstance : entityInstanceContext.getEntityInstanceOneRelationInstancesSet()) {
+				Entity relationEntityContext = relationInstance.getEntityInstanceTwo().getEntity();
+				EntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceTwo();
+				if (relationEntityContext.equals(this)) {
+					for (AttributeBasic attribute : relationEntityContext.getAttributeBasicSet()) {
+						if (attribute.getIsKeyAttribute()) {
+							relationEntityInstanceContext.assignAttributeInstances(goalWorkItem, attribute,
+									conditionType);
+						}
+					}
+				}
+			}
 
-        if (getEntityInstancesSet().isEmpty()) {
-            // EntityInstance entityInstance = new
-            // EntityInstance(dataModelInstance, this);
-            EntityInstance entityInstance = new EntityInstance(this);
-            for (AttributeBasic attribute : getAttributeBasicSet()) {
-                if (attribute.getIsKeyAttribute())
-                    entityInstance.assignAttributeInstances(taskWorkItem,
-                            attribute, conditionType);
-            }
+			for (RelationInstance relationInstance : entityInstanceContext.getEntityInstanceTwoRelationInstancesSet()) {
+				Entity relationEntityContext = relationInstance.getEntityInstanceOne().getEntity();
+				EntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceOne();
+				if (relationEntityContext.equals(this)) {
+					for (AttributeBasic attribute : relationEntityContext.getAttributeBasicSet()) {
+						if (attribute.getIsKeyAttribute()) {
+							relationEntityInstanceContext.assignAttributeInstances(goalWorkItem, attribute,
+									conditionType);
+						}
+					}
+				}
+			}
+		}
+	}
 
-            // FIXME: Bad Hack!
-            if (!taskWorkItem.getTask().getName().equals("Booking")) {
-                createRelationInstances(dataModelInstance, entityInstance);
-            }
-        } else {
-            for (EntityInstance entityInstance : getEntityInstancesSet()) { // FIXME:
-                                                                            // Only
-                                                                            // 1
-                                                                            // entityInstance
-                for (AttributeBasic attribute : getAttributeBasicSet()) {
-                    if (attribute.getIsKeyAttribute())
-                        entityInstance.assignAttributeInstances(taskWorkItem,
-                                attribute, conditionType);
-                }
-            }
-        }
-    }
+	public void assignAllAttributeInstances(TaskWorkItem taskWorkItem, Entity entity, ConditionType conditionType) {
+		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
 
-    private void createRelationInstances(DataModelInstance dataModelInstance,
-            EntityInstance entityInstance) {
-        Entity relationEntityTwo = null;
-        EntityInstance relationEntityInstanceTwo = null;
-        // Relation Type Exists?
-        if (this.getRelationCount() > 0) {
-            for (RelationBW relation : this.getRelationSet()) {
-                // Get the other relation entity
-                for (Entity entity : relation.getEntitySet()) {
-                    if (!this.getName().equals(entity.getName())) {
-                        relationEntityTwo = entity; // entity2
-                    }
-                }
-                // Relations instances already exists?
-                if (relation.getRelationInstancesSet().isEmpty()) {
-                    if (relationEntityTwo.getEntityInstancesSet().isEmpty()) {
-                        // relationEntityInstanceTwo = new
-                        // EntityInstance(dataModelInstance, relationEntityTwo);
-                        relationEntityInstanceTwo = new EntityInstance(
-                                relationEntityTwo);
-                    } else {
-                        for (EntityInstance entityInstance1 : relationEntityTwo
-                                .getEntityInstancesSet()) { // FIXME: only 1
-                                                            // entityInstance
-                            relationEntityInstanceTwo = entityInstance1;
-                        }
-                    }
-                    // Create Relation Instance and re-call the method for the 2
-                    // entity
-                    EntityInstance relationInstanceOne;
-                    EntityInstance relationInstanceTwo;
+		if (getEntityInstancesSet().isEmpty()) {
+			// EntityInstance entityInstance = new
+			// EntityInstance(dataModelInstance, this);
+			EntityInstance entityInstance = new EntityInstance(this);
+			for (AttributeBasic attribute : getAttributeBasicSet()) {
+				if (attribute.getIsKeyAttribute())
+					entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
+			}
 
-                    if (entityInstance.getEntity()
-                            .equals(relation.getEntityOne())) {
-                        relationInstanceOne = entityInstance;
-                        relationInstanceTwo = relationEntityInstanceTwo;
-                    } else {
-                        relationInstanceOne = relationEntityInstanceTwo;
-                        relationInstanceTwo = entityInstance;
-                    }
-                    new RelationInstance(relation, relationInstanceOne,
-                            relationInstanceTwo,
-                            relationInstanceOne.getNewRelationInstanceID());
-                    // if (entityInstance.getEntity().getName().equals("?")) {
-                    // relationEntityTwo.createRelationInstances(dataModelInstance,
-                    // relationEntityInstanceTwo);
-                    // }
-                }
-            }
-        }
-    }
+			// FIXME: Bad Hack!
+			if (!taskWorkItem.getTask().getName().equals("Booking")) {
+				createRelationInstances(dataModelInstance, entityInstance);
+			}
+		} else {
+			for (EntityInstance entityInstance : getEntityInstancesSet()) { // FIXME:
+																			// Only
+																			// 1
+																			// entityInstance
+				for (AttributeBasic attribute : getAttributeBasicSet()) {
+					if (attribute.getIsKeyAttribute())
+						entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
+				}
+			}
+		}
+	}
 
-    public int getNewEntityInstanceId() {
-        setEntityInstanceCounter(getEntityInstanceCounter() + 1);
-        return getEntityInstanceCounter();
-    }
+	private void createRelationInstances(DataModelInstance dataModelInstance, EntityInstance entityInstance) {
+		Entity relationEntityTwo = null;
+		EntityInstance relationEntityInstanceTwo = null;
+		// Relation Type Exists?
+		if (this.getRelationCount() > 0) {
+			for (RelationBW relation : this.getRelationSet()) {
+				// Get the other relation entity
+				for (Entity entity : relation.getEntitySet()) {
+					if (!this.getName().equals(entity.getName())) {
+						relationEntityTwo = entity; // entity2
+					}
+				}
+				// Relations instances already exists?
+				if (relation.getRelationInstancesSet().isEmpty()) {
+					if (relationEntityTwo.getEntityInstancesSet().isEmpty()) {
+						// relationEntityInstanceTwo = new
+						// EntityInstance(dataModelInstance, relationEntityTwo);
+						relationEntityInstanceTwo = new EntityInstance(relationEntityTwo);
+					} else {
+						for (EntityInstance entityInstance1 : relationEntityTwo.getEntityInstancesSet()) { // FIXME:
+																											// only
+																											// 1
+																											// entityInstance
+							relationEntityInstanceTwo = entityInstance1;
+						}
+					}
+					// Create Relation Instance and re-call the method for the 2
+					// entity
+					EntityInstance relationInstanceOne;
+					EntityInstance relationInstanceTwo;
 
-    public Optional<AttributeBasic> getAttribute(String name) {
-        return getAttributeBasicSet().stream()
-                .filter(att -> att.getName().equals(name)).findFirst();
-    }
+					if (entityInstance.getEntity().equals(relation.getEntityOne())) {
+						relationInstanceOne = entityInstance;
+						relationInstanceTwo = relationEntityInstanceTwo;
+					} else {
+						relationInstanceOne = relationEntityInstanceTwo;
+						relationInstanceTwo = entityInstance;
+					}
+					new RelationInstance(relation, relationInstanceOne, relationInstanceTwo,
+							relationInstanceOne.getNewRelationInstanceID());
+					// if (entityInstance.getEntity().getName().equals("?")) {
+					// relationEntityTwo.createRelationInstances(dataModelInstance,
+					// relationEntityInstanceTwo);
+					// }
+				}
+			}
+		}
+	}
 
-    public EntityInstance getEntityInstance(String ID) {
-        for (EntityInstance entityInstance : getEntityInstancesSet()) {
-            if (entityInstance.getID().equals(ID)) {
-                return entityInstance;
-            }
-        }
-        return null;
-    }
+	public int getNewEntityInstanceId() {
+		setEntityInstanceCounter(getEntityInstanceCounter() + 1);
+		return getEntityInstanceCounter();
+	}
 
-    public Set<RelationBW> getRelationSet() {
-        Set<RelationBW> relations = new HashSet<RelationBW>(
-                this.getRelationOneSet());
-        relations.addAll(getRelationTwoSet());
-        return relations;
-    }
+	public Optional<AttributeBasic> getAttribute(String name) {
+		return getAttributeBasicSet().stream().filter(att -> att.getName().equals(name)).findFirst();
+	}
 
-    public int getRelationCount() {
-        return getRelationOneSet().size() + getRelationTwoSet().size();
-    }
+	public EntityInstance getEntityInstance(String ID) {
+		for (EntityInstance entityInstance : getEntityInstancesSet()) {
+			if (entityInstance.getID().equals(ID)) {
+				return entityInstance;
+			}
+		}
+		return null;
+	}
 
-    public Optional<AttributeGroup> getAttributeGroup(String name) {
-        return getAttributeGroupSet().stream()
-                .filter(attGroup -> attGroup.getName().equals(name))
-                .findFirst();
-    }
+	public Set<RelationBW> getRelationSet() {
+		Set<RelationBW> relations = new HashSet<RelationBW>(this.getRelationOneSet());
+		relations.addAll(getRelationTwoSet());
+		return relations;
+	}
 
-    @Override
-    public void delete() {
-        setDataModel(null);
-        getAttributeGroupSet().stream().forEach(attGroup -> attGroup.delete());
-        getAttributeSet().stream().forEach(att -> att.delete());
-        getRelationOneSet().stream().forEach(rel -> rel.delete());
-        getRelationTwoSet().stream().forEach(rel -> rel.delete());
-        if (getDefEntityCondition() != null)
-            getDefEntityCondition().delete();
+	public int getRelationCount() {
+		return getRelationOneSet().size() + getRelationTwoSet().size();
+	}
 
-        super.delete();
-    }
+	public Optional<AttributeGroup> getAttributeGroup(String name) {
+		return getAttributeGroupSet().stream().filter(attGroup -> attGroup.getName().equals(name)).findFirst();
+	}
 
-    @Override
-    public Entity getEntity() {
-        return this;
-    }
+	@Override
+	public void delete() {
+		setDataModel(null);
+		getRuleSet().stream().forEach(rule -> rule.delete());
+		getAttributeGroupSet().stream().forEach(attGroup -> attGroup.delete());
+		getAttributeSet().stream().forEach(att -> att.delete());
+		getRelationOneSet().stream().forEach(rel -> rel.delete());
+		getRelationTwoSet().stream().forEach(rel -> rel.delete());
+		if (getDefEntityCondition() != null)
+			getDefEntityCondition().delete();
 
-    @Override
-    public Product getNext(List<String> pathLeft, String path) {
-        log.debug("getNext {}:{}", path, pathLeft);
+		super.delete();
+	}
 
-        if (pathLeft.isEmpty())
-            return this;
+	@Override
+	public Entity getEntity() {
+		return this;
+	}
 
-        String element = pathLeft.get(0);
-        Optional<AttributeGroup> oBwAttGroup = getAttributeGroup(element);
-        if (oBwAttGroup.isPresent()) {
-            pathLeft.remove(0);
-            return oBwAttGroup.get().getNext(pathLeft, path);
-        }
+	@Override
+	public Product getNext(List<String> pathLeft, String path) {
+		// log.debug("getNext {}:{}", path, pathLeft);
 
-        Optional<AttributeBasic> oBwAtt = getAttribute(element);
-        if (oBwAtt.isPresent()) {
-            pathLeft.remove(0);
-            return oBwAtt.get().getNext(pathLeft, path);
-        }
+		if (pathLeft.isEmpty())
+			return this;
 
-        Optional<RelationBW> oBwRel = getRelationSet().stream()
-                .filter(rel -> (rel.getRoleNameOne().equals(element)
-                        && rel.getEntityTwo() == this)
-                        || (rel.getRoleNameTwo().equals(element)
-                                && rel.getEntityOne() == this))
-                .findFirst();
-        if (oBwRel.isPresent()) {
-            pathLeft.remove(0);
-            return oBwRel.get().getEntitybyRolename(element).getNext(pathLeft,
-                    path);
-        }
+		String element = pathLeft.get(0);
+		Optional<AttributeGroup> oBwAttGroup = getAttributeGroup(element);
+		if (oBwAttGroup.isPresent()) {
+			pathLeft.remove(0);
+			return oBwAttGroup.get().getNext(pathLeft, path);
+		}
 
-        throw new BWException(BWErrorType.INVALID_PATH, path + ":" + pathLeft);
-    }
+		Optional<AttributeBasic> oBwAtt = getAttribute(element);
+		if (oBwAtt.isPresent()) {
+			pathLeft.remove(0);
+			return oBwAtt.get().getNext(pathLeft, path);
+		}
 
-    @Override
-    public EntityDTO getDTO() {
-        EntityDTO entityDTO = new EntityDTO();
-        entityDTO.setSpecId(getDataModel().getSpecification().getSpecId());
-        entityDTO.setExtId(getExternalId());
-        entityDTO.setProductType(getProductType().name());
-        entityDTO.setName(getName());
-        entityDTO.setExists(getExists());
+		Optional<RelationBW> oBwRel = getRelationSet().stream()
+				.filter(rel -> (rel.getRoleNameOne().equals(element) && rel.getEntityTwo() == this)
+						|| (rel.getRoleNameTwo().equals(element) && rel.getEntityOne() == this))
+				.findFirst();
+		if (oBwRel.isPresent()) {
+			pathLeft.remove(0);
+			return oBwRel.get().getEntitybyRolename(element).getNext(pathLeft, path);
+		}
 
-        return entityDTO;
-    }
+		throw new BWException(BWErrorType.INVALID_PATH, path + ":" + pathLeft);
+	}
 
-    public Set<MulCondition> getMultConditions() {
-        return Stream
-                .concat(getRelationOneSet().stream(),
-                        getRelationTwoSet().stream())
-                .map((r) -> r.getMulCondition(this))
-                .collect(Collectors.toSet());
-    }
+	@Override
+	public EntityDTO getDTO() {
+		EntityDTO entityDTO = new EntityDTO();
+		entityDTO.setSpecId(getDataModel().getSpecification().getSpecId());
+		entityDTO.setExtId(getExternalId());
+		entityDTO.setProductType(getProductType().name());
+		entityDTO.setName(getName());
+		entityDTO.setExists(getExists());
 
-    @Override
-    public DefProductCondition getDefCondition() {
-        return DefEntityCondition.getDefEntity(this);
-    }
+		return entityDTO;
+	}
 
-    public Set<AttributeBasic> getAttributeBasicSet() {
-        return getAttributeSet().stream()
-                .filter(AttributeBasic.class::isInstance)
-                .map(AttributeBasic.class::cast).collect(Collectors.toSet());
-    }
+	public Set<MulCondition> getMultConditions() {
+		return Stream.concat(getRelationOneSet().stream(), getRelationTwoSet().stream())
+				.map((r) -> r.getMulCondition(this)).collect(Collectors.toSet());
+	}
 
-    public Set<AttributeGroup> getAttributeGroupSet() {
-        return getAttributeSet().stream()
-                .filter(AttributeGroup.class::isInstance)
-                .map(AttributeGroup.class::cast).collect(Collectors.toSet());
-    }
+	@Override
+	public DefProductCondition getDefCondition() {
+		return DefEntityCondition.getDefEntity(this);
+	}
 
-    @Override
-    public String getFullPath() {
-        return getName();
-    }
+	public Set<AttributeBasic> getAttributeBasicSet() {
+		return getAttributeSet().stream().filter(AttributeBasic.class::isInstance).map(AttributeBasic.class::cast)
+				.collect(Collectors.toSet());
+	}
+
+	public Set<AttributeGroup> getAttributeGroupSet() {
+		return getAttributeSet().stream().filter(AttributeGroup.class::isInstance).map(AttributeGroup.class::cast)
+				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public String getFullPath() {
+		return getName();
+	}
 
 }

@@ -1,5 +1,6 @@
 package org.blended.data.repository;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.blended.common.common.Association;
@@ -26,11 +27,12 @@ import org.slf4j.LoggerFactory;
 public class WriteDataModelService {
 	final static String SERVER_ADDRESS = "http://localhost:8080/";
 
-	private static Logger log = LoggerFactory.getLogger(WriteDataModelService.class);
+	private static Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 
 	private static WriteDataModelService instance = null;
 
 	public static WriteDataModelService getInstance() {
+		logger.debug("getInstance");
 		if (instance == null) {
 			instance = new WriteDataModelService();
 		}
@@ -39,7 +41,7 @@ public class WriteDataModelService {
 
 	// to be invoked by tests only
 	public void deleteSpecification(String specId) {
-		log.debug("deleteSpecification {}", specId);
+		// logger.debug("deleteSpecification {}", specId);
 		ci.deleteSpecification(specId);
 	}
 
@@ -50,7 +52,7 @@ public class WriteDataModelService {
 	}
 
 	public BWNotification write(String specId, DataModel eDataModel) {
-		log.debug("loadDataModel: {}", specId);
+		// logger.debug("loadDataModel: {}", specId);
 
 		BWNotification notification = new BWNotification();
 
@@ -58,26 +60,29 @@ public class WriteDataModelService {
 			ci.getSpecBySpecId(specId);
 			ci.cleanDataModel(specId);
 		} catch (RepositoryException re) {
-			log.debug("getSpec: {}", re.getMessage());
+			// logger.debug("getSpec: {}", re.getMessage());
 			try {
 				ci.createSpec(new SpecDTO(specId, eDataModel.getSpecification().getName()));
 			} catch (RepositoryException ree) {
 				notification.addError(ree.getError());
-				log.debug("createSpec: {}", re.getMessage());
+				// logger.debug("createSpec: {}", re.getMessage());
 				return notification;
 			}
 		}
+
+		Set<RuleDTO> rulesToCreate = new HashSet<RuleDTO>();
 
 		for (Entity eEnt : eDataModel.getEntities()) {
 			String entityExtId = null;
 			try {
 				EntityDTO entityDTO = ci.createEntity(new EntityDTO(specId, eEnt.getName(), eEnt.isExists()));
 				entityExtId = entityDTO.getExtId();
-				log.debug("createdEntity: {}, {}, {}", entityDTO.getExtId(), entityDTO.getName(),
-						entityDTO.getExists());
+				// logger.debug("createdEntity: {}, {}, {}",
+				// entityDTO.getExtId(), entityDTO.getName(),
+				// entityDTO.getExists());
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
-				log.debug("createEntity: {}", re.getMessage());
+				// logger.debug("createEntity: {}", re.getMessage());
 				continue;
 			}
 			// create entity dependences
@@ -86,7 +91,7 @@ public class WriteDataModelService {
 					ci.createDependence(new DependenceDTO(specId, eEnt.getName(), eDep));
 				} catch (RepositoryException re) {
 					notification.addError(re.getError());
-					log.debug("Error: {}", re.getMessage());
+					// logger.debug("Error: {}", re.getMessage());
 				}
 			}
 
@@ -99,7 +104,7 @@ public class WriteDataModelService {
 								eAtt.getType(), eAtt.isMandatory()));
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						log.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 						continue;
 					}
 
@@ -110,7 +115,7 @@ public class WriteDataModelService {
 									attributeDTO.getEntityName() + "." + attributeDTO.getName(), eDep));
 						} catch (RepositoryException re) {
 							notification.addError(re.getError());
-							log.debug("Error: {}", re.getMessage());
+							// logger.debug("Error: {}", re.getMessage());
 						}
 					}
 				} else if (eObj instanceof AttributeGroup) {
@@ -121,7 +126,7 @@ public class WriteDataModelService {
 								eAttGroup.getName(), eAttGroup.isMandatory()));
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						log.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 						continue;
 					}
 					// create group attribute dependences
@@ -131,7 +136,7 @@ public class WriteDataModelService {
 									new DependenceDTO(specId, groupVO.getEntityName() + "." + groupVO.getName(), eDep));
 						} catch (RepositoryException re) {
 							notification.addError(re.getError());
-							log.debug("Error: {}", re.getMessage());
+							// logger.debug("Error: {}", re.getMessage());
 						}
 					}
 
@@ -142,11 +147,17 @@ public class WriteDataModelService {
 									eAtt.getType(), eAtt.isMandatory()));
 						} catch (RepositoryException re) {
 							notification.addError(re.getError());
-							log.debug("Error: {}", re.getMessage());
+							// logger.debug("Error: {}", re.getMessage());
 						}
 					}
 				}
 			}
+
+			for (Constraint constraint : eEnt.getConstraint()) {
+				ExpressionDTO expression = ExpressionDTO.buildExpressionDTO(specId, constraint.getConstraint());
+				rulesToCreate.add(new RuleDTO(specId, eEnt.getName(), constraint.getName(), expression));
+			}
+
 		}
 
 		for (Association assoc : eDataModel.getAssociations()) {
@@ -156,30 +167,30 @@ public class WriteDataModelService {
 						assoc.getCardinality2()));
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
-				log.debug("Error: {}", re.getMessage());
+				// logger.debug("Error: {}", re.getMessage());
+			}
+		}
+
+		for (RuleDTO ruleDTO : rulesToCreate) {
+			try {
+				ci.createRule(ruleDTO);
+			} catch (RepositoryException re) {
+				notification.addError(re.getError());
+				// logger.debug("Error: {}", re.getMessage());
 			}
 		}
 
 		Set<DependenceDTO> deps = ci.getDependencies(specId);
 		for (DependenceDTO dep : deps) {
-			log.debug("dependence extId:{}, path:{}, product:{}", dep.getExtId(), dep.getPath(), dep.getProduct());
+			// logger.debug("dependence extId:{}, path:{}, product:{}",
+			// dep.getExtId(), dep.getPath(), dep.getProduct());
 			try {
 				ci.checkDependence(specId, dep.getExtId());
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
-				log.debug("Error: {}", re.getMessage());
+				// logger.debug("Error: {}", re.getMessage());
 
 				ci.deleteDependence(specId, dep.getExtId());
-			}
-		}
-
-		for (Constraint constraint : eDataModel.getConstraint()) {
-			ExpressionDTO expression = ExpressionDTO.buildExpressionDTO(specId, constraint.getConstraint());
-			try {
-				ci.createRule(new RuleDTO(specId, constraint.getName(), expression));
-			} catch (RepositoryException re) {
-				notification.addError(re.getError());
-				log.debug("Error: {}", re.getMessage());
 			}
 		}
 

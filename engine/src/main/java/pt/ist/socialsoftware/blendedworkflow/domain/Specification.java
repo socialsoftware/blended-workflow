@@ -12,81 +12,81 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 
 public class Specification extends Specification_Base {
 
-    @Override
-    public void setSpecId(String specId) {
-        checkSpecificationId(specId);
-        super.setSpecId(specId);
-    }
+	@Override
+	public void setSpecId(String specId) {
+		checkSpecificationId(specId);
+		super.setSpecId(specId);
+	}
 
-    @Override
-    public void setName(String name) {
-        checkSpecificationName(name);
-        super.setName(name);
-    }
+	@Override
+	public void setName(String name) {
+		checkSpecificationName(name);
+		super.setName(name);
+	}
 
-    public Specification(String specId, String name, String author,
-            String description, String version, String UID) throws BWException {
-        setSpecId(specId);
-        setName(name);
-        setAuthor(author);
-        setDescription(description);
-        setVersion(version);
-        setUID(UID);
+	public Specification(String specId, String name, String author, String description, String version, String UID)
+			throws BWException {
+		setSpecId(specId);
+		setName(name);
+		setAuthor(author);
+		setDescription(description);
+		setVersion(version);
+		setUID(UID);
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        setCreationDate(dateFormat.format(Calendar.getInstance().getTime()));
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		setCreationDate(dateFormat.format(Calendar.getInstance().getTime()));
 
-        setDataModel(new DataModel());
-        setConditionModel(new ConditionModel());
-        setTaskModel(new TaskModel());
-        setGoalModel(new GoalModel());
-        setInstanceCounter(0);
-        BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-        blendedWorkflow.addSpecification(this);
-    }
+		setDataModel(new DataModel());
+		setConditionModel(new ConditionModel());
+		setTaskModel(new TaskModel());
+		setGoalModel(new GoalModel());
+		setInstanceCounter(0);
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		blendedWorkflow.addSpecification(this);
+	}
 
-    private void checkSpecificationId(String specId) {
-        if ((specId == null) || specId.equals(""))
-            throw new BWException(BWErrorType.INVALID_SPECIFICATION_ID, specId);
+	private void checkSpecificationId(String specId) {
+		if ((specId == null) || specId.equals(""))
+			throw new BWException(BWErrorType.INVALID_SPECIFICATION_ID, specId);
 
-        checkUniqueSpecificationId(specId);
-    }
+		checkUniqueSpecificationId(specId);
+	}
 
-    private void checkUniqueSpecificationId(String specId) {
-        BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
-        boolean existsId = blendedWorkflow.getSpecificationSet().stream()
-                .anyMatch(spec -> spec.getSpecId().equals(specId));
-        if (existsId)
-            throw new BWException(BWErrorType.INVALID_SPECIFICATION_ID, specId);
-    }
+	private void checkUniqueSpecificationId(String specId) {
+		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
+		boolean existsId = blendedWorkflow.getSpecificationSet().stream()
+				.anyMatch(spec -> spec.getSpecId().equals(specId));
+		if (existsId)
+			throw new BWException(BWErrorType.INVALID_SPECIFICATION_ID, specId);
+	}
 
-    private void checkSpecificationName(String name) {
-        if ((name == null) || name.equals(""))
-            throw new BWException(BWErrorType.INVALID_SPECIFICATION_NAME, name);
-    }
+	private void checkSpecificationName(String name) {
+		if ((name == null) || name.equals(""))
+			throw new BWException(BWErrorType.INVALID_SPECIFICATION_NAME, name);
+	}
 
-    public int generateInstanceId() {
-        setInstanceCounter(getInstanceCounter() + 1);
-        return getInstanceCounter();
-    }
+	public int generateInstanceId() {
+		setInstanceCounter(getInstanceCounter() + 1);
+		return getInstanceCounter();
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    public void delete() {
-        getDataModel().delete();
-        getConditionModel().delete();
-        getTaskModel().delete();
-        getGoalModel().delete();
+	@Atomic(mode = TxMode.WRITE)
+	public void delete() {
+		getGoalModel().delete();
+		getTaskModel().delete();
+		getConditionModel().delete();
+		getDataModel().delete();
 
-        setBlendedWorkflow(null);
-        deleteDomainObject();
-    }
+		setBlendedWorkflow(null);
+		deleteDomainObject();
+	}
 
-    public SpecDTO getDTO() {
-        SpecDTO specDTO = new SpecDTO();
-        specDTO.setSpecId(getSpecId());
-        specDTO.setName(getName());
+	public SpecDTO getDTO() {
+		SpecDTO specDTO = new SpecDTO();
+		specDTO.setSpecId(getSpecId());
+		specDTO.setName(getName());
 
-        return specDTO;
-    }
+		return specDTO;
+	}
 
 }

@@ -226,7 +226,7 @@ public class ActivityModelController {
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		Rule rule = adi.associateRuleToActivityPost(specId, activityName, ruleDTO.getName());
+		Rule rule = adi.associateRuleToActivityPost(ruleDTO, activityName);
 
 		return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
 	}

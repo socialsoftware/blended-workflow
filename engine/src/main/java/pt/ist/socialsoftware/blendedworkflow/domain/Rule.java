@@ -11,7 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 
 public class Rule extends Rule_Base {
-	private static Logger log = LoggerFactory.getLogger(Rule.class);
+	private static Logger logger = LoggerFactory.getLogger(Rule.class);
 
 	@Override
 	public void setName(String name) {
@@ -19,8 +19,17 @@ public class Rule extends Rule_Base {
 		super.setName(name);
 	}
 
-	public Rule(DataModel dataModel, String name, Condition condition) {
-		setDataModel(dataModel);
+	@Override
+	public void setCondition(Condition condition) {
+		if (condition != null && !condition.getPathSet().stream().map(path -> path.split("\\.")[0])
+				.allMatch(en -> en.equals(getEntity().getName())))
+			throw new BWException(BWErrorType.INVALID_PATH, condition.toString());
+
+		super.setCondition(condition);
+	}
+
+	public Rule(Entity entity, String name, Condition condition) {
+		setEntity(entity);
 		setName(name);
 		setCondition(condition);
 	}
@@ -33,14 +42,14 @@ public class Rule extends Rule_Base {
 	}
 
 	private void checkUniqueName(String name) throws BWException {
-		boolean exists = getDataModel().getRuleSet().stream()
+		boolean exists = getEntity().getRuleSet().stream()
 				.anyMatch(rule -> (rule.getName() != null) && (rule.getName().equals(name)));
 		if (exists)
 			throw new BWException(BWErrorType.INVALID_RULE_NAME, name);
 	}
 
 	public void delete() {
-		setDataModel(null);
+		setEntity(null);
 		setConditionModel(null);
 		setInvariantConditionGoal(null);
 		setTaskWithRule(null);
@@ -51,10 +60,11 @@ public class Rule extends Rule_Base {
 
 	public RuleDTO getDTO() {
 		RuleDTO ruleDTO = new RuleDTO();
-		ruleDTO.setSpecId(getDataModel().getSpecification().getSpecId());
+		ruleDTO.setSpecId(getEntity().getDataModel().getSpecification().getSpecId());
+		ruleDTO.setEntityName(getEntity().getName());
 		ruleDTO.setExtId(getExternalId());
 		ruleDTO.setName(getName());
-		ruleDTO.setExpression(getCondition().getDTO(getDataModel().getSpecification().getSpecId()));
+		ruleDTO.setExpression(getCondition().getDTO(getEntity().getDataModel().getSpecification().getSpecId()));
 
 		return ruleDTO;
 	}
@@ -65,8 +75,8 @@ public class Rule extends Rule_Base {
 
 	public Set<Attribute> getAttributeSet() {
 		Set<String> paths = getPathSet();
-		return paths.stream().map(p -> getDataModel().getTargetOfPath(p)).filter(Attribute.class::isInstance)
-				.map(Attribute.class::cast).collect(Collectors.toSet());
+		return paths.stream().map(p -> getEntity().getDataModel().getTargetOfPath(p))
+				.filter(Attribute.class::isInstance).map(Attribute.class::cast).collect(Collectors.toSet());
 	}
 
 	public Set<String> getPathSet() {

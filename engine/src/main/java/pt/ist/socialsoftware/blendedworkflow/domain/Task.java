@@ -136,8 +136,7 @@ public class Task extends Task_Base {
 	private void checkRuleConstraint() {
 		Set<AttributeBasic> attributes = getTaskModel().getDefinedAttributes();
 
-		Set<AttributeBasic> postAttributes = getConditionModel()
-				.getBasicAtributesOfDefAttributeSet(getPostConditionSet());
+		Set<AttributeBasic> postAttributes = ConditionModel.getBasicAtributesOfDefConditionSet(getPostConditionSet());
 
 		Optional<Rule> oRule = getRuleInvariantSet().stream().filter(r -> !attributes.containsAll(r.getAttributeSet()))
 				.findFirst();
@@ -152,21 +151,14 @@ public class Task extends Task_Base {
 	}
 
 	private void checkMultiplicityConstraint() {
-		Set<Entity> allEntities = getConditionModel().getEntitiesOfDefEntitySet(getPreConditionSet());
-		System.out.println("preEntities");
-		allEntities.stream().forEach(e -> System.out.println(e.getName()));
-		Set<Entity> postEntities = getConditionModel().getEntitiesOfDefEntitySet(getPostConditionSet());
-		System.out.println("postEntities");
-		postEntities.stream().forEach(e -> System.out.println(e.getName()));
+		Set<Entity> allEntities = ConditionModel.getEntitiesOfDefConditionSet(getPreConditionSet());
+		Set<Entity> postEntities = ConditionModel.getEntitiesOfDefConditionSet(getPostConditionSet());
 		allEntities.addAll(postEntities);
 
 		Optional<MulCondition> oMul = getMultiplicityInvariantSet().stream()
 				.filter(m -> !allEntities.contains(m.getRelationBW().getEntityOne())
 						|| !allEntities.contains(m.getRelationBW().getEntityTwo()))
 				.findFirst();
-
-		if (oMul.isPresent())
-			System.out.println("breaks" + oMul.get().getEntity().getName() + "." + oMul.get().getRolename());
 
 		if (oMul.isPresent())
 			throw new BWException(BWErrorType.INCONSISTENT_MUL_CONDITION,
@@ -185,9 +177,9 @@ public class Task extends Task_Base {
 	}
 
 	private void checkDependenceConstraint() {
-		Set<Product> postProducts = getConditionModel().getProductsOfDefConditions(getPostConditionSet());
+		Set<Product> postProducts = ConditionModel.getProductsOfDefConditions(getPostConditionSet());
 
-		Set<Product> preProducts = getConditionModel().getProductsOfDefConditions(getPreConditionSet());
+		Set<Product> preProducts = ConditionModel.getProductsOfDefConditions(getPreConditionSet());
 
 		Optional<Dependence> oDep = getTaskModel().getSpecification().getDataModel().getDependenceSet().stream()
 				.filter(d -> postProducts.contains(d.getProduct()) && !preProducts.contains(d.getTarget())
@@ -200,12 +192,12 @@ public class Task extends Task_Base {
 
 	private void checkEntityOfDefAttributeIsDefined() {
 		Set<Entity> entities = Stream
-				.concat(getConditionModel().getEntitiesOfDefEntitySet(getPreConditionSet()).stream(),
-						getConditionModel().getEntitiesOfDefEntitySet(getPostConditionSet()).stream())
+				.concat(ConditionModel.getEntitiesOfDefConditionSet(getPreConditionSet()).stream(),
+						ConditionModel.getEntitiesOfDefConditionSet(getPostConditionSet()).stream())
 				.collect(Collectors.toSet());
 
-		Optional<DefAttributeCondition> oDef = getConditionModel().getDefAttributeConditions(getPostConditionSet())
-				.stream().filter(d -> !entities.contains(d.getAttributeOfDef().getEntity())).findFirst();
+		Optional<DefAttributeCondition> oDef = ConditionModel.getDefAttributeConditions(getPostConditionSet()).stream()
+				.filter(d -> !entities.contains(d.getAttributeOfDef().getEntity())).findFirst();
 
 		if (oDef.isPresent())
 			throw new BWException(BWErrorType.MISSING_DEF_IN_PRE,
@@ -214,17 +206,13 @@ public class Task extends Task_Base {
 	}
 
 	private void checkPostConditionContainsAtLeastOneDef() {
-		if (getConditionModel().getDefAttributeConditions(getPostConditionSet()).size() > 0)
+		if (ConditionModel.getDefAttributeConditions(getPostConditionSet()).size() > 0)
 			return;
 
-		if (getConditionModel().getDefEntityConditions(getPostConditionSet()).size() > 0)
+		if (ConditionModel.getDefEntityConditions(getPostConditionSet()).size() > 0)
 			return;
 
 		throw new BWException(BWErrorType.NO_DEF_CONDITION_IN_POST, getName());
-	}
-
-	private ConditionModel getConditionModel() {
-		return this.getTaskModel().getSpecification().getConditionModel();
 	}
 
 	public void removePreCondition(String entityTwoName) {

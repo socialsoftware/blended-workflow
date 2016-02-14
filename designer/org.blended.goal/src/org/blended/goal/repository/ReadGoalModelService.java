@@ -24,11 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ReadGoalModelService {
-	private static Logger log = LoggerFactory.getLogger(ReadGoalModelService.class);
+	private static Logger logger = LoggerFactory.getLogger(ReadGoalModelService.class);
 
 	private static ReadGoalModelService instance = null;
 
 	public static ReadGoalModelService getInstance() {
+		logger.debug("getInstance");
 		if (instance == null) {
 			instance = new ReadGoalModelService();
 		}

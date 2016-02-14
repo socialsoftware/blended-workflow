@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-import java.util.Collections;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -90,6 +89,12 @@ public class GoalModel extends GoalModel_Base {
 				}
 			}
 
+			for (Rule rule : conditionModel.getAttributeInvariantConditionSet()) {
+				if (defEntityCondition.getEntity().getRuleSet().contains(rule)) {
+					entityGoal.addAttributeInvariantCondition(rule);
+				}
+			}
+
 			int subCounter = 0;
 			for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
 				if (defAttributeCondition.getAttributeOfDef().getEntity() == defEntityCondition.getEntity()) {
@@ -104,11 +109,6 @@ public class GoalModel extends GoalModel_Base {
 						}
 					}
 
-					for (Rule rule : conditionModel.getAttributeInvariantConditionSet()) {
-						if (!Collections.disjoint(rule.getAttributeBasicSet(),
-								defAttributeCondition.getAttributeOfDef().getAttributeBasicSet())) {
-						}
-					}
 				}
 			}
 		}

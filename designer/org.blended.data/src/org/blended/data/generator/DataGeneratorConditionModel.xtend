@@ -49,8 +49,6 @@ class DataGeneratorConditionModel {
 
 		var specId = resource.normalizedURI.lastSegment.split("\\.").get(0)
 		
-		ci.cleanConditionModel(specId)
-		
 		ci.generateConditionModel(specId)
 		
 		model.specification = resource.allContents.toIterable.filter(typeof(Specification)).get(0).copy

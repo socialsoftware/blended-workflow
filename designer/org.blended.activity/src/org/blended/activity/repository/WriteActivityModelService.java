@@ -23,6 +23,7 @@ public class WriteActivityModelService {
 	private static WriteActivityModelService instance = null;
 
 	public static WriteActivityModelService getInstance() {
+		logger.debug("getInstance");
 		if (instance == null) {
 			instance = new WriteActivityModelService();
 		}
@@ -36,39 +37,39 @@ public class WriteActivityModelService {
 	}
 
 	public BWNotification write(String specId, ActivityModel eActivityModel) {
-		logger.debug("loadActivityModel: {}", specId);
+		// logger.debug("loadActivityModel: {}", specId);
 
 		BWNotification notification = new BWNotification();
 
 		Specification eSpec = eActivityModel.getSpecification();
-		logger.debug("Specification: {}", eSpec.getName());
+		// logger.debug("Specification: {}", eSpec.getName());
 
 		try {
 			ci.getSpecBySpecId(specId);
 
 			ci.cleanActivityModel(specId);
 		} catch (RepositoryException re) {
-			logger.debug("loadActivityModel: {}", re.getMessage());
+			// logger.debug("loadActivityModel: {}", re.getMessage());
 			// data and condition models are required
 			notification.addError(re.getError());
 			return notification;
 		}
 
 		for (Activity eActivity : eActivityModel.getActivities()) {
-			logger.debug("Activity specId:{}, name:{}, description:{}", specId, eActivity.getName(),
-					eActivity.getDescription());
+			// logger.debug("Activity specId:{}, name:{}, description:{}",
+			// specId, eActivity.getName(), eActivity.getDescription());
 
 			ci.createActivity(specId, eActivity.getName(), eActivity.getDescription());
 
 			for (EObject eObj : eActivity.getPre()) {
 				if (eObj instanceof PathDefinition) {
 					PathDefinition pd = (PathDefinition) eObj;
-					logger.debug("PRE({})", pd.getPath());
+					// logger.debug("PRE({})", pd.getPath());
 					try {
 						ci.associateDefPathToActivityPre(specId, eActivity.getName(), pd.getPath());
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						logger.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 					}
 				}
 				assert (false);
@@ -78,40 +79,42 @@ public class WriteActivityModelService {
 			for (EObject eObj : eActivity.getPost()) {
 				if (eObj instanceof EntityAchieveCondition) {
 					EntityAchieveCondition eac = (EntityAchieveCondition) eObj;
-					logger.debug("POST({})", eac.getName());
+					// logger.debug("POST({})", eac.getName());
 					try {
 						ci.associateEntityToActivityPost(specId, eActivity.getName(), eac.getName());
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						logger.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 					}
 				} else if (eObj instanceof AttributeAchieveCondition) {
 					AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
-					logger.debug("POST({})", aac.getAttribute());
+					// logger.debug("POST({})", aac.getAttribute());
 					try {
 						ci.associateAttributeToActivityPost(specId, eActivity.getName(), aac.getAttribute());
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						logger.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 					}
 				} else if (eObj instanceof EntityInvariantCondition) {
 					EntityInvariantCondition eic = (EntityInvariantCondition) eObj;
-					logger.debug("POST(MUL({},{}))", eic.getName(), eic.getCardinality());
+					// logger.debug("POST(MUL({},{}))", eic.getName(),
+					// eic.getCardinality());
 					try {
 						ci.associateMulToActivityPost(specId, eActivity.getName(),
 								new MulConditionDTO(specId, eic.getName(), eic.getCardinality()));
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						logger.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 					}
 				} else if (eObj instanceof AttributeInvariantCondition) {
 					AttributeInvariantCondition aic = (AttributeInvariantCondition) eObj;
-					logger.debug("POST(RULE({}))", aic.getName());
+					// logger.debug("POST(RULE({}))", aic.getName());
 					try {
-						ci.associateRuleToActivityPost(specId, eActivity.getName(), new RuleDTO(specId, aic.getName()));
+						ci.associateRuleToActivityPost(specId, eActivity.getName(),
+								new RuleDTO(specId, aic.getContext(), aic.getName()));
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						logger.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 					}
 				}
 				assert (false);
@@ -122,7 +125,7 @@ public class WriteActivityModelService {
 			ci.checkActivityModelConsistency(specId);
 		} catch (RepositoryException re) {
 			notification.addError(re.getError());
-			logger.debug("Error: {}", re.getMessage());
+			// logger.debug("Error: {}", re.getMessage());
 		}
 
 		ci.printSpecificationModels(specId);

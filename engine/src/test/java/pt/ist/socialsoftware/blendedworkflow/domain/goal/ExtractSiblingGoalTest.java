@@ -44,8 +44,6 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 	private static final String CHILD_GOAL_ONE = "childGoalOne";
 	private static final String CHILD_GOAL_THREE = "childGoalThree";
 	private static final String CHILD_GOAL_TWO_ONE = "childGoalTwoOne";
-	private static final String CHILD_GOAL_TWO_ONE_ONE = "childGoalTwoOneOne";
-	private static final String CHILD_GOAL_TWO_TWO = "childGoalTwoTwo";
 
 	Specification spec;
 	Entity entityOne;
@@ -108,7 +106,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 		topGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_TWO));
 		childGoalTwo.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_ONE));
 
-		rule = new Rule(spec.getDataModel(), RULE_CONDITION,
+		rule = new Rule(entityOne, RULE_CONDITION,
 				new Comparison(new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
 						new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME),
 						ComparisonOperator.EQUAL));
@@ -216,8 +214,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 				childGoalThree.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
 		assertEquals(0, childGoalThree.getActivationConditionSet().size());
 		assertEquals(0, childGoalThree.getEntityInvariantConditionSet().size());
-		assertEquals(1, childGoalThree.getAttributeInvariantConditionSet().size());
-		assertTrue(childGoalThree.getAttributeInvariantConditionSet().contains(rule));
+		assertEquals(0, childGoalThree.getAttributeInvariantConditionSet().size());
 
 		assertEquals(CHILD_GOAL_TWO, childGoalTwo.getName());
 		assertEquals(topGoal, childGoalTwo.getParentGoal());
@@ -270,8 +267,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 		assertTrue(childGoalTwo.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
 		assertEquals(0, childGoalTwo.getActivationConditionSet().size());
 		assertEquals(0, childGoalTwo.getEntityInvariantConditionSet().size());
-		assertEquals(1, childGoalTwo.getAttributeInvariantConditionSet().size());
-		assertTrue(childGoalTwo.getAttributeInvariantConditionSet().contains(rule));
+		assertEquals(0, childGoalTwo.getAttributeInvariantConditionSet().size());
 
 	}
 

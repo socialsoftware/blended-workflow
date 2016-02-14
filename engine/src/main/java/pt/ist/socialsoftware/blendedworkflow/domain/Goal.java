@@ -240,7 +240,7 @@ public class Goal extends Goal_Base {
 
 	public void purgeActivationCondition() {
 		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
-			Set<Product> successProducts = getConditionModel().getProductsOfDefConditions(getSuccessConditionSet());
+			Set<Product> successProducts = ConditionModel.getProductsOfDefConditions(getSuccessConditionSet());
 			if (successProducts.contains(defPathCondition.getTargetOfPath()))
 				removeActivationCondition(defPathCondition);
 		}
@@ -263,8 +263,7 @@ public class Goal extends Goal_Base {
 
 	private boolean checkGoalActIntersectsAnotherGoalSuc(Goal childGoal, Goal goal) {
 		for (DefPathCondition defPathCondition : childGoal.getActivationConditionSet()) {
-			Set<Product> successProducts = getConditionModel()
-					.getProductsOfDefConditions(goal.getSuccessConditionSet());
+			Set<Product> successProducts = ConditionModel.getProductsOfDefConditions(goal.getSuccessConditionSet());
 			if (successProducts.contains(defPathCondition.getTargetOfPath())) {
 				return true;
 			}
@@ -320,28 +319,24 @@ public class Goal extends Goal_Base {
 	}
 
 	private void addActivationConditions() {
-		Set<String> paths = getConditionModel().getProductsOfDefConditions(getSuccessConditionSet()).stream()
+		Set<String> paths = ConditionModel.getProductsOfDefConditions(getSuccessConditionSet()).stream()
 				.flatMap((p) -> p.getDependenceSet().stream()).map((d) -> d.getPath().getValue())
 				.collect(Collectors.toSet());
 
 		for (String path : paths) {
-			if (!getConditionModel().getEntitiesOfDefEntitySet(getSuccessConditionSet())
+			if (!ConditionModel.getEntitiesOfDefConditionSet(getSuccessConditionSet())
 					.contains(getDataModel().getTargetOfPath(path)))
 				addActivationCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
 		}
 	}
 
 	private void addRuleConditions() {
-		for (Rule rule : getDataModel().getRuleSet()) {
-			if (getSuccessConditionSet().stream().flatMap((c) -> c.getAttributeBasicSet().stream())
-					.anyMatch((a) -> rule.getAttributeBasicSet().contains(a))) {
-				addAttributeInvariantCondition(rule);
-			}
-		}
+		ConditionModel.getEntitiesOfDefConditionSet(getSuccessConditionSet()).stream()
+				.flatMap(def -> def.getRuleSet().stream()).forEach(rule -> addAttributeInvariantCondition(rule));
 	}
 
 	private void addMultiplicityConditions() {
-		Set<Entity> entities = getConditionModel().getEntitiesOfDefEntitySet(getSuccessConditionSet());
+		Set<Entity> entities = ConditionModel.getEntitiesOfDefConditionSet(getSuccessConditionSet());
 
 		entities.stream().flatMap((e) -> e.getMultConditions().stream()).forEach((m) -> addEntityInvariantCondition(m));
 	}
@@ -396,7 +391,7 @@ public class Goal extends Goal_Base {
 
 	private void checkSiblingsAttributeConstraintBasic(Set<DefProductCondition> successConditionsOne,
 			Set<DefProductCondition> successConditionsTwo) {
-		Set<Entity> entities = getConditionModel().getEntitiesOfDefEntitySet(successConditionsOne);
+		Set<Entity> entities = ConditionModel.getEntitiesOfDefConditionSet(successConditionsOne);
 
 		Optional<Entity> oEntity = successConditionsTwo.stream().filter(DefAttributeCondition.class::isInstance)
 				.map(DefAttributeCondition.class::cast).map((def) -> def.getAttributeOfDef().getEntity())
@@ -408,7 +403,7 @@ public class Goal extends Goal_Base {
 	}
 
 	private void checkParentChildAttributeConstraint(Set<DefProductCondition> successConditions) {
-		Set<Entity> entities = getConditionModel().getEntitiesOfDefEntitySet(successConditions);
+		Set<Entity> entities = ConditionModel.getEntitiesOfDefConditionSet(successConditions);
 
 		Optional<Entity> oEntity = flattened()
 				.flatMap((g) -> g.getSuccessConditionSet().stream().filter(DefAttributeCondition.class::isInstance))
@@ -427,10 +422,10 @@ public class Goal extends Goal_Base {
 
 		log.debug("topSuccessConditions size:{}", topSuccessConditions.size());
 
-		Set<Product> topProducts = getConditionModel().getProductsOfDefConditions(topSuccessConditions);
+		Set<Product> topProducts = ConditionModel.getProductsOfDefConditions(topSuccessConditions);
 		log.debug("topProducts {}", topProducts.stream().map((p) -> p.getName()).collect(Collectors.joining(",")));
 
-		Set<Product> succProducts = getConditionModel().getProductsOfDefConditions(successConditions);
+		Set<Product> succProducts = ConditionModel.getProductsOfDefConditions(successConditions);
 		log.debug("succProducts {}", succProducts.stream().map((p) -> p.getName()).collect(Collectors.joining(",")));
 
 		Optional<Product> oProduct = topProducts.stream().flatMap((p) -> p.getDependenceSet().stream())
@@ -440,10 +435,6 @@ public class Goal extends Goal_Base {
 			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
 					"checkDependenceConstraint:" + oProduct.get().getName());
 
-	}
-
-	private ConditionModel getConditionModel() {
-		return getSpecification().getConditionModel();
 	}
 
 	private DataModel getDataModel() {

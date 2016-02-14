@@ -56,7 +56,6 @@ public class DataModel extends DataModel_Base {
 			getSpecification().getGoalModel().clean();
 		if (getSpecification().getTaskModel() != null)
 			getSpecification().getTaskModel().clean();
-		getRuleSet().stream().forEach(rule -> rule.delete());
 		getDependenceSet().stream().forEach(dep -> dep.delete());
 		getEntitySet().stream().forEach(ent -> ent.delete());
 		getAttributeSet().stream().forEach(a -> a.delete());
@@ -72,14 +71,6 @@ public class DataModel extends DataModel_Base {
 
 	public Entity createEntity(String entityName, Boolean exists) {
 		return new Entity(this, entityName, exists);
-	}
-
-	public Rule createRule(String name, Condition condition) {
-		return new Rule(this, name, condition);
-	}
-
-	public Rule getRule(String name) {
-		return getRuleSet().stream().filter(rule -> rule.getName().equals(name)).findFirst().orElse(null);
 	}
 
 	public Product getTargetOfPath(String path) {
