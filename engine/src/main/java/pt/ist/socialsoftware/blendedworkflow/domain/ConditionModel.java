@@ -41,7 +41,8 @@ public class ConditionModel extends ConditionModel_Base {
 
 		dataModel.getRelationBWSet().stream().forEach(r -> MulCondition.createMUlConditions(r));
 
-		dataModel.getRuleSet().stream().forEach(r -> this.addAttributeInvariantCondition(r));
+		dataModel.getEntitySet().stream().flatMap(e -> e.getRuleSet().stream())
+				.forEach(r -> this.addAttributeInvariantCondition(r));
 
 		dataModel.getDependenceSet().stream().filter(d -> d.getProduct().getProductType().equals(ProductType.ENTITY))
 				.forEach(d -> this.addEntityDependenceCondition(d));
@@ -51,29 +52,30 @@ public class ConditionModel extends ConditionModel_Base {
 
 	}
 
-	public Set<Product> getProductsOfDefConditions(Set<? extends DefProductCondition> defConditions) {
+	static public Set<Product> getProductsOfDefConditions(Set<? extends DefProductCondition> defConditions) {
 		return defConditions.stream().map(d -> d.getTargetOfPath()).collect(Collectors.toSet());
 	}
 
-	public Set<Entity> getEntitiesOfDefEntitySet(Set<? extends DefProductCondition> defEntities) {
+	static public Set<Entity> getEntitiesOfDefConditionSet(Set<? extends DefProductCondition> defEntities) {
 		Set<Entity> entities = defEntities.stream().map(d -> d.getTargetOfPath()).filter(Entity.class::isInstance)
 				.map(Entity.class::cast).collect(Collectors.toSet());
 		return entities;
 	}
 
-	public Set<AttributeBasic> getBasicAtributesOfDefAttributeSet(Set<? extends DefProductCondition> defAttributes) {
+	static public Set<AttributeBasic> getBasicAtributesOfDefConditionSet(
+			Set<? extends DefProductCondition> defAttributes) {
 		Set<AttributeBasic> attributes = defAttributes.stream().map(d -> d.getTargetOfPath())
 				.filter(Attribute.class::isInstance).map(Attribute.class::cast)
 				.flatMap(a -> a.getAttributeBasicSet().stream()).collect(Collectors.toSet());
 		return attributes;
 	}
 
-	public Set<DefEntityCondition> getDefEntityConditions(Set<? extends DefProductCondition> conditions) {
+	static public Set<DefEntityCondition> getDefEntityConditions(Set<? extends DefProductCondition> conditions) {
 		return conditions.stream().filter(DefEntityCondition.class::isInstance).map(DefEntityCondition.class::cast)
 				.collect(Collectors.toSet());
 	}
 
-	public Set<DefAttributeCondition> getDefAttributeConditions(Set<? extends DefProductCondition> conditions) {
+	static public Set<DefAttributeCondition> getDefAttributeConditions(Set<? extends DefProductCondition> conditions) {
 		return conditions.stream().filter(DefAttributeCondition.class::isInstance)
 				.map(DefAttributeCondition.class::cast).collect(Collectors.toSet());
 	}

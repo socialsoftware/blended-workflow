@@ -307,12 +307,6 @@ relation LogHasLogRecords {
 	LogRecord playsRole logRecords {multiplicity 0..*;}
 }
 
-// DataModel
-relation DataModelHasDefPathConditions {
-	DataModel playsRole dataModel {multiplicity 0..1;}
-	DefPathCondition playsRole defPathCondition {multiplicity 0..*;}
-}
-
 // ConditionModel
 relation ConditionModelHasEntityAchieveConditions {
 	ConditionModel playsRole conditionModel {multiplicity 0..1;}
@@ -462,9 +456,9 @@ relation DataModelHasAttributes {
 	Attribute playsRole attribute { multiplicity 0..*; }
 }
 
-relation DataModelHasPaths {
-	DataModel playsRole dataModel { multiplicity 0..1; }
-	Path playsRole path { multiplicity 0..*; }
+relation DataModelHasDefPathConditions {
+	DataModel playsRole dataModel {multiplicity 0..1;}
+	DefPathCondition playsRole defPathCondition {multiplicity 0..*;}
 }
 
 relation DataModelHasRelationBW {
@@ -477,9 +471,9 @@ relation DataModelHasDependence {
 	Dependence playsRole dependence { multiplicity 0..*; }
 }
 
-relation DataModelHasRule {
+relation DataModelHasPath {
 	DataModel playsRole dataModel { multiplicity 1..1; }
-	Rule playsRole rule { multiplicity 0..*; }
+	Path playsRole path { multiplicity 0..*; }
 }
 
 // Product
@@ -492,6 +486,11 @@ relation ProductHasDependence {
 relation EntityHasAttributes {
 	Entity playsRole entity { multiplicity 0..1; }
 	Attribute playsRole attribute { multiplicity 0..*; }
+}
+
+relation EntityHasRule {
+	Entity playsRole entity { multiplicity 1..1; }
+	Rule playsRole rule { multiplicity 0..*; }
 }
 
 relation EntityHasEntityInstances {

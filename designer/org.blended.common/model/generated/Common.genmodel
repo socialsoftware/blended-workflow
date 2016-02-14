@@ -21,6 +21,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Entity/exists"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Entity/dependsOn"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Common.ecore#//Entity/attributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Common.ecore#//Entity/constraint"/>
     </genClasses>
     <genClasses ecoreClass="Common.ecore#//Attribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Attribute/name"/>
@@ -67,6 +68,7 @@
     <genClasses ecoreClass="Common.ecore#//NotMandatoryAttributeAchieveCondition"/>
     <genClasses ecoreClass="Common.ecore#//MandatoryAttributeAchieveCondition"/>
     <genClasses ecoreClass="Common.ecore#//AttributeInvariantCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//AttributeInvariantCondition/context"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//AttributeInvariantCondition/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Common.ecore#//AttributeInvariantCondition/expression"/>
     </genClasses>

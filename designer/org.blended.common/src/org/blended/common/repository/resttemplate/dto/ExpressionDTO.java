@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExpressionDTO {
-	private static Logger log = LoggerFactory.getLogger(ExpressionDTO.class);
+	private static Logger logger = LoggerFactory.getLogger(ExpressionDTO.class);
 
 	// copy from the equivalent in engine ExpressionDTO
 	public enum Type {
@@ -230,7 +230,8 @@ public class ExpressionDTO {
 	}
 
 	public Expression buildExpression() {
-		log.debug("buildExpression() type:{}, value:{}", getType(), getValue());
+		// logger.debug("buildExpression() type:{}, value:{}", getType(),
+		// getValue());
 		CommonFactory factory = CommonFactory.eINSTANCE;
 		switch (Type.valueOf(getType())) {
 		case AND:

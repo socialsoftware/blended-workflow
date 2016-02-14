@@ -93,12 +93,12 @@ public class MergeTasksTest extends TeardownRollbackTest {
 
 		new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH_ONE);
 
-		ruleOne = new Rule(spec.getDataModel(), RULE_ONE_NAME,
+		ruleOne = new Rule(entityOne, RULE_ONE_NAME,
 				new Comparison(new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
 						new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME),
 						ComparisonOperator.EQUAL));
 
-		ruleTwo = new Rule(spec.getDataModel(), RULE_TWO_NAME,
+		ruleTwo = new Rule(entityThree, RULE_TWO_NAME,
 				new Comparison(new AttributeValueExpression(spec, ENTITY_THREE_NAME + "." + ATTRIBUTE_FOURONE_NAME),
 						new AttributeValueExpression(spec, ENTITY_THREE_NAME + "." + ATTRIBUTE_FOURTWO_NAME),
 						ComparisonOperator.EQUAL));

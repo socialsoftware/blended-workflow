@@ -154,8 +154,7 @@ public class Comparison extends Comparison_Base {
 
 	@Override
 	public String toString() {
-		return "compareAttributeTo(" + getAttributeOfComparison().getEntity().getName() + "."
-				+ getAttributeOfComparison().getName() + " " + getOperator() + " " + getValue() + ")";
+		return getSubPath();
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.service.design;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -199,20 +198,12 @@ public class DesignInterface {
 	@Atomic(mode = TxMode.WRITE)
 	public Rule createRule(RuleDTO ruleDTO) {
 		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
+		Entity entity = spec.getDataModel().getEntity(ruleDTO.getEntityName())
+				.orElseThrow(() -> new BWException(BWErrorType.NON_EXISTENT_ENTITY, ruleDTO.getEntityName()));
 
-		Rule rule = spec.getDataModel().createRule(ruleDTO.getName(), ruleDTO.getExpression().buildCondition(spec));
-
-		log.debug("createRule expression:{}", rule.getCondition().getSubPath());
+		Rule rule = entity.createRule(ruleDTO.getName(), ruleDTO.getExpression().buildCondition(spec));
 
 		return rule;
-	}
-
-	public boolean ruleUsesAnyAttribute(String specId, String ruleName, String path) {
-		Specification spec = getSpecBySpecId(specId);
-
-		Rule rule = getRule(spec, ruleName);
-
-		return !Collections.disjoint(rule.getAttributeBasicSet(), getAttribute(spec, path).getAttributeBasicSet());
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -232,6 +223,7 @@ public class DesignInterface {
 		if (spec.getDataModel().getEntitySet().size() == 0)
 			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
 
+		spec.getConditionModel().clean();
 		spec.getConditionModel().generateConditions();
 
 		return true;
@@ -260,6 +252,7 @@ public class DesignInterface {
 		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
 			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
 
+		spec.getGoalModel().clean();
 		spec.getGoalModel().generateGoals();
 
 		return true;
@@ -288,6 +281,7 @@ public class DesignInterface {
 		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
 			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
 
+		spec.getTaskModel().clean();
 		spec.getTaskModel().generateActivities();
 
 		return true;
@@ -426,8 +420,9 @@ public class DesignInterface {
 	@Atomic(mode = TxMode.WRITE)
 	public Rule createAttributeInvariant(RuleDTO ruleDTO) {
 		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
+		Entity entity = getEntityByName(spec.getDataModel(), ruleDTO.getEntityName());
 
-		Rule rule = getRule(spec, ruleDTO.getName());
+		Rule rule = getRule(entity, ruleDTO.getName());
 
 		spec.getConditionModel().addAttributeInvariantCondition(rule);
 
@@ -539,12 +534,13 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public void associateRuleToGoalInvariant(String specId, String goalName, String ruleName) {
-		Specification spec = getSpecBySpecId(specId);
+	public void associateRuleToGoalInvariant(RuleDTO ruleDTO, String goalName) {
+		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
+		Entity entity = getEntityByName(spec.getDataModel(), ruleDTO.getEntityName());
+
+		Rule rule = getRule(entity, ruleDTO.getName());
+
 		Goal goal = getGoalByName(spec, goalName);
-
-		Rule rule = getRule(spec, ruleName);
-
 		goal.addAttributeInvariantCondition(rule);
 	}
 
@@ -707,11 +703,13 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Rule associateRuleToActivityPost(String specId, String activityName, String ruleName) {
-		Specification spec = getSpecBySpecId(specId);
+	public Rule associateRuleToActivityPost(RuleDTO ruleDTO, String activityName) {
+		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
+		Entity entity = getEntityByName(spec.getDataModel(), ruleDTO.getEntityName());
+
 		Task task = getTaskByName(spec, activityName);
 
-		Rule rule = getRule(spec, ruleName);
+		Rule rule = getRule(entity, ruleDTO.getName());
 
 		task.addRuleInvariant(rule);
 
@@ -795,12 +793,14 @@ public class DesignInterface {
 
 		for (Entity entity : spec.getDataModel().getEntitySet()) {
 			System.out.println("Entity " + entity.getName() + " Exists:" + entity.getExists());
+
+			entity.getAttributeSet().stream().map(a -> "Attribute: " + a.getName()).forEach(System.out::println);
+
+			entity.getRuleSet().stream().map(rule -> "Rule: " + rule.getName() + ":" + rule.getCondition().toString())
+					.forEach(System.out::println);
 		}
 
 		spec.getDataModel().getDependenceSet().stream().map(dep -> dep.getProduct().getFullPath() + ":" + dep.getPath())
-				.forEach(System.out::println);
-
-		spec.getDataModel().getRuleSet().stream().map(rule -> rule.getName() + ":" + rule.getCondition().getSubPath())
 				.forEach(System.out::println);
 
 		System.out.println("-------------------------------------------------------");
@@ -926,8 +926,8 @@ public class DesignInterface {
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_GOAL_NAME, goalName));
 	}
 
-	private Rule getRule(Specification spec, String ruleName) {
-		return spec.getDataModel().getRuleSet().stream().filter(r -> r.getName().equals(ruleName)).findFirst()
+	private Rule getRule(Entity entity, String ruleName) {
+		return entity.getRuleSet().stream().filter(r -> r.getName().equals(ruleName)).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_RULE_NAME, ruleName));
 	}
 

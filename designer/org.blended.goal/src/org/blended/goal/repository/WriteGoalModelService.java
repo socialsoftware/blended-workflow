@@ -19,11 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WriteGoalModelService {
-	private static Logger log = LoggerFactory.getLogger(WriteGoalModelService.class);
+	private static Logger logger = LoggerFactory.getLogger(WriteGoalModelService.class);
 
 	private static WriteGoalModelService instance = null;
 
 	public static WriteGoalModelService getInstance() {
+		logger.debug("getInstance");
 		if (instance == null) {
 			instance = new WriteGoalModelService();
 		}
@@ -37,93 +38,95 @@ public class WriteGoalModelService {
 	}
 
 	public BWNotification write(String specId, GoalModel eGoalModel) {
-		log.debug("loadGoalModel: {}", specId);
+		// logger.debug("loadGoalModel: {}", specId);
 
 		BWNotification notification = new BWNotification();
 
 		Specification eSpec = eGoalModel.getSpecification();
-		log.debug("Specification: {}", eSpec.getName());
+		// logger.debug("Specification: {}", eSpec.getName());
 
 		try {
 			ci.getSpecBySpecId(specId);
 
 			ci.cleanGoalModel(specId);
 		} catch (RepositoryException re) {
-			log.debug("loadGoalModel: {}", re.getMessage());
+			// logger.debug("loadGoalModel: {}", re.getMessage());
 			// data and condition models are required
 			notification.addError(re.getError());
 			return notification;
 		}
 
 		for (Goal eGoal : eGoalModel.getGoals()) {
-			log.debug("Goal: {}", eGoal.getName());
+			// logger.debug("Goal: {}", eGoal.getName());
 			String goalName = eGoal.getName();
 			try {
 				ci.createGoal(new GoalDTO(specId, eGoal.getName()));
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
-				log.debug("Error: {}", re.getMessage());
+				// logger.debug("Error: {}", re.getMessage());
 			}
 
-			log.debug("Activation Conditions");
+			// logger.debug("Activation Conditions");
 			for (EObject eObj : eGoal.getActivationConditions()) {
 				if (eObj instanceof PathDefinition) {
 					PathDefinition pd = (PathDefinition) eObj;
-					log.debug("ACT({})", pd.getPath());
+					// logger.debug("ACT({})", pd.getPath());
 					try {
 						ci.associatePathConditionToGoalActivation(specId, goalName, pd.getPath());
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						log.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 					}
 				}
 				assert (false);
 			}
 
-			log.debug("Success Conditions");
+			// logger.debug("Success Conditions");
 			for (EObject eObj : eGoal.getSuccessConditions()) {
 				if (eObj instanceof EntityAchieveCondition) {
 					EntityAchieveCondition eac = (EntityAchieveCondition) eObj;
-					log.debug("SUC({})", eac.getName());
+					// logger.debug("SUC({})", eac.getName());
 					try {
 						ci.associateEntityToGoalSuccess(specId, goalName, eac.getName());
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						log.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 					}
 				} else if (eObj instanceof AttributeAchieveCondition) {
 					AttributeAchieveCondition aac = (AttributeAchieveCondition) eObj;
-					log.debug("SUC({})", aac.getAttribute());
+					// logger.debug("SUC({})", aac.getAttribute());
 					try {
 						ci.associateAttributeToGoalSuccess(specId, goalName, aac.getAttribute());
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						log.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 					}
 				}
 				assert (false);
 			}
 
-			log.debug("Invariant Conditions");
+			// logger.debug("Invariant Conditions");
 			for (EObject eObj : eGoal.getInvariantConditions()) {
 				if (eObj instanceof EntityInvariantCondition) {
 					EntityInvariantCondition eic = (EntityInvariantCondition) eObj;
-					log.debug("MUL({},{})", eic.getName(), eic.getCardinality());
+					// logger.debug("MUL({},{})", eic.getName(),
+					// eic.getCardinality());
 					try {
 						ci.associateMulToGoalInvariant(specId, goalName,
 								new MulConditionDTO(specId, eic.getName(), eic.getCardinality()));
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						log.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 					}
 				} else if (eObj instanceof AttributeInvariantCondition) {
 					AttributeInvariantCondition aic = (AttributeInvariantCondition) eObj;
-					log.debug("RULE({})", aic.getName());
+					// logger.debug("RULE({})", aic.getName());
 					try {
-						ci.associateRuleToGoalInvariant(specId, goalName, new RuleDTO(specId, aic.getName()));
+						ci.associateRuleToGoalInvariant(specId, goalName,
+								new RuleDTO(specId, aic.getContext(), aic.getName()));
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
-						log.debug("Error: {}", re.getMessage());
+						// logger.debug("Error: {}", re.getMessage());
 					}
 				}
 				assert (false);
@@ -131,14 +134,14 @@ public class WriteGoalModelService {
 		}
 
 		for (Goal eGoal : eGoalModel.getGoals()) {
-			log.debug("Subgoals");
+			// logger.debug("Subgoals");
 			for (Goal subGoal : eGoal.getChildrenGoals()) {
-				log.debug("Subgoal: {}", subGoal.getName());
+				// logger.debug("Subgoal: {}", subGoal.getName());
 				try {
 					ci.addSubGoal(eGoal.getName(), new GoalDTO(specId, subGoal.getName()));
 				} catch (RepositoryException re) {
 					notification.addError(re.getError());
-					log.debug("Error: {}", re.getMessage());
+					// logger.debug("Error: {}", re.getMessage());
 				}
 			}
 		}

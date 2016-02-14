@@ -19,11 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ReadActivityModelService {
-	private static Logger log = LoggerFactory.getLogger(ReadActivityModelService.class);
+	private static Logger logger = LoggerFactory.getLogger(ReadActivityModelService.class);
 
 	private static ReadActivityModelService instance = null;
 
 	public static ReadActivityModelService getInstance() {
+		logger.debug("getInstance");
 		if (instance == null) {
 			instance = new ReadActivityModelService();
 		}
@@ -67,7 +68,7 @@ public class ReadActivityModelService {
 			List<RuleDTO> rules = ci.getActivityRuleConditions(specId, activityDTO.getName());
 			for (RuleDTO rule : rules) {
 				activity.getPost().add(rule.createAttributeInvariantCondition(factory));
-				log.debug("RUL-CONDITIONS name:{}", rule.getName());
+				// logger.debug("RUL-CONDITIONS name:{}", rule.getName());
 			}
 		}
 

@@ -89,7 +89,7 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 		topGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_TWO));
 		childGoalTwo.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_ONE));
 
-		Rule rule = new Rule(spec.getDataModel(), RULE_CONDITION, null);
+		Rule rule = new Rule(entityOne, RULE_CONDITION, null);
 
 		childGoalOne.addAttributeInvariantCondition(rule);
 		childGoalTwo.addAttributeInvariantCondition(rule);
@@ -114,7 +114,7 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 		assertTrue(
 				merged.getEntityInvariantConditionSet().contains(MulCondition.getMulCondition(relation, ROLENAME_ONE)));
 		assertEquals(1, merged.getAttributeInvariantConditionSet().size());
-		assertTrue(merged.getAttributeInvariantConditionSet().contains(spec.getDataModel().getRule(RULE_CONDITION)));
+		assertTrue(merged.getAttributeInvariantConditionSet().contains(entityOne.getRule(RULE_CONDITION)));
 	}
 
 	@Test
@@ -139,7 +139,7 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 		assertTrue(
 				result.getEntityInvariantConditionSet().contains(MulCondition.getMulCondition(relation, ROLENAME_TWO)));
 		assertEquals(1, result.getAttributeInvariantConditionSet().size());
-		assertTrue(result.getAttributeInvariantConditionSet().contains(spec.getDataModel().getRule(RULE_CONDITION)));
+		assertTrue(result.getAttributeInvariantConditionSet().contains(entityOne.getRule(RULE_CONDITION)));
 
 	}
 

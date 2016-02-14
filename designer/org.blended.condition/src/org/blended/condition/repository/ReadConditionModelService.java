@@ -25,6 +25,7 @@ public class ReadConditionModelService {
 	private static ReadConditionModelService instance = null;
 
 	public static ReadConditionModelService getInstance() {
+		logger.debug("getInstance");
 		if (instance == null) {
 			instance = new ReadConditionModelService();
 		}
@@ -95,17 +96,18 @@ public class ReadConditionModelService {
 		}
 	}
 
-	private void createAttributeDependenceCondition(DependenceDTO adc, ConditionModel model) {
+	private void createAttributeDependenceCondition(DependenceDTO dependenceDTO, ConditionModel model) {
 		AttributeDependenceCondition dep = factory.createAttributeDependenceCondition();
-		dep.setAttribute1(adc.getProduct());
-		dep.setAttribute2(adc.getPath());
+		dep.setAttribute1(dependenceDTO.getProduct());
+		dep.setAttribute2(dependenceDTO.getPath());
 		model.getAttributeDependenceConditions().add(dep);
 	}
 
-	private void createAttributeInvariantCondition(RuleDTO aic, ConditionModel model) {
+	private void createAttributeInvariantCondition(RuleDTO ruleDTO, ConditionModel model) {
 		AttributeInvariantCondition inv = factory.createAttributeInvariantCondition();
-		inv.setName(aic.getName());
-		inv.setExpression(aic.getExpression().buildExpression());
+		inv.setName(ruleDTO.getName());
+		inv.setContext(ruleDTO.getEntityName());
+		inv.setExpression(ruleDTO.getExpression().buildExpression());
 		model.getAttributeInvariantConditions().add(inv);
 	}
 

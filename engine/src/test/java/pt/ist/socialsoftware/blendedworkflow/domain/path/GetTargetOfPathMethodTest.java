@@ -21,16 +21,11 @@ public class GetTargetOfPathMethodTest extends TeardownRollbackTest {
 	private static final String ROLE_TWO = "role2";
 	private static final String ROLE_ONE = "role1";
 	private static final String SPEC_ID = "ID0";
-	private static final String NEW_SPEC_ID = "ID1";
-	private static final String RULE_NAME = "Rule name";
-	private static final String NEW_SPEC_NAME = "Doctor Appointment";
 	private static final String SPEC_NAME = "Old Doctor Appointment Specification";
 	private static final String ENTITY_NAME_TWO = "Entity Name";
 	private static final String ENTITY_NAME_ONE = "Exists Entity Name";
-	private static final String ATTRIBUTE_NAME = "Attribute Name";
 	private static final String ATTRIBUTE_NAME_ONE = "Exists Attribute Name";
 	private static final String ATTRIBUTE_NAME_TWO = "Exists Attribute Name String";
-	private static final String ATTRIBUTE_GROUP_NAME = "Attribute Group Name";
 
 	Specification spec;
 	Entity entityOne;

@@ -6,9 +6,9 @@ generate condition "http://www.blended.org/condition/Condition"
 ConditionModel:
 	specification = Specification
 	('ENTITY_ACHIEVE_CONDITIONS' entityAchieveConditions += (EntityAchieveCondition | EntityAchieveConditionExist)*)?
-	('ENTITY_INVARIANT_CONDITIONS' entityInvariantConditions += EntityInvariantCondition*)?
 	('ENTITY_DEPENDENCE_CONDITIONS' entityDependenceConditions += EntityDependenceCondition*)?
+	('ENTITY_INVARIANT_CONDITIONS' entityInvariantConditions += EntityInvariantCondition*)?
 	('ATTRIBUTE_ACHIEVE_CONDITIONS' attributeAchieveConditions += AttributeAchieveCondition*)?
-	('ATTRIBUTE_INVARIANT_CONDITIONS' attributeInvariantConditions += AttributeInvariantCondition*)?
 	('ATTRIBUTE_DEPENDENCE_CONDITIONS' attributeDependenceConditions += AttributeDependenceCondition*)?
+	('ATTRIBUTE_INVARIANT_CONDITIONS' attributeInvariantConditions += AttributeInvariantCondition*)?
 ;

@@ -103,7 +103,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		topGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_TWO));
 		childGoalTwo.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_ONE));
 
-		Rule rule = new Rule(spec.getDataModel(), RULE_CONDITION,
+		Rule rule = new Rule(entityOne, RULE_CONDITION,
 				new Comparison(new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
 						new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME),
 						ComparisonOperator.EQUAL));
@@ -224,8 +224,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		assertEquals(1, childGoalTwo.getEntityInvariantConditionSet().size());
 		assertEquals(MulCondition.getMulCondition(relation, ROLENAME_ONE),
 				childGoalTwo.getEntityInvariantConditionSet().stream().findFirst().get());
-		assertEquals(1, childGoalTwo.getAttributeInvariantConditionSet().size());
-
+		assertEquals(0, childGoalTwo.getAttributeInvariantConditionSet().size());
 	}
 
 }

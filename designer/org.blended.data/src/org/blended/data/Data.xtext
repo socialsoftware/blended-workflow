@@ -6,6 +6,5 @@ DataModel:
 	specification = Specification
 	entities += Entity*
 	associations += Association*
-	constraint += Constraint*
 ;
 

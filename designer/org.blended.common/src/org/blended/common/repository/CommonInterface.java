@@ -260,47 +260,32 @@ public class CommonInterface {
 		return result;
 	}
 
-	public RelationDTO createRelation(RelationDTO relationVO) {
-		logger.debug("createRelation: {}, {}, {}", relationVO.getName(), relationVO.getEntOneName(),
-				relationVO.getEntTwoName());
+	public RelationDTO createRelation(RelationDTO relationDTO) {
+		logger.debug("createRelation: {}, {}, {}", relationDTO.getName(), relationDTO.getEntOneName(),
+				relationDTO.getEntTwoName());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/relations";
 
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("specId", relationVO.getSpecId());
+		params.put("specId", relationDTO.getSpecId());
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		RelationDTO result = restTemplate.postForObject(uri, relationVO, RelationDTO.class, params);
+		RelationDTO result = restTemplate.postForObject(uri, relationDTO, RelationDTO.class, params);
 
 		return result;
 	}
 
-	public RuleDTO createRule(RuleDTO ruleVO) {
-		logger.debug("createRule: {}, {}, {}", ruleVO.getSpecId(), ruleVO.getName(), ruleVO.getExpression().toString());
+	public RuleDTO createRule(RuleDTO ruleDTO) {
+		logger.debug("createRule: {}, {}, {}", ruleDTO.getSpecId(), ruleDTO.getEntityName(), ruleDTO.getName(),
+				ruleDTO.getExpression().toString());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/rules";
 
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("specId", ruleVO.getSpecId());
+		params.put("specId", ruleDTO.getSpecId());
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		RuleDTO result = restTemplate.postForObject(uri, ruleVO, RuleDTO.class, params);
-
-		return result;
-	}
-
-	public boolean ruleUsesAnyAttribute(String specId, String ruleName, String path) {
-		logger.debug("ruleUsesAnyAttribute specId:{}, ruleName:{}, path:{}", specId, ruleName, path);
-
-		final String uri = BASE_URL + "/specs/{specId}/datamodel/rules/{ruleName}/anyAttribute?path={path}";
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("specId", specId);
-		params.put("ruleName", ruleName);
-		params.put("path", path);
-
-		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		Boolean result = restTemplate.getForObject(uri, Boolean.class, params);
+		RuleDTO result = restTemplate.postForObject(uri, ruleDTO, RuleDTO.class, params);
 
 		return result;
 	}

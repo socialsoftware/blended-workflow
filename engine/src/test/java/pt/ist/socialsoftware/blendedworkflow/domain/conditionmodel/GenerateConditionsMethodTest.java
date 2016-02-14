@@ -60,7 +60,7 @@ public class GenerateConditionsMethodTest extends TeardownRollbackTest {
 		new Dependence(spec.getDataModel(), attributeThree,
 				ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME);
 
-		new Rule(spec.getDataModel(), RULE_NAME,
+		new Rule(entityOne, RULE_NAME,
 				new Comparison(new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
 						new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME),
 						ComparisonOperator.EQUAL));

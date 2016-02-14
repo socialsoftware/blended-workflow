@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
@@ -134,26 +133,14 @@ public class DataModelController {
 
 	@RequestMapping(value = "/rules", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<RuleDTO> createRule(@PathVariable("specId") String specId, @RequestBody RuleDTO ruleDTO) {
-		log.debug("createEntity specId:{}, name:{}, expression:{}", ruleDTO.getSpecId(), ruleDTO.getName(),
-				ruleDTO.getExpression().toString());
+		log.debug("createRule specId:{}, entityName:{}, name:{}, expression:{}", ruleDTO.getSpecId(),
+				ruleDTO.getEntityName(), ruleDTO.getName(), ruleDTO.getExpression().toString());
 
 		DesignInterface adi = DesignInterface.getInstance();
 
 		Rule rule = adi.createRule(ruleDTO);
 
 		return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
-	}
-
-	@RequestMapping(value = "/rules/{ruleName}/anyAttribute", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public ResponseEntity<Boolean> ruleUsesAnyAttribute(@PathVariable("specId") String specId,
-			@PathVariable("ruleName") String ruleName, @RequestParam("path") String path) {
-		log.debug("ruleUsesAnyAttribute specId:{}, ruleName:{}, path:{}", specId, ruleName, path);
-
-		DesignInterface adi = DesignInterface.getInstance();
-
-		boolean result = adi.ruleUsesAnyAttribute(specId, ruleName, path);
-
-		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/dependencies", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
