@@ -29,6 +29,8 @@ public class Rule extends Rule_Base {
 	}
 
 	public Rule(Entity entity, String name, Condition condition) {
+		entity.checkUniqueElementName(name);
+
 		setEntity(entity);
 		setName(name);
 		setCondition(condition);
@@ -38,14 +40,7 @@ public class Rule extends Rule_Base {
 		if ((name == null) || (name.equals("")))
 			throw new BWException(BWErrorType.INVALID_RULE_NAME, name);
 
-		checkUniqueName(name);
-	}
-
-	private void checkUniqueName(String name) throws BWException {
-		boolean exists = getEntity().getRuleSet().stream()
-				.anyMatch(rule -> (rule.getName() != null) && (rule.getName().equals(name)));
-		if (exists)
-			throw new BWException(BWErrorType.INVALID_RULE_NAME, name);
+		getEntity().checkUniqueElementName(name);
 	}
 
 	public void delete() {

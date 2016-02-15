@@ -13,36 +13,34 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateAttributeGroupMethodTest extends TeardownRollbackTest {
-    private static String ATT_GROUP_NAME = "Attribute group name";
-    private static String EXISTS_NAME = "Exists name";
+	private static String ATT_GROUP_NAME = "Attribute group name";
+	private static String EXISTS_NAME = "Exists name";
 
-    private Entity entity = null;
+	private Entity entity = null;
 
-    @Override
-    public void populate4Test() throws BWException {
-        Specification spec = new Specification("SpecId", "My spec", "author",
-                "description", "version", "UID");
-        entity = new Entity(spec.getDataModel(), "Entity name", false);
-        new AttributeGroup(spec.getDataModel(), entity, EXISTS_NAME, true);
-    }
+	@Override
+	public void populate4Test() throws BWException {
+		Specification spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
+		entity = new Entity(spec.getDataModel(), "Entity name", false);
+		new AttributeGroup(spec.getDataModel(), entity, EXISTS_NAME, true);
+	}
 
-    @Test
-    public void success() {
-        AttributeGroup attGroup = entity.createAttributeGroup(ATT_GROUP_NAME,
-                false);
+	@Test
+	public void success() {
+		AttributeGroup attGroup = entity.createAttributeGroup(ATT_GROUP_NAME, false);
 
-        assertEquals(2, entity.getAttributeGroupSet().size());
-        assertEquals(ATT_GROUP_NAME, attGroup.getName());
-    }
+		assertEquals(2, entity.getAttributeGroupSet().size());
+		assertEquals(ATT_GROUP_NAME, attGroup.getName());
+	}
 
-    @Test
-    public void existsName() {
-        try {
-            entity.createAttributeGroup(EXISTS_NAME, true);
-            fail();
-        } catch (BWException bwe) {
-            assertEquals(BWErrorType.INVALID_ATTRIBUTE_NAME, bwe.getError());
-        }
-    }
+	@Test
+	public void existsName() {
+		try {
+			entity.createAttributeGroup(EXISTS_NAME, true);
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.DUPLICATE_NAME, bwe.getError());
+		}
+	}
 
 }

@@ -52,6 +52,21 @@ public class Entity extends Entity_Base {
 		return ProductType.ENTITY;
 	}
 
+	public void checkUniqueElementName(String name) {
+		if (getAttributeSet().stream().anyMatch(a -> a.getName() != null && a.getName().equals(name)))
+			throw new BWException(BWErrorType.DUPLICATE_NAME, getEntity().getName() + "." + name);
+
+		if (getRuleSet().stream().anyMatch(r -> r.getName() != null && r.getName().equals(name)))
+			throw new BWException(BWErrorType.DUPLICATE_NAME, getEntity().getName() + "." + name);
+
+		if (getRelationOneSet().stream().anyMatch(r -> r.getRoleNameTwo() != null && r.getRoleNameTwo().equals(name)))
+			throw new BWException(BWErrorType.DUPLICATE_NAME, getEntity().getName() + "." + name);
+
+		if (getRelationTwoSet().stream().anyMatch(r -> r.getRoleNameOne() != null && r.getRoleNameOne().equals(name)))
+			throw new BWException(BWErrorType.DUPLICATE_NAME, getEntity().getName() + "." + name);
+
+	}
+
 	public AttributeBasic createAttribute(AttributeGroup attGroup, String name, AttributeType type,
 			boolean isMandatory) {
 		return new AttributeBasic(getDataModel(), this, attGroup, name, type, isMandatory, false, false);
