@@ -154,8 +154,8 @@ public class ExtractTaskTest extends TeardownRollbackTest {
 		Task task = taskModel.extractTask(taskOne, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
 		assertEquals(4, taskModel.getTasksSet().size());
-		assertTrue(taskModel.getTask(TASK_ONE).getPreConditionSet().stream().map(d -> d.getPath())
-				.collect(Collectors.toSet()).contains(DefEntityCondition.getDefEntity(entityOne).getPath()));
+		assertTrue(taskModel.getTask(TASK_ONE).getPreConditionSet().stream().map(d -> d.getPath().getValue())
+				.collect(Collectors.toSet()).contains(DefEntityCondition.getDefEntity(entityOne).getPath().getValue()));
 		assertEquals(0, task.getMultiplicityInvariantSet().size());
 
 		assertEquals(2, taskModel.getTask(TASK_TWO).getMultiplicityInvariantSet().size());
@@ -205,9 +205,9 @@ public class ExtractTaskTest extends TeardownRollbackTest {
 		Task task = taskModel.extractTask(taskThree, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
 		assertEquals(4, taskModel.getTasksSet().size());
-		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath()).collect(Collectors.toSet())
+		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath().getValue()).collect(Collectors.toSet())
 				.contains(DEPENDENCE_PATH_ONE));
-		assertFalse(taskModel.getTask(TASK_TWO).getPreConditionSet().stream().map(d -> d.getPath())
+		assertFalse(taskModel.getTask(TASK_TWO).getPreConditionSet().stream().map(d -> d.getPath().getValue())
 				.collect(Collectors.toSet()).contains(DEPENDENCE_PATH_ONE));
 
 		assertTrue(task.checkConsistency());

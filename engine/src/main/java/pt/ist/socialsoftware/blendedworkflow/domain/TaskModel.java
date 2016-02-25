@@ -103,7 +103,7 @@ public class TaskModel extends TaskModel_Base {
 		Set<Product> postProducts = ConditionModel.getProductsOfDefConditions(newTask.getPostConditionSet());
 
 		for (DefPathCondition defPathCondition : newTask.getPreConditionSet()) {
-			if (postProducts.contains(defPathCondition.getPathObject().getTargetOfPath()))
+			if (postProducts.contains(defPathCondition.getPath().getTargetOfPath()))
 				newTask.removePreCondition(defPathCondition);
 		}
 
@@ -147,15 +147,16 @@ public class TaskModel extends TaskModel_Base {
 
 		Set<AttributeBasic> postAttributes = ConditionModel
 				.getBasicAtributesOfDefConditionSet(task.getPostConditionSet());
-		Set<Product> preAttributes = task.getPreConditionSet().stream().map(d -> d.getPathObject().getTargetOfPath())
+		Set<Product> preAttributes = task.getPreConditionSet().stream().map(d -> d.getPath().getTargetOfPath())
 				.collect(Collectors.toSet());
 		preAttributes.addAll(getDataModel().getEntitySet().stream().filter(e -> e.getExists())
 				.flatMap(e -> e.getAttributeBasicSet().stream()).collect(Collectors.toSet()));
 
 		task.getRuleInvariantSet().stream().flatMap(r -> r.getPathSet().stream())
-				.filter(path -> !postAttributes.contains(getDataModel().getTargetOfPath(path))
-						&& !preAttributes.contains(getDataModel().getTargetOfPath(path)))
-				.forEach(path -> task.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(), path)));
+				.filter(path -> !postAttributes.contains(path.getTargetOfPath())
+						&& !preAttributes.contains(path.getTargetOfPath()))
+				.forEach(path -> task
+						.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(), path.getValue())));
 	}
 
 	private Set<AttributeBasic> getAttributesInEntitiesContext(Rule r, Set<Entity> entitiesInContext) {
@@ -280,8 +281,8 @@ public class TaskModel extends TaskModel_Base {
 		allDefConditions.removeAll(
 				getTasksSet().stream().flatMap(t -> t.getPostConditionSet().stream()).collect(Collectors.toSet()));
 		if (!allDefConditions.isEmpty())
-			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
-					allDefConditions.stream().map(c -> "DEF(" + c.getPath() + ")").collect(Collectors.joining(",")));
+			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, allDefConditions.stream()
+					.map(c -> "DEF(" + c.getPath().getValue() + ")").collect(Collectors.joining(",")));
 
 		Set<MulCondition> allMulConditions = new HashSet<MulCondition>(conditionModel.getEntityInvariantConditionSet());
 		allMulConditions.removeAll(getTasksSet().stream().flatMap(t -> t.getMultiplicityInvariantSet().stream())

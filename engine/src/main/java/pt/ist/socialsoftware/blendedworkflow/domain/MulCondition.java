@@ -120,8 +120,8 @@ public class MulCondition extends MulCondition_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
-		return new HashSet<String>();
+	public Set<Path> getPathSet() {
+		return new HashSet<Path>();
 
 	}
 

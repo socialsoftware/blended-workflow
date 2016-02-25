@@ -532,9 +532,9 @@ relation AttributeValueExpressionHasPath {
 	Path playsRole path { multiplicity 1..1; }
 }
 
-relation DefPathConditionHasPath {
-	DefPathCondition playsRole defPathCondition { multiplicity 0..1; }
-	Path playsRole pathObject { multiplicity 1..1; }
+relation DefProductConditionHasPath {
+	DefProductCondition playsRole defProductCondition { multiplicity 0..1; }
+	Path playsRole path { multiplicity 1..1; }
 }
 
 // Rule

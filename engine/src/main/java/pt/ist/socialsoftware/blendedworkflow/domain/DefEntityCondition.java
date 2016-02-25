@@ -21,17 +21,9 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 
 	private DefEntityCondition(Entity entity) {
 		setConditionModel(entity.getDataModel().getSpecification().getConditionModel());
+		Path path = new Path(entity.getDataModel(), entity.getName());
+		setPath(path);
 		setEntity(entity);
-	}
-
-	@Override
-	public Product getTargetOfPath() {
-		return getEntity();
-	}
-
-	@Override
-	public String getPath() {
-		return getEntity().getName();
 	}
 
 	@Override
@@ -78,8 +70,8 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
-		Set<String> paths = new HashSet<String>();
+	public Set<Path> getPathSet() {
+		Set<Path> paths = new HashSet<Path>();
 		paths.add(getPath());
 
 		return paths;
@@ -338,7 +330,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 
 	@Override
 	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.PATH_DEF, getPath());
+		return new ExpressionDTO(specId, BooleanOperator.PATH_DEF, getPath().getValue());
 	}
 
 }

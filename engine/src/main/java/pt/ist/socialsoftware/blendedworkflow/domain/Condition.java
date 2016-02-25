@@ -108,6 +108,6 @@ public abstract class Condition extends Condition_Base {
 
 	public abstract ExpressionDTO getDTO(String specId);
 
-	public abstract Set<String> getPathSet();
+	public abstract Set<Path> getPathSet();
 
 }

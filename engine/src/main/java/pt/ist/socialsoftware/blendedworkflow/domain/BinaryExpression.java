@@ -62,9 +62,9 @@ public class BinaryExpression extends BinaryExpression_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
-		Set<String> pathsOne = getRightExpression().getPathSet();
-		Set<String> pathsTwo = getLeftExpression().getPathSet();
+	public Set<Path> getPathSet() {
+		Set<Path> pathsOne = getRightExpression().getPathSet();
+		Set<Path> pathsTwo = getLeftExpression().getPathSet();
 		pathsOne.addAll(pathsTwo);
 
 		return pathsOne;

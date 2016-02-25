@@ -69,7 +69,7 @@ public class BoolComparison extends BoolComparison_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
+	public Set<Path> getPathSet() {
 		return Stream.concat(getRightCondition().getPathSet().stream(), getLeftCondition().getPathSet().stream())
 				.collect(Collectors.toSet());
 	}

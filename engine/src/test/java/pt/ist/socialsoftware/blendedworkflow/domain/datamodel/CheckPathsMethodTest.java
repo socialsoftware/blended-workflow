@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.domain.dependence;
+package pt.ist.socialsoftware.blendedworkflow.domain.datamodel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -9,16 +9,20 @@ import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
+import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class CheckMethodTest extends TeardownRollbackTest {
+public class CheckPathsMethodTest extends TeardownRollbackTest {
 
 	private static final String SPEC_ID = "SpecId";
 	private static final String ENT_ONE_NAME = "EntOne";
@@ -32,6 +36,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
 	private static final String ROLENAME_ENT_TWO = "entTwo";
 	private static final String ROLENAME_ENT_THREE = "entThree";
 
+	Specification spec;
 	DataModel dataModel;
 	Entity entOne;
 	Entity entTwo;
@@ -40,7 +45,7 @@ public class CheckMethodTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		Specification spec = new Specification(SPEC_ID, "name", "author", "description", "version", "UID");
+		spec = new Specification(SPEC_ID, "name", "author", "description", "version", "UID");
 		dataModel = spec.getDataModel();
 
 		entOne = new Entity(dataModel, ENT_ONE_NAME, false);
@@ -49,37 +54,58 @@ public class CheckMethodTest extends TeardownRollbackTest {
 
 		AttributeGroup attGroupOne = new AttributeGroup(dataModel, entOne, GROUP_ONE_NAME, true);
 
-		AttributeBasic attOne = new AttributeBasic(dataModel, entOne, null, ATT_ONE_NAME, AttributeType.BOOLEAN, true,
+		AttributeBasic attOne = new AttributeBasic(dataModel, entOne, null, ATT_ONE_NAME, AttributeType.NUMBER, true,
 				false, false);
 		attGroupOne.addAttribute(attOne);
-		AttributeBasic attTwo = new AttributeBasic(dataModel, entOne, null, ATT_TWO_NAME, AttributeType.NUMBER, false,
-				false, false);
+		new AttributeBasic(dataModel, entOne, null, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
 
-		attThree = new AttributeBasic(dataModel, entTwo, null, ATT_THREE_NAME, AttributeType.STRING, true, false,
+		attThree = new AttributeBasic(dataModel, entTwo, null, ATT_THREE_NAME, AttributeType.NUMBER, true, false,
 				false);
 
-		RelationBW relOneThree = new RelationBW(dataModel, "relOne", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false,
-				entThree, ROLENAME_ENT_THREE, Cardinality.ONE_MANY, false);
+		new RelationBW(dataModel, "relOne", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false, entThree,
+				ROLENAME_ENT_THREE, Cardinality.ONE_MANY, false);
 
-		RelationBW relThreeTwo = new RelationBW(dataModel, "relThree", entThree, ROLENAME_ENT_THREE,
-				Cardinality.ZERO_MANY, false, entTwo, ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);
+		new RelationBW(dataModel, "relThree", entThree, ROLENAME_ENT_THREE, Cardinality.ZERO_MANY, false, entTwo,
+				ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);
 
 	}
 
 	@Test
-	public void successEntitytoExternalAttribute() throws BWException {
-		Dependence dep = new Dependence(dataModel, entOne,
+	public void successDependence() throws BWException {
+		new Dependence(dataModel, entOne,
 				ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
 
-		dep.check();
+		dataModel.checkPaths();
 	}
 
 	@Test
-	public void failPrefixMissing() throws BWException {
+	public void failPrefixMissingDependence() throws BWException {
 		try {
-			Dependence dep = new Dependence(dataModel, entTwo,
+			new Dependence(dataModel, entTwo,
 					ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
-			dep.check();
+			dataModel.checkPaths();
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.INVALID_PATH, bwe.getError());
+		}
+	}
+
+	@Test
+	public void successRule() throws BWException {
+		new Rule(entOne, "myRule", new Comparison(new AttributeValueExpression(spec, ENT_ONE_NAME + "." + ATT_ONE_NAME),
+				new AttributeValueExpression(spec, ENT_ONE_NAME + "." + ATT_TWO_NAME), ComparisonOperator.EQUAL));
+
+		dataModel.checkPaths();
+	}
+
+	@Test
+	public void failPrefixMissingRule() throws BWException {
+		try {
+			new Rule(entOne, "myRule",
+					new Comparison(new AttributeValueExpression(spec, ENT_ONE_NAME + "." + ATT_ONE_NAME),
+							new AttributeValueExpression(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME),
+							ComparisonOperator.EQUAL));
+			dataModel.checkPaths();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INVALID_PATH, bwe.getError());

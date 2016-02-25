@@ -26,17 +26,11 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 
 	private DefAttributeCondition(Attribute attribute) {
 		setConditionModel(attribute.getEntity().getDataModel().getSpecification().getConditionModel());
+		Path path = new Path(attribute.getEntity().getDataModel(),
+				attribute.getEntity().getName() + "." + attribute.getName());
+		setPath(path);
+
 		setAttributeOfDef(attribute);
-	}
-
-	@Override
-	public Product getTargetOfPath() {
-		return getAttributeOfDef();
-	}
-
-	@Override
-	public String getPath() {
-		return getAttributeOfDef().getEntity().getName() + "." + getAttributeOfDef().getName();
 	}
 
 	@Override
@@ -78,8 +72,8 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
-		Set<String> paths = new HashSet<String>();
+	public Set<Path> getPathSet() {
+		Set<Path> paths = new HashSet<Path>();
 		paths.add(getPath());
 
 		return paths;
@@ -244,7 +238,7 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	public DefAttributeConditionDTO getDTO() {
 		DefAttributeConditionDTO defConditionDTO = new DefAttributeConditionDTO();
 		defConditionDTO.setSpecId(getConditionModel().getSpecification().getSpecId());
-		defConditionDTO.setPath(getPath());
+		defConditionDTO.setPath(getPath().getValue());
 		defConditionDTO.setAttributeExtId(getAttributeOfDef().getExternalId());
 		defConditionDTO.setMandatory(getAttributeOfDef().getIsMandatory());
 
@@ -253,7 +247,7 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 
 	@Override
 	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.PATH_DEF, getPath());
+		return new ExpressionDTO(specId, BooleanOperator.PATH_DEF, getPath().getValue());
 	}
 
 }

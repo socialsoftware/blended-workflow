@@ -69,9 +69,9 @@ public class OrCondition extends OrCondition_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
-		Set<String> pathsOne = getConditionOne().getPathSet();
-		Set<String> pathsTwo = getConditionTwo().getPathSet();
+	public Set<Path> getPathSet() {
+		Set<Path> pathsOne = getConditionOne().getPathSet();
+		Set<Path> pathsTwo = getConditionTwo().getPathSet();
 		pathsOne.addAll(pathsTwo);
 		return pathsOne;
 	}

@@ -94,11 +94,11 @@ public class Comparison extends Comparison_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
+	public Set<Path> getPathSet() {
 		if (getAttributeOfComparison() != null) {
-			Set<String> attributes = new HashSet<String>();
-			attributes
-					.add(getAttributeOfComparison().getEntity().getName() + "." + getAttributeOfComparison().getName());
+			Set<Path> attributes = new HashSet<Path>();
+			attributes.add(new Path(getDataModel(),
+					getAttributeOfComparison().getEntity().getName() + "." + getAttributeOfComparison().getName()));
 			return attributes;
 		} else {
 			return Stream.concat(getRightExpression().getPathSet().stream(), getLeftExpression().getPathSet().stream())

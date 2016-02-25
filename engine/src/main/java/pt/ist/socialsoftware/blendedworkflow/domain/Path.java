@@ -21,7 +21,7 @@ public class Path extends Path_Base {
 		setDependence(null);
 		setAttributeBoolCondition(null);
 		setAttributeValueExpression(null);
-		setDefPathCondition(null);
+		setDefProductCondition(null);
 
 		deleteDomainObject();
 	}

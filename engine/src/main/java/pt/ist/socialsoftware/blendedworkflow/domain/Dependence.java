@@ -16,7 +16,7 @@ public class Dependence extends Dependence_Base {
 
 	@Override
 	public void setPath(Path path) {
-		checkPathPrefix(path);
+		checkPathPrefixLocal(path);
 		super.setPath(path);
 	}
 
@@ -27,7 +27,7 @@ public class Dependence extends Dependence_Base {
 		setPath(path);
 	}
 
-	private void checkPathPrefix(Path path) {
+	private void checkPathPrefixLocal(Path path) {
 		List<String> elements = Arrays.stream(path.getValue().split("\\.")).collect(Collectors.toList());
 		if (elements.size() == 1) {
 			throw new BWException(BWErrorType.INVALID_PATH, path.getValue());
@@ -39,11 +39,12 @@ public class Dependence extends Dependence_Base {
 		}
 	}
 
-	public boolean check() {
-		log.debug("check {}", getPath());
+	public void checkPathPrefix() {
+		checkPathPrefixLocal(getPath());
+	}
 
-		checkPathPrefix(getPath());
-
+	public boolean checkPath() {
+		checkPathPrefix();
 		return getPath().check();
 	}
 

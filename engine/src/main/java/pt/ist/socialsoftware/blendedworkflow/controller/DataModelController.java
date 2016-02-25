@@ -46,6 +46,17 @@ public class DataModelController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/check", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<Boolean> checkDataModel(@PathVariable("specId") String specId) {
+		log.debug("checkDataModel specId:{}", specId);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		adi.checkDataModel(specId);
+
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/products/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<ProductDTO> getProduct(@PathVariable("specId") String specId,
 			@PathVariable("path") String path) {

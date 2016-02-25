@@ -217,7 +217,7 @@ public class Task extends Task_Base {
 
 	public void removePreCondition(String entityTwoName) {
 		for (DefPathCondition defPathCondition : getPreConditionSet()) {
-			if (defPathCondition.getPath().equals(entityTwoName)) {
+			if (defPathCondition.getPath().getValue().equals(entityTwoName)) {
 				removePreCondition(defPathCondition);
 			}
 		}
