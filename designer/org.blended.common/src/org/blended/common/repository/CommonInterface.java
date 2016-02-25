@@ -146,6 +146,20 @@ public class CommonInterface {
 		restTemplate.put(uri, null, params);
 	}
 
+	public boolean checkDataModel(String specId) {
+		logger.debug("checkDataModel: {}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/datamodel/check";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		Boolean response = restTemplate.getForObject(uri, Boolean.class, params);
+
+		return response;
+	}
+
 	public EntityDTO createEntity(EntityDTO entityVO) {
 		logger.debug("createEntity: {}, {}, {}", entityVO.getSpecId(), entityVO.getName(), entityVO.getExists());
 

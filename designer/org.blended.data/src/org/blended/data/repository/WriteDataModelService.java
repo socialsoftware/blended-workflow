@@ -194,6 +194,12 @@ public class WriteDataModelService {
 			}
 		}
 
+		try {
+			ci.checkDataModel(specId);
+		} catch (RepositoryException re) {
+			notification.addError(re.getError());
+		}
+
 		ci.printSpecificationModels(specId);
 
 		return notification;

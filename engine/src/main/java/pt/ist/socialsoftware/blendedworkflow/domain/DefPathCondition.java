@@ -21,13 +21,8 @@ public class DefPathCondition extends DefPathCondition_Base {
 
 	private DefPathCondition(Specification spec, String value) {
 		Path path = new Path(spec.getDataModel(), value);
-		setPathObject(path);
+		setPath(path);
 		setDataModel(spec.getDataModel());
-	}
-
-	@Override
-	public Product getTargetOfPath() {
-		return getPathObject().getTargetOfPath();
 	}
 
 	@Override
@@ -77,8 +72,8 @@ public class DefPathCondition extends DefPathCondition_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
-		Set<String> paths = new HashSet<String>();
+	public Set<Path> getPathSet() {
+		Set<Path> paths = new HashSet<Path>();
 		paths.add(getPath());
 
 		return paths;
@@ -159,14 +154,13 @@ public class DefPathCondition extends DefPathCondition_Base {
 
 	@Override
 	public String getSubPath() {
-		return "DEF(" + getPathObject().getValue() + ")";
+		return "DEF(" + getPath().getValue() + ")";
 	}
 
 	@Override
 	public void delete() {
 		getTaskWithPreConditionSet().stream().forEach(d -> removeTaskWithPreCondition(d));
 		getActivationConditionGoalSet().stream().forEach(d -> removeActivationConditionGoal(d));
-		getPathObject().delete();
 		setDataModel(null);
 
 		super.delete();
@@ -174,12 +168,7 @@ public class DefPathCondition extends DefPathCondition_Base {
 
 	@Override
 	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.PATH_DEF, getPathObject().getValue());
-	}
-
-	@Override
-	public String getPath() {
-		return getPathObject().getValue();
+		return new ExpressionDTO(specId, BooleanOperator.PATH_DEF, getPath().getValue());
 	}
 
 }

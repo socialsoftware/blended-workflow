@@ -8,11 +8,13 @@ public abstract class DefProductCondition extends DefProductCondition_Base {
 
 		setSuccessConditionGoal(null);
 
+		getPath().delete();
+
 		super.delete();
 	}
 
-	public abstract Product getTargetOfPath();
-
-	public abstract String getPath();
+	public Product getTargetOfPath() {
+		return getPath().getTargetOfPath();
+	}
 
 }

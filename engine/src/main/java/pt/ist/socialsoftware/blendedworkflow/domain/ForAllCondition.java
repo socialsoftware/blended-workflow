@@ -54,7 +54,7 @@ public class ForAllCondition extends ForAllCondition_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
+	public Set<Path> getPathSet() {
 		return getCondition().getPathSet();
 	}
 

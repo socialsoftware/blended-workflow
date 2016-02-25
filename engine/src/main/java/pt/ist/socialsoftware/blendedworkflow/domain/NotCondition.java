@@ -51,7 +51,7 @@ public class NotCondition extends NotCondition_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
+	public Set<Path> getPathSet() {
 		return getCondition().getPathSet();
 	}
 

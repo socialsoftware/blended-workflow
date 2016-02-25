@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,9 +23,8 @@ public class Rule extends Rule_Base {
 
 	@Override
 	public void setCondition(Condition condition) {
-		if (condition != null && !condition.getPathSet().stream().map(path -> path.split("\\.")[0])
-				.allMatch(en -> en.equals(getEntity().getName())))
-			throw new BWException(BWErrorType.INVALID_PATH, condition.toString());
+		if (condition != null)
+			condition.getPathSet().forEach(p -> checkPathPrefix(p));
 
 		super.setCondition(condition);
 	}
@@ -69,13 +70,37 @@ public class Rule extends Rule_Base {
 	}
 
 	public Set<Attribute> getAttributeSet() {
-		Set<String> paths = getPathSet();
-		return paths.stream().map(p -> getEntity().getDataModel().getTargetOfPath(p))
-				.filter(Attribute.class::isInstance).map(Attribute.class::cast).collect(Collectors.toSet());
+		Set<Path> paths = getCondition().getPathSet();
+		return paths.stream().map(p -> p.getTargetOfPath()).filter(Attribute.class::isInstance)
+				.map(Attribute.class::cast).collect(Collectors.toSet());
 	}
 
-	public Set<String> getPathSet() {
+	public Set<Path> getPathSet() {
 		return getCondition().getPathSet();
+	}
+
+	public boolean checkPaths() {
+		if (getCondition() != null)
+			getCondition().getPathSet().stream().forEach(p -> checkPath(p));
+
+		return true;
+	}
+
+	private boolean checkPath(Path path) {
+		checkPathPrefix(path);
+		return path.check();
+	}
+
+	private void checkPathPrefix(Path path) {
+		List<String> elements = Arrays.stream(path.getValue().split("\\.")).collect(Collectors.toList());
+		if (elements.size() == 1) {
+			throw new BWException(BWErrorType.INVALID_PATH, path.getValue());
+		}
+
+		if (!elements.get(0).equals(getEntity().getName())) {
+			throw new BWException(BWErrorType.INVALID_PATH,
+					path.getValue() + " requires to have the Entity name as prefix: " + getEntity().getName());
+		}
 	}
 
 }

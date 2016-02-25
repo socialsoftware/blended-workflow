@@ -66,9 +66,9 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
-		Set<String> paths = new HashSet<String>();
-		paths.add(getPath().getValue());
+	public Set<Path> getPathSet() {
+		Set<Path> paths = new HashSet<Path>();
+		paths.add(getPath());
 
 		return paths;
 	}

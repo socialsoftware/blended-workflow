@@ -48,8 +48,8 @@ public class FalseCondition extends FalseCondition_Base {
 	}
 
 	@Override
-	public Set<String> getPathSet() {
-		return new HashSet<String>();
+	public Set<Path> getPathSet() {
+		return new HashSet<Path>();
 	}
 
 	@Override

@@ -285,9 +285,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskOne.removeRuleInvariant(ruleOne);
 		taskTwo.addRuleInvariant(ruleOne);
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec,
-				DefAttributeCondition.getDefAttribute(attributeOne).getPath()));
+				DefAttributeCondition.getDefAttribute(attributeOne).getPath().getValue()));
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec,
-				DefAttributeCondition.getDefAttribute(attributeTwo).getPath()));
+				DefAttributeCondition.getDefAttribute(attributeTwo).getPath().getValue()));
 
 		try {
 			spec.getTaskModel().checkModel();
@@ -303,7 +303,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskThree.removeRuleInvariant(ruleTwo);
 		taskTwo.addRuleInvariant(ruleTwo);
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec,
-				DefAttributeCondition.getDefAttribute(attributeFour).getPath()));
+				DefAttributeCondition.getDefAttribute(attributeFour).getPath().getValue()));
 
 		try {
 			spec.getTaskModel().checkModel();

@@ -94,6 +94,12 @@ public class DesignInterface {
 		spec.getDataModel().clean();
 	}
 
+	public void checkDataModel(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		spec.getDataModel().check();
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public Entity createEntity(EntityDTO entDTO) {
 		log.debug("createEntity specId:{}, name:{}, exists:{}", entDTO.getSpecId(), entDTO.getName(),
@@ -186,7 +192,7 @@ public class DesignInterface {
 
 	public boolean checkDependence(String extId) {
 		Dependence dependence = getDependenceByExtId(extId);
-		return dependence.check();
+		return dependence.checkPath();
 	}
 
 	@Atomic(mode = TxMode.WRITE)

@@ -80,8 +80,14 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		relation = new RelationBW(spec.getDataModel(), "name", entityOne, ROLENAME_ONE, Cardinality.ONE, false,
 				entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
-		Dependence dependence = new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH);
-		dependence.check();
+		new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH);
+
+		Rule rule = new Rule(entityOne, RULE_CONDITION,
+				new Comparison(new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
+						new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME),
+						ComparisonOperator.EQUAL));
+
+		spec.getDataModel().checkPaths();
 
 		topGoal = new Goal(spec.getGoalModel(), TOP_GOAL);
 		childGoalOne = new Goal(spec.getGoalModel(), CHILD_GOAL_ONE);
@@ -102,11 +108,6 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 
 		topGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_TWO));
 		childGoalTwo.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_ONE));
-
-		Rule rule = new Rule(entityOne, RULE_CONDITION,
-				new Comparison(new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
-						new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME),
-						ComparisonOperator.EQUAL));
 
 		childGoalOne.addAttributeInvariantCondition(rule);
 		childGoalTwo.addAttributeInvariantCondition(rule);
@@ -213,7 +214,8 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		assertEquals(1, newGoal.getSuccessConditionSet().size());
 		assertTrue(newGoal.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeThree)));
 		assertEquals(1, newGoal.getActivationConditionSet().size());
-		assertEquals(DEPENDENCE_PATH, newGoal.getActivationConditionSet().stream().findFirst().get().getPath());
+		assertEquals(DEPENDENCE_PATH,
+				newGoal.getActivationConditionSet().stream().findFirst().get().getPath().getValue());
 		assertEquals(0, newGoal.getEntityInvariantConditionSet().size());
 		assertEquals(0, newGoal.getAttributeInvariantConditionSet().size());
 

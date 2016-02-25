@@ -37,7 +37,7 @@ public abstract class Expression extends Expression_Base {
 
 	public abstract Set<AttributeBasic> getAttributes();
 
-	public abstract Set<String> getPathSet();
+	public abstract Set<Path> getPathSet();
 
 	public abstract ExpressionDTO getDTO(String specId);
 

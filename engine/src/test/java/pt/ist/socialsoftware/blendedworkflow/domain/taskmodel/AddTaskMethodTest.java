@@ -216,11 +216,11 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		assertTrue(task.getPostConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeFour)));
 		task.getPreConditionSet().stream().forEach(e -> System.out.println(e.getPath()));
 		assertEquals(3, task.getPreConditionSet().size());
-		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath()).collect(Collectors.toSet())
+		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath().getValue()).collect(Collectors.toSet())
 				.contains(ENTITY_TWO_NAME));
-		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath()).collect(Collectors.toSet())
+		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath().getValue()).collect(Collectors.toSet())
 				.contains(ENTITY_THREE_NAME));
-		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath()).collect(Collectors.toSet())
+		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath().getValue()).collect(Collectors.toSet())
 				.contains(DEPENDENCE_PATH_ONE));
 		assertEquals(0, task.getMultiplicityInvariantSet().size());
 		assertEquals(1, task.getRuleInvariantSet().size());
@@ -241,7 +241,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 
 		assertEquals(NEW_TASK_NAME, task.getName());
 		assertEquals(1, task.getPreConditionSet().size());
-		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath()).collect(Collectors.toSet())
+		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath().getValue()).collect(Collectors.toSet())
 				.contains(ENTITY_EXISTS));
 		// assertTrue(task.getPreConditionSet().stream().map(d ->
 		// d.getPath()).collect(Collectors.toSet())

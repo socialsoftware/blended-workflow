@@ -68,8 +68,11 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 		relation = new RelationBW(spec.getDataModel(), "name", entityOne, ROLENAME_ONE, Cardinality.ONE, false,
 				entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
-		Dependence dependence = new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH);
-		dependence.check();
+		new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH);
+
+		Rule rule = new Rule(entityOne, RULE_CONDITION, null);
+
+		spec.getDataModel().checkPaths();
 
 		topGoal = new Goal(spec.getGoalModel(), TOP_GOAL);
 		childGoalOne = new Goal(spec.getGoalModel(), CHILD_GOAL_ONE);
@@ -88,8 +91,6 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 
 		topGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_TWO));
 		childGoalTwo.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_ONE));
-
-		Rule rule = new Rule(entityOne, RULE_CONDITION, null);
 
 		childGoalOne.addAttributeInvariantCondition(rule);
 		childGoalTwo.addAttributeInvariantCondition(rule);
