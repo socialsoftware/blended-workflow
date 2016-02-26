@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -138,7 +137,7 @@ public class DataModel extends DataModel_Base {
 		Set<Product> nextProducts = beforeProduct.getDependenceSet().stream().map(d -> d.getPath().getTargetOfPath())
 				.filter(p -> !visitedProducts.contains(p)).collect(Collectors.toSet());
 
-		if (productSimulatenouslyCreatedWithOneOProducts(afterProduct, nextProducts)) {
+		if (!afterProduct.canBeDefinedBeforeProducts(nextProducts)) {
 			return false;
 		} else {
 			visitedProducts.addAll(nextProducts);
@@ -185,7 +184,7 @@ public class DataModel extends DataModel_Base {
 		logger.debug("removeNonCircularPaths path:{}, product:{}, dependencies:{}", dependence.getPath().getValue(),
 				product.getName(), product.getDependenceSet().size());
 
-		if (productSimulatenouslyCreatedWithOneOProducts(product, visitedProducts)) {
+		if (!product.canBeDefinedBeforeProducts(visitedProducts)) {
 			throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY, dependence.getPath().getValue());
 		} else {
 			dependencies.remove(dependence);
@@ -195,19 +194,6 @@ public class DataModel extends DataModel_Base {
 		for (Dependence dep : product.getDependenceSet()) {
 			removeNonCircularPaths(dep, dependencies, visitedProducts);
 		}
-	}
-
-	private boolean productSimulatenouslyCreatedWithOneOProducts(Product product, Set<Product> products) {
-		if (products.contains(product))
-			return true;
-
-		if (product.getProductType().equals(ProductType.ENTITY))
-			return false;
-
-		Attribute att = (Attribute) product;
-
-		return products.stream().filter(Attribute.class::isInstance).map(Attribute.class::cast)
-				.anyMatch(a -> a.getAttributeBasicSet().contains(att) || att.getAttributeBasicSet().contains(a));
 	}
 
 	public void checkPaths() {

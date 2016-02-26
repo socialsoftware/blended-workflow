@@ -43,10 +43,11 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	private static final String ATTRIBUTE_THREE_NAME = "att3";
 	private static final String ATTRIBUTE_FOUR_NAME = "att4";
 	private static final String ROLENAME_ONE = "theOne";
-	private static final String DEPENDENCE_PATH = ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME;
 	private static final String ROLENAME_TWO = "theTwo";
+	private static final String ROLENAME_THREE = "theThree";
 	private static final String RULE_ONE_NAME = "ruleOne";
 	private static final String RULE_TWO_NAME = "ruleTwo";
+	private static final String DEPENDENCE_PATH = ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME;
 
 	Specification spec;
 	Entity entityOne;
@@ -61,6 +62,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	AttributeBasic attributeFourTwo;
 	RelationBW existsRelationOne;
 	RelationBW existsRelationTwo;
+	RelationBW existsRelationThree;
 	Rule ruleOne;
 	Rule ruleTwo;
 
@@ -82,8 +84,8 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		attributeThree = new AttributeBasic(spec.getDataModel(), entityTwo, null, ATTRIBUTE_THREE_NAME,
 				AttributeType.BOOLEAN, true, false, false);
 
-		existsRelationOne = new RelationBW(spec.getDataModel(), "name", entityOne, ROLENAME_ONE, Cardinality.ONE, false,
-				entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
+		existsRelationOne = new RelationBW(spec.getDataModel(), "nameOne", entityOne, ROLENAME_ONE, Cardinality.ONE,
+				false, entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
 		entityThree = new Entity(spec.getDataModel(), ENTITY_THREE_NAME, false);
 		attributeFour = new AttributeGroup(spec.getDataModel(), entityThree, ATTRIBUTE_FOUR_NAME, false);
@@ -91,6 +93,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				AttributeType.NUMBER, false, false, false);
 		attributeFourTwo = new AttributeBasic(spec.getDataModel(), entityThree, attributeFour, ATTRIBUTE_FOURTWO_NAME,
 				AttributeType.NUMBER, false, false, false);
+
+		existsRelationTwo = new RelationBW(spec.getDataModel(), "nameTwo", entityTwo, ROLENAME_TWO, Cardinality.ONE,
+				false, entityThree, ROLENAME_THREE, Cardinality.ZERO_MANY, false);
 
 		new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH);
 
@@ -105,7 +110,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 						ComparisonOperator.EQUAL));
 
 		existsEntity = new Entity(spec.getDataModel(), EXISTS_ENTITY, true);
-		existsRelationTwo = new RelationBW(spec.getDataModel(), "other", entityOne, ROLENAME_ONE, Cardinality.ONE,
+		existsRelationThree = new RelationBW(spec.getDataModel(), "other", entityOne, ROLENAME_ONE, Cardinality.ONE,
 				false, existsEntity, "existingEntity", Cardinality.ZERO_MANY, false);
 
 		spec.getConditionModel().generateConditions();
@@ -116,9 +121,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
 		taskOne.addMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationTwo, existsRelationTwo.getRoleNameOne()));
+				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRoleNameOne()));
 		taskOne.addMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationTwo, existsRelationTwo.getRoleNameTwo()));
+				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRoleNameTwo()));
 		taskOne.addRuleInvariant(ruleOne);
 
 		taskTwo = new Task(spec.getTaskModel(), TASK_TWO, "Description");
@@ -129,6 +134,10 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(
 				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameTwo()));
+		taskTwo.addMultiplicityInvariant(
+				MulCondition.getMulCondition(existsRelationTwo, existsRelationTwo.getRoleNameOne()));
+		taskTwo.addMultiplicityInvariant(
+				MulCondition.getMulCondition(existsRelationTwo, existsRelationTwo.getRoleNameTwo()));
 
 		taskThree = new Task(spec.getTaskModel(), TASK_THREE, "Description");
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
@@ -302,8 +311,6 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	public void ruleConditionDoesNotHaveDefAttributeGroup() {
 		taskThree.removeRuleInvariant(ruleTwo);
 		taskTwo.addRuleInvariant(ruleTwo);
-		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec,
-				DefAttributeCondition.getDefAttribute(attributeFour).getPath().getValue()));
 
 		try {
 			spec.getTaskModel().checkModel();
@@ -316,14 +323,11 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void success() {
-		boolean result = spec.getTaskModel().checkModel();
-
-		assertTrue(result);
+		assertTrue(spec.getTaskModel().checkModel());
 	}
 
 	@Test
 	public void existsEntitySuccess() {
-
 		assertTrue(spec.getTaskModel().checkModel());
 	}
 
@@ -343,7 +347,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	@Test
 	public void existsEntityFailureNoMulCondition() {
 		taskOne.removeMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationTwo, existsRelationTwo.getRoleNameOne()));
+				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRoleNameOne()));
 
 		try {
 			spec.getTaskModel().checkModel();

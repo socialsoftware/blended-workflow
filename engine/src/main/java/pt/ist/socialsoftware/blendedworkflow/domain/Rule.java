@@ -49,7 +49,8 @@ public class Rule extends Rule_Base {
 		setConditionModel(null);
 		setInvariantConditionGoal(null);
 		setTaskWithRule(null);
-		getCondition().delete();
+		if (getCondition() != null)
+			getCondition().delete();
 
 		deleteDomainObject();
 	}

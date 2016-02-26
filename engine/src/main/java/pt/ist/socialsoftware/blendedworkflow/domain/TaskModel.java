@@ -35,6 +35,20 @@ public class TaskModel extends TaskModel_Base {
 		throw new BWException(BWErrorType.NON_EXISTENT_TASK_NAME, name);
 	}
 
+	public Task getTaskPostConditionContains(String path) {
+		Product product = getDataModel().getTargetOfPath(path);
+		if (product.isEntityAndExists()) {
+			return null;
+		}
+
+		for (Task task : getTasksSet()) {
+			if (task.getPostConditionSet().stream().map(d -> d.getPath().getValue()).anyMatch(p -> p.equals(path))) {
+				return task;
+			}
+		}
+		throw new BWException(BWErrorType.NON_EXISTENT_TASK_PATH, path);
+	}
+
 	public void clean() {
 		getTasksSet().stream().forEach(t -> t.delete());
 	}
@@ -60,9 +74,9 @@ public class TaskModel extends TaskModel_Base {
 			}
 		}
 
-		for (DefAttributeCondition defEntityCondition : conditionModel.getAttributeAchieveConditionSet()) {
+		for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
 			HashSet<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
-			postConditionSet.add(defEntityCondition);
+			postConditionSet.add(defAttributeCondition);
 			addTask("a" + activityCounter, "Activity number " + activityCounter, postConditionSet);
 			activityCounter++;
 		}

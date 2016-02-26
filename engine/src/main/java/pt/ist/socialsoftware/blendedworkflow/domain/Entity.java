@@ -18,7 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 
 public class Entity extends Entity_Base {
-	private static Logger log = LoggerFactory.getLogger(Entity.class);
+	private static Logger logger = LoggerFactory.getLogger(Entity.class);
 
 	@Override
 	public void setName(String name) {
@@ -395,6 +395,14 @@ public class Entity extends Entity_Base {
 	@Override
 	public String getFullPath() {
 		return getName();
+	}
+
+	@Override
+	public boolean canBeDefinedBefore(Product product) {
+		if (this == product)
+			return false;
+		else
+			return true;
 	}
 
 }

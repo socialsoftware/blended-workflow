@@ -79,4 +79,17 @@ public class AttributeGroup extends AttributeGroup_Base {
 		return getAttributeSet();
 	}
 
+	@Override
+	public boolean canBeDefinedBefore(Product product) {
+		if (this == product) {
+			return false;
+		} else if (product.getProductType().equals(ProductType.ENTITY)) {
+			return this.getEntity() != product;
+		} else if (product.getProductType().equals(ProductType.ATTRIBUTE_BASIC)) {
+			return !this.getAttributeSet().contains(product);
+		} else {
+			return true;
+		}
+	}
+
 }

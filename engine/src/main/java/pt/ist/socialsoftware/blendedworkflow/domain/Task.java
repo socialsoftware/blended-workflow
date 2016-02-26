@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -129,8 +130,31 @@ public class Task extends Task_Base {
 		checkDependenceConstraint();
 		checkMultiplicityConstraint();
 		checkRuleConstraint();
+		checkCircularity();
 
 		return true;
+	}
+
+	public void checkCircularity() {
+		Set<Product> visitedProducts = new HashSet<Product>();
+		goThroughAcyclicPath(this, visitedProducts);
+	}
+
+	private void goThroughAcyclicPath(Task task, Set<Product> visitedProducts) {
+		Set<Product> nextProducts = getPreConditionSet().stream().map(p -> p.getPath().getTargetOfPath())
+				.filter(p -> !p.isEntityAndExists() && !visitedProducts.contains(p)).collect(Collectors.toSet());
+
+		Set<Task> nextTasks = nextProducts.stream()
+				.map(p -> getTaskModel().getTaskPostConditionContains(p.getFullPath())).collect(Collectors.toSet());
+
+		if (nextTasks.contains(task)) {
+			throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY, getName());
+		} else {
+			visitedProducts.addAll(nextProducts);
+			for (Task nextTask : nextTasks) {
+				nextTask.goThroughAcyclicPath(task, visitedProducts);
+			}
+		}
 	}
 
 	private void checkRuleConstraint() {

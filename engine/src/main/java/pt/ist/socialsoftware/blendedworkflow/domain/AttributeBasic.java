@@ -13,7 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 
 public class AttributeBasic extends AttributeBasic_Base {
-	private static Logger log = LoggerFactory.getLogger(AttributeBasic.class);
+	private static Logger logger = LoggerFactory.getLogger(AttributeBasic.class);
 
 	final static String ATTRIBUTE_TYPE = "(" + AttributeType.STRING + "|" + AttributeType.NUMBER + "|"
 			+ AttributeType.BOOLEAN + "|" + AttributeType.DATE + ")";
@@ -142,6 +142,19 @@ public class AttributeBasic extends AttributeBasic_Base {
 		Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
 		attributes.add(this);
 		return attributes;
+	}
+
+	@Override
+	public boolean canBeDefinedBefore(Product product) {
+		if (this == product) {
+			return false;
+		} else if (product.getProductType().equals(ProductType.ENTITY)) {
+			return this.getEntity() != product;
+		} else if (product.getProductType().equals(ProductType.ATTRIBUTE_GROUP)) {
+			return this.getAttributeGroup() != product;
+		} else {
+			return true;
+		}
 	}
 
 }
