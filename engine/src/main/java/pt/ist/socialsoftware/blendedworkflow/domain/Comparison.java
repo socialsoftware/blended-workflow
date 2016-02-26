@@ -391,8 +391,10 @@ public class Comparison extends Comparison_Base {
 	@Override
 	public void delete() {
 		setAttributeOfComparison(null);
-		getLeftExpression().delete();
-		getRightExpression().delete();
+		if (getLeftExpression() != null)
+			getLeftExpression().delete();
+		if (getRightExpression() != null)
+			getRightExpression().delete();
 		super.delete();
 
 	}

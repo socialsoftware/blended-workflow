@@ -209,4 +209,28 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 		}
 	}
 
+	@Test
+	public void failEntityDependsOnItsAttributeDirect() throws BWException {
+		try {
+			new Dependence(dataModel, entOne, ENT_ONE_NAME + "." + ATT_ONE_NAME);
+			dataModel.checkCircularities();
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
+		}
+	}
+
+	@Test
+	public void failEntityDependsOnItsAttributeIndirect() throws BWException {
+		try {
+			new Dependence(dataModel, entOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO);
+			new Dependence(dataModel, entTwo, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE);
+			new Dependence(dataModel, entThree, ENT_THREE_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME);
+			dataModel.checkCircularities();
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
+		}
+	}
+
 }
