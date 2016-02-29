@@ -79,14 +79,14 @@ public class CreateNewGoalService implements Callable<String> {
 						DefPathCondition.getDefPathCondition(bwInstance.getSpecification(), activateConditionString));
 			}
 
-			BlendedWorkflow.getInstance().getWorkListManager().notifyNewGoalCreated(newGoal);
+			// BlendedWorkflow.getInstance().getWorkListManager().notifyNewGoalCreated(newGoal);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			String date = dateFormat.format(Calendar.getInstance().getTime());
 			bwInstance.getLog().addLogRecords(new LogRecord(date, "Goal Created", "[GOAL] " + name, userID));
 
 		} catch (BWException bwe) {
 			log.error(bwe.getError().name());
-			BlendedWorkflow.getInstance().getWorkListManager().notifyException(bwe.getError());
+			// BlendedWorkflow.getInstance().getWorkListManager().notifyException(bwe.getError());
 		}
 		Transaction.commit();
 		log.info("END");

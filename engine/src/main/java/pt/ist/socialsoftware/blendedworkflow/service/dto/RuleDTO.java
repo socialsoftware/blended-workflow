@@ -9,6 +9,7 @@ public class RuleDTO {
 	private String extId;
 	private String name;
 	private ExpressionDTO expression;
+	private String toStringExpression;
 
 	public RuleDTO() {
 	}
@@ -59,6 +60,14 @@ public class RuleDTO {
 
 	public void setEntityName(String entityName) {
 		this.entityName = entityName;
+	}
+
+	public String getToStringExpression() {
+		return toStringExpression;
+	}
+
+	public void setToStringExpression(String toStringExpression) {
+		this.toStringExpression = toStringExpression;
 	}
 
 }

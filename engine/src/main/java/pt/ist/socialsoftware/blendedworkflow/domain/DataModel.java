@@ -202,4 +202,8 @@ public class DataModel extends DataModel_Base {
 		getEntitySet().stream().flatMap(e -> e.getRuleSet().stream()).forEach(r -> r.checkPaths());
 	}
 
+	public Set<Rule> getRules() {
+		return getEntitySet().stream().flatMap(e -> e.getRuleSet().stream()).collect(Collectors.toSet());
+	}
+
 }

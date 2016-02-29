@@ -19,6 +19,7 @@ import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
 import org.blended.common.repository.resttemplate.dto.ExpressionDTO.Type;
 import org.blended.common.repository.resttemplate.dto.GoalDTO;
 import org.blended.common.repository.resttemplate.dto.MulConditionDTO;
+import org.blended.common.repository.resttemplate.dto.ProductDTO.ProductType;
 import org.blended.common.repository.resttemplate.dto.RelationDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.blended.common.repository.resttemplate.dto.SpecDTO;
@@ -65,15 +66,17 @@ public class MergeAndExtractGoalTest {
 		EntityDTO entityDTO = ci.createEntity(new EntityDTO(TEST_SPEC_ID, ENTITY_ONE, false));
 		ci.createEntityAchieveCondition(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_ONE));
 
-		AttributeDTO attOneDTO = ci
-				.createAttribute(new AttributeDTO(TEST_SPEC_ID, entityDTO.getExtId(), null, ATT_ONE, "Number", false));
+		AttributeDTO attOneDTO = ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, ProductType.ATTRIBUTE_BASIC.name(),
+				entityDTO.getExtId(), entityDTO.getName(), null, null, ATT_ONE, "Number", false));
 
-		ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, entityDTO.getExtId(), null, ATT_TWO, "Number", false));
+		ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, ProductType.ATTRIBUTE_BASIC.name(), entityDTO.getExtId(),
+				entityDTO.getName(), null, null, ATT_TWO, "Number", false));
 
 		entityDTO = ci.createEntity(new EntityDTO(TEST_SPEC_ID, ENTITY_TWO, false));
 		ci.createEntityAchieveCondition(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
 
-		ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, entityDTO.getExtId(), null, ATT_THREE, "String", false));
+		ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, ProductType.ATTRIBUTE_BASIC.name(), entityDTO.getExtId(),
+				entityDTO.getName(), null, null, ATT_THREE, "String", false));
 
 		ci.createRelation(new RelationDTO(TEST_SPEC_ID, "RelationName", ENTITY_ONE, ROLENAME_ONE, "0..1", ENTITY_TWO,
 				ROLENAME_TWO, "*"));

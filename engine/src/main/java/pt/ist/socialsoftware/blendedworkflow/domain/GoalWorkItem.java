@@ -60,7 +60,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	public void notifyPreGoal() {
 		log.info("GoalWorkitem " + getID() + " is now in PreGoal state");
 		setState(GoalState.PRE_GOAL);
-		BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
+		// BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
 	}
 
 	public void notifyActivated() {
@@ -82,7 +82,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Achieved", "[GOAL] " + getID(), getUser().getID()));
-		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
+		// BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 
 		getBwInstance().getGoalModelInstance().checkActivatedWorkItems();
 	}
@@ -94,7 +94,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
 		String date = dateFormat.format(Calendar.getInstance().getTime());
 		getBwInstance().getLog().addLogRecords(new LogRecord(date, "Skipped", "[GOAL] " + getID(), getUser().getID()));
-		BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
+		// BlendedWorkflow.getInstance().getWorkListManager().notifyCompletedWorkItem(this);
 
 		getBwInstance().getGoalModelInstance().checkActivatedWorkItems();
 	}
@@ -108,7 +108,8 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		getBwInstance().getLog()
 				.addLogRecords(new LogRecord(date, "ReEnabled", "[GOAL] " + this.getID(), getUser().getID()));
 
-		BlendedWorkflow.getInstance().getWorkListManager().notifyReEnabledWorkItem(this, cause);
+		// BlendedWorkflow.getInstance().getWorkListManager().notifyReEnabledWorkItem(this,
+		// cause);
 	}
 
 	/**********************************
@@ -166,7 +167,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 			if (result.equals(TripleStateBool.TRUE)) {
 				notifyAchieved();
 			} else if (result.equals(TripleStateBool.FALSE)) {
-				BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
+				// BlendedWorkflow.getInstance().getWorkListManager().notifyEnabledWorkItem(this);
 			} else if (result.equals(TripleStateBool.SKIPPED)) {
 				notifySkipped();
 			}
@@ -316,8 +317,9 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 							} else {
 								log.debug("New GoalWorkItem: " + newGoalWorkItem.getID()
 										+ " Sucessed with the old data but failed with the new data! ");
-								BlendedWorkflow.getInstance().getWorkListManager()
-										.notifyReEnabledWorkItem(newGoalWorkItem, this);
+								// BlendedWorkflow.getInstance().getWorkListManager()
+								// .notifyReEnabledWorkItem(newGoalWorkItem,
+								// this);
 								affectedMandatory = true;
 							}
 						} else {

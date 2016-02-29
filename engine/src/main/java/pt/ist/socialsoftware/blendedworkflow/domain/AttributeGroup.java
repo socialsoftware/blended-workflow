@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 
 public class AttributeGroup extends AttributeGroup_Base {
 	private static Logger log = LoggerFactory.getLogger(AttributeGroup.class);
@@ -56,17 +56,17 @@ public class AttributeGroup extends AttributeGroup_Base {
 	}
 
 	@Override
-	public AttributeGroupDTO getDTO() {
-		AttributeGroupDTO group = new AttributeGroupDTO();
-		group.setSpecId(getDataModel().getSpecification().getSpecId());
-		group.setExtId(getExternalId());
-		group.setProductType(getProductType().name());
-		group.setEntityExtId(getEntity().getExternalId());
-		group.setEntityName(getEntity().getName());
-		group.setName(getName());
-		group.setMandatory(getIsMandatory());
+	public AttributeDTO getDTO() {
+		AttributeDTO attDTO = new AttributeDTO();
+		attDTO.setSpecId(getDataModel().getSpecification().getSpecId());
+		attDTO.setExtId(getExternalId());
+		attDTO.setProductType(ProductType.ATTRIBUTE_GROUP.name());
+		attDTO.setEntityExtId(getEntity().getExternalId());
+		attDTO.setEntityName(getEntity().getName());
+		attDTO.setName(getName());
+		attDTO.setMandatory(getIsMandatory());
 
-		return group;
+		return attDTO;
 	}
 
 	@Override
@@ -90,6 +90,19 @@ public class AttributeGroup extends AttributeGroup_Base {
 		} else {
 			return true;
 		}
+	}
+
+	@Override
+	public boolean isCreatedTogether(Product product) {
+		if (this == product) {
+			return true;
+		}
+
+		if (product.getProductType().equals(ProductType.ATTRIBUTE_BASIC)) {
+			return this.getAttributeSet().contains(product);
+		}
+
+		return false;
 	}
 
 }

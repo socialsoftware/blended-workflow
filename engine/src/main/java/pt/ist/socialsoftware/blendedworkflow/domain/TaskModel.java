@@ -42,11 +42,13 @@ public class TaskModel extends TaskModel_Base {
 		}
 
 		for (Task task : getTasksSet()) {
-			if (task.getPostConditionSet().stream().map(d -> d.getPath().getValue()).anyMatch(p -> p.equals(path))) {
+			if (task.getPostConditionSet().stream().map(d -> d.getPath().getTargetOfPath())
+					.anyMatch(p -> p.isCreatedTogether(product))) {
 				return task;
 			}
 		}
-		throw new BWException(BWErrorType.NON_EXISTENT_TASK_PATH, path);
+
+		throw new BWException(BWErrorType.TASK_UNKNOWN_POST_CONDITION_DEF, path);
 	}
 
 	public void clean() {

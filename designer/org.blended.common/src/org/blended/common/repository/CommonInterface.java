@@ -14,7 +14,6 @@ import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.RestUtil;
 import org.blended.common.repository.resttemplate.dto.ActivityDTO;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
-import org.blended.common.repository.resttemplate.dto.AttributeGroupDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
@@ -246,7 +245,7 @@ public class CommonInterface {
 
 	public AttributeDTO createAttribute(AttributeDTO attribueVO) {
 		logger.debug("createAttribute: entitityExtId:{}, groupExtId:{}, {}, {}, {}", attribueVO.getEntityExtId(),
-				attribueVO.getGroupExtId(), attribueVO.getName(), attribueVO.getType(), attribueVO.getIsMandatory());
+				attribueVO.getGroupExtId(), attribueVO.getName(), attribueVO.getType(), attribueVO.isMandatory());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/attributes";
 
@@ -259,17 +258,17 @@ public class CommonInterface {
 		return result;
 	}
 
-	public AttributeGroupDTO createAttributeGroup(AttributeGroupDTO attributeGroupVO) {
-		logger.debug("createAttributeGroup: entitityExtId:{},  {}, {}", attributeGroupVO.getEntityExtId(),
-				attributeGroupVO.getName(), attributeGroupVO.isMandatory());
+	public AttributeDTO createAttributeGroup(AttributeDTO attributeDTO) {
+		logger.debug("createAttributeGroup: entitityExtId:{}, name:{}, mandatory:{}", attributeDTO.getEntityExtId(),
+				attributeDTO.getName(), attributeDTO.isMandatory());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/attributegroups";
 
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("specId", attributeGroupVO.getSpecId());
+		params.put("specId", attributeDTO.getSpecId());
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		AttributeGroupDTO result = restTemplate.postForObject(uri, attributeGroupVO, AttributeGroupDTO.class, params);
+		AttributeDTO result = restTemplate.postForObject(uri, attributeDTO, AttributeDTO.class, params);
 
 		return result;
 	}
