@@ -26,6 +26,8 @@ public abstract class Product extends Product_Base {
 
 	public abstract boolean canBeDefinedBefore(Product product);
 
+	public abstract boolean isCreatedTogether(Product product);
+
 	public abstract ProductDTO getDTO();
 
 	public void delete() {

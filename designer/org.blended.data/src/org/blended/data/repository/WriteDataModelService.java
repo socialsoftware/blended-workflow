@@ -12,10 +12,11 @@ import org.blended.common.repository.CommonInterface;
 import org.blended.common.repository.resttemplate.BWNotification;
 import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
-import org.blended.common.repository.resttemplate.dto.AttributeGroupDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
 import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
+import org.blended.common.repository.resttemplate.dto.ProductDTO;
+import org.blended.common.repository.resttemplate.dto.ProductDTO.ProductType;
 import org.blended.common.repository.resttemplate.dto.RelationDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.blended.common.repository.resttemplate.dto.SpecDTO;
@@ -100,8 +101,9 @@ public class WriteDataModelService {
 					AttributeDTO attributeDTO;
 					Attribute eAtt = (Attribute) eObj;
 					try {
-						attributeDTO = ci.createAttribute(new AttributeDTO(specId, entityExtId, null, eAtt.getName(),
-								eAtt.getType(), eAtt.isMandatory()));
+						attributeDTO = ci.createAttribute(new AttributeDTO(specId,
+								ProductDTO.ProductType.ATTRIBUTE_BASIC.name(), entityExtId, eEnt.getName(), null, null,
+								eAtt.getName(), eAtt.getType(), eAtt.isMandatory()));
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
 						// logger.debug("Error: {}", re.getMessage());
@@ -119,11 +121,12 @@ public class WriteDataModelService {
 						}
 					}
 				} else if (eObj instanceof AttributeGroup) {
-					AttributeGroupDTO groupVO;
+					AttributeDTO groupDTO;
 					AttributeGroup eAttGroup = (AttributeGroup) eObj;
 					try {
-						groupVO = ci.createAttributeGroup(new AttributeGroupDTO(specId, entityExtId,
-								eAttGroup.getName(), eAttGroup.isMandatory()));
+						groupDTO = ci.createAttributeGroup(new AttributeDTO(specId, ProductType.ATTRIBUTE_GROUP.name(),
+								entityExtId, eEnt.getName(), null, null, eAttGroup.getName(), null,
+								eAttGroup.isMandatory()));
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
 						// logger.debug("Error: {}", re.getMessage());
@@ -133,7 +136,7 @@ public class WriteDataModelService {
 					for (String eDep : eAttGroup.getDependsOn()) {
 						try {
 							ci.createDependence(
-									new DependenceDTO(specId, groupVO.getEntityName() + "." + groupVO.getName(), eDep));
+									new DependenceDTO(specId, groupDTO.getEntityName() + "." + groupDTO.getName(), eDep));
 						} catch (RepositoryException re) {
 							notification.addError(re.getError());
 							// logger.debug("Error: {}", re.getMessage());
@@ -143,8 +146,9 @@ public class WriteDataModelService {
 					for (Attribute eAtt : eAttGroup.getAttributes()) {
 						// create groupAttribute's attributes
 						try {
-							ci.createAttribute(new AttributeDTO(specId, entityExtId, groupVO.getExtId(), eAtt.getName(),
-									eAtt.getType(), eAtt.isMandatory()));
+							ci.createAttribute(new AttributeDTO(specId, ProductDTO.ProductType.ATTRIBUTE_BASIC.name(),
+									entityExtId, eEnt.getName(), groupDTO.getExtId(), groupDTO.getGroupName(),
+									eAtt.getName(), eAtt.getType(), eAtt.isMandatory()));
 						} catch (RepositoryException re) {
 							notification.addError(re.getError());
 							// logger.debug("Error: {}", re.getMessage());

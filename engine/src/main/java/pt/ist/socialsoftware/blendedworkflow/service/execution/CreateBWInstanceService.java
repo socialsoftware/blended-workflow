@@ -9,58 +9,51 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateBWInstanceService implements Callable<String> {
 
-    private static Logger log = LoggerFactory
-            .getLogger("CreateBWInstanceService");
-    private final Specification bwSpecification;
-    private final String name;
-    private final String userID;
+	private static Logger log = LoggerFactory.getLogger("CreateBWInstanceService");
+	private final Specification bwSpecification;
+	private final String name;
+	private final String userID;
 
-    public CreateBWInstanceService(String bwSpecificationOID, String name,
-            String userID) {
-        this.bwSpecification = FenixFramework
-                .getDomainObject(bwSpecificationOID);
-        this.name = name;
-        this.userID = userID;
-    }
+	public CreateBWInstanceService(String bwSpecificationOID, String name, String userID) {
+		this.bwSpecification = FenixFramework.getDomainObject(bwSpecificationOID);
+		this.name = name;
+		this.userID = userID;
+	}
 
-    @Atomic(mode = TxMode.WRITE)
-    @Override
-    public String call() throws Exception {
-        log.info("Start");
-        try {
-            // GetUser
-            User user = BlendedWorkflow.getInstance().getOrganizationalModel()
-                    .getUser(userID);
+	@Atomic(mode = TxMode.WRITE)
+	@Override
+	public String call() throws Exception {
+		log.info("Start");
+		try {
+			// GetUser
+			User user = BlendedWorkflow.getInstance().getOrganizationalModel().getUser(userID);
 
-            // Get BWSpecification and clone it
-            BWInstance bwInstance = new BWInstance(this.bwSpecification, name,
-                    user);
+			// Get BWSpecification and clone it
+			BWInstance bwInstance = new BWInstance(this.bwSpecification, name, user);
 
-            // Launch case on YAWL
-            Specification bwSpecification = bwInstance.getSpecification();
-            String yawlSpecificationID = bwSpecification
-                    .getYawlSpecficationID();
-            String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter()
-                    .launchCase(yawlSpecificationID);
-            bwInstance.setYawlCaseID(yawlCaseID);
+			// Launch case on YAWL
+			Specification bwSpecification = bwInstance.getSpecification();
+			String yawlSpecificationID = bwSpecification.getYawlSpecficationID();
+			String yawlCaseID = BlendedWorkflow.getInstance().getYawlAdapter().launchCase(yawlSpecificationID);
+			bwInstance.setYawlCaseID(yawlCaseID);
 
-            // Create GoalWorkItems and TaskWorkItems
-            BlendedWorkflow.getInstance().getBwManager()
-                    .notifyCreatedBWInstance(bwInstance);
+			// Create GoalWorkItems and TaskWorkItems
+			// BlendedWorkflow.getInstance().getBwManager()
+			// .notifyCreatedBWInstance(bwInstance);
 
-        } catch (BWException bwe) {
-            log.error(bwe.getError().name());
-            BlendedWorkflow.getInstance().getBwManager()
-                    .notifyException(bwe.getError());
-        }
-        log.info("END");
-        return "CreateBWInstanceService:Sucess";
-    }
+		} catch (BWException bwe) {
+			log.error(bwe.getError().name());
+			// BlendedWorkflow.getInstance().getBwManager()
+			// .notifyException(bwe.getError());
+		}
+		log.info("END");
+		return "CreateBWInstanceService:Sucess";
+	}
 }

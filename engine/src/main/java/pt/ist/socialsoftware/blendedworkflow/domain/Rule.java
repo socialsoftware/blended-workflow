@@ -62,6 +62,7 @@ public class Rule extends Rule_Base {
 		ruleDTO.setExtId(getExternalId());
 		ruleDTO.setName(getName());
 		ruleDTO.setExpression(getCondition().getDTO(getEntity().getDataModel().getSpecification().getSpecId()));
+		ruleDTO.setToStringExpression(ruleDTO.getExpression().toString());
 
 		return ruleDTO;
 	}

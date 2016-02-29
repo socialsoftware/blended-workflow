@@ -125,9 +125,10 @@ public class AttributeBasic extends AttributeBasic_Base {
 		attDTO.setEntityExtId(getEntity().getExternalId());
 		attDTO.setEntityName(getEntity().getName());
 		attDTO.setGroupExtId(getAttributeGroup() != null ? getAttributeGroup().getExternalId() : null);
+		attDTO.setGroupName(getAttributeGroup() != null ? getAttributeGroup().getName() : null);
 		attDTO.setName(getName());
-		attDTO.setType(getType().toString());
-		attDTO.setIsMandatory(getIsMandatory());
+		attDTO.setType(getType().name);
+		attDTO.setMandatory(getIsMandatory());
 
 		return attDTO;
 	}
@@ -155,6 +156,19 @@ public class AttributeBasic extends AttributeBasic_Base {
 		} else {
 			return true;
 		}
+	}
+
+	@Override
+	public boolean isCreatedTogether(Product product) {
+		if (this == product) {
+			return true;
+		}
+
+		if (product.getProductType().equals(ProductType.ATTRIBUTE_GROUP)) {
+			return this.getAttributeGroup() == product;
+		}
+
+		return false;
 	}
 
 }

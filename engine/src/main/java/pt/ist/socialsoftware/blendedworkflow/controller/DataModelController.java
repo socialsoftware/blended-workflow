@@ -23,7 +23,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
@@ -81,6 +80,18 @@ public class DataModelController {
 		return new ResponseEntity<EntityDTO>(entity.getDTO(), HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/entities", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<EntityDTO[]> getEntities(@PathVariable("specId") String specId) {
+		log.debug("getEntities specId:{}", specId);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		EntityDTO[] entities = adi.getEntities(specId).stream().map(e -> e.getDTO())
+				.toArray(size -> new EntityDTO[size]);
+
+		return new ResponseEntity<EntityDTO[]>(entities, HttpStatus.CREATED);
+	}
+
 	@RequestMapping(value = "/entities", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<EntityDTO> createEntity(@PathVariable("specId") String specId,
 			@RequestBody EntityDTO entDTO) {
@@ -91,6 +102,18 @@ public class DataModelController {
 		Entity entity = adi.createEntity(entDTO);
 
 		return new ResponseEntity<EntityDTO>(entity.getDTO(), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/attributes", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<AttributeDTO[]> getAttributtes(@PathVariable("specId") String specId) {
+		log.debug("getAttributtes specId:{}", specId);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		AttributeDTO[] attributes = adi.getAttributes(specId).stream().map(a -> a.getDTO())
+				.toArray(size -> new AttributeDTO[size]);
+
+		return new ResponseEntity<AttributeDTO[]>(attributes, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/attributes/{extId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -118,16 +141,16 @@ public class DataModelController {
 	}
 
 	@RequestMapping(value = "/attributegroups", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public ResponseEntity<AttributeGroupDTO> createGroupAttribute(@PathVariable("specId") String specId,
-			@RequestBody AttributeGroupDTO groupAttributeDTO) {
-		log.debug("createGroupAttribute entityExtId:{},  name:{}, mandatory:{}", groupAttributeDTO.getEntityExtId(),
-				groupAttributeDTO.getName(), groupAttributeDTO.isMandatory());
+	public ResponseEntity<AttributeDTO> createGroupAttribute(@PathVariable("specId") String specId,
+			@RequestBody AttributeDTO attributeDTO) {
+		log.debug("createGroupAttribute entityExtId:{},  name:{}, mandatory:{}", attributeDTO.getEntityExtId(),
+				attributeDTO.getName(), attributeDTO.isMandatory());
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		AttributeGroup group = adi.createAttributeGroup(groupAttributeDTO);
+		AttributeGroup group = adi.createAttributeGroup(attributeDTO);
 
-		return new ResponseEntity<AttributeGroupDTO>(group.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<AttributeDTO>(group.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/relations", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -142,6 +165,18 @@ public class DataModelController {
 		return new ResponseEntity<RelationDTO>(relation.getDTO(), HttpStatus.CREATED);
 	}
 
+	@RequestMapping(value = "/relations", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<RelationDTO[]> getRelations(@PathVariable("specId") String specId) {
+		log.debug("getRelations specId:{}", specId);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		RelationDTO[] attributes = adi.getRelations(specId).stream().map(a -> a.getDTO())
+				.toArray(size -> new RelationDTO[size]);
+
+		return new ResponseEntity<RelationDTO[]>(attributes, HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/rules", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<RuleDTO> createRule(@PathVariable("specId") String specId, @RequestBody RuleDTO ruleDTO) {
 		log.debug("createRule specId:{}, entityName:{}, name:{}, expression:{}", ruleDTO.getSpecId(),
@@ -152,6 +187,17 @@ public class DataModelController {
 		Rule rule = adi.createRule(ruleDTO);
 
 		return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/rules", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<RuleDTO[]> getRules(@PathVariable("specId") String specId) {
+		log.debug("getRules specId:{}", specId);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		RuleDTO[] attributes = adi.getRules(specId).stream().map(a -> a.getDTO()).toArray(size -> new RuleDTO[size]);
+
+		return new ResponseEntity<RuleDTO[]>(attributes, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/dependencies", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)

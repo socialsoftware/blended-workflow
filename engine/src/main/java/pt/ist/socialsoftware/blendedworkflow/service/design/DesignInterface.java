@@ -36,7 +36,6 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeGroupDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetDTO;
@@ -75,7 +74,10 @@ public class DesignInterface {
 		getSpecBySpecId(specId).delete();
 	}
 
-	@Atomic(mode = TxMode.WRITE)
+	public Set<Specification> getSpecs() {
+		return getBlendedWorkflow().getSpecificationSet();
+	}
+
 	public Specification getSpecBySpecId(String specId) {
 		Specification spec = getBlendedWorkflow().getSpecById(specId)
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID, specId));
@@ -100,6 +102,14 @@ public class DesignInterface {
 		spec.getDataModel().check();
 	}
 
+	public Set<Entity> getEntities(String specId) {
+		log.debug("getEntities specId:{}", specId);
+
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getDataModel().getEntitySet();
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public Entity createEntity(EntityDTO entDTO) {
 		log.debug("createEntity specId:{}, name:{}, exists:{}", entDTO.getSpecId(), entDTO.getName(),
@@ -108,6 +118,13 @@ public class DesignInterface {
 		Specification spec = getSpecBySpecId(entDTO.getSpecId());
 
 		return spec.getDataModel().createEntity(entDTO.getName(), entDTO.getExists());
+	}
+
+	public Set<Attribute> getAttributes(String specId) {
+		log.debug("getAttributes specId:{}", specId);
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getDataModel().getAttributeSet();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -121,7 +138,7 @@ public class DesignInterface {
 		}
 
 		AttributeBasic attribute = ent.createAttribute(attGroup, attDTO.getName(),
-				AttributeType.parseAttributeType(attDTO.getType()), attDTO.getIsMandatory());
+				AttributeType.parseAttributeType(attDTO.getType()), attDTO.isMandatory());
 
 		return attribute;
 	}
@@ -162,11 +179,17 @@ public class DesignInterface {
 		return relation;
 	}
 
-	@Atomic(mode = TxMode.WRITE)
-	public AttributeGroup createAttributeGroup(AttributeGroupDTO attGroupDTO) {
-		Entity entity = getEntityByExtId(attGroupDTO.getEntityExtId());
+	public Set<RelationBW> getRelations(String specId) {
+		Specification spec = getSpecBySpecId(specId);
 
-		AttributeGroup group = entity.createAttributeGroup(attGroupDTO.getName(), attGroupDTO.isMandatory());
+		return spec.getDataModel().getRelationBWSet();
+	}
+
+	@Atomic(mode = TxMode.WRITE)
+	public AttributeGroup createAttributeGroup(AttributeDTO attDTO) {
+		Entity entity = getEntityByExtId(attDTO.getEntityExtId());
+
+		AttributeGroup group = entity.createAttributeGroup(attDTO.getName(), attDTO.isMandatory());
 
 		return group;
 	}
@@ -210,6 +233,14 @@ public class DesignInterface {
 		Rule rule = entity.createRule(ruleDTO.getName(), ruleDTO.getExpression().buildCondition(spec));
 
 		return rule;
+	}
+
+	public Set<Rule> getRules(String specId) {
+		log.debug("getRules specId:{}", specId);
+
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getDataModel().getRules();
 	}
 
 	@Atomic(mode = TxMode.WRITE)

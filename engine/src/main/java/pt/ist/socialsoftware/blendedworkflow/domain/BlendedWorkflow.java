@@ -13,165 +13,118 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.adapters.WorkletAdapter;
 import pt.ist.socialsoftware.blendedworkflow.adapters.YAWLAdapter;
-import pt.ist.socialsoftware.blendedworkflow.bwmanager.BWManager;
-import pt.ist.socialsoftware.blendedworkflow.organizationalmanager.OrganizationalManager;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWExecutorService;
-import pt.ist.socialsoftware.blendedworkflow.worklistmanager.WorkListManager;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
-    private static Logger log = LoggerFactory.getLogger(BlendedWorkflow.class);
+	private static Logger log = LoggerFactory.getLogger(BlendedWorkflow.class);
 
-    DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
-    private YAWLAdapter yawlAdapter = null;
-    private WorkletAdapter workletAdapter = null;
-    private WorkListManager workListManager = null;
-    private BWManager bwManager = null;
-    private OrganizationalManager organizationalManager = null;
-    private String today = dateFormatter.format(new java.util.Date());
+	DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
+	private YAWLAdapter yawlAdapter = null;
+	private WorkletAdapter workletAdapter = null;
+	private String today = dateFormatter.format(new java.util.Date());
 
-    private BWExecutorService bwExecutorService = null;
+	private BWExecutorService bwExecutorService = null;
 
-    public static BlendedWorkflow getInstance() {
-        if (FenixFramework.getDomainRoot().getBlendedWorkflow() == null) {
-            new BlendedWorkflow();
-            log.debug("BlendedWorkflow instance created");
-        }
+	public static BlendedWorkflow getInstance() {
+		if (FenixFramework.getDomainRoot().getBlendedWorkflow() == null) {
+			new BlendedWorkflow();
+			log.debug("BlendedWorkflow instance created");
+		}
 
-        return FenixFramework.getDomainRoot().getBlendedWorkflow();
-    }
+		return FenixFramework.getDomainRoot().getBlendedWorkflow();
+	}
 
-    public BlendedWorkflow() {
-        FenixFramework.getDomainRoot().setBlendedWorkflow(this);
-    }
+	public BlendedWorkflow() {
+		FenixFramework.getDomainRoot().setBlendedWorkflow(this);
+	}
 
-    public Specification createSpecification(String specId, String name)
-            throws BWException {
-        String author = "Author";
-        String description = "Description";
-        String version = "Version";
-        String UID = "UID";
-        return new Specification(specId, name, author, description, version,
-                UID);
-    }
+	public Specification createSpecification(String specId, String name) throws BWException {
+		String author = "Author";
+		String description = "Description";
+		String version = "Version";
+		String UID = "UID";
+		return new Specification(specId, name, author, description, version, UID);
+	}
 
-    public Set<Specification> getSpecByName(String name) {
-        return getSpecificationSet().stream()
-                .filter(spec -> spec.getName().equals(name))
-                .collect(Collectors.toSet());
-    }
+	public Set<Specification> getSpecByName(String name) {
+		return getSpecificationSet().stream().filter(spec -> spec.getName().equals(name)).collect(Collectors.toSet());
+	}
 
-    public Optional<Specification> getSpecById(String specId) {
-        return getSpecificationSet().stream()
-                .filter(spec -> spec.getSpecId().equals(specId)).findFirst();
-    }
+	public Optional<Specification> getSpecById(String specId) {
+		return getSpecificationSet().stream().filter(spec -> spec.getSpecId().equals(specId)).findFirst();
+	}
 
-    public BWInstance getBWInstance(String ID) throws BWException {
-        for (Specification specificationpecification : getSpecificationSet()) {
-            for (BWInstance bwInstance : specificationpecification
-                    .getBwInstancesSet()) {
-                if (bwInstance.getID().equals(ID))
-                    return bwInstance;
-            }
-        }
-        throw new BWException(BWErrorType.NON_EXISTENT_CASE_ID, ID);
-    }
+	public BWInstance getBWInstance(String ID) throws BWException {
+		for (Specification specificationpecification : getSpecificationSet()) {
+			for (BWInstance bwInstance : specificationpecification.getBwInstancesSet()) {
+				if (bwInstance.getID().equals(ID))
+					return bwInstance;
+			}
+		}
+		throw new BWException(BWErrorType.NON_EXISTENT_CASE_ID, ID);
+	}
 
-    public BWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID)
-            throws BWException {
-        for (Specification specification : getSpecificationSet()) {
-            for (BWInstance bwInstance : specification.getBwInstancesSet()) {
-                if (bwInstance.getYawlCaseID().equals(yawlCaseID))
-                    return bwInstance;
-            }
-        }
-        throw new BWException(BWErrorType.NON_EXISTENT_CASE_ID, yawlCaseID);
-    }
+	public BWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID) throws BWException {
+		for (Specification specification : getSpecificationSet()) {
+			for (BWInstance bwInstance : specification.getBwInstancesSet()) {
+				if (bwInstance.getYawlCaseID().equals(yawlCaseID))
+					return bwInstance;
+			}
+		}
+		throw new BWException(BWErrorType.NON_EXISTENT_CASE_ID, yawlCaseID);
+	}
 
-    public YAWLAdapter getYawlAdapter() throws BWException {
-        if (yawlAdapter == null) {
-            yawlAdapter = new YAWLAdapter();
-        }
-        return yawlAdapter;
-    }
+	public YAWLAdapter getYawlAdapter() throws BWException {
+		if (yawlAdapter == null) {
+			yawlAdapter = new YAWLAdapter();
+		}
+		return yawlAdapter;
+	}
 
-    public void setYawlAdapter(YAWLAdapter yawlAdapter) {
-        this.yawlAdapter = yawlAdapter;
-    }
+	public void setYawlAdapter(YAWLAdapter yawlAdapter) {
+		this.yawlAdapter = yawlAdapter;
+	}
 
-    public WorkletAdapter getWorkletAdapter() {
-        if (workletAdapter == null) {
-            workletAdapter = new WorkletAdapter();
-        }
-        return workletAdapter;
-    }
+	public WorkletAdapter getWorkletAdapter() {
+		if (workletAdapter == null) {
+			workletAdapter = new WorkletAdapter();
+		}
+		return workletAdapter;
+	}
 
-    public void setWorkletAdapter(WorkletAdapter workletAdapter) {
-        this.workletAdapter = workletAdapter;
-    }
+	public void setWorkletAdapter(WorkletAdapter workletAdapter) {
+		this.workletAdapter = workletAdapter;
+	}
 
-    public WorkListManager getWorkListManager() {
-        if (workListManager == null) {
-            workListManager = new WorkListManager();
-        }
-        return workListManager;
-    }
+	public BWExecutorService getBWExecutorService() {
+		if (bwExecutorService == null) {
+			bwExecutorService = new BWExecutorService();
+		}
+		return bwExecutorService;
+	}
 
-    public void setWorkListManager(WorkListManager workListManager) {
-        this.workListManager = workListManager;
-    }
+	public void setBWExecutorService(BWExecutorService bwExecutorService) {
+		this.bwExecutorService = bwExecutorService;
+	}
 
-    public BWManager getBwManager() {
-        if (bwManager == null) {
-            bwManager = new BWManager();
-        }
-        return bwManager;
-    }
+	public String getToday() {
+		return today;
+	}
 
-    public void setBwManager(BWManager bwManager) {
-        this.bwManager = bwManager;
-    }
+	public void setToday(String today) {
+		this.today = today;
+	}
 
-    public OrganizationalManager getOrganizationalManager() {
-        if (organizationalManager == null) {
-            organizationalManager = new OrganizationalManager();
-        }
-        return organizationalManager;
-    }
+	// TODO: a in depth deletion of objects
+	@Atomic(mode = TxMode.WRITE)
+	public void delete() {
+		getSpecificationSet().stream().forEach(spec -> spec.delete());
 
-    public void setOrganizationalManager(
-            OrganizationalManager organizationalManager) {
-        this.organizationalManager = organizationalManager;
-    }
+		setRoot(null);
 
-    public BWExecutorService getBWExecutorService() {
-        if (bwExecutorService == null) {
-            bwExecutorService = new BWExecutorService();
-        }
-        return bwExecutorService;
-    }
-
-    public void setBWExecutorService(BWExecutorService bwExecutorService) {
-        this.bwExecutorService = bwExecutorService;
-    }
-
-    public String getToday() {
-        return today;
-    }
-
-    public void setToday(String today) {
-        this.today = today;
-    }
-
-    // TODO: a in depth deletion of objects
-    @Atomic(mode = TxMode.WRITE)
-    public void delete() {
-        getSpecificationSet().stream().forEach(spec -> spec.delete());
-
-        setRoot(null);
-
-        deleteDomainObject();
-    }
+		deleteDomainObject();
+	}
 
 }

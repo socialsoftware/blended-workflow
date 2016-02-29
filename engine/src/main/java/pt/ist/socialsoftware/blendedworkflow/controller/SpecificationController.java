@@ -25,15 +25,16 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 public class SpecificationController {
 	private static Logger log = LoggerFactory.getLogger(SpecificationController.class);
 
-	@RequestMapping(value = "/{specId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteSpecification(@PathVariable("specId") String specId) {
-		log.debug("deleteSpecification specId:{}", specId);
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<SpecDTO[]> getSpecs() {
+		log.debug("getSpecs");
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		adi.deleteSpecification(specId);
+		SpecDTO[] specs = adi.getSpecs().stream().map(s -> s.getDTO())
+				.sorted((s1, s2) -> s1.getName().compareTo(s2.getName())).toArray(size -> new SpecDTO[size]);
 
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<SpecDTO[]>(specs, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{specId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -55,6 +56,17 @@ public class SpecificationController {
 		Specification spec = adi.createSpecification(specDTO);
 
 		return new ResponseEntity<SpecDTO>(spec.getDTO(), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/{specId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public ResponseEntity<String> deleteSpecification(@PathVariable("specId") String specId) {
+		log.debug("deleteSpecification specId:{}", specId);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		adi.deleteSpecification(specId);
+
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{specId}/print", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)

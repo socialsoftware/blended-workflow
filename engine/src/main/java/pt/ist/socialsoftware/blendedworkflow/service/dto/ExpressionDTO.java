@@ -34,54 +34,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
 public class ExpressionDTO {
 	private static Logger logger = LoggerFactory.getLogger(ExpressionDTO.class);
 
-	public String getSpecId() {
-		return specId;
-	}
-
-	public void setSpecIdId(String specId) {
-		this.specId = specId;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public ExpressionDTO getUnaryExpression() {
-		return unaryExpression;
-	}
-
-	public void setUnaryExpression(ExpressionDTO unaryExpression) {
-		this.unaryExpression = unaryExpression;
-	}
-
-	public ExpressionDTO getLeftExpression() {
-		return leftExpression;
-	}
-
-	public void setLeftExpresssion(ExpressionDTO leftExpresssion) {
-		this.leftExpression = leftExpresssion;
-	}
-
-	public ExpressionDTO getRightExpression() {
-		return rightExpression;
-	}
-
-	public void setRightExpression(ExpressionDTO rightExpression) {
-		this.rightExpression = rightExpression;
-	}
-
 	private enum Type {
 		AND, OR, NOT, PATH_DEF, EQUAL, NOT_EQUAL, GREATER, GREATER_EQUAL, SMALLER, SMALLER_EQUAL, PLUS, MINUS, MUL, DIV, ATT_VALUE, STRING, INT, BOOL;
 
@@ -238,7 +190,7 @@ public class ExpressionDTO {
 		else if (this.unaryExpression != null)
 			return getType() + "(" + getUnaryExpression().toString() + ")";
 		else
-			return getType() + "(" + getLeftExpression().toString() + "," + getRightExpression().toString() + ")";
+			return "(" + getLeftExpression().toString() + " " + getType() + " " + getRightExpression().toString() + ")";
 	}
 
 	public Condition buildCondition(Specification spec) {
@@ -317,6 +269,54 @@ public class ExpressionDTO {
 			assert (false);
 			return null;
 		}
+	}
+
+	public String getSpecId() {
+		return specId;
+	}
+
+	public void setSpecIdId(String specId) {
+		this.specId = specId;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public ExpressionDTO getUnaryExpression() {
+		return unaryExpression;
+	}
+
+	public void setUnaryExpression(ExpressionDTO unaryExpression) {
+		this.unaryExpression = unaryExpression;
+	}
+
+	public ExpressionDTO getLeftExpression() {
+		return leftExpression;
+	}
+
+	public void setLeftExpresssion(ExpressionDTO leftExpresssion) {
+		this.leftExpression = leftExpresssion;
+	}
+
+	public ExpressionDTO getRightExpression() {
+		return rightExpression;
+	}
+
+	public void setRightExpression(ExpressionDTO rightExpression) {
+		this.rightExpression = rightExpression;
 	}
 
 }

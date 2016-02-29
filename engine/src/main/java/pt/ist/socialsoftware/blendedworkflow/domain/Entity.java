@@ -405,4 +405,13 @@ public class Entity extends Entity_Base {
 			return true;
 	}
 
+	@Override
+	public boolean isCreatedTogether(Product product) {
+		if (this == product) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

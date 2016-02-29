@@ -4,35 +4,39 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDTO {
-    private String specId;
-    private String extId;
-    private String producType;
+	public enum ProductType {
+		ATTRIBUTE_BASIC, ATTRIBUTE_GROUP, ENTITY
+	}
 
-    public ProductDTO() {
-    }
+	private String specId;
+	private String extId;
+	private String productType;
 
-    public String getExtId() {
-        return extId;
-    }
+	public ProductDTO() {
+	}
 
-    public void setExtId(String extId) {
-        this.extId = extId;
-    }
+	public String getExtId() {
+		return extId;
+	}
 
-    public String getProducType() {
-        return producType;
-    }
+	public void setExtId(String extId) {
+		this.extId = extId;
+	}
 
-    public void setProducType(String producType) {
-        this.producType = producType;
-    }
+	public String getProductType() {
+		return productType;
+	}
 
-    public String getSpecId() {
-        return specId;
-    }
+	public void setProductType(String producType) {
+		this.productType = producType;
+	}
 
-    public void setSpecId(String specId) {
-        this.specId = specId;
-    }
+	public String getSpecId() {
+		return specId;
+	}
+
+	public void setSpecId(String specId) {
+		this.specId = specId;
+	}
 
 }

@@ -4,6 +4,7 @@ public class DependenceDTO {
 	private String specId;
 	private String extId;
 	private String product;
+	private String productExtId;
 	private String path;
 
 	public DependenceDTO() {
@@ -45,6 +46,14 @@ public class DependenceDTO {
 
 	public void setProduct(String product) {
 		this.product = product;
+	}
+
+	public String getProductExtId() {
+		return productExtId;
+	}
+
+	public void setProductExtId(String productExtId) {
+		this.productExtId = productExtId;
 	}
 
 }
