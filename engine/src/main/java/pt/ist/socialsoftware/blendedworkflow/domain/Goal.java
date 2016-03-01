@@ -429,7 +429,7 @@ public class Goal extends Goal_Base {
 		log.debug("succProducts {}", succProducts.stream().map((p) -> p.getName()).collect(Collectors.joining(",")));
 
 		Optional<Product> oProduct = topProducts.stream().flatMap((p) -> p.getDependenceSet().stream())
-				.map((d) -> d.getPath().getTargetOfPath()).filter((p) -> succProducts.contains(p)).findFirst();
+				.map((d) -> d.getPath().getTarget()).filter((p) -> succProducts.contains(p)).findFirst();
 
 		if (oProduct.isPresent())
 			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,

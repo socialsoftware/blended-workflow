@@ -73,7 +73,7 @@ public class Rule extends Rule_Base {
 
 	public Set<Attribute> getAttributeSet() {
 		Set<Path> paths = getCondition().getPathSet();
-		return paths.stream().map(p -> p.getTargetOfPath()).filter(Attribute.class::isInstance)
+		return paths.stream().map(p -> p.getTarget()).filter(Attribute.class::isInstance)
 				.map(Attribute.class::cast).collect(Collectors.toSet());
 	}
 

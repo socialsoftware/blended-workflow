@@ -185,6 +185,7 @@ public class ExtractTaskTest extends TeardownRollbackTest {
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
 		postConditionSet.add(DefEntityCondition.getDefEntity(entityTwo));
 		Task task = taskModel.extractTask(taskTwo, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
+		taskModel.applyMultiplicityToPostAndPre(task);
 
 		assertEquals(4, taskModel.getTasksSet().size());
 		assertTrue(task.getMultiplicityInvariantSet()

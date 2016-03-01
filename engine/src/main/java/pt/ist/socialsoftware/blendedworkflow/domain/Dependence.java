@@ -68,7 +68,7 @@ public class Dependence extends Dependence_Base {
 	}
 
 	public Product getTarget() {
-		return getPath().getTargetOfPath();
+		return getPath().getTarget();
 	}
 
 }

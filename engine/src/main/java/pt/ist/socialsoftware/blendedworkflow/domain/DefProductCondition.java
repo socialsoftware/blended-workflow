@@ -14,7 +14,7 @@ public abstract class DefProductCondition extends DefProductCondition_Base {
 	}
 
 	public Product getTargetOfPath() {
-		return getPath().getTargetOfPath();
+		return getPath().getTarget();
 	}
 
 }

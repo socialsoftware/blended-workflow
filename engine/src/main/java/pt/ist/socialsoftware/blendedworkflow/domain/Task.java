@@ -141,7 +141,7 @@ public class Task extends Task_Base {
 	}
 
 	private void goThroughAcyclicPath(Task task, Set<Product> visitedProducts) {
-		Set<Product> nextProducts = getPreConditionSet().stream().map(p -> p.getPath().getTargetOfPath())
+		Set<Product> nextProducts = getPreConditionSet().stream().map(p -> p.getPath().getTarget())
 				.filter(p -> !p.isEntityAndExists() && !visitedProducts.contains(p)).collect(Collectors.toSet());
 
 		Set<Task> nextTasks = nextProducts.stream()
@@ -245,7 +245,16 @@ public class Task extends Task_Base {
 				removePreCondition(defPathCondition);
 			}
 		}
+	}
 
+	public Set<Entity> getEntitiesToDefine() {
+		return getPostConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Entity.class::isInstance)
+				.map(Entity.class::cast).collect(Collectors.toSet());
+	}
+
+	public Set<Entity> getCreationDependentAdjacentEntities() {
+		return getPreConditionSet().stream().filter(d -> getEntitiesToDefine().contains(d.getPath().getSource()))
+				.map(d -> d.getPath().getAdjacent()).collect(Collectors.toSet());
 	}
 
 }

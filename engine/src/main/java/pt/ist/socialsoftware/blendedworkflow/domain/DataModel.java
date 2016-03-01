@@ -134,7 +134,7 @@ public class DataModel extends DataModel_Base {
 		// logger.debug("checkProductCanBeCreatedAfterProduct afterProduct:{},
 		// beforeProduct:{}", afterProduct.getName(),
 		// beforeProduct.getName());
-		Set<Product> nextProducts = beforeProduct.getDependenceSet().stream().map(d -> d.getPath().getTargetOfPath())
+		Set<Product> nextProducts = beforeProduct.getDependenceSet().stream().map(d -> d.getPath().getTarget())
 				.filter(p -> !visitedProducts.contains(p)).collect(Collectors.toSet());
 
 		if (!afterProduct.canBeDefinedBeforeProducts(nextProducts)) {
@@ -179,7 +179,7 @@ public class DataModel extends DataModel_Base {
 
 	private void removeNonCircularPaths(Dependence dependence, List<Dependence> dependencies,
 			Set<Product> visitedProducts) {
-		Product product = dependence.getPath().getTargetOfPath();
+		Product product = dependence.getPath().getTarget();
 
 		logger.debug("removeNonCircularPaths path:{}, product:{}, dependencies:{}", dependence.getPath().getValue(),
 				product.getName(), product.getDependenceSet().size());

@@ -158,6 +158,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
 		taskThree.addRuleInvariant(ruleTwo);
 
+		taskModel.checkModel();
 	}
 
 	@Test
@@ -238,8 +239,10 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		postConditions.add(DefAttributeCondition.getDefAttribute(attributeOne));
 		postConditions.add(DefAttributeCondition.getDefAttribute(attributeTwo));
 		Task task = taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
+		taskModel.applyMultiplicityToPostAndPre(task);
 
 		assertEquals(NEW_TASK_NAME, task.getName());
+		assertEquals(3, task.getPostConditionSet().size());
 		assertEquals(1, task.getPreConditionSet().size());
 		assertTrue(task.getPreConditionSet().stream().map(d -> d.getPath().getValue()).collect(Collectors.toSet())
 				.contains(ENTITY_EXISTS));
@@ -247,7 +250,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		// d.getPath()).collect(Collectors.toSet())
 		// .contains(ENTITY_ONE_NAME + "." + ROLENAME_EXISTS + "." +
 		// ATTRIBUTE_FIVE_NAME));
-		assertEquals(3, task.getPostConditionSet().size());
+		assertEquals(2, task.getMultiplicityInvariantSet().size());
 		assertEquals(2, task.getRuleInvariantSet().size());
 		assertTrue(task.getRuleInvariantSet().contains(ruleOne));
 		assertTrue(task.getRuleInvariantSet().contains(ruleThree));
@@ -264,6 +267,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		postConditions.add(DefEntityCondition.getDefEntity(entityTwo));
 		postConditions.add(DefEntityCondition.getDefEntity(entityThree));
 		Task task = taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
+		taskModel.applyMultiplicityToPostAndPre(task);
 
 		assertEquals(NEW_TASK_NAME, task.getName());
 		assertEquals(2, task.getPostConditionSet().size());
