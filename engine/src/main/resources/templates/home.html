@@ -1,16 +1,11 @@
 <!doctype html>
 <html data-ng-app="">
 <head>
-<script
-	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
 <script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<script src="../js/ui-bootstrap-tpls-1.2.1.min.js"></script>
 </head>
 <body ng-app="specManager" ng-controller="specController">
 	<div class="container">
@@ -31,20 +26,42 @@
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li><a href="#"> <select ng-model="spec"
-								ng-init="spec = specs[1]"
-								ng-options="x as x.name for x in specs">
-									<option value='' ng-disabled="true">Select
-										Specification</option>
-							</select>
+						<li class="dropdown" uib-dropdown="uib-dropdown"><a href="#"
+							id="simple-dropdown" uib-dropdown-toggle="uib-dropdown-toggle">
+								Specification <span class="caret"></span>
+						</a>
+							<ul uib-dropdown-menu="uib-dropdown-menuuib-dropdown-menu"
+								aria-labelledby="simple-dropdown">
+								<li ng-repeat="x in specs" ng-click="selectSpecification(x)"><a
+									href="#">{{x.name}}</a></li>
+							</ul></li>
+						<li><a href="#"> <strong>{{spec.name}}</strong>
 						</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#" ng-click="dataModel()">Data Model</a></li>
-						<li><a href="#" ng-click="conditionModel()">Condition
-								Model</a></li>
-						<li><a href="#" ng-click="goalModel()">Goal Model</a></li>
-						<li><a href="#" ng-click="activityModel()">Activity Model</a></li>
+						<li class="dropdown" uib-dropdown="uib-dropdown"><a href="#"
+							class="dropdown-toggle" uib-dropdown-toggle="uib-dropdown-toggle">Designer
+								<span class="caret"></span>
+						</a>
+							<ul class="dropdown-menu" uib-dropdown-menu="uib-dropdown-menu">
+								<li><a href="#" ng-click="dataModel()">Data Model</a></li>
+								<li><a href="#" ng-click="conditionModel()">Condition
+										Model</a></li>
+								<li><a href="#" ng-click="goalModel()">Goal Model</a></li>
+								<li><a href="#" ng-click="activityModel()">Activity
+										Model</a></li>
+							</ul></li>
+
+						<li class="dropdown" uib-dropdown="uib-dropdown"><a href="#"
+							class="dropdown-toggle" uib-dropdown-toggle="uib-dropdown-toggle">Engine
+								<span class="caret"></span>
+						</a>
+							<ul class="dropdown-menu" uib-dropdown-menu="uib-dropdown-menu">
+								<li><a href="#">Data View</a></li>
+								<li><a href="#">Activity View</a></li>
+								<li><a href="#">Goal View</a></li>
+							</ul></li>
+
 					</ul>
 				</div>
 				<!-- /.navbar-collapse -->
@@ -53,8 +70,12 @@
 		</nav>
 
 		<div ng-switch="model">
-			<div ng-switch-when="dataModel"><div ng-include="'/views/dataModel.html'"></div></div>
-			<div ng-switch-when="conditionModel">Condition Model</div>
+			<div ng-switch-when="dataModel">
+				<div ng-include="'/views/dataModel.html'"></div>
+			</div>
+			<div ng-switch-when="conditionModel">
+				<div ng-include="'/views/conditionModel.html'"></div>
+			</div>
 			<div ng-switch-when="goalModel">Goal Model</div>
 			<div ng-switch-when="activityModel">Activity Model</div>
 		</div>
@@ -63,8 +84,8 @@
 
 	<script src="../js/specManager.js"></script>
 	<script src="../js/specController.js"></script>
-
 	<script src="../js/dataModelController.js"></script>
+	<script src="../js/conditionModelController.js"></script>
 
 </body>
 </html>

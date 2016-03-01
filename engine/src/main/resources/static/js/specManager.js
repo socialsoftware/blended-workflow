@@ -1,1 +1,1 @@
-var app = angular.module("specManager", []);
+var app = angular.module('specManager', ['ui.bootstrap']);
