@@ -1,7 +1,7 @@
 <div ng-controller="dataModelController">
 	<div class="text-left">
 		<samp>
-			<strong>Specification</strong> {{spec.name}} <br /> <br />
+			<strong>Data Model Specification</strong> {{spec.name}} <br /> <br />
 			<div ng-repeat="e in entities | orderBy:'name'">
 				<strong>Entity</strong> {{ e.name }} <span ng-if="e.exists"><strong>exists</strong></span>
 				<span ng-if="hasDependencies(e.extId)"><strong>dependsOn</strong></span>
@@ -31,7 +31,7 @@
 						</div>
 				</div>
 				<div ng-repeat="r in rules | filter : {'entityName':e.name}">
-					<br /> <span style="padding-left: 2em"><strong>Constraint</strong>
+					<br /> <span style="padding-left: 2em"><strong>RULE</strong>
 						{{r.name}} : {{r.toStringExpression}}
 				</div>
 
@@ -50,6 +50,5 @@
 
 	</div>
 
-	{{rules}}
 </div>
 

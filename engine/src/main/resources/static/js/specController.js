@@ -11,7 +11,7 @@ app.controller('specController', function($scope, $http) {
 		} else {
 			$scope.model = "";
 		}
-	}
+	};
 
 	$scope.conditionModel = function() {
 		if ($scope.spec) {
@@ -19,7 +19,7 @@ app.controller('specController', function($scope, $http) {
 		} else {
 			$scope.model = "";
 		}
-	}
+	};
 
 	$scope.goalModel = function() {
 		if ($scope.spec) {
@@ -27,7 +27,7 @@ app.controller('specController', function($scope, $http) {
 		} else {
 			$scope.model = "";
 		}
-	}
+	};
 
 	$scope.activityModel = function() {
 		if ($scope.spec) {
@@ -35,6 +35,11 @@ app.controller('specController', function($scope, $http) {
 		} else {
 			$scope.model = "";
 		}
-	}
+	};
+	
+	$scope.selectSpecification = function(spec) {
+		$scope.spec = spec;
+		$scope.model = "";
+	};
 
 });
