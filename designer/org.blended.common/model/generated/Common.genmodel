@@ -76,6 +76,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//AttributeDependenceCondition/attribute1"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//AttributeDependenceCondition/attribute2"/>
     </genClasses>
+    <genClasses ecoreClass="Common.ecore#//PathDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//PathDefinition/path"/>
+    </genClasses>
     <genClasses ecoreClass="Common.ecore#//Expression"/>
     <genClasses ecoreClass="Common.ecore#//Or">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Common.ecore#//Or/left"/>
@@ -127,9 +130,6 @@
     </genClasses>
     <genClasses ecoreClass="Common.ecore#//Not">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Common.ecore#//Not/expression"/>
-    </genClasses>
-    <genClasses ecoreClass="Common.ecore#//PathDefinition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//PathDefinition/path"/>
     </genClasses>
     <genClasses ecoreClass="Common.ecore#//AttributeValue">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//AttributeValue/name"/>

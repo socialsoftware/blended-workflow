@@ -147,7 +147,7 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getDTO(String specId) {
+	public ExpressionDTO getExpressionDTO(String specId) {
 		return new ExpressionDTO(specId, BooleanOperator.ATT_VALUE, getPath().getValue());
 	}
 

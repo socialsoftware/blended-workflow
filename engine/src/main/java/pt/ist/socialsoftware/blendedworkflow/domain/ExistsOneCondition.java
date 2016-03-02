@@ -140,7 +140,7 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getDTO(String specId) {
+	public ExpressionDTO getExpressionDTO(String specId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

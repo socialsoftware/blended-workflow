@@ -163,9 +163,9 @@ public class OrCondition extends OrCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.OR, getLeftCondition().getDTO(specId),
-				getRightCondition().getDTO(specId));
+	public ExpressionDTO getExpressionDTO(String specId) {
+		return new ExpressionDTO(specId, BooleanOperator.OR, getLeftCondition().getExpressionDTO(specId),
+				getRightCondition().getExpressionDTO(specId));
 	}
 
 }

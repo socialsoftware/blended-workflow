@@ -134,8 +134,8 @@ public class NotCondition extends NotCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.NOT, getCondition().getDTO(specId));
+	public ExpressionDTO getExpressionDTO(String specId) {
+		return new ExpressionDTO(specId, BooleanOperator.NOT, getCondition().getExpressionDTO(specId));
 	}
 
 }

@@ -12,6 +12,7 @@ import org.blended.common.repository.resttemplate.RepositoryException;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DefPathConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
@@ -151,9 +152,9 @@ public class MergeAndExtractGoalTest {
 
 		// add act conditions
 		ci.associatePathConditionToGoalActivation(TEST_SPEC_ID, SUB_GOAL_ONE, ENTITY_ONE + "." + ATT_TWO);
-		Set<ExpressionDTO> defPaths = ci.getGoalActivationDefPathConditionSet(TEST_SPEC_ID, SUB_GOAL_ONE);
+		Set<DefPathConditionDTO> defPaths = ci.getGoalActivationDefPathConditionSet(TEST_SPEC_ID, SUB_GOAL_ONE);
 		assertEquals(1, defPaths.size());
-		assertEquals("PATH_DEF(" + ENTITY_ONE + "." + ATT_TWO + ")", defPaths.stream().findAny().get().toString());
+		assertEquals(ENTITY_ONE + "." + ATT_TWO, defPaths.stream().findAny().get().getPath());
 
 		// add mul conditions
 		ci.associateMulToGoalInvariant(TEST_SPEC_ID, TOP_GOAL,
@@ -248,7 +249,7 @@ public class MergeAndExtractGoalTest {
 		// get activation def path conditions
 		defPaths = ci.getGoalActivationDefPathConditionSet(TEST_SPEC_ID, goalDTO.getName());
 		assertEquals(1, defPaths.size());
-		assertEquals("PATH_DEF(" + ENTITY_ONE + "." + ATT_TWO + ")", defPaths.stream().findFirst().get().toString());
+		assertEquals(ENTITY_ONE + "." + ATT_TWO, defPaths.stream().findFirst().get().getPath());
 
 		// get success entity achieve conditions
 		defsEnt = ci.getGoalSuccessEntitySet(TEST_SPEC_ID, goalDTO.getName());

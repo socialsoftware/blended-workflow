@@ -374,7 +374,7 @@ public class Entity extends Entity_Base {
 
 	public Set<MulCondition> getMultConditions() {
 		return Stream.concat(getRelationOneSet().stream(), getRelationTwoSet().stream())
-				.map((r) -> r.getMulCondition(this)).collect(Collectors.toSet());
+				.map(r -> r.getMulCondition(this)).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -412,6 +412,14 @@ public class Entity extends Entity_Base {
 		} else {
 			return false;
 		}
+	}
+
+	public Entity getEntityByRolename(String rolename) {
+		return getRelationSet().stream()
+				.filter(r -> (r.getEntityOne() == this && r.getRoleNameTwo().equals(rolename))
+						|| (r.getEntityTwo() == this && r.getRoleNameOne().equals(rolename)))
+				.map(r -> r.getEntityOne() == this ? r.getEntityTwo() : r.getEntityOne()).findFirst()
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ROLE_NAME, getName() + "." + rolename));
 	}
 
 }

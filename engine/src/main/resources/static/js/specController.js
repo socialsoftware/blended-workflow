@@ -5,33 +5,9 @@ app.controller('specController', function($scope, $http) {
 		$scope.specs = response.data;
 	});
 
-	$scope.dataModel = function() {
+	$scope.setModel = function(modelType) {
 		if ($scope.spec) {
-			$scope.model = "dataModel";
-		} else {
-			$scope.model = "";
-		}
-	};
-
-	$scope.conditionModel = function() {
-		if ($scope.spec) {
-			$scope.model = "conditionModel";
-		} else {
-			$scope.model = "";
-		}
-	};
-
-	$scope.goalModel = function() {
-		if ($scope.spec) {
-			$scope.model = "goalModel";
-		} else {
-			$scope.model = "";
-		}
-	};
-
-	$scope.activityModel = function() {
-		if ($scope.spec) {
-			$scope.model = "activityModel";
+			$scope.model = modelType;
 		} else {
 			$scope.model = "";
 		}

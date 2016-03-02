@@ -22,7 +22,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
@@ -184,20 +184,20 @@ public class GoalModelController {
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/act", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public ResponseEntity<ExpressionDTO[]> getGoalActDefPathConditionSet(@PathVariable("specId") String specId,
+	public ResponseEntity<DefPathConditionDTO[]> getGoalActDefPathConditionSet(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		log.debug("getGoalActDefPathConditionSet specId:{}, goalName:{}", specId, goalName);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		ExpressionDTO[] paths = adi.getGoalActivationDefPathConditionSet(specId, goalName).stream()
-				.map((def) -> def.getDTO(specId)).toArray(size -> new ExpressionDTO[size]);
+		DefPathConditionDTO[] paths = adi.getGoalActivationDefPathConditionSet(specId, goalName).stream()
+				.map((def) -> def.getDTO(specId)).toArray(size -> new DefPathConditionDTO[size]);
 
-		return new ResponseEntity<ExpressionDTO[]>(paths, HttpStatus.OK);
+		return new ResponseEntity<DefPathConditionDTO[]>(paths, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/act/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public ResponseEntity<ExpressionDTO> associateDefPathConditionToGoalAct(@PathVariable("specId") String specId,
+	public ResponseEntity<DefPathConditionDTO> associateDefPathConditionToGoalAct(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @PathVariable("path") String path) {
 		log.debug("associateDefPathConditionToGoalAct specId:{}, goalName:{}, path:{}", specId, goalName, path);
 
@@ -205,7 +205,7 @@ public class GoalModelController {
 
 		DefPathCondition defPathCondition = adi.associateDefPathConditionToGoalActivation(specId, goalName, path);
 
-		return new ResponseEntity<ExpressionDTO>(defPathCondition.getDTO(specId), HttpStatus.CREATED);
+		return new ResponseEntity<DefPathConditionDTO>(defPathCondition.getDTO(specId), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/invent", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)

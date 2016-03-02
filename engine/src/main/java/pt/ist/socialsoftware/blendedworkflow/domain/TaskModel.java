@@ -42,7 +42,7 @@ public class TaskModel extends TaskModel_Base {
 		}
 
 		for (Task task : getTasksSet()) {
-			if (task.getPostConditionSet().stream().map(d -> d.getPath().getTargetOfPath())
+			if (task.getPostConditionSet().stream().map(d -> d.getPath().getTarget())
 					.anyMatch(p -> p.isCreatedTogether(product))) {
 				return task;
 			}
@@ -83,6 +83,10 @@ public class TaskModel extends TaskModel_Base {
 			activityCounter++;
 		}
 
+		for (Task task : getTasksSet()) {
+			applyMultiplicityToPostAndPre(task);
+		}
+
 		checkModel();
 	}
 
@@ -99,8 +103,6 @@ public class TaskModel extends TaskModel_Base {
 		applyAttributeEntityDependenceToPre(task);
 
 		applyDependenceConditionsToPre(task);
-
-		applyMultiplicityToPostAndPre(task);
 
 		applyRuleConditionToPostAndPre(task);
 
@@ -119,7 +121,7 @@ public class TaskModel extends TaskModel_Base {
 		Set<Product> postProducts = ConditionModel.getProductsOfDefConditions(newTask.getPostConditionSet());
 
 		for (DefPathCondition defPathCondition : newTask.getPreConditionSet()) {
-			if (postProducts.contains(defPathCondition.getPath().getTargetOfPath()))
+			if (postProducts.contains(defPathCondition.getPath().getTarget()))
 				newTask.removePreCondition(defPathCondition);
 		}
 
@@ -163,14 +165,13 @@ public class TaskModel extends TaskModel_Base {
 
 		Set<AttributeBasic> postAttributes = ConditionModel
 				.getBasicAtributesOfDefConditionSet(task.getPostConditionSet());
-		Set<Product> preAttributes = task.getPreConditionSet().stream().map(d -> d.getPath().getTargetOfPath())
+		Set<Product> preAttributes = task.getPreConditionSet().stream().map(d -> d.getPath().getTarget())
 				.collect(Collectors.toSet());
 		preAttributes.addAll(getDataModel().getEntitySet().stream().filter(e -> e.getExists())
 				.flatMap(e -> e.getAttributeBasicSet().stream()).collect(Collectors.toSet()));
 
 		task.getRuleInvariantSet().stream().flatMap(r -> r.getPathSet().stream())
-				.filter(path -> !postAttributes.contains(path.getTargetOfPath())
-						&& !preAttributes.contains(path.getTargetOfPath()))
+				.filter(path -> !postAttributes.contains(path.getTarget()) && !preAttributes.contains(path.getTarget()))
 				.forEach(path -> task
 						.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(), path.getValue())));
 	}
@@ -191,51 +192,42 @@ public class TaskModel extends TaskModel_Base {
 		return definedAttributes;
 	}
 
-	private void applyMultiplicityToPostAndPre(Task task) {
-		Set<Entity> definedEntities = getDefinedEntities();
+	public void applyMultiplicityToPostAndPre(Task task) {
+		// get all entities that are going to be defined in the task
+		Set<Entity> entitiesToDefine = task.getEntitiesToDefine();
+		if (entitiesToDefine.isEmpty())
+			return;
 
-		// System.out.println("definedEntities");
-		// definedEntities.stream().forEach(e ->
-		// System.out.println(e.getName()));
+		// get all the multiplicity conditions that still need to be applied
+		Set<MulCondition> undefinedMulConditions = entitiesToDefine.stream().flatMap(e -> e.getRelationSet().stream())
+				.flatMap(r -> r.getMulConditionSet().stream()).filter(m -> m.getTaskWithMultiplicity() == null)
+				.collect(Collectors.toSet());
+		if (undefinedMulConditions.isEmpty())
+			return;
 
-		Set<MulCondition> definedMulConditions = getTasksSet().stream()
-				.flatMap(t -> t.getMultiplicityInvariantSet().stream()).collect(Collectors.toSet());
+		// all entities that should be created before due to existing
+		// dependencies
+		Set<Entity> creationDependentAdjacentEntities = task.getCreationDependentAdjacentEntities();
 
-		// System.out.println("definedMulConditions");
-		// definedMulConditions.stream().forEach(e ->
-		// System.out.println(e.getRolename()));
+		// remove mulConditions to avoid a circularity, the creation dependent
+		// adjacent entities should be created before
+		Set<MulCondition> mulConditionsToDefine = undefinedMulConditions.stream().filter(m -> !m.getRelationBW()
+				.getEntitySet().stream().anyMatch(e -> creationDependentAdjacentEntities.contains(e)))
+				.collect(Collectors.toSet());
 
-		Set<MulCondition> undefinedMulConditions = new HashSet<MulCondition>(
-				getConditionModel().getEntityInvariantConditionSet());
-		undefinedMulConditions.removeAll(definedMulConditions);
-
-		// System.out.println("undefinedMulConditions");
-		// undefinedMulConditions.stream().forEach(e ->
-		// System.out.println(e.getRolename()));
-
-		Set<MulCondition> mulConditionsToDefine = undefinedMulConditions.stream()
-				.filter(m -> definedEntities.containsAll(m.getRelationBW().getEntitySet())).collect(Collectors.toSet());
-
+		// add post conditions
 		mulConditionsToDefine.forEach(m -> task.getMultiplicityInvariantSet().add(m));
 
+		// add pre conditions
+		addPreConditionsDueToMulConditions(task, mulConditionsToDefine);
+	}
+
+	private void addPreConditionsDueToMulConditions(Task task, Set<MulCondition> mulConditionsToDefine) {
 		mulConditionsToDefine.stream()
 				.filter(m -> !ConditionModel.getEntitiesOfDefConditionSet(task.getPostConditionSet())
 						.contains(m.getEntity()))
 				.forEach(m -> task.addPreCondition(
 						DefPathCondition.getDefPathCondition(getSpecification(), m.getEntity().getName())));
-	}
-
-	public Set<Entity> getDefinedEntities() {
-		Set<Entity> definedEntities = getTasksSet().stream()
-				.flatMap(t -> ConditionModel.getEntitiesOfDefConditionSet(t.getPostConditionSet()).stream())
-				.collect(Collectors.toSet());
-
-		Set<Entity> existEntities = getConditionModel().getEntityAchieveConditionSet().stream()
-				.map(eac -> eac.getEntity()).filter(e -> e.getEntity().getExists()).collect(Collectors.toSet());
-
-		definedEntities.addAll(existEntities);
-
-		return definedEntities;
 	}
 
 	private void applyDependenceConditionsToPre(Task task) {

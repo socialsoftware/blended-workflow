@@ -49,9 +49,9 @@ public class GetTargetOfPathMethodTest extends TeardownRollbackTest {
 	public void successAttribute() throws BWException {
 		Path path = new Path(spec.getDataModel(), ENTITY_NAME_TWO + "." + ROLE_ONE + "." + ATTRIBUTE_NAME_ONE);
 
-		assertEquals(ProductType.ATTRIBUTE_BASIC, path.getTargetOfPath().getProductType());
+		assertEquals(ProductType.ATTRIBUTE_BASIC, path.getTarget().getProductType());
 
-		AttributeBasic attribute = (AttributeBasic) path.getTargetOfPath();
+		AttributeBasic attribute = (AttributeBasic) path.getTarget();
 
 		assertEquals(SPEC_ID, attribute.getDataModel().getSpecification().getSpecId());
 		assertEquals(entityOne.getExternalId(), attribute.getEntity().getExternalId());
@@ -62,9 +62,9 @@ public class GetTargetOfPathMethodTest extends TeardownRollbackTest {
 	public void successEntity() throws BWException {
 		Path path = new Path(spec.getDataModel(), ENTITY_NAME_TWO + "." + ROLE_ONE);
 
-		assertEquals(ProductType.ENTITY, path.getTargetOfPath().getProductType());
+		assertEquals(ProductType.ENTITY, path.getTarget().getProductType());
 
-		Entity entity = (Entity) path.getTargetOfPath();
+		Entity entity = (Entity) path.getTarget();
 
 		assertEquals(SPEC_ID, entity.getDataModel().getSpecification().getSpecId());
 		assertEquals(ENTITY_NAME_ONE, entity.getName());
