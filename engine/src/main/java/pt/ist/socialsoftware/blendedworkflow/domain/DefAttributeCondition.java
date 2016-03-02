@@ -246,8 +246,9 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.PATH_DEF, getPath().getValue());
+	public ExpressionDTO getExpressionDTO(String specId) {
+		assert false : "expressions cannot have a def condition";
+		return null;
 	}
 
 }

@@ -11,8 +11,8 @@ import org.blended.common.repository.CommonInterface;
 import org.blended.common.repository.resttemplate.dto.ActivityDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DefPathConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
-import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
 import org.blended.common.repository.resttemplate.dto.MulConditionDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.slf4j.Logger;
@@ -45,10 +45,10 @@ public class ReadActivityModelService {
 		for (ActivityDTO activityDTO : activities) {
 			Activity activity = createActivity(model, activityDTO);
 
-			Set<ExpressionDTO> expressionsDTO = ci.getActivityPreConditionSet(specId, activityDTO.getName());
+			Set<DefPathConditionDTO> defPathConditions = ci.getActivityPreConditionSet(specId, activityDTO.getName());
 
-			for (ExpressionDTO expressionDTO : expressionsDTO) {
-				activity.getPre().add(expressionDTO.buildExpression());
+			for (DefPathConditionDTO defPathConditionDTO : defPathConditions) {
+				activity.getPre().add(defPathConditionDTO.buildPathDefinition());
 			}
 
 			DefProductConditionSetDTO defProductConditionSetDTO = ci.getActivityPostConditionSet(specId,

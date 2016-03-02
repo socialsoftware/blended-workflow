@@ -16,6 +16,7 @@ import org.blended.common.repository.resttemplate.dto.ActivityDTO;
 import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
+import org.blended.common.repository.resttemplate.dto.DefPathConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
@@ -717,7 +718,7 @@ public class CommonInterface {
 		restTemplate.postForObject(uri, null, String.class, params);
 	}
 
-	public Set<ExpressionDTO> getGoalActivationDefPathConditionSet(String specId, String goalName) {
+	public Set<DefPathConditionDTO> getGoalActivationDefPathConditionSet(String specId, String goalName) {
 		logger.debug("getGoalActivationDefPathConditionSet: {}, {}", specId, goalName);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/act";
@@ -727,12 +728,12 @@ public class CommonInterface {
 		params.put("goalName", goalName);
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		ExpressionDTO[] defsVO = restTemplate.getForObject(uri, ExpressionDTO[].class, params);
+		DefPathConditionDTO[] defsVO = restTemplate.getForObject(uri, DefPathConditionDTO[].class, params);
 
-		return new HashSet<ExpressionDTO>(Arrays.asList(defsVO));
+		return new HashSet<DefPathConditionDTO>(Arrays.asList(defsVO));
 	}
 
-	public ExpressionDTO associatePathConditionToGoalActivation(String specId, String goalName, String path) {
+	public DefPathConditionDTO associatePathConditionToGoalActivation(String specId, String goalName, String path) {
 		logger.debug("associatePathConditionToGoalActivation specId:{}, goalName:{}, path:{}", specId, goalName, path);
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/act/{path}/";
@@ -743,7 +744,7 @@ public class CommonInterface {
 		params.put("path", path);
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		ExpressionDTO result = restTemplate.postForObject(uri, null, ExpressionDTO.class, params);
+		DefPathConditionDTO result = restTemplate.postForObject(uri, null, DefPathConditionDTO.class, params);
 
 		return result;
 	}
@@ -934,7 +935,7 @@ public class CommonInterface {
 		return restTemplate.postForObject(uri, request, ActivityDTO.class, params);
 	}
 
-	public Set<ExpressionDTO> getActivityPreConditionSet(String specId, String activityName) {
+	public Set<DefPathConditionDTO> getActivityPreConditionSet(String specId, String activityName) {
 		logger.debug("getActivityPreConditionSet specId:{}, activityName:{}", specId, activityName);
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/pre";
@@ -944,7 +945,7 @@ public class CommonInterface {
 		params.put("activityName", activityName);
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		ExpressionDTO[] result = restTemplate.getForObject(uri, ExpressionDTO[].class, params);
+		DefPathConditionDTO[] result = restTemplate.getForObject(uri, DefPathConditionDTO[].class, params);
 
 		return Arrays.stream(result).collect(Collectors.toSet());
 	}

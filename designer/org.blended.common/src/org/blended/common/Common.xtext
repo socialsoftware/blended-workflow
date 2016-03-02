@@ -90,6 +90,10 @@ Cardinality:
 	INT | INT '..' INT | INT '..' '*' | INT '..' '+'
 ;
 
+PathDefinition:
+	'DEF' '(' path = QualifiedName ')'
+;
+
 Expression: Or;
 
 Or returns Expression:
@@ -139,7 +143,6 @@ Primary returns Expression:
 ;
 
 Atomic returns Expression:
-	{PathDefinition} 'DEF' '(' path = QualifiedName ')' |
 	{AttributeValue} name = QualifiedName |
 	{IntConstant} name=INT |
 	{StringConstant} name=STRING |

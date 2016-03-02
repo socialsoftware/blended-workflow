@@ -278,10 +278,6 @@ public class ExpressionDTO {
 			smallerEqual.setLeft(getLeftExpression().buildExpression());
 			smallerEqual.setRight(getRightExpression().buildExpression());
 			return smallerEqual;
-		case PATH_DEF:
-			PathDefinition pathDefinition = factory.createPathDefinition();
-			pathDefinition.setPath(getValue());
-			return pathDefinition;
 		case ATT_VALUE:
 			AttributeValue attributeValue = factory.createAttributeValue();
 			attributeValue.setName(getValue());

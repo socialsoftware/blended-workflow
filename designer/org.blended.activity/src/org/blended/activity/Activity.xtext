@@ -10,7 +10,7 @@ ActivityModel:
 
 Activity:
 	name = ID ':' description = STRING
-	'PRE' '(' (pre += (Expression) (',' pre += (Expression))*)? ')'','
+	'PRE' '(' (pre += (PathDefinition) (',' pre += (PathDefinition))*)? ')'','
 	'POST' '(' (post += (EntityAchieveCondition | MandatoryAttributeAchieveCondition | NotMandatoryAttributeAchieveCondition | EntityInvariantCondition | AttributeInvariantCondition) 
 	(',' post += (EntityAchieveCondition | MandatoryAttributeAchieveCondition | NotMandatoryAttributeAchieveCondition | EntityInvariantCondition | AttributeInvariantCondition))*)?  ')'
 ;

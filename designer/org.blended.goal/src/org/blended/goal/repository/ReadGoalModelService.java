@@ -8,12 +8,12 @@ import org.blended.common.common.AttributeInvariantCondition;
 import org.blended.common.common.CommonFactory;
 import org.blended.common.common.EntityAchieveCondition;
 import org.blended.common.common.EntityInvariantCondition;
-import org.blended.common.common.Expression;
 import org.blended.common.common.Nothing;
+import org.blended.common.common.PathDefinition;
 import org.blended.common.repository.CommonInterface;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
-import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
+import org.blended.common.repository.resttemplate.dto.DefPathConditionDTO;
 import org.blended.common.repository.resttemplate.dto.GoalDTO;
 import org.blended.common.repository.resttemplate.dto.MulConditionDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
@@ -50,7 +50,7 @@ public class ReadGoalModelService {
 		for (GoalDTO goalDTO : goals) {
 			Goal newGoal = createNewGoal(model, goalDTO.getName());
 
-			Set<ExpressionDTO> paths = ci.getGoalActivationDefPathConditionSet(specId, goalDTO.getName());
+			Set<DefPathConditionDTO> paths = ci.getGoalActivationDefPathConditionSet(specId, goalDTO.getName());
 			addActivationDefPathConditions(newGoal, paths);
 
 			addSuccessCondition(specId, goalDTO, newGoal);
@@ -102,9 +102,9 @@ public class ReadGoalModelService {
 		}
 	}
 
-	private void addActivationDefPathConditions(Goal newGoal, Set<ExpressionDTO> paths) {
-		for (ExpressionDTO path : paths) {
-			Expression pathDefinition = path.buildExpression();
+	private void addActivationDefPathConditions(Goal newGoal, Set<DefPathConditionDTO> paths) {
+		for (DefPathConditionDTO path : paths) {
+			PathDefinition pathDefinition = path.buildPathDefinition();
 			newGoal.getActivationConditions().add(pathDefinition);
 		}
 	}

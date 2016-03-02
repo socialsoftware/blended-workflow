@@ -41,6 +41,7 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 	private static final String EXISTS_ENTITY_NAME = "Exists Entity Name";
 	private static final String EXISTS_ATTRIBUTE_NAME = "Exists Attribute Name";
 	private static final String EXISTS_ATTRIBUTE_NAME_STRING = "Exists Attribute Name String";
+	private static final String EXISTS_ATTRIBUTE_NAME_BOOLEAN = "Exists Attribute Name Boolean";
 
 	DesignInterface designInterface;
 	DataModel existingDataModel;
@@ -60,6 +61,8 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 		new AttributeBasic(existingDataModel, existsEntity, null, EXISTS_ATTRIBUTE_NAME, AttributeType.NUMBER, true,
 				false, false);
 		new AttributeBasic(existingDataModel, existsEntity, null, EXISTS_ATTRIBUTE_NAME_STRING, AttributeType.STRING,
+				false, false, false);
+		new AttributeBasic(existingDataModel, existsEntity, null, EXISTS_ATTRIBUTE_NAME_BOOLEAN, AttributeType.BOOLEAN,
 				false, false, false);
 
 		new RelationBW(existingDataModel, "relation", existsEntity, "role1", Cardinality.ZERO_OR_ONE, false, entityTwo,
@@ -170,30 +173,30 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 	}
 
 	@Test
-	public void expressionWithNotAndDef() {
+	public void expressionWithNot() {
 		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.NOT, new ExpressionDTO(EXISTS_SPEC_ID,
-				BooleanOperator.PATH_DEF, EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME));
+				BooleanOperator.ATT_VALUE, EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME_BOOLEAN));
 
 		designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
 	}
 
 	@Test
-	public void expressionWithNotAndAndDef() {
+	public void expressionWithNotAndAttAndDef() {
 		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.AND,
 				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.NOT,
-						new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.PATH_DEF,
-								EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME)),
+						new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.ATT_VALUE,
+								EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME_BOOLEAN)),
 				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL, "false"));
 
 		designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
 	}
 
 	@Test
-	public void expressionWithNotAndDefAndNotEqual() {
+	public void expressionWithNotAndAttAndNotEqual() {
 		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.NOT_EQUAL,
 				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.NOT,
-						new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.PATH_DEF,
-								EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME)),
+						new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.ATT_VALUE,
+								EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME_BOOLEAN)),
 				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL, "false"));
 
 		designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));

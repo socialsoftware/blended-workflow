@@ -407,7 +407,7 @@ public class Comparison extends Comparison_Base {
 	}
 
 	@Override
-	public ExpressionDTO getDTO(String specId) {
+	public ExpressionDTO getExpressionDTO(String specId) {
 		return new ExpressionDTO(specId, getComparator(), getLeftExpression().getDTO(specId),
 				getRightExpression().getDTO(specId));
 	}

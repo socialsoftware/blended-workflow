@@ -208,7 +208,7 @@ public class MulCondition extends MulCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getDTO(String specId) {
+	public ExpressionDTO getExpressionDTO(String specId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

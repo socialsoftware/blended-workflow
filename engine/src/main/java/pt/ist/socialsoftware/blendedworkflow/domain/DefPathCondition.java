@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
@@ -167,8 +168,13 @@ public class DefPathCondition extends DefPathCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.PATH_DEF, getPath().getValue());
+	public ExpressionDTO getExpressionDTO(String specId) {
+		assert false : "expressions cannot have a def condition";
+		return null;
+	}
+
+	public DefPathConditionDTO getDTO(String specId) {
+		return new DefPathConditionDTO(specId, getPath().getValue());
 	}
 
 }

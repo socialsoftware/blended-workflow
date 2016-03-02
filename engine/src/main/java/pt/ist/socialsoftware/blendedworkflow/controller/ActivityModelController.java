@@ -28,8 +28,8 @@ import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.req.AddActivityReq;
@@ -101,7 +101,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/pre", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public ResponseEntity<ExpressionDTO[]> getActivityPreCondition(@PathVariable("specId") String specId,
+	public ResponseEntity<DefPathConditionDTO[]> getActivityPreCondition(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
 
@@ -109,12 +109,13 @@ public class ActivityModelController {
 
 		Set<DefPathCondition> preConditionSet = adi.getActivityPreCondition(specId, activityName);
 
-		return new ResponseEntity<ExpressionDTO[]>(
-				preConditionSet.stream().map(d -> d.getDTO(specId)).toArray(ExpressionDTO[]::new), HttpStatus.OK);
+		return new ResponseEntity<DefPathConditionDTO[]>(
+				preConditionSet.stream().map(d -> d.getExpressionDTO(specId)).toArray(DefPathConditionDTO[]::new),
+				HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/pre/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public ResponseEntity<ExpressionDTO> associateDefPathToActivityPre(@PathVariable("specId") String specId,
+	public ResponseEntity<DefPathConditionDTO> associateDefPathToActivityPre(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName, @PathVariable("path") String path) {
 		logger.debug("associateDefPathToActivityPre specId:{}, activityName:{}, path:{}", specId, activityName, path);
 
@@ -122,7 +123,7 @@ public class ActivityModelController {
 
 		DefPathCondition defPathCondition = adi.associateDefPathToActivityPre(specId, activityName, path);
 
-		return new ResponseEntity<ExpressionDTO>(defPathCondition.getDTO(specId), HttpStatus.CREATED);
+		return new ResponseEntity<DefPathConditionDTO>(defPathCondition.getDTO(specId), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/post", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
