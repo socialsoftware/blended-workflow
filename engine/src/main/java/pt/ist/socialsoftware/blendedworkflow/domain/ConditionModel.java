@@ -62,14 +62,6 @@ public class ConditionModel extends ConditionModel_Base {
 		return entities;
 	}
 
-	static public Set<AttributeBasic> getBasicAtributesOfDefConditionSet(
-			Set<? extends DefProductCondition> defAttributes) {
-		Set<AttributeBasic> attributes = defAttributes.stream().map(d -> d.getTargetOfPath())
-				.filter(Attribute.class::isInstance).map(Attribute.class::cast)
-				.flatMap(a -> a.getAttributeBasicSet().stream()).collect(Collectors.toSet());
-		return attributes;
-	}
-
 	static public Set<DefEntityCondition> getDefEntityConditions(Set<? extends DefProductCondition> conditions) {
 		return conditions.stream().filter(DefEntityCondition.class::isInstance).map(DefEntityCondition.class::cast)
 				.collect(Collectors.toSet());

@@ -374,7 +374,8 @@ public class Entity extends Entity_Base {
 
 	public Set<MulCondition> getMultConditions() {
 		return Stream.concat(getRelationOneSet().stream(), getRelationTwoSet().stream())
-				.map(r -> r.getMulCondition(this)).collect(Collectors.toSet());
+				.flatMap(r -> r.getMulConditionSet().stream()).filter(m -> m.getSourceEntity() == this)
+				.collect(Collectors.toSet());
 	}
 
 	@Override
@@ -398,20 +399,8 @@ public class Entity extends Entity_Base {
 	}
 
 	@Override
-	public boolean canBeDefinedBefore(Product product) {
-		if (this == product)
-			return false;
-		else
-			return true;
-	}
-
-	@Override
 	public boolean isCreatedTogether(Product product) {
-		if (this == product) {
-			return true;
-		} else {
-			return false;
-		}
+		return this == product;
 	}
 
 	public Entity getEntityByRolename(String rolename) {
@@ -420,6 +409,11 @@ public class Entity extends Entity_Base {
 						|| (r.getEntityTwo() == this && r.getRoleNameOne().equals(rolename)))
 				.map(r -> r.getEntityOne() == this ? r.getEntityTwo() : r.getEntityOne()).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ROLE_NAME, getName() + "." + rolename));
+	}
+
+	@Override
+	public boolean cannotBeDefinedBefore(Product source) {
+		return this == source;
 	}
 
 }

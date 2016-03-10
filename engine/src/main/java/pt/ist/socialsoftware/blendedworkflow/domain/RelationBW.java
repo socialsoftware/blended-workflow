@@ -182,11 +182,13 @@ public class RelationBW extends RelationBW_Base {
 		return relDTO;
 	}
 
-	public MulCondition getMulCondition(Entity entity) {
-		if (getEntityOne() == entity)
-			return MulCondition.getMulCondition(this, getRoleNameTwo());
-		if (getEntityTwo() == entity)
-			return MulCondition.getMulCondition(this, getRoleNameOne());
+	public String getPath(Entity e) {
+		if (e == getEntityOne())
+			return getEntityTwo().getName() + "." + getRoleNameOne();
+
+		if (e == getEntityTwo())
+			return getEntityOne().getName() + "." + getRoleNameTwo();
+
 		return null;
 	}
 

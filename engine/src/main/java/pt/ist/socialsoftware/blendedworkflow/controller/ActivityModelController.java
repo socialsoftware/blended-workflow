@@ -101,7 +101,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/pre", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public ResponseEntity<DefPathConditionDTO[]> getActivityPreCondition(@PathVariable("specId") String specId,
+	public ResponseEntity<DefPathConditionDTO[]> getActivityPreConditionSet(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
 
@@ -110,8 +110,7 @@ public class ActivityModelController {
 		Set<DefPathCondition> preConditionSet = adi.getActivityPreCondition(specId, activityName);
 
 		return new ResponseEntity<DefPathConditionDTO[]>(
-				preConditionSet.stream().map(d -> d.getExpressionDTO(specId)).toArray(DefPathConditionDTO[]::new),
-				HttpStatus.OK);
+				preConditionSet.stream().map(d -> d.getDTO(specId)).toArray(DefPathConditionDTO[]::new), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/pre/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -238,9 +237,9 @@ public class ActivityModelController {
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		boolean result = adi.checkActivityModel(specId);
+		adi.checkActivityModel(specId);
 
-		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/activities/merge", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
