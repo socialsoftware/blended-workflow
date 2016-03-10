@@ -11,9 +11,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.ConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
@@ -127,17 +125,12 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public AttributeBasic createAttribute(AttributeDTO attDTO) {
+	public Attribute createAttribute(AttributeDTO attDTO) {
 		log.debug("createAttribute entityExtId:{}", attDTO.getEntityExtId());
 		Entity ent = getEntityByExtId(attDTO.getEntityExtId());
 
-		AttributeGroup attGroup = null;
-		if (attDTO.getGroupExtId() != null) {
-			attGroup = getAttributeGroupByExtId(attDTO.getGroupExtId());
-		}
-
-		AttributeBasic attribute = ent.createAttribute(attGroup, attDTO.getName(),
-				AttributeType.parseAttributeType(attDTO.getType()), attDTO.isMandatory());
+		Attribute attribute = ent.createAttribute(attDTO.getName(), AttributeType.parseAttributeType(attDTO.getType()),
+				attDTO.isMandatory());
 
 		return attribute;
 	}
@@ -182,15 +175,6 @@ public class DesignInterface {
 		Specification spec = getSpecBySpecId(specId);
 
 		return spec.getDataModel().getRelationBWSet();
-	}
-
-	@Atomic(mode = TxMode.WRITE)
-	public AttributeGroup createAttributeGroup(AttributeDTO attDTO) {
-		Entity entity = getEntityByExtId(attDTO.getEntityExtId());
-
-		AttributeGroup group = entity.createAttributeGroup(attDTO.getName(), attDTO.isMandatory());
-
-		return group;
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -352,7 +336,7 @@ public class DesignInterface {
 		return getEntityByName(spec.getDataModel(), entityName);
 	}
 
-	public AttributeBasic getAttributeByExtId(String extId) {
+	public Attribute getAttributeByExtId(String extId) {
 		return FenixFramework.getDomainObject(extId);
 	}
 
@@ -887,20 +871,6 @@ public class DesignInterface {
 		if (entity == null)
 			throw new BWException(BWErrorType.NOT_FOUND, externalId);
 		return entity;
-	}
-
-	private AttributeGroup getAttributeGroupByExtId(String externalId) {
-		if (externalId == null || externalId.equals(""))
-			throw new BWException(BWErrorType.NOT_FOUND, externalId);
-		AttributeGroup attributeGroup = FenixFramework.getDomainObject(externalId);
-		if (attributeGroup == null)
-			throw new BWException(BWErrorType.NOT_FOUND, externalId);
-		return attributeGroup;
-	}
-
-	private Attribute getAttribute(Specification spec, String path) {
-		log.debug("getAttribute path:{}", path);
-		return (Attribute) spec.getDataModel().getTargetOfPath(path);
 	}
 
 	private Dependence getDependenceByExtId(String externalId) {

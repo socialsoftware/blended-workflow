@@ -6,9 +6,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -24,7 +23,6 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 	private static final String ENT_ONE_NAME = "EntOne";
 	private static final String ENT_TWO_NAME = "EntTwo";
 	private static final String ENT_THREE_NAME = "EntThree";
-	private static final String GROUP_ONE_NAME = "GroupOne";
 	private static final String ATT_ONE_NAME = "AttOne";
 	private static final String ATT_TWO_NAME = "AttTwo";
 	private static final String ATT_THREE_NAME = "AttThree";
@@ -38,11 +36,10 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 	Entity entOne;
 	Entity entTwo;
 	Entity entThree;
-	AttributeGroup attGroupOne;
-	AttributeBasic attOne;
-	AttributeBasic attTwo;
-	AttributeBasic attThree;
-	AttributeBasic attFour;
+	Attribute attOne;
+	Attribute attTwo;
+	Attribute attThree;
+	Attribute attFour;
 
 	@Override
 	public void populate4Test() throws BWException {
@@ -53,17 +50,12 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 		entTwo = new Entity(dataModel, ENT_TWO_NAME, false);
 		entThree = new Entity(dataModel, ENT_THREE_NAME, false);
 
-		attGroupOne = new AttributeGroup(dataModel, entOne, GROUP_ONE_NAME, true);
+		attOne = new Attribute(dataModel, entOne, ATT_ONE_NAME, AttributeType.NUMBER, true, false, false);
+		attTwo = new Attribute(dataModel, entOne, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
 
-		attOne = new AttributeBasic(dataModel, entOne, null, ATT_ONE_NAME, AttributeType.NUMBER, true, false, false);
-		attGroupOne.addAttribute(attOne);
-		attTwo = new AttributeBasic(dataModel, entOne, null, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
+		attThree = new Attribute(dataModel, entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true, false, false);
 
-		attThree = new AttributeBasic(dataModel, entTwo, null, ATT_THREE_NAME, AttributeType.NUMBER, true, false,
-				false);
-
-		attFour = new AttributeBasic(dataModel, entThree, null, ATT_FOUR_NAME, AttributeType.NUMBER, true, false,
-				false);
+		attFour = new Attribute(dataModel, entThree, ATT_FOUR_NAME, AttributeType.NUMBER, true, false, false);
 
 		new RelationBW(dataModel, "relOneTwo", entOne, ROLENAME_ENT_ONE, Cardinality.ONE_MANY, false, entTwo,
 				ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);
@@ -89,30 +81,6 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 		try {
 			new Dependence(dataModel, attOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
 			new Dependence(dataModel, attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME);
-			dataModel.checkDependences();
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
-		}
-	}
-
-	@Test
-	public void failAttributeGroupToAttribute() throws BWException {
-		try {
-			new Dependence(dataModel, attGroupOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
-			new Dependence(dataModel, attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME);
-			dataModel.checkDependences();
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
-		}
-	}
-
-	@Test
-	public void failAttributeToAttributeGroup() throws BWException {
-		try {
-			new Dependence(dataModel, attOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
-			new Dependence(dataModel, attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE + "." + GROUP_ONE_NAME);
 			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {

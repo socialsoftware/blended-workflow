@@ -18,7 +18,7 @@ import org.yawlfoundation.yawl.worklet.rdr.RuleType;
 import org.yawlfoundation.yawl.worklet.support.WorkletGatewayClient;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
@@ -303,8 +303,8 @@ public class WorkletAdapter {
             String type) {
         String cornerStr = "<cornerstone>";
         Set<Entity> entities = null;
-        Set<AttributeBasic> attributes = null;
-        HashMap<AttributeBasic, String> attributesValues = null;
+        Set<Attribute> attributes = null;
+        HashMap<Attribute, String> attributesValues = null;
 
         // Get Condition Data
         if (task != null && isPreCondition) {
@@ -312,7 +312,7 @@ public class WorkletAdapter {
                     .flatMap((cond) -> cond.getEntities().stream())
                     .collect(Collectors.toSet());
             attributes = task.getPreConditionSet().stream()
-                    .flatMap((cond) -> cond.getAttributeBasicSet().stream())
+                    .flatMap((cond) -> cond.getAttributeSet().stream())
                     .collect(Collectors.toSet());
             attributesValues = task.getPreConditionSet().stream()
                     .map(Condition.class::cast)
@@ -325,7 +325,7 @@ public class WorkletAdapter {
                     .flatMap((cond) -> cond.getEntities().stream())
                     .collect(Collectors.toSet());
             attributes = task.getPreConditionSet().stream()
-                    .flatMap((cond) -> cond.getAttributeBasicSet().stream())
+                    .flatMap((cond) -> cond.getAttributeSet().stream())
                     .collect(Collectors.toSet());
             attributesValues = task.getPostConditionSet().stream()
                     .map(Condition.class::cast)
@@ -335,9 +335,9 @@ public class WorkletAdapter {
         }
 
         if (attributes != null) {
-            Iterator<AttributeBasic> it = attributes.iterator();
+            Iterator<Attribute> it = attributes.iterator();
             while (it.hasNext()) {
-                AttributeBasic attribute = it.next();
+                Attribute attribute = it.next();
                 Entity entity = attribute.getEntity();
                 if (entities.contains(entity)
                         && !attributesValues.containsKey(attribute)
@@ -350,7 +350,7 @@ public class WorkletAdapter {
             // Parse complete entities
             for (Entity entity : entities) {
                 String entityName = entity.getName().replaceAll(" ", "");
-                for (AttributeBasic attribute : entity.getAttributeBasicSet()) {
+                for (Attribute attribute : entity.getAttributeBasicSet()) {
                     if (attribute.getIsKeyAttribute()) {
                         String attributeName = attribute.getName()
                                 .replaceAll(" ", "");
@@ -374,7 +374,7 @@ public class WorkletAdapter {
         }
         // Parse single attributes
         if (attributes != null) {
-            for (AttributeBasic attribute : attributes) {
+            for (Attribute attribute : attributes) {
                 String entityName = attribute.getEntity().getName()
                         .replaceAll(" ", "");
                 String attributeName = attribute.getName().replaceAll(" ", "");

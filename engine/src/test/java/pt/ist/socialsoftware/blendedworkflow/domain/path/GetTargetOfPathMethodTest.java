@@ -6,8 +6,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Path;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
@@ -36,9 +36,9 @@ public class GetTargetOfPathMethodTest extends TeardownRollbackTest {
 
 		entityOne = new Entity(spec.getDataModel(), ENTITY_NAME_ONE, false);
 		Entity entityTwo = new Entity(spec.getDataModel(), ENTITY_NAME_TWO, false);
-		new AttributeBasic(spec.getDataModel(), entityOne, null, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false,
+		new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false,
 				false);
-		new AttributeBasic(spec.getDataModel(), entityOne, null, ATTRIBUTE_NAME_TWO, AttributeType.STRING, false, false,
+		new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_NAME_TWO, AttributeType.STRING, false, false,
 				false);
 
 		new RelationBW(spec.getDataModel(), "relation", entityOne, ROLE_ONE, Cardinality.ZERO_OR_ONE, false, entityTwo,
@@ -49,9 +49,9 @@ public class GetTargetOfPathMethodTest extends TeardownRollbackTest {
 	public void successAttribute() throws BWException {
 		Path path = new Path(spec.getDataModel(), ENTITY_NAME_TWO + "." + ROLE_ONE + "." + ATTRIBUTE_NAME_ONE);
 
-		assertEquals(ProductType.ATTRIBUTE_BASIC, path.getTarget().getProductType());
+		assertEquals(ProductType.ATTRIBUTE, path.getTarget().getProductType());
 
-		AttributeBasic attribute = (AttributeBasic) path.getTarget();
+		Attribute attribute = (Attribute) path.getTarget();
 
 		assertEquals(SPEC_ID, attribute.getDataModel().getSpecification().getSpecId());
 		assertEquals(entityOne.getExternalId(), attribute.getEntity().getExternalId());

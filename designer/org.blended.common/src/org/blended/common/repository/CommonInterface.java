@@ -244,32 +244,17 @@ public class CommonInterface {
 		return result;
 	}
 
-	public AttributeDTO createAttribute(AttributeDTO attribueVO) {
-		logger.debug("createAttribute: entitityExtId:{}, groupExtId:{}, {}, {}, {}", attribueVO.getEntityExtId(),
-				attribueVO.getGroupExtId(), attribueVO.getName(), attribueVO.getType(), attribueVO.isMandatory());
+	public AttributeDTO createAttribute(AttributeDTO attribueDTO) {
+		logger.debug("createAttribute: entitityExtId:{}, {}, {}, {}", attribueDTO.getEntityExtId(),
+				attribueDTO.getName(), attribueDTO.getType(), attribueDTO.isMandatory());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/attributes";
 
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("specId", attribueVO.getSpecId());
+		params.put("specId", attribueDTO.getSpecId());
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		AttributeDTO result = restTemplate.postForObject(uri, attribueVO, AttributeDTO.class, params);
-
-		return result;
-	}
-
-	public AttributeDTO createAttributeGroup(AttributeDTO attributeDTO) {
-		logger.debug("createAttributeGroup: entitityExtId:{}, name:{}, mandatory:{}", attributeDTO.getEntityExtId(),
-				attributeDTO.getName(), attributeDTO.isMandatory());
-
-		final String uri = BASE_URL + "/specs/{specId}/datamodel/attributegroups";
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("specId", attributeDTO.getSpecId());
-
-		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		AttributeDTO result = restTemplate.postForObject(uri, attributeDTO, AttributeDTO.class, params);
+		AttributeDTO result = restTemplate.postForObject(uri, attribueDTO, AttributeDTO.class, params);
 
 		return result;
 	}

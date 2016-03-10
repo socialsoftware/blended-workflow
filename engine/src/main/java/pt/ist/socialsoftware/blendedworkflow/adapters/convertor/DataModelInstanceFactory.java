@@ -6,7 +6,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
@@ -50,7 +50,7 @@ public class DataModelInstanceFactory {
                     throws BWException {
         Namespace dmNamespace = entityXML.getNamespace();
 
-        for (AttributeBasic attribute : entityInstance.getEntity()
+        for (Attribute attribute : entityInstance.getEntity()
                 .getAttributeBasicSet()) {
             String attributeName = attribute.getName().replaceAll(" ", "_");
             String value = entityXML.getChildText(attributeName, dmNamespace);

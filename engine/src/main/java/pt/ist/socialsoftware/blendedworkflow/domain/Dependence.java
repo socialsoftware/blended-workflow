@@ -1,9 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -79,39 +77,6 @@ public class Dependence extends Dependence_Base {
 
 	public Product getTarget() {
 		return getPath().getTarget();
-	}
-
-	public Set<Dependence> getDependenceTransitiveClosure(Set<Dependence> visited) {
-		visited.addAll(getPath().getTarget().getDependenceSet());
-
-		for (Dependence next : getPath().getTarget().getDependenceSet()) {
-			if (!visited.contains(next)) {
-				visited.addAll(next.getDependenceTransitiveClosure(visited));
-			}
-		}
-
-		return visited;
-	}
-
-	public void checkDependenceCycle() {
-		Product product = getProduct();
-		Set<Product> visited = new HashSet<Product>();
-
-		checkDependenceCycle(product, visited);
-	}
-
-	private void checkDependenceCycle(Product source, Set<Product> visited) {
-		Product target = getTarget();
-		if (target.cannotBeDefinedBefore(source)) {
-			throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY, getPath().getValue());
-		}
-
-		if (!visited.contains(target)) {
-			visited.add(target);
-			for (Dependence next : target.getDependenceSet()) {
-				next.checkDependenceCycle(source, visited);
-			}
-		}
 	}
 
 }

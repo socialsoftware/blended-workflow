@@ -68,14 +68,9 @@ public class Rule extends Rule_Base {
 		return ruleDTO;
 	}
 
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		return getAttributeSet().stream().flatMap(a -> a.getAttributeBasicSet().stream()).collect(Collectors.toSet());
-	}
-
 	public Set<Attribute> getAttributeSet() {
 		Set<Path> paths = getCondition().getPathSet();
-		return paths.stream().map(p -> p.getTarget()).filter(Attribute.class::isInstance).map(Attribute.class::cast)
-				.collect(Collectors.toSet());
+		return paths.stream().map(p -> p.getTarget()).map(Attribute.class::cast).collect(Collectors.toSet());
 	}
 
 	public Set<Path> getPathSet() {

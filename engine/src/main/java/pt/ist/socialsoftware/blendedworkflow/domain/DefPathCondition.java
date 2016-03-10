@@ -61,18 +61,6 @@ public class DefPathCondition extends DefPathCondition_Base {
 	}
 
 	@Override
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
-		if (getTargetOfPath() instanceof AttributeBasic) {
-			attributes.add((AttributeBasic) getTargetOfPath());
-		} else if (getTargetOfPath() instanceof AttributeGroup) {
-			attributes.addAll(((AttributeGroup) getTargetOfPath()).getAttributeBasicSet());
-		}
-
-		return attributes;
-	}
-
-	@Override
 	public Set<Path> getPathSet() {
 		Set<Path> paths = new HashSet<Path>();
 		paths.add(getPath());
@@ -81,7 +69,7 @@ public class DefPathCondition extends DefPathCondition_Base {
 	}
 
 	@Override
-	public HashMap<AttributeBasic, String> getcompareConditionValues() {
+	public HashMap<Attribute, String> getcompareConditionValues() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -175,6 +163,15 @@ public class DefPathCondition extends DefPathCondition_Base {
 
 	public DefPathConditionDTO getDTO(String specId) {
 		return new DefPathConditionDTO(specId, getPath().getValue());
+	}
+
+	@Override
+	public Set<Attribute> getAttributeSet() {
+		Set<Attribute> attributes = new HashSet<Attribute>();
+		if (getTargetOfPath() instanceof Attribute) {
+			attributes.add((Attribute) getTargetOfPath());
+		}
+		return attributes;
 	}
 
 }

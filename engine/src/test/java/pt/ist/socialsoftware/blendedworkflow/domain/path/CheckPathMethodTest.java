@@ -6,9 +6,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Path;
@@ -24,7 +23,6 @@ public class CheckPathMethodTest extends TeardownRollbackTest {
 	private static final String ENT_ONE_NAME = "EntOne";
 	private static final String ENT_TWO_NAME = "EntTwo";
 	private static final String ENT_THREE_NAME = "EntThree";
-	private static final String GROUP_ONE_NAME = "GroupOne";
 	private static final String ATT_ONE_NAME = "AttOne";
 	private static final String ATT_TWO_NAME = "AttTwo";
 	private static final String ATT_THREE_NAME = "AttThree";
@@ -36,7 +34,7 @@ public class CheckPathMethodTest extends TeardownRollbackTest {
 	Entity entOne;
 	Entity entTwo;
 	Entity entThree;
-	AttributeBasic attThree;
+	Attribute attThree;
 
 	@Override
 	public void populate4Test() throws BWException {
@@ -47,22 +45,16 @@ public class CheckPathMethodTest extends TeardownRollbackTest {
 		entTwo = new Entity(dataModel, ENT_TWO_NAME, false);
 		entThree = new Entity(dataModel, ENT_THREE_NAME, false);
 
-		AttributeGroup attGroupOne = new AttributeGroup(dataModel, entOne, GROUP_ONE_NAME, true);
+		new Attribute(dataModel, entOne, ATT_ONE_NAME, AttributeType.BOOLEAN, true, false, false);
+		new Attribute(dataModel, entOne, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
 
-		AttributeBasic attOne = new AttributeBasic(dataModel, entOne, null, ATT_ONE_NAME, AttributeType.BOOLEAN, true,
-				false, false);
-		attGroupOne.addAttribute(attOne);
-		AttributeBasic attTwo = new AttributeBasic(dataModel, entOne, null, ATT_TWO_NAME, AttributeType.NUMBER, false,
-				false, false);
+		attThree = new Attribute(dataModel, entTwo, ATT_THREE_NAME, AttributeType.STRING, true, false, false);
 
-		attThree = new AttributeBasic(dataModel, entTwo, null, ATT_THREE_NAME, AttributeType.STRING, true, false,
-				false);
+		new RelationBW(dataModel, "relOne", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false, entThree,
+				ROLENAME_ENT_THREE, Cardinality.ONE_MANY, false);
 
-		RelationBW relOneThree = new RelationBW(dataModel, "relOne", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false,
-				entThree, ROLENAME_ENT_THREE, Cardinality.ONE_MANY, false);
-
-		RelationBW relThreeTwo = new RelationBW(dataModel, "relThree", entThree, ROLENAME_ENT_THREE,
-				Cardinality.ZERO_MANY, false, entTwo, ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);
+		new RelationBW(dataModel, "relThree", entThree, ROLENAME_ENT_THREE, Cardinality.ZERO_MANY, false, entTwo,
+				ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);
 
 	}
 
@@ -86,39 +78,8 @@ public class CheckPathMethodTest extends TeardownRollbackTest {
 	}
 
 	@Test
-	public void successEntitytoExternalGroupAttributeAttribute() throws BWException {
-		Path path = new Path(dataModel, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE + "."
-				+ GROUP_ONE_NAME + "." + ATT_ONE_NAME);
-
-		path.check();
-	}
-
-	@Test
-	public void successEntitytoExternalGroupAttribute() throws BWException {
-		Path path = new Path(dataModel,
-				ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE + "." + GROUP_ONE_NAME);
-
-		path.check();
-	}
-
-	@Test
 	public void successEntitytoExternalEntity() throws BWException {
 		Path path = new Path(dataModel, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE);
-
-		path.check();
-	}
-
-	@Test
-	public void successEntitytoAttributeGroupAttribute() throws BWException {
-		Path path = new Path(dataModel, ENT_ONE_NAME + "." + GROUP_ONE_NAME + "." + ATT_ONE_NAME);
-
-		path.check();
-	}
-
-	@Test
-	public void successAttributetoExternalGroupAttribute() throws BWException {
-		Path path = new Path(dataModel, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_ONE + "."
-				+ GROUP_ONE_NAME + "." + ATT_ONE_NAME);
 
 		path.check();
 	}

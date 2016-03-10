@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -41,7 +41,7 @@ public class Comparison extends Comparison_Base {
 			throw new BWException(BWErrorType.INCONSISTENT_TYPE, getSubPath());
 	}
 
-	public Comparison(AttributeBasic attribute, String operator, String value) {
+	public Comparison(Attribute attribute, String operator, String value) {
 		setAttributeOfComparison(attribute);
 		setOperator(operator);
 		setValue(value);
@@ -51,7 +51,7 @@ public class Comparison extends Comparison_Base {
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttributeOfComparison().getEntity().getName()).get();
-		AttributeBasic attribute = entity.getAttribute(getAttributeOfComparison().getName()).orElse(null);
+		Attribute attribute = entity.getAttribute(getAttributeOfComparison().getName()).orElse(null);
 		return new Comparison(attribute, getOperator(), getValue());
 	}
 
@@ -59,7 +59,7 @@ public class Comparison extends Comparison_Base {
 	Condition cloneCondition(TaskModelInstance taskModelInstance) {
 		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttributeOfComparison().getEntity().getName()).get();
-		AttributeBasic attribute = entity.getAttribute(getAttributeOfComparison().getName()).orElse(null);
+		Attribute attribute = entity.getAttribute(getAttributeOfComparison().getName()).orElse(null);
 		return new Comparison(attribute, getOperator(), getValue());
 	}
 
@@ -81,9 +81,9 @@ public class Comparison extends Comparison_Base {
 	}
 
 	@Override
-	public Set<AttributeBasic> getAttributeBasicSet() {
+	public Set<Attribute> getAttributeSet() {
 		if (getAttributeOfComparison() != null) {
-			Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
+			Set<Attribute> attributes = new HashSet<Attribute>();
 			attributes.add(getAttributeOfComparison());
 			return attributes;
 		} else {
@@ -107,8 +107,8 @@ public class Comparison extends Comparison_Base {
 	}
 
 	@Override
-	public HashMap<AttributeBasic, String> getcompareConditionValues() {
-		HashMap<AttributeBasic, String> result = new HashMap<AttributeBasic, String>();
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		HashMap<Attribute, String> result = new HashMap<Attribute, String>();
 		result.put(getAttributeOfComparison(), getValue());
 		return result;
 	}
@@ -183,8 +183,8 @@ public class Comparison extends Comparison_Base {
 		}
 		if (arguments != null) {
 			for (WorkItemArgument workItemArgument : arguments) {
-				AttributeBasic workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
-				AttributeBasic conditionAttribute = getAttributeOfComparison();
+				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+				Attribute conditionAttribute = getAttributeOfComparison();
 				if (workItemAttribute == conditionAttribute) {
 					if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
 						return TripleStateBool.FALSE;
@@ -214,8 +214,8 @@ public class Comparison extends Comparison_Base {
 		}
 		if (arguments != null) {
 			for (WorkItemArgument workItemArgument : arguments) {
-				AttributeBasic workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
-				AttributeBasic conditionAttribute = getAttributeOfComparison();
+				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+				Attribute conditionAttribute = getAttributeOfComparison();
 				if (workItemAttribute == conditionAttribute) {
 					if (workItemArgument.getState().equals(DataState.UNDEFINED)) {
 						return TripleStateBool.FALSE;

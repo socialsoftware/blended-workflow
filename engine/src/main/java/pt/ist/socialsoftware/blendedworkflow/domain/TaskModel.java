@@ -45,8 +45,7 @@ public class TaskModel extends TaskModel_Base {
 		}
 
 		for (Task task : getTasksSet()) {
-			if (task.getPostConditionSet().stream().map(d -> d.getPath().getTarget())
-					.anyMatch(p -> p.isCreatedTogether(product))) {
+			if (task.getPostConditionSet().stream().map(d -> d.getPath().getTarget()).anyMatch(p -> p == product)) {
 				return task;
 			}
 		}

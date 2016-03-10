@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
@@ -58,12 +58,12 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
 		existsEntity = new Entity(existingDataModel, EXISTS_ENTITY_NAME, false);
 		Entity entityTwo = new Entity(existingDataModel, ENTITY_NAME, false);
-		new AttributeBasic(existingDataModel, existsEntity, null, EXISTS_ATTRIBUTE_NAME, AttributeType.NUMBER, true,
+		new Attribute(existingDataModel, existsEntity, EXISTS_ATTRIBUTE_NAME, AttributeType.NUMBER, true, false,
+				false);
+		new Attribute(existingDataModel, existsEntity, EXISTS_ATTRIBUTE_NAME_STRING, AttributeType.STRING, false,
 				false, false);
-		new AttributeBasic(existingDataModel, existsEntity, null, EXISTS_ATTRIBUTE_NAME_STRING, AttributeType.STRING,
-				false, false, false);
-		new AttributeBasic(existingDataModel, existsEntity, null, EXISTS_ATTRIBUTE_NAME_BOOLEAN, AttributeType.BOOLEAN,
-				false, false, false);
+		new Attribute(existingDataModel, existsEntity, EXISTS_ATTRIBUTE_NAME_BOOLEAN, AttributeType.BOOLEAN, false,
+				false, false);
 
 		new RelationBW(existingDataModel, "relation", existsEntity, "role1", Cardinality.ZERO_OR_ONE, false, entityTwo,
 				"role2", Cardinality.ONE, false);
@@ -92,7 +92,7 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
 		AttributeValueExpression attValue = (AttributeValueExpression) righExpression;
 		Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME).get();
-		AttributeBasic att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
+		Attribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
 		assertEquals(att, attValue.getAttribute());
 	}
 
@@ -128,7 +128,7 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
 		AttributeValueExpression attValue = (AttributeValueExpression) righExpression;
 		Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME).get();
-		AttributeBasic att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
+		Attribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
 		assertEquals(att, attValue.getAttribute());
 	}
 

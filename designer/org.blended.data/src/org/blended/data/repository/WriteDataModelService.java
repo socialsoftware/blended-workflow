@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.blended.common.common.Association;
 import org.blended.common.common.Attribute;
-import org.blended.common.common.AttributeGroup;
 import org.blended.common.common.Constraint;
 import org.blended.common.common.Entity;
 import org.blended.common.repository.CommonInterface;
@@ -16,7 +15,6 @@ import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
 import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
 import org.blended.common.repository.resttemplate.dto.ProductDTO;
-import org.blended.common.repository.resttemplate.dto.ProductDTO.ProductType;
 import org.blended.common.repository.resttemplate.dto.RelationDTO;
 import org.blended.common.repository.resttemplate.dto.RuleDTO;
 import org.blended.common.repository.resttemplate.dto.SpecDTO;
@@ -101,9 +99,9 @@ public class WriteDataModelService {
 					AttributeDTO attributeDTO;
 					Attribute eAtt = (Attribute) eObj;
 					try {
-						attributeDTO = ci.createAttribute(new AttributeDTO(specId,
-								ProductDTO.ProductType.ATTRIBUTE_BASIC.name(), entityExtId, eEnt.getName(), null, null,
-								eAtt.getName(), eAtt.getType(), eAtt.isMandatory()));
+						attributeDTO = ci.createAttribute(
+								new AttributeDTO(specId, ProductDTO.ProductType.ATTRIBUTE.name(), entityExtId,
+										eEnt.getName(), eAtt.getName(), eAtt.getType(), eAtt.isMandatory()));
 					} catch (RepositoryException re) {
 						notification.addError(re.getError());
 						// logger.debug("Error: {}", re.getMessage());
@@ -115,40 +113,6 @@ public class WriteDataModelService {
 						try {
 							ci.createDependence(new DependenceDTO(specId,
 									attributeDTO.getEntityName() + "." + attributeDTO.getName(), eDep));
-						} catch (RepositoryException re) {
-							notification.addError(re.getError());
-							// logger.debug("Error: {}", re.getMessage());
-						}
-					}
-				} else if (eObj instanceof AttributeGroup) {
-					AttributeDTO groupDTO;
-					AttributeGroup eAttGroup = (AttributeGroup) eObj;
-					try {
-						groupDTO = ci.createAttributeGroup(new AttributeDTO(specId, ProductType.ATTRIBUTE_GROUP.name(),
-								entityExtId, eEnt.getName(), null, null, eAttGroup.getName(), null,
-								eAttGroup.isMandatory()));
-					} catch (RepositoryException re) {
-						notification.addError(re.getError());
-						// logger.debug("Error: {}", re.getMessage());
-						continue;
-					}
-					// create group attribute dependences
-					for (String eDep : eAttGroup.getDependsOn()) {
-						try {
-							ci.createDependence(
-									new DependenceDTO(specId, groupDTO.getEntityName() + "." + groupDTO.getName(), eDep));
-						} catch (RepositoryException re) {
-							notification.addError(re.getError());
-							// logger.debug("Error: {}", re.getMessage());
-						}
-					}
-
-					for (Attribute eAtt : eAttGroup.getAttributes()) {
-						// create groupAttribute's attributes
-						try {
-							ci.createAttribute(new AttributeDTO(specId, ProductDTO.ProductType.ATTRIBUTE_BASIC.name(),
-									entityExtId, eEnt.getName(), groupDTO.getExtId(), groupDTO.getGroupName(),
-									eAtt.getName(), eAtt.getType(), eAtt.isMandatory()));
 						} catch (RepositoryException re) {
 							notification.addError(re.getError());
 							// logger.debug("Error: {}", re.getMessage());

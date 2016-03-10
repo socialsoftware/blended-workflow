@@ -49,8 +49,8 @@ public class ForAllCondition extends ForAllCondition_Base {
 	}
 
 	@Override
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		return getCondition().getAttributeBasicSet();
+	public Set<Attribute> getAttributeSet() {
+		return getCondition().getAttributeSet();
 	}
 
 	@Override
@@ -59,8 +59,8 @@ public class ForAllCondition extends ForAllCondition_Base {
 	}
 
 	@Override
-	public HashMap<AttributeBasic, String> getcompareConditionValues() {
-		return new HashMap<AttributeBasic, String>();
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		return new HashMap<Attribute, String>();
 	}
 
 	@Override

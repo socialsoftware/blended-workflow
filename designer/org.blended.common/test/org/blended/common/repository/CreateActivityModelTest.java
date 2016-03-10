@@ -53,16 +53,16 @@ public class CreateActivityModelTest {
 
 		EntityDTO entityDTO = ci.createEntity(new EntityDTO(TEST_SPEC_ID, ENTITY_ONE, false));
 
-		AttributeDTO attOneDTO = ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, ProductType.ATTRIBUTE_BASIC.name(),
-				entityDTO.getExtId(), entityDTO.getName(), null, null, ATT_ONE, "Number", false));
+		AttributeDTO attOneDTO = ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, ProductType.ATTRIBUTE.name(),
+				entityDTO.getExtId(), entityDTO.getName(), ATT_ONE, "Number", false));
 
-		ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, ProductType.ATTRIBUTE_BASIC.name(), entityDTO.getExtId(),
-				entityDTO.getName(), null, null, ATT_TWO, "Number", false));
+		ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, ProductType.ATTRIBUTE.name(), entityDTO.getExtId(),
+				entityDTO.getName(), ATT_TWO, "Number", false));
 
 		entityDTO = ci.createEntity(new EntityDTO(TEST_SPEC_ID, ENTITY_TWO, false));
 
-		ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, ProductType.ATTRIBUTE_BASIC.name(), entityDTO.getExtId(),
-				entityDTO.getName(), null, null, ATT_THREE, "String", false));
+		ci.createAttribute(new AttributeDTO(TEST_SPEC_ID, ProductType.ATTRIBUTE.name(), entityDTO.getExtId(),
+				entityDTO.getName(), ATT_THREE, "String", false));
 
 		ci.createRelation(new RelationDTO(TEST_SPEC_ID, "RelationName", ENTITY_ONE, ROLENAME_ONE, "0..1", ENTITY_TWO,
 				ROLENAME_TWO, "*"));

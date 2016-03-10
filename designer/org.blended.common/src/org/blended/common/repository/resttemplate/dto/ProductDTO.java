@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDTO {
 	public enum ProductType {
-		ATTRIBUTE_BASIC, ATTRIBUTE_GROUP, ENTITY
+		ATTRIBUTE, ENTITY
 	}
 
 	private String specId;

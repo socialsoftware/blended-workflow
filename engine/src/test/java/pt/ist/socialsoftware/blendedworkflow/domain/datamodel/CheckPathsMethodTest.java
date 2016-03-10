@@ -6,9 +6,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
@@ -41,7 +40,7 @@ public class CheckPathsMethodTest extends TeardownRollbackTest {
 	Entity entOne;
 	Entity entTwo;
 	Entity entThree;
-	AttributeBasic attThree;
+	Attribute attThree;
 
 	@Override
 	public void populate4Test() throws BWException {
@@ -52,15 +51,11 @@ public class CheckPathsMethodTest extends TeardownRollbackTest {
 		entTwo = new Entity(dataModel, ENT_TWO_NAME, false);
 		entThree = new Entity(dataModel, ENT_THREE_NAME, false);
 
-		AttributeGroup attGroupOne = new AttributeGroup(dataModel, entOne, GROUP_ONE_NAME, true);
-
-		AttributeBasic attOne = new AttributeBasic(dataModel, entOne, null, ATT_ONE_NAME, AttributeType.NUMBER, true,
-				false, false);
-		attGroupOne.addAttribute(attOne);
-		new AttributeBasic(dataModel, entOne, null, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
-
-		attThree = new AttributeBasic(dataModel, entTwo, null, ATT_THREE_NAME, AttributeType.NUMBER, true, false,
+		Attribute attOne = new Attribute(dataModel, entOne, ATT_ONE_NAME, AttributeType.NUMBER, true, false,
 				false);
+		new Attribute(dataModel, entOne, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
+
+		attThree = new Attribute(dataModel, entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true, false, false);
 
 		new RelationBW(dataModel, "relOne", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false, entThree,
 				ROLENAME_ENT_THREE, Cardinality.ONE_MANY, false);
