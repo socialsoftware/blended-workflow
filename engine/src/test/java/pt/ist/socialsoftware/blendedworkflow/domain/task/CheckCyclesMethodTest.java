@@ -6,8 +6,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
@@ -42,10 +42,10 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 	Entity entOne;
 	Entity entTwo;
 	Entity entThree;
-	AttributeBasic attOne;
-	AttributeBasic attTwo;
-	AttributeBasic attThree;
-	AttributeBasic attFour;
+	Attribute attOne;
+	Attribute attTwo;
+	Attribute attThree;
+	Attribute attFour;
 
 	@Override
 	public void populate4Test() throws BWException {
@@ -57,14 +57,12 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 		entTwo = new Entity(dataModel, ENT_TWO_NAME, false);
 		entThree = new Entity(dataModel, ENT_THREE_NAME, false);
 
-		attOne = new AttributeBasic(dataModel, entOne, null, ATT_ONE_NAME, AttributeType.NUMBER, true, false, false);
-		attTwo = new AttributeBasic(dataModel, entOne, null, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
+		attOne = new Attribute(dataModel, entOne, ATT_ONE_NAME, AttributeType.NUMBER, true, false, false);
+		attTwo = new Attribute(dataModel, entOne, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
 
-		attThree = new AttributeBasic(dataModel, entTwo, null, ATT_THREE_NAME, AttributeType.NUMBER, true, false,
-				false);
+		attThree = new Attribute(dataModel, entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true, false, false);
 
-		attFour = new AttributeBasic(dataModel, entThree, null, ATT_FOUR_NAME, AttributeType.NUMBER, true, false,
-				false);
+		attFour = new Attribute(dataModel, entThree, ATT_FOUR_NAME, AttributeType.NUMBER, true, false, false);
 
 		new RelationBW(dataModel, "relOneTwo", entOne, ROLENAME_ENT_ONE, Cardinality.ONE_MANY, false, entTwo,
 				ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);

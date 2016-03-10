@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 
 public class AttributeValueExpression extends AttributeValueExpression_Base {
@@ -11,7 +11,7 @@ public class AttributeValueExpression extends AttributeValueExpression_Base {
 	public AttributeValueExpression(Specification spec, String value) {
 		Path path = new Path(spec.getDataModel(), value);
 		setPath(path);
-		setAttribute((AttributeBasic) spec.getDataModel().getTargetOfPath(value));
+		setAttribute((Attribute) spec.getDataModel().getTargetOfPath(value));
 	}
 
 	@Override
@@ -32,8 +32,8 @@ public class AttributeValueExpression extends AttributeValueExpression_Base {
 	}
 
 	@Override
-	public Set<AttributeBasic> getAttributes() {
-		Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
+	public Set<Attribute> getAttributes() {
+		Set<Attribute> attributes = new HashSet<Attribute>();
 		if (!getAttribute().getEntity().getExists())
 			attributes.add(getAttribute());
 		return attributes;

@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -67,13 +67,8 @@ public class Entity extends Entity_Base {
 
 	}
 
-	public AttributeBasic createAttribute(AttributeGroup attGroup, String name, AttributeType type,
-			boolean isMandatory) {
-		return new AttributeBasic(getDataModel(), this, attGroup, name, type, isMandatory, false, false);
-	}
-
-	public AttributeGroup createAttributeGroup(String name, boolean isMandatory) {
-		return new AttributeGroup(getDataModel(), this, name, isMandatory);
+	public Attribute createAttribute(String name, AttributeType type, boolean isMandatory) {
+		return new Attribute(getDataModel(), this, name, type, isMandatory, false, false);
 	}
 
 	public Rule createRule(String name, Condition condition) {
@@ -92,7 +87,7 @@ public class Entity extends Entity_Base {
 
 	public void cloneEntity(DataModelInstance dataModelInstance) throws BWException {
 		Entity newEntity = new Entity(dataModelInstance, getName(), false);
-		for (AttributeBasic attribute : getAttributeBasicSet()) {
+		for (Attribute attribute : getAttributeBasicSet()) {
 			attribute.cloneAttribute(dataModelInstance, newEntity);
 		}
 
@@ -104,8 +99,7 @@ public class Entity extends Entity_Base {
 	/**
 	 * Create and assign EntityInstances and AttributesInstances to Workitems
 	 */
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, AttributeBasic attribute,
-			ConditionType conditionType) {
+	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute, ConditionType conditionType) {
 		EntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
 		Entity entityContext = entityInstanceContext.getEntity();
 
@@ -137,8 +131,7 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-	public void assignAttributeInstances(TaskWorkItem taskWorkItem, AttributeBasic attribute,
-			ConditionType conditionType) {
+	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, ConditionType conditionType) {
 		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
 		if (getEntityInstancesSet().isEmpty()) {
 			// EntityInstance entityInstance = new
@@ -165,7 +158,7 @@ public class Entity extends Entity_Base {
 		Entity entityContext = entityInstanceContext.getEntity();
 
 		if (this.equals(entityContext)) {
-			for (AttributeBasic attribute : entityContext.getAttributeBasicSet()) {
+			for (Attribute attribute : entityContext.getAttributeBasicSet()) {
 				if (attribute.getIsKeyAttribute()) {
 					entityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
 				}
@@ -175,7 +168,7 @@ public class Entity extends Entity_Base {
 				Entity relationEntityContext = relationInstance.getEntityInstanceTwo().getEntity();
 				EntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceTwo();
 				if (relationEntityContext.equals(this)) {
-					for (AttributeBasic attribute : relationEntityContext.getAttributeBasicSet()) {
+					for (Attribute attribute : relationEntityContext.getAttributeBasicSet()) {
 						if (attribute.getIsKeyAttribute()) {
 							relationEntityInstanceContext.assignAttributeInstances(goalWorkItem, attribute,
 									conditionType);
@@ -188,7 +181,7 @@ public class Entity extends Entity_Base {
 				Entity relationEntityContext = relationInstance.getEntityInstanceOne().getEntity();
 				EntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceOne();
 				if (relationEntityContext.equals(this)) {
-					for (AttributeBasic attribute : relationEntityContext.getAttributeBasicSet()) {
+					for (Attribute attribute : relationEntityContext.getAttributeBasicSet()) {
 						if (attribute.getIsKeyAttribute()) {
 							relationEntityInstanceContext.assignAttributeInstances(goalWorkItem, attribute,
 									conditionType);
@@ -206,7 +199,7 @@ public class Entity extends Entity_Base {
 			// EntityInstance entityInstance = new
 			// EntityInstance(dataModelInstance, this);
 			EntityInstance entityInstance = new EntityInstance(this);
-			for (AttributeBasic attribute : getAttributeBasicSet()) {
+			for (Attribute attribute : getAttributeBasicSet()) {
 				if (attribute.getIsKeyAttribute())
 					entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 			}
@@ -220,7 +213,7 @@ public class Entity extends Entity_Base {
 																			// Only
 																			// 1
 																			// entityInstance
-				for (AttributeBasic attribute : getAttributeBasicSet()) {
+				for (Attribute attribute : getAttributeBasicSet()) {
 					if (attribute.getIsKeyAttribute())
 						entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 				}
@@ -282,7 +275,7 @@ public class Entity extends Entity_Base {
 		return getEntityInstanceCounter();
 	}
 
-	public Optional<AttributeBasic> getAttribute(String name) {
+	public Optional<Attribute> getAttribute(String name) {
 		return getAttributeBasicSet().stream().filter(att -> att.getName().equals(name)).findFirst();
 	}
 
@@ -305,15 +298,10 @@ public class Entity extends Entity_Base {
 		return getRelationOneSet().size() + getRelationTwoSet().size();
 	}
 
-	public Optional<AttributeGroup> getAttributeGroup(String name) {
-		return getAttributeGroupSet().stream().filter(attGroup -> attGroup.getName().equals(name)).findFirst();
-	}
-
 	@Override
 	public void delete() {
 		setDataModel(null);
 		getRuleSet().stream().forEach(rule -> rule.delete());
-		getAttributeGroupSet().stream().forEach(attGroup -> attGroup.delete());
 		getAttributeSet().stream().forEach(att -> att.delete());
 		getRelationOneSet().stream().forEach(rel -> rel.delete());
 		getRelationTwoSet().stream().forEach(rel -> rel.delete());
@@ -336,13 +324,7 @@ public class Entity extends Entity_Base {
 			return this;
 
 		String element = pathLeft.get(0);
-		Optional<AttributeGroup> oBwAttGroup = getAttributeGroup(element);
-		if (oBwAttGroup.isPresent()) {
-			pathLeft.remove(0);
-			return oBwAttGroup.get().getNext(pathLeft, path);
-		}
-
-		Optional<AttributeBasic> oBwAtt = getAttribute(element);
+		Optional<Attribute> oBwAtt = getAttribute(element);
 		if (oBwAtt.isPresent()) {
 			pathLeft.remove(0);
 			return oBwAtt.get().getNext(pathLeft, path);
@@ -383,13 +365,8 @@ public class Entity extends Entity_Base {
 		return DefEntityCondition.getDefEntity(this);
 	}
 
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		return getAttributeSet().stream().filter(AttributeBasic.class::isInstance).map(AttributeBasic.class::cast)
-				.collect(Collectors.toSet());
-	}
-
-	public Set<AttributeGroup> getAttributeGroupSet() {
-		return getAttributeSet().stream().filter(AttributeGroup.class::isInstance).map(AttributeGroup.class::cast)
+	public Set<Attribute> getAttributeBasicSet() {
+		return getAttributeSet().stream().filter(Attribute.class::isInstance).map(Attribute.class::cast)
 				.collect(Collectors.toSet());
 	}
 
@@ -398,22 +375,12 @@ public class Entity extends Entity_Base {
 		return getName();
 	}
 
-	@Override
-	public boolean isCreatedTogether(Product product) {
-		return this == product;
-	}
-
 	public Entity getEntityByRolename(String rolename) {
 		return getRelationSet().stream()
 				.filter(r -> (r.getEntityOne() == this && r.getRoleNameTwo().equals(rolename))
 						|| (r.getEntityTwo() == this && r.getRoleNameOne().equals(rolename)))
 				.map(r -> r.getEntityOne() == this ? r.getEntityTwo() : r.getEntityOne()).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ROLE_NAME, getName() + "." + rolename));
-	}
-
-	@Override
-	public boolean cannotBeDefinedBefore(Product source) {
-		return this == source;
 	}
 
 }

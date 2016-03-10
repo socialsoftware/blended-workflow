@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.adapters.convertor;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
@@ -101,7 +101,7 @@ public class ConditionParser {
         StringBuilder elementName = new StringBuilder();
         int startArgs = "existsAttribute(".length();
 
-        AttributeBasic attribute = parseExistsAttributeConditionArgs(
+        Attribute attribute = parseExistsAttributeConditionArgs(
                 existsAttributeString, startArgs,
                 existsAttributeString.length() - 1, elementName);
         Condition existsAttributeCondition = DefAttributeCondition
@@ -110,7 +110,7 @@ public class ConditionParser {
         return existsAttributeCondition;
     }
 
-    protected AttributeBasic parseExistsAttributeConditionArgs(
+    protected Attribute parseExistsAttributeConditionArgs(
             String existsAttributeCondition, int startArgs, int endArgs,
             StringBuilder elementName) throws BWException {
         if (startArgs > endArgs)
@@ -172,7 +172,7 @@ public class ConditionParser {
         StringBuilder elementTo = new StringBuilder();
         int startArgs = "compareAttributeTo(".length();
 
-        AttributeBasic attribute;
+        Attribute attribute;
         String operator;
         String value;
 
@@ -314,7 +314,7 @@ public class ConditionParser {
         return relation;
     }
 
-    private AttributeBasic parseAttribute(String[] elementArr, Entity entity)
+    private Attribute parseAttribute(String[] elementArr, Entity entity)
             throws BWException {
         // AttributeType type;
         // boolean iskeyAttribute;

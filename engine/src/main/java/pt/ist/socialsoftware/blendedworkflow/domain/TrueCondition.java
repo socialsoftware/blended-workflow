@@ -36,8 +36,8 @@ public class TrueCondition extends TrueCondition_Base {
 	}
 
 	@Override
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		return new HashSet<AttributeBasic>();
+	public Set<Attribute> getAttributeSet() {
+		return new HashSet<Attribute>();
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public class TrueCondition extends TrueCondition_Base {
 	}
 
 	@Override
-	public HashMap<AttributeBasic, String> getcompareConditionValues() {
-		return new HashMap<AttributeBasic, String>();
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		return new HashMap<Attribute, String>();
 	}
 
 	@Override

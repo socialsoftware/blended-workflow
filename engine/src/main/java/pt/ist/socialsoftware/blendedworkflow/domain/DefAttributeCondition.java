@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
@@ -37,7 +37,7 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	Condition cloneCondition(GoalModelInstance goalModelInstance) {
 		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttributeOfDef().getEntity().getName()).get();
-		AttributeBasic attribute = entity.getAttribute(getAttributeOfDef().getName()).orElse(null);
+		Attribute attribute = entity.getAttribute(getAttributeOfDef().getName()).orElse(null);
 		return new DefAttributeCondition(attribute);
 	}
 
@@ -45,30 +45,23 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	Condition cloneCondition(TaskModelInstance taskModelInstance) {
 		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttributeOfDef().getEntity().getName()).get();
-		AttributeBasic attribute = entity.getAttribute(getAttributeOfDef().getName()).orElse(null);
+		Attribute attribute = entity.getAttribute(getAttributeOfDef().getName()).orElse(null);
 		return new DefAttributeCondition(attribute);
 	}
 
 	@Override
 	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		getAttributeOfDef().getEntity().assignAttributeInstances(goalWorkItem, (AttributeBasic) getAttributeOfDef(),
-				conditionType);
+		getAttributeOfDef().getEntity().assignAttributeInstances(goalWorkItem, getAttributeOfDef(), conditionType);
 	}
 
 	@Override
 	public void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
-		getAttributeOfDef().getEntity().assignAttributeInstances(taskWorkItem, (AttributeBasic) getAttributeOfDef(),
-				conditionType);
+		getAttributeOfDef().getEntity().assignAttributeInstances(taskWorkItem, getAttributeOfDef(), conditionType);
 	}
 
 	@Override
 	public Set<Entity> getEntities() {
 		return new HashSet<Entity>();
-	}
-
-	@Override
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		return getAttributeOfDef().getAttributeBasicSet();
 	}
 
 	@Override
@@ -80,8 +73,8 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	}
 
 	@Override
-	public HashMap<AttributeBasic, String> getcompareConditionValues() {
-		return new HashMap<AttributeBasic, String>();
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		return new HashMap<Attribute, String>();
 	}
 
 	@Override
@@ -158,7 +151,7 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 
 		if (arguments != null) {
 			for (WorkItemArgument workItemArgument : arguments) {
-				AttributeBasic workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 				Attribute conditionAttribute = getAttributeOfDef();
 				if (workItemAttribute == conditionAttribute) {
 					if (workItemArgument.getState().equals(DataState.SKIPPED)) {
@@ -176,7 +169,7 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		for (AttributeInstance attributeInstance : entityInstance.getAttributeInstancesSet()) {
-			AttributeBasic attribute = attributeInstance.getAttribute();
+			Attribute attribute = attributeInstance.getAttribute();
 			Attribute conditionAttribute = getAttributeOfDef();
 
 			if (attribute == conditionAttribute) {
@@ -249,6 +242,13 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	public ExpressionDTO getExpressionDTO(String specId) {
 		assert false : "expressions cannot have a def condition";
 		return null;
+	}
+
+	@Override
+	public Set<Attribute> getAttributeSet() {
+		Set<Attribute> attributes = new HashSet<Attribute>();
+		attributes.add(getAttributeOfDef());
+		return attributes;
 	}
 
 }

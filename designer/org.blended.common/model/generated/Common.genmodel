@@ -29,12 +29,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Attribute/mandatory"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Attribute/dependsOn"/>
     </genClasses>
-    <genClasses ecoreClass="Common.ecore#//AttributeGroup">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//AttributeGroup/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//AttributeGroup/mandatory"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//AttributeGroup/dependsOn"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Common.ecore#//AttributeGroup/attributes"/>
-    </genClasses>
     <genClasses ecoreClass="Common.ecore#//Association">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Common.ecore#//Association/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Common.ecore#//Association/entity1"/>

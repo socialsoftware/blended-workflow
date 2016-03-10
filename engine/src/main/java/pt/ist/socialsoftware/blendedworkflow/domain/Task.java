@@ -75,24 +75,24 @@ public class Task extends Task_Base {
 	 */
 	public String getConstraintData(Boolean isPreConstraint) {
 		Set<Entity> entities;
-		Set<AttributeBasic> attributes;
+		Set<Attribute> attributes;
 		String dataString = "";
 
 		// Get Condition Data
 		if (isPreConstraint) {
 			entities = getPreConditionSet().stream().flatMap((cond) -> cond.getEntities().stream())
 					.collect(Collectors.toSet());
-			attributes = getPreConditionSet().stream().flatMap((cond) -> cond.getAttributeBasicSet().stream())
+			attributes = getPreConditionSet().stream().flatMap((cond) -> cond.getAttributeSet().stream())
 					.collect(Collectors.toSet());
 		} else {
 			entities = getPostConditionSet().stream().flatMap((cond) -> cond.getEntities().stream())
 					.collect(Collectors.toSet());
-			attributes = getPostConditionSet().stream().flatMap((cond) -> cond.getAttributeBasicSet().stream())
+			attributes = getPostConditionSet().stream().flatMap((cond) -> cond.getAttributeSet().stream())
 					.collect(Collectors.toSet());
 		}
 
 		// Add Attribute entities
-		for (AttributeBasic attribute : attributes) {
+		for (Attribute attribute : attributes) {
 			entities.add(attribute.getEntity());
 		}
 

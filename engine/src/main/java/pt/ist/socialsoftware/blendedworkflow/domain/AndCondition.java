@@ -62,9 +62,9 @@ public class AndCondition extends AndCondition_Base {
 	}
 
 	@Override
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		Set<AttributeBasic> attributesOne = getConditionOne().getAttributeBasicSet();
-		Set<AttributeBasic> attributesTwo = getConditionTwo().getAttributeBasicSet();
+	public Set<Attribute> getAttributeSet() {
+		Set<Attribute> attributesOne = getConditionOne().getAttributeSet();
+		Set<Attribute> attributesTwo = getConditionTwo().getAttributeSet();
 		attributesOne.addAll(attributesTwo);
 		return attributesOne;
 	}
@@ -78,9 +78,9 @@ public class AndCondition extends AndCondition_Base {
 	}
 
 	@Override
-	public HashMap<AttributeBasic, String> getcompareConditionValues() {
-		HashMap<AttributeBasic, String> attributesOne = getConditionOne().getcompareConditionValues();
-		HashMap<AttributeBasic, String> attributesTwo = getConditionTwo().getcompareConditionValues();
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		HashMap<Attribute, String> attributesOne = getConditionOne().getcompareConditionValues();
+		HashMap<Attribute, String> attributesTwo = getConditionTwo().getcompareConditionValues();
 		attributesOne.putAll(attributesTwo);
 		return attributesOne;
 	}

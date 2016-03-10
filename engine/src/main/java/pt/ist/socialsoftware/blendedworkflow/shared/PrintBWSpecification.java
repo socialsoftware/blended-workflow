@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.shared;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
@@ -99,7 +99,7 @@ public class PrintBWSpecification {
                         + ei.getState());
             }
 
-            for (AttributeBasic attribute : entity.getAttributeBasicSet()) {
+            for (Attribute attribute : entity.getAttributeBasicSet()) {
                 System.out.println("Attribute \"" + attribute.getName() + "\"");
             }
             System.out.println(
@@ -121,7 +121,7 @@ public class PrintBWSpecification {
         for (Entity entity : dataModelInstance.getEntitySet()) {
             System.out.println("Entity \"" + entity.getName() + "\"");
 
-            for (AttributeBasic attribute : entity.getAttributeBasicSet()) {
+            for (Attribute attribute : entity.getAttributeBasicSet()) {
                 System.out.println("Attribute \"" + attribute.getName() + "\"");
             }
             System.out.println(

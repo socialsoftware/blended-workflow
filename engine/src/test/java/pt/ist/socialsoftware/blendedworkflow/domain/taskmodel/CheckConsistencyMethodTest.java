@@ -6,8 +6,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
@@ -51,11 +51,11 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	Entity entityTwo;
 	Entity entityThree;
 	Entity existsEntity;
-	AttributeBasic attributeOne;
-	AttributeBasic attributeTwo;
-	AttributeBasic attributeThree;
-	AttributeBasic attributeFourOne;
-	AttributeBasic attributeFourTwo;
+	Attribute attributeOne;
+	Attribute attributeTwo;
+	Attribute attributeThree;
+	Attribute attributeFourOne;
+	Attribute attributeFourTwo;
 	RelationBW existsRelationOne;
 	RelationBW existsRelationTwo;
 	RelationBW existsRelationThree;
@@ -71,22 +71,22 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
 
 		entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-		attributeOne = new AttributeBasic(spec.getDataModel(), entityOne, null, ATTRIBUTE_ONE_NAME,
-				AttributeType.NUMBER, true, false, false);
-		attributeTwo = new AttributeBasic(spec.getDataModel(), entityOne, null, ATTRIBUTE_TWO_NAME,
-				AttributeType.NUMBER, true, false, false);
+		attributeOne = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_ONE_NAME, AttributeType.NUMBER,
+				true, false, false);
+		attributeTwo = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_TWO_NAME, AttributeType.NUMBER,
+				true, false, false);
 
 		entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
-		attributeThree = new AttributeBasic(spec.getDataModel(), entityTwo, null, ATTRIBUTE_THREE_NAME,
-				AttributeType.BOOLEAN, true, false, false);
+		attributeThree = new Attribute(spec.getDataModel(), entityTwo, ATTRIBUTE_THREE_NAME, AttributeType.BOOLEAN,
+				true, false, false);
 
 		existsRelationOne = new RelationBW(spec.getDataModel(), "nameOne", entityOne, ROLENAME_ONE, Cardinality.ONE,
 				false, entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
 		entityThree = new Entity(spec.getDataModel(), ENTITY_THREE_NAME, false);
-		attributeFourOne = new AttributeBasic(spec.getDataModel(), entityThree, null, ATTRIBUTE_FOURONE_NAME,
+		attributeFourOne = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FOURONE_NAME,
 				AttributeType.NUMBER, false, false, false);
-		attributeFourTwo = new AttributeBasic(spec.getDataModel(), entityThree, null, ATTRIBUTE_FOURTWO_NAME,
+		attributeFourTwo = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FOURTWO_NAME,
 				AttributeType.NUMBER, false, false, false);
 
 		existsRelationTwo = new RelationBW(spec.getDataModel(), "nameTwo", entityTwo, ROLENAME_TWO, Cardinality.ONE,

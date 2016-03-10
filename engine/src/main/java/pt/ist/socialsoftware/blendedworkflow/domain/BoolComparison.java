@@ -63,9 +63,9 @@ public class BoolComparison extends BoolComparison_Base {
 	}
 
 	@Override
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		return Stream.concat(getRightCondition().getAttributeBasicSet().stream(),
-				getLeftCondition().getAttributeBasicSet().stream()).collect(Collectors.toSet());
+	public Set<Attribute> getAttributeSet() {
+		return Stream.concat(getRightCondition().getAttributeSet().stream(),
+				getLeftCondition().getAttributeSet().stream()).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class BoolComparison extends BoolComparison_Base {
 	}
 
 	@Override
-	public HashMap<AttributeBasic, String> getcompareConditionValues() {
+	public HashMap<Attribute, String> getcompareConditionValues() {
 		// TODO Auto-generated method stub
 		return null;
 	}

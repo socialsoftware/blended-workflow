@@ -12,7 +12,7 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 	public AttributeBoolCondition(Specification spec, String value) {
 		Path path = new Path(spec.getDataModel(), value);
 		setPath(path);
-		setAttributeOfBool((AttributeBasic) spec.getDataModel().getTargetOfPath(value));
+		setAttributeOfBool((Attribute) spec.getDataModel().getTargetOfPath(value));
 	}
 
 	@Override
@@ -58,8 +58,8 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 	}
 
 	@Override
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
+	public Set<Attribute> getAttributeSet() {
+		Set<Attribute> attributes = new HashSet<Attribute>();
 		attributes.add(getAttributeOfBool());
 
 		return attributes;
@@ -74,7 +74,7 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 	}
 
 	@Override
-	public HashMap<AttributeBasic, String> getcompareConditionValues() {
+	public HashMap<Attribute, String> getcompareConditionValues() {
 		// TODO Auto-generated method stub
 		return null;
 	}

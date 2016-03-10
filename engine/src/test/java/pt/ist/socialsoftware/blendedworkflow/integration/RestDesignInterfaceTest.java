@@ -103,8 +103,8 @@ public class RestDesignInterfaceTest {
 				.andExpect(status().isCreated()).andReturn();
 		entityTwoDTO = mapper.readValue(result.getResponse().getContentAsString(), EntityDTO.class);
 
-		AttributeDTO attributeOneDTO = new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE_BASIC.name(),
-				entityOneDTO.getExtId(), null, null, null, "att1", "Boolean", true);
+		AttributeDTO attributeOneDTO = new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
+				entityOneDTO.getExtId(), null, "att1", "Boolean", true);
 		result = mockMvc
 				.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -114,14 +114,14 @@ public class RestDesignInterfaceTest {
 				.andExpect(jsonPath("$.isMandatory").value(true)).andReturn();
 		attributeOneDTO = mapper.readValue(result.getResponse().getContentAsString(), AttributeDTO.class);
 
-		AttributeDTO attributeTwoDTO = new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE_BASIC.name(),
-				entityOneDTO.getExtId(), null, null, null, ATTRIBUTE_TWO_NAME_STRING, "String", false);
+		AttributeDTO attributeTwoDTO = new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
+				entityOneDTO.getExtId(), null, ATTRIBUTE_TWO_NAME_STRING, "String", false);
 		mockMvc.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(mapper.writeValueAsBytes(attributeTwoDTO)))
 				.andExpect(status().isCreated());
 
-		AttributeDTO attributeThreeDTO = new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE_BASIC.name(),
-				entityOneDTO.getExtId(), null, null, null, "att3", "Number", true);
+		AttributeDTO attributeThreeDTO = new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
+				entityOneDTO.getExtId(), null, "att3", "Number", true);
 		mockMvc.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(mapper.writeValueAsBytes(attributeThreeDTO)))
 				.andExpect(status().isCreated());

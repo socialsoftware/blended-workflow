@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product;
@@ -122,7 +121,7 @@ public class DataModelController {
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		AttributeBasic attribute = adi.getAttributeByExtId(extId);
+		Attribute attribute = adi.getAttributeByExtId(extId);
 
 		return new ResponseEntity<AttributeDTO>(attribute.getDTO(), HttpStatus.OK);
 	}
@@ -130,27 +129,14 @@ public class DataModelController {
 	@RequestMapping(value = "/attributes", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<AttributeDTO> createAttribute(@PathVariable("specId") String specId,
 			@RequestBody AttributeDTO attDTO) {
-		log.debug("createAttribute entityExtId:{}, groupExtId:{}, name:{}, type:{}", attDTO.getEntityExtId(),
-				attDTO.getGroupExtId(), attDTO.getName(), attDTO.getType());
+		log.debug("createAttribute entityExtId:{},  name:{}, type:{}", attDTO.getEntityExtId(), attDTO.getName(),
+				attDTO.getType());
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		AttributeBasic attribute = adi.createAttribute(attDTO);
+		Attribute attribute = adi.createAttribute(attDTO);
 
 		return new ResponseEntity<AttributeDTO>(attribute.getDTO(), HttpStatus.CREATED);
-	}
-
-	@RequestMapping(value = "/attributegroups", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public ResponseEntity<AttributeDTO> createGroupAttribute(@PathVariable("specId") String specId,
-			@RequestBody AttributeDTO attributeDTO) {
-		log.debug("createGroupAttribute entityExtId:{},  name:{}, mandatory:{}", attributeDTO.getEntityExtId(),
-				attributeDTO.getName(), attributeDTO.isMandatory());
-
-		DesignInterface adi = DesignInterface.getInstance();
-
-		AttributeGroup group = adi.createAttributeGroup(attributeDTO);
-
-		return new ResponseEntity<AttributeDTO>(group.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/relations", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)

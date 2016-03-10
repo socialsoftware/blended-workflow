@@ -109,11 +109,11 @@ public class Goal extends Goal_Base {
 	 */
 	public String getConstraintData() {
 		Set<Entity> entities = getSuccessConditionSet().stream().findFirst().get().getEntities();
-		Set<AttributeBasic> attributes = getSuccessConditionSet().stream().findFirst().get().getAttributeBasicSet();
+		Set<Attribute> attributes = getSuccessConditionSet().stream().findFirst().get().getAttributeSet();
 		String dataString = "";
 
 		// Add Attribute entities
-		for (AttributeBasic attribute : attributes) {
+		for (Attribute attribute : attributes) {
 			entities.add(attribute.getEntity());
 		}
 
@@ -139,11 +139,11 @@ public class Goal extends Goal_Base {
 																		// Only
 																		// First
 																		// ActivateConditionData
-		Set<AttributeBasic> attributes = activateConditions.get(0).getAttributeBasicSet();
+		Set<Attribute> attributes = activateConditions.get(0).getAttributeSet();
 		String dataString = "";
 
 		// Add Attribute entities
-		for (AttributeBasic attribute : attributes) {
+		for (Attribute attribute : attributes) {
 			entities.add(attribute.getEntity());
 		}
 

@@ -9,8 +9,8 @@ import java.util.Set;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
@@ -58,12 +58,12 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 	Entity entityTwo;
 	Entity entityThree;
 	Entity entityExists;
-	AttributeBasic attributeOne;
-	AttributeBasic attributeTwo;
-	AttributeBasic attributeThree;
-	AttributeBasic attributeFour;
-	AttributeBasic attributeFive;
-	AttributeBasic attributeSix;
+	Attribute attributeOne;
+	Attribute attributeTwo;
+	Attribute attributeThree;
+	Attribute attributeFour;
+	Attribute attributeFive;
+	Attribute attributeSix;
 	RelationBW relation;
 	RelationBW relationExists;
 	Rule ruleOne;
@@ -80,27 +80,27 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
 
 		entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-		attributeOne = new AttributeBasic(spec.getDataModel(), entityOne, null, ATTRIBUTE_ONE_NAME,
-				AttributeType.NUMBER, true, false, false);
-		attributeTwo = new AttributeBasic(spec.getDataModel(), entityOne, null, ATTRIBUTE_TWO_NAME,
-				AttributeType.NUMBER, true, false, false);
+		attributeOne = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_ONE_NAME, AttributeType.NUMBER,
+				true, false, false);
+		attributeTwo = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_TWO_NAME, AttributeType.NUMBER,
+				true, false, false);
 
 		entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
-		attributeThree = new AttributeBasic(spec.getDataModel(), entityTwo, null, ATTRIBUTE_THREE_NAME,
-				AttributeType.BOOLEAN, true, false, false);
+		attributeThree = new Attribute(spec.getDataModel(), entityTwo, ATTRIBUTE_THREE_NAME, AttributeType.BOOLEAN,
+				true, false, false);
 
 		relation = new RelationBW(spec.getDataModel(), "name", entityOne, ROLENAME_ONE, Cardinality.ONE, false,
 				entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
 		entityThree = new Entity(spec.getDataModel(), ENTITY_THREE_NAME, false);
-		attributeFour = new AttributeBasic(spec.getDataModel(), entityThree, null, ATTRIBUTE_FOUR_NAME,
-				AttributeType.NUMBER, false, false, false);
-		attributeSix = new AttributeBasic(spec.getDataModel(), entityThree, null, ATTRIBUTE_SIX_NAME,
-				AttributeType.NUMBER, false, false, false);
+		attributeFour = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FOUR_NAME, AttributeType.NUMBER,
+				false, false, false);
+		attributeSix = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_SIX_NAME, AttributeType.NUMBER,
+				false, false, false);
 
 		entityExists = new Entity(spec.getDataModel(), ENTITY_EXISTS, true);
-		attributeFive = new AttributeBasic(spec.getDataModel(), entityExists, null, ATTRIBUTE_FIVE_NAME,
-				AttributeType.NUMBER, true, false, false);
+		attributeFive = new Attribute(spec.getDataModel(), entityExists, ATTRIBUTE_FIVE_NAME, AttributeType.NUMBER,
+				true, false, false);
 
 		relationExists = new RelationBW(spec.getDataModel(), "nameTwo", entityOne, ROLENAME_ONE, Cardinality.ONE, false,
 				entityExists, ROLENAME_EXISTS, Cardinality.ZERO_MANY, false);

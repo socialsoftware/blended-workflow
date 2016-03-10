@@ -16,7 +16,7 @@ Specification:
 
 Entity:
 	'Entity' name = ID (exists ?= 'exists')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? '{' 
-		attributes += (AttributeGroup | Attribute)*
+		attributes += Attribute*
 		constraint += Constraint*
 	'}'
 ;
@@ -25,12 +25,6 @@ Attribute:
 	name = QualifiedName ':' type = ID
 	(mandatory ?= 'mandatory')?
 	('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)?
-;
-
-AttributeGroup:
-	"group" name = ID (mandatory ?= 'mandatory')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? "{"
-		(attributes += Attribute)+
-	"}"
 ;
 
 QualifiedName: 

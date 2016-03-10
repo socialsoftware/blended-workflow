@@ -96,8 +96,8 @@ public class DataModel extends DataModel_Base {
 		return entity.getNext(pathLeft, path);
 	}
 
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		return getAttributeSet().stream().filter(AttributeBasic.class::isInstance).map(AttributeBasic.class::cast)
+	public Set<Attribute> getAttributeBasicSet() {
+		return getAttributeSet().stream().filter(Attribute.class::isInstance).map(Attribute.class::cast)
 				.collect(Collectors.toSet());
 	}
 

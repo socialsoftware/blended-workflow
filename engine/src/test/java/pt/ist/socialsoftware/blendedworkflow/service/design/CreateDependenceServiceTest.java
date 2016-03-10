@@ -7,9 +7,8 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
@@ -34,8 +33,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 	DataModel dataModel;
 	Entity entityOne;
 	Entity entityTwo;
-	AttributeGroup group;
-	AttributeBasic att;
+	Attribute att;
 
 	@Override
 	public void populate4Test() throws BWException {
@@ -45,9 +43,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 		dataModel = getBlendedWorkflow().getSpecById(SPEC_ID).get().getDataModel();
 
 		entityOne = new Entity(dataModel, ENTITY_NAME_ONE, false);
-		group = new AttributeGroup(dataModel, entityOne, ATTRIBUTE_GROUP_NAME, false);
-		att = new AttributeBasic(dataModel, entityOne, group, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false,
-				false);
+		att = new Attribute(dataModel, entityOne, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false, false);
 
 		entityTwo = new Entity(dataModel, ENTITY_NAME_TWO, false);
 
@@ -62,17 +58,6 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 		designInterface.createDependence(new DependenceDTO(SPEC_ID, entityOne.getFullPath(), DEPENDENCE_ONE));
 
 		assertEquals(1, dataModel.getEntity(ENTITY_NAME_ONE).get().getDependenceSet().size());
-		assertEquals(DEPENDENCE_ONE + "," + DEPENDENCE_TWO, dataModel.getDependenceSet().stream()
-				.map(dep -> dep.getPath().getValue()).sorted().collect(Collectors.joining(",")));
-	}
-
-	@Test
-	public void successCreateAttributeGroupDependence() {
-		designInterface.createDependence(new DependenceDTO(SPEC_ID, group.getFullPath(), DEPENDENCE_ONE));
-
-		assertEquals(0, dataModel.getEntity(ENTITY_NAME_ONE).get().getDependenceSet().size());
-		assertEquals(1, dataModel.getEntity(ENTITY_NAME_ONE).get().getAttributeGroup(ATTRIBUTE_GROUP_NAME).get()
-				.getDependenceSet().size());
 		assertEquals(DEPENDENCE_ONE + "," + DEPENDENCE_TWO, dataModel.getDependenceSet().stream()
 				.map(dep -> dep.getPath().getValue()).sorted().collect(Collectors.joining(",")));
 	}

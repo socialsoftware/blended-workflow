@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
@@ -58,18 +58,6 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 	}
 
 	@Override
-	public Set<AttributeBasic> getAttributeBasicSet() {
-		Set<AttributeBasic> attributes = new HashSet<AttributeBasic>();
-		// TODO: Removed but may be impact in execution
-		// for (BWAttribute attribute : getEntity().getAttributesSet()) {
-		// if (attribute.getIsKeyAttribute()) {
-		// attributes.add(attribute);
-		// }
-		// }
-		return attributes;
-	}
-
-	@Override
 	public Set<Path> getPathSet() {
 		Set<Path> paths = new HashSet<Path>();
 		paths.add(getPath());
@@ -78,8 +66,8 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 	}
 
 	@Override
-	public HashMap<AttributeBasic, String> getcompareConditionValues() {
-		return new HashMap<AttributeBasic, String>();
+	public HashMap<Attribute, String> getcompareConditionValues() {
+		return new HashMap<Attribute, String>();
 	}
 
 	@Override
@@ -88,7 +76,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		String entityName = getEntity().getName().replaceAll(" ", "");
 		Boolean first = true;
 
-		for (AttributeBasic attribute : getEntity().getAttributeBasicSet()) {
+		for (Attribute attribute : getEntity().getAttributeBasicSet()) {
 			if (attribute.getIsKeyAttribute()) {
 
 				if (first) {
@@ -112,7 +100,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		String entityName = getEntity().getName().replaceAll(" ", "");
 		Boolean first = true;
 
-		for (AttributeBasic attribute : getEntity().getAttributeBasicSet()) {
+		for (Attribute attribute : getEntity().getAttributeBasicSet()) {
 			if (attribute.getIsKeyAttribute()) {
 
 				if (first) {
@@ -136,7 +124,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 
 		Boolean first = true;
 
-		for (AttributeBasic attribute : getEntity().getAttributeBasicSet()) {
+		for (Attribute attribute : getEntity().getAttributeBasicSet()) {
 			if (attribute.getIsKeyAttribute()) {
 
 				if (first) {
@@ -197,8 +185,8 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		// Exists Entity
 		if (arguments != null) {
 			for (WorkItemArgument workItemArgument : arguments) {
-				AttributeBasic workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
-				AttributeBasic conditionAttribute = getEntity().getAttribute(workItemAttribute.getName()).orElse(null);
+				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
+				Attribute conditionAttribute = getEntity().getAttribute(workItemAttribute.getName()).orElse(null);
 				if (conditionAttribute != null && conditionAttribute.getIsKeyAttribute()) {
 					workItemEntityInstance = workItemArgument.getAttributeInstance().getEntityInstance();
 
@@ -332,6 +320,11 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 	public ExpressionDTO getExpressionDTO(String specId) {
 		assert false : "expressions cannot have a def condition";
 		return null;
+	}
+
+	@Override
+	public Set<Attribute> getAttributeSet() {
+		return new HashSet<Attribute>();
 	}
 
 }
