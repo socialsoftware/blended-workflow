@@ -43,7 +43,6 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
@@ -395,7 +394,7 @@ public class DesignInterface {
 
 		MulCondition mulCondition = getMULCondition(spec, miDTO.getRolePath());
 
-		if (!mulCondition.getCardinality().equals(miDTO.getCardinality()))
+		if (!mulCondition.getTargetCardinality().equals(miDTO.getCardinality()))
 			new BWException(BWErrorType.INVALID_CARDINALITY, miDTO.getCardinality());
 
 		spec.getConditionModel().addEntityInvariantCondition(mulCondition);
@@ -753,10 +752,10 @@ public class DesignInterface {
 		return rule;
 	}
 
-	public boolean checkActivityModel(String specId) {
+	public void checkActivityModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		return spec.getTaskModel().checkModel();
+		spec.getTaskModel().checkModel();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -777,45 +776,6 @@ public class DesignInterface {
 
 		return spec.getTaskModel().extractTask(task, newActivityName, description,
 				getConditionSet(spec, successCondition));
-	}
-
-	public ProductDTO getSourceOfPath(String specId, String path) {
-		Specification spec = getSpecBySpecId(specId);
-
-		Entity entity = getEntityByName(spec.getDataModel(), path.split("\\.")[0]);
-
-		return new ProductDTO(specId, entity.getExternalId(), ProductType.ENTITY.name());
-	}
-
-	public ProductDTO getTargetOfPath(String specId, String path) {
-		Specification spec = getSpecBySpecId(specId);
-
-		Product product = spec.getDataModel().getTargetOfPath(path);
-
-		return new ProductDTO(specId, product.getExternalId(), product.getProductType().name());
-
-	}
-
-	public Set<String> getDependencePaths(String specId, Set<String> sucConditions) {
-		Set<String> paths = new HashSet<String>();
-		Specification spec = getSpecBySpecId(specId);
-
-		for (String sucCond : sucConditions) {
-			Product product = spec.getDataModel().getTargetOfPath(sucCond);
-
-			paths.addAll(product.getDependenceSet().stream().map(dep -> dep.getPath().getValue())
-					.collect(Collectors.toSet()));
-
-			if (product instanceof AttributeBasic) {
-				AttributeBasic attribute = (AttributeBasic) product;
-				if (attribute.getAttributeGroup() != null) {
-					paths.addAll(attribute.getDependenceSet().stream().map(dep -> dep.getPath().getValue())
-							.collect(Collectors.toSet()));
-				}
-			}
-		}
-
-		return paths;
 	}
 
 	public void printSpecificationModels(String specId) {

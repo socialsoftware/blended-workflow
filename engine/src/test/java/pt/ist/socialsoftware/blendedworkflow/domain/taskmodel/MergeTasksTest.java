@@ -2,7 +2,6 @@ package pt.ist.socialsoftware.blendedworkflow.domain.taskmodel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.stream.Collectors;
 
@@ -11,7 +10,6 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
@@ -30,8 +28,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class MergeTasksTest extends TeardownRollbackTest {
-	private static final String ATTRIBUTE_FOURTWO_NAME = "att42";
-	private static final String ATTRIBUTE_FOURONE_NAME = "att41";
 	private static final String TASK_ONE = "TaskOne";
 	private static final String TASK_TWO = "TaskTwo";
 	private static final String TASK_THREE = "TaskThree";
@@ -42,6 +38,7 @@ public class MergeTasksTest extends TeardownRollbackTest {
 	private static final String ATTRIBUTE_TWO_NAME = "att2";
 	private static final String ATTRIBUTE_THREE_NAME = "att3";
 	private static final String ATTRIBUTE_FOUR_NAME = "att4";
+	private static final String ATTRIBUTE_FIVE_NAME = "att5";
 	private static final String ROLENAME_ONE = "theOne";
 	private static final String DEPENDENCE_PATH_ONE = ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME;
 	private static final String ROLENAME_TWO = "theTwo";
@@ -55,9 +52,8 @@ public class MergeTasksTest extends TeardownRollbackTest {
 	AttributeBasic attributeOne;
 	AttributeBasic attributeTwo;
 	AttributeBasic attributeThree;
-	AttributeGroup attributeFour;
-	AttributeBasic attributeFourOne;
-	AttributeBasic attributeFourTwo;
+	AttributeBasic attributeFour;
+	AttributeBasic attributeFive;
 	RelationBW relation;
 	Rule ruleOne;
 	Rule ruleTwo;
@@ -85,10 +81,9 @@ public class MergeTasksTest extends TeardownRollbackTest {
 				entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
 		entityThree = new Entity(spec.getDataModel(), ENTITY_THREE_NAME, false);
-		attributeFour = new AttributeGroup(spec.getDataModel(), entityThree, ATTRIBUTE_FOUR_NAME, false);
-		attributeFourOne = new AttributeBasic(spec.getDataModel(), entityThree, attributeFour, ATTRIBUTE_FOURONE_NAME,
+		attributeFour = new AttributeBasic(spec.getDataModel(), entityThree, null, ATTRIBUTE_FIVE_NAME,
 				AttributeType.NUMBER, false, false, false);
-		attributeFourTwo = new AttributeBasic(spec.getDataModel(), entityThree, attributeFour, ATTRIBUTE_FOURTWO_NAME,
+		attributeFive = new AttributeBasic(spec.getDataModel(), entityThree, null, ATTRIBUTE_FOUR_NAME,
 				AttributeType.NUMBER, false, false, false);
 
 		new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH_ONE);
@@ -99,8 +94,8 @@ public class MergeTasksTest extends TeardownRollbackTest {
 						ComparisonOperator.EQUAL));
 
 		ruleTwo = new Rule(entityThree, RULE_TWO_NAME,
-				new Comparison(new AttributeValueExpression(spec, ENTITY_THREE_NAME + "." + ATTRIBUTE_FOURONE_NAME),
-						new AttributeValueExpression(spec, ENTITY_THREE_NAME + "." + ATTRIBUTE_FOURTWO_NAME),
+				new Comparison(new AttributeValueExpression(spec, ENTITY_THREE_NAME + "." + ATTRIBUTE_FIVE_NAME),
+						new AttributeValueExpression(spec, ENTITY_THREE_NAME + "." + ATTRIBUTE_FOUR_NAME),
 						ComparisonOperator.EQUAL));
 
 		spec.getConditionModel().generateConditions();
@@ -126,6 +121,7 @@ public class MergeTasksTest extends TeardownRollbackTest {
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH_ONE));
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeThree));
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFive));
 		taskThree.addRuleInvariant(ruleTwo);
 
 	}
@@ -139,24 +135,24 @@ public class MergeTasksTest extends TeardownRollbackTest {
 		assertFalse(task.getPreConditionSet().stream().map(d -> d.getTargetOfPath()).collect(Collectors.toSet())
 				.contains(ENTITY_ONE_NAME));
 
-		assertTrue(taskModel.checkModel());
-		assertTrue(task.checkConsistency());
+		taskModel.checkModel();
+		task.checkConsistency();
 	}
 
 	@Test
 	public void mergeTasksTwoThree() {
 		Task task = taskModel.mergeTasks("newTask", "taskDescription", taskTwo, taskThree);
 
-		assertTrue(taskModel.checkModel());
-		assertTrue(task.checkConsistency());
+		taskModel.checkModel();
+		task.checkConsistency();
 	}
 
 	@Test
 	public void mergeTasksOneThree() {
 		Task task = taskModel.mergeTasks("newTask", "taskDescription", taskOne, taskThree);
 
-		assertTrue(taskModel.checkModel());
-		assertTrue(task.checkConsistency());
+		taskModel.checkModel();
+		task.checkConsistency();
 	}
 
 }

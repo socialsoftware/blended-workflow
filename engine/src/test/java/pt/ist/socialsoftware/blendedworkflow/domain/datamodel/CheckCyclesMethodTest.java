@@ -18,7 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
+public class CheckCyclesMethodTest extends TeardownRollbackTest {
 
 	private static final String SPEC_ID = "SpecId";
 	private static final String ENT_ONE_NAME = "EntOne";
@@ -81,7 +81,7 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 		new Dependence(dataModel, entOne,
 				ENT_ONE_NAME + "." + ROLENAME_ENT_THREE + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
 
-		dataModel.checkCircularities();
+		dataModel.checkDependences();
 	}
 
 	@Test
@@ -89,7 +89,7 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 		try {
 			new Dependence(dataModel, attOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
 			new Dependence(dataModel, attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -101,7 +101,7 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 		try {
 			new Dependence(dataModel, attGroupOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
 			new Dependence(dataModel, attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -113,7 +113,7 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 		try {
 			new Dependence(dataModel, attOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
 			new Dependence(dataModel, attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE + "." + GROUP_ONE_NAME);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -127,7 +127,7 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 					ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME);
 			new Dependence(dataModel, attFour,
 					ENT_THREE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -140,7 +140,7 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 			new Dependence(dataModel, attOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
 			new Dependence(dataModel, attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME);
 			new Dependence(dataModel, attFour, ENT_THREE_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -152,7 +152,7 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 		try {
 			new Dependence(dataModel, entOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO);
 			new Dependence(dataModel, entTwo, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -164,7 +164,7 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 		try {
 			new Dependence(dataModel, entOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_THREE);
 			new Dependence(dataModel, entThree, ENT_THREE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_ONE);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -177,7 +177,7 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 			new Dependence(dataModel, entOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO);
 			new Dependence(dataModel, entTwo, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE);
 			new Dependence(dataModel, entThree, ENT_THREE_NAME + "." + ROLENAME_ENT_ONE);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -189,11 +189,18 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 		try {
 			new Dependence(dataModel, entOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_THREE);
 			new Dependence(dataModel, entTwo, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
 		}
+	}
+
+	@Test
+	public void sucessAttributeToEntityInverse() throws BWException {
+		new Dependence(dataModel, attOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_THREE);
+		new Dependence(dataModel, entTwo, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE);
+		dataModel.checkDependences();
 	}
 
 	@Test
@@ -202,7 +209,7 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 			new Dependence(dataModel, entOne,
 					ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME);
 			new Dependence(dataModel, entThree, ENT_THREE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_ONE);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -210,10 +217,18 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 	}
 
 	@Test
+	public void successAttributeToAttributeInverse() throws BWException {
+		new Dependence(dataModel, attOne,
+				ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME);
+		new Dependence(dataModel, entThree, ENT_THREE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_ONE);
+		dataModel.checkDependences();
+	}
+
+	@Test
 	public void failEntityDependsOnItsAttributeDirect() throws BWException {
 		try {
 			new Dependence(dataModel, entOne, ENT_ONE_NAME + "." + ATT_ONE_NAME);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -226,11 +241,51 @@ public class CheckCircularitiesMethodTest extends TeardownRollbackTest {
 			new Dependence(dataModel, entOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO);
 			new Dependence(dataModel, entTwo, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE);
 			new Dependence(dataModel, entThree, ENT_THREE_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME);
-			dataModel.checkCircularities();
+			dataModel.checkDependences();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
 		}
+	}
+
+	@Test
+	public void successAttributeDependenceCanCreateAllEntitiesOne() throws BWException {
+		new Dependence(dataModel, attOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
+		new Dependence(dataModel, attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME);
+		new Dependence(dataModel, entThree, ENT_THREE_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_TWO_NAME);
+		dataModel.checkDependences();
+	}
+
+	@Test
+	public void successAttributeDependenceCanCreateAllEntitiesTwo() throws BWException {
+		new Dependence(dataModel, attOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
+		new Dependence(dataModel, attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME);
+		new Dependence(dataModel, entThree, ENT_THREE_NAME + "." + ROLENAME_ENT_ONE);
+		dataModel.checkDependences();
+	}
+
+	@Test
+	public void sucessAttributeDependenceCanCreateAllEntitiesThree() throws BWException {
+		new Dependence(dataModel, attOne, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME);
+		new Dependence(dataModel, attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME);
+		new Dependence(dataModel, entThree, ENT_THREE_NAME + "." + ROLENAME_ENT_ONE);
+		dataModel.checkDependences();
+	}
+
+	@Test
+	public void successIntermediatePathDependenceOne() throws BWException {
+		new Dependence(dataModel, attOne,
+				ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME);
+		new Dependence(dataModel, entTwo, ENT_TWO_NAME + "." + ROLENAME_ENT_THREE);
+		dataModel.checkDependences();
+	}
+
+	@Test
+	public void successIntermediatePathDependenceTwo() throws BWException {
+		new Dependence(dataModel, attOne,
+				ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME);
+		new Dependence(dataModel, entThree, ENT_THREE_NAME + "." + ROLENAME_ENT_TWO);
+		dataModel.checkDependences();
 	}
 
 }

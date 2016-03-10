@@ -436,7 +436,7 @@ relation TaskHasMultiplicityInvariants {
 }
 
 relation TaskHasRuleInvariants {
-	Task playsRole taskWithRule { multiplicity 0..1; }
+	Task playsRole tasksWithRule { multiplicity 0..*; }
 	Rule playsRole ruleInvariant { multiplicity 0..*; }
 }
 

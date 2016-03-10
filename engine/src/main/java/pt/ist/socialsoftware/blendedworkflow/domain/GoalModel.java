@@ -84,7 +84,7 @@ public class GoalModel extends GoalModel_Base {
 			}
 
 			for (MulCondition mulCondition : conditionModel.getEntityInvariantConditionSet()) {
-				if (mulCondition.getEntity() == defEntityCondition.getEntity()) {
+				if (mulCondition.getSourceEntity() == defEntityCondition.getEntity()) {
 					entityGoal.addEntityInvariantCondition(mulCondition);
 				}
 			}

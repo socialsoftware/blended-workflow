@@ -228,8 +228,8 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 		assertEquals(DEPENDENCE_PATH,
 				childGoalTwo.getActivationConditionSet().stream().findFirst().get().getPath().getValue());
 		assertEquals(1, childGoalTwo.getEntityInvariantConditionSet().size());
-		assertEquals(ENTITY_TWO_NAME,
-				childGoalTwo.getEntityInvariantConditionSet().stream().findFirst().get().getEntity().getName());
+		assertEquals(ENTITY_ONE_NAME,
+				childGoalTwo.getEntityInvariantConditionSet().stream().findFirst().get().getTargetEntity().getName());
 		assertEquals(0, childGoalTwo.getAttributeInvariantConditionSet().size());
 	}
 
@@ -259,8 +259,8 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 		assertEquals(DEPENDENCE_PATH,
 				childGoalThree.getActivationConditionSet().stream().findFirst().get().getPath().getValue());
 		assertEquals(1, childGoalThree.getEntityInvariantConditionSet().size());
-		assertEquals(ENTITY_TWO_NAME,
-				childGoalThree.getEntityInvariantConditionSet().stream().findFirst().get().getEntity().getName());
+		assertEquals(ENTITY_ONE_NAME,
+				childGoalThree.getEntityInvariantConditionSet().stream().findFirst().get().getTargetEntity().getName());
 		assertEquals(0, childGoalThree.getAttributeInvariantConditionSet().size());
 
 		assertEquals(CHILD_GOAL_TWO, childGoalTwo.getName());

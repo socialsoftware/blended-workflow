@@ -1,6 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -83,8 +86,12 @@ public class TaskModel extends TaskModel_Base {
 			activityCounter++;
 		}
 
-		for (Task task : getTasksSet()) {
-			applyMultiplicityToPostAndPre(task);
+		for (RelationBW relation : getDataModel().getRelationBWSet()) {
+			applyMultiplicityToPostAndPre(relation);
+		}
+
+		for (Rule rule : conditionModel.getAttributeInvariantConditionSet()) {
+			applyRuleConditionToPost(rule);
 		}
 
 		checkModel();
@@ -103,8 +110,6 @@ public class TaskModel extends TaskModel_Base {
 		applyAttributeEntityDependenceToPre(task);
 
 		applyDependenceConditionsToPre(task);
-
-		applyRuleConditionToPostAndPre(task);
 
 		return task;
 	}
@@ -152,82 +157,64 @@ public class TaskModel extends TaskModel_Base {
 		return addTask(taskName, taskDescription, postConditionSet);
 	}
 
-	private void applyRuleConditionToPostAndPre(Task task) {
-		Set<AttributeBasic> definedAttributes = getDefinedAttributes();
-
-		Set<Entity> entitiesInContext = ConditionModel.getBasicAtributesOfDefConditionSet(task.getPostConditionSet())
-				.stream().map(def -> def.getEntity()).collect(Collectors.toSet());
-
-		entitiesInContext.stream().flatMap(e -> e.getRuleSet().stream())
-				.filter(r -> r.getTaskWithRule() == null
-						&& definedAttributes.containsAll(getAttributesInEntitiesContext(r, entitiesInContext)))
-				.forEach(r -> task.addRuleInvariant(r));
-
-		Set<AttributeBasic> postAttributes = ConditionModel
-				.getBasicAtributesOfDefConditionSet(task.getPostConditionSet());
-		Set<Product> preAttributes = task.getPreConditionSet().stream().map(d -> d.getPath().getTarget())
-				.collect(Collectors.toSet());
-		preAttributes.addAll(getDataModel().getEntitySet().stream().filter(e -> e.getExists())
-				.flatMap(e -> e.getAttributeBasicSet().stream()).collect(Collectors.toSet()));
-
-		task.getRuleInvariantSet().stream().flatMap(r -> r.getPathSet().stream())
-				.filter(path -> !postAttributes.contains(path.getTarget()) && !preAttributes.contains(path.getTarget()))
-				.forEach(path -> task
-						.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(), path.getValue())));
+	private void applyRuleConditionToPost(Rule rule) {
+		for (Task task : getRuleTasks(rule)) {
+			task.getRuleInvariantSet().add(rule);
+		}
 	}
 
-	private Set<AttributeBasic> getAttributesInEntitiesContext(Rule r, Set<Entity> entitiesInContext) {
-		return r.getAttributeBasicSet().stream().filter(a -> entitiesInContext.contains(a.getEntity()))
-				.collect(Collectors.toSet());
+	private Set<Task> getRuleTasks(Rule rule) {
+		Set<Attribute> ruleAttributes = rule.getAttributeSet();
+
+		// logger.debug("getRuleTasks attributes:{}",
+		// ruleAttributes.stream().map(a ->
+		// a.getName()).collect(Collectors.joining(",")));
+
+		Set<Task> ruleTasks = new HashSet<Task>();
+		for (Task task : getTasksSet()) {
+			if (task.getPostConditionSet().stream().anyMatch(d -> ruleAttributes.contains(d.getTargetOfPath()))) {
+				// logger.debug("getRuleTasks task to add:{}", task.getName());
+				ruleTasks.add(task);
+			}
+		}
+
+		return ruleTasks;
 	}
 
-	public Set<AttributeBasic> getDefinedAttributes() {
-		Set<AttributeBasic> definedAttributes = getTasksSet().stream()
-				.flatMap(t -> ConditionModel.getDefAttributeConditions(t.getPostConditionSet()).stream())
-				.flatMap(def -> def.getAttributeOfDef().getAttributeBasicSet().stream()).collect(Collectors.toSet());
+	private void applyMultiplicityToPostAndPre(RelationBW relation) {
+		List<Task> tasks = relation.getEntitySet().stream()
+				.map(e -> DefEntityCondition.getDefEntity(e).getTaskWithPostCondition()).filter(t -> t != null)
+				.collect(Collectors.toList());
 
-		definedAttributes.addAll(getDataModel().getEntitySet().stream().filter(e -> e.getExists())
-				.flatMap(e -> e.getAttributeBasicSet().stream()).collect(Collectors.toSet()));
+		// a relation has an exists entity
+		if (tasks.size() == 1) {
+			tasks.get(0).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
+			addPreConditionsDueToMulConditions(tasks.get(0), relation);
+		} else {
+			Map<Task, Set<Task>> taskDependencies = getTaskDependencies();
 
-		return definedAttributes;
+			if (taskDependencies.get(tasks.get(0)).contains(tasks.get(1))
+					&& taskDependencies.get(tasks.get(1)).contains(tasks.get(0))) {
+				assert false : "there is already a circularity when applying multiplicities to the task model";
+			} else if (taskDependencies.get(tasks.get(0)).contains(tasks.get(1))) {
+				tasks.get(0).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
+				addPreConditionsDueToMulConditions(tasks.get(0), relation);
+			} else if (taskDependencies.get(tasks.get(1)).contains(tasks.get(0))) {
+				tasks.get(1).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
+				addPreConditionsDueToMulConditions(tasks.get(1), relation);
+			} else {
+				tasks.get(0).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
+				addPreConditionsDueToMulConditions(tasks.get(0), relation);
+			}
+		}
+
 	}
 
-	public void applyMultiplicityToPostAndPre(Task task) {
-		// get all entities that are going to be defined in the task
-		Set<Entity> entitiesToDefine = task.getEntitiesToDefine();
-		if (entitiesToDefine.isEmpty())
-			return;
-
-		// get all the multiplicity conditions that still need to be applied
-		Set<MulCondition> undefinedMulConditions = entitiesToDefine.stream().flatMap(e -> e.getRelationSet().stream())
-				.flatMap(r -> r.getMulConditionSet().stream()).filter(m -> m.getTaskWithMultiplicity() == null)
-				.collect(Collectors.toSet());
-		if (undefinedMulConditions.isEmpty())
-			return;
-
-		// all entities that should be created before due to existing
-		// dependencies
-		Set<Entity> creationDependentAdjacentEntities = task.getCreationDependentAdjacentEntities();
-
-		// remove mulConditions to avoid a circularity, the creation dependent
-		// adjacent entities should be created before
-		Set<MulCondition> mulConditionsToDefine = undefinedMulConditions.stream().filter(m -> !m.getRelationBW()
-				.getEntitySet().stream().anyMatch(e -> creationDependentAdjacentEntities.contains(e)))
-				.collect(Collectors.toSet());
-
-		// add post conditions
-		mulConditionsToDefine.forEach(m -> task.getMultiplicityInvariantSet().add(m));
-
-		// add pre conditions
-		addPreConditionsDueToMulConditions(task, mulConditionsToDefine);
-	}
-
-	private void addPreConditionsDueToMulConditions(Task task, Set<MulCondition> mulConditionsToDefine) {
-		mulConditionsToDefine.stream()
-				.filter(m -> !ConditionModel.getEntitiesOfDefConditionSet(task.getPostConditionSet())
-						.contains(m.getEntity()))
-				.forEach(m -> task.addPreCondition(
-						DefPathCondition.getDefPathCondition(getSpecification(), m.getEntity().getName())));
+	private void addPreConditionsDueToMulConditions(Task task, RelationBW relation) {
+		relation.getEntitySet().stream()
+				.filter(e -> !ConditionModel.getEntitiesOfDefConditionSet(task.getPostConditionSet()).contains(e))
+				.forEach(e -> task.addPreCondition(
+						DefPathCondition.getDefPathCondition(getSpecification(), relation.getPath(e))));
 	}
 
 	private void applyDependenceConditionsToPre(Task task) {
@@ -271,10 +258,51 @@ public class TaskModel extends TaskModel_Base {
 			throw new BWException(BWErrorType.CANNOT_ADD_TASK, "empty post condition set");
 	}
 
-	public boolean checkModel() {
+	public void checkModel() {
 		checkAllConditionsAreUsedInPost();
 
-		return getTasksSet().stream().map(t -> t.checkConsistency()).reduce(true, (b1, b2) -> b1 && b2);
+		getTasksSet().stream().forEach(t -> t.checkConsistency());
+
+		checkCycles();
+		checkRules();
+	}
+
+	private void checkRules() {
+		for (Rule rule : getConditionModel().getAttributeInvariantConditionSet()) {
+			if (!getRuleTasks(rule).stream().allMatch(t -> t.getRuleInvariantSet().contains(rule))) {
+				throw new BWException(BWErrorType.INCONSISTENT_RULE_CONDITION, rule.getName());
+			}
+		}
+	}
+
+	private void checkCycles() {
+		Map<Task, Set<Task>> taskDependencies = getTaskDependencies();
+
+		checkCycles(taskDependencies);
+	}
+
+	private void checkCycles(Map<Task, Set<Task>> taskDependencies) {
+		for (Task task : taskDependencies.keySet()) {
+			task.checkCycles(taskDependencies);
+		}
+	}
+
+	public Map<Task, Set<Task>> getTaskDependencies() {
+		Map<Task, Set<Task>> taskDependencies = new HashMap<Task, Set<Task>>();
+		for (Task task : getTasksSet()) {
+			Set<Task> tasks = task.getPreConditionSet().stream().flatMap(d -> d.getPath().getProductsInPath().stream())
+					.map(p -> p.getDefCondition()).filter(d -> d.getTaskWithPostCondition() != null)
+					.map(d -> d.getTaskWithPostCondition()).filter(t -> t != task).collect(Collectors.toSet());
+
+			taskDependencies.put(task, tasks);
+		}
+
+		logger.debug("getTaskDependencies {}",
+				taskDependencies.entrySet().stream()
+						.map(e -> e.getKey().getName() + ":"
+								+ e.getValue().stream().map(t -> t.getName()).collect(Collectors.joining(",")))
+				.collect(Collectors.joining(";")));
+		return taskDependencies;
 	}
 
 	private void checkAllConditionsAreUsedInPost() {

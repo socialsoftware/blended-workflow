@@ -48,7 +48,7 @@ public class Rule extends Rule_Base {
 		setEntity(null);
 		setConditionModel(null);
 		setInvariantConditionGoal(null);
-		setTaskWithRule(null);
+		getTasksWithRuleSet().stream().forEach(t -> removeTasksWithRule(t));
 		if (getCondition() != null)
 			getCondition().delete();
 
@@ -61,7 +61,8 @@ public class Rule extends Rule_Base {
 		ruleDTO.setEntityName(getEntity().getName());
 		ruleDTO.setExtId(getExternalId());
 		ruleDTO.setName(getName());
-		ruleDTO.setExpression(getCondition().getExpressionDTO(getEntity().getDataModel().getSpecification().getSpecId()));
+		ruleDTO.setExpression(
+				getCondition().getExpressionDTO(getEntity().getDataModel().getSpecification().getSpecId()));
 		ruleDTO.setToStringExpression(ruleDTO.getExpression().toString());
 
 		return ruleDTO;
@@ -73,8 +74,8 @@ public class Rule extends Rule_Base {
 
 	public Set<Attribute> getAttributeSet() {
 		Set<Path> paths = getCondition().getPathSet();
-		return paths.stream().map(p -> p.getTarget()).filter(Attribute.class::isInstance)
-				.map(Attribute.class::cast).collect(Collectors.toSet());
+		return paths.stream().map(p -> p.getTarget()).filter(Attribute.class::isInstance).map(Attribute.class::cast)
+				.collect(Collectors.toSet());
 	}
 
 	public Set<Path> getPathSet() {

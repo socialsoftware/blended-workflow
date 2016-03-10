@@ -80,19 +80,6 @@ public class AttributeGroup extends AttributeGroup_Base {
 	}
 
 	@Override
-	public boolean canBeDefinedBefore(Product product) {
-		if (this == product) {
-			return false;
-		} else if (product.getProductType().equals(ProductType.ENTITY)) {
-			return this.getEntity() != product;
-		} else if (product.getProductType().equals(ProductType.ATTRIBUTE_BASIC)) {
-			return !this.getAttributeSet().contains(product);
-		} else {
-			return true;
-		}
-	}
-
-	@Override
 	public boolean isCreatedTogether(Product product) {
 		if (this == product) {
 			return true;
@@ -101,6 +88,17 @@ public class AttributeGroup extends AttributeGroup_Base {
 		if (product.getProductType().equals(ProductType.ATTRIBUTE_BASIC)) {
 			return this.getAttributeSet().contains(product);
 		}
+
+		return false;
+	}
+
+	@Override
+	public boolean cannotBeDefinedBefore(Product source) {
+		if (this == source)
+			return true;
+
+		if (this.getAttributeBasicSet().contains(source))
+			return true;
 
 		return false;
 	}

@@ -2,8 +2,10 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -101,99 +103,79 @@ public class DataModel extends DataModel_Base {
 
 	public void check() {
 		checkPaths();
-		checkCircularities();
+		checkDependences();
 	}
 
-	public void checkCircularities() {
-		checkDirectCircularities();
+	public void checkDependences() {
+		Map<Product, Set<Product>> productDependencies = getProductDependencies();
 
-		checkCreationCircularities();
+		for (Product product : productDependencies.keySet()) {
+			checkCycles(product, productDependencies);
+		}
 	}
 
-	private void checkCreationCircularities() {
-		List<Dependence> dependencies = getDependenceSet().stream()
-				.filter(d -> d.getProduct().getProductType().equals(Product.ProductType.ENTITY))
-				.collect(Collectors.toList());
-		for (Dependence dependence : dependencies) {
-			Set<Product> entities = getIntermediateEntities(dependence);
-			// logger.debug("checkCreationCircularities
-			// intermediateEntities:{}",
-			// entities.stream().map(e ->
-			// e.getName()).collect(Collectors.joining(",")));
+	private void checkCycles(Product product, Map<Product, Set<Product>> productDependencies) {
+		Set<Product> visitedProducts = new HashSet<Product>();
+		List<Product> nextProducts = new ArrayList<Product>();
+		nextProducts.add(product);
+		while (!nextProducts.isEmpty()) {
+			Product next = nextProducts.get(0);
 
-			for (Product entity : entities) {
-				Set<Product> visitedProducts = new HashSet<Product>();
-				if (!checkProductCanBeCreatedAfterProduct(dependence.getProduct(), entity, visitedProducts))
-					throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY, dependence.getPath().getValue());
+			if (productDependencies.get(next) != null) {
+
+				if (productDependencies.get(next).contains(product)) {
+					throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY, product.getFullPath());
+				}
+
+				nextProducts.addAll(productDependencies.get(next).stream().filter(p -> !visitedProducts.contains(p))
+						.collect(Collectors.toSet()));
+
+				visitedProducts.addAll(productDependencies.get(next));
 			}
+
+			nextProducts.remove(0);
 		}
+
 	}
 
-	private boolean checkProductCanBeCreatedAfterProduct(Product afterProduct, Product beforeProduct,
-			Set<Product> visitedProducts) {
-		// logger.debug("checkProductCanBeCreatedAfterProduct afterProduct:{},
-		// beforeProduct:{}", afterProduct.getName(),
-		// beforeProduct.getName());
-		Set<Product> nextProducts = beforeProduct.getDependenceSet().stream().map(d -> d.getPath().getTarget())
-				.filter(p -> !visitedProducts.contains(p)).collect(Collectors.toSet());
+	private Map<Product, Set<Product>> getProductDependencies() {
+		Map<Product, Set<Product>> productDependencies = new HashMap<Product, Set<Product>>();
 
-		if (!afterProduct.canBeDefinedBeforeProducts(nextProducts)) {
-			return false;
-		} else {
-			visitedProducts.addAll(nextProducts);
+		for (Dependence dependence : getDependenceSet()) {
+			Set<Product> products = productDependencies.get(dependence.getProduct());
+
+			if (products == null) {
+				products = new HashSet<Product>();
+			}
+			products.addAll(dependence.getPath().getProductsInPath());
+
+			if (dependence.getProduct() == dependence.getPath().getSource()) {
+				products.remove(dependence.getProduct());
+			}
+
+			productDependencies.put(dependence.getProduct(), products);
 		}
 
-		for (Product product : nextProducts) {
-			checkProductCanBeCreatedAfterProduct(afterProduct, product, visitedProducts);
+		for (Attribute attribute : getEntitySet().stream().flatMap(e -> e.getAttributeSet().stream())
+				.collect(Collectors.toSet())) {
+			Set<Product> products = productDependencies.get(attribute);
+
+			if (products == null) {
+				products = new HashSet<Product>();
+			}
+
+			products.add(attribute.getEntity());
+
+			productDependencies.put(attribute, products);
 		}
 
-		return true;
-	}
+		logger.debug("getProductDependencies {}",
+				productDependencies.entrySet().stream()
+						.map(e -> e.getKey().getName() + ":"
+								+ e.getValue().stream().map(t -> t.getName()).collect(Collectors.joining(",")))
+				.collect(Collectors.joining(";")));
 
-	private Set<Product> getIntermediateEntities(Dependence dependence) {
-		String[] pathParts = dependence.getPath().getValue().split("\\.");
-		String path = pathParts[0];
-
-		Set<Product> entities = new HashSet<Product>();
-		for (int i = 1; i < pathParts.length - 1; i++) {
-			path = path + "." + pathParts[i];
-			entities.add(getTargetOfPath(path));
-		}
-
-		return entities;
-	}
-
-	private Set<Product> checkDirectCircularities() {
-		List<Dependence> dependencies = new ArrayList<Dependence>(getDependenceSet());
-		Set<Product> visitedProducts = null;
-
-		while (!dependencies.isEmpty()) {
-			Dependence dependence = dependencies.get(0);
-			visitedProducts = new HashSet<Product>();
-			visitedProducts.add(dependence.getProduct());
-
-			removeNonCircularPaths(dependence, dependencies, visitedProducts);
-		}
-		return visitedProducts;
-	}
-
-	private void removeNonCircularPaths(Dependence dependence, List<Dependence> dependencies,
-			Set<Product> visitedProducts) {
-		Product product = dependence.getPath().getTarget();
-
-		logger.debug("removeNonCircularPaths path:{}, product:{}, dependencies:{}", dependence.getPath().getValue(),
-				product.getName(), product.getDependenceSet().size());
-
-		if (!product.canBeDefinedBeforeProducts(visitedProducts)) {
-			throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY, dependence.getPath().getValue());
-		} else {
-			dependencies.remove(dependence);
-			visitedProducts.add(product);
-		}
-
-		for (Dependence dep : product.getDependenceSet()) {
-			removeNonCircularPaths(dep, dependencies, visitedProducts);
-		}
+		return productDependencies;
 	}
 
 	public void checkPaths() {

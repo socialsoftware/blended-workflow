@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain.taskmodel;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -9,7 +8,6 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeBasic.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeGroup;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
@@ -41,7 +39,6 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	private static final String ATTRIBUTE_ONE_NAME = "att1";
 	private static final String ATTRIBUTE_TWO_NAME = "att2";
 	private static final String ATTRIBUTE_THREE_NAME = "att3";
-	private static final String ATTRIBUTE_FOUR_NAME = "att4";
 	private static final String ROLENAME_ONE = "theOne";
 	private static final String ROLENAME_TWO = "theTwo";
 	private static final String ROLENAME_THREE = "theThree";
@@ -57,7 +54,6 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	AttributeBasic attributeOne;
 	AttributeBasic attributeTwo;
 	AttributeBasic attributeThree;
-	AttributeGroup attributeFour;
 	AttributeBasic attributeFourOne;
 	AttributeBasic attributeFourTwo;
 	RelationBW existsRelationOne;
@@ -88,10 +84,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				false, entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
 		entityThree = new Entity(spec.getDataModel(), ENTITY_THREE_NAME, false);
-		attributeFour = new AttributeGroup(spec.getDataModel(), entityThree, ATTRIBUTE_FOUR_NAME, false);
-		attributeFourOne = new AttributeBasic(spec.getDataModel(), entityThree, attributeFour, ATTRIBUTE_FOURONE_NAME,
+		attributeFourOne = new AttributeBasic(spec.getDataModel(), entityThree, null, ATTRIBUTE_FOURONE_NAME,
 				AttributeType.NUMBER, false, false, false);
-		attributeFourTwo = new AttributeBasic(spec.getDataModel(), entityThree, attributeFour, ATTRIBUTE_FOURTWO_NAME,
+		attributeFourTwo = new AttributeBasic(spec.getDataModel(), entityThree, null, ATTRIBUTE_FOURTWO_NAME,
 				AttributeType.NUMBER, false, false, false);
 
 		existsRelationTwo = new RelationBW(spec.getDataModel(), "nameTwo", entityTwo, ROLENAME_TWO, Cardinality.ONE,
@@ -144,7 +139,8 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_THREE_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH));
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeThree));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFourOne));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFourTwo));
 		taskThree.addRuleInvariant(ruleTwo);
 
 	}
@@ -177,14 +173,14 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void defGroupConditionNotAppliedToPost() {
-		taskThree.removePostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
+		taskThree.removePostCondition(DefAttributeCondition.getDefAttribute(attributeFourOne));
 
 		try {
 			spec.getTaskModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, bwe.getError());
-			assertEquals("DEF(" + ENTITY_THREE_NAME + "." + ATTRIBUTE_FOUR_NAME + ")", bwe.getMessage());
+			assertEquals("DEF(" + ENTITY_THREE_NAME + "." + ATTRIBUTE_FOURONE_NAME + ")", bwe.getMessage());
 		}
 	}
 
@@ -323,12 +319,12 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void success() {
-		assertTrue(spec.getTaskModel().checkModel());
+		spec.getTaskModel().checkModel();
 	}
 
 	@Test
 	public void existsEntitySuccess() {
-		assertTrue(spec.getTaskModel().checkModel());
+		spec.getTaskModel().checkModel();
 	}
 
 	@Test
@@ -354,7 +350,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, bwe.getError());
-			assertEquals("MUL(" + existsEntity.getName() + "." + "ONE" + ")", bwe.getMessage());
+			assertEquals("MUL(" + EXISTS_ENTITY + "." + ROLENAME_ONE + "," + "ONE" + ")", bwe.getMessage());
 		}
 	}
 

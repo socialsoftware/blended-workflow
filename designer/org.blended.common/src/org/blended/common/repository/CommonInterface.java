@@ -1130,16 +1130,4 @@ public class CommonInterface {
 		return restTemplate.postForObject(uri, req, ActivityDTO.class, params);
 	}
 
-	public Set<String> getDependencePaths(String specId, Set<String> paths) {
-		logger.debug("getDependencePaths paths:{}", paths);
-
-		final String uri = BASE_URL + "/specs/{specId}/pathdep?paths={paths}";
-
-		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		String[] result = restTemplate.getForObject(uri, String[].class, specId,
-				paths.stream().collect(Collectors.joining(",")));
-
-		return Arrays.stream(result).collect(Collectors.toSet());
-	}
-
 }

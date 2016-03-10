@@ -1,6 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -124,51 +126,38 @@ public class Task extends Task_Base {
 		return new ActivityDTO(getTaskModel().getSpecification().getSpecId(), getName(), getDescription());
 	}
 
-	public boolean checkConsistency() {
+	public void checkConsistency() {
 		checkPostConditionContainsAtLeastOneDef();
 		checkEntityOfDefAttributeIsDefined();
 		checkDependenceConstraint();
 		checkMultiplicityConstraint();
 		checkRuleConstraint();
-		checkCircularity();
-
-		return true;
+		// checkCycles(getTaskModel().getTaskDependencies());
 	}
 
-	public void checkCircularity() {
-		Set<Product> visitedProducts = new HashSet<Product>();
-		goThroughAcyclicPath(this, visitedProducts);
+	public void checkCycles(Map<Task, Set<Task>> taskDependencies) {
+		Set<Task> visitedTasks = new HashSet<Task>();
+		goThroughAcyclicPath(this, taskDependencies, visitedTasks);
 	}
 
-	private void goThroughAcyclicPath(Task task, Set<Product> visitedProducts) {
-		Set<Product> nextProducts = getPreConditionSet().stream().map(p -> p.getPath().getTarget())
-				.filter(p -> !p.isEntityAndExists() && !visitedProducts.contains(p)).collect(Collectors.toSet());
-
-		Set<Task> nextTasks = nextProducts.stream()
-				.map(p -> getTaskModel().getTaskPostConditionContains(p.getFullPath())).collect(Collectors.toSet());
+	private void goThroughAcyclicPath(Task task, Map<Task, Set<Task>> taskDependencies, Set<Task> visitedTasks) {
+		Set<Task> nextTasks = taskDependencies.get(this);
+		visitedTasks.add(this);
 
 		if (nextTasks.contains(task)) {
 			throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY, getName());
 		} else {
-			visitedProducts.addAll(nextProducts);
 			for (Task nextTask : nextTasks) {
-				nextTask.goThroughAcyclicPath(task, visitedProducts);
+				if (!visitedTasks.contains(nextTask))
+					nextTask.goThroughAcyclicPath(task, taskDependencies, visitedTasks);
 			}
 		}
 	}
 
 	private void checkRuleConstraint() {
-		Set<AttributeBasic> attributes = getTaskModel().getDefinedAttributes();
-
-		Set<AttributeBasic> postAttributes = ConditionModel.getBasicAtributesOfDefConditionSet(getPostConditionSet());
-
-		Optional<Rule> oRule = getRuleInvariantSet().stream().filter(r -> !attributes.containsAll(r.getAttributeSet()))
-				.findFirst();
-
-		if (oRule.isPresent())
-			throw new BWException(BWErrorType.INCONSISTENT_RULE_CONDITION, getName() + ":" + oRule.get().getName());
-
 		// at least an attribute is defined in the task
+		Set<Attribute> postAttributes = getPostConditionSet().stream().map(d -> d.getTargetOfPath())
+				.filter(Attribute.class::isInstance).map(Attribute.class::cast).collect(Collectors.toSet());
 		for (Rule rule : getRuleInvariantSet())
 			if (!rule.getAttributeSet().stream().anyMatch((a) -> postAttributes.contains(a)))
 				throw new BWException(BWErrorType.INCONSISTENT_RULE_CONDITION, getName() + ":" + rule.getName());
@@ -186,7 +175,7 @@ public class Task extends Task_Base {
 
 		if (oMul.isPresent())
 			throw new BWException(BWErrorType.INCONSISTENT_MUL_CONDITION,
-					getName() + ":" + oMul.get().getEntity().getName() + "." + oMul.get().getRolename());
+					getName() + ":" + oMul.get().getSourceEntity().getName() + "." + oMul.get().getTargetRolename());
 
 		// at least one entity definition is done here
 		oMul = getMultiplicityInvariantSet().stream()
@@ -196,7 +185,7 @@ public class Task extends Task_Base {
 
 		if (oMul.isPresent())
 			throw new BWException(BWErrorType.INCONSISTENT_MUL_CONDITION,
-					getName() + ":" + oMul.get().getEntity().getName());
+					getName() + ":" + oMul.get().getSourceEntity().getName() + "." + oMul.get().getTargetRolename());
 
 	}
 
@@ -239,22 +228,26 @@ public class Task extends Task_Base {
 		throw new BWException(BWErrorType.NO_DEF_CONDITION_IN_POST, getName());
 	}
 
-	public void removePreCondition(String entityTwoName) {
+	public void removePreCondition(String path) {
 		for (DefPathCondition defPathCondition : getPreConditionSet()) {
-			if (defPathCondition.getPath().getValue().equals(entityTwoName)) {
+			if (defPathCondition.getPath().getValue().equals(path)) {
 				removePreCondition(defPathCondition);
 			}
 		}
 	}
 
-	public Set<Entity> getEntitiesToDefine() {
+	public Set<Entity> getPostConditionEntities() {
 		return getPostConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Entity.class::isInstance)
 				.map(Entity.class::cast).collect(Collectors.toSet());
 	}
 
 	public Set<Entity> getCreationDependentAdjacentEntities() {
-		return getPreConditionSet().stream().filter(d -> getEntitiesToDefine().contains(d.getPath().getSource()))
+		return getPreConditionSet().stream().filter(d -> getPostConditionEntities().contains(d.getPath().getSource()))
 				.map(d -> d.getPath().getAdjacent()).collect(Collectors.toSet());
+	}
+
+	public List<Entity> getContextEntities() {
+		return getPostConditionSet().stream().map(d -> d.getPath().getSource()).collect(Collectors.toList());
 	}
 
 }

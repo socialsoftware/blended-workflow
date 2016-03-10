@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -69,6 +70,20 @@ public class Path extends Path_Base {
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, path.get(0)));
 
 		return entity.getEntityByRolename(path.get(1));
+	}
+
+	public List<Product> getProductsInPath() {
+		String[] pathParts = getValue().split("\\.");
+		String path = pathParts[0];
+
+		List<Product> products = new ArrayList<Product>();
+		products.add(getSource());
+		for (int i = 1; i < pathParts.length; i++) {
+			path = path + "." + pathParts[i];
+			products.add(getDataModel().getTargetOfPath(path));
+		}
+
+		return products;
 	}
 
 }

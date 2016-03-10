@@ -20,7 +20,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class CheckCircularityMethodTest extends TeardownRollbackTest {
+public class CheckCyclesMethodTest extends TeardownRollbackTest {
 	private static final String ENT_ONE_NAME = "EntOne";
 	private static final String ENT_TWO_NAME = "EntTwo";
 	private static final String ENT_THREE_NAME = "EntThree";
@@ -80,7 +80,7 @@ public class CheckCircularityMethodTest extends TeardownRollbackTest {
 	public void successEmptyPrecondition() throws BWException {
 		Task task = new Task(taskModel, ACTIVITY_ONE, DESCRIPTION);
 
-		task.checkCircularity();
+		task.checkCycles(taskModel.getTaskDependencies());
 	}
 
 	@Test
@@ -94,7 +94,7 @@ public class CheckCircularityMethodTest extends TeardownRollbackTest {
 		taskTwo.getPostConditionSet()
 				.add(DefAttributeCondition.getDefAttribute(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME));
 
-		taskOne.checkCircularity();
+		taskOne.checkCycles(taskModel.getTaskDependencies());
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class CheckCircularityMethodTest extends TeardownRollbackTest {
 		taskFour.getPostConditionSet()
 				.add(DefAttributeCondition.getDefAttribute(spec, ENT_ONE_NAME + "." + ATT_TWO_NAME));
 
-		taskOne.checkCircularity();
+		taskOne.checkCycles(taskModel.getTaskDependencies());
 	}
 
 	@Test
@@ -145,7 +145,7 @@ public class CheckCircularityMethodTest extends TeardownRollbackTest {
 				.add(DefAttributeCondition.getDefAttribute(spec, ENT_THREE_NAME + "." + ATT_FOUR_NAME));
 
 		try {
-			taskOne.checkCircularity();
+			taskOne.checkCycles(taskModel.getTaskDependencies());
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -176,7 +176,7 @@ public class CheckCircularityMethodTest extends TeardownRollbackTest {
 				.add(DefAttributeCondition.getDefAttribute(spec, ENT_THREE_NAME + "." + ATT_FOUR_NAME));
 
 		try {
-			taskOne.checkCircularity();
+			taskOne.checkCycles(taskModel.getTaskDependencies());
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());

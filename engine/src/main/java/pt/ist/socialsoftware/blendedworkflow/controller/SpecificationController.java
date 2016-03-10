@@ -1,9 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.controller;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
@@ -78,19 +73,6 @@ public class SpecificationController {
 		adi.printSpecificationModels(specId);
 
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/{specId}/pathdep", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public ResponseEntity<String[]> getDependencesOfPaths(@PathVariable("specId") String specId,
-			@RequestParam("paths") String paths) {
-		log.debug("getDependencesOfPaths specId:{}, paths:{}", specId, paths);
-
-		DesignInterface adi = DesignInterface.getInstance();
-
-		Set<String> result = adi.getDependencePaths(specId,
-				Arrays.asList(paths.split(",")).stream().collect(Collectors.toSet()));
-
-		return new ResponseEntity<String[]>(result.toArray(new String[result.size()]), HttpStatus.OK);
 	}
 
 }
