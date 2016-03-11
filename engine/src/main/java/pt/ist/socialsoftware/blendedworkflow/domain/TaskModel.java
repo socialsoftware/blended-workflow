@@ -120,46 +120,31 @@ public class TaskModel extends TaskModel_Base {
 
 		Task newTask = addTask(taskName, taskDescription, postConditionSet);
 
-		Set<RelationBW> relations = postConditionSet.stream().map(d -> d.getTargetOfPath())
-				.filter(Entity.class::isInstance).map(Entity.class::cast).flatMap(e -> e.getRelationSet().stream())
-				.collect(Collectors.toSet());
-		for (RelationBW relation : relations) {
+		for (RelationBW relation : getDataModel().getRelationBWSet()) {
 			applyMultiplicityToPostAndPre(relation);
 		}
 
-		checkModel();
-
-		// Task newTask = createTask(taskName, taskDescription);
-		//
-		// newTask.getPreConditionSet().addAll(taskOne.getPreConditionSet());
-		// newTask.getPreConditionSet().addAll(taskTwo.getPreConditionSet());
-		//
-		// newTask.getPostConditionSet().addAll(taskOne.getPostConditionSet());
-		// newTask.getPostConditionSet().addAll(taskTwo.getPostConditionSet());
-		//
-		// Set<Product> postProducts =
-		// ConditionModel.getProductsOfDefConditions(newTask.getPostConditionSet());
-		//
-		// for (DefPathCondition defPathCondition :
-		// newTask.getPreConditionSet()) {
-		// if (postProducts.contains(defPathCondition.getPath().getTarget()))
-		// newTask.removePreCondition(defPathCondition);
+		// Set<RelationBW> relations = postConditionSet.stream().map(d ->
+		// d.getTargetOfPath())
+		// .filter(Entity.class::isInstance).map(Entity.class::cast).flatMap(e
+		// -> e.getRelationSet().stream())
+		// .collect(Collectors.toSet());
+		// for (RelationBW relation : relations) {
+		// applyMultiplicityToPostAndPre(relation);
 		// }
-		//
-		// newTask.getMultiplicityInvariantSet().addAll(taskOne.getMultiplicityInvariantSet());
-		// newTask.getMultiplicityInvariantSet().addAll(taskTwo.getMultiplicityInvariantSet());
-		//
-		// newTask.getRuleInvariantSet().addAll(taskOne.getRuleInvariantSet());
-		// newTask.getRuleInvariantSet().addAll(taskTwo.getRuleInvariantSet());
-		//
-		// taskOne.delete();
-		// taskTwo.delete();
+
+		checkModel();
 
 		return newTask;
 	}
 
 	public Task extractTask(Task fromTask, String taskName, String taskDescription,
 			Set<DefProductCondition> postConditionSet) {
+		if (postConditionSet.size() == 0 || fromTask.getPostConditionSet().size() - postConditionSet.size() <= 0
+				|| fromTask.getPostConditionSet().containsAll(postConditionSet)) {
+			new BWException(BWErrorType.CANNOT_EXTRACT_ACTIVITY, fromTask.getName());
+		}
+
 		String fromTaskName = fromTask.getName();
 		String fromTaskDescription = fromTask.getDescription();
 		Set<DefProductCondition> fromTaskPostCondition = new HashSet<DefProductCondition>(
@@ -168,9 +153,17 @@ public class TaskModel extends TaskModel_Base {
 
 		fromTask.delete();
 
-		addTask(fromTaskName, fromTaskDescription, fromTaskPostCondition);
+		Task newFromTask = addTask(fromTaskName, fromTaskDescription, fromTaskPostCondition);
 
-		return addTask(taskName, taskDescription, postConditionSet);
+		Task newExtratedTask = addTask(taskName, taskDescription, postConditionSet);
+
+		for (RelationBW relation : getDataModel().getRelationBWSet()) {
+			applyMultiplicityToPostAndPre(relation);
+		}
+
+		checkModel();
+
+		return newExtratedTask;
 	}
 
 	private void applyRulesToPost(Task task) {
