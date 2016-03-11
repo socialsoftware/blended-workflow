@@ -25,6 +25,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class MergeTasksTest extends TeardownRollbackTest {
@@ -68,10 +69,10 @@ public class MergeTasksTest extends TeardownRollbackTest {
 		spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
 
 		entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-		attributeOne = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_ONE_NAME, AttributeType.NUMBER,
-				true, false, false);
-		attributeTwo = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_TWO_NAME, AttributeType.NUMBER,
-				true, false, false);
+		attributeOne = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_ONE_NAME, AttributeType.NUMBER, true,
+				false, false);
+		attributeTwo = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_TWO_NAME, AttributeType.NUMBER, true,
+				false, false);
 
 		entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
 		attributeThree = new Attribute(spec.getDataModel(), entityTwo, ATTRIBUTE_THREE_NAME, AttributeType.BOOLEAN,
@@ -81,9 +82,9 @@ public class MergeTasksTest extends TeardownRollbackTest {
 				entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
 		entityThree = new Entity(spec.getDataModel(), ENTITY_THREE_NAME, false);
-		attributeFour = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FIVE_NAME, AttributeType.NUMBER,
+		attributeFour = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FOUR_NAME, AttributeType.NUMBER,
 				false, false, false);
-		attributeFive = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FOUR_NAME, AttributeType.NUMBER,
+		attributeFive = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FIVE_NAME, AttributeType.NUMBER,
 				false, false, false);
 
 		new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH_ONE);
@@ -149,10 +150,11 @@ public class MergeTasksTest extends TeardownRollbackTest {
 
 	@Test
 	public void mergeTasksOneThree() {
-		Task task = taskModel.mergeTasks("newTask", "taskDescription", taskOne, taskThree);
-
-		taskModel.checkModel();
-		task.checkConsistency();
+		try {
+			taskModel.mergeTasks("newTask", "taskDescription", taskOne, taskThree);
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
+		}
 	}
 
 }

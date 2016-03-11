@@ -132,7 +132,7 @@ public class Task extends Task_Base {
 		checkDependenceConstraint();
 		checkMultiplicityConstraint();
 		checkRuleConstraint();
-		// checkCycles(getTaskModel().getTaskDependencies());
+		checkCycles(getTaskModel().getTaskDependencies());
 	}
 
 	public void checkCycles(Map<Task, Set<Task>> taskDependencies) {

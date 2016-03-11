@@ -89,10 +89,6 @@ public class TaskModel extends TaskModel_Base {
 			applyMultiplicityToPostAndPre(relation);
 		}
 
-		for (Rule rule : conditionModel.getAttributeInvariantConditionSet()) {
-			applyRuleConditionToPost(rule);
-		}
-
 		checkModel();
 	}
 
@@ -110,33 +106,54 @@ public class TaskModel extends TaskModel_Base {
 
 		applyDependenceConditionsToPre(task);
 
+		applyRulesToPost(task);
+
 		return task;
 	}
 
 	public Task mergeTasks(String taskName, String taskDescription, Task taskOne, Task taskTwo) {
-		Task newTask = createTask(taskName, taskDescription);
-
-		newTask.getPreConditionSet().addAll(taskOne.getPreConditionSet());
-		newTask.getPreConditionSet().addAll(taskTwo.getPreConditionSet());
-
-		newTask.getPostConditionSet().addAll(taskOne.getPostConditionSet());
-		newTask.getPostConditionSet().addAll(taskTwo.getPostConditionSet());
-
-		Set<Product> postProducts = ConditionModel.getProductsOfDefConditions(newTask.getPostConditionSet());
-
-		for (DefPathCondition defPathCondition : newTask.getPreConditionSet()) {
-			if (postProducts.contains(defPathCondition.getPath().getTarget()))
-				newTask.removePreCondition(defPathCondition);
-		}
-
-		newTask.getMultiplicityInvariantSet().addAll(taskOne.getMultiplicityInvariantSet());
-		newTask.getMultiplicityInvariantSet().addAll(taskTwo.getMultiplicityInvariantSet());
-
-		newTask.getRuleInvariantSet().addAll(taskOne.getRuleInvariantSet());
-		newTask.getRuleInvariantSet().addAll(taskTwo.getRuleInvariantSet());
+		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>(taskOne.getPostConditionSet());
+		postConditionSet.addAll(taskTwo.getPostConditionSet());
 
 		taskOne.delete();
 		taskTwo.delete();
+
+		Task newTask = addTask(taskName, taskDescription, postConditionSet);
+
+		Set<RelationBW> relations = postConditionSet.stream().map(d -> d.getTargetOfPath())
+				.filter(Entity.class::isInstance).map(Entity.class::cast).flatMap(e -> e.getRelationSet().stream())
+				.collect(Collectors.toSet());
+		for (RelationBW relation : relations) {
+			applyMultiplicityToPostAndPre(relation);
+		}
+
+		checkModel();
+
+		// Task newTask = createTask(taskName, taskDescription);
+		//
+		// newTask.getPreConditionSet().addAll(taskOne.getPreConditionSet());
+		// newTask.getPreConditionSet().addAll(taskTwo.getPreConditionSet());
+		//
+		// newTask.getPostConditionSet().addAll(taskOne.getPostConditionSet());
+		// newTask.getPostConditionSet().addAll(taskTwo.getPostConditionSet());
+		//
+		// Set<Product> postProducts =
+		// ConditionModel.getProductsOfDefConditions(newTask.getPostConditionSet());
+		//
+		// for (DefPathCondition defPathCondition :
+		// newTask.getPreConditionSet()) {
+		// if (postProducts.contains(defPathCondition.getPath().getTarget()))
+		// newTask.removePreCondition(defPathCondition);
+		// }
+		//
+		// newTask.getMultiplicityInvariantSet().addAll(taskOne.getMultiplicityInvariantSet());
+		// newTask.getMultiplicityInvariantSet().addAll(taskTwo.getMultiplicityInvariantSet());
+		//
+		// newTask.getRuleInvariantSet().addAll(taskOne.getRuleInvariantSet());
+		// newTask.getRuleInvariantSet().addAll(taskTwo.getRuleInvariantSet());
+		//
+		// taskOne.delete();
+		// taskTwo.delete();
 
 		return newTask;
 	}
@@ -156,9 +173,12 @@ public class TaskModel extends TaskModel_Base {
 		return addTask(taskName, taskDescription, postConditionSet);
 	}
 
-	private void applyRuleConditionToPost(Rule rule) {
-		for (Task task : getRuleTasks(rule)) {
-			task.getRuleInvariantSet().add(rule);
+	private void applyRulesToPost(Task task) {
+		for (Rule rule : getConditionModel().getAttributeInvariantConditionSet()) {
+			Set<Attribute> ruleAttributes = rule.getAttributeSet();
+			if (task.getPostConditionSet().stream().anyMatch(d -> ruleAttributes.contains(d.getTargetOfPath()))) {
+				task.getRuleInvariantSet().add(rule);
+			}
 		}
 	}
 
@@ -185,11 +205,11 @@ public class TaskModel extends TaskModel_Base {
 				.map(e -> DefEntityCondition.getDefEntity(e).getTaskWithPostCondition()).filter(t -> t != null)
 				.collect(Collectors.toList());
 
-		// a relation has an exists entity
+		// the relation has an exists entity
 		if (tasks.size() == 1) {
 			tasks.get(0).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
 			addPreConditionsDueToMulConditions(tasks.get(0), relation);
-		} else {
+		} else { // the two entities in the relation do no exist
 			Map<Task, Set<Task>> taskDependencies = getTaskDependencies();
 
 			if (taskDependencies.get(tasks.get(0)).contains(tasks.get(1))
