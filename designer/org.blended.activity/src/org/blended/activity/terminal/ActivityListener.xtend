@@ -73,10 +73,12 @@ class ActivityListener implements Runnable {
 		var ls = new CommandLs()
 		var join = new CommandJoin()
 		var split = new CommandSplit()
+		var seq = new CommandSeq()
 		jc.addCommand("help", help)	
 		jc.addCommand("ls", ls)
 		jc.addCommand("join", join)		
 		jc.addCommand("split", split)
+		jc.addCommand("seq", seq)
 		
 		try {
 			jc.parse(option.split(" "))
@@ -98,6 +100,9 @@ class ActivityListener implements Runnable {
 					case "split": {
 						ConsoleManagement.write(name, helpSplit().toString);
 					}
+					case "seq": {
+						ConsoleManagement.write(name, helpSeq().toString);
+					}
 				}
 			}
 			else if (jc.getParsedCommand().equals("ls")) {
@@ -109,6 +114,10 @@ class ActivityListener implements Runnable {
 			}
 			else if (jc.getParsedCommand().equals("split")) {
 				ManageSplit.execute(model, name, this.specId, split);
+				updateResource();
+			}
+			else if (jc.getParsedCommand().equals("seq")) {
+				ManageSeq.execute(model, name, this.specId, seq);
 				updateResource();
 			}
 		}
@@ -132,9 +141,10 @@ class ActivityListener implements Runnable {
 	static def listOfActions() '''
 	Activity Model Commands:	
 		help	shows the help for specific commands
-		ls	lists elements of the model
+		ls		lists elements of the model
 		join	joins two activities
 		split	splits an activity in two
+		seq		manages the sequence constraints of an activity
 		
 		-help	prints this message
 	'''
@@ -168,6 +178,13 @@ class ActivityListener implements Runnable {
 	
 	Syntax:
 	split -n NEW_ACTIVITY_NAME -a SOUCE_ACTIVITY -p POST_ELEMENTS_SEPARATED_BY_SEMICOLON
+	'''
+	
+	static def helpSeq()'''
+	seq is a command used to add a sequence constraint to an activity
+	
+	Syntax:
+	seq -a ACTIVITY_NAME -t OPERATION -p PATH
 	'''
 	
 	def updateResource() {

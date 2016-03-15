@@ -434,6 +434,11 @@ relation TaskHasRuleInvariants {
 	Rule playsRole ruleInvariant { multiplicity 0..*; }
 }
 
+relation TaskHasSequenceConditions {
+	Task playsRole taskSequenceCondition { multiplicity 0..1; }
+	DefPathCondition playsRole sequenceCondition { multiplicity 0..*; }
+}
+
 relation TaskHasTaskWorkItem {
 	Task playsRole task { multiplicity 0..1; }
 	TaskWorkItem playsRole taskWorkItem { multiplicity 0..1; }

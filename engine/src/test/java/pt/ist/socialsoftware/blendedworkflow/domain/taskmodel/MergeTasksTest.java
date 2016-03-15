@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.domain.taskmodel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import java.util.stream.Collectors;
 
@@ -152,9 +153,28 @@ public class MergeTasksTest extends TeardownRollbackTest {
 	public void mergeTasksOneThree() {
 		try {
 			taskModel.mergeTasks("newTask", "taskDescription", taskOne, taskThree);
+			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
 		}
+	}
+
+	@Test
+	public void mergeSequentialConditionOne() {
+		taskTwo.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME + "." + ROLENAME_ONE));
+
+		Task merge = taskModel.mergeTasks("newTask", "taskDescription", taskOne, taskTwo);
+
+		assertEquals(0, merge.getSequenceConditionSet().size());
+	}
+
+	@Test
+	public void mergeSequentialConditionTwo() {
+		taskTwo.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME + "." + ROLENAME_ONE));
+
+		Task merge = taskModel.mergeTasks("newTask", "taskDescription", taskTwo, taskThree);
+
+		assertEquals(1, merge.getSequenceConditionSet().size());
 	}
 
 }

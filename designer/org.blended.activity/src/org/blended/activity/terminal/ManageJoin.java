@@ -41,7 +41,7 @@ public class ManageJoin {
 
 		Utils.loadActivityModelFromServer(model, specId);
 
-		ConsoleManagement.write(name, "Operation performed. New goal " + activityDTO.getName() + " generated");
+		ConsoleManagement.write(name, "Operation performed. New activity " + activityDTO.getName() + " generated");
 	}
 
 }

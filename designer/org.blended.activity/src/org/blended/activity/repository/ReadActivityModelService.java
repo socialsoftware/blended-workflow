@@ -46,9 +46,13 @@ public class ReadActivityModelService {
 			Activity activity = createActivity(model, activityDTO);
 
 			Set<DefPathConditionDTO> defPathConditions = ci.getActivityPreConditionSet(specId, activityDTO.getName());
-
 			for (DefPathConditionDTO defPathConditionDTO : defPathConditions) {
 				activity.getPre().add(defPathConditionDTO.buildPathDefinition());
+			}
+
+			Set<DefPathConditionDTO> defSeqConditions = ci.getActivitySeqConditionSet(specId, activityDTO.getName());
+			for (DefPathConditionDTO defSeqConditionDTO : defSeqConditions) {
+				activity.getSeq().add(defSeqConditionDTO.buildPathDefinition());
 			}
 
 			DefProductConditionSetDTO defProductConditionSetDTO = ci.getActivityPostConditionSet(specId,
