@@ -57,7 +57,8 @@ public class WriteActivityModelService {
 
 		for (Activity eActivity : eActivityModel.getActivities()) {
 			// logger.debug("Activity specId:{}, name:{}, description:{}",
-			// specId, eActivity.getName(), eActivity.getDescription());
+			// specId, eActivity.getName(),
+			// eActivity.getDescription());
 
 			ci.createActivity(specId, eActivity.getName(), eActivity.getDescription());
 
@@ -119,6 +120,21 @@ public class WriteActivityModelService {
 				}
 				assert (false);
 			}
+
+			for (EObject eObj : eActivity.getSeq()) {
+				if (eObj instanceof PathDefinition) {
+					PathDefinition pd = (PathDefinition) eObj;
+					// logger.debug("SEQ({})", pd.getPath());
+					try {
+						ci.addSequenceConditionToActivity(specId, eActivity.getName(), pd.getPath());
+					} catch (RepositoryException re) {
+						notification.addError(re.getError());
+						// logger.debug("Error: {}", re.getMessage());
+					}
+				}
+				assert (false);
+			}
+
 		}
 
 		try {

@@ -276,4 +276,42 @@ public class ActivityModelController {
 		return new ResponseEntity<ActivityDTO>(task.getDTO(), HttpStatus.CREATED);
 	}
 
+	@RequestMapping(value = "/activities/{activityName}/seq/add", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<Boolean> addSequenceConditionToActivity(@PathVariable("specId") String specId,
+			@PathVariable("activityName") String activityName, @RequestBody String path) {
+		logger.debug("addSequenceConditionToActivity specId:{}, activityName:{}, path:{}", specId, activityName, path);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		adi.addSequenceConditionToActivity(specId, activityName, path);
+
+		return new ResponseEntity<Boolean>(true, HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/activities/{activityName}/seq/rem", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<Boolean> removeSequenceConditionToActivity(@PathVariable("specId") String specId,
+			@PathVariable("activityName") String activityName, @RequestBody String path) {
+		logger.debug("removeSequenceConditionToActivity specId:{}, activityName:{}, path:{}", specId, activityName,
+				path);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		adi.removeSequenceConditionToActivity(specId, activityName, path);
+
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/activities/{activityName}/seq", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<DefPathConditionDTO[]> getActivitySeqConditionSet(@PathVariable("specId") String specId,
+			@PathVariable("activityName") String activityName) {
+		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		Set<DefPathCondition> preConditionSet = adi.getActivitySeqCondition(specId, activityName);
+
+		return new ResponseEntity<DefPathConditionDTO[]>(
+				preConditionSet.stream().map(d -> d.getDTO(specId)).toArray(DefPathConditionDTO[]::new), HttpStatus.OK);
+	}
+
 }

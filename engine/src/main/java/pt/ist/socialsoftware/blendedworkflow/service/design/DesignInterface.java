@@ -762,6 +762,35 @@ public class DesignInterface {
 				getConditionSet(spec, successCondition));
 	}
 
+	@Atomic(mode = TxMode.WRITE)
+	public void addSequenceConditionToActivity(String specId, String activityName, String path) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
+
+		task.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, path));
+	}
+
+	@Atomic(mode = TxMode.WRITE)
+	public void removeSequenceConditionToActivity(String specId, String activityName, String path) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
+
+		if (!task.getSequenceConditionSet().stream().filter(d -> d.getPath().getValue().equals(path)).findFirst()
+				.isPresent()) {
+			throw new BWException(BWErrorType.UNKNOWN_SEQUENCE_CONDITION, path);
+		}
+
+		task.getSequenceConditionSet().stream().filter(d -> d.getPath().getValue().equals(path))
+				.forEach(d -> task.removeSequenceCondition(d));
+	}
+
+	public Set<DefPathCondition> getActivitySeqCondition(String specId, String activityName) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
+
+		return task.getSequenceConditionSet();
+	}
+
 	public void printSpecificationModels(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 

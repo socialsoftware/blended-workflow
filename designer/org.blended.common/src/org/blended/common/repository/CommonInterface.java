@@ -1115,4 +1115,45 @@ public class CommonInterface {
 		return restTemplate.postForObject(uri, req, ActivityDTO.class, params);
 	}
 
+	public Boolean addSequenceConditionToActivity(String specId, String activity, String path) {
+		logger.debug("addSequenceConditionToActivity specId:{}, activity:{}, path:{}", specId, activity, path);
+
+		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/seq/add";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+		params.put("activityName", activity);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		return restTemplate.postForObject(uri, path, Boolean.class, params);
+	}
+
+	public Boolean removeSequenceConditionToActivity(String specId, String activity, String path) {
+		logger.debug("removeSequenceConditionToActivity specId:{}, activity:{}, path:{}", specId, activity, path);
+
+		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/seq/rem";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+		params.put("activityName", activity);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		return restTemplate.postForObject(uri, path, Boolean.class, params);
+	}
+
+	public Set<DefPathConditionDTO> getActivitySeqConditionSet(String specId, String activity) {
+		logger.debug("getActivitySeqConditionSet specId:{}, activity:{}", specId, activity);
+
+		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/seq";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("specId", specId);
+		params.put("activityName", activity);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		DefPathConditionDTO[] result = restTemplate.getForObject(uri, DefPathConditionDTO[].class, params);
+
+		return Arrays.stream(result).collect(Collectors.toSet());
+	}
+
 }

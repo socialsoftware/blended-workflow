@@ -115,23 +115,25 @@ public class TaskModel extends TaskModel_Base {
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>(taskOne.getPostConditionSet());
 		postConditionSet.addAll(taskTwo.getPostConditionSet());
 
+		Set<DefPathCondition> sequenceConditions = new HashSet<DefPathCondition>(taskOne.getSequenceConditionSet());
+		sequenceConditions.addAll(taskTwo.getSequenceConditionSet());
+
+		Set<Product> products = postConditionSet.stream().map(d -> d.getTargetOfPath()).collect(Collectors.toSet());
+
+		Set<String> sequenceConditionValues = sequenceConditions.stream()
+				.filter(d -> !products.contains(d.getTargetOfPath())).map(d -> d.getPath().getValue())
+				.collect(Collectors.toSet());
+
 		taskOne.delete();
 		taskTwo.delete();
 
 		Task newTask = addTask(taskName, taskDescription, postConditionSet);
+		sequenceConditionValues.stream().forEach(
+				v -> newTask.addSequenceCondition(DefPathCondition.getDefPathCondition(getSpecification(), v)));
 
 		for (RelationBW relation : getDataModel().getRelationBWSet()) {
 			applyMultiplicityToPostAndPre(relation);
 		}
-
-		// Set<RelationBW> relations = postConditionSet.stream().map(d ->
-		// d.getTargetOfPath())
-		// .filter(Entity.class::isInstance).map(Entity.class::cast).flatMap(e
-		// -> e.getRelationSet().stream())
-		// .collect(Collectors.toSet());
-		// for (RelationBW relation : relations) {
-		// applyMultiplicityToPostAndPre(relation);
-		// }
 
 		checkModel();
 
@@ -151,11 +153,22 @@ public class TaskModel extends TaskModel_Base {
 				fromTask.getPostConditionSet());
 		fromTaskPostCondition.removeAll(postConditionSet);
 
+		Set<String> sequenceConditionValues = fromTask.getSequenceConditionSet().stream()
+				.map(d -> d.getPath().getValue()).collect(Collectors.toSet());
+
 		fromTask.delete();
 
 		Task newFromTask = addTask(fromTaskName, fromTaskDescription, fromTaskPostCondition);
 
 		Task newExtratedTask = addTask(taskName, taskDescription, postConditionSet);
+
+		for (String path : sequenceConditionValues) {
+			if (newFromTask.getPostConditionProducts().contains(getDataModel().getSourceOfPath(path))) {
+				newFromTask.addSequenceCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
+			} else {
+				newExtratedTask.addSequenceCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
+			}
+		}
 
 		for (RelationBW relation : getDataModel().getRelationBWSet()) {
 			applyMultiplicityToPostAndPre(relation);
@@ -233,12 +246,19 @@ public class TaskModel extends TaskModel_Base {
 		Set<Product> postProducts = ConditionModel.getProductsOfDefConditions(task.getPostConditionSet());
 		Set<Product> preProducts = ConditionModel.getProductsOfDefConditions(task.getPreConditionSet());
 
-		getSpecification().getDataModel().getDependenceSet().stream()
+		Set<Dependence> dependencies = getDefPathDependencies();
+
+		dependencies.stream()
 				.filter(d -> postProducts.contains(d.getProduct()) && !postProducts.contains(d.getTarget())
 						&& !preProducts.contains(d.getTarget()))
 				.forEach(d -> task.addPreCondition(
 						DefPathCondition.getDefPathCondition(getSpecification(), d.getPath().getValue())));
+	}
 
+	private Set<Dependence> getDefPathDependencies() {
+		Set<Dependence> dependencies = new HashSet<Dependence>(getConditionModel().getEntityDependenceConditionSet());
+		dependencies.addAll(getConditionModel().getAttributeDependenceConditionSet());
+		return dependencies;
 	}
 
 	private void applyAttributeEntityDependenceToPre(Task task) {
@@ -302,9 +322,10 @@ public class TaskModel extends TaskModel_Base {
 	public Map<Task, Set<Task>> getTaskDependencies() {
 		Map<Task, Set<Task>> taskDependencies = new HashMap<Task, Set<Task>>();
 		for (Task task : getTasksSet()) {
-			Set<Task> tasks = task.getPreConditionSet().stream().flatMap(d -> d.getPath().getProductsInPath().stream())
-					.map(p -> p.getDefCondition()).filter(d -> d.getTaskWithPostCondition() != null)
-					.map(d -> d.getTaskWithPostCondition()).filter(t -> t != task).collect(Collectors.toSet());
+			Set<Task> tasks = task.getExecutionDependencies().stream()
+					.flatMap(d -> d.getPath().getProductsInPath().stream()).map(p -> p.getDefCondition())
+					.filter(d -> d.getTaskWithPostCondition() != null).map(d -> d.getTaskWithPostCondition())
+					.filter(t -> t != task).collect(Collectors.toSet());
 
 			taskDependencies.put(task, tasks);
 		}
@@ -313,7 +334,7 @@ public class TaskModel extends TaskModel_Base {
 				taskDependencies.entrySet().stream()
 						.map(e -> e.getKey().getName() + ":"
 								+ e.getValue().stream().map(t -> t.getName()).collect(Collectors.joining(",")))
-				.collect(Collectors.joining(";")));
+						.collect(Collectors.joining(";")));
 		return taskDependencies;
 	}
 

@@ -24,6 +24,15 @@ public class Task extends Task_Base {
 		super.setName(name);
 	}
 
+	@Override
+	public void addSequenceCondition(DefPathCondition sequenceCondition) {
+		checkSequenceConditon(sequenceCondition);
+
+		super.addSequenceCondition(sequenceCondition);
+
+		checkCycles(getTaskModel().getTaskDependencies());
+	}
+
 	public Task(TaskModel taskModel, String name, String description) {
 		setTaskModel(taskModel);
 		setName(name);
@@ -32,7 +41,7 @@ public class Task extends Task_Base {
 
 	public Task(TaskModel taskModel, String name, String description, Set<DefPathCondition> preConditions,
 			Set<DefProductCondition> postCondition, String previous, String joinCode, String splitCode)
-					throws BWException {
+			throws BWException {
 		setTaskModel(taskModel);
 		setName(name);
 		getPreConditionSet().addAll(preConditions);
@@ -41,6 +50,13 @@ public class Task extends Task_Base {
 		setPrevious(previous);
 		setJoinCode(joinCode);
 		setSplitCode(splitCode);
+	}
+
+	private void checkSequenceConditon(DefPathCondition sequenceCondition) {
+		if (!getPostConditionProducts().stream().map(p -> p.getEntity())
+				.anyMatch(e -> e == sequenceCondition.getPath().getSource())) {
+			throw new BWException(BWErrorType.SEQUENCE_CONDITION_INVALID, sequenceCondition.getPath().getValue());
+		}
 	}
 
 	private void checkUniqueTaskName(String name) throws BWException {
@@ -118,6 +134,7 @@ public class Task extends Task_Base {
 		getPostConditionSet().forEach(c -> removePostCondition(c));
 		getMultiplicityInvariantSet().forEach(m -> removeMultiplicityInvariant(m));
 		getRuleInvariantSet().forEach(r -> removeRuleInvariant(r));
+		getSequenceConditionSet().forEach(d -> d.delete());
 
 		deleteDomainObject();
 	}
@@ -241,6 +258,10 @@ public class Task extends Task_Base {
 				.map(Entity.class::cast).collect(Collectors.toSet());
 	}
 
+	public Set<Product> getPostConditionProducts() {
+		return getPostConditionSet().stream().map(d -> d.getPath().getTarget()).collect(Collectors.toSet());
+	}
+
 	public Set<Entity> getCreationDependentAdjacentEntities() {
 		return getPreConditionSet().stream().filter(d -> getPostConditionEntities().contains(d.getPath().getSource()))
 				.map(d -> d.getPath().getAdjacent()).collect(Collectors.toSet());
@@ -248,6 +269,12 @@ public class Task extends Task_Base {
 
 	public List<Entity> getContextEntities() {
 		return getPostConditionSet().stream().map(d -> d.getPath().getSource()).collect(Collectors.toList());
+	}
+
+	public Set<DefPathCondition> getExecutionDependencies() {
+		Set<DefPathCondition> defPathConditions = new HashSet<DefPathCondition>(getPreConditionSet());
+		defPathConditions.addAll(getSequenceConditionSet());
+		return defPathConditions;
 	}
 
 }

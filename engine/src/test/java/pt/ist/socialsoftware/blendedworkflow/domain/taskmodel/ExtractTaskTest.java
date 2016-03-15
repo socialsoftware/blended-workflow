@@ -132,7 +132,6 @@ public class ExtractTaskTest extends TeardownRollbackTest {
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
 		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFive));
 		taskThree.addRuleInvariant(ruleTwo);
-
 	}
 
 	@Test
@@ -211,6 +210,32 @@ public class ExtractTaskTest extends TeardownRollbackTest {
 
 		task.checkConsistency();
 		taskModel.getTask(TASK_THREE).checkConsistency();
+		taskModel.checkModel();
+	}
+
+	@Test
+	public void extractAndSequenceConditionStaysInSource() {
+		taskTwo.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME + "." + ROLENAME_ONE));
+		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
+		postConditionSet.add(DefEntityCondition.getDefEntity(entityTwo));
+		Task task = taskModel.extractTask(taskTwo, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
+
+		assertEquals(1, task.getSequenceConditionSet().size());
+		assertEquals(0, taskModel.getTask(TASK_TWO).getSequenceConditionSet().size());
+
+		taskModel.checkModel();
+	}
+
+	@Test
+	public void extractAndSequenceConditionMovesToTarget() {
+		taskTwo.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME + "." + ROLENAME_ONE));
+		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
+		postConditionSet.add(DefEntityCondition.getDefEntity(entityThree));
+		Task task = taskModel.extractTask(taskTwo, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
+
+		assertEquals(0, task.getSequenceConditionSet().size());
+		assertEquals(1, taskModel.getTask(TASK_TWO).getSequenceConditionSet().size());
+
 		taskModel.checkModel();
 	}
 
