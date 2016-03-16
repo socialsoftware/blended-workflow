@@ -134,12 +134,10 @@ public class ActivityModelController {
 
 		Set<DefProductCondition> postConditionSet = adi.getActivityPostCondition(specId, activityName);
 
-		ConditionModel conditionModel = adi.getSpecBySpecId(specId).getConditionModel();
-
 		DefProductConditionSetDTO defConditionSetDTO = new DefProductConditionSetDTO();
-		defConditionSetDTO.setDefEnts(conditionModel.getDefEntityConditions(postConditionSet).stream()
+		defConditionSetDTO.setDefEnts(ConditionModel.getDefEntityConditions(postConditionSet).stream()
 				.map(d -> d.getDTO()).collect(Collectors.toSet()));
-		defConditionSetDTO.setDefAtts(conditionModel.getDefAttributeConditions(postConditionSet).stream()
+		defConditionSetDTO.setDefAtts(ConditionModel.getDefAttributeConditions(postConditionSet).stream()
 				.map(d -> d.getDTO()).collect(Collectors.toSet()));
 
 		return new ResponseEntity<DefProductConditionSetDTO>(defConditionSetDTO, HttpStatus.OK);
@@ -221,8 +219,8 @@ public class ActivityModelController {
 	public ResponseEntity<RuleDTO> associateAttributeInvariantConditionActivityPost(
 			@PathVariable("specId") String specId, @PathVariable("activityName") String activityName,
 			@RequestBody RuleDTO ruleDTO) {
-		logger.debug("associateActConditionToGoal specId:{}, activityName:{}, rule:{}", specId, activityName,
-				ruleDTO.getName());
+		logger.debug("associateAttributeInvariantConditionActivityPost specId:{}, activityName:{}, rule:{}", specId,
+				activityName, ruleDTO.getName());
 
 		DesignInterface adi = DesignInterface.getInstance();
 
