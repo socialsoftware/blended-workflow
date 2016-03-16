@@ -1,4 +1,4 @@
-<div ng-controller="dataModelController">
+<div class="container">
 	<div class="text-left">
 		<samp>
 			<strong>Data Model Specification</strong> {{spec.name}} <br /> <br />
@@ -8,31 +8,19 @@
 				<span
 					ng-repeat="d in dependencies | filter : {'productExtId':e.extId}">
 					{{d.path}} &nbsp; </span> <br /> {
+					
 				<div
-					ng-repeat="a in attributes | filter : {'entityName':e.name, 'groupName':null} | orderBy:'name'">
-					<span style="padding-left: 2em"><span
-						ng-if="a.productType == 'ATTRIBUTE_GROUP'"> <strong>group</strong>
-							{{a.name}}
-					</span> <span ng-if="a.productType == 'ATTRIBUTE_BASIC'">
-							{{a.name}} : {{a.type}}</span><span ng-if="a.mandatory"> <strong>mandatory</strong></span></span>
-					<span ng-if="hasDependencies(a.extId)"><strong>dependsOn</strong>
+					ng-repeat="a in attributes | filter : {'entityName':e.name} | orderBy:'a.name'">
+					<span style="padding-left: 2em"> {{a.name}} : {{a.type}}<span
+						ng-if="a.mandatory"> <strong>mandatory</strong></span> <span
+						ng-if="hasDependencies(a.extId)"><strong>dependsOn</strong>
 						<span
 						ng-repeat="d in dependencies | filter : {'productExtId':a.extId}">
 							{{d.path}} &nbsp; </span>
-						<div
-							ng-repeat="a2 in attributes | filter : {'entityName':e.name, 'groupName':a.name} | orderBy:'name'">
-							<span style="padding-left: 4em">{{a2.name}} : {{a2.type}}
-								<span ng-if="a2.mandatory"> <strong>mandatory</strong></span>
-							</span> <span ng-if="hasDependencies(a2.extId)"><strong>dependsOn</strong>
-								<span
-								ng-repeat="d in dependencies | filter : {'productExtId':a2.extId}">
-									<strong>dependsOn</strong> {{d.path}} &nbsp;
-							</span>
-						</div>
 				</div>
 				<div ng-repeat="r in rules | filter : {'entityName':e.name}">
 					<br /> <span style="padding-left: 2em"><strong>RULE</strong>
-						{{r.name}} : {{r.toStringExpression}}
+						{{r.name}} : {{r.toStringExpression}} 
 				</div>
 
 

@@ -5,7 +5,9 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
 <script
 	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-<script src="../js/ui-bootstrap-tpls-1.2.1.min.js"></script>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+<script src="js/ui-bootstrap-tpls-1.2.1.min.js"></script>
 </head>
 <body ng-app="specManager" ng-controller="specController">
 	<div class="container">
@@ -44,12 +46,10 @@
 								<span class="caret"></span>
 						</a>
 							<ul class="dropdown-menu" uib-dropdown-menu="uib-dropdown-menu">
-								<li><a href="#" ng-click="setModel('dataModel')">Data Model</a></li>
-								<li><a href="#" ng-click="setModel('conditionModel')">Condition
-										Model</a></li>
-								<li><a href="#" ng-click="setModel('goalModel')">Goal Model</a></li>
-								<li><a href="#" ng-click="setModel('activityModel')">Activity
-										Model</a></li>
+								<li><a href="#/data">Data Model</a></li>
+								<li><a href="#/condition">Condition Model</a></li>
+								<li><a href="#">Goal Model</a></li>
+								<li><a href="#/activity">Activity Model</a></li>
 							</ul></li>
 
 						<li class="dropdown" uib-dropdown="uib-dropdown"><a href="#"
@@ -69,23 +69,21 @@
 			<!-- /.container-fluid -->
 		</nav>
 
-		<div ng-switch="model">
-			<div ng-switch-when="dataModel">
-				<div ng-include="'/views/dataModel.html'"></div>
-			</div>
-			<div ng-switch-when="conditionModel">
-				<div ng-include="'/views/conditionModel.html'"></div>
-			</div>
-			<div ng-switch-when="goalModel">Goal Model</div>
-			<div ng-switch-when="activityModel">Activity Model</div>
-		</div>
+		<ng-view> </ng-view>
 
 	</div>
 
-	<script src="../js/specManager.js"></script>
-	<script src="../js/specController.js"></script>
-	<script src="../js/dataModelController.js"></script>
-	<script src="../js/conditionModelController.js"></script>
+	<script src="app/specManager.js"></script>
+
+	<script src="app/controllers/specController.js"></script>
+	<script src="app/controllers/dataModelController.js"></script>
+	<script src="app/controllers/conditionModelController.js"></script>
+	<script src="app/controllers/activityModelController.js"></script>
+
+	<script src="app/services/specRepository.js"></script>
+	<script src="app/services/dataRepository.js"></script>
+	<script src="app/services/conditionRepository.js"></script>
+	<script src="app/services/activityRepository.js"></script>
 
 </body>
 </html>

@@ -1,29 +1,29 @@
-app.controller('dataModelController', function($scope, $http) {
-	$http.get("specs/" + $scope.spec.specId + "/datamodel/entities").then(
+app.controller('dataModelController', function($scope,  dataRepository) {
+	dataRepository.getEntities($scope.spec.specId).then(
 			function(response) {
 				$scope.entities = response.data;
 			});
 
-	$http.get("specs/" + $scope.spec.specId + "/datamodel/attributes").then(
+	dataRepository.getAttributes($scope.spec.specId).then(
 			function(response) {
 				$scope.attributes = response.data;
 			});
 
-	$http.get("specs/" + $scope.spec.specId + "/datamodel/dependencies").then(
+	dataRepository.getDependencies($scope.spec.specId).then(
 			function(response) {
 				$scope.dependencies = response.data;
 			});
 
-	$http.get("specs/" + $scope.spec.specId + "/datamodel/rules").then(
+	dataRepository.getRules($scope.spec.specId).then(
 			function(response) {
 				$scope.rules = response.data;
 			});
 
-	$http.get("specs/" + $scope.spec.specId + "/datamodel/relations").then(
+	dataRepository.getRelations($scope.spec.specId).then(
 			function(response) {
 				$scope.relations = response.data;
 			});
-	
+
 	$scope.hasDependencies = function(productExtId) {
 		for (i = 0; i < $scope.dependencies.length; i++) { 
 		    if ($scope.dependencies[i].productExtId == productExtId)
