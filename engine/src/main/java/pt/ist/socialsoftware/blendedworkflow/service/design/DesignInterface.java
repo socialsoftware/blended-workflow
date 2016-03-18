@@ -33,6 +33,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityGraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
@@ -789,6 +790,12 @@ public class DesignInterface {
 		Task task = getTaskByName(spec, activityName);
 
 		return task.getSequenceConditionSet();
+	}
+
+	public ActivityGraphDTO getActivityGraph(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getTaskModel().getActivityGraph();
 	}
 
 	public void printSpecificationModels(String specId) {

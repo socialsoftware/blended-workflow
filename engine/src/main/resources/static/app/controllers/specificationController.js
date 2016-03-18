@@ -1,4 +1,4 @@
-app.controller('specController', function($scope, specRepository) {
+app.controller('SpecificationController', function($scope, specRepository) {
 	specRepository.getSpecifications().then(function(response) {
 		$scope.specs = response.data;
 	});

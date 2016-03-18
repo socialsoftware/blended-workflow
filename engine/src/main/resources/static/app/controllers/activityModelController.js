@@ -1,4 +1,4 @@
-app.controller('activityModelController', function($scope, activityRepository) {
+app.controller('ActivityModelController', function($scope, activityRepository) {
 	activityRepository.getActivities($scope.spec.specId).then(
 			function(response) {
 				$scope.activities = response.data;

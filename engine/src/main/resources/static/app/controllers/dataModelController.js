@@ -1,4 +1,4 @@
-app.controller('dataModelController', function($scope,  dataRepository) {
+app.controller('DataModelController', function($scope,  dataRepository) {
 	dataRepository.getEntities($scope.spec.specId).then(
 			function(response) {
 				$scope.entities = response.data;
