@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityGraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.EdgeDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.NodeDTO;
 
 public class TaskModel extends TaskModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(TaskModel.class);
@@ -366,6 +370,54 @@ public class TaskModel extends TaskModel_Base {
 		if (!allRules.isEmpty())
 			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
 					allRules.stream().map(r -> r.getName()).collect(Collectors.joining(",")));
+	}
+
+	public ActivityGraphDTO getActivityGraph() {
+		ActivityGraphDTO graph = new ActivityGraphDTO();
+
+		Map<Task, Set<Task>> dependencies = getTaskDependencies();
+
+		List<NodeDTO> nodes = new ArrayList<NodeDTO>();
+		for (Task task : dependencies.keySet()) {
+			String description = null;
+			if (!task.getPreConditionSet().isEmpty()) {
+				description = "PRE(" + task.getPreConditionSet().stream().map(d -> d.getPath().getValue())
+						.collect(Collectors.joining(",")) + ")";
+			}
+			if (!task.getSequenceConditionSet().isEmpty()) {
+				description = description + ", " + "SEQ(" + task.getSequenceConditionSet().stream()
+						.map(d -> d.getPath().getValue()).collect(Collectors.joining(",")) + ")";
+			}
+			if (!task.getPostConditionSet().isEmpty()) {
+				description = description + ", " + "POST(" + task.getPostConditionSet().stream()
+						.map(d -> d.getPath().getValue()).collect(Collectors.joining(",")) + ")";
+			}
+			if (!task.getMultiplicityInvariantSet().isEmpty()) {
+				description = description + ", " + "MUL("
+						+ task.getMultiplicityInvariantSet().stream().map(m -> m.getSourceEntity().getName() + "."
+								+ m.getTargetRolename() + "," + m.getTargetCardinality().name())
+								.collect(Collectors.joining(","))
+						+ ")";
+			}
+			if (!task.getRuleInvariantSet().isEmpty()) {
+				description = description + ", " + "RULE("
+						+ task.getRuleInvariantSet().stream().map(r -> r.getName()).collect(Collectors.joining(","))
+						+ ")";
+			}
+
+			nodes.add(new NodeDTO(task.getExternalId(), task.getName(), description));
+		}
+
+		List<EdgeDTO> edges = new ArrayList<EdgeDTO>();
+		for (Task task : dependencies.keySet()) {
+			dependencies.get(task).stream()
+					.forEach(t -> edges.add(new EdgeDTO(t.getExternalId(), task.getExternalId())));
+		}
+
+		graph.setNodes(nodes.stream().toArray(NodeDTO[]::new));
+		graph.setEdges(edges.stream().toArray(EdgeDTO[]::new));
+
+		return graph;
 	}
 
 	private ConditionModel getConditionModel() {

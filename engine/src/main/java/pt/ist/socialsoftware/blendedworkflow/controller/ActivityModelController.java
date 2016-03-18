@@ -26,6 +26,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityGraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
@@ -310,6 +311,17 @@ public class ActivityModelController {
 
 		return new ResponseEntity<DefPathConditionDTO[]>(
 				preConditionSet.stream().map(d -> d.getDTO(specId)).toArray(DefPathConditionDTO[]::new), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/activities/graph", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<ActivityGraphDTO> getActivityGraph(@PathVariable("specId") String specId) {
+		logger.debug("getActivityGraph specId:{}", specId);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		ActivityGraphDTO activityGraph = adi.getActivityGraph(specId);
+
+		return new ResponseEntity<ActivityGraphDTO>(activityGraph, HttpStatus.OK);
 	}
 
 }

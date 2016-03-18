@@ -1,4 +1,4 @@
-app.controller('conditionModelController', function($scope, conditionRepository) {
+app.controller('ConditionModelController', function($scope, conditionRepository) {
 	conditionRepository.getEntityAchieveConditions($scope.spec.specId).then(
 			function(response) {
 				$scope.entityachieveconditions = response.data;

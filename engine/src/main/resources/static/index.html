@@ -3,13 +3,15 @@
 <head>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
+<script src="http://d3js.org/d3.v2.js" charset="utf-8"></script>
+<script src="js/dagre-d3.min.js"></script>
 <script
 	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
 <script
 	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
 <script src="js/ui-bootstrap-tpls-1.2.1.min.js"></script>
 </head>
-<body ng-app="specManager" ng-controller="specController">
+<body ng-app="specManager" ng-controller="SpecificationController">
 	<div class="container">
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
@@ -22,7 +24,7 @@
 							class="icon-bar"></span> <span class="icon-bar"></span> <span
 							class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="/">Blended Workflow</a>
+					<a class="navbar-brand" href="#/">Blended Workflow</a>
 				</div>
 
 				<div class="collapse navbar-collapse"
@@ -40,7 +42,7 @@
 						<li><a href="#"> <strong>{{spec.name}}</strong>
 						</a></li>
 					</ul>
-					<ul class="nav navbar-nav navbar-right">
+					<ul class="nav navbar-nav navbar-right" ng-show="spec.name">
 						<li class="dropdown" uib-dropdown="uib-dropdown"><a href="#"
 							class="dropdown-toggle" uib-dropdown-toggle="uib-dropdown-toggle">Designer
 								<span class="caret"></span>
@@ -49,7 +51,10 @@
 								<li><a href="#/data">Data Model</a></li>
 								<li><a href="#/condition">Condition Model</a></li>
 								<li><a href="#">Goal Model</a></li>
-								<li><a href="#/activity">Activity Model</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="#/activitymodel">Activity Model</a></li>
+								<li><a href="#/activitygraph">Activity Graph</a></li>
+
 							</ul></li>
 
 						<li class="dropdown" uib-dropdown="uib-dropdown"><a href="#"
@@ -75,10 +80,13 @@
 
 	<script src="app/specManager.js"></script>
 
-	<script src="app/controllers/specController.js"></script>
+	<script src="app/controllers/specificationController.js"></script>
 	<script src="app/controllers/dataModelController.js"></script>
 	<script src="app/controllers/conditionModelController.js"></script>
 	<script src="app/controllers/activityModelController.js"></script>
+	<script src="app/controllers/activityGraphController.js"></script>
+	
+	<script src="app/directives/activityGraph.js"></script>
 
 	<script src="app/services/specRepository.js"></script>
 	<script src="app/services/dataRepository.js"></script>

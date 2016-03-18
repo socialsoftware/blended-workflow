@@ -1,0 +1,9 @@
+<link rel="stylesheet" type="text/css" href="../css/activityGraph.css"></link>
+<div class="container" ng-show="spec.name">
+	<div>
+		<strong><span title="BB">Activity Graph</span></strong> {{spec.name}} <br /> <br />
+		<div ng-if="activityGraph">
+			<div activity-graph activity-data="activityGraph"></div>
+		</div>
+	</div>
+</div>

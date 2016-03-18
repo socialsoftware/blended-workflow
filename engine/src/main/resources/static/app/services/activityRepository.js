@@ -6,27 +6,31 @@ app.factory('activityRepository', function($http) {
 		},
 		getPreConditions : function(spec, activity) {
 			var url = "specs/" + spec + "/activitymodel/activities/" + activity
-					+ "/pre"
+					+ "/pre";
 			return $http.get(url);
 		},
 		getSeqConditions : function(spec, activity) {
 			var url = "specs/" + spec + "/activitymodel/activities/" + activity
-					+ "/seq"
+					+ "/seq";
 			return $http.get(url);
 		},
 		getPostConditions : function(spec, activity) {
 			var url = "specs/" + spec + "/activitymodel/activities/" + activity
-					+ "/post"
+					+ "/post";
 			return $http.get(url);
 		},
 		getMulConditions : function(spec, activity) {
 			var url = "specs/" + spec + "/activitymodel/activities/" + activity
-					+ "/postmul"
+					+ "/postmul";
 			return $http.get(url);
 		},
 		getRuleConditions : function(spec, activity) {
 			var url = "specs/" + spec + "/activitymodel/activities/" + activity
-					+ "/postrule"
+					+ "/postrule";
+			return $http.get(url);
+		},
+		getActivityGraph : function(spec) {
+			var url = "specs/" + spec + "/activitymodel/activities/graph";
 			return $http.get(url);
 		}
 	};
