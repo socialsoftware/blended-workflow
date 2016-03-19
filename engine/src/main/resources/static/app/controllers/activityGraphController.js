@@ -1,7 +1,16 @@
 app
 .controller(
 		'ActivityGraphController',
-		function($scope, activityRepository) {
+		function($rootScope, $scope, $routeParams,
+				specRepository, activityRepository) {
+			
+			var specId = $routeParams.specId;
+			
+			specRepository.getSpecification(specId).then(
+					function(response) {
+						$rootScope.spec = response.data;
+					});
+
 			$scope.operations = {
 					availableOperations : [ {
 						id : 0,
@@ -44,7 +53,7 @@ app
 							$scope.activities.selectedActivity = $scope.activities.availableActivities[0];
 						});
 			};
-			$scope.readActivities($scope.spec.specId);
+			$scope.readActivities(specId);
 
 			$scope.readGraph = function(specId) {
 				activityRepository.getActivityGraph(specId).then(
@@ -53,7 +62,7 @@ app
 						});
 			};
 
-			$scope.readGraph($scope.spec.specId);
+			$scope.readGraph(specId);
 
 			$scope.activityNameInput = function() {
 				return ($scope.operations.selectedOperation.id >= 1 && $scope.operations.selectedOperation.id <= 3);
@@ -75,14 +84,14 @@ app
 				if ($scope.operations.selectedOperation.id == 1)
 					activityRepository
 					.renameActivity(
-							$scope.spec.specId,
+							specId,
 							$scope.activities.selectedActivity.name,
 							$scope.newActivityName)
 							.success(
 									function() {
 										$scope.status = 'Updated Activity! Refreshing.';
-										$scope.readActivities($scope.spec.specId);
-										$scope.readGraph($scope.spec.specId);
+										$scope.readActivities(specId);
+										$scope.readGraph(specId);
 									})
 									.error(
 											function(error) {

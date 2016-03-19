@@ -1,5 +1,13 @@
-app.controller('ActivityModelController', function($scope, activityRepository) {
-	activityRepository.getActivities($scope.spec.specId).then(
+app.controller('ActivityModelController', function($rootScope, $scope, $routeParams,
+		specRepository, activityRepository) {
+	var specId = $routeParams.specId;
+	
+	specRepository.getSpecification(specId).then(
+			function(response) {
+				$rootScope.spec = response.data;
+			});
+
+	activityRepository.getActivities(specId).then(
 			function(response) {
 				$scope.activities = response.data;
 			});
