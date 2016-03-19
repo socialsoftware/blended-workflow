@@ -1,7 +1,26 @@
 <link rel="stylesheet" type="text/css" href="../css/activityGraph.css"></link>
 <div class="container" ng-show="spec.name">
 	<div>
-		<strong><span title="BB">Activity Graph</span></strong> {{spec.name}} <br /> <br />
+		<h3>
+			<strong>Activity Graph</strong> {{spec.name}}
+		</h3>
+
+		<form class="form-inline" name="activityForm" novalidate="novalidate">
+			<select
+				ng-options="operation.name for operation in operations.availableOperations track by operation.id"
+				ng-model="operations.selectedOperation" class="btn btn-primary">
+			</select> <select name="activitySource" ng-show="operations.selectedOperation.id!=0"
+				ng-options="activity.name for activity in activities.availableActivities | orderBy:'name'"
+				ng-model="activities.selectedActivity" class="btn btn-primary">
+			</select> <input name="newActivity" ng-show="activityNameInput()" type="text" placeholder="Activity name"
+				ng-model="newActivityName" required></input>
+			<input class="btn btn-primary" ng-show="operations.selectedOperation.id!=0" type="submit" ng-click="submitForm()"
+				ng-disabled="activityForm.activitySource.$invalid || activityForm.newActivity.$invalid || !validForm()">
+		</form>
+
+
+		<br /> <br />
+
 		<div ng-if="activityGraph">
 			<div activity-graph activity-data="activityGraph"></div>
 		</div>

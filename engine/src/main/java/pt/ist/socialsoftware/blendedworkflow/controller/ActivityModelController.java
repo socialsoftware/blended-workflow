@@ -89,6 +89,18 @@ public class ActivityModelController {
 		return new ResponseEntity<ActivityDTO>(task.getDTO(), HttpStatus.CREATED);
 	}
 
+	@RequestMapping(value = "/activities/{activityName}/{newName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public ResponseEntity<Void> updateActivityName(@PathVariable("specId") String specId,
+			@PathVariable("activityName") String activityName, @PathVariable("newName") String newName) {
+		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		adi.updateActivityName(specId, activityName, newName);
+
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/activities", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<ActivityDTO[]> getActivitySet(@PathVariable("specId") String specId) {
 		logger.debug("getActivitySet specId:{}", specId);

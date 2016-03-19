@@ -32,6 +32,11 @@ app.factory('activityRepository', function($http) {
 		getActivityGraph : function(spec) {
 			var url = "specs/" + spec + "/activitymodel/activities/graph";
 			return $http.get(url);
+		},
+		renameActivity : function(spec, activity, activityName) {
+			var url = "specs/" + spec + "/activitymodel/activities/" + activity
+					+ "/" + activityName;
+			return $http.put(url);
 		}
 	};
 });

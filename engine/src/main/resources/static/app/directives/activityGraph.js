@@ -3,6 +3,8 @@ app.directive('activityGraph', function($window) {
 		restrict : 'EA',
 		template : "<svg width='960' height='600'></svg>",
 		link : function(scope, elem, attrs) {
+			scope.$watch(attrs.activityData, function(activityData) {
+
 			var dataToPlot = scope[attrs.activityData];
 
 			// Create the input graph
@@ -38,8 +40,11 @@ app.directive('activityGraph', function($window) {
 			var render = new dagreD3.render();
 
 			// Set up an SVG group so that we can translate the final graph.
-			var svg = d3.select("svg"), inner = svg.append("g");
-
+			d3.selectAll("svg > *").remove();
+			var svg = d3.select("svg");
+			
+			inner = svg.append("g");
+	
 			// Set up zoom support
 			var zoom = d3.behavior.zoom().on(
 					"zoom",
@@ -62,13 +67,13 @@ app.directive('activityGraph', function($window) {
 				return g.node(v).description
 			});
 
-
 			// Center the graph
 			// var initialScale = 0.75;
 			// zoom.translate(
 			// [ (svg.attr("width") - g.graph().width * initialScale) / 2,
 			// 20 ]).scale(initialScale).event(svg);
 			// svg.attr('height', g.graph().height * initialScale + 40);
+			});
 		}
 	};
 });

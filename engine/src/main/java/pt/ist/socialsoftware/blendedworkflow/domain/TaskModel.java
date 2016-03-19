@@ -379,11 +379,8 @@ public class TaskModel extends TaskModel_Base {
 
 		List<NodeDTO> nodes = new ArrayList<NodeDTO>();
 		for (Task task : dependencies.keySet()) {
-			String description = null;
-			if (!task.getPreConditionSet().isEmpty()) {
-				description = "PRE(" + task.getPreConditionSet().stream().map(d -> d.getPath().getValue())
-						.collect(Collectors.joining(",")) + ")";
-			}
+			String description = "PRE(" + task.getPreConditionSet().stream().map(d -> d.getPath().getValue())
+					.collect(Collectors.joining(",")) + ")";
 			if (!task.getSequenceConditionSet().isEmpty()) {
 				description = description + ", " + "SEQ(" + task.getSequenceConditionSet().stream()
 						.map(d -> d.getPath().getValue()).collect(Collectors.joining(",")) + ")";
@@ -396,7 +393,7 @@ public class TaskModel extends TaskModel_Base {
 				description = description + ", " + "MUL("
 						+ task.getMultiplicityInvariantSet().stream().map(m -> m.getSourceEntity().getName() + "."
 								+ m.getTargetRolename() + "," + m.getTargetCardinality().name())
-								.collect(Collectors.joining(","))
+								.collect(Collectors.joining(";"))
 						+ ")";
 			}
 			if (!task.getRuleInvariantSet().isEmpty()) {
