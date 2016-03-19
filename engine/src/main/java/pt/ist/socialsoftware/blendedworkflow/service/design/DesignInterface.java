@@ -635,6 +635,14 @@ public class DesignInterface {
 				getConditionSet(spec, request.getPostConditionSet()));
 	}
 
+	@Atomic(mode = TxMode.WRITE)
+	public void updateActivityName(String specId, String activityName, String newName) {
+		Specification spec = getSpecBySpecId(specId);
+		Task task = getTaskByName(spec, activityName);
+
+		task.setName(newName);
+	}
+
 	public Set<Task> getActivities(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 

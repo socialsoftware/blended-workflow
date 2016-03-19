@@ -18,7 +18,7 @@
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed"
-						data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+						data-toggle="collapse" data-target="#bs-navbar-collapse-1"
 						aria-expanded="false">
 						<span class="sr-only">Toggle navigation</span> <span
 							class="icon-bar"></span> <span class="icon-bar"></span> <span
@@ -28,7 +28,7 @@
 				</div>
 
 				<div class="collapse navbar-collapse"
-					id="bs-example-navbar-collapse-1">
+					id="bs-navbar-collapse-1">
 					<ul class="nav navbar-nav">
 						<li class="dropdown" uib-dropdown="uib-dropdown"><a href="#"
 							id="simple-dropdown" uib-dropdown-toggle="uib-dropdown-toggle">
@@ -48,12 +48,12 @@
 								<span class="caret"></span>
 						</a>
 							<ul class="dropdown-menu" uib-dropdown-menu="uib-dropdown-menu">
-								<li><a href="#/data">Data Model</a></li>
-								<li><a href="#/condition">Condition Model</a></li>
+								<li><a href="#/specs/{{spec.specId}}/datamodel">Data Model</a></li>
+								<li><a href="#/specs/{{spec.specId}}/conditionmodel">Condition Model</a></li>
 								<li><a href="#">Goal Model</a></li>
 								<li role="separator" class="divider"></li>
-								<li><a href="#/activitymodel">Activity Model</a></li>
-								<li><a href="#/activitygraph">Activity Graph</a></li>
+								<li><a href="#/specs/{{spec.specId}}/activitymodel">Activity Model</a></li>
+								<li><a href="#/specs/{{spec.specId}}/activitygraph">Activity Graph</a></li>
 
 							</ul></li>
 

@@ -3,16 +3,16 @@ var app = angular.module('specManager', [ 'ngRoute', 'ui.bootstrap' ]);
 app.config(function($routeProvider) {
 	$routeProvider.when("/", {
 		templateUrl : "views/home.html"
-	}).when("/data", {
+	}).when("/specs/:specId/datamodel", {
 		templateUrl : "views/dataModel.html",
 		controller : "DataModelController"
-	}).when("/condition", {
+	}).when("/specs/:specId/conditionmodel", {
 		templateUrl : "views/conditionModel.html",
 		controller : "ConditionModelController"
-	}).when("/activitymodel", {
+	}).when("/specs/:specId/activitymodel", {
 		templateUrl : "views/activityModel.html",
 		controller : "ActivityModelController"
-	}).when("/activitygraph", {
+	}).when("/specs/:specId/activitygraph", {
 		templateUrl : "views/activityGraph.html",
 		controller : "ActivityGraphController"
 	}).otherwise({
