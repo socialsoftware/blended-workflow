@@ -224,7 +224,9 @@ public class TaskModel extends TaskModel_Base {
 
 			if (taskDependencies.get(tasks.get(0)).contains(tasks.get(1))
 					&& taskDependencies.get(tasks.get(1)).contains(tasks.get(0))) {
-				assert false : "there is already a circularity when applying multiplicities to the task model";
+				// it can occur when a merge or a split is tried
+				throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY,
+						tasks.get(0).getName() + "--" + tasks.get(1).getName());
 			} else if (taskDependencies.get(tasks.get(0)).contains(tasks.get(1))) {
 				tasks.get(0).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
 				addPreConditionsDueToMulConditions(tasks.get(0), relation);

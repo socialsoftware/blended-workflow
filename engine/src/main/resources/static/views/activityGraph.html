@@ -5,20 +5,31 @@
 			<strong>Activity Graph</strong> {{spec.name}}
 		</h3>
 
-		<form class="form-inline" name="activityForm" novalidate="novalidate">
-			<select
-				ng-options="operation.name for operation in operations.availableOperations track by operation.id"
-				ng-model="operations.selectedOperation" class="btn btn-primary">
-			</select> <select name="activitySource" ng-show="operations.selectedOperation.id!=0"
-				ng-options="activity.name for activity in activities.availableActivities | orderBy:'name'"
-				ng-model="activities.selectedActivity" class="btn btn-primary">
-			</select> <input name="newActivity" ng-show="activityNameInput()" type="text" placeholder="Activity name"
-				ng-model="newActivityName" required></input>
-			<input class="btn btn-primary" ng-show="operations.selectedOperation.id!=0" type="submit" ng-click="submitForm()"
-				ng-disabled="activityForm.activitySource.$invalid || activityForm.newActivity.$invalid || !validForm()">
-		</form>
-
-
+		<div class="container">
+			<form class="form-inline" name="activityForm" novalidate="novalidate">
+				<select class="btn btn-primary form-control"
+					ng-options="operation.name for operation in operations.availableOperations track by operation.id"
+					ng-model="operations.selectedOperation">
+				</select> <select name="activitySourceOne"
+					class="btn btn-primary form-control"
+					ng-show="operations.selectedOperation.id!=0"
+					ng-options="activity.name for activity in activitiesOne.availableActivities | orderBy:'name'"
+					ng-model="activitiesOne.selectedActivity">
+				</select> <select name="activitySourceTwo"
+					class="btn btn-primary form-control"
+					ng-show="activitiesTwoSelect()"
+					ng-options="activity.name for activity in activitiesTwo.availableActivities | orderBy:'name'"
+					ng-model="activitiesTwo.selectedActivity">
+				</select> <input name="newActivity" ng-show="activityNameInput()" type="text"
+					class="form-control" placeholder="New activity name"
+					ng-model="newActivityName" required></input> <input
+					class="btn btn-primary"
+					ng-show="operations.selectedOperation.id!=0" type="submit"
+					ng-click="submitForm()"
+					ng-disabled="activityForm.activitySource.$invalid || activityForm.newActivity.$invalid || !validForm()">
+				</input>
+			</form>
+		</div>
 		<br /> <br />
 
 		<div ng-if="activityGraph">

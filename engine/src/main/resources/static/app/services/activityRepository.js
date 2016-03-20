@@ -37,6 +37,14 @@ app.factory('activityRepository', function($http) {
 			var url = "specs/" + spec + "/activitymodel/activities/" + activity
 					+ "/" + activityName;
 			return $http.put(url);
+		},
+		mergeActivities : function(spec, activityOne, activityTwo,
+				newActivityName) {
+			var url = "specs/" + spec
+					+ "/activitymodel/activities/merge?activityNameOne="
+					+ activityOne + "&activityNameTwo=" + activityTwo
+					+ "&newActivityName=" + newActivityName;
+			return $http.post(url);
 		}
 	};
 });

@@ -1,7 +1,7 @@
 app.directive('activityGraph', function($window) {
 	return {
 		restrict : 'EA',
-		template : "<svg width='960' height='600'></svg>",
+		template : "<svg width='960' height='900'></svg>",
 		link : function(scope, elem, attrs) {
 			scope.$watch(attrs.activityData, function(activityData) {
 
