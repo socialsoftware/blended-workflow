@@ -1,4 +1,4 @@
-var app = angular.module('specManager', [ 'ngRoute', 'ui.bootstrap' ]);
+var app = angular.module('specManager', [ 'ngRoute', 'ui.bootstrap']);
 
 app.config(function($routeProvider) {
 	$routeProvider.when("/", {

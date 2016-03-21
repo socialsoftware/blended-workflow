@@ -79,8 +79,9 @@ public class ActivityModelController {
 	@RequestMapping(value = "/activities/add", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<ActivityDTO> addActivity(@PathVariable("specId") String specId,
 			@RequestBody AddActivityReq request) {
-		logger.debug("addActivity specId:{}, name:{}, description:{}", specId, request.getActivityName(),
-				request.getDescription());
+		logger.debug("addActivity specId:{}, name:{}, description:{}, postConditions:{}", specId,
+				request.getActivityName(), request.getDescription(),
+				request.getPostConditionSet().stream().map(d -> d.getPath()).collect(Collectors.joining(",")));
 
 		DesignInterface adi = DesignInterface.getInstance();
 
@@ -273,16 +274,13 @@ public class ActivityModelController {
 			@RequestBody ExtractActivityReq request) {
 		logger.debug("extractActivity specId:{}, newActivityName:{}, sourceActivityName:{}, entDefs:{}, attDefs:{}",
 				specId, request.getNewActivityName(), request.getSourceActivityName(),
-				request.getSuccessCondition().getDefEnts().stream().map((def) -> def.getEntityName())
-						.collect(Collectors.joining(",")),
-				request.getSuccessCondition().getDefAtts().stream().map((def) -> def.getPath())
-						.collect(Collectors.joining("|")));
+				request.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
 
 		DesignInterface adi = DesignInterface.getInstance();
 
 		Task task = adi.extractActivity(specId, request.getNewActivityName(),
 				"splitted from activity " + request.getSourceActivityName(), request.getSourceActivityName(),
-				request.getSuccessCondition());
+				request.getSuccessConditions());
 
 		return new ResponseEntity<ActivityDTO>(task.getDTO(), HttpStatus.CREATED);
 	}

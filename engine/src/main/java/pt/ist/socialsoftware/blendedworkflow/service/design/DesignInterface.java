@@ -37,7 +37,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityGraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
@@ -600,7 +600,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public Goal extractChildGoal(String specId, String newGoalName, String sourceGoalName,
-			DefProductConditionSetDTO successConditionDTO) {
+			Set<DefPathConditionDTO> successConditionDTO) {
 		Specification spec = getSpecBySpecId(specId);
 		Goal parentGoal = getGoalByName(spec, sourceGoalName);
 
@@ -611,7 +611,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public Goal extractSiblingGoal(String specId, String newGoalName, String sourceGoalName,
-			DefProductConditionSetDTO successConditionDTO) {
+			Set<DefPathConditionDTO> successConditionDTO) {
 		Specification spec = getSpecBySpecId(specId);
 		Goal sourceGoal = getGoalByName(spec, sourceGoalName);
 
@@ -763,7 +763,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public Task extractActivity(String specId, String newActivityName, String description, String sourceActivityName,
-			DefProductConditionSetDTO successCondition) {
+			Set<DefPathConditionDTO> successCondition) {
 		Specification spec = getSpecBySpecId(specId);
 		Task task = getTaskByName(spec, sourceActivityName);
 
@@ -955,14 +955,20 @@ public class DesignInterface {
 		return MulCondition.getMulCondition(relation, rolename);
 	}
 
-	private Set<DefProductCondition> getConditionSet(Specification spec, DefProductConditionSetDTO defConditionSetDTO) {
-		Set<DefProductCondition> conditions = defConditionSetDTO.getDefEnts().stream()
-				.map((def) -> DefEntityCondition
-						.getDefEntity(getEntityByName(spec.getDataModel(), def.getEntityName())))
-				.collect(Collectors.toSet());
-
-		conditions.addAll(defConditionSetDTO.getDefAtts().stream()
-				.map((def) -> DefAttributeCondition.getDefAttribute(spec, def.getPath())).collect(Collectors.toSet()));
+	private Set<DefProductCondition> getConditionSet(Specification spec, Set<DefPathConditionDTO> defConditionSetDTO) {
+		Set<DefProductCondition> conditions = new HashSet<DefProductCondition>();
+		for (DefPathConditionDTO defPathCondition : defConditionSetDTO) {
+			if (spec.getDataModel().getTargetOfPath(defPathCondition.getPath()).getProductType()
+					.equals(ProductType.ENTITY)) {
+				conditions.add(DefEntityCondition
+						.getDefEntity(getEntityByName(spec.getDataModel(), defPathCondition.getPath())));
+			} else if (spec.getDataModel().getTargetOfPath(defPathCondition.getPath()).getProductType()
+					.equals(ProductType.ATTRIBUTE)) {
+				conditions.add(DefAttributeCondition.getDefAttribute(spec, defPathCondition.getPath()));
+			} else {
+				assert false : "error in path";
+			}
+		}
 
 		return conditions;
 	}

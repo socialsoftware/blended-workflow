@@ -12,9 +12,7 @@ import org.blended.common.common.MandatoryAttributeAchieveCondition;
 import org.blended.common.common.NotMandatoryAttributeAchieveCondition;
 import org.blended.common.common.Nothing;
 import org.blended.common.repository.CommonInterface;
-import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
-import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
-import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
+import org.blended.common.repository.resttemplate.dto.DefPathConditionDTO;
 import org.blended.common.repository.resttemplate.dto.GoalDTO;
 import org.blended.common.utils.ConsoleManagement;
 import org.blended.common.utils.ValueException;
@@ -84,28 +82,24 @@ public class ManageSplit {
 				+ goalDTO.getName() + " (" + type + ")");
 	}
 
-	private static DefProductConditionSetDTO getDefProductConditionSet(Goal goal, String specId,
+	private static Set<DefPathConditionDTO> getDefProductConditionSet(Goal goal, String specId,
 			List<String> successConditionsToSplit) {
-		Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
-		Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
+		Set<DefPathConditionDTO> defs = new HashSet<DefPathConditionDTO>();
 
 		for (String condition : successConditionsToSplit) {
 			EObject eo = getGoalSuccessCondition(goal, condition);
 			if (eo instanceof EntityAchieveCondition) {
-				defEnts.add(new DefEntityConditionDTO(specId, ((EntityAchieveCondition) eo).getName()));
+				defs.add(new DefPathConditionDTO(specId, ((EntityAchieveCondition) eo).getName()));
 			} else if (eo instanceof MandatoryAttributeAchieveCondition) {
-				defAtts.add(new DefAttributeConditionDTO(specId,
-						((MandatoryAttributeAchieveCondition) eo).getAttribute(), true));
+				defs.add(new DefPathConditionDTO(specId, ((MandatoryAttributeAchieveCondition) eo).getAttribute()));
 			} else if (eo instanceof NotMandatoryAttributeAchieveCondition) {
-				defAtts.add(new DefAttributeConditionDTO(specId,
-						((NotMandatoryAttributeAchieveCondition) eo).getAttribute(), false));
+				defs.add(new DefPathConditionDTO(specId, ((NotMandatoryAttributeAchieveCondition) eo).getAttribute()));
 			} else {
 				assert false;
 			}
 		}
 
-		DefProductConditionSetDTO defProductConditionSetDTO = new DefProductConditionSetDTO(defEnts, defAtts);
-		return defProductConditionSetDTO;
+		return defs;
 	}
 
 	private static Type getType(String type) {
