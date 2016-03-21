@@ -7,20 +7,35 @@
 
 		<div class="container">
 			<form class="form-inline" name="activityForm" novalidate="novalidate">
+				<!-- operation select -->
 				<select class="btn btn-primary form-control"
 					ng-options="operation.name for operation in operations.availableOperations track by operation.id"
 					ng-model="operations.selectedOperation">
-				</select> <select name="activitySourceOne"
+				</select>
+				<!-- first activity select -->
+				<select name="activitySourceOne"
 					class="btn btn-primary form-control"
 					ng-show="operations.selectedOperation.id!=0"
 					ng-options="activity.name for activity in activitiesOne.availableActivities | orderBy:'name'"
-					ng-model="activitiesOne.selectedActivity">
-				</select> <select name="activitySourceTwo"
+					ng-model="activitiesOne.selectedActivity"
+					ng-change="readActivityPostConditions(spec.specId,activitiesOne.selectedActivity.name)">
+				</select> 
+				<!-- second activity select -->
+				<select name="activitySourceTwo"
 					class="btn btn-primary form-control"
 					ng-show="activitiesTwoSelect()"
 					ng-options="activity.name for activity in activitiesTwo.availableActivities | orderBy:'name'"
 					ng-model="activitiesTwo.selectedActivity">
-				</select> <input name="newActivity" ng-show="activityNameInput()" type="text"
+				</select> 
+				<!-- post conditions of first activity select -->
+				<select name="activityPostConditions"
+					class="btn form-control"
+					ng-show="activitiesPostConditionsSelect()"
+					ng-options="post.path for post in activityPosConditions.availablePostConditions | orderBy:'path'"
+					ng-model="activityPosConditions.selectedPostConditions" multiple>
+				</select> 
+				<!-- new activity name -->
+				<input name="newActivity" ng-show="activityNameInput()" type="text"
 					class="form-control" placeholder="New activity name"
 					ng-model="newActivityName" required></input> <input
 					class="btn btn-primary"

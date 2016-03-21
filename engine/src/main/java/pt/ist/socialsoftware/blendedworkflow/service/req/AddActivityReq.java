@@ -1,40 +1,42 @@
 package pt.ist.socialsoftware.blendedworkflow.service.req;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AddActivityReq {
-    private String activityName;
-    private String description;
-    private DefProductConditionSetDTO postConditionSet;
+	private String activityName;
+	private String description;
+	private Set<DefPathConditionDTO> postConditionSet;
 
-    public AddActivityReq() {
-    }
+	public AddActivityReq() {
+	}
 
-    public String getActivityName() {
-        return activityName;
-    }
+	public String getActivityName() {
+		return activityName;
+	}
 
-    public void setActivityName(String activityName) {
-        this.activityName = activityName;
-    }
+	public void setActivityName(String activityName) {
+		this.activityName = activityName;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public DefProductConditionSetDTO getPostConditionSet() {
-        return postConditionSet;
-    }
+	public Set<DefPathConditionDTO> getPostConditionSet() {
+		return postConditionSet;
+	}
 
-    public void setPostConditionSet(DefProductConditionSetDTO postConditionSet) {
-        this.postConditionSet = postConditionSet;
-    }
+	public void setPostConditionSet(Set<DefPathConditionDTO> postConditionSet) {
+		this.postConditionSet = postConditionSet;
+	}
 
 }

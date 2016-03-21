@@ -64,6 +64,30 @@ app
 					};
 					$scope.readActivities(specId);
 
+					$scope.activityPosConditions = {
+						availablePostConditions : [ {
+							path : '--- Post Conditions ---'
+						} ],
+						selectedPostConditions : []
+					};
+
+					$scope.readActivityPostConditions = function(specId,
+							activity) {
+						activityRepository
+								.getPostConditions(specId, activity)
+								.then(
+										function(response) {
+											$scope.activityPosConditions = {
+												availablePostConditions : []
+														.concat(
+																response.data.defAtts)
+														.concat(
+																response.data.defEnts),
+												selectedPostConditions : []
+											};
+										});
+					};
+
 					$scope.readGraph = function(specId) {
 						activityRepository.getActivityGraph(specId).then(
 								function(response) {
@@ -82,6 +106,12 @@ app
 					$scope.activitiesTwoSelect = function() {
 						// merge operation
 						return ($scope.operations.selectedOperation.id == 2);
+
+					};
+
+					$scope.activitiesPostConditionsSelect = function() {
+						// split operation
+						return ($scope.operations.selectedOperation.id == 3);
 
 					};
 
@@ -112,6 +142,13 @@ app
 							for (i = 0; i < $scope.activitiesTwo.availableActivities.length; i++)
 								if ($scope.activitiesTwo.selectedActivity.name == $scope.activitiesOne.selectedActivity.name)
 									return false;
+						}
+
+						// split operation
+						if ($scope.operations.selectedOperation.id == 3) {
+							if ($scope.activityPosConditions.selectedPostConditions.length < 1
+									|| $scope.activityPosConditions.selectedPostConditions.length == $scope.activityPosConditions.availablePostConditions.length)
+								return false;
 						}
 
 						return true;
@@ -147,6 +184,18 @@ app
 									});
 							break;
 						case 3: // split
+							activityRepository.splitActivity(specId,
+									$scope.activitiesOne.selectedActivity.name,
+									$scope.activityPosConditions.selectedPostConditions,
+									$scope.newActivityName).then(
+											function(ressponse) {
+												$scope.readActivities(specId);
+												$scope.readGraph(specId);
+											},
+											function(response) {
+												alert(response.data.type + '('
+														+ response.data.value + ')');												
+											});
 							break;
 						case 4: // add sequence
 							break;

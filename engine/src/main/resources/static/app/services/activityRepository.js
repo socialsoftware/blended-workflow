@@ -45,6 +45,15 @@ app.factory('activityRepository', function($http) {
 					+ activityOne + "&activityNameTwo=" + activityTwo
 					+ "&newActivityName=" + newActivityName;
 			return $http.post(url);
+		},
+		splitActivity : function(spec, activity, postConditions, newActivityName) {
+			var url = "specs/" + spec
+			+ "/activitymodel/activities/extract";
+			return $http.post(url, {
+				"sourceActivityName" : activity,
+				"newActivityName" :  newActivityName,
+				"successConditions" : postConditions
+			});
 		}
 	};
 });

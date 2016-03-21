@@ -13,6 +13,11 @@ public class DefPathConditionDTO {
 	public DefPathConditionDTO() {
 	};
 
+	public DefPathConditionDTO(String specId, String path) {
+		this.specId = specId;
+		this.path = path;
+	};
+
 	public PathDefinition buildPathDefinition() {
 		CommonFactory factory = CommonFactory.eINSTANCE;
 

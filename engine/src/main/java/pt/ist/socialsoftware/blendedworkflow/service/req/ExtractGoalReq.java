@@ -1,40 +1,42 @@
 package pt.ist.socialsoftware.blendedworkflow.service.req;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtractGoalReq {
-    private String newGoalName;
-    private String sourceGoalName;
-    private DefProductConditionSetDTO successCondition;
+	private String newGoalName;
+	private String sourceGoalName;
+	private Set<DefPathConditionDTO> successConditions;
 
-    public ExtractGoalReq() {
-    }
+	public ExtractGoalReq() {
+	}
 
-    public String getNewGoalName() {
-        return newGoalName;
-    }
+	public String getNewGoalName() {
+		return newGoalName;
+	}
 
-    public void setNewGoalName(String newGoalName) {
-        this.newGoalName = newGoalName;
-    }
+	public void setNewGoalName(String newGoalName) {
+		this.newGoalName = newGoalName;
+	}
 
-    public String getSourceGoalName() {
-        return sourceGoalName;
-    }
+	public String getSourceGoalName() {
+		return sourceGoalName;
+	}
 
-    public void setSourceGoalName(String sourceGoalName) {
-        this.sourceGoalName = sourceGoalName;
-    }
+	public void setSourceGoalName(String sourceGoalName) {
+		this.sourceGoalName = sourceGoalName;
+	}
 
-    public DefProductConditionSetDTO getSuccessCondition() {
-        return successCondition;
-    }
+	public Set<DefPathConditionDTO> getSuccessConditions() {
+		return successConditions;
+	}
 
-    public void setSuccessCondition(DefProductConditionSetDTO successCondition) {
-        this.successCondition = successCondition;
-    }
+	public void setSuccessConditions(Set<DefPathConditionDTO> successConditions) {
+		this.successConditions = successConditions;
+	}
 
 }

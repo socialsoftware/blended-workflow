@@ -1,6 +1,8 @@
 package org.blended.common.repository.resttemplate.req;
 
-import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
+import java.util.Set;
+
+import org.blended.common.repository.resttemplate.dto.DefPathConditionDTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -8,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class ExtractActivityReq {
 	private String newActivityName;
 	private String sourceActivityName;
-	private DefProductConditionSetDTO successCondition;
+	private Set<DefPathConditionDTO> successConditions;
 
 	public ExtractActivityReq() {
 	}
@@ -29,11 +31,11 @@ public class ExtractActivityReq {
 		this.sourceActivityName = sourceActivityName;
 	}
 
-	public DefProductConditionSetDTO getSuccessCondition() {
-		return successCondition;
+	public Set<DefPathConditionDTO> getSuccessConditions() {
+		return successConditions;
 	}
 
-	public void setSuccessCondition(DefProductConditionSetDTO successCondition) {
-		this.successCondition = successCondition;
+	public void setSuccessConditions(Set<DefPathConditionDTO> successConditions) {
+		this.successConditions = successConditions;
 	}
 }

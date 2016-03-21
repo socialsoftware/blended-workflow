@@ -277,17 +277,14 @@ public class GoalModelController {
 	@RequestMapping(value = "/goals/extractchild", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> extractChildGoal(@PathVariable("specId") String specId,
 			@RequestBody ExtractGoalReq req) {
-		log.debug("extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defEnts:{}, defAtts:{}", specId,
+		log.debug("extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
 				req.getNewGoalName(), req.getSourceGoalName(),
-				req.getSuccessCondition().getDefEnts().stream().map((def) -> def.getEntityName())
-						.collect(Collectors.joining(",")),
-				req.getSuccessCondition().getDefAtts().stream().map((def) -> def.getPath())
-						.collect(Collectors.joining("|")));
+				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
 
 		DesignInterface adi = DesignInterface.getInstance();
 
 		Goal goal = adi.extractChildGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
-				req.getSuccessCondition());
+				req.getSuccessConditions());
 
 		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
 	}
@@ -295,17 +292,14 @@ public class GoalModelController {
 	@RequestMapping(value = "/goals/extractsibling", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> extractSiblingGoal(@PathVariable("specId") String specId,
 			@RequestBody ExtractGoalReq req) {
-		log.debug("extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defEnts:{}, defAtts:{}", specId,
+		log.debug("extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
 				req.getNewGoalName(), req.getSourceGoalName(),
-				req.getSuccessCondition().getDefEnts().stream().map((def) -> def.getEntityName())
-						.collect(Collectors.joining(",")),
-				req.getSuccessCondition().getDefAtts().stream().map((def) -> def.getPath())
-						.collect(Collectors.joining("|")));
+				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
 
 		DesignInterface adi = DesignInterface.getInstance();
 
 		Goal goal = adi.extractSiblingGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
-				req.getSuccessCondition());
+				req.getSuccessConditions());
 
 		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
 	}

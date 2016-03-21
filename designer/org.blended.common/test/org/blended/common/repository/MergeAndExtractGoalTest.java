@@ -13,7 +13,6 @@ import org.blended.common.repository.resttemplate.dto.AttributeDTO;
 import org.blended.common.repository.resttemplate.dto.DefAttributeConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefEntityConditionDTO;
 import org.blended.common.repository.resttemplate.dto.DefPathConditionDTO;
-import org.blended.common.repository.resttemplate.dto.DefProductConditionSetDTO;
 import org.blended.common.repository.resttemplate.dto.DependenceDTO;
 import org.blended.common.repository.resttemplate.dto.EntityDTO;
 import org.blended.common.repository.resttemplate.dto.ExpressionDTO;
@@ -229,14 +228,10 @@ public class MergeAndExtractGoalTest {
 
 		// extract childOne from parent: after there are 3 goals Top, goalOne
 		// and goalTwoOne
-		Set<DefEntityConditionDTO> defEnts = new HashSet<DefEntityConditionDTO>();
+		Set<DefPathConditionDTO> successConditions = new HashSet<DefPathConditionDTO>();
+		successConditions.add(new DefPathConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_ONE));
 
-		Set<DefAttributeConditionDTO> defAtts = new HashSet<DefAttributeConditionDTO>();
-		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_ONE));
-
-		DefProductConditionSetDTO successCondition = new DefProductConditionSetDTO(defEnts, defAtts);
-
-		goalDTO = ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_ONE, TOP_GOAL, successCondition);
+		goalDTO = ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_ONE, TOP_GOAL, successConditions);
 
 		// get super goal
 		parentGoalDTO = ci.getParentGoal(TEST_SPEC_ID, goalDTO.getName());
@@ -273,24 +268,19 @@ public class MergeAndExtractGoalTest {
 		ci.mergeGoals(TEST_SPEC_ID, TOP_GOAL, SUB_GOAL_TWO_ONE, TOP_GOAL);
 
 		// extract childTwo + childTwoOne from parent
-		defEnts.clear();
-		defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
+		successConditions.clear();
+		successConditions.add(new DefPathConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
+		successConditions.add(new DefPathConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_TWO));
+		successConditions.add(new DefPathConditionDTO(TEST_SPEC_ID, ENTITY_TWO + "." + ATT_THREE));
 
-		defAtts.clear();
-		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_ONE + "." + ATT_TWO));
-		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_TWO + "." + ATT_THREE));
-
-		ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_TWO, TOP_GOAL, new DefProductConditionSetDTO(defEnts, defAtts));
+		ci.extractChildGoal(TEST_SPEC_ID, SUB_GOAL_TWO, TOP_GOAL, successConditions);
 
 		// extract childThree from childTwo
-		defEnts.clear();
-		defEnts.add(new DefEntityConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
+		successConditions.clear();
+		successConditions.add(new DefPathConditionDTO(TEST_SPEC_ID, ENTITY_TWO));
+		successConditions.add(new DefPathConditionDTO(TEST_SPEC_ID, ENTITY_TWO + "." + ATT_THREE));
 
-		defAtts.clear();
-		defAtts.add(new DefAttributeConditionDTO(TEST_SPEC_ID, ENTITY_TWO + "." + ATT_THREE));
-
-		goalDTO = ci.extractSiblingGoal(TEST_SPEC_ID, SUB_GOAL_THREE, SUB_GOAL_TWO,
-				new DefProductConditionSetDTO(defEnts, defAtts));
+		goalDTO = ci.extractSiblingGoal(TEST_SPEC_ID, SUB_GOAL_THREE, SUB_GOAL_TWO, successConditions);
 		assertEquals(SUB_GOAL_THREE, goalDTO.getName());
 
 		// get super goal

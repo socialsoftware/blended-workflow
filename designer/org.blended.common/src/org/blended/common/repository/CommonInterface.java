@@ -812,12 +812,9 @@ public class CommonInterface {
 	}
 
 	public GoalDTO extractChildGoal(String specId, String newGoalName, String sourceGoalName,
-			DefProductConditionSetDTO successCondition) {
-		logger.debug("extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}", specId,
-				newGoalName, sourceGoalName,
-				successCondition.getDefEnts().stream().map((def) -> def.getEntityName())
-						.collect(Collectors.joining(",")),
-				successCondition.getDefAtts().stream().map((def) -> def.getPath()).collect(Collectors.joining(",")));
+			Set<DefPathConditionDTO> successCondition) {
+		logger.debug("extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId, newGoalName,
+				sourceGoalName, successCondition.stream().map((def) -> def.getPath()).collect(Collectors.joining(",")));
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/extractchild";
 
@@ -834,12 +831,9 @@ public class CommonInterface {
 	}
 
 	public GoalDTO extractSiblingGoal(String specId, String newGoalName, String sourceGoalName,
-			DefProductConditionSetDTO successCondition) {
-		logger.debug("extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, entDefs:{}, attDefs:{}", specId,
-				newGoalName, sourceGoalName,
-				successCondition.getDefEnts().stream().map((def) -> def.getEntityName())
-						.collect(Collectors.joining(",")),
-				successCondition.getDefAtts().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
+			Set<DefPathConditionDTO> successCondition) {
+		logger.debug("extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId, newGoalName,
+				sourceGoalName, successCondition.stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/extractsibling";
 
@@ -1094,12 +1088,10 @@ public class CommonInterface {
 	}
 
 	public ActivityDTO extractActivity(String specId, String newActivityName, String sourceActivityName,
-			DefProductConditionSetDTO successCondition) {
-		logger.debug("extractActivity specId:{}, newActivityName:{}, sourceActivityName:{}, entDefs:{}, attDefs:{}",
-				specId, newActivityName, sourceActivityName,
-				successCondition.getDefEnts().stream().map((def) -> def.getEntityName())
-						.collect(Collectors.joining(",")),
-				successCondition.getDefAtts().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
+			Set<DefPathConditionDTO> successConditions) {
+		logger.debug("extractActivity specId:{}, newActivityName:{}, sourceActivityName:{}, defs:{}", specId,
+				newActivityName, sourceActivityName,
+				successConditions.stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/extract";
 
@@ -1109,7 +1101,7 @@ public class CommonInterface {
 		ExtractActivityReq req = new ExtractActivityReq();
 		req.setNewActivityName(newActivityName);
 		req.setSourceActivityName(sourceActivityName);
-		req.setSuccessCondition(successCondition);
+		req.setSuccessConditions(successConditions);
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
 		return restTemplate.postForObject(uri, req, ActivityDTO.class, params);
