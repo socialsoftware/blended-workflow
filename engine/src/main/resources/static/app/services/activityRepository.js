@@ -54,6 +54,21 @@ app.factory('activityRepository', function($http) {
 				"newActivityName" :  newActivityName,
 				"successConditions" : postConditions
 			});
+		},
+		addSequenceCondition : function(spec, activity, path) {
+			var url = "specs/" + spec
+			+ "/activitymodel/activities/" + activity + "/seq/add";
+			return $http.post(url, path);
+		},
+		remSequenceCondition : function(spec, activity, path) {
+			var url = "specs/" + spec
+			+ "/activitymodel/activities/" + activity + "/seq/rem";
+			return $http.post(url, path);
+		},
+		getSeqConditions : function(spec, activity) {
+			var url = "specs/" + spec
+			+ "/activitymodel/activities/" + activity + "/seq";
+			return $http.get(url);
 		}
 	};
 });

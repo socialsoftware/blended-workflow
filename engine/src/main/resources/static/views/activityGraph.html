@@ -18,30 +18,39 @@
 					ng-show="operations.selectedOperation.id!=0"
 					ng-options="activity.name for activity in activitiesOne.availableActivities | orderBy:'name'"
 					ng-model="activitiesOne.selectedActivity"
-					ng-change="readActivityPostConditions(spec.specId,activitiesOne.selectedActivity.name)">
-				</select> 
+					ng-change="updateSelects(spec.specId,activitiesOne.selectedActivity.name)">
+				</select>
 				<!-- second activity select -->
 				<select name="activitySourceTwo"
 					class="btn btn-primary form-control"
 					ng-show="activitiesTwoSelect()"
 					ng-options="activity.name for activity in activitiesTwo.availableActivities | orderBy:'name'"
 					ng-model="activitiesTwo.selectedActivity">
-				</select> 
+				</select>
 				<!-- post conditions of first activity select -->
-				<select name="activityPostConditions"
-					class="btn form-control"
+				<select name="activityPostConditions" class="btn form-control"
 					ng-show="activitiesPostConditionsSelect()"
-					ng-options="post.path for post in activityPosConditions.availablePostConditions | orderBy:'path'"
-					ng-model="activityPosConditions.selectedPostConditions" multiple>
-				</select> 
+					ng-options="post.path for post in activityPostConditions.availablePostConditions | orderBy:'path'"
+					ng-model="activityPostConditions.selectedPostConditions" multiple>
+				</select>
 				<!-- new activity name -->
 				<input name="newActivity" ng-show="activityNameInput()" type="text"
 					class="form-control" placeholder="New activity name"
-					ng-model="newActivityName" required></input> <input
-					class="btn btn-primary"
-					ng-show="operations.selectedOperation.id!=0" type="submit"
-					ng-click="submitForm()"
-					ng-disabled="activityForm.activitySource.$invalid || activityForm.newActivity.$invalid || !validForm()">
+					ng-model="newActivityName" required></input>
+				<!-- add sequence condition -->
+				<input name="sequenceConditionToAdd" ng-show="sequenceConditionInput()"
+					type="text" class="form-control" placeholder="Sequence condition"
+					ng-model="sequenceConditionToAdd" required></input>
+				<!-- remove sequence condition -->
+				<select name="sequenceConditionToRemove" class="btn btn-primary form-control"
+					ng-show="removeSequenceConditionSelect()"
+					ng-options="seq.path for seq in activitySeqConditions.availableSeqConditions | orderBy:'path'"
+					ng-model="activitySeqConditions.selectedSeqCondition">
+				</select>
+				<!-- submit form  -->
+				<input ng-show="operations.selectedOperation.id!=0" type="submit"
+					class="btn btn-primary" ng-click="submitForm()"
+					ng-disabled="activityForm.activitySource.$invalid || (activityNameInput() && activityForm.newActivity.$invalid) || (sequenceConditionInput() && activityForm.sequenceConditionToAdd.$invalid) || !validForm()">
 				</input>
 			</form>
 		</div>
