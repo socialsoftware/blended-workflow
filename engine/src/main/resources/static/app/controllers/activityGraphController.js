@@ -62,9 +62,8 @@ app
 											$scope.activitiesTwo.selectedActivity = $scope.activitiesTwo.availableActivities[0];
 										});
 					};
-					$scope.readActivities(specId);
 
-					$scope.activityPosConditions = {
+					$scope.activityPostConditions = {
 						availablePostConditions : [ {
 							path : '--- Post Conditions ---'
 						} ],
@@ -77,7 +76,7 @@ app
 								.getPostConditions(specId, activity)
 								.then(
 										function(response) {
-											$scope.activityPosConditions = {
+											$scope.activityPostConditions = {
 												availablePostConditions : []
 														.concat(
 																response.data.defAtts)
@@ -88,6 +87,26 @@ app
 										});
 					};
 
+					$scope.activitySeqConditions = {
+							availableSeqConditions : [ {
+								path : '--- Sequence Condition ---'
+							} ],
+							selectedSeqCondition : {
+								path : '--- Sequence Condition ---'
+							}
+						};
+					$scope.activitySeqConditions.selectedSeqCondition = $scope.activitySeqConditions.availableSeqConditions[0];
+
+					$scope.readActivitySeqConditions = function(specId,
+							activity) {
+						activityRepository.getSeqConditions(specId, activity)
+								.then(function(response) {
+									$scope.activitySeqConditions.availableSeqConditions = [$scope.activitySeqConditions.availableSeqConditions[0]].concat(response.data),
+									$scope.activitySeqConditions.selectedSeqCondition = $scope.activitySeqConditions.availableSeqConditions[0];
+								});
+						
+					};
+
 					$scope.readGraph = function(specId) {
 						activityRepository.getActivityGraph(specId).then(
 								function(response) {
@@ -95,30 +114,35 @@ app
 								});
 					};
 
-					$scope.readGraph(specId);
-
 					$scope.activityNameInput = function() {
 						// rename, merge, and split operations
 						return ($scope.operations.selectedOperation.id >= 1 && $scope.operations.selectedOperation.id <= 3);
-
 					};
 
 					$scope.activitiesTwoSelect = function() {
 						// merge operation
 						return ($scope.operations.selectedOperation.id == 2);
-
 					};
 
 					$scope.activitiesPostConditionsSelect = function() {
 						// split operation
 						return ($scope.operations.selectedOperation.id == 3);
+					};
 
+					$scope.sequenceConditionInput = function() {
+						// add sequence condition
+						return ($scope.operations.selectedOperation.id == 4);
+					};
+
+					$scope.removeSequenceConditionSelect = function() {
+						// remove sequence condition
+						return ($scope.operations.selectedOperation.id == 5);
 					};
 
 					$scope.validForm = function() {
 						// applies to all operations
 
-						// has to select an activity
+						// for all operations it is necessary to select an activity, but not the header
 						if ($scope.activitiesOne.selectedActivity == $scope.activitiesOne.availableActivities[0])
 							return false;
 
@@ -133,7 +157,7 @@ app
 
 						// merge operation
 						if ($scope.operations.selectedOperation.id == 2) {
-							// has to select the second activity
+							// has to select the second activity, but not the header
 							if ($scope.activitiesTwo.selectedActivity == $scope.activitiesTwo.availableActivities[0])
 								return false;
 
@@ -146,8 +170,16 @@ app
 
 						// split operation
 						if ($scope.operations.selectedOperation.id == 3) {
-							if ($scope.activityPosConditions.selectedPostConditions.length < 1
-									|| $scope.activityPosConditions.selectedPostConditions.length == $scope.activityPosConditions.availablePostConditions.length)
+							// at least one of post condition is selected, but nor all the conditions
+							if ($scope.activityPostConditions.selectedPostConditions.length < 1
+									|| $scope.activityPostConditions.selectedPostConditions.length == $scope.activityPostConditions.availablePostConditions.length)
+								return false;
+						}
+
+						// remove sequence condition operation
+						if ($scope.operations.selectedOperation.id == 5) {
+							// has to select a sequence condition, but not the header
+							if ($scope.activitySeqConditions.selectedSeqCondition == $scope.activitySeqConditions.availableSeqConditions[0])
 								return false;
 						}
 
@@ -161,8 +193,7 @@ app
 									$scope.activitiesOne.selectedActivity.name,
 									$scope.newActivityName).then(
 									function() {
-										$scope.readActivities(specId);
-										$scope.readGraph(specId);
+										$scope.updateState();
 									},
 									function(error) {
 										alert(response.data.type + '('
@@ -175,8 +206,7 @@ app
 									$scope.activitiesTwo.selectedActivity.name,
 									$scope.newActivityName).then(
 									function(response) {
-										$scope.readActivities(specId);
-										$scope.readGraph(specId);
+										$scope.updateState();
 									},
 									function(response) {
 										alert(response.data.type + '('
@@ -184,24 +214,64 @@ app
 									});
 							break;
 						case 3: // split
-							activityRepository.splitActivity(specId,
-									$scope.activitiesOne.selectedActivity.name,
-									$scope.activityPosConditions.selectedPostConditions,
-									$scope.newActivityName).then(
+							activityRepository
+									.splitActivity(
+											specId,
+											$scope.activitiesOne.selectedActivity.name,
+											$scope.activityPostConditions.selectedPostConditions,
+											$scope.newActivityName).then(
 											function(ressponse) {
-												$scope.readActivities(specId);
-												$scope.readGraph(specId);
+												$scope.updateState();
 											},
 											function(response) {
 												alert(response.data.type + '('
-														+ response.data.value + ')');												
+														+ response.data.value
+														+ ')');
 											});
 							break;
 						case 4: // add sequence
+							activityRepository.addSequenceCondition(specId,
+									$scope.activitiesOne.selectedActivity.name,
+									$scope.sequenceConditionToAdd).then(
+									function(ressponse) {
+										$scope.updateState();
+									},
+									function(response) {
+										alert(response.data.type + '('
+												+ response.data.value + ')');
+									});
 							break;
 						case 5: // remove sequence
+							activityRepository.remSequenceCondition(specId,
+									$scope.activitiesOne.selectedActivity.name,
+									$scope.activitySeqConditions.selectedSeqCondition.path).then(
+									function(ressponse) {
+										$scope.updateState();
+									},
+									function(response) {
+										alert(response.data.type + '('
+												+ response.data.value + ')');
+									});
 							break;
 						}
+					};
+
+					$scope.updateState = function() {
+						$scope.readActivities(specId);
+						$scope.readGraph(specId);
+						$scope.operations.selectedOperation = $scope.operations.availableOperations[0];
+					};
+
+					$scope.updateState();
+
+					$scope.updateSelects = function(specId, activity) {
+						// split operation
+						if ($scope.operations.selectedOperation.id == 3)
+							$scope.readActivityPostConditions(specId, activity);
+						
+						// remove sequence condition operation
+						if ($scope.operations.selectedOperation.id == 5)
+							$scope.readActivitySeqConditions(specId, activity);
 					};
 
 				});
