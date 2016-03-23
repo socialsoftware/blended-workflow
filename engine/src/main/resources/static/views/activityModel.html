@@ -7,23 +7,22 @@
 					{{a.description}}</span> <br /> { <br />
 				<div
 					ng-init="preConditions(a.name); seqConditions(a.name); postConditions(a.name); mulConditions(a.name); ruleConditions(a.name)">
-					<span style="padding-left: 2em"><strong>PRE</strong>(<span
+					<span style="padding-left: 2em"></span><strong>PRE</strong>(<span
 						ng-repeat="pre in preconditions.get(a.name)">{{pre.path}}<span
-							ng-if="!$last">, </span></span>) <br /> <span style="padding-left: 2em">
-							<strong>SEQ</strong>(<span
-							ng-repeat="pre in seqconditions.get(a.name)">{{pre.path}}<span
-								ng-if="!$last">, </span></span>) <br /> <span
-							style="padding-left: 2em"><strong>POST</strong>(<span
-								ng-repeat="post in postconditions.get(a.name).defEnts"><strong>DEF</strong>({{post.entityName}})<span
-									ng-if="!$last || postconditions.get(a.name).defAtts.length!=0">,
-								</span></span><span ng-repeat="post in postconditions.get(a.name).defAtts">DEF({{post.path}})<span
-									ng-if="!$last">, </span></span><span
-								ng-if="mulconditions.get(a.name).length!=0">; </span><span
-								ng-repeat="mul in mulconditions.get(a.name)"><strong>MUL</strong>({{mul.rolePath}},
-									{{mul.cardinality}})<span ng-if="!$last">, </span></span><span
-								ng-if="ruleconditions.get(a.name).length!=0">; </span><span
-								ng-repeat="rule in ruleconditions.get(a.name)"><strong>RULE</strong>({{rule.name}}:
-									{{rule.toStringExpression}})<span ng-if="!$last">, </span></span>) <br />
+						ng-if="!$last">, </span></span>) <br /> <span style="padding-left: 2em"></span>
+					<strong>SEQ</strong>(<span
+						ng-repeat="pre in seqconditions.get(a.name)">{{pre.path}}<span
+						ng-if="!$last">, </span></span>) <br /> <span style="padding-left: 2em"></span><strong>POST</strong>(<span
+						ng-repeat="post in postconditions.get(a.name).defEnts"><strong>DEF</strong>({{post.entityName}})<span
+						ng-if="!$last || postconditions.get(a.name).defAtts.length!=0">,
+					</span></span><span ng-repeat="post in postconditions.get(a.name).defAtts">DEF(<span ng-if="post.mandatory">MAN(</span>{{post.path}})<span ng-if="post.mandatory">)</span><span
+						ng-if="!$last">, </span></span><span
+						ng-if="mulconditions.get(a.name).length!=0">; </span><span
+						ng-repeat="mul in mulconditions.get(a.name)"><strong>MUL</strong>({{mul.rolePath}},
+						{{mul.cardinality}})<span ng-if="!$last">, </span></span><span
+						ng-if="ruleconditions.get(a.name).length!=0">; </span><span
+						ng-repeat="rule in ruleconditions.get(a.name)"><strong>RULE</strong>({{rule.name}}:
+						{{rule.toStringExpression}})<span ng-if="!$last">, </span></span>) <br />
 				</div>
 				}<br /> <br />
 			</div>

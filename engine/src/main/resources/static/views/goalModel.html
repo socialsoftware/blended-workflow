@@ -5,7 +5,7 @@
 			<div ng-repeat="g in goals | orderBy:'name'">
 				<strong>Goal</strong><span> {{g.name}}</span> <br /> { <br />
 				<div
-					ng-init="getSubGoals(g.name); getActivationConditions(g.name); getSuccessConditions(g.name); getMulConditions(g.name); getRuleConditions(g.name)">
+					ng-init="getSubGoals(g.name); getActivationConditions(g.name); getEntSuccessConditions(g.name); getAttSuccessConditions(g.name); getMulConditions(g.name); getRuleConditions(g.name)">
 				<span style="padding-left: 2em"></span><strong>SUB</strong>(<span
 					ng-repeat="sub in subgoals.get(g.name)">{{sub.name}}<span
 					ng-if="!$last">, </span></span>) <br /> 
@@ -13,16 +13,16 @@
 					ng-repeat="act in actconditions.get(g.name)">{{act.path}}<span
 					ng-if="!$last">, </span></span>) <br /> 
 				<span style="padding-left: 2em"></span><strong>SUC</strong>(<span
-					ng-repeat="suc in succonditions.get(g.name)"><span
+					ng-repeat="suc in entsucconditions.get(g.name)">{{suc.path}}<span ng-if="!$last || attsucconditions.get(g.name).length != 0">, </span></span><span
+					ng-repeat="suc in attsucconditions.get(g.name)"><span
 					ng-if="suc.mandatory">MAN(</span>{{suc.path}}<span
 					ng-if="suc.mandatory">)</span><span ng-if="!$last">, </span></span>) <br />
 				<span style="padding-left: 2em"></span><strong>MUL</strong>(<span
 					ng-repeat="mul in mulconditions.get(g.name)">{{mul.rolePath}},
-					{{mul.cardinality}}<span ng-if="!$last">, </span>
-				</span>) <br /> 
-				<span style="padding-left: 2em"></span><span
-					ng-repeat="rule in ruleconditions.get(g.name)"><strong>RULE</strong>({{rule.name}}:
-					{{rule.toStringExpression}})<span ng-if="!$last">, </span>)<br /></span><br />
+					{{mul.cardinality}}<span ng-if="!$last">, </span></span>) <br /> 
+				<span style="padding-left: 2em"></span><strong>RULES</strong>(<span
+					ng-repeat="rule in ruleconditions.get(g.name)">{{rule.name}}:
+					{{rule.toStringExpression}})<span ng-if="!$last">, </span></span>)<br />
 			</div>
 			}<br /> <br />
 	</div>
