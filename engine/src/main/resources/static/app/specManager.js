@@ -9,6 +9,9 @@ app.config(function($routeProvider) {
 	}).when("/specs/:specId/conditionmodel", {
 		templateUrl : "views/conditionModel.html",
 		controller : "ConditionModelController"
+	}).when("/specs/:specId/goalmodel", {
+		templateUrl : "views/goalModel.html",
+		controller : "GoalModelController"
 	}).when("/specs/:specId/activitymodel", {
 		templateUrl : "views/activityModel.html",
 		controller : "ActivityModelController"
