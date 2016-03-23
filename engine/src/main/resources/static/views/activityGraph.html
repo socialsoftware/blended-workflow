@@ -10,7 +10,7 @@
 				<!-- operation select -->
 				<select class="btn btn-primary form-control"
 					ng-options="operation.name for operation in operations.availableOperations track by operation.id"
-					ng-model="operations.selectedOperation">
+					ng-model="operations.selectedOperation" ng-change='cleanAll()'>
 				</select>
 				<!-- first activity select -->
 				<select name="activitySourceOne"
@@ -38,11 +38,13 @@
 					class="form-control" placeholder="New activity name"
 					ng-model="newActivityName" required></input>
 				<!-- add sequence condition -->
-				<input name="sequenceConditionToAdd" ng-show="sequenceConditionInput()"
-					type="text" class="form-control" placeholder="Sequence condition"
-					ng-model="sequenceConditionToAdd" required></input>
+				<input name="sequenceConditionToAdd"
+					ng-show="sequenceConditionInput()" type="text" class="form-control"
+					placeholder="Sequence condition" ng-model="sequenceConditionToAdd"
+					required></input>
 				<!-- remove sequence condition -->
-				<select name="sequenceConditionToRemove" class="btn btn-primary form-control"
+				<select name="sequenceConditionToRemove"
+					class="btn btn-primary form-control"
 					ng-show="removeSequenceConditionSelect()"
 					ng-options="seq.path for seq in activitySeqConditions.availableSeqConditions | orderBy:'path'"
 					ng-model="activitySeqConditions.selectedSeqCondition">
@@ -54,6 +56,11 @@
 				</input>
 			</form>
 		</div>
+
+		<div ng-if="error">
+			<div error-message error-data="{{error}}"></div>
+		</div>
+
 		<br /> <br />
 
 		<div ng-if="activityGraph">

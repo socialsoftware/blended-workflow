@@ -9,6 +9,7 @@
 	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
 <script
 	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.js"></script>
 <script src="js/ui-bootstrap-tpls-1.2.1.min.js"></script>
 </head>
 <body ng-app="specManager" ng-controller="SpecificationController">
@@ -50,10 +51,12 @@
 							<ul class="dropdown-menu" uib-dropdown-menu="uib-dropdown-menu">
 								<li><a href="#/specs/{{spec.specId}}/datamodel">Data Model</a></li>
 								<li><a href="#/specs/{{spec.specId}}/conditionmodel">Condition Model</a></li>
-								<li><a href="#">Goal Model</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="#/specs/{{spec.specId}}/goalmodel">Goal Model</a></li>
+								<li><a href="#/specs/{{spec.specId}}/goalgraph">Goal Graph and Operations</a></li>
 								<li role="separator" class="divider"></li>
 								<li><a href="#/specs/{{spec.specId}}/activitymodel">Activity Model</a></li>
-								<li><a href="#/specs/{{spec.specId}}/activitygraph">Activity Graph</a></li>
+								<li><a href="#/specs/{{spec.specId}}/activitygraph">Activity Graph and Operations</a></li>
 
 							</ul></li>
 
@@ -85,12 +88,15 @@
 	<script src="app/controllers/conditionModelController.js"></script>
 	<script src="app/controllers/activityModelController.js"></script>
 	<script src="app/controllers/activityGraphController.js"></script>
+	<script src="app/controllers/goalModelController.js"></script>
 	
+	<script src="app/directives/errorMessage.js"></script>
 	<script src="app/directives/activityGraph.js"></script>
-
+	
 	<script src="app/services/specRepository.js"></script>
 	<script src="app/services/dataRepository.js"></script>
 	<script src="app/services/conditionRepository.js"></script>
+	<script src="app/services/goalRepository.js"></script>
 	<script src="app/services/activityRepository.js"></script>
 
 </body>
