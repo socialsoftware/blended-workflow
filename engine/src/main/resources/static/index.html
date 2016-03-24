@@ -2,14 +2,14 @@
 <html data-ng-app="">
 <head>
 <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
-<script src="http://d3js.org/d3.v2.js" charset="utf-8"></script>
+	href="css/bootstrap-3.3.6.min.css"></link>
+<script src="js/d3.v2.js" charset="utf-8"></script>
 <script src="js/dagre-d3.min.js"></script>
 <script
-	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+	src="js/angular-1.5.0.min.js"></script>
 <script
-	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.js"></script>
+	src="js/angular-route-1.5.0.min.js"></script>
+<script src="js/angular-animate-1.5.3.js"></script>
 <script src="js/ui-bootstrap-tpls-1.2.1.min.js"></script>
 </head>
 <body ng-app="specManager" ng-controller="SpecificationController">
@@ -86,11 +86,13 @@
 	<script src="app/controllers/specificationController.js"></script>
 	<script src="app/controllers/dataModelController.js"></script>
 	<script src="app/controllers/conditionModelController.js"></script>
+	<script src="app/controllers/goalModelController.js"></script>
+	<script src="app/controllers/goalGraphController.js"></script>
 	<script src="app/controllers/activityModelController.js"></script>
 	<script src="app/controllers/activityGraphController.js"></script>
-	<script src="app/controllers/goalModelController.js"></script>
 	
 	<script src="app/directives/errorMessage.js"></script>
+	<script src="app/directives/goalGraph.js"></script>
 	<script src="app/directives/activityGraph.js"></script>
 	
 	<script src="app/services/specRepository.js"></script>

@@ -24,13 +24,17 @@ app.controller('GoalModelController', function($rootScope, $scope,
 		});
 	};
 
-	$scope.succonditions = new Map();
-	$scope.getSuccessConditions = function(goalName) {
+	$scope.entsucconditions = new Map();
+	$scope.getEntSuccessConditions = function(goalName) {
 		goalRepository.getEntitySuccessConditions(specId, goalName).then(function(response) {
-			$scope.succonditions.set(goalName, response.data);
+			$scope.entsucconditions.set(goalName, response.data);
 		});
-		goalRepository.getAttributeSuccessConditions(specId, goalName).then(function(response) {
-			$scope.succonditions.set(goalName, $scope.succonditions.get(goalName).concat(response.data));
+	};
+
+	$scope.attsucconditions = new Map();
+	$scope.getAttSuccessConditions = function(goalName) {
+	goalRepository.getAttributeSuccessConditions(specId, goalName).then(function(response) {
+			$scope.attsucconditions.set(goalName, response.data);
 		});
 	};
 

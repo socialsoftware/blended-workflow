@@ -24,6 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDT
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.req.ExtractGoalReq;
@@ -302,6 +303,17 @@ public class GoalModelController {
 				req.getSuccessConditions());
 
 		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/goals/graph", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<GraphDTO> getGoalGraph(@PathVariable("specId") String specId) {
+		log.debug("getGoalGraph specId:{}", specId);
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		GraphDTO graph = adi.getGoalModelGraph(specId);
+
+		return new ResponseEntity<GraphDTO>(graph, HttpStatus.OK);
 	}
 
 }
