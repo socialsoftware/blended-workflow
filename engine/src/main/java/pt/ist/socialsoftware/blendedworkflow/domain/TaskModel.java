@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityGraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EdgeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.NodeDTO;
 
@@ -374,8 +374,8 @@ public class TaskModel extends TaskModel_Base {
 					allRules.stream().map(r -> r.getName()).collect(Collectors.joining(",")));
 	}
 
-	public ActivityGraphDTO getActivityGraph() {
-		ActivityGraphDTO graph = new ActivityGraphDTO();
+	public GraphDTO getActivityGraph() {
+		GraphDTO graph = new GraphDTO();
 
 		Map<Task, Set<Task>> dependencies = getTaskDependencies();
 

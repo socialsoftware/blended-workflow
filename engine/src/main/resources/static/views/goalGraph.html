@@ -1,0 +1,14 @@
+<link rel="stylesheet" type="text/css" href="../css/graph.css"></link>
+<div class="container" ng-show="spec.name">
+	<div>
+		<h3>
+			<strong>Goal Graph</strong> {{spec.name}}
+		</h3>
+
+		<br /> <br />
+
+		<div ng-if="goalGraph">
+			<div goal-graph goal-data="goalGraph"></div>
+		</div>
+	</div>
+</div>

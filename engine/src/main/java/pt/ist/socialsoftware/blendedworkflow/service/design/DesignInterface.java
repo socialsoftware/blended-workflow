@@ -33,7 +33,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityGraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
@@ -41,6 +40,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
@@ -456,6 +456,12 @@ public class DesignInterface {
 		return spec.getGoalModel().getGoalSet();
 	}
 
+	public GraphDTO getGoalModelGraph(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getGoalModel().getGoalGraph();
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public Goal createGoal(GoalDTO goalDTO) {
 		Specification spec = getSpecBySpecId(goalDTO.getSpecId());
@@ -800,7 +806,7 @@ public class DesignInterface {
 		return task.getSequenceConditionSet();
 	}
 
-	public ActivityGraphDTO getActivityGraph(String specId) {
+	public GraphDTO getActivityGraph(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
 		return spec.getTaskModel().getActivityGraph();

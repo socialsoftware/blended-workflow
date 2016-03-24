@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -8,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal.GoalRelation;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.EdgeDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.GraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.NodeDTO;
 
 public class GoalModel extends GoalModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(GoalModel.class);
@@ -188,6 +194,45 @@ public class GoalModel extends GoalModel_Base {
 		parentGoal.setName(newGoalName);
 
 		return parentGoal;
+	}
+
+	public GraphDTO getGoalGraph() {
+		GraphDTO graph = new GraphDTO();
+
+		List<NodeDTO> nodes = new ArrayList<NodeDTO>();
+		List<EdgeDTO> edges = new ArrayList<EdgeDTO>();
+
+		for (Goal goal : getGoalSet()) {
+			String description = "ACT(" + goal.getActivationConditionSet().stream().map(d -> d.getPath().getValue())
+					.collect(Collectors.joining(",")) + ")";
+			if (!goal.getSuccessConditionSet().isEmpty()) {
+				description = description + ", " + "SUC(" + goal.getSuccessConditionSet().stream()
+						.map(d -> d.getPath().getValue()).collect(Collectors.joining(",")) + ")";
+			}
+			if (!goal.getEntityInvariantConditionSet().isEmpty()) {
+				description = description + ", " + "MUL("
+						+ goal.getEntityInvariantConditionSet().stream().map(m -> m.getSourceEntity().getName() + "."
+								+ m.getTargetRolename() + "," + m.getTargetCardinality().name())
+								.collect(Collectors.joining(";"))
+						+ ")";
+			}
+			if (!goal.getAttributeInvariantConditionSet().isEmpty()) {
+				description = description + ", " + "RULE(" + goal.getAttributeInvariantConditionSet().stream()
+						.map(r -> r.getName()).collect(Collectors.joining(",")) + ")";
+			}
+
+			nodes.add(new NodeDTO(goal.getExternalId(), goal.getName(), description));
+
+			for (Goal subGoal : goal.getSubGoalSet()) {
+				edges.add(new EdgeDTO(goal.getExternalId(), subGoal.getExternalId()));
+			}
+
+		}
+
+		graph.setNodes(nodes.stream().toArray(NodeDTO[]::new));
+		graph.setEdges(edges.stream().toArray(EdgeDTO[]::new));
+
+		return graph;
 	}
 
 }
