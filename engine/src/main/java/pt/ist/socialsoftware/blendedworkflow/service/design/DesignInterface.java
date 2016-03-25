@@ -469,6 +469,13 @@ public class DesignInterface {
 		return new Goal(spec.getGoalModel(), goalDTO.getName());
 	}
 
+	@Atomic(mode = TxMode.WRITE)
+	public void updateGoalName(String specId, String goalName, String newName) {
+		Specification spec = getSpecBySpecId(specId);
+
+		spec.getGoalModel().getGoal(goalName).setName(newName);
+	}
+
 	public Goal getGoalByName(String specId, String goalName) {
 		Specification spec = getSpecBySpecId(specId);
 

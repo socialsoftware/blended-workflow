@@ -52,7 +52,7 @@
 				<!-- submit form  -->
 				<input ng-show="operations.selectedOperation.id!=0" type="submit"
 					class="btn btn-primary" ng-click="submitForm()"
-					ng-disabled="activityForm.activitySource.$invalid || (activityNameInput() && activityForm.newActivity.$invalid) || (sequenceConditionInput() && activityForm.sequenceConditionToAdd.$invalid) || !validForm()">
+					ng-disabled="(activityNameInput() && activityForm.newActivity.$invalid) || (sequenceConditionInput() && activityForm.sequenceConditionToAdd.$invalid) || !validForm()">
 				</input>
 			</form>
 		</div>

@@ -26,11 +26,11 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefProductConditionSetDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.req.AddActivityReq;
@@ -93,7 +93,7 @@ public class ActivityModelController {
 	@RequestMapping(value = "/activities/{activityName}/{newName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public ResponseEntity<Void> updateActivityName(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName, @PathVariable("newName") String newName) {
-		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
+		logger.debug("updateActivityName specId:{}, activityName:{}", specId, activityName);
 
 		DesignInterface adi = DesignInterface.getInstance();
 
