@@ -5,6 +5,37 @@
 			<strong>Goal Graph</strong> {{spec.name}}
 		</h3>
 
+		<div class="container">
+			<form class="form-inline" name="goalForm" novalidate="novalidate">
+				<!-- operation select -->
+				<select class="btn btn-primary form-control"
+					ng-options="operation.name for operation in operations.availableOperations track by operation.id"
+					ng-model="operations.selectedOperation" ng-change='cleanAll()'>
+				</select>
+				<!-- first goal select -->
+				<select name="goalSourceOne"
+					class="btn btn-primary form-control"
+					ng-show="operations.selectedOperation.id!=0"
+					ng-options="goal.name for goal in goalsOne.availableGoals | orderBy:'name'"
+					ng-model="goalsOne.selectedGoal"
+					ng-change="updateSelects(spec.specId, goalsOne.selectedGoal.name)">
+				</select>
+				<!-- new goal name -->
+				<input name="newGoal" ng-show="goalNameInput()" type="text"
+					class="form-control" placeholder="New goal name"
+					ng-model="newGoalName" required></input>
+				<!-- submit form  -->
+				<input ng-show="operations.selectedOperation.id!=0" type="submit"
+					class="btn btn-primary" ng-click="submitForm()"
+					ng-disabled="(goalNameInput() && goalForm.newGoal.$invalid) || !validForm()">
+				</input>
+			</form>
+		</div>
+
+		<div ng-if="error">
+			<div error-message error-data="{{error}}"></div>
+		</div>
+
 		<br /> <br />
 
 		<div ng-if="goalGraph">
