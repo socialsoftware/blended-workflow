@@ -257,7 +257,7 @@ public class Goal extends Goal_Base {
 				.findAny();
 
 		if (oGoal.isPresent()) {
-			throw new BWException(BWErrorType.UNMERGEABLE_GOALS);
+			throw new BWException(BWErrorType.UNMERGEABLE_GOALS, getName() + " - " + childGoal.getName());
 		}
 	}
 

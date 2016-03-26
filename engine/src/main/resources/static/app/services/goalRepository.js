@@ -43,14 +43,14 @@ app.factory('goalRepository', function($http) {
 					+ "/" + goalName;
 			return $http.put(url);
 		},
-//		mergeActivities : function(spec, activityOne, activityTwo,
-//				newActivityName) {
-//			var url = "specs/" + spec
-//					+ "/activitymodel/activities/merge?activityNameOne="
-//					+ activityOne + "&activityNameTwo=" + activityTwo
-//					+ "&newActivityName=" + newActivityName;
-//			return $http.post(url);
-//		},
+		mergeGoals : function(spec, goalOne, goalTwo,
+				newGoalName) {
+			var url = "specs/" + spec
+					+ "/goalmodel/goals/merge?goalNameOne="
+					+ goalOne + "&goalNameTwo=" + goalTwo
+					+ "&newGoalName=" + newGoalName;
+			return $http.post(url);
+		},
 //		splitActivity : function(spec, activity, postConditions, newActivityName) {
 //			var url = "specs/" + spec
 //			+ "/activitymodel/activities/extract";

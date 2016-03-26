@@ -41,15 +41,15 @@ app.controller('GoalGraphController', function($rootScope, $scope,
 								}
 							};
 							$scope.goalsOne.selectedGoal = $scope.goalsOne.availableGoals[0];
-//							$scope.goalsTwo = {
-//								availableGoals : [ {
-//									name : '--- with Goal ---'
-//								} ].concat(response.data),
-//								selectedGoal : {
-//									name : '--- with Goal ---'
-//								}
-//							};
-//							$scope.goalsTwo.selectedGoal = $scope.goalsTwo.availableGoals[0];
+							$scope.goalsTwo = {
+								availableGoals : [ {
+									name : '--- with Goal ---'
+								} ].concat(response.data),
+								selectedGoal : {
+									name : '--- with Goal ---'
+								}
+							};
+							$scope.goalsTwo.selectedGoal = $scope.goalsTwo.availableGoals[0];
 						});
 	};
 
@@ -62,6 +62,11 @@ app.controller('GoalGraphController', function($rootScope, $scope,
 	$scope.goalNameInput = function() {
 		// rename, merge, and split operations
 		return ($scope.operations.selectedOperation.id >= 1 && $scope.operations.selectedOperation.id <= 3);
+	};
+
+	$scope.goalsTwoSelect = function() {
+		// merge operation
+		return ($scope.operations.selectedOperation.id == 2);
 	};
 
 	$scope.validForm = function() {
@@ -81,10 +86,27 @@ app.controller('GoalGraphController', function($rootScope, $scope,
 					return false;
 		}
 
+		// merge operation
+		if ($scope.operations.selectedOperation.id == 2) {
+			// has to select the second goal, but not the
+			// header
+			if ($scope.goalsTwo.selectedActivity == $scope.goalsTwo.availableGoals[0])
+				return false;
+
+			// the second selected activity should be different
+			// from the first
+			for (i = 0; i < $scope.goalsTwo.availableGoals.length; i++)
+				if ($scope.goalsTwo.selectedGoal.name == $scope.goalsOne.selectedGoal.name)
+					return false;
+		}
+
 		return true;
 	};
 
 	$scope.submitForm = function() {
+		// clean error message
+		$scope.error = '';
+		
 		switch ($scope.operations.selectedOperation.id) {
 		case 1: // rename
 			goalRepository.renameGoal(specId,
@@ -99,17 +121,17 @@ app.controller('GoalGraphController', function($rootScope, $scope,
 					});
 			break;
 		case 2: // merge
-//			goalRepository.mergeGoals(specId,
-//					$scope.goalsOne.selectedGoal.name,
-//					$scope.goalsTwo.selectedGoal.name,
-//					$scope.newGoalName).then(
-//					function(response) {
-//						$scope.updateState();
-//					},
-//					function(response) {
-//						$scope.error = response.data.type + '('
-//								+ response.data.value + ')';
-//					});
+			goalRepository.mergeGoals(specId,
+					$scope.goalsOne.selectedGoal.name,
+					$scope.goalsTwo.selectedGoal.name,
+					$scope.newGoalName).then(
+					function(response) {
+						$scope.updateState();
+					},
+					function(response) {
+						$scope.error = response.data.type + '('
+								+ response.data.value + ')';
+					});
 			break;
 		case 3: // split
 //			goalRepository
@@ -119,7 +141,7 @@ app.controller('GoalGraphController', function($rootScope, $scope,
 //							$scope.goalPostConditions.selectedPostConditions,
 //							$scope.newGoalName)
 //					.then(
-//							function(ressponse) {
+//							function(response) {
 //								$scope.updateState();
 //							},
 //							function(response) {
@@ -140,6 +162,8 @@ app.controller('GoalGraphController', function($rootScope, $scope,
 	$scope.updateState();
 
 	$scope.updateSelects = function(specId, goal) {
+		// merge operation
+		
 		// split operation
 //		if ($scope.operations.selectedOperation.id == 3)
 //			$scope.readGoalSucessConditions(specId, goal);
@@ -147,7 +171,7 @@ app.controller('GoalGraphController', function($rootScope, $scope,
 
 	$scope.cleanAll = function() {
 		$scope.goalsOne.selectedGoal = $scope.goalsOne.availableGoals[0];
-//		$scope.goalsTwo.selectedGoal = $scope.goalsTwo.availableGoals[0];
+		$scope.goalsTwo.selectedGoal = $scope.goalsTwo.availableGoals[0];
 //		$scope.goalPostConditions.availablePostConditions = [ {
 //			path : '--- Post Conditions ---'
 //		} ]
