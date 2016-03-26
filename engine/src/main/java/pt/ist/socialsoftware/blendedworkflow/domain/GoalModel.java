@@ -127,7 +127,7 @@ public class GoalModel extends GoalModel_Base {
 		GoalRelation relation = goalOne.getGoalRelation(goalTwo);
 
 		if (relation == GoalRelation.OTHER) {
-			throw new BWException(BWErrorType.UNMERGEABLE_GOALS);
+			throw new BWException(BWErrorType.UNMERGEABLE_GOALS, goalOne.getName() + " - " + goalTwo.getName());
 		} else if (relation == GoalRelation.SIBLING) {
 			result = mergeSiblingGoals(newGoalName, goalOne, goalTwo);
 		} else if (relation == GoalRelation.PARENT) {

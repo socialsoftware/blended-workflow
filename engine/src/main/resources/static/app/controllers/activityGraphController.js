@@ -194,6 +194,9 @@ app
 					};
 
 					$scope.submitForm = function() {
+						// clean error message
+						$scope.error = '';
+
 						switch ($scope.operations.selectedOperation.id) {
 						case 1: // rename
 							activityRepository.renameActivity(specId,
