@@ -27,6 +27,20 @@
 					ng-options="goal.name for goal in goalsTwo.availableGoals | orderBy:'name'"
 					ng-model="goalsTwo.selectedGoal">
 				</select>
+				<!-- success conditions of first goal select -->
+				<select name="splitType" class="btn btn-primary form-control"
+					ng-show="goalSucConditionsSelect()"
+					ng-model="splitType">
+      				<option value="">---Select Type---</option> 
+      				<option value="child">Child</option>
+      				<option value="sibling">Sibling</option>
+				</select>
+				<!-- success conditions of first goal select -->
+				<select name="goalSucConditions" class="btn form-control"
+					ng-show="goalSucConditionsSelect()"
+					ng-options="suc.path for suc in goalSucConditions.availableSucConditions | orderBy:'path'"
+					ng-model="goalSucConditions.selectedSucConditions" multiple>
+				</select>
 				<!-- new goal name -->
 				<input name="newGoal" ng-show="goalNameInput()" type="text"
 					class="form-control" placeholder="New goal name"
