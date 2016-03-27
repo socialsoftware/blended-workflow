@@ -11,7 +11,7 @@ app.directive('errorMessage', function($uibModal) {
 					animation : true,
 					templateUrl : '../../views/errorMessage.html',
 					controller : 'ModalInstanceCtrl',
-					size : 'sm',
+					size : 'lg',
 					resolve : {
 						errorMessage : function() {
 							return errorData;

@@ -51,14 +51,23 @@ app.factory('goalRepository', function($http) {
 					+ "&newGoalName=" + newGoalName;
 			return $http.post(url);
 		},
-//		splitActivity : function(spec, activity, postConditions, newActivityName) {
-//			var url = "specs/" + spec
-//			+ "/activitymodel/activities/extract";
-//			return $http.post(url, {
-//				"sourceActivityName" : activity,
-//				"newActivityName" :  newActivityName,
-//				"successConditions" : postConditions
-//			});
-//		}
+		splitChildGoal : function(spec, goal, sucConditions, newGoalName) {
+			var url = "specs/" + spec
+			+ "/goalmodel/goals/extractchild";
+			return $http.post(url, {
+				"sourceGoalName" : goal,
+				"newGoalName" :  newGoalName,
+				"successConditions" : sucConditions
+			});
+		},
+		splitSiblingGoal : function(spec, goal, sucConditions, newGoalName) {
+			var url = "specs/" + spec
+			+ "/goalmodel/goals/extractsibling";
+			return $http.post(url, {
+				"sourceGoalName" : goal,
+				"newGoalName" :  newGoalName,
+				"successConditions" : sucConditions
+			});
+		}
 	};
 })
