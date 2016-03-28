@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.service.dto.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EdgeDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.NodeDTO;
 
 public class TaskModel extends TaskModel_Base {
@@ -379,6 +379,8 @@ public class TaskModel extends TaskModel_Base {
 
 		Map<Task, Set<Task>> dependencies = getTaskDependencies();
 
+		removeRedundantTransitiveDependencies(dependencies);
+
 		List<NodeDTO> nodes = new ArrayList<NodeDTO>();
 		for (Task task : dependencies.keySet()) {
 			String description = "PRE(" + task.getPreConditionSet().stream().map(d -> d.getPath().getValue())
@@ -417,6 +419,49 @@ public class TaskModel extends TaskModel_Base {
 		graph.setEdges(edges.stream().toArray(EdgeDTO[]::new));
 
 		return graph;
+	}
+
+	private void removeRedundantTransitiveDependencies(Map<Task, Set<Task>> dependencies) {
+		for (Task taskKey : dependencies.keySet()) {
+			Set<Task> transitiveDependencies = getTransitiveDependencies(taskKey, dependencies);
+			Set<Task> tasksToRemove = new HashSet<Task>();
+			for (Task taskValue : dependencies.get(taskKey)) {
+				if (transitiveDependencies.contains(taskValue)) {
+					tasksToRemove.add(taskValue);
+				}
+			}
+			dependencies.get(taskKey).removeAll(tasksToRemove);
+		}
+	}
+
+	private Set<Task> getTransitiveDependencies(Task task, Map<Task, Set<Task>> dependencies) {
+		Set<Task> transitiveDependencies = new HashSet<Task>();
+		for (Task nextTask : dependencies.get(task)) {
+			transitiveDependencies.addAll(dependencies.get(nextTask));
+		}
+
+		Set<Task> visited = new HashSet<Task>();
+		visited.add(task);
+		return tasksReachableFrom(transitiveDependencies, dependencies, visited);
+	}
+
+	private Set<Task> tasksReachableFrom(Set<Task> reachableTasks, Map<Task, Set<Task>> dependencies,
+			Set<Task> visited) {
+		Set<Task> tasksToAdd = new HashSet<Task>();
+		for (Task task : reachableTasks) {
+			if (!visited.contains(task)) {
+				tasksToAdd.addAll(dependencies.get(task));
+				visited.add(task);
+			}
+		}
+		reachableTasks.addAll(tasksToAdd);
+
+		if (tasksToAdd.isEmpty()) {
+			return reachableTasks;
+		} else {
+			return tasksReachableFrom(reachableTasks, dependencies, visited);
+		}
+
 	}
 
 	private ConditionModel getConditionModel() {
