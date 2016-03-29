@@ -78,7 +78,7 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 	public void successEmptyPrecondition() throws BWException {
 		Task task = new Task(taskModel, ACTIVITY_ONE, DESCRIPTION);
 
-		task.checkCycles(taskModel.getTaskDependencies());
+		task.checkCycles(taskModel.getTaskSequences());
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 		taskTwo.getPostConditionSet()
 				.add(DefAttributeCondition.getDefAttribute(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME));
 
-		taskOne.checkCycles(taskModel.getTaskDependencies());
+		taskOne.checkCycles(taskModel.getTaskSequences());
 	}
 
 	@Test
@@ -119,7 +119,7 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 		taskFour.getPostConditionSet()
 				.add(DefAttributeCondition.getDefAttribute(spec, ENT_ONE_NAME + "." + ATT_TWO_NAME));
 
-		taskOne.checkCycles(taskModel.getTaskDependencies());
+		taskOne.checkCycles(taskModel.getTaskSequences());
 	}
 
 	@Test
@@ -143,7 +143,7 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 				.add(DefAttributeCondition.getDefAttribute(spec, ENT_THREE_NAME + "." + ATT_FOUR_NAME));
 
 		try {
-			taskOne.checkCycles(taskModel.getTaskDependencies());
+			taskOne.checkCycles(taskModel.getTaskSequences());
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -174,7 +174,7 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 				.add(DefAttributeCondition.getDefAttribute(spec, ENT_THREE_NAME + "." + ATT_FOUR_NAME));
 
 		try {
-			taskOne.checkCycles(taskModel.getTaskDependencies());
+			taskOne.checkCycles(taskModel.getTaskSequences());
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());

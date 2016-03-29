@@ -804,6 +804,8 @@ public class DesignInterface {
 
 		task.getSequenceConditionSet().stream().filter(d -> d.getPath().getValue().equals(path))
 				.forEach(d -> task.removeSequenceCondition(d));
+
+		spec.getTaskModel().applyRules();
 	}
 
 	public Set<DefPathCondition> getActivitySeqCondition(String specId, String activityName) {

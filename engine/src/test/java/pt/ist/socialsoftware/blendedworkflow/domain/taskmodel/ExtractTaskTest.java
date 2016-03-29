@@ -185,11 +185,14 @@ public class ExtractTaskTest extends TeardownRollbackTest {
 		Task task = taskModel.extractTask(taskTwo, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
 		assertEquals(4, taskModel.getTasksSet().size());
-		assertTrue(task.getMultiplicityInvariantSet()
-				.contains(MulCondition.getMulCondition(relation, relation.getRoleNameOne())));
-		assertTrue(task.getMultiplicityInvariantSet()
-				.contains(MulCondition.getMulCondition(relation, relation.getRoleNameTwo())));
+		// assertTrue(task.getMultiplicityInvariantSet()
+		// .contains(MulCondition.getMulCondition(relation,
+		// relation.getRoleNameOne())));
+		// assertTrue(task.getMultiplicityInvariantSet()
+		// .contains(MulCondition.getMulCondition(relation,
+		// relation.getRoleNameTwo())));
 		assertEquals(0, taskModel.getTask(TASK_TWO).getMultiplicityInvariantSet().size());
+		assertEquals(2, taskModel.getTask(TASK_ONE).getMultiplicityInvariantSet().size());
 
 		task.checkConsistency();
 		taskModel.getTask(TASK_TWO).checkConsistency();
