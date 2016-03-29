@@ -30,7 +30,9 @@ public class Task extends Task_Base {
 
 		super.addSequenceCondition(sequenceCondition);
 
-		checkCycles(getTaskModel().getTaskDependencies());
+		checkCycles(getTaskModel().getTaskSequences());
+
+		getTaskModel().applyRules();
 	}
 
 	public Task(TaskModel taskModel, String name, String description) {
@@ -149,12 +151,11 @@ public class Task extends Task_Base {
 		checkDependenceConstraint();
 		checkMultiplicityConstraint();
 		checkRuleConstraint();
-		checkCycles(getTaskModel().getTaskDependencies());
+		checkCycles(getTaskModel().getTaskSequences());
 	}
 
 	public void checkCycles(Map<Task, Set<Task>> taskDependencies) {
-		Set<Task> visitedTasks = new HashSet<Task>();
-		goThroughAcyclicPath(this, taskDependencies, visitedTasks);
+		goThroughAcyclicPath(this, taskDependencies, new HashSet<Task>());
 	}
 
 	private void goThroughAcyclicPath(Task task, Map<Task, Set<Task>> taskDependencies, Set<Task> visitedTasks) {
@@ -172,11 +173,11 @@ public class Task extends Task_Base {
 	}
 
 	private void checkRuleConstraint() {
-		// at least an attribute is defined in the task
+		// at least one of the attributes in the rule is defined in the task
 		Set<Attribute> postAttributes = getPostConditionSet().stream().map(d -> d.getTargetOfPath())
 				.filter(Attribute.class::isInstance).map(Attribute.class::cast).collect(Collectors.toSet());
 		for (Rule rule : getRuleInvariantSet())
-			if (!rule.getAttributeSet().stream().anyMatch((a) -> postAttributes.contains(a)))
+			if (!rule.getAttributeSet().stream().anyMatch(a -> postAttributes.contains(a)))
 				throw new BWException(BWErrorType.INCONSISTENT_RULE_CONDITION, getName() + ":" + rule.getName());
 	}
 

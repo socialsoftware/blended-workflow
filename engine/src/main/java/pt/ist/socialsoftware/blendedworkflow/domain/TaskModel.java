@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -89,11 +90,34 @@ public class TaskModel extends TaskModel_Base {
 			activityCounter++;
 		}
 
-		for (RelationBW relation : getDataModel().getRelationBWSet()) {
-			applyMultiplicityToPostAndPre(relation);
-		}
+		applyMultipicityConditions();
+		applyRules();
 
 		checkModel();
+	}
+
+	private void applyRuleDueToDependencies(Rule rule) {
+		Map<Task, Set<Task>> taskSequences = getTaskSequences();
+		Set<Task> ruleTasks = getRuleTasks(rule);
+
+		for (Task task : ruleTasks) {
+			Set<Task> reachable = new HashSet<Task>();
+			reachable.add(task);
+			reachable = tasksReachableFrom(reachable, taskSequences, new HashSet<Task>());
+
+			reachable.remove(task);
+			logger.debug("applyRuleDueToDependencies rule:{}, disjoint:{}", rule.getName(),
+					Collections.disjoint(reachable, ruleTasks));
+			if (Collections.disjoint(reachable, ruleTasks)) {
+				// it is the last in the sequence that sets the attributes in
+				// the rule
+				task.addRuleInvariant(rule);
+			} else {
+				// another task, setting one of the attributes, occurs after
+				task.removeRuleInvariant(rule);
+			}
+		}
+
 	}
 
 	public Task addTask(String taskName, String taskDescription, Set<DefProductCondition> postConditionSet) {
@@ -109,8 +133,6 @@ public class TaskModel extends TaskModel_Base {
 		applyAttributeEntityDependenceToPre(task);
 
 		applyDependenceConditionsToPre(task);
-
-		applyRulesToPost(task);
 
 		return task;
 	}
@@ -135,13 +157,24 @@ public class TaskModel extends TaskModel_Base {
 		sequenceConditionValues.stream().forEach(
 				v -> newTask.addSequenceCondition(DefPathCondition.getDefPathCondition(getSpecification(), v)));
 
-		for (RelationBW relation : getDataModel().getRelationBWSet()) {
-			applyMultiplicityToPostAndPre(relation);
-		}
+		applyMultipicityConditions();
+		applyRules();
 
 		checkModel();
 
 		return newTask;
+	}
+
+	public void applyMultipicityConditions() {
+		for (RelationBW relation : getDataModel().getRelationBWSet()) {
+			applyMultiplicityToPostAndPre(relation);
+		}
+	}
+
+	public void applyRules() {
+		for (Rule rule : getDataModel().getRules()) {
+			applyRuleDueToDependencies(rule);
+		}
 	}
 
 	public Task extractTask(Task fromTask, String taskName, String taskDescription,
@@ -174,22 +207,12 @@ public class TaskModel extends TaskModel_Base {
 			}
 		}
 
-		for (RelationBW relation : getDataModel().getRelationBWSet()) {
-			applyMultiplicityToPostAndPre(relation);
-		}
+		applyMultipicityConditions();
+		applyRules();
 
 		checkModel();
 
 		return newExtratedTask;
-	}
-
-	private void applyRulesToPost(Task task) {
-		for (Rule rule : getConditionModel().getAttributeInvariantConditionSet()) {
-			Set<Attribute> ruleAttributes = rule.getAttributeSet();
-			if (task.getPostConditionSet().stream().anyMatch(d -> ruleAttributes.contains(d.getTargetOfPath()))) {
-				task.getRuleInvariantSet().add(rule);
-			}
-		}
 	}
 
 	private Set<Task> getRuleTasks(Rule rule) {
@@ -220,22 +243,22 @@ public class TaskModel extends TaskModel_Base {
 			tasks.get(0).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
 			addPreConditionsDueToMulConditions(tasks.get(0), relation);
 		} else { // the two entities in the relation do no exist
-			Map<Task, Set<Task>> taskDependencies = getTaskDependencies();
+			Map<Task, Set<Task>> taskSequences = getTaskSequences();
 
-			if (taskDependencies.get(tasks.get(0)).contains(tasks.get(1))
-					&& taskDependencies.get(tasks.get(1)).contains(tasks.get(0))) {
+			if (taskSequences.get(tasks.get(0)).contains(tasks.get(1))
+					&& taskSequences.get(tasks.get(1)).contains(tasks.get(0))) {
 				// it can occur when a merge or a split is tried
 				throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY,
 						tasks.get(0).getName() + "--" + tasks.get(1).getName());
-			} else if (taskDependencies.get(tasks.get(0)).contains(tasks.get(1))) {
-				tasks.get(0).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
-				addPreConditionsDueToMulConditions(tasks.get(0), relation);
-			} else if (taskDependencies.get(tasks.get(1)).contains(tasks.get(0))) {
+			} else if (taskSequences.get(tasks.get(0)).contains(tasks.get(1))) {
 				tasks.get(1).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
 				addPreConditionsDueToMulConditions(tasks.get(1), relation);
-			} else {
+			} else if (taskSequences.get(tasks.get(1)).contains(tasks.get(0))) {
 				tasks.get(0).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
 				addPreConditionsDueToMulConditions(tasks.get(0), relation);
+			} else {
+				tasks.get(1).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
+				addPreConditionsDueToMulConditions(tasks.get(1), relation);
 			}
 		}
 
@@ -302,21 +325,10 @@ public class TaskModel extends TaskModel_Base {
 		getTasksSet().stream().forEach(t -> t.checkConsistency());
 
 		checkCycles();
-		checkRules();
-	}
-
-	private void checkRules() {
-		for (Rule rule : getConditionModel().getAttributeInvariantConditionSet()) {
-			if (!getRuleTasks(rule).stream().allMatch(t -> t.getRuleInvariantSet().contains(rule))) {
-				throw new BWException(BWErrorType.INCONSISTENT_RULE_CONDITION, rule.getName());
-			}
-		}
 	}
 
 	private void checkCycles() {
-		Map<Task, Set<Task>> taskDependencies = getTaskDependencies();
-
-		checkCycles(taskDependencies);
+		checkCycles(getTaskSequences());
 	}
 
 	private void checkCycles(Map<Task, Set<Task>> taskDependencies) {
@@ -325,23 +337,24 @@ public class TaskModel extends TaskModel_Base {
 		}
 	}
 
-	public Map<Task, Set<Task>> getTaskDependencies() {
-		Map<Task, Set<Task>> taskDependencies = new HashMap<Task, Set<Task>>();
-		for (Task task : getTasksSet()) {
-			Set<Task> tasks = task.getExecutionDependencies().stream()
-					.flatMap(d -> d.getPath().getProductsInPath().stream()).map(p -> p.getDefCondition())
-					.filter(d -> d.getTaskWithPostCondition() != null).map(d -> d.getTaskWithPostCondition())
-					.filter(t -> t != task).collect(Collectors.toSet());
+	public Map<Task, Set<Task>> getTaskSequences() {
+		Map<Task, Set<Task>> taskSequencies = new HashMap<Task, Set<Task>>();
+		getTasksSet().stream().forEach(t -> taskSequencies.put(t, new HashSet<Task>()));
 
-			taskDependencies.put(task, tasks);
+		for (Task task : getTasksSet()) {
+			task.getExecutionDependencies().stream().flatMap(d -> d.getPath().getProductsInPath().stream())
+					.map(p -> p.getDefCondition()).filter(d -> d.getTaskWithPostCondition() != null)
+					.map(d -> d.getTaskWithPostCondition()).filter(t -> t != task)
+					.forEach(t -> taskSequencies.get(t).add(task));
 		}
 
 		logger.debug("getTaskDependencies {}",
-				taskDependencies.entrySet().stream()
+				taskSequencies.entrySet().stream()
 						.map(e -> e.getKey().getName() + ":"
 								+ e.getValue().stream().map(t -> t.getName()).collect(Collectors.joining(",")))
 						.collect(Collectors.joining(";")));
-		return taskDependencies;
+
+		return taskSequencies;
 	}
 
 	private void checkAllConditionsAreUsedInPost() {
@@ -377,12 +390,12 @@ public class TaskModel extends TaskModel_Base {
 	public GraphDTO getActivityGraph() {
 		GraphDTO graph = new GraphDTO();
 
-		Map<Task, Set<Task>> dependencies = getTaskDependencies();
+		Map<Task, Set<Task>> taskSequences = getTaskSequences();
 
-		removeRedundantTransitiveDependencies(dependencies);
+		removeRedundantTransitiveSequences(taskSequences);
 
 		List<NodeDTO> nodes = new ArrayList<NodeDTO>();
-		for (Task task : dependencies.keySet()) {
+		for (Task task : taskSequences.keySet()) {
 			String description = "PRE(" + task.getPreConditionSet().stream().map(d -> d.getPath().getValue())
 					.collect(Collectors.joining(",")) + ")";
 			if (!task.getSequenceConditionSet().isEmpty()) {
@@ -410,9 +423,9 @@ public class TaskModel extends TaskModel_Base {
 		}
 
 		List<EdgeDTO> edges = new ArrayList<EdgeDTO>();
-		for (Task task : dependencies.keySet()) {
-			dependencies.get(task).stream()
-					.forEach(t -> edges.add(new EdgeDTO(t.getExternalId(), task.getExternalId())));
+		for (Task task : taskSequences.keySet()) {
+			taskSequences.get(task).stream()
+					.forEach(t -> edges.add(new EdgeDTO(task.getExternalId(), t.getExternalId())));
 		}
 
 		graph.setNodes(nodes.stream().toArray(NodeDTO[]::new));
@@ -421,36 +434,35 @@ public class TaskModel extends TaskModel_Base {
 		return graph;
 	}
 
-	private void removeRedundantTransitiveDependencies(Map<Task, Set<Task>> dependencies) {
-		for (Task taskKey : dependencies.keySet()) {
-			Set<Task> transitiveDependencies = getTransitiveDependencies(taskKey, dependencies);
+	private void removeRedundantTransitiveSequences(Map<Task, Set<Task>> sequences) {
+		for (Task taskKey : sequences.keySet()) {
+			Set<Task> transitiveSequences = getTransitiveSequences(taskKey, sequences);
 			Set<Task> tasksToRemove = new HashSet<Task>();
-			for (Task taskValue : dependencies.get(taskKey)) {
-				if (transitiveDependencies.contains(taskValue)) {
+			for (Task taskValue : sequences.get(taskKey)) {
+				if (transitiveSequences.contains(taskValue)) {
 					tasksToRemove.add(taskValue);
 				}
 			}
-			dependencies.get(taskKey).removeAll(tasksToRemove);
+			sequences.get(taskKey).removeAll(tasksToRemove);
 		}
 	}
 
-	private Set<Task> getTransitiveDependencies(Task task, Map<Task, Set<Task>> dependencies) {
-		Set<Task> transitiveDependencies = new HashSet<Task>();
-		for (Task nextTask : dependencies.get(task)) {
-			transitiveDependencies.addAll(dependencies.get(nextTask));
+	private Set<Task> getTransitiveSequences(Task task, Map<Task, Set<Task>> sequences) {
+		Set<Task> transitiveSequences = new HashSet<Task>();
+		for (Task nextTask : sequences.get(task)) {
+			transitiveSequences.addAll(sequences.get(nextTask));
 		}
 
 		Set<Task> visited = new HashSet<Task>();
 		visited.add(task);
-		return tasksReachableFrom(transitiveDependencies, dependencies, visited);
+		return tasksReachableFrom(transitiveSequences, sequences, visited);
 	}
 
-	private Set<Task> tasksReachableFrom(Set<Task> reachableTasks, Map<Task, Set<Task>> dependencies,
-			Set<Task> visited) {
+	private Set<Task> tasksReachableFrom(Set<Task> reachableTasks, Map<Task, Set<Task>> sequences, Set<Task> visited) {
 		Set<Task> tasksToAdd = new HashSet<Task>();
 		for (Task task : reachableTasks) {
 			if (!visited.contains(task)) {
-				tasksToAdd.addAll(dependencies.get(task));
+				tasksToAdd.addAll(sequences.get(task));
 				visited.add(task);
 			}
 		}
@@ -459,7 +471,7 @@ public class TaskModel extends TaskModel_Base {
 		if (tasksToAdd.isEmpty()) {
 			return reachableTasks;
 		} else {
-			return tasksReachableFrom(reachableTasks, dependencies, visited);
+			return tasksReachableFrom(reachableTasks, sequences, visited);
 		}
 
 	}
