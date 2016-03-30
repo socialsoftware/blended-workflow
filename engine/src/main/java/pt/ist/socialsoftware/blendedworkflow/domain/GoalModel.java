@@ -78,43 +78,45 @@ public class GoalModel extends GoalModel_Base {
 
 		int goalCounter = 0;
 		for (DefEntityCondition defEntityCondition : conditionModel.getEntityAchieveConditionSet()) {
-			Goal entityGoal = new Goal(this, "g" + ++goalCounter);
-			top.addSubGoal(entityGoal);
-			entityGoal.addSuccessCondition(defEntityCondition);
+			if (!defEntityCondition.getEntity().getExists()) {
+				Goal entityGoal = new Goal(this, "g" + ++goalCounter);
+				top.addSubGoal(entityGoal);
+				entityGoal.addSuccessCondition(defEntityCondition);
 
-			for (Dependence dependence : conditionModel.getEntityDependenceConditionSet()) {
-				if (dependence.getProduct() == defEntityCondition.getEntity()) {
-					entityGoal.addActivationCondition(
-							DefPathCondition.getDefPathCondition(getSpecification(), dependence.getPath().getValue()));
-				}
-			}
-
-			for (MulCondition mulCondition : conditionModel.getEntityInvariantConditionSet()) {
-				if (mulCondition.getSourceEntity() == defEntityCondition.getEntity()) {
-					entityGoal.addEntityInvariantCondition(mulCondition);
-				}
-			}
-
-			for (Rule rule : conditionModel.getAttributeInvariantConditionSet()) {
-				if (defEntityCondition.getEntity().getRuleSet().contains(rule)) {
-					entityGoal.addAttributeInvariantCondition(rule);
-				}
-			}
-
-			int subCounter = 0;
-			for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
-				if (defAttributeCondition.getAttributeOfDef().getEntity() == defEntityCondition.getEntity()) {
-					Goal attributeGoal = new Goal(this, "g" + goalCounter + ++subCounter);
-					entityGoal.addSubGoal(attributeGoal);
-					attributeGoal.addSuccessCondition(defAttributeCondition);
-
-					for (Dependence dependence : conditionModel.getAttributeDependenceConditionSet()) {
-						if (dependence.getProduct() == defAttributeCondition.getAttributeOfDef()) {
-							attributeGoal.addActivationCondition(DefPathCondition
-									.getDefPathCondition(getSpecification(), dependence.getPath().getValue()));
-						}
+				for (Dependence dependence : conditionModel.getEntityDependenceConditionSet()) {
+					if (dependence.getProduct() == defEntityCondition.getEntity()) {
+						entityGoal.addActivationCondition(DefPathCondition.getDefPathCondition(getSpecification(),
+								dependence.getPath().getValue()));
 					}
+				}
 
+				for (MulCondition mulCondition : conditionModel.getEntityInvariantConditionSet()) {
+					if (mulCondition.getSourceEntity() == defEntityCondition.getEntity()) {
+						entityGoal.addEntityInvariantCondition(mulCondition);
+					}
+				}
+
+				for (Rule rule : conditionModel.getAttributeInvariantConditionSet()) {
+					if (defEntityCondition.getEntity().getRuleSet().contains(rule)) {
+						entityGoal.addAttributeInvariantCondition(rule);
+					}
+				}
+
+				int subCounter = 0;
+				for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
+					if (defAttributeCondition.getAttributeOfDef().getEntity() == defEntityCondition.getEntity()) {
+						Goal attributeGoal = new Goal(this, "g" + goalCounter + ++subCounter);
+						entityGoal.addSubGoal(attributeGoal);
+						attributeGoal.addSuccessCondition(defAttributeCondition);
+
+						for (Dependence dependence : conditionModel.getAttributeDependenceConditionSet()) {
+							if (dependence.getProduct() == defAttributeCondition.getAttributeOfDef()) {
+								attributeGoal.addActivationCondition(DefPathCondition
+										.getDefPathCondition(getSpecification(), dependence.getPath().getValue()));
+							}
+						}
+
+					}
 				}
 			}
 		}
