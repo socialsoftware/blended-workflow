@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,16 @@ public class ConditionModel extends ConditionModel_Base {
 		dataModel.getDependenceSet().stream().filter(d -> !d.getProduct().getProductType().equals(ProductType.ENTITY))
 				.forEach(d -> this.addAttributeDependenceCondition(d));
 
+	}
+
+	public Set<DefProductCondition> getAllProductionConditions() {
+		Set<DefProductCondition> allDefConditions = new HashSet<DefProductCondition>(getEntityAchieveConditionSet()
+				.stream().filter(d -> !d.getEntity().getExists()).collect(Collectors.toSet()));
+
+		allDefConditions.addAll(getAttributeAchieveConditionSet().stream()
+				.filter(d -> !d.getAttributeOfDef().getEntity().getExists()).collect(Collectors.toSet()));
+
+		return allDefConditions;
 	}
 
 	static public Set<Product> getProductsOfDefConditions(Set<? extends DefProductCondition> defConditions) {
