@@ -200,7 +200,7 @@ public class TaskModel extends TaskModel_Base {
 		Task newExtratedTask = addTask(taskName, taskDescription, postConditionSet);
 
 		for (String path : sequenceConditionValues) {
-			if (newFromTask.getPostConditionProducts().contains(getDataModel().getSourceOfPath(path))) {
+			if (newFromTask.getPostProducts().contains(getDataModel().getSourceOfPath(path))) {
 				newFromTask.addSequenceCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
 			} else {
 				newExtratedTask.addSequenceCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
@@ -320,11 +320,15 @@ public class TaskModel extends TaskModel_Base {
 	}
 
 	public void checkModel() {
-		checkAllConditionsAreUsedInPost();
+		checkModelCompleteness();
 
-		getTasksSet().stream().forEach(t -> t.checkConsistency());
+		checkModelConsistency();
 
 		checkCycles();
+	}
+
+	public void checkModelConsistency() {
+		getTasksSet().stream().forEach(t -> t.checkConsistency());
 	}
 
 	private void checkCycles() {
@@ -357,27 +361,19 @@ public class TaskModel extends TaskModel_Base {
 		return taskSequencies;
 	}
 
-	private void checkAllConditionsAreUsedInPost() {
+	private void checkModelCompleteness() {
+		checkAllProductionConditionsAreApplied();
+
+		// TODO
+		// checkAllDependenceConditionsAreApplied();
+
+		checkAllMultiplicityConditionsAreApplied();
+
+		checkAllRulesAreApplied();
+	}
+
+	public void checkAllRulesAreApplied() {
 		ConditionModel conditionModel = getConditionModel();
-
-		Set<DefProductCondition> allDefConditions = new HashSet<DefProductCondition>(
-				conditionModel.getEntityAchieveConditionSet().stream().filter(d -> !d.getEntity().getExists())
-						.collect(Collectors.toSet()));
-
-		allDefConditions.addAll(conditionModel.getAttributeAchieveConditionSet().stream()
-				.filter(d -> !d.getAttributeOfDef().getEntity().getExists()).collect(Collectors.toSet()));
-		allDefConditions.removeAll(
-				getTasksSet().stream().flatMap(t -> t.getPostConditionSet().stream()).collect(Collectors.toSet()));
-		if (!allDefConditions.isEmpty())
-			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, allDefConditions.stream()
-					.map(c -> "DEF(" + c.getPath().getValue() + ")").collect(Collectors.joining(",")));
-
-		Set<MulCondition> allMulConditions = new HashSet<MulCondition>(conditionModel.getEntityInvariantConditionSet());
-		allMulConditions.removeAll(getTasksSet().stream().flatMap(t -> t.getMultiplicityInvariantSet().stream())
-				.collect(Collectors.toSet()));
-		if (!allMulConditions.isEmpty())
-			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
-					allMulConditions.stream().map(c -> c.getSubPath()).collect(Collectors.joining(",")));
 
 		Set<Rule> allRules = new HashSet<Rule>(conditionModel.getAttributeInvariantConditionSet());
 		allRules.removeAll(
@@ -385,6 +381,29 @@ public class TaskModel extends TaskModel_Base {
 		if (!allRules.isEmpty())
 			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
 					allRules.stream().map(r -> r.getName()).collect(Collectors.joining(",")));
+	}
+
+	public void checkAllMultiplicityConditionsAreApplied() {
+		ConditionModel conditionModel = getConditionModel();
+
+		Set<MulCondition> allMulConditions = new HashSet<MulCondition>(conditionModel.getEntityInvariantConditionSet());
+		allMulConditions.removeAll(getTasksSet().stream().flatMap(t -> t.getMultiplicityInvariantSet().stream())
+				.collect(Collectors.toSet()));
+		if (!allMulConditions.isEmpty())
+			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
+					allMulConditions.stream().map(c -> c.getSubPath()).collect(Collectors.joining(",")));
+	}
+
+	private void checkAllProductionConditionsAreApplied() {
+		ConditionModel conditionModel = getConditionModel();
+
+		Set<DefProductCondition> allDefConditions = conditionModel.getAllProductionConditions();
+
+		allDefConditions.removeAll(
+				getTasksSet().stream().flatMap(t -> t.getPostConditionSet().stream()).collect(Collectors.toSet()));
+		if (!allDefConditions.isEmpty())
+			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, allDefConditions.stream()
+					.map(c -> "DEF(" + c.getPath().getValue() + ")").collect(Collectors.joining(",")));
 	}
 
 	public GraphDTO getActivityGraph() {

@@ -74,12 +74,11 @@ public class GoalModel extends GoalModel_Base {
 	public void generateGoals() {
 		ConditionModel conditionModel = getSpecification().getConditionModel();
 
-		Goal top = new Goal(this, "top");
-
-		int goalCounter = 0;
+		int goalCounter = 1;
+		Goal top = new Goal(this, "g" + goalCounter++);
 		for (DefEntityCondition defEntityCondition : conditionModel.getEntityAchieveConditionSet()) {
 			if (!defEntityCondition.getEntity().getExists()) {
-				Goal entityGoal = new Goal(this, "g" + ++goalCounter);
+				Goal entityGoal = new Goal(this, "g" + goalCounter++);
 				top.addSubGoal(entityGoal);
 				entityGoal.addSuccessCondition(defEntityCondition);
 
@@ -102,10 +101,10 @@ public class GoalModel extends GoalModel_Base {
 					}
 				}
 
-				int subCounter = 0;
+				int subCounter = 1;
 				for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
 					if (defAttributeCondition.getAttributeOfDef().getEntity() == defEntityCondition.getEntity()) {
-						Goal attributeGoal = new Goal(this, "g" + goalCounter + ++subCounter);
+						Goal attributeGoal = new Goal(this, "g" + goalCounter + subCounter++);
 						entityGoal.addSubGoal(attributeGoal);
 						attributeGoal.addSuccessCondition(defAttributeCondition);
 
@@ -120,6 +119,7 @@ public class GoalModel extends GoalModel_Base {
 				}
 			}
 		}
+		checkModel();
 
 	}
 
@@ -137,6 +137,8 @@ public class GoalModel extends GoalModel_Base {
 		} else if (relation == GoalRelation.CHILD) {
 			result = mergeParentChildGoals(newGoalName, goalOne, goalTwo);
 		}
+
+		checkModel();
 
 		return result;
 	}
@@ -176,8 +178,6 @@ public class GoalModel extends GoalModel_Base {
 	}
 
 	private Goal mergeParentChildGoals(String newGoalName, Goal parentGoal, Goal childGoal) {
-		parentGoal.checkCanMergeChild(childGoal);
-
 		childGoal.getSubGoalSet().stream().forEach((goal) -> parentGoal.addSubGoal(goal));
 
 		childGoal.getSuccessConditionSet().stream().forEach((cond) -> parentGoal.addSuccessCondition(cond));
@@ -196,6 +196,41 @@ public class GoalModel extends GoalModel_Base {
 		parentGoal.setName(newGoalName);
 
 		return parentGoal;
+	}
+
+	public void checkModel() {
+		checkModelCompleteness();
+		checkModelConsistency();
+	}
+
+	public void checkModelCompleteness() {
+		// TODO
+		// checkAllProductsAreProduced();
+		// checkAllDependenceConditionsAreApplied();
+		// checkAllMultiplicityConditionsAreApplied();
+		// checkAllRulesAreApplied();
+	}
+
+	public void checkModelConsistency() {
+		checkSingleRootConstraint();
+		checkAttributeChildEntityParentConstraint();
+		checkActivationConditionDependenciesConstraint();
+	}
+
+	private void checkActivationConditionDependenciesConstraint() {
+		getGoalSet().stream().filter(g -> !g.getActivationConditionSet().isEmpty())
+				.forEach(g -> g.checkActivationConditionDependenciesConstraint());
+	}
+
+	private void checkAttributeChildEntityParentConstraint() {
+		getGoalSet().stream().forEach(g -> g.checkAttributeChildEntityParentConstraint());
+
+	}
+
+	private void checkSingleRootConstraint() {
+		if (getGoalSet().stream().filter(g -> g.getParentGoal() == null).count() != 1)
+			throw new BWException(BWErrorType.INCONSISTENT_GOALMODEL, "multiple top goals");
+
 	}
 
 	public GraphDTO getGoalGraph() {

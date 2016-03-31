@@ -173,7 +173,7 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 			spec.getGoalModel().mergeGoals("Name", topGoal, childGoalOne);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.UNMERGEABLE_GOALS, bwe.getError());
+			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
 		}
 
 	}

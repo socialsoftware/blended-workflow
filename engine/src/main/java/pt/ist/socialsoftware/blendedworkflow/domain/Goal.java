@@ -251,32 +251,10 @@ public class Goal extends Goal_Base {
 		return Stream.concat(Stream.of(this), getSubGoalSet().stream().flatMap(Goal::flattened));
 	}
 
-	public void checkCanMergeChild(Goal childGoal) {
-		Optional<Goal> oGoal = flattened().filter(
-				goal -> (goal != this && goal != childGoal && checkGoalActIntersectsAnotherGoalSuc(childGoal, goal)))
-				.findAny();
-
-		if (oGoal.isPresent()) {
-			throw new BWException(BWErrorType.UNMERGEABLE_GOALS, getName() + " - " + childGoal.getName());
-		}
-	}
-
-	private boolean checkGoalActIntersectsAnotherGoalSuc(Goal childGoal, Goal goal) {
-		for (DefPathCondition defPathCondition : childGoal.getActivationConditionSet()) {
-			Set<Product> successProducts = ConditionModel.getProductsOfDefConditions(goal.getSuccessConditionSet());
-			if (successProducts.contains(defPathCondition.getTargetOfPath())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public Goal extractChild(String newGoalName, Set<DefProductCondition> successConditions) {
 		checkConditionsNotEmpty(successConditions);
 		checkConditionsExistInSource(successConditions);
 		removeConditionsFromSource(successConditions);
-
-		checkCanExtractChild(successConditions);
 
 		Goal newGoal = new Goal(getGoalModel(), newGoalName);
 		successConditions.stream().forEach((def) -> newGoal.addSuccessCondition(def));
@@ -291,6 +269,8 @@ public class Goal extends Goal_Base {
 		addRuleConditions();
 		newGoal.addRuleConditions();
 
+		getGoalModel().checkModel();
+
 		return newGoal;
 	}
 
@@ -298,8 +278,6 @@ public class Goal extends Goal_Base {
 		checkConditionsNotEmpty(successConditions);
 		checkConditionsExistInSource(successConditions);
 		removeConditionsFromSource(successConditions);
-
-		checkCanExtractSibling(successConditions);
 
 		Goal newGoal = new Goal(getGoalModel(), newGoalName);
 
@@ -314,6 +292,8 @@ public class Goal extends Goal_Base {
 
 		addRuleConditions();
 		newGoal.addRuleConditions();
+
+		getGoalModel().checkModel();
 
 		return newGoal;
 	}
@@ -339,21 +319,6 @@ public class Goal extends Goal_Base {
 		Set<Entity> entities = ConditionModel.getEntitiesOfDefConditionSet(getSuccessConditionSet());
 
 		entities.stream().flatMap((e) -> e.getMultConditions().stream()).forEach((m) -> addEntityInvariantCondition(m));
-	}
-
-	private void checkCanExtractSibling(Set<DefProductCondition> successConditions) {
-		checkIsNotTopGoal();
-		checkSiblingsAttributeConstraint(successConditions);
-	}
-
-	private void checkCanExtractChild(Set<DefProductCondition> successConditions) {
-		checkParentChildAttributeConstraint(successConditions);
-		checkDependenceConstraint(successConditions);
-	}
-
-	private void checkIsNotTopGoal() {
-		if (getParentGoal() == null)
-			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL, "checkIsNotTopGoal");
 	}
 
 	private void checkConditionsNotEmpty(Set<DefProductCondition> successConditions) {
@@ -382,67 +347,65 @@ public class Goal extends Goal_Base {
 
 	}
 
-	private void checkSiblingsAttributeConstraint(Set<DefProductCondition> successConditions) {
-		Set<DefProductCondition> conditionsLeft = new HashSet<DefProductCondition>(getSuccessConditionSet());
-		conditionsLeft.removeAll(successConditions);
-		checkSiblingsAttributeConstraintBasic(successConditions, conditionsLeft);
-		checkSiblingsAttributeConstraintBasic(conditionsLeft, successConditions);
-	}
-
-	private void checkSiblingsAttributeConstraintBasic(Set<DefProductCondition> successConditionsOne,
-			Set<DefProductCondition> successConditionsTwo) {
-		Set<Entity> entities = ConditionModel.getEntitiesOfDefConditionSet(successConditionsOne);
-
-		Optional<Entity> oEntity = successConditionsTwo.stream().filter(DefAttributeCondition.class::isInstance)
-				.map(DefAttributeCondition.class::cast).map((def) -> def.getAttributeOfDef().getEntity())
-				.filter((e) -> entities.contains(e)).findFirst();
-
-		if (oEntity.isPresent())
-			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
-					"checkSiblingsAttributeConstraintBasic:" + oEntity.get().getName());
-	}
-
-	private void checkParentChildAttributeConstraint(Set<DefProductCondition> successConditions) {
-		Set<Entity> entities = ConditionModel.getEntitiesOfDefConditionSet(successConditions);
-
-		Optional<Entity> oEntity = flattened()
-				.flatMap((g) -> g.getSuccessConditionSet().stream().filter(DefAttributeCondition.class::isInstance))
-				.map(DefAttributeCondition.class::cast).map((def) -> def.getAttributeOfDef().getEntity())
-				.filter((e) -> entities.contains(e)).findFirst();
-
-		if (oEntity.isPresent())
-			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
-					"checkParentChildAttributeConstraint:" + oEntity.get().getName());
-	}
-
-	private void checkDependenceConstraint(Set<DefProductCondition> successConditions) {
-		Set<DefProductCondition> topSuccessConditions = new HashSet<DefProductCondition>();
-		topSuccessConditions.addAll(getSuccessConditionSet());
-		topSuccessConditions.removeAll(successConditions);
-
-		log.debug("topSuccessConditions size:{}", topSuccessConditions.size());
-
-		Set<Product> topProducts = ConditionModel.getProductsOfDefConditions(topSuccessConditions);
-		log.debug("topProducts {}", topProducts.stream().map((p) -> p.getName()).collect(Collectors.joining(",")));
-
-		Set<Product> succProducts = ConditionModel.getProductsOfDefConditions(successConditions);
-		log.debug("succProducts {}", succProducts.stream().map((p) -> p.getName()).collect(Collectors.joining(",")));
-
-		Optional<Product> oProduct = topProducts.stream().flatMap((p) -> p.getDependenceSet().stream())
-				.map((d) -> d.getPath().getTarget()).filter((p) -> succProducts.contains(p)).findFirst();
-
-		if (oProduct.isPresent())
-			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
-					"checkDependenceConstraint:" + oProduct.get().getName());
-
-	}
-
 	private DataModel getDataModel() {
 		return getSpecification().getDataModel();
 	}
 
 	private Specification getSpecification() {
 		return getGoalModel().getSpecification();
+	}
+
+	public void checkAttributeChildEntityParentConstraint() {
+		Set<Attribute> attributes = getProducedAttributes();
+
+		if (!attributes.isEmpty()) {
+			Set<Goal> goals = getTransitiveParentGoals();
+			goals.add(this);
+			Set<Entity> entities = goals.stream().flatMap(g -> g.getProducedEntities().stream())
+					.collect(Collectors.toSet());
+			if (!attributes.stream().allMatch(a -> entities.contains(a.getEntity()))) {
+				throw new BWException(BWErrorType.INCONSISTENT_GOALMODEL,
+						"Attributes of " + getName() + " do not have its Entity in a parent goal");
+			}
+		}
+	}
+
+	public void checkActivationConditionDependenciesConstraint() {
+		Set<Goal> subGoals = flattened().collect(Collectors.toSet());
+		subGoals.remove(this);
+
+		for (DefPathCondition defPath : getActivationConditionSet()) {
+			Product defProduct = defPath.getTargetOfPath();
+			if (subGoals.stream().anyMatch(g -> g.getProducedProducts().contains(defProduct))) {
+				throw new BWException(BWErrorType.INCONSISTENT_GOALMODEL, "Subgoals of " + getName()
+						+ " produce product " + defProduct.getFullPath() + " which is in its activation condition");
+			}
+		}
+	}
+
+	private Set<Product> getProducedProducts() {
+		return getSuccessConditionSet().stream().map(d -> d.getPath().getTarget()).collect(Collectors.toSet());
+	}
+
+	private Set<Entity> getProducedEntities() {
+		return getSuccessConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Entity.class::isInstance)
+				.map(Entity.class::cast).collect(Collectors.toSet());
+	}
+
+	private Set<Attribute> getProducedAttributes() {
+		return getSuccessConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Attribute.class::isInstance)
+				.map(Attribute.class::cast).collect(Collectors.toSet());
+	}
+
+	private Set<Goal> getTransitiveParentGoals() {
+		Set<Goal> parents = new HashSet<Goal>();
+
+		if (getParentGoal() != null) {
+			parents.add(getParentGoal());
+			parents.addAll(getParentGoal().getTransitiveParentGoals());
+		}
+
+		return parents;
 	}
 
 }

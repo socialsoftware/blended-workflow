@@ -66,16 +66,15 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 		spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
 
 		entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-		attributeOne = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_ONE_NAME, AttributeType.NUMBER,
-				true, false, false);
-		attributeTwo = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_TWO_NAME, AttributeType.NUMBER,
-				true, false, false);
+		attributeOne = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_ONE_NAME, AttributeType.NUMBER, true,
+				false, false);
+		attributeTwo = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_TWO_NAME, AttributeType.NUMBER, true,
+				false, false);
 
 		entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
 		attributeThree = new Attribute(spec.getDataModel(), entityTwo, "att3", AttributeType.BOOLEAN, true, false,
 				false);
-		attributeFour = new Attribute(spec.getDataModel(), entityTwo, "att4", AttributeType.STRING, true, false,
-				false);
+		attributeFour = new Attribute(spec.getDataModel(), entityTwo, "att4", AttributeType.STRING, true, false, false);
 
 		entityThree = new Entity(spec.getDataModel(), "Entity three name", false);
 
@@ -141,7 +140,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 			topGoal.extractSibling("secondTop", successConditions);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
+			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
 		}
 	}
 
@@ -179,8 +178,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 			childGoalTwo.extractSibling(CHILD_GOAL_THREE, successConditions);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-			assertEquals("checkSiblingsAttributeConstraintBasic:" + entityTwo.getName(), bwe.getMessage());
+			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
 		}
 	}
 
@@ -193,8 +191,7 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 			childGoalTwo.extractSibling(CHILD_GOAL_THREE, successConditions);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-			assertEquals("checkSiblingsAttributeConstraintBasic:" + entityTwo.getName(), bwe.getMessage());
+			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
 		}
 	}
 

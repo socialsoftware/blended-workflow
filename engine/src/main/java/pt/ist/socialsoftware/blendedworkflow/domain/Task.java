@@ -55,7 +55,7 @@ public class Task extends Task_Base {
 	}
 
 	private void checkSequenceConditon(DefPathCondition sequenceCondition) {
-		if (!getPostConditionProducts().stream().map(p -> p.getEntity())
+		if (!getPostProducts().stream().map(p -> p.getEntity())
 				.anyMatch(e -> e == sequenceCondition.getPath().getSource())) {
 			throw new BWException(BWErrorType.SEQUENCE_CONDITION_INVALID, sequenceCondition.getPath().getValue());
 		}
@@ -208,9 +208,8 @@ public class Task extends Task_Base {
 	}
 
 	private void checkDependenceConstraint() {
-		Set<Product> postProducts = ConditionModel.getProductsOfDefConditions(getPostConditionSet());
-
-		Set<Product> preProducts = ConditionModel.getProductsOfDefConditions(getPreConditionSet());
+		Set<Product> preProducts = getPreProducts();
+		Set<Product> postProducts = getPostProducts();
 
 		Optional<Dependence> oDep = getTaskModel().getSpecification().getDataModel().getDependenceSet().stream()
 				.filter(d -> postProducts.contains(d.getProduct()) && !preProducts.contains(d.getTarget())
@@ -254,17 +253,21 @@ public class Task extends Task_Base {
 		}
 	}
 
-	public Set<Entity> getPostConditionEntities() {
+	public Set<Entity> getPostEntities() {
 		return getPostConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Entity.class::isInstance)
 				.map(Entity.class::cast).collect(Collectors.toSet());
 	}
 
-	public Set<Product> getPostConditionProducts() {
+	public Set<Product> getPostProducts() {
 		return getPostConditionSet().stream().map(d -> d.getPath().getTarget()).collect(Collectors.toSet());
 	}
 
+	public Set<Product> getPreProducts() {
+		return getPreConditionSet().stream().map(d -> d.getPath().getTarget()).collect(Collectors.toSet());
+	}
+
 	public Set<Entity> getCreationDependentAdjacentEntities() {
-		return getPreConditionSet().stream().filter(d -> getPostConditionEntities().contains(d.getPath().getSource()))
+		return getPreConditionSet().stream().filter(d -> getPostEntities().contains(d.getPath().getSource()))
 				.map(d -> d.getPath().getAdjacent()).collect(Collectors.toSet());
 	}
 
