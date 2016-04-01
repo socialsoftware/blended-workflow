@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -355,9 +354,8 @@ public class Entity extends Entity_Base {
 	}
 
 	public Set<MulCondition> getMultConditions() {
-		return Stream.concat(getRelationOneSet().stream(), getRelationTwoSet().stream())
-				.flatMap(r -> r.getMulConditionSet().stream()).filter(m -> m.getSourceEntity() == this)
-				.collect(Collectors.toSet());
+		return getRelationSet().stream().flatMap(r -> r.getMulConditionSet().stream())
+				.filter(m -> m.getSourceEntity() == this).collect(Collectors.toSet());
 	}
 
 	@Override

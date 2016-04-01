@@ -619,7 +619,7 @@ public class DesignInterface {
 
 		Set<DefProductCondition> successConditions = getConditionSet(spec, successConditionDTO);
 
-		return parentGoal.extractChild(newGoalName, successConditions);
+		return spec.getGoalModel().extractChild(parentGoal, newGoalName, successConditions);
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -630,7 +630,7 @@ public class DesignInterface {
 
 		Set<DefProductCondition> successConditions = getConditionSet(spec, successConditionDTO);
 
-		return sourceGoal.extractSibling(newGoalName, successConditions);
+		return spec.getGoalModel().extractSibling(sourceGoal, newGoalName, successConditions);
 	}
 
 	@Atomic(mode = TxMode.WRITE)

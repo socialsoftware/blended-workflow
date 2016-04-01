@@ -1,7 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,46 +76,24 @@ public class GoalModel extends GoalModel_Base {
 	public void generateGoals() {
 		ConditionModel conditionModel = getSpecification().getConditionModel();
 
-		int goalCounter = 1;
-		Goal top = new Goal(this, "g" + goalCounter++);
+		int goalCounter = 0;
+		Goal top = new Goal(this, "g" + ++goalCounter);
 		for (DefEntityCondition defEntityCondition : conditionModel.getEntityAchieveConditionSet()) {
 			if (!defEntityCondition.getEntity().getExists()) {
-				Goal entityGoal = new Goal(this, "g" + goalCounter++);
+				Goal entityGoal = new Goal(this, "g" + ++goalCounter);
 				top.addSubGoal(entityGoal);
 				entityGoal.addSuccessCondition(defEntityCondition);
 
-				for (Dependence dependence : conditionModel.getEntityDependenceConditionSet()) {
-					if (dependence.getProduct() == defEntityCondition.getEntity()) {
-						entityGoal.addActivationCondition(DefPathCondition.getDefPathCondition(getSpecification(),
-								dependence.getPath().getValue()));
-					}
-				}
+				entityGoal.applyConditions();
 
-				for (MulCondition mulCondition : conditionModel.getEntityInvariantConditionSet()) {
-					if (mulCondition.getSourceEntity() == defEntityCondition.getEntity()) {
-						entityGoal.addEntityInvariantCondition(mulCondition);
-					}
-				}
-
-				for (Rule rule : conditionModel.getAttributeInvariantConditionSet()) {
-					if (defEntityCondition.getEntity().getRuleSet().contains(rule)) {
-						entityGoal.addAttributeInvariantCondition(rule);
-					}
-				}
-
-				int subCounter = 1;
+				int subCounter = 0;
 				for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
 					if (defAttributeCondition.getAttributeOfDef().getEntity() == defEntityCondition.getEntity()) {
-						Goal attributeGoal = new Goal(this, "g" + goalCounter + subCounter++);
+						Goal attributeGoal = new Goal(this, "g" + goalCounter + ++subCounter);
 						entityGoal.addSubGoal(attributeGoal);
 						attributeGoal.addSuccessCondition(defAttributeCondition);
 
-						for (Dependence dependence : conditionModel.getAttributeDependenceConditionSet()) {
-							if (dependence.getProduct() == defAttributeCondition.getAttributeOfDef()) {
-								attributeGoal.addActivationCondition(DefPathCondition
-										.getDefPathCondition(getSpecification(), dependence.getPath().getValue()));
-							}
-						}
+						attributeGoal.applyConditions();
 
 					}
 				}
@@ -152,50 +132,66 @@ public class GoalModel extends GoalModel_Base {
 		newGoal.setParentGoal(goalOne.getParentGoal());
 
 		Stream.concat(goalOne.getSubGoalSet().stream(), goalTwo.getSubGoalSet().stream())
-				.forEach((goal) -> newGoal.addSubGoal(goal));
+				.forEach(goal -> newGoal.addSubGoal(goal));
 
 		Stream.concat(goalOne.getSuccessConditionSet().stream(), goalTwo.getSuccessConditionSet().stream())
-				.forEach((cond) -> newGoal.addSuccessCondition(cond));
-
-		Stream.concat(goalOne.getActivationConditionSet().stream(), goalTwo.getActivationConditionSet().stream())
-				.forEach((cond) -> newGoal.addActivationCondition(cond));
-		newGoal.purgeActivationCondition();
-
-		Stream.concat(goalOne.getEntityInvariantConditionSet().stream(),
-				goalTwo.getEntityInvariantConditionSet().stream())
-				.forEach((cond) -> newGoal.addEntityInvariantCondition(cond));
-
-		Stream.concat(goalOne.getAttributeInvariantConditionSet().stream(),
-				goalTwo.getAttributeInvariantConditionSet().stream())
-				.forEach((rule) -> newGoal.addAttributeInvariantCondition(rule));
+				.forEach(cond -> newGoal.addSuccessCondition(cond));
 
 		goalOne.delete();
 		goalTwo.delete();
 
 		newGoal.setName(newGoalName);
 
+		newGoal.applyConditions();
+
 		return newGoal;
 	}
 
 	private Goal mergeParentChildGoals(String newGoalName, Goal parentGoal, Goal childGoal) {
-		childGoal.getSubGoalSet().stream().forEach((goal) -> parentGoal.addSubGoal(goal));
-
-		childGoal.getSuccessConditionSet().stream().forEach((cond) -> parentGoal.addSuccessCondition(cond));
-
-		childGoal.getActivationConditionSet().stream().forEach((cond) -> parentGoal.addActivationCondition(cond));
-		parentGoal.purgeActivationCondition();
-
-		childGoal.getEntityInvariantConditionSet().stream()
-				.forEach((mul) -> parentGoal.addEntityInvariantCondition(mul));
-
-		childGoal.getAttributeInvariantConditionSet().stream()
-				.forEach((rule) -> parentGoal.addAttributeInvariantCondition(rule));
-
+		childGoal.getSubGoalSet().stream().forEach(goal -> parentGoal.addSubGoal(goal));
+		childGoal.getSuccessConditionSet().stream().forEach(cond -> parentGoal.addSuccessCondition(cond));
 		childGoal.delete();
 
+		parentGoal.shrinkGoal(new HashSet<DefProductCondition>());
 		parentGoal.setName(newGoalName);
+		parentGoal.applyConditions();
 
 		return parentGoal;
+	}
+
+	public Goal extractChild(Goal goal, String newGoalName, Set<DefProductCondition> successConditions) {
+		checkConditionsNotEmpty(successConditions);
+		goal.checkConditionsExistSucc(successConditions);
+		goal.shrinkGoal(successConditions);
+
+		Goal newGoal = new Goal(this, newGoalName);
+		successConditions.stream().forEach((def) -> newGoal.addSuccessCondition(def));
+		newGoal.setParentGoal(goal);
+
+		goal.applyConditions();
+		newGoal.applyConditions();
+
+		checkModel();
+
+		return newGoal;
+	}
+
+	public Goal extractSibling(Goal goal, String newGoalName, Set<DefProductCondition> successConditions) {
+		checkConditionsNotEmpty(successConditions);
+		goal.checkConditionsExistSucc(successConditions);
+		goal.shrinkGoal(successConditions);
+
+		Goal newGoal = new Goal(this, newGoalName);
+
+		successConditions.stream().forEach((def) -> newGoal.addSuccessCondition(def));
+		newGoal.setParentGoal(goal.getParentGoal());
+
+		goal.applyConditions();
+		newGoal.applyConditions();
+
+		checkModel();
+
+		return newGoal;
 	}
 
 	public void checkModel() {
@@ -231,6 +227,11 @@ public class GoalModel extends GoalModel_Base {
 		if (getGoalSet().stream().filter(g -> g.getParentGoal() == null).count() != 1)
 			throw new BWException(BWErrorType.INCONSISTENT_GOALMODEL, "multiple top goals");
 
+	}
+
+	private void checkConditionsNotEmpty(Set<DefProductCondition> successConditions) {
+		if (successConditions.isEmpty())
+			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL, "checkConditionsNotEmpty");
 	}
 
 	public GraphDTO getGoalGraph() {

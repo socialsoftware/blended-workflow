@@ -17,7 +17,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
 
 public class Goal extends Goal_Base {
-	private static Logger log = LoggerFactory.getLogger(Goal.class);
+	private static Logger logger = LoggerFactory.getLogger(Goal.class);
 
 	public enum GoalRelation {
 		CHILD, PARENT, SIBLING, OTHER;
@@ -238,95 +238,41 @@ public class Goal extends Goal_Base {
 		return GoalRelation.OTHER;
 	}
 
-	public void purgeActivationCondition() {
-		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
-			Set<Product> successProducts = ConditionModel.getProductsOfDefConditions(getSuccessConditionSet());
-			if (successProducts.contains(defPathCondition.getTargetOfPath()))
-				removeActivationCondition(defPathCondition);
-		}
-
+	public void applyConditions() {
+		applyActivationConditions();
+		applyMultiplicityConditions();
+		applyRuleConditions();
 	}
 
-	private Stream<Goal> flattened() {
-		return Stream.concat(Stream.of(this), getSubGoalSet().stream().flatMap(Goal::flattened));
-	}
-
-	public Goal extractChild(String newGoalName, Set<DefProductCondition> successConditions) {
-		checkConditionsNotEmpty(successConditions);
-		checkConditionsExistInSource(successConditions);
-		removeConditionsFromSource(successConditions);
-
-		Goal newGoal = new Goal(getGoalModel(), newGoalName);
-		successConditions.stream().forEach((def) -> newGoal.addSuccessCondition(def));
-		newGoal.setParentGoal(this);
-
-		addActivationConditions();
-		newGoal.addActivationConditions();
-
-		addMultiplicityConditions();
-		newGoal.addMultiplicityConditions();
-
-		addRuleConditions();
-		newGoal.addRuleConditions();
-
-		getGoalModel().checkModel();
-
-		return newGoal;
-	}
-
-	public Goal extractSibling(String newGoalName, Set<DefProductCondition> successConditions) {
-		checkConditionsNotEmpty(successConditions);
-		checkConditionsExistInSource(successConditions);
-		removeConditionsFromSource(successConditions);
-
-		Goal newGoal = new Goal(getGoalModel(), newGoalName);
-
-		successConditions.stream().forEach((def) -> newGoal.addSuccessCondition(def));
-		newGoal.setParentGoal(getParentGoal());
-
-		addActivationConditions();
-		newGoal.addActivationConditions();
-
-		addMultiplicityConditions();
-		newGoal.addMultiplicityConditions();
-
-		addRuleConditions();
-		newGoal.addRuleConditions();
-
-		getGoalModel().checkModel();
-
-		return newGoal;
-	}
-
-	private void addActivationConditions() {
-		Set<String> paths = ConditionModel.getProductsOfDefConditions(getSuccessConditionSet()).stream()
-				.flatMap((p) -> p.getDependenceSet().stream()).map((d) -> d.getPath().getValue())
-				.collect(Collectors.toSet());
+	private void applyActivationConditions() {
+		Set<String> paths = getProducedProducts().stream().flatMap(p -> p.getDependenceSet().stream())
+				.map(d -> d.getPath().getValue()).collect(Collectors.toSet());
 
 		for (String path : paths) {
-			if (!ConditionModel.getEntitiesOfDefConditionSet(getSuccessConditionSet())
-					.contains(getDataModel().getTargetOfPath(path)))
+			if (!getProducedProducts().contains(getDataModel().getTargetOfPath(path)))
 				addActivationCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
 		}
 	}
 
-	private void addRuleConditions() {
-		ConditionModel.getEntitiesOfDefConditionSet(getSuccessConditionSet()).stream()
-				.flatMap(def -> def.getRuleSet().stream()).forEach(rule -> addAttributeInvariantCondition(rule));
+	private void applyMultiplicityConditions() {
+		getProducedEntities().stream().flatMap(e -> e.getMultConditions().stream())
+				.forEach(m -> addEntityInvariantCondition(m));
 	}
 
-	private void addMultiplicityConditions() {
-		Set<Entity> entities = ConditionModel.getEntitiesOfDefConditionSet(getSuccessConditionSet());
-
-		entities.stream().flatMap((e) -> e.getMultConditions().stream()).forEach((m) -> addEntityInvariantCondition(m));
+	private void applyRuleConditions() {
+		getProducedEntities().stream().flatMap(e -> e.getRuleSet().stream())
+				.forEach(rule -> addAttributeInvariantCondition(rule));
 	}
 
-	private void checkConditionsNotEmpty(Set<DefProductCondition> successConditions) {
-		if (successConditions.isEmpty())
-			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL, "checkConditionsNotEmpty");
+	private DataModel getDataModel() {
+		return getSpecification().getDataModel();
 	}
 
-	private void checkConditionsExistInSource(Set<DefProductCondition> successConditions) {
+	private Specification getSpecification() {
+		return getGoalModel().getSpecification();
+	}
+
+	public void checkConditionsExistSucc(Set<DefProductCondition> successConditions) {
 		Optional<DefProductCondition> oCond = successConditions.stream()
 				.filter((def) -> !getSuccessConditionSet().contains(def)).findFirst();
 
@@ -336,23 +282,11 @@ public class Goal extends Goal_Base {
 
 	}
 
-	private void removeConditionsFromSource(Set<DefProductCondition> successConditions) {
-		successConditions.stream().forEach((def) -> removeSuccessCondition(def));
-		getActivationConditionSet().stream().forEach((def) -> removeActivationCondition(def));
-		getEntityInvariantConditionSet().stream().forEach((mul) -> removeEntityInvariantCondition(mul));
-		getAttributeInvariantConditionSet().stream().forEach((rul) -> removeAttributeInvariantCondition(rul));
-
-		if (getSuccessConditionSet().isEmpty())
-			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL, "checkNotAllConditionsAreExtracted");
-
-	}
-
-	private DataModel getDataModel() {
-		return getSpecification().getDataModel();
-	}
-
-	private Specification getSpecification() {
-		return getGoalModel().getSpecification();
+	public void shrinkGoal(Set<DefProductCondition> successConditions) {
+		successConditions.stream().forEach(def -> removeSuccessCondition(def));
+		getActivationConditionSet().stream().forEach(def -> removeActivationCondition(def));
+		getEntityInvariantConditionSet().stream().forEach(mul -> removeEntityInvariantCondition(mul));
+		getAttributeInvariantConditionSet().stream().forEach(rul -> removeAttributeInvariantCondition(rul));
 	}
 
 	public void checkAttributeChildEntityParentConstraint() {
@@ -381,6 +315,10 @@ public class Goal extends Goal_Base {
 						+ " produce product " + defProduct.getFullPath() + " which is in its activation condition");
 			}
 		}
+	}
+
+	private Stream<Goal> flattened() {
+		return Stream.concat(Stream.of(this), getSubGoalSet().stream().flatMap(Goal::flattened));
 	}
 
 	private Set<Product> getProducedProducts() {
