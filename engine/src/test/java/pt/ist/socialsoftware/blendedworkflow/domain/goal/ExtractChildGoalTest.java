@@ -88,6 +88,8 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 
 		spec.getDataModel().checkPaths();
 
+		spec.getConditionModel().generateConditions();
+
 		topGoal = new Goal(spec.getGoalModel(), TOP_GOAL);
 		childGoalOne = new Goal(spec.getGoalModel(), CHILD_GOAL_ONE);
 		childGoalTwo = new Goal(spec.getGoalModel(), CHILD_GOAL_TWO);
@@ -117,7 +119,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
 
 		try {
-			topGoal.extractChild(CHILD_GOAL_THREE, successConditions);
+			spec.getGoalModel().extractChild(topGoal, CHILD_GOAL_THREE, successConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
@@ -130,7 +132,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		successConditions.add(DefAttributeCondition.getDefAttribute(attributeFour));
 
 		try {
-			childGoalTwoOne.extractChild(CHILD_GOAL_TWO_ONE_ONE, successConditions);
+			spec.getGoalModel().extractChild(childGoalTwoOne, CHILD_GOAL_TWO_ONE_ONE, successConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
@@ -143,7 +145,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
 
 		try {
-			childGoalTwoOne.extractChild(CHILD_GOAL_TWO_TWO, successConditions);
+			spec.getGoalModel().extractChild(childGoalTwoOne, CHILD_GOAL_TWO_TWO, successConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
@@ -158,7 +160,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
 
 		try {
-			childGoalTwo.extractChild(CHILD_GOAL_TWO_TWO, successConditions);
+			spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
@@ -175,7 +177,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		childGoalTwoOne.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeFour));
 
 		try {
-			childGoalTwo.extractChild(CHILD_GOAL_TWO_TWO, successConditions);
+			spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
@@ -189,7 +191,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		successConditions.add(DefAttributeCondition.getDefAttribute(attributeTwo));
 
 		try {
-			childGoalTwo.extractChild(CHILD_GOAL_TWO_TWO, successConditions);
+			spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
@@ -202,7 +204,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
 		successConditions.add(DefAttributeCondition.getDefAttribute(attributeThree));
 
-		Goal newGoal = childGoalTwo.extractChild(CHILD_GOAL_TWO_TWO, successConditions);
+		Goal newGoal = spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
 
 		assertEquals(CHILD_GOAL_TWO_TWO, newGoal.getName());
 		assertEquals(childGoalTwo, newGoal.getParentGoal());
@@ -223,6 +225,8 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		assertEquals(MulCondition.getMulCondition(relation, ROLENAME_ONE),
 				childGoalTwo.getEntityInvariantConditionSet().stream().findFirst().get());
 		assertEquals(0, childGoalTwo.getAttributeInvariantConditionSet().size());
+
+		spec.getGoalModel().checkModel();
 	}
 
 }

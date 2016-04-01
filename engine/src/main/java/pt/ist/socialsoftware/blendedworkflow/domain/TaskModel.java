@@ -265,15 +265,13 @@ public class TaskModel extends TaskModel_Base {
 	}
 
 	private void addPreConditionsDueToMulConditions(Task task, RelationBW relation) {
-		relation.getEntitySet().stream()
-				.filter(e -> !ConditionModel.getEntitiesOfDefConditionSet(task.getPostConditionSet()).contains(e))
-				.forEach(e -> task.addPreCondition(
-						DefPathCondition.getDefPathCondition(getSpecification(), relation.getPath(e))));
+		relation.getEntitySet().stream().filter(e -> !task.getPostEntities().contains(e)).forEach(e -> task
+				.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(), relation.getPath(e))));
 	}
 
 	private void applyDependenceConditionsToPre(Task task) {
-		Set<Product> postProducts = ConditionModel.getProductsOfDefConditions(task.getPostConditionSet());
-		Set<Product> preProducts = ConditionModel.getProductsOfDefConditions(task.getPreConditionSet());
+		Set<Product> postProducts = task.getPostProducts();
+		Set<Product> preProducts = task.getPreProducts();
 
 		Set<Dependence> dependencies = getDefPathDependencies();
 
@@ -293,8 +291,7 @@ public class TaskModel extends TaskModel_Base {
 	private void applyAttributeEntityDependenceToPre(Task task) {
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>(task.getPostConditionSet());
 		ConditionModel.getDefAttributeConditions(postConditionSet).stream()
-				.filter(def -> !ConditionModel.getEntitiesOfDefConditionSet(postConditionSet)
-						.contains(def.getAttributeOfDef().getEntity()))
+				.filter(def -> !task.getPostEntities().contains(def.getAttributeOfDef().getEntity()))
 				.forEach(def -> task.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(),
 						def.getAttributeOfDef().getEntity().getName())));
 	}

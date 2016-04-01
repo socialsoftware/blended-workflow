@@ -10,9 +10,11 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
+import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
@@ -25,19 +27,18 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class MergeGoalsMethodTest extends TeardownRollbackTest {
-	private static final String ENTITY_TWO_NAME = "Entity two name";
-	private static final String ENTITY_ONE_NAME = "Entity one name";
+	private static final String ENTITY_TWO_NAME = "EntityTwo";
+	private static final String ENTITY_ONE_NAME = "EntityOne";
 	private static final String ATTRIBUTE_ONE_NAME = "att1";
 	private static final String ATTRIBUTE_TWO_NAME = "att2";
 	private static final String ATTRIBUTE_THREE_NAME = "att3";
-	private static final String CHILD_GOAL_TWO_ONE = "childGoalTwoOne";
 	private static final String TOP_GOAL = "topGoal";
 	private static final String RULE_CONDITION = "rule";
 	private static final String ROLENAME_ONE = "theOne";
 	private static final String ROLENAME_TWO = "theTwo";
 	private static final String CHILD_GOAL_TWO = "childGoalTwo";
 	private static final String CHILD_GOAL_ONE = "childGoalOne";
-	private static final String DEPENDENCE_PATH = ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_TWO_NAME;
+	private static final String DEPENDENCE_PATH = ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_ONE_NAME;
 
 	Specification spec;
 	Entity entityOne;
@@ -49,14 +50,13 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 	Goal topGoal;
 	Goal childGoalOne;
 	Goal childGoalTwo;
-	Goal childGoalTwoOne;
 
 	@Override
 	public void populate4Test() throws BWException {
 		spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
 
 		entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-		attributeOne = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_ONE_NAME, AttributeType.BOOLEAN, true,
+		attributeOne = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_ONE_NAME, AttributeType.NUMBER, true,
 				false, false);
 		attributeTwo = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_TWO_NAME, AttributeType.NUMBER, true,
 				false, false);
@@ -70,30 +70,32 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 
 		new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH);
 
-		Rule rule = new Rule(entityOne, RULE_CONDITION, null);
+		Rule rule = new Rule(entityOne, RULE_CONDITION,
+				new Comparison(new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
+						new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME),
+						ComparisonOperator.EQUAL));
 
 		spec.getDataModel().checkPaths();
+
+		spec.getConditionModel().generateConditions();
 
 		topGoal = new Goal(spec.getGoalModel(), TOP_GOAL);
 		childGoalOne = new Goal(spec.getGoalModel(), CHILD_GOAL_ONE);
 		childGoalTwo = new Goal(spec.getGoalModel(), CHILD_GOAL_TWO);
-		childGoalTwoOne = new Goal(spec.getGoalModel(), CHILD_GOAL_TWO_ONE);
 		topGoal.addSubGoal(childGoalOne);
 		topGoal.addSubGoal(childGoalTwo);
-		childGoalTwo.addSubGoal(childGoalTwoOne);
 
 		topGoal.addSuccessCondition(DefEntityCondition.getDefEntity(entityOne));
 		childGoalOne.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeOne));
 		childGoalTwo.addSuccessCondition(DefEntityCondition.getDefEntity(entityTwo));
 		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeThree));
 
-		childGoalOne.addActivationCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH));
+		topGoal.applyConditions();
+		childGoalOne.applyConditions();
+		childGoalTwo.applyConditions();
 
-		topGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_TWO));
-		childGoalTwo.addEntityInvariantCondition(MulCondition.getMulCondition(relation, ROLENAME_ONE));
-
-		childGoalOne.addAttributeInvariantCondition(rule);
-		childGoalTwo.addAttributeInvariantCondition(rule);
+		spec.getGoalModel().checkModel();
 	}
 
 	@Test
@@ -104,9 +106,8 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 		assertFalse(spec.getGoalModel().existsGoal(CHILD_GOAL_TWO));
 		assertEquals(topGoal, merged.getParentGoal());
 		assertEquals(CHILD_GOAL_ONE + CHILD_GOAL_TWO, merged.getName());
-		assertEquals(1, merged.getSubGoalSet().size());
-		assertTrue(merged.getSubGoalSet().contains(childGoalTwoOne));
-		assertEquals(3, merged.getSuccessConditionSet().size());
+		assertEquals(0, merged.getSubGoalSet().size());
+		assertEquals(4, merged.getSuccessConditionSet().size());
 		assertTrue(merged.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeOne)));
 		assertTrue(merged.getSuccessConditionSet().contains(DefEntityCondition.getDefEntity(entityTwo)));
 		assertTrue(merged.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
@@ -114,63 +115,38 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 		assertEquals(1, merged.getEntityInvariantConditionSet().size());
 		assertTrue(
 				merged.getEntityInvariantConditionSet().contains(MulCondition.getMulCondition(relation, ROLENAME_ONE)));
-		assertEquals(1, merged.getAttributeInvariantConditionSet().size());
-		assertTrue(merged.getAttributeInvariantConditionSet().contains(entityOne.getRule(RULE_CONDITION)));
+		assertEquals(0, merged.getAttributeInvariantConditionSet().size());
+
+		spec.getGoalModel().checkModel();
 	}
 
 	@Test
 	public void parentChildMerge() {
-		Goal result = spec.getGoalModel().mergeGoals(TOP_GOAL, childGoalTwo, topGoal);
+		Goal result = spec.getGoalModel().mergeGoals(TOP_GOAL, childGoalOne, topGoal);
 
-		assertFalse(spec.getGoalModel().existsGoal(CHILD_GOAL_TWO));
+		assertFalse(spec.getGoalModel().existsGoal(CHILD_GOAL_ONE));
 		assertTrue(spec.getGoalModel().existsGoal(TOP_GOAL));
 		assertEquals(topGoal, result);
 
-		assertEquals(2, result.getSubGoalSet().size());
-		assertTrue(result.getSubGoalSet().contains(childGoalOne));
-		assertTrue(result.getSubGoalSet().contains(childGoalTwoOne));
-		assertEquals(3, result.getSuccessConditionSet().size());
+		assertEquals(1, result.getSubGoalSet().size());
+		assertTrue(result.getSubGoalSet().contains(childGoalTwo));
+		assertEquals(2, result.getSuccessConditionSet().size());
 		assertTrue(result.getSuccessConditionSet().contains(DefEntityCondition.getDefEntity(entityOne)));
-		assertTrue(result.getSuccessConditionSet().contains(DefEntityCondition.getDefEntity(entityTwo)));
-		assertTrue(result.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
+		assertTrue(result.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeOne)));
 		assertEquals(0, result.getActivationConditionSet().size());
-		assertEquals(2, result.getEntityInvariantConditionSet().size());
-		assertTrue(
-				result.getEntityInvariantConditionSet().contains(MulCondition.getMulCondition(relation, ROLENAME_ONE)));
+		assertEquals(1, result.getEntityInvariantConditionSet().size());
 		assertTrue(
 				result.getEntityInvariantConditionSet().contains(MulCondition.getMulCondition(relation, ROLENAME_TWO)));
 		assertEquals(1, result.getAttributeInvariantConditionSet().size());
 		assertTrue(result.getAttributeInvariantConditionSet().contains(entityOne.getRule(RULE_CONDITION)));
 
-	}
-
-	@Test
-	public void siblingsMergeNameAlreadyExits() {
-		new Goal(spec.getGoalModel(), CHILD_GOAL_ONE + CHILD_GOAL_TWO);
-
-		try {
-			spec.getGoalModel().mergeGoals(CHILD_GOAL_ONE + CHILD_GOAL_TWO, childGoalOne, childGoalTwo);
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INVALID_GOAL_NAME, bwe.getError());
-			assertEquals(CHILD_GOAL_ONE + CHILD_GOAL_TWO, bwe.getMessage());
-		}
-	}
-
-	@Test
-	public void nonSiblingsAndNonParentChildGoals() {
-		try {
-			spec.getGoalModel().mergeGoals("Name", childGoalOne, childGoalTwoOne);
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.UNMERGEABLE_GOALS, bwe.getError());
-			assertEquals("childGoalOne - childGoalTwoOne", bwe.getMessage());
-		}
+		spec.getGoalModel().checkModel();
 	}
 
 	@Test
 	public void parentChildConflict() {
 		try {
-			spec.getGoalModel().mergeGoals("Name", topGoal, childGoalOne);
+			spec.getGoalModel().mergeGoals("Name", topGoal, childGoalTwo);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());

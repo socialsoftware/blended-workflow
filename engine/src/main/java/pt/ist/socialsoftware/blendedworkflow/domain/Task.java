@@ -182,8 +182,8 @@ public class Task extends Task_Base {
 	}
 
 	private void checkMultiplicityConstraint() {
-		Set<Entity> allEntities = ConditionModel.getEntitiesOfDefConditionSet(getPreConditionSet());
-		Set<Entity> postEntities = ConditionModel.getEntitiesOfDefConditionSet(getPostConditionSet());
+		Set<Entity> allEntities = getPreEntities();
+		Set<Entity> postEntities = getPostEntities();
 		allEntities.addAll(postEntities);
 
 		Optional<MulCondition> oMul = getMultiplicityInvariantSet().stream()
@@ -221,9 +221,7 @@ public class Task extends Task_Base {
 	}
 
 	private void checkEntityOfDefAttributeIsDefined() {
-		Set<Entity> entities = Stream
-				.concat(ConditionModel.getEntitiesOfDefConditionSet(getPreConditionSet()).stream(),
-						ConditionModel.getEntitiesOfDefConditionSet(getPostConditionSet()).stream())
+		Set<Entity> entities = Stream.concat(getPreEntities().stream(), getPostEntities().stream())
 				.collect(Collectors.toSet());
 
 		Optional<DefAttributeCondition> oDef = ConditionModel.getDefAttributeConditions(getPostConditionSet()).stream()
@@ -236,10 +234,7 @@ public class Task extends Task_Base {
 	}
 
 	private void checkPostConditionContainsAtLeastOneDef() {
-		if (ConditionModel.getDefAttributeConditions(getPostConditionSet()).size() > 0)
-			return;
-
-		if (ConditionModel.getDefEntityConditions(getPostConditionSet()).size() > 0)
+		if (getPostProducts().size() > 0)
 			return;
 
 		throw new BWException(BWErrorType.NO_DEF_CONDITION_IN_POST, getName());
@@ -255,6 +250,11 @@ public class Task extends Task_Base {
 
 	public Set<Entity> getPostEntities() {
 		return getPostConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Entity.class::isInstance)
+				.map(Entity.class::cast).collect(Collectors.toSet());
+	}
+
+	public Set<Entity> getPreEntities() {
+		return getPreConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Entity.class::isInstance)
 				.map(Entity.class::cast).collect(Collectors.toSet());
 	}
 
