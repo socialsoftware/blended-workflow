@@ -623,6 +623,17 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
+	public Goal extractParentGoal(String specId, String newGoalName, String sourceGoalName,
+			Set<DefPathConditionDTO> successConditionDTO) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal childGoal = getGoalByName(spec, sourceGoalName);
+
+		Set<DefProductCondition> successConditions = getConditionSet(spec, successConditionDTO);
+
+		return spec.getGoalModel().extractParent(childGoal, newGoalName, successConditions);
+	}
+
+	@Atomic(mode = TxMode.WRITE)
 	public Goal extractSiblingGoal(String specId, String newGoalName, String sourceGoalName,
 			Set<DefPathConditionDTO> successConditionDTO) {
 		Specification spec = getSpecBySpecId(specId);

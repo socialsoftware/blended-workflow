@@ -1,14 +1,11 @@
 <!doctype html>
 <html data-ng-app="">
 <head>
-<link rel="stylesheet"
-	href="css/bootstrap-3.3.6.min.css"></link>
+<link rel="stylesheet" href="css/bootstrap-3.3.6.min.css"></link>
 <script src="js/d3.v2.js" charset="utf-8"></script>
 <script src="js/dagre-d3.min.js"></script>
-<script
-	src="js/angular-1.5.0.min.js"></script>
-<script
-	src="js/angular-route-1.5.0.min.js"></script>
+<script src="js/angular-1.5.0.min.js"></script>
+<script src="js/angular-route-1.5.0.min.js"></script>
 <script src="js/angular-animate-1.5.3.js"></script>
 <script src="js/ui-bootstrap-tpls-1.2.1.min.js"></script>
 </head>
@@ -28,8 +25,7 @@
 					<a class="navbar-brand" href="#/">Blended Workflow</a>
 				</div>
 
-				<div class="collapse navbar-collapse"
-					id="bs-navbar-collapse-1">
+				<div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
 					<ul class="nav navbar-nav">
 						<li class="dropdown" uib-dropdown="uib-dropdown"><a href="#"
 							id="simple-dropdown" uib-dropdown-toggle="uib-dropdown-toggle">
@@ -49,14 +45,20 @@
 								<span class="caret"></span>
 						</a>
 							<ul class="dropdown-menu" uib-dropdown-menu="uib-dropdown-menu">
-								<li><a href="#/specs/{{spec.specId}}/datamodel">Data Model</a></li>
-								<li><a href="#/specs/{{spec.specId}}/conditionmodel">Condition Model</a></li>
+								<li><a href="#/specs/{{spec.specId}}/datamodel">Data
+										Model</a></li>
+								<li><a href="#/specs/{{spec.specId}}/conditionmodel">Condition
+										Model</a></li>
 								<li role="separator" class="divider"></li>
-								<li><a href="#/specs/{{spec.specId}}/goalmodel">Goal Model</a></li>
-								<li><a href="#/specs/{{spec.specId}}/goalgraph">Goal Graph and Operations</a></li>
+								<li><a href="#/specs/{{spec.specId}}/goalmodel">Goal
+										Model</a></li>
+								<li><a href="#/specs/{{spec.specId}}/goalgraph">Goal
+										Graph and Operations</a></li>
 								<li role="separator" class="divider"></li>
-								<li><a href="#/specs/{{spec.specId}}/activitymodel">Activity Model</a></li>
-								<li><a href="#/specs/{{spec.specId}}/activitygraph">Activity Graph and Operations</a></li>
+								<li><a href="#/specs/{{spec.specId}}/activitymodel">Activity
+										Model</a></li>
+								<li><a href="#/specs/{{spec.specId}}/activitygraph">Activity
+										Graph and Operations</a></li>
 
 							</ul></li>
 
@@ -90,11 +92,11 @@
 	<script src="app/controllers/goalGraphController.js"></script>
 	<script src="app/controllers/activityModelController.js"></script>
 	<script src="app/controllers/activityGraphController.js"></script>
-	
+
 	<script src="app/directives/errorMessage.js"></script>
 	<script src="app/directives/goalGraph.js"></script>
 	<script src="app/directives/activityGraph.js"></script>
-	
+
 	<script src="app/services/specRepository.js"></script>
 	<script src="app/services/dataRepository.js"></script>
 	<script src="app/services/conditionRepository.js"></script>
