@@ -85,7 +85,7 @@ app
 																};
 															});
 										});
-						
+
 					};
 
 					$scope.readGraph = function(specId) {
@@ -97,8 +97,9 @@ app
 
 					$scope.goalNameInput = function() {
 						// if split of a goal with empty success conditions
-						if ($scope.operations.selectedOperation.id == 3 && $scope.goalSucConditions.availableSucConditions.length == 0)
-						return false;
+						if ($scope.operations.selectedOperation.id == 3
+								&& $scope.goalSucConditions.availableSucConditions.length == 0)
+							return false;
 
 						// rename, merge, and split operations
 						return ($scope.operations.selectedOperation.id >= 1 && $scope.operations.selectedOperation.id <= 3);
@@ -122,9 +123,9 @@ app
 						if ($scope.goalsOne.selectedGoal == $scope.goalsOne.availableGoals[0])
 							return false;
 
-						// rename, merge and split operation require a name for
+						// rename and split operation require a new name for
 						// the new operation
-						if (($scope.operations.selectedOperation.id >= 1 && $scope.operations.selectedOperation.id <= 3)) {
+						if (($scope.operations.selectedOperation.id == 1 && $scope.operations.selectedOperation.id == 3)) {
 							// the new goal name should not exist
 							for (i = 0; i < $scope.goalsOne.availableGoals.length; i++)
 								if ($scope.goalsOne.availableGoals[i].name == $scope.newGoalName)
@@ -138,10 +139,18 @@ app
 							if ($scope.goalsTwo.selectedActivity == $scope.goalsTwo.availableGoals[0])
 								return false;
 
-							// the second selected activity should be different
+							// the second selected goal should be different
 							// from the first
 							for (i = 0; i < $scope.goalsTwo.availableGoals.length; i++)
 								if ($scope.goalsTwo.selectedGoal.name == $scope.goalsOne.selectedGoal.name)
+									return false;
+
+							// the new goal name should not exist or reuse one
+							// of the selected
+							for (i = 0; i < $scope.goalsOne.availableGoals.length; i++)
+								if ($scope.goalsOne.availableGoals[i].name == $scope.newGoalName
+										&& $scope.newGoalName != $scope.goalsOne.selectedGoal.name
+										&& $scope.newGoalName != $scope.goalsTwo.selectedGoal.name)
 									return false;
 						}
 
@@ -150,17 +159,19 @@ app
 							// a type need to be specified
 							if ($scope.splitType == '')
 								return false;
-							
+
 							// if the goal has empty success conditions
 							if (!$scope.goalSucConditions)
 								return false;
 
-							// if it is extract child or sibling at least one of success condition should be selected
+							// if it is extract child or sibling at least one of
+							// success condition should be selected
 							if (($scope.splitType == 'child' || $scope.splitType == 'sibling')
 									&& $scope.goalSucConditions.selectedSucConditions.length < 1)
 								return false;
 
-							// if it is an extract parent or sibling it is not possible to
+							// if it is an extract parent or sibling it is not
+							// possible to
 							// select all conditions
 							if (($scope.splitType == 'parent' || $scope.splitType == 'sibling')
 									&& $scope.goalSucConditions.selectedSucConditions.length == $scope.goalSucConditions.availableSucConditions.length)
