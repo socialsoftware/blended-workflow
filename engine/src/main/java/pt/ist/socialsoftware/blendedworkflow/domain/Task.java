@@ -281,4 +281,11 @@ public class Task extends Task_Base {
 		return defPathConditions;
 	}
 
+	public void applyMultiplicities(RelationBW relation) {
+		getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
+
+		relation.getEntitySet().stream().filter(e -> !getPostEntities().contains(e)).forEach(e -> addPreCondition(
+				DefPathCondition.getDefPathCondition(getTaskModel().getSpecification(), relation.getPath(e))));
+	}
+
 }

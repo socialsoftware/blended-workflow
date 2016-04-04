@@ -165,18 +165,6 @@ public class TaskModel extends TaskModel_Base {
 		return newTask;
 	}
 
-	public void applyMultipicityConditions() {
-		for (RelationBW relation : getDataModel().getRelationBWSet()) {
-			applyMultiplicityToPostAndPre(relation);
-		}
-	}
-
-	public void applyRules() {
-		for (Rule rule : getDataModel().getRules()) {
-			applyRuleDueToDependencies(rule);
-		}
-	}
-
 	public Task extractTask(Task fromTask, String taskName, String taskDescription,
 			Set<DefProductCondition> postConditionSet) {
 		if (postConditionSet.size() == 0 || fromTask.getPostConditionSet().size() - postConditionSet.size() <= 0
@@ -197,14 +185,27 @@ public class TaskModel extends TaskModel_Base {
 
 		Task newFromTask = addTask(fromTaskName, fromTaskDescription, fromTaskPostCondition);
 
-		Task newExtratedTask = addTask(taskName, taskDescription, postConditionSet);
+		Task newExtractedTask = addTask(taskName, taskDescription, postConditionSet);
 
 		for (String path : sequenceConditionValues) {
 			if (newFromTask.getPostProducts().contains(getDataModel().getSourceOfPath(path))) {
 				newFromTask.addSequenceCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
 			} else {
-				newExtratedTask.addSequenceCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
+				newExtractedTask.addSequenceCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
 			}
+		}
+
+		// if necessary define an order such that the extracted task occurs
+		// after the from task
+		Map<Task, Set<Task>> taskSequences = getTaskSequences();
+		if (!taskSequences.get(newFromTask).contains(newExtractedTask)
+				&& !taskSequences.get(newExtractedTask).contains(newFromTask)) {
+
+			Set<Entity> fromPostEntities = newFromTask.getPostEntities();
+			Set<Entity> extractedPostEntities = newExtractedTask.getPostEntities();
+			extractedPostEntities.stream().flatMap(e -> e.getRelationSet().stream())
+					.filter(r -> !Collections.disjoint(r.getEntitySet(), fromPostEntities))
+					.forEach(r -> newExtractedTask.applyMultiplicities(r));
 		}
 
 		applyMultipicityConditions();
@@ -212,25 +213,32 @@ public class TaskModel extends TaskModel_Base {
 
 		checkModel();
 
-		return newExtratedTask;
+		return newExtractedTask;
 	}
 
 	private Set<Task> getRuleTasks(Rule rule) {
 		Set<Attribute> ruleAttributes = rule.getAttributeSet();
 
-		// logger.debug("getRuleTasks attributes:{}",
-		// ruleAttributes.stream().map(a ->
-		// a.getName()).collect(Collectors.joining(",")));
-
 		Set<Task> ruleTasks = new HashSet<Task>();
 		for (Task task : getTasksSet()) {
 			if (task.getPostConditionSet().stream().anyMatch(d -> ruleAttributes.contains(d.getTargetOfPath()))) {
-				// logger.debug("getRuleTasks task to add:{}", task.getName());
 				ruleTasks.add(task);
 			}
 		}
 
 		return ruleTasks;
+	}
+
+	public void applyMultipicityConditions() {
+		for (RelationBW relation : getDataModel().getRelationBWSet()) {
+			applyMultiplicityToPostAndPre(relation);
+		}
+	}
+
+	public void applyRules() {
+		for (Rule rule : getDataModel().getRules()) {
+			applyRuleDueToDependencies(rule);
+		}
 	}
 
 	private void applyMultiplicityToPostAndPre(RelationBW relation) {
@@ -240,8 +248,7 @@ public class TaskModel extends TaskModel_Base {
 
 		// the relation has an exists entity
 		if (tasks.size() == 1) {
-			tasks.get(0).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
-			addPreConditionsDueToMulConditions(tasks.get(0), relation);
+			tasks.get(0).applyMultiplicities(relation);
 		} else { // the two entities in the relation do no exist
 			Map<Task, Set<Task>> taskSequences = getTaskSequences();
 
@@ -251,22 +258,14 @@ public class TaskModel extends TaskModel_Base {
 				throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY,
 						tasks.get(0).getName() + "--" + tasks.get(1).getName());
 			} else if (taskSequences.get(tasks.get(0)).contains(tasks.get(1))) {
-				tasks.get(1).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
-				addPreConditionsDueToMulConditions(tasks.get(1), relation);
+				tasks.get(1).applyMultiplicities(relation);
 			} else if (taskSequences.get(tasks.get(1)).contains(tasks.get(0))) {
-				tasks.get(0).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
-				addPreConditionsDueToMulConditions(tasks.get(0), relation);
+				tasks.get(0).applyMultiplicities(relation);
 			} else {
-				tasks.get(1).getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
-				addPreConditionsDueToMulConditions(tasks.get(1), relation);
+				tasks.get(1).applyMultiplicities(relation);
 			}
 		}
 
-	}
-
-	private void addPreConditionsDueToMulConditions(Task task, RelationBW relation) {
-		relation.getEntitySet().stream().filter(e -> !task.getPostEntities().contains(e)).forEach(e -> task
-				.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(), relation.getPath(e))));
 	}
 
 	private void applyDependenceConditionsToPre(Task task) {

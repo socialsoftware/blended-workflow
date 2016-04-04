@@ -287,6 +287,18 @@ public class Entity extends Entity_Base {
 		return null;
 	}
 
+	public Set<Entity> getEntitiesInRelation() {
+		Set<Entity> entities = new HashSet<Entity>();
+		for (RelationBW relation : getRelationSet()) {
+			if (relation.getEntityOne() == this) {
+				entities.add(relation.getEntityTwo());
+			} else {
+				entities.add(relation.getEntityOne());
+			}
+		}
+		return entities;
+	}
+
 	public Set<RelationBW> getRelationSet() {
 		Set<RelationBW> relations = new HashSet<RelationBW>(this.getRelationOneSet());
 		relations.addAll(getRelationTwoSet());
