@@ -5,19 +5,25 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefPathConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DefPathCondition extends DefPathCondition_Base {
+	private static Logger logger = LoggerFactory.getLogger(DefPathCondition.class);
 
 	public static DefPathCondition getDefPathCondition(Specification spec, String value) {
 		Optional<DefPathCondition> oDef = spec.getDataModel().getDefPathConditionSet().stream()
-				.filter(d -> d.getPath().equals(value)).findFirst();
-		if (oDef.isPresent())
+				.filter(d -> d.getPath().getValue().equals(value)).findFirst();
+
+		if (oDef.isPresent()) {
 			return oDef.get();
-		else
+		} else {
 			return new DefPathCondition(spec, value);
+		}
 	}
 
 	private DefPathCondition(Specification spec, String value) {
