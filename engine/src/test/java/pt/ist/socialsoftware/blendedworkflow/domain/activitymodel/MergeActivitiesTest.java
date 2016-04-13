@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.domain.taskmodel;
+package pt.ist.socialsoftware.blendedworkflow.domain.activitymodel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -29,7 +29,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.ActivityModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class MergeTasksTest extends TeardownRollbackTest {
+public class MergeActivitiesTest extends TeardownRollbackTest {
 	private static final String TASK_ONE = "TaskOne";
 	private static final String TASK_TWO = "TaskTwo";
 	private static final String TASK_THREE = "TaskThree";
