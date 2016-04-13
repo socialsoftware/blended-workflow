@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 
-public class TaskWorkItem extends TaskWorkItem_Base {
+public class OldTaskWorkItem extends OldTaskWorkItem_Base {
 
 	public enum ActivityState {
 		NEW, PRE_ACTIVITY, ENABLED, SKIPPED, COMPLETED
@@ -18,7 +18,7 @@ public class TaskWorkItem extends TaskWorkItem_Base {
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private final Logger log = LoggerFactory.getLogger("TaskWorkItem");
 
-	public TaskWorkItem(BWInstance bwInstance, Task task) {
+	public OldTaskWorkItem(OldBWInstance bwInstance, Activity task) {
 		log.info("New TaskWorkItem for task " + task.getName());
 		setBwInstance(bwInstance);
 		setTask(task);

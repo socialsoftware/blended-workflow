@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
@@ -29,7 +30,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
@@ -289,7 +289,7 @@ public class DesignInterface {
 		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
 			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
 
-		spec.getTaskModel().clean();
+		spec.getActivityModel().clean();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -302,8 +302,8 @@ public class DesignInterface {
 		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
 			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
 
-		spec.getTaskModel().clean();
-		spec.getTaskModel().generateActivities();
+		spec.getActivityModel().clean();
+		spec.getActivityModel().generateActivities();
 
 		return true;
 	}
@@ -645,66 +645,66 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Task createActivity(ActivityDTO activityDTO) {
+	public Activity createActivity(ActivityDTO activityDTO) {
 		Specification spec = getSpecBySpecId(activityDTO.getSpecId());
 
-		return spec.getTaskModel().createTask(activityDTO.getName(), activityDTO.getDescription());
+		return spec.getActivityModel().createActivity(activityDTO.getName(), activityDTO.getDescription());
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Task addActivity(String specId, AddActivityReq request) {
+	public Activity addActivity(String specId, AddActivityReq request) {
 		Specification spec = getSpecBySpecId(specId);
 
-		return spec.getTaskModel().addTask(request.getActivityName(), request.getDescription(),
+		return spec.getActivityModel().addActivity(request.getActivityName(), request.getDescription(),
 				getConditionSet(spec, request.getPostConditionSet()));
 	}
 
 	@Atomic(mode = TxMode.WRITE)
 	public void updateActivityName(String specId, String activityName, String newName) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
-		task.setName(newName);
+		activity.setName(newName);
 	}
 
-	public Set<Task> getActivities(String specId) {
+	public Set<Activity> getActivities(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		return spec.getTaskModel().getTasksSet();
+		return spec.getActivityModel().getActivitySet();
 	}
 
 	public Set<DefPathCondition> getActivityPreCondition(String specId, String activityName) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
-		return task.getPreConditionSet();
+		return activity.getPreConditionSet();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
 	public DefPathCondition associateDefPathToActivityPre(String specId, String activityName, String path) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
 		spec.getDataModel().getTargetOfPath(path);
 
 		DefPathCondition defPathCondition = DefPathCondition.getDefPathCondition(spec, path);
 
-		task.addPreCondition(defPathCondition);
+		activity.addPreCondition(defPathCondition);
 
 		return defPathCondition;
 	}
 
 	public Set<DefProductCondition> getActivityPostCondition(String specId, String activityName) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
-		return task.getPostConditionSet();
+		return activity.getPostConditionSet();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
 	public DefEntityCondition associateEntityToActivityPost(String specId, String activityName, String path) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
 		Product product = spec.getDataModel().getTargetOfPath(path);
 		if (product.getProductType() != ProductType.ENTITY)
@@ -712,7 +712,7 @@ public class DesignInterface {
 
 		DefEntityCondition defEntityCondition = ((Entity) product).getDefEntityCondition();
 
-		task.addPostCondition(defEntityCondition);
+		activity.addPostCondition(defEntityCondition);
 
 		return defEntityCondition;
 	}
@@ -720,39 +720,39 @@ public class DesignInterface {
 	@Atomic(mode = TxMode.WRITE)
 	public DefAttributeCondition associateAttributeToActivityPost(String specId, String activityName, String path) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, path);
 
-		task.addPostCondition(defAttributeCondition);
+		activity.addPostCondition(defAttributeCondition);
 
 		return defAttributeCondition;
 	}
 
 	public Set<MulCondition> getActivityMulConditions(String specId, String activityName) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
-		return task.getMultiplicityInvariantSet();
+		return activity.getMultiplicityInvariantSet();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
 	public MulCondition associateMulToActivityPost(String specId, String activityName, String path,
 			String cardinality) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
 		MulCondition mulCondition = getMULCondition(spec, path);
 
-		task.addMultiplicityInvariant(mulCondition);
+		activity.addMultiplicityInvariant(mulCondition);
 
 		return mulCondition;
 	}
 
 	public Set<Rule> getActivityRuleConditions(String specId, String activityName) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
-		return task.getRuleInvariantSet();
+		return activity.getRuleInvariantSet();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -760,11 +760,11 @@ public class DesignInterface {
 		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
 		Entity entity = getEntityByName(spec.getDataModel(), ruleDTO.getEntityName());
 
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
 		Rule rule = getRule(entity, ruleDTO.getName());
 
-		task.addRuleInvariant(rule);
+		activity.addRuleInvariant(rule);
 
 		return rule;
 	}
@@ -772,64 +772,64 @@ public class DesignInterface {
 	public void checkActivityModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		spec.getTaskModel().checkModel();
+		spec.getActivityModel().checkModel();
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Task mergeActivities(String specId, String newActivityName, String description, String activityNameOne,
+	public Activity mergeActivities(String specId, String newActivityName, String description, String activityNameOne,
 			String activityNameTwo) {
 		Specification spec = getSpecBySpecId(specId);
-		Task activityOne = getTaskByName(spec, activityNameOne);
-		Task activityTwo = getTaskByName(spec, activityNameTwo);
+		Activity activityOne = getActivityByName(spec, activityNameOne);
+		Activity activityTwo = getActivityByName(spec, activityNameTwo);
 
-		return spec.getTaskModel().mergeTasks(newActivityName, description, activityOne, activityTwo);
+		return spec.getActivityModel().mergeActivities(newActivityName, description, activityOne, activityTwo);
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Task extractActivity(String specId, String newActivityName, String description, String sourceActivityName,
-			Set<DefPathConditionDTO> successCondition) {
+	public Activity extractActivity(String specId, String newActivityName, String description,
+			String sourceActivityName, Set<DefPathConditionDTO> successCondition) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, sourceActivityName);
+		Activity activity = getActivityByName(spec, sourceActivityName);
 
-		return spec.getTaskModel().extractTask(task, newActivityName, description,
+		return spec.getActivityModel().extractActivity(activity, newActivityName, description,
 				getConditionSet(spec, successCondition));
 	}
 
 	@Atomic(mode = TxMode.WRITE)
 	public void addSequenceConditionToActivity(String specId, String activityName, String path) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
-		task.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, path));
+		activity.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, path));
 	}
 
 	@Atomic(mode = TxMode.WRITE)
 	public void removeSequenceConditionToActivity(String specId, String activityName, String path) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
-		if (!task.getSequenceConditionSet().stream().filter(d -> d.getPath().getValue().equals(path)).findFirst()
+		if (!activity.getSequenceConditionSet().stream().filter(d -> d.getPath().getValue().equals(path)).findFirst()
 				.isPresent()) {
 			throw new BWException(BWErrorType.UNKNOWN_SEQUENCE_CONDITION, path);
 		}
 
-		task.getSequenceConditionSet().stream().filter(d -> d.getPath().getValue().equals(path))
-				.forEach(d -> task.removeSequenceCondition(d));
+		activity.getSequenceConditionSet().stream().filter(d -> d.getPath().getValue().equals(path))
+				.forEach(d -> activity.removeSequenceCondition(d));
 
-		spec.getTaskModel().applyRules();
+		spec.getActivityModel().applyRules();
 	}
 
 	public Set<DefPathCondition> getActivitySeqCondition(String specId, String activityName) {
 		Specification spec = getSpecBySpecId(specId);
-		Task task = getTaskByName(spec, activityName);
+		Activity activity = getActivityByName(spec, activityName);
 
-		return task.getSequenceConditionSet();
+		return activity.getSequenceConditionSet();
 	}
 
 	public GraphDTO getActivityGraph(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		return spec.getTaskModel().getActivityGraph();
+		return spec.getActivityModel().getActivityGraph();
 	}
 
 	public void printSpecificationModels(String specId) {
@@ -908,17 +908,18 @@ public class DesignInterface {
 		System.out.println("Specification Activity Model: " + spec.getName());
 		System.out.println("-------------------------------------------------------");
 
-		for (Task task : spec.getTaskModel().getTasksSet()) {
-			System.out.println("Task name:" + task.getName() + ", description:" + task.getDescription());
+		for (Activity activity : spec.getActivityModel().getActivitySet()) {
+			System.out.println("Activity name:" + activity.getName() + ", description:" + activity.getDescription());
 
-			task.getPreConditionSet().stream().forEach((c) -> System.out.println("PreCondition:" + c.getSubPath()));
+			activity.getPreConditionSet().stream().forEach((c) -> System.out.println("PreCondition:" + c.getSubPath()));
 
-			task.getPostConditionSet().stream().forEach((c) -> System.out.println("PostCondition:" + c.getSubPath()));
+			activity.getPostConditionSet().stream()
+					.forEach((c) -> System.out.println("PostCondition:" + c.getSubPath()));
 
-			task.getMultiplicityInvariantSet().stream()
+			activity.getMultiplicityInvariantSet().stream()
 					.forEach((m) -> System.out.println("MultiplicityInvariant:" + m.getExpression()));
 
-			task.getRuleInvariantSet().stream()
+			activity.getRuleInvariantSet().stream()
 					.forEach((r) -> System.out.println("MultiplicityInvariant:" + r.getName()));
 		}
 
@@ -999,9 +1000,9 @@ public class DesignInterface {
 		return conditions;
 	}
 
-	private Task getTaskByName(Specification spec, String name) {
-		return spec.getTaskModel().getTasksSet().stream().filter(t -> t.getName().equals(name)).findFirst()
-				.orElseThrow(() -> new BWException(BWErrorType.INVALID_TASK_NAME, name));
+	private Activity getActivityByName(Specification spec, String name) {
+		return spec.getActivityModel().getActivitySet().stream().filter(t -> t.getName().equals(name)).findFirst()
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ACTIVITY_NAME, name));
 	}
 
 }

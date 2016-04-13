@@ -1,26 +1,26 @@
 package pt.ist.socialsoftware.blendedworkflow.shared;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldAttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldBWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldDataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldEntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldGoalModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldGoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldRelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.domain.ActivityModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldTaskModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldTaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class PrintBWSpecification {
@@ -31,11 +31,11 @@ public class PrintBWSpecification {
     private static Specification bwSpecification;
     private static DataModel dataModelTemplate;
     private static GoalModel goalModel;
-    private static TaskModel taskModel;
-    private static BWInstance bwInstance;
-    private static DataModelInstance dataModelInstance;
-    private static GoalModelInstance goalModelInstance;
-    private static TaskModelInstance taskModelInstance;
+    private static ActivityModel taskModel;
+    private static OldBWInstance bwInstance;
+    private static OldDataModelInstance dataModelInstance;
+    private static OldGoalModelInstance goalModelInstance;
+    private static OldTaskModelInstance taskModelInstance;
 
     private PrintBWSpecification() {
     }
@@ -59,7 +59,7 @@ public class PrintBWSpecification {
                 .orElse(null);
         dataModelTemplate = bwSpecification.getDataModel();
         goalModel = bwSpecification.getGoalModel();
-        taskModel = bwSpecification.getTaskModel();
+        taskModel = bwSpecification.getActivityModel();
 
         bwInstance = blendedWorkflow.getBWInstance(bwSpecificationName + ".1"); // TODO:
                                                                                 // only
@@ -93,8 +93,8 @@ public class PrintBWSpecification {
                 "----------------------------------------------------------");
         for (Entity entity : dataModelTemplate.getEntitySet()) {
             System.out.println("Entity \"" + entity.getName() + "\" has "
-                    + entity.getEntityInstancesSet().size() + " Instances");
-            for (EntityInstance ei : entity.getEntityInstancesSet()) {
+                    + entity.getOldEntityInstanceSet().size() + " Instances");
+            for (OldEntityInstance ei : entity.getOldEntityInstanceSet()) {
                 System.out.println("EntityInstance \"" + ei.getID() + "\" is "
                         + ei.getState());
             }
@@ -142,7 +142,7 @@ public class PrintBWSpecification {
                 "----------------------------------------------------------");
         for (Goal goal : goalModel.getGoalSet()) {
             System.out.println("Goal \"" + goal.getName() + "\" has \""
-                    + goal.getGoalWorkItemsSet().size()
+                    + goal.getOldGoalWorkItemSet().size()
                     + "\" WorkItems and has " + goal.getSubGoalSet().size()
                     + " subgoals.");
             for (Condition ac : goal.getActivationConditionSet()) {
@@ -165,7 +165,7 @@ public class PrintBWSpecification {
                 "----------------------------------------------------------");
         for (Goal goal : goalModelInstance.getGoalSet()) {
             System.out.println("Goal \"" + goal.getName() + "\" has \""
-                    + goal.getGoalWorkItemsSet().size()
+                    + goal.getOldGoalWorkItemSet().size()
                     + "\" WorkItems and has " + goal.getSubGoalSet().size()
                     + " subgoals.");
             for (Condition ac : goal.getActivationConditionSet()) {
@@ -186,7 +186,7 @@ public class PrintBWSpecification {
         System.out.println("TaskModel Template");
         System.out.println(
                 "----------------------------------------------------------");
-        for (Task task : taskModel.getTasksSet()) {
+        for (Activity task : taskModel.getActivitySet()) {
             System.out.println("Task \"" + task.getName() + "\".");
             System.out.println("Pre Condition: ");
             task.getPreConditionSet().stream()
@@ -207,7 +207,7 @@ public class PrintBWSpecification {
         System.out.println("TaskModel Type");
         System.out.println(
                 "----------------------------------------------------------");
-        for (Task task : taskModelInstance.getTasksSet()) {
+        for (Activity task : taskModelInstance.getActivitySet()) {
             System.out.println("Task \"" + task.getName() + "\".");
             System.out.println("Pre Condition: ");
             task.getPreConditionSet().stream()
@@ -230,16 +230,16 @@ public class PrintBWSpecification {
                 "----------------------------------------------------------");
         for (Entity entity : dataModelInstance.getEntitySet()) {
             System.out.println("Entity \"" + entity.getName() + "\" has "
-                    + entity.getEntityInstancesSet().size() + " instances.");
-            if (entity.getEntityInstancesSet().size() > 0) {
-                for (EntityInstance entityInstance : entity
-                        .getEntityInstancesSet()) {
+                    + entity.getOldEntityInstanceSet().size() + " instances.");
+            if (entity.getOldEntityInstanceSet().size() > 0) {
+                for (OldEntityInstance entityInstance : entity
+                        .getOldEntityInstanceSet()) {
                     System.out.println(
                             "EntityInstance \"" + entityInstance.getID()
                                     + "\" is associated with " + entityInstance
                                             .getAttributeInstancesSet().size()
                                     + " AttributesInstances.");
-                    for (AttributeInstance attributeInstance : entityInstance
+                    for (OldAttributeInstance attributeInstance : entityInstance
                             .getAttributeInstancesSet()) {
                         System.out.println("AttributeInstance \""
                                 + attributeInstance.getID() + "\" with value \""
@@ -253,15 +253,15 @@ public class PrintBWSpecification {
         }
         for (RelationBW relation : dataModelInstance.getRelationBWSet()) {
             System.out.println("Relation \"" + relation.getName() + "\" has "
-                    + relation.getRelationInstancesSet().size()
+                    + relation.getOldRelationInstanceSet().size()
                     + " instances.");
             System.out.println(
                     "E1 \"" + relation.getEntityOne().getName() + "\"");
             System.out.println(
                     "E2 \"" + relation.getEntityTwo().getName() + "\"");
-            if (relation.getRelationInstancesSet().size() > 0) {
-                for (RelationInstance relationInstance : relation
-                        .getRelationInstancesSet()) {
+            if (relation.getOldRelationInstanceSet().size() > 0) {
+                for (OldRelationInstance relationInstance : relation
+                        .getOldRelationInstanceSet()) {
                     System.out.println("RelationInstance \""
                             + relationInstance.getID() + "\"");
                     System.out.println("EI1 \""
@@ -283,9 +283,9 @@ public class PrintBWSpecification {
         System.out.println("WorkItems");
         System.out.println(
                 "----------------------------------------------------------");
-        for (WorkItem workitem : bwInstance.getWorkItemsSet()) {
-            if (workitem instanceof GoalWorkItem) {
-                GoalWorkItem goalWorkItem = (GoalWorkItem) workitem;
+        for (OldWorkItem workitem : bwInstance.getWorkItemsSet()) {
+            if (workitem instanceof OldGoalWorkItem) {
+                OldGoalWorkItem goalWorkItem = (OldGoalWorkItem) workitem;
                 System.out
                         .println("GoalWorkItem \"" + workitem.getID() + "\" is "
                                 + goalWorkItem.getState()
@@ -294,8 +294,8 @@ public class PrintBWSpecification {
                                 + " attributeInstances.");
             }
 
-            if (workitem instanceof TaskWorkItem) {
-                TaskWorkItem taskWorkItem = (TaskWorkItem) workitem;
+            if (workitem instanceof OldTaskWorkItem) {
+                OldTaskWorkItem taskWorkItem = (OldTaskWorkItem) workitem;
                 System.out
                         .println("GoalWorkItem \"" + workitem.getID() + "\" is "
                                 + taskWorkItem.getState()
@@ -314,14 +314,14 @@ public class PrintBWSpecification {
         System.out.println("WorkItems with Attributes");
         System.out.println(
                 "----------------------------------------------------------");
-        for (WorkItem workitem : bwInstance.getWorkItemsSet()) {
-            if (workitem instanceof TaskWorkItem) {
-                TaskWorkItem taskWorkItem = (TaskWorkItem) workitem;
+        for (OldWorkItem workitem : bwInstance.getWorkItemsSet()) {
+            if (workitem instanceof OldTaskWorkItem) {
+                OldTaskWorkItem taskWorkItem = (OldTaskWorkItem) workitem;
                 System.out.println("TaskWorkItem \"" + workitem.getID()
                         + "\" is " + taskWorkItem.getState());
             }
-            if (workitem instanceof GoalWorkItem) {
-                GoalWorkItem goalWorkItem = (GoalWorkItem) workitem;
+            if (workitem instanceof OldGoalWorkItem) {
+                OldGoalWorkItem goalWorkItem = (OldGoalWorkItem) workitem;
                 System.out.println("GoalWorkItem \"" + workitem.getID()
                         + "\" is " + goalWorkItem.getState());
             }
@@ -330,7 +330,7 @@ public class PrintBWSpecification {
                     + workitem.getInputAttributeInstancesSet().size()
                     + " attributeInstances.");
             if (workitem.getInputAttributeInstancesSet().size() > 0) {
-                for (AttributeInstance attributeInstance : workitem
+                for (OldAttributeInstance attributeInstance : workitem
                         .getInputAttributeInstancesSet()) {
                     System.out.println("EI"
                             + attributeInstance.getEntityInstance().getID()
@@ -345,7 +345,7 @@ public class PrintBWSpecification {
                     + workitem.getOutputAttributeInstancesSet().size()
                     + " attributeInstances.");
             if (workitem.getOutputAttributeInstancesSet().size() > 0) {
-                for (AttributeInstance attributeInstance : workitem
+                for (OldAttributeInstance attributeInstance : workitem
                         .getOutputAttributeInstancesSet()) {
                     System.out.println("EI: "
                             + attributeInstance.getEntityInstance().getID()

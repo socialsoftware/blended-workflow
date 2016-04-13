@@ -2,10 +2,10 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 
-public class AttributeInstance extends AttributeInstance_Base {
+public class OldAttributeInstance extends OldAttributeInstance_Base {
 
-    public AttributeInstance(Attribute attribute,
-            EntityInstance entityInstance) {
+    public OldAttributeInstance(Attribute attribute,
+            OldEntityInstance entityInstance) {
         setEntityInstance(entityInstance);
         setAttribute(attribute);
         setID(getAttribute().getName() + "."
@@ -37,9 +37,9 @@ public class AttributeInstance extends AttributeInstance_Base {
         }
     }
 
-    public void cloneAttributeInstance(DataModelInstance dataModelInstance,
-            EntityInstance newEntityInstance) {
-        AttributeInstance newAttributeInstance = new AttributeInstance(
+    public void cloneAttributeInstance(OldDataModelInstance dataModelInstance,
+            OldEntityInstance newEntityInstance) {
+        OldAttributeInstance newAttributeInstance = new OldAttributeInstance(
                 getAttribute(), newEntityInstance);
         newAttributeInstance.setValue(getValue());
     }

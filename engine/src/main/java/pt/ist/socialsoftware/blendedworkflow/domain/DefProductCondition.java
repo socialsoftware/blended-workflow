@@ -4,7 +4,7 @@ public abstract class DefProductCondition extends DefProductCondition_Base {
 
 	@Override
 	public void delete() {
-		setTaskWithPostCondition(null);
+		setActivityWithPostCondition(null);
 
 		setSuccessConditionGoal(null);
 

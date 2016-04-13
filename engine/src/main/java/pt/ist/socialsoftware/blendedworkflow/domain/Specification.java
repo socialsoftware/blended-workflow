@@ -38,7 +38,7 @@ public class Specification extends Specification_Base {
 
 		setDataModel(new DataModel());
 		setConditionModel(new ConditionModel());
-		setTaskModel(new TaskModel());
+		setActivityModel(new ActivityModel());
 		setGoalModel(new GoalModel());
 		setInstanceCounter(0);
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
@@ -73,7 +73,7 @@ public class Specification extends Specification_Base {
 	@Atomic(mode = TxMode.WRITE)
 	public void delete() {
 		getGoalModel().delete();
-		getTaskModel().delete();
+		getActivityModel().delete();
 		getConditionModel().delete();
 		getDataModel().delete();
 

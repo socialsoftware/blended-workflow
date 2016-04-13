@@ -48,7 +48,7 @@ public class Rule extends Rule_Base {
 		setEntity(null);
 		setConditionModel(null);
 		setInvariantConditionGoal(null);
-		getTasksWithRuleSet().stream().forEach(t -> removeTasksWithRule(t));
+		getActivityWithRuleSet().stream().forEach(t -> removeActivityWithRule(t));
 		if (getCondition() != null)
 			getCondition().delete();
 

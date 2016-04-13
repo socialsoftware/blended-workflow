@@ -13,7 +13,7 @@ public abstract class Condition extends Condition_Base {
 	};
 
 	public enum ConditionType {
-		PRE_CONDITION, POS_CONDITION, ACTIVATE_CONDITION, SUCESS_CONDITION, MAINTAIN_CONDITION
+		PRE_CONDITION, POS_CONDITION, ACTIVATE_CONDITION, SUCCESS_CONDITION, MAINTAIN_CONDITION
 	};
 
 	public enum ConditionResult {
@@ -32,13 +32,13 @@ public abstract class Condition extends Condition_Base {
 		return new NotCondition(condition);
 	}
 
-	abstract Condition cloneCondition(GoalModelInstance goalModelInstance);
+	abstract Condition cloneCondition(OldGoalModelInstance goalModelInstance);
 
-	abstract Condition cloneCondition(TaskModelInstance taskModelInstance);
+	abstract Condition cloneCondition(OldTaskModelInstance taskModelInstance);
 
-	public abstract void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType);
+	public abstract void assignAttributeInstances(OldGoalWorkItem goalWorkItem, ConditionType conditionType);
 
-	abstract void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType);
+	abstract void assignAttributeInstances(OldTaskWorkItem taskWorkItem, ConditionType conditionType);
 
 	public abstract Set<Entity> getEntities();
 
@@ -66,11 +66,11 @@ public abstract class Condition extends Condition_Base {
 	/******************************
 	 * Evaluate
 	 ******************************/
-	public abstract TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType);
+	public abstract TripleStateBool evaluate(OldGoalWorkItem goalWorkItem, ConditionType conditionType);
 
-	public abstract TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType);
+	public abstract TripleStateBool evaluateWithWorkItem(OldGoalWorkItem goalWorkItem, ConditionType conditionType);
 
-	public abstract TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
+	public abstract TripleStateBool evaluateWithDataModel(OldEntityInstance entityInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType);
 
 	public void delete() {

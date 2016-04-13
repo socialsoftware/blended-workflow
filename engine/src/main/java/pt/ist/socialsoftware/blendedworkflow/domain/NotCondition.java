@@ -21,22 +21,22 @@ public class NotCondition extends NotCondition_Base {
 	}
 
 	@Override
-	Condition cloneCondition(GoalModelInstance goalModelInstance) {
+	Condition cloneCondition(OldGoalModelInstance goalModelInstance) {
 		return new NotCondition(getCondition().cloneCondition(goalModelInstance));
 	}
 
 	@Override
-	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+	Condition cloneCondition(OldTaskModelInstance taskModelInstance) {
 		return new NotCondition(getCondition().cloneCondition(taskModelInstance));
 	}
 
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		getCondition().assignAttributeInstances(goalWorkItem, conditionType);
 	}
 
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
+	void assignAttributeInstances(OldTaskWorkItem taskWorkItem, ConditionType conditionType) {
 		getCondition().assignAttributeInstances(taskWorkItem, conditionType);
 	}
 
@@ -94,17 +94,17 @@ public class NotCondition extends NotCondition_Base {
 	 * Evaluate
 	 ******************************/
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluate(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return getCondition().evaluate(goalWorkItem, conditionType).NOT();
 	}
 
 	@Override
-	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluateWithWorkItem(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return getCondition().evaluateWithWorkItem(goalWorkItem, conditionType).NOT();
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
+	public TripleStateBool evaluateWithDataModel(OldEntityInstance entityInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		return getCondition().evaluateWithWorkItem(goalWorkItem, conditionType).NOT();
 	}

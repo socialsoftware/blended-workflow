@@ -15,8 +15,8 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 
-public class Task extends Task_Base {
-	private static Logger logger = LoggerFactory.getLogger(Task.class);
+public class Activity extends Activity_Base {
+	private static Logger logger = LoggerFactory.getLogger(Activity.class);
 
 	@Override
 	public void setName(String name) {
@@ -30,21 +30,21 @@ public class Task extends Task_Base {
 
 		super.addSequenceCondition(sequenceCondition);
 
-		checkCycles(getTaskModel().getTaskSequences());
+		checkCycles(getActivityModel().getActivitySequences());
 
-		getTaskModel().applyRules();
+		getActivityModel().applyRules();
 	}
 
-	public Task(TaskModel taskModel, String name, String description) {
-		setTaskModel(taskModel);
+	public Activity(ActivityModel activityModel, String name, String description) {
+		setActivityModel(activityModel);
 		setName(name);
 		setDescription(description);
 	}
 
-	public Task(TaskModel taskModel, String name, String description, Set<DefPathCondition> preConditions,
+	public Activity(ActivityModel activityModel, String name, String description, Set<DefPathCondition> preConditions,
 			Set<DefProductCondition> postCondition, String previous, String joinCode, String splitCode)
 			throws BWException {
-		setTaskModel(taskModel);
+		setActivityModel(activityModel);
 		setName(name);
 		getPreConditionSet().addAll(preConditions);
 		getPostConditionSet().addAll(postCondition);
@@ -62,26 +62,26 @@ public class Task extends Task_Base {
 	}
 
 	private void checkUniqueTaskName(String name) throws BWException {
-		if (getTaskModel().getTasksSet().stream().filter(t -> t != this && t.getName().equals(name)).findFirst()
+		if (getActivityModel().getActivitySet().stream().filter(t -> t != this && t.getName().equals(name)).findFirst()
 				.isPresent())
-			throw new BWException(BWErrorType.INVALID_TASK_NAME, name);
+			throw new BWException(BWErrorType.INVALID_ACTIVITY_NAME, name);
 	}
 
-	public void cloneTask(TaskModelInstance taskModelInstance) throws BWException {
+	public void cloneTask(OldTaskModelInstance activityModelInstance) throws BWException {
 		Set<DefPathCondition> newPreConditions = null;
 		Set<DefPathCondition> preConditions = getPreConditionSet();
 		Set<DefProductCondition> newPostCondition = null;
 		Set<DefProductCondition> postCondition = getPostConditionSet();
 		if (!preConditions.isEmpty() && !getPostConditionSet().isEmpty()) {
 			newPreConditions = preConditions.stream()
-					.map((cond) -> (DefPathCondition) cond.cloneCondition(taskModelInstance))
+					.map((cond) -> (DefPathCondition) cond.cloneCondition(activityModelInstance))
 					.collect(Collectors.toSet());
 			newPostCondition = postCondition.stream()
-					.map((cond) -> (DefProductCondition) cond.cloneCondition(taskModelInstance))
+					.map((cond) -> (DefProductCondition) cond.cloneCondition(activityModelInstance))
 					.collect(Collectors.toSet());
 		}
-		Task newTask = new Task(taskModelInstance, getName(), getDescription(), newPreConditions, newPostCondition,
-				getPrevious(), getJoinCode(), getSplitCode());
+		Activity newTask = new Activity(activityModelInstance, getName(), getDescription(), newPreConditions,
+				newPostCondition, getPrevious(), getJoinCode(), getSplitCode());
 		newTask.setUser(getUser());
 		newTask.setRole(getRole());
 	}
@@ -131,7 +131,7 @@ public class Task extends Task_Base {
 	}
 
 	public void delete() {
-		setTaskModel(null);
+		setActivityModel(null);
 		getPreConditionSet().forEach(c -> removePreCondition(c));
 		getPostConditionSet().forEach(c -> removePostCondition(c));
 		getMultiplicityInvariantSet().forEach(m -> removeMultiplicityInvariant(m));
@@ -142,7 +142,7 @@ public class Task extends Task_Base {
 	}
 
 	public ActivityDTO getDTO() {
-		return new ActivityDTO(getTaskModel().getSpecification().getSpecId(), getName(), getDescription());
+		return new ActivityDTO(getActivityModel().getSpecification().getSpecId(), getName(), getDescription());
 	}
 
 	public void checkConsistency() {
@@ -151,29 +151,30 @@ public class Task extends Task_Base {
 		checkDependenceConstraint();
 		checkMultiplicityConstraint();
 		checkRuleConstraint();
-		checkCycles(getTaskModel().getTaskSequences());
+		checkCycles(getActivityModel().getActivitySequences());
 	}
 
-	public void checkCycles(Map<Task, Set<Task>> taskDependencies) {
-		goThroughAcyclicPath(this, taskDependencies, new HashSet<Task>());
+	public void checkCycles(Map<Activity, Set<Activity>> activityDependencies) {
+		goThroughAcyclicPath(this, activityDependencies, new HashSet<Activity>());
 	}
 
-	private void goThroughAcyclicPath(Task task, Map<Task, Set<Task>> taskDependencies, Set<Task> visitedTasks) {
-		Set<Task> nextTasks = taskDependencies.get(this);
+	private void goThroughAcyclicPath(Activity activity, Map<Activity, Set<Activity>> activityDependencies,
+			Set<Activity> visitedTasks) {
+		Set<Activity> nextTasks = activityDependencies.get(this);
 		visitedTasks.add(this);
 
-		if (nextTasks.contains(task)) {
+		if (nextTasks.contains(activity)) {
 			throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY, getName());
 		} else {
-			for (Task nextTask : nextTasks) {
+			for (Activity nextTask : nextTasks) {
 				if (!visitedTasks.contains(nextTask))
-					nextTask.goThroughAcyclicPath(task, taskDependencies, visitedTasks);
+					nextTask.goThroughAcyclicPath(activity, activityDependencies, visitedTasks);
 			}
 		}
 	}
 
 	private void checkRuleConstraint() {
-		// at least one of the attributes in the rule is defined in the task
+		// at least one of the attributes in the rule is defined in the activity
 		Set<Attribute> postAttributes = getPostConditionSet().stream().map(d -> d.getTargetOfPath())
 				.filter(Attribute.class::isInstance).map(Attribute.class::cast).collect(Collectors.toSet());
 		for (Rule rule : getRuleInvariantSet())
@@ -211,7 +212,7 @@ public class Task extends Task_Base {
 		Set<Product> preProducts = getPreProducts();
 		Set<Product> postProducts = getPostProducts();
 
-		Optional<Dependence> oDep = getTaskModel().getSpecification().getDataModel().getDependenceSet().stream()
+		Optional<Dependence> oDep = getActivityModel().getSpecification().getDataModel().getDependenceSet().stream()
 				.filter(d -> postProducts.contains(d.getProduct()) && !preProducts.contains(d.getTarget())
 						&& !postProducts.contains(d.getTarget()))
 				.findFirst();
@@ -285,7 +286,7 @@ public class Task extends Task_Base {
 		getMultiplicityInvariantSet().addAll(relation.getMulConditionSet());
 
 		relation.getEntitySet().stream().filter(e -> !getPostEntities().contains(e)).forEach(e -> addPreCondition(
-				DefPathCondition.getDefPathCondition(getTaskModel().getSpecification(), relation.getPath(e))));
+				DefPathCondition.getDefPathCondition(getActivityModel().getSpecification(), relation.getPath(e))));
 	}
 
 }

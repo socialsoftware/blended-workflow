@@ -23,8 +23,8 @@ public class GoalModel extends GoalModel_Base {
 	/**
 	 * Clone the GoalModel tree
 	 */
-	public void cloneGoalModel(GoalModelInstance newGoalModelInstance) throws BWException {
-		for (MaintainGoal maintainGoal : getMaintainGoalsSet()) {
+	public void cloneGoalModel(OldGoalModelInstance newGoalModelInstance) throws BWException {
+		for (OldMaintainGoal maintainGoal : getMaintainGoalsSet()) {
 			maintainGoal.cloneGoal(newGoalModelInstance);
 		}
 
@@ -53,8 +53,8 @@ public class GoalModel extends GoalModel_Base {
 		throw new BWException(BWErrorType.NON_EXISTENT_GOAL_NAME, name);
 	}
 
-	public MaintainGoal getMaintainGoal(String name) throws BWException {
-		for (MaintainGoal goal : getMaintainGoalsSet()) {
+	public OldMaintainGoal getMaintainGoal(String name) throws BWException {
+		for (OldMaintainGoal goal : getMaintainGoalsSet()) {
 			if (goal.getName().equals(name)) {
 				return goal;
 			}

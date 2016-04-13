@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.domain.ConditionModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
@@ -23,7 +24,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
-import pt.ist.socialsoftware.blendedworkflow.domain.Task;
 import pt.ist.socialsoftware.blendedworkflow.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.DefAttributeConditionDTO;
@@ -71,9 +71,9 @@ public class ActivityModelController {
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		Task task = adi.createActivity(activityDTO);
+		Activity activity = adi.createActivity(activityDTO);
 
-		return new ResponseEntity<ActivityDTO>(task.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<ActivityDTO>(activity.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/add", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -85,9 +85,9 @@ public class ActivityModelController {
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		Task task = adi.addActivity(specId, request);
+		Activity activity = adi.addActivity(specId, request);
 
-		return new ResponseEntity<ActivityDTO>(task.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<ActivityDTO>(activity.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/{newName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
@@ -108,7 +108,7 @@ public class ActivityModelController {
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		Set<Task> goals = adi.getActivities(specId);
+		Set<Activity> goals = adi.getActivities(specId);
 
 		return new ResponseEntity<ActivityDTO[]>(goals.stream().map(g -> g.getDTO()).toArray(ActivityDTO[]::new),
 				HttpStatus.OK);
@@ -263,10 +263,10 @@ public class ActivityModelController {
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		Task task = adi.mergeActivities(specId, newActivityName, "merged: " + activityNameOne + " " + activityNameTwo,
-				activityNameOne, activityNameTwo);
+		Activity activity = adi.mergeActivities(specId, newActivityName,
+				"merged: " + activityNameOne + " " + activityNameTwo, activityNameOne, activityNameTwo);
 
-		return new ResponseEntity<ActivityDTO>(task.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<ActivityDTO>(activity.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/extract", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -278,11 +278,11 @@ public class ActivityModelController {
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		Task task = adi.extractActivity(specId, request.getNewActivityName(),
+		Activity activity = adi.extractActivity(specId, request.getNewActivityName(),
 				"splitted from activity " + request.getSourceActivityName(), request.getSourceActivityName(),
 				request.getSuccessConditions());
 
-		return new ResponseEntity<ActivityDTO>(task.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<ActivityDTO>(activity.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/seq/add", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)

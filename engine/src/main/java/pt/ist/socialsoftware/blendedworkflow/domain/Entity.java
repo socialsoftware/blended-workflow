@@ -84,13 +84,13 @@ public class Entity extends Entity_Base {
 				cardinalityTwo, false);
 	}
 
-	public void cloneEntity(DataModelInstance dataModelInstance) throws BWException {
+	public void cloneEntity(OldDataModelInstance dataModelInstance) throws BWException {
 		Entity newEntity = new Entity(dataModelInstance, getName(), false);
 		for (Attribute attribute : getAttributeBasicSet()) {
 			attribute.cloneAttribute(dataModelInstance, newEntity);
 		}
 
-		for (EntityInstance ei : getEntityInstancesSet()) {
+		for (OldEntityInstance ei : getOldEntityInstanceSet()) {
 			ei.cloneEntityInstance(dataModelInstance, newEntity);
 		}
 	}
@@ -98,28 +98,28 @@ public class Entity extends Entity_Base {
 	/**
 	 * Create and assign EntityInstances and AttributesInstances to Workitems
 	 */
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, Attribute attribute, ConditionType conditionType) {
-		EntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, Attribute attribute, ConditionType conditionType) {
+		OldEntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
 		Entity entityContext = entityInstanceContext.getEntity();
 
 		if (this.equals(entityContext)) {
 			entityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
 		} else {
-			for (RelationInstance relationInstance : entityInstanceContext.getEntityInstanceOneRelationInstancesSet()) {
+			for (OldRelationInstance relationInstance : entityInstanceContext.getEntityInstanceOneRelationInstancesSet()) {
 				Entity relationEntityContext = relationInstance.getEntityInstanceTwo().getEntity();
-				EntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceTwo();
+				OldEntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceTwo();
 				if (relationEntityContext.equals(this)) {
 					relationEntityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
 				}
 			}
 
-			for (RelationInstance relationInstance : entityInstanceContext.getEntityInstanceTwoRelationInstancesSet()) {
+			for (OldRelationInstance relationInstance : entityInstanceContext.getEntityInstanceTwoRelationInstancesSet()) {
 				Entity relationEntityContext = relationInstance.getEntityInstanceOne().getEntity();
-				EntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceOne();
+				OldEntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceOne();
 				if (relationEntityContext.equals(this)) {
 					relationEntityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
 				} else {
-					for (RelationInstance r2 : relationEntityInstanceContext
+					for (OldRelationInstance r2 : relationEntityInstanceContext
 							.getEntityInstanceTwoRelationInstancesSet()) {
 						if (r2.getEntityInstanceOne().getEntity().equals(this)) {
 							r2.getEntityInstanceOne().assignAttributeInstances(goalWorkItem, attribute, conditionType);
@@ -130,12 +130,12 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-	public void assignAttributeInstances(TaskWorkItem taskWorkItem, Attribute attribute, ConditionType conditionType) {
-		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
-		if (getEntityInstancesSet().isEmpty()) {
+	public void assignAttributeInstances(OldTaskWorkItem taskWorkItem, Attribute attribute, ConditionType conditionType) {
+		OldDataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
+		if (getOldEntityInstanceSet().isEmpty()) {
 			// EntityInstance entityInstance = new
 			// EntityInstance(dataModelInstance, this); //OLD
-			EntityInstance entityInstance = new EntityInstance(this);
+			OldEntityInstance entityInstance = new OldEntityInstance(this);
 			entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 
 			// FIXME: Bad Hack!
@@ -143,7 +143,7 @@ public class Entity extends Entity_Base {
 				createRelationInstances(dataModelInstance, entityInstance);
 			}
 		} else {
-			for (EntityInstance entityInstance : getEntityInstancesSet()) { // FIXME:
+			for (OldEntityInstance entityInstance : getOldEntityInstanceSet()) { // FIXME:
 																			// only
 																			// 1
 																			// entityInstance
@@ -152,8 +152,8 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-	public void assignAllAttributeInstances(GoalWorkItem goalWorkItem, Entity entity, ConditionType conditionType) {
-		EntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
+	public void assignAllAttributeInstances(OldGoalWorkItem goalWorkItem, Entity entity, ConditionType conditionType) {
+		OldEntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
 		Entity entityContext = entityInstanceContext.getEntity();
 
 		if (this.equals(entityContext)) {
@@ -163,9 +163,9 @@ public class Entity extends Entity_Base {
 				}
 			}
 		} else {
-			for (RelationInstance relationInstance : entityInstanceContext.getEntityInstanceOneRelationInstancesSet()) {
+			for (OldRelationInstance relationInstance : entityInstanceContext.getEntityInstanceOneRelationInstancesSet()) {
 				Entity relationEntityContext = relationInstance.getEntityInstanceTwo().getEntity();
-				EntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceTwo();
+				OldEntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceTwo();
 				if (relationEntityContext.equals(this)) {
 					for (Attribute attribute : relationEntityContext.getAttributeBasicSet()) {
 						if (attribute.getIsKeyAttribute()) {
@@ -176,9 +176,9 @@ public class Entity extends Entity_Base {
 				}
 			}
 
-			for (RelationInstance relationInstance : entityInstanceContext.getEntityInstanceTwoRelationInstancesSet()) {
+			for (OldRelationInstance relationInstance : entityInstanceContext.getEntityInstanceTwoRelationInstancesSet()) {
 				Entity relationEntityContext = relationInstance.getEntityInstanceOne().getEntity();
-				EntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceOne();
+				OldEntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceOne();
 				if (relationEntityContext.equals(this)) {
 					for (Attribute attribute : relationEntityContext.getAttributeBasicSet()) {
 						if (attribute.getIsKeyAttribute()) {
@@ -191,13 +191,13 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-	public void assignAllAttributeInstances(TaskWorkItem taskWorkItem, Entity entity, ConditionType conditionType) {
-		DataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
+	public void assignAllAttributeInstances(OldTaskWorkItem taskWorkItem, Entity entity, ConditionType conditionType) {
+		OldDataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
 
-		if (getEntityInstancesSet().isEmpty()) {
+		if (getOldEntityInstanceSet().isEmpty()) {
 			// EntityInstance entityInstance = new
 			// EntityInstance(dataModelInstance, this);
-			EntityInstance entityInstance = new EntityInstance(this);
+			OldEntityInstance entityInstance = new OldEntityInstance(this);
 			for (Attribute attribute : getAttributeBasicSet()) {
 				if (attribute.getIsKeyAttribute())
 					entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
@@ -208,7 +208,7 @@ public class Entity extends Entity_Base {
 				createRelationInstances(dataModelInstance, entityInstance);
 			}
 		} else {
-			for (EntityInstance entityInstance : getEntityInstancesSet()) { // FIXME:
+			for (OldEntityInstance entityInstance : getOldEntityInstanceSet()) { // FIXME:
 																			// Only
 																			// 1
 																			// entityInstance
@@ -220,9 +220,9 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-	private void createRelationInstances(DataModelInstance dataModelInstance, EntityInstance entityInstance) {
+	private void createRelationInstances(OldDataModelInstance dataModelInstance, OldEntityInstance entityInstance) {
 		Entity relationEntityTwo = null;
-		EntityInstance relationEntityInstanceTwo = null;
+		OldEntityInstance relationEntityInstanceTwo = null;
 		// Relation Type Exists?
 		if (this.getRelationCount() > 0) {
 			for (RelationBW relation : this.getRelationSet()) {
@@ -233,13 +233,13 @@ public class Entity extends Entity_Base {
 					}
 				}
 				// Relations instances already exists?
-				if (relation.getRelationInstancesSet().isEmpty()) {
-					if (relationEntityTwo.getEntityInstancesSet().isEmpty()) {
+				if (relation.getOldRelationInstanceSet().isEmpty()) {
+					if (relationEntityTwo.getOldEntityInstanceSet().isEmpty()) {
 						// relationEntityInstanceTwo = new
 						// EntityInstance(dataModelInstance, relationEntityTwo);
-						relationEntityInstanceTwo = new EntityInstance(relationEntityTwo);
+						relationEntityInstanceTwo = new OldEntityInstance(relationEntityTwo);
 					} else {
-						for (EntityInstance entityInstance1 : relationEntityTwo.getEntityInstancesSet()) { // FIXME:
+						for (OldEntityInstance entityInstance1 : relationEntityTwo.getOldEntityInstanceSet()) { // FIXME:
 																											// only
 																											// 1
 																											// entityInstance
@@ -248,8 +248,8 @@ public class Entity extends Entity_Base {
 					}
 					// Create Relation Instance and re-call the method for the 2
 					// entity
-					EntityInstance relationInstanceOne;
-					EntityInstance relationInstanceTwo;
+					OldEntityInstance relationInstanceOne;
+					OldEntityInstance relationInstanceTwo;
 
 					if (entityInstance.getEntity().equals(relation.getEntityOne())) {
 						relationInstanceOne = entityInstance;
@@ -258,7 +258,7 @@ public class Entity extends Entity_Base {
 						relationInstanceOne = relationEntityInstanceTwo;
 						relationInstanceTwo = entityInstance;
 					}
-					new RelationInstance(relation, relationInstanceOne, relationInstanceTwo,
+					new OldRelationInstance(relation, relationInstanceOne, relationInstanceTwo,
 							relationInstanceOne.getNewRelationInstanceID());
 					// if (entityInstance.getEntity().getName().equals("?")) {
 					// relationEntityTwo.createRelationInstances(dataModelInstance,
@@ -278,8 +278,8 @@ public class Entity extends Entity_Base {
 		return getAttributeBasicSet().stream().filter(att -> att.getName().equals(name)).findFirst();
 	}
 
-	public EntityInstance getEntityInstance(String ID) {
-		for (EntityInstance entityInstance : getEntityInstancesSet()) {
+	public OldEntityInstance getEntityInstance(String ID) {
+		for (OldEntityInstance entityInstance : getOldEntityInstanceSet()) {
 			if (entityInstance.getID().equals(ID)) {
 				return entityInstance;
 			}

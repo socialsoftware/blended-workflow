@@ -17,8 +17,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.domain.ActivityModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -40,7 +40,7 @@ public class AddSequenceConditionTest extends TeardownRollbackTest {
 	private static final String TASK_THREE = "activityThree";
 
 	Specification spec;
-	TaskModel taskModel;
+	ActivityModel taskModel;
 	Entity entOne;
 	Entity entTwo;
 	Entity entThree;
@@ -48,15 +48,15 @@ public class AddSequenceConditionTest extends TeardownRollbackTest {
 	Attribute attTwo;
 	Attribute attThree;
 	Attribute attFour;
-	Task taskOne;
-	Task taskTwo;
-	Task taskThree;
+	Activity taskOne;
+	Activity taskTwo;
+	Activity taskThree;
 
 	@Override
 	public void populate4Test() throws BWException {
 		spec = new Specification("SpecId", "My spec", "author", DESCRIPTION, "version", "UID");
 		DataModel dataModel = spec.getDataModel();
-		taskModel = spec.getTaskModel();
+		taskModel = spec.getActivityModel();
 
 		entOne = new Entity(dataModel, ENT_ONE_NAME, false);
 		entTwo = new Entity(dataModel, ENT_TWO_NAME, false);
@@ -82,19 +82,19 @@ public class AddSequenceConditionTest extends TeardownRollbackTest {
 		//
 		spec.getConditionModel().generateConditions();
 
-		taskOne = new Task(spec.getTaskModel(), TASK_ONE, "Description");
+		taskOne = new Activity(spec.getActivityModel(), TASK_ONE, "Description");
 		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attTwo));
 
-		taskTwo = new Task(spec.getTaskModel(), TASK_TWO, "Description");
+		taskTwo = new Activity(spec.getActivityModel(), TASK_TWO, "Description");
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entThree));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relationOne, relationOne.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relationOne, relationOne.getRoleNameTwo()));
 
-		taskThree = new Task(spec.getTaskModel(), TASK_THREE, "Description");
+		taskThree = new Activity(spec.getActivityModel(), TASK_THREE, "Description");
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_TWO_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_THREE_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH_ONE));

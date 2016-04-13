@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldBWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
@@ -36,7 +36,7 @@ public class CreateBWInstanceService implements Callable<String> {
 			User user = BlendedWorkflow.getInstance().getOrganizationalModel().getUser(userID);
 
 			// Get BWSpecification and clone it
-			BWInstance bwInstance = new BWInstance(this.bwSpecification, name, user);
+			OldBWInstance bwInstance = new OldBWInstance(this.bwSpecification, name, user);
 
 			// Launch case on YAWL
 			Specification bwSpecification = bwInstance.getSpecification();

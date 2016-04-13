@@ -33,25 +33,25 @@ public class DefPathCondition extends DefPathCondition_Base {
 	}
 
 	@Override
-	Condition cloneCondition(GoalModelInstance goalModelInstance) {
+	Condition cloneCondition(OldGoalModelInstance goalModelInstance) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+	Condition cloneCondition(OldTaskModelInstance activityModelInstance) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
+	void assignAttributeInstances(OldTaskWorkItem activityWorkItem, ConditionType conditionType) {
 		// TODO Auto-generated method stub
 
 	}
@@ -129,19 +129,19 @@ public class DefPathCondition extends DefPathCondition_Base {
 	}
 
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluate(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluateWithWorkItem(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
+	public TripleStateBool evaluateWithDataModel(OldEntityInstance entityInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		// TODO Auto-generated method stub
 		return null;
@@ -154,9 +154,9 @@ public class DefPathCondition extends DefPathCondition_Base {
 
 	@Override
 	public void delete() {
-		getTaskWithPreConditionSet().stream().forEach(d -> removeTaskWithPreCondition(d));
+		getActivityWithPreConditionSet().stream().forEach(d -> removeActivityWithPreCondition(d));
 		getActivationConditionGoalSet().stream().forEach(d -> removeActivationConditionGoal(d));
-		setTaskSequenceCondition(null);
+		setActivitySequenceCondition(null);
 		setDataModel(null);
 
 		super.delete();

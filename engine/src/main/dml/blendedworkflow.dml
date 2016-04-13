@@ -1,11 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState as DataState;
-enum pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal.MaintainGoalState as MaintainGoalState;
-//enum pt.ist.socialsoftware.blendedworkflow.domain.Task.TaskState as TaskState;
-//enum pt.ist.socialsoftware.blendedworkflow.domain.WorkItem.WorkItemState as WorkItemState;
-enum pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState as ActivityState;
-enum pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState as GoalState;
+enum pt.ist.socialsoftware.blendedworkflow.domain.OldMaintainGoal.MaintainGoalState as MaintainGoalState;
+//enum pt.ist.socialsoftware.blendedworkflow.domain.OldWorkItem.WorkItemState as WorkItemState;
+enum pt.ist.socialsoftware.blendedworkflow.domain.OldTaskWorkItem.ActivityState as ActivityState;
+enum pt.ist.socialsoftware.blendedworkflow.domain.OldGoalWorkItem.GoalState as GoalState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality as Cardinality;
 enum pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator as ComparisonOperator;
@@ -55,7 +54,7 @@ class Specification {
 
 class DataModel;
 
-class DataModelInstance extends DataModel;
+class OldDataModelInstance extends DataModel;
 
 class Product {
 	String name;
@@ -109,7 +108,7 @@ class StringLiteral extends Expression {
 	String valueString;
 }
 
-class BWInstance {
+class OldBWInstance {
 	String ID;
 	String name;
 	String creationDate;
@@ -128,47 +127,46 @@ class LogRecord {
 
 class ConditionModel;
 
-class WorkItem {
+class OldWorkItem {
 	String ID;
 //	WorkItemState stateDELETE;
 }
 
-class TaskWorkItem extends WorkItem {
+class OldTaskWorkItem extends OldWorkItem {
 	ActivityState state;
 }
 
-class GoalWorkItem extends WorkItem {
+class OldGoalWorkItem extends OldWorkItem {
 	GoalState state;
 }
 
-class WorkItemArgument {
+class OldWorkItemArgument {
 	String value;
 	DataState state;
 }
 
 class GoalModel;
 
-class GoalModelInstance extends GoalModel;
+class OldGoalModelInstance extends GoalModel;
 
 class Goal {
 	String name;
 	String description;
 }
 
-class MaintainGoal {
+class OldMaintainGoal {
 	String name;
 	String description;
 	MaintainGoalState state;
 }
 
-class TaskModel;
+class ActivityModel;
 
-class TaskModelInstance extends TaskModel;
+class OldTaskModelInstance extends ActivityModel;
 
-class Task {
+class Activity {
 	String name;
 	String description;
-//	TaskState state;
 	String previous;
 	String joinCode;
 	String splitCode;
@@ -210,23 +208,23 @@ class TrueCondition extends Condition;
 
 class FalseCondition extends Condition;
 
-class ForAllCondition extends Condition;
-class ExistsOneCondition extends Condition;
+class OldForAllCondition extends Condition;
+class OldExistsOneCondition extends Condition;
 
-class EntityInstance {
+class OldEntityInstance {
 	String ID;
 	DataState state;
 	Integer attributeInstanceCounter;
 	Integer relationInstanceCounter;
 }
 
-class AttributeInstance {
+class OldAttributeInstance {
 	String ID;
 	String value;
 	DataState state;
 }
 
-class RelationInstance {
+class OldRelationInstance {
 	String ID;
 }
 
@@ -241,7 +239,7 @@ relation BlendedWorkflowHasSpecifications {
 // Specification
 relation SpecificationHasBWInstances {
 	Specification playsRole specification {multiplicity 0..1;}
-	BWInstance playsRole bwInstances {multiplicity 0..*;}
+	OldBWInstance playsRole bwInstances {multiplicity 0..*;}
 }
 
 relation SpecificationHasConditionModel {
@@ -254,9 +252,9 @@ relation SpecificationHasGoalModel {
 	GoalModel playsRole goalModel { multiplicity 0..1; }
 }
 
-relation SpecificationHasTaskModel {
+relation SpecificationHasActivityModel {
 	Specification playsRole specification {multiplicity 0..1;}
-	TaskModel playsRole taskModel { multiplicity 0..1; }
+	ActivityModel playsRole activityModel { multiplicity 0..1; }
 }
 
 relation SpecificationHasDataModel {
@@ -264,25 +262,25 @@ relation SpecificationHasDataModel {
 	DataModel playsRole dataModel { multiplicity 0..1; }
 }
 
-// BWInstance
+// OldBWInstance
 relation BWInstanceHasGoalModelInstance {
-	BWInstance playsRole bwInstance {multiplicity 0..1;}
-	GoalModelInstance playsRole goalModelInstance {multiplicity 0..1;}
+	OldBWInstance playsRole bwInstance {multiplicity 0..1;}
+	OldGoalModelInstance playsRole goalModelInstance {multiplicity 0..1;}
 }
 
 relation BWInstanceHasTaskModelInstance {
-	BWInstance playsRole bwInstance {multiplicity 0..1;}
-	TaskModelInstance playsRole taskModelInstance {multiplicity 0..1;}
+	OldBWInstance playsRole bwInstance {multiplicity 0..1;}
+	OldTaskModelInstance playsRole taskModelInstance {multiplicity 0..1;}
 }
 
 relation BWInstanceHasDataModelInstance {
-	BWInstance playsRole bwInstance {multiplicity 0..1;}
-	DataModelInstance playsRole dataModelInstance {multiplicity 0..1;}
+	OldBWInstance playsRole bwInstance {multiplicity 0..1;}
+	OldDataModelInstance playsRole dataModelInstance {multiplicity 0..1;}
 }
 
 relation BWInstanceHasWorkItems {
-	BWInstance playsRole bwInstance {multiplicity 0..1;}
-	WorkItem playsRole workItems {multiplicity 0..*;}
+	OldBWInstance playsRole bwInstance {multiplicity 0..1;}
+	OldWorkItem playsRole workItems {multiplicity 0..*;}
 }
 
 // Log
@@ -292,7 +290,7 @@ relation SpecificationHasLog {
 }
 
 relation BWInstanceHasLog {
-	BWInstance playsRole bwInstance {multiplicity 0..1;}
+	OldBWInstance playsRole bwInstance {multiplicity 0..1;}
 	Log playsRole log {multiplicity 0..1;}
 }
 
@@ -333,31 +331,31 @@ relation ConditionModelHasAttributeInvariantConditions {
 }
 
 
-// WorkItem
+// OldWorkItem
 relation WorkItemRefersToOutputAttributeInstances {
-	WorkItem playsRole contraintViolationWorkItems {multiplicity 0..*;}
-	AttributeInstance playsRole outputAttributeInstances { multiplicity 0..*; }
+	OldWorkItem playsRole contraintViolationWorkItems {multiplicity 0..*;}
+	OldAttributeInstance playsRole outputAttributeInstances { multiplicity 0..*; }
 }
 
 relation WorkItemRefersInputAttributteInstances {
-	WorkItem playsRole preConstraintWorkItems {multiplicity 0..*;}
-	AttributeInstance playsRole inputAttributeInstances { multiplicity 0..*; }
+	OldWorkItem playsRole preConstraintWorkItems {multiplicity 0..*;}
+	OldAttributeInstance playsRole inputAttributeInstances { multiplicity 0..*; }
 }
 
-// WorkItemArgument
+// OldWorkItemArgument
 relation WorkItemHasInputWorkItemArguments {
-	WorkItem playsRole inputWorkItem {multiplicity 0..1;}
-	WorkItemArgument playsRole inputWorkItemArguments { multiplicity 0..*; }
+	OldWorkItem playsRole inputWorkItem {multiplicity 0..1;}
+	OldWorkItemArgument playsRole inputWorkItemArguments { multiplicity 0..*; }
 }
 
 relation WorkItemHasOutputWorkItemArguments {
-	WorkItem playsRole outputWorkItem {multiplicity 0..1;}
-	WorkItemArgument playsRole outputWorkItemArguments { multiplicity 0..*; }
+	OldWorkItem playsRole outputWorkItem {multiplicity 0..1;}
+	OldWorkItemArgument playsRole outputWorkItemArguments { multiplicity 0..*; }
 }
 
 relation WorkItemArgumentRefersAttributteInstances {
-	WorkItemArgument playsRole workItemArgument {multiplicity 0..*;}
-	AttributeInstance playsRole attributeInstance { multiplicity 0..1; }
+	OldWorkItemArgument playsRole workItemArgument {multiplicity 0..*;}
+	OldAttributeInstance playsRole attributeInstance { multiplicity 0..1; }
 }
 
 // Goal Model
@@ -368,7 +366,7 @@ relation GoalModelHasGoals {
 
 relation GoalModelHasMaintainGoals {
 	GoalModel playsRole goalModel { multiplicity 0..1; }
-	MaintainGoal playsRole maintainGoals { multiplicity 0..*; }
+	OldMaintainGoal playsRole maintainGoals { multiplicity 0..*; }
 }
 
 // Goal
@@ -399,49 +397,49 @@ relation GoalHasAttributeInvariantCondition {
 
 relation GoalHasGoalWorkItem {
 	Goal playsRole goal { multiplicity 0..1; }
-	GoalWorkItem playsRole goalWorkItems { multiplicity 0..*; }
+	OldGoalWorkItem playsRole oldGoalWorkItem { multiplicity 0..*; }
 }
 
-// Task Model
-relation TaskModelHasTasks {
-	TaskModel playsRole taskModel { multiplicity 0..1; }
-	Task playsRole tasks { multiplicity 0..*; }
+// Activity Model
+relation ActivityModelHasActivities {
+	ActivityModel playsRole activityModel { multiplicity 0..1; }
+	Activity playsRole activity { multiplicity 0..*; }
 }
 
-// Task
-relation TaskHasNextTask {
-	Task playsRole task { multiplicity 0..*; }
-	Task playsRole nextTasks { multiplicity 0..*; }
+// Activity
+relation ActivityHasNextActivity {
+	Activity playsRole activity { multiplicity 0..*; }
+	Activity playsRole nextActivity { multiplicity 0..*; }
 }
 
-relation TaskHasPreConditions {
-	Task playsRole taskWithPreCondition { multiplicity 0..*; }
+relation ActivityHasPreConditions {
+	Activity playsRole activityWithPreCondition { multiplicity 0..*; }
 	DefPathCondition playsRole preCondition { multiplicity 0..*; }
 }
 
-relation TaskHasPostConditions {
-	Task playsRole taskWithPostCondition { multiplicity 0..1; }
+relation ActivityHasPostConditions {
+	Activity playsRole activityWithPostCondition { multiplicity 0..1; }
 	DefProductCondition playsRole postCondition { multiplicity 0..*; }
 }
 
-relation TaskHasMultiplicityInvariants {
-	Task playsRole taskWithMultiplicity { multiplicity 0..1; }
+relation ActivityHasMultiplicityInvariants {
+	Activity playsRole activityWithMultiplicity { multiplicity 0..1; }
 	MulCondition playsRole multiplicityInvariant { multiplicity 0..*; }
 }
 
-relation TaskHasRuleInvariants {
-	Task playsRole tasksWithRule { multiplicity 0..*; }
+relation ActivityHasRuleInvariants {
+	Activity playsRole activityWithRule { multiplicity 0..*; }
 	Rule playsRole ruleInvariant { multiplicity 0..*; }
 }
 
-relation TaskHasSequenceConditions {
-	Task playsRole taskSequenceCondition { multiplicity 0..1; }
+relation ActivityHasSequenceConditions {
+	Activity playsRole activitySequenceCondition { multiplicity 0..1; }
 	DefPathCondition playsRole sequenceCondition { multiplicity 0..*; }
 }
 
-relation TaskHasTaskWorkItem {
-	Task playsRole task { multiplicity 0..1; }
-	TaskWorkItem playsRole taskWorkItem { multiplicity 0..1; }
+relation ActivityHasTaskWorkItem {
+	Activity playsRole task { multiplicity 0..1; }
+	OldTaskWorkItem playsRole oldTaskWorkItem { multiplicity 0..1; }
 }
 
 // DataModel
@@ -494,19 +492,19 @@ relation EntityHasRule {
 
 relation EntityHasEntityInstances {
 	Entity playsRole entity { multiplicity 0..1; }
-	EntityInstance playsRole entityInstances { multiplicity 0..*; }
+	OldEntityInstance playsRole oldEntityInstance { multiplicity 0..*; }
 }
 
 // RelationBW
 relation RelationBWHasRelationInstances {
 	RelationBW playsRole relationType { multiplicity 0..1; } //FIXME relation
-	RelationInstance playsRole relationInstances { multiplicity 0..*; }
+	OldRelationInstance playsRole oldRelationInstance { multiplicity 0..*; }
 }
 
 // Attributes
 relation AttributeHasAttributeInstances {
 	Attribute playsRole attribute { multiplicity 0..1; }
-	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
+	OldAttributeInstance playsRole oldAttributeInstance { multiplicity 0..*; }
 }
 
 // Path
@@ -536,10 +534,10 @@ relation RuleHasCondition {
 	Condition playsRole condition { multiplicity 1..1; }
 }
 
-// EntityInstance
+// OldEntityInstance
 relation EntityInstanceHasAttributeInstances {
-	EntityInstance playsRole entityInstance { multiplicity 0..1; }
-	AttributeInstance playsRole attributeInstances { multiplicity 0..*; }
+	OldEntityInstance playsRole entityInstance { multiplicity 0..1; }
+	OldAttributeInstance playsRole attributeInstances { multiplicity 0..*; }
 }
 
 relation RelationBWHasEntityOne {
@@ -554,8 +552,8 @@ relation RelationBWHasEntityTwo {
 
 /*
 relation EntityInstanceMayHaveRelationInstances {
-	EntityInstance playsRole entityInstances { multiplicity 0..*; } //FIXME 0..2
-	RelationInstance playsRole relationInstances { multiplicity 0..*; }
+	OldEntityInstance playsRole entityInstances { multiplicity 0..*; } //FIXME 0..2
+	OldRelationInstance playsRole relationInstances { multiplicity 0..*; }
 }*/
 
 //NEW
@@ -571,13 +569,13 @@ relation EntityMayBeRelationEntityTwo {
 }*/
 
 relation EntityInstanceMayBeRelationEntityOne {
-	EntityInstance playsRole entityInstanceOne { multiplicity 0..1; }
-	RelationInstance playsRole entityInstanceOneRelationInstances { multiplicity 0..*; }
+	OldEntityInstance playsRole entityInstanceOne { multiplicity 0..1; }
+	OldRelationInstance playsRole entityInstanceOneRelationInstances { multiplicity 0..*; }
 }
 
 relation EntityInstanceMayBeRelationEntityTwo {
-	EntityInstance playsRole entityInstanceTwo { multiplicity 0..1; }
-	RelationInstance playsRole entityInstanceTwoRelationInstances { multiplicity 0..*; }
+	OldEntityInstance playsRole entityInstanceTwo { multiplicity 0..1; }
+	OldRelationInstance playsRole entityInstanceTwoRelationInstances { multiplicity 0..*; }
 }
 
 
@@ -696,7 +694,7 @@ relation OrganizationalModelHasUsers {
 }
 
 relation BWInstanceHasUser {
-	BWInstance playsRole bwInstance {multiplicity 0..*;}
+	OldBWInstance playsRole bwInstance {multiplicity 0..*;}
 	User playsRole user {multiplicity 0..1;}
 }
 
@@ -705,13 +703,13 @@ relation UserHasRoles {
 	Role playsRole role {multiplicity 0..1;}
 }
 
-relation TaskHasRoles {
-	Task playsRole tasks {multiplicity 0..*;}
+relation ActivityHasRoles {
+	Activity playsRole activity {multiplicity 0..*;}
 	Role playsRole role {multiplicity 0..1;}
 }
 
-relation TaskHasUsers {
-	Task playsRole tasks {multiplicity 0..*;}
+relation ActivityHasUsers {
+	Activity playsRole activity {multiplicity 0..*;}
 	User playsRole user {multiplicity 0..1;}
 }
 
@@ -726,12 +724,12 @@ relation GoalHasUsers {
 }
 
 relation WorkItemHasRoles {
-	WorkItem playsRole workItems {multiplicity 0..*;}
+	OldWorkItem playsRole workItems {multiplicity 0..*;}
 	Role playsRole role {multiplicity 0..1;}
 }
 
 relation WorkItemHasUsers {
-	WorkItem playsRole workItems {multiplicity 0..*;}
+	OldWorkItem playsRole workItems {multiplicity 0..*;}
 	User playsRole user {multiplicity 0..1;}
 }
 
@@ -742,69 +740,69 @@ relation GoalHasEntity {
 }
 
 relation MaintainGoalHasEntity {
-	MaintainGoal playsRole maintainGoalContext {multiplicity 0..*;}
+	OldMaintainGoal playsRole maintainGoalContext {multiplicity 0..*;}
 	Entity playsRole maintainGoalEntityContext {multiplicity 0..1;}
 }
 
 relation GoalWorkItemHasEntityInstances {
-	GoalWorkItem playsRole goalWorkItemContext {multiplicity 0..*;}
-	EntityInstance playsRole entityInstanceContext {multiplicity 0..1;}
+	OldGoalWorkItem playsRole goalWorkItemContext {multiplicity 0..*;}
+	OldEntityInstance playsRole entityInstanceContext {multiplicity 0..1;}
 }
 
 relation MaintainGoalHasMaintainCondition {
-	MaintainGoal playsRole maintainConditionAchieveGoal {multiplicity 0..1;}
+	OldMaintainGoal playsRole maintainConditionAchieveGoal {multiplicity 0..1;}
 	Condition playsRole maintainCondition {multiplicity 0..1;}
 }
 
 relation GoalWorkItemHasActivateCondition {
-	GoalWorkItem playsRole activateConditionGoalWorkItem {multiplicity 0..*;}
+	OldGoalWorkItem playsRole oldActivateConditionGoalWorkItem {multiplicity 0..*;}
 	Condition playsRole activateConditions {multiplicity 0..*;}
 }
 
 relation GoalWorkItemHasMaintainConditions {
-	GoalWorkItem playsRole maintainConditionGoalWorkItem {multiplicity 0..*;}
+	OldGoalWorkItem playsRole oldMaintainConditionGoalWorkItem {multiplicity 0..*;}
 	Condition playsRole maintainConditions {multiplicity 0..*;}
 }
 
 relation GoalWorkItemHasSucessCondition {
-	GoalWorkItem playsRole sucessConditionGoalWorkItem {multiplicity 0..*;}
+	OldGoalWorkItem playsRole oldSucessConditionGoalWorkItem {multiplicity 0..*;}
 	Condition playsRole sucessCondition {multiplicity 0..1;}
 }
 
-//ForAllCondition
+//OldForAllCondition
 relation ForAllConditionConditionHasCondition {
-	ForAllCondition playsRole forAllCondition { multiplicity 0..1; }
+	OldForAllCondition playsRole forAllCondition { multiplicity 0..1; }
 	Condition playsRole condition { multiplicity 0..1; }
 }
 
 //relation ForAllConditionConditionHasRelationRole {
-//	ForAllCondition playsRole forAllCondition { multiplicity 0..1; }
+//	OldForAllCondition playsRole forAllCondition { multiplicity 0..1; }
 //	RelationRole playsRole relationRole { multiplicity 0..1; }
 //}
 
 relation ForAllConditionConditionConditionHasEntity {
-	ForAllCondition playsRole forAllCondition { multiplicity 0..*; }
+	OldForAllCondition playsRole forAllCondition { multiplicity 0..*; }
 	Entity playsRole forAllEntity { multiplicity 0..1; }
 }
 
 relation ForAllConditionConditionConditionHasRelationBW {
-	ForAllCondition playsRole forAllCondition { multiplicity 0..*; }
+	OldForAllCondition playsRole forAllCondition { multiplicity 0..*; }
 	RelationBW playsRole forAllRelation { multiplicity 0..1; }
 }
 
 //ExistsOne
 relation ExistsOneConditionHasCondition {
-	ExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
+	OldExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
 	Condition playsRole condition { multiplicity 0..1; }
 }
 
 relation ExistsOneConditionConditionHasEntity {
-	ExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
+	OldExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
 	Entity playsRole existsOneEntity { multiplicity 0..1; }
 }
 
 relation ExistsOneConditionConditionHasRelationBW {
-	ExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
+	OldExistsOneCondition playsRole existsOneCondition { multiplicity 0..1; }
 	RelationBW playsRole existsOneRelation { multiplicity 0..1; }
 }
 

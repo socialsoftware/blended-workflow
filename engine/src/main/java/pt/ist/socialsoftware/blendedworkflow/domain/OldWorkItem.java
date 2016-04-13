@@ -5,7 +5,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 
-public abstract class WorkItem extends WorkItem_Base {
+public abstract class OldWorkItem extends OldWorkItem_Base {
 
     /**********************************
      * Events
@@ -18,8 +18,8 @@ public abstract class WorkItem extends WorkItem_Base {
      * WorkItemArguments
      **********************************/
     public void createInputWorkItemArguments() {
-        for (AttributeInstance attributeInstance : getInputAttributeInstancesSet()) {
-            WorkItemArgument workItemArgument = new WorkItemArgument(
+        for (OldAttributeInstance attributeInstance : getInputAttributeInstancesSet()) {
+            OldWorkItemArgument workItemArgument = new OldWorkItemArgument(
                     attributeInstance, attributeInstance.getValue(),
                     attributeInstance.getState());
             addInputWorkItemArguments(workItemArgument);
@@ -27,8 +27,8 @@ public abstract class WorkItem extends WorkItem_Base {
     }
 
     public void updateInputWorkItemArguments() {
-        for (WorkItemArgument workItemArgument : getInputWorkItemArgumentsSet()) {
-            AttributeInstance attributeInstance = workItemArgument
+        for (OldWorkItemArgument workItemArgument : getInputWorkItemArgumentsSet()) {
+            OldAttributeInstance attributeInstance = workItemArgument
                     .getAttributeInstance();
             workItemArgument.setValue(attributeInstance.getValue());
             workItemArgument.setState(attributeInstance.getState());
@@ -36,8 +36,8 @@ public abstract class WorkItem extends WorkItem_Base {
     }
 
     public void createOutputWorkItemArguments() {
-        for (AttributeInstance attributeInstance : getOutputAttributeInstancesSet()) {
-            WorkItemArgument workItemArgument = new WorkItemArgument(
+        for (OldAttributeInstance attributeInstance : getOutputAttributeInstancesSet()) {
+            OldWorkItemArgument workItemArgument = new OldWorkItemArgument(
                     attributeInstance, attributeInstance.getValue(),
                     attributeInstance.getState());
             addOutputWorkItemArguments(workItemArgument);
@@ -45,8 +45,8 @@ public abstract class WorkItem extends WorkItem_Base {
     }
 
     public void updateOutputWorkItemArguments() {
-        for (WorkItemArgument workItemArgument : getOutputWorkItemArgumentsSet()) {
-            AttributeInstance attributeInstance = workItemArgument
+        for (OldWorkItemArgument workItemArgument : getOutputWorkItemArgumentsSet()) {
+            OldAttributeInstance attributeInstance = workItemArgument
                     .getAttributeInstance();
             workItemArgument.setValue(attributeInstance.getValue());
             workItemArgument.setState(attributeInstance.getState());
@@ -65,8 +65,8 @@ public abstract class WorkItem extends WorkItem_Base {
         Boolean isPreTask = false;
 
         // Add PreConstrain data
-        for (WorkItemArgument workItemArgument : getInputWorkItemArgumentsSet()) {
-            AttributeInstance attributeInstance = workItemArgument
+        for (OldWorkItemArgument workItemArgument : getInputWorkItemArgumentsSet()) {
+            OldAttributeInstance attributeInstance = workItemArgument
                     .getAttributeInstance();
             if (!attributeInstance.getState().equals(DataState.DEFINED)) {
                 workItemArgument.getAttributeInstance()
@@ -83,8 +83,8 @@ public abstract class WorkItem extends WorkItem_Base {
         }
 
         // Add ConstrainViolation data
-        for (WorkItemArgument workItemArgument : getOutputWorkItemArgumentsSet()) {
-            AttributeInstance attributeInstance = workItemArgument
+        for (OldWorkItemArgument workItemArgument : getOutputWorkItemArgumentsSet()) {
+            OldAttributeInstance attributeInstance = workItemArgument
                     .getAttributeInstance();
             if (!attributeInstance.getState().equals(DataState.DEFINED)) {
                 workItemArgument.getAttributeInstance()
@@ -111,8 +111,8 @@ public abstract class WorkItem extends WorkItem_Base {
         Boolean modified = false;
 
         // Add PreConstrain data
-        for (WorkItemArgument workItemArgument : getInputWorkItemArgumentsSet()) {
-            AttributeInstance attributeInstance = workItemArgument
+        for (OldWorkItemArgument workItemArgument : getInputWorkItemArgumentsSet()) {
+            OldAttributeInstance attributeInstance = workItemArgument
                     .getAttributeInstance();
             if (attributeInstance.getState() == DataState.UNDEFINED) {
                 attributeInstance.setState(DataState.SKIPPED);
@@ -122,8 +122,8 @@ public abstract class WorkItem extends WorkItem_Base {
         }
 
         // Add ConstrainViolation data
-        for (WorkItemArgument workItemArgument : getOutputWorkItemArgumentsSet()) {
-            AttributeInstance attributeInstance = workItemArgument
+        for (OldWorkItemArgument workItemArgument : getOutputWorkItemArgumentsSet()) {
+            OldAttributeInstance attributeInstance = workItemArgument
                     .getAttributeInstance();
             if (attributeInstance.getState() == DataState.UNDEFINED) {
                 attributeInstance.setState(DataState.SKIPPED);
@@ -142,33 +142,33 @@ public abstract class WorkItem extends WorkItem_Base {
      * conditions.
      */
     public void notifyWorkItemDataChanged(Boolean isPreTask) {
-        Set<WorkItem> notifyWorkItems = new HashSet<WorkItem>();
+        Set<OldWorkItem> notifyWorkItems = new HashSet<OldWorkItem>();
 
         if (isPreTask) {
-            for (AttributeInstance attributeInstance : getInputAttributeInstancesSet()) {
-                for (WorkItem workItem : attributeInstance
+            for (OldAttributeInstance attributeInstance : getInputAttributeInstancesSet()) {
+                for (OldWorkItem workItem : attributeInstance
                         .getPreConstraintWorkItemsSet()) {
                     notifyWorkItems.add(workItem);
                 }
-                for (WorkItem workItem : attributeInstance
+                for (OldWorkItem workItem : attributeInstance
                         .getContraintViolationWorkItemsSet()) {
                     notifyWorkItems.add(workItem);
                 }
             }
         }
 
-        for (AttributeInstance attributeInstance : getOutputAttributeInstancesSet()) {
-            for (WorkItem workItem : attributeInstance
+        for (OldAttributeInstance attributeInstance : getOutputAttributeInstancesSet()) {
+            for (OldWorkItem workItem : attributeInstance
                     .getPreConstraintWorkItemsSet()) {
                 notifyWorkItems.add(workItem);
             }
-            for (WorkItem workItem : attributeInstance
+            for (OldWorkItem workItem : attributeInstance
                     .getContraintViolationWorkItemsSet()) {
                 notifyWorkItems.add(workItem);
             }
         }
 
-        for (WorkItem workItem : notifyWorkItems) {
+        for (OldWorkItem workItem : notifyWorkItems) {
             workItem.updateInputWorkItemArguments();
             workItem.updateOutputWorkItemArguments();
             workItem.notifyDataChanged();

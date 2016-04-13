@@ -97,7 +97,7 @@ public class MulCondition extends MulCondition_Base {
 		setConditionModel(null);
 		setRelationBW(null);
 		setInvariantConditionGoal(null);
-		setTaskWithMultiplicity(null);
+		setActivityWithMultiplicity(null);
 
 		deleteDomainObject();
 	}
@@ -109,25 +109,25 @@ public class MulCondition extends MulCondition_Base {
 	}
 
 	@Override
-	Condition cloneCondition(GoalModelInstance goalModelInstance) {
+	Condition cloneCondition(OldGoalModelInstance goalModelInstance) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+	Condition cloneCondition(OldTaskModelInstance taskModelInstance) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
+	void assignAttributeInstances(OldTaskWorkItem taskWorkItem, ConditionType conditionType) {
 		// TODO Auto-generated method stub
 
 	}
@@ -204,19 +204,19 @@ public class MulCondition extends MulCondition_Base {
 	}
 
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluate(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluateWithWorkItem(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
+	public TripleStateBool evaluateWithDataModel(OldEntityInstance entityInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		// TODO Auto-generated method stub
 		return null;

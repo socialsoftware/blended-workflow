@@ -8,18 +8,18 @@ import org.slf4j.LoggerFactory;
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal;
-import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal.MaintainGoalState;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldGoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldMaintainGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldMaintainGoal.MaintainGoalState;
 
 public class ManageGoalConditionService implements Callable<String> {
 
     private static Logger log = LoggerFactory
             .getLogger("DisableGoalConditionService");
 
-    private final GoalWorkItem goalWorkItem;
+    private final OldGoalWorkItem goalWorkItem;
     private final Condition condition;
-    private final MaintainGoal maintainGoal;
+    private final OldMaintainGoal maintainGoal;
     private final MaintainGoalState state;
 
     /**

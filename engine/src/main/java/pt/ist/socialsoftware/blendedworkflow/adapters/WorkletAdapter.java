@@ -19,22 +19,22 @@ import org.yawlfoundation.yawl.worklet.support.WorkletGatewayClient;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldAttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldBWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskWorkItem.ActivityState;
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.domain.ActivityModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldTaskModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldTaskWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldTaskWorkItem.ActivityState;
 import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
-import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldWorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.BWPropertiesManager;
@@ -79,16 +79,16 @@ public class WorkletAdapter {
      */
     public void notifyWorkItemPreConditionResult(WorkItemRecord wir,
             String result) {
-        TaskWorkItem taskWorkItem = null;
+        OldTaskWorkItem taskWorkItem = null;
         try {
-            BWInstance bwInstance = BlendedWorkflow.getInstance()
+            OldBWInstance bwInstance = BlendedWorkflow.getInstance()
                     .getBWInstanceFromYAWLCaseID(wir.getCaseID());
-            TaskModelInstance taskModelInstance = bwInstance
+            OldTaskModelInstance taskModelInstance = bwInstance
                     .getTaskModelInstance();
 
             String taskName = wir.getTaskName().replaceAll("_", " ");
-            Task task = taskModelInstance.getTask(taskName);
-            taskWorkItem = new TaskWorkItem(bwInstance, task);
+            Activity task = taskModelInstance.getActivity(taskName);
+            taskWorkItem = new OldTaskWorkItem(bwInstance, task);
 
             associateWorkItemRecordWithTaskWorkItem(wir, taskWorkItem);
         } catch (BWException bwe) {
@@ -109,7 +109,7 @@ public class WorkletAdapter {
      */
     public void notifyWorkItemPostConditionResult(WorkItemRecord wir,
             String result) {
-        TaskWorkItem taskWorkItem = getTaskWorkItem(wir);
+        OldTaskWorkItem taskWorkItem = getTaskWorkItem(wir);
         processPostConditionEvaluationResult(result, taskWorkItem);
     }
 
@@ -117,7 +117,7 @@ public class WorkletAdapter {
      * Process Conditions Result
      *********************************/
     private void processPreConditionEvaluationResult(String result,
-            TaskWorkItem taskWorkItem) {
+            OldTaskWorkItem taskWorkItem) {
         if (result.equals("TRUE")) {
             taskWorkItem.notifyEnabled(ConditionType.PRE_CONDITION);
         } else if (result.equals("SKIPPED") || result.equals("FALSE")) {
@@ -130,7 +130,7 @@ public class WorkletAdapter {
     }
 
     private void processPostConditionEvaluationResult(String result,
-            TaskWorkItem taskWorkItem) {
+            OldTaskWorkItem taskWorkItem) {
         if (result.equals("TRUE")) {
             taskWorkItem.notifyCompleted();
         } else if (result.equals("SKIPPED")) {
@@ -155,7 +155,7 @@ public class WorkletAdapter {
      *            the taskWorkItem to evaluate.
      */
     public void requestWorkItemPreConditionEvaluation(
-            TaskWorkItem taskWorkItem) {
+            OldTaskWorkItem taskWorkItem) {
         try {
             evaluatePreCondition(taskWorkItem);
         } catch (BWException bwe) {
@@ -171,7 +171,7 @@ public class WorkletAdapter {
      *            the workItem to evaluate.
      */
     public void requestWorkItemPostConditionEvaluation(
-            TaskWorkItem taskWorkItem) {
+            OldTaskWorkItem taskWorkItem) {
         log.debug("requestWorkItemPostConditionEvaluation"
                 + taskWorkItem.getID());
         try {
@@ -193,14 +193,14 @@ public class WorkletAdapter {
      * @throws BWException
      */
     public void loadRdrSet(Specification bwSpecification) throws BWException {
-        TaskModel taskModel = bwSpecification.getTaskModel();
+        ActivityModel taskModel = bwSpecification.getActivityModel();
         YSpecificationID yawlSpecID = getYAWLSpecificationID(bwSpecification);
         String condition = null;
         Element eConclusion = null;
         Element eCornerstone = null;
 
         // Create Tasks RdrSet
-        for (Task task : taskModel.getTasksSet()) {
+        for (Activity task : taskModel.getActivitySet()) {
             String taskName = generateYAWLTaskName(task);
 
             Condition preCondition = task.getPreConditionSet().stream()
@@ -299,7 +299,7 @@ public class WorkletAdapter {
      *            SKIPPED.
      * @return an ELement with the cornerstoneData.
      */
-    private Element getCornerstoneData(Task task, Boolean isPreCondition,
+    private Element getCornerstoneData(Activity task, Boolean isPreCondition,
             String type) {
         String cornerStr = "<cornerstone>";
         Set<Entity> entities = null;
@@ -408,16 +408,16 @@ public class WorkletAdapter {
      *            a TaskWorkItem.
      * @return an ELement with the evaluation data.
      */
-    private Element getInputEvaluationData(TaskWorkItem taskWorkItem) {
+    private Element getInputEvaluationData(OldTaskWorkItem taskWorkItem) {
         // Get Workitem
-        WorkItem workItem = taskWorkItem;
-        Set<WorkItemArgument> workItemArguments = workItem
+        OldWorkItem workItem = taskWorkItem;
+        Set<OldWorkItemArgument> workItemArguments = workItem
                 .getInputWorkItemArgumentsSet();
 
         // Get Workitem data
         String cornerStr = "<cornerstone>";
-        for (WorkItemArgument workItemArgument : workItemArguments) {
-            AttributeInstance attributeInstance = workItemArgument
+        for (OldWorkItemArgument workItemArgument : workItemArguments) {
+            OldAttributeInstance attributeInstance = workItemArgument
                     .getAttributeInstance();
             String entityName = attributeInstance.getEntityInstance()
                     .getEntity().getName().replaceAll(" ", "");
@@ -454,16 +454,16 @@ public class WorkletAdapter {
      *            a TaskWorkItem.
      * @return an ELement with the evaluation data.
      */
-    private Element getOutputEvaluationData(TaskWorkItem taskWorkItem) {
+    private Element getOutputEvaluationData(OldTaskWorkItem taskWorkItem) {
         // Get Workitem
-        WorkItem workItem = taskWorkItem;
-        Set<WorkItemArgument> workItemArguments = workItem
+        OldWorkItem workItem = taskWorkItem;
+        Set<OldWorkItemArgument> workItemArguments = workItem
                 .getOutputWorkItemArgumentsSet();
 
         // Get Workitem data
         String cornerStr = "<cornerstone>";
-        for (WorkItemArgument workItemArgument : workItemArguments) {
-            AttributeInstance attributeInstance = workItemArgument
+        for (OldWorkItemArgument workItemArgument : workItemArguments) {
+            OldAttributeInstance attributeInstance = workItemArgument
                     .getAttributeInstance();
             String entityName = attributeInstance.getEntityInstance()
                     .getEntity().getName().replaceAll(" ", "");
@@ -620,7 +620,7 @@ public class WorkletAdapter {
      *            the TaskWorkItem.
      * @throws BWException
      */
-    public void process(TaskWorkItem taskWorkItem) throws BWException {
+    public void process(OldTaskWorkItem taskWorkItem) throws BWException {
         // Evaluation Data
         Element eData = getOutputEvaluationData(taskWorkItem);
 
@@ -643,7 +643,7 @@ public class WorkletAdapter {
      *            a TaskWorkItem;
      * @throws BWException
      */
-    public void evaluatePreCondition(TaskWorkItem taskWorkItem)
+    public void evaluatePreCondition(OldTaskWorkItem taskWorkItem)
             throws BWException {
         Specification bwSpecification = taskWorkItem.getBwInstance()
                 .getSpecification();
@@ -733,7 +733,7 @@ public class WorkletAdapter {
      *            the taskWorkItem
      * @return name the task name on YAWL
      */
-    private String generateYAWLTaskName(Task task) {
+    private String generateYAWLTaskName(Activity task) {
         return task.getName().replaceAll(" ", "_");
     }
 
@@ -744,11 +744,11 @@ public class WorkletAdapter {
      *            the TaskWorkItem.
      * @return the WorkItemRecord.
      */
-    private WorkItemRecord getWorkItemRecord(TaskWorkItem taskWorkItem) {
+    private WorkItemRecord getWorkItemRecord(OldTaskWorkItem taskWorkItem) {
         Iterator<?> it = yawlEnabledWIR.keySet().iterator();
         while (it.hasNext()) {
             WorkItemRecord wir = (WorkItemRecord) it.next();
-            TaskWorkItem tWorkItem = getTaskWorkItem(wir);
+            OldTaskWorkItem tWorkItem = getTaskWorkItem(wir);
             if (tWorkItem.getID().equals(taskWorkItem.getID())) {
                 return wir;
             }
@@ -763,21 +763,21 @@ public class WorkletAdapter {
      *            the WorkItemRecord.
      * @return the TaskWorkItem.
      */
-    private TaskWorkItem getTaskWorkItem(WorkItemRecord wir) {
+    private OldTaskWorkItem getTaskWorkItem(WorkItemRecord wir) {
         String workitemID = yawlEnabledWIR.get(wir);
-        WorkItem taskWorkItem = null;
+        OldWorkItem taskWorkItem = null;
         try {
-            BWInstance bwInstance = BlendedWorkflow.getInstance()
+            OldBWInstance bwInstance = BlendedWorkflow.getInstance()
                     .getBWInstanceFromYAWLCaseID(wir.getCaseID());
             taskWorkItem = bwInstance.getWorkItem(workitemID);
         } catch (BWException bwe) {
             log.error(bwe.getError().name());
         }
-        return (TaskWorkItem) taskWorkItem;
+        return (OldTaskWorkItem) taskWorkItem;
     }
 
     public void associateWorkItemRecordWithTaskWorkItem(WorkItemRecord wir,
-            TaskWorkItem taskWorkItem) {
+            OldTaskWorkItem taskWorkItem) {
         yawlEnabledWIR.put(wir, taskWorkItem.getID());
     }
 
