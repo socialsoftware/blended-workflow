@@ -27,26 +27,26 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 	}
 
 	@Override
-	Condition cloneCondition(GoalModelInstance goalModelInstance) {
-		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
+	Condition cloneCondition(OldGoalModelInstance goalModelInstance) {
+		OldDataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getEntity().getName()).get();
 		return new DefEntityCondition(entity);
 	}
 
 	@Override
-	Condition cloneCondition(TaskModelInstance taskModelInstance) {
-		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
+	Condition cloneCondition(OldTaskModelInstance taskModelInstance) {
+		OldDataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getEntity().getName()).get();
 		return new DefEntityCondition(entity);
 	}
 
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		getEntity().assignAllAttributeInstances(goalWorkItem, getEntity(), conditionType);
 	}
 
 	@Override
-	public void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldTaskWorkItem taskWorkItem, ConditionType conditionType) {
 		getEntity().assignAllAttributeInstances(taskWorkItem, getEntity(), conditionType);
 	}
 
@@ -166,25 +166,25 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 	 * Evaluate
 	 ******************************/
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluate(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO:Refactor
 		return TripleStateBool.FALSE;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		EntityInstance workItemEntityInstance = null;
-		Set<WorkItemArgument> arguments = null;
+	public TripleStateBool evaluateWithWorkItem(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
+		OldEntityInstance workItemEntityInstance = null;
+		Set<OldWorkItemArgument> arguments = null;
 		TripleStateBool finalResult = TripleStateBool.TRUE;
 		if (conditionType.equals(ConditionType.ACTIVATE_CONDITION)) {
 			arguments = goalWorkItem.getInputWorkItemArgumentsSet();
-		} else if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
+		} else if (conditionType.equals(ConditionType.SUCCESS_CONDITION)) {
 			arguments = goalWorkItem.getOutputWorkItemArgumentsSet();
 		}
 
 		// Exists Entity
 		if (arguments != null) {
-			for (WorkItemArgument workItemArgument : arguments) {
+			for (OldWorkItemArgument workItemArgument : arguments) {
 				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 				Attribute conditionAttribute = getEntity().getAttribute(workItemAttribute.getName()).orElse(null);
 				if (conditionAttribute != null && conditionAttribute.getIsKeyAttribute()) {
@@ -203,18 +203,18 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 
 		// Exists Entity Key Relations
 		if (workItemEntityInstance != null) {
-			for (RelationInstance relationInstance : workItemEntityInstance
+			for (OldRelationInstance relationInstance : workItemEntityInstance
 					.getEntityInstanceOneRelationInstancesSet()) {
 				if (relationInstance.getRelationType().getIsTwoKeyEntity()) {
-					EntityInstance two = relationInstance.getEntityInstanceTwo();
+					OldEntityInstance two = relationInstance.getEntityInstanceTwo();
 					finalResult = finalResult.AND(evaluateWithDataModel(two, goalWorkItem, conditionType));
 				}
 			}
 
-			for (RelationInstance relationInstance : workItemEntityInstance
+			for (OldRelationInstance relationInstance : workItemEntityInstance
 					.getEntityInstanceTwoRelationInstancesSet()) {
 				if (relationInstance.getRelationType().getIsOneKeyEntity()) {
-					EntityInstance one = relationInstance.getEntityInstanceOne();
+					OldEntityInstance one = relationInstance.getEntityInstanceOne();
 					finalResult = finalResult.AND(evaluateWithDataModel(one, goalWorkItem, conditionType));
 				}
 			}
@@ -223,12 +223,12 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
+	public TripleStateBool evaluateWithDataModel(OldEntityInstance entityInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		TripleStateBool finalResult = TripleStateBool.TRUE;
 
 		// Exists Entity
-		for (AttributeInstance attributeInstance : entityInstance.getAttributeInstancesSet()) {
+		for (OldAttributeInstance attributeInstance : entityInstance.getAttributeInstancesSet()) {
 			if (attributeInstance.getAttribute().getIsKeyAttribute()) {
 				TripleStateBool attributeResult;
 
@@ -249,16 +249,16 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 			}
 		}
 
-		for (RelationInstance relationInstance : entityInstance.getEntityInstanceOneRelationInstancesSet()) {
+		for (OldRelationInstance relationInstance : entityInstance.getEntityInstanceOneRelationInstancesSet()) {
 			if (relationInstance.getRelationType().getIsTwoKeyEntity()) {
-				EntityInstance two = relationInstance.getEntityInstanceTwo();
+				OldEntityInstance two = relationInstance.getEntityInstanceTwo();
 				finalResult = finalResult.AND(evaluateWithDataModel(two, goalWorkItem, conditionType));
 			}
 		}
 
-		for (RelationInstance relationInstance : entityInstance.getEntityInstanceTwoRelationInstancesSet()) {
+		for (OldRelationInstance relationInstance : entityInstance.getEntityInstanceTwoRelationInstancesSet()) {
 			if (relationInstance.getRelationType().getIsOneKeyEntity()) {
-				EntityInstance one = relationInstance.getEntityInstanceOne();
+				OldEntityInstance one = relationInstance.getEntityInstanceOne();
 				finalResult = finalResult.AND(evaluateWithDataModel(one, goalWorkItem, conditionType));
 			}
 		}
@@ -266,7 +266,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		return finalResult;
 	}
 
-	private DataState getWorkItemState(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem,
+	private DataState getWorkItemState(OldAttributeInstance attributeInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		// List<WorkItemArgument> arguments = null;
 		// if (conditionType.equals(ConditionType.ACTIVATE)) {
@@ -276,7 +276,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		// }
 		// for (WorkItemArgument workItemArgument : arguments) {
 		if (goalWorkItem != null) {
-			for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArgumentsSet()) {
+			for (OldWorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArgumentsSet()) {
 				if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
 					return workItemArgument.getState();
 				}

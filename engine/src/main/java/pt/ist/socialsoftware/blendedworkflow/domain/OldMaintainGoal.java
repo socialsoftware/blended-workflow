@@ -3,13 +3,13 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class MaintainGoal extends MaintainGoal_Base {
+public class OldMaintainGoal extends OldMaintainGoal_Base {
 
     public enum MaintainGoalState {
         DEACTIVATED, ENABLED
     };
 
-    public MaintainGoal(GoalModel goalModel, String name, String description,
+    public OldMaintainGoal(GoalModel goalModel, String name, String description,
             Condition condition, Entity context) throws BWException {
         checkUniqueGoalName(goalModel, name);
         setGoalModel(goalModel);
@@ -27,14 +27,14 @@ public class MaintainGoal extends MaintainGoal_Base {
                 throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
             }
         }
-        for (MaintainGoal goal : goalModel.getMaintainGoalsSet()) {
+        for (OldMaintainGoal goal : goalModel.getMaintainGoalsSet()) {
             if (goal.getName().equals(name)) {
                 throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
             }
         }
     }
 
-    public void cloneGoal(GoalModelInstance goalModelInstance)
+    public void cloneGoal(OldGoalModelInstance goalModelInstance)
             throws BWException {
         Condition newMaintainCondition = null;
         Condition condition = getMaintainCondition();
@@ -43,8 +43,8 @@ public class MaintainGoal extends MaintainGoal_Base {
         }
 
         // Get EntityTypeContext from Template
-        BWInstance bwInstance = goalModelInstance.getBwInstance();
-        DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+        OldBWInstance bwInstance = goalModelInstance.getBwInstance();
+        OldDataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
         Entity newEntityContext = null;
         for (Entity entity : dataModelInstance.getEntitySet()) {
             if (getMaintainGoalEntityContext().getName()
@@ -53,7 +53,7 @@ public class MaintainGoal extends MaintainGoal_Base {
             }
         }
 
-        new MaintainGoal(goalModelInstance, getName(), getDescription(),
+        new OldMaintainGoal(goalModelInstance, getName(), getDescription(),
                 newMaintainCondition, newEntityContext);
     }
 }

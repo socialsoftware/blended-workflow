@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldGoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalDTO;
@@ -67,14 +67,14 @@ public class Goal extends Goal_Base {
 				throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
 			}
 		}
-		for (MaintainGoal goal : this.getGoalModel().getMaintainGoalsSet()) {
+		for (OldMaintainGoal goal : this.getGoalModel().getMaintainGoalsSet()) {
 			if (goal.getName() != null && goal.getName().equals(name)) {
 				throw new BWException(BWErrorType.INVALID_GOAL_NAME, name);
 			}
 		}
 	}
 
-	public void cloneGoal(GoalModelInstance goalModelInstance) throws BWException {
+	public void cloneGoal(OldGoalModelInstance goalModelInstance) throws BWException {
 		DefProductCondition newSucessCondition = null;
 		DefProductCondition condition = getSuccessConditionSet().stream().findFirst().get();
 		if (condition != null) {
@@ -82,8 +82,8 @@ public class Goal extends Goal_Base {
 		}
 
 		// Get EntityTypeContext from Template
-		BWInstance bwInstance = goalModelInstance.getBwInstance();
-		DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+		OldBWInstance bwInstance = goalModelInstance.getBwInstance();
+		OldDataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		Entity newEntityContext = null;
 		for (Entity entity : dataModelInstance.getEntitySet()) {
 			if (getEntityContext().getName().equals(entity.getName())) {
@@ -166,9 +166,9 @@ public class Goal extends Goal_Base {
 	/**
 	 * Check GoalWorkitems in the ACTIVATED state.
 	 */
-	public void checkActivated(BWInstance bwInstance) {
-		if (!getGoalWorkItemsSet().isEmpty()) {
-			for (GoalWorkItem goalWorkItem : getGoalWorkItemsSet()) {
+	public void checkActivated(OldBWInstance bwInstance) {
+		if (!getOldGoalWorkItemSet().isEmpty()) {
+			for (OldGoalWorkItem goalWorkItem : getOldGoalWorkItemSet()) {
 				if (goalWorkItem.getState().equals(GoalState.ACTIVATED)) {
 					goalWorkItem.notifyDataChanged();
 				}
@@ -183,9 +183,9 @@ public class Goal extends Goal_Base {
 	 * @param entityInstanceContext
 	 * @return
 	 */
-	public Boolean goalWorkItemsExistForTheContext(EntityInstance entityInstanceContext) {
+	public Boolean goalWorkItemsExistForTheContext(OldEntityInstance entityInstanceContext) {
 		Boolean alreadyExists = false;
-		for (GoalWorkItem goalWorkItem : getGoalWorkItemsSet()) {
+		for (OldGoalWorkItem goalWorkItem : getOldGoalWorkItemSet()) {
 			if (goalWorkItem.getEntityInstanceContext().equals(entityInstanceContext)) {
 				alreadyExists = true;
 			}

@@ -48,29 +48,29 @@ public class Comparison extends Comparison_Base {
 	}
 
 	@Override
-	Condition cloneCondition(GoalModelInstance goalModelInstance) {
-		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
+	Condition cloneCondition(OldGoalModelInstance goalModelInstance) {
+		OldDataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttributeOfComparison().getEntity().getName()).get();
 		Attribute attribute = entity.getAttribute(getAttributeOfComparison().getName()).orElse(null);
 		return new Comparison(attribute, getOperator(), getValue());
 	}
 
 	@Override
-	Condition cloneCondition(TaskModelInstance taskModelInstance) {
-		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
+	Condition cloneCondition(OldTaskModelInstance taskModelInstance) {
+		OldDataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttributeOfComparison().getEntity().getName()).get();
 		Attribute attribute = entity.getAttribute(getAttributeOfComparison().getName()).orElse(null);
 		return new Comparison(attribute, getOperator(), getValue());
 	}
 
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		getAttributeOfComparison().getEntity().assignAttributeInstances(goalWorkItem, getAttributeOfComparison(),
 				conditionType);
 	}
 
 	@Override
-	public void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldTaskWorkItem taskWorkItem, ConditionType conditionType) {
 		getAttributeOfComparison().getEntity().assignAttributeInstances(taskWorkItem, getAttributeOfComparison(),
 				conditionType);
 	}
@@ -171,18 +171,18 @@ public class Comparison extends Comparison_Base {
 	 * Evaluate
 	 ******************************/
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluate(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO:In progress...
 
 		// Input/Output Arguments
-		Set<WorkItemArgument> arguments = null;
+		Set<OldWorkItemArgument> arguments = null;
 		if (conditionType.equals(ConditionType.ACTIVATE_CONDITION)) {
 			arguments = goalWorkItem.getInputWorkItemArgumentsSet();
-		} else if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
+		} else if (conditionType.equals(ConditionType.SUCCESS_CONDITION)) {
 			arguments = goalWorkItem.getOutputWorkItemArgumentsSet();
 		}
 		if (arguments != null) {
-			for (WorkItemArgument workItemArgument : arguments) {
+			for (OldWorkItemArgument workItemArgument : arguments) {
 				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 				Attribute conditionAttribute = getAttributeOfComparison();
 				if (workItemAttribute == conditionAttribute) {
@@ -205,15 +205,15 @@ public class Comparison extends Comparison_Base {
 
 	// Legacy
 	@Override
-	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		Set<WorkItemArgument> arguments = null;
+	public TripleStateBool evaluateWithWorkItem(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
+		Set<OldWorkItemArgument> arguments = null;
 		if (conditionType.equals(ConditionType.ACTIVATE_CONDITION)) {
 			arguments = goalWorkItem.getInputWorkItemArgumentsSet();
-		} else if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
+		} else if (conditionType.equals(ConditionType.SUCCESS_CONDITION)) {
 			arguments = goalWorkItem.getOutputWorkItemArgumentsSet();
 		}
 		if (arguments != null) {
-			for (WorkItemArgument workItemArgument : arguments) {
+			for (OldWorkItemArgument workItemArgument : arguments) {
 				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 				Attribute conditionAttribute = getAttributeOfComparison();
 				if (workItemAttribute == conditionAttribute) {
@@ -235,14 +235,14 @@ public class Comparison extends Comparison_Base {
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
+	public TripleStateBool evaluateWithDataModel(OldEntityInstance entityInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		if (entityInstance == null) {
 			return evaluateWithWorkItem(goalWorkItem, conditionType);
 		}
 
 		else {
-			for (AttributeInstance attributeInstance : entityInstance.getAttributeInstancesSet()) {
+			for (OldAttributeInstance attributeInstance : entityInstance.getAttributeInstancesSet()) {
 				if (attributeInstance.getAttribute().equals(getAttributeOfComparison())) {
 					DataState state = getWorkItemState(attributeInstance, goalWorkItem, conditionType);
 					if (state == null) {
@@ -271,7 +271,7 @@ public class Comparison extends Comparison_Base {
 		}
 	}
 
-	private String getWorkItemValue(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem,
+	private String getWorkItemValue(OldAttributeInstance attributeInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		// List<WorkItemArgument> arguments = null;
 		// if (conditionType.equals(ConditionType.ACTIVATE)) {
@@ -281,7 +281,7 @@ public class Comparison extends Comparison_Base {
 		// }
 		// for (WorkItemArgument workItemArgument : arguments) {
 		if (goalWorkItem != null) {
-			for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArgumentsSet()) {
+			for (OldWorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArgumentsSet()) {
 				if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
 					return workItemArgument.getValue();
 				}
@@ -290,7 +290,7 @@ public class Comparison extends Comparison_Base {
 		return null;
 	}
 
-	private DataState getWorkItemState(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem,
+	private DataState getWorkItemState(OldAttributeInstance attributeInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		// List<WorkItemArgument> arguments = null;
 		// if (conditionType.equals(ConditionType.ACTIVATE)) {
@@ -300,7 +300,7 @@ public class Comparison extends Comparison_Base {
 		// }
 		// for (WorkItemArgument workItemArgument : arguments) {
 		if (goalWorkItem != null) {
-			for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArgumentsSet()) {
+			for (OldWorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArgumentsSet()) {
 				if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
 					return workItemArgument.getState();
 				}

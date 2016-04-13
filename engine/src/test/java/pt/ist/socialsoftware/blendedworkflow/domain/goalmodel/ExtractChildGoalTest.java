@@ -1,6 +1,7 @@
-package pt.ist.socialsoftware.blendedworkflow.domain.goal;
+package pt.ist.socialsoftware.blendedworkflow.domain.goalmodel;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -30,11 +31,11 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class ExtractSiblingGoalTest extends TeardownRollbackTest {
-	private static final String ENTITY_TWO_NAME = "Entity two name";
-	private static final String ENTITY_ONE_NAME = "Entity one name";
+public class ExtractChildGoalTest extends TeardownRollbackTest {
 	private static final String ATTRIBUTE_ONE_NAME = "att1";
 	private static final String ATTRIBUTE_TWO_NAME = "att2";
+	private static final String ENTITY_TWO_NAME = "Entity two name";
+	private static final String ENTITY_ONE_NAME = "Entity one name";
 	private static final String TOP_GOAL = "topGoal";
 	private static final String RULE_CONDITION = "rule";
 	private static final String ROLENAME_ONE = "theOne";
@@ -44,18 +45,17 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 	private static final String CHILD_GOAL_ONE = "childGoalOne";
 	private static final String CHILD_GOAL_THREE = "childGoalThree";
 	private static final String CHILD_GOAL_TWO_ONE = "childGoalTwoOne";
+	private static final String CHILD_GOAL_TWO_ONE_ONE = "childGoalTwoOneOne";
+	private static final String CHILD_GOAL_TWO_TWO = "childGoalTwoTwo";
 
 	Specification spec;
 	Entity entityOne;
 	Entity entityTwo;
-	Entity entityThree;
 	Attribute attributeOne;
 	Attribute attributeTwo;
 	Attribute attributeThree;
 	Attribute attributeFour;
-	Attribute attributeFive;
 	RelationBW relation;
-	Rule rule;
 	Goal topGoal;
 	Goal childGoalOne;
 	Goal childGoalTwo;
@@ -76,14 +76,12 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 				false);
 		attributeFour = new Attribute(spec.getDataModel(), entityTwo, "att4", AttributeType.STRING, true, false, false);
 
-		entityThree = new Entity(spec.getDataModel(), "Entity three name", false);
-
 		relation = new RelationBW(spec.getDataModel(), "name", entityOne, ROLENAME_ONE, Cardinality.ONE, false,
 				entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
 		new Dependence(spec.getDataModel(), attributeThree, DEPENDENCE_PATH);
 
-		rule = new Rule(entityOne, RULE_CONDITION,
+		Rule rule = new Rule(entityOne, RULE_CONDITION,
 				new Comparison(new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
 						new AttributeValueExpression(spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME),
 						ComparisonOperator.EQUAL));
@@ -101,7 +99,6 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 		childGoalTwo.addSubGoal(childGoalTwoOne);
 
 		topGoal.addSuccessCondition(DefEntityCondition.getDefEntity(entityOne));
-		topGoal.addSuccessCondition(DefEntityCondition.getDefEntity(entityThree));
 		childGoalOne.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeOne));
 		childGoalTwo.addSuccessCondition(DefEntityCondition.getDefEntity(entityTwo));
 		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
@@ -118,53 +115,11 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 	}
 
 	@Test
-	public void sourceDoesNotContainCondition() {
-		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefAttributeCondition.getDefAttribute(attributeTwo));
-
-		try {
-			spec.getGoalModel().extractSibling(childGoalOne, CHILD_GOAL_THREE, successConditions);
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-			assertEquals(
-					"checkConditionsExistInSource:" + "DEF(" + ENTITY_ONE_NAME + "." + attributeTwo.getName() + ")",
-					bwe.getMessage());
-		}
-	}
-
-	@Test
-	public void cannotExtractSiblingOfTopGoal() {
-		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefEntityCondition.getDefEntity(entityThree));
-
-		try {
-			spec.getGoalModel().extractSibling(topGoal, "secondTop", successConditions);
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
-		}
-	}
-
-	@Test
-	public void sourceCannotEndWithEmptySuccessCondition() {
-		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefAttributeCondition.getDefAttribute(attributeOne));
-
-		try {
-			spec.getGoalModel().extractSibling(childGoalOne, CHILD_GOAL_THREE, successConditions);
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
-		}
-	}
-
-	@Test
 	public void conditionsToExtractShouldNotBeEmpty() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
 
 		try {
-			spec.getGoalModel().extractSibling(childGoalTwo, CHILD_GOAL_THREE, successConditions);
+			spec.getGoalModel().extractChild(topGoal, CHILD_GOAL_THREE, successConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
@@ -172,105 +127,100 @@ public class ExtractSiblingGoalTest extends TeardownRollbackTest {
 	}
 
 	@Test
-	public void cannotSeparateDefAttFromDefEnt() {
+	public void parentEndsUpWithEmptySuccessCondition() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefAttributeCondition.getDefAttribute(attributeThree));
+		successConditions.add(DefAttributeCondition.getDefAttribute(attributeFour));
+		Goal newGoal = spec.getGoalModel().extractChild(childGoalTwoOne, CHILD_GOAL_TWO_ONE_ONE, successConditions);
 
-		try {
-			spec.getGoalModel().extractSibling(childGoalTwo, CHILD_GOAL_THREE, successConditions);
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
-		}
+		assertEquals(0, childGoalTwoOne.getSuccessConditionSet().size());
+		assertEquals(1, newGoal.getSuccessConditionSet().size());
 	}
 
 	@Test
-	public void cannotSeparateDefEntFromDefAtt() {
+	public void parentDoesNotContainCondition() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
 		successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
 
 		try {
-			spec.getGoalModel().extractSibling(childGoalTwo, CHILD_GOAL_THREE, successConditions);
+			spec.getGoalModel().extractChild(childGoalTwoOne, CHILD_GOAL_TWO_TWO, successConditions);
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.CANNOT_EXTRACT_GOAL, bwe.getError());
+			assertEquals("checkConditionsExistInSource:" + "DEF(" + entityTwo.getName() + ")", bwe.getMessage());
+		}
+
+	}
+
+	@Test
+	public void defAttributeInParent() {
+		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
+		successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
+
+		try {
+			spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
 		}
+
 	}
 
 	@Test
-	public void successOne() {
+	public void defAttributeInChild() {
+		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
+		successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
+
+		childGoalTwo.removeSuccessCondition(DefAttributeCondition.getDefAttribute(attributeThree));
+		childGoalTwoOne.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeFour));
+
+		try {
+			spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
+		}
+
+	}
+
+	@Test
+	public void parentAttributeDependsOnChildAttribute() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
 		successConditions.add(DefAttributeCondition.getDefAttribute(attributeTwo));
 
-		Goal childGoalThree = spec.getGoalModel().extractSibling(childGoalTwo, CHILD_GOAL_THREE, successConditions);
+		try {
+			spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
+		}
 
-		assertEquals(3, topGoal.getSubGoalSet().size());
-
-		assertEquals(CHILD_GOAL_THREE, childGoalThree.getName());
-		assertEquals(topGoal, childGoalThree.getParentGoal());
-		assertEquals(0, childGoalThree.getSubGoalSet().size());
-		assertEquals(1, childGoalThree.getSuccessConditionSet().size());
-		assertTrue(
-				childGoalThree.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
-		assertEquals(0, childGoalThree.getActivationConditionSet().size());
-		assertEquals(0, childGoalThree.getEntityInvariantConditionSet().size());
-		assertEquals(0, childGoalThree.getAttributeInvariantConditionSet().size());
-
-		assertEquals(CHILD_GOAL_TWO, childGoalTwo.getName());
-		assertEquals(topGoal, childGoalTwo.getParentGoal());
-		assertEquals(1, childGoalTwo.getSubGoalSet().size());
-		assertEquals(2, childGoalTwo.getSuccessConditionSet().size());
-		assertTrue(childGoalTwo.getSuccessConditionSet().contains(DefEntityCondition.getDefEntity(entityTwo)));
-		assertTrue(
-				childGoalTwo.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeThree)));
-		assertEquals(1, childGoalTwo.getActivationConditionSet().size());
-		assertEquals(DEPENDENCE_PATH,
-				childGoalTwo.getActivationConditionSet().stream().findFirst().get().getPath().getValue());
-		assertEquals(1, childGoalTwo.getEntityInvariantConditionSet().size());
-		assertEquals(ENTITY_ONE_NAME,
-				childGoalTwo.getEntityInvariantConditionSet().stream().findFirst().get().getTargetEntity().getName());
-		assertEquals(0, childGoalTwo.getAttributeInvariantConditionSet().size());
-
-		spec.getGoalModel().checkModel();
 	}
 
 	@Test
-	public void successTwo() {
-		childGoalTwo = topGoal.getGoalModel().mergeGoals(CHILD_GOAL_TWO, childGoalTwo, childGoalTwoOne);
-
+	public void successAndOnlyChangesSuccCondition() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
 		successConditions.add(DefAttributeCondition.getDefAttribute(attributeThree));
-		successConditions.add(DefAttributeCondition.getDefAttribute(attributeFour));
 
-		Goal childGoalThree = spec.getGoalModel().extractSibling(childGoalTwo, CHILD_GOAL_THREE, successConditions);
+		Goal newGoal = spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
 
-		assertEquals(3, topGoal.getSubGoalSet().size());
-
-		assertEquals(CHILD_GOAL_THREE, childGoalThree.getName());
-		assertEquals(topGoal, childGoalThree.getParentGoal());
-		assertEquals(0, childGoalThree.getSubGoalSet().size());
-		assertEquals(3, childGoalThree.getSuccessConditionSet().size());
-		assertTrue(childGoalThree.getSuccessConditionSet().contains(DefEntityCondition.getDefEntity(entityTwo)));
-		assertTrue(childGoalThree.getSuccessConditionSet()
-				.contains(DefAttributeCondition.getDefAttribute(attributeThree)));
-		assertTrue(
-				childGoalThree.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeFour)));
-		assertEquals(1, childGoalThree.getActivationConditionSet().size());
+		assertEquals(CHILD_GOAL_TWO_TWO, newGoal.getName());
+		assertEquals(childGoalTwo, newGoal.getParentGoal());
+		assertEquals(0, newGoal.getSubGoalSet().size());
+		assertEquals(1, newGoal.getSuccessConditionSet().size());
+		assertTrue(newGoal.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeThree)));
+		assertEquals(1, newGoal.getActivationConditionSet().size());
 		assertEquals(DEPENDENCE_PATH,
-				childGoalThree.getActivationConditionSet().stream().findFirst().get().getPath().getValue());
-		assertEquals(1, childGoalThree.getEntityInvariantConditionSet().size());
-		assertEquals(ENTITY_ONE_NAME,
-				childGoalThree.getEntityInvariantConditionSet().stream().findFirst().get().getTargetEntity().getName());
-		assertEquals(0, childGoalThree.getAttributeInvariantConditionSet().size());
+				newGoal.getActivationConditionSet().stream().findFirst().get().getPath().getValue());
+		assertEquals(0, newGoal.getEntityInvariantConditionSet().size());
+		assertEquals(0, newGoal.getAttributeInvariantConditionSet().size());
 
-		assertEquals(CHILD_GOAL_TWO, childGoalTwo.getName());
-		assertEquals(topGoal, childGoalTwo.getParentGoal());
-		assertEquals(0, childGoalTwo.getSubGoalSet().size());
-		assertEquals(1, childGoalTwo.getSuccessConditionSet().size());
-		assertTrue(childGoalTwo.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
+		assertEquals(2, childGoalTwo.getSuccessConditionSet().size());
+		assertFalse(
+				childGoalTwo.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeThree)));
 		assertEquals(0, childGoalTwo.getActivationConditionSet().size());
-		assertEquals(0, childGoalTwo.getEntityInvariantConditionSet().size());
+		assertEquals(1, childGoalTwo.getEntityInvariantConditionSet().size());
+		assertEquals(MulCondition.getMulCondition(relation, ROLENAME_ONE),
+				childGoalTwo.getEntityInvariantConditionSet().stream().findFirst().get());
 		assertEquals(0, childGoalTwo.getAttributeInvariantConditionSet().size());
 
 		spec.getGoalModel().checkModel();

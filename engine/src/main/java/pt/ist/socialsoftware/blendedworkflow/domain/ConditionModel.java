@@ -11,8 +11,8 @@ public class ConditionModel extends ConditionModel_Base {
 	public void clean() {
 		if (getSpecification().getGoalModel() != null)
 			getSpecification().getGoalModel().clean();
-		if (getSpecification().getTaskModel() != null)
-			getSpecification().getTaskModel().clean();
+		if (getSpecification().getActivityModel() != null)
+			getSpecification().getActivityModel().clean();
 		getEntityAchieveConditionSet().stream().forEach(defEnt -> removeEntityAchieveCondition(defEnt));
 		getEntityDependenceConditionSet().stream().forEach(depEnt -> removeEntityDependenceCondition(depEnt));
 		getEntityInvariantConditionSet().stream().forEach(mul -> removeEntityInvariantCondition(mul));

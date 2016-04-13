@@ -21,7 +21,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Task;
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -62,9 +62,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	Rule ruleOne;
 	Rule ruleTwo;
 
-	Task taskOne;
-	Task taskTwo;
-	Task taskThree;
+	Activity taskOne;
+	Activity taskTwo;
+	Activity taskThree;
 
 	@Override
 	public void populate4Test() throws BWException {
@@ -110,7 +110,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 		spec.getConditionModel().generateConditions();
 
-		taskOne = new Task(spec.getTaskModel(), TASK_ONE, "Description");
+		taskOne = new Activity(spec.getActivityModel(), TASK_ONE, "Description");
 		taskOne.addPreCondition(DefPathCondition.getDefPathCondition(spec, EXISTS_ENTITY));
 		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entityOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
@@ -121,7 +121,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRoleNameTwo()));
 		taskOne.addRuleInvariant(ruleOne);
 
-		taskTwo = new Task(spec.getTaskModel(), TASK_TWO, "Description");
+		taskTwo = new Activity(spec.getActivityModel(), TASK_TWO, "Description");
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_ONE_NAME));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
@@ -134,7 +134,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskTwo.addMultiplicityInvariant(
 				MulCondition.getMulCondition(existsRelationTwo, existsRelationTwo.getRoleNameTwo()));
 
-		taskThree = new Task(spec.getTaskModel(), TASK_THREE, "Description");
+		taskThree = new Activity(spec.getActivityModel(), TASK_THREE, "Description");
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_THREE_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH));
@@ -147,10 +147,10 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void taskWithoutDefsPost() {
-		new Task(spec.getTaskModel(), ANOTHER_TASK, "Description");
+		new Activity(spec.getActivityModel(), ANOTHER_TASK, "Description");
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NO_DEF_CONDITION_IN_POST, bwe.getError());
@@ -163,7 +163,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskOne.removePostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, bwe.getError());
@@ -176,7 +176,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskThree.removePostCondition(DefAttributeCondition.getDefAttribute(attributeFourOne));
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, bwe.getError());
@@ -190,7 +190,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameTwo()));
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, bwe.getError());
@@ -205,7 +205,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskOne.removeRuleInvariant(ruleOne);
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, bwe.getError());
@@ -218,7 +218,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskThree.removePreCondition(ENTITY_TWO_NAME);
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.MISSING_DEF_IN_PRE, bwe.getError());
@@ -231,7 +231,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskThree.removePreCondition(DEPENDENCE_PATH);
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.MISSING_DEF_IN_PRE, bwe.getError());
@@ -247,7 +247,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameOne()));
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_MUL_CONDITION, bwe.getError());
@@ -263,7 +263,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameOne()));
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_MUL_CONDITION, bwe.getError());
@@ -277,7 +277,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskThree.addRuleInvariant(ruleOne);
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_RULE_CONDITION, bwe.getError());
@@ -295,7 +295,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				DefAttributeCondition.getDefAttribute(attributeTwo).getPath().getValue()));
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_RULE_CONDITION, bwe.getError());
@@ -309,7 +309,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskTwo.addRuleInvariant(ruleTwo);
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_RULE_CONDITION, bwe.getError());
@@ -319,12 +319,12 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void success() {
-		spec.getTaskModel().checkModel();
+		spec.getActivityModel().checkModel();
 	}
 
 	@Test
 	public void existsEntitySuccess() {
-		spec.getTaskModel().checkModel();
+		spec.getActivityModel().checkModel();
 	}
 
 	@Test
@@ -332,7 +332,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskOne.removePreCondition(EXISTS_ENTITY);
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INCONSISTENT_MUL_CONDITION, bwe.getError());
@@ -346,7 +346,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRoleNameOne()));
 
 		try {
-			spec.getTaskModel().checkModel();
+			spec.getActivityModel().checkModel();
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, bwe.getError());

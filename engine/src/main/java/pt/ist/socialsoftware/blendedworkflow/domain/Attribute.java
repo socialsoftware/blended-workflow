@@ -84,7 +84,7 @@ public class Attribute extends Attribute_Base {
 		return ProductType.ATTRIBUTE;
 	}
 
-	public void cloneAttribute(DataModelInstance dataModelInstance, Entity entity) throws BWException {
+	public void cloneAttribute(OldDataModelInstance dataModelInstance, Entity entity) throws BWException {
 		new Attribute(dataModelInstance, entity, getName(), getType(), getIsMandatory(), getIsKeyAttribute(),
 				getIsSystem());
 	}

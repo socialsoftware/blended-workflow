@@ -13,15 +13,15 @@ import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Role;
-import pt.ist.socialsoftware.blendedworkflow.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.domain.ActivityModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
 public class TaskModelFactory {
 
-	public void parseXMLTaskModel(DataModel dataModel, TaskModel taskModel, String specificationXML)
+	public void parseXMLTaskModel(DataModel dataModel, ActivityModel taskModel, String specificationXML)
 			throws BWException {
 		User defaultUser = BlendedWorkflow.getInstance().getOrganizationalModel().getUser("BlendedWorkflow");
 		Role defaultRole = BlendedWorkflow.getInstance().getOrganizationalModel().getRole("Admin");
@@ -69,7 +69,7 @@ public class TaskModelFactory {
 				String previousTask2 = taskXML.getChildText("PreviousTaskName2", bwNamespace);
 				previousTask = previousTask1 + "," + previousTask2;
 			}
-			Task newTask = new Task(taskModel, taskName, taskDescription, taskPreCondition, taskPostCondition,
+			Activity newTask = new Activity(taskModel, taskName, taskDescription, taskPreCondition, taskPostCondition,
 					previousTask, joinCode, splitCode);
 			newTask.setUser(defaultUser);
 			newTask.setRole(defaultRole);
@@ -80,12 +80,12 @@ public class TaskModelFactory {
 			Element taskXML = (Element) task;
 			int nextTaskCount = Integer.parseInt(taskXML.getChildText("NextTaskCount", bwNamespace));
 			String currentTaskName = taskXML.getChildText("Name", bwNamespace);
-			Task currentTask = taskModel.getTask(currentTaskName);
+			Activity currentTask = taskModel.getActivity(currentTaskName);
 			for (int i = 0; i < nextTaskCount; i++) {
 				String nextTaskNameXML = "NextTaskName" + (i + 1);
 				String nextTaskName = taskXML.getChildText(nextTaskNameXML, bwNamespace);
-				Task nextTask = taskModel.getTask(nextTaskName);
-				currentTask.addNextTasks(nextTask);
+				Activity nextTask = taskModel.getActivity(nextTaskName);
+				currentTask.addNextActivity(nextTask);
 			}
 		}
 	}

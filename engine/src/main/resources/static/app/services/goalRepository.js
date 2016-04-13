@@ -51,6 +51,15 @@ app.factory('goalRepository', function($http) {
 					+ "&newGoalName=" + newGoalName;
 			return $http.post(url);
 		},
+		splitParentGoal : function(spec, goal, sucConditions, newGoalName) {
+			var url = "specs/" + spec
+			+ "/goalmodel/goals/extractparent";
+			return $http.post(url, {
+				"sourceGoalName" : goal,
+				"newGoalName" :  newGoalName,
+				"successConditions" : sucConditions
+			});
+		},
 		splitChildGoal : function(spec, goal, sucConditions, newGoalName) {
 			var url = "specs/" + spec
 			+ "/goalmodel/goals/extractchild";

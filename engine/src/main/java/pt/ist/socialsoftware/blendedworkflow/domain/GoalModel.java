@@ -23,8 +23,8 @@ public class GoalModel extends GoalModel_Base {
 	/**
 	 * Clone the GoalModel tree
 	 */
-	public void cloneGoalModel(GoalModelInstance newGoalModelInstance) throws BWException {
-		for (MaintainGoal maintainGoal : getMaintainGoalsSet()) {
+	public void cloneGoalModel(OldGoalModelInstance newGoalModelInstance) throws BWException {
+		for (OldMaintainGoal maintainGoal : getMaintainGoalsSet()) {
 			maintainGoal.cloneGoal(newGoalModelInstance);
 		}
 
@@ -53,8 +53,8 @@ public class GoalModel extends GoalModel_Base {
 		throw new BWException(BWErrorType.NON_EXISTENT_GOAL_NAME, name);
 	}
 
-	public MaintainGoal getMaintainGoal(String name) throws BWException {
-		for (MaintainGoal goal : getMaintainGoalsSet()) {
+	public OldMaintainGoal getMaintainGoal(String name) throws BWException {
+		for (OldMaintainGoal goal : getMaintainGoalsSet()) {
 			if (goal.getName().equals(name)) {
 				return goal;
 			}
@@ -178,13 +178,33 @@ public class GoalModel extends GoalModel_Base {
 
 	public Goal extractSibling(Goal goal, String newGoalName, Set<DefProductCondition> successConditions) {
 		checkConditionsNotEmpty(successConditions);
+		checkAllConditionsNotSelected(goal.getSuccessConditionSet(), successConditions);
 		goal.checkConditionsExistSucc(successConditions);
 		goal.shrinkGoal(successConditions);
 
 		Goal newGoal = new Goal(this, newGoalName);
-
 		successConditions.stream().forEach((def) -> newGoal.addSuccessCondition(def));
 		newGoal.setParentGoal(goal.getParentGoal());
+
+		goal.applyConditions();
+		newGoal.applyConditions();
+
+		checkModel();
+
+		return newGoal;
+	}
+
+	public Goal extractParent(Goal goal, String newGoalName, Set<DefProductCondition> successConditions) {
+		checkAllConditionsNotSelected(goal.getSuccessConditionSet(), successConditions);
+		goal.checkConditionsExistSucc(successConditions);
+		goal.shrinkGoal(successConditions);
+
+		Goal newGoal = new Goal(this, newGoalName);
+		successConditions.stream().forEach((def) -> newGoal.addSuccessCondition(def));
+		newGoal.setParentGoal(goal.getParentGoal());
+		goal.setParentGoal(newGoal);
+
+		checkModel();
 
 		goal.applyConditions();
 		newGoal.applyConditions();
@@ -232,6 +252,12 @@ public class GoalModel extends GoalModel_Base {
 	private void checkConditionsNotEmpty(Set<DefProductCondition> successConditions) {
 		if (successConditions.isEmpty())
 			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL, "checkConditionsNotEmpty");
+	}
+
+	private void checkAllConditionsNotSelected(Set<DefProductCondition> successConditionOne,
+			Set<DefProductCondition> successConditionsTwo) {
+		if (successConditionOne.equals(successConditionsTwo))
+			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL, "checkAllConditionsAreNotSelected");
 	}
 
 	public GraphDTO getGoalGraph() {

@@ -85,6 +85,7 @@ app
 																};
 															});
 										});
+
 					};
 
 					$scope.readGraph = function(specId) {
@@ -95,6 +96,11 @@ app
 					};
 
 					$scope.goalNameInput = function() {
+						// if split of a goal with empty success conditions
+						if ($scope.operations.selectedOperation.id == 3
+								&& $scope.goalSucConditions.availableSucConditions.length == 0)
+							return false;
+
 						// rename, merge, and split operations
 						return ($scope.operations.selectedOperation.id >= 1 && $scope.operations.selectedOperation.id <= 3);
 					};
@@ -106,7 +112,7 @@ app
 
 					$scope.goalSucConditionsSelect = function() {
 						// split operation
-						return ($scope.operations.selectedOperation.id == 3);
+						return ($scope.operations.selectedOperation.id == 3 && $scope.goalSucConditions.availableSucConditions.length > 0);
 					};
 
 					$scope.validForm = function() {
@@ -117,9 +123,9 @@ app
 						if ($scope.goalsOne.selectedGoal == $scope.goalsOne.availableGoals[0])
 							return false;
 
-						// rename, merge and split operation require a name for
+						// rename and split operation require a new name for
 						// the new operation
-						if (($scope.operations.selectedOperation.id >= 1 && $scope.operations.selectedOperation.id <= 3)) {
+						if (($scope.operations.selectedOperation.id == 1 && $scope.operations.selectedOperation.id == 3)) {
 							// the new goal name should not exist
 							for (i = 0; i < $scope.goalsOne.availableGoals.length; i++)
 								if ($scope.goalsOne.availableGoals[i].name == $scope.newGoalName)
@@ -128,26 +134,47 @@ app
 
 						// merge operation
 						if ($scope.operations.selectedOperation.id == 2) {
-							// has to select the second goal, but not the
+							// have to select the second goal, but not the
 							// header
 							if ($scope.goalsTwo.selectedActivity == $scope.goalsTwo.availableGoals[0])
 								return false;
 
-							// the second selected activity should be different
+							// the second selected goal should be different
 							// from the first
 							for (i = 0; i < $scope.goalsTwo.availableGoals.length; i++)
 								if ($scope.goalsTwo.selectedGoal.name == $scope.goalsOne.selectedGoal.name)
+									return false;
+
+							// the new goal name should not exist or reuse one
+							// of the selected
+							for (i = 0; i < $scope.goalsOne.availableGoals.length; i++)
+								if ($scope.goalsOne.availableGoals[i].name == $scope.newGoalName
+										&& $scope.newGoalName != $scope.goalsOne.selectedGoal.name
+										&& $scope.newGoalName != $scope.goalsTwo.selectedGoal.name)
 									return false;
 						}
 
 						// split operation
 						if ($scope.operations.selectedOperation.id == 3) {
-							// at least one of success condition is selected,
-							// but
-							// nor all the conditions
-							if ($scope.goalSucConditions.selectedSucConditions.length < 1
-									|| $scope.goalSucConditions.selectedSucConditions.length == $scope.goalSucConditions.availableSucConditions.length
-									|| $scope.splitType == '')
+							// a type need to be specified
+							if ($scope.splitType == '')
+								return false;
+
+							// if the goal has empty success conditions
+							if (!$scope.goalSucConditions)
+								return false;
+
+							// if it is extract child or sibling at least one of
+							// success condition should be selected
+							if (($scope.splitType == 'child' || $scope.splitType == 'sibling')
+									&& $scope.goalSucConditions.selectedSucConditions.length < 1)
+								return false;
+
+							// if it is an extract parent or sibling it is not
+							// possible to
+							// select all conditions
+							if (($scope.splitType == 'parent' || $scope.splitType == 'sibling')
+									&& $scope.goalSucConditions.selectedSucConditions.length == $scope.goalSucConditions.availableSucConditions.length)
 								return false;
 						}
 
@@ -185,7 +212,24 @@ app
 									});
 							break;
 						case 3: // split
-							if ($scope.splitType == 'child') {
+							if ($scope.splitType == 'parent') {
+								goalRepository
+										.splitParentGoal(
+												specId,
+												$scope.goalsOne.selectedGoal.name,
+												$scope.goalSucConditions.selectedSucConditions,
+												$scope.newGoalName)
+										.then(
+												function(response) {
+													$scope.updateState();
+												},
+												function(response) {
+													$scope.error = response.data.type
+															+ '('
+															+ response.data.value
+															+ ')';
+												});
+							} else if ($scope.splitType == 'child') {
 								goalRepository
 										.splitChildGoal(
 												specId,

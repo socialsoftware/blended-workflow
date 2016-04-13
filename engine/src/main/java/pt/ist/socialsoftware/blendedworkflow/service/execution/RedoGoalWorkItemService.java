@@ -8,15 +8,15 @@ import org.slf4j.LoggerFactory;
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldGoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldGoalWorkItem.GoalState;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
 
 public class RedoGoalWorkItemService implements Callable<String> {
 
     private static Logger log = LoggerFactory.getLogger("RedoGoalService");
 
-    private final GoalWorkItem goalWorkItem;
+    private final OldGoalWorkItem goalWorkItem;
     private final String userID;
 
     public RedoGoalWorkItemService(String goalWorkItemOID, String userID) {

@@ -24,8 +24,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.domain.ActivityModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -60,10 +60,10 @@ public class MergeTasksTest extends TeardownRollbackTest {
 	Rule ruleOne;
 	Rule ruleTwo;
 
-	TaskModel taskModel;
-	Task taskOne;
-	Task taskTwo;
-	Task taskThree;
+	ActivityModel taskModel;
+	Activity taskOne;
+	Activity taskTwo;
+	Activity taskThree;
 
 	@Override
 	public void populate4Test() throws BWException {
@@ -102,22 +102,22 @@ public class MergeTasksTest extends TeardownRollbackTest {
 
 		spec.getConditionModel().generateConditions();
 
-		taskModel = spec.getTaskModel();
+		taskModel = spec.getActivityModel();
 
-		taskOne = new Task(spec.getTaskModel(), TASK_ONE, "Description");
+		taskOne = new Activity(spec.getActivityModel(), TASK_ONE, "Description");
 		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entityOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
 		taskOne.addRuleInvariant(ruleOne);
 
-		taskTwo = new Task(spec.getTaskModel(), TASK_TWO, "Description");
+		taskTwo = new Activity(spec.getActivityModel(), TASK_TWO, "Description");
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_ONE_NAME));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameTwo()));
 
-		taskThree = new Task(spec.getTaskModel(), TASK_THREE, "Description");
+		taskThree = new Activity(spec.getActivityModel(), TASK_THREE, "Description");
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_THREE_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH_ONE));
@@ -130,9 +130,9 @@ public class MergeTasksTest extends TeardownRollbackTest {
 
 	@Test
 	public void mergeTasksOneTwo() {
-		Task task = taskModel.mergeTasks("newTask", "taskDescription", taskOne, taskTwo);
+		Activity task = taskModel.mergeActivities("newTask", "taskDescription", taskOne, taskTwo);
 
-		assertEquals(2, taskModel.getTasksSet().size());
+		assertEquals(2, taskModel.getActivitySet().size());
 
 		assertFalse(task.getPreConditionSet().stream().map(d -> d.getTargetOfPath()).collect(Collectors.toSet())
 				.contains(ENTITY_ONE_NAME));
@@ -143,7 +143,7 @@ public class MergeTasksTest extends TeardownRollbackTest {
 
 	@Test
 	public void mergeTasksTwoThree() {
-		Task task = taskModel.mergeTasks("newTask", "taskDescription", taskTwo, taskThree);
+		Activity task = taskModel.mergeActivities("newTask", "taskDescription", taskTwo, taskThree);
 
 		taskModel.checkModel();
 		task.checkConsistency();
@@ -152,7 +152,7 @@ public class MergeTasksTest extends TeardownRollbackTest {
 	@Test
 	public void mergeTasksOneThree() {
 		try {
-			taskModel.mergeTasks("newTask", "taskDescription", taskOne, taskThree);
+			taskModel.mergeActivities("newTask", "taskDescription", taskOne, taskThree);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
@@ -163,7 +163,7 @@ public class MergeTasksTest extends TeardownRollbackTest {
 	public void mergeSequentialConditionOne() {
 		taskTwo.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME + "." + ROLENAME_ONE));
 
-		Task merge = taskModel.mergeTasks("newTask", "taskDescription", taskOne, taskTwo);
+		Activity merge = taskModel.mergeActivities("newTask", "taskDescription", taskOne, taskTwo);
 
 		assertEquals(0, merge.getSequenceConditionSet().size());
 	}
@@ -172,7 +172,7 @@ public class MergeTasksTest extends TeardownRollbackTest {
 	public void mergeSequentialConditionTwo() {
 		taskTwo.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME + "." + ROLENAME_ONE));
 
-		Task merge = taskModel.mergeTasks("newTask", "taskDescription", taskTwo, taskThree);
+		Activity merge = taskModel.mergeActivities("newTask", "taskDescription", taskTwo, taskThree);
 
 		assertEquals(1, merge.getSequenceConditionSet().size());
 	}

@@ -3,9 +3,9 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 
-public class EntityInstance extends EntityInstance_Base {
+public class OldEntityInstance extends OldEntityInstance_Base {
 
-    public EntityInstance(Entity entity) {
+    public OldEntityInstance(Entity entity) {
         setEntity(entity);
         setID(entity.getName() + "." + entity.getNewEntityInstanceId()); // Id:
                                                                          // EntityName.#
@@ -17,12 +17,12 @@ public class EntityInstance extends EntityInstance_Base {
     /**
      * Create and assign EntityInstances and AttributesInstances to Workitems
      */
-    public void assignAttributeInstances(GoalWorkItem goalWorkItem,
+    public void assignAttributeInstances(OldGoalWorkItem goalWorkItem,
             Attribute attribute, ConditionType conditionType) {
         boolean exists = false;
-        for (AttributeInstance attributeInstance : getAttributeInstancesSet()) {
+        for (OldAttributeInstance attributeInstance : getAttributeInstancesSet()) {
             if (attributeInstance.getAttribute().equals(attribute)) {
-                if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
+                if (conditionType.equals(ConditionType.SUCCESS_CONDITION)) {
                     goalWorkItem.addOutputAttributeInstances(attributeInstance);
                 } else {
                     goalWorkItem.addInputAttributeInstances(attributeInstance);
@@ -32,9 +32,9 @@ public class EntityInstance extends EntityInstance_Base {
         }
 
         if (!exists) {
-            AttributeInstance attributeInstance = new AttributeInstance(
+            OldAttributeInstance attributeInstance = new OldAttributeInstance(
                     attribute, this);
-            if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
+            if (conditionType.equals(ConditionType.SUCCESS_CONDITION)) {
                 goalWorkItem.addOutputAttributeInstances(attributeInstance);
             } else {
                 goalWorkItem.addInputAttributeInstances(attributeInstance);
@@ -43,15 +43,15 @@ public class EntityInstance extends EntityInstance_Base {
         }
     }
 
-    public void assignAttributeInstances(TaskWorkItem taskWorkItem,
+    public void assignAttributeInstances(OldTaskWorkItem taskWorkItem,
             Attribute attribute, ConditionType conditionType) {
         boolean exists = false;
         boolean existsOne = false;
-        for (AttributeInstance attributeInstance : getAttributeInstancesSet()) {
+        for (OldAttributeInstance attributeInstance : getAttributeInstancesSet()) {
             if (attributeInstance.getAttribute().equals(attribute)) {
                 if (conditionType.equals(ConditionType.PRE_CONDITION)) {
 
-                    for (AttributeInstance ai : taskWorkItem
+                    for (OldAttributeInstance ai : taskWorkItem
                             .getInputAttributeInstancesSet()) {
                         if (attributeInstance.getID().equals(ai.getID())) {
                             existsOne = true;
@@ -63,7 +63,7 @@ public class EntityInstance extends EntityInstance_Base {
                     }
                 }
                 if (conditionType.equals(ConditionType.POS_CONDITION)) {
-                    for (AttributeInstance ai : taskWorkItem
+                    for (OldAttributeInstance ai : taskWorkItem
                             .getOutputAttributeInstancesSet()) {
                         if (attributeInstance.getID().equals(ai.getID())) {
                             existsOne = true;
@@ -78,7 +78,7 @@ public class EntityInstance extends EntityInstance_Base {
             }
         }
         if (!exists) {
-            AttributeInstance attributeInstance = new AttributeInstance(
+            OldAttributeInstance attributeInstance = new OldAttributeInstance(
                     attribute, this);
             if (conditionType.equals(ConditionType.PRE_CONDITION)) {
                 taskWorkItem.addInputAttributeInstances(attributeInstance);
@@ -106,7 +106,7 @@ public class EntityInstance extends EntityInstance_Base {
         int keyAttributesTotal = 0;
         int keyAttributesDefined = 0;
         int keyAttributesSkipped = 0;
-        for (AttributeInstance attributeInstance : getAttributeInstancesSet()) {
+        for (OldAttributeInstance attributeInstance : getAttributeInstancesSet()) {
             // Count total of key Attributes
             if (attributeInstance.getAttribute().getIsKeyAttribute() == true) {
                 keyAttributesTotal++;
@@ -132,8 +132,8 @@ public class EntityInstance extends EntityInstance_Base {
         }
     }
 
-    public AttributeInstance getAttributeInstance(String ID) {
-        for (AttributeInstance attributeInstance : getAttributeInstancesSet()) {
+    public OldAttributeInstance getAttributeInstance(String ID) {
+        for (OldAttributeInstance attributeInstance : getAttributeInstancesSet()) {
             if (attributeInstance.getID().equals(ID)) {
                 return attributeInstance;
             }
@@ -141,10 +141,10 @@ public class EntityInstance extends EntityInstance_Base {
         return null;
     }
 
-    public void cloneEntityInstance(DataModelInstance dataModelInstance,
+    public void cloneEntityInstance(OldDataModelInstance dataModelInstance,
             Entity newEntity) {
-        EntityInstance newEntityInstance = new EntityInstance(newEntity);
-        for (AttributeInstance attributeInstance : getAttributeInstancesSet()) {
+        OldEntityInstance newEntityInstance = new OldEntityInstance(newEntity);
+        for (OldAttributeInstance attributeInstance : getAttributeInstancesSet()) {
             attributeInstance.cloneAttributeInstance(dataModelInstance,
                     newEntityInstance);
         }

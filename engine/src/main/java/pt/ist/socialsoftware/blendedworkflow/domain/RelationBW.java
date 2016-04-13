@@ -116,7 +116,7 @@ public class RelationBW extends RelationBW_Base {
 		getEntityOne().checkUniqueElementName(roleNameTwo);
 	}
 
-	public void cloneRelation(DataModelInstance dataModelInstance, Entity entityOne, Entity entityTwo)
+	public void cloneRelation(OldDataModelInstance dataModelInstance, Entity entityOne, Entity entityTwo)
 			throws BWException {
 		new RelationBW(dataModelInstance, getName(), entityOne, getRoleNameOne(), getCardinalityOne(),
 				getIsOneKeyEntity(), entityTwo, getRoleNameTwo(), getCardinalityTwo(), getIsTwoKeyEntity());

@@ -34,28 +34,28 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	}
 
 	@Override
-	Condition cloneCondition(GoalModelInstance goalModelInstance) {
-		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
+	Condition cloneCondition(OldGoalModelInstance goalModelInstance) {
+		OldDataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttributeOfDef().getEntity().getName()).get();
 		Attribute attribute = entity.getAttribute(getAttributeOfDef().getName()).orElse(null);
 		return new DefAttributeCondition(attribute);
 	}
 
 	@Override
-	Condition cloneCondition(TaskModelInstance taskModelInstance) {
-		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
+	Condition cloneCondition(OldTaskModelInstance taskModelInstance) {
+		OldDataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
 		Entity entity = dataModelInstance.getEntity(getAttributeOfDef().getEntity().getName()).get();
 		Attribute attribute = entity.getAttribute(getAttributeOfDef().getName()).orElse(null);
 		return new DefAttributeCondition(attribute);
 	}
 
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		getAttributeOfDef().getEntity().assignAttributeInstances(goalWorkItem, getAttributeOfDef(), conditionType);
 	}
 
 	@Override
-	public void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldTaskWorkItem taskWorkItem, ConditionType conditionType) {
 		getAttributeOfDef().getEntity().assignAttributeInstances(taskWorkItem, getAttributeOfDef(), conditionType);
 	}
 
@@ -135,22 +135,22 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	 * Evaluate
 	 ******************************/
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluate(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO:Refactor
 		return TripleStateBool.FALSE;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
-		Set<WorkItemArgument> arguments = null;
+	public TripleStateBool evaluateWithWorkItem(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
+		Set<OldWorkItemArgument> arguments = null;
 		if (conditionType.equals(ConditionType.ACTIVATE_CONDITION)) {
 			arguments = goalWorkItem.getInputWorkItemArgumentsSet();
-		} else if (conditionType.equals(ConditionType.SUCESS_CONDITION)) {
+		} else if (conditionType.equals(ConditionType.SUCCESS_CONDITION)) {
 			arguments = goalWorkItem.getOutputWorkItemArgumentsSet();
 		}
 
 		if (arguments != null) {
-			for (WorkItemArgument workItemArgument : arguments) {
+			for (OldWorkItemArgument workItemArgument : arguments) {
 				Attribute workItemAttribute = workItemArgument.getAttributeInstance().getAttribute();
 				Attribute conditionAttribute = getAttributeOfDef();
 				if (workItemAttribute == conditionAttribute) {
@@ -166,9 +166,9 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
+	public TripleStateBool evaluateWithDataModel(OldEntityInstance entityInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
-		for (AttributeInstance attributeInstance : entityInstance.getAttributeInstancesSet()) {
+		for (OldAttributeInstance attributeInstance : entityInstance.getAttributeInstancesSet()) {
 			Attribute attribute = attributeInstance.getAttribute();
 			Attribute conditionAttribute = getAttributeOfDef();
 
@@ -188,7 +188,7 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 		return TripleStateBool.TRUE;
 	}
 
-	private DataState getWorkItemState(AttributeInstance attributeInstance, GoalWorkItem goalWorkItem,
+	private DataState getWorkItemState(OldAttributeInstance attributeInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		// List<WorkItemArgument> arguments = null;
 		// if (conditionType.equals(ConditionType.ACTIVATE)) {
@@ -198,7 +198,7 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 		// }
 		// for (WorkItemArgument workItemArgument : arguments) {
 		if (goalWorkItem != null) {
-			for (WorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArgumentsSet()) {
+			for (OldWorkItemArgument workItemArgument : goalWorkItem.getOutputWorkItemArgumentsSet()) {
 				if (workItemArgument.getAttributeInstance().equals(attributeInstance)) {
 					return workItemArgument.getState();
 				}
