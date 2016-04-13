@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.domain.taskmodel;
+package pt.ist.socialsoftware.blendedworkflow.domain.activitymodel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

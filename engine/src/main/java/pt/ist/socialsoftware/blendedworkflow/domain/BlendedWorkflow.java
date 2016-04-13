@@ -58,7 +58,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 
 	public OldBWInstance getBWInstance(String ID) throws BWException {
 		for (Specification specificationpecification : getSpecificationSet()) {
-			for (OldBWInstance bwInstance : specificationpecification.getBwInstancesSet()) {
+			for (OldBWInstance bwInstance : specificationpecification.getOldBwInstancesSet()) {
 				if (bwInstance.getID().equals(ID))
 					return bwInstance;
 			}
@@ -68,7 +68,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 
 	public OldBWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID) throws BWException {
 		for (Specification specification : getSpecificationSet()) {
-			for (OldBWInstance bwInstance : specification.getBwInstancesSet()) {
+			for (OldBWInstance bwInstance : specification.getOldBwInstancesSet()) {
 				if (bwInstance.getYawlCaseID().equals(yawlCaseID))
 					return bwInstance;
 			}

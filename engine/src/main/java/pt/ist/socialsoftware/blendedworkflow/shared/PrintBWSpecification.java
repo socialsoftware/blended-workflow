@@ -79,7 +79,7 @@ public class PrintBWSpecification {
         System.out.println(
                 "----------------------------------------------------------");
         System.out.println(bwSpecification.getName() + " has "
-                + bwSpecification.getBwInstancesSet().size() + " instance.");
+                + bwSpecification.getOldBwInstancesSet().size() + " instance.");
         System.out.println(bwInstance.getID());
     }
 

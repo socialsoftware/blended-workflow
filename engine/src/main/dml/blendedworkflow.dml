@@ -228,7 +228,9 @@ class OldRelationInstance {
 	String ID;
 }
 
-//class RelationRole;
+class WorkflowInstance {
+	String name;
+}
 
 // BlendedWorkflow
 relation BlendedWorkflowHasSpecifications {
@@ -239,7 +241,12 @@ relation BlendedWorkflowHasSpecifications {
 // Specification
 relation SpecificationHasBWInstances {
 	Specification playsRole specification {multiplicity 0..1;}
-	OldBWInstance playsRole bwInstances {multiplicity 0..*;}
+	OldBWInstance playsRole oldBwInstances {multiplicity 0..*;}
+}
+
+relation SpecificationHasWorkflowInstances {
+	Specification playsRole specification {multiplicity 0..1;}
+	WorkflowInstance playsRole workflowInstance {multiplicity 0..*;}
 }
 
 relation SpecificationHasConditionModel {
