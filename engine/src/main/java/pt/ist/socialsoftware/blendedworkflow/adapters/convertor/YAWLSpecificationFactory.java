@@ -8,8 +8,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.domain.ActivityModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class YAWLSpecificationFactory {
@@ -101,17 +101,17 @@ public class YAWLSpecificationFactory {
 		Boolean firstTask = true;
 
 		// Tasks
-		TaskModel taskModel = bwSpecification.getTaskModel();
+		ActivityModel taskModel = bwSpecification.getActivityModel();
 
 		// Create YAWL Task IDs
-		for (Task task : taskModel.getTasksSet()) {
+		for (Activity task : taskModel.getActivitySet()) {
 			String taskName = task.getName();
 			String yawlID = task.getName().replaceAll(" ", "_") + "_" + taskIndex;
 			this.taskYAWLID.put(taskName, yawlID);
 			taskIndex++;
 		}
 
-		for (Task task : taskModel.getTasksSet()) {
+		for (Activity task : taskModel.getActivitySet()) {
 			String taskName = task.getName().replaceAll(" ", "_");
 			String taskID = this.taskYAWLID.get(task.getName());
 			String joinCode = task.getJoinCode();
@@ -129,8 +129,8 @@ public class YAWLSpecificationFactory {
 
 			element += "<task id=\"" + taskID + "\">" + "<name>" + taskName + "</name>";
 
-			if (task.getNextTasksSet().size() > 0) {
-				for (Task nextTask : task.getNextTasksSet()) {
+			if (task.getNextActivitySet().size() > 0) {
+				for (Activity nextTask : task.getNextActivitySet()) {
 					String nextTaskID = this.taskYAWLID.get(nextTask.getName());
 					element += "<flowsInto>" + "<nextElementRef id=\"" + nextTaskID + "\" />" + "</flowsInto>";
 				}
@@ -205,8 +205,8 @@ public class YAWLSpecificationFactory {
 		String outputParam = "";
 
 		// Tasks
-		TaskModel taskModel = bwSpecification.getTaskModel();
-		for (Task task : taskModel.getTasksSet()) {
+		ActivityModel taskModel = bwSpecification.getActivityModel();
+		for (Activity task : taskModel.getActivitySet()) {
 			inputOutputParamIndex = 0;
 			inputParam = "";
 			outputParam = "";

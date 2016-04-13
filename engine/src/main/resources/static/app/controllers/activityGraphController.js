@@ -150,9 +150,9 @@ app
 						if ($scope.activitiesOne.selectedActivity == $scope.activitiesOne.availableActivities[0])
 							return false;
 
-						// rename, merge and split operation require a name for
+						// rename and split operation require a name for
 						// the new operation
-						if (($scope.operations.selectedOperation.id >= 1 && $scope.operations.selectedOperation.id <= 3)) {
+						if (($scope.operations.selectedOperation.id == 1 && $scope.operations.selectedOperation.id == 3)) {
 							// the new activity name should not exist
 							for (i = 0; i < $scope.activitiesOne.availableActivities.length; i++)
 								if ($scope.activitiesOne.availableActivities[i].name == $scope.newActivityName)
@@ -170,6 +170,14 @@ app
 							// from the first
 							for (i = 0; i < $scope.activitiesTwo.availableActivities.length; i++)
 								if ($scope.activitiesTwo.selectedActivity.name == $scope.activitiesOne.selectedActivity.name)
+									return false;
+							
+							// the new activity name should not exist or reuse one
+							// of the selected
+							for (i = 0; i < $scope.activitiesOne.availableActivities.length; i++)
+								if ($scope.activitiesOne.availableActivities[i].name == $scope.newActivityName
+										&& $scope.newActivityName != $scope.activitiesOne.selectedActivity.name
+										&& $scope.newActivityName != $scope.activitiesTwo.selectedActivity.name)
 									return false;
 						}
 

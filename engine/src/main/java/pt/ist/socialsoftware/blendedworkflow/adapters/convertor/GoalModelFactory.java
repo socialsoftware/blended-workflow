@@ -14,7 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
-import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldMaintainGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -108,7 +108,7 @@ public class GoalModelFactory {
 			entityContextName = goalXML.getChildText("Context", bwNamespace);
 			entityContext = dataModel.getEntity(entityContextName).get();
 
-			new MaintainGoal(goalModel, goalName, goalDescription, goalCondition, entityContext);
+			new OldMaintainGoal(goalModel, goalName, goalDescription, goalCondition, entityContext);
 		}
 	}
 }

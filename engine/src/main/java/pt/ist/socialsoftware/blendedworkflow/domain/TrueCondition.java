@@ -13,21 +13,21 @@ public class TrueCondition extends TrueCondition_Base {
 	}
 
 	@Override
-	Condition cloneCondition(GoalModelInstance goalModelInstance) {
+	Condition cloneCondition(OldGoalModelInstance goalModelInstance) {
 		return new TrueCondition();
 	}
 
 	@Override
-	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+	Condition cloneCondition(OldTaskModelInstance taskModelInstance) {
 		return new TrueCondition();
 	}
 
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 	}
 
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
+	void assignAttributeInstances(OldTaskWorkItem taskWorkItem, ConditionType conditionType) {
 	}
 
 	@Override
@@ -89,17 +89,17 @@ public class TrueCondition extends TrueCondition_Base {
 	 * Evaluate
 	 ******************************/
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluate(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return TripleStateBool.TRUE;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluateWithWorkItem(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return TripleStateBool.TRUE;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
+	public TripleStateBool evaluateWithDataModel(OldEntityInstance entityInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		return TripleStateBool.TRUE;
 	}

@@ -12,17 +12,17 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class GoalWorkItem extends GoalWorkItem_Base {
+public class OldGoalWorkItem extends OldGoalWorkItem_Base {
 
 	public enum GoalState {
 		NEW, PRE_GOAL, ACTIVATED, ENABLED, SKIPPED, ACHIEVED, RE_ACTIVATED
 	};
 
-	private final Logger log = LoggerFactory.getLogger("GoalWorkItem");
+	private final Logger log = LoggerFactory.getLogger(OldGoalWorkItem.class);
 	private final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-	public GoalWorkItem(BWInstance bwInstance, Goal goal, EntityInstance entityInstanceContext,
-			Set<DefPathCondition> activateConditions, Set<MaintainGoal> maintainGoals) {
+	public OldGoalWorkItem(OldBWInstance bwInstance, Goal goal, OldEntityInstance entityInstanceContext,
+			Set<DefPathCondition> activateConditions, Set<OldMaintainGoal> maintainGoals) {
 		log.info("New GoalWorkitem for goal " + goal.getName());
 		setBwInstance(bwInstance);
 		setGoal(goal);
@@ -43,11 +43,11 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
 		// Success Condition
 		setSucessCondition(goal.getSuccessConditionSet().stream().findFirst().get());
-		getSucessCondition().assignAttributeInstances(this, ConditionType.SUCESS_CONDITION);
+		getSucessCondition().assignAttributeInstances(this, ConditionType.SUCCESS_CONDITION);
 		createOutputWorkItemArguments();
 
 		// Maintain Conditions
-		for (MaintainGoal maintainGoal : maintainGoals) {
+		for (OldMaintainGoal maintainGoal : maintainGoals) {
 			addMaintainConditions(maintainGoal.getMaintainCondition());
 		}
 
@@ -99,7 +99,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		getBwInstance().getGoalModelInstance().checkActivatedWorkItems();
 	}
 
-	public void notifyReActivated(GoalWorkItem cause) {
+	public void notifyReActivated(OldGoalWorkItem cause) {
 		this.updateInputWorkItemArguments();
 		this.updateOutputWorkItemArguments();
 		this.setState(GoalState.RE_ACTIVATED);
@@ -188,13 +188,13 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		for (Goal subGoal : getGoal().getSubGoalSet()) {
 			countSubGoalsWorkItems = 0;
 
-			for (GoalWorkItem goalWorkItem : subGoal.getGoalWorkItemsSet()) {
+			for (OldGoalWorkItem goalWorkItem : subGoal.getOldGoalWorkItemSet()) {
 				if (goalWorkItem.getState().equals(GoalState.ACHIEVED)
 						|| goalWorkItem.getState().equals(GoalState.SKIPPED)) {
 					countSubGoalsWorkItems++;
 				}
 			}
-			if (subGoal.getGoalWorkItemsSet().size() == countSubGoalsWorkItems) {
+			if (subGoal.getOldGoalWorkItemSet().size() == countSubGoalsWorkItems) {
 				countSubGoals++;
 			}
 		}
@@ -228,20 +228,21 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	}
 
 	public TripleStateBool evaluateSucessCondition() {
-		return getSucessCondition().evaluateWithWorkItem(this, ConditionType.SUCESS_CONDITION);
+		return getSucessCondition().evaluateWithWorkItem(this, ConditionType.SUCCESS_CONDITION);
 	}
 
 	public TripleStateBool evaluateMaintainConditions() {
 		TripleStateBool maintainConditionsResult = TripleStateBool.TRUE;
 		Boolean und = false;
 		for (Condition maintainCondition : getMaintainConditionsSet()) {
-			for (WorkItemArgument wa2 : getOutputWorkItemArgumentsSet()) {
+			for (OldWorkItemArgument wa2 : getOutputWorkItemArgumentsSet()) {
 				if (wa2.getState().equals(DataState.UNDEFINED)) {
 					und = true;
 				}
 			}
 			if (!und) {
-				TripleStateBool m = maintainCondition.evaluateWithDataModel(null, this, ConditionType.SUCESS_CONDITION);
+				TripleStateBool m = maintainCondition.evaluateWithDataModel(null, this,
+						ConditionType.SUCCESS_CONDITION);
 				maintainConditionsResult = maintainConditionsResult.AND(m);
 			}
 		}
@@ -253,8 +254,8 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	 ***********************************/
 	public boolean checkAffectedGoals() {
 		Goal redoGoal = this.getGoal();
-		DataModelInstance dataModelInstance = getBwInstance().getDataModelInstance();
-		GoalModelInstance goalModelInstance = getBwInstance().getGoalModelInstance();
+		OldDataModelInstance dataModelInstance = getBwInstance().getDataModelInstance();
+		OldGoalModelInstance goalModelInstance = getBwInstance().getGoalModelInstance();
 		boolean workitemExists = false;
 		boolean affectedMandatory = false;
 
@@ -262,13 +263,13 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
 		// Search All Affected Goals:
 		for (Goal affectedAG : affectedAchieveGoals) {
-			for (EntityInstance entityInstance : affectedAG.getEntityContext().getEntityInstancesSet()) {
-				EntityInstance affectedAGEntityInstance = dataModelInstance
+			for (OldEntityInstance entityInstance : affectedAG.getEntityContext().getOldEntityInstanceSet()) {
+				OldEntityInstance affectedAGEntityInstance = dataModelInstance
 						.getEntityInstance(getEntityInstanceContext(), entityInstance);
 
 				// Context can be reached
 				if (affectedAGEntityInstance != null) {
-					for (GoalWorkItem affectedGW : affectedAG.getGoalWorkItemsSet()) {
+					for (OldGoalWorkItem affectedGW : affectedAG.getOldGoalWorkItemSet()) {
 						if (affectedGW.getEntityInstanceContext().equals(affectedAGEntityInstance)) {
 							// notify?
 							log.debug("GoalWorkItem for EntityInstance: " + affectedAGEntityInstance.getID()
@@ -283,9 +284,9 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 								+ affectedAGEntityInstance.getID());
 						// Create GoalWorkItem
 						Set<DefPathCondition> activateConditions = affectedAG.getActivationConditionSet();
-						Set<MaintainGoal> maintainGoals = getBwInstance().getGoalModelInstance()
+						Set<OldMaintainGoal> maintainGoals = getBwInstance().getGoalModelInstance()
 								.getAchieveGoalAssociatedMaintainGoals(affectedAG);
-						GoalWorkItem newGoalWorkItem = new GoalWorkItem(getBwInstance(), affectedAG,
+						OldGoalWorkItem newGoalWorkItem = new OldGoalWorkItem(getBwInstance(), affectedAG,
 								affectedAGEntityInstance, activateConditions, maintainGoals);
 						// evaluate SucessCondition with old data
 						TripleStateBool result = newGoalWorkItem.evaluateSucessCondition();
@@ -293,13 +294,13 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 								+ result);
 						if (result.equals(TripleStateBool.TRUE) || result.equals(TripleStateBool.SKIPPED)) {
 							// Put new data into the new workitem
-							for (WorkItemArgument redoOutputWA : this.getOutputWorkItemArgumentsSet()) {
-								for (WorkItemArgument newInputWA : newGoalWorkItem.getInputWorkItemArgumentsSet()) {
+							for (OldWorkItemArgument redoOutputWA : this.getOutputWorkItemArgumentsSet()) {
+								for (OldWorkItemArgument newInputWA : newGoalWorkItem.getInputWorkItemArgumentsSet()) {
 									if (redoOutputWA.getAttributeInstance().equals(newInputWA.getAttributeInstance())) {
 										newInputWA.setValue(redoOutputWA.getValue());
 									}
 								}
-								for (WorkItemArgument newOutputWA : newGoalWorkItem.getOutputWorkItemArgumentsSet()) {
+								for (OldWorkItemArgument newOutputWA : newGoalWorkItem.getOutputWorkItemArgumentsSet()) {
 									if (redoOutputWA.getAttributeInstance()
 											.equals(newOutputWA.getAttributeInstance())) {
 										newOutputWA.setValue(redoOutputWA.getValue());

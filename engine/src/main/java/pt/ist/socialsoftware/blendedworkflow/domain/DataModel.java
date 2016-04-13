@@ -26,8 +26,8 @@ public class DataModel extends DataModel_Base {
 	/**
 	 * Clone the DataModel.
 	 */
-	public DataModelInstance cloneDataModel() throws BWException {
-		DataModelInstance newDataModelInstance = new DataModelInstance();
+	public OldDataModelInstance cloneDataModel() throws BWException {
+		OldDataModelInstance newDataModelInstance = new OldDataModelInstance();
 		Entity relationEntityOne;
 		Entity relationEntityTwo;
 
@@ -62,8 +62,8 @@ public class DataModel extends DataModel_Base {
 			getSpecification().getConditionModel().clean();
 		if (getSpecification().getGoalModel() != null)
 			getSpecification().getGoalModel().clean();
-		if (getSpecification().getTaskModel() != null)
-			getSpecification().getTaskModel().clean();
+		if (getSpecification().getActivityModel() != null)
+			getSpecification().getActivityModel().clean();
 		getDependenceSet().stream().forEach(dep -> dep.delete());
 		getEntitySet().stream().forEach(ent -> ent.delete());
 		getAttributeSet().stream().forEach(a -> a.delete());

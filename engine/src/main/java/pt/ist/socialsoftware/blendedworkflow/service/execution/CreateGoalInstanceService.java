@@ -10,29 +10,29 @@ import org.slf4j.LoggerFactory;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldBWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldDataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldEntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem.GoalState;
-import pt.ist.socialsoftware.blendedworkflow.domain.MaintainGoal;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldGoalModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldGoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldGoalWorkItem.GoalState;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldMaintainGoal;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldWorkItem;
 
 public class CreateGoalInstanceService implements Callable<String> {
 
 	private static Logger log = LoggerFactory.getLogger("CreateGoalInstanceService");
 
-	private final BWInstance bwInstance;
+	private final OldBWInstance bwInstance;
 	private final Goal goal;
 	private final Set<String> activateConditionsOID;
 	private Set<DefPathCondition> activateConditions;
 	private final Set<String> maintainGoalsOID;
-	private Set<MaintainGoal> maintainGoals;
+	private Set<OldMaintainGoal> maintainGoals;
 	private final Map<String, String> entitiesOID;
 	private final Set<RelationBW> relations;
 
@@ -55,7 +55,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 
 		Transaction.begin();
 
-		DataModelInstance dataModelInstance = this.bwInstance.getDataModelInstance();
+		OldDataModelInstance dataModelInstance = this.bwInstance.getDataModelInstance();
 
 		// Get Key Relations if the Context is new
 		if (this.entitiesOID.get(this.goal.getEntityContext().getExternalId()) == null) {
@@ -72,14 +72,14 @@ public class CreateGoalInstanceService implements Callable<String> {
 		}
 
 		// Get SubGoals Relations if the goal has subgoals
-		GoalModelInstance goalModelInstance = this.bwInstance.getGoalModelInstance();
+		OldGoalModelInstance goalModelInstance = this.bwInstance.getGoalModelInstance();
 		this.relations.addAll(goalModelInstance.getSubGoalsRelations(this.goal));
 
 		// Create EntityInstances that do not exist
 		for (Map.Entry<String, String> entry : entitiesOID.entrySet()) {
 			if (entry.getValue() == null) {
 				Entity entity = FenixFramework.getDomainObject(entry.getKey());
-				EntityInstance newEntityInstance = new EntityInstance(entity);
+				OldEntityInstance newEntityInstance = new OldEntityInstance(entity);
 				entry.setValue(newEntityInstance.getExternalId());
 			}
 		}
@@ -97,21 +97,21 @@ public class CreateGoalInstanceService implements Callable<String> {
 
 		// Parse Maintain Goals
 		if (this.maintainGoalsOID == null) {
-			this.maintainGoals = new HashSet<MaintainGoal>(
+			this.maintainGoals = new HashSet<OldMaintainGoal>(
 					this.bwInstance.getGoalModelInstance().getAchieveGoalAssociatedMaintainGoals(this.goal));
 		} else {
-			this.maintainGoals = new HashSet<MaintainGoal>();
+			this.maintainGoals = new HashSet<OldMaintainGoal>();
 			for (String maintainGoalOID : this.maintainGoalsOID) {
-				MaintainGoal maintainGoal = FenixFramework.getDomainObject(maintainGoalOID);
+				OldMaintainGoal maintainGoal = FenixFramework.getDomainObject(maintainGoalOID);
 				this.maintainGoals.add(maintainGoal);
 			}
 		}
 
 		// Create RelationInstances
 		for (RelationBW relation : this.relations) {
-			EntityInstance entityInstanceOne = FenixFramework
+			OldEntityInstance entityInstanceOne = FenixFramework
 					.getDomainObject(this.entitiesOID.get(relation.getEntityOne().getExternalId()));
-			EntityInstance entityInstanceTwo = FenixFramework
+			OldEntityInstance entityInstanceTwo = FenixFramework
 					.getDomainObject(this.entitiesOID.get(relation.getEntityTwo().getExternalId()));
 
 			dataModelInstance.createRelationInstance(this.bwInstance, entityInstanceOne, entityInstanceTwo);
@@ -129,12 +129,12 @@ public class CreateGoalInstanceService implements Callable<String> {
 
 	}
 
-	private void createGoalWorkItems(BWInstance bwInstance, Goal goal, Set<DefPathCondition> activateConditions,
-			Set<MaintainGoal> maintainGoals) {
+	private void createGoalWorkItems(OldBWInstance bwInstance, Goal goal, Set<DefPathCondition> activateConditions,
+			Set<OldMaintainGoal> maintainGoals) {
 		// NOTE: If parent goal has activated workItems change their state to
 		// ACTIVATED
-		if (goal.getParentGoal().getGoalWorkItemsSet().size() > 0) {
-			for (GoalWorkItem goalWorkItem : goal.getParentGoal().getGoalWorkItemsSet()) {
+		if (goal.getParentGoal().getOldGoalWorkItemSet().size() > 0) {
+			for (OldGoalWorkItem goalWorkItem : goal.getParentGoal().getOldGoalWorkItemSet()) {
 				if (goalWorkItem.getState().equals(GoalState.ENABLED)
 						|| goalWorkItem.getState().equals(GoalState.PRE_GOAL)) {
 					goalWorkItem.notifyActivated();
@@ -143,10 +143,10 @@ public class CreateGoalInstanceService implements Callable<String> {
 		}
 
 		// Create GoalWorkItem
-		EntityInstance goalEntityInstanceContext = FenixFramework
+		OldEntityInstance goalEntityInstanceContext = FenixFramework
 				.getDomainObject(this.entitiesOID.get(goal.getEntityContext().getExternalId()));
 		if (!goal.goalWorkItemsExistForTheContext(goalEntityInstanceContext)) {
-			new GoalWorkItem(bwInstance, goal, goalEntityInstanceContext, activateConditions, maintainGoals);
+			new OldGoalWorkItem(bwInstance, goal, goalEntityInstanceContext, activateConditions, maintainGoals);
 		} else {
 			log.info("GoalWorkItem associated with " + goalEntityInstanceContext.getID() + " already exists.");
 		}
@@ -155,17 +155,17 @@ public class CreateGoalInstanceService implements Callable<String> {
 		for (Goal subGoal : goal.getSubGoalSet()) {
 			Set<DefPathCondition> subGoalActivateConditions = new HashSet<DefPathCondition>(
 					subGoal.getActivationConditionSet());
-			Set<MaintainGoal> subGoalMaintainGoals = new HashSet<MaintainGoal>(
+			Set<OldMaintainGoal> subGoalMaintainGoals = new HashSet<OldMaintainGoal>(
 					bwInstance.getGoalModelInstance().getAchieveGoalAssociatedMaintainGoals(subGoal));
 			createGoalWorkItems(bwInstance, subGoal, subGoalActivateConditions, subGoalMaintainGoals);
 		}
 	}
 
 	private void evaluateNew() {
-		GoalWorkItem parentGoalWorkItem = null;
-		for (WorkItem workItem : this.bwInstance.getWorkItemsSet()) {
-			if (workItem instanceof GoalWorkItem) {
-				parentGoalWorkItem = (GoalWorkItem) workItem;
+		OldGoalWorkItem parentGoalWorkItem = null;
+		for (OldWorkItem workItem : this.bwInstance.getWorkItemsSet()) {
+			if (workItem instanceof OldGoalWorkItem) {
+				parentGoalWorkItem = (OldGoalWorkItem) workItem;
 				if (parentGoalWorkItem.getGoal().equals(this.goal)) {
 					break;
 				}
@@ -177,9 +177,9 @@ public class CreateGoalInstanceService implements Callable<String> {
 		}
 
 		if (parentGoalWorkItem != null && !parentGoalWorkItem.getState().equals(GoalState.PRE_GOAL)) {
-			for (WorkItem workItem : this.bwInstance.getWorkItemsSet()) {
-				if (workItem instanceof GoalWorkItem) {
-					GoalWorkItem goalWorkItem = (GoalWorkItem) workItem;
+			for (OldWorkItem workItem : this.bwInstance.getWorkItemsSet()) {
+				if (workItem instanceof OldGoalWorkItem) {
+					OldGoalWorkItem goalWorkItem = (OldGoalWorkItem) workItem;
 					if ((goalWorkItem != parentGoalWorkItem) && goalWorkItem.getState().equals(GoalState.NEW)) {
 						goalWorkItem.evaluate();
 					}

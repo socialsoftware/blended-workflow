@@ -303,6 +303,21 @@ public class GoalModelController {
 		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
 	}
 
+	@RequestMapping(value = "/goals/extractparent", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<GoalDTO> extractParentGoal(@PathVariable("specId") String specId,
+			@RequestBody ExtractGoalReq req) {
+		logger.debug("extractParentGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
+				req.getNewGoalName(), req.getSourceGoalName(),
+				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
+
+		DesignInterface adi = DesignInterface.getInstance();
+
+		Goal goal = adi.extractParentGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
+				req.getSuccessConditions());
+
+		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
+	}
+
 	@RequestMapping(value = "/goals/extractsibling", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> extractSiblingGoal(@PathVariable("specId") String specId,
 			@RequestBody ExtractGoalReq req) {

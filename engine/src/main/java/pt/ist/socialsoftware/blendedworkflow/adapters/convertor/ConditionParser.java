@@ -8,8 +8,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.ExistsOneCondition;
-import pt.ist.socialsoftware.blendedworkflow.domain.ForAllCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldExistsOneCondition;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldForAllCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.NotCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.OrCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
@@ -229,7 +229,7 @@ public class ConditionParser {
         Condition newCondition = new ConditionParser(dataModel, subCondition)
                 .parseCondition();
 
-        ForAllCondition forAllCondition = new ForAllCondition(relation, entity,
+        OldForAllCondition forAllCondition = new OldForAllCondition(relation, entity,
                 newCondition);
         _token = endOfCondition + 1;
         return forAllCondition;
@@ -262,7 +262,7 @@ public class ConditionParser {
         Condition newCondition = new ConditionParser(dataModel, subCondition)
                 .parseCondition();
 
-        ExistsOneCondition existOneCondition = new ExistsOneCondition(relation,
+        OldExistsOneCondition existOneCondition = new OldExistsOneCondition(relation,
                 entity, newCondition);
         _token = endOfCondition + 1;
         return existOneCondition;

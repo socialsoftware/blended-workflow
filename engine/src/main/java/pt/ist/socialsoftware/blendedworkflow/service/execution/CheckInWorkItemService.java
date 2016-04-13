@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldWorkItem;
 
 public class CheckInWorkItemService implements Callable<String> {
 
     private static Logger log = LoggerFactory
             .getLogger("CheckInWorkItemService");
-    private final WorkItem workItem;
+    private final OldWorkItem workItem;
 
     public CheckInWorkItemService(String workItemOID) {
         this.workItem = FenixFramework.getDomainObject(workItemOID);

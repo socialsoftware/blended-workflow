@@ -3,15 +3,15 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class TaskModelInstance extends TaskModelInstance_Base {
+public class OldTaskModelInstance extends OldTaskModelInstance_Base {
 
     @Override
-    public Task getTask(String name) throws BWException {
-        for (Task task : getTasksSet()) {
+    public Activity getActivity(String name) throws BWException {
+        for (Activity task : getActivitySet()) {
             if (task.getName().equals(name)) {
                 return task;
             }
         }
-        throw new BWException(BWErrorType.NON_EXISTENT_TASK_NAME, name);
+        throw new BWException(BWErrorType.NON_EXISTENT_ACTIVITY_NAME, name);
     }
 }

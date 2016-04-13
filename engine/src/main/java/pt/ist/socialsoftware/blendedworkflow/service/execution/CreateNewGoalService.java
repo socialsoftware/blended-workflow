@@ -12,14 +12,14 @@ import org.slf4j.LoggerFactory;
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.adapters.convertor.ConditionFactory;
-import pt.ist.socialsoftware.blendedworkflow.domain.BWInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldBWInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.DataModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldDataModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.domain.GoalModelInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldGoalModelInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.LogRecord;
 import pt.ist.socialsoftware.blendedworkflow.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.domain.User;
@@ -28,7 +28,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 public class CreateNewGoalService implements Callable<String> {
 
 	private static Logger log = LoggerFactory.getLogger("CreateGoalService");
-	private final BWInstance bwInstance;
+	private final OldBWInstance bwInstance;
 	private final Goal parentGoal;
 	private final String name;
 	private final String description;
@@ -54,8 +54,8 @@ public class CreateNewGoalService implements Callable<String> {
 		log.info("Start");
 		Transaction.begin();
 		try {
-			DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
-			GoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
+			OldDataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+			OldGoalModelInstance goalModelInstance = bwInstance.getGoalModelInstance();
 
 			// Create Condition
 			DefProductCondition goalCondition = (DefProductCondition) ConditionFactory

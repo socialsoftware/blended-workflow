@@ -7,10 +7,10 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.domain.AttributeInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldAttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldEntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
@@ -29,24 +29,24 @@ public class DataModelInstanceFactory {
                 bwNamespace);
         for (Object ent : entities) {
             Element entityXML = (Element) ent;
-            EntityInstance entityInstance = parseEntityInstance(dataModel,
+            OldEntityInstance entityInstance = parseEntityInstance(dataModel,
                     entityXML);
             parseAttributeInstance(dataModel, entityInstance, entityXML);
         }
     }
 
-    private EntityInstance parseEntityInstance(DataModel dataModel,
+    private OldEntityInstance parseEntityInstance(DataModel dataModel,
             Element entityXML) throws BWException {
         Namespace dmNamespace = entityXML.getNamespace();
 
         String entityName = entityXML.getChildText("Type", dmNamespace);
         Entity entity = dataModel.getEntity(entityName).get();
-        EntityInstance entityInstance = new EntityInstance(entity);
+        OldEntityInstance entityInstance = new OldEntityInstance(entity);
         return entityInstance;
     }
 
     private void parseAttributeInstance(DataModel dataModel,
-            EntityInstance entityInstance, Element entityXML)
+            OldEntityInstance entityInstance, Element entityXML)
                     throws BWException {
         Namespace dmNamespace = entityXML.getNamespace();
 
@@ -54,7 +54,7 @@ public class DataModelInstanceFactory {
                 .getAttributeBasicSet()) {
             String attributeName = attribute.getName().replaceAll(" ", "_");
             String value = entityXML.getChildText(attributeName, dmNamespace);
-            AttributeInstance attributeInstance = new AttributeInstance(
+            OldAttributeInstance attributeInstance = new OldAttributeInstance(
                     attribute, entityInstance);
             attributeInstance.setValue(value);
         }

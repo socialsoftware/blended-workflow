@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
 import jvstm.Transaction;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
-import pt.ist.socialsoftware.blendedworkflow.domain.WorkItem;
-import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.OldWorkItemArgument;
 
 public class SkipWorkItemService implements Callable<String> {
 
     private static Logger log = LoggerFactory.getLogger("SkipWorkItemService");
-    private final WorkItem workItem;
+    private final OldWorkItem workItem;
 
     public SkipWorkItemService(String workItemOID) {
         this.workItem = FenixFramework.getDomainObject(workItemOID);
@@ -24,7 +24,7 @@ public class SkipWorkItemService implements Callable<String> {
     public String call() throws Exception {
         log.info("Start");
         Transaction.begin();
-        for (WorkItemArgument workItemArgument : this.workItem
+        for (OldWorkItemArgument workItemArgument : this.workItem
                 .getOutputWorkItemArgumentsSet()) {
             workItemArgument.setState(DataState.SKIPPED);
             workItemArgument.setValue("$SKIPPED$");

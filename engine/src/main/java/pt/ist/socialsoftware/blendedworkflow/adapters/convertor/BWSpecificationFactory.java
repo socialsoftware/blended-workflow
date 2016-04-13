@@ -8,7 +8,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.ActivityModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.SpecUtils;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
@@ -38,7 +38,7 @@ public class BWSpecificationFactory {
 		new DataModelInstanceFactory().parseXMLDataModel(dataModel, bwXML);
 
 		// Task Model
-		TaskModel taskModel = bwSpecification.getTaskModel();
+		ActivityModel taskModel = bwSpecification.getActivityModel();
 		new TaskModelFactory().parseXMLTaskModel(dataModel, taskModel, bwXML);
 
 		// Goal Model

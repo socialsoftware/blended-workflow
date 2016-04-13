@@ -25,8 +25,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Task;
-import pt.ist.socialsoftware.blendedworkflow.domain.TaskModel;
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.domain.ActivityModel;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -70,10 +70,10 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 	Rule ruleTwo;
 	Rule ruleThree;
 
-	TaskModel taskModel;
-	Task taskOne;
-	Task taskTwo;
-	Task taskThree;
+	ActivityModel taskModel;
+	Activity taskOne;
+	Activity taskTwo;
+	Activity taskThree;
 
 	@Override
 	public void populate4Test() throws BWException {
@@ -125,9 +125,9 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 
 		spec.getConditionModel().generateConditions();
 
-		taskModel = spec.getTaskModel();
+		taskModel = spec.getActivityModel();
 
-		taskOne = new Task(spec.getTaskModel(), TASK_ONE, "Description");
+		taskOne = new Activity(spec.getActivityModel(), TASK_ONE, "Description");
 		taskOne.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_EXISTS));
 		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entityOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
@@ -137,14 +137,14 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		taskOne.addRuleInvariant(ruleOne);
 		taskOne.addRuleInvariant(ruleThree);
 
-		taskTwo = new Task(spec.getTaskModel(), TASK_TWO, "Description");
+		taskTwo = new Activity(spec.getActivityModel(), TASK_TWO, "Description");
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_ONE_NAME));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameTwo()));
 
-		taskThree = new Task(spec.getTaskModel(), TASK_THREE, "Description");
+		taskThree = new Activity(spec.getActivityModel(), TASK_THREE, "Description");
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_THREE_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH_ONE));
@@ -162,7 +162,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 
 		try {
 			Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
-			taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
+			taskModel.addActivity(NEW_TASK_NAME, "Description", postConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.CANNOT_ADD_TASK, bwe.getError());
@@ -175,7 +175,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		try {
 			Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
 			postConditions.add(DefEntityCondition.getDefEntity(entityOne));
-			taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
+			taskModel.addActivity(NEW_TASK_NAME, "Description", postConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.CANNOT_ADD_TASK, bwe.getError());
@@ -189,7 +189,7 @@ public class AddTaskMethodTest extends TeardownRollbackTest {
 		try {
 			Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
 			postConditions.add(DefEntityCondition.getDefEntity(entityOne));
-			taskModel.addTask(NEW_TASK_NAME, "Description", postConditions);
+			taskModel.addActivity(NEW_TASK_NAME, "Description", postConditions);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.CANNOT_ADD_TASK, bwe.getError());

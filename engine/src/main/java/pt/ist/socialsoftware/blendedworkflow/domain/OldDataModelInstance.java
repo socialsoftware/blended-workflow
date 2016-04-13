@@ -2,12 +2,12 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.ArrayList;
 
-public class DataModelInstance extends DataModelInstance_Base {
+public class OldDataModelInstance extends OldDataModelInstance_Base {
 
     // Search GlobalVariables
-    private EntityInstance foundEntityInstance = null;
-    private ArrayList<EntityInstance> foundEntityInstancePath = new ArrayList<EntityInstance>();
-    private final ArrayList<EntityInstance> visitedEntityInstanceNodes = new ArrayList<EntityInstance>();
+    private OldEntityInstance foundEntityInstance = null;
+    private ArrayList<OldEntityInstance> foundEntityInstancePath = new ArrayList<OldEntityInstance>();
+    private final ArrayList<OldEntityInstance> visitedEntityInstanceNodes = new ArrayList<OldEntityInstance>();
 
     private Entity foundEntity = null;
     private ArrayList<Entity> foundEntityPath = new ArrayList<Entity>();
@@ -17,15 +17,15 @@ public class DataModelInstance extends DataModelInstance_Base {
     /**********************
      * Getters and Setters
      **********************/
-    public EntityInstance getFoundEntityInstance() {
+    public OldEntityInstance getFoundEntityInstance() {
         return this.foundEntityInstance;
     }
 
-    public ArrayList<EntityInstance> getFoundEntityInstancePath() {
+    public ArrayList<OldEntityInstance> getFoundEntityInstancePath() {
         return this.foundEntityInstancePath;
     }
 
-    public ArrayList<EntityInstance> getVisitedEntityInstanceNodes() {
+    public ArrayList<OldEntityInstance> getVisitedEntityInstanceNodes() {
         return this.visitedEntityInstanceNodes;
     }
 
@@ -105,8 +105,8 @@ public class DataModelInstance extends DataModelInstance_Base {
         }
     }
 
-    public void searchEntityInstance(EntityInstance initNode,
-            EntityInstance targetNode, ArrayList<EntityInstance> currentPath) {
+    public void searchEntityInstance(OldEntityInstance initNode,
+            OldEntityInstance targetNode, ArrayList<OldEntityInstance> currentPath) {
         visitedEntityInstanceNodes.add(initNode);
 
         if (foundEntityInstance == null) {
@@ -118,17 +118,17 @@ public class DataModelInstance extends DataModelInstance_Base {
             this.foundEntityInstancePath = currentPath;
 
         } else {
-            for (RelationInstance relationInstance : initNode
+            for (OldRelationInstance relationInstance : initNode
                     .getEntityInstanceOneRelationInstancesSet()) {
-                EntityInstance two = relationInstance.getEntityInstanceTwo();
+                OldEntityInstance two = relationInstance.getEntityInstanceTwo();
                 if (!visitedEntityInstanceNodes.contains(two)) {
                     searchEntityInstance(two, targetNode, currentPath);
                 }
             }
 
-            for (RelationInstance relationInstance : initNode
+            for (OldRelationInstance relationInstance : initNode
                     .getEntityInstanceTwoRelationInstancesSet()) {
-                EntityInstance one = relationInstance.getEntityInstanceOne();
+                OldEntityInstance one = relationInstance.getEntityInstanceOne();
                 if (!visitedEntityInstanceNodes.contains(one)) {
                     searchEntityInstance(one, targetNode, currentPath);
                 }
@@ -141,11 +141,11 @@ public class DataModelInstance extends DataModelInstance_Base {
         }
     }
 
-    public EntityInstance getEntityInstance(EntityInstance startEntityInstance,
-            EntityInstance targetEntityInstance) {
+    public OldEntityInstance getEntityInstance(OldEntityInstance startEntityInstance,
+            OldEntityInstance targetEntityInstance) {
         searchEntityInstance(startEntityInstance, targetEntityInstance,
-                new ArrayList<EntityInstance>());
-        EntityInstance result = getFoundEntityInstance();
+                new ArrayList<OldEntityInstance>());
+        OldEntityInstance result = getFoundEntityInstance();
         clearSearchEntityInstanceVariables();
         return result;
     }
@@ -168,9 +168,9 @@ public class DataModelInstance extends DataModelInstance_Base {
     }
 
     // FIXME: Merge with RelationInstance construtor?
-    public void createRelationInstance(BWInstance bwInstance, EntityInstance e1,
-            EntityInstance e2) {
-        DataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
+    public void createRelationInstance(OldBWInstance bwInstance, OldEntityInstance e1,
+            OldEntityInstance e2) {
+        OldDataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 
         Entity entity1 = e1.getEntity();
         Entity entity2 = e2.getEntity();
@@ -178,10 +178,10 @@ public class DataModelInstance extends DataModelInstance_Base {
 
         // Check if relation instance already exists
         for (RelationBW relation : dataModelInstance.getRelationBWSet()) {
-            for (RelationInstance relationInstance : relation
-                    .getRelationInstancesSet()) {
-                EntityInstance one = relationInstance.getEntityInstanceOne();
-                EntityInstance two = relationInstance.getEntityInstanceTwo();
+            for (OldRelationInstance relationInstance : relation
+                    .getOldRelationInstanceSet()) {
+                OldEntityInstance one = relationInstance.getEntityInstanceOne();
+                OldEntityInstance two = relationInstance.getEntityInstanceTwo();
                 if (one.equals(e1) && two.equals(e2)
                         || one.equals(e2) && two.equals(e1)) {
                     exists = true;
@@ -196,10 +196,10 @@ public class DataModelInstance extends DataModelInstance_Base {
                 Entity one = relation.getEntityOne();
                 Entity two = relation.getEntityTwo();
                 if ((one.equals(entity1) && two.equals(entity2))) {
-                    new RelationInstance(relation, e1, e2,
+                    new OldRelationInstance(relation, e1, e2,
                             e1.getNewRelationInstanceID());
                 } else if (one.equals(entity2) && two.equals(entity1)) {
-                    new RelationInstance(relation, e2, e1,
+                    new OldRelationInstance(relation, e2, e1,
                             e2.getNewRelationInstanceID());
                 }
             }

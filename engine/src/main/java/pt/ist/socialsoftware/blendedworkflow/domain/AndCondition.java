@@ -30,25 +30,25 @@ public class AndCondition extends AndCondition_Base {
 	}
 
 	@Override
-	Condition cloneCondition(GoalModelInstance goalModelInstance) {
+	Condition cloneCondition(OldGoalModelInstance goalModelInstance) {
 		return new AndCondition(getConditionOne().cloneCondition(goalModelInstance),
 				getConditionTwo().cloneCondition(goalModelInstance));
 	}
 
 	@Override
-	Condition cloneCondition(TaskModelInstance taskModelInstance) {
+	Condition cloneCondition(OldTaskModelInstance taskModelInstance) {
 		return new AndCondition(getConditionOne().cloneCondition(taskModelInstance),
 				getConditionTwo().cloneCondition(taskModelInstance));
 	}
 
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		getConditionOne().assignAttributeInstances(goalWorkItem, conditionType);
 		getConditionTwo().assignAttributeInstances(goalWorkItem, conditionType);
 	}
 
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
+	void assignAttributeInstances(OldTaskWorkItem taskWorkItem, ConditionType conditionType) {
 		getConditionOne().assignAttributeInstances(taskWorkItem, conditionType);
 		getConditionTwo().assignAttributeInstances(taskWorkItem, conditionType);
 	}
@@ -131,19 +131,19 @@ public class AndCondition extends AndCondition_Base {
 	 * Evaluate
 	 ******************************/
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluate(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return getConditionOne().evaluate(goalWorkItem, conditionType)
 				.AND(getConditionTwo().evaluate(goalWorkItem, conditionType));
 	}
 
 	@Override
-	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluateWithWorkItem(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		return getConditionOne().evaluateWithWorkItem(goalWorkItem, conditionType)
 				.AND(getConditionTwo().evaluateWithWorkItem(goalWorkItem, conditionType));
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance entityInstance, GoalWorkItem goalWorkItem,
+	public TripleStateBool evaluateWithDataModel(OldEntityInstance entityInstance, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		return getConditionOne().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType)
 				.AND(getConditionTwo().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));

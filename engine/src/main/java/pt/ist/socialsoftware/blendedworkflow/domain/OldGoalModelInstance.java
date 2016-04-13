@@ -6,7 +6,7 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class GoalModelInstance extends GoalModelInstance_Base {
+public class OldGoalModelInstance extends OldGoalModelInstance_Base {
 
     @Override
     public Goal getGoal(String name) throws BWException {
@@ -35,11 +35,11 @@ public class GoalModelInstance extends GoalModelInstance_Base {
      *            An AchieveGoal.
      * @return a set containing all the related MaintainGoals.
      */
-    public Set<MaintainGoal> getAchieveGoalAssociatedMaintainGoals(
+    public Set<OldMaintainGoal> getAchieveGoalAssociatedMaintainGoals(
             Goal achieveGoal) {
-        Set<MaintainGoal> maintainGoals = new HashSet<MaintainGoal>();
+        Set<OldMaintainGoal> maintainGoals = new HashSet<OldMaintainGoal>();
 
-        for (MaintainGoal maintainGoal : getMaintainGoalsSet()) {
+        for (OldMaintainGoal maintainGoal : getMaintainGoalsSet()) {
             // Get AchieveGoal Conditions Data
             Set<Attribute> achieveAttributes = new HashSet<Attribute>();
             Set<Entity> achieveEntities = new HashSet<Entity>();
@@ -118,7 +118,7 @@ public class GoalModelInstance extends GoalModelInstance_Base {
     public Set<RelationBW> getSubGoalsRelations(Goal topGoal) {
         Set<RelationBW> result = new HashSet<RelationBW>();
 
-        DataModelInstance dataModelInstance = getBwInstance()
+        OldDataModelInstance dataModelInstance = getBwInstance()
                 .getDataModelInstance();
         for (Goal subGoal : topGoal.getSubGoalSet()) {
             result.addAll(dataModelInstance.getRelations(

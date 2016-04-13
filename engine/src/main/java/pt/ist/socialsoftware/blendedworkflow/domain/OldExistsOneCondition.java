@@ -7,37 +7,37 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
-public class ExistsOneCondition extends ExistsOneCondition_Base {
+public class OldExistsOneCondition extends OldExistsOneCondition_Base {
 
-	public ExistsOneCondition(RelationBW relation, Entity entity, Condition condition) {
+	public OldExistsOneCondition(RelationBW relation, Entity entity, Condition condition) {
 		setExistsOneEntity(entity);
 		setExistsOneRelation(relation);
 		setCondition(condition);
 	}
 
 	@Override
-	Condition cloneCondition(GoalModelInstance goalModelInstance) {
-		DataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
+	Condition cloneCondition(OldGoalModelInstance goalModelInstance) {
+		OldDataModelInstance dataModelInstance = goalModelInstance.getBwInstance().getDataModelInstance();
 		RelationBW relation = dataModelInstance.getRelation(getExistsOneRelation().getName());
 		Entity entity = dataModelInstance.getEntity(getExistsOneEntity().getName()).get();
-		return new ExistsOneCondition(relation, entity, getCondition().cloneCondition(goalModelInstance));
+		return new OldExistsOneCondition(relation, entity, getCondition().cloneCondition(goalModelInstance));
 	}
 
 	@Override
-	Condition cloneCondition(TaskModelInstance taskModelInstance) {
-		DataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
+	Condition cloneCondition(OldTaskModelInstance taskModelInstance) {
+		OldDataModelInstance dataModelInstance = taskModelInstance.getBwInstance().getDataModelInstance();
 		RelationBW relation = dataModelInstance.getRelation(getExistsOneRelation().getName());
 		Entity entity = dataModelInstance.getEntity(getExistsOneEntity().getName()).get();
-		return new ForAllCondition(relation, entity, getCondition().cloneCondition(taskModelInstance));
+		return new OldForAllCondition(relation, entity, getCondition().cloneCondition(taskModelInstance));
 	}
 
 	@Override
-	public void assignAttributeInstances(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO:assignAttributeInstances
 	}
 
 	@Override
-	void assignAttributeInstances(TaskWorkItem taskWorkItem, ConditionType conditionType) {
+	void assignAttributeInstances(OldTaskWorkItem taskWorkItem, ConditionType conditionType) {
 		// TODO:assignAttributeInstances
 	}
 
@@ -98,27 +98,27 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
 	 * Evaluate
 	 ******************************/
 	@Override
-	public TripleStateBool evaluate(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluate(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		// TODO:Refactor
 		return TripleStateBool.FALSE;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithWorkItem(GoalWorkItem goalWorkItem, ConditionType conditionType) {
+	public TripleStateBool evaluateWithWorkItem(OldGoalWorkItem goalWorkItem, ConditionType conditionType) {
 		TripleStateBool result = TripleStateBool.FALSE;
-		for (RelationInstance relationInstance : getExistsOneRelation().getRelationInstancesSet()) {
-			EntityInstance entityInstance = relationInstance.getEntityInstance(getExistsOneEntity());
+		for (OldRelationInstance relationInstance : getExistsOneRelation().getOldRelationInstanceSet()) {
+			OldEntityInstance entityInstance = relationInstance.getEntityInstance(getExistsOneEntity());
 			result = result.OR(getCondition().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
 		}
 		return result;
 	}
 
 	@Override
-	public TripleStateBool evaluateWithDataModel(EntityInstance invalid, GoalWorkItem goalWorkItem,
+	public TripleStateBool evaluateWithDataModel(OldEntityInstance invalid, OldGoalWorkItem goalWorkItem,
 			ConditionType conditionType) {
 		TripleStateBool result = TripleStateBool.FALSE;
-		for (RelationInstance relationInstance : getExistsOneRelation().getRelationInstancesSet()) {
-			EntityInstance entityInstance = relationInstance.getEntityInstance(getExistsOneEntity());
+		for (OldRelationInstance relationInstance : getExistsOneRelation().getOldRelationInstanceSet()) {
+			OldEntityInstance entityInstance = relationInstance.getEntityInstance(getExistsOneEntity());
 			result = result.OR(getCondition().evaluateWithDataModel(entityInstance, goalWorkItem, conditionType));
 		}
 		return result;
@@ -136,7 +136,7 @@ public class ExistsOneCondition extends ExistsOneCondition_Base {
 
 	@Override
 	public String getSubPath() {
-		return ExistsOneCondition.class.getName();
+		return OldExistsOneCondition.class.getName();
 	}
 
 	@Override
