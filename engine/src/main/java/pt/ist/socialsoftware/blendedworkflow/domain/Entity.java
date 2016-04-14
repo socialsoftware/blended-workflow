@@ -86,7 +86,7 @@ public class Entity extends Entity_Base {
 
 	public void cloneEntity(OldDataModelInstance dataModelInstance) throws BWException {
 		Entity newEntity = new Entity(dataModelInstance, getName(), false);
-		for (Attribute attribute : getAttributeBasicSet()) {
+		for (Attribute attribute : getAttributeSet()) {
 			attribute.cloneAttribute(dataModelInstance, newEntity);
 		}
 
@@ -98,14 +98,16 @@ public class Entity extends Entity_Base {
 	/**
 	 * Create and assign EntityInstances and AttributesInstances to Workitems
 	 */
-	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, Attribute attribute, ConditionType conditionType) {
+	public void assignAttributeInstances(OldGoalWorkItem goalWorkItem, Attribute attribute,
+			ConditionType conditionType) {
 		OldEntityInstance entityInstanceContext = goalWorkItem.getEntityInstanceContext();
 		Entity entityContext = entityInstanceContext.getEntity();
 
 		if (this.equals(entityContext)) {
 			entityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
 		} else {
-			for (OldRelationInstance relationInstance : entityInstanceContext.getEntityInstanceOneRelationInstancesSet()) {
+			for (OldRelationInstance relationInstance : entityInstanceContext
+					.getEntityInstanceOneRelationInstancesSet()) {
 				Entity relationEntityContext = relationInstance.getEntityInstanceTwo().getEntity();
 				OldEntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceTwo();
 				if (relationEntityContext.equals(this)) {
@@ -113,7 +115,8 @@ public class Entity extends Entity_Base {
 				}
 			}
 
-			for (OldRelationInstance relationInstance : entityInstanceContext.getEntityInstanceTwoRelationInstancesSet()) {
+			for (OldRelationInstance relationInstance : entityInstanceContext
+					.getEntityInstanceTwoRelationInstancesSet()) {
 				Entity relationEntityContext = relationInstance.getEntityInstanceOne().getEntity();
 				OldEntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceOne();
 				if (relationEntityContext.equals(this)) {
@@ -130,7 +133,8 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-	public void assignAttributeInstances(OldTaskWorkItem taskWorkItem, Attribute attribute, ConditionType conditionType) {
+	public void assignAttributeInstances(OldTaskWorkItem taskWorkItem, Attribute attribute,
+			ConditionType conditionType) {
 		OldDataModelInstance dataModelInstance = taskWorkItem.getBwInstance().getDataModelInstance();
 		if (getOldEntityInstanceSet().isEmpty()) {
 			// EntityInstance entityInstance = new
@@ -144,9 +148,9 @@ public class Entity extends Entity_Base {
 			}
 		} else {
 			for (OldEntityInstance entityInstance : getOldEntityInstanceSet()) { // FIXME:
-																			// only
-																			// 1
-																			// entityInstance
+				// only
+				// 1
+				// entityInstance
 				entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 			}
 		}
@@ -157,17 +161,18 @@ public class Entity extends Entity_Base {
 		Entity entityContext = entityInstanceContext.getEntity();
 
 		if (this.equals(entityContext)) {
-			for (Attribute attribute : entityContext.getAttributeBasicSet()) {
+			for (Attribute attribute : entityContext.getAttributeSet()) {
 				if (attribute.getIsKeyAttribute()) {
 					entityInstanceContext.assignAttributeInstances(goalWorkItem, attribute, conditionType);
 				}
 			}
 		} else {
-			for (OldRelationInstance relationInstance : entityInstanceContext.getEntityInstanceOneRelationInstancesSet()) {
+			for (OldRelationInstance relationInstance : entityInstanceContext
+					.getEntityInstanceOneRelationInstancesSet()) {
 				Entity relationEntityContext = relationInstance.getEntityInstanceTwo().getEntity();
 				OldEntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceTwo();
 				if (relationEntityContext.equals(this)) {
-					for (Attribute attribute : relationEntityContext.getAttributeBasicSet()) {
+					for (Attribute attribute : relationEntityContext.getAttributeSet()) {
 						if (attribute.getIsKeyAttribute()) {
 							relationEntityInstanceContext.assignAttributeInstances(goalWorkItem, attribute,
 									conditionType);
@@ -176,11 +181,12 @@ public class Entity extends Entity_Base {
 				}
 			}
 
-			for (OldRelationInstance relationInstance : entityInstanceContext.getEntityInstanceTwoRelationInstancesSet()) {
+			for (OldRelationInstance relationInstance : entityInstanceContext
+					.getEntityInstanceTwoRelationInstancesSet()) {
 				Entity relationEntityContext = relationInstance.getEntityInstanceOne().getEntity();
 				OldEntityInstance relationEntityInstanceContext = relationInstance.getEntityInstanceOne();
 				if (relationEntityContext.equals(this)) {
-					for (Attribute attribute : relationEntityContext.getAttributeBasicSet()) {
+					for (Attribute attribute : relationEntityContext.getAttributeSet()) {
 						if (attribute.getIsKeyAttribute()) {
 							relationEntityInstanceContext.assignAttributeInstances(goalWorkItem, attribute,
 									conditionType);
@@ -198,7 +204,7 @@ public class Entity extends Entity_Base {
 			// EntityInstance entityInstance = new
 			// EntityInstance(dataModelInstance, this);
 			OldEntityInstance entityInstance = new OldEntityInstance(this);
-			for (Attribute attribute : getAttributeBasicSet()) {
+			for (Attribute attribute : getAttributeSet()) {
 				if (attribute.getIsKeyAttribute())
 					entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 			}
@@ -209,10 +215,10 @@ public class Entity extends Entity_Base {
 			}
 		} else {
 			for (OldEntityInstance entityInstance : getOldEntityInstanceSet()) { // FIXME:
-																			// Only
-																			// 1
-																			// entityInstance
-				for (Attribute attribute : getAttributeBasicSet()) {
+				// Only
+				// 1
+				// entityInstance
+				for (Attribute attribute : getAttributeSet()) {
 					if (attribute.getIsKeyAttribute())
 						entityInstance.assignAttributeInstances(taskWorkItem, attribute, conditionType);
 				}
@@ -240,9 +246,9 @@ public class Entity extends Entity_Base {
 						relationEntityInstanceTwo = new OldEntityInstance(relationEntityTwo);
 					} else {
 						for (OldEntityInstance entityInstance1 : relationEntityTwo.getOldEntityInstanceSet()) { // FIXME:
-																											// only
-																											// 1
-																											// entityInstance
+							// only
+							// 1
+							// entityInstance
 							relationEntityInstanceTwo = entityInstance1;
 						}
 					}
@@ -275,7 +281,7 @@ public class Entity extends Entity_Base {
 	}
 
 	public Optional<Attribute> getAttribute(String name) {
-		return getAttributeBasicSet().stream().filter(att -> att.getName().equals(name)).findFirst();
+		return getAttributeSet().stream().filter(att -> att.getName().equals(name)).findFirst();
 	}
 
 	public OldEntityInstance getEntityInstance(String ID) {
@@ -373,11 +379,6 @@ public class Entity extends Entity_Base {
 	@Override
 	public DefProductCondition getDefCondition() {
 		return DefEntityCondition.getDefEntity(this);
-	}
-
-	public Set<Attribute> getAttributeBasicSet() {
-		return getAttributeSet().stream().filter(Attribute.class::isInstance).map(Attribute.class::cast)
-				.collect(Collectors.toSet());
 	}
 
 	@Override

@@ -76,7 +76,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		String entityName = getEntity().getName().replaceAll(" ", "");
 		Boolean first = true;
 
-		for (Attribute attribute : getEntity().getAttributeBasicSet()) {
+		for (Attribute attribute : getEntity().getAttributeSet()) {
 			if (attribute.getIsKeyAttribute()) {
 
 				if (first) {
@@ -100,7 +100,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		String entityName = getEntity().getName().replaceAll(" ", "");
 		Boolean first = true;
 
-		for (Attribute attribute : getEntity().getAttributeBasicSet()) {
+		for (Attribute attribute : getEntity().getAttributeSet()) {
 			if (attribute.getIsKeyAttribute()) {
 
 				if (first) {
@@ -124,7 +124,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 
 		Boolean first = true;
 
-		for (Attribute attribute : getEntity().getAttributeBasicSet()) {
+		for (Attribute attribute : getEntity().getAttributeSet()) {
 			if (attribute.getIsKeyAttribute()) {
 
 				if (first) {

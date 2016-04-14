@@ -232,6 +232,14 @@ class WorkflowInstance {
 	String name;
 }
 
+class EntityInstance;
+
+class AttributeInstance {
+	String value;
+}
+
+class RelationInstance;
+
 // BlendedWorkflow
 relation BlendedWorkflowHasSpecifications {
 	BlendedWorkflow playsRole blendedWorkflow {multiplicity 0..1;}
@@ -267,6 +275,12 @@ relation SpecificationHasActivityModel {
 relation SpecificationHasDataModel {
 	Specification playsRole specification {multiplicity 0..1;}
 	DataModel playsRole dataModel { multiplicity 0..1; }
+}
+
+// WorkflowInstance
+relation WorkflowInstanceHasEntityInstances {
+	WorkflowInstance playsRole workflowInstance {multiplicity 0..1;}
+	EntityInstance playsRole entityInstance {multiplicity 0..*;}
 }
 
 // OldBWInstance
@@ -497,21 +511,36 @@ relation EntityHasRule {
 	Rule playsRole rule { multiplicity 0..*; }
 }
 
-relation EntityHasEntityInstances {
+relation EntityHasOldEntityInstances {
 	Entity playsRole entity { multiplicity 0..1; }
 	OldEntityInstance playsRole oldEntityInstance { multiplicity 0..*; }
 }
 
+relation EntityHasEntityInstances {
+	Entity playsRole entity { multiplicity 0..1; }
+	EntityInstance playsRole entityInstance { multiplicity 0..*; }
+}
+
 // RelationBW
 relation RelationBWHasRelationInstances {
+	RelationBW playsRole relationType { multiplicity 0..1; } 
+	RelationInstance playsRole RelationInstance { multiplicity 0..*; }
+}
+
+relation RelationBWHasOldRelationInstances {
 	RelationBW playsRole relationType { multiplicity 0..1; } //FIXME relation
 	OldRelationInstance playsRole oldRelationInstance { multiplicity 0..*; }
 }
 
 // Attributes
-relation AttributeHasAttributeInstances {
+relation AttributeHasOldAttributeInstances {
 	Attribute playsRole attribute { multiplicity 0..1; }
 	OldAttributeInstance playsRole oldAttributeInstance { multiplicity 0..*; }
+}
+
+relation AttributeHasAttributeInstances {
+	Attribute playsRole attribute { multiplicity 0..1; }
+	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
 }
 
 // Path
@@ -542,11 +571,12 @@ relation RuleHasCondition {
 }
 
 // OldEntityInstance
-relation EntityInstanceHasAttributeInstances {
+relation EntityInstanceHasOldAttributeInstances {
 	OldEntityInstance playsRole entityInstance { multiplicity 0..1; }
 	OldAttributeInstance playsRole attributeInstances { multiplicity 0..*; }
 }
 
+// Relation
 relation RelationBWHasEntityOne {
 	RelationBW playsRole relationOne { multiplicity 0..*; }
 	Entity playsRole entityOne { multiplicity 1..1; }
@@ -576,14 +606,32 @@ relation EntityMayBeRelationEntityTwo {
 }*/
 
 relation EntityInstanceMayBeRelationEntityOne {
+	EntityInstance playsRole entityInstanceOne { multiplicity 0..1; }
+	RelationInstance playsRole entityInstanceOneRelationInstances { multiplicity 0..*; }
+}
+
+relation EntityInstanceMayBeRelationEntityTwo {
+	EntityInstance playsRole entityInstanceTwo { multiplicity 0..1; }
+	RelationInstance playsRole entityInstanceTwoRelationInstances { multiplicity 0..*; }
+}
+
+relation EntityInstanceMayBeOldRelationEntityOne {
 	OldEntityInstance playsRole entityInstanceOne { multiplicity 0..1; }
 	OldRelationInstance playsRole entityInstanceOneRelationInstances { multiplicity 0..*; }
 }
 
-relation EntityInstanceMayBeRelationEntityTwo {
+relation EntityInstanceMayBeOldRelationEntityTwo {
 	OldEntityInstance playsRole entityInstanceTwo { multiplicity 0..1; }
 	OldRelationInstance playsRole entityInstanceTwoRelationInstances { multiplicity 0..*; }
 }
+
+// EntityInstance
+relation EntityInstanceHasAttributeInstances {
+	EntityInstance playsRole entityInstance { multiplicity 0..1; }
+	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
+}
+
+
 
 
 
