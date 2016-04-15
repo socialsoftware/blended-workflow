@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 
+@Deprecated
 public class OldTaskWorkItem extends OldTaskWorkItem_Base {
 
 	public enum ActivityState {

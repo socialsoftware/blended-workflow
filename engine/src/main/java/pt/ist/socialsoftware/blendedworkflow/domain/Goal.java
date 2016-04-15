@@ -207,6 +207,9 @@ public class Goal extends Goal_Base {
 	public void delete() {
 		setGoalModel(null);
 		setParentGoal(null);
+
+		getWorkItemSet().stream().forEach(wi -> wi.delete());
+
 		getSubGoalSet().stream().forEach(sub -> removeSubGoal(sub));
 		getSuccessConditionSet().stream().forEach(suc -> removeSuccessCondition(suc));
 		getActivationConditionSet().stream().forEach(act -> removeActivationCondition(act));

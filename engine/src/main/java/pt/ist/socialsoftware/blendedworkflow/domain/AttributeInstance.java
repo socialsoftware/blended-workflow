@@ -34,7 +34,7 @@ public class AttributeInstance extends AttributeInstance_Base {
 	private void checkConsistency(EntityInstance entityInstance, Attribute attribute) {
 		if (entityInstance != null && attribute != null) {
 			if (!entityInstance.getEntity().getAttributeSet().contains(attribute)) {
-				throw new BWException(BWErrorType.CREATE_ATTRIBUTE_INSTANCE,
+				throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
 						entityInstance.getEntity().getName() + ":" + attribute.getName());
 			}
 		}
@@ -50,7 +50,7 @@ public class AttributeInstance extends AttributeInstance_Base {
 					final String BOOLEAN_EXP = "(true|TRUE|false|FALSE)";
 
 					if (!Pattern.matches(BOOLEAN_EXP, value))
-						throw new BWException(BWErrorType.INCONSISTENT_ATTRIBUTE_VALUE,
+						throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
 								getAttribute().getType() + ":" + value);
 					break;
 				case NUMBER:
@@ -60,14 +60,14 @@ public class AttributeInstance extends AttributeInstance_Base {
 					final String LITERAL_EXP = "(" + NEGATIVE + "|" + ZERO + "|" + POSITIVE + ")";
 
 					if (!Pattern.matches(LITERAL_EXP, value))
-						throw new BWException(BWErrorType.INCONSISTENT_ATTRIBUTE_VALUE,
+						throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
 								getAttribute().getType() + ":" + value);
 					break;
 				case DATE:
 					final String DATE_EXP = "[01]\\d-[01]\\d-\\d{4}";
 
 					if (!Pattern.matches(DATE_EXP, value))
-						throw new BWException(BWErrorType.INCONSISTENT_ATTRIBUTE_VALUE,
+						throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
 								getAttribute().getType() + ":" + value);
 					break;
 				default:
@@ -75,6 +75,24 @@ public class AttributeInstance extends AttributeInstance_Base {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void delete() {
+		setEntityInstance(null);
+		setAttribute(null);
+
+		super.delete();
+	}
+
+	@Override
+	public WorkflowInstance getWorkflowInstance() {
+		return getEntityInstance().getWorkflowInstance();
+	}
+
+	@Override
+	public Product getProduct() {
+		return getAttribute();
 	}
 
 }

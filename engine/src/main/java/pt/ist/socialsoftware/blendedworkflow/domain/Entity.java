@@ -318,6 +318,9 @@ public class Entity extends Entity_Base {
 	@Override
 	public void delete() {
 		setDataModel(null);
+
+		getEntityInstanceSet().stream().forEach(ei -> ei.delete());
+
 		getRuleSet().stream().forEach(rule -> rule.delete());
 		getAttributeSet().stream().forEach(att -> att.delete());
 		getRelationOneSet().stream().forEach(rel -> rel.delete());

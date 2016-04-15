@@ -25,9 +25,25 @@ public class EntityInstance extends EntityInstance_Base {
 	private void checkConsistency(WorkflowInstance workflowInstance, Entity entity) {
 		if (workflowInstance != null && entity != null) {
 			if (workflowInstance.getSpecification() != entity.getDataModel().getSpecification()) {
-				throw new BWException(BWErrorType.CREATE_ENTITY_INSTANCE, workflowInstance.getName() + ":" + entity.getName());
+				throw new BWException(BWErrorType.ENTITYINSTANCE_CONSISTENCY,
+						workflowInstance.getName() + ":" + entity.getName());
 			}
 		}
+	}
+
+	@Override
+	public void delete() {
+		setEntity(null);
+		getAttributeInstanceSet().forEach(ai -> ai.delete());
+		getRelationInstanceOfOneSet().stream().forEach(ri -> ri.delete());
+		getRelationInstanceOfTwoSet().stream().forEach(ri -> ri.delete());
+
+		super.delete();
+	}
+
+	@Override
+	public Product getProduct() {
+		return getEntity();
 	}
 
 }

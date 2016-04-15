@@ -72,6 +72,7 @@ public class Specification extends Specification_Base {
 
 	@Atomic(mode = TxMode.WRITE)
 	public void delete() {
+		getWorkflowInstanceSet().stream().forEach(wi -> wi.delete());
 		getGoalModel().delete();
 		getActivityModel().delete();
 		getConditionModel().delete();

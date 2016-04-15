@@ -107,6 +107,9 @@ public class Attribute extends Attribute_Base {
 	@Override
 	public void delete() {
 		setDataModel(null);
+
+		getAttributeInstanceSet().stream().forEach(ai -> ai.delete());
+
 		setEntity(null);
 		if (getDefAttributeCondition() != null)
 			getDefAttributeCondition().delete();

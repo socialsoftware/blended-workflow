@@ -45,7 +45,7 @@ public class CreateEntityInstanceTest extends TeardownRollbackTest {
 			new EntityInstance(workflowInstance, otherEntity);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CREATE_ENTITY_INSTANCE, bwe.getError());
+			assertEquals(BWErrorType.ENTITYINSTANCE_CONSISTENCY, bwe.getError());
 			assertEquals(NAME + ":" + OTHER_ENTITY_NAME, bwe.getMessage());
 
 		}

@@ -35,7 +35,7 @@ public class createWorklowInstanceTest extends TeardownRollbackTest {
 		try {
 			new WorkflowInstance(spec, NAME);
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.DUPLICATE_WORKFLOW_INSTANCE_NAME, bwe.getError());
+			assertEquals(BWErrorType.WORKFLOWINSTANCE_CONSISTENCY, bwe.getError());
 			assertEquals(NAME, bwe.getMessage());
 		}
 	}
@@ -45,7 +45,7 @@ public class createWorklowInstanceTest extends TeardownRollbackTest {
 		try {
 			new WorkflowInstance(spec, null);
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.EMPTY_WORKFLOW_INSTANCE_NAME, bwe.getError());
+			assertEquals(BWErrorType.WORKFLOWINSTANCE_CONSISTENCY, bwe.getError());
 		}
 	}
 
@@ -54,7 +54,7 @@ public class createWorklowInstanceTest extends TeardownRollbackTest {
 		try {
 			new WorkflowInstance(spec, "");
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.EMPTY_WORKFLOW_INSTANCE_NAME, bwe.getError());
+			assertEquals(BWErrorType.WORKFLOWINSTANCE_CONSISTENCY, bwe.getError());
 		}
 	}
 

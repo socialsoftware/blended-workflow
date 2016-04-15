@@ -232,13 +232,25 @@ class WorkflowInstance {
 	String name;
 }
 
-class EntityInstance;
+class ProductInstance;
 
-class AttributeInstance {
+class EntityInstance extends ProductInstance;
+
+class AttributeInstance extends ProductInstance {
 	String value;
 }
 
 class RelationInstance;
+
+class WorkItem;
+
+class ActivityWorkItem extends WorkItem;
+
+class GoalWorkItem extends WorkItem;
+
+class WorkItemArgument {
+	String value;
+}
 
 // BlendedWorkflow
 relation BlendedWorkflowHasSpecifications {
@@ -281,6 +293,11 @@ relation SpecificationHasDataModel {
 relation WorkflowInstanceHasEntityInstances {
 	WorkflowInstance playsRole workflowInstance {multiplicity 0..1;}
 	EntityInstance playsRole entityInstance {multiplicity 0..*;}
+}
+
+relation WorkflowInstanceHasWorkItems {
+	WorkflowInstance playsRole workflowInstance {multiplicity 0..1;}
+	WorkItem playsRole workItem {multiplicity 0..*;}
 }
 
 // OldBWInstance
@@ -351,6 +368,16 @@ relation ConditionModelHasAttributeInvariantConditions {
 	Rule playsRole attributeInvariantCondition {multiplicity 0..*;}
 }
 
+// WorkItem
+relation WorkItemHasPreConditions {
+	WorkItem playsRole workItemOfPre {multiplicity 0..1;}
+	WorkItemArgument playsRole preCondition {multiplicity 0..*;}
+}
+
+relation WorkItemHasPostConditions {
+	WorkItem playsRole workItemOfPost {multiplicity 0..1;}
+	WorkItemArgument playsRole postCondition {multiplicity 0..*;}
+}
 
 // OldWorkItem
 relation WorkItemRefersToOutputAttributeInstances {
@@ -361,6 +388,17 @@ relation WorkItemRefersToOutputAttributeInstances {
 relation WorkItemRefersInputAttributteInstances {
 	OldWorkItem playsRole preConstraintWorkItems {multiplicity 0..*;}
 	OldAttributeInstance playsRole inputAttributeInstances { multiplicity 0..*; }
+}
+
+// WorkItemArgument
+relation WorkItemArgumentHasDefProductConditon {
+	WorkItemArgument playsRole workItem {multiplicity 0..*;}
+	DefProductCondition playsRole defProductCondition {multiplicity 0..1;}
+}
+
+relation WorkItemArgumentHasProductInstance {
+	WorkItemArgument playsRole workItem {multiplicity 0..1;}
+	ProductInstance playsRole productInstance {multiplicity 0..1;}
 }
 
 // OldWorkItemArgument
@@ -418,6 +456,11 @@ relation GoalHasAttributeInvariantCondition {
 
 relation GoalHasGoalWorkItem {
 	Goal playsRole goal { multiplicity 0..1; }
+	GoalWorkItem playsRole workItem { multiplicity 0..*; }
+}
+
+relation GoalHasGoalOldWorkItem {
+	Goal playsRole goal { multiplicity 0..1; }
 	OldGoalWorkItem playsRole oldGoalWorkItem { multiplicity 0..*; }
 }
 
@@ -456,6 +499,11 @@ relation ActivityHasRuleInvariants {
 relation ActivityHasSequenceConditions {
 	Activity playsRole activitySequenceCondition { multiplicity 0..1; }
 	DefPathCondition playsRole sequenceCondition { multiplicity 0..*; }
+}
+
+relation ActivityHasActivityWorkItem {
+	Activity playsRole activity { multiplicity 0..1; }
+	ActivityWorkItem playsRole WorkItem { multiplicity 0..*; }
 }
 
 relation ActivityHasTaskWorkItem {
@@ -607,12 +655,12 @@ relation EntityMayBeRelationEntityTwo {
 
 relation EntityInstanceMayBeRelationEntityOne {
 	EntityInstance playsRole entityInstanceOne { multiplicity 0..1; }
-	RelationInstance playsRole entityInstanceOneRelationInstances { multiplicity 0..*; }
+	RelationInstance playsRole relationInstanceOfOne { multiplicity 0..*; }
 }
 
 relation EntityInstanceMayBeRelationEntityTwo {
 	EntityInstance playsRole entityInstanceTwo { multiplicity 0..1; }
-	RelationInstance playsRole entityInstanceTwoRelationInstances { multiplicity 0..*; }
+	RelationInstance playsRole RelationInstanceOfTwo { multiplicity 0..*; }
 }
 
 relation EntityInstanceMayBeOldRelationEntityOne {

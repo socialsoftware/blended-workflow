@@ -58,7 +58,7 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 			new RelationInstance(entityInstanceOther, entityInstanceTwo, relation);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CREATE_RELATION_INSTANCE, bwe.getError());
+			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
 			assertEquals(entityInstanceOne.getEntity().getName() + ":" + entityInstanceTwo.getEntity().getName(),
 					bwe.getMessage());
 		}
@@ -70,7 +70,7 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 			new RelationInstance(entityInstanceTwo, entityInstanceTwo, relation);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CREATE_RELATION_INSTANCE, bwe.getError());
+			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
 			assertEquals(entityInstanceTwo.getEntity().getName() + ":" + relation.getEntityOne().getName(),
 					bwe.getMessage());
 		}
@@ -82,7 +82,7 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 			new RelationInstance(entityInstanceOne, entityInstanceOne, relation);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CREATE_RELATION_INSTANCE, bwe.getError());
+			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
 			assertEquals(entityInstanceOne.getEntity().getName() + ":" + relation.getEntityTwo().getName(),
 					bwe.getMessage());
 		}

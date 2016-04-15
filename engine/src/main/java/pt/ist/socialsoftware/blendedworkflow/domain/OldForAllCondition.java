@@ -7,6 +7,7 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
+@Deprecated
 public class OldForAllCondition extends OldForAllCondition_Base {
 
 	public OldForAllCondition(RelationBW relation, Entity entity, Condition condition) {
