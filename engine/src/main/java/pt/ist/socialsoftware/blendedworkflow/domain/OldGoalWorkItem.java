@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
+@Deprecated
 public class OldGoalWorkItem extends OldGoalWorkItem_Base {
 
 	public enum GoalState {
@@ -300,7 +301,8 @@ public class OldGoalWorkItem extends OldGoalWorkItem_Base {
 										newInputWA.setValue(redoOutputWA.getValue());
 									}
 								}
-								for (OldWorkItemArgument newOutputWA : newGoalWorkItem.getOutputWorkItemArgumentsSet()) {
+								for (OldWorkItemArgument newOutputWA : newGoalWorkItem
+										.getOutputWorkItemArgumentsSet()) {
 									if (redoOutputWA.getAttributeInstance()
 											.equals(newOutputWA.getAttributeInstance())) {
 										newOutputWA.setValue(redoOutputWA.getValue());

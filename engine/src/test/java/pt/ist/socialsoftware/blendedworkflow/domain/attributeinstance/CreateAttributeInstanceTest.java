@@ -53,7 +53,7 @@ public class CreateAttributeInstanceTest extends TeardownRollbackTest {
 			new AttributeInstance(entityInstance, otherAttribute, STRING_VALUE);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CREATE_ATTRIBUTE_INSTANCE, bwe.getError());
+			assertEquals(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY, bwe.getError());
 			assertEquals(entity.getName() + ":" + otherAttribute.getName(), bwe.getMessage());
 		}
 

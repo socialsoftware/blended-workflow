@@ -81,7 +81,7 @@ public class SetValueTest extends TeardownRollbackTest {
 			attributeInstanceBoolean.setValue(STRING_VALUE);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INCONSISTENT_ATTRIBUTE_VALUE, bwe.getError());
+			assertEquals(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY, bwe.getError());
 			assertEquals(AttributeType.BOOLEAN + ":" + STRING_VALUE, bwe.getMessage());
 		}
 	}
@@ -92,7 +92,7 @@ public class SetValueTest extends TeardownRollbackTest {
 			attributeInstanceNumber.setValue(STRING_VALUE);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INCONSISTENT_ATTRIBUTE_VALUE, bwe.getError());
+			assertEquals(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY, bwe.getError());
 			assertEquals(AttributeType.NUMBER + ":" + STRING_VALUE, bwe.getMessage());
 		}
 	}
@@ -103,7 +103,7 @@ public class SetValueTest extends TeardownRollbackTest {
 			attributeInstanceDate.setValue(STRING_VALUE);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INCONSISTENT_ATTRIBUTE_VALUE, bwe.getError());
+			assertEquals(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY, bwe.getError());
 			assertEquals(AttributeType.DATE + ":" + STRING_VALUE, bwe.getMessage());
 		}
 	}

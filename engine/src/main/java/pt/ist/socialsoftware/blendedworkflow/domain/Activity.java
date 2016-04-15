@@ -132,6 +132,9 @@ public class Activity extends Activity_Base {
 
 	public void delete() {
 		setActivityModel(null);
+
+		getWorkItemSet().stream().forEach(wi -> wi.delete());
+
 		getPreConditionSet().forEach(c -> removePreCondition(c));
 		getPostConditionSet().forEach(c -> removePostCondition(c));
 		getMultiplicityInvariantSet().forEach(m -> removeMultiplicityInvariant(m));
