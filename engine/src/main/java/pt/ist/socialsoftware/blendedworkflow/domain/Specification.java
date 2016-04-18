@@ -90,4 +90,10 @@ public class Specification extends Specification_Base {
 		return specDTO;
 	}
 
+	public WorkflowInstance getWorkflowInstance(String name) {
+		return getWorkflowInstanceSet().stream().filter(wi -> wi.getName().equals(name)).findFirst()
+				.orElseThrow(() -> new BWException(BWErrorType.UNKNOWN_INSTANCE, name));
+
+	}
+
 }

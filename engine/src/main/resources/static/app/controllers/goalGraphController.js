@@ -190,10 +190,10 @@ app
 							goalRepository.renameGoal(specId,
 									$scope.goalsOne.selectedGoal.name,
 									$scope.newGoalName).then(
-									function() {
+									function(response) {
 										$scope.updateState();
 									},
-									function(error) {
+									function(response) {
 										$scope.error = response.data.type + '('
 												+ response.data.value + ')';
 									});

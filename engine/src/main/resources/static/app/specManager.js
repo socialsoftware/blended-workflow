@@ -21,6 +21,9 @@ app.config(function($routeProvider) {
 	}).when("/specs/:specId/activitygraph", {
 		templateUrl : "views/activityGraph.html",
 		controller : "ActivityGraphController"
+	}).when("/specs/:specId/instancesmanager", {
+		templateUrl : "views/instancesManager.html",
+		controller : "SpecificationController"
 	}).otherwise({
 		redirectTo : "/"
 	});
