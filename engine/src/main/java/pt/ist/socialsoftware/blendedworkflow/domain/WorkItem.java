@@ -7,6 +7,8 @@ public abstract class WorkItem extends WorkItem_Base {
 
 		getPreConditionSet().stream().forEach(dpc -> dpc.delete());
 		getPostConditionSet().stream().forEach(dpc -> dpc.delete());
+
+		deleteDomainObject();
 	}
 
 }

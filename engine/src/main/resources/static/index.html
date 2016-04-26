@@ -62,6 +62,19 @@
 
 					<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown" uib-dropdown="uib-dropdown"
+							ng-show="instance.name"><a href="#" class="dropdown-toggle"
+							uib-dropdown-toggle="uib-dropdown-toggle">Executor <span
+								class="caret"></span>
+						</a>
+							<ul class="dropdown-menu" uib-dropdown-menu="uib-dropdown-menu">
+								<li><a href="#">Data View</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="#">Activity View</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="#">Goal View</a></li>
+							</ul></li>
+
+						<li class="dropdown" uib-dropdown="uib-dropdown"
 							ng-show="spec.name"><a href="#" class="dropdown-toggle"
 							uib-dropdown-toggle="uib-dropdown-toggle">Designer <span
 								class="caret"></span>
@@ -83,20 +96,6 @@
 								<li><a href="#/specs/{{spec.specId}}/activitygraph">Activity
 										Graph and Operations</a></li>
 							</ul></li>
-
-						<li class="dropdown" uib-dropdown="uib-dropdown"
-							ng-show="instance.name"><a href="#" class="dropdown-toggle"
-							uib-dropdown-toggle="uib-dropdown-toggle">Executor <span
-								class="caret"></span>
-						</a>
-							<ul class="dropdown-menu" uib-dropdown-menu="uib-dropdown-menu">
-								<li><a href="#">Data View</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="#">Activity View</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="#">Goal View</a></li>
-							</ul></li>
-
 					</ul>
 				</div>
 				<!-- /.navbar-collapse -->

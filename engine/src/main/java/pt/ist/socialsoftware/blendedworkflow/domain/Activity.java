@@ -292,4 +292,24 @@ public class Activity extends Activity_Base {
 				DefPathCondition.getDefPathCondition(getActivityModel().getSpecification(), relation.getPath(e))));
 	}
 
+	public Set<Entity> getEntityContext() {
+		Set<Entity> entityContext = new HashSet<Entity>();
+
+		// the entity already exist
+		for (DefPathCondition defPath : getPreConditionSet()) {
+			if (defPath.getTargetOfPath() == defPath.getSourceOfPath()) {
+				entityContext.add(defPath.getSourceOfPath());
+			}
+		}
+
+		// the entity is going to be defined
+		for (DefPathCondition defPath : getPreConditionSet()) {
+			if (!entityContext.contains(defPath.getSourceOfPath())) {
+				entityContext.add(defPath.getPath().getAdjacent());
+			}
+		}
+
+		return entityContext;
+	}
+
 }

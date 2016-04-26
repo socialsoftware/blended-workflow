@@ -73,6 +73,8 @@ public class WorkItemArgument extends WorkItemArgument_Base {
 
 		setProductInstance(null);
 		setDefProductCondition(null);
+
+		deleteDomainObject();
 	}
 
 }

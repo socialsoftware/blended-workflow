@@ -251,4 +251,9 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 		return attributes;
 	}
 
+	@Override
+	public Entity getSourceOfPath() {
+		return getAttributeOfDef().getEntity();
+	}
+
 }
