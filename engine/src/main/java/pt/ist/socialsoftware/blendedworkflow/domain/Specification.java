@@ -79,6 +79,7 @@ public class Specification extends Specification_Base {
 		getDataModel().delete();
 
 		setBlendedWorkflow(null);
+
 		deleteDomainObject();
 	}
 

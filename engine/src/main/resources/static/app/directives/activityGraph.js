@@ -56,9 +56,9 @@ app.directive('activityGraph', function($window) {
 			svg.call(zoom);
 
 			// Simple function to style the tooltip for the given node.
-			var styleTooltip = function(description) {
-				return description;
-			};
+//			var styleTooltip = function(description) {
+//				return description;
+//			};
 
 			// Run the renderer. This is what draws the final graph.
 			render(inner, g);

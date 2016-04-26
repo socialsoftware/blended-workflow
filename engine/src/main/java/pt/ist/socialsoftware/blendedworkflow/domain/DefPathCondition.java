@@ -181,4 +181,9 @@ public class DefPathCondition extends DefPathCondition_Base {
 		return attributes;
 	}
 
+	@Override
+	public Entity getSourceOfPath() {
+		return getPath().getSource();
+	}
+
 }

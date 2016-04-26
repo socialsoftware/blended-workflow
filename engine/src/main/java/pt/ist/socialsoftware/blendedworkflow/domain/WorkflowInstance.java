@@ -32,6 +32,8 @@ public class WorkflowInstance extends WorkflowInstance_Base {
 		setSpecification(null);
 		getWorkItemSet().stream().forEach(wi -> wi.delete());
 		getEntityInstanceSet().stream().forEach(ei -> ei.delete());
+
+		deleteDomainObject();
 	}
 
 	public WorkflowInstanceDTO getDTO() {

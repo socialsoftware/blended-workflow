@@ -328,4 +328,9 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		return new HashSet<Attribute>();
 	}
 
+	@Override
+	public Entity getSourceOfPath() {
+		return getEntity();
+	}
+
 }

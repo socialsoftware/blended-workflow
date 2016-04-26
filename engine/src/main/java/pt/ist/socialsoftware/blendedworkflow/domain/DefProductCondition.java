@@ -19,4 +19,6 @@ public abstract class DefProductCondition extends DefProductCondition_Base {
 		return getPath().getTarget();
 	}
 
+	public abstract Entity getSourceOfPath();
+
 }
