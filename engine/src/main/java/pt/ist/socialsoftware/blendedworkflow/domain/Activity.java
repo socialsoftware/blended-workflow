@@ -312,4 +312,29 @@ public class Activity extends Activity_Base {
 		return entityContext;
 	}
 
+	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity entity) {
+		Set<EntityInstance> instanceContext = new HashSet<EntityInstance>();
+
+		outerloop: for (EntityInstance entityInstance : workflowInstance.getEntityInstanceSet(entity)) {
+			// activity pre-condition holds
+			for (DefPathCondition defPathCondition : getPreConditionSet()) {
+				if (!entityInstance.holdsDefPathCondition(defPathCondition)) {
+					break outerloop;
+				}
+			}
+
+			// multiplicity condition holds for the number of entities that need
+			// to be connect to ei
+
+			// post-condition does not hold
+
+			// multiplicity conditions do not hold for ei should not be
+			// connected with
+
+			instanceContext.add(entityInstance);
+		}
+
+		return instanceContext;
+	}
+
 }

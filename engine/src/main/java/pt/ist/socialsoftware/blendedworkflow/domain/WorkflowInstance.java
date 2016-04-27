@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.WorkflowInstanceDTO;
@@ -42,6 +45,10 @@ public class WorkflowInstance extends WorkflowInstance_Base {
 		workflowInstanceDTO.setName(getName());
 
 		return workflowInstanceDTO;
+	}
+
+	public Set<EntityInstance> getEntityInstanceSet(Entity entity) {
+		return getEntityInstanceSet().stream().filter(ei -> ei.getEntity() == entity).collect(Collectors.toSet());
 	}
 
 }
