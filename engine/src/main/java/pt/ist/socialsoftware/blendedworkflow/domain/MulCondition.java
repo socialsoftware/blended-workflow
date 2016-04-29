@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ExpressionDTO;
@@ -88,7 +87,7 @@ public class MulCondition extends MulCondition_Base {
 	}
 
 	public String getExpression() {
-		return "MUL(" + getSourceEntity().getName() + "." + getTargetRolename() + "," + getTargetCardinality().name()
+		return "MUL(" + getSourceEntity().getName() + "." + getTargetRolename() + "," + getTargetCardinality().getExp()
 				+ ")";
 	}
 
@@ -104,7 +103,7 @@ public class MulCondition extends MulCondition_Base {
 
 	@Override
 	public String getSubPath() {
-		return "MUL(" + getSourceEntity().getName() + "." + getTargetRolename() + "," + getTargetCardinality().name()
+		return "MUL(" + getSourceEntity().getName() + "." + getTargetRolename() + "," + getTargetCardinality().getExp()
 				+ ")";
 	}
 
@@ -226,7 +225,7 @@ public class MulCondition extends MulCondition_Base {
 		MulConditionDTO mulConditionDTO = new MulConditionDTO();
 		mulConditionDTO.setSpecId(getConditionModel().getSpecification().getExternalId());
 		mulConditionDTO.setRolePath(getSourceEntity().getName() + "." + getTargetRolename());
-		mulConditionDTO.setCardinality(getSourceCardinality().toString());
+		mulConditionDTO.setCardinality(getSourceCardinality().getExp());
 
 		return mulConditionDTO;
 	}

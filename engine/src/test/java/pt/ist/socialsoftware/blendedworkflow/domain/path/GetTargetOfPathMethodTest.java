@@ -8,11 +8,11 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Path;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -36,10 +36,8 @@ public class GetTargetOfPathMethodTest extends TeardownRollbackTest {
 
 		entityOne = new Entity(spec.getDataModel(), ENTITY_NAME_ONE, false);
 		Entity entityTwo = new Entity(spec.getDataModel(), ENTITY_NAME_TWO, false);
-		new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false,
-				false);
-		new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_NAME_TWO, AttributeType.STRING, false, false,
-				false);
+		new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false, false);
+		new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_NAME_TWO, AttributeType.STRING, false, false, false);
 
 		new RelationBW(spec.getDataModel(), "relation", entityOne, ROLE_ONE, Cardinality.ZERO_OR_ONE, false, entityTwo,
 				ROLE_TWO, Cardinality.ONE, false);

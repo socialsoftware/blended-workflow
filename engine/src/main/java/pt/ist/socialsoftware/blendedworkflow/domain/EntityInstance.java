@@ -55,6 +55,10 @@ public class EntityInstance extends EntityInstance_Base {
 		return getEntity();
 	}
 
+	public Boolean holdsDefPathConditions(Set<DefPathCondition> preConditionSet) {
+		return preConditionSet.stream().map(d -> this.holdsDefPathCondition(d)).reduce(true, (b1, b2) -> b1 && b2);
+	}
+
 	public boolean holdsDefPathCondition(DefPathCondition defPathCondition) {
 		LinkedList<String> namesInPath = new LinkedList<String>(
 				Arrays.asList(defPathCondition.getPath().getValue().split("\\.")));
@@ -63,7 +67,7 @@ public class EntityInstance extends EntityInstance_Base {
 				&& defPathCondition.getPath().getAdjacent() == getEntity()) {
 			namesInPath.removeFirst();
 		} else {
-			assert false : "holdsDefPathCondition path does not start or has adjacent of the entity instance type";
+			assert false : "holdsDefPathCondition path neither starts or nor have adjacent of the entity instance type";
 		}
 
 		// the first element refers the entity
@@ -129,6 +133,26 @@ public class EntityInstance extends EntityInstance_Base {
 		// the data model guarantees that the name is unique for attributes and
 		// roles
 		return getEntityInstanceSetByRolename(name).stream().collect(Collectors.toSet());
+	}
+
+	public boolean isDefined(Attribute attribute) {
+		if (getEntity().getAttributeSet().contains(attribute)) {
+			return getAttributeInstanceByName(attribute.getName()).isPresent();
+		}
+		return true;
+	}
+
+	public boolean isInMaxCardinality(MulCondition m) {
+		if (m.getSourceEntity() == getEntity()) {
+			return (getRelationInstanceSet().stream().filter(ri -> ri.getRelationType() == m.getRelationBW())
+					.count() == m.getTargetCardinality().getMaxValue());
+		}
+		return true;
+	}
+
+	public Set<RelationInstance> getRelationInstanceSet() {
+		return Stream.concat(getRelationInstanceOfOneSet().stream(), getRelationInstanceOfTwoSet().stream())
+				.collect(Collectors.toSet());
 	}
 
 }

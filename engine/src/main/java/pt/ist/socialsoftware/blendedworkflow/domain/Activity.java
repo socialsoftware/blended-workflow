@@ -252,6 +252,11 @@ public class Activity extends Activity_Base {
 		}
 	}
 
+	public Set<Attribute> getPostAttributes() {
+		return getPostConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Attribute.class::isInstance)
+				.map(Attribute.class::cast).collect(Collectors.toSet());
+	}
+
 	public Set<Entity> getPostEntities() {
 		return getPostConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Entity.class::isInstance)
 				.map(Entity.class::cast).collect(Collectors.toSet());
@@ -313,28 +318,32 @@ public class Activity extends Activity_Base {
 	}
 
 	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity entity) {
-		Set<EntityInstance> instanceContext = new HashSet<EntityInstance>();
+		// pre-conditions hold
+		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(entity).stream()
+				.filter(ei -> ei.holdsDefPathConditions(getPreConditionSet())).collect(Collectors.toSet());
 
-		outerloop: for (EntityInstance entityInstance : workflowInstance.getEntityInstanceSet(entity)) {
-			// activity pre-condition holds
-			for (DefPathCondition defPathCondition : getPreConditionSet()) {
-				if (!entityInstance.holdsDefPathCondition(defPathCondition)) {
-					break outerloop;
-				}
-			}
+		// post-conditions do not hold
+		instanceContext = instanceContext.stream().filter(ei -> postConditionNotHold(ei)).collect(Collectors.toSet());
 
-			// multiplicity condition holds for the number of entities that need
-			// to be connect to ei
-
-			// post-condition does not hold
-
-			// multiplicity conditions do not hold for ei should not be
-			// connected with
-
-			instanceContext.add(entityInstance);
-		}
+		// finally E.e1,n must be ensured, there are enough in the instance
+		// context, MAYBE IN ANOTHER METHOD isEnabled()
 
 		return instanceContext;
+	}
+
+	private boolean postConditionNotHold(EntityInstance entityInstance) {
+		// for every def attribute in post-condition, if the attribute belongs
+		// to the entity instance type, then it should not be defined for the
+		// entity instance
+		if (!getPostAttributes().stream().filter(a -> a.getEntity() == entityInstance.getEntity())
+				.noneMatch(a -> entityInstance.isDefined(a))) {
+			return false;
+		}
+		// for every def entity in post-condition, if the entity is in relation
+		// with then entity instance type, then it should be possible to create
+		// another relation instance associated with the entity instance
+		return getMultiplicityInvariantSet().stream().filter(m -> m.getSourceEntity() == entityInstance.getEntity())
+				.noneMatch(m -> entityInstance.isInMaxCardinality(m));
 	}
 
 }

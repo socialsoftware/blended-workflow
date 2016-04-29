@@ -8,9 +8,9 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -33,8 +33,7 @@ public class CheckUniqueElementName extends TeardownRollbackTest {
 		entityOne = new Entity(spec.getDataModel(), ENTITY_NAME_ONE, false);
 		entityTwo = new Entity(spec.getDataModel(), ENTITY_NAME_TWO, false);
 
-		new Attribute(spec.getDataModel(), entityOne, ELEMENT_NAME_TWO, AttributeType.BOOLEAN, false, false,
-				false);
+		new Attribute(spec.getDataModel(), entityOne, ELEMENT_NAME_TWO, AttributeType.BOOLEAN, false, false, false);
 		new RelationBW(spec.getDataModel(), "relation", entityOne, "entity", Cardinality.ONE, false, entityTwo,
 				ELEMENT_NAME_THREE, Cardinality.ONE_MANY, false);
 		new Rule(entityOne, ELEMENT_NAME_FOUR, null);

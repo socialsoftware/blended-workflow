@@ -27,7 +27,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -166,8 +165,7 @@ public class DesignInterface {
 					+ "!=" + entityTwo.getDataModel().getSpecification().getSpecId());
 
 		RelationBW relation = entityOne.createRelation(relDTO.getName(), relDTO.getRolenameOne(),
-				Cardinality.parseCardinality(relDTO.getCardinalityOne()), entityTwo, relDTO.getRolenameTwo(),
-				Cardinality.parseCardinality(relDTO.getCardinalityTwo()));
+				relDTO.getCardinalityOne(), entityTwo, relDTO.getRolenameTwo(), relDTO.getCardinalityTwo());
 
 		return relation;
 	}

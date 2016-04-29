@@ -8,10 +8,10 @@ import org.jdom.Namespace;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.shared.StringUtils;
 
@@ -59,8 +59,7 @@ public class DataModelFactory {
 		String attType = attributeXML.getChildText("Type", dmNamespace);
 		boolean isKey = Boolean.parseBoolean(attributeXML.getChildText("isKey", dmNamespace));
 		boolean isSystem = Boolean.parseBoolean(attributeXML.getChildText("isSystem", dmNamespace));
-		new Attribute(dataModel, entity, attName, AttributeType.parseAttributeType(attType), true, isKey,
-				isSystem);
+		new Attribute(dataModel, entity, attName, AttributeType.parseAttributeType(attType), true, isKey, isSystem);
 	}
 
 	private void parseRelation(DataModel dataModel, Element relationInXML) throws BWException {
@@ -78,19 +77,12 @@ public class DataModelFactory {
 		Cardinality cardinalityTwo = parseCardinality(entityTwoXML.getChildText("EntityCardinality", dmNamespace));
 		Boolean isTwoKeyEntity = parseIsKeyEntity(entityTwoXML.getChildText("isEntityKey", dmNamespace));
 
-		new RelationBW(dataModel, relationName, entityOne, "", cardinalityOne, isOneKeyEntity, entityTwo, "",
-				cardinalityTwo, isTwoKeyEntity);
+		new RelationBW(dataModel, relationName, entityOne, "", cardinalityOne.getExp(), isOneKeyEntity, entityTwo, "",
+				cardinalityTwo.getExp(), isTwoKeyEntity);
 	}
 
 	private Cardinality parseCardinality(String cardinality) {
-		if (cardinality.equals(Cardinality.ONE.toString())) {
-			return Cardinality.ONE;
-		} else if (cardinality.equals(Cardinality.ZERO_MANY.toString())) {
-			return Cardinality.ZERO_MANY;
-		} else if (cardinality.equals(Cardinality.ZERO_OR_ONE.toString())) {
-			return Cardinality.ZERO_OR_ONE;
-		}
-		return null;
+		return Cardinality.parseCardinality(cardinality);
 	}
 
 	private AttributeType parseAttributeType(String type) {

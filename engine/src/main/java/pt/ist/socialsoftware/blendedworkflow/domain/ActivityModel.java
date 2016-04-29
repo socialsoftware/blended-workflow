@@ -429,7 +429,7 @@ public class ActivityModel extends ActivityModel_Base {
 				description = description + ", " + "MUL("
 						+ activity
 								.getMultiplicityInvariantSet().stream().map(m -> m.getSourceEntity().getName() + "."
-										+ m.getTargetRolename() + "," + m.getTargetCardinality().name())
+										+ m.getTargetRolename() + "," + m.getTargetCardinality().getExp())
 								.collect(Collectors.joining(";"))
 						+ ")";
 			}
