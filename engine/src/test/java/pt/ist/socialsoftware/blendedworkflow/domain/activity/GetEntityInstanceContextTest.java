@@ -75,7 +75,7 @@ public class GetEntityInstanceContextTest extends TeardownRollbackTest {
 				ROLENAME_ENT_TWO, "0..2", false);
 
 		relationTwo = new RelationBW(dataModel, "relOneThree", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false,
-				entThree, ROLENAME_ENT_THREE, Cardinality.ONE_MANY, false);
+				entThree, ROLENAME_ENT_THREE, "2..4", false);
 
 		relationThree = new RelationBW(dataModel, "relTwoThree", entThree, ROLENAME_ENT_THREE, Cardinality.ZERO_MANY,
 				false, entTwo, ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);
@@ -157,6 +157,39 @@ public class GetEntityInstanceContextTest extends TeardownRollbackTest {
 
 		assertEquals(1, instanceContext.size());
 		assertTrue(instanceContext.contains(entityInstanceOneTwo));
+	}
+
+	@Test
+	public void enoughInstancesInInstanceContext() {
+		Activity activity = new Activity(spec.getActivityModel(), "name", "description");
+		activity.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_THREE_NAME));
+		activity.addPostCondition(DefEntityCondition.getDefEntityCondition(entOne));
+		activity.addMultiplicityInvariant(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_ONE));
+		activity.addMultiplicityInvariant(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+
+		EntityInstance entityInstanceThreeOne = new EntityInstance(workflowInstance, entThree);
+		EntityInstance entityInstanceThreeTwo = new EntityInstance(workflowInstance, entThree);
+
+		Set<EntityInstance> instanceContext = activity.getInstanceContext(workflowInstance, entThree);
+
+		assertEquals(2, instanceContext.size());
+		assertTrue(instanceContext.contains(entityInstanceThreeOne));
+		assertTrue(instanceContext.contains(entityInstanceThreeTwo));
+	}
+
+	@Test
+	public void notEnoughInstancesInInstanceContext() {
+		Activity activity = new Activity(spec.getActivityModel(), "name", "description");
+		activity.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_THREE_NAME));
+		activity.addPostCondition(DefEntityCondition.getDefEntityCondition(entOne));
+		activity.addMultiplicityInvariant(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_ONE));
+		activity.addMultiplicityInvariant(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+
+		new EntityInstance(workflowInstance, entThree);
+
+		Set<EntityInstance> instanceContext = activity.getInstanceContext(workflowInstance, entThree);
+
+		assertEquals(0, instanceContext.size());
 	}
 
 }
