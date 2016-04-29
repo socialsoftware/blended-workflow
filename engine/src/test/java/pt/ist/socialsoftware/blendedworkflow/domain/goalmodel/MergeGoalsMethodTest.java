@@ -85,11 +85,11 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 		topGoal.addSubGoal(childGoalOne);
 		topGoal.addSubGoal(childGoalTwo);
 
-		topGoal.addSuccessCondition(DefEntityCondition.getDefEntity(entityOne));
-		childGoalOne.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeOne));
-		childGoalTwo.addSuccessCondition(DefEntityCondition.getDefEntity(entityTwo));
-		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
-		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeThree));
+		topGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entityOne));
+		childGoalOne.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeOne));
+		childGoalTwo.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entityTwo));
+		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
+		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeThree));
 
 		topGoal.applyConditions();
 		childGoalOne.applyConditions();
@@ -108,9 +108,9 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 		assertEquals(CHILD_GOAL_ONE + CHILD_GOAL_TWO, merged.getName());
 		assertEquals(0, merged.getSubGoalSet().size());
 		assertEquals(4, merged.getSuccessConditionSet().size());
-		assertTrue(merged.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeOne)));
-		assertTrue(merged.getSuccessConditionSet().contains(DefEntityCondition.getDefEntity(entityTwo)));
-		assertTrue(merged.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeTwo)));
+		assertTrue(merged.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttributeCondition(attributeOne)));
+		assertTrue(merged.getSuccessConditionSet().contains(DefEntityCondition.getDefEntityCondition(entityTwo)));
+		assertTrue(merged.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttributeCondition(attributeTwo)));
 		assertEquals(0, merged.getActivationConditionSet().size());
 		assertEquals(1, merged.getEntityInvariantConditionSet().size());
 		assertTrue(
@@ -131,8 +131,8 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 		assertEquals(1, result.getSubGoalSet().size());
 		assertTrue(result.getSubGoalSet().contains(childGoalTwo));
 		assertEquals(2, result.getSuccessConditionSet().size());
-		assertTrue(result.getSuccessConditionSet().contains(DefEntityCondition.getDefEntity(entityOne)));
-		assertTrue(result.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeOne)));
+		assertTrue(result.getSuccessConditionSet().contains(DefEntityCondition.getDefEntityCondition(entityOne)));
+		assertTrue(result.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttributeCondition(attributeOne)));
 		assertEquals(0, result.getActivationConditionSet().size());
 		assertEquals(1, result.getEntityInvariantConditionSet().size());
 		assertTrue(

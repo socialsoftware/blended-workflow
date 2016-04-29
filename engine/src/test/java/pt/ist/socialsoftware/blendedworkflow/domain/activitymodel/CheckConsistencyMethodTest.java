@@ -112,9 +112,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 		taskOne = new Activity(spec.getActivityModel(), TASK_ONE, "Description");
 		taskOne.addPreCondition(DefPathCondition.getDefPathCondition(spec, EXISTS_ENTITY));
-		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entityOne));
-		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
-		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskOne.addPostCondition(DefEntityCondition.getDefEntityCondition(entityOne));
+		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeOne));
+		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
 		taskOne.addMultiplicityInvariant(
 				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRoleNameOne()));
 		taskOne.addMultiplicityInvariant(
@@ -123,8 +123,8 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 		taskTwo = new Activity(spec.getActivityModel(), TASK_TWO, "Description");
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_ONE_NAME));
-		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
-		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
+		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityTwo));
+		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityThree));
 		taskTwo.addMultiplicityInvariant(
 				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(
@@ -138,9 +138,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_THREE_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeThree));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFourOne));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFourTwo));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeThree));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeFourOne));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeFourTwo));
 		taskThree.addRuleInvariant(ruleTwo);
 
 	}
@@ -160,7 +160,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void defConditionNotAppliedToPost() {
-		taskOne.removePostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskOne.removePostCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
 
 		try {
 			spec.getActivityModel().checkModel();
@@ -173,7 +173,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void defGroupConditionNotAppliedToPost() {
-		taskThree.removePostCondition(DefAttributeCondition.getDefAttribute(attributeFourOne));
+		taskThree.removePostCondition(DefAttributeCondition.getDefAttributeCondition(attributeFourOne));
 
 		try {
 			spec.getActivityModel().checkModel();
@@ -290,9 +290,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskOne.removeRuleInvariant(ruleOne);
 		taskTwo.addRuleInvariant(ruleOne);
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec,
-				DefAttributeCondition.getDefAttribute(attributeOne).getPath().getValue()));
+				DefAttributeCondition.getDefAttributeCondition(attributeOne).getPath().getValue()));
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec,
-				DefAttributeCondition.getDefAttribute(attributeTwo).getPath().getValue()));
+				DefAttributeCondition.getDefAttributeCondition(attributeTwo).getPath().getValue()));
 
 		try {
 			spec.getActivityModel().checkModel();

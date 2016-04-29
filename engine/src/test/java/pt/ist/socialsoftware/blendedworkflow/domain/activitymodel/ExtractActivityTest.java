@@ -112,15 +112,15 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 		taskModel = spec.getActivityModel();
 
 		taskOne = new Activity(spec.getActivityModel(), TASK_ONE, DESCRIPTION);
-		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entityOne));
-		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
-		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskOne.addPostCondition(DefEntityCondition.getDefEntityCondition(entityOne));
+		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeOne));
+		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
 		taskOne.addRuleInvariant(ruleOne);
 
 		taskTwo = new Activity(spec.getActivityModel(), TASK_TWO, DESCRIPTION);
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, entityOne.getName()));
-		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
-		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
+		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityTwo));
+		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityThree));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameTwo()));
 
@@ -128,9 +128,9 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, entityTwo.getName()));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, entityThree.getName()));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH_ONE));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeThree));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFive));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeThree));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeFour));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeFive));
 		taskThree.addRuleInvariant(ruleTwo);
 	}
 
@@ -148,12 +148,12 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 	@Test
 	public void extractDefEntity() {
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
-		postConditionSet.add(DefEntityCondition.getDefEntity(entityOne));
+		postConditionSet.add(DefEntityCondition.getDefEntityCondition(entityOne));
 		Activity task = taskModel.extractActivity(taskOne, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
 		assertEquals(4, taskModel.getActivitySet().size());
 		assertTrue(taskModel.getActivity(TASK_ONE).getPreConditionSet().stream().map(d -> d.getPath().getValue())
-				.collect(Collectors.toSet()).contains(DefEntityCondition.getDefEntity(entityOne).getPath().getValue()));
+				.collect(Collectors.toSet()).contains(DefEntityCondition.getDefEntityCondition(entityOne).getPath().getValue()));
 		assertEquals(0, task.getMultiplicityInvariantSet().size());
 
 		assertEquals(2, taskModel.getActivity(TASK_TWO).getMultiplicityInvariantSet().size());
@@ -166,8 +166,8 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 	@Test
 	public void extractDefAttribute() {
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
-		postConditionSet.add(DefAttributeCondition.getDefAttribute(attributeOne));
-		postConditionSet.add(DefAttributeCondition.getDefAttribute(attributeTwo));
+		postConditionSet.add(DefAttributeCondition.getDefAttributeCondition(attributeOne));
+		postConditionSet.add(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
 		Activity task = taskModel.extractActivity(taskOne, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
 		assertEquals(4, taskModel.getActivitySet().size());
@@ -181,7 +181,7 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 	@Test
 	public void extractWithMultiplicityImpact() {
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
-		postConditionSet.add(DefEntityCondition.getDefEntity(entityTwo));
+		postConditionSet.add(DefEntityCondition.getDefEntityCondition(entityTwo));
 		Activity task = taskModel.extractActivity(taskTwo, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
 		assertEquals(4, taskModel.getActivitySet().size());
@@ -203,7 +203,7 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 	@Test
 	public void extractWithDependence() {
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
-		postConditionSet.add(DefAttributeCondition.getDefAttribute(attributeThree));
+		postConditionSet.add(DefAttributeCondition.getDefAttributeCondition(attributeThree));
 		Activity task = taskModel.extractActivity(taskThree, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
 		assertEquals(4, taskModel.getActivitySet().size());
@@ -221,7 +221,7 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 	public void extractAndSequenceConditionStaysInSource() {
 		taskTwo.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME + "." + ROLENAME_ONE));
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
-		postConditionSet.add(DefEntityCondition.getDefEntity(entityTwo));
+		postConditionSet.add(DefEntityCondition.getDefEntityCondition(entityTwo));
 		Activity task = taskModel.extractActivity(taskTwo, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
 		assertEquals(1, task.getSequenceConditionSet().size());
@@ -234,7 +234,7 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 	public void extractAndSequenceConditionMovesToTarget() {
 		taskTwo.addSequenceCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME + "." + ROLENAME_ONE));
 		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
-		postConditionSet.add(DefEntityCondition.getDefEntity(entityThree));
+		postConditionSet.add(DefEntityCondition.getDefEntityCondition(entityThree));
 		Activity task = taskModel.extractActivity(taskTwo, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 
 		assertEquals(0, task.getSequenceConditionSet().size());

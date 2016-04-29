@@ -31,10 +31,10 @@ public class ConditionModel extends ConditionModel_Base {
 	public void generateConditions() {
 		DataModel dataModel = getSpecification().getDataModel();
 
-		dataModel.getEntitySet().stream().forEach(e -> DefEntityCondition.getDefEntity(e));
+		dataModel.getEntitySet().stream().forEach(e -> DefEntityCondition.getDefEntityCondition(e));
 
 		dataModel.getAttributeSet().stream().filter(Attribute.class::isInstance).map(Attribute.class::cast)
-				.filter(a -> !a.getEntity().getExists()).forEach(a -> DefAttributeCondition.getDefAttribute(a));
+				.filter(a -> !a.getEntity().getExists()).forEach(a -> DefAttributeCondition.getDefAttributeCondition(a));
 
 		dataModel.getRelationBWSet().stream().forEach(r -> MulCondition.createMUlConditions(r));
 

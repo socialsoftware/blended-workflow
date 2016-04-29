@@ -105,7 +105,7 @@ public class ConditionParser {
                 existsAttributeString, startArgs,
                 existsAttributeString.length() - 1, elementName);
         Condition existsAttributeCondition = DefAttributeCondition
-                .getDefAttribute(attribute);
+                .getDefAttributeCondition(attribute);
         _token = endOfCondition + 1;
         return existsAttributeCondition;
     }

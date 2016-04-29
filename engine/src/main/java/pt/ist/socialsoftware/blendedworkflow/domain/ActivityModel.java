@@ -246,7 +246,7 @@ public class ActivityModel extends ActivityModel_Base {
 
 	private void applyMultiplicityToPostAndPre(RelationBW relation) {
 		List<Activity> activities = relation.getEntitySet().stream()
-				.map(e -> DefEntityCondition.getDefEntity(e).getActivityWithPostCondition()).filter(t -> t != null)
+				.map(e -> DefEntityCondition.getDefEntityCondition(e).getActivityWithPostCondition()).filter(t -> t != null)
 				.collect(Collectors.toList());
 
 		// the relation has an exists entity

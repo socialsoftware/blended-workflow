@@ -105,15 +105,15 @@ public class MergeActivitiesTest extends TeardownRollbackTest {
 		taskModel = spec.getActivityModel();
 
 		taskOne = new Activity(spec.getActivityModel(), TASK_ONE, "Description");
-		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entityOne));
-		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
-		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskOne.addPostCondition(DefEntityCondition.getDefEntityCondition(entityOne));
+		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeOne));
+		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
 		taskOne.addRuleInvariant(ruleOne);
 
 		taskTwo = new Activity(spec.getActivityModel(), TASK_TWO, "Description");
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_ONE_NAME));
-		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
-		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
+		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityTwo));
+		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityThree));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameTwo()));
 
@@ -121,9 +121,9 @@ public class MergeActivitiesTest extends TeardownRollbackTest {
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_THREE_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH_ONE));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeThree));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFive));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeThree));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeFour));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeFive));
 		taskThree.addRuleInvariant(ruleTwo);
 
 	}

@@ -83,14 +83,14 @@ public class AddSequenceConditionTest extends TeardownRollbackTest {
 		spec.getConditionModel().generateConditions();
 
 		taskOne = new Activity(spec.getActivityModel(), TASK_ONE, "Description");
-		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entOne));
-		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attOne));
-		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attTwo));
+		taskOne.addPostCondition(DefEntityCondition.getDefEntityCondition(entOne));
+		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attOne));
+		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attTwo));
 
 		taskTwo = new Activity(spec.getActivityModel(), TASK_TWO, "Description");
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME));
-		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entTwo));
-		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entThree));
+		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entTwo));
+		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entThree));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relationOne, relationOne.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relationOne, relationOne.getRoleNameTwo()));
 
@@ -98,8 +98,8 @@ public class AddSequenceConditionTest extends TeardownRollbackTest {
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_TWO_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_THREE_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH_ONE));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attThree));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attFour));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attThree));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attFour));
 
 		taskModel.checkModel();
 	}

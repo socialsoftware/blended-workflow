@@ -129,9 +129,9 @@ public class AddActivityMethodTest extends TeardownRollbackTest {
 
 		taskOne = new Activity(spec.getActivityModel(), TASK_ONE, "Description");
 		taskOne.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_EXISTS));
-		taskOne.addPostCondition(DefEntityCondition.getDefEntity(entityOne));
-		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeOne));
-		taskOne.addPostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskOne.addPostCondition(DefEntityCondition.getDefEntityCondition(entityOne));
+		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeOne));
+		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
 		taskOne.addMultiplicityInvariant(MulCondition.getMulCondition(relationExists, relationExists.getRoleNameOne()));
 		taskOne.addMultiplicityInvariant(MulCondition.getMulCondition(relationExists, relationExists.getRoleNameTwo()));
 		taskOne.addRuleInvariant(ruleOne);
@@ -139,8 +139,8 @@ public class AddActivityMethodTest extends TeardownRollbackTest {
 
 		taskTwo = new Activity(spec.getActivityModel(), TASK_TWO, "Description");
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_ONE_NAME));
-		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityTwo));
-		taskTwo.addPostCondition(DefEntityCondition.getDefEntity(entityThree));
+		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityTwo));
+		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityThree));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameOne()));
 		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameTwo()));
 
@@ -148,9 +148,9 @@ public class AddActivityMethodTest extends TeardownRollbackTest {
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_THREE_NAME));
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH_ONE));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeThree));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeFour));
-		taskThree.addPostCondition(DefAttributeCondition.getDefAttribute(attributeSix));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeThree));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeFour));
+		taskThree.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeSix));
 		taskThree.addRuleInvariant(ruleTwo);
 
 		taskModel.checkModel();
@@ -158,7 +158,7 @@ public class AddActivityMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void emptyPostConditionSet() {
-		taskThree.removePostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskThree.removePostCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
 
 		try {
 			Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
@@ -174,7 +174,7 @@ public class AddActivityMethodTest extends TeardownRollbackTest {
 	public void allActivitiesWereCreated() {
 		try {
 			Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
-			postConditions.add(DefEntityCondition.getDefEntity(entityOne));
+			postConditions.add(DefEntityCondition.getDefEntityCondition(entityOne));
 			taskModel.addActivity(NEW_TASK_NAME, "Description", postConditions);
 			fail();
 		} catch (BWException bwe) {
@@ -185,10 +185,10 @@ public class AddActivityMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void conditionBelongsToOtherPostCondition() {
-		taskThree.removePostCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
+		taskThree.removePostCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
 		try {
 			Set<DefProductCondition> postConditions = new HashSet<DefProductCondition>();
-			postConditions.add(DefEntityCondition.getDefEntity(entityOne));
+			postConditions.add(DefEntityCondition.getDefEntityCondition(entityOne));
 			taskModel.addActivity(NEW_TASK_NAME, "Description", postConditions);
 			fail();
 		} catch (BWException bwe) {

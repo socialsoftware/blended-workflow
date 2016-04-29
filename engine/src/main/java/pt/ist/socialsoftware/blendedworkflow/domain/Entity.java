@@ -380,7 +380,7 @@ public class Entity extends Entity_Base {
 
 	@Override
 	public DefProductCondition getDefCondition() {
-		return DefEntityCondition.getDefEntity(this);
+		return DefEntityCondition.getDefEntityCondition(this);
 	}
 
 	@Override

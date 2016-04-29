@@ -12,12 +12,12 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DefAttributeCondition extends DefAttributeCondition_Base {
 
-	public static DefAttributeCondition getDefAttribute(Specification spec, String path) {
+	public static DefAttributeCondition getDefAttributeCondition(Specification spec, String path) {
 		Attribute attribute = (Attribute) spec.getDataModel().getTargetOfPath(path);
-		return DefAttributeCondition.getDefAttribute(attribute);
+		return DefAttributeCondition.getDefAttributeCondition(attribute);
 	}
 
-	public static DefAttributeCondition getDefAttribute(Attribute attribute) {
+	public static DefAttributeCondition getDefAttributeCondition(Attribute attribute) {
 		DefAttributeCondition defAttributeCondition = attribute.getDefAttributeCondition();
 		if (defAttributeCondition == null)
 			defAttributeCondition = new DefAttributeCondition(attribute);

@@ -323,7 +323,8 @@ public class Activity extends Activity_Base {
 				.filter(ei -> ei.holdsDefPathConditions(getPreConditionSet())).collect(Collectors.toSet());
 
 		// post-conditions do not hold
-		instanceContext = instanceContext.stream().filter(ei -> postConditionNotHold(ei)).collect(Collectors.toSet());
+		instanceContext = instanceContext.stream().filter(ei -> postConditionDoesNotHold(ei))
+				.collect(Collectors.toSet());
 
 		// finally E.e1,n must be ensured, there are enough in the instance
 		// context, MAYBE IN ANOTHER METHOD isEnabled()
@@ -331,7 +332,7 @@ public class Activity extends Activity_Base {
 		return instanceContext;
 	}
 
-	private boolean postConditionNotHold(EntityInstance entityInstance) {
+	public boolean postConditionDoesNotHold(EntityInstance entityInstance) {
 		// for every def attribute in post-condition, if the attribute belongs
 		// to the entity instance type, then it should not be defined for the
 		// entity instance

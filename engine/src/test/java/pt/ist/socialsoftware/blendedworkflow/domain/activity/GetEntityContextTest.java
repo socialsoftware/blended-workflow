@@ -79,7 +79,7 @@ public class GetEntityContextTest extends TeardownRollbackTest {
 
 	@Test
 	public void emptyContext() {
-		activity.addPostCondition(DefEntityCondition.getDefEntity(entOne));
+		activity.addPostCondition(DefEntityCondition.getDefEntityCondition(entOne));
 
 		Set<Entity> entityContext = activity.getEntityContext();
 
@@ -89,7 +89,7 @@ public class GetEntityContextTest extends TeardownRollbackTest {
 	@Test
 	public void singleEntityContext() {
 		activity.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME));
-		activity.addPostCondition(DefAttributeCondition.getDefAttribute(attOne));
+		activity.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attOne));
 
 		Set<Entity> entityContext = activity.getEntityContext();
 
@@ -101,8 +101,8 @@ public class GetEntityContextTest extends TeardownRollbackTest {
 	public void longPreConditionPath() {
 		activity.addPreCondition(DefPathCondition.getDefPathCondition(spec,
 				ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME));
-		activity.addPostCondition(DefEntityCondition.getDefEntity(entOne));
-		activity.addPostCondition(DefAttributeCondition.getDefAttribute(attOne));
+		activity.addPostCondition(DefEntityCondition.getDefEntityCondition(entOne));
+		activity.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attOne));
 
 		Set<Entity> entityContext = activity.getEntityContext();
 
@@ -115,7 +115,7 @@ public class GetEntityContextTest extends TeardownRollbackTest {
 		activity.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME));
 		activity.addPreCondition(DefPathCondition.getDefPathCondition(spec,
 				ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME));
-		activity.addPostCondition(DefAttributeCondition.getDefAttribute(attOne));
+		activity.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attOne));
 
 		Set<Entity> entityContext = activity.getEntityContext();
 
@@ -129,8 +129,8 @@ public class GetEntityContextTest extends TeardownRollbackTest {
 		activity.addPreCondition(DefPathCondition.getDefPathCondition(spec,
 				ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME));
 		activity.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_THREE_NAME));
-		activity.addPostCondition(DefAttributeCondition.getDefAttribute(attOne));
-		activity.addPostCondition(DefAttributeCondition.getDefAttribute(attFour));
+		activity.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attOne));
+		activity.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attFour));
 
 		Set<Entity> entityContext = activity.getEntityContext();
 

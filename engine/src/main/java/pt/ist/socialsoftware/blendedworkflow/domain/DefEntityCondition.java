@@ -12,7 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.shared.TripleStateBool;
 
 public class DefEntityCondition extends DefEntityCondition_Base {
 
-	public static DefEntityCondition getDefEntity(Entity entity) {
+	public static DefEntityCondition getDefEntityCondition(Entity entity) {
 		if (entity.getDefEntityCondition() != null)
 			return entity.getDefEntityCondition();
 		else

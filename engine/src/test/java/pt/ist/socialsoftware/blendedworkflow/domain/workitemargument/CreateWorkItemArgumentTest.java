@@ -49,7 +49,7 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 		Entity entity = new Entity(spec.getDataModel(), ENTITY_NAME, false);
 		Attribute attribute = new Attribute(spec.getDataModel(), entity, ATTRIBUTE_NAME, AttributeType.STRING, false,
 				false, false);
-		defAttributeCondition = DefAttributeCondition.getDefAttribute(attribute);
+		defAttributeCondition = DefAttributeCondition.getDefAttributeCondition(attribute);
 		goal = new Goal(spec.getGoalModel(), NAME);
 		defPathCondition = DefPathCondition.getDefPathCondition(spec, ENTITY_NAME + "." + ATTRIBUTE_NAME);
 		goal.addActivationCondition(defPathCondition);

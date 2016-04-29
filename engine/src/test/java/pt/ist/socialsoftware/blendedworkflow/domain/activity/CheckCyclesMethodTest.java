@@ -90,7 +90,7 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 
 		Activity taskTwo = new Activity(taskModel, ACTIVITY_TWO, DESCRIPTION);
 		taskTwo.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME));
 
 		taskOne.checkCycles(taskModel.getActivitySequences());
 	}
@@ -101,23 +101,23 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 		taskOne.getPreConditionSet().add(DefPathCondition.getDefPathCondition(spec,
 				ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME));
 		taskOne.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_ONE_NAME + "." + ATT_ONE_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_ONE_NAME + "." + ATT_ONE_NAME));
 
 		Activity taskTwo = new Activity(taskModel, ACTIVITY_TWO, DESCRIPTION);
 		taskTwo.getPreConditionSet().add(DefPathCondition.getDefPathCondition(spec,
 				ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME));
 		taskTwo.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME));
 
 		Activity taskThree = new Activity(taskModel, ACTIVITY_THREE, DESCRIPTION);
 		taskThree.getPreConditionSet().add(DefPathCondition.getDefPathCondition(spec,
 				ENT_THREE_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_TWO_NAME));
 		taskThree.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_THREE_NAME + "." + ATT_FOUR_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_THREE_NAME + "." + ATT_FOUR_NAME));
 
 		Activity taskFour = new Activity(taskModel, ACTIVITY_FOUR, DESCRIPTION);
 		taskFour.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_ONE_NAME + "." + ATT_TWO_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_ONE_NAME + "." + ATT_TWO_NAME));
 
 		taskOne.checkCycles(taskModel.getActivitySequences());
 	}
@@ -128,19 +128,19 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 		taskOne.getPreConditionSet().add(DefPathCondition.getDefPathCondition(spec,
 				ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME));
 		taskOne.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_ONE_NAME + "." + ATT_ONE_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_ONE_NAME + "." + ATT_ONE_NAME));
 
 		Activity taskTwo = new Activity(taskModel, ACTIVITY_TWO, DESCRIPTION);
 		taskTwo.getPreConditionSet().add(DefPathCondition.getDefPathCondition(spec,
 				ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME));
 		taskTwo.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME));
 
 		Activity taskThree = new Activity(taskModel, ACTIVITY_THREE, DESCRIPTION);
 		taskThree.getPreConditionSet().add(DefPathCondition.getDefPathCondition(spec,
 				ENT_THREE_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME));
 		taskThree.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_THREE_NAME + "." + ATT_FOUR_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_THREE_NAME + "." + ATT_FOUR_NAME));
 
 		try {
 			taskOne.checkCycles(taskModel.getActivitySequences());
@@ -157,21 +157,21 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 				ENT_ONE_NAME + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME));
 		taskOne.getPreConditionSet().add(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME + "." + ATT_TWO_NAME));
 		taskOne.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_ONE_NAME + "." + ATT_ONE_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_ONE_NAME + "." + ATT_ONE_NAME));
 
 		Activity taskTwo = new Activity(taskModel, ACTIVITY_TWO, DESCRIPTION);
 		taskTwo.getPreConditionSet().add(DefPathCondition.getDefPathCondition(spec,
 				ENT_TWO_NAME + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME));
 		taskTwo.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_TWO_NAME + "." + ATT_THREE_NAME));
 		taskTwo.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_ONE_NAME + "." + ATT_TWO_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_ONE_NAME + "." + ATT_TWO_NAME));
 
 		Activity taskThree = new Activity(taskModel, ACTIVITY_THREE, DESCRIPTION);
 		taskThree.getPreConditionSet().add(DefPathCondition.getDefPathCondition(spec,
 				ENT_THREE_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME));
 		taskThree.getPostConditionSet()
-				.add(DefAttributeCondition.getDefAttribute(spec, ENT_THREE_NAME + "." + ATT_FOUR_NAME));
+				.add(DefAttributeCondition.getDefAttributeCondition(spec, ENT_THREE_NAME + "." + ATT_FOUR_NAME));
 
 		try {
 			taskOne.checkCycles(taskModel.getActivitySequences());

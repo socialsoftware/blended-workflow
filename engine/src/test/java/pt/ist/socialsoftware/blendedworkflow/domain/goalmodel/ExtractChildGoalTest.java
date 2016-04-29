@@ -98,12 +98,12 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		topGoal.addSubGoal(childGoalTwo);
 		childGoalTwo.addSubGoal(childGoalTwoOne);
 
-		topGoal.addSuccessCondition(DefEntityCondition.getDefEntity(entityOne));
-		childGoalOne.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeOne));
-		childGoalTwo.addSuccessCondition(DefEntityCondition.getDefEntity(entityTwo));
-		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
-		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeThree));
-		childGoalTwoOne.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeFour));
+		topGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entityOne));
+		childGoalOne.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeOne));
+		childGoalTwo.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entityTwo));
+		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
+		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeThree));
+		childGoalTwoOne.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeFour));
 
 		childGoalOne.addActivationCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH));
 
@@ -129,7 +129,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 	@Test
 	public void parentEndsUpWithEmptySuccessCondition() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefAttributeCondition.getDefAttribute(attributeFour));
+		successConditions.add(DefAttributeCondition.getDefAttributeCondition(attributeFour));
 		Goal newGoal = spec.getGoalModel().extractChild(childGoalTwoOne, CHILD_GOAL_TWO_ONE_ONE, successConditions);
 
 		assertEquals(0, childGoalTwoOne.getSuccessConditionSet().size());
@@ -139,7 +139,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 	@Test
 	public void parentDoesNotContainCondition() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
+		successConditions.add(DefEntityCondition.getDefEntityCondition(entityTwo));
 
 		try {
 			spec.getGoalModel().extractChild(childGoalTwoOne, CHILD_GOAL_TWO_TWO, successConditions);
@@ -154,7 +154,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 	@Test
 	public void defAttributeInParent() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
+		successConditions.add(DefEntityCondition.getDefEntityCondition(entityTwo));
 
 		try {
 			spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
@@ -168,10 +168,10 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 	@Test
 	public void defAttributeInChild() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
+		successConditions.add(DefEntityCondition.getDefEntityCondition(entityTwo));
 
-		childGoalTwo.removeSuccessCondition(DefAttributeCondition.getDefAttribute(attributeThree));
-		childGoalTwoOne.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeFour));
+		childGoalTwo.removeSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeThree));
+		childGoalTwoOne.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeFour));
 
 		try {
 			spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
@@ -185,7 +185,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 	@Test
 	public void parentAttributeDependsOnChildAttribute() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefAttributeCondition.getDefAttribute(attributeTwo));
+		successConditions.add(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
 
 		try {
 			spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
@@ -199,7 +199,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 	@Test
 	public void successAndOnlyChangesSuccCondition() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefAttributeCondition.getDefAttribute(attributeThree));
+		successConditions.add(DefAttributeCondition.getDefAttributeCondition(attributeThree));
 
 		Goal newGoal = spec.getGoalModel().extractChild(childGoalTwo, CHILD_GOAL_TWO_TWO, successConditions);
 
@@ -207,7 +207,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 		assertEquals(childGoalTwo, newGoal.getParentGoal());
 		assertEquals(0, newGoal.getSubGoalSet().size());
 		assertEquals(1, newGoal.getSuccessConditionSet().size());
-		assertTrue(newGoal.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeThree)));
+		assertTrue(newGoal.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttributeCondition(attributeThree)));
 		assertEquals(1, newGoal.getActivationConditionSet().size());
 		assertEquals(DEPENDENCE_PATH,
 				newGoal.getActivationConditionSet().stream().findFirst().get().getPath().getValue());
@@ -216,7 +216,7 @@ public class ExtractChildGoalTest extends TeardownRollbackTest {
 
 		assertEquals(2, childGoalTwo.getSuccessConditionSet().size());
 		assertFalse(
-				childGoalTwo.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttribute(attributeThree)));
+				childGoalTwo.getSuccessConditionSet().contains(DefAttributeCondition.getDefAttributeCondition(attributeThree)));
 		assertEquals(0, childGoalTwo.getActivationConditionSet().size());
 		assertEquals(1, childGoalTwo.getEntityInvariantConditionSet().size());
 		assertEquals(MulCondition.getMulCondition(relation, ROLENAME_ONE),

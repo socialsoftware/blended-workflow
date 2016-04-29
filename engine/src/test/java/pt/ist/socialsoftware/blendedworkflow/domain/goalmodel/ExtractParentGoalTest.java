@@ -93,12 +93,12 @@ public class ExtractParentGoalTest extends TeardownRollbackTest {
 		topGoal.addSubGoal(childGoalOne);
 		topGoal.addSubGoal(childGoalTwo);
 
-		topGoal.addSuccessCondition(DefEntityCondition.getDefEntity(entityOne));
-		childGoalOne.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeOne));
-		childGoalTwo.addSuccessCondition(DefEntityCondition.getDefEntity(entityTwo));
-		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeTwo));
-		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeThree));
-		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttribute(attributeFour));
+		topGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entityOne));
+		childGoalOne.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeOne));
+		childGoalTwo.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entityTwo));
+		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
+		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeThree));
+		childGoalTwo.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attributeFour));
 
 		childGoalOne.addActivationCondition(DefPathCondition.getDefPathCondition(spec, DEPENDENCE_PATH));
 
@@ -114,7 +114,7 @@ public class ExtractParentGoalTest extends TeardownRollbackTest {
 	@Test
 	public void cannotExtractAllConditions() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefAttributeCondition.getDefAttribute(attributeOne));
+		successConditions.add(DefAttributeCondition.getDefAttributeCondition(attributeOne));
 
 		try {
 			goalModel.extractParent(childGoalOne, NEW_PARENT_GOAL, successConditions);
@@ -142,7 +142,7 @@ public class ExtractParentGoalTest extends TeardownRollbackTest {
 		topGoal = goalModel.mergeGoals("newTop", topGoal, childGoalOne);
 
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefEntityCondition.getDefEntity(entityOne));
+		successConditions.add(DefEntityCondition.getDefEntityCondition(entityOne));
 
 		Goal newGoal = goalModel.extractParent(topGoal, NEW_PARENT_GOAL, successConditions);
 
@@ -156,8 +156,8 @@ public class ExtractParentGoalTest extends TeardownRollbackTest {
 	@Test
 	public void dependenceContraintError() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefEntityCondition.getDefEntity(entityTwo));
-		successConditions.add(DefAttributeCondition.getDefAttribute(attributeThree));
+		successConditions.add(DefEntityCondition.getDefEntityCondition(entityTwo));
+		successConditions.add(DefAttributeCondition.getDefAttributeCondition(attributeThree));
 
 		try {
 			goalModel.extractParent(childGoalTwo, NEW_PARENT_GOAL, successConditions);
@@ -170,7 +170,7 @@ public class ExtractParentGoalTest extends TeardownRollbackTest {
 	@Test
 	public void entityAttributeContraintError() {
 		Set<DefProductCondition> successConditions = new HashSet<DefProductCondition>();
-		successConditions.add(DefAttributeCondition.getDefAttribute(attributeFour));
+		successConditions.add(DefAttributeCondition.getDefAttributeCondition(attributeFour));
 
 		try {
 			goalModel.extractParent(childGoalTwo, NEW_PARENT_GOAL, successConditions);

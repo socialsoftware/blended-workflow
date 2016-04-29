@@ -146,7 +146,7 @@ public class Attribute extends Attribute_Base {
 
 	@Override
 	public DefProductCondition getDefCondition() {
-		return DefAttributeCondition.getDefAttribute(this);
+		return DefAttributeCondition.getDefAttributeCondition(this);
 	}
 
 	@Override

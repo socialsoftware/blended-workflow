@@ -323,7 +323,7 @@ public class DesignInterface {
 			throw new BWException(BWErrorType.INVALID_ENTITY, eacDTO.getEntityName() + " exists=" + entity.getExists());
 		}
 
-		DefEntityCondition defCondition = DefEntityCondition.getDefEntity(entity);
+		DefEntityCondition defCondition = DefEntityCondition.getDefEntityCondition(entity);
 		spec.getConditionModel().addEntityAchieveCondition(defCondition);
 
 		return defCondition;
@@ -399,7 +399,7 @@ public class DesignInterface {
 
 		Specification spec = getSpecBySpecId(aacDTO.getSpecId());
 
-		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, aacDTO.getPath());
+		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttributeCondition(spec, aacDTO.getPath());
 
 		if (defAttributeCondition.getAttributeOfDef() != null
 				&& defAttributeCondition.getAttributeOfDef().getIsMandatory() != aacDTO.isMandatory())
@@ -515,7 +515,7 @@ public class DesignInterface {
 	public DefAttributeCondition associateAttributeToGoalSuccess(String specId, String goalName, String path) {
 		Specification spec = getSpecBySpecId(specId);
 		Goal goal = getGoalByName(spec, goalName);
-		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, path);
+		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttributeCondition(spec, path);
 
 		goal.addSuccessCondition(defAttributeCondition);
 
@@ -719,7 +719,7 @@ public class DesignInterface {
 	public DefAttributeCondition associateAttributeToActivityPost(String specId, String activityName, String path) {
 		Specification spec = getSpecBySpecId(specId);
 		Activity activity = getActivityByName(spec, activityName);
-		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttribute(spec, path);
+		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttributeCondition(spec, path);
 
 		activity.addPostCondition(defAttributeCondition);
 
@@ -986,10 +986,10 @@ public class DesignInterface {
 			if (spec.getDataModel().getTargetOfPath(defPathCondition.getPath()).getProductType()
 					.equals(ProductType.ENTITY)) {
 				conditions.add(DefEntityCondition
-						.getDefEntity(getEntityByName(spec.getDataModel(), defPathCondition.getPath())));
+						.getDefEntityCondition(getEntityByName(spec.getDataModel(), defPathCondition.getPath())));
 			} else if (spec.getDataModel().getTargetOfPath(defPathCondition.getPath()).getProductType()
 					.equals(ProductType.ATTRIBUTE)) {
-				conditions.add(DefAttributeCondition.getDefAttribute(spec, defPathCondition.getPath()));
+				conditions.add(DefAttributeCondition.getDefAttributeCondition(spec, defPathCondition.getPath()));
 			} else {
 				assert false : "error in path";
 			}
