@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -326,8 +327,12 @@ public class Activity extends Activity_Base {
 		instanceContext = instanceContext.stream().filter(ei -> postConditionDoesNotHold(ei))
 				.collect(Collectors.toSet());
 
-		// finally E.e1,n must be ensured, there are enough in the instance
-		// context, MAYBE IN ANOTHER METHOD isEnabled()
+		// there are enough instances in the context to enable the activity
+		int instanceContextSize = instanceContext.size();
+		if (!getMultiplicityInvariantSet().stream().filter(m -> m.getTargetEntity() == entity)
+				.allMatch(m -> m.getTargetCardinality().getMinValue() <= instanceContextSize)) {
+			instanceContext.clear();
+		}
 
 		return instanceContext;
 	}
@@ -345,6 +350,33 @@ public class Activity extends Activity_Base {
 		// another relation instance associated with the entity instance
 		return getMultiplicityInvariantSet().stream().filter(m -> m.getSourceEntity() == entityInstance.getEntity())
 				.noneMatch(m -> entityInstance.isInMaxCardinality(m));
+	}
+
+	public boolean isEnabledForExecution(WorkflowInstance workflowInstance) {
+		// get entity context
+		Set<Entity> entityContext = getEntityContext();
+		if (entityContext.isEmpty()) {
+			return true;
+		}
+
+		// for each entity, in entity context, get instance context
+		for (Entity entity : entityContext) {
+			if (getInstanceContext(workflowInstance, entity).isEmpty()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public Map<Entity, Set<EntityInstance>> getInstanceContext(WorkflowInstance workflowInstance) {
+		Map<Entity, Set<EntityInstance>> instanceContext = new HashMap<Entity, Set<EntityInstance>>();
+
+		for (Entity entity : getEntityContext()) {
+			instanceContext.put(entity, getInstanceContext(workflowInstance, entity));
+		}
+
+		return instanceContext;
 	}
 
 }
