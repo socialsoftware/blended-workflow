@@ -1,4 +1,4 @@
-package WorkflowInstance;
+package pt.ist.socialsoftware.blendedworkflow.workflowinstance;
 
 import static org.junit.Assert.assertEquals;
 

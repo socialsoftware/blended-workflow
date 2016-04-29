@@ -276,7 +276,7 @@ public class GoalModel extends GoalModel_Base {
 			if (!goal.getEntityInvariantConditionSet().isEmpty()) {
 				description = description + ", " + "MUL("
 						+ goal.getEntityInvariantConditionSet().stream().map(m -> m.getSourceEntity().getName() + "."
-								+ m.getTargetRolename() + "," + m.getTargetCardinality().name())
+								+ m.getTargetRolename() + "," + m.getTargetCardinality().getExp())
 								.collect(Collectors.joining(";"))
 						+ ")";
 			}

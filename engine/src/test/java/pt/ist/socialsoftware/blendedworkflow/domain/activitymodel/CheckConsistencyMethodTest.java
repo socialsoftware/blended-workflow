@@ -6,9 +6,11 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
+import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefAttributeCondition;
@@ -18,10 +20,8 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -71,10 +71,10 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
 
 		entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
-		attributeOne = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_ONE_NAME, AttributeType.NUMBER,
-				true, false, false);
-		attributeTwo = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_TWO_NAME, AttributeType.NUMBER,
-				true, false, false);
+		attributeOne = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_ONE_NAME, AttributeType.NUMBER, true,
+				false, false);
+		attributeTwo = new Attribute(spec.getDataModel(), entityOne, ATTRIBUTE_TWO_NAME, AttributeType.NUMBER, true,
+				false, false);
 
 		entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);
 		attributeThree = new Attribute(spec.getDataModel(), entityTwo, ATTRIBUTE_THREE_NAME, AttributeType.BOOLEAN,
@@ -84,10 +84,10 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 				false, entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
 		entityThree = new Entity(spec.getDataModel(), ENTITY_THREE_NAME, false);
-		attributeFourOne = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FOURONE_NAME,
-				AttributeType.NUMBER, false, false, false);
-		attributeFourTwo = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FOURTWO_NAME,
-				AttributeType.NUMBER, false, false, false);
+		attributeFourOne = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FOURONE_NAME, AttributeType.NUMBER,
+				false, false, false);
+		attributeFourTwo = new Attribute(spec.getDataModel(), entityThree, ATTRIBUTE_FOURTWO_NAME, AttributeType.NUMBER,
+				false, false, false);
 
 		existsRelationTwo = new RelationBW(spec.getDataModel(), "nameTwo", entityTwo, ROLENAME_TWO, Cardinality.ONE,
 				false, entityThree, ROLENAME_THREE, Cardinality.ZERO_MANY, false);
@@ -350,7 +350,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, bwe.getError());
-			assertEquals("MUL(" + EXISTS_ENTITY + "." + ROLENAME_ONE + "," + "ONE" + ")", bwe.getMessage());
+			assertEquals("MUL(" + EXISTS_ENTITY + "." + ROLENAME_ONE + "," + Cardinality.ONE + ")", bwe.getMessage());
 		}
 	}
 

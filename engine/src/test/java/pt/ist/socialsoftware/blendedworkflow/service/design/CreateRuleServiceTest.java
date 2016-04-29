@@ -14,6 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.AndCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.AttributeValueExpression;
+import pt.ist.socialsoftware.blendedworkflow.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison;
 import pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition;
@@ -24,7 +25,6 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Expression;
 import pt.ist.socialsoftware.blendedworkflow.domain.Expression.ExpressionAtom;
 import pt.ist.socialsoftware.blendedworkflow.domain.NumberLiteral;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.TrueCondition;
@@ -58,10 +58,9 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
 		existsEntity = new Entity(existingDataModel, EXISTS_ENTITY_NAME, false);
 		Entity entityTwo = new Entity(existingDataModel, ENTITY_NAME, false);
-		new Attribute(existingDataModel, existsEntity, EXISTS_ATTRIBUTE_NAME, AttributeType.NUMBER, true, false,
+		new Attribute(existingDataModel, existsEntity, EXISTS_ATTRIBUTE_NAME, AttributeType.NUMBER, true, false, false);
+		new Attribute(existingDataModel, existsEntity, EXISTS_ATTRIBUTE_NAME_STRING, AttributeType.STRING, false, false,
 				false);
-		new Attribute(existingDataModel, existsEntity, EXISTS_ATTRIBUTE_NAME_STRING, AttributeType.STRING, false,
-				false, false);
 		new Attribute(existingDataModel, existsEntity, EXISTS_ATTRIBUTE_NAME_BOOLEAN, AttributeType.BOOLEAN, false,
 				false, false);
 

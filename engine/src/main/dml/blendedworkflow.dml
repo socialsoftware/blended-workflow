@@ -6,7 +6,6 @@ enum pt.ist.socialsoftware.blendedworkflow.domain.OldMaintainGoal.MaintainGoalSt
 enum pt.ist.socialsoftware.blendedworkflow.domain.OldTaskWorkItem.ActivityState as ActivityState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.OldGoalWorkItem.GoalState as GoalState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType as AttributeType;
-enum pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality as Cardinality;
 enum pt.ist.socialsoftware.blendedworkflow.domain.Comparison.ComparisonOperator as ComparisonOperator;
 enum pt.ist.socialsoftware.blendedworkflow.domain.BinaryExpression.BinaryOperator as BinaryOperator;
 
@@ -82,10 +81,14 @@ class RelationBW {
 	String name;
 	String roleNameOne;
 	String roleNameTwo;
-	Cardinality cardinalityOne;
-	Cardinality cardinalityTwo;
 	boolean isOneKeyEntity;
 	boolean isTwoKeyEntity;
+}
+
+class Cardinality {
+	String exp;
+	int minValue;
+	int maxValue;
 }
 
 class Rule {
@@ -570,9 +573,19 @@ relation EntityHasEntityInstances {
 }
 
 // RelationBW
+relation RelationBWHasCardinalityOne {
+	RelationBW playsRole relationOfOne { multiplicity 0..1; } 
+	Cardinality playsRole cardinalityOne { multiplicity 0..1; }
+}
+
+relation RelationBWHasCardinalityTwo {
+	RelationBW playsRole relationOfTwo { multiplicity 0..1; } 
+	Cardinality playsRole cardinalityTwo { multiplicity 0..1; }
+}
+
 relation RelationBWHasRelationInstances {
 	RelationBW playsRole relationType { multiplicity 0..1; } 
-	RelationInstance playsRole RelationInstance { multiplicity 0..*; }
+	RelationInstance playsRole relationInstance { multiplicity 0..*; }
 }
 
 relation RelationBWHasOldRelationInstances {

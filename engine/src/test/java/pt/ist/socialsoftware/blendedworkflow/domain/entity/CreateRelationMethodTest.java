@@ -7,9 +7,9 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.TeardownRollbackTest;
+import pt.ist.socialsoftware.blendedworkflow.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -43,8 +43,8 @@ public class CreateRelationMethodTest extends TeardownRollbackTest {
 		assertEquals(entityTwo, relation.getEntityTwo());
 		assertEquals(ROLE_NAME_ONE, relation.getRoleNameOne());
 		assertEquals(ROLE_NAME_TWO, relation.getRoleNameTwo());
-		assertEquals(Cardinality.ZERO_MANY, relation.getCardinalityOne());
-		assertEquals(Cardinality.ONE, relation.getCardinalityTwo());
+		assertEquals(Cardinality.ZERO_MANY, relation.getCardinalityOne().getExp());
+		assertEquals(Cardinality.ONE, relation.getCardinalityTwo().getExp());
 	}
 
 	@Test

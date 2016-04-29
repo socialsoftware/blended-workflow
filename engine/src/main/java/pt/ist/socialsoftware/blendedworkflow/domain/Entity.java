@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.domain.Condition.ConditionType;
-import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.EntityDTO;
@@ -78,8 +77,8 @@ public class Entity extends Entity_Base {
 		return getRuleSet().stream().filter(rule -> rule.getName().equals(name)).findFirst().orElse(null);
 	}
 
-	public RelationBW createRelation(String name, String roleNameOne, Cardinality cardinalityOne, Entity entityTwo,
-			String roleNameTwo, Cardinality cardinalityTwo) {
+	public RelationBW createRelation(String name, String roleNameOne, String cardinalityOne, Entity entityTwo,
+			String roleNameTwo, String cardinalityTwo) {
 		return new RelationBW(getDataModel(), name, this, roleNameOne, cardinalityOne, false, entityTwo, roleNameTwo,
 				cardinalityTwo, false);
 	}
