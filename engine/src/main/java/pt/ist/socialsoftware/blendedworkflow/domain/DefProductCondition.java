@@ -4,7 +4,7 @@ public abstract class DefProductCondition extends DefProductCondition_Base {
 
 	@Override
 	public void delete() {
-		getWorkItemSet().stream().forEach(wi -> wi.delete());
+		getPostWorkItemArgumentSet().stream().forEach(wi -> wi.delete());
 
 		setActivityWithPostCondition(null);
 

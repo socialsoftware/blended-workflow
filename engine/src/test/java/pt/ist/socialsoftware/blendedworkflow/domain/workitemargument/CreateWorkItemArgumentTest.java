@@ -17,8 +17,9 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.domain.PostWorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.domain.PreWorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.domain.WorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -65,21 +66,18 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 
 	@Test
 	public void successPreGoal() {
-		WorkItemArgument workItemArgument = new WorkItemArgument().initPreWorkItem(goalWorkItem, defPathCondition,
-				attributeInstance, VALUE);
+		PreWorkItemArgument workItemArgument = new PreWorkItemArgument(goalWorkItem, defPathCondition,
+				attributeInstance);
 
 		assertEquals(goalWorkItem, workItemArgument.getWorkItemOfPre());
-		assertEquals(null, workItemArgument.getWorkItemOfPost());
-		assertEquals(defPathCondition, workItemArgument.getDefProductCondition());
+		assertEquals(defPathCondition, workItemArgument.getDefPathCondition());
 		assertEquals(attributeInstance, workItemArgument.getProductInstance());
 	}
 
 	@Test
 	public void successPostGoal() {
-		WorkItemArgument workItemArgument = new WorkItemArgument().initPostWorkItem(goalWorkItem,
-				defAttributeCondition);
+		PostWorkItemArgument workItemArgument = new PostWorkItemArgument(goalWorkItem, defAttributeCondition);
 
-		assertEquals(null, workItemArgument.getWorkItemOfPre());
 		assertEquals(goalWorkItem, workItemArgument.getWorkItemOfPost());
 		assertEquals(defAttributeCondition, workItemArgument.getDefProductCondition());
 		assertEquals(null, workItemArgument.getProductInstance());
@@ -87,21 +85,18 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 
 	@Test
 	public void successPreActivity() {
-		WorkItemArgument workItemArgument = new WorkItemArgument().initPreWorkItem(activityWorkItem, defPathCondition,
-				attributeInstance, VALUE);
+		PreWorkItemArgument workItemArgument = new PreWorkItemArgument(activityWorkItem, defPathCondition,
+				attributeInstance);
 
 		assertEquals(activityWorkItem, workItemArgument.getWorkItemOfPre());
-		assertEquals(null, workItemArgument.getWorkItemOfPost());
-		assertEquals(defPathCondition, workItemArgument.getDefProductCondition());
+		assertEquals(defPathCondition, workItemArgument.getDefPathCondition());
 		assertEquals(attributeInstance, workItemArgument.getProductInstance());
 	}
 
 	@Test
 	public void successPostActivity() {
-		WorkItemArgument workItemArgument = new WorkItemArgument().initPostWorkItem(activityWorkItem,
-				defAttributeCondition);
+		PostWorkItemArgument workItemArgument = new PostWorkItemArgument(activityWorkItem, defAttributeCondition);
 
-		assertEquals(null, workItemArgument.getWorkItemOfPre());
 		assertEquals(activityWorkItem, workItemArgument.getWorkItemOfPost());
 		assertEquals(defAttributeCondition, workItemArgument.getDefProductCondition());
 		assertEquals(null, workItemArgument.getProductInstance());
@@ -113,7 +108,7 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 		EntityInstance otherEntityInstance = new EntityInstance(workflowInstance, otherEntity);
 
 		try {
-			new WorkItemArgument().initPreWorkItem(goalWorkItem, defPathCondition, otherEntityInstance, VALUE);
+			new PreWorkItemArgument(goalWorkItem, defPathCondition, otherEntityInstance);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.WORKITEMARGUMENT_CONSISTENCY, bwe.getError());
@@ -127,7 +122,7 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 		GoalWorkItem otherGoalWorkItem = new GoalWorkItem(otherWorkflowInstance, goal);
 
 		try {
-			new WorkItemArgument().initPreWorkItem(otherGoalWorkItem, defPathCondition, attributeInstance, VALUE);
+			new PreWorkItemArgument(otherGoalWorkItem, defPathCondition, attributeInstance);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.WORKITEMARGUMENT_CONSISTENCY, bwe.getError());

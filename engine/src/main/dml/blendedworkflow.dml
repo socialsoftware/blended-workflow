@@ -251,9 +251,11 @@ class ActivityWorkItem extends WorkItem;
 
 class GoalWorkItem extends WorkItem;
 
-class WorkItemArgument {
-	String value;
-}
+class WorkItemArgument;
+
+class PreWorkItemArgument extends WorkItemArgument;
+
+class PostWorkItemArgument extends WorkItemArgument;
 
 // BlendedWorkflow
 relation BlendedWorkflowHasSpecifications {
@@ -374,12 +376,12 @@ relation ConditionModelHasAttributeInvariantConditions {
 // WorkItem
 relation WorkItemHasPreConditions {
 	WorkItem playsRole workItemOfPre {multiplicity 0..1;}
-	WorkItemArgument playsRole preCondition {multiplicity 0..*;}
+	PreWorkItemArgument playsRole preCondition {multiplicity 0..*;}
 }
 
 relation WorkItemHasPostConditions {
 	WorkItem playsRole workItemOfPost {multiplicity 0..1;}
-	WorkItemArgument playsRole postCondition {multiplicity 0..*;}
+	PostWorkItemArgument playsRole postCondition {multiplicity 0..*;}
 }
 
 // OldWorkItem
@@ -394,13 +396,23 @@ relation WorkItemRefersInputAttributteInstances {
 }
 
 // WorkItemArgument
-relation WorkItemArgumentHasDefProductConditon {
-	WorkItemArgument playsRole workItem {multiplicity 0..*;}
+relation PreWorkItemArgumentHasDefPathCondition {
+	PreWorkItemArgument playsRole preWorkItemArgument {multiplicity 0..*;}
+	DefPathCondition playsRole defPathCondition {multiplicity 0..1;}
+}
+
+relation PostWorkItemArgumentHasDefProductCondition {
+	PostWorkItemArgument playsRole postWorkItemArgument {multiplicity 0..*;}
 	DefProductCondition playsRole defProductCondition {multiplicity 0..1;}
 }
 
-relation WorkItemArgumentHasProductInstance {
-	WorkItemArgument playsRole workItem {multiplicity 0..1;}
+relation PreWorkItemArgumentHasProductInstance {
+	PreWorkItemArgument playsRole preWorkItemArgument {multiplicity 0..*;}
+	ProductInstance playsRole productInstance {multiplicity 0..1;}
+}
+
+relation PostWorkItemArgumentHasProductInstance {
+	PostWorkItemArgument playsRole postWorkItemArgument {multiplicity 0..1;}
 	ProductInstance playsRole productInstance {multiplicity 0..1;}
 }
 
