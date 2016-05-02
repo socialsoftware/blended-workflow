@@ -36,12 +36,4 @@ public abstract class Product extends Product_Base {
 		deleteDomainObject();
 	}
 
-	public boolean isEntityAndExists() {
-		if (getProductType().equals(ProductType.ENTITY) && ((Entity) this).getExists()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 }

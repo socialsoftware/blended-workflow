@@ -154,6 +154,8 @@ public class DefPathCondition extends DefPathCondition_Base {
 
 	@Override
 	public void delete() {
+		getPreWorkItemArgumentSet().stream().forEach(wia -> wia.delete());
+
 		getActivityWithPreConditionSet().stream().forEach(d -> removeActivityWithPreCondition(d));
 		getActivationConditionGoalSet().stream().forEach(d -> removeActivationConditionGoal(d));
 		setActivitySequenceCondition(null);

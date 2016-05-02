@@ -43,21 +43,6 @@ public class ActivityModel extends ActivityModel_Base {
 		throw new BWException(BWErrorType.NON_EXISTENT_ACTIVITY_NAME, name);
 	}
 
-	public Activity getActivityPostConditionContains(String path) {
-		Product product = getDataModel().getTargetOfPath(path);
-		if (product.isEntityAndExists()) {
-			return null;
-		}
-
-		for (Activity activity : getActivitySet()) {
-			if (activity.getPostConditionSet().stream().map(d -> d.getPath().getTarget()).anyMatch(p -> p == product)) {
-				return activity;
-			}
-		}
-
-		throw new BWException(BWErrorType.ACTIVITY_UNKNOWN_POST_CONDITION_DEF, path);
-	}
-
 	public void clean() {
 		getActivitySet().stream().forEach(t -> t.delete());
 	}
@@ -246,8 +231,8 @@ public class ActivityModel extends ActivityModel_Base {
 
 	private void applyMultiplicityToPostAndPre(RelationBW relation) {
 		List<Activity> activities = relation.getEntitySet().stream()
-				.map(e -> DefEntityCondition.getDefEntityCondition(e).getActivityWithPostCondition()).filter(t -> t != null)
-				.collect(Collectors.toList());
+				.map(e -> DefEntityCondition.getDefEntityCondition(e).getActivityWithPostCondition())
+				.filter(t -> t != null).collect(Collectors.toList());
 
 		// the relation has an exists entity
 		if (activities.size() == 1) {

@@ -31,8 +31,6 @@ public class IsEnabledForExecutionTest extends TeardownRollbackTest {
 	private static final String ROLENAME_ENT_ONE = "entOne";
 	private static final String ROLENAME_ENT_TWO = "entTwo";
 	private static final String ROLENAME_ENT_THREE = "entThree";
-	private static final String DESCRIPTION = "description";
-	private static final String ACTIVITY_ONE = "activityOne";
 
 	Specification spec = null;
 	Entity entOne;

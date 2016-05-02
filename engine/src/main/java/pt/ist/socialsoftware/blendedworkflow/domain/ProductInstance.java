@@ -6,7 +6,10 @@ import java.util.Set;
 public abstract class ProductInstance extends ProductInstance_Base {
 
 	public void delete() {
-		getWorkItem().delete();
+		getPreWorkItemArgumentSet().stream().forEach(wia -> wia.delete());
+		setPostWorkItemArgument(null);
+
+		deleteDomainObject();
 	}
 
 	public abstract WorkflowInstance getWorkflowInstance();
