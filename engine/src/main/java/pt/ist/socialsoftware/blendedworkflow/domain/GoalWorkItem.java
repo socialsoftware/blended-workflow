@@ -25,8 +25,8 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	private void checkConsistency(WorkflowInstance workflowInstance, Goal goal) {
 		if (workflowInstance != null && goal != null) {
 			if (workflowInstance.getSpecification() != goal.getGoalModel().getSpecification()) {
-				throw new BWException(BWErrorType.WORKITEM_CONSISTENCY, workflowInstance.getSpecification().getName() + "<>"
-						+ goal.getGoalModel().getSpecification().getName());
+				throw new BWException(BWErrorType.WORKITEM_CONSISTENCY, workflowInstance.getSpecification().getName()
+						+ "<>" + goal.getGoalModel().getSpecification().getName());
 			}
 		}
 	}

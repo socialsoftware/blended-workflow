@@ -2,7 +2,6 @@ package pt.ist.socialsoftware.blendedworkflow.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.domain.DataModel.DataState as DataState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.OldMaintainGoal.MaintainGoalState as MaintainGoalState;
-//enum pt.ist.socialsoftware.blendedworkflow.domain.OldWorkItem.WorkItemState as WorkItemState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.OldTaskWorkItem.ActivityState as ActivityState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.OldGoalWorkItem.GoalState as GoalState;
 enum pt.ist.socialsoftware.blendedworkflow.domain.Attribute.AttributeType as AttributeType;
@@ -233,6 +232,7 @@ class OldRelationInstance {
 
 class WorkflowInstance {
 	String name;
+	int logCounter;
 }
 
 class ProductInstance;
@@ -245,7 +245,9 @@ class AttributeInstance extends ProductInstance {
 
 class RelationInstance;
 
-class WorkItem;
+class WorkItem {
+	int counter;
+}
 
 class ActivityWorkItem extends WorkItem;
 

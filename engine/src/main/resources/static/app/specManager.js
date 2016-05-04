@@ -23,6 +23,9 @@ app.config(function($routeProvider) {
 		controller : "ActivityGraphController"
 	}).when("/specs/:specId/instancesmanager", {
 		templateUrl : "views/instancesManager.html"
+	}).when("/specs/:specId/instancesmanager/:instance/activity", {
+		templateUrl : "views/activityWorkItemManager.html",
+		controller : "ActivityWorkItemController"
 	}).otherwise({
 		redirectTo : "/"
 	});

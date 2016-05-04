@@ -69,7 +69,7 @@
 							<ul class="dropdown-menu" uib-dropdown-menu="uib-dropdown-menu">
 								<li><a href="#">Data View</a></li>
 								<li role="separator" class="divider"></li>
-								<li><a href="#">Activity View</a></li>
+								<li><a href="#/specs/{{spec.specId}}/instancesmanager/{{instance.name}}/activity">Activity View</a></li>
 								<li role="separator" class="divider"></li>
 								<li><a href="#">Goal View</a></li>
 							</ul></li>
@@ -116,6 +116,7 @@
 	<script src="app/controllers/goalGraphController.js"></script>
 	<script src="app/controllers/activityModelController.js"></script>
 	<script src="app/controllers/activityGraphController.js"></script>
+	<script src="app/controllers/activityWorkItemController.js"></script>
 
 	<script src="app/directives/errorMessage.js"></script>
 	<script src="app/directives/goalGraph.js"></script>
@@ -127,6 +128,7 @@
 	<script src="app/services/goalRepository.js"></script>
 	<script src="app/services/activityRepository.js"></script>
 	<script src="app/services/instanceRepository.js"></script>
+	<script src="app/services/activityWorkItemRepository.js"></script>
 
 </body>
 </html>

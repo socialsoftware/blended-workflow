@@ -25,8 +25,8 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 	private void checkConsistency(WorkflowInstance workflowInstance, Activity activity) {
 		if (workflowInstance != null && activity != null) {
 			if (workflowInstance.getSpecification() != activity.getActivityModel().getSpecification()) {
-				throw new BWException(BWErrorType.WORKITEM_CONSISTENCY, workflowInstance.getSpecification().getName() + "<>"
-						+ activity.getActivityModel().getSpecification().getName());
+				throw new BWException(BWErrorType.WORKITEM_CONSISTENCY, workflowInstance.getSpecification().getName()
+						+ "<>" + activity.getActivityModel().getSpecification().getName());
 			}
 		}
 	}
