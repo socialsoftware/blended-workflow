@@ -1,0 +1,20 @@
+<div class="container" ng-show="instance.name">
+	<div>
+		<samp>
+			<strong>Activity Work Items</strong> {{spec.name}}:{{instance.name}}
+			<br /> <br />
+			<div ng-repeat="wi in workItems">
+				<form class="form-inline" name="activityForm"
+					novalidate="novalidate">
+					<strong>Work Item</strong><span> {{wi.activityName}}</span> { <br />
+					<span style="padding-left: 2em"></span><strong>Context</strong> <br />
+					<div ng-repeat="(entity,values) in wi.context">
+						<span style="padding-left: 4em"></span>Entity: {{entity}}, Values: {{values}}
+					</div>
+					} <br />
+				</form>
+			</div>
+		</samp>
+
+	</div>
+</div>
