@@ -410,12 +410,12 @@ relation PostWorkItemArgumentHasDefProductCondition {
 
 relation PreWorkItemArgumentHasProductInstance {
 	PreWorkItemArgument playsRole preWorkItemArgument {multiplicity 0..*;}
-	ProductInstance playsRole productInstance {multiplicity 0..1;}
+	ProductInstance playsRole productInstance {multiplicity 0..*;}
 }
 
 relation PostWorkItemArgumentHasProductInstance {
 	PostWorkItemArgument playsRole postWorkItemArgument {multiplicity 0..1;}
-	ProductInstance playsRole productInstance {multiplicity 0..1;}
+	ProductInstance playsRole productInstance {multiplicity 0..*;}
 }
 
 // OldWorkItemArgument

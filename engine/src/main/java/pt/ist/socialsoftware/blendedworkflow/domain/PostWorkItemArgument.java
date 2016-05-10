@@ -4,21 +4,21 @@ public class PostWorkItemArgument extends PostWorkItemArgument_Base {
 
 	@Override
 	public void setWorkItemOfPost(WorkItem workItem) {
-		checkInstanceConsistency(workItem, getProductInstance());
+		checkInstanceConsistency(workItem, getProductInstanceSet());
 		super.setWorkItemOfPost(workItem);
 	}
 
 	@Override
 	public void setDefProductCondition(DefProductCondition defProductCondition) {
-		checkProductConsistency(defProductCondition, getProductInstance());
+		checkProductConsistency(defProductCondition, getProductInstanceSet());
 		super.setDefProductCondition(defProductCondition);
 	}
 
 	@Override
-	public void setProductInstance(ProductInstance productInstance) {
+	public void addProductInstance(ProductInstance productInstance) {
 		checkInstanceConsistency(getWorkItemOfPost(), productInstance);
 		checkProductConsistency(getDefProductCondition(), productInstance);
-		super.setProductInstance(productInstance);
+		super.addProductInstance(productInstance);
 	}
 
 	public PostWorkItemArgument(WorkItem workItem, DefProductCondition defProductCondition) {
@@ -30,7 +30,7 @@ public class PostWorkItemArgument extends PostWorkItemArgument_Base {
 		setWorkItemOfPost(null);
 		setDefProductCondition(null);
 
-		setProductInstance(null);
+		getProductInstanceSet().stream().forEach(pi -> removeProductInstance(pi));
 
 		deleteDomainObject();
 	}

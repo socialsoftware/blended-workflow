@@ -16,8 +16,15 @@ public abstract class ProductInstance extends ProductInstance_Base {
 
 	public abstract Product getProduct();
 
+	public abstract EntityInstance getEntityInstance();
+
 	public Set<ProductInstance> getProductInstanceSetByName(String name) {
 		return new HashSet<ProductInstance>();
 	}
 
+	public abstract boolean isDefined();
+
+	public abstract boolean holdsPost(DefProductCondition defProductCondition, Set<MulCondition> mulConditionSet);
+
+	public abstract boolean holdsPre(DefPathCondition defPathCondition);
 }
