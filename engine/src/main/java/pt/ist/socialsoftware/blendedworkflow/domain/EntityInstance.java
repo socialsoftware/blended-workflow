@@ -9,10 +9,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class EntityInstance extends EntityInstance_Base {
+	private static Logger logger = LoggerFactory.getLogger(EntityInstance.class);
 
 	@Override
 	public void setWorkflowInstance(WorkflowInstance workflowInstance) {
@@ -53,6 +57,11 @@ public class EntityInstance extends EntityInstance_Base {
 	@Override
 	public Product getProduct() {
 		return getEntity();
+	}
+
+	@Override
+	public EntityInstance getEntityInstance() {
+		return this;
 	}
 
 	public Boolean holdsDefPathConditions(Set<DefPathCondition> preConditionSet) {
@@ -153,6 +162,38 @@ public class EntityInstance extends EntityInstance_Base {
 	public Set<RelationInstance> getRelationInstanceSet() {
 		return Stream.concat(getRelationInstanceOfOneSet().stream(), getRelationInstanceOfTwoSet().stream())
 				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public boolean isDefined() {
+		return getEntity().getMultConditions().stream().allMatch(m -> isInCardinality(m));
+	}
+
+	private boolean isInCardinality(MulCondition m) {
+		long numberOfInstances = getRelationInstanceSet().stream()
+				.filter(ri -> ri.getRelationType() == m.getRelationBW()).count();
+		logger.debug("isInCardinality numberOfInstances>{}", numberOfInstances);
+
+		return numberOfInstances >= m.getTargetCardinality().getMinValue()
+				&& numberOfInstances <= m.getTargetCardinality().getMaxValue();
+	}
+
+	@Override
+	public boolean holdsPost(DefProductCondition defProductCondition, Set<MulCondition> mulConditionSet) {
+		if (getEntity() != defProductCondition.getSourceOfPath()) {
+			return false;
+		}
+
+		return mulConditionSet.stream().allMatch(m -> isInCardinality(m));
+	}
+
+	@Override
+	public boolean holdsPre(DefPathCondition defPathCondition) {
+		if (getEntity() != defPathCondition.getSourceOfPath()) {
+			return false;
+		}
+
+		return false;
 	}
 
 }

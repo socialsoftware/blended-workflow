@@ -26,7 +26,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class GetEntityInstanceContextTest extends TeardownRollbackTest {
+public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 	private static final String ENT_ONE_NAME = "EntOne";
 	private static final String ENT_TWO_NAME = "EntTwo";
 	private static final String ENT_THREE_NAME = "EntThree";

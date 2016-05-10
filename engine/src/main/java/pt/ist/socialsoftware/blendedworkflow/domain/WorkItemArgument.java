@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Set;
+
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
@@ -21,6 +23,19 @@ public class WorkItemArgument extends WorkItemArgument_Base {
 				throw new BWException(BWErrorType.WORKITEMARGUMENT_CONSISTENCY, workItem.getWorkflowInstance().getName()
 						+ "<>" + productInstance.getWorkflowInstance().getName());
 			}
+		}
+	}
+
+	public void checkProductConsistency(DefProductCondition defProductCondition,
+			Set<ProductInstance> productInstanceSet) {
+		if (defProductCondition != null && productInstanceSet != null) {
+			productInstanceSet.stream().forEach(pi -> checkProductConsistency(defProductCondition, pi));
+		}
+	}
+
+	public void checkInstanceConsistency(WorkItem workItem, Set<ProductInstance> productInstanceSet) {
+		if (workItem != null && productInstanceSet != null) {
+			productInstanceSet.stream().forEach(pi -> checkInstanceConsistency(workItem, pi));
 		}
 	}
 

@@ -37,4 +37,50 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 		super.delete();
 	}
 
+	public boolean holds() {
+		checkArgumentsCompletelyDefined();
+
+		return preConditionsHold() && postConditionsHold();
+	}
+
+	public boolean preConditionsHold() {
+		return getPostConditionSet().stream().allMatch(wia -> getActivity().preHolds(wia, getPreConditionSet()));
+	}
+
+	public boolean postConditionsHold() {
+		return getPostConditionSet().stream().allMatch(wia -> getActivity().postHolds(wia));
+	}
+
+	public void checkArgumentsCompletelyDefined() {
+		checkCompleteSetOfPreConditions();
+
+		checkCompleteSetOfPostConditions();
+	}
+
+	private void checkCompleteSetOfPostConditions() {
+		if (getActivity().getPostConditionSet().size() != getPostConditionSet().size()) {
+			throw new BWException(BWErrorType.POST_WORK_ITEM_ARGUMENT, "Number of elements");
+		} else {
+			for (DefProductCondition defProductCondition : getActivity().getPostConditionSet()) {
+				if (!getPostConditionSet().stream()
+						.anyMatch(pwia -> pwia.getDefProductCondition() == defProductCondition)) {
+					throw new BWException(BWErrorType.POST_WORK_ITEM_ARGUMENT,
+							"Non existing def product: " + defProductCondition.getPath().getValue());
+				}
+			}
+		}
+	}
+
+	private void checkCompleteSetOfPreConditions() {
+		if (getActivity().getPreConditionSet().size() != getPreConditionSet().size()) {
+			throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT, "Number of elements");
+		} else {
+			for (DefPathCondition defPathCondition : getActivity().getPreConditionSet()) {
+				if (!getPreConditionSet().stream().anyMatch(pwia -> pwia.getDefPathCondition() == defPathCondition)) {
+					throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT,
+							"Non existing def path: " + defPathCondition.getPath().getValue());
+				}
+			}
+		}
+	}
 }

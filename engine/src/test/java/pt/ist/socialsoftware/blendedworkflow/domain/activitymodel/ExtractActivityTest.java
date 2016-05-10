@@ -153,7 +153,8 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 
 		assertEquals(4, taskModel.getActivitySet().size());
 		assertTrue(taskModel.getActivity(TASK_ONE).getPreConditionSet().stream().map(d -> d.getPath().getValue())
-				.collect(Collectors.toSet()).contains(DefEntityCondition.getDefEntityCondition(entityOne).getPath().getValue()));
+				.collect(Collectors.toSet())
+				.contains(DefEntityCondition.getDefEntityCondition(entityOne).getPath().getValue()));
 		assertEquals(0, task.getMultiplicityInvariantSet().size());
 
 		assertEquals(2, taskModel.getActivity(TASK_TWO).getMultiplicityInvariantSet().size());
@@ -191,9 +192,11 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 		// assertTrue(task.getMultiplicityInvariantSet()
 		// .contains(MulCondition.getMulCondition(relation,
 		// relation.getRoleNameTwo())));
-		assertEquals(2, taskModel.getActivity(TASK_ONE).getMultiplicityInvariantSet().size());
+		assertEquals(2, taskModel.getActivity(NEW_TASK_NAME).getMultiplicityInvariantSet().size()
+				+ taskModel.getActivity(TASK_ONE).getMultiplicityInvariantSet().size());
+		assertTrue(taskModel.getActivity(NEW_TASK_NAME).getMultiplicityInvariantSet().size() == 0
+				|| taskModel.getActivity(TASK_ONE).getMultiplicityInvariantSet().size() == 0);
 		assertEquals(0, taskModel.getActivity(TASK_TWO).getMultiplicityInvariantSet().size());
-		assertEquals(0, taskModel.getActivity(NEW_TASK_NAME).getMultiplicityInvariantSet().size());
 
 		task.checkConsistency();
 		taskModel.getActivity(TASK_TWO).checkConsistency();

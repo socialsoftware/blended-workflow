@@ -4,34 +4,33 @@ public class PreWorkItemArgument extends PreWorkItemArgument_Base {
 
 	@Override
 	public void setWorkItemOfPre(WorkItem workItem) {
-		checkInstanceConsistency(workItem, getProductInstance());
+		checkInstanceConsistency(workItem, getProductInstanceSet());
 		super.setWorkItemOfPre(workItem);
 	}
 
 	@Override
 	public void setDefPathCondition(DefPathCondition defPathCondition) {
-		checkProductConsistency(defPathCondition, getProductInstance());
+		checkProductConsistency(defPathCondition, getProductInstanceSet());
 		super.setDefPathCondition(defPathCondition);
 	}
 
 	@Override
-	public void setProductInstance(ProductInstance productInstance) {
+	public void addProductInstance(ProductInstance productInstance) {
 		checkInstanceConsistency(getWorkItemOfPre(), productInstance);
 		checkProductConsistency(getDefPathCondition(), productInstance);
-		super.setProductInstance(productInstance);
+		super.addProductInstance(productInstance);
 	}
 
-	public PreWorkItemArgument(WorkItem workItem, DefPathCondition defPathCondition, ProductInstance productInstance) {
+	public PreWorkItemArgument(WorkItem workItem, DefPathCondition defPathCondition) {
 		setWorkItemOfPre(workItem);
 		setDefPathCondition(defPathCondition);
-		setProductInstance(productInstance);
 	}
 
 	public void delete() {
 		setWorkItemOfPre(null);
 		setDefPathCondition(null);
 
-		setProductInstance(null);
+		getProductInstanceSet().stream().forEach(pi -> removeProductInstance(pi));
 
 		deleteDomainObject();
 	}

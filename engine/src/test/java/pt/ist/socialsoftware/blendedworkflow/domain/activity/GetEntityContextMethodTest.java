@@ -22,7 +22,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class GetEntityContextTest extends TeardownRollbackTest {
+public class GetEntityContextMethodTest extends TeardownRollbackTest {
 	private static final String ENT_ONE_NAME = "EntOne";
 	private static final String ENT_TWO_NAME = "EntTwo";
 	private static final String ENT_THREE_NAME = "EntThree";
