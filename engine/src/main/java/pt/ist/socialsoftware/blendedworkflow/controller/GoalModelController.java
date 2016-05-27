@@ -238,12 +238,12 @@ public class GoalModelController {
 	public ResponseEntity<String> associateEntityInvariantConditionToGoal(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @RequestBody MulConditionDTO mulConditionDTO) {
 		logger.debug("associateActConditionToGoal specId:{}, goalName:{}, path:{}, cardinality:{}", specId, goalName,
-				mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
+				mulConditionDTO.getRolePath(), mulConditionDTO.getTargetCardinality());
 
 		DesignInterface adi = DesignInterface.getInstance();
 
 		adi.associateMulToGoalInvariant(specId, goalName, mulConditionDTO.getRolePath(),
-				mulConditionDTO.getCardinality());
+				mulConditionDTO.getTargetCardinality());
 
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}

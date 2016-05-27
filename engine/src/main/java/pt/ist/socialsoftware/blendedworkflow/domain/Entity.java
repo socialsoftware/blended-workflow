@@ -28,7 +28,7 @@ public class Entity extends Entity_Base {
 		setDataModel(dataModel);
 		setName(name);
 		setExists(exists);
-		setEntityInstanceCounter(0);
+		setOLDEntityInstanceCounter(0);
 	}
 
 	private void checkEntityName(String name) {
@@ -274,9 +274,9 @@ public class Entity extends Entity_Base {
 		}
 	}
 
-	public int getNewEntityInstanceId() {
-		setEntityInstanceCounter(getEntityInstanceCounter() + 1);
-		return getEntityInstanceCounter();
+	public int getNewOldEntityInstanceId() {
+		setOLDEntityInstanceCounter(getOLDEntityInstanceCounter() + 1);
+		return getOLDEntityInstanceCounter();
 	}
 
 	public Optional<Attribute> getAttribute(String name) {

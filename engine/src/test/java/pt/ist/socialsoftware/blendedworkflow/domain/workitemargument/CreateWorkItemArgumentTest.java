@@ -114,7 +114,7 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.WORKITEMARGUMENT_CONSISTENCY, bwe.getError());
+			assertEquals(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, bwe.getError());
 			assertEquals(ATTRIBUTE_NAME + "<>" + OTHER_ENTITY_NAME, bwe.getMessage());
 		}
 	}
@@ -129,7 +129,7 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 			workItemArgument.addProductInstance(attributeInstance);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.WORKITEMARGUMENT_CONSISTENCY, bwe.getError());
+			assertEquals(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, bwe.getError());
 			assertEquals(OTHER_NAME + "<>" + NAME, bwe.getMessage());
 		}
 	}

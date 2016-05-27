@@ -1,10 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.service.execution;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +9,8 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.domain.ActivityWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -53,6 +49,10 @@ public class ExecutionInterface {
 		return getSpecification(specId).getWorkflowInstance(name);
 	}
 
+	public Activity getActivity(String specId, String activityName) {
+		return getSpecification(specId).getActivityModel().getActivity(activityName);
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public WorkflowInstance createWorkflowInstance(String specId, String name) {
 		return new WorkflowInstance(getSpecification(specId), name);
@@ -70,20 +70,21 @@ public class ExecutionInterface {
 		Set<ActivityWorkItemDTO> activityWorkItemDTOs = new HashSet<ActivityWorkItemDTO>();
 
 		for (Activity activity : workflowInstance.getEnabledActivitySet()) {
-			ActivityWorkItemDTO activityWorkItemDTO = new ActivityWorkItemDTO();
-			activityWorkItemDTO.setSpecId(specId);
-			activityWorkItemDTO.setInstanceName(instanceName);
-			activityWorkItemDTO.setActivityName(activity.getName());
-			activityWorkItemDTO.setContext(new HashMap<String, Set<String>>());
-			Map<Entity, Set<EntityInstance>> context = activity.getInstanceContext(workflowInstance);
-			for (Entity entity : context.keySet()) {
-				activityWorkItemDTO.getContext().put(entity.getName(),
-						context.get(entity).stream().map(ei -> ei.getExternalId()).collect(Collectors.toSet()));
-			}
-
-			activityWorkItemDTOs.add(activityWorkItemDTO);
+			activityWorkItemDTOs.add(ActivityWorkItemDTO.createActivityWorkItemDTO(workflowInstance, activity));
 		}
 
 		return activityWorkItemDTOs;
 	}
+
+	@Atomic(mode = TxMode.WRITE)
+	public void executeActivityWorkItem(ActivityWorkItemDTO activityWorkItemDTO) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(activityWorkItemDTO.getSpecId(),
+				activityWorkItemDTO.getWorkflowInstanceName());
+		Activity activity = getActivity(activityWorkItemDTO.getSpecId(), activityWorkItemDTO.getActivityName());
+
+		ActivityWorkItem activityWorkItem = activityWorkItemDTO.createActivityWorkItem(workflowInstance, activity);
+
+		activityWorkItem.holds();
+	}
+
 }

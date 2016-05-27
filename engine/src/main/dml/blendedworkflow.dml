@@ -60,7 +60,7 @@ class Product {
 
 class Entity extends Product {
 	boolean exists;
-	Integer entityInstanceCounter;
+	Integer OLDEntityInstanceCounter;
 }
 
 class Attribute extends Product {

@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductInstanceDTO;
 
 public class AttributeInstance extends AttributeInstance_Base {
 
@@ -65,7 +66,7 @@ public class AttributeInstance extends AttributeInstance_Base {
 								getAttribute().getType() + ":" + value);
 					break;
 				case DATE:
-					final String DATE_EXP = "[01]\\d-[01]\\d-\\d{4}";
+					final String DATE_EXP = "[01]\\d/[01]\\d/\\d{4}";
 
 					if (!Pattern.matches(DATE_EXP, value))
 						throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
@@ -98,17 +99,35 @@ public class AttributeInstance extends AttributeInstance_Base {
 
 	@Override
 	public boolean isDefined() {
-		return getValue() != null && getValue().length() > 0;
+		if (getValue() == null || getValue().length() == 0)
+			throw new BWException(BWErrorType.NOT_DEFINED, getAttribute().getFullPath());
+
+		return true;
 	}
 
 	@Override
 	public boolean holdsPost(DefProductCondition defProductCondition, Set<MulCondition> mulConditionSet) {
-		return getAttribute() == defProductCondition.getTargetOfPath() && isDefined();
+		if (getAttribute() != defProductCondition.getTargetOfPath() || !isDefined())
+			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, "post work item argument "
+					+ getAttribute().getFullPath() + ":" + defProductCondition.getTargetOfPath().getFullPath());
+
+		return true;
 	}
 
 	@Override
 	public boolean holdsPre(DefPathCondition defPathCondition) {
 		return getAttribute() == defPathCondition.getTargetOfPath() && isDefined();
+	}
+
+	@Override
+	public ProductInstanceDTO getDTO() {
+		ProductInstanceDTO productInstanceDTO = new ProductInstanceDTO();
+		productInstanceDTO.setProduct(getAttribute().getDTO());
+		productInstanceDTO.setExternalId(getExternalId());
+		productInstanceDTO.setPath(getAttribute().getFullPath());
+		productInstanceDTO.setValue(getAttribute().getFullPath() + "[" + getValue() + "]");
+
+		return productInstanceDTO;
 	}
 
 }

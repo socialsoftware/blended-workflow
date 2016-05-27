@@ -1,7 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.domain.activityworkitem;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -23,6 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
@@ -93,9 +95,13 @@ public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(activityWorkItem, defAttributeCondition);
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
-		boolean result = activityWorkItem.postConditionsHold();
+		try {
+			activityWorkItem.postConditionsHold();
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, bwe.getError());
+		}
 
-		assertFalse(result);
 	}
 
 	@Test
@@ -106,9 +112,13 @@ public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
 		attributeInstance.setValue(null);
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
-		boolean result = activityWorkItem.postConditionsHold();
+		try {
+			activityWorkItem.postConditionsHold();
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.NOT_DEFINED, bwe.getError());
+		}
 
-		assertFalse(result);
 	}
 
 	@Test
@@ -119,9 +129,13 @@ public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
 		attributeInstance.setValue("");
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
-		boolean result = activityWorkItem.postConditionsHold();
+		try {
+			activityWorkItem.postConditionsHold();
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.NOT_DEFINED, bwe.getError());
+		}
 
-		assertFalse(result);
 	}
 
 	@Test
@@ -151,9 +165,12 @@ public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
 		postWorkItemArgument.addProductInstance(entityInstance);
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
-		boolean result = activityWorkItem.postConditionsHold();
-
-		assertFalse(result);
+		try {
+			activityWorkItem.postConditionsHold();
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, bwe.getError());
+		}
 	}
 
 	@Test
@@ -174,9 +191,13 @@ public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
 		postWorkItemArgument.addProductInstance(entityInstance);
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
-		boolean result = activityWorkItem.postConditionsHold();
+		try {
+			activityWorkItem.postConditionsHold();
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, bwe.getError());
+		}
 
-		assertFalse(result);
 	}
 
 	@Test

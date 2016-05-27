@@ -8,7 +8,7 @@ public class OldEntityInstance extends OldEntityInstance_Base {
 
 	public OldEntityInstance(Entity entity) {
 		setEntity(entity);
-		setID(entity.getName() + "." + entity.getNewEntityInstanceId()); // Id:
+		setID(entity.getName() + "." + entity.getNewOldEntityInstanceId()); // Id:
 																			// EntityName.#
 		setAttributeInstanceCounter(0);
 		setRelationInstanceCounter(0);

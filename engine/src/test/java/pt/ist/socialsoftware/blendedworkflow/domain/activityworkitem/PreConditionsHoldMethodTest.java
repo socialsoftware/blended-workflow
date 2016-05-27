@@ -1,7 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.domain.activityworkitem;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -23,6 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class PreConditionsHoldMethodTest extends TeardownRollbackTest {
@@ -125,8 +127,12 @@ public class PreConditionsHoldMethodTest extends TeardownRollbackTest {
 		postWorkItemArgument.addProductInstance(attributeInstance);
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
-		boolean result = activityWorkItem.preConditionsHold();
-		assertFalse(result);
+		try {
+			activityWorkItem.preConditionsHold();
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, bwe.getError());
+		}
 	}
 
 }

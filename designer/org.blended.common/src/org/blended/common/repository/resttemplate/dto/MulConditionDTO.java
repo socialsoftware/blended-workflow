@@ -9,7 +9,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class MulConditionDTO {
 	private String specId;
 	private String rolePath;
-	private String cardinality;
+	private String sourceCardinality;
+	private int sourceMin;
+	private int sourceMax;
+	private String targetCardinality;
+	private int targetMin;
+	private int targetMax;
 
 	public MulConditionDTO() {
 	}
@@ -17,13 +22,13 @@ public class MulConditionDTO {
 	public MulConditionDTO(String specId, String rolePath, String cardinality) {
 		this.specId = specId;
 		this.rolePath = rolePath;
-		this.cardinality = cardinality;
+		this.targetCardinality = cardinality;
 	}
 
 	public EntityInvariantCondition createEntityInvariantCondition(CommonFactory factory) {
 		EntityInvariantCondition entityInvariantCondition = factory.createEntityInvariantCondition();
 		entityInvariantCondition.setName(getRolePath());
-		entityInvariantCondition.setCardinality(getCardinality());
+		entityInvariantCondition.setCardinality(getTargetCardinality());
 		return entityInvariantCondition;
 	}
 
@@ -43,12 +48,52 @@ public class MulConditionDTO {
 		this.rolePath = rolePath;
 	}
 
-	public String getCardinality() {
-		return cardinality;
+	public String getSourceCardinality() {
+		return sourceCardinality;
 	}
 
-	public void setCardinality(String cardinality) {
-		this.cardinality = cardinality;
+	public void setSourceCardinality(String sourceCardinality) {
+		this.sourceCardinality = sourceCardinality;
+	}
+
+	public int getSourceMin() {
+		return sourceMin;
+	}
+
+	public void setSourceMin(int sourceMin) {
+		this.sourceMin = sourceMin;
+	}
+
+	public int getSourceMax() {
+		return sourceMax;
+	}
+
+	public void setSourceMax(int sourceMax) {
+		this.sourceMax = sourceMax;
+	}
+
+	public String getTargetCardinality() {
+		return targetCardinality;
+	}
+
+	public void setTargetCardinality(String targetCardinality) {
+		this.targetCardinality = targetCardinality;
+	}
+
+	public int getTargetMin() {
+		return targetMin;
+	}
+
+	public void setTargetMin(int targetMin) {
+		this.targetMin = targetMin;
+	}
+
+	public int getTargetMax() {
+		return targetMax;
+	}
+
+	public void setTargetMax(int targetMax) {
+		this.targetMax = targetMax;
 	}
 
 }

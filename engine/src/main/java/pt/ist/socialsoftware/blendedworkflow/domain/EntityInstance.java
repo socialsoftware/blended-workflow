@@ -1,8 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ProductInstanceDTO;
 
 public class EntityInstance extends EntityInstance_Base {
 	private static Logger logger = LoggerFactory.getLogger(EntityInstance.class);
@@ -69,21 +70,8 @@ public class EntityInstance extends EntityInstance_Base {
 	}
 
 	public boolean holdsDefPathCondition(DefPathCondition defPathCondition) {
-		LinkedList<String> namesInPath = new LinkedList<String>(
-				Arrays.asList(defPathCondition.getPath().getValue().split("\\.")));
-
-		if (defPathCondition.getPath().getSource() != getEntity()
-				&& defPathCondition.getPath().getAdjacent() == getEntity()) {
-			namesInPath.removeFirst();
-		} else {
-			assert false : "holdsDefPathCondition path neither starts or nor have adjacent of the entity instance type";
-		}
-
-		// the first element refers the entity
-		namesInPath.remove(0);
-
 		try {
-			getProductInstancesByPath(namesInPath);
+			getProductInstancesByPath(defPathCondition);
 		} catch (BWException bwe) {
 			if (bwe.getError().equals(BWErrorType.NOT_ALL_PRODUCT_INSTANCES_DEFINED)) {
 				return false;
@@ -95,7 +83,38 @@ public class EntityInstance extends EntityInstance_Base {
 		return true;
 	}
 
-	public Set<ProductInstance> getProductInstancesByPath(List<String> namesInPath) {
+	public Set<ProductInstance> getProductInstancesByPath(DefPathCondition defPathCondition) {
+		List<String> namesInPath = new ArrayList<String>(
+				Arrays.asList(defPathCondition.getPath().getValue().split("\\.")));
+
+		if (defPathCondition.getPath().getSource() != getEntity()
+				&& defPathCondition.getPath().getAdjacent() != getEntity()) {
+			assert false : "neither the first nor the second element in the path refer to the entity of this instance";
+		}
+
+		// the first element refers the entity
+		if (defPathCondition.getPath().getSource() == getEntity()) {
+			namesInPath.remove(0);
+		}
+
+		// the second element refers the entity
+		if (defPathCondition.getPath().getSource() != getEntity()
+				&& defPathCondition.getPath().getAdjacent() == getEntity()) {
+			namesInPath.remove(0);
+			namesInPath.remove(0);
+		}
+
+		return getProductInstancesByListOfNames(namesInPath);
+	}
+
+	public Set<ProductInstance> getProductInstancesByPath(String path) {
+		DefPathCondition defPathCondition = DefPathCondition
+				.getDefPathCondition(getEntity().getDataModel().getSpecification(), path);
+
+		return getProductInstancesByPath(defPathCondition);
+	}
+
+	private Set<ProductInstance> getProductInstancesByListOfNames(List<String> namesInPath) {
 		Set<ProductInstance> productInstances = new HashSet<ProductInstance>();
 		productInstances.add(this);
 
@@ -172,16 +191,30 @@ public class EntityInstance extends EntityInstance_Base {
 	private boolean isInCardinality(MulCondition m) {
 		long numberOfInstances = getRelationInstanceSet().stream()
 				.filter(ri -> ri.getRelationType() == m.getRelationBW()).count();
-		logger.debug("isInCardinality numberOfInstances>{}", numberOfInstances);
 
-		return numberOfInstances >= m.getTargetCardinality().getMinValue()
-				&& numberOfInstances <= m.getTargetCardinality().getMaxValue();
+		int minValue;
+		int maxValue;
+		if (getEntity() == m.getSourceEntity()) {
+			minValue = m.getTargetCardinality().getMinValue();
+			maxValue = m.getTargetCardinality().getMaxValue();
+		} else {
+			minValue = m.getSourceCardinality().getMinValue();
+			maxValue = m.getSourceCardinality().getMaxValue();
+		}
+
+		if (numberOfInstances < minValue || numberOfInstances > maxValue) {
+			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, "post work item argument cardinality "
+					+ numberOfInstances + " " + m.getTargetEntity().getName() + " " + minValue + " " + maxValue);
+		}
+
+		return true;
 	}
 
 	@Override
 	public boolean holdsPost(DefProductCondition defProductCondition, Set<MulCondition> mulConditionSet) {
 		if (getEntity() != defProductCondition.getSourceOfPath()) {
-			return false;
+			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, "post work item argument "
+					+ getEntity().getFullPath() + ":" + defProductCondition.getTargetOfPath().getFullPath());
 		}
 
 		return mulConditionSet.stream().allMatch(m -> isInCardinality(m));
@@ -194,6 +227,28 @@ public class EntityInstance extends EntityInstance_Base {
 		}
 
 		return false;
+	}
+
+	@Override
+	public ProductInstanceDTO getDTO() {
+		ProductInstanceDTO productInstanceDTO = new ProductInstanceDTO();
+		productInstanceDTO.setProduct(getEntity().getDTO());
+		productInstanceDTO.setExternalId(getExternalId());
+		productInstanceDTO.setPath(getEntity().getName());
+		productInstanceDTO
+				.setValue(getEntity().getName() + "(" + getExternalId() + ","
+						+ getAttributeInstanceSet().stream()
+								.map(ai -> ai.getAttribute().getName() + "[" + ai.getValue() + "]")
+								.collect(Collectors.joining(","))
+						+ ")");
+
+		return productInstanceDTO;
+	}
+
+	public boolean isInRelation(EntityInstance entityInstance, RelationBW relationBW) {
+		return getRelationInstanceSet().stream().anyMatch(ri -> ri.getRelationType() == relationBW
+				&& (ri.getEntityInstanceOne() == entityInstance || ri.getEntityInstanceTwo() == entityInstance));
+
 	}
 
 }

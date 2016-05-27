@@ -70,9 +70,9 @@ public class SetValueTest extends TeardownRollbackTest {
 
 	@Test
 	public void successDate() {
-		attributeInstanceDate.setValue("12-12-2012");
+		attributeInstanceDate.setValue("12/12/2012");
 
-		assertEquals("12-12-2012", attributeInstanceDate.getValue());
+		assertEquals("12/12/2012", attributeInstanceDate.getValue());
 	}
 
 	@Test

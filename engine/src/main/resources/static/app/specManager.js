@@ -13,18 +13,18 @@ app.config(function($routeProvider) {
 		templateUrl : "views/goalModel.html",
 		controller : "GoalModelController"
 	}).when("/specs/:specId/goalgraph", {
-		templateUrl : "views/goalGraph.html",
+		templateUrl : "app/shared/goal/goalGraph.html",
 		controller : "GoalGraphController"
 	}).when("/specs/:specId/activitymodel", {
 		templateUrl : "views/activityModel.html",
 		controller : "ActivityModelController"
 	}).when("/specs/:specId/activitygraph", {
-		templateUrl : "views/activityGraph.html",
+		templateUrl : "app/shared/activity/activityGraph.html",
 		controller : "ActivityGraphController"
 	}).when("/specs/:specId/instancesmanager", {
 		templateUrl : "views/instancesManager.html"
 	}).when("/specs/:specId/instancesmanager/:instance/activity", {
-		templateUrl : "views/activityWorkItemManager.html",
+		templateUrl : "app/components/activity/workItems/activityWorkItem.html",
 		controller : "ActivityWorkItemController"
 	}).otherwise({
 		redirectTo : "/"

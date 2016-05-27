@@ -107,7 +107,7 @@ public class AddSequenceConditionMethodTest extends TeardownRollbackTest {
 	@Test
 	public void success() {
 		taskThree.addSequenceCondition(
-				DefPathCondition.getDefPathCondition(spec, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_TWO_NAME));
+				DefPathCondition.getDefPathCondition(spec, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME));
 
 	}
 

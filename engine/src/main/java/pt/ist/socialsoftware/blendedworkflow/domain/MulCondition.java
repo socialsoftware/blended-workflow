@@ -223,9 +223,14 @@ public class MulCondition extends MulCondition_Base {
 
 	public MulConditionDTO getDTO() {
 		MulConditionDTO mulConditionDTO = new MulConditionDTO();
-		mulConditionDTO.setSpecId(getConditionModel().getSpecification().getExternalId());
+		mulConditionDTO.setExternalId(getExternalId());
 		mulConditionDTO.setRolePath(getSourceEntity().getName() + "." + getTargetRolename());
-		mulConditionDTO.setCardinality(getSourceCardinality().getExp());
+		mulConditionDTO.setSourceCardinality(getSourceCardinality().getExp());
+		mulConditionDTO.setSourceMin(getSourceCardinality().getMinValue());
+		mulConditionDTO.setSourceMax(getSourceCardinality().getMaxValue());
+		mulConditionDTO.setTargetCardinality(getTargetCardinality().getExp());
+		mulConditionDTO.setTargetMin(getTargetCardinality().getMinValue());
+		mulConditionDTO.setTargetMax(getTargetCardinality().getMaxValue());
 
 		return mulConditionDTO;
 	}

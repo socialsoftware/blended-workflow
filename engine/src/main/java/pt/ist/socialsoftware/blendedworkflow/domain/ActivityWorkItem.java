@@ -19,13 +19,14 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 
 	public ActivityWorkItem(WorkflowInstance workflowInstance, Activity activity) {
 		setWorkflowInstance(workflowInstance);
+		setCounter(workflowInstance.incLogCounter());
 		setActivity(activity);
 	}
 
 	private void checkConsistency(WorkflowInstance workflowInstance, Activity activity) {
 		if (workflowInstance != null && activity != null) {
 			if (workflowInstance.getSpecification() != activity.getActivityModel().getSpecification()) {
-				throw new BWException(BWErrorType.WORKITEM_CONSISTENCY, workflowInstance.getSpecification().getName()
+				throw new BWException(BWErrorType.WORK_ITEM_CONSISTENCY, workflowInstance.getSpecification().getName()
 						+ "<>" + activity.getActivityModel().getSpecification().getName());
 			}
 		}
@@ -58,8 +59,9 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 	}
 
 	private void checkCompleteSetOfPostConditions() {
-		if (getActivity().getPostConditionSet().size() != getPostConditionSet().size()) {
-			throw new BWException(BWErrorType.POST_WORK_ITEM_ARGUMENT, "Number of elements");
+		if (getActivity().getPostConditionSet().size() > getPostConditionSet().size()) {
+			throw new BWException(BWErrorType.POST_WORK_ITEM_ARGUMENT, "Number of elements "
+					+ getActivity().getPostConditionSet().size() + "<" + getPostConditionSet().size());
 		} else {
 			for (DefProductCondition defProductCondition : getActivity().getPostConditionSet()) {
 				if (!getPostConditionSet().stream()
@@ -73,7 +75,8 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 
 	private void checkCompleteSetOfPreConditions() {
 		if (getActivity().getPreConditionSet().size() != getPreConditionSet().size()) {
-			throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT, "Number of elements");
+			throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT, "Number of elements "
+					+ getActivity().getPreConditionSet().size() + "<>" + getPreConditionSet().size());
 		} else {
 			for (DefPathCondition defPathCondition : getActivity().getPreConditionSet()) {
 				if (!getPreConditionSet().stream().anyMatch(pwia -> pwia.getDefPathCondition() == defPathCondition)) {

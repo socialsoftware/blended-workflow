@@ -59,8 +59,8 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
-			assertEquals(entityInstanceOne.getEntity().getName() + ":" + entityInstanceTwo.getEntity().getName(),
-					bwe.getMessage());
+			assertEquals("Different workflow instances " + entityInstanceOne.getEntity().getName() + ":"
+					+ entityInstanceTwo.getEntity().getName(), bwe.getMessage());
 		}
 	}
 
@@ -71,8 +71,8 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
-			assertEquals(entityInstanceTwo.getEntity().getName() + ":" + relation.getEntityOne().getName(),
-					bwe.getMessage());
+			assertEquals("Entity One type does not match " + entityInstanceTwo.getEntity().getName() + ":"
+					+ relation.getEntityOne().getName(), bwe.getMessage());
 		}
 	}
 
@@ -83,8 +83,8 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
-			assertEquals(entityInstanceOne.getEntity().getName() + ":" + relation.getEntityTwo().getName(),
-					bwe.getMessage());
+			assertEquals("Entity Two type does not match " + entityInstanceOne.getEntity().getName() + ":"
+					+ relation.getEntityTwo().getName(), bwe.getMessage());
 		}
 	}
 

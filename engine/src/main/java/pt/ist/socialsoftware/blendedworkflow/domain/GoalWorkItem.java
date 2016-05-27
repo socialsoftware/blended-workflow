@@ -19,13 +19,14 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 
 	public GoalWorkItem(WorkflowInstance workflowInstance, Goal goal) {
 		setWorkflowInstance(workflowInstance);
+		setCounter(workflowInstance.incLogCounter());
 		setGoal(goal);
 	}
 
 	private void checkConsistency(WorkflowInstance workflowInstance, Goal goal) {
 		if (workflowInstance != null && goal != null) {
 			if (workflowInstance.getSpecification() != goal.getGoalModel().getSpecification()) {
-				throw new BWException(BWErrorType.WORKITEM_CONSISTENCY, workflowInstance.getSpecification().getName()
+				throw new BWException(BWErrorType.WORK_ITEM_CONSISTENCY, workflowInstance.getSpecification().getName()
 						+ "<>" + goal.getGoalModel().getSpecification().getName());
 			}
 		}

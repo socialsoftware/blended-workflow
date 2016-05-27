@@ -400,7 +400,7 @@ public class CommonInterface {
 
 	public MulConditionDTO createEntityInvariantCondition(MulConditionDTO mulConditionVO) {
 		logger.debug("createEntityInvariantCondition rolePath:{}, cardinality:{}", mulConditionVO.getRolePath(),
-				mulConditionVO.getCardinality());
+				mulConditionVO.getTargetCardinality());
 
 		final String uri = BASE_URL + "/specs/{specId}/conditionmodel/entityinvariantconditions";
 
@@ -752,7 +752,7 @@ public class CommonInterface {
 	public void associateMulToGoalInvariant(String specId, String goalName, MulConditionDTO mulConditionVO) {
 		logger.debug(
 				"associateMulConditionToGoalEntityInvariantCondition specId:{}, goalName:{}, path:{}, cardinality:{}",
-				specId, goalName, mulConditionVO.getRolePath(), mulConditionVO.getCardinality());
+				specId, goalName, mulConditionVO.getRolePath(), mulConditionVO.getTargetCardinality());
 
 		final String uri = BASE_URL + "/specs/{specId}/goalmodel/goals/{goalName}/invent";
 
@@ -1009,7 +1009,7 @@ public class CommonInterface {
 	public MulConditionDTO associateMulToActivityPost(String specId, String activityName,
 			MulConditionDTO mulConditionDTO) {
 		logger.debug("associateMulToActivityPost specId:{}, activityName:{}, path:{}, cardinality:{}", specId,
-				activityName, mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
+				activityName, mulConditionDTO.getRolePath(), mulConditionDTO.getTargetCardinality());
 
 		final String uri = BASE_URL + "/specs/{specId}/activitymodel/activities/{activityName}/postmul";
 

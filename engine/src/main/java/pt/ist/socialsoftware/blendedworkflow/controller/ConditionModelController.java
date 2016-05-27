@@ -164,12 +164,12 @@ public class ConditionModelController {
 	@RequestMapping(value = "/entityinvariantconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<MulConditionDTO> createEntityInvariantCondition(@PathVariable("specId") String specId,
 			@RequestBody MulConditionDTO mulConditionDTO) {
-		log.debug("createEntityInvariantCondition specId:{}, rolePath:{}, cardinality:{}", mulConditionDTO.getSpecId(),
-				mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
+		log.debug("createEntityInvariantCondition specId:{}, rolePath:{}, cardinality:{}", specId,
+				mulConditionDTO.getRolePath(), mulConditionDTO.getTargetCardinality());
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		MulCondition mulCondition = adi.createEntityInvariantCondition(mulConditionDTO);
+		MulCondition mulCondition = adi.createEntityInvariantCondition(specId, mulConditionDTO);
 
 		return new ResponseEntity<MulConditionDTO>(mulCondition.getDTO(), HttpStatus.CREATED);
 	}

@@ -62,7 +62,7 @@ public class CreateWorkItemTest extends TeardownRollbackTest {
 			new GoalWorkItem(workflowInstance, otherGoal);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.WORKITEM_CONSISTENCY, bwe.getError());
+			assertEquals(BWErrorType.WORK_ITEM_CONSISTENCY, bwe.getError());
 			assertEquals(MY_SPEC + "<>" + YOUR_SPEC, bwe.getMessage());
 		}
 	}
@@ -77,7 +77,7 @@ public class CreateWorkItemTest extends TeardownRollbackTest {
 			new ActivityWorkItem(workflowInstance, otherActivity);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.WORKITEM_CONSISTENCY, bwe.getError());
+			assertEquals(BWErrorType.WORK_ITEM_CONSISTENCY, bwe.getError());
 			assertEquals(MY_SPEC + "<>" + YOUR_SPEC, bwe.getMessage());
 		}
 	}

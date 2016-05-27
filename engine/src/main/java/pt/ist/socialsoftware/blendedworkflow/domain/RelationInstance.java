@@ -33,18 +33,18 @@ public class RelationInstance extends RelationInstance_Base {
 			RelationBW relation) {
 		if (entityInstanceOne != null && entityInstanceTwo != null && relation != null) {
 			if (entityInstanceOne.getWorkflowInstance() != entityInstanceTwo.getWorkflowInstance()) {
-				throw new BWException(BWErrorType.RELATIONINSTANCE_CONSISTENCY,
-						entityInstanceOne.getEntity().getName() + ":" + entityInstanceTwo.getEntity().getName());
+				throw new BWException(BWErrorType.RELATIONINSTANCE_CONSISTENCY, "Different workflow instances "
+						+ entityInstanceOne.getEntity().getName() + "-" + entityInstanceTwo.getEntity().getName());
 			}
 
 			if (entityInstanceOne.getEntity() != relation.getEntityOne()) {
-				throw new BWException(BWErrorType.RELATIONINSTANCE_CONSISTENCY,
-						entityInstanceOne.getEntity().getName() + ":" + relation.getEntityOne().getName());
+				throw new BWException(BWErrorType.RELATIONINSTANCE_CONSISTENCY, "Entity One type does not match "
+						+ entityInstanceOne.getEntity().getName() + "-" + relation.getEntityOne().getName());
 			}
 
 			if (entityInstanceTwo.getEntity() != relation.getEntityTwo()) {
-				throw new BWException(BWErrorType.RELATIONINSTANCE_CONSISTENCY,
-						entityInstanceTwo.getEntity().getName() + ":" + relation.getEntityTwo().getName());
+				throw new BWException(BWErrorType.RELATIONINSTANCE_CONSISTENCY, "Entity Two type does not match "
+						+ entityInstanceTwo.getEntity().getName() + "-" + relation.getEntityTwo().getName());
 			}
 		}
 

@@ -370,15 +370,15 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public MulCondition createEntityInvariantCondition(MulConditionDTO miDTO) {
+	public MulCondition createEntityInvariantCondition(String specId, MulConditionDTO miDTO) {
 		log.debug("createEntityInvariantCondition Entity:{}, Cardinality:{}", miDTO.getRolePath(),
-				miDTO.getCardinality());
-		Specification spec = getSpecBySpecId(miDTO.getSpecId());
+				miDTO.getTargetCardinality());
+		Specification spec = getSpecBySpecId(specId);
 
 		MulCondition mulCondition = getMULCondition(spec, miDTO.getRolePath());
 
-		if (!mulCondition.getTargetCardinality().equals(miDTO.getCardinality()))
-			new BWException(BWErrorType.INVALID_CARDINALITY, miDTO.getCardinality());
+		if (!mulCondition.getTargetCardinality().equals(miDTO.getTargetCardinality()))
+			new BWException(BWErrorType.INVALID_CARDINALITY, miDTO.getTargetCardinality());
 
 		spec.getConditionModel().addEntityInvariantCondition(mulCondition);
 
@@ -399,7 +399,8 @@ public class DesignInterface {
 
 		Specification spec = getSpecBySpecId(aacDTO.getSpecId());
 
-		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttributeCondition(spec, aacDTO.getPath());
+		DefAttributeCondition defAttributeCondition = DefAttributeCondition.getDefAttributeCondition(spec,
+				aacDTO.getPath());
 
 		if (defAttributeCondition.getAttributeOfDef() != null
 				&& defAttributeCondition.getAttributeOfDef().getIsMandatory() != aacDTO.isMandatory())

@@ -1,13 +1,13 @@
 <!doctype html>
 <html data-ng-app="">
 <head>
-<link rel="stylesheet" href="css/bootstrap-3.3.6.min.css"></link>
-<script src="js/d3.v2.js" charset="utf-8"></script>
-<script src="js/dagre-d3.min.js"></script>
-<script src="js/angular-1.5.0.min.js"></script>
-<script src="js/angular-route-1.5.0.min.js"></script>
-<script src="js/angular-animate-1.5.3.js"></script>
-<script src="js/ui-bootstrap-tpls-1.2.1.min.js"></script>
+<link rel="stylesheet" href="assets/css/bootstrap-3.3.6.min.css"></link>
+<script src="assets/libs/d3.v2.js" charset="utf-8"></script>
+<script src="assets/libs/dagre-d3.min.js"></script>
+<script src="assets/libs/angular-1.5.5.min.js"></script>
+<script src="assets/libs/angular-route-1.5.5.min.js"></script>
+<script src="assets/libs/angular-animate-1.5.5.min.js"></script>
+<script src="assets/libs/ui-bootstrap-tpls-1.2.1.min.js"></script>
 </head>
 <body ng-app="specManager" ng-controller="SpecificationController">
 	<div class="container">
@@ -116,11 +116,12 @@
 	<script src="app/controllers/goalGraphController.js"></script>
 	<script src="app/controllers/activityModelController.js"></script>
 	<script src="app/controllers/activityGraphController.js"></script>
-	<script src="app/controllers/activityWorkItemController.js"></script>
+	<script src="app/components/activity/workItems/activityWorkItemController.js"></script>
 
-	<script src="app/directives/errorMessage.js"></script>
-	<script src="app/directives/goalGraph.js"></script>
-	<script src="app/directives/activityGraph.js"></script>
+	<script src="app/shared/error/errorMessage.js"></script>
+	<script src="app/shared/goal/goalGraph.js"></script>
+	<script src="app/shared/activity/activityGraph.js"></script>
+	<script src="app/shared/workItem/workItem.js"></script>
 
 	<script src="app/services/specRepository.js"></script>
 	<script src="app/services/dataRepository.js"></script>

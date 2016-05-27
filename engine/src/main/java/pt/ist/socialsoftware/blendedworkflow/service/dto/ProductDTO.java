@@ -3,12 +3,12 @@ package pt.ist.socialsoftware.blendedworkflow.service.dto;
 public class ProductDTO {
 	private String specId;
 	private String extId;
-	private String producType;
+	private String productType;
 
 	public ProductDTO(String specId, String extId, String productType) {
 		this.specId = specId;
 		this.extId = extId;
-		this.producType = productType;
+		this.productType = productType;
 	}
 
 	public ProductDTO() {
@@ -23,11 +23,11 @@ public class ProductDTO {
 	}
 
 	public String getProductType() {
-		return producType;
+		return productType;
 	}
 
 	public void setProductType(String type) {
-		this.producType = type;
+		this.productType = type;
 	}
 
 	public String getSpecId() {

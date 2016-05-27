@@ -239,7 +239,7 @@ app
 											$scope.activityPostConditions.selectedPostConditions,
 											$scope.newActivityName)
 									.then(
-											function(ressponse) {
+											function(response) {
 												$scope.updateState();
 											},
 											function(response) {
@@ -268,7 +268,7 @@ app
 											$scope.activitiesOne.selectedActivity.name,
 											$scope.activitySeqConditions.selectedSeqCondition.path)
 									.then(
-											function(ressponse) {
+											function(response) {
 												$scope.updateState();
 											},
 											function(response) {

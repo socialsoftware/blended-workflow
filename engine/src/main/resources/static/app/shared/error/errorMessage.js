@@ -9,7 +9,7 @@ app.directive('errorMessage', function($uibModal) {
 			open = function(errorData) {
 				$uibModal.open({
 					animation : true,
-					templateUrl : '../../views/errorMessage.html',
+					templateUrl : 'app/shared/error/errorMessage.html',
 					controller : 'ModalInstanceCtrl',
 					size : 'lg',
 					resolve : {
