@@ -27,10 +27,10 @@ import pt.ist.socialsoftware.blendedworkflow.service.execution.ExecutionInterfac
 public class ActivityWorkItemController {
 	private static Logger logger = LoggerFactory.getLogger(ActivityWorkItemController.class);
 
-	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public ResponseEntity<ActivityWorkItemDTO[]> getActivityWorkItems(@PathVariable("specId") String specId,
+	@RequestMapping(value = "/next", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<ActivityWorkItemDTO[]> getNextActivityWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
-		logger.debug("getActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
+		logger.debug("getNextActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
 		ExecutionInterface edi = ExecutionInterface.getInstance();
 
 		ActivityWorkItemDTO[] instances = edi.getPendingActivityWorkItemSet(specId, instanceName).stream()
@@ -39,8 +39,20 @@ public class ActivityWorkItemController {
 		return new ResponseEntity<ActivityWorkItemDTO[]>(instances, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/log", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<ActivityWorkItemDTO[]> getLogActivityWorkItems(@PathVariable String specId,
+			@PathVariable String instanceName) {
+		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
+		ExecutionInterface edi = ExecutionInterface.getInstance();
+
+		ActivityWorkItemDTO[] instances = edi.getLogActivityWorkItemSet(specId, instanceName).stream()
+				.map(awi -> awi.getDTO()).toArray(size -> new ActivityWorkItemDTO[size]);
+
+		return new ResponseEntity<ActivityWorkItemDTO[]>(instances, HttpStatus.OK);
+	}
+
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public ResponseEntity<Boolean> executeActivityWorkItem(@PathVariable("specId") String specId,
+	public ResponseEntity<Boolean> executeActivityWorkItem(@PathVariable String specId,
 			@RequestBody ActivityWorkItemDTO activityWorkItemDTO) {
 		logger.debug("executeActivityActivityWorkItem specId:{}, instanceName:{}, activityName:{}", specId,
 				activityWorkItemDTO.getWorkflowInstanceName(), activityWorkItemDTO.getActivityName());

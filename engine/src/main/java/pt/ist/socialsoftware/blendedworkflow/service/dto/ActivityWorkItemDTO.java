@@ -32,7 +32,10 @@ import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
 public class ActivityWorkItemDTO extends WorkItemDTO {
 	private static Logger logger = LoggerFactory.getLogger(ActivityWorkItemDTO.class);
 
-	String activityName;
+	private String activityName;
+	private int timestamp;
+	private String preArguments;
+	private String postArguments;
 
 	public ActivityWorkItemDTO() {
 	}
@@ -43,6 +46,30 @@ public class ActivityWorkItemDTO extends WorkItemDTO {
 
 	public void setActivityName(String activityName) {
 		this.activityName = activityName;
+	}
+
+	public int getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(int timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getPreArguments() {
+		return preArguments;
+	}
+
+	public void setPreArguments(String preArguments) {
+		this.preArguments = preArguments;
+	}
+
+	public String getPostArguments() {
+		return postArguments;
+	}
+
+	public void setPostArguments(String postArguments) {
+		this.postArguments = postArguments;
 	}
 
 	public static ActivityWorkItemDTO createActivityWorkItemDTO(WorkflowInstance workflowInstance, Activity activity) {

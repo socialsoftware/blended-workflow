@@ -349,4 +349,21 @@ public class Goal extends Goal_Base {
 		return parents;
 	}
 
+	public Boolean isEnabledForExecution(WorkflowInstance workflowInstance) {
+		// get entity context
+		// Set<Entity> entityContext = getEntityContext();
+		// if (entityContext.isEmpty()) {
+		// return true;
+		// }
+		//
+		// // for each entity, in entity context, get instance context
+		// for (Entity entity : entityContext) {
+		// if (getInstanceContext(workflowInstance, entity).isEmpty()) {
+		// return false;
+		// }
+		// }
+
+		return true;
+	}
+
 }

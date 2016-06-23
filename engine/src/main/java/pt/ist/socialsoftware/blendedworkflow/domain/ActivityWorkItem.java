@@ -1,7 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.stream.Collectors;
+
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityWorkItemDTO;
 
 public class ActivityWorkItem extends ActivityWorkItem_Base {
 
@@ -85,5 +88,25 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 				}
 			}
 		}
+	}
+
+	public ActivityWorkItemDTO getDTO() {
+		ActivityWorkItemDTO activityWorkItemDTO = new ActivityWorkItemDTO();
+		activityWorkItemDTO.setActivityName(getActivity().getName());
+		activityWorkItemDTO.setTimestamp(getCounter());
+		activityWorkItemDTO
+				.setPreArguments(
+						getPreConditionSet()
+								.stream().map(pwia -> pwia.getProductInstanceSet().stream()
+										.map(pi -> pi.getDTO().getValue()).collect(Collectors.joining(",")))
+								.collect(Collectors.joining(",")));
+		activityWorkItemDTO
+				.setPostArguments(
+						getPostConditionSet()
+								.stream().map(pwia -> pwia.getProductInstanceSet().stream()
+										.map(pi -> pi.getDTO().getValue()).collect(Collectors.joining(",")))
+								.collect(Collectors.joining(",")));
+
+		return activityWorkItemDTO;
 	}
 }

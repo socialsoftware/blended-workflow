@@ -1,7 +1,11 @@
 app.factory('activityWorkItemRepository', function($http) {
 	return {
-		getActivityWorkItems : function(spec,instance) {
-			var url = "specs/" + spec + "/instances/"+ instance + "/activityworkitem";
+		getNextActivityWorkItems : function(spec,instance) {
+			var url = "specs/" + spec + "/instances/"+ instance + "/activityworkitem/next";
+			return $http.get(url);
+		},
+		getLogActivityWorkItems : function(spec,instance) {
+			var url = "specs/" + spec + "/instances/"+ instance + "/activityworkitem/log";
 			return $http.get(url);
 		},
 		executeWorkItem : function(spec, instance,

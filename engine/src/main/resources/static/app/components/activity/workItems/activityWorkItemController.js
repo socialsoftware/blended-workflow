@@ -13,21 +13,31 @@ app.controller('ActivityWorkItemController', function($rootScope, $scope,
 				$rootScope.instance = response.data;
 			});
 
-	$scope.getWorkItems = function(specId, name) {
-		activityWorkItemRepository.getActivityWorkItems(specId, name).then(
+	$scope.getNextWorkItems = function(specId, name) {
+		activityWorkItemRepository.getNextActivityWorkItems(specId, name).then(
 				function(response) {
-					$scope.workItems = response.data;
+					$scope.nextWorkItems = response.data;
 				});
 	};
 	
-	$scope.getWorkItems(specId, name);
+	$scope.getNextWorkItems(specId, name);
+
+	$scope.getLogWorkItems = function(specId, name) {
+		activityWorkItemRepository.getLogActivityWorkItems(specId, name).then(
+				function(response) {
+					$scope.logWorkItems = response.data;
+				});
+	};
+	
+	$scope.getLogWorkItems(specId, name);
 
 	$scope.submitActivityWorkItem = function(activityName, workItem) {
 		$scope.error = '';
 		activityWorkItemRepository.executeWorkItem(specId, name, activityName,
 				workItem).then(
 				function(response) {
-					$scope.getWorkItems(specId, name);
+					$scope.getNextWorkItems(specId, name);
+					$scope.getLogWorkItems(specId, name);
 				},
 				function(response) {
 					$scope.error = response.data.type + '('

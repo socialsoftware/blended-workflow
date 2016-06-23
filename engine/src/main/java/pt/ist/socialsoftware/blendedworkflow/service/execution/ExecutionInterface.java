@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.service.execution;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -11,11 +12,13 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.domain.ActivityWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.service.dto.ActivityWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalWorkItemDTO;
 
 public class ExecutionInterface {
 	private static Logger logger = LoggerFactory.getLogger(ExecutionInterface.class);
@@ -76,6 +79,12 @@ public class ExecutionInterface {
 		return activityWorkItemDTOs;
 	}
 
+	public List<ActivityWorkItem> getLogActivityWorkItemSet(String specId, String instanceName) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		return workflowInstance.getLogActivityWorkItemList();
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public void executeActivityWorkItem(ActivityWorkItemDTO activityWorkItemDTO) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(activityWorkItemDTO.getSpecId(),
@@ -85,6 +94,18 @@ public class ExecutionInterface {
 		ActivityWorkItem activityWorkItem = activityWorkItemDTO.createActivityWorkItem(workflowInstance, activity);
 
 		activityWorkItem.holds();
+	}
+
+	public Set<GoalWorkItemDTO> getPendingGoalWorkItemSet(String specId, String instanceName) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		Set<GoalWorkItemDTO> goalWorkItemDTOs = new HashSet<GoalWorkItemDTO>();
+
+		for (Goal goal : workflowInstance.getEnabledGoalSet()) {
+			goalWorkItemDTOs.add(GoalWorkItemDTO.createGoalWorkItemDTO(workflowInstance, goal));
+		}
+
+		return goalWorkItemDTOs;
 	}
 
 }
