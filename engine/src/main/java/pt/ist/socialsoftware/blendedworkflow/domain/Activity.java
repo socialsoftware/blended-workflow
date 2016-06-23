@@ -45,7 +45,7 @@ public class Activity extends Activity_Base {
 
 	@Override
 	public void removeSequenceCondition(DefPathCondition sequenceCondition) {
-		if (getSequenceConditionSet().contains(sequenceCondition)) {
+		if (!getSequenceConditionSet().contains(sequenceCondition)) {
 			throw new BWException(BWErrorType.SEQUENCE_CONDITION_INVALID, "It does not exist in sequence conditions");
 		}
 

@@ -48,6 +48,7 @@ public class EntityInstance extends EntityInstance_Base {
 	@Override
 	public void delete() {
 		setEntity(null);
+		setWorkflowInstance(null);
 		getAttributeInstanceSet().forEach(ai -> ai.delete());
 		getRelationInstanceOfOneSet().stream().forEach(ri -> ri.delete());
 		getRelationInstanceOfTwoSet().stream().forEach(ri -> ri.delete());

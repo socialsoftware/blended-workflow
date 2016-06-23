@@ -51,6 +51,7 @@ public class RelationInstance extends RelationInstance_Base {
 	}
 
 	public void delete() {
+		setRelationType(null);
 		setEntityInstanceOne(null);
 		setEntityInstanceTwo(null);
 	}

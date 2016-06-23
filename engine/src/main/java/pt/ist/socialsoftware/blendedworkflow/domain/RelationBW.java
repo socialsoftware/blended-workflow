@@ -95,6 +95,8 @@ public class RelationBW extends RelationBW_Base {
 		getCardinalityOne().delete();
 		getCardinalityTwo().delete();
 
+		getRelationInstanceSet().stream().forEach(ri -> ri.delete());
+
 		deleteDomainObject();
 	}
 

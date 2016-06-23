@@ -74,9 +74,9 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 	}
 
 	private void checkCompleteSetOfPreConditions() {
-		if (getActivity().getPreConditionSet().size() != getPreConditionSet().size()) {
+		if (getActivity().getPreConditionSet().size() > getPreConditionSet().size()) {
 			throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT, "Number of elements "
-					+ getActivity().getPreConditionSet().size() + "<>" + getPreConditionSet().size());
+					+ getActivity().getPreConditionSet().size() + ">" + getPreConditionSet().size());
 		} else {
 			for (DefPathCondition defPathCondition : getActivity().getPreConditionSet()) {
 				if (!getPreConditionSet().stream().anyMatch(pwia -> pwia.getDefPathCondition() == defPathCondition)) {

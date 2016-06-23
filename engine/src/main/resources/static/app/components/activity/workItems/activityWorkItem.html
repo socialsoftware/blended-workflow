@@ -3,7 +3,7 @@
 		<samp>
 			<strong>Activity Work Items</strong> {{spec.name}}:{{instance.name}}
 			<br /> <br />
-			<work-item ng-repeat="workItem in workItems"
+			<work-item ng-repeat="workItem in workItems | orderBy:'activityName'"
 				name="workItem.activityName" work-item="workItem"
 				on-update="submitActivityWorkItem(activityName,workItem)"></work-item>
 
