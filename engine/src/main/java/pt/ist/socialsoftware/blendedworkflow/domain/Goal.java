@@ -45,7 +45,7 @@ public class Goal extends Goal_Base {
 		setDescription(description);
 		addSuccessCondition(condition);
 		setParentGoal(null);
-		setEntityContext(context);
+		setOldEntityContext(context);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class Goal extends Goal_Base {
 		setDescription(description);
 		addSuccessCondition(condition);
 		setParentGoal(parentGoal);
-		setEntityContext(context);
+		setOldEntityContext(context);
 	}
 
 	private void checkUniqueGoalName(String name) throws BWException {
@@ -86,7 +86,7 @@ public class Goal extends Goal_Base {
 		OldDataModelInstance dataModelInstance = bwInstance.getDataModelInstance();
 		Entity newEntityContext = null;
 		for (Entity entity : dataModelInstance.getEntitySet()) {
-			if (getEntityContext().getName().equals(entity.getName())) {
+			if (getOldEntityContext().getName().equals(entity.getName())) {
 				newEntityContext = entity;
 			}
 		}
@@ -198,7 +198,7 @@ public class Goal extends Goal_Base {
 		Set<Entity> result = new HashSet<Entity>();
 		// result.add(getEntityContext());
 		for (Goal subGoal : getSubGoalSet()) {
-			result.add(subGoal.getEntityContext());
+			result.add(subGoal.getOldEntityContext());
 		}
 
 		return result;
@@ -351,12 +351,12 @@ public class Goal extends Goal_Base {
 
 	public Boolean isEnabledForExecution(WorkflowInstance workflowInstance) {
 		// get entity context
-		// Set<Entity> entityContext = getEntityContext();
-		// if (entityContext.isEmpty()) {
-		// return true;
-		// }
-		//
-		// // for each entity, in entity context, get instance context
+		Set<Entity> entityContext = getEntityContext();
+		if (entityContext.isEmpty()) {
+			return true;
+		}
+
+		// for each entity, in entity context, get instance context
 		// for (Entity entity : entityContext) {
 		// if (getInstanceContext(workflowInstance, entity).isEmpty()) {
 		// return false;
@@ -364,6 +364,85 @@ public class Goal extends Goal_Base {
 		// }
 
 		return true;
+	}
+
+	public Set<Entity> getEntityContext() {
+		Set<Entity> entityContext = new HashSet<Entity>();
+		Set<Entity> parentsSuccessEntities = getParentsSuccessEntities();
+
+		for (DefProductCondition defProductCondition : getSuccessConditionSet()) {
+			// attribute is defined but not its entity
+			if (defProductCondition.getSourceOfPath() != defProductCondition.getTargetOfPath()
+					&& !getSuccessEntities().contains(defProductCondition.getSourceOfPath())) {
+				entityContext.add(defProductCondition.getSourceOfPath());
+			}
+			// entity is defined
+			if (defProductCondition.getSourceOfPath() == defProductCondition.getTargetOfPath()) {
+				for (MulCondition mulCondition : getEntityInvariantConditionSet()) {
+					// associated entities were already created in a super goal
+					if (parentsSuccessEntities.contains(mulCondition.getTargetEntity())) {
+						entityContext.add(mulCondition.getTargetEntity());
+					}
+				}
+			}
+		}
+
+		// the entity is already defined
+		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
+			if (defPathCondition.getSourceOfPath() == defPathCondition.getTargetOfPath()) {
+				entityContext.add(defPathCondition.getSourceOfPath());
+			}
+		}
+
+		// the entity is going to be defined
+		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
+			if (!entityContext.contains(defPathCondition.getSourceOfPath())) {
+				entityContext.add(defPathCondition.getPath().getAdjacent());
+			}
+		}
+
+		return entityContext;
+	}
+
+	// public Set<EntityInstance> getInstanceContext(WorkflowInstance
+	// workflowInstance, Entity entity) {
+	// // pre-conditions hold
+	// Set<EntityInstance> instanceContext =
+	// workflowInstance.getEntityInstanceSet(entity).stream()
+	// .filter(ei ->
+	// ei.holdsDefPathConditions(getPreConditionSet())).collect(Collectors.toSet());
+	//
+	// // post-conditions do not hold
+	// instanceContext = instanceContext.stream().filter(ei ->
+	// postConditionDoesNotHold(ei))
+	// .collect(Collectors.toSet());
+	//
+	// // there are enough instances in the context to enable the activity
+	// int instanceContextSize = instanceContext.size();
+	// if (!getMultiplicityInvariantSet().stream().filter(m ->
+	// m.getTargetEntity() == entity)
+	// .allMatch(m -> m.getTargetCardinality().getMinValue() <=
+	// instanceContextSize)) {
+	// instanceContext.clear();
+	// }
+	//
+	// return instanceContext;
+	// }
+
+	private Set<Entity> getSuccessEntities() {
+		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).filter(Entity.class::isInstance)
+				.map(Entity.class::cast).collect(Collectors.toSet());
+	}
+
+	private Set<Entity> getParentsSuccessEntities() {
+		Set<Entity> successEntities = new HashSet<Entity>();
+
+		if (getParentGoal() != null) {
+			successEntities.addAll(getParentGoal().getSuccessEntities());
+			successEntities.addAll(getParentGoal().getParentsSuccessEntities());
+		}
+
+		return successEntities;
 	}
 
 }

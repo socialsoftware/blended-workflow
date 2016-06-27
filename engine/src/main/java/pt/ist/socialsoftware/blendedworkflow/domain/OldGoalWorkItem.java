@@ -264,7 +264,7 @@ public class OldGoalWorkItem extends OldGoalWorkItem_Base {
 
 		// Search All Affected Goals:
 		for (Goal affectedAG : affectedAchieveGoals) {
-			for (OldEntityInstance entityInstance : affectedAG.getEntityContext().getOldEntityInstanceSet()) {
+			for (OldEntityInstance entityInstance : affectedAG.getOldEntityContext().getOldEntityInstanceSet()) {
 				OldEntityInstance affectedAGEntityInstance = dataModelInstance
 						.getEntityInstance(getEntityInstanceContext(), entityInstance);
 

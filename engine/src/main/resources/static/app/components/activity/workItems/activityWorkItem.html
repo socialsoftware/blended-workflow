@@ -8,29 +8,32 @@
 				name="workItem.activityName" work-item="workItem"
 				on-update="submitActivityWorkItem(activityName,workItem)"></work-item>
 
-			</br>
-			</br>
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>Timestamp</th>
-						<th>Activity</th>
-						<th>Pre Arguments</th>
-						<th>Post Arguments</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="log in logWorkItems | orderBy:'-timestamp'">
-						<td>{{log.timestamp}}</td>
-						<td>{{log.activityName}}</td>
-						<td>{{log.preArguments}}</td>
-						<td>{{log.postArguments}}</td>
-					</tr>
-				</tbody>
-			</table>
-
 			<div ng-if="error">
 				<div error-message error-data="{{error}}"></div>
+			</div>
+
+			</br> </br>
+
+
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Timestamp</th>
+							<th>Activity</th>
+							<th>Pre Arguments</th>
+							<th>Post Arguments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="log in logWorkItems | orderBy:'-timestamp'">
+							<td>{{log.timestamp}}</td>
+							<td>{{log.activityName}}</td>
+							<td>{{log.preArguments}}</td>
+							<td>{{log.postArguments}}</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 
 		</samp>

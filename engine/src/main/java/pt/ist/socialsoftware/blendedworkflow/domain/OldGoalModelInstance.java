@@ -112,7 +112,7 @@ public class OldGoalModelInstance extends OldGoalModelInstance_Base {
 
 		OldDataModelInstance dataModelInstance = getBwInstance().getDataModelInstance();
 		for (Goal subGoal : topGoal.getSubGoalSet()) {
-			result.addAll(dataModelInstance.getRelations(topGoal.getEntityContext(), subGoal.getEntityContext()));
+			result.addAll(dataModelInstance.getRelations(topGoal.getOldEntityContext(), subGoal.getOldEntityContext()));
 		}
 
 		return result;

@@ -58,14 +58,14 @@ public class CreateGoalInstanceService implements Callable<String> {
 		OldDataModelInstance dataModelInstance = this.bwInstance.getDataModelInstance();
 
 		// Get Key Relations if the Context is new
-		if (this.entitiesOID.get(this.goal.getEntityContext().getExternalId()) == null) {
-			for (RelationBW relation : this.goal.getEntityContext().getRelationSet()) {
+		if (this.entitiesOID.get(this.goal.getOldEntityContext().getExternalId()) == null) {
+			for (RelationBW relation : this.goal.getOldEntityContext().getRelationSet()) {
 				Entity one = relation.getEntityOne();
 				Entity two = relation.getEntityTwo();
-				if (this.goal.getEntityContext().equals(one) && relation.getIsTwoKeyEntity()) {
+				if (this.goal.getOldEntityContext().equals(one) && relation.getIsTwoKeyEntity()) {
 					this.relations.add(relation);
 				}
-				if (this.goal.getEntityContext().equals(two) && relation.getIsOneKeyEntity()) {
+				if (this.goal.getOldEntityContext().equals(two) && relation.getIsOneKeyEntity()) {
 					this.relations.add(relation);
 				}
 			}
@@ -144,7 +144,7 @@ public class CreateGoalInstanceService implements Callable<String> {
 
 		// Create GoalWorkItem
 		OldEntityInstance goalEntityInstanceContext = FenixFramework
-				.getDomainObject(this.entitiesOID.get(goal.getEntityContext().getExternalId()));
+				.getDomainObject(this.entitiesOID.get(goal.getOldEntityContext().getExternalId()));
 		if (!goal.goalWorkItemsExistForTheContext(goalEntityInstanceContext)) {
 			new OldGoalWorkItem(bwInstance, goal, goalEntityInstanceContext, activateConditions, maintainGoals);
 		} else {

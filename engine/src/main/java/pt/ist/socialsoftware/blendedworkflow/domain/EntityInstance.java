@@ -236,12 +236,7 @@ public class EntityInstance extends EntityInstance_Base {
 		productInstanceDTO.setProduct(getEntity().getDTO());
 		productInstanceDTO.setExternalId(getExternalId());
 		productInstanceDTO.setPath(getEntity().getName());
-		productInstanceDTO
-				.setValue(getEntity().getName() + "(" + getExternalId() + ","
-						+ getAttributeInstanceSet().stream()
-								.map(ai -> ai.getAttribute().getName() + "[" + ai.getValue() + "]")
-								.collect(Collectors.joining(","))
-						+ ")");
+		productInstanceDTO.setValue(getEntity().getName() + "[" + getExternalId() + "]");
 
 		return productInstanceDTO;
 	}

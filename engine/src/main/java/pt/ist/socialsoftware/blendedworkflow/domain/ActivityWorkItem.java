@@ -99,13 +99,13 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 						getPreConditionSet()
 								.stream().map(pwia -> pwia.getProductInstanceSet().stream()
 										.map(pi -> pi.getDTO().getValue()).collect(Collectors.joining(",")))
-								.collect(Collectors.joining(",")));
+								.collect(Collectors.joining("\r\n")));
 		activityWorkItemDTO
 				.setPostArguments(
 						getPostConditionSet()
 								.stream().map(pwia -> pwia.getProductInstanceSet().stream()
 										.map(pi -> pi.getDTO().getValue()).collect(Collectors.joining(",")))
-								.collect(Collectors.joining(",")));
+								.collect(Collectors.joining("\r\n")));
 
 		return activityWorkItemDTO;
 	}

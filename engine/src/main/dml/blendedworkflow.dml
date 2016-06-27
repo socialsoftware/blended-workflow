@@ -866,7 +866,7 @@ relation WorkItemHasUsers {
 //NEWGoalModel Relations
 relation GoalHasEntity {
 	Goal playsRole goalContext {multiplicity 0..*;}
-	Entity playsRole entityContext {multiplicity 0..1;}
+	Entity playsRole oldEntityContext {multiplicity 0..1;}
 }
 
 relation MaintainGoalHasEntity {
