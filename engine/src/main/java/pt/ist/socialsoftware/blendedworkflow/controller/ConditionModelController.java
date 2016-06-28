@@ -165,7 +165,7 @@ public class ConditionModelController {
 	public ResponseEntity<MulConditionDTO> createEntityInvariantCondition(@PathVariable("specId") String specId,
 			@RequestBody MulConditionDTO mulConditionDTO) {
 		log.debug("createEntityInvariantCondition specId:{}, rolePath:{}, cardinality:{}", specId,
-				mulConditionDTO.getRolePath(), mulConditionDTO.getTargetCardinality());
+				mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
 
 		DesignInterface adi = DesignInterface.getInstance();
 

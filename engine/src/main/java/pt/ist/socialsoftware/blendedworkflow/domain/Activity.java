@@ -217,7 +217,7 @@ public class Activity extends Activity_Base {
 
 		if (oMul.isPresent())
 			throw new BWException(BWErrorType.INCONSISTENT_MUL_CONDITION,
-					getName() + ":" + oMul.get().getSourceEntity().getName() + "." + oMul.get().getTargetRolename());
+					getName() + ":" + oMul.get().getSourceEntity().getName() + "." + oMul.get().getRolename());
 
 		// at least one entity definition is done here
 		oMul = getMultiplicityInvariantSet().stream()
@@ -227,7 +227,7 @@ public class Activity extends Activity_Base {
 
 		if (oMul.isPresent())
 			throw new BWException(BWErrorType.INCONSISTENT_MUL_CONDITION,
-					getName() + ":" + oMul.get().getSourceEntity().getName() + "." + oMul.get().getTargetRolename());
+					getName() + ":" + oMul.get().getSourceEntity().getName() + "." + oMul.get().getRolename());
 
 	}
 
@@ -359,21 +359,6 @@ public class Activity extends Activity_Base {
 		return entityContext;
 	}
 
-	public boolean postConditionDoesNotHold(EntityInstance entityInstance) {
-		// for every def attribute in post-condition, if the attribute belongs
-		// to the entity instance type, then it should not be defined for the
-		// entity instance
-		if (!getPostAttributes().stream().filter(a -> a.getEntity() == entityInstance.getEntity())
-				.noneMatch(a -> entityInstance.isDefined(a))) {
-			return false;
-		}
-		// for every def entity in post-condition, if the entity is in relation
-		// with then entity instance type, then it should be possible to create
-		// another relation instance associated with the entity instance
-		return getMultiplicityInvariantSet().stream().filter(m -> m.getSourceEntity() == entityInstance.getEntity())
-				.noneMatch(m -> entityInstance.isInMaxCardinality(m));
-	}
-
 	public boolean isEnabledForExecution(WorkflowInstance workflowInstance) {
 		// get entity context
 		Set<Entity> entityContext = getEntityContext();
@@ -401,19 +386,23 @@ public class Activity extends Activity_Base {
 		return instanceContext;
 	}
 
-	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity entity) {
+	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity) {
 		// pre-conditions hold
-		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(entity).stream()
+		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(contextEntity).stream()
 				.filter(ei -> ei.holdsDefPathConditions(getPreConditionSet())).collect(Collectors.toSet());
 
-		// post-conditions do not hold
-		instanceContext = instanceContext.stream().filter(ei -> postConditionDoesNotHold(ei))
+		// none of post-conditions attributes are defined
+		instanceContext = instanceContext.stream().filter(ei -> ei.attributesNotDefined(getPostAttributes()))
 				.collect(Collectors.toSet());
+
+		// entity instance can be associated due to post-condition mulcondition
+		instanceContext = instanceContext.stream()
+				.filter(ei -> ei.canAssociateEntityInstance(getMultiplicityInvariantSet())).collect(Collectors.toSet());
 
 		// there are enough instances in the context to enable the activity
 		int instanceContextSize = instanceContext.size();
-		if (!getMultiplicityInvariantSet().stream().filter(m -> m.getTargetEntity() == entity)
-				.allMatch(m -> m.getTargetCardinality().getMinValue() <= instanceContextSize)) {
+		if (!getMultiplicityInvariantSet().stream().filter(m -> m.getTargetEntity() == contextEntity)
+				.allMatch(m -> m.getCardinality().getMinValue() <= instanceContextSize)) {
 			instanceContext.clear();
 		}
 

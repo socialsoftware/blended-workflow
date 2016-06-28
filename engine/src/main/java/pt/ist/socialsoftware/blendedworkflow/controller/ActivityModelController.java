@@ -203,12 +203,12 @@ public class ActivityModelController {
 	public ResponseEntity<MulConditionDTO> associateMultiplicityToActivityPost(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName, @RequestBody MulConditionDTO mulConditionDTO) {
 		logger.debug("associateActConditionToGoal specId:{}, activityName:{}, path:{}, cardinality:{}", specId,
-				activityName, mulConditionDTO.getRolePath(), mulConditionDTO.getTargetCardinality());
+				activityName, mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
 
 		DesignInterface adi = DesignInterface.getInstance();
 
 		MulCondition mulCondition = adi.associateMulToActivityPost(specId, activityName, mulConditionDTO.getRolePath(),
-				mulConditionDTO.getTargetCardinality());
+				mulConditionDTO.getCardinality());
 
 		return new ResponseEntity<MulConditionDTO>(mulCondition.getDTO(), HttpStatus.CREATED);
 	}

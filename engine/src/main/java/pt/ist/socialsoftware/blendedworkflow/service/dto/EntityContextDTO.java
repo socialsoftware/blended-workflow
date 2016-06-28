@@ -31,9 +31,9 @@ public class EntityContextDTO {
 
 		if (mulCondition == null) {
 			MulConditionDTO mulConditionDTO = new MulConditionDTO();
-			mulConditionDTO.setTargetCardinality("1");
-			mulConditionDTO.setTargetMin(1);
-			mulConditionDTO.setTargetMax(1);
+			mulConditionDTO.setCardinality("1");
+			mulConditionDTO.setMin(1);
+			mulConditionDTO.setMax(1);
 			mulConditionDTO.setRolePath(entityContext.getName());
 			entityContextDTO.setMulCondition(mulConditionDTO);
 			entityContextDTO.setDefPathConditionSet(

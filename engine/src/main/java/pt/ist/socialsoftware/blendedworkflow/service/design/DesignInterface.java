@@ -372,13 +372,13 @@ public class DesignInterface {
 	@Atomic(mode = TxMode.WRITE)
 	public MulCondition createEntityInvariantCondition(String specId, MulConditionDTO miDTO) {
 		log.debug("createEntityInvariantCondition Entity:{}, Cardinality:{}", miDTO.getRolePath(),
-				miDTO.getTargetCardinality());
+				miDTO.getCardinality());
 		Specification spec = getSpecBySpecId(specId);
 
 		MulCondition mulCondition = getMULCondition(spec, miDTO.getRolePath());
 
-		if (!mulCondition.getTargetCardinality().equals(miDTO.getTargetCardinality()))
-			new BWException(BWErrorType.INVALID_CARDINALITY, miDTO.getTargetCardinality());
+		if (!mulCondition.getCardinality().equals(miDTO.getCardinality()))
+			new BWException(BWErrorType.INVALID_CARDINALITY, miDTO.getCardinality());
 
 		spec.getConditionModel().addEntityInvariantCondition(mulCondition);
 

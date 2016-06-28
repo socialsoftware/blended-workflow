@@ -35,8 +35,8 @@ public class GetMulConditionMethodTest extends TeardownRollbackTest {
 
 		assertNotNull(mulCondition);
 		assertEquals(1, relation.getMulConditionSet().size());
-		assertEquals(ROLENAME_ONE, mulCondition.getTargetRolename());
-		assertEquals(relation.getCardinalityByRolename(ROLENAME_ONE), mulCondition.getTargetCardinality());
+		assertEquals(ROLENAME_ONE, mulCondition.getRolename());
+		assertEquals(relation.getCardinalityByRolename(ROLENAME_ONE), mulCondition.getCardinality());
 	}
 
 	@Test
@@ -46,8 +46,8 @@ public class GetMulConditionMethodTest extends TeardownRollbackTest {
 
 		assertNotNull(mulCondition);
 		assertEquals(2, relation.getMulConditionSet().size());
-		assertEquals(ROLENAME_TWO, mulCondition.getTargetRolename());
-		assertEquals(relation.getCardinalityByRolename(ROLENAME_TWO), mulCondition.getTargetCardinality());
+		assertEquals(ROLENAME_TWO, mulCondition.getRolename());
+		assertEquals(relation.getCardinalityByRolename(ROLENAME_TWO), mulCondition.getCardinality());
 	}
 
 	@Test
@@ -58,8 +58,8 @@ public class GetMulConditionMethodTest extends TeardownRollbackTest {
 
 		assertNotNull(mulCondition);
 		assertEquals(2, relation.getMulConditionSet().size());
-		assertEquals(ROLENAME_ONE, mulCondition.getTargetRolename());
-		assertEquals(relation.getCardinalityByRolename(ROLENAME_ONE), mulCondition.getTargetCardinality());
+		assertEquals(ROLENAME_ONE, mulCondition.getRolename());
+		assertEquals(relation.getCardinalityByRolename(ROLENAME_ONE), mulCondition.getCardinality());
 	}
 
 }

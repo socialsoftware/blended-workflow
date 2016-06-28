@@ -357,11 +357,11 @@ public class Goal extends Goal_Base {
 		}
 
 		// for each entity, in entity context, get instance context
-		// for (Entity entity : entityContext) {
-		// if (getInstanceContext(workflowInstance, entity).isEmpty()) {
-		// return false;
-		// }
-		// }
+		for (Entity entity : entityContext) {
+			if (getInstanceContext(workflowInstance, entity).isEmpty()) {
+				return false;
+			}
+		}
 
 		return true;
 	}
@@ -404,30 +404,27 @@ public class Goal extends Goal_Base {
 		return entityContext;
 	}
 
-	// public Set<EntityInstance> getInstanceContext(WorkflowInstance
-	// workflowInstance, Entity entity) {
-	// // pre-conditions hold
-	// Set<EntityInstance> instanceContext =
-	// workflowInstance.getEntityInstanceSet(entity).stream()
-	// .filter(ei ->
-	// ei.holdsDefPathConditions(getPreConditionSet())).collect(Collectors.toSet());
-	//
-	// // post-conditions do not hold
-	// instanceContext = instanceContext.stream().filter(ei ->
-	// postConditionDoesNotHold(ei))
-	// .collect(Collectors.toSet());
-	//
-	// // there are enough instances in the context to enable the activity
-	// int instanceContextSize = instanceContext.size();
-	// if (!getMultiplicityInvariantSet().stream().filter(m ->
-	// m.getTargetEntity() == entity)
-	// .allMatch(m -> m.getTargetCardinality().getMinValue() <=
-	// instanceContextSize)) {
-	// instanceContext.clear();
-	// }
-	//
-	// return instanceContext;
-	// }
+	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity entity) {
+		// activation conditions hold
+		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(entity).stream()
+				.filter(ei -> ei.holdsDefPathConditions(getActivationConditionSet())).collect(Collectors.toSet());
+
+		// // success conditions do not hold
+		// instanceContext = instanceContext.stream().filter(ei ->
+		// postConditionDoesNotHold(ei))
+		// .collect(Collectors.toSet());
+		//
+		// // there are enough instances in the context to enable the activity
+		// int instanceContextSize = instanceContext.size();
+		// if (!getMultiplicityInvariantSet().stream().filter(m ->
+		// m.getTargetEntity() == entity)
+		// .allMatch(m -> m.getTargetCardinality().getMinValue() <=
+		// instanceContextSize)) {
+		// instanceContext.clear();
+		// }
+
+		return instanceContext;
+	}
 
 	private Set<Entity> getSuccessEntities() {
 		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).filter(Entity.class::isInstance)

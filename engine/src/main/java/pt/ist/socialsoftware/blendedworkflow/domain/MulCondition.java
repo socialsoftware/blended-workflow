@@ -16,7 +16,7 @@ public class MulCondition extends MulCondition_Base {
 	// g. given role name a returns for MUL(B.a,n)
 	public static MulCondition getMulCondition(RelationBW relation, String rolename) {
 		for (MulCondition mulCondition : relation.getMulConditionSet()) {
-			if (mulCondition.getTargetRolename().equals(rolename))
+			if (mulCondition.getRolename().equals(rolename))
 				return mulCondition;
 		}
 
@@ -51,20 +51,6 @@ public class MulCondition extends MulCondition_Base {
 			return getRelationBW().getEntityTwo();
 	}
 
-	public String getSourceRolename() {
-		if (getSide() == 1)
-			return getRelationBW().getRoleNameOne();
-		else
-			return getRelationBW().getRoleNameTwo();
-	}
-
-	public Cardinality getSourceCardinality() {
-		if (getSide() == 1)
-			return getRelationBW().getCardinalityOne();
-		else
-			return getRelationBW().getCardinalityTwo();
-	}
-
 	public Entity getTargetEntity() {
 		if (getSide() == 1)
 			return getRelationBW().getEntityTwo();
@@ -72,14 +58,14 @@ public class MulCondition extends MulCondition_Base {
 			return getRelationBW().getEntityOne();
 	}
 
-	public String getTargetRolename() {
+	public String getRolename() {
 		if (getSide() == 1)
 			return getRelationBW().getRoleNameTwo();
 		else
 			return getRelationBW().getRoleNameOne();
 	}
 
-	public Cardinality getTargetCardinality() {
+	public Cardinality getCardinality() {
 		if (getSide() == 1)
 			return getRelationBW().getCardinalityTwo();
 		else
@@ -87,8 +73,7 @@ public class MulCondition extends MulCondition_Base {
 	}
 
 	public String getExpression() {
-		return "MUL(" + getSourceEntity().getName() + "." + getTargetRolename() + "," + getTargetCardinality().getExp()
-				+ ")";
+		return "MUL(" + getSourceEntity().getName() + "." + getRolename() + "," + getCardinality().getExp() + ")";
 	}
 
 	@Override
@@ -103,8 +88,7 @@ public class MulCondition extends MulCondition_Base {
 
 	@Override
 	public String getSubPath() {
-		return "MUL(" + getSourceEntity().getName() + "." + getTargetRolename() + "," + getTargetCardinality().getExp()
-				+ ")";
+		return "MUL(" + getSourceEntity().getName() + "." + getRolename() + "," + getCardinality().getExp() + ")";
 	}
 
 	@Override
@@ -224,13 +208,10 @@ public class MulCondition extends MulCondition_Base {
 	public MulConditionDTO getDTO() {
 		MulConditionDTO mulConditionDTO = new MulConditionDTO();
 		mulConditionDTO.setExternalId(getExternalId());
-		mulConditionDTO.setRolePath(getSourceEntity().getName() + "." + getTargetRolename());
-		mulConditionDTO.setSourceCardinality(getSourceCardinality().getExp());
-		mulConditionDTO.setSourceMin(getSourceCardinality().getMinValue());
-		mulConditionDTO.setSourceMax(getSourceCardinality().getMaxValue());
-		mulConditionDTO.setTargetCardinality(getTargetCardinality().getExp());
-		mulConditionDTO.setTargetMin(getTargetCardinality().getMinValue());
-		mulConditionDTO.setTargetMax(getTargetCardinality().getMaxValue());
+		mulConditionDTO.setRolePath(getSourceEntity().getName() + "." + getRolename());
+		mulConditionDTO.setCardinality(getCardinality().getExp());
+		mulConditionDTO.setMin(getCardinality().getMinValue());
+		mulConditionDTO.setMax(getCardinality().getMaxValue());
 
 		return mulConditionDTO;
 	}

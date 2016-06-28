@@ -3,12 +3,9 @@ package pt.ist.socialsoftware.blendedworkflow.service.dto;
 public class MulConditionDTO {
 	private String externalId;
 	private String rolePath;
-	private String sourceCardinality;
-	private int sourceMin;
-	private int sourceMax;
-	private String targetCardinality;
-	private int targetMin;
-	private int targetMax;
+	private String cardinality;
+	private int min;
+	private int max;
 
 	public MulConditionDTO() {
 	}
@@ -29,52 +26,28 @@ public class MulConditionDTO {
 		this.rolePath = rolePath;
 	}
 
-	public String getSourceCardinality() {
-		return sourceCardinality;
+	public String getCardinality() {
+		return cardinality;
 	}
 
-	public void setSourceCardinality(String sourceCardinality) {
-		this.sourceCardinality = sourceCardinality;
+	public void setCardinality(String cardinality) {
+		this.cardinality = cardinality;
 	}
 
-	public int getSourceMin() {
-		return sourceMin;
+	public int getMin() {
+		return min;
 	}
 
-	public void setSourceMin(int sourceMin) {
-		this.sourceMin = sourceMin;
+	public void setMin(int min) {
+		this.min = min;
 	}
 
-	public int getSourceMax() {
-		return sourceMax;
+	public int getMax() {
+		return max;
 	}
 
-	public void setSourceMax(int sourceMax) {
-		this.sourceMax = sourceMax;
-	}
-
-	public String getTargetCardinality() {
-		return targetCardinality;
-	}
-
-	public void setTargetCardinality(String targetCardinality) {
-		this.targetCardinality = targetCardinality;
-	}
-
-	public int getTargetMin() {
-		return targetMin;
-	}
-
-	public void setTargetMin(int targetMin) {
-		this.targetMin = targetMin;
-	}
-
-	public int getTargetMax() {
-		return targetMax;
-	}
-
-	public void setTargetMax(int targetMax) {
-		this.targetMax = targetMax;
+	public void setMax(int max) {
+		this.max = max;
 	}
 
 }

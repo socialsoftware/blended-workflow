@@ -171,14 +171,6 @@ public class EntityInstance extends EntityInstance_Base {
 		return true;
 	}
 
-	public boolean isInMaxCardinality(MulCondition m) {
-		if (m.getSourceEntity() == getEntity()) {
-			return (getRelationInstanceSet().stream().filter(ri -> ri.getRelationType() == m.getRelationBW())
-					.count() == m.getTargetCardinality().getMaxValue());
-		}
-		return true;
-	}
-
 	public Set<RelationInstance> getRelationInstanceSet() {
 		return Stream.concat(getRelationInstanceOfOneSet().stream(), getRelationInstanceOfTwoSet().stream())
 				.collect(Collectors.toSet());
@@ -189,23 +181,27 @@ public class EntityInstance extends EntityInstance_Base {
 		return getEntity().getMultConditions().stream().allMatch(m -> isInCardinality(m));
 	}
 
-	private boolean isInCardinality(MulCondition m) {
-		long numberOfInstances = getRelationInstanceSet().stream()
-				.filter(ri -> ri.getRelationType() == m.getRelationBW()).count();
+	private long numberOfInstances(MulCondition mulCondition) {
+		return getRelationInstanceSet().stream().filter(ri -> ri.getRelationType() == mulCondition.getRelationBW())
+				.count();
+	}
+
+	private boolean isInCardinality(MulCondition mulCondition) {
+		long numberOfInstances = numberOfInstances(mulCondition);
 
 		int minValue;
 		int maxValue;
-		if (getEntity() == m.getSourceEntity()) {
-			minValue = m.getTargetCardinality().getMinValue();
-			maxValue = m.getTargetCardinality().getMaxValue();
+		if (getEntity() == mulCondition.getSourceEntity()) {
+			minValue = mulCondition.getCardinality().getMinValue();
+			maxValue = mulCondition.getCardinality().getMaxValue();
 		} else {
-			minValue = m.getSourceCardinality().getMinValue();
-			maxValue = m.getSourceCardinality().getMaxValue();
+			return true;
 		}
 
 		if (numberOfInstances < minValue || numberOfInstances > maxValue) {
-			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, "post work item argument cardinality "
-					+ numberOfInstances + " " + m.getTargetEntity().getName() + " " + minValue + " " + maxValue);
+			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY,
+					"post work item argument cardinality " + numberOfInstances + " "
+							+ mulCondition.getTargetEntity().getName() + " " + minValue + " " + maxValue);
 		}
 
 		return true;
@@ -245,6 +241,16 @@ public class EntityInstance extends EntityInstance_Base {
 		return getRelationInstanceSet().stream().anyMatch(ri -> ri.getRelationType() == relationBW
 				&& (ri.getEntityInstanceOne() == entityInstance || ri.getEntityInstanceTwo() == entityInstance));
 
+	}
+
+	public boolean attributesNotDefined(Set<Attribute> attributes) {
+		// none of attributes are defined for this instance
+		return attributes.stream().filter(a -> a.getEntity() == getEntity()).noneMatch(a -> isDefined(a));
+	}
+
+	public boolean canAssociateEntityInstance(Set<MulCondition> mulConditions) {
+		return mulConditions.stream().filter(m -> m.getSourceEntity() == getEntity())
+				.noneMatch(m -> numberOfInstances(m) == m.getCardinality().getMaxValue());
 	}
 
 }
