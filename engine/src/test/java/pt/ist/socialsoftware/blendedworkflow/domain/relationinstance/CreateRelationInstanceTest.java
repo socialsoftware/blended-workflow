@@ -88,4 +88,16 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 		}
 	}
 
+	@Test
+	public void failRelationCardinality() {
+		try {
+			new RelationInstance(entityInstanceOne, entityInstanceTwo, relation);
+			new RelationInstance(entityInstanceOne, new EntityInstance(workflowInstance, entityTwo), relation);
+			fail();
+		} catch (BWException bwe) {
+			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
+			assertEquals("Number of instances 2 > 1", bwe.getMessage());
+		}
+	}
+
 }

@@ -19,8 +19,8 @@ public class RelationInstance extends RelationInstance_Base {
 
 	@Override
 	public void setRelationType(RelationBW relation) {
-		checkConsistency(getEntityInstanceOne(), getEntityInstanceTwo(), relation);
 		super.setRelationType(relation);
+		checkConsistency(getEntityInstanceOne(), getEntityInstanceTwo(), relation);
 	}
 
 	public RelationInstance(EntityInstance entityInstanceOne, EntityInstance entityInstanceTwo, RelationBW relation) {
@@ -45,6 +45,20 @@ public class RelationInstance extends RelationInstance_Base {
 			if (entityInstanceTwo.getEntity() != relation.getEntityTwo()) {
 				throw new BWException(BWErrorType.RELATIONINSTANCE_CONSISTENCY, "Entity Two type does not match "
 						+ entityInstanceTwo.getEntity().getName() + "-" + relation.getEntityTwo().getName());
+			}
+
+			if (entityInstanceOne.numberOfInstances(relation.getRoleNameTwo()) > relation.getCardinalityTwo()
+					.getMaxValue()) {
+				throw new BWException(BWErrorType.RELATIONINSTANCE_CONSISTENCY,
+						"Number of instances " + entityInstanceOne.numberOfInstances(relation.getRoleNameTwo()) + " > "
+								+ relation.getCardinalityTwo().getMaxValue());
+			}
+
+			if (entityInstanceTwo.numberOfInstances(relation.getRoleNameOne()) > relation.getCardinalityOne()
+					.getMaxValue()) {
+				throw new BWException(BWErrorType.RELATIONINSTANCE_CONSISTENCY,
+						"Number of instances " + entityInstanceOne.numberOfInstances(relation.getRoleNameOne()) + " > "
+								+ relation.getCardinalityOne().getMaxValue());
 			}
 		}
 

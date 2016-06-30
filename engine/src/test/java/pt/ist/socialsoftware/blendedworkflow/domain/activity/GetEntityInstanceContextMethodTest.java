@@ -37,8 +37,6 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 	private static final String ROLENAME_ENT_ONE = "entOne";
 	private static final String ROLENAME_ENT_TWO = "entTwo";
 	private static final String ROLENAME_ENT_THREE = "entThree";
-	private static final String DESCRIPTION = "description";
-	private static final String ACTIVITY_ONE = "activityOne";
 
 	Specification spec = null;
 	Entity entOne;
@@ -47,10 +45,8 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 	Attribute attOne;
 	Attribute attTwo;
 	Attribute attThree;
-	Attribute attFour;
 	RelationBW relationOne;
 	RelationBW relationTwo;
-	RelationBW relationThree;
 
 	WorkflowInstance workflowInstance = null;
 
@@ -69,16 +65,12 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 
 		attThree = new Attribute(dataModel, entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true, false, false);
 
-		attFour = new Attribute(dataModel, entThree, ATT_FOUR_NAME, AttributeType.NUMBER, true, false, false);
-
 		relationOne = new RelationBW(dataModel, "relOneTwo", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false, entTwo,
 				ROLENAME_ENT_TWO, "0..2", false);
 
 		relationTwo = new RelationBW(dataModel, "relOneThree", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false,
 				entThree, ROLENAME_ENT_THREE, "2..4", false);
 
-		relationThree = new RelationBW(dataModel, "relTwoThree", entThree, ROLENAME_ENT_THREE, Cardinality.ZERO_MANY,
-				false, entTwo, ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);
 	}
 
 	@Test
@@ -138,7 +130,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 	}
 
 	@Test
-	public void oneEntityIsDefinedTheOtherDont() {
+	public void oneEntityInstanceIsDefinedTheOtherDont() {
 		Activity activity = new Activity(spec.getActivityModel(), "name", "description");
 		activity.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME));
 		activity.addPostCondition(DefEntityCondition.getDefEntityCondition(entTwo));

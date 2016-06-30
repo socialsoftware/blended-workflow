@@ -181,9 +181,14 @@ public class EntityInstance extends EntityInstance_Base {
 		return getEntity().getMultConditions().stream().allMatch(m -> isInCardinality(m));
 	}
 
-	private long numberOfInstances(MulCondition mulCondition) {
+	public long numberOfInstances(MulCondition mulCondition) {
 		return getRelationInstanceSet().stream().filter(ri -> ri.getRelationType() == mulCondition.getRelationBW())
 				.count();
+	}
+
+	public long numberOfInstances(String rolename) {
+		return getRelationInstanceSet().stream().filter(ri -> ri.getRelationType().getRoleNameOne().equals(rolename)
+				|| ri.getRelationType().getRoleNameTwo().equals(rolename)).count();
 	}
 
 	private boolean isInCardinality(MulCondition mulCondition) {
@@ -248,8 +253,9 @@ public class EntityInstance extends EntityInstance_Base {
 		return attributes.stream().filter(a -> a.getEntity() == getEntity()).noneMatch(a -> isDefined(a));
 	}
 
-	public boolean canAssociateEntityInstance(Set<MulCondition> mulConditions) {
-		return mulConditions.stream().filter(m -> m.getSourceEntity() == getEntity())
+	public boolean canBeAssociatedWithNewEntityInstance(Set<MulCondition> mulConditions) {
+		return mulConditions.stream().filter(m -> m.getTargetEntity() == getEntity())
+				.map(m -> m.getSymmetricMulCondition())
 				.noneMatch(m -> numberOfInstances(m) == m.getCardinality().getMaxValue());
 	}
 

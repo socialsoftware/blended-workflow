@@ -182,4 +182,25 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 		assertTrue(entityContext.contains(entThree));
 	}
 
+	@Test
+	public void successEntityDoesNotHaveEntityContextForSibling() {
+		Goal parentGoal = new Goal(spec.getGoalModel(), "parent");
+
+		goal.setParentGoal(parentGoal);
+		goal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
+		goal.addEntityInvariantCondition(MulCondition.getMulCondition(oneTwo, ROLENAME_ENT_TWO));
+		goal.addEntityInvariantCondition(MulCondition.getMulCondition(twoThree, ROLENAME_ENT_THREE));
+
+		Goal goalOne = new Goal(spec.getGoalModel(), "other");
+		goalOne.setParentGoal(parentGoal);
+		goalOne.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entTwo));
+		goalOne.addEntityInvariantCondition(MulCondition.getMulCondition(oneTwo, ROLENAME_ENT_ONE));
+
+		Set<Entity> entityContext = goal.getEntityContext();
+		assertTrue(entityContext.isEmpty());
+
+		entityContext = goalOne.getEntityContext();
+		assertTrue(entityContext.isEmpty());
+	}
+
 }

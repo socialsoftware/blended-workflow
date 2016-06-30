@@ -376,7 +376,7 @@ public class Goal extends Goal_Base {
 					&& !getSuccessEntities().contains(defProductCondition.getSourceOfPath())) {
 				entityContext.add(defProductCondition.getSourceOfPath());
 			}
-			// entity is defined
+			// entity is defined in a parent goal
 			if (defProductCondition.getSourceOfPath() == defProductCondition.getTargetOfPath()) {
 				for (MulCondition mulCondition : getEntityInvariantConditionSet()) {
 					// associated entities were already created in a super goal
@@ -404,24 +404,26 @@ public class Goal extends Goal_Base {
 		return entityContext;
 	}
 
-	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity entity) {
+	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity) {
 		// activation conditions hold
-		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(entity).stream()
+		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(contextEntity).stream()
 				.filter(ei -> ei.holdsDefPathConditions(getActivationConditionSet())).collect(Collectors.toSet());
 
-		// // success conditions do not hold
-		// instanceContext = instanceContext.stream().filter(ei ->
-		// postConditionDoesNotHold(ei))
-		// .collect(Collectors.toSet());
-		//
-		// // there are enough instances in the context to enable the activity
-		// int instanceContextSize = instanceContext.size();
-		// if (!getMultiplicityInvariantSet().stream().filter(m ->
-		// m.getTargetEntity() == entity)
-		// .allMatch(m -> m.getTargetCardinality().getMinValue() <=
-		// instanceContextSize)) {
-		// instanceContext.clear();
-		// }
+		// none of activation conditions attributes are defined
+		instanceContext = instanceContext.stream().filter(ei -> ei.attributesNotDefined(getSuccessAttributes()))
+				.collect(Collectors.toSet());
+
+		// entity instance can be associated due to invariant mulconditions
+		instanceContext = instanceContext.stream()
+				.filter(ei -> ei.canBeAssociatedWithNewEntityInstance(getEntityInvariantConditionSet()))
+				.collect(Collectors.toSet());
+
+		// there are enough instances in the context to enable the activity
+		int instanceContextSize = instanceContext.size();
+		if (!getEntityInvariantConditionSet().stream().filter(m -> m.getTargetEntity() == contextEntity)
+				.allMatch(m -> m.getCardinality().getMinValue() <= instanceContextSize)) {
+			instanceContext.clear();
+		}
 
 		return instanceContext;
 	}
@@ -429,6 +431,11 @@ public class Goal extends Goal_Base {
 	private Set<Entity> getSuccessEntities() {
 		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).filter(Entity.class::isInstance)
 				.map(Entity.class::cast).collect(Collectors.toSet());
+	}
+
+	private Set<Attribute> getSuccessAttributes() {
+		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).filter(Attribute.class::isInstance)
+				.map(Attribute.class::cast).collect(Collectors.toSet());
 	}
 
 	private Set<Entity> getParentsSuccessEntities() {
