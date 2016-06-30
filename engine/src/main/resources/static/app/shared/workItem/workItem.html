@@ -1,4 +1,5 @@
-<br /> <hr>
+<br />
+<hr>
 <form class="form-inline" name="activityForm" novalidate="novalidate">
 	<strong>Work Item</strong> <span> {{$ctrl.name}}</span>
 	<button class="btn btn-default"
@@ -32,9 +33,10 @@
 						<td>
 							<div
 								ng-repeat="entityContext in definitionGroup.entityContextSet">
-								{{entityContext.mulCondition.rolePath}}
-								{{entityContext.mulCondition.cardinality}} <select
-									class="btn btn-default"
+								MUL({{entityContext.mulCondition.rolePath}},{{entityContext.mulCondition.cardinality}})
+								PATHS(<span
+									ng-repeat="pathCondition in entityContext.defPathConditionSet">{{pathCondition.path}}<span
+									ng-if="!$last">, </span></span>)<select class="btn btn-default"
 									ng-options="entityInstanceContext.pathValues for entityInstanceContext in entityContext.entityInstanceContextSet"
 									ng-model="definitionGroupInstance.entityInstanceContextSet"
 									multiple>

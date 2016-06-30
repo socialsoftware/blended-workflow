@@ -18,10 +18,10 @@ import pt.ist.socialsoftware.blendedworkflow.service.execution.ExecutionInterfac
 public class GoalWorkItemController {
 	private static Logger logger = LoggerFactory.getLogger(GoalWorkItemController.class);
 
-	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/next", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<GoalWorkItemDTO[]> getGoalWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
-		logger.debug("getActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
+		logger.debug("getGoalWorkItems specId:{}, instanceName:{}", specId, instanceName);
 		ExecutionInterface edi = ExecutionInterface.getInstance();
 
 		GoalWorkItemDTO[] instances = edi.getPendingGoalWorkItemSet(specId, instanceName).stream()

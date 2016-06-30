@@ -126,6 +126,22 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 	}
 
 	@Test
+	public void attributeSuccessParentCreatesEntity() {
+		Goal parentGoal = new Goal(goalModel, "parent");
+		parentGoal.addSubGoal(goal);
+		parentGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(oneTwo, ROLENAME_ENT_TWO));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(oneThree, ROLENAME_ENT_THREE));
+
+		goal.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attOne));
+
+		Set<Entity> entityContext = goal.getEntityContext();
+
+		assertEquals(1, entityContext.size());
+		assertTrue(entityContext.contains(entOne));
+	}
+
+	@Test
 	public void attributeSuccessAttributeActivation() {
 		Goal parentGoal = new Goal(goalModel, "parent");
 		parentGoal.addSubGoal(goal);

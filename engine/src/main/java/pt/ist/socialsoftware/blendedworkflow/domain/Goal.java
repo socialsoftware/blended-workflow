@@ -1,8 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -404,6 +406,57 @@ public class Goal extends Goal_Base {
 		return entityContext;
 	}
 
+	public Set<Entity> getEntityContext(Entity entity) {
+		Set<Entity> entityContext = new HashSet<Entity>();
+
+		for (DefProductCondition defProductCondition : getSuccessConditionSet()) {
+			if (defProductCondition.getSourceOfPath() == entity) {
+				// attribute is defined but not its entity
+				if (defProductCondition.getSourceOfPath() != defProductCondition.getTargetOfPath()
+						&& !getSuccessEntities().contains(defProductCondition.getSourceOfPath())) {
+					entityContext.add(defProductCondition.getSourceOfPath());
+				}
+				// entity is defined in a parent goal
+				if (defProductCondition.getSourceOfPath() == defProductCondition.getTargetOfPath()) {
+					for (MulCondition mulCondition : getEntityInvariantConditionSet()) {
+						// associates all entities, different from
+						// getEntityContext() because the association is not
+						// mandatory to occur in this definition
+						entityContext.add(mulCondition.getTargetEntity());
+					}
+				}
+			}
+		}
+
+		// the entity already exist
+		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
+			if (defPathCondition.getSourceOfPath() == entity
+					&& defPathCondition.getTargetOfPath() == defPathCondition.getSourceOfPath()) {
+				entityContext.add(defPathCondition.getSourceOfPath());
+			}
+		}
+
+		// the entity is going to be defined
+		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
+			if (defPathCondition.getSourceOfPath() == entity
+					&& !entityContext.contains(defPathCondition.getSourceOfPath())) {
+				entityContext.add(defPathCondition.getPath().getAdjacent());
+			}
+		}
+
+		return entityContext;
+	}
+
+	public Map<Entity, Set<EntityInstance>> getInstanceContext(WorkflowInstance workflowInstance) {
+		Map<Entity, Set<EntityInstance>> instanceContext = new HashMap<Entity, Set<EntityInstance>>();
+
+		for (Entity entity : getEntityContext()) {
+			instanceContext.put(entity, getInstanceContext(workflowInstance, entity));
+		}
+
+		return instanceContext;
+	}
+
 	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity) {
 		// activation conditions hold
 		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(contextEntity).stream()
@@ -447,6 +500,20 @@ public class Goal extends Goal_Base {
 		}
 
 		return successEntities;
+	}
+
+	public Set<MulCondition> getMulConditionFromEntityToEntity(Entity fromEntity, Entity toEntity) {
+		return getEntityInvariantConditionSet().stream()
+				.filter(m -> m.getSourceEntity() == fromEntity && m.getTargetEntity() == toEntity)
+				.collect(Collectors.toSet());
+	}
+
+	public Set<MulCondition> getInnerMulConditions(Entity entity) {
+		Set<Entity> postEntities = getSuccessEntities();
+		return getEntityInvariantConditionSet()
+				.stream().filter(m -> postEntities.contains(m.getSourceEntity())
+						&& postEntities.contains(m.getTargetEntity()) && m.getSourceEntity() == entity)
+				.collect(Collectors.toSet());
 	}
 
 }

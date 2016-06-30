@@ -69,9 +69,9 @@
 							<ul class="dropdown-menu" uib-dropdown-menu="uib-dropdown-menu">
 								<li><a href="#">Data View</a></li>
 								<li role="separator" class="divider"></li>
-								<li><a href="#/specs/{{spec.specId}}/instancesmanager/{{instance.name}}/activity">Activity View</a></li>
+								<li><a href="#/specs/{{spec.specId}}/instancesmanager/{{instance.name}}/goal">Goal View</a></li>
 								<li role="separator" class="divider"></li>
-								<li><a href="#">Goal View</a></li>
+								<li><a href="#/specs/{{spec.specId}}/instancesmanager/{{instance.name}}/activity">Activity View</a></li>
 							</ul></li>
 
 						<li class="dropdown" uib-dropdown="uib-dropdown"
@@ -117,6 +117,7 @@
 	<script src="app/controllers/activityModelController.js"></script>
 	<script src="app/controllers/activityGraphController.js"></script>
 	<script src="app/components/activity/workItems/activityWorkItemController.js"></script>
+	<script src="app/components/goal/workItems/goalWorkItemController.js"></script>
 
 	<script src="app/shared/error/errorMessage.js"></script>
 	<script src="app/shared/goal/goalGraph.js"></script>
@@ -130,6 +131,7 @@
 	<script src="app/services/activityRepository.js"></script>
 	<script src="app/services/instanceRepository.js"></script>
 	<script src="app/services/activityWorkItemRepository.js"></script>
+	<script src="app/services/goalWorkItemRepository.js"></script>
 
 </body>
 </html>

@@ -397,7 +397,8 @@ public class Activity extends Activity_Base {
 
 		// entity instance can be associated due to post-condition mulcondition
 		instanceContext = instanceContext.stream()
-				.filter(ei -> ei.canBeAssociatedWithNewEntityInstance(getMultiplicityInvariantSet())).collect(Collectors.toSet());
+				.filter(ei -> ei.canBeAssociatedWithNewEntityInstance(getMultiplicityInvariantSet()))
+				.collect(Collectors.toSet());
 
 		// there are enough instances in the context to enable the activity
 		int instanceContextSize = instanceContext.size();
@@ -472,4 +473,5 @@ public class Activity extends Activity_Base {
 						&& postEntities.contains(m.getTargetEntity()) && m.getSourceEntity() == entity)
 				.collect(Collectors.toSet());
 	}
+
 }

@@ -4,9 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ist.socialsoftware.blendedworkflow.domain.Product.ProductType;
 
 public class ConditionModel extends ConditionModel_Base {
+	private static Logger logger = LoggerFactory.getLogger(ConditionModel.class);
 
 	public void clean() {
 		if (getSpecification().getGoalModel() != null)
@@ -34,7 +38,8 @@ public class ConditionModel extends ConditionModel_Base {
 		dataModel.getEntitySet().stream().forEach(e -> DefEntityCondition.getDefEntityCondition(e));
 
 		dataModel.getAttributeSet().stream().filter(Attribute.class::isInstance).map(Attribute.class::cast)
-				.filter(a -> !a.getEntity().getExists()).forEach(a -> DefAttributeCondition.getDefAttributeCondition(a));
+				.filter(a -> !a.getEntity().getExists())
+				.forEach(a -> DefAttributeCondition.getDefAttributeCondition(a));
 
 		dataModel.getRelationBWSet().stream().forEach(r -> MulCondition.createMUlConditions(r));
 
@@ -47,6 +52,8 @@ public class ConditionModel extends ConditionModel_Base {
 		dataModel.getDependenceSet().stream().filter(d -> !d.getProduct().getProductType().equals(ProductType.ENTITY))
 				.forEach(d -> this.addAttributeDependenceCondition(d));
 
+		getEntityInvariantConditionSet().stream()
+				.forEach(m -> DefPathCondition.getDefPathCondition(getSpecification(), m.getPath()));
 	}
 
 	public Set<DefProductCondition> getAllProductionConditions() {

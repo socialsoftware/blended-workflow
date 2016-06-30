@@ -79,7 +79,7 @@ public class ReadConditionModelService {
 	private void createEntityInvariantCondition(MulConditionDTO mulConditionDTO, ConditionModel model) {
 		EntityInvariantCondition mul = factory.createEntityInvariantCondition();
 		mul.setName(mulConditionDTO.getRolePath());
-		mul.setCardinality(mulConditionDTO.getTargetCardinality());
+		mul.setCardinality(mulConditionDTO.getCardinality());
 		model.getEntityInvariantConditions().add(mul);
 	}
 

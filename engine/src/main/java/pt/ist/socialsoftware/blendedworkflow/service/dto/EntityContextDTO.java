@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
 
@@ -55,6 +57,56 @@ public class EntityContextDTO {
 			entityInstanceContextDTOs
 					.add(EntityInstanceContextDTO.createEntityInstanceContextDTO(entityContextDTO, entityInstance));
 		}
+
+		return entityContextDTO;
+	}
+
+	public static EntityContextDTO createEntityContextDTO(Goal goal, Entity entityContext, MulCondition mulCondition,
+			WorkflowInstance workflowInstance) {
+		EntityContextDTO entityContextDTO = new EntityContextDTO();
+		entityContextDTO.setEntity(entityContext.getDTO());
+
+		if (mulCondition == null) {
+			MulConditionDTO mulConditionDTO = new MulConditionDTO();
+			mulConditionDTO.setCardinality("1");
+			mulConditionDTO.setMin(1);
+			mulConditionDTO.setMax(1);
+			mulConditionDTO.setRolePath(entityContext.getName());
+			entityContextDTO.setMulCondition(mulConditionDTO);
+			// parent defines the entity
+			DefPathConditionDTO defPathConditionDTO = DefPathCondition
+					.getDefPathCondition(entityContext.getDataModel().getSpecification(), entityContext.getName())
+					.getDTO(entityContext.getDataModel().getSpecification().getSpecId());
+			// others defpaths due to activation condition
+			Set<DefPathConditionDTO> defPathConditions = goal.getActivationConditionSet().stream()
+					.filter(d -> d.getSourceOfPath() == entityContext)
+					.map(d -> d.getDTO(entityContext.getDataModel().getSpecification().getSpecId()))
+					.collect(Collectors.toSet());
+			defPathConditions.add(defPathConditionDTO);
+			entityContextDTO.setDefPathConditionSet(defPathConditions);
+		} else {
+			entityContextDTO.setMulCondition(mulCondition.getDTO());
+			// defpath due to the mulcondition
+			DefPathConditionDTO defPathConditionDTO = DefPathCondition
+					.getDefPathCondition(entityContext.getDataModel().getSpecification(), mulCondition.getPath())
+					.getDTO(entityContext.getDataModel().getSpecification().getSpecId());
+			// others defpaths due to activation condition
+			Set<DefPathConditionDTO> defPathConditions = goal.getActivationConditionSet().stream()
+					.filter(d -> d.getSourceOfPath() == mulCondition.getSourceEntity()
+							&& d.getSourceOfPath() != d.getTargetOfPath() && d.getPath().getAdjacent() == entityContext)
+					.map(d -> d.getDTO(entityContext.getDataModel().getSpecification().getSpecId()))
+					.collect(Collectors.toSet());
+			defPathConditions.add(defPathConditionDTO);
+			entityContextDTO.setDefPathConditionSet(defPathConditions);
+		}
+
+		Set<EntityInstanceContextDTO> entityInstanceContextDTOs = new HashSet<EntityInstanceContextDTO>();
+		entityContextDTO.setEntityInstanceContextSet(entityInstanceContextDTOs);
+		for (EntityInstance entityInstance : goal.getInstanceContext(workflowInstance, entityContext)) {
+			entityInstanceContextDTOs
+					.add(EntityInstanceContextDTO.createEntityInstanceContextDTO(entityContextDTO, entityInstance));
+		}
+
 		return entityContextDTO;
 	}
 

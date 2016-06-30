@@ -1,0 +1,17 @@
+<div class="container" ng-show="instance.name">
+	<div>
+		<samp>
+			<strong>Goal Work Items</strong> {{spec.name}}:{{instance.name}}
+			<br /> <br />
+			<work-item
+				ng-repeat="workItem in nextWorkItems | orderBy:'goalName'"
+				name="workItem.goalName" work-item="workItem"
+				on-update="submitGoalWorkItem(goalName,workItem)"></work-item>
+
+			<div ng-if="error">
+				<div error-message error-data="{{error}}"></div>
+			</div>
+		</samp>
+	</div>
+</div>
+			

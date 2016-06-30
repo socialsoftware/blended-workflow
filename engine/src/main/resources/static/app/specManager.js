@@ -26,6 +26,9 @@ app.config(function($routeProvider) {
 	}).when("/specs/:specId/instancesmanager/:instance/activity", {
 		templateUrl : "app/components/activity/workItems/activityWorkItem.html",
 		controller : "ActivityWorkItemController"
+	}).when("/specs/:specId/instancesmanager/:instance/goal", {
+		templateUrl : "app/components/goal/workItems/goalWorkItem.html",
+		controller : "GoalWorkItemController"
 	}).otherwise({
 		redirectTo : "/"
 	});

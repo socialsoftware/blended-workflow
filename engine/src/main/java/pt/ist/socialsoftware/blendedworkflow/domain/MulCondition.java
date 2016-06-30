@@ -72,6 +72,10 @@ public class MulCondition extends MulCondition_Base {
 			return getRelationBW().getCardinalityOne();
 	}
 
+	public String getPath() {
+		return getSourceEntity().getName() + "." + getRolename();
+	}
+
 	public MulCondition getSymmetricMulCondition() {
 		String rolename;
 
