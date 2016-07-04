@@ -28,7 +28,7 @@ function WorkItemController() {
 		if (definitionGroup.definitionGroupInstanceSet.length == 0) {
 			return true;
 		}
-
+		
 		if (definitionGroup.innerRelationSet.length != 0) {
 			for (i in definitionGroup.innerRelationSet) {
 				if (definitionGroup.innerRelationSet[i].mulCondition.sourceMax > (definitionGroup.definitionGroupInstanceSet.length)) {

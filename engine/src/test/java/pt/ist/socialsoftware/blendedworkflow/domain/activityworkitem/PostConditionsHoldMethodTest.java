@@ -27,7 +27,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
+public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 	private static final String ENT_TWO_ROLE = "entTwoRole";
 	private static final String ENT_ONE_ROLE = "entOneRole";
 	private static final String ATTRIBUTE_ONE = "AttributeOne";
@@ -142,8 +142,8 @@ public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
 	public void entityInstanceHolds() {
 		EntityInstance entityInstanceTwo = new EntityInstance(workflowInstance, entityTwo);
 		EntityInstance entityInstanceThree = new EntityInstance(workflowInstance, entityTwo);
-		new RelationInstance(entityInstance, entityInstanceTwo, relationBW);
-		new RelationInstance(entityInstance, entityInstanceThree, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceThree, ENT_TWO_ROLE, relationBW);
 
 		ActivityWorkItem activityWorkItem = new ActivityWorkItem(workflowInstance, activity);
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(activityWorkItem, defEntityCondition);
@@ -158,7 +158,7 @@ public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
 	@Test
 	public void entityInstanceHoldsFailBellowCardinality() {
 		EntityInstance entityInstanceTwo = new EntityInstance(workflowInstance, entityTwo);
-		new RelationInstance(entityInstance, entityInstanceTwo, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, relationBW);
 
 		ActivityWorkItem activityWorkItem = new ActivityWorkItem(workflowInstance, activity);
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(activityWorkItem, defEntityCondition);
@@ -169,35 +169,8 @@ public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
 			activityWorkItem.postConditionsHold();
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, bwe.getError());
+			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
 		}
-	}
-
-	@Test
-	public void entityInstanceHoldsFailAboveCardinality() {
-		EntityInstance entityInstanceTwo = new EntityInstance(workflowInstance, entityTwo);
-		EntityInstance entityInstanceThree = new EntityInstance(workflowInstance, entityTwo);
-		EntityInstance entityInstanceFour = new EntityInstance(workflowInstance, entityTwo);
-		EntityInstance entityInstanceFive = new EntityInstance(workflowInstance, entityTwo);
-		EntityInstance entityInstanceSix = new EntityInstance(workflowInstance, entityTwo);
-		new RelationInstance(entityInstance, entityInstanceTwo, relationBW);
-		new RelationInstance(entityInstance, entityInstanceThree, relationBW);
-		new RelationInstance(entityInstance, entityInstanceFour, relationBW);
-		new RelationInstance(entityInstance, entityInstanceFive, relationBW);
-		new RelationInstance(entityInstance, entityInstanceSix, relationBW);
-
-		ActivityWorkItem activityWorkItem = new ActivityWorkItem(workflowInstance, activity);
-		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(activityWorkItem, defEntityCondition);
-		postWorkItemArgument.addProductInstance(entityInstance);
-		activityWorkItem.addPostCondition(postWorkItemArgument);
-
-		try {
-			activityWorkItem.postConditionsHold();
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, bwe.getError());
-		}
-
 	}
 
 	@Test
@@ -206,10 +179,10 @@ public class PostConditonsHoldMethodTest extends TeardownRollbackTest {
 		EntityInstance entityInstanceThree = new EntityInstance(workflowInstance, entityTwo);
 		EntityInstance entityInstanceFour = new EntityInstance(workflowInstance, entityTwo);
 		EntityInstance entityInstanceFive = new EntityInstance(workflowInstance, entityTwo);
-		new RelationInstance(entityInstance, entityInstanceTwo, relationBW);
-		new RelationInstance(entityInstance, entityInstanceThree, relationBW);
-		new RelationInstance(entityInstance, entityInstanceFour, relationBW);
-		new RelationInstance(entityInstance, entityInstanceFive, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceThree, ENT_TWO_ROLE, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceFour, ENT_TWO_ROLE, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceFive, ENT_TWO_ROLE, relationBW);
 
 		ActivityWorkItem activityWorkItem = new ActivityWorkItem(workflowInstance, activity);
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(activityWorkItem, defEntityCondition);

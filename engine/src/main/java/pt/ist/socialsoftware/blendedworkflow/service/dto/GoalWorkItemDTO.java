@@ -14,31 +14,19 @@ import pt.ist.socialsoftware.blendedworkflow.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
 
 public class GoalWorkItemDTO extends WorkItemDTO {
 	private static Logger logger = LoggerFactory.getLogger(GoalWorkItemDTO.class);
 
-	String goalName;
-
-	public GoalWorkItemDTO() {
-	}
-
-	public String getGoalName() {
-		return goalName;
-	}
-
-	public void setGoalName(String goalName) {
-		this.goalName = goalName;
-	}
-
 	public static GoalWorkItemDTO createGoalWorkItemDTO(WorkflowInstance workflowInstance, Goal goal) {
 		GoalWorkItemDTO goalWorkItemDTO = new GoalWorkItemDTO();
 		goalWorkItemDTO.setSpecId(workflowInstance.getSpecification().getSpecId());
 		goalWorkItemDTO.setWorkflowInstanceName(workflowInstance.getName());
 		goalWorkItemDTO.setDefinitionGroupSet(new HashSet<DefinitionGroupDTO>());
-		goalWorkItemDTO.setGoalName(goal.getName());
+		goalWorkItemDTO.setName(goal.getName());
 
 		// get activity definition groups
 		Map<Entity, List<DefProductCondition>> definitionGroupMap = goal.getSuccessConditionSet().stream()
@@ -90,6 +78,14 @@ public class GoalWorkItemDTO extends WorkItemDTO {
 			definitionGroup.setDefinitionGroupInstanceSet(definitionGroupInstances);
 		}
 		return goalWorkItemDTO;
+	}
+
+	public GoalWorkItem createGoalWorkItem(WorkflowInstance workflowInstance, Goal goal) {
+		GoalWorkItem goalWorkItem = new GoalWorkItem(workflowInstance, goal);
+
+		fillWorkItem(workflowInstance, goalWorkItem);
+
+		return goalWorkItem;
 	}
 
 }

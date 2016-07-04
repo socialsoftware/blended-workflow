@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -98,18 +97,14 @@ public class AttributeInstance extends AttributeInstance_Base {
 	}
 
 	@Override
-	public boolean isDefined() {
-		if (getValue() == null || getValue().length() == 0)
-			throw new BWException(BWErrorType.NOT_DEFINED, getAttribute().getFullPath());
-
-		return true;
+	public Entity getEntity() {
+		return getAttribute().getEntity();
 	}
 
 	@Override
-	public boolean holdsPost(DefProductCondition defProductCondition, Set<MulCondition> mulConditionSet) {
-		if (getAttribute() != defProductCondition.getTargetOfPath() || !isDefined())
-			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, "post work item argument "
-					+ getAttribute().getFullPath() + ":" + defProductCondition.getTargetOfPath().getFullPath());
+	public boolean isDefined() {
+		if (getValue() == null || getValue().length() == 0)
+			throw new BWException(BWErrorType.NOT_DEFINED, getAttribute().getFullPath());
 
 		return true;
 	}

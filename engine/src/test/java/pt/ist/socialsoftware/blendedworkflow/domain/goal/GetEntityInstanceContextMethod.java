@@ -29,7 +29,6 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	private static final String PARENT_GOAL = "parent";
 	private static final String GOAL_NAME_ONE = "name one";
-	private static final String GOAL_NAME_TWO = "name two";
 	private static final String GOAL_NAME_THREE = "name three";
 	private static final String NUMBER_VALUE = "1234";
 	private static final String ENT_ONE_NAME = "EntOne";
@@ -49,8 +48,8 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	Attribute attOne;
 	Attribute attTwo;
 	Attribute attThree;
-	RelationBW relationOne;
-	RelationBW relationTwo;
+	RelationBW relationOneTwo;
+	RelationBW relationOneThree;
 
 	WorkflowInstance workflowInstance = null;
 
@@ -69,10 +68,10 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 
 		attThree = new Attribute(dataModel, entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true, false, false);
 
-		relationOne = new RelationBW(dataModel, "relOneTwo", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false, entTwo,
-				ROLENAME_ENT_TWO, "0..2", false);
+		relationOneTwo = new RelationBW(dataModel, "relOneTwo", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false,
+				entTwo, ROLENAME_ENT_TWO, "0..2", false);
 
-		relationTwo = new RelationBW(dataModel, "relOneThree", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false,
+		relationOneThree = new RelationBW(dataModel, "relOneThree", entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false,
 				entThree, ROLENAME_ENT_THREE, "2..4", false);
 	}
 
@@ -89,8 +88,8 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	public void topGoalActivationEmptySuccessEntity() {
 		Goal goal = new Goal(spec.getGoalModel(), GOAL_NAME_ONE);
 		goal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		goal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		goal.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		goal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		goal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 
 		Set<EntityInstance> instanceContext = goal.getInstanceContext(workflowInstance, entOne);
 
@@ -101,8 +100,8 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	public void activationEmptySuccessAttribute() {
 		Goal parentGoal = new Goal(spec.getGoalModel(), PARENT_GOAL);
 		parentGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 		Goal goal = new Goal(spec.getGoalModel(), GOAL_NAME_ONE);
 		goal.setParentGoal(parentGoal);
 		goal.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attOne));
@@ -120,8 +119,8 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	public void activationEmptySuccessAttributeFail() {
 		Goal parentGoal = new Goal(spec.getGoalModel(), PARENT_GOAL);
 		parentGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 		Goal goal = new Goal(spec.getGoalModel(), GOAL_NAME_ONE);
 		goal.setParentGoal(parentGoal);
 		goal.addSuccessCondition(DefAttributeCondition.getDefAttributeCondition(attOne));
@@ -139,8 +138,8 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	public void activationAttributeSuccessAttributeFail() {
 		Goal parentGoal = new Goal(spec.getGoalModel(), PARENT_GOAL);
 		parentGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 		Goal goal = new Goal(spec.getGoalModel(), GOAL_NAME_ONE);
 		goal.setParentGoal(parentGoal);
 		goal.addActivationCondition(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME + "." + ATT_TWO_NAME));
@@ -159,8 +158,8 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	public void activationAttributeSuccessAttributeSuccess() {
 		Goal parentGoal = new Goal(spec.getGoalModel(), PARENT_GOAL);
 		parentGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 		Goal goal = new Goal(spec.getGoalModel(), GOAL_NAME_ONE);
 		goal.setParentGoal(parentGoal);
 		goal.addActivationCondition(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME + "." + ATT_TWO_NAME));
@@ -180,8 +179,8 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	public void activationEntitySuccessAttributeFail() {
 		Goal parentGoal = new Goal(spec.getGoalModel(), PARENT_GOAL);
 		parentGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 		Goal goal = new Goal(spec.getGoalModel(), GOAL_NAME_ONE);
 		goal.setParentGoal(parentGoal);
 		goal.addActivationCondition(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO));
@@ -199,8 +198,8 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	public void activationEntitySuccessAttributeSuccess() {
 		Goal parentGoal = new Goal(spec.getGoalModel(), PARENT_GOAL);
 		parentGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 		Goal goal = new Goal(spec.getGoalModel(), GOAL_NAME_ONE);
 		goal.setParentGoal(parentGoal);
 		goal.addActivationCondition(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME + "." + ROLENAME_ENT_TWO));
@@ -208,7 +207,7 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 
 		EntityInstance entityInstanceOne = new EntityInstance(workflowInstance, entOne);
 		EntityInstance entityInstanceTwo = new EntityInstance(workflowInstance, entTwo);
-		new RelationInstance(entityInstanceOne, entityInstanceTwo, relationOne);
+		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO, relationOneTwo);
 
 		assertTrue(goal.getEntityContext().contains(entOne));
 		Set<EntityInstance> instanceContext = goal.getInstanceContext(workflowInstance, entOne);
@@ -221,16 +220,16 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	public void successEntity() {
 		Goal parentGoal = new Goal(spec.getGoalModel(), PARENT_GOAL);
 		parentGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 		Goal goal = new Goal(spec.getGoalModel(), GOAL_NAME_ONE);
 		goal.setParentGoal(parentGoal);
 		goal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entTwo));
-		goal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_ONE));
+		goal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_ONE));
 
 		EntityInstance entityInstanceOne = new EntityInstance(workflowInstance, entOne);
 		EntityInstance entityInstanceTwo = new EntityInstance(workflowInstance, entTwo);
-		new RelationInstance(entityInstanceOne, entityInstanceTwo, relationOne);
+		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO, relationOneTwo);
 
 		assertTrue(goal.getEntityContext().contains(entOne));
 		Set<EntityInstance> instanceContext = goal.getInstanceContext(workflowInstance, entOne);
@@ -243,16 +242,18 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 	public void successEntityFull() {
 		Goal parentGoal = new Goal(spec.getGoalModel(), PARENT_GOAL);
 		parentGoal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		parentGoal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 		Goal goal = new Goal(spec.getGoalModel(), GOAL_NAME_ONE);
 		goal.setParentGoal(parentGoal);
 		goal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entTwo));
-		goal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_ONE));
+		goal.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_ONE));
 
 		EntityInstance entityInstanceOne = new EntityInstance(workflowInstance, entOne);
-		new RelationInstance(entityInstanceOne, new EntityInstance(workflowInstance, entTwo), relationOne);
-		new RelationInstance(entityInstanceOne, new EntityInstance(workflowInstance, entTwo), relationOne);
+		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, new EntityInstance(workflowInstance, entTwo),
+				ROLENAME_ENT_TWO, relationOneTwo);
+		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, new EntityInstance(workflowInstance, entTwo),
+				ROLENAME_ENT_TWO, relationOneTwo);
 
 		assertTrue(goal.getEntityContext().contains(entOne));
 		Set<EntityInstance> instanceContext = goal.getInstanceContext(workflowInstance, entOne);
@@ -268,12 +269,12 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 		goalOne.addActivationCondition(
 				DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME + "." + ROLENAME_ENT_THREE));
 		goalOne.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		goalOne.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		goalOne.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		goalOne.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		goalOne.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 		Goal goalThree = new Goal(spec.getGoalModel(), GOAL_NAME_THREE);
 		goalThree.setParentGoal(parentGoal);
 		goalThree.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entThree));
-		goalThree.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_ONE));
+		goalThree.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_ONE));
 
 		new EntityInstance(workflowInstance, entThree);
 
@@ -291,12 +292,12 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 		goalOne.addActivationCondition(
 				DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME + "." + ROLENAME_ENT_THREE));
 		goalOne.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
-		goalOne.addEntityInvariantCondition(MulCondition.getMulCondition(relationOne, ROLENAME_ENT_TWO));
-		goalOne.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_THREE));
+		goalOne.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneTwo, ROLENAME_ENT_TWO));
+		goalOne.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_THREE));
 		Goal goalThree = new Goal(spec.getGoalModel(), GOAL_NAME_THREE);
 		goalThree.setParentGoal(parentGoal);
 		goalThree.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entThree));
-		goalThree.addEntityInvariantCondition(MulCondition.getMulCondition(relationTwo, ROLENAME_ENT_ONE));
+		goalThree.addEntityInvariantCondition(MulCondition.getMulCondition(relationOneThree, ROLENAME_ENT_ONE));
 
 		new EntityInstance(workflowInstance, entThree);
 		new EntityInstance(workflowInstance, entThree);

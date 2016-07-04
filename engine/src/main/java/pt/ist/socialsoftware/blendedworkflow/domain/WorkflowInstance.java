@@ -63,6 +63,11 @@ public class WorkflowInstance extends WorkflowInstance_Base {
 				.sorted((wi1, wi2) -> Integer.compare(wi1.getCounter(), wi2.getCounter())).collect(Collectors.toList());
 	}
 
+	public List<GoalWorkItem> getLogGoalWorkItemList() {
+		return getWorkItemSet().stream().filter(GoalWorkItem.class::isInstance).map(GoalWorkItem.class::cast)
+				.sorted((wi1, wi2) -> Integer.compare(wi1.getCounter(), wi2.getCounter())).collect(Collectors.toList());
+	}
+
 	public List<GoalWorkItem> getLogGoalWorkItemSet() {
 		return getWorkItemSet().stream().filter(GoalWorkItem.class::isInstance).map(GoalWorkItem.class::cast)
 				.sorted((wi1, wi2) -> Integer.compare(wi1.getCounter(), wi2.getCounter())).collect(Collectors.toList());

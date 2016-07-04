@@ -82,7 +82,7 @@ public class HoldsMethodTest extends TeardownRollbackTest {
 
 		PreWorkItemArgument preWorkItemArgument = new PreWorkItemArgument(activityWorkItem, defPathCondition);
 		EntityInstance entityInstanceTwo = new EntityInstance(workflowInstance, entityTwo);
-		new RelationInstance(entityInstance, entityInstanceTwo, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, relationBW);
 		preWorkItemArgument.addProductInstance(entityInstanceTwo);
 		activityWorkItem.addPreCondition(preWorkItemArgument);
 
@@ -90,7 +90,7 @@ public class HoldsMethodTest extends TeardownRollbackTest {
 		postWorkItemArgument.addProductInstance(attributeInstance);
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
-		boolean result = activityWorkItem.holds();
+		boolean result = activityWorkItem.holds(activity.getPreConditionSet(), activity.getPostConditionSet());
 		assertTrue(result);
 	}
 
@@ -103,7 +103,7 @@ public class HoldsMethodTest extends TeardownRollbackTest {
 
 		PreWorkItemArgument preWorkItemArgument = new PreWorkItemArgument(activityWorkItem, defPathCondition);
 		EntityInstance entityInstanceTwo = new EntityInstance(workflowInstance, entityTwo);
-		new RelationInstance(entityInstance, entityInstanceTwo, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, relationBW);
 		preWorkItemArgument.addProductInstance(entityInstanceTwo);
 		activityWorkItem.addPreCondition(preWorkItemArgument);
 
@@ -111,7 +111,7 @@ public class HoldsMethodTest extends TeardownRollbackTest {
 		postWorkItemArgument.addProductInstance(entityInstance);
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
-		boolean result = activityWorkItem.holds();
+		boolean result = activityWorkItem.holds(activity.getPreConditionSet(), activity.getPostConditionSet());
 		assertTrue(result);
 	}
 

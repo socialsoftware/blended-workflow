@@ -95,7 +95,9 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 
 		Set<Entity> entityContext = goal.getEntityContext();
 
-		assertTrue(entityContext.isEmpty());
+		assertEquals(2, entityContext.size());
+		assertTrue(entityContext.contains(entTwo));
+		assertTrue(entityContext.contains(entThree));
 	}
 
 	@Test
@@ -107,8 +109,9 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 
 		Set<Entity> entityContext = goal.getEntityContext();
 
-		assertEquals(1, entityContext.size());
+		assertEquals(2, entityContext.size());
 		assertTrue(entityContext.contains(entTwo));
+		assertTrue(entityContext.contains(entThree));
 	}
 
 	@Test
@@ -121,8 +124,9 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 
 		Set<Entity> entityContext = goal.getEntityContext();
 
-		assertEquals(1, entityContext.size());
+		assertEquals(2, entityContext.size());
 		assertTrue(entityContext.contains(entTwo));
+		assertTrue(entityContext.contains(entThree));
 	}
 
 	@Test
@@ -173,8 +177,9 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 
 		Set<Entity> entityContext = goal.getEntityContext();
 
-		assertEquals(1, entityContext.size());
+		assertEquals(2, entityContext.size());
 		assertTrue(entityContext.contains(entOne));
+		assertTrue(entityContext.contains(entThree));
 	}
 
 	@Test
@@ -205,7 +210,7 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 		goal.setParentGoal(parentGoal);
 		goal.addSuccessCondition(DefEntityCondition.getDefEntityCondition(entOne));
 		goal.addEntityInvariantCondition(MulCondition.getMulCondition(oneTwo, ROLENAME_ENT_TWO));
-		goal.addEntityInvariantCondition(MulCondition.getMulCondition(twoThree, ROLENAME_ENT_THREE));
+		goal.addEntityInvariantCondition(MulCondition.getMulCondition(oneThree, ROLENAME_ENT_THREE));
 
 		Goal goalOne = new Goal(spec.getGoalModel(), "other");
 		goalOne.setParentGoal(parentGoal);
@@ -213,10 +218,13 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 		goalOne.addEntityInvariantCondition(MulCondition.getMulCondition(oneTwo, ROLENAME_ENT_ONE));
 
 		Set<Entity> entityContext = goal.getEntityContext();
-		assertTrue(entityContext.isEmpty());
+		assertEquals(2, entityContext.size());
+		assertTrue(entityContext.contains(entTwo));
+		assertTrue(entityContext.contains(entThree));
 
 		entityContext = goalOne.getEntityContext();
-		assertTrue(entityContext.isEmpty());
+		assertEquals(1, entityContext.size());
+		assertTrue(entityContext.contains(entOne));
 	}
 
 }

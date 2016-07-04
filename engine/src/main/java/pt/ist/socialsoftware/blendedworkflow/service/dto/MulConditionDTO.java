@@ -6,6 +6,8 @@ public class MulConditionDTO {
 	private String cardinality;
 	private int min;
 	private int max;
+	private int sourceMin;
+	private int sourceMax;
 
 	public MulConditionDTO() {
 	}
@@ -48,6 +50,22 @@ public class MulConditionDTO {
 
 	public void setMax(int max) {
 		this.max = max;
+	}
+
+	public int getSourceMin() {
+		return sourceMin;
+	}
+
+	public void setSourceMin(int sourceMin) {
+		this.sourceMin = sourceMin;
+	}
+
+	public int getSourceMax() {
+		return sourceMax;
+	}
+
+	public void setSourceMax(int sourceMax) {
+		this.sourceMax = sourceMax;
 	}
 
 }

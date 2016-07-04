@@ -9,12 +9,12 @@ app.factory('activityWorkItemRepository', function($http) {
 			return $http.get(url);
 		},
 		executeWorkItem : function(spec, instance,
-				activityName, workItem) {
+				workItemName, workItem) {
 			var url = "specs/" + spec + "/instances/"+ instance + "/activityworkitem";
 			return $http.post(url, {
 				"specId" :  spec,
 				"workflowInstanceName" : instance,
-				"activityName" : activityName,
+				"name" : workItemName,
 				"definitionGroupSet" : workItem.definitionGroupSet
 			});
 		}

@@ -21,4 +21,12 @@ public abstract class DefProductCondition extends DefProductCondition_Base {
 
 	public abstract Entity getSourceOfPath();
 
+	public boolean isAttribute() {
+		return getSourceOfPath() != getTargetOfPath();
+	}
+
+	public boolean isEntity() {
+		return getSourceOfPath() == getTargetOfPath();
+	}
+
 }

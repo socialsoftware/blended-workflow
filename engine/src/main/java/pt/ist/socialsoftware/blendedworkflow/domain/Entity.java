@@ -57,10 +57,10 @@ public class Entity extends Entity_Base {
 		if (getRuleSet().stream().anyMatch(r -> r.getName() != null && r.getName().equals(name)))
 			throw new BWException(BWErrorType.DUPLICATE_NAME, getEntity().getName() + "." + name);
 
-		if (getRelationOneSet().stream().anyMatch(r -> r.getRoleNameTwo() != null && r.getRoleNameTwo().equals(name)))
+		if (getRelationOneSet().stream().anyMatch(r -> r.getRolenameTwo() != null && r.getRolenameTwo().equals(name)))
 			throw new BWException(BWErrorType.DUPLICATE_NAME, getEntity().getName() + "." + name);
 
-		if (getRelationTwoSet().stream().anyMatch(r -> r.getRoleNameOne() != null && r.getRoleNameOne().equals(name)))
+		if (getRelationTwoSet().stream().anyMatch(r -> r.getRolenameOne() != null && r.getRolenameOne().equals(name)))
 			throw new BWException(BWErrorType.DUPLICATE_NAME, getEntity().getName() + "." + name);
 
 	}
@@ -350,8 +350,8 @@ public class Entity extends Entity_Base {
 		}
 
 		Optional<RelationBW> oBwRel = getRelationSet().stream()
-				.filter(rel -> (rel.getRoleNameOne().equals(element) && rel.getEntityTwo() == this)
-						|| (rel.getRoleNameTwo().equals(element) && rel.getEntityOne() == this))
+				.filter(rel -> (rel.getRolenameOne().equals(element) && rel.getEntityTwo() == this)
+						|| (rel.getRolenameTwo().equals(element) && rel.getEntityOne() == this))
 				.findFirst();
 		if (oBwRel.isPresent()) {
 			pathLeft.remove(0);
@@ -390,8 +390,8 @@ public class Entity extends Entity_Base {
 
 	public Entity getEntityByRolename(String rolename) {
 		return getRelationSet().stream()
-				.filter(r -> (r.getEntityOne() == this && r.getRoleNameTwo().equals(rolename))
-						|| (r.getEntityTwo() == this && r.getRoleNameOne().equals(rolename)))
+				.filter(r -> (r.getEntityOne() == this && r.getRolenameTwo().equals(rolename))
+						|| (r.getEntityTwo() == this && r.getRolenameOne().equals(rolename)))
 				.map(r -> r.getEntityOne() == this ? r.getEntityTwo() : r.getEntityOne()).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ROLE_NAME, getName() + "." + rolename));
 	}

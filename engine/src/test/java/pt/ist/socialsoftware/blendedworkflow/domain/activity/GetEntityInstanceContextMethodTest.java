@@ -142,8 +142,10 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		EntityInstance entityInstanceTwoOne = new EntityInstance(workflowInstance, entTwo);
 		EntityInstance entityInstanceTwoTwo = new EntityInstance(workflowInstance, entTwo);
 
-		new RelationInstance(entityInstanceOneOne, entityInstanceTwoOne, relationOne);
-		new RelationInstance(entityInstanceOneOne, entityInstanceTwoTwo, relationOne);
+		new RelationInstance(entityInstanceOneOne, ROLENAME_ENT_ONE, entityInstanceTwoOne, ROLENAME_ENT_TWO,
+				relationOne);
+		new RelationInstance(entityInstanceOneOne, ROLENAME_ENT_ONE, entityInstanceTwoTwo, ROLENAME_ENT_TWO,
+				relationOne);
 
 		Set<EntityInstance> instanceContext = activity.getInstanceContext(workflowInstance, entOne);
 

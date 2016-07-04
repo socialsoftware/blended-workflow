@@ -13,6 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.domain.ActivityWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
@@ -56,6 +57,10 @@ public class ExecutionInterface {
 		return getSpecification(specId).getActivityModel().getActivity(activityName);
 	}
 
+	public Goal getGoal(String specId, String goalName) {
+		return getSpecification(specId).getGoalModel().getGoal(goalName);
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public WorkflowInstance createWorkflowInstance(String specId, String name) {
 		return new WorkflowInstance(getSpecification(specId), name);
@@ -89,11 +94,11 @@ public class ExecutionInterface {
 	public void executeActivityWorkItem(ActivityWorkItemDTO activityWorkItemDTO) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(activityWorkItemDTO.getSpecId(),
 				activityWorkItemDTO.getWorkflowInstanceName());
-		Activity activity = getActivity(activityWorkItemDTO.getSpecId(), activityWorkItemDTO.getActivityName());
+		Activity activity = getActivity(activityWorkItemDTO.getSpecId(), activityWorkItemDTO.getName());
 
 		ActivityWorkItem activityWorkItem = activityWorkItemDTO.createActivityWorkItem(workflowInstance, activity);
 
-		activityWorkItem.holds();
+		activityWorkItem.holds(activity.getPreConditionSet(), activity.getPostConditionSet());
 	}
 
 	public Set<GoalWorkItemDTO> getPendingGoalWorkItemSet(String specId, String instanceName) {
@@ -106,6 +111,23 @@ public class ExecutionInterface {
 		}
 
 		return goalWorkItemDTOs;
+	}
+
+	public List<GoalWorkItem> getLogGoalWorkItemSet(String specId, String instanceName) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		return workflowInstance.getLogGoalWorkItemList();
+	}
+
+	@Atomic(mode = TxMode.WRITE)
+	public void executeGoalWorkItem(GoalWorkItemDTO goalWorkItemDTO) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(goalWorkItemDTO.getSpecId(),
+				goalWorkItemDTO.getWorkflowInstanceName());
+		Goal goal = getGoal(goalWorkItemDTO.getSpecId(), goalWorkItemDTO.getName());
+
+		GoalWorkItem goalWorkItem = goalWorkItemDTO.createGoalWorkItem(workflowInstance, goal);
+
+		goalWorkItem.holds(goal.getActivationConditionSet(), goal.getSuccessConditionSet());
 	}
 
 }

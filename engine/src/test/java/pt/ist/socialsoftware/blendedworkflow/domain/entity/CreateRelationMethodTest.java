@@ -41,8 +41,8 @@ public class CreateRelationMethodTest extends TeardownRollbackTest {
 		assertNotNull(relation);
 		assertEquals(entityOne, relation.getEntityOne());
 		assertEquals(entityTwo, relation.getEntityTwo());
-		assertEquals(ROLE_NAME_ONE, relation.getRoleNameOne());
-		assertEquals(ROLE_NAME_TWO, relation.getRoleNameTwo());
+		assertEquals(ROLE_NAME_ONE, relation.getRolenameOne());
+		assertEquals(ROLE_NAME_TWO, relation.getRolenameTwo());
 		assertEquals(Cardinality.ZERO_MANY, relation.getCardinalityOne().getExp());
 		assertEquals(Cardinality.ONE, relation.getCardinalityTwo().getExp());
 	}

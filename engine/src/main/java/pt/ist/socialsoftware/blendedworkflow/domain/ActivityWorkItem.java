@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
@@ -41,72 +41,34 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 		super.delete();
 	}
 
-	public boolean holds() {
-		checkArgumentsCompletelyDefined();
-
-		return preConditionsHold() && postConditionsHold();
+	@Override
+	protected Set<DefPathCondition> definedPreConditions() {
+		return getActivity().getPreConditionSet();
 	}
 
-	public boolean preConditionsHold() {
-		return getPostConditionSet().stream().allMatch(wia -> getActivity().preHolds(wia, getPreConditionSet()));
-	}
-
+	@Override
 	public boolean postConditionsHold() {
-		return getPostConditionSet().stream().allMatch(wia -> getActivity().postHolds(wia));
-	}
-
-	public void checkArgumentsCompletelyDefined() {
-		checkCompleteSetOfPreConditions();
-
-		checkCompleteSetOfPostConditions();
-	}
-
-	private void checkCompleteSetOfPostConditions() {
-		if (getActivity().getPostConditionSet().size() > getPostConditionSet().size()) {
-			throw new BWException(BWErrorType.POST_WORK_ITEM_ARGUMENT, "Number of elements "
-					+ getActivity().getPostConditionSet().size() + "<" + getPostConditionSet().size());
-		} else {
-			for (DefProductCondition defProductCondition : getActivity().getPostConditionSet()) {
-				if (!getPostConditionSet().stream()
-						.anyMatch(pwia -> pwia.getDefProductCondition() == defProductCondition)) {
-					throw new BWException(BWErrorType.POST_WORK_ITEM_ARGUMENT,
-							"Non existing def product: " + defProductCondition.getPath().getValue());
-				}
-			}
+		if (getPostConditionSet().size() == 0) {
+			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, "missing argument");
 		}
-	}
 
-	private void checkCompleteSetOfPreConditions() {
-		if (getActivity().getPreConditionSet().size() > getPreConditionSet().size()) {
-			throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT, "Number of elements "
-					+ getActivity().getPreConditionSet().size() + ">" + getPreConditionSet().size());
-		} else {
-			for (DefPathCondition defPathCondition : getActivity().getPreConditionSet()) {
-				if (!getPreConditionSet().stream().anyMatch(pwia -> pwia.getDefPathCondition() == defPathCondition)) {
-					throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT,
-							"Non existing def path: " + defPathCondition.getPath().getValue());
-				}
-			}
-		}
+		getPostConditionSet().stream().allMatch(wia -> wia.productExistsAndHasCorrectType());
+
+		getPostConditionSet().stream().allMatch(wia -> wia.attributeIsDefined());
+
+		getPostConditionSet().stream().allMatch(wia -> wia.relationInstancesAreDefined(
+				getActivity().getMulConditionsThatShouldHold(wia.getDefProductCondition().getTargetOfPath())));
+
+		return true;
 	}
 
 	public ActivityWorkItemDTO getDTO() {
 		ActivityWorkItemDTO activityWorkItemDTO = new ActivityWorkItemDTO();
-		activityWorkItemDTO.setActivityName(getActivity().getName());
-		activityWorkItemDTO.setTimestamp(getCounter());
-		activityWorkItemDTO
-				.setPreArguments(
-						getPreConditionSet()
-								.stream().map(pwia -> pwia.getProductInstanceSet().stream()
-										.map(pi -> pi.getDTO().getValue()).collect(Collectors.joining(",")))
-								.collect(Collectors.joining("\r\n")));
-		activityWorkItemDTO
-				.setPostArguments(
-						getPostConditionSet()
-								.stream().map(pwia -> pwia.getProductInstanceSet().stream()
-										.map(pi -> pi.getDTO().getValue()).collect(Collectors.joining(",")))
-								.collect(Collectors.joining("\r\n")));
+		activityWorkItemDTO.setName(getActivity().getName());
+
+		super.fillDTO(activityWorkItemDTO);
 
 		return activityWorkItemDTO;
 	}
+
 }

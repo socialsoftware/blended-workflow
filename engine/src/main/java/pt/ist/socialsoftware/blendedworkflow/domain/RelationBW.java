@@ -17,26 +17,26 @@ public class RelationBW extends RelationBW_Base {
 	}
 
 	@Override
-	public void setRoleNameOne(String roleNameOne) {
-		checkRoleNameOne(roleNameOne);
-		super.setRoleNameOne(roleNameOne);
+	public void setRolenameOne(String roleNameOne) {
+		checkRolenameOne(roleNameOne);
+		super.setRolenameOne(roleNameOne);
 	}
 
 	@Override
-	public void setRoleNameTwo(String roleNameTwo) {
-		checkRoleNameTwo(roleNameTwo);
-		super.setRoleNameTwo(roleNameTwo);
+	public void setRolenameTwo(String roleNameTwo) {
+		checkRolenameTwo(roleNameTwo);
+		super.setRolenameTwo(roleNameTwo);
 	}
 
-	public RelationBW(DataModel dataModel, String name, Entity entityOne, String roleNameOne, String cardinalityOne,
-			boolean isOneKeyEntity, Entity entityTwo, String roleNameTwo, String cardinalityTwo, boolean isTwoKeyEntity)
+	public RelationBW(DataModel dataModel, String name, Entity entityOne, String rolenameOne, String cardinalityOne,
+			boolean isOneKeyEntity, Entity entityTwo, String rolenameTwo, String cardinalityTwo, boolean isTwoKeyEntity)
 			throws BWException {
 		setDataModel(dataModel);
 		setName(name);
 		setEntityOne(entityOne);
 		setEntityTwo(entityTwo);
-		setRoleNameOne(roleNameOne);
-		setRoleNameTwo(roleNameTwo);
+		setRolenameOne(rolenameOne);
+		setRolenameTwo(rolenameTwo);
 		setCardinalityOne(Cardinality.parseCardinality(cardinalityOne));
 		setCardinalityTwo(Cardinality.parseCardinality(cardinalityTwo));
 		setIsOneKeyEntity(isOneKeyEntity);
@@ -58,24 +58,24 @@ public class RelationBW extends RelationBW_Base {
 			throw new BWException(BWErrorType.INVALID_RELATION_NAME, name);
 	}
 
-	private void checkRoleNameOne(String roleNameOne) {
-		if ((roleNameOne == null) || roleNameOne.equals(""))
-			throw new BWException(BWErrorType.INVALID_ROLE_NAME, roleNameOne);
+	private void checkRolenameOne(String rolenameOne) {
+		if ((rolenameOne == null) || rolenameOne.equals(""))
+			throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolenameOne);
 
-		getEntityTwo().checkUniqueElementName(roleNameOne);
+		getEntityTwo().checkUniqueElementName(rolenameOne);
 	}
 
-	private void checkRoleNameTwo(String roleNameTwo) {
-		if ((roleNameTwo == null) || roleNameTwo.equals(""))
-			throw new BWException(BWErrorType.INVALID_ROLE_NAME, roleNameTwo);
+	private void checkRolenameTwo(String rolenameTwo) {
+		if ((rolenameTwo == null) || rolenameTwo.equals(""))
+			throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolenameTwo);
 
-		getEntityOne().checkUniqueElementName(roleNameTwo);
+		getEntityOne().checkUniqueElementName(rolenameTwo);
 	}
 
 	public void cloneRelation(OldDataModelInstance dataModelInstance, Entity entityOne, Entity entityTwo)
 			throws BWException {
-		new RelationBW(dataModelInstance, getName(), entityOne, getRoleNameOne(), getCardinalityOne().getExp(),
-				getIsOneKeyEntity(), entityTwo, getRoleNameTwo(), getCardinalityTwo().getExp(), getIsTwoKeyEntity());
+		new RelationBW(dataModelInstance, getName(), entityOne, getRolenameOne(), getCardinalityOne().getExp(),
+				getIsOneKeyEntity(), entityTwo, getRolenameTwo(), getCardinalityTwo().getExp(), getIsTwoKeyEntity());
 	}
 
 	public Set<Entity> getEntitySet() {
@@ -101,26 +101,26 @@ public class RelationBW extends RelationBW_Base {
 	}
 
 	public Entity getEntitybyRolename(String rolename) {
-		if (getRoleNameOne().equals(rolename))
+		if (getRolenameOne().equals(rolename))
 			return getEntityOne();
-		if (getRoleNameTwo().equals(rolename))
+		if (getRolenameTwo().equals(rolename))
 			return getEntityTwo();
 		return null;
 	}
 
 	public Entity getSourceOfRolename(String rolename) {
-		if (getRoleNameOne().equals(rolename))
+		if (getRolenameOne().equals(rolename))
 			return getEntityTwo();
-		if (getRoleNameTwo().equals(rolename))
+		if (getRolenameTwo().equals(rolename))
 			return getEntityOne();
 
 		throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolename);
 	}
 
 	public Cardinality getCardinalityByRolename(String rolename) {
-		if (getRoleNameOne().equals(rolename))
+		if (getRolenameOne().equals(rolename))
 			return getCardinalityOne();
-		if (getRoleNameTwo().equals(rolename))
+		if (getRolenameTwo().equals(rolename))
 			return getCardinalityTwo();
 
 		throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolename);
@@ -133,11 +133,11 @@ public class RelationBW extends RelationBW_Base {
 		relDTO.setName(getName());
 		relDTO.setEntOneExtId(getEntityOne().getExternalId());
 		relDTO.setEntOneName(getEntityOne().getName());
-		relDTO.setRolenameOne(getRoleNameOne());
+		relDTO.setRolenameOne(getRolenameOne());
 		relDTO.setCardinalityOne(getCardinalityOne().getExp());
 		relDTO.setEntTwoExtId(getEntityTwo().getExternalId());
 		relDTO.setEntTwoName(getEntityTwo().getName());
-		relDTO.setRolenameTwo(getRoleNameTwo());
+		relDTO.setRolenameTwo(getRolenameTwo());
 		relDTO.setCardinalityTwo(getCardinalityTwo().getExp());
 
 		return relDTO;
@@ -145,10 +145,10 @@ public class RelationBW extends RelationBW_Base {
 
 	public String getPath(Entity e) {
 		if (e == getEntityOne())
-			return getEntityTwo().getName() + "." + getRoleNameOne();
+			return getEntityTwo().getName() + "." + getRolenameOne();
 
 		if (e == getEntityTwo())
-			return getEntityOne().getName() + "." + getRoleNameTwo();
+			return getEntityOne().getName() + "." + getRolenameTwo();
 
 		return null;
 	}

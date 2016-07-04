@@ -121,8 +121,8 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, entityOne.getName()));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityThree));
-		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameOne()));
-		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameTwo()));
+		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRolenameOne()));
+		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRolenameTwo()));
 
 		taskThree = new Activity(spec.getActivityModel(), TASK_THREE, DESCRIPTION);
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, entityTwo.getName()));

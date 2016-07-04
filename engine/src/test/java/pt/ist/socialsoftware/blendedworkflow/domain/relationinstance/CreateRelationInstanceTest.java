@@ -17,6 +17,8 @@ import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
 public class CreateRelationInstanceTest extends TeardownRollbackTest {
+	private static final String ROLENAME_ENT_ONE = "entOne";
+	private static final String ROLENAME_ENT_TWO = "entTwo";
 	private static final String NAME = "name";
 	private static final String OTHER_ENTITY_NAME = "otherEntityName";
 
@@ -34,7 +36,7 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 		workflowInstance = new WorkflowInstance(spec, NAME);
 		entityOne = new Entity(spec.getDataModel(), "entityNameOne", false);
 		entityTwo = new Entity(spec.getDataModel(), "entityNameTwo", false);
-		relation = new RelationBW(spec.getDataModel(), NAME, entityOne, "entOne", Cardinality.ONE_MANY, false,
+		relation = new RelationBW(spec.getDataModel(), NAME, entityOne, ROLENAME_ENT_ONE, Cardinality.ONE_MANY, false,
 				entityTwo, "entTwo", Cardinality.ONE, false);
 
 		entityInstanceOne = new EntityInstance(workflowInstance, entityOne);
@@ -43,7 +45,8 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 
 	@Test
 	public void success() {
-		RelationInstance relationInstance = new RelationInstance(entityInstanceOne, entityInstanceTwo, relation);
+		RelationInstance relationInstance = new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo,
+				ROLENAME_ENT_TWO, relation);
 
 		assertEquals(entityOne, relationInstance.getEntityInstanceOne().getEntity());
 		assertEquals(entityTwo, relationInstance.getEntityInstanceTwo().getEntity());
@@ -55,11 +58,11 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 		EntityInstance entityInstanceOther = new EntityInstance(new WorkflowInstance(spec, "other"), entityOne);
 
 		try {
-			new RelationInstance(entityInstanceOther, entityInstanceTwo, relation);
+			new RelationInstance(entityInstanceOther, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO, relation);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
-			assertEquals("Different workflow instances " + entityInstanceOne.getEntity().getName() + "-"
+			assertEquals("Different workflow instances " + entityInstanceOne.getEntity().getName() + " - "
 					+ entityInstanceTwo.getEntity().getName(), bwe.getMessage());
 		}
 	}
@@ -67,32 +70,33 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 	@Test
 	public void failEntityOne() {
 		try {
-			new RelationInstance(entityInstanceTwo, entityInstanceTwo, relation);
+			new RelationInstance(entityInstanceTwo, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO, relation);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
-			assertEquals("Entity One type does not match " + entityInstanceTwo.getEntity().getName() + "-"
-					+ relation.getEntityOne().getName(), bwe.getMessage());
+			assertEquals("Rolename and type do not match for rolename " + ROLENAME_ENT_ONE + " of entity type "
+					+ entityInstanceTwo.getEntity().getName(), bwe.getMessage());
 		}
 	}
 
 	@Test
 	public void failEntityTwo() {
 		try {
-			new RelationInstance(entityInstanceOne, entityInstanceOne, relation);
+			new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceOne, ROLENAME_ENT_TWO, relation);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());
-			assertEquals("Entity Two type does not match " + entityInstanceOne.getEntity().getName() + "-"
-					+ relation.getEntityTwo().getName(), bwe.getMessage());
+			assertEquals("Rolename and type do not match for rolename " + ROLENAME_ENT_TWO + " of entity type "
+					+ entityInstanceOne.getEntity().getName(), bwe.getMessage());
 		}
 	}
 
 	@Test
-	public void failRelationCardinality() {
+	public void failRelationMaxCardinality() {
+		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO, relation);
 		try {
-			new RelationInstance(entityInstanceOne, entityInstanceTwo, relation);
-			new RelationInstance(entityInstanceOne, new EntityInstance(workflowInstance, entityTwo), relation);
+			new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, new EntityInstance(workflowInstance, entityTwo),
+					ROLENAME_ENT_TWO, relation);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());

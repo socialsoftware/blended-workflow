@@ -974,8 +974,8 @@ public class DesignInterface {
 
 		RelationBW relation = spec.getDataModel().getRelationBWSet().stream()
 				.filter(rel -> (rel.getEntityOne().getName().equals(entityName)
-						&& rel.getRoleNameTwo().equals(rolename))
-						|| (rel.getEntityTwo().getName().equals(entityName) && rel.getRoleNameOne().equals(rolename)))
+						&& rel.getRolenameTwo().equals(rolename))
+						|| (rel.getEntityTwo().getName().equals(entityName) && rel.getRolenameOne().equals(rolename)))
 				.findFirst().orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH, path));
 
 		return MulCondition.getMulCondition(relation, rolename);

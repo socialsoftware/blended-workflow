@@ -91,8 +91,8 @@ public class AddSequenceConditionMethodTest extends TeardownRollbackTest {
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_ONE_NAME));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entThree));
-		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relationOne, relationOne.getRoleNameOne()));
-		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relationOne, relationOne.getRoleNameTwo()));
+		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relationOne, relationOne.getRolenameOne()));
+		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relationOne, relationOne.getRolenameTwo()));
 
 		taskThree = new Activity(spec.getActivityModel(), TASK_THREE, "Description");
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENT_TWO_NAME));

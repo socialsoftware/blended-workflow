@@ -23,10 +23,10 @@ public class MulCondition extends MulCondition_Base {
 		if (relation.getMulConditionSet().size() >= 2)
 			throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolename);
 
-		if (relation.getRoleNameOne().equals(rolename))
+		if (relation.getRolenameOne().equals(rolename))
 			return new MulCondition(relation, 2);
 
-		if (relation.getRoleNameTwo().equals(rolename))
+		if (relation.getRolenameTwo().equals(rolename))
 			return new MulCondition(relation, 1);
 
 		assert (false);
@@ -34,8 +34,8 @@ public class MulCondition extends MulCondition_Base {
 	}
 
 	public static void createMUlConditions(RelationBW relation) {
-		getMulCondition(relation, relation.getRoleNameOne());
-		getMulCondition(relation, relation.getRoleNameTwo());
+		getMulCondition(relation, relation.getRolenameOne());
+		getMulCondition(relation, relation.getRolenameTwo());
 	}
 
 	private MulCondition(RelationBW relation, int side) {
@@ -60,9 +60,9 @@ public class MulCondition extends MulCondition_Base {
 
 	public String getRolename() {
 		if (getSide() == 1)
-			return getRelationBW().getRoleNameTwo();
+			return getRelationBW().getRolenameTwo();
 		else
-			return getRelationBW().getRoleNameOne();
+			return getRelationBW().getRolenameOne();
 	}
 
 	public Cardinality getCardinality() {
@@ -80,9 +80,9 @@ public class MulCondition extends MulCondition_Base {
 		String rolename;
 
 		if (getSide() == 1) {
-			rolename = getRelationBW().getRoleNameOne();
+			rolename = getRelationBW().getRolenameOne();
 		} else {
-			rolename = getRelationBW().getRoleNameTwo();
+			rolename = getRelationBW().getRolenameTwo();
 		}
 
 		return MulCondition.getMulCondition(getRelationBW(), rolename);
@@ -228,6 +228,8 @@ public class MulCondition extends MulCondition_Base {
 		mulConditionDTO.setCardinality(getCardinality().getExp());
 		mulConditionDTO.setMin(getCardinality().getMinValue());
 		mulConditionDTO.setMax(getCardinality().getMaxValue());
+		mulConditionDTO.setSourceMin(getSymmetricMulCondition().getCardinality().getMinValue());
+		mulConditionDTO.setSourceMax(getSymmetricMulCondition().getCardinality().getMaxValue());
 
 		return mulConditionDTO;
 	}

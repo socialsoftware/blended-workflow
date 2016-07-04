@@ -68,8 +68,8 @@ public class CanAssociateEntityInstanceMethodTest extends TeardownRollbackTest {
 		EntityInstance entityInstanceOne = new EntityInstance(workflowInstance, entOne);
 		EntityInstance entityInstanceTwoOne = new EntityInstance(workflowInstance, entTwo);
 		EntityInstance entityInstanceTwoTwo = new EntityInstance(workflowInstance, entTwo);
-		new RelationInstance(entityInstanceOne, entityInstanceTwoOne, relationOne);
-		new RelationInstance(entityInstanceOne, entityInstanceTwoTwo, relationOne);
+		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwoOne, ROLENAME_ENT_TWO, relationOne);
+		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwoTwo, ROLENAME_ENT_TWO, relationOne);
 
 		boolean result = entityInstanceOne.canBeAssociatedWithNewEntityInstance(mulConditions);
 
@@ -84,7 +84,7 @@ public class CanAssociateEntityInstanceMethodTest extends TeardownRollbackTest {
 
 		EntityInstance entityInstanceOne = new EntityInstance(workflowInstance, entOne);
 		EntityInstance entityInstanceTwo = new EntityInstance(workflowInstance, entTwo);
-		new RelationInstance(entityInstanceOne, entityInstanceTwo, relationOne);
+		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO, relationOne);
 
 		boolean result = entityInstanceOne.canBeAssociatedWithNewEntityInstance(mulConditions);
 

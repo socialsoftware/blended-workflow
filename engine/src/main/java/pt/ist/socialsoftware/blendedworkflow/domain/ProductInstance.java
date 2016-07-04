@@ -18,6 +18,8 @@ public abstract class ProductInstance extends ProductInstance_Base {
 
 	public abstract Product getProduct();
 
+	public abstract Entity getEntity();
+
 	public abstract EntityInstance getEntityInstance();
 
 	public abstract ProductInstanceDTO getDTO();
@@ -27,8 +29,6 @@ public abstract class ProductInstance extends ProductInstance_Base {
 	}
 
 	public abstract boolean isDefined();
-
-	public abstract boolean holdsPost(DefProductCondition defProductCondition, Set<MulCondition> mulConditionSet);
 
 	public abstract boolean holdsPre(DefPathCondition defPathCondition);
 }

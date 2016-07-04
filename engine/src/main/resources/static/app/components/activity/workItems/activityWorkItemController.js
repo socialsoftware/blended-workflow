@@ -2,42 +2,42 @@ app.controller('ActivityWorkItemController', function($rootScope, $scope,
 		$routeParams, specRepository, instanceRepository,
 		activityWorkItemRepository) {
 	specId = $routeParams.specId;
-	name = $routeParams.instance;
+	instance = $routeParams.instance;
 
 	specRepository.getSpecification(specId).then(function(response) {
 		$rootScope.spec = response.data;
 	});
 
-	instanceRepository.getWorkflowInstance(specId, name).then(
+	instanceRepository.getWorkflowInstance(specId, instance).then(
 			function(response) {
 				$rootScope.instance = response.data;
 			});
 
-	$scope.getNextWorkItems = function(specId, name) {
-		activityWorkItemRepository.getNextActivityWorkItems(specId, name).then(
+	$scope.getNextWorkItems = function(specId, instance) {
+		activityWorkItemRepository.getNextActivityWorkItems(specId, instance).then(
 				function(response) {
 					$scope.nextWorkItems = response.data;
 				});
 	};
-	
-	$scope.getNextWorkItems(specId, name);
 
-	$scope.getLogWorkItems = function(specId, name) {
-		activityWorkItemRepository.getLogActivityWorkItems(specId, name).then(
+	$scope.getNextWorkItems(specId, instance);
+
+	$scope.getLogWorkItems = function(specId, instance) {
+		activityWorkItemRepository.getLogActivityWorkItems(specId, instance).then(
 				function(response) {
 					$scope.logWorkItems = response.data;
 				});
 	};
-	
-	$scope.getLogWorkItems(specId, name);
 
-	$scope.submitActivityWorkItem = function(activityName, workItem) {
+	$scope.getLogWorkItems(specId, instance);
+
+	$scope.submitActivityWorkItem = function(workItemName, workItem) {
 		$scope.error = '';
-		activityWorkItemRepository.executeWorkItem(specId, name, activityName,
+		activityWorkItemRepository.executeWorkItem(specId, instance, workItemName,
 				workItem).then(
 				function(response) {
-					$scope.getNextWorkItems(specId, name);
-					$scope.getLogWorkItems(specId, name);
+					$scope.getNextWorkItems(specId, instance);
+					$scope.getLogWorkItems(specId, instance);
 				},
 				function(response) {
 					$scope.error = response.data.type + '('

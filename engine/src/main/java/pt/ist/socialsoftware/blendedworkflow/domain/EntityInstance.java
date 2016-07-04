@@ -135,18 +135,6 @@ public class EntityInstance extends EntityInstance_Base {
 		return productInstances;
 	}
 
-	public Set<EntityInstance> getEntityInstanceSetByRolename(String rolename) {
-		return Stream.concat(
-				getRelationInstanceOfOneSet().stream()
-						.filter(ri -> ri.getRelationType().getRoleNameTwo().equals(rolename))
-						.map(ri -> ri.getEntityInstanceTwo()),
-				getRelationInstanceOfTwoSet().stream()
-						.filter(ri -> ri.getRelationType().getRoleNameOne().equals(rolename))
-						.map(ri -> ri.getEntityInstanceOne()))
-				.collect(Collectors.toSet());
-
-	}
-
 	public Optional<AttributeInstance> getAttributeInstanceByName(String name) {
 		return getAttributeInstanceSet().stream().filter(ai -> ai.getAttribute().getName().equals(name)).findFirst();
 	}
@@ -161,7 +149,7 @@ public class EntityInstance extends EntityInstance_Base {
 
 		// the data model guarantees that the name is unique for attributes and
 		// roles
-		return getEntityInstanceSetByRolename(name).stream().collect(Collectors.toSet());
+		return getEntityInstancesByRolename(name).stream().map(ProductInstance.class::cast).collect(Collectors.toSet());
 	}
 
 	public boolean isDefined(Attribute attribute) {
@@ -181,45 +169,22 @@ public class EntityInstance extends EntityInstance_Base {
 		return getEntity().getMultConditions().stream().allMatch(m -> isInCardinality(m));
 	}
 
-	public long numberOfInstances(MulCondition mulCondition) {
-		return getRelationInstanceSet().stream().filter(ri -> ri.getRelationType() == mulCondition.getRelationBW())
-				.count();
-	}
-
-	public long numberOfInstances(String rolename) {
-		return getRelationInstanceSet().stream().filter(ri -> ri.getRelationType().getRoleNameOne().equals(rolename)
-				|| ri.getRelationType().getRoleNameTwo().equals(rolename)).count();
+	public boolean isDefined(Set<MulCondition> mulConditionSet) {
+		return mulConditionSet.stream().allMatch(m -> isInCardinality(m));
 	}
 
 	private boolean isInCardinality(MulCondition mulCondition) {
-		long numberOfInstances = numberOfInstances(mulCondition);
+		int numberOfInstances = getEntityInstancesByRolename(mulCondition.getRolename()).size();
 
-		int minValue;
-		int maxValue;
-		if (getEntity() == mulCondition.getSourceEntity()) {
-			minValue = mulCondition.getCardinality().getMinValue();
-			maxValue = mulCondition.getCardinality().getMaxValue();
-		} else {
-			return true;
-		}
-
-		if (numberOfInstances < minValue || numberOfInstances > maxValue) {
-			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY,
-					"post work item argument cardinality " + numberOfInstances + " "
-							+ mulCondition.getTargetEntity().getName() + " " + minValue + " " + maxValue);
+		if (numberOfInstances < mulCondition.getCardinality().getMinValue()
+				|| numberOfInstances > mulCondition.getCardinality().getMaxValue()) {
+			throw new BWException(BWErrorType.RELATIONINSTANCE_CONSISTENCY,
+					"cardinality " + numberOfInstances + " " + mulCondition.getTargetEntity().getName() + " "
+							+ mulCondition.getCardinality().getMinValue() + " "
+							+ mulCondition.getCardinality().getMaxValue());
 		}
 
 		return true;
-	}
-
-	@Override
-	public boolean holdsPost(DefProductCondition defProductCondition, Set<MulCondition> mulConditionSet) {
-		if (getEntity() != defProductCondition.getSourceOfPath()) {
-			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, "post work item argument "
-					+ getEntity().getFullPath() + ":" + defProductCondition.getTargetOfPath().getFullPath());
-		}
-
-		return mulConditionSet.stream().allMatch(m -> isInCardinality(m));
 	}
 
 	@Override
@@ -242,10 +207,9 @@ public class EntityInstance extends EntityInstance_Base {
 		return productInstanceDTO;
 	}
 
-	public boolean isInRelation(EntityInstance entityInstance, RelationBW relationBW) {
-		return getRelationInstanceSet().stream().anyMatch(ri -> ri.getRelationType() == relationBW
-				&& (ri.getEntityInstanceOne() == entityInstance || ri.getEntityInstanceTwo() == entityInstance));
-
+	public Set<EntityInstance> getEntityInstancesByRolename(String rolename) {
+		return getRelationInstanceSet().stream().filter(ri -> ri.hasRolename(rolename))
+				.map(ri -> ri.getEntityInstanceByRolename(this, rolename)).collect(Collectors.toSet());
 	}
 
 	public boolean attributesNotDefined(Set<Attribute> attributes) {
@@ -255,8 +219,8 @@ public class EntityInstance extends EntityInstance_Base {
 
 	public boolean canBeAssociatedWithNewEntityInstance(Set<MulCondition> mulConditions) {
 		return mulConditions.stream().filter(m -> m.getTargetEntity() == getEntity())
-				.map(m -> m.getSymmetricMulCondition())
-				.noneMatch(m -> numberOfInstances(m) == m.getCardinality().getMaxValue());
+				.map(m -> m.getSymmetricMulCondition()).noneMatch(
+						m -> getEntityInstancesByRolename(m.getRolename()).size() == m.getCardinality().getMaxValue());
 	}
 
 }

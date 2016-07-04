@@ -84,7 +84,7 @@ public class PreConditionsHoldMethodTest extends TeardownRollbackTest {
 
 		PreWorkItemArgument preWorkItemArgument = new PreWorkItemArgument(activityWorkItem, defPathCondition);
 		EntityInstance entityInstanceTwo = new EntityInstance(workflowInstance, entityTwo);
-		new RelationInstance(entityInstance, entityInstanceTwo, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, relationBW);
 		preWorkItemArgument.addProductInstance(entityInstanceTwo);
 		activityWorkItem.addPreCondition(preWorkItemArgument);
 
@@ -102,7 +102,7 @@ public class PreConditionsHoldMethodTest extends TeardownRollbackTest {
 
 		PreWorkItemArgument preWorkItemArgument = new PreWorkItemArgument(activityWorkItem, defPathCondition);
 		EntityInstance entityInstanceTwo = new EntityInstance(workflowInstance, entityTwo);
-		new RelationInstance(entityInstance, entityInstanceTwo, relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, relationBW);
 		preWorkItemArgument.addProductInstance(entityInstanceTwo);
 		activityWorkItem.addPreCondition(preWorkItemArgument);
 

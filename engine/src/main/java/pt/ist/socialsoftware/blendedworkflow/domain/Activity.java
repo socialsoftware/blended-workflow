@@ -410,47 +410,10 @@ public class Activity extends Activity_Base {
 		return instanceContext;
 	}
 
-	public boolean postHolds(PostWorkItemArgument postWorkItemArgument) {
-		if (postWorkItemArgument.getProductInstanceSet() == null
-				|| postWorkItemArgument.getProductInstanceSet().isEmpty()) {
-			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, "post work item argument is empty");
-		}
-
-		return postWorkItemArgument.getProductInstanceSet().stream()
-				.allMatch(pi -> pi.holdsPost(postWorkItemArgument.getDefProductCondition(),
-						getMulConditionSet(postWorkItemArgument.getDefProductCondition().getTargetOfPath())));
-	}
-
-	private Set<MulCondition> getMulConditionSet(Product product) {
+	public Set<MulCondition> getMulConditionsThatShouldHold(Product product) {
 		return getMultiplicityInvariantSet().stream().filter(m -> m.getSourceEntity() == product)
 				.collect(Collectors.toSet());
 
-	}
-
-	public boolean preHolds(PostWorkItemArgument postWorkItemArgument,
-			Set<PreWorkItemArgument> preWorkItemArgumentSet) {
-		// get all pre work item arguments related to the post work item
-		// argument
-		Set<PreWorkItemArgument> preWorkItemArguments = preWorkItemArgumentSet.stream()
-				.filter(wia -> wia.getDefPathCondition().getSourceOfPath() == postWorkItemArgument
-						.getDefProductCondition().getSourceOfPath())
-				.collect(Collectors.toSet());
-
-		// the pre work item arguments should be completely defined
-		if (preWorkItemArguments.stream()
-				.anyMatch(wia -> wia.getProductInstanceSet() == null || wia.getProductInstanceSet().isEmpty())) {
-			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, "pre work item argument not specified.");
-		}
-
-		for (ProductInstance productInstance : postWorkItemArgument.getProductInstanceSet()) {
-			if (!preWorkItemArguments.stream().allMatch(
-					wia -> productInstance.getEntityInstance().holdsDefPathCondition(wia.getDefPathCondition()))) {
-				throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY,
-						"pre work item argument not specified.");
-			}
-		}
-
-		return true;
 	}
 
 	public Set<MulCondition> getMulConditionFromEntityToEntity(Entity fromEntity, Entity toEntity) {

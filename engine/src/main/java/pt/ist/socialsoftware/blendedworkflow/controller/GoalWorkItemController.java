@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,31 @@ public class GoalWorkItemController {
 				.toArray(size -> new GoalWorkItemDTO[size]);
 
 		return new ResponseEntity<GoalWorkItemDTO[]>(instances, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/log", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<GoalWorkItemDTO[]> getLogGoalWorkItems(@PathVariable String specId,
+			@PathVariable String instanceName) {
+		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
+		ExecutionInterface edi = ExecutionInterface.getInstance();
+
+		GoalWorkItemDTO[] instances = edi.getLogGoalWorkItemSet(specId, instanceName).stream().map(owi -> owi.getDTO())
+				.toArray(size -> new GoalWorkItemDTO[size]);
+
+		return new ResponseEntity<GoalWorkItemDTO[]>(instances, HttpStatus.OK);
+	}
+
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<Boolean> executeGoalWorkItem(@PathVariable String specId,
+			@RequestBody GoalWorkItemDTO goalWorkItemDTO) {
+		logger.debug("executeGoalWorkItem specId:{}, instanceName:{}, goalName:{}", specId,
+				goalWorkItemDTO.getWorkflowInstanceName(), goalWorkItemDTO.getName());
+		logger.debug("executeGoalWorkItem activityWorkItemDTO:{}", goalWorkItemDTO.print());
+		ExecutionInterface edi = ExecutionInterface.getInstance();
+
+		edi.executeGoalWorkItem(goalWorkItemDTO);
+
+		return new ResponseEntity<Boolean>(true, HttpStatus.CREATED);
 	}
 
 }

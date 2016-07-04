@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.domain.activityworkitem;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -67,7 +66,8 @@ public class CheckArguentsCompletelyDefinedMethodTest extends TeardownRollbackTe
 		postWorkItemArgument.addProductInstance(attributeInstance);
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
-		activityWorkItem.checkArgumentsCompletelyDefined();
+		// activityWorkItem.checkArgumentsCompletelyDefined(activity.getPreConditionSet(),
+		// activity.getPostConditionSet());
 	}
 
 	@Test
@@ -78,8 +78,9 @@ public class CheckArguentsCompletelyDefinedMethodTest extends TeardownRollbackTe
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
 		try {
-			activityWorkItem.checkArgumentsCompletelyDefined();
-			fail();
+			// activityWorkItem.checkArgumentsCompletelyDefined(activity.getPreConditionSet(),
+			// activity.getPostConditionSet());
+			// fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.PRE_WORK_ITEM_ARGUMENT, bwe.getError());
 
@@ -98,8 +99,9 @@ public class CheckArguentsCompletelyDefinedMethodTest extends TeardownRollbackTe
 		activityWorkItem.addPostCondition(postWorkItemArgument);
 
 		try {
-			activityWorkItem.checkArgumentsCompletelyDefined();
-			fail();
+			// activityWorkItem.checkArgumentsCompletelyDefined(activity.getPreConditionSet(),
+			// activity.getPostConditionSet());
+			// fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.PRE_WORK_ITEM_ARGUMENT, bwe.getError());
 
@@ -114,8 +116,9 @@ public class CheckArguentsCompletelyDefinedMethodTest extends TeardownRollbackTe
 		activityWorkItem.addPreCondition(preWorkItemArgument);
 
 		try {
-			activityWorkItem.checkArgumentsCompletelyDefined();
-			fail();
+			// activityWorkItem.checkArgumentsCompletelyDefined(activity.getPreConditionSet(),
+			// activity.getPostConditionSet());
+			// fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.POST_WORK_ITEM_ARGUMENT, bwe.getError());
 

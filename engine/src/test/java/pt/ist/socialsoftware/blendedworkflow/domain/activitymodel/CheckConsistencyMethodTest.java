@@ -116,9 +116,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeOne));
 		taskOne.addPostCondition(DefAttributeCondition.getDefAttributeCondition(attributeTwo));
 		taskOne.addMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRoleNameOne()));
+				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRolenameOne()));
 		taskOne.addMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRoleNameTwo()));
+				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRolenameTwo()));
 		taskOne.addRuleInvariant(ruleOne);
 
 		taskTwo = new Activity(spec.getActivityModel(), TASK_TWO, "Description");
@@ -126,13 +126,13 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityThree));
 		taskTwo.addMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameOne()));
+				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRolenameOne()));
 		taskTwo.addMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameTwo()));
+				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRolenameTwo()));
 		taskTwo.addMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationTwo, existsRelationTwo.getRoleNameOne()));
+				MulCondition.getMulCondition(existsRelationTwo, existsRelationTwo.getRolenameOne()));
 		taskTwo.addMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationTwo, existsRelationTwo.getRoleNameTwo()));
+				MulCondition.getMulCondition(existsRelationTwo, existsRelationTwo.getRolenameTwo()));
 
 		taskThree = new Activity(spec.getActivityModel(), TASK_THREE, "Description");
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));
@@ -187,7 +187,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	@Test
 	public void mulConditionNotAppliedToPost() {
 		taskTwo.removeMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameTwo()));
+				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRolenameTwo()));
 
 		try {
 			spec.getActivityModel().checkModel();
@@ -195,7 +195,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, bwe.getError());
 			assertEquals(
-					MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameTwo()).getSubPath(),
+					MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRolenameTwo()).getSubPath(),
 					bwe.getMessage());
 		}
 	}
@@ -242,9 +242,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	@Test
 	public void mulConditionIsWronglyLocated() {
 		taskTwo.removeMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameOne()));
+				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRolenameOne()));
 		taskOne.addMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameOne()));
+				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRolenameOne()));
 
 		try {
 			spec.getActivityModel().checkModel();
@@ -258,9 +258,9 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	@Test
 	public void mulConditionDoesNotHaveDefEntity() {
 		taskTwo.removeMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameOne()));
+				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRolenameOne()));
 		taskThree.addMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRoleNameOne()));
+				MulCondition.getMulCondition(existsRelationOne, existsRelationOne.getRolenameOne()));
 
 		try {
 			spec.getActivityModel().checkModel();
@@ -343,7 +343,7 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 	@Test
 	public void existsEntityFailureNoMulCondition() {
 		taskOne.removeMultiplicityInvariant(
-				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRoleNameOne()));
+				MulCondition.getMulCondition(existsRelationThree, existsRelationThree.getRolenameOne()));
 
 		try {
 			spec.getActivityModel().checkModel();

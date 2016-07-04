@@ -1,7 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.domain;
 
+import java.util.Set;
+
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.service.dto.GoalWorkItemDTO;
 
 public class GoalWorkItem extends GoalWorkItem_Base {
 
@@ -36,6 +39,38 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	public void delete() {
 		setGoal(null);
 		super.delete();
+	}
+
+	@Override
+	protected Set<DefPathCondition> definedPreConditions() {
+		return getGoal().getActivationConditionSet();
+	}
+
+	@Override
+	public boolean postConditionsHold() {
+		if (getPostConditionSet().size() == 0 && getGoal().getSuccessConditionSet().size() != 0) {
+			throw new BWException(BWErrorType.WORK_ITEM_ARGUMENT_CONSISTENCY, "missing argument");
+		}
+
+		getPostConditionSet().stream().allMatch(wia -> wia.productExistsAndHasCorrectType());
+
+		getPostConditionSet().stream().allMatch(wia -> wia.attributeIsDefined());
+
+		// only verifies the relations if the it they are all defined, which
+		// means that are either defined in a super-class or in the goal
+		getPostConditionSet().stream().allMatch(wia -> wia.relationInstancesAreDefined(
+				getGoal().getMulConditionsThatShouldHold(wia.getDefProductCondition().getTargetOfPath())));
+
+		return true;
+	}
+
+	public GoalWorkItemDTO getDTO() {
+		GoalWorkItemDTO goalWorkItemDTO = new GoalWorkItemDTO();
+		goalWorkItemDTO.setName(getGoal().getName());
+
+		super.fillDTO(goalWorkItemDTO);
+
+		return goalWorkItemDTO;
 	}
 
 }

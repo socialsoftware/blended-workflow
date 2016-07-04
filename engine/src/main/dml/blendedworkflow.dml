@@ -78,8 +78,8 @@ class Dependence;
 
 class RelationBW {
 	String name;
-	String roleNameOne;
-	String roleNameTwo;
+	String rolenameOne;
+	String rolenameTwo;
 	boolean isOneKeyEntity;
 	boolean isTwoKeyEntity;
 }

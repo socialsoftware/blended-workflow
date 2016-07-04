@@ -114,8 +114,8 @@ public class MergeActivitiesTest extends TeardownRollbackTest {
 		taskTwo.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_ONE_NAME));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityTwo));
 		taskTwo.addPostCondition(DefEntityCondition.getDefEntityCondition(entityThree));
-		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameOne()));
-		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRoleNameTwo()));
+		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRolenameOne()));
+		taskTwo.addMultiplicityInvariant(MulCondition.getMulCondition(relation, relation.getRolenameTwo()));
 
 		taskThree = new Activity(spec.getActivityModel(), TASK_THREE, "Description");
 		taskThree.addPreCondition(DefPathCondition.getDefPathCondition(spec, ENTITY_TWO_NAME));

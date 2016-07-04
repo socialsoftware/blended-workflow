@@ -360,7 +360,20 @@ public class Goal extends Goal_Base {
 
 		// for each entity, in entity context, get instance context
 		for (Entity entity : entityContext) {
-			if (getInstanceContext(workflowInstance, entity).isEmpty()) {
+			if (getInstanceContext(workflowInstance, entity).isEmpty() && entityRequiresInstances(entity)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	// there is a mul condition which target is entity and the mul condition
+	// symmetric does not to the goal entity invariant conditions to top
+	private boolean entityRequiresInstances(Entity entity) {
+		for (MulCondition mulCondition : getEntityInvariantConditionSet()) {
+			if (mulCondition.getTargetEntity() == entity
+					&& !getEntityInvariantConditionsToTop().contains(mulCondition.getSymmetricMulCondition())) {
 				return false;
 			}
 		}
@@ -370,28 +383,29 @@ public class Goal extends Goal_Base {
 
 	public Set<Entity> getEntityContext() {
 		Set<Entity> entityContext = new HashSet<Entity>();
-		Set<Entity> parentsSuccessEntities = getParentsSuccessEntities();
 
+		// some may not be defined in activation conditions because of parent
+		// goals
 		for (DefProductCondition defProductCondition : getSuccessConditionSet()) {
 			// attribute is defined but not its entity
-			if (defProductCondition.getSourceOfPath() != defProductCondition.getTargetOfPath()
-					&& !getSuccessEntities().contains(defProductCondition.getSourceOfPath())) {
+			if (defProductCondition.isAttribute()
+					&& !getSuccessConditionSet().contains(defProductCondition.getSourceOfPath())) {
 				entityContext.add(defProductCondition.getSourceOfPath());
 			}
-			// entity is defined in a parent goal
-			if (defProductCondition.getSourceOfPath() == defProductCondition.getTargetOfPath()) {
+			// create contexts for entities which are not defined in the goal
+			// subtree
+			if (defProductCondition.isEntity()) {
 				for (MulCondition mulCondition : getEntityInvariantConditionSet()) {
-					// associated entities were already created in a super goal
-					if (parentsSuccessEntities.contains(mulCondition.getTargetEntity())) {
+					if (mulCondition.getSourceEntity() == defProductCondition.getTargetOfPath()
+							&& !isInSubTree(mulCondition.getSymmetricMulCondition()))
 						entityContext.add(mulCondition.getTargetEntity());
-					}
 				}
 			}
 		}
 
 		// the entity is already defined
 		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
-			if (defPathCondition.getSourceOfPath() == defPathCondition.getTargetOfPath()) {
+			if (defPathCondition.isEntity()) {
 				entityContext.add(defPathCondition.getSourceOfPath());
 			}
 		}
@@ -409,42 +423,56 @@ public class Goal extends Goal_Base {
 	public Set<Entity> getEntityContext(Entity entity) {
 		Set<Entity> entityContext = new HashSet<Entity>();
 
-		for (DefProductCondition defProductCondition : getSuccessConditionSet()) {
-			if (defProductCondition.getSourceOfPath() == entity) {
-				// attribute is defined but not its entity
-				if (defProductCondition.getSourceOfPath() != defProductCondition.getTargetOfPath()
-						&& !getSuccessEntities().contains(defProductCondition.getSourceOfPath())) {
-					entityContext.add(defProductCondition.getSourceOfPath());
-				}
-				// entity is defined in a parent goal
-				if (defProductCondition.getSourceOfPath() == defProductCondition.getTargetOfPath()) {
-					for (MulCondition mulCondition : getEntityInvariantConditionSet()) {
-						// associates all entities, different from
-						// getEntityContext() because the association is not
-						// mandatory to occur in this definition
+		// some may not be defined in activation conditions because of parent
+		// goals
+		for (DefProductCondition defProductCondition : getSuccessConditionSet().stream()
+				.filter(d -> d.getSourceOfPath() == entity).collect(Collectors.toSet())) {
+			// attribute is defined but not its entity
+			if (defProductCondition.isAttribute()
+					&& !getSuccessEntities().contains(defProductCondition.getSourceOfPath())) {
+				entityContext.add(defProductCondition.getSourceOfPath());
+			}
+			// create contexts for entities which are not defined in the goal
+			// subtree
+			if (defProductCondition.isEntity()) {
+				for (MulCondition mulCondition : getEntityInvariantConditionSet()) {
+					if (mulCondition.getSourceEntity() == defProductCondition.getTargetOfPath()
+							&& !isInSubTree(mulCondition.getSymmetricMulCondition()))
 						entityContext.add(mulCondition.getTargetEntity());
-					}
 				}
 			}
 		}
 
+		Set<DefPathCondition> activationDefPathConditions = getActivationConditionSet().stream()
+				.filter(d -> d.getSourceOfPath() == entity).collect(Collectors.toSet());
+
 		// the entity already exist
-		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
-			if (defPathCondition.getSourceOfPath() == entity
-					&& defPathCondition.getTargetOfPath() == defPathCondition.getSourceOfPath()) {
+		for (DefPathCondition defPathCondition : activationDefPathConditions) {
+			if (defPathCondition.isEntity()) {
 				entityContext.add(defPathCondition.getSourceOfPath());
 			}
 		}
 
 		// the entity is going to be defined
-		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
-			if (defPathCondition.getSourceOfPath() == entity
-					&& !entityContext.contains(defPathCondition.getSourceOfPath())) {
+		for (DefPathCondition defPathCondition : activationDefPathConditions) {
+			if (!entityContext.contains(defPathCondition.getSourceOfPath())) {
 				entityContext.add(defPathCondition.getPath().getAdjacent());
 			}
 		}
 
 		return entityContext;
+	}
+
+	private boolean isInSubTree(MulCondition mulCondition) {
+		if (getEntityInvariantConditionSet().contains(mulCondition))
+			return true;
+
+		for (Goal subGoal : getSubGoalSet()) {
+			if (subGoal.isInSubTree(mulCondition))
+				return true;
+		}
+
+		return false;
 	}
 
 	public Map<Entity, Set<EntityInstance>> getInstanceContext(WorkflowInstance workflowInstance) {
@@ -481,6 +509,14 @@ public class Goal extends Goal_Base {
 		return instanceContext;
 	}
 
+	public Set<MulCondition> getMulConditionsThatShouldHold(Product product) {
+		Set<MulCondition> entityInvariantConditionsToTop = getEntityInvariantConditionsToTop();
+		return getEntityInvariantConditionSet().stream()
+				.filter(m -> m.getSourceEntity() == product
+						&& entityInvariantConditionsToTop.contains(m.getSymmetricMulCondition()))
+				.collect(Collectors.toSet());
+	}
+
 	private Set<Entity> getSuccessEntities() {
 		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).filter(Entity.class::isInstance)
 				.map(Entity.class::cast).collect(Collectors.toSet());
@@ -495,11 +531,30 @@ public class Goal extends Goal_Base {
 		Set<Entity> successEntities = new HashSet<Entity>();
 
 		if (getParentGoal() != null) {
-			successEntities.addAll(getParentGoal().getSuccessEntities());
-			successEntities.addAll(getParentGoal().getParentsSuccessEntities());
+			successEntities.addAll(getParentGoal().getSuccessEntitiesToTop());
 		}
 
 		return successEntities;
+	}
+
+	private Set<Entity> getSuccessEntitiesToTop() {
+		Set<Entity> successEntities = new HashSet<Entity>(getSuccessEntities());
+
+		if (getParentGoal() != null) {
+			successEntities.addAll(getParentGoal().getSuccessEntitiesToTop());
+		}
+
+		return successEntities;
+	}
+
+	private Set<MulCondition> getEntityInvariantConditionsToTop() {
+		Set<MulCondition> mulConditions = new HashSet<MulCondition>(getEntityInvariantConditionSet());
+
+		if (getParentGoal() != null) {
+			mulConditions.addAll(getParentGoal().getEntityInvariantConditionsToTop());
+		}
+
+		return mulConditions;
 	}
 
 	public Set<MulCondition> getMulConditionFromEntityToEntity(Entity fromEntity, Entity toEntity) {
