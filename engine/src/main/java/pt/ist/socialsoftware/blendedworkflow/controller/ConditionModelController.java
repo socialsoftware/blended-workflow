@@ -36,7 +36,7 @@ public class ConditionModelController {
 
 		adi.cleanConditionModel(specId);
 
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -47,10 +47,10 @@ public class ConditionModelController {
 
 		boolean result = adi.generateConditionModel(specId);
 
-		return new ResponseEntity<Boolean>(result, HttpStatus.CREATED);
+		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/entityachieveconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/entityachieveconditions", method = RequestMethod.GET)
 	public ResponseEntity<DefEntityConditionDTO[]> getEntityAchieveConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getEntityAchieveConditionSet specId:{}", specId);
 
@@ -59,10 +59,10 @@ public class ConditionModelController {
 		DefEntityConditionDTO[] defConditions = adi.getEntityAchieveConditionSet(specId).stream()
 				.map(def -> def.getDTO()).toArray(size -> new DefEntityConditionDTO[size]);
 
-		return new ResponseEntity<DefEntityConditionDTO[]>(defConditions, HttpStatus.OK);
+		return new ResponseEntity<>(defConditions, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/entityachieveconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/entityachieveconditions", method = RequestMethod.POST)
 	public ResponseEntity<DefEntityConditionDTO> createEntityAchieveCondition(@PathVariable("specId") String specId,
 			@RequestBody DefEntityConditionDTO eacDTO) {
 		log.debug("createEntityAchieveCondition entityName:{}, exists:{}", eacDTO.getEntityName(), eacDTO.isExists());
@@ -71,10 +71,10 @@ public class ConditionModelController {
 
 		DefEntityCondition defCondition = adi.createEntityAchieveCondition(eacDTO);
 
-		return new ResponseEntity<DefEntityConditionDTO>(defCondition.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(defCondition.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/attributeachieveconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/attributeachieveconditions", method = RequestMethod.GET)
 	public ResponseEntity<DefAttributeConditionDTO[]> getAttributeAchieveConditionSet(
 			@PathVariable("specId") String specId) {
 		log.debug("getAttributeAchieveConditionSet specId:{}", specId);
@@ -84,10 +84,10 @@ public class ConditionModelController {
 		DefAttributeConditionDTO[] defConditions = adi.getAttributeAchieveConditionSet(specId).stream()
 				.map(def -> def.getDTO()).toArray(size -> new DefAttributeConditionDTO[size]);
 
-		return new ResponseEntity<DefAttributeConditionDTO[]>(defConditions, HttpStatus.OK);
+		return new ResponseEntity<>(defConditions, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/attributeachieveconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/attributeachieveconditions", method = RequestMethod.POST)
 	public ResponseEntity<DefAttributeConditionDTO> createAttributeAchieveCondition(
 			@PathVariable("specId") String specId, @RequestBody DefAttributeConditionDTO aacDTO) {
 		log.debug("createAttributeAchieveCondition path:{}, mandatory:{}", aacDTO.getPath(), aacDTO.isMandatory());
@@ -96,10 +96,10 @@ public class ConditionModelController {
 
 		DefAttributeCondition defCondition = adi.createAttributeAchieveCondition(aacDTO);
 
-		return new ResponseEntity<DefAttributeConditionDTO>(defCondition.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(defCondition.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/entitydependenceconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/entitydependenceconditions", method = RequestMethod.GET)
 	public ResponseEntity<DependenceDTO[]> getEntityDependenceConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getEntityDependenceConditionSet specId:{}", specId);
 
@@ -108,10 +108,10 @@ public class ConditionModelController {
 		DependenceDTO[] dependences = adi.getEntityDependenceConditionSet(specId).stream().map(dep -> dep.getDTO())
 				.toArray(size -> new DependenceDTO[size]);
 
-		return new ResponseEntity<DependenceDTO[]>(dependences, HttpStatus.OK);
+		return new ResponseEntity<>(dependences, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/entitydependenceconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/entitydependenceconditions", method = RequestMethod.POST)
 	public ResponseEntity<DependenceDTO> createEntityDependenceCondition(@PathVariable("specId") String specId,
 			@RequestBody DependenceDTO dependenceDTO) {
 		log.debug("createEntityDependenceCondition product:{}, path:{}", dependenceDTO.getProduct(),
@@ -121,10 +121,10 @@ public class ConditionModelController {
 
 		Dependence dependence = adi.createEntityDependenceCondition(dependenceDTO);
 
-		return new ResponseEntity<DependenceDTO>(dependence.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(dependence.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/attributedependenceconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/attributedependenceconditions", method = RequestMethod.GET)
 	public ResponseEntity<DependenceDTO[]> getAttributeDependenceConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getAttributeDependenceConditionSet specId:{}", specId);
 
@@ -133,10 +133,10 @@ public class ConditionModelController {
 		DependenceDTO[] dependences = adi.getAttributeDependenceConditionSet(specId).stream().map(dep -> dep.getDTO())
 				.toArray(size -> new DependenceDTO[size]);
 
-		return new ResponseEntity<DependenceDTO[]>(dependences, HttpStatus.OK);
+		return new ResponseEntity<>(dependences, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/attributedependenceconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/attributedependenceconditions", method = RequestMethod.POST)
 	public ResponseEntity<DependenceDTO> createAttributeDependenceCondition(@PathVariable("specId") String specId,
 			@RequestBody DependenceDTO dependenceDTO) {
 		log.debug("createAttributeDependenceCondition product:{}, path:{}", dependenceDTO.getProduct(),
@@ -146,10 +146,10 @@ public class ConditionModelController {
 
 		Dependence dependence = adi.createAttributeDependenceCondition(dependenceDTO);
 
-		return new ResponseEntity<DependenceDTO>(dependence.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(dependence.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/entityinvariantconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/entityinvariantconditions", method = RequestMethod.GET)
 	public ResponseEntity<MulConditionDTO[]> getEntityInvariantConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getEntityInvariantConditionSet specId:{}", specId);
 
@@ -158,10 +158,10 @@ public class ConditionModelController {
 		MulConditionDTO[] mulConditionsDTO = adi.getEntityInvariantConditionSet(specId).stream()
 				.map(mul -> mul.getDTO()).toArray(size -> new MulConditionDTO[size]);
 
-		return new ResponseEntity<MulConditionDTO[]>(mulConditionsDTO, HttpStatus.OK);
+		return new ResponseEntity<>(mulConditionsDTO, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/entityinvariantconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/entityinvariantconditions", method = RequestMethod.POST)
 	public ResponseEntity<MulConditionDTO> createEntityInvariantCondition(@PathVariable("specId") String specId,
 			@RequestBody MulConditionDTO mulConditionDTO) {
 		log.debug("createEntityInvariantCondition specId:{}, rolePath:{}, cardinality:{}", specId,
@@ -171,10 +171,10 @@ public class ConditionModelController {
 
 		MulCondition mulCondition = adi.createEntityInvariantCondition(specId, mulConditionDTO);
 
-		return new ResponseEntity<MulConditionDTO>(mulCondition.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(mulCondition.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/attributeinvariantconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/attributeinvariantconditions", method = RequestMethod.GET)
 	public ResponseEntity<RuleDTO[]> getAttributeInvariantConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getAttributeInvariantConditionSet specId:{}", specId);
 
@@ -183,10 +183,10 @@ public class ConditionModelController {
 		RuleDTO[] rulesDTO = adi.getAttributeInvariantConditionSet(specId).stream().map(mul -> mul.getDTO())
 				.toArray(size -> new RuleDTO[size]);
 
-		return new ResponseEntity<RuleDTO[]>(rulesDTO, HttpStatus.OK);
+		return new ResponseEntity<>(rulesDTO, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/attributeinvariantconditions", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/attributeinvariantconditions", method = RequestMethod.POST)
 	public ResponseEntity<RuleDTO> createAttributeInvariantCondition(@PathVariable("specId") String specId,
 			@RequestBody RuleDTO ruleDTO) {
 		log.debug("createAttributeInvariantCondition specId:{}, name:{}", ruleDTO.getSpecId(), ruleDTO.getName());
@@ -195,7 +195,7 @@ public class ConditionModelController {
 
 		Rule rule = adi.createAttributeInvariant(ruleDTO);
 
-		return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(rule.getDTO(), HttpStatus.CREATED);
 	}
 
 }

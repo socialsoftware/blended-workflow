@@ -3,7 +3,6 @@ package pt.ist.socialsoftware.blendedworkflow.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,7 @@ import pt.ist.socialsoftware.blendedworkflow.service.dto.SpecDTO;
 public class SpecificationController {
 	private static Logger log = LoggerFactory.getLogger(SpecificationController.class);
 
-	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<SpecDTO[]> getSpecs() {
 		log.debug("getSpecs");
 
@@ -29,10 +28,10 @@ public class SpecificationController {
 		SpecDTO[] specs = adi.getSpecs().stream().map(s -> s.getDTO())
 				.sorted((s1, s2) -> s1.getName().compareTo(s2.getName())).toArray(size -> new SpecDTO[size]);
 
-		return new ResponseEntity<SpecDTO[]>(specs, HttpStatus.OK);
+		return new ResponseEntity<>(specs, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{specId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/{specId}", method = RequestMethod.GET)
 	public ResponseEntity<SpecDTO> getSpecBySpecId(@PathVariable("specId") String specId) {
 		log.debug("getSpecBySpecId sepcId:{}", specId);
 
@@ -40,20 +39,20 @@ public class SpecificationController {
 
 		Specification spec = adi.getSpecBySpecId(specId);
 
-		return new ResponseEntity<SpecDTO>(spec.getDTO(), HttpStatus.OK);
+		return new ResponseEntity<>(spec.getDTO(), HttpStatus.OK);
 	}
 
-	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<SpecDTO> createSpec(@RequestBody SpecDTO specDTO) {
 		log.debug("createSpec specId:{}, name:{}", specDTO.getSpecId(), specDTO.getName());
 		DesignInterface adi = DesignInterface.getInstance();
 
 		Specification spec = adi.createSpecification(specDTO);
 
-		return new ResponseEntity<SpecDTO>(spec.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(spec.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/{specId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{specId}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteSpecification(@PathVariable("specId") String specId) {
 		log.debug("deleteSpecification specId:{}", specId);
 
@@ -61,10 +60,10 @@ public class SpecificationController {
 
 		adi.deleteSpecification(specId);
 
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{specId}/print", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/{specId}/print", method = RequestMethod.GET)
 	public ResponseEntity<Boolean> printSpecModels(@PathVariable("specId") String specId) {
 		log.debug("printSpecModels specId:{}", specId);
 
@@ -72,7 +71,7 @@ public class SpecificationController {
 
 		adi.printSpecificationModels(specId);
 
-		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 
 }

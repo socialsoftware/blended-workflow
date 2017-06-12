@@ -1,0 +1,3 @@
+include 'designer'
+include 'designer.ide'
+include 'designer.idea'

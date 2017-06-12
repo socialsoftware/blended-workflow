@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <feature url="features/org.blended.activity.sdk_1.0.0.qualifier.jar" id="org.blended.activity.sdk" version="1.0.0.qualifier">
-      <category name="org.blended.activity"/>
-   </feature>
-   <category-def name="org.blended.activity" label="Blended Workflow Engine - Activity"/>
-</site>

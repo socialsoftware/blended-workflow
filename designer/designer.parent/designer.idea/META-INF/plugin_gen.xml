@@ -1,0 +1,93 @@
+<idea-plugin version="2">
+	<extensions defaultExtensionNs="org.eclipse.xtext.idea">
+		<package
+			uri="http://www.ist.pt/socialsoftware/blendedworkflow/designer/BlendedWorkflow"
+			class="pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.BlendedWorkflowPackage"
+		/>
+		<resourceFactory 
+			type="bw"
+			class="org.eclipse.xtext.resource.IResourceFactory"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+		/>
+		<resourceServiceProvider
+			uriExtension="bw"
+			class="org.eclipse.xtext.idea.resource.IResourceIdeaServiceProvider"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+		/>
+
+		<lang.setup
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			implementationClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowIdeaSetup"
+		/>
+	</extensions>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<psi.treeChangePreprocessor implementation="pt.ist.socialsoftware.blendedworkflow.designer.idea.lang.psi.BlendedWorkflowCodeBlockModificationListener"/>
+
+		<fileTypeFactory implementation="pt.ist.socialsoftware.blendedworkflow.designer.idea.lang.BlendedWorkflowFileTypeFactory"/>
+		<stubElementTypeHolder class="pt.ist.socialsoftware.blendedworkflow.designer.idea.lang.BlendedWorkflowElementTypeProvider"/>
+		<lang.ast.factory 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.lang.BaseXtextASTFactory"
+		/>
+		<lang.parserDefinition 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.lang.parser.BlendedWorkflowParserDefinition"
+		/>
+		<lang.findUsagesProvider 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.findusages.BaseXtextFindUsageProvider"
+		/>
+		<lang.refactoringSupport 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.refactoring.BaseXtextRefactoringSupportProvider"
+		/>
+		<lang.namesValidator 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="com.intellij.lang.refactoring.NamesValidator"
+		/>
+		<lang.syntaxHighlighterFactory key="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow" implementationClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.highlighting.BlendedWorkflowSyntaxHighlighterFactory" />
+		<lang.braceMatcher 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="com.intellij.lang.PairedBraceMatcher"
+		/>
+		<annotator 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.annotation.IssueAnnotator"
+		/>
+		<completion.contributor language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow" implementationClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.completion.BlendedWorkflowCompletionContributor"/>
+		<pom.declarationSearcher implementation="pt.ist.socialsoftware.blendedworkflow.designer.idea.lang.pom.BlendedWorkflowPomDeclarationSearcher"/>
+
+		<lang.psiStructureViewFactory 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="com.intellij.lang.PsiStructureViewFactory"
+		/>
+		<facetType implementation="pt.ist.socialsoftware.blendedworkflow.designer.idea.facet.BlendedWorkflowFacetType"/>
+		<lang.documentationProvider 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.documentation.IdeaDocumentationProvider"
+		/>
+		<colorSettingsPage implementation="pt.ist.socialsoftware.blendedworkflow.designer.idea.highlighting.BlendedWorkflowColorSettingsPage"/>
+		<highlightVisitor implementation="pt.ist.socialsoftware.blendedworkflow.designer.idea.highlighting.BlendedWorkflowSemanticHighlightVisitor"/>
+
+		<lang.formatter 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="com.intellij.formatting.FormattingModelBuilder"
+		/>
+		<lang.commenter 
+			language="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
+			factoryClass="pt.ist.socialsoftware.blendedworkflow.designer.idea.BlendedWorkflowExtensionFactory"
+			implementationClass="com.intellij.lang.CodeDocumentationAwareCommenter"
+		/>
+	</extensions>
+</idea-plugin>

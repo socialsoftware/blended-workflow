@@ -42,7 +42,7 @@ public class GoalModelController {
 
 		adi.cleanGoalModel(specId);
 
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -53,10 +53,10 @@ public class GoalModelController {
 
 		boolean result = adi.generateGoalModel(specId);
 
-		return new ResponseEntity<Boolean>(result, HttpStatus.CREATED);
+		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/{newName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	@RequestMapping(value = "/goals/{goalName}/{newName}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> updateGoalName(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @PathVariable("newName") String newName) {
 		logger.debug("updateGoalName specId:{}, goalName:{}", specId, goalName);
@@ -65,10 +65,10 @@ public class GoalModelController {
 
 		adi.updateGoalName(specId, goalName, newName);
 
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/goals", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/goals", method = RequestMethod.GET)
 	public ResponseEntity<GoalDTO[]> getGoalSet(@PathVariable("specId") String specId) {
 		logger.debug("getGoalSet specId:{}", specId);
 
@@ -76,11 +76,11 @@ public class GoalModelController {
 
 		Set<Goal> goals = adi.getGoals(specId);
 
-		return new ResponseEntity<GoalDTO[]>(goals.stream().map(g -> g.getDTO()).toArray(GoalDTO[]::new),
+		return new ResponseEntity<>(goals.stream().map(g -> g.getDTO()).toArray(GoalDTO[]::new),
 				HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/goals/{goalName}", method = RequestMethod.GET)
 	public ResponseEntity<GoalDTO> getGoalByName(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalByName specId:{}, name:{}", specId, goalName);
@@ -89,10 +89,10 @@ public class GoalModelController {
 
 		Goal goal = adi.getGoalByName(specId, goalName);
 
-		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.OK);
+		return new ResponseEntity<>(goal.getDTO(), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/goals", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals", method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> createGoal(@PathVariable("specId") String specId, @RequestBody GoalDTO goalDTO) {
 		logger.debug("createGoal specId:{}, name:{}, exists:{}", goalDTO.getSpecId(), goalDTO.getName());
 
@@ -100,10 +100,10 @@ public class GoalModelController {
 
 		Goal goal = adi.createGoal(goalDTO);
 
-		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/sub", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/goals/{goalName}/sub", method = RequestMethod.GET)
 	public ResponseEntity<GoalDTO[]> getSubGoal(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getSubGoal specId:{}, goalName:{}", specId, goalName);
@@ -113,10 +113,10 @@ public class GoalModelController {
 		GoalDTO[] subGoals = adi.getSubGoals(specId, goalName).stream().map((goal) -> goal.getDTO())
 				.toArray(size -> new GoalDTO[size]);
 
-		return new ResponseEntity<GoalDTO[]>(subGoals, HttpStatus.OK);
+		return new ResponseEntity<>(subGoals, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/sup", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/goals/{goalName}/sup", method = RequestMethod.GET)
 	public ResponseEntity<GoalDTO> getParentGoal(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getParentGoal specId:{}, goalName:{}", specId, goalName);
@@ -125,15 +125,16 @@ public class GoalModelController {
 
 		Goal parentGoal = adi.getParentGoal(specId, goalName);
 		GoalDTO parentGoalDTO;
-		if (parentGoal == null)
+		if (parentGoal == null) {
 			parentGoalDTO = new GoalDTO(specId);
-		else
+		} else {
 			parentGoalDTO = parentGoal.getDTO();
+		}
 
-		return new ResponseEntity<GoalDTO>(parentGoalDTO, HttpStatus.OK);
+		return new ResponseEntity<>(parentGoalDTO, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/sub", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/{goalName}/sub", method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> addSubGoal(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @RequestBody GoalDTO goalDTO) {
 		logger.debug("createGoal specId:{}, parentName:{}, childName:{}", specId, goalName, goalDTO.getName());
@@ -142,10 +143,10 @@ public class GoalModelController {
 
 		Goal goal = adi.addSubGoal(specId, goalName, goalDTO.getName());
 
-		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/sucent", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/goals/{goalName}/sucent", method = RequestMethod.GET)
 	public ResponseEntity<DefEntityConditionDTO[]> getGoalSucEntityAchieveConditions(
 			@PathVariable("specId") String specId, @PathVariable("goalName") String goalName) {
 		logger.debug("getGoalSucEntityAchieveConditions specId:{}, goalName:{}", specId, goalName);
@@ -155,10 +156,10 @@ public class GoalModelController {
 		DefEntityConditionDTO[] defs = adi.getGoalSuccessEntitySet(specId, goalName).stream().map((def) -> def.getDTO())
 				.toArray(size -> new DefEntityConditionDTO[size]);
 
-		return new ResponseEntity<DefEntityConditionDTO[]>(defs, HttpStatus.OK);
+		return new ResponseEntity<>(defs, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/sucent/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/{goalName}/sucent/{path}/", method = RequestMethod.POST)
 	public ResponseEntity<DefEntityConditionDTO> associateEntityAchieveConditionToGoalSuc(
 			@PathVariable("specId") String specId, @PathVariable("goalName") String goalName,
 			@PathVariable("path") String path) {
@@ -168,10 +169,10 @@ public class GoalModelController {
 
 		DefEntityCondition defEntityCondition = adi.associateEntityToGoalSuccess(specId, goalName, path);
 
-		return new ResponseEntity<DefEntityConditionDTO>(defEntityCondition.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(defEntityCondition.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/sucatt", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/goals/{goalName}/sucatt", method = RequestMethod.GET)
 	public ResponseEntity<DefAttributeConditionDTO[]> getGoalSucAttributeAchieveConditions(
 			@PathVariable("specId") String specId, @PathVariable("goalName") String goalName) {
 		logger.debug("getGoalSucAttributeAchieveConditions specId:{}, goalName:{}", specId, goalName);
@@ -181,10 +182,10 @@ public class GoalModelController {
 		DefAttributeConditionDTO[] defs = adi.getGoalSuccessAttributeSet(specId, goalName).stream()
 				.map((def) -> def.getDTO()).toArray(size -> new DefAttributeConditionDTO[size]);
 
-		return new ResponseEntity<DefAttributeConditionDTO[]>(defs, HttpStatus.OK);
+		return new ResponseEntity<>(defs, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/goals/{goalExtId}/sucatt/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/{goalExtId}/sucatt/{path}/", method = RequestMethod.POST)
 	public ResponseEntity<String> associateAttributeAchieveConditionToGoalSuc(@PathVariable("specId") String specId,
 			@PathVariable("goalExtId") String goalExtId, @PathVariable("path") String path) {
 		logger.debug("associateActConditionToGoal specId:{}, goalExtId:{}, path:{}", specId, goalExtId, path);
@@ -193,10 +194,10 @@ public class GoalModelController {
 
 		adi.associateAttributeToGoalSuccess(specId, goalExtId, path);
 
-		return new ResponseEntity<String>(HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/act", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/goals/{goalName}/act", method = RequestMethod.GET)
 	public ResponseEntity<DefPathConditionDTO[]> getGoalActDefPathConditionSet(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalActDefPathConditionSet specId:{}, goalName:{}", specId, goalName);
@@ -206,10 +207,10 @@ public class GoalModelController {
 		DefPathConditionDTO[] paths = adi.getGoalActivationDefPathConditionSet(specId, goalName).stream()
 				.map((def) -> def.getDTO(specId)).toArray(size -> new DefPathConditionDTO[size]);
 
-		return new ResponseEntity<DefPathConditionDTO[]>(paths, HttpStatus.OK);
+		return new ResponseEntity<>(paths, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/act/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/{goalName}/act/{path}/", method = RequestMethod.POST)
 	public ResponseEntity<DefPathConditionDTO> associateDefPathConditionToGoalAct(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @PathVariable("path") String path) {
 		logger.debug("associateDefPathConditionToGoalAct specId:{}, goalName:{}, path:{}", specId, goalName, path);
@@ -218,10 +219,10 @@ public class GoalModelController {
 
 		DefPathCondition defPathCondition = adi.associateDefPathConditionToGoalActivation(specId, goalName, path);
 
-		return new ResponseEntity<DefPathConditionDTO>(defPathCondition.getDTO(specId), HttpStatus.CREATED);
+		return new ResponseEntity<>(defPathCondition.getDTO(specId), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/invent", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/goals/{goalName}/invent", method = RequestMethod.GET)
 	public ResponseEntity<MulConditionDTO[]> getGoalMulInvSet(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalMulInvSet specId:{}, goalName:{}", specId, goalName);
@@ -231,10 +232,10 @@ public class GoalModelController {
 		MulConditionDTO[] defs = adi.getGoalMulInvSet(specId, goalName).stream().map((def) -> def.getDTO())
 				.toArray(size -> new MulConditionDTO[size]);
 
-		return new ResponseEntity<MulConditionDTO[]>(defs, HttpStatus.OK);
+		return new ResponseEntity<>(defs, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/invent", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/{goalName}/invent", method = RequestMethod.POST)
 	public ResponseEntity<String> associateEntityInvariantConditionToGoal(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @RequestBody MulConditionDTO mulConditionDTO) {
 		logger.debug("associateActConditionToGoal specId:{}, goalName:{}, path:{}, cardinality:{}", specId, goalName,
@@ -245,10 +246,10 @@ public class GoalModelController {
 		adi.associateMulToGoalInvariant(specId, goalName, mulConditionDTO.getRolePath(),
 				mulConditionDTO.getCardinality());
 
-		return new ResponseEntity<String>(HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/invatt", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/goals/{goalName}/invatt", method = RequestMethod.GET)
 	public ResponseEntity<RuleDTO[]> getGoalRuleInvSet(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalRuleInvSet specId:{}, goalName:{}", specId, goalName);
@@ -258,10 +259,10 @@ public class GoalModelController {
 		RuleDTO[] defs = adi.getGoalRuleInvSet(specId, goalName).stream().map((def) -> def.getDTO())
 				.toArray(size -> new RuleDTO[size]);
 
-		return new ResponseEntity<RuleDTO[]>(defs, HttpStatus.OK);
+		return new ResponseEntity<>(defs, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/invatt", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/{goalName}/invatt", method = RequestMethod.POST)
 	public ResponseEntity<String> associateAttributeInvariantConditionToGoal(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @RequestBody RuleDTO ruleDTO) {
 		logger.debug("associateActConditionToGoal specId:{}, goalName:{}, rule:{}", specId, goalName,
@@ -271,10 +272,10 @@ public class GoalModelController {
 
 		adi.associateRuleToGoalInvariant(ruleDTO, goalName);
 
-		return new ResponseEntity<String>(HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/merge", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/merge", method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> mergeGoals(@PathVariable("specId") String specId,
 			@PathParam("newGoalName") String newGoalName, @PathParam("goalNameOne") String goalNameOne,
 			@PathParam("goalNameTwo") String goalNameTwo) {
@@ -285,10 +286,10 @@ public class GoalModelController {
 
 		Goal goal = adi.mergeGoals(specId, newGoalName, goalNameOne, goalNameTwo);
 
-		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/extractchild", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/extractchild", method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> extractChildGoal(@PathVariable("specId") String specId,
 			@RequestBody ExtractGoalReq req) {
 		logger.debug("extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
@@ -300,10 +301,10 @@ public class GoalModelController {
 		Goal goal = adi.extractChildGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions());
 
-		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/extractparent", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/extractparent", method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> extractParentGoal(@PathVariable("specId") String specId,
 			@RequestBody ExtractGoalReq req) {
 		logger.debug("extractParentGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
@@ -315,10 +316,10 @@ public class GoalModelController {
 		Goal goal = adi.extractParentGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions());
 
-		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/extractsibling", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/extractsibling", method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> extractSiblingGoal(@PathVariable("specId") String specId,
 			@RequestBody ExtractGoalReq req) {
 		logger.debug("extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
@@ -330,10 +331,10 @@ public class GoalModelController {
 		Goal goal = adi.extractSiblingGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions());
 
-		return new ResponseEntity<GoalDTO>(goal.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/graph", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/goals/graph", method = RequestMethod.GET)
 	public ResponseEntity<GraphDTO> getGoalGraph(@PathVariable("specId") String specId) {
 		logger.debug("getGoalGraph specId:{}", specId);
 
@@ -341,7 +342,7 @@ public class GoalModelController {
 
 		GraphDTO graph = adi.getGoalModelGraph(specId);
 
-		return new ResponseEntity<GraphDTO>(graph, HttpStatus.OK);
+		return new ResponseEntity<>(graph, HttpStatus.OK);
 	}
 
 }

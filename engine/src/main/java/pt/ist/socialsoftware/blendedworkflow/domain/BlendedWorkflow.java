@@ -23,20 +23,25 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
 	private YAWLAdapter yawlAdapter = null;
 	private WorkletAdapter workletAdapter = null;
-	private String today = dateFormatter.format(new java.util.Date());
+	private String today = this.dateFormatter.format(new java.util.Date());
 
 	private BWExecutorService bwExecutorService = null;
 
 	public static BlendedWorkflow getInstance() {
 		if (FenixFramework.getDomainRoot().getBlendedWorkflow() == null) {
-			new BlendedWorkflow();
+			writeTransactionToCreateBlendedWorkflow();
 			log.debug("BlendedWorkflow instance created");
 		}
 
 		return FenixFramework.getDomainRoot().getBlendedWorkflow();
 	}
 
-	public BlendedWorkflow() {
+	@Atomic(mode = TxMode.WRITE)
+	private static BlendedWorkflow writeTransactionToCreateBlendedWorkflow() {
+		return new BlendedWorkflow();
+	}
+
+	private BlendedWorkflow() {
 		FenixFramework.getDomainRoot().setBlendedWorkflow(this);
 	}
 
@@ -59,8 +64,9 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	public OldBWInstance getBWInstance(String ID) throws BWException {
 		for (Specification specificationpecification : getSpecificationSet()) {
 			for (OldBWInstance bwInstance : specificationpecification.getOldBwInstancesSet()) {
-				if (bwInstance.getID().equals(ID))
+				if (bwInstance.getID().equals(ID)) {
 					return bwInstance;
+				}
 			}
 		}
 		throw new BWException(BWErrorType.NON_EXISTENT_CASE_ID, ID);
@@ -69,18 +75,19 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	public OldBWInstance getBWInstanceFromYAWLCaseID(String yawlCaseID) throws BWException {
 		for (Specification specification : getSpecificationSet()) {
 			for (OldBWInstance bwInstance : specification.getOldBwInstancesSet()) {
-				if (bwInstance.getYawlCaseID().equals(yawlCaseID))
+				if (bwInstance.getYawlCaseID().equals(yawlCaseID)) {
 					return bwInstance;
+				}
 			}
 		}
 		throw new BWException(BWErrorType.NON_EXISTENT_CASE_ID, yawlCaseID);
 	}
 
 	public YAWLAdapter getYawlAdapter() throws BWException {
-		if (yawlAdapter == null) {
-			yawlAdapter = new YAWLAdapter();
+		if (this.yawlAdapter == null) {
+			this.yawlAdapter = new YAWLAdapter();
 		}
-		return yawlAdapter;
+		return this.yawlAdapter;
 	}
 
 	public void setYawlAdapter(YAWLAdapter yawlAdapter) {
@@ -88,10 +95,10 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	}
 
 	public WorkletAdapter getWorkletAdapter() {
-		if (workletAdapter == null) {
-			workletAdapter = new WorkletAdapter();
+		if (this.workletAdapter == null) {
+			this.workletAdapter = new WorkletAdapter();
 		}
-		return workletAdapter;
+		return this.workletAdapter;
 	}
 
 	public void setWorkletAdapter(WorkletAdapter workletAdapter) {
@@ -99,10 +106,10 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	}
 
 	public BWExecutorService getBWExecutorService() {
-		if (bwExecutorService == null) {
-			bwExecutorService = new BWExecutorService();
+		if (this.bwExecutorService == null) {
+			this.bwExecutorService = new BWExecutorService();
 		}
-		return bwExecutorService;
+		return this.bwExecutorService;
 	}
 
 	public void setBWExecutorService(BWExecutorService bwExecutorService) {
@@ -110,7 +117,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	}
 
 	public String getToday() {
-		return today;
+		return this.today;
 	}
 
 	public void setToday(String today) {

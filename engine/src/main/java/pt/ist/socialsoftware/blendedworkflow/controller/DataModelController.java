@@ -41,10 +41,10 @@ public class DataModelController {
 
 		adi.cleanDataModel(specId);
 
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/check", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/check", method = RequestMethod.GET)
 	public ResponseEntity<Boolean> checkDataModel(@PathVariable("specId") String specId) {
 		log.debug("checkDataModel specId:{}", specId);
 
@@ -52,10 +52,10 @@ public class DataModelController {
 
 		adi.checkDataModel(specId);
 
-		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/products/{path}/", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/products/{path}/", method = RequestMethod.GET)
 	public ResponseEntity<ProductDTO> getProduct(@PathVariable("specId") String specId,
 			@PathVariable("path") String path) {
 		log.debug("getProduct path:{}", path);
@@ -64,10 +64,10 @@ public class DataModelController {
 
 		Product product = adi.getProduct(specId, path);
 
-		return new ResponseEntity<ProductDTO>(product.getDTO(), HttpStatus.OK);
+		return new ResponseEntity<>(product.getDTO(), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/entities/{entityName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/entities/{entityName}", method = RequestMethod.GET)
 	public ResponseEntity<EntityDTO> getEntityByName(@PathVariable("specId") String specId,
 			@PathVariable("entityName") String entityName) {
 		log.debug("getProduct entityName:{}", entityName);
@@ -76,10 +76,10 @@ public class DataModelController {
 
 		Entity entity = adi.getEntityByName(specId, entityName);
 
-		return new ResponseEntity<EntityDTO>(entity.getDTO(), HttpStatus.OK);
+		return new ResponseEntity<>(entity.getDTO(), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/entities", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/entities", method = RequestMethod.GET)
 	public ResponseEntity<EntityDTO[]> getEntities(@PathVariable("specId") String specId) {
 		log.debug("getEntities specId:{}", specId);
 
@@ -88,10 +88,10 @@ public class DataModelController {
 		EntityDTO[] entities = adi.getEntities(specId).stream().map(e -> e.getDTO())
 				.toArray(size -> new EntityDTO[size]);
 
-		return new ResponseEntity<EntityDTO[]>(entities, HttpStatus.CREATED);
+		return new ResponseEntity<>(entities, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/entities", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/entities", method = RequestMethod.POST)
 	public ResponseEntity<EntityDTO> createEntity(@PathVariable("specId") String specId,
 			@RequestBody EntityDTO entDTO) {
 		log.debug("createEntity specId:{}, name:{}, exists:{}", specId, entDTO.getName(), entDTO.getExists());
@@ -100,10 +100,10 @@ public class DataModelController {
 
 		Entity entity = adi.createEntity(entDTO);
 
-		return new ResponseEntity<EntityDTO>(entity.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(entity.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/attributes", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/attributes", method = RequestMethod.GET)
 	public ResponseEntity<AttributeDTO[]> getAttributtes(@PathVariable("specId") String specId) {
 		log.debug("getAttributtes specId:{}", specId);
 
@@ -112,10 +112,10 @@ public class DataModelController {
 		AttributeDTO[] attributes = adi.getAttributes(specId).stream().map(a -> a.getDTO())
 				.toArray(size -> new AttributeDTO[size]);
 
-		return new ResponseEntity<AttributeDTO[]>(attributes, HttpStatus.OK);
+		return new ResponseEntity<>(attributes, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/attributes/{extId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/attributes/{extId}", method = RequestMethod.GET)
 	public ResponseEntity<AttributeDTO> getAttributeByExtId(@PathVariable("extId") String extId) {
 		log.debug("getAttributeByExtId specId:{} extId:{}", extId);
 
@@ -123,10 +123,10 @@ public class DataModelController {
 
 		Attribute attribute = adi.getAttributeByExtId(extId);
 
-		return new ResponseEntity<AttributeDTO>(attribute.getDTO(), HttpStatus.OK);
+		return new ResponseEntity<>(attribute.getDTO(), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/attributes", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/attributes", method = RequestMethod.POST)
 	public ResponseEntity<AttributeDTO> createAttribute(@PathVariable("specId") String specId,
 			@RequestBody AttributeDTO attDTO) {
 		log.debug("createAttribute entityExtId:{},  name:{}, type:{}", attDTO.getEntityExtId(), attDTO.getName(),
@@ -136,10 +136,10 @@ public class DataModelController {
 
 		Attribute attribute = adi.createAttribute(attDTO);
 
-		return new ResponseEntity<AttributeDTO>(attribute.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(attribute.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/relations", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/relations", method = RequestMethod.POST)
 	public ResponseEntity<RelationDTO> createRelation(@PathVariable("specId") String specId,
 			@RequestBody RelationDTO relDTO) {
 		log.debug("createRelation {}, {}, {}", relDTO.getName(), relDTO.getEntOneName(), relDTO.getEntTwoName());
@@ -148,10 +148,10 @@ public class DataModelController {
 
 		RelationBW relation = adi.createRelation(relDTO);
 
-		return new ResponseEntity<RelationDTO>(relation.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(relation.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/relations", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/relations", method = RequestMethod.GET)
 	public ResponseEntity<RelationDTO[]> getRelations(@PathVariable("specId") String specId) {
 		log.debug("getRelations specId:{}", specId);
 
@@ -160,10 +160,10 @@ public class DataModelController {
 		RelationDTO[] attributes = adi.getRelations(specId).stream().map(a -> a.getDTO())
 				.toArray(size -> new RelationDTO[size]);
 
-		return new ResponseEntity<RelationDTO[]>(attributes, HttpStatus.OK);
+		return new ResponseEntity<>(attributes, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/rules", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/rules", method = RequestMethod.POST)
 	public ResponseEntity<RuleDTO> createRule(@PathVariable("specId") String specId, @RequestBody RuleDTO ruleDTO) {
 		log.debug("createRule specId:{}, entityName:{}, name:{}, expression:{}", ruleDTO.getSpecId(),
 				ruleDTO.getEntityName(), ruleDTO.getName(), ruleDTO.getExpression().toString());
@@ -172,10 +172,10 @@ public class DataModelController {
 
 		Rule rule = adi.createRule(ruleDTO);
 
-		return new ResponseEntity<RuleDTO>(rule.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(rule.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/rules", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/rules", method = RequestMethod.GET)
 	public ResponseEntity<RuleDTO[]> getRules(@PathVariable("specId") String specId) {
 		log.debug("getRules specId:{}", specId);
 
@@ -183,10 +183,10 @@ public class DataModelController {
 
 		RuleDTO[] attributes = adi.getRules(specId).stream().map(a -> a.getDTO()).toArray(size -> new RuleDTO[size]);
 
-		return new ResponseEntity<RuleDTO[]>(attributes, HttpStatus.OK);
+		return new ResponseEntity<>(attributes, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/dependencies", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	@RequestMapping(value = "/dependencies", method = RequestMethod.POST)
 	public ResponseEntity<DependenceDTO> createDependence(@PathVariable("specId") String specId,
 			@RequestBody DependenceDTO dependenceDTO) {
 		log.debug("createDependence product:{}, path:{}", dependenceDTO.getProduct(), dependenceDTO.getPath());
@@ -195,10 +195,10 @@ public class DataModelController {
 
 		Dependence dependence = adi.createDependence(dependenceDTO);
 
-		return new ResponseEntity<DependenceDTO>(dependence.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(dependence.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/dependencies", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/dependencies", method = RequestMethod.GET)
 	public ResponseEntity<DependenceDTO[]> getDependencies(@PathVariable("specId") String specId) {
 		log.debug("getDependencies specId:{}", specId);
 
@@ -213,10 +213,10 @@ public class DataModelController {
 
 		DependenceDTO[] depsArray = dependenciesDTO.toArray(new DependenceDTO[dependenciesDTO.size()]);
 
-		return new ResponseEntity<DependenceDTO[]>(depsArray, HttpStatus.OK);
+		return new ResponseEntity<>(depsArray, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/dependencies/{depExtId}/check", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/dependencies/{depExtId}/check", method = RequestMethod.GET)
 	public ResponseEntity<Boolean> checkDependence(@PathVariable("specId") String specId,
 			@PathVariable("depExtId") String depExtId) {
 		log.debug("checkDependence productExtId:{}", depExtId);
@@ -225,10 +225,10 @@ public class DataModelController {
 
 		boolean result = adi.checkDependence(depExtId);
 
-		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/dependencies/{depExtId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	@RequestMapping(value = "/dependencies/{depExtId}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteDependence(@PathVariable("specId") String specId,
 			@PathVariable("depExtId") String depExtId) {
 		log.debug("deleteDependence productExtId:{}", depExtId);
@@ -237,6 +237,6 @@ public class DataModelController {
 
 		adi.deleteDependence(depExtId);
 
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

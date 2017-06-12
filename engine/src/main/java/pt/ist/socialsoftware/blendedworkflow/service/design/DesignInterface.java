@@ -160,9 +160,10 @@ public class DesignInterface {
 			entityTwo = getEntityByName(spec.getDataModel(), relDTO.getEntTwoName());
 		}
 
-		if (entityOne.getDataModel() != entityTwo.getDataModel())
+		if (entityOne.getDataModel() != entityTwo.getDataModel()) {
 			throw new BWException(BWErrorType.INVALID_RELATION, entityOne.getDataModel().getSpecification().getSpecId()
 					+ "!=" + entityTwo.getDataModel().getSpecification().getSpecId());
+		}
 
 		RelationBW relation = entityOne.createRelation(relDTO.getName(), relDTO.getRolenameOne(),
 				relDTO.getCardinalityOne(), entityTwo, relDTO.getRolenameTwo(), relDTO.getCardinalityTwo());
@@ -186,7 +187,7 @@ public class DesignInterface {
 	public Set<Dependence> getDependencies(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		Set<Dependence> deps = new HashSet<Dependence>();
+		Set<Dependence> deps = new HashSet<>();
 
 		for (Dependence dependence : spec.getDataModel().getDependenceSet()) {
 			deps.add(dependence);
@@ -229,8 +230,9 @@ public class DesignInterface {
 	public void cleanConditionModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		if (spec.getDataModel().getEntitySet().size() == 0)
+		if (spec.getDataModel().getEntitySet().size() == 0) {
 			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+		}
 
 		spec.getConditionModel().clean();
 	}
@@ -239,8 +241,9 @@ public class DesignInterface {
 	public boolean generateConditionModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		if (spec.getDataModel().getEntitySet().size() == 0)
+		if (spec.getDataModel().getEntitySet().size() == 0) {
 			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+		}
 
 		spec.getConditionModel().clean();
 		spec.getConditionModel().generateConditions();
@@ -252,11 +255,13 @@ public class DesignInterface {
 	public void cleanGoalModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		if (spec.getDataModel().getEntitySet().size() == 0)
+		if (spec.getDataModel().getEntitySet().size() == 0) {
 			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+		}
 
-		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
+		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0) {
 			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
+		}
 
 		spec.getGoalModel().clean();
 	}
@@ -265,11 +270,13 @@ public class DesignInterface {
 	public boolean generateGoalModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		if (spec.getDataModel().getEntitySet().size() == 0)
+		if (spec.getDataModel().getEntitySet().size() == 0) {
 			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+		}
 
-		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
+		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0) {
 			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
+		}
 
 		spec.getGoalModel().clean();
 		spec.getGoalModel().generateGoals();
@@ -281,11 +288,13 @@ public class DesignInterface {
 	public void cleanActivityModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		if (spec.getDataModel().getEntitySet().size() == 0)
+		if (spec.getDataModel().getEntitySet().size() == 0) {
 			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+		}
 
-		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
+		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0) {
 			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
+		}
 
 		spec.getActivityModel().clean();
 	}
@@ -294,11 +303,13 @@ public class DesignInterface {
 	public boolean generateActivityModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		if (spec.getDataModel().getEntitySet().size() == 0)
+		if (spec.getDataModel().getEntitySet().size() == 0) {
 			throw new BWException(BWErrorType.NO_DATA_MODEL, specId);
+		}
 
-		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0)
+		if (spec.getConditionModel().getEntityAchieveConditionSet().size() == 0) {
 			throw new BWException(BWErrorType.NO_CONDITION_MODEL, specId);
+		}
 
 		spec.getActivityModel().clean();
 		spec.getActivityModel().generateActivities();
@@ -377,8 +388,9 @@ public class DesignInterface {
 
 		MulCondition mulCondition = getMULCondition(spec, miDTO.getRolePath());
 
-		if (!mulCondition.getCardinality().equals(miDTO.getCardinality()))
+		if (!mulCondition.getCardinality().equals(miDTO.getCardinality())) {
 			new BWException(BWErrorType.INVALID_CARDINALITY, miDTO.getCardinality());
+		}
 
 		spec.getConditionModel().addEntityInvariantCondition(mulCondition);
 
@@ -403,8 +415,9 @@ public class DesignInterface {
 				aacDTO.getPath());
 
 		if (defAttributeCondition.getAttributeOfDef() != null
-				&& defAttributeCondition.getAttributeOfDef().getIsMandatory() != aacDTO.isMandatory())
+				&& defAttributeCondition.getAttributeOfDef().getIsMandatory() != aacDTO.isMandatory()) {
 			throw new BWException(BWErrorType.INCONSISTENT_ATTRIBUTE_MANDATORY, aacDTO.getPath().toString());
+		}
 
 		spec.getConditionModel().addAttributeAchieveCondition(defAttributeCondition);
 
@@ -495,8 +508,9 @@ public class DesignInterface {
 		Goal goal = getGoalByName(spec, goalName);
 
 		Product product = spec.getDataModel().getTargetOfPath(path);
-		if (product.getProductType() != ProductType.ENTITY)
+		if (product.getProductType() != ProductType.ENTITY) {
 			throw new BWException(BWErrorType.INVALID_PATH, path);
+		}
 
 		DefEntityCondition defEntityCondition = ((Entity) product).getDefEntityCondition();
 		goal.addSuccessCondition(defEntityCondition);
@@ -706,8 +720,9 @@ public class DesignInterface {
 		Activity activity = getActivityByName(spec, activityName);
 
 		Product product = spec.getDataModel().getTargetOfPath(path);
-		if (product.getProductType() != ProductType.ENTITY)
+		if (product.getProductType() != ProductType.ENTITY) {
 			throw new BWException(BWErrorType.INVALID_PATH, path);
+		}
 
 		DefEntityCondition defEntityCondition = ((Entity) product).getDefEntityCondition();
 
@@ -935,20 +950,24 @@ public class DesignInterface {
 	}
 
 	private Entity getEntityByExtId(String externalId) {
-		if (externalId == null || externalId.equals(""))
+		if (externalId == null || externalId.equals("")) {
 			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		}
 		Entity entity = FenixFramework.getDomainObject(externalId);
-		if (entity == null)
+		if (entity == null) {
 			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		}
 		return entity;
 	}
 
 	private Dependence getDependenceByExtId(String externalId) {
-		if (externalId == null || externalId.equals(""))
+		if (externalId == null || externalId.equals("")) {
 			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		}
 		Dependence dependence = FenixFramework.getDomainObject(externalId);
-		if (dependence == null)
+		if (dependence == null) {
 			throw new BWException(BWErrorType.NOT_FOUND, externalId);
+		}
 		return dependence;
 	}
 
@@ -972,9 +991,8 @@ public class DesignInterface {
 		String entityName = path.split("\\.")[0];
 		String rolename = path.split("\\.")[1];
 
-		RelationBW relation = spec.getDataModel().getRelationBWSet().stream()
-				.filter(rel -> (rel.getEntityOne().getName().equals(entityName)
-						&& rel.getRolenameTwo().equals(rolename))
+		RelationBW relation = spec.getDataModel().getRelationBWSet().stream().filter(
+				rel -> (rel.getEntityOne().getName().equals(entityName) && rel.getRolenameTwo().equals(rolename))
 						|| (rel.getEntityTwo().getName().equals(entityName) && rel.getRolenameOne().equals(rolename)))
 				.findFirst().orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH, path));
 
@@ -982,7 +1000,7 @@ public class DesignInterface {
 	}
 
 	private Set<DefProductCondition> getConditionSet(Specification spec, Set<DefPathConditionDTO> defConditionSetDTO) {
-		Set<DefProductCondition> conditions = new HashSet<DefProductCondition>();
+		Set<DefProductCondition> conditions = new HashSet<>();
 		for (DefPathConditionDTO defPathCondition : defConditionSetDTO) {
 			if (spec.getDataModel().getTargetOfPath(defPathCondition.getPath()).getProductType()
 					.equals(ProductType.ENTITY)) {
