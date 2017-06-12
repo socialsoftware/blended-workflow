@@ -1,6 +1,7 @@
 .classpath
 .project
 .settings
+.DS_Store
 tmp-data
 repo
 engine/.classpath
