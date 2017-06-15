@@ -61,17 +61,20 @@ public class ActivityModel extends ActivityModel_Base {
 
 		for (DefEntityCondition defEntityCondition : conditionModel.getEntityAchieveConditionSet()) {
 			if (!defEntityCondition.getEntity().getExists()) {
-				HashSet<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
+				HashSet<DefProductCondition> postConditionSet = new HashSet<>();
 				postConditionSet.add(defEntityCondition);
-				addActivity("a" + activityCounter, "Activity number " + activityCounter, postConditionSet);
+				String name = postConditionSet.stream().map(d -> d.getPath().getValue())
+						.collect(Collectors.joining(","));
+				addActivity(name, "Activity number: " + activityCounter, postConditionSet);
 				activityCounter++;
 			}
 		}
 
 		for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
-			HashSet<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>();
+			HashSet<DefProductCondition> postConditionSet = new HashSet<>();
 			postConditionSet.add(defAttributeCondition);
-			addActivity("a" + activityCounter, "Activity number " + activityCounter, postConditionSet);
+			String name = postConditionSet.stream().map(d -> d.getPath().getValue()).collect(Collectors.joining(","));
+			addActivity(name, "Activity number: " + activityCounter, postConditionSet);
 			activityCounter++;
 		}
 
@@ -86,7 +89,7 @@ public class ActivityModel extends ActivityModel_Base {
 		Set<Activity> ruleActivities = getRuleActivities(rule);
 
 		for (Activity activity : ruleActivities) {
-			Set<Activity> reachable = new HashSet<Activity>();
+			Set<Activity> reachable = new HashSet<>();
 			reachable.add(activity);
 			reachable = activitiesReachableFrom(reachable, activitySequences, new HashSet<Activity>());
 
@@ -125,10 +128,10 @@ public class ActivityModel extends ActivityModel_Base {
 
 	public Activity mergeActivities(String activityName, String activityDescription, Activity activityOne,
 			Activity activityTwo) {
-		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>(activityOne.getPostConditionSet());
+		Set<DefProductCondition> postConditionSet = new HashSet<>(activityOne.getPostConditionSet());
 		postConditionSet.addAll(activityTwo.getPostConditionSet());
 
-		Set<DefPathCondition> sequenceConditions = new HashSet<DefPathCondition>(activityOne.getSequenceConditionSet());
+		Set<DefPathCondition> sequenceConditions = new HashSet<>(activityOne.getSequenceConditionSet());
 		sequenceConditions.addAll(activityTwo.getSequenceConditionSet());
 
 		Set<Product> products = postConditionSet.stream().map(d -> d.getTargetOfPath()).collect(Collectors.toSet());
@@ -160,9 +163,8 @@ public class ActivityModel extends ActivityModel_Base {
 		}
 
 		String fromActivityName = fromActivity.getName();
-		String fromActivitycDescription = fromActivity.getDescription();
-		Set<DefProductCondition> fromActivityPostCondition = new HashSet<DefProductCondition>(
-				fromActivity.getPostConditionSet());
+		String fromActivityDescription = fromActivity.getDescription();
+		Set<DefProductCondition> fromActivityPostCondition = new HashSet<>(fromActivity.getPostConditionSet());
 		fromActivityPostCondition.removeAll(postConditionSet);
 
 		Set<String> sequenceConditionValues = fromActivity.getSequenceConditionSet().stream()
@@ -170,7 +172,7 @@ public class ActivityModel extends ActivityModel_Base {
 
 		fromActivity.delete();
 
-		Activity newFromActivity = addActivity(fromActivityName, fromActivitycDescription, fromActivityPostCondition);
+		Activity newFromActivity = addActivity(fromActivityName, fromActivityDescription, fromActivityPostCondition);
 
 		Activity newExtractedActivity = addActivity(activityName, activityDescription, postConditionSet);
 
@@ -207,7 +209,7 @@ public class ActivityModel extends ActivityModel_Base {
 	private Set<Activity> getRuleActivities(Rule rule) {
 		Set<Attribute> ruleAttributes = rule.getAttributeSet();
 
-		Set<Activity> ruleActivities = new HashSet<Activity>();
+		Set<Activity> ruleActivities = new HashSet<>();
 		for (Activity activity : getActivitySet()) {
 			if (activity.getPostConditionSet().stream().anyMatch(d -> ruleAttributes.contains(d.getTargetOfPath()))) {
 				ruleActivities.add(activity);
@@ -270,13 +272,13 @@ public class ActivityModel extends ActivityModel_Base {
 	}
 
 	private Set<Dependence> getDefPathDependencies() {
-		Set<Dependence> dependencies = new HashSet<Dependence>(getConditionModel().getEntityDependenceConditionSet());
+		Set<Dependence> dependencies = new HashSet<>(getConditionModel().getEntityDependenceConditionSet());
 		dependencies.addAll(getConditionModel().getAttributeDependenceConditionSet());
 		return dependencies;
 	}
 
 	private void applyAttributeEntityDependenceToPre(Activity activity) {
-		Set<DefProductCondition> postConditionSet = new HashSet<DefProductCondition>(activity.getPostConditionSet());
+		Set<DefProductCondition> postConditionSet = new HashSet<>(activity.getPostConditionSet());
 		ConditionModel.getDefAttributeConditions(postConditionSet).stream()
 				.filter(def -> !activity.getPostEntities().contains(def.getAttributeOfDef().getEntity()))
 				.forEach(def -> activity.addPreCondition(DefPathCondition.getDefPathCondition(getSpecification(),
@@ -285,8 +287,9 @@ public class ActivityModel extends ActivityModel_Base {
 
 	private void checkPostConditionsNotUsed(Set<DefProductCondition> postConditionSet) {
 		if (getActivitySet().stream().flatMap(t -> t.getPostConditionSet().stream())
-				.anyMatch(c -> postConditionSet.contains(c)))
+				.anyMatch(c -> postConditionSet.contains(c))) {
 			throw new BWException(BWErrorType.CANNOT_ADD_TASK, "condition already used");
+		}
 	}
 
 	private void checkModelNotCompletelyCreated() {
@@ -294,14 +297,16 @@ public class ActivityModel extends ActivityModel_Base {
 		if (!conditionModel.getEntityAchieveConditionSet().stream()
 				.anyMatch(c -> c.getActivityWithPostCondition() == null)
 				&& !conditionModel.getAttributeAchieveConditionSet().stream()
-						.anyMatch(c -> c.getActivityWithPostCondition() == null))
+						.anyMatch(c -> c.getActivityWithPostCondition() == null)) {
 			throw new BWException(BWErrorType.CANNOT_ADD_TASK,
 					"all achieve conditions already belong to a post condition");
+		}
 	}
 
 	private void checkNonEmptyPostCondition(Set<DefProductCondition> postConditionSet) {
-		if (postConditionSet.isEmpty())
+		if (postConditionSet.isEmpty()) {
 			throw new BWException(BWErrorType.CANNOT_ADD_TASK, "empty post condition set");
+		}
 	}
 
 	public void checkModel() {
@@ -327,7 +332,7 @@ public class ActivityModel extends ActivityModel_Base {
 	}
 
 	public Map<Activity, Set<Activity>> getActivitySequences() {
-		Map<Activity, Set<Activity>> activitySequencies = new HashMap<Activity, Set<Activity>>();
+		Map<Activity, Set<Activity>> activitySequencies = new HashMap<>();
 		getActivitySet().stream().forEach(t -> activitySequencies.put(t, new HashSet<Activity>()));
 
 		for (Activity activity : getActivitySet()) {
@@ -360,23 +365,25 @@ public class ActivityModel extends ActivityModel_Base {
 	public void checkAllRulesAreApplied() {
 		ConditionModel conditionModel = getConditionModel();
 
-		Set<Rule> allRules = new HashSet<Rule>(conditionModel.getAttributeInvariantConditionSet());
+		Set<Rule> allRules = new HashSet<>(conditionModel.getAttributeInvariantConditionSet());
 		allRules.removeAll(
 				getActivitySet().stream().flatMap(t -> t.getRuleInvariantSet().stream()).collect(Collectors.toSet()));
-		if (!allRules.isEmpty())
+		if (!allRules.isEmpty()) {
 			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
 					allRules.stream().map(r -> r.getName()).collect(Collectors.joining(",")));
+		}
 	}
 
 	public void checkAllMultiplicityConditionsAreApplied() {
 		ConditionModel conditionModel = getConditionModel();
 
-		Set<MulCondition> allMulConditions = new HashSet<MulCondition>(conditionModel.getEntityInvariantConditionSet());
+		Set<MulCondition> allMulConditions = new HashSet<>(conditionModel.getEntityInvariantConditionSet());
 		allMulConditions.removeAll(getActivitySet().stream().flatMap(t -> t.getMultiplicityInvariantSet().stream())
 				.collect(Collectors.toSet()));
-		if (!allMulConditions.isEmpty())
+		if (!allMulConditions.isEmpty()) {
 			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED,
 					allMulConditions.stream().map(c -> c.getSubPath()).collect(Collectors.joining(",")));
+		}
 	}
 
 	private void checkAllProductionConditionsAreApplied() {
@@ -386,9 +393,10 @@ public class ActivityModel extends ActivityModel_Base {
 
 		allDefConditions.removeAll(
 				getActivitySet().stream().flatMap(t -> t.getPostConditionSet().stream()).collect(Collectors.toSet()));
-		if (!allDefConditions.isEmpty())
+		if (!allDefConditions.isEmpty()) {
 			throw new BWException(BWErrorType.NOT_ALL_CONDITIONS_APPLIED, allDefConditions.stream()
 					.map(c -> "DEF(" + c.getPath().getValue() + ")").collect(Collectors.joining(",")));
+		}
 	}
 
 	public GraphDTO getActivityGraph() {
@@ -398,7 +406,7 @@ public class ActivityModel extends ActivityModel_Base {
 
 		removeRedundantTransitiveSequences(activitySequences);
 
-		List<NodeDTO> nodes = new ArrayList<NodeDTO>();
+		List<NodeDTO> nodes = new ArrayList<>();
 		for (Activity activity : activitySequences.keySet()) {
 			String description = "PRE(" + activity.getPreConditionSet().stream().map(d -> d.getPath().getValue())
 					.collect(Collectors.joining(",")) + ")";
@@ -411,12 +419,9 @@ public class ActivityModel extends ActivityModel_Base {
 						.map(d -> d.getPath().getValue()).collect(Collectors.joining(",")) + ")";
 			}
 			if (!activity.getMultiplicityInvariantSet().isEmpty()) {
-				description = description + ", " + "MUL("
-						+ activity
-								.getMultiplicityInvariantSet().stream().map(m -> m.getSourceEntity().getName() + "."
-										+ m.getRolename() + "," + m.getCardinality().getExp())
-								.collect(Collectors.joining(";"))
-						+ ")";
+				description = description + ", " + "MUL(" + activity.getMultiplicityInvariantSet().stream().map(
+						m -> m.getSourceEntity().getName() + "." + m.getRolename() + "," + m.getCardinality().getExp())
+						.collect(Collectors.joining(";")) + ")";
 			}
 			if (!activity.getRuleInvariantSet().isEmpty()) {
 				description = description + ", " + "RULE("
@@ -427,7 +432,7 @@ public class ActivityModel extends ActivityModel_Base {
 			nodes.add(new NodeDTO(activity.getExternalId(), activity.getName(), description));
 		}
 
-		List<EdgeDTO> edges = new ArrayList<EdgeDTO>();
+		List<EdgeDTO> edges = new ArrayList<>();
 		for (Activity activity : activitySequences.keySet()) {
 			activitySequences.get(activity).stream()
 					.forEach(t -> edges.add(new EdgeDTO(activity.getExternalId(), t.getExternalId())));
@@ -442,7 +447,7 @@ public class ActivityModel extends ActivityModel_Base {
 	private void removeRedundantTransitiveSequences(Map<Activity, Set<Activity>> sequences) {
 		for (Activity activityKey : sequences.keySet()) {
 			Set<Activity> transitiveSequences = getTransitiveSequences(activityKey, sequences);
-			Set<Activity> activitiesToRemove = new HashSet<Activity>();
+			Set<Activity> activitiesToRemove = new HashSet<>();
 			for (Activity activityValue : sequences.get(activityKey)) {
 				if (transitiveSequences.contains(activityValue)) {
 					activitiesToRemove.add(activityValue);
@@ -453,19 +458,19 @@ public class ActivityModel extends ActivityModel_Base {
 	}
 
 	private Set<Activity> getTransitiveSequences(Activity activity, Map<Activity, Set<Activity>> sequences) {
-		Set<Activity> transitiveSequences = new HashSet<Activity>();
+		Set<Activity> transitiveSequences = new HashSet<>();
 		for (Activity nextActivity : sequences.get(activity)) {
 			transitiveSequences.addAll(sequences.get(nextActivity));
 		}
 
-		Set<Activity> visited = new HashSet<Activity>();
+		Set<Activity> visited = new HashSet<>();
 		visited.add(activity);
 		return activitiesReachableFrom(transitiveSequences, sequences, visited);
 	}
 
 	private Set<Activity> activitiesReachableFrom(Set<Activity> reachableActivities,
 			Map<Activity, Set<Activity>> sequences, Set<Activity> visited) {
-		Set<Activity> activitiesToAdd = new HashSet<Activity>();
+		Set<Activity> activitiesToAdd = new HashSet<>();
 		for (Activity activity : reachableActivities) {
 			if (!visited.contains(activity)) {
 				activitiesToAdd.addAll(sequences.get(activity));

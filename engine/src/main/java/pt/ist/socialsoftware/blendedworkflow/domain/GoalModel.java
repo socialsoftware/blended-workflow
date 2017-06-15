@@ -76,20 +76,18 @@ public class GoalModel extends GoalModel_Base {
 	public void generateGoals() {
 		ConditionModel conditionModel = getSpecification().getConditionModel();
 
-		int goalCounter = 0;
-		Goal top = new Goal(this, "g" + ++goalCounter);
+		Goal top = new Goal(this, "top");
 		for (DefEntityCondition defEntityCondition : conditionModel.getEntityAchieveConditionSet()) {
 			if (!defEntityCondition.getEntity().getExists()) {
-				Goal entityGoal = new Goal(this, "g" + ++goalCounter);
+				Goal entityGoal = new Goal(this, defEntityCondition.getPath().getValue());
 				top.addSubGoal(entityGoal);
 				entityGoal.addSuccessCondition(defEntityCondition);
 
 				entityGoal.applyConditions();
 
-				int subCounter = 0;
 				for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
 					if (defAttributeCondition.getAttributeOfDef().getEntity() == defEntityCondition.getEntity()) {
-						Goal attributeGoal = new Goal(this, "g" + goalCounter + ++subCounter);
+						Goal attributeGoal = new Goal(this, defAttributeCondition.getPath().getValue());
 						entityGoal.addSubGoal(attributeGoal);
 						attributeGoal.addSuccessCondition(defAttributeCondition);
 
@@ -125,8 +123,9 @@ public class GoalModel extends GoalModel_Base {
 
 	private Goal mergeSiblingGoals(String newGoalName, Goal goalOne, Goal goalTwo) {
 		String tmpName = goalOne.getName() + "-" + goalTwo.getName();
-		while (existsGoal(tmpName))
+		while (existsGoal(tmpName)) {
 			tmpName = tmpName + ".1";
+		}
 
 		Goal newGoal = new Goal(this, tmpName);
 		newGoal.setParentGoal(goalOne.getParentGoal());
@@ -244,27 +243,30 @@ public class GoalModel extends GoalModel_Base {
 	}
 
 	private void checkSingleRootConstraint() {
-		if (getGoalSet().stream().filter(g -> g.getParentGoal() == null).count() != 1)
+		if (getGoalSet().stream().filter(g -> g.getParentGoal() == null).count() != 1) {
 			throw new BWException(BWErrorType.INCONSISTENT_GOALMODEL, "multiple top goals");
+		}
 
 	}
 
 	private void checkConditionsNotEmpty(Set<DefProductCondition> successConditions) {
-		if (successConditions.isEmpty())
+		if (successConditions.isEmpty()) {
 			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL, "checkConditionsNotEmpty");
+		}
 	}
 
 	private void checkAllConditionsNotSelected(Set<DefProductCondition> successConditionOne,
 			Set<DefProductCondition> successConditionsTwo) {
-		if (successConditionOne.equals(successConditionsTwo))
+		if (successConditionOne.equals(successConditionsTwo)) {
 			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL, "checkAllConditionsAreNotSelected");
+		}
 	}
 
 	public GraphDTO getGoalGraph() {
 		GraphDTO graph = new GraphDTO();
 
-		List<NodeDTO> nodes = new ArrayList<NodeDTO>();
-		List<EdgeDTO> edges = new ArrayList<EdgeDTO>();
+		List<NodeDTO> nodes = new ArrayList<>();
+		List<EdgeDTO> edges = new ArrayList<>();
 
 		for (Goal goal : getGoalSet()) {
 			String description = "ACT(" + goal.getActivationConditionSet().stream().map(d -> d.getPath().getValue())
