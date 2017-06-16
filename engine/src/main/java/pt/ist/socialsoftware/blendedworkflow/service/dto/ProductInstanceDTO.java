@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.service.dto;
 public class ProductInstanceDTO {
 	private ProductDTO product;
 	private String externalId;
+	private String id;
 	private String path;
 	private String value;
 
@@ -10,7 +11,7 @@ public class ProductInstanceDTO {
 	}
 
 	public ProductDTO getProduct() {
-		return product;
+		return this.product;
 	}
 
 	public void setProduct(ProductDTO product) {
@@ -18,7 +19,7 @@ public class ProductInstanceDTO {
 	}
 
 	public String getPath() {
-		return path;
+		return this.path;
 	}
 
 	public void setPath(String path) {
@@ -26,7 +27,7 @@ public class ProductInstanceDTO {
 	}
 
 	public String getValue() {
-		return value;
+		return this.value;
 	}
 
 	public void setValue(String value) {
@@ -34,11 +35,19 @@ public class ProductInstanceDTO {
 	}
 
 	public String getExternalId() {
-		return externalId;
+		return this.externalId;
 	}
 
 	public void setExternalId(String externalId) {
 		this.externalId = externalId;
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

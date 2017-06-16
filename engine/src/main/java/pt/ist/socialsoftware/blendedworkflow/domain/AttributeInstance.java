@@ -50,9 +50,10 @@ public class AttributeInstance extends AttributeInstance_Base {
 				case BOOLEAN:
 					final String BOOLEAN_EXP = "(true|TRUE|false|FALSE)";
 
-					if (!Pattern.matches(BOOLEAN_EXP, value))
+					if (!Pattern.matches(BOOLEAN_EXP, value)) {
 						throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
 								getAttribute().getType() + ":" + value);
+					}
 					break;
 				case NUMBER:
 					final String NEGATIVE = "-(?!0)\\d+";
@@ -60,16 +61,18 @@ public class AttributeInstance extends AttributeInstance_Base {
 					final String POSITIVE = "(?!0)\\d+";
 					final String LITERAL_EXP = "(" + NEGATIVE + "|" + ZERO + "|" + POSITIVE + ")";
 
-					if (!Pattern.matches(LITERAL_EXP, value))
+					if (!Pattern.matches(LITERAL_EXP, value)) {
 						throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
 								getAttribute().getType() + ":" + value);
+					}
 					break;
 				case DATE:
 					final String DATE_EXP = "[01]\\d/[01]\\d/\\d{4}";
 
-					if (!Pattern.matches(DATE_EXP, value))
+					if (!Pattern.matches(DATE_EXP, value)) {
 						throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
 								getAttribute().getType() + ":" + value);
+					}
 					break;
 				default:
 					assert false;
@@ -103,8 +106,9 @@ public class AttributeInstance extends AttributeInstance_Base {
 
 	@Override
 	public boolean isDefined() {
-		if (getValue() == null || getValue().length() == 0)
+		if (getValue() == null || getValue().length() == 0) {
 			throw new BWException(BWErrorType.NOT_DEFINED, getAttribute().getFullPath());
+		}
 
 		return true;
 	}
@@ -120,8 +124,8 @@ public class AttributeInstance extends AttributeInstance_Base {
 		productInstanceDTO.setProduct(getAttribute().getDTO());
 		productInstanceDTO.setExternalId(getExternalId());
 		productInstanceDTO.setPath(getAttribute().getFullPath());
-		productInstanceDTO.setValue(getAttribute().getEntity().getName() + "[" + getEntityInstance().getExternalId()
-				+ "," + getAttribute().getName() + "[" + getValue() + "]]");
+		productInstanceDTO.setValue(getAttribute().getEntity().getName() + "[" + getEntityInstance().getId() + ","
+				+ getAttribute().getName() + "[" + getValue() + "]]");
 
 		return productInstanceDTO;
 	}

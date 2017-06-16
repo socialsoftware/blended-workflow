@@ -34,6 +34,7 @@ public class EntityInstance extends EntityInstance_Base {
 	public EntityInstance(WorkflowInstance workflowInstance, Entity entity) {
 		setWorkflowInstance(workflowInstance);
 		setEntity(entity);
+		setId(entity.getDataModel().incInstanceCounter());
 	}
 
 	private void checkConsistency(WorkflowInstance workflowInstance, Entity entity) {
@@ -85,8 +86,7 @@ public class EntityInstance extends EntityInstance_Base {
 	}
 
 	public Set<ProductInstance> getProductInstancesByPath(DefPathCondition defPathCondition) {
-		List<String> namesInPath = new ArrayList<String>(
-				Arrays.asList(defPathCondition.getPath().getValue().split("\\.")));
+		List<String> namesInPath = new ArrayList<>(Arrays.asList(defPathCondition.getPath().getValue().split("\\.")));
 
 		if (defPathCondition.getPath().getSource() != getEntity()
 				&& defPathCondition.getPath().getAdjacent() != getEntity()) {
@@ -116,11 +116,11 @@ public class EntityInstance extends EntityInstance_Base {
 	}
 
 	private Set<ProductInstance> getProductInstancesByListOfNames(List<String> namesInPath) {
-		Set<ProductInstance> productInstances = new HashSet<ProductInstance>();
+		Set<ProductInstance> productInstances = new HashSet<>();
 		productInstances.add(this);
 
 		for (String name : namesInPath) {
-			Set<ProductInstance> tmpProductInstances = new HashSet<ProductInstance>();
+			Set<ProductInstance> tmpProductInstances = new HashSet<>();
 			for (ProductInstance productInstance : productInstances) {
 				Set<ProductInstance> stepProductInstances = productInstance.getProductInstanceSetByName(name);
 				if (stepProductInstances.isEmpty()) {
@@ -142,7 +142,7 @@ public class EntityInstance extends EntityInstance_Base {
 	@Override
 	public Set<ProductInstance> getProductInstanceSetByName(String name) {
 		if (getAttributeInstanceByName(name).isPresent()) {
-			Set<ProductInstance> productInstances = new HashSet<ProductInstance>();
+			Set<ProductInstance> productInstances = new HashSet<>();
 			productInstances.add(getAttributeInstanceByName(name).get());
 			return productInstances;
 		}
@@ -201,8 +201,9 @@ public class EntityInstance extends EntityInstance_Base {
 		ProductInstanceDTO productInstanceDTO = new ProductInstanceDTO();
 		productInstanceDTO.setProduct(getEntity().getDTO());
 		productInstanceDTO.setExternalId(getExternalId());
+		productInstanceDTO.setId(getId());
 		productInstanceDTO.setPath(getEntity().getName());
-		productInstanceDTO.setValue(getEntity().getName() + "[" + getExternalId() + "]");
+		productInstanceDTO.setValue(getEntity().getName() + "[" + getId() + "]");
 
 		return productInstanceDTO;
 	}

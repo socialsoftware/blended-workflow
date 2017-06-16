@@ -23,6 +23,15 @@ public class DataModel extends DataModel_Base {
 		DEFINED, UNDEFINED, SKIPPED
 	}
 
+	public DataModel() {
+		setInstanceCounter(0);
+	}
+
+	public String incInstanceCounter() {
+		setInstanceCounter(getInstanceCounter() + 1);
+		return getInstanceCounter().toString();
+	}
+
 	/**
 	 * Clone the DataModel.
 	 */
@@ -58,12 +67,15 @@ public class DataModel extends DataModel_Base {
 	}
 
 	public void clean() {
-		if (getSpecification().getConditionModel() != null)
+		if (getSpecification().getConditionModel() != null) {
 			getSpecification().getConditionModel().clean();
-		if (getSpecification().getGoalModel() != null)
+		}
+		if (getSpecification().getGoalModel() != null) {
 			getSpecification().getGoalModel().clean();
-		if (getSpecification().getActivityModel() != null)
+		}
+		if (getSpecification().getActivityModel() != null) {
 			getSpecification().getActivityModel().clean();
+		}
 		getDependenceSet().stream().forEach(dep -> dep.delete());
 		getEntitySet().stream().forEach(ent -> ent.delete());
 		getAttributeSet().stream().forEach(a -> a.delete());
@@ -115,8 +127,8 @@ public class DataModel extends DataModel_Base {
 	}
 
 	private void checkCycles(Product product, Map<Product, Set<Product>> productDependencies) {
-		Set<Product> visitedProducts = new HashSet<Product>();
-		List<Product> nextProducts = new ArrayList<Product>();
+		Set<Product> visitedProducts = new HashSet<>();
+		List<Product> nextProducts = new ArrayList<>();
 		nextProducts.add(product);
 		while (!nextProducts.isEmpty()) {
 			Product next = nextProducts.get(0);
@@ -139,13 +151,13 @@ public class DataModel extends DataModel_Base {
 	}
 
 	private Map<Product, Set<Product>> getProductDependencies() {
-		Map<Product, Set<Product>> productDependencies = new HashMap<Product, Set<Product>>();
+		Map<Product, Set<Product>> productDependencies = new HashMap<>();
 
 		for (Dependence dependence : getDependenceSet()) {
 			Set<Product> products = productDependencies.get(dependence.getProduct());
 
 			if (products == null) {
-				products = new HashSet<Product>();
+				products = new HashSet<>();
 			}
 			products.addAll(dependence.getPath().getProductsInPath());
 
@@ -161,7 +173,7 @@ public class DataModel extends DataModel_Base {
 			Set<Product> products = productDependencies.get(attribute);
 
 			if (products == null) {
-				products = new HashSet<Product>();
+				products = new HashSet<>();
 			}
 
 			products.add(attribute.getEntity());
@@ -173,7 +185,7 @@ public class DataModel extends DataModel_Base {
 				productDependencies.entrySet().stream()
 						.map(e -> e.getKey().getName() + ":"
 								+ e.getValue().stream().map(t -> t.getName()).collect(Collectors.joining(",")))
-				.collect(Collectors.joining(";")));
+						.collect(Collectors.joining(";")));
 
 		return productDependencies;
 	}

@@ -50,7 +50,9 @@ class Specification {
 	String version;
 }
 
-class DataModel;
+class DataModel {
+	Integer instanceCounter;
+}
 
 class OldDataModelInstance extends DataModel;
 
@@ -237,7 +239,9 @@ class WorkflowInstance {
 
 class ProductInstance;
 
-class EntityInstance extends ProductInstance;
+class EntityInstance extends ProductInstance {
+	String id;
+}
 
 class AttributeInstance extends ProductInstance {
 	String value;
