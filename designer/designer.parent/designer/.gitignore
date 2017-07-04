@@ -7,3 +7,4 @@ src-gen/
 xtend-gen/
 model/
 /.launch/
+/build/
