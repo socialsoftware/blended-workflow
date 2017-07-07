@@ -29,8 +29,15 @@ Export-Package: pt.ist.socialsoftware.blendedworkflow.designer,
  pt.ist.socialsoftware.blendedworkflow.designer.serializer; uses:="org.eclipse.emf.ecore,  org.eclipse.xtext.nodemodel,  org.eclipse.xtext.serializer.analysis,  org.eclipse.xtext.serializer.sequencer,  org.eclipse.xtext,  pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow,  pt.ist.socialsoftware.blendedworkflow.designer.services,  org.eclipse.xtext.serializer",
  pt.ist.socialsoftware.blendedworkflow.designer.services;uses:="org.eclipse.xtext.common.services,org.eclipse.xtext.service,org.eclipse.xtext",
  pt.ist.socialsoftware.blendedworkflow.designer.validation;uses:="pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow"
-Import-Package: org.apache.log4j.spi;version="1.2.15",
- org.eclipse.equinox.log;version="1.0.0",
- org.slf4j;version="1.7.2",
- org.apache.log4j
-Bundle-ClassPath: .,lib/spring-web-4.3.9.RELEASE.jar,lib/spring-core-4.3.9.RELEASE.jar,lib/commons-logging-1.2.jar,lib/jackson-core-2.9.0.pr3.jar,lib/spring-beans-4.3.9.RELEASE.jar,lib/jackson-annotations-2.9.0.pr3.jar,lib/jackson-databind-2.9.0.pr3.jar
+Import-Package: org.apache.log4j,
+ org.apache.log4j.spi;version="1.2.15",
+ org.eclipse.equinox.log;version="1.0.0"
+Bundle-ClassPath: .,
+ lib/spring-web-4.3.9.RELEASE.jar,
+ lib/spring-core-4.3.9.RELEASE.jar,
+ lib/commons-logging-1.2.jar,
+ lib/jackson-core-2.9.0.pr3.jar,
+ lib/spring-beans-4.3.9.RELEASE.jar,
+ lib/jackson-annotations-2.9.0.pr3.jar,
+ lib/jackson-databind-2.9.0.pr3.jar,
+ lib/slf4j-api-1.7.25.jar
