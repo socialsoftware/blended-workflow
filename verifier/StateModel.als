@@ -18,6 +18,8 @@ sig State {
 
 fun atts (s:State, o:Obj): set FName { s.fields[o].{Obj + Val} }
 
+fun commitedAssociatedObjects (s: State, objSource: Obj, roleSource: FName, roleTarget: FName): set Obj { {o: Obj | s.fields[o, roleSource] = objSource} + {o: Obj | s.fields[objSource, roleTarget] = o} }
+
 pred noFieldChangeExcept(s, s': State, o: Obj, f: FName) {
 	all obj: s.objects - o | obj.(s'.fields) = obj.(s.fields)
 	all field: atts[s, o] - f | s'.fields[o, field] = s.fields[o, field]
@@ -44,9 +46,9 @@ pred bidirectionalRule(s: State, objsOne: set Obj, roleOne: FName, objsTwo: set 
 	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleTwo] | objTwo in s.fields[objOne, roleOne]
 }
 
-pred bidirectionalViolation(s: State, objsOne: set Obj, roleOne: FName, objsTwo: set Obj, roleTwo: FName) {
-	all objOne: objsOne <: s.objects | all objTwo: s.fields[objOne, roleOne] | no s.fields[objTwo, roleTwo] or objOne in s.fields[objTwo, roleTwo]
-	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleTwo] | no s.fields[objOne, roleOne] or objTwo in s.fields[objOne, roleOne]
+pred bidirectionalViolation(s: State, objsOne: set Obj, roleOne: FName, mulOne: Int, objsTwo: set Obj, roleTwo: FName, mulTwo: Int) {
+	all objOne: objsOne <: s.objects | all objTwo: s.fields[objOne, roleOne] | #s.fields[objOne, roleOne] < mulOne  or objOne in s.fields[objTwo, roleTwo]
+	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleTwo] | #s.fields[objTwo, roleTwo] < mulTwo or objTwo in s.fields[objOne, roleOne]
 }
 
 pred defObj(s, s' : State, o: Obj) {
@@ -67,16 +69,24 @@ pred defAtt(s, s': State, o: Obj, att: FName) {
 	noFieldChangeExcept[s, s', o, att]
 }
 
-pred linkObj(s, s': State, os: Obj, rel: FName, ot: Obj) {
-	os in s.objects
-	ot in s.objects
-	ot !in s.fields[os, rel]
+pred linkObj(s, s': State, objSource: Obj, roleSource: FName, mulSource: Int, objTarget: Obj, roleTarget: FName, mulTarget: Int) {
+	objSource in s.objects
+	objTarget in s.objects
+	objTarget !in s.fields[objSource, roleTarget]
+	// source can have more targets
+	#s.fields[objSource, roleTarget] < mulTarget
+	// target can have more sources
+	#s.fields[objTarget, roleSource] < mulSource or objSource in s.fields[objTarget, roleSource]
+	// source is not completely compromised yet
+	#commitedAssociatedObjects[s, objSource, roleSource, roleTarget] < mulSource or objTarget in commitedAssociatedObjects[s, objSource, roleSource, roleTarget]
+	// target is not completely compomised yet
+	#commitedAssociatedObjects[s, objTarget, roleTarget, roleSource] < mulTarget or objSource in commitedAssociatedObjects[s, objTarget, roleTarget, roleSource]
 
 	s'.objects = s.objects
 
-	s'.fields = s.fields + (os -> rel -> ot)
+	s'.fields = s.fields + (objSource -> roleTarget -> objTarget)
 
-	noFieldChangeExcept[s, s', os, rel]
+	noFieldChangeExcept[s, s', objSource, roleTarget]
 }
 
 pred skip(s, s': State) {

@@ -19,11 +19,13 @@ pred init (s: State) {
 fact traces {
 	first.init
 	all s: State - last | let s' = s.next |
-	some p: Patient, a: Appointment 
-		| defObj [s, s', p] or defObj [s, s', a] or
-		  defAtt [s, s', p, patient_name] or defAtt [s, s', p, patient_address] or linkObj [s, s', p, patient_appointment, a] or
-		  defAtt [s, s', a, appointment_reserve_date] or linkObj [s, s', a, appointment_patient, p] //or
-		  //skip [s, s']
+	some p: Patient, a: Appointment | 
+		defObj [s, s', p] or defObj [s, s', a] or
+		defAtt [s, s', p, patient_name] or defAtt [s, s', p, patient_address] or 
+		linkObj [s, s', p,  appointment_patient, 1, a, patient_appointment, 100] or
+	 	defAtt [s, s', a, appointment_reserve_date] or 
+		linkObj [s, s', a, patient_appointment, 100, p, appointment_patient, 1] //or
+		//skip [s, s']
 }
 
 // how many instances we are going to use to test the model
@@ -41,8 +43,8 @@ pred Invariants(s: State) {
 	noMultiplicityExceed [s, Appointment, appointment_patient, 1] and
 	noMultiplicityExceed [s, Patient, patient_appointment, 100]
 
-	// 
-	bidirectionalViolation [s, Patient, patient_appointment, Appointment, appointment_patient] 
+	// if there is a link between two objects, either is unidirectional or bidirectional
+	bidirectionalViolation [s, Patient, patient_appointment, 1, Appointment, appointment_patient, 100] 
 }
 
 // DefObj preserves the operation
@@ -59,36 +61,31 @@ assert DefAttPreservesInv {
 //check DefAttPreservesInv
 
 assert LinkObjPreservesInv {
-	all s, s': State | all o1, o2: Obj | all f: FName |
-		Invariants [s] and linkObj [s, s', o1, f, o2] => Invariants [s']
+	all s, s': State | all os, ot: Obj | all rs, rt: FName | all ms, mt: Int |
+		Invariants [s] and linkObj [s, s', os, rt, mt, ot, rs, ms] => Invariants [s']
 }
 check LinkObjPreservesInv for 10
 
-assert InvariantsAllStates {
-	all s: State | Invariants [s]
-}
-//check InvariantsAllStates for 10
-
 pred complete {
 	one s: State | 
-	// cannot be the initial state to find one meaningful state
-	#Patient <: s.objects = 1 and
-	#Appointment <: s.objects = 2 and
-	#s.objects = 3 and
-	// model is well defined
+		// cannot be the initial state to find one meaningful state
+		#Patient <: s.objects = 2 and
+		#Appointment <: s.objects = 2 and
+		#s.objects = 4 and
+		// model is well defined
 
-	// all attributes are defined
-	attributesDefined [s, Patient, patient_name + patient_address]	and
-	attributesDefined [s, Appointment, appointment_reserve_date] and
+		// all attributes are defined
+		attributesDefined [s, Patient, patient_name + patient_address]	and
+		attributesDefined [s, Appointment, appointment_reserve_date] and
 
-	// associations multiplicity
-	multiplicityRule [s, Appointment, appointment_patient, 1, 1] and
-	multiplicityRule [s, Patient, patient_appointment, 0, 100] and
+		// associations multiplicity
+		multiplicityRule [s, Appointment, appointment_patient, 1, 1] and
+		multiplicityRule [s, Patient, patient_appointment, 0, 100] and
 
-	// bidirectional relation
-	bidirectionalRule [s, Patient, patient_appointment, Appointment, appointment_patient] 
+		// bidirectional relation
+		bidirectionalRule [s, Patient, patient_appointment, Appointment, appointment_patient] 
 
-	and
-	sameState[s, s.next]
+	//	and
+	//	sameState[s, s.next]
 }
 //run complete for 14
