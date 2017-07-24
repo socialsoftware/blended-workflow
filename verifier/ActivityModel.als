@@ -5,7 +5,7 @@ open DataModel
 pred preCondition(s: State, entDefs: set Obj, attDefs: set Obj -> FName) {
 	entDefs in s.objects
 	attDefs.FName in s.objects
-//	all def: attDefs | s.fields[def.FName, Obj.def] = DefVal or s.fields[def.FName, Obj.def] in s.objects
+	all obj: attDefs.FName | all field: obj.attDefs | s.fields[obj, field] = DefVal or s.fields[obj, field] in s.objects
 }
 
 pred postCondition(s, s': State, entDefs: set Obj, attDefs: set Obj -> FName,  muls: set Obj -> FName -> Obj) {
