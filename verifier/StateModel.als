@@ -18,7 +18,10 @@ sig State {
 
 fun atts (s:State, o:Obj): set FName { s.fields[o].{Obj + Val} }
 
-fun commitedAssociatedObjects (s: State, objSource: Obj, roleSource: FName, roleTarget: FName): set Obj { {o: Obj | s.fields[o, roleSource] = objSource} + {o: Obj | s.fields[objSource, roleTarget] = o} }
+fun commitedAssociatedObjects (s: State, objSource: Obj, roleSource: FName, roleTarget: FName): set Obj { 
+	{o: Obj | s.fields[o, roleSource] = objSource} + 
+	{o: Obj | s.fields[objSource, roleTarget] = o} 
+}
 
 pred noFieldChangeExcept(s, s': State, o: Obj, f: FName) {
 	all obj: s.objects - o | obj.(s'.fields) = obj.(s.fields)
@@ -77,10 +80,12 @@ pred linkObj(s, s': State, objSource: Obj, roleSource: FName, mulSource: Int, ob
 	#s.fields[objSource, roleTarget] < mulTarget
 	// target can have more sources
 	#s.fields[objTarget, roleSource] < mulSource or objSource in s.fields[objTarget, roleSource]
-	// source is not completely compromised yet
-	#commitedAssociatedObjects[s, objSource, roleSource, roleTarget] < mulSource or objTarget in commitedAssociatedObjects[s, objSource, roleSource, roleTarget]
-	// target is not completely compomised yet
-	#commitedAssociatedObjects[s, objTarget, roleTarget, roleSource] < mulTarget or objSource in commitedAssociatedObjects[s, objTarget, roleTarget, roleSource]
+	// source is not completely commited yet
+	let commitedObjects = commitedAssociatedObjects[s, objSource, roleSource, roleTarget] | 
+		#commitedObjects < mulSource or objTarget in commitedObjects
+	// target is not completely commited yet
+	let commitedObjects = commitedAssociatedObjects[s, objTarget, roleTarget, roleSource] |
+		#commitedObjects < mulTarget or objSource in commitedObjects
 
 	s'.objects = s.objects
 
