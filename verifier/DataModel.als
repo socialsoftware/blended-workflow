@@ -1,4 +1,4 @@
-module StateModel
+module DataModel
 
 open util/ordering [State]
 
@@ -23,9 +23,9 @@ fun commitedAssociatedObjects (s: State, objSource: Obj, roleSource: FName, role
 	{o: Obj | s.fields[objSource, roleTarget] = o} 
 }
 
-pred noFieldChangeExcept(s, s': State, o: Obj, f: FName) {
-	all obj: s.objects - o | obj.(s'.fields) = obj.(s.fields)
-	all field: atts[s, o] - f | s'.fields[o, field] = s.fields[o, field]
+pred noFieldChangeExcept(s, s': State, asg: set Obj ->FName) {
+	all obj: s.objects - asg.FName | obj.(s'.fields) = obj.(s.fields)
+	all o: asg.FName | all field: atts[s, o] - o.asg | s'.fields[o, field] = s.fields[o, field]
 }
 
 pred noExtraFields(s: State, objs: set Obj, fNames: set FName) {
@@ -69,7 +69,7 @@ pred defAtt(s, s': State, o: Obj, att: FName) {
 
 	s'.fields = s.fields + (o -> att -> DefVal)
 
-	noFieldChangeExcept[s, s', o, att]
+	noFieldChangeExcept[s, s', o -> att]
 }
 
 pred linkObj(s, s': State, objSource: Obj, roleSource: FName, mulSource: Int, objTarget: Obj, roleTarget: FName, mulTarget: Int) {
@@ -91,7 +91,7 @@ pred linkObj(s, s': State, objSource: Obj, roleSource: FName, mulSource: Int, ob
 
 	s'.fields = s.fields + (objSource -> roleTarget -> objTarget)
 
-	noFieldChangeExcept[s, s', objSource, roleTarget]
+	noFieldChangeExcept[s, s', objSource -> roleTarget]
 }
 
 pred skip(s, s': State) {

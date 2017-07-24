@@ -1,6 +1,6 @@
 module DoctorAppointment
 
-open StateModel
+open DataModel
 
 sig Patient extends Obj {}
 one sig patient_name extends FName {}
@@ -24,3 +24,22 @@ pred Invariants(s: State) {
 	bidirectionalViolation [s, Patient, patient_appointment, 1, Appointment, appointment_patient, 100] 
 }
 
+pred complete {
+ 	one s: State | 
+		// cannot be the initial state to find one meaningful state
+		#Patient <: s.objects = 1 and
+		#Appointment <: s.objects = 2 and
+		#s.objects = 3 and
+		// model is well defined
+
+		// all attributes are defined
+		attributesDefined [s, Patient, patient_name + patient_address]	and
+		attributesDefined [s, Appointment, appointment_reserve_date] and
+
+		// associations multiplicity
+		multiplicityRule [s, Appointment, appointment_patient, 1, 1] and
+		multiplicityRule [s, Patient, patient_appointment, 0, 100] and
+
+		// bidirectional relation
+		bidirectionalRule [s, Patient, patient_appointment, Appointment, appointment_patient] 
+}
