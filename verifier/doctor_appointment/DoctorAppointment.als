@@ -1,6 +1,6 @@
-module DoctorAppointment
+module filesystem/doctorappointment/DoctorAppointment
 
-open DataModel
+open filesystem/DataModel
 
 sig Patient extends Obj {}
 one sig patient_name extends FName {}

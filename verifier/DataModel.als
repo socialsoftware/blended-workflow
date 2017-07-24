@@ -1,4 +1,4 @@
-module DataModel
+module filesystem/DataModel
 
 open util/ordering [State]
 

@@ -1,6 +1,6 @@
-module DoctorAppointmentDataModel
+module filesystem/doctorappointment/DoctorAppointmentDataModel
 
-open DoctorAppointment
+open filesystem/doctorappointment/DoctorAppointment
 
 pred init (s: State) {
 	no s.objects

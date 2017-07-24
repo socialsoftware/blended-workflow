@@ -1,7 +1,7 @@
-module DoctorAppointmentActivityModel
+module filesystem/doctorappointment/DoctorAppointmentActivityModel
 
-open DoctorAppointment
-open ActivityModel
+open filesystem/doctorappointment/DoctorAppointment
+open filesystem/ActivityModel
 
 pred init (s: State) {
 	no s.objects

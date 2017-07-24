@@ -1,6 +1,6 @@
-module ActivityModel
+module filesystem/ActivityModel
 
-open DataModel
+open filesystem/DataModel
 
 pred preCondition(s: State, entDefs: set Obj, attDefs: set Obj -> FName) {
 	entDefs in s.objects
