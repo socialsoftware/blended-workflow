@@ -4,12 +4,17 @@ open filesystem/DataModel
 
 pred preCondition(s: State, entDefs: set Obj, attDefs: set Obj -> FName) {
 	entDefs in s.objects
+
 	attDefs.FName in s.objects
 	all obj: attDefs.FName | all field: obj.attDefs | s.fields[obj, field] = DefVal or s.fields[obj, field] in s.objects
 }
 
 pred postCondition(s, s': State, entDefs: set Obj, attDefs: set Obj -> FName,  muls: set Obj -> FName -> Obj) {
 	entDefs !in s.objects
+
+	all objSource: (muls.Obj).FName, objTarget: FName.(objSource.muls), roleTarget: objSource.muls.objTarget |
+		canLink[s, objSource, roleTarget.inverse, objTarget] 
+		//and canLink[s, objTarget, roleTarget, objSource] it is redundant because canLink verifies in both directions
 
 	s'.objects = s.objects + entDefs
 

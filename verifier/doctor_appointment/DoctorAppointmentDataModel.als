@@ -11,37 +11,43 @@ fact traces {
 	first.init
 	all s: State - last | let s' = s.next |
 	some p: Patient, a: Appointment | 
-		defObj [s, s', p] or defObj [s, s', a] or
+		defObj [s, s', p] or 
 		defAtt [s, s', p, patient_name] or defAtt [s, s', p, patient_address] or 
-		linkObj [s, s', p,  appointment_patient, 1, a, patient_appointment, 100] or
+		defObj [s, s', a] or
 	 	defAtt [s, s', a, appointment_reserve_date] or 
-		linkObj [s, s', a, patient_appointment, 100, p, appointment_patient, 1] //or
-	//	skip [s, s']
+		linkObj [s, s', p,  appointment_patient, a, patient_appointment] or
+		linkObj [s, s', a, patient_appointment, p, appointment_patient] //or
+		//skip [s, s']
 }
 
 // how many instances we are going to use to test the model
 fact NumberOfObjects {
-	#Patient = 1
+	#Patient = 2
 	#Appointment = 2
 }
+
+assert initialState {
+	one s: State | init[s] => Invariants [s]
+}
+//check initialState
 
 // DefObj preserves the operation
 assert DefObjPreservesInv {
 	all s, s': State | all o: Obj |
 		Invariants [s] and defObj [s, s', o] => Invariants [s']
 }
-//check DefObjPreservesInv for 5
+//check DefObjPreservesInv for 12
 
 assert DefAttPreservesInv {
 	all s, s': State | all o: Obj | all f: FName |
-		Invariants [s] and defAtt [s, s', o, f] => Invariants [s']
+		Invariants [s] and defAtt [s, s', o, f] => Invariants [s'] 
 }
-//check DefAttPreservesInv
+//check DefAttPreservesInv for 12
 
 assert LinkObjPreservesInv {
-	all s, s': State | all os, ot: Obj | all rs, rt: FName | all ms, mt: Int |
-		Invariants [s] and linkObj [s, s', os, rt, mt, ot, rs, ms] => Invariants [s']
+	all s, s': State, os, ot: Obj, rs, rt: FName |
+		Invariants [s] and linkObj [s, s', os, rs, ot, rt] => Invariants [s']
 }
-check LinkObjPreservesInv for 12
+//check LinkObjPreservesInv for 5 but 5 Int
 
-//run complete for 12
+run complete for 4 but 15 State, 5 Int

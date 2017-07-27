@@ -4,7 +4,11 @@ open util/ordering [State]
 
 abstract sig Obj {}
 
-abstract sig FName {}
+abstract sig FName {
+	minMul: Int,
+	maxMul: Int,
+	inverse: FName
+}
 
 abstract sig Val {}
 
@@ -18,9 +22,18 @@ sig State {
 
 fun atts (s:State, o:Obj): set FName { s.fields[o].{Obj + Val} }
 
-fun commitedAssociatedObjects (s: State, objSource: Obj, roleSource: FName, roleTarget: FName): set Obj { 
+fun commitedAssociatedObjects (s: State, objSource: Obj, roleSource: FName): set Obj { 
 	{o: Obj | s.fields[o, roleSource] = objSource} + 
-	{o: Obj | s.fields[objSource, roleTarget] = o} 
+	{o: Obj | s.fields[objSource, roleSource.inverse] = o} 
+}
+
+pred canLink(s: State, objSource: Obj, roleSource: FName, objTarget: Obj) {
+	// source is not completely commited yet in the number of targets
+	let commitedTargetObjects = commitedAssociatedObjects[s, objSource, roleSource] | 
+		#commitedTargetObjects < roleSource.inverse.maxMul or objTarget in commitedTargetObjects 
+	// target is not completely commited yet in the number of sources
+	let commitedSourceObjects = commitedAssociatedObjects[s, objTarget, roleSource.inverse] |
+		#commitedSourceObjects < roleSource.maxMul or objSource in commitedSourceObjects
 }
 
 pred noFieldChangeExcept(s, s': State, asg: set Obj ->FName) {
@@ -36,22 +49,22 @@ pred attributesDefined(s: State, objs: set Obj, atts: set FName) {
 	all obj: objs <: s.objects | all att: atts | s.fields[obj, att] = DefVal
 }
 
-pred multiplicityRule(s: State, objs: set Obj, role: FName, min, max: Int) {
-	all obj: objs <: s.objects | #s.fields[obj, role] >= min and #s.fields[obj, role] <= max
+pred multiplicityRule(s: State, objs: set Obj, role: FName) {
+	all obj: objs <: s.objects | #s.fields[obj, role] >= role.minMul and #s.fields[obj, role] <= role.maxMul
 }
 
-pred noMultiplicityExceed(s: State, objs: set Obj, role: FName, max: Int) {
-	all obj: objs <: s.objects | #s.fields[obj, role] <= max
+pred noMultiplicityExceed(s: State, objs: set Obj, role: FName) {
+	all obj: objs <: s.objects | #s.fields[obj, role] <= role.maxMul
 }
 
 pred bidirectionalRule(s: State, objsOne: set Obj, roleOne: FName, objsTwo: set Obj, roleTwo: FName) {
-	all objOne: objsOne <: s.objects | all objTwo: s.fields[objOne, roleOne] | objOne in s.fields[objTwo, roleTwo]
-	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleTwo] | objTwo in s.fields[objOne, roleOne]
+	all objOne: objsOne <: s.objects | all objTwo: s.fields[objOne, roleTwo] | objOne in s.fields[objTwo, roleOne]
+	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleOne] | objTwo in s.fields[objOne, roleTwo]
 }
 
-pred bidirectionalViolation(s: State, objsOne: set Obj, roleOne: FName, mulOne: Int, objsTwo: set Obj, roleTwo: FName, mulTwo: Int) {
-	all objOne: objsOne <: s.objects | all objTwo: s.fields[objOne, roleOne] | #s.fields[objOne, roleOne] < mulOne  or objOne in s.fields[objTwo, roleTwo]
-	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleTwo] | #s.fields[objTwo, roleTwo] < mulTwo or objTwo in s.fields[objOne, roleOne]
+pred bidirectionalPreservation(s: State, objsOne: set Obj, roleOne: FName, objsTwo: set Obj, roleTwo: FName) {
+	all objOne: objsOne <: s.objects | all objTwo: s.fields[objOne, roleTwo] | objOne in s.fields[objTwo, roleOne] or canLink[s, objTwo, roleTwo, objOne]
+	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleOne] | objTwo in s.fields[objOne, roleTwo] or canLink[s, objOne, roleOne, objTwo]
 }
 
 pred defObj(s, s' : State, o: Obj) {
@@ -72,20 +85,12 @@ pred defAtt(s, s': State, o: Obj, att: FName) {
 	noFieldChangeExcept[s, s', o -> att]
 }
 
-pred linkObj(s, s': State, objSource: Obj, roleSource: FName, mulSource: Int, objTarget: Obj, roleTarget: FName, mulTarget: Int) {
+pred linkObj(s, s': State, objSource: Obj, roleSource: FName, objTarget: Obj, roleTarget: FName) {
 	objSource in s.objects
 	objTarget in s.objects
 	objTarget !in s.fields[objSource, roleTarget]
-	// source can have more targets
-	#s.fields[objSource, roleTarget] < mulTarget
-	// target can have more sources
-	#s.fields[objTarget, roleSource] < mulSource or objSource in s.fields[objTarget, roleSource]
-	// source is not completely commited yet
-	let commitedObjects = commitedAssociatedObjects[s, objSource, roleSource, roleTarget] | 
-		#commitedObjects < mulSource or objTarget in commitedObjects
-	// target is not completely commited yet
-	let commitedObjects = commitedAssociatedObjects[s, objTarget, roleTarget, roleSource] |
-		#commitedObjects < mulTarget or objSource in commitedObjects
+
+	canLink [s, objSource, roleSource, objTarget]
 
 	s'.objects = s.objects
 
