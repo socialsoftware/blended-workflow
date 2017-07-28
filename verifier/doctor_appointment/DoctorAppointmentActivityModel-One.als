@@ -34,7 +34,7 @@ assert RegisterPatientPreservesInv {
 	all s, s': State | all p: Patient |
 		Invariants [s] and registerPatient [s, s', p] => Invariants [s']
 }
-check RegisterPatientPreservesInv for 4 but 6 State, 5 Int
+//check RegisterPatientPreservesInv for 4 but 6 State, 5 Int
 
 // bookAppointment preserves the operation
 assert BookAppointmentPreservesInv {
@@ -43,4 +43,4 @@ assert BookAppointmentPreservesInv {
 }
 //check BookAppointmentPreservesInv for 4 but 6 State, 5 Int
 
-//run complete for 4 but 6 State, 5 Int
+run complete for 4 but 6 State, 5 Int
