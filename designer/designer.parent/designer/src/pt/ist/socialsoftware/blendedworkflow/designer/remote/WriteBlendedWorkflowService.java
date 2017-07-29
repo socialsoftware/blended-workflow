@@ -49,7 +49,8 @@ public class WriteBlendedWorkflowService {
 		this.repository = RepositoryInterface.getInstance();
 	}
 
-	public BWNotification write(String specId, BWSpecification eBWSpecification) {
+	public BWNotification write(BWSpecification eBWSpecification) {
+		String specId = eBWSpecification.getSpecification().getName().replaceAll("\\s+", "");
 		// logger.debug("eBWSpecification: {}", specId);
 
 		BWNotification notification = new BWNotification();
@@ -169,6 +170,14 @@ public class WriteBlendedWorkflowService {
 		}
 
 		this.repository.printSpecificationModels(specId);
+
+		if (!notification.hasErrors()) {
+			this.repository.generateConditionModel(specId);
+
+			this.repository.generateGoalModel(specId);
+
+			this.repository.generateActivityModel(specId);
+		}
 
 		return notification;
 	}

@@ -17,14 +17,14 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.Reposito
 class BlendedWorkflowGenerator extends AbstractGenerator {	
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		var specId = resource.URI.lastSegment.split("\\.").get(0)
-
-		var RepositoryInterface repository =  RepositoryInterface.getInstance()
-
-		repository.generateConditionModel(specId)
-		
-		repository.generateGoalModel(specId)
-		
-		repository.generateActivityModel(specId)
+//		var specId = resource.URI.lastSegment.split("\\.").get(0)
+//				
+//		var RepositoryInterface repository =  RepositoryInterface.getInstance()
+//
+//		repository.generateConditionModel(specId)
+//		
+//		repository.generateGoalModel(specId)
+//		
+//		repository.generateActivityModel(specId)
 	}
 }
