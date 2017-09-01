@@ -16,11 +16,18 @@ one sig DefVal extends Val {}
 
 sig State {
 	objects: set Obj,
-	fields: objects -> ( FName ->set { Obj + Val } ) 
-//	dependencies: (Obj -> FName) -> (Obj -> FName)
+	fields: objects -> ( FName ->set { Obj + Val } ) ,
 }
 
-fun atts (s:State, o:Obj): set FName { s.fields[o].{Obj + Val} }
+fun reach (s: State, obj: set Obj, path: seq FName): set Obj {
+	(#path = 1) implies {
+		s.fields[obj, path.first]
+	} else {
+		reach[s, s.fields[obj, path.first], path.rest]
+	}
+}
+
+fun atts (s: State, o: Obj): set FName { s.fields[o].{Obj + Val} }
 
 fun commitedAssociatedObjects (s: State, objSource: Obj, roleSource: FName): set Obj { 
 	{o: Obj | s.fields[o, roleSource] = objSource} + 
@@ -67,6 +74,12 @@ pred bidirectionalPreservation(s: State, objsOne: set Obj, roleOne: FName, objsT
 	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleOne] | objTwo in s.fields[objOne, roleTwo] or canLink[s, objOne, roleOne, objTwo]
 }
 
+pred verifyDependence[s: State, sourceObj: Obj, sourceAtt: FName, p: seq FName, targetAtt: FName] {
+
+	// verifyDependence [s, Appointment, appointment_reserve_date, 0 -> appointment_patient, patient_address]
+	all oS: sourceObj <: s.objects | (s.fields[oS, sourceAtt] = DefVal) implies DefVal in s.fields[reach[s, oS, p], targetAtt] 
+}
+
 pred defObj(s, s' : State, o: Obj) {
 	o !in s.objects
 
@@ -102,11 +115,6 @@ pred linkObj(s, s': State, objSource: Obj, roleSource: FName, objTarget: Obj, ro
 pred skip(s, s': State) {
 	s'.objects = s.objects
 	s'.fields = s.fields
-}
-
-pred sameState(s, s': State) {
-	s.objects = s'.objects
-	s.fields = s'.fields
 }
 
 run {}

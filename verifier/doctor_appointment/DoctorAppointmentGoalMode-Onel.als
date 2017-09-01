@@ -14,8 +14,8 @@ fact traces {
 	some p: Patient, a: Appointment | 
 		registerPatient[s, s', p] or
 		bookAppointment[s, s', a] or
-		associatePatientToAppointment[s, s', p, a] or
-		skip [s, s']
+		associatePatientToAppointment[s, s', p, a] //or
+		//skip [s, s']
 }
 
 pred registerPatient(s, s': State, p: Patient) {
@@ -46,11 +46,11 @@ assert BookAppointmentPreservesInv {
 	all s, s': State, a: Appointment |
 		Invariants [s] and bookAppointment [s, s', a] => Invariants [s']
 }
-//check BookAppointmentPreservesInv for 4 but 6 State, 5 Int
+check BookAppointmentPreservesInv for 4 but 6 State, 5 Int
 
 // bookAppointment preserves the operation
 assert AssociatePatientToAppointmentPreservesInv {
-	all s, s': State, p: Appointment, a: Appointment |
+	all s, s': State, p: Patient, a: Appointment |
 		Invariants [s] and associatePatientToAppointment [s, s', p, a] => Invariants [s']
 }
 //check AssociatePatientToAppointmentPreservesInv for 4 but 6 State, 5 Int

@@ -36,13 +36,19 @@ assert DefObjPreservesInv {
 	all s, s': State | all o: Obj |
 		Invariants [s] and defObj [s, s', o] => Invariants [s']
 }
-//check DefObjPreservesInv for 12
+check DefObjPreservesInv for 6
 
 assert DefAttPreservesInv {
 	all s, s': State | all o: Obj | all f: FName |
 		Invariants [s] and defAtt [s, s', o, f] => Invariants [s'] 
 }
-//check DefAttPreservesInv for 12
+check DefAttPreservesInv for 6
+
+assert DefAttPreservesDepInv {
+	all s, s': State | all o: Obj | all f: FName |
+		depInv [s] and defAtt [s, s', o, f] => depInv [s'] 
+}
+check DefAttPreservesDepInv for 6
 
 assert LinkObjPreservesInv {
 	all s, s': State, os, ot: Obj, rs, rt: FName |

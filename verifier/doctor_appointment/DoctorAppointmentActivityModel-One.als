@@ -13,8 +13,8 @@ fact traces {
 	all s: State - last | let s' = s.next |
 	some p: Patient, a: Appointment | 
 		registerPatient[s, s', p] or
-		bookAppointment[s, s', p, a] or
-		skip [s, s']
+		bookAppointment[s, s', p, a] //or
+	//	skip [s, s']
 }
 
 pred registerPatient(s, s': State, p: Patient) {
@@ -41,6 +41,6 @@ assert BookAppointmentPreservesInv {
 	all s, s': State, p: Patient, a: Appointment |
 		Invariants [s] and bookAppointment [s, s', p, a] => Invariants [s']
 }
-//check BookAppointmentPreservesInv for 4 but 6 State, 5 Int
+check BookAppointmentPreservesInv for 4 but 6 State, 5 Int
 
-run complete for 4 but 6 State, 5 Int
+//run complete for 4 but 6 State, 5 Int

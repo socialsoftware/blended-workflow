@@ -136,7 +136,7 @@ public class Goal extends Goal_Base {
 	}
 
 	public String getPreConstraintData() {
-		List<Condition> activateConditions = new ArrayList<Condition>(getActivationConditionSet());
+		List<Condition> activateConditions = new ArrayList<>(getActivationConditionSet());
 		Set<Entity> entities = activateConditions.get(0).getEntities(); // FIXME:
 																		// Only
 																		// First
@@ -197,7 +197,7 @@ public class Goal extends Goal_Base {
 
 	// TODO:
 	public Set<Entity> getSubGoalsContext() {
-		Set<Entity> result = new HashSet<Entity>();
+		Set<Entity> result = new HashSet<>();
 		// result.add(getEntityContext());
 		for (Goal subGoal : getSubGoalSet()) {
 			result.add(subGoal.getOldEntityContext());
@@ -231,14 +231,17 @@ public class Goal extends Goal_Base {
 	}
 
 	public GoalRelation getGoalRelation(Goal goalTwo) {
-		if (getSubGoalSet().contains(goalTwo))
+		if (getSubGoalSet().contains(goalTwo)) {
 			return GoalRelation.CHILD;
+		}
 
-		if (goalTwo.getSubGoalSet().contains(this))
+		if (goalTwo.getSubGoalSet().contains(this)) {
 			return GoalRelation.PARENT;
+		}
 
-		if ((getParentGoal() != null) && (getParentGoal().getSubGoalSet().contains(goalTwo)))
+		if ((getParentGoal() != null) && (getParentGoal().getSubGoalSet().contains(goalTwo))) {
 			return GoalRelation.SIBLING;
+		}
 
 		return GoalRelation.OTHER;
 	}
@@ -254,8 +257,9 @@ public class Goal extends Goal_Base {
 				.map(d -> d.getPath().getValue()).collect(Collectors.toSet());
 
 		for (String path : paths) {
-			if (!getProducedProducts().contains(getDataModel().getTargetOfPath(path)))
+			if (!getProducedProducts().contains(getDataModel().getTargetOfPath(path))) {
 				addActivationCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
+			}
 		}
 	}
 
@@ -281,9 +285,10 @@ public class Goal extends Goal_Base {
 		Optional<DefProductCondition> oCond = successConditions.stream()
 				.filter((def) -> !getSuccessConditionSet().contains(def)).findFirst();
 
-		if (oCond.isPresent())
+		if (oCond.isPresent()) {
 			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL,
 					"checkConditionsExistInSource:" + oCond.get().getSubPath());
+		}
 
 	}
 
@@ -341,7 +346,7 @@ public class Goal extends Goal_Base {
 	}
 
 	private Set<Goal> getTransitiveParentGoals() {
-		Set<Goal> parents = new HashSet<Goal>();
+		Set<Goal> parents = new HashSet<>();
 
 		if (getParentGoal() != null) {
 			parents.add(getParentGoal());
@@ -382,7 +387,7 @@ public class Goal extends Goal_Base {
 	}
 
 	public Set<Entity> getEntityContext() {
-		Set<Entity> entityContext = new HashSet<Entity>();
+		Set<Entity> entityContext = new HashSet<>();
 
 		// some may not be defined in activation conditions because of parent
 		// goals
@@ -397,8 +402,9 @@ public class Goal extends Goal_Base {
 			if (defProductCondition.isEntity()) {
 				for (MulCondition mulCondition : getEntityInvariantConditionSet()) {
 					if (mulCondition.getSourceEntity() == defProductCondition.getTargetOfPath()
-							&& !isInSubTree(mulCondition.getSymmetricMulCondition()))
+							&& !isInSubTree(mulCondition.getSymmetricMulCondition())) {
 						entityContext.add(mulCondition.getTargetEntity());
+					}
 				}
 			}
 		}
@@ -421,7 +427,7 @@ public class Goal extends Goal_Base {
 	}
 
 	public Set<Entity> getEntityContext(Entity entity) {
-		Set<Entity> entityContext = new HashSet<Entity>();
+		Set<Entity> entityContext = new HashSet<>();
 
 		// some may not be defined in activation conditions because of parent
 		// goals
@@ -437,8 +443,9 @@ public class Goal extends Goal_Base {
 			if (defProductCondition.isEntity()) {
 				for (MulCondition mulCondition : getEntityInvariantConditionSet()) {
 					if (mulCondition.getSourceEntity() == defProductCondition.getTargetOfPath()
-							&& !isInSubTree(mulCondition.getSymmetricMulCondition()))
+							&& !isInSubTree(mulCondition.getSymmetricMulCondition())) {
 						entityContext.add(mulCondition.getTargetEntity());
+					}
 				}
 			}
 		}
@@ -464,19 +471,21 @@ public class Goal extends Goal_Base {
 	}
 
 	private boolean isInSubTree(MulCondition mulCondition) {
-		if (getEntityInvariantConditionSet().contains(mulCondition))
+		if (getEntityInvariantConditionSet().contains(mulCondition)) {
 			return true;
+		}
 
 		for (Goal subGoal : getSubGoalSet()) {
-			if (subGoal.isInSubTree(mulCondition))
+			if (subGoal.isInSubTree(mulCondition)) {
 				return true;
+			}
 		}
 
 		return false;
 	}
 
 	public Map<Entity, Set<EntityInstance>> getInstanceContext(WorkflowInstance workflowInstance) {
-		Map<Entity, Set<EntityInstance>> instanceContext = new HashMap<Entity, Set<EntityInstance>>();
+		Map<Entity, Set<EntityInstance>> instanceContext = new HashMap<>();
 
 		for (Entity entity : getEntityContext()) {
 			instanceContext.put(entity, getInstanceContext(workflowInstance, entity));
@@ -499,7 +508,7 @@ public class Goal extends Goal_Base {
 				.filter(ei -> ei.canBeAssociatedWithNewEntityInstance(getEntityInvariantConditionSet()))
 				.collect(Collectors.toSet());
 
-		// there are enough instances in the context to enable the activity
+		// there are enough instances in the context to enable the goal
 		int instanceContextSize = instanceContext.size();
 		if (!getEntityInvariantConditionSet().stream().filter(m -> m.getTargetEntity() == contextEntity)
 				.allMatch(m -> m.getCardinality().getMinValue() <= instanceContextSize)) {
@@ -528,7 +537,7 @@ public class Goal extends Goal_Base {
 	}
 
 	private Set<Entity> getParentsSuccessEntities() {
-		Set<Entity> successEntities = new HashSet<Entity>();
+		Set<Entity> successEntities = new HashSet<>();
 
 		if (getParentGoal() != null) {
 			successEntities.addAll(getParentGoal().getSuccessEntitiesToTop());
@@ -538,7 +547,7 @@ public class Goal extends Goal_Base {
 	}
 
 	private Set<Entity> getSuccessEntitiesToTop() {
-		Set<Entity> successEntities = new HashSet<Entity>(getSuccessEntities());
+		Set<Entity> successEntities = new HashSet<>(getSuccessEntities());
 
 		if (getParentGoal() != null) {
 			successEntities.addAll(getParentGoal().getSuccessEntitiesToTop());
@@ -548,7 +557,7 @@ public class Goal extends Goal_Base {
 	}
 
 	private Set<MulCondition> getEntityInvariantConditionsToTop() {
-		Set<MulCondition> mulConditions = new HashSet<MulCondition>(getEntityInvariantConditionSet());
+		Set<MulCondition> mulConditions = new HashSet<>(getEntityInvariantConditionSet());
 
 		if (getParentGoal() != null) {
 			mulConditions.addAll(getParentGoal().getEntityInvariantConditionsToTop());

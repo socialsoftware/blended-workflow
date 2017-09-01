@@ -32,6 +32,13 @@ pred Invariants(s: State) {
 
 	// if there is a link between two objects, either is unidirectional or bidirectional
 	bidirectionalPreservation [s, Patient, appointment_patient, Appointment, patient_appointment] 
+
+	// dependencies hold
+	verifyDependence [s, Appointment, appointment_reserve_date, 0 -> appointment_patient, patient_address]
+}
+
+pred depInv(s: State) {
+	verifyDependence [s, Appointment, appointment_reserve_date, 0 -> appointment_patient, patient_address]
 }
 
 pred complete {
@@ -51,5 +58,10 @@ pred complete {
 		multiplicityRule [s, Patient, patient_appointment] and
 
 		// bidirectional relation
-		bidirectionalRule [s, Patient, appointment_patient, Appointment, patient_appointment] 
+		bidirectionalRule [s, Patient, appointment_patient, Appointment, patient_appointment] and
+
+		// dependencies hold
+		verifyDependence [s, Appointment, appointment_reserve_date, 0 -> appointment_patient, patient_address]
 }
+
+run {}
