@@ -1,3 +1,4 @@
+// an activity model where appointments are created first, it violates dependence invariant
 module filesystem/doctorappointment/DoctorAppointmentActivityModel
 
 open filesystem/doctorappointment/DoctorAppointment
@@ -27,6 +28,8 @@ pred bookAppointment(s, s': State, a: Appointment) {
 	preCondition[s, none, none -> none]
 
 	postCondition[s, s', a, a -> appointment_reserve_date, none -> none -> none]
+
+	dependence[s', a, appointment_reserve_date, 0 -> appointment_patient, patient_address]
 }
 
 // registerPatient preserves the operation
@@ -41,6 +44,8 @@ assert BookAppointmentPreservesInv {
 	all s, s': State, a: Appointment |
 		Invariants [s] and bookAppointment [s, s', a] => Invariants [s']
 }
+// dependence invariant is violated when the dependence verification is removed
 //check BookAppointmentPreservesInv for 4 but 6 State, 5 Int
 
+// cannot generate a complete model
 run complete for 4 but 6 State, 5 Int

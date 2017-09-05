@@ -74,10 +74,16 @@ pred bidirectionalPreservation(s: State, objsOne: set Obj, roleOne: FName, objsT
 	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleOne] | objTwo in s.fields[objOne, roleTwo] or canLink[s, objOne, roleOne, objTwo]
 }
 
-pred verifyDependence[s: State, sourceObj: Obj, sourceAtt: FName, p: seq FName, targetAtt: FName] {
-
-	// verifyDependence [s, Appointment, appointment_reserve_date, 0 -> appointment_patient, patient_address]
-	all oS: sourceObj <: s.objects | (s.fields[oS, sourceAtt] = DefVal) implies DefVal in s.fields[reach[s, oS, p], targetAtt] 
+pred dependence[s: State, sourceObj: Obj, sourceAtt: FName, p: seq FName, targetAtt: FName] {
+	(sourceAtt = none and targetAtt = none) implies {
+		all oS: sourceObj <: s.objects | !no reach[s, oS, p]
+	} else (sourceAtt = none) implies {
+		all oS: sourceObj <: s.objects | DefVal in s.fields[reach[s, oS, p], targetAtt] 
+	} else (targetAtt = none) implies {
+		all oS: sourceObj <: s.objects | (s.fields[oS, sourceAtt] = DefVal) implies !no reach[s, oS, p]
+	} else {
+		all oS: sourceObj <: s.objects | (s.fields[oS, sourceAtt] = DefVal) implies DefVal in s.fields[reach[s, oS, p], targetAtt] 
+	}	
 }
 
 pred defObj(s, s' : State, o: Obj) {

@@ -10,7 +10,7 @@ pred actCondition(s: State, entDefs: set Obj, attDefs: set Obj -> FName) {
 }
 
 pred sucCondition(s, s': State, entDefs: set Obj, attDefs: set Obj -> FName) {
-	entDefs !in s.objects
+	(entDefs != none) implies entDefs !in s.objects
 	all obj: attDefs.FName | obj in s.objects + entDefs
 	all obj: attDefs.FName, role: obj.attDefs | no s.fields[obj, role]
 

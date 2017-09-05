@@ -1,3 +1,4 @@
+// contains the construction of a doctor appointment model using basic operations based on data, it violates some invariants
 module filesystem/doctorappointment/DoctorAppointmentDataModel
 
 open filesystem/doctorappointment/DoctorAppointment
@@ -31,25 +32,23 @@ assert initialState {
 }
 //check initialState
 
-// DefObj preserves the operation
+// defObj preserves the invariant
 assert DefObjPreservesInv {
 	all s, s': State | all o: Obj |
 		Invariants [s] and defObj [s, s', o] => Invariants [s']
 }
-check DefObjPreservesInv for 6
+// fails for mutliplicity invariant
+//check DefObjPreservesInv for 6
 
+// defAtt preserves the invariant
 assert DefAttPreservesInv {
 	all s, s': State | all o: Obj | all f: FName |
 		Invariants [s] and defAtt [s, s', o, f] => Invariants [s'] 
 }
-check DefAttPreservesInv for 6
+// fails for dependency invariant
+//check DefAttPreservesInv for 6
 
-assert DefAttPreservesDepInv {
-	all s, s': State | all o: Obj | all f: FName |
-		depInv [s] and defAtt [s, s', o, f] => depInv [s'] 
-}
-check DefAttPreservesDepInv for 6
-
+// linkObj preserves the invariant
 assert LinkObjPreservesInv {
 	all s, s': State, os, ot: Obj, rs, rt: FName |
 		Invariants [s] and linkObj [s, s', os, rs, ot, rt] => Invariants [s']

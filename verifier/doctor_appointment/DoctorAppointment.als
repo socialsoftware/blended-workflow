@@ -1,3 +1,4 @@
+// Contains a simple doctor appointment model with a dependence appointment.reserve_date -> appointment.appointment_patient.patient_address
 module filesystem/doctorappointment/DoctorAppointment
 
 open filesystem/DataModel
@@ -34,11 +35,7 @@ pred Invariants(s: State) {
 	bidirectionalPreservation [s, Patient, appointment_patient, Appointment, patient_appointment] 
 
 	// dependencies hold
-	verifyDependence [s, Appointment, appointment_reserve_date, 0 -> appointment_patient, patient_address]
-}
-
-pred depInv(s: State) {
-	verifyDependence [s, Appointment, appointment_reserve_date, 0 -> appointment_patient, patient_address]
+	dependence [s, Appointment, appointment_reserve_date, 0 -> appointment_patient, patient_address]
 }
 
 pred complete {
@@ -61,7 +58,7 @@ pred complete {
 		bidirectionalRule [s, Patient, appointment_patient, Appointment, patient_appointment] and
 
 		// dependencies hold
-		verifyDependence [s, Appointment, appointment_reserve_date, 0 -> appointment_patient, patient_address]
+		dependence [s, Appointment, appointment_reserve_date, 0 -> appointment_patient, patient_address]
 }
 
 run {}
