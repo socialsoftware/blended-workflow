@@ -1,7 +1,7 @@
 // A goal model that cannot achive the top goal because of a dependence
-module filesystem/doctorappointment/DoctorAppointmentGoalModel
+module filesystem/doctorappointment/DoctorAppointmentTwoEntitiesGoalModelOne
 
-open filesystem/doctorappointment/DoctorAppointment
+open filesystem/doctorappointment/DoctorAppointmentTwoEntities
 open filesystem/GoalModel
 
 pred init (s: State) {

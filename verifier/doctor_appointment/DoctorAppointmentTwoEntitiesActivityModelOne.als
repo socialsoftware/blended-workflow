@@ -1,7 +1,7 @@
 // an activity model where patients are registered first, it preserves all invariants
-module filesystem/doctorappointment/DoctorAppointmentActivityModel
+module filesystem/doctorappointment/DoctorAppointmentTwoEntitiesActivityModelOne
 
-open filesystem/doctorappointment/DoctorAppointment
+open filesystem/doctorappointment/DoctorAppointmentTwoEntities
 open filesystem/ActivityModel
 
 pred init (s: State) {

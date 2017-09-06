@@ -1,6 +1,6 @@
-module filesystem/doctorappointment/DoctorAppointmentGoalModel
+module filesystem/doctorappointment/DoctorAppointmentGoalModelTwo
 
-open filesystem/doctorappointment/DoctorAppointment
+open filesystem/doctorappointment/DoctorAppointmentTwoEntities
 open filesystem/GoalModel
 
 pred init (s: State) {

@@ -1,7 +1,7 @@
 // an activity model where appointments are created first, it violates dependence invariant
-module filesystem/doctorappointment/DoctorAppointmentActivityModel
+module filesystem/doctorappointment/DoctorAppointmentTwoEntitiesActivityModelTwo
 
-open filesystem/doctorappointment/DoctorAppointment
+open filesystem/doctorappointment/DoctorAppointmentTwoEntities
 open filesystem/ActivityModel
 
 pred init (s: State) {
