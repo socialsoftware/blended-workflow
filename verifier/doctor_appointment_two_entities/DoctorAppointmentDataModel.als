@@ -1,7 +1,7 @@
 // contains the construction of a doctor appointment model using basic operations based on data, it violates some invariants
-module filesystem/doctorappointment/DoctorAppointmentDataModel
+module filesystem/doctorappointmenttwoentities/DoctorAppointmentDataModel
 
-open filesystem/doctorappointment/DoctorAppointmentTwoEntities
+open filesystem/doctorappointmenttwoentities/DoctorAppointment
 
 pred init (s: State) {
 	no s.objects

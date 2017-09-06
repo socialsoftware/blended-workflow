@@ -1,7 +1,7 @@
 // an activity model where appointments are created first, it violates dependence invariant
-module filesystem/doctorappointment/DoctorAppointmentTwoEntitiesActivityModelTwo
+module filesystem/doctorappointmenttwoentities/DoctorAppointmentActivityModelTwo
 
-open filesystem/doctorappointment/DoctorAppointmentTwoEntities
+open filesystem/doctorappointmenttwoentities/DoctorAppointment
 open filesystem/ActivityModel
 
 pred init (s: State) {
@@ -45,7 +45,7 @@ assert BookAppointmentPreservesInv {
 		Invariants [s] and bookAppointment [s, s', a] => Invariants [s']
 }
 // dependence invariant is violated when the dependence verification is removed
-//check BookAppointmentPreservesInv for 4 but 6 State, 5 Int
+check BookAppointmentPreservesInv for 4 but 2 State, 5 Int
 
 // cannot generate a complete model
 run complete for 4 but 6 State, 5 Int

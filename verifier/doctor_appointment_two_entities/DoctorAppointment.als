@@ -1,5 +1,5 @@
 // Contains a simple doctor appointment model with a dependence appointment.reserve_date -> appointment.appointment_patient.patient_address
-module filesystem/doctorappointment/DoctorAppointmentTwoEntities
+module filesystem/doctorappointmenttwoentities/DoctorAppointment
 
 open filesystem/DataModel
 

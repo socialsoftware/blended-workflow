@@ -10,9 +10,11 @@ pred preCondition(s: State, entDefs: set Obj, attDefs: set Obj -> FName) {
 }
 
 pred postCondition(s, s': State, entDefs: set Obj, attDefs: set Obj -> FName,  muls: set Obj -> FName -> Obj) {
-	entDefs !in s.objects
-	all obj: attDefs.FName | obj in s.objects + entDefs
-	all obj: attDefs.FName, role: obj.attDefs | no s.fields[obj, role]
+	(entDefs != none) implies {
+		entDefs !in s.objects
+		all obj: attDefs.FName | obj in s.objects + entDefs
+		all obj: attDefs.FName, role: obj.attDefs | no s.fields[obj, role]
+	}
 
 	all objSource: (muls.Obj).FName, objTarget: FName.(objSource.muls), roleTarget: objSource.muls.objTarget |
 		canLink[s, objSource, roleTarget.inverse, objTarget] 

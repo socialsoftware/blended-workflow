@@ -81,6 +81,8 @@ pred dependence[s: State, sourceObj: Obj, sourceAtt: FName, p: seq FName, target
 		all oS: sourceObj <: s.objects | DefVal in s.fields[reach[s, oS, p], targetAtt] 
 	} else (targetAtt = none) implies {
 		all oS: sourceObj <: s.objects | (s.fields[oS, sourceAtt] = DefVal) implies !no reach[s, oS, p]
+	} else (p = none -> none) implies {
+		all oS: sourceObj <: s.objects | (s.fields[oS, sourceAtt] = DefVal) implies DefVal in s.fields[oS, targetAtt]
 	} else {
 		all oS: sourceObj <: s.objects | (s.fields[oS, sourceAtt] = DefVal) implies DefVal in s.fields[reach[s, oS, p], targetAtt] 
 	}	
