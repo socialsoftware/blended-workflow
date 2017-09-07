@@ -1,4 +1,4 @@
-// verify that models are consistent
+// verify that operations are consistently defined
 module filesystem/doctorappointment/complete/goal/VerifyDefPatientName
 
 open filesystem/doctorappointment/complete/invariants
