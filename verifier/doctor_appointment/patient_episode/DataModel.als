@@ -1,7 +1,9 @@
 // contains the construction of a doctor appointment model using basic operations based on data, it violates some invariants
-module filesystem/doctorappointmenttwoentities/DoctorAppointmentDataModel
+module filesystem/doctorappointment/patientepisode/DataModel
 
-open filesystem/doctorappointmenttwoentities/DoctorAppointment
+open filesystem/doctorappointment/DoctorAppointment
+open filesystem/doctorappointment/patientepisode/Achieve
+open filesystem/doctorappointment/patientepisode/Invariants
 
 pred init (s: State) {
 	no s.objects
@@ -11,20 +13,20 @@ pred init (s: State) {
 fact traces {
 	first.init
 	all s: State - last | let s' = s.next |
-	some p: Patient, a: Appointment | 
+	some p: Patient, e: Episode | 
 		defObj [s, s', p] or 
 		defAtt [s, s', p, patient_name] or defAtt [s, s', p, patient_address] or 
-		defObj [s, s', a] or
-	 	defAtt [s, s', a, appointment_reserve_date] or 
-		linkObj [s, s', p,  appointment_patient, a, patient_appointment] or
-		linkObj [s, s', a, patient_appointment, p, appointment_patient] //or
+		defObj [s, s', e] or
+	 	defAtt [s, s', e, episode_reserve_date] or 
+		linkObj [s, s', p,  episode_patient, e, patient_episode] or
+		linkObj [s, s', e, patient_episode, p, episode_patient] //or
 		//skip [s, s']
 }
 
 // how many instances we are going to use to test the model
 fact NumberOfObjects {
 	#Patient = 2
-	#Appointment = 2
+	#Episode = 2
 }
 
 assert initialState {
@@ -46,7 +48,7 @@ assert DefAttPreservesInv {
 		Invariants [s] and defAtt [s, s', o, f] => Invariants [s'] 
 }
 // fails for dependency invariant
-//check DefAttPreservesInv for 6
+check DefAttPreservesInv for 6
 
 // linkObj preserves the invariant
 assert LinkObjPreservesInv {
