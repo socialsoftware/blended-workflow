@@ -1,5 +1,5 @@
 // contains the construction of a doctor appointment model using basic operations based on data, it violates some invariants
-module filesystem/doctorappointment/patientepisode/DataModel
+module filesystem/doctorappointment/patientepisode/data/DataModel
 
 open filesystem/doctorappointment/DoctorAppointment
 open filesystem/doctorappointment/patientepisode/Achieve
