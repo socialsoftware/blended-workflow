@@ -62,75 +62,59 @@ pred noChangeInAccessControl(s,s' :SecureState){
 
 pred secureDefObj(s, s' : SecureState, o: Obj, usr:User) {
 	usr in s.users
-	//User has Write permission over the object
-	let usr_perm =  (usr.(s.u_roles)).(s.r_permissions)
-		|o in usr_perm.Write
-
+	
+	hasDefObjPermissions[s,s',o,usr]
 	defObj[s,s',o]
 
 	s'.u_owned = s.u_owned + usr -> o
 	noChangeInAccessControl[s, s']
-
-	//add to log
-//	s'.log = s.log + (s.step -> defObj)
-//	(s.step).(s'.log).dO_obj=o 
-	//and	(s.step).(s'.log).dO_usr=usr
-	//Increase the step
-	//s'.step = 1.add[s.step]
 }
 
+//Permissions to define an object
+pred hasDefObjPermissions(s, s':SecureState,o:Obj, usr:User){
+	let usr_perm =  (usr.(s.u_roles)).(s.r_permissions)
+		{o in usr_perm.Write}
+}
 
 pred secureDefAtt(s, s': State, o: Obj, att: FName, usr:User) {
 	usr in s.users
-	let usr_perm = (usr.(s.u_roles)).(s.r_permissions)|
+	
+	hasDefAttPermissions[s,s',o,att,usr]
+	defAtt[s,s',o,att, none]
+
+	noChangeInAccessControl[s, s']
+	s'.u_owned = s.u_owned 
+}
+
+//Permissions to define an attribute
+pred hasDefAttPermissions(s, s': State, o: Obj, att: FName, usr:User){
+	let usr_perm = (usr.(s.u_roles)).(s.r_permissions){
 		//Write or Read permission or own the Object
 		(o in usr_perm.Operation or o in usr.(s.u_owned))
 		//Write permission on the attribute
-		and att in usr_perm.Write
-	
-	defAtt[s,s',o,att]
-
-	noChangeInAccessControl[s, s']
-
-	//add to log
-//	s'.log = s.log + (s.step -> defAtt)
-	//(s.step).(s'.log).dA_att=att
-	//and(s.step).(s'.log).dA_obj=o
-	//and (s.step).(s'.log).dA_usr=usr
-	//Increase the step
-	//s'.step = 1.add[s.step]
+		att in usr_perm.Write
+	}
 }
 
 pred secureLinkObj(s, s': State, objSource: Obj, roleSource: FName, objTarget: Obj, roleTarget: FName, usr:User) {
 	usr in s.users
-	let usr_perm = (usr.(s.u_roles)).(s.r_permissions)|
-		//Write permission or own the source
-		(objSource in usr_perm.Write or objSource in usr.(s.u_owned))
-		//Write or Read permission or own the target
-		and (objSource in usr_perm.Operation or objSource in usr.(s.u_owned))
-	
+
+	hasLinkObjPermissions[s, s', objSource, roleSource, objTarget, roleTarget,usr]
 	linkObj[s, s', objSource, roleSource, objTarget, roleTarget]
 
 	noChangeInAccessControl[s, s']
-
-	//add to log
-	//s'.log = s.log + (s.step -> linkObj)
-	//(s.step).(s'.log).lO_objSource = objSource
-	//and(s.step).(s'.log).lO_roleSource= roleSource
-	//and (s.step).(s'.log).lO_objTarget= objTarget
-	//and (s.step).(s'.log).lO_roleTarget= roleTarget
-//	and (s.step).(s'.log).lO_usr= usr
-	//Increase the step
-//	s'.step = 1.add[s.step]
-
 }
 
+//Permissions to link an object
+pred hasLinkObjPermissions(s, s': State, objSource: Obj, roleSource: FName, objTarget: Obj, roleTarget: FName, usr:User){
+		let usr_perm = (usr.(s.u_roles)).(s.r_permissions){
+		//Write permission or own the source
+		(objSource in usr_perm.Write or objSource in usr.(s.u_owned))
+		//Write or Read permission or own the target
+		(objSource in usr_perm.Operation or objSource in usr.(s.u_owned))
+		}
+}
 
-/*
-	Criar um secure complete que verifica: atige o estado completo com os invariantes e adicionalmente
-	é correctamente aplicado o controlo de accesso
-
-*/
 
 run {}
 

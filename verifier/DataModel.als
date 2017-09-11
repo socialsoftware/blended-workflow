@@ -98,7 +98,6 @@ pred defObj(s, s' : State, o: Obj) {
 pred defAtt(s, s': State, o: Obj, att: FName) {
 	o in s.objects
 	no s.fields[o, att] 
-
 	s'.objects = s.objects
 
 	s'.fields = s.fields + (o -> att -> DefVal)

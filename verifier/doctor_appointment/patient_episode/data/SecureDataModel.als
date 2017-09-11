@@ -9,27 +9,38 @@ open filesystem/doctorappointment/patientepisode/Invariants
 pred init (s: State) {
 	no s.objects
 	no s.fields
-	
 	//The log is empty
 	no s.log
-	//This is the first state
-	//s.step=1
-
 /**
 * Hard code here the Access control rules
 **/	
-//DIZER EXPLICITAMENTE QUE O CONJUNTO É = Person1+person2
+
+
 
 	//WRITE HERE THE USERS
-	Person1 in s.users
-	Person2 in s.users
+	s.users = {Alice + Bruno + Carlos}
 	//WRITE HERE THE ROLES
-	Doctor in s.roles
-	Receptionist in s.roles
+	s.roles={Doctor+ Receptionist + Nurse}
 	//WRITE HERE THE ROLES OF EACH USER
-	
+	s.u_roles = {
+		Alice -> Doctor 
+		+ Bruno -> Receptionist 
+		+ Carlos -> Nurse}
 	//WRITE HERE THE PERMISSIONS OF EACH ROLE
-
+	s.r_permissions = {
+		Doctor->{ 
+				Patient -> Read
+				+ patient_name -> Read + patient_address -> Read + patient_episode->Read
+				+Episode -> Write
+				+episode_reserve_date -> Write+ episode_data -> Write+episode_report->Write
+			}
+		+ Receptionist->{ 
+				Patient -> Write 
+				+ patient_name -> Write + patient_address -> Write + patient_episode->Write
+				+ Episode ->Read
+				+ episode_reserve_date -> Write + episode_checkin ->Write + episode_checkout ->Write + episode_patient -> Write
+			}
+		}
 	//No user owned Objects
 	no s.u_owned
 
@@ -49,4 +60,4 @@ fact traces {
 }
 
 
-run complete for   4 but 15 State, 5 Int
+run complete for  4 but 15 State, 5 Int
