@@ -6,8 +6,14 @@ The master contains the current version of development, which includes the blend
 
 The current version of the project is a maven project that uses Fénix Framework (https://fenix-framework.github.io/) for persistency support and Xtex (http://www.eclipse.org/Xtext/) for the designer. 
 
-To run the project you have to change some configurations. For the engine:
 
--blended-workflow\src\main\config\build.properties (Endpoints, User, password, etc)
-    
--blended-workflow\src\main\config\log4j (log path file)
+To run the engine execute: 
+- create a "blendedworkflow" database in mysql
+- configure the mysql username and password in resources/fenix-framework.properties
+- mvn clean spring-boot:run
+- access in a browser to localhost:8080
+
+To run the designer:
+- in Eclipse import all projets in blended-workflow/designer as "Existing Projects in Workspace"
+- "Generate xText Artifacts" for designer/src/pt.ist.socialsoftware.blendedworkflow.designer/BlendedWorkflow.xtext
+- run the designer "As Eclipse Application"
