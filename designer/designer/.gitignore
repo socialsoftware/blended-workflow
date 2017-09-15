@@ -7,3 +7,4 @@ model/
 /.launch/
 /build/
 /.antlr-generator-3.2.0-patch.jar
+/.metadata/

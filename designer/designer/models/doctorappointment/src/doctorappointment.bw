@@ -46,7 +46,7 @@ Association PatientHasEpisode {
 }
 
 Association EpisodeHasPrescription{
-	Episode with episode (1)
+	Episode with episode (1) 
 	Prescription with prescription (0..1)
 }
 
@@ -63,5 +63,4 @@ Association EpisodehasReport {
 Association PrescriptionHasMedication {
 	Prescription with prescription (1)
 	Medication with medication (1..*)
-}  
-
+} 
