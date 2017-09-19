@@ -30,7 +30,7 @@ fact NumberOfObjects {
 	#Episode = 2
 }
 
-pred defEpisodeReserveDate(s, s': State, e: Obj){
+pred defEpisodeReserveDate(s, s': State, e: Episode){
 	dependence[s', e, episode_reserve_date, 0 -> episode_patient, patient_address]
 	defAtt[s, s', e, episode_reserve_date]
 }

@@ -49,6 +49,7 @@ pred noFieldChangeExcept(s, s': State, asg: set Obj ->FName) {
 }
 
 pred noExtraFields(s: State, objs: set Obj, fNames: set FName) {
+	
 	all obj: objs <: s.objects |no obj.(s.fields)[ FName - fNames ]
 }
 
@@ -89,6 +90,7 @@ pred dependence[s: State, sourceObj: Obj, sourceAtt: FName, p: seq FName, target
 }
 
 pred defObj(s, s' : State, o: Obj) {
+
 	o !in s.objects
 
 	s'.objects = s.objects + o

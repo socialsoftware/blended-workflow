@@ -1,5 +1,5 @@
 // invariants for patient and episode
-module filesystem/doctorappointment/patientepisode/invariants
+module filesystem/doctorappointment/patientepisode/Invariants
 
 open filesystem/doctorappointment/DoctorAppointment
 
