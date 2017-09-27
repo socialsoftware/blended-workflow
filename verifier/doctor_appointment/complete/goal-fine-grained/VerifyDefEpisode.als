@@ -1,7 +1,7 @@
 // verify that the operation is consistently defined
-module filesystem/doctorappointment/complete/goal/VerifyDefEpisode
+module filesystem/doctorappointment/complete/goalfinegrained/VerifyDefEpisode
 open filesystem/doctorappointment/complete/invariants
-open filesystem/doctorappointment/complete/goal/GoalModel
+open filesystem/doctorappointment/complete/goalfinegrained/GoalModel
 
 
 assert DefEpisodePreservesInv {

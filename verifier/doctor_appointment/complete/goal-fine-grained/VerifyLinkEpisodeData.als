@@ -1,7 +1,7 @@
 // verify that the operation is consistently defined
-module filesystem/doctorappointment/complete/goal/VerifyLinkEpisodeData
+module filesystem/doctorappointment/complete/goalfinegrained/VerifyLinkEpisodeData
 open filesystem/doctorappointment/complete/invariants
-open filesystem/doctorappointment/complete/goal/GoalModel
+open filesystem/doctorappointment/complete/goalfinegrained/GoalModel
 
 
 assert LinkEpisodeDataPreservesInv {

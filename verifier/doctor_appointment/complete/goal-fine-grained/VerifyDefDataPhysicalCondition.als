@@ -1,7 +1,7 @@
 // verify that the operation is consistently defined
-module filesystem/doctorappointment/complete/goal/VerifyDefDataPhysicalCondition
+module filesystem/doctorappointment/complete/goalfinegrained/VerifyDefDataPhysicalCondition
 open filesystem/doctorappointment/complete/invariants
-open filesystem/doctorappointment/complete/goal/GoalModel
+open filesystem/doctorappointment/complete/goalfinegrained/GoalModel
 
 
 assert DefDataPhysicalConditionPreservesInv {

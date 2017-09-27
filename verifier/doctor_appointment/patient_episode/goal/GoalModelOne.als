@@ -24,19 +24,21 @@ fact traces {
 pred registerPatient(s, s': State, p: Patient) {
 	actCondition[s, none, none -> none]
 	
-	sucCondition[s, s', p, p -> patient_name + p -> patient_address]
+	sucCondition[s, s', p, p -> patient_name + p -> patient_address, none -> none -> none]
 }
 
 pred bookAppointment(s, s': State, e: Episode) {
 	actCondition[s, none, none -> none]
 
-	sucCondition[s, s', e, e -> episode_reserve_date]
+	sucCondition[s, s', e, e -> episode_reserve_date, none -> none -> none]
 
 	dependence[s', e, episode_reserve_date, 0 -> episode_patient, patient_address]
 }
 
 pred associatePatientToEpisode(s, s': State, p: Patient, e: Episode) {
-	invCondition[s, s',  (p -> patient_episode -> e) + (e -> episode_patient -> p)]
+	actCondition[s, none, none -> none]
+
+	sucCondition[s, s', none, none ->none, (p -> patient_episode -> e) + (e -> episode_patient -> p)]
 }
 
 // registerPatient preserves the invariant

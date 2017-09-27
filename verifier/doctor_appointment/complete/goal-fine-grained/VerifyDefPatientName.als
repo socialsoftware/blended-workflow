@@ -1,8 +1,8 @@
 // verify that operations are consistently defined
-module filesystem/doctorappointment/complete/goal/VerifyDefPatientName
+module filesystem/doctorappointment/complete/goalfinegrained/VerifyDefPatientName
 
 open filesystem/doctorappointment/complete/invariants
-open filesystem/doctorappointment/complete/goal/GoalModel
+open filesystem/doctorappointment/complete/goalfinegrained/GoalModel
 
 
 assert DefPatientNamePreservesInv {
