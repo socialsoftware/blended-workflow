@@ -359,6 +359,7 @@ public class Goal extends Goal_Base {
 	public Boolean isEnabledForExecution(WorkflowInstance workflowInstance) {
 		// get entity context
 		Set<Entity> entityContext = getEntityContext();
+
 		if (entityContext.isEmpty()) {
 			return true;
 		}
@@ -394,7 +395,7 @@ public class Goal extends Goal_Base {
 		for (DefProductCondition defProductCondition : getSuccessConditionSet()) {
 			// attribute is defined but not its entity
 			if (defProductCondition.isAttribute()
-					&& !getSuccessConditionSet().contains(defProductCondition.getSourceOfPath())) {
+					&& !getSuccessConditionSet().contains(defProductCondition.getSourceOfPath().getDefCondition())) {
 				entityContext.add(defProductCondition.getSourceOfPath());
 			}
 			// create contexts for entities which are not defined in the goal

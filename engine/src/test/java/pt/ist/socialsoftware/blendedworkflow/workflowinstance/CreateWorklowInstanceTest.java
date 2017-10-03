@@ -10,7 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.service.BWException;
 
-public class createWorklowInstanceTest extends TeardownRollbackTest {
+public class CreateWorklowInstanceTest extends TeardownRollbackTest {
 	private static final String NAME = "name";
 
 	Specification spec;

@@ -75,7 +75,7 @@ public class ExecutionInterface {
 	public Set<ActivityWorkItemDTO> getPendingActivityWorkItemSet(String specId, String instanceName) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
-		Set<ActivityWorkItemDTO> activityWorkItemDTOs = new HashSet<ActivityWorkItemDTO>();
+		Set<ActivityWorkItemDTO> activityWorkItemDTOs = new HashSet<>();
 
 		for (Activity activity : workflowInstance.getEnabledActivitySet()) {
 			activityWorkItemDTOs.add(ActivityWorkItemDTO.createActivityWorkItemDTO(workflowInstance, activity));
@@ -104,7 +104,7 @@ public class ExecutionInterface {
 	public Set<GoalWorkItemDTO> getPendingGoalWorkItemSet(String specId, String instanceName) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
-		Set<GoalWorkItemDTO> goalWorkItemDTOs = new HashSet<GoalWorkItemDTO>();
+		Set<GoalWorkItemDTO> goalWorkItemDTOs = new HashSet<>();
 
 		for (Goal goal : workflowInstance.getEnabledGoalSet()) {
 			goalWorkItemDTOs.add(GoalWorkItemDTO.createGoalWorkItemDTO(workflowInstance, goal));

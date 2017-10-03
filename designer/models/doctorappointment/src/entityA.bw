@@ -1,0 +1,6 @@
+Specification: "Entity A" 
+       
+Entity A { 
+	att1 : String 
+	att2 : Number 
+}    
