@@ -75,7 +75,7 @@ pred bidirectionalPreservation(s: State, objsOne: set Obj, roleOne: FName, objsT
 	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleOne] | objTwo in s.fields[objOne, roleTwo] or canLink[s, objOne, roleOne, objTwo]
 }
 
-pred dependence[s: State, sourceObj: Obj, sourceAtt: FName, p: seq FName, targetAtt: FName] {
+pred dependence(s: State, sourceObj: Obj, sourceAtt: FName, p: seq FName, targetAtt: FName) {
 	(sourceAtt = none and targetAtt = none) implies {
 		all oS: sourceObj <: s.objects | !no reach[s, oS, p]
 	} else (sourceAtt = none) implies {
