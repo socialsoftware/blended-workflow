@@ -27,13 +27,16 @@ pred securityInit (s: SecureState) {
 		+ Bruno -> R_Receptionist 
 		+ Carlos -> R_Nurse}
 	//WRITE HERE THE PERMISSIONS OF EACH ROLE
-	s.r_DefPermissions = {
-		R_Doctor->{ Episode + episode_reserve_date}
-		+ R_Receptionist->{ Patient + patient_name + patient_address + patient_episode + episode_patient }
-		}
-	s.r_ReadPermissions = {
-		R_Doctor-> {Patient + patient_name + patient_address + patient_episode + Episode + episode_reserve_date  + episode_patient}
-		+ R_Receptionist->{ Patient + patient_name + patient_address + patient_episode + Episode + episode_reserve_date  + episode_patient}
+	s.r_permissions = 
+		{Def -> ({
+			R_Doctor->{ Episode + episode_reserve_date}
+			+ R_Receptionist->{ Patient + patient_name + patient_address + patient_episode + episode_patient }
+			})
+		+
+		Read -> ({
+			R_Doctor-> {Patient + patient_name + patient_address + patient_episode + Episode + episode_reserve_date  + episode_patient}
+			+ R_Receptionist->{ Patient + patient_name + patient_address + patient_episode + Episode + episode_reserve_date  + episode_patient}
+			})
 		}
 
 }
@@ -41,7 +44,7 @@ pred securityInit (s: SecureState) {
 fact traces {
 	first.securityInit
 	all s: State - last | let s' = s.next |
-		some p: sPatient, e: Episode, u: User| 
+		some p: Patient, e: Episode, u: User| 
 		baseSecureDefObj [s, s', p, u]or 
 		baseSecureDefAtt [s, s', p, patient_name, u] or baseSecureDefAtt [s, s', p, patient_address, u] or 
 		baseSecureDefObj [s, s', e, u] or

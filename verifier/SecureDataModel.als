@@ -3,8 +3,9 @@ module filesystem/SecureDataModel
 open filesystem/DataModel
 
 abstract sig User{
-
+	usr_obj: set Obj
 }
+
 
 abstract sig Role{}
 
@@ -35,20 +36,6 @@ sig linkObj extends Transition{
 
 
 
-sig activityTransition extends Transition{
-	act_usr: User,
-	act_PreDefObj: set Obj,
-	act_PreDefAtt: set Obj -> FName,
-	
-	act_DepSourceObj: Obj,
-	act_DepSourceAtt: FName,
-	act_DepPath: seq FName,
-	act_DepTargetAtt: FName,
-
-	act_PostDefObj: set Obj,
-	act_PostDefAtt: set Obj -> FName,
-	act_PostLinkObj: set Obj -> FName -> Obj
-}
 sig SecureState extends State{
 	//Log of the operations made in each transition
 	log: seq Transition,
@@ -57,9 +44,10 @@ sig SecureState extends State{
 	users: set User,
 	roles: set Role,
 	u_roles: users -> set roles,
-	r_DefPermissions: roles -> set({Obj + FName}),
-	r_ReadPermissions: roles -> set({Obj + FName}),
-	
+	resources: set {Obj + FName},
+	role_permissions: Operation -> roles ->  resources,
+
+
 	
 } 
 
@@ -73,8 +61,7 @@ pred noChangeInAccessControl(s, s' :SecureState){
 	s'.users = s.users
 	s'.roles = s.roles
 	s'.u_roles = s.u_roles
-	s'.r_DefPermissions = s.r_DefPermissions
-	s'.r_ReadPermissions = s.r_ReadPermissions
+	s'.role_permissions = s.role_permissions
 }
 
 pred noChangeInAccessControlExceptRolePermissions(s, s' :SecureState){
@@ -85,27 +72,27 @@ pred noChangeInAccessControlExceptRolePermissions(s, s' :SecureState){
 
 // gives all roles of a user
 fun userRoles(s: SecureState, usr: User): set Role{
-	(usr.(s.u_roles))
+	usr.(s.u_roles)
 }
 
 // gives all the tuples (Role, Object) of the def Permissions
 fun RoleObjectWithDefPermission(s: SecureState): set Role -> Obj {
-	 ( s.r_DefPermissions) :> Obj
+	 Def.(s.role_permissions) :> Obj
 }
 
 // gives all the tuples (Role, FName) of the def Permissions
 fun RoleAttributeWithDefPermission(s: SecureState): set Role -> FName {
-	( s.r_DefPermissions) :> FName
+	Def.(s.role_permissions) :> FName
 }
 
 // gives all the tuples (Role, Object) of the read Permissions
 fun RoleObjectWithReadPermission(s: SecureState): set Role -> Obj {
-	( s.r_ReadPermissions) :> Obj 
+	Read.(s.role_permissions) :> Obj 
 }
 
 // gives all the tuples (Role, FName) of the read Permissions
 fun RoleAttributeWithReadPermission(s: SecureState): set Role -> FName {
-	( s.r_ReadPermissions) :> FName
+	Read.(s.role_permissions) :> FName
 }
 
 //User has permission to create an instance of an object
@@ -261,13 +248,13 @@ pred baseSecureLinkObj(s, s': SecureState, objSource: Obj, roleSource: FName, ob
 //Give read permission to all roles of a user that have def permission to that object
 pred giveObjectReadPermission(s, s': SecureState, o: Obj, usr: User){
 	all role: userRoles[s, usr] <: (RoleObjectWithDefPermission[s]).o |
-		 role.(s'.r_ReadPermissions) = role.(s.r_ReadPermissions) + {o}
+		 role.(Read.(s'.role_permissions)) =  role.(Read.(s.role_permissions)) + {o}
 }
 
 //Give read permission to all roles of a user that have def permission to that attribute
 pred giveAttributeReadPermission(s, s': SecureState, att: FName, usr: User){
 	all role: userRoles[s, usr] <: (RoleAttributeWithDefPermission[s]).att |
-		role.(s'.r_ReadPermissions) = role.(s.r_ReadPermissions) + {att}
+		 role.(Read.(s'.role_permissions)) =  role.(Read.(s.role_permissions))+ {att}
 }
 
 // The user that defines the object gains read permission over that object

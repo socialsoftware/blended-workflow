@@ -11,7 +11,7 @@ pred init (s: SecureState) {
 /**
 * Hard code here the Access control rules
 **/	
-
+	no s.domain_permission
 
 
 	//WRITE HERE THE USERS
@@ -41,8 +41,8 @@ fact traces {
 	all s: SecureState - last | let s' = s.next |
 	some p: Patient, e: Episode, u: User | 
 		secureStaticRegisterPatient[s, s', p, u] or
-		secureStaticBookAppointment[s, s', p, e, u] //or
-	//	skip [s, s']
+		secureStaticBookAppointment[s, s', p, e, u] or
+		skip [s, s']
 }
 
 
@@ -50,7 +50,6 @@ pred secureStaticRegisterPatient(s, s': SecureState, p: Patient, usr: User) {
 	secureBaseActivity[s, s', none, none -> none, 
 		none, none, none -> none, none, 
 		p, p -> patient_name + p -> patient_address, none -> none -> none, usr]
-	noChangeInAccessControl[s, s']
 /*
 	secureBasePreCondition[s, none, none -> none, usr]
 	secureBasePostCondition[s, s', p, p -> patient_name + p -> patient_address, none -> none -> none, usr]
@@ -69,7 +68,6 @@ pred secureStaticBookAppointment(s, s': SecureState, p: Patient, e: Episode, usr
 	secureBaseActivity[s, s', p, none -> none, 
 		e, episode_reserve_date, 0 -> episode_patient, patient_address, 
 		e, e -> episode_reserve_date, (p -> patient_episode -> e) + (e -> episode_patient -> p), usr]
-	noChangeInAccessControl[s, s']
 /*
 	secureBasePreCondition[s, p, none -> none, usr]
 	secureBaseDependence[s', e, episode_reserve_date, 0 -> episode_patient, patient_address, usr]
@@ -111,7 +109,7 @@ assert secureBookAppointment{
 			and NoActivityDepenceWithoutPermissions[s', e, episode_reserve_date, 0 -> episode_patient, patient_address]
 }
 //CHECK
-check secureBookAppointment for 4 but 6 State, 5 Int
+//check secureBookAppointment for 4 but 6 State, 5 Int
 
 pred complete{}
-//run complete for 2
+run complete 
