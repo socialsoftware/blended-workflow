@@ -16,6 +16,7 @@ one sig episode_patient extends FName {}
 one sig episode_data extends FName {} 
 one sig episode_report extends FName {} 
 
+
 sig Data extends Obj {}
 one sig data_height extends FName {}
 one sig data_weight extends FName {}
@@ -56,4 +57,4 @@ fact relations {
 	report_episode.inverse = episode_report
 }
 
-run {}
+//run {}

@@ -30,6 +30,7 @@ fact NumberOfObjects {
 	#Episode = 2
 }
 
+
 pred defEpisodeReserveDate(s, s': State, e: Episode){
 	dependence[s', e, episode_reserve_date, 0 -> episode_patient, patient_address]
 	defAtt[s, s', e, episode_reserve_date]
@@ -42,11 +43,11 @@ assert initialState {
 
 // defObj preserves the invariant
 assert DefObjPreservesInv {
-	all s, s': State | all o: Obj |
+	all s, s': State | all o: Obj|
 		Invariants [s] and defObj [s, s', o] => Invariants [s']
 }
 // fails for mutliplicity invariant
-//check DefObjPreservesInv for 6
+//check DefObjPreservesInv for 2
 
 // defAtt preserves the invariant for all except episode_reserve_date 
 assert DefAttPreservesInv {
@@ -62,7 +63,7 @@ assert DefEpisodeReserveDatePreservesInv {
 		Invariants [s] and defEpisodeReserveDate [s, s', e] => Invariants [s'] 
 }
 
-check DefEpisodeReserveDatePreservesInv for 6
+//check DefEpisodeReserveDatePreservesInv for 6
 
 // linkObj preserves the invariant
 assert LinkObjPreservesInv {
