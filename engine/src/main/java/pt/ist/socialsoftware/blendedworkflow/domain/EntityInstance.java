@@ -90,7 +90,9 @@ public class EntityInstance extends EntityInstance_Base {
 
 		if (defPathCondition.getPath().getSource() != getEntity()
 				&& defPathCondition.getPath().getAdjacent() != getEntity()) {
-			assert false : "neither the first nor the second element in the path refer to the entity of this instance";
+			assert false : "neither the first nor the second element in the path, "
+					+ defPathCondition.getPath().getValue() + ", refer to the entity of this instance, "
+					+ getEntity().getName();
 		}
 
 		// the first element refers the entity

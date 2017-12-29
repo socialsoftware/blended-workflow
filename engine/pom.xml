@@ -12,7 +12,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.org.mortbay.jetty.jetty.maven.plugin>8.1.8.v20121106</version.org.mortbay.jetty.jetty.maven.plugin>
-		<version.org.springframework.boot>1.5.4.RELEASE</version.org.springframework.boot>
+		<version.org.springframework.boot>1.5.9.RELEASE</version.org.springframework.boot>
 		<version.com.jayway.jsonpath>2.0.0</version.com.jayway.jsonpath>
 		<version.com.fasterxml.jackson.core>2.6.0</version.com.fasterxml.jackson.core>
 
