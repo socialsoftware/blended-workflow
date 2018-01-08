@@ -9,4 +9,4 @@ assert RegisterPatientPreservesInv {
 	all s, s': State | all p: Patient |
 		Invariants [s] and registerPatient [s, s', p] => Invariants [s']
 }
-check RegisterPatientPreservesInv for 4 but 2 State, 5 Int
+check RegisterPatientPreservesInv for 4 but 7 State, 5 Int

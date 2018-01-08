@@ -17,5 +17,5 @@ pred Invariants(s: State) {
 	bidirectionalPreservation [s, Patient, episode_patient, Episode, patient_episode] 
 
 	// dependencies hold
-	dependence [s, Episode, episode_reserve_date, 0 -> episode_patient, patient_address]
+	checkDependence [s, Episode, reserve_date_dependence]
 }

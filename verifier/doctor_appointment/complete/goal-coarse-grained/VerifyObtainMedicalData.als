@@ -8,4 +8,4 @@ assert ObtainMedicalDataPreservesInv {
 	all s, s': State, e: Episode, d: Data |
 		Invariants [s] and obtainMedicalData [s, s', e, d] => Invariants [s']
 }
-check ObtainMedicalDataPreservesInv for 4 but 2 State, 5 Int
+check ObtainMedicalDataPreservesInv for 4 but 10 State, 5 Int

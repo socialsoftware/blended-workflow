@@ -8,4 +8,4 @@ assert MeasureBloodPressurePreservesInv {
 	all s, s': State, d: Data |
 		Invariants [s] and measureBloodPressure [s, s', d] => Invariants [s']
 }
-check MeasureBloodPressurePreservesInv for 4 but 2 State, 5 Int
+check MeasureBloodPressurePreservesInv for 4 but 10 State, 5 Int

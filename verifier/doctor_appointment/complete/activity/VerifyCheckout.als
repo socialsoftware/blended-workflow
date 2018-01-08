@@ -9,4 +9,4 @@ assert CheckoutPreservesInv {
 	all s, s': State | all e: Episode |
 		Invariants [s] and checkout [s, s', e] => Invariants [s']
 }
-check CheckoutPreservesInv for 4 but 2 State, 5 Int
+check CheckoutPreservesInv for 4 but 7 State, 5 Int

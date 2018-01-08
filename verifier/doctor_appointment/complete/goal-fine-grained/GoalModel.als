@@ -35,47 +35,37 @@ fact traces {
 
 pred defPatient(s, s': State, p: Patient) {
 	actCondition[s, none, none -> none]
-	
 	sucCondition[s, s', p, none -> none, none -> none -> none]
 }
 
 pred defPatientName(s, s': State, p: Patient) {
 	actCondition[s, p, none -> none]
-	
 	sucCondition[s, s', none, p -> patient_name, none -> none -> none]
 }
 
 pred defPatientAddress(s, s': State, p: Patient) {
 	actCondition[s, p, none -> none]
-	
 	sucCondition[s, s', none, p -> patient_address, none -> none -> none]
 }
 
 pred defEpisode(s, s': State, e: Episode) {
 	actCondition[s, none, none -> none]
-
 	sucCondition[s, s', e, none -> none, none -> none -> none]
 }
 
 pred defEpisodeReserveDate(s, s': State, e: Episode) {
 	actCondition[s, e, none -> none]
-
 	sucCondition[s, s', none , e -> episode_reserve_date, none -> none -> none]
 }
 
 pred defEpisodeCheckin(s, s': State, e: Episode) {
 	actCondition[s, e, none -> none]
-
 	sucCondition[s, s', none, e -> episode_checkin, none -> none -> none]
 }
 
 pred defEpisodeCheckout(s, s': State, e: Episode) {
 	actCondition[s, e, none -> none]
-
 	sucCondition[s, s', none, e -> episode_checkout, none -> none -> none]
-
-	dependence [s', e, episode_checkout, 0 -> episode_report, report_description]
-	dependence [s', e, episode_checkout,  none -> none, episode_checkin]
 }
 
 pred linkPatientEpisode(s, s': State, p: Patient, e: Episode) {
@@ -84,31 +74,26 @@ pred linkPatientEpisode(s, s': State, p: Patient, e: Episode) {
 
 pred defData(s, s': State, d: Data) {
 	actCondition[s, none, none -> none]
-
 	sucCondition[s, s', d, none -> none, none -> none -> none]
 }
 
 pred defDataHeight(s, s': State, d: Data) {
 	actCondition[s, d, none -> none]
-
 	sucCondition[s, s', none, d -> data_height, none -> none -> none]
 }
 
 pred defDataWeight(s, s': State, d: Data) {
 	actCondition[s, d, none -> none]
-
 	sucCondition[s, s', none, d -> data_weight, none -> none -> none]
 }
 
 pred defDataBloodPressure(s, s': State, d: Data) {
 	actCondition[s, d, none -> none]
-
 	sucCondition[s, s', none, d -> data_blood_pressure, none -> none -> none]
 }
 
 pred defDataPhysicalCondition(s, s': State, d: Data) {
 	actCondition[s, d, none -> none]
-
 	sucCondition[s, s', none, d -> data_physical_condition, none -> none -> none]
 }
 
@@ -118,16 +103,12 @@ pred linkEpisodeData(s, s': State, e: Episode, d: Data) {
 
 pred defReport(s, s': State, r: Report) {
 	actCondition[s, none, none -> none]
-
 	sucCondition[s, s', r, none -> none, none -> none -> none]
 }
 
 pred defReportDescription(s, s': State, r: Report) {
 	actCondition[s, r, none -> none]
-
 	sucCondition[s, s', none , r -> report_description, none -> none -> none]
-
-	dependence [s', r, report_description, 0 -> report_episode + 1 -> episode_data, data_blood_pressure]
 }
 
 pred linkEpisodeReport(s, s': State, e: Episode, r: Report) {

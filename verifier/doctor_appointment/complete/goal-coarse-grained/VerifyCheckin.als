@@ -8,4 +8,4 @@ assert CheckinPreservesInv {
 	all s, s': State, p: Patient, e: Episode |
 		Invariants [s] and checkin [s, s', p, e] => Invariants [s']
 }
-check CheckinPreservesInv for 4 but 2 State, 5 Int
+check CheckinPreservesInv for 4 but 10 State, 5 Int

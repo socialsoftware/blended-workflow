@@ -8,4 +8,4 @@ assert DefDataPhysicalConditionPreservesInv {
 	all s, s': State, d: Data |
 		Invariants [s] and defDataPhysicalCondition [s, s', d] => Invariants [s']
 }
-check DefDataPhysicalConditionPreservesInv for 4 but 2 State, 5 Int
+check DefDataPhysicalConditionPreservesInv for 4 but 18 State, 5 Int

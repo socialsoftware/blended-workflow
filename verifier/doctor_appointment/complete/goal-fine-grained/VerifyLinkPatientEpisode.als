@@ -9,4 +9,4 @@ assert LinkPatientEpisodePreservesInv {
 	all s, s': State, p: Patient, e: Episode |
 		Invariants [s] and linkPatientEpisode [s, s', p, e] => Invariants [s']
 }
-check LinkPatientEpisodePreservesInv for 4 but 2 State, 5 Int
+check LinkPatientEpisodePreservesInv for 4 but 18 State, 5 Int

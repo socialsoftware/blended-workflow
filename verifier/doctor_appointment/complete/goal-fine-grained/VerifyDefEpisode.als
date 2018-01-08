@@ -8,4 +8,4 @@ assert DefEpisodePreservesInv {
 	all s, s': State, e: Episode |
 		Invariants [s] and defEpisode [s, s', e] => Invariants [s']
 }
-check DefEpisodePreservesInv for 4 but 2 State, 5 Int
+check DefEpisodePreservesInv for 4 but 18 State, 5 Int

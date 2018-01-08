@@ -16,6 +16,10 @@ one sig episode_patient extends FName {}
 one sig episode_data extends FName {} 
 one sig episode_report extends FName {} 
 
+sig reserve_date_dependence extends Dependence {}
+sig episode_checkout_report_descripton_dependence extends Dependence {}
+sig episode_checkout_episode_checkin_dependence extends Dependence {}
+sig report_description_data_blood_pressure_dependence extends Dependence {}
 
 sig Data extends Obj {}
 one sig data_height extends FName {}
@@ -56,5 +60,30 @@ fact relations {
 	report_episode.maxMul = 1
 	report_episode.inverse = episode_report
 }
+
+fact dependencies {
+	// dependence episode_reserve_date from patient_address
+	reserve_date_dependence.sourceObj = Episode
+	reserve_date_dependence.sourceAtt = episode_reserve_date
+	reserve_date_dependence.sequence =  0 -> episode_patient
+	reserve_date_dependence.targetAtt = patient_address
+
+	episode_checkout_report_descripton_dependence.sourceObj = Episode
+	episode_checkout_report_descripton_dependence.sourceAtt = episode_checkout
+	episode_checkout_report_descripton_dependence.sequence = 0 -> episode_report
+	episode_checkout_report_descripton_dependence.targetAtt = report_description
+
+	episode_checkout_episode_checkin_dependence.sourceObj = Episode
+	episode_checkout_episode_checkin_dependence.sourceAtt = episode_checkout
+	episode_checkout_episode_checkin_dependence.sequence = none -> none
+	episode_checkout_episode_checkin_dependence.targetAtt = episode_checkin
+
+	report_description_data_blood_pressure_dependence.sourceObj = Report
+	report_description_data_blood_pressure_dependence.sourceAtt = report_description
+	report_description_data_blood_pressure_dependence.sequence =  0 -> report_episode + 1 -> episode_data
+	report_description_data_blood_pressure_dependence.targetAtt = data_blood_pressure
+}
+
+
 
 //run {}

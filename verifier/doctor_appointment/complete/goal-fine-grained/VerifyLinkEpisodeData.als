@@ -8,4 +8,4 @@ assert LinkEpisodeDataPreservesInv {
 	all s, s': State, e: Episode, d: Data |
 		Invariants [s] and linkEpisodeData [s, s', e, d] => Invariants [s']
 }
-check LinkEpisodeDataPreservesInv for 4 but 2 State, 5 Int
+check LinkEpisodeDataPreservesInv for 4 but 18 State, 5 Int

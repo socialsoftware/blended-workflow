@@ -23,7 +23,7 @@ pred complete {
 		bidirectionalRule [s, Patient, episode_patient, Episode, patient_episode] and
 
 		// dependencies hold
-		dependence [s, Episode, episode_reserve_date, 0 -> episode_patient, patient_address]
+		checkDependence [s, Episode, reserve_date_dependence]
 }
 
 run {}

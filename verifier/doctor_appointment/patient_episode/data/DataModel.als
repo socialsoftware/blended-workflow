@@ -17,8 +17,7 @@ fact traces {
 		defObj [s, s', p] or 
 		defAtt [s, s', p, patient_name] or defAtt [s, s', p, patient_address] or 
 		defObj [s, s', e] or
-		defEpisodeReserveDate [s, s', e] or
-	// 	defAtt [s, s', e, episode_reserve_date] or 
+	 	defAtt [s, s', e, episode_reserve_date] or 
 		linkObj [s, s', p,  episode_patient, e, patient_episode] or
 		linkObj [s, s', e, patient_episode, p, episode_patient] //or
 		//skip [s, s']
@@ -28,12 +27,6 @@ fact traces {
 fact NumberOfObjects {
 	#Patient = 2
 	#Episode = 2
-}
-
-
-pred defEpisodeReserveDate(s, s': State, e: Episode){
-	dependence[s', e, episode_reserve_date, 0 -> episode_patient, patient_address]
-	defAtt[s, s', e, episode_reserve_date]
 }
 
 assert initialState {
@@ -51,19 +44,10 @@ assert DefObjPreservesInv {
 
 // defAtt preserves the invariant for all except episode_reserve_date 
 assert DefAttPreservesInv {
-	all s, s': State | all o: Obj | all f: FName - episode_reserve_date| 
+	all s, s': State | all o: Obj | all f: FName | 
 		Invariants [s] and defAtt [s, s', o, f] => Invariants [s'] 
 }
 //check DefAttPreservesInv for 6
-
-
-// defAtt preserves the invariant for episode_reserve_date 
-assert DefEpisodeReserveDatePreservesInv {
-	all s, s': State | all e: Episode |  
-		Invariants [s] and defEpisodeReserveDate [s, s', e] => Invariants [s'] 
-}
-
-//check DefEpisodeReserveDatePreservesInv for 6
 
 // linkObj preserves the invariant
 assert LinkObjPreservesInv {

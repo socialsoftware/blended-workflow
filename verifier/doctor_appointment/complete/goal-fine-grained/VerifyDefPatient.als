@@ -9,4 +9,4 @@ assert DefPatientPreservesInv {
 	all s, s': State | all p: Patient |
 		Invariants [s] and defPatient [s, s', p] => Invariants [s']
 }
-check DefPatientPreservesInv for 4 but 2 State, 5 Int
+check DefPatientPreservesInv for 4 but 18 State, 5 Int

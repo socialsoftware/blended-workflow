@@ -41,7 +41,7 @@ pred complete {
  		bidirectionalRule [s, Episode, report_episode, Report, episode_report] and
 
 		// dependencies hold
-		dependence [s, Episode, episode_checkout, 0 -> episode_report, report_description] and
-		dependence [s, Episode, episode_checkout,  none -> none, episode_checkin] and
-		dependence [s, Report, report_description, 0 -> report_episode + 1 -> episode_data, data_blood_pressure]
+		checkDependence [s, Episode, episode_checkout_report_descripton_dependence] and
+		checkDependence [s, Episode, episode_checkout_episode_checkin_dependence] and
+		checkDependence [s, Report, report_description_data_blood_pressure_dependence]
 }

@@ -9,4 +9,4 @@ assert CollectDataPreservesInv {
 	all s, s': State, e: Episode, d: Data |
 		Invariants [s] and collectData[s, s', e, d] => Invariants [s']
 }
-check CollectDataPreservesInv for 4 but 2 State, 5 Int
+check CollectDataPreservesInv for 4 but 7 State, 5 Int

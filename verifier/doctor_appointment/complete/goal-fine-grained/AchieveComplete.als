@@ -5,4 +5,4 @@ open filesystem/doctorappointment/complete/complete
 open filesystem/doctorappointment/complete/goalfinegrained/GoalModel
 
 
-run complete for 1 but 4 Obj, 18 State, 5 Int
+run complete for 4 but 18 State, 5 Int

@@ -8,4 +8,4 @@ assert DefReportPreservesInv {
 	all s, s': State, r: Report |
 		Invariants [s] and defReport [s, s', r] => Invariants [s']
 }
-check DefReportPreservesInv for 4 but 2 State, 5 Int
+check DefReportPreservesInv for 4 but 18 State, 5 Int

@@ -14,6 +14,13 @@ abstract sig Val {}
 
 one sig DefVal extends Val {}
 
+abstract sig Dependence {
+	sourceObj: Obj,
+	sourceAtt: FName, 
+	sequence: seq FName, 
+	targetAtt: FName
+}
+
 sig State {
 	objects: set Obj,
 	fields: objects -> ( FName ->set { Obj + Val } ) ,
@@ -75,17 +82,17 @@ pred bidirectionalPreservation(s: State, objsOne: set Obj, roleOne: FName, objsT
 	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleOne] | objTwo in s.fields[objOne, roleTwo] or canLink[s, objOne, roleOne, objTwo]
 }
 
-pred dependence(s: State, sourceObj: Obj, sourceAtt: FName, p: seq FName, targetAtt: FName) {
-	(sourceAtt = none and targetAtt = none) implies {
-		all oS: sourceObj <: s.objects | !no reach[s, oS, p]
-	} else (sourceAtt = none) implies {
-		all oS: sourceObj <: s.objects | DefVal in s.fields[reach[s, oS, p], targetAtt] 
-	} else (targetAtt = none) implies {
-		all oS: sourceObj <: s.objects | (s.fields[oS, sourceAtt] = DefVal) implies !no reach[s, oS, p]
-	} else (p = none -> none) implies {
-		all oS: sourceObj <: s.objects | (s.fields[oS, sourceAtt] = DefVal) implies DefVal in s.fields[oS, targetAtt]
+pred checkDependence(s: State, sourceObj: Obj, dependence: Dependence) {
+	(dependence.sourceAtt = none and dependence.targetAtt = none) implies {
+		all oS: sourceObj <: s.objects | !no reach[s, oS, dependence.sequence]
+	} else (dependence.sourceAtt = none) implies {
+		all oS: sourceObj <: s.objects | DefVal in s.fields[reach[s, oS, dependence.sequence], dependence.targetAtt] 
+	} else (dependence.targetAtt = none) implies {
+		all oS: sourceObj <: s.objects | (s.fields[oS, dependence.sourceAtt] = DefVal) implies !no reach[s, oS, dependence.sequence]
+	} else (dependence.sequence = none -> none) implies {
+		all oS: sourceObj <: s.objects | (s.fields[oS, dependence.sourceAtt] = DefVal) implies DefVal in s.fields[oS, dependence.targetAtt]
 	} else {
-		all oS: sourceObj <: s.objects | (s.fields[oS, sourceAtt] = DefVal) implies DefVal in s.fields[reach[s, oS, p], targetAtt] 
+		all oS: sourceObj <: s.objects | (s.fields[oS, dependence.sourceAtt] = DefVal) implies DefVal in s.fields[reach[s, oS, dependence.sequence], dependence.targetAtt] 
 	}	
 }
 
@@ -95,6 +102,8 @@ pred defObj(s, s' : State, o: Obj) {
 
 	s'.objects = s.objects + o
 	s'.fields = s.fields
+
+	all dep: Dependence | o in dep.sourceObj implies checkDependence[ s', o, dep]
 }
 
 pred defAtt(s, s': State, o: Obj, att: FName) {
@@ -105,6 +114,8 @@ pred defAtt(s, s': State, o: Obj, att: FName) {
 	s'.fields = s.fields + (o -> att -> DefVal)
 
 	noFieldChangeExcept[s, s', o -> att]
+
+	all dep: Dependence | o in dep.sourceObj and att in dep.sourceAtt implies checkDependence[ s', o, dep]
 }
 
 pred linkObj(s, s': State, objSource: Obj, roleSource: FName, objTarget: Obj, roleTarget: FName) {

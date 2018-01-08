@@ -8,4 +8,4 @@ assert DefDataPreservesInv {
 	all s, s': State, d: Data |
 		Invariants [s] and defData [s, s', d] => Invariants [s']
 }
-check DefDataPreservesInv for 4 but 2 State, 5 Int
+check DefDataPreservesInv for 4 but 18 State, 5 Int

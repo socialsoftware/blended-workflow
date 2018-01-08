@@ -25,4 +25,8 @@ pred postCondition(s, s': State, entDefs: set Obj, attDefs: set Obj -> FName,  m
 	s'.fields = s.fields + attDefs  -> DefVal + muls
 
 	noFieldChangeExcept[s, s', attDefs + muls.Obj]
+
+	all o: entDefs, dep: Dependence | o in dep.sourceObj implies checkDependence[ s', o, dep]
+
+	all o: attDefs.FName, dep: Dependence | o in dep.sourceObj implies checkDependence[ s', o, dep]
 }

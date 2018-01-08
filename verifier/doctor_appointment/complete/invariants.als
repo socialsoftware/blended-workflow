@@ -25,7 +25,7 @@ pred Invariants(s: State) {
  	bidirectionalPreservation [s, Episode, report_episode, Report, episode_report] and
 
 	// if there is a link between two objects, either is unidirectional or bidirectional
-	dependence [s, Episode, episode_checkout, 0 -> episode_report, report_description] and
-	dependence [s, Episode, episode_checkout,  none -> none, episode_checkin] and
-	dependence [s, Report, report_description, 0 -> report_episode + 1 -> episode_data, data_blood_pressure]
+	checkDependence [s, Episode, episode_checkout_report_descripton_dependence]
+	checkDependence [s, Episode, episode_checkout_episode_checkin_dependence]
+	checkDependence [s, Report, report_description_data_blood_pressure_dependence]
 }
