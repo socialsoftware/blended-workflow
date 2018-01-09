@@ -1,9 +1,7 @@
 // fine grained goals
 module filesystem/doctorappointment/patientepisode/goal/GoalModelTwo
 
-open filesystem/doctorappointment/DoctorAppointment
-open filesystem/doctorappointment/patientepisode/Achieve
-open filesystem/doctorappointment/patientepisode/Invariants
+open filesystem/doctorappointment/patientepisode/DoctorAppointment
 open filesystem/GoalModel
 
 pred init (s: State) {
@@ -58,27 +56,27 @@ assert DefPatientPreservesInv {
 	all s, s': State | all p: Patient |
 		Invariants [s] and defPatient [s, s', p] => Invariants [s']
 }
-//check DefPatientPreservesInv for 4 but 15 State, 5 Int
+//check DefPatientPreservesInv for 4 but 13 State, 5 Int
 
 // defEpisode preserves the invariant
 assert DefEpisodePreservesInv {
 	all s, s': State, e: Episode |
 		Invariants [s] and defEpisode [s, s', e] => Invariants [s']
 }
-//check DefEpisodePreservesInv for 4 but 15 State, 5 Int
+//check DefEpisodePreservesInv for 4 but 13 State, 5 Int
 
 // defEpisodeReserveDate preserves the invariant
 assert DefEpisodeReserveDatePreservesInv {
 	all s, s': State, e: Episode |
 		Invariants [s] and defEpisodeReserveDate [s, s', e] => Invariants [s']
 }
-check DefEpisodeReserveDatePreservesInv for 4 but 15 State, 5 Int
+//check DefEpisodeReserveDatePreservesInv for 4 but 13 State, 5 Int
 
 // associatePatientToEpisode preserves the invariant
 assert AssociatePatientToEpisodePreservesInv {
 	all s, s': State, p: Patient, e: Episode |
 		Invariants [s] and associatePatientToEpisode [s, s', p, e] => Invariants [s']
 }
-//check AssociatePatientToEpisodePreservesInv for 4 but 15 State, 5 Int
+//check AssociatePatientToEpisodePreservesInv for 4 but 13 State, 5 Int
 
-run complete for 4 but 15 State, 5 Int
+run complete for 4 but 13 State, 5 Int

@@ -1,7 +1,6 @@
 // verify that models are consistent
 module filesystem/doctorappointment/complete/activity/VerifyCheckin
 
-open filesystem/doctorappointment/complete/invariants
 open filesystem/doctorappointment/complete/activity/ActivityModel
 
 

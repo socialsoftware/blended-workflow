@@ -1,7 +1,6 @@
 // verify the a complete and consistent model can be generated
 module filesystem/doctorappointment/complete/goalcoarsegrained/AchieveComplete
 
-open filesystem/doctorappointment/complete/complete
 open filesystem/doctorappointment/complete/goalcoarsegrained/GoalModel
 
 

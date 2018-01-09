@@ -1,7 +1,6 @@
 // verify the a complete and consistent can be generated
 module filesystem/doctorappointment/complete/activity/AchieveComplete
 
-open filesystem/doctorappointment/complete/complete
 open filesystem/doctorappointment/complete/activity/ActivityModel
 
 

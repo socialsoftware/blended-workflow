@@ -1,7 +1,6 @@
 // verify that operations are consistently defined
 module filesystem/doctorappointment/complete/goalfinegrained/VerifyDefPatientAddress
 
-open filesystem/doctorappointment/complete/invariants
 open filesystem/doctorappointment/complete/goalfinegrained/GoalModel
 
 

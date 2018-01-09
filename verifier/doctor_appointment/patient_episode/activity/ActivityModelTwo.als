@@ -1,9 +1,7 @@
 // an activity model where appointments are created first, it violates dependence invariant
 module filesystem/doctorappointment/patientepisode/activity/ActivityModelOne
 
-open filesystem/doctorappointment/DoctorAppointment
-open filesystem/doctorappointment/patientepisode/Achieve
-open filesystem/doctorappointment/patientepisode/Invariants
+open filesystem/doctorappointment/patientepisode/DoctorAppointment
 open filesystem/ActivityModel
 
 pred init (s: State) {
@@ -17,8 +15,8 @@ fact traces {
 	some p: Patient, e: Episode | 
 		registerPatient[s, s', p, e] or
 		createEpisode[s, s', e] or
-		bookAppointment[s, s', e] or
-		skip [s, s']
+		bookAppointment[s, s', e] //or
+	//	skip [s, s']
 }
 
 pred registerPatient(s, s': State, p: Patient, e: Episode) {
@@ -48,7 +46,7 @@ assert CreateEpisodePreservesInv {
 	all s, s': State, e: Episode |
 		Invariants [s] and createEpisode [s, s', e] => Invariants [s']
 }
-check CreateEpisodePreservesInv for 4 but 7 State, 5 Int
+//check CreateEpisodePreservesInv for 4 but 7 State, 5 Int
 
 // bookAppointment preserves the operation
 assert BookAppointmentPreservesInv {

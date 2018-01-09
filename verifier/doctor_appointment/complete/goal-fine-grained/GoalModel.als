@@ -2,7 +2,7 @@
 module filesystem/doctorappointment/complete/goalfinegrained/GoalModel
 
 open filesystem/GoalModel
-open filesystem/doctorappointment/DoctorAppointment
+open filesystem/doctorappointment/complete/DoctorAppointment
 
 pred init (s: State) {
 	no s.objects

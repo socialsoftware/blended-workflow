@@ -1,6 +1,6 @@
 // verify that the operation is consistently defined
 module filesystem/doctorappointment/complete/goalfinegrained/VerifyDefEpisodeCheckout
-open filesystem/doctorappointment/complete/invariants
+
 open filesystem/doctorappointment/complete/goalfinegrained/GoalModel
 
 

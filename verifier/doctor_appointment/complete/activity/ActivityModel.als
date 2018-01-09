@@ -2,7 +2,7 @@
 module filesystem/doctorappointment/complete/activity/ActivityModel
 
 open filesystem/ActivityModel
-open filesystem/doctorappointment/DoctorAppointment
+open filesystem/doctorappointment/complete/DoctorAppointment
 
 pred init (s: State) {
 	no s.objects

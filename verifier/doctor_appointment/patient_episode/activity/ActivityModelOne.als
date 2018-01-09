@@ -1,9 +1,7 @@
 // an activity model where patients are registered first, it preserves all invariants
 module filesystem/doctorappointment/patientepisode/activity/ActivityModelOne
 
-open filesystem/doctorappointment/DoctorAppointment
-open filesystem/doctorappointment/patientepisode/Achieve
-open filesystem/doctorappointment/patientepisode/Invariants
+open filesystem/doctorappointment/patientepisode/DoctorAppointment
 open filesystem/ActivityModel
 
 pred init (s: State) {
@@ -18,8 +16,8 @@ fact traces {
 		registerPatient[s, s', p] or
 		registerPatientAddress[s, s', p] or
 		createEpisode[s, s', p, e] or		
-		bookAppointment[s, s', e] or
-		skip [s, s']
+		bookAppointment[s, s', e] // or
+		// skip[s, s']
 }
 
 pred registerPatient(s, s': State, p: Patient) {

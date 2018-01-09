@@ -1,6 +1,6 @@
 // verify that the operation is consistently defined
 module filesystem/doctorappointment/complete/goalcoarsegrained/VerifyObtainMedicalData
-open filesystem/doctorappointment/complete/invariants
+
 open filesystem/doctorappointment/complete/goalcoarsegrained/GoalModel
 
 
