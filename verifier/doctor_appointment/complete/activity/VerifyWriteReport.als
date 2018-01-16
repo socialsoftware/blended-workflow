@@ -1,7 +1,7 @@
 // verify that models are consistent
 module filesystem/doctorappointment/complete/activity/VerifyWriteReport
 
-open filesystem/doctorappointment/complete/activity/ActivityModel
+open filesystem/doctorappointment/complete/activity/ActivitySpecExec
 
 assert WriteReportPreservesInv {
 	all s, s': State, e: Episode, r: Report |

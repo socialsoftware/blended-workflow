@@ -1,6 +1,15 @@
-Specification: "Entity A" 
+Specification: "Entity A and B" 
        
 Entity A { 
 	att1 : String 
 	att2 : Number 
-}    
+} 
+
+Entity B {
+	att1 : Boolean
+}   
+
+Association AHasBs{
+	A with a (1) 
+	B with b (0..*)
+}

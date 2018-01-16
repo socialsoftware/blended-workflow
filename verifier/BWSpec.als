@@ -1,6 +1,6 @@
-module filesystem/DataModel
+module filesystem/BWSpec
 
-open util/ordering [State]
+open util/ordering [AbstractState]
 
 abstract sig Obj {}
 
@@ -21,12 +21,12 @@ abstract sig Dependence {
 	targetAtt: FName
 }
 
-sig State {
+abstract sig AbstractState {
 	objects: set Obj,
 	fields: objects -> ( FName ->set { Obj + Val } ) ,
 }
 
-fun reach (s: State, obj: set Obj, path: seq FName): set Obj {
+fun reach (s: AbstractState, obj: set Obj, path: seq FName): set Obj {
 	(#path = 1) implies {
 		s.fields[obj, path.first]
 	} else {
@@ -34,14 +34,14 @@ fun reach (s: State, obj: set Obj, path: seq FName): set Obj {
 	}
 }
 
-fun atts (s: State, o: Obj): set FName { s.fields[o].{Obj + Val} }
+fun atts (s: AbstractState, o: Obj): set FName { s.fields[o].{Obj + Val} }
 
-fun commitedAssociatedObjects (s: State, objSource: Obj, roleSource: FName): set Obj { 
+fun commitedAssociatedObjects (s: AbstractState, objSource: Obj, roleSource: FName): set Obj { 
 	{o: Obj | s.fields[o, roleSource] = objSource} + 
 	{o: Obj | s.fields[objSource, roleSource.inverse] = o} 
 }
 
-pred canLink(s: State, objSource: Obj, roleSource: FName, objTarget: Obj) {
+pred canLink(s: AbstractState, objSource: Obj, roleSource: FName, objTarget: Obj) {
 	// source is not completely commited yet in the number of targets
 	let commitedTargetObjects = commitedAssociatedObjects[s, objSource, roleSource] | 
 		#commitedTargetObjects < roleSource.inverse.maxMul or objTarget in commitedTargetObjects 
@@ -50,39 +50,39 @@ pred canLink(s: State, objSource: Obj, roleSource: FName, objTarget: Obj) {
 		#commitedSourceObjects < roleSource.maxMul or objSource in commitedSourceObjects
 }
 
-pred noFieldChangeExcept(s, s': State, asg: set Obj ->FName) {
+pred noFieldChangeExcept(s, s': AbstractState, asg: set Obj ->FName) {
 	all obj: s.objects - asg.FName | obj.(s'.fields) = obj.(s.fields)
 	all o: asg.FName | all field: atts[s, o] - o.asg | s'.fields[o, field] = s.fields[o, field]
 }
 
-pred noExtraFields(s: State, objs: set Obj, fNames: set FName) {
+pred noExtraFields(s: AbstractState, objs: set Obj, fNames: set FName) {
 	
 	all obj: objs <: s.objects |no obj.(s.fields)[ FName - fNames ]
 }
 
-pred attributesDefined(s: State, objs: set Obj, atts: set FName) {
+pred attributesDefined(s: AbstractState, objs: set Obj, atts: set FName) {
 	all obj: objs <: s.objects | all att: atts | s.fields[obj, att] = DefVal
 }
 
-pred multiplicityRule(s: State, objs: set Obj, role: FName) {
+pred multiplicityRule(s: AbstractState, objs: set Obj, role: FName) {
 	all obj: objs <: s.objects | #s.fields[obj, role] >= role.minMul and #s.fields[obj, role] <= role.maxMul
 }
 
-pred noMultiplicityExceed(s: State, objs: set Obj, role: FName) {
+pred noMultiplicityExceed(s: AbstractState, objs: set Obj, role: FName) {
 	all obj: objs <: s.objects | #s.fields[obj, role] <= role.maxMul
 }
 
-pred bidirectionalRule(s: State, objsOne: set Obj, roleOne: FName, objsTwo: set Obj, roleTwo: FName) {
+pred bidirectionalRule(s: AbstractState, objsOne: set Obj, roleOne: FName, objsTwo: set Obj, roleTwo: FName) {
 	all objOne: objsOne <: s.objects | all objTwo: s.fields[objOne, roleTwo] | objOne in s.fields[objTwo, roleOne]
 	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleOne] | objTwo in s.fields[objOne, roleTwo]
 }
 
-pred bidirectionalPreservation(s: State, objsOne: set Obj, roleOne: FName, objsTwo: set Obj, roleTwo: FName) {
+pred bidirectionalPreservation(s: AbstractState, objsOne: set Obj, roleOne: FName, objsTwo: set Obj, roleTwo: FName) {
 	all objOne: objsOne <: s.objects | all objTwo: s.fields[objOne, roleTwo] | objOne in s.fields[objTwo, roleOne] or canLink[s, objTwo, roleTwo, objOne]
 	all objTwo: objsTwo <: s.objects | all objOne: s.fields[objTwo, roleOne] | objTwo in s.fields[objOne, roleTwo] or canLink[s, objOne, roleOne, objTwo]
 }
 
-pred checkDependence(s: State, sourceObj: Obj, dependence: Dependence) {
+pred checkDependence(s: AbstractState, sourceObj: Obj, dependence: Dependence) {
 	(dependence.sourceAtt = none and dependence.targetAtt = none) implies {
 		all oS: sourceObj <: s.objects | !no reach[s, oS, dependence.sequence]
 	} else (dependence.sourceAtt = none) implies {
@@ -95,46 +95,3 @@ pred checkDependence(s: State, sourceObj: Obj, dependence: Dependence) {
 		all oS: sourceObj <: s.objects | (s.fields[oS, dependence.sourceAtt] = DefVal) implies DefVal in s.fields[reach[s, oS, dependence.sequence], dependence.targetAtt] 
 	}	
 }
-
-pred defObj(s, s' : State, o: Obj) {
-
-	o !in s.objects
-
-	s'.objects = s.objects + o
-	s'.fields = s.fields
-
-	all dep: Dependence | o in dep.sourceObj implies checkDependence[ s', o, dep]
-}
-
-pred defAtt(s, s': State, o: Obj, att: FName) {
-	o in s.objects
-	no s.fields[o, att] 
-	s'.objects = s.objects
-
-	s'.fields = s.fields + (o -> att -> DefVal)
-
-	noFieldChangeExcept[s, s', o -> att]
-
-	all dep: Dependence | o in dep.sourceObj and att in dep.sourceAtt implies checkDependence[ s', o, dep]
-}
-
-pred linkObj(s, s': State, objSource: Obj, roleSource: FName, objTarget: Obj, roleTarget: FName) {
-	objSource in s.objects
-	objTarget in s.objects
-	objTarget !in s.fields[objSource, roleTarget]
-
-	canLink [s, objSource, roleSource, objTarget]
-
-	s'.objects = s.objects
-
-	s'.fields = s.fields + (objSource -> roleTarget -> objTarget)
-
-	noFieldChangeExcept[s, s', objSource -> roleTarget]
-}
-
-pred skip(s, s': State) {
-	s'.objects = s.objects
-	s'.fields = s.fields
-}
-
-run {}

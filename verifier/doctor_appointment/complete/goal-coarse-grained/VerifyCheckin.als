@@ -1,7 +1,7 @@
 // verify that the operation is consistently defined
 module filesystem/doctorappointment/complete/goalcoarsegrained/VerifyCheckin
 
-open filesystem/doctorappointment/complete/goalcoarsegrained/GoalModel
+open filesystem/doctorappointment/complete/goalcoarsegrained/GoalSpecExec
 
 assert CheckinPreservesInv {
 	all s, s': State, p: Patient, e: Episode |
