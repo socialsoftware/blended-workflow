@@ -1,8 +1,9 @@
 // an activity model where appointments are created first, it violates dependence invariant
 module filesystem/doctorappointment/patientepisode/activity/ActivitySpecTwo/ActivitySpecTwo
 
-open filesystem/ActivityConditions
-open filesystem/doctorappointment/patientepisode/DoctorAppointment
+open filesystem/doctorappointment/patientepisode/SecureDoctorAppointment
+open filesystem/SecureActivityConditions
+
 
 pred registerPatient(s, s': AbstractState, p: Patient, e: Episode) {
 	preCondition[s, e, none -> none]
