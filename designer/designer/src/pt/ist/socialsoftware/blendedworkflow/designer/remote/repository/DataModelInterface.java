@@ -25,16 +25,16 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.SpecDTO;
 
-public class RepositoryInterface {
-	private static Logger logger = LoggerFactory.getLogger(RepositoryInterface.class);
+public class DataModelInterface {
+	private static Logger logger = LoggerFactory.getLogger(DataModelInterface.class);
 
 	final static String BASE_URL = "http://localhost:8080";
 
-	private static RepositoryInterface instance = null;
+	private static DataModelInterface instance = null;
 
-	public static RepositoryInterface getInstance() {
+	public static DataModelInterface getInstance() {
 		if (instance == null) {
-			instance = new RepositoryInterface();
+			instance = new DataModelInterface();
 		}
 		return instance;
 	}

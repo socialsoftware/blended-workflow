@@ -4,8 +4,14 @@ generate blendedWorkflow "http://www.ist.pt/socialsoftware/blendedworkflow/desig
 
 BWSpecification:
 	specification = Specification
+	dataSpecification = DataSpecification
+	resourceSpecification = (ResourceSpecification)?
+;
+	
+DataSpecification:
 	entities += Entity*
 	associations += Association*
+	
 ;
 
 Specification:
@@ -91,4 +97,8 @@ Atomic returns Expression:
 	{IntConstant} name=INT |
 	{StringConstant} name=STRING |
 	{BoolConstant} name=('true'|'false')
+;
+
+ResourceSpecification:
+	"bnvmn"
 ;

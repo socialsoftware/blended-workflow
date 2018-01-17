@@ -22,7 +22,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.RepositoryException;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.RepositoryInterface;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.DataModelInterface;
 
 public class WriteBlendedWorkflowService {
 	private static Logger logger = LoggerFactory.getLogger(WriteBlendedWorkflowService.class);
@@ -43,10 +43,10 @@ public class WriteBlendedWorkflowService {
 		this.repository.deleteSpecification(specId);
 	}
 
-	private RepositoryInterface repository = null;
+	private DataModelInterface repository = null;
 
 	private WriteBlendedWorkflowService() {
-		this.repository = RepositoryInterface.getInstance();
+		this.repository = DataModelInterface.getInstance();
 	}
 
 	public BWNotification write(BWSpecification eBWSpecification) {
@@ -71,7 +71,7 @@ public class WriteBlendedWorkflowService {
 
 		Set<RuleDTO> rulesToCreate = new HashSet<>();
 
-		for (Entity eEnt : eBWSpecification.getEntities()) {
+		for (Entity eEnt : eBWSpecification.getDataSpecification().getEntities()) {
 			String entityExtId = null;
 			try {
 				EntityDTO entityDTO = this.repository
@@ -129,7 +129,7 @@ public class WriteBlendedWorkflowService {
 
 		}
 
-		for (Association assoc : eBWSpecification.getAssociations()) {
+		for (Association assoc : eBWSpecification.getDataSpecification().getAssociations()) {
 			try {
 				this.repository.createRelation(new RelationDTO(specId, assoc.getName(), assoc.getEntity1().getName(),
 						assoc.getName1(), assoc.getCardinality1(), assoc.getEntity2().getName(), assoc.getName2(),
