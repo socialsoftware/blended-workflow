@@ -1,6 +1,7 @@
 .classpath
 .project
 .settings
+.idea
 test-db
 tmp-data
 dependency-reduced-pom.xml
