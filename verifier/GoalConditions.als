@@ -1,15 +1,15 @@
-module filesystem/GoalModel
+module filesystem/GoalConditions
 
-open filesystem/DataModel
+open filesystem/BWSpec
 
-pred actCondition(s: State, entDefs: set Obj, attDefs: set Obj -> FName) {
+pred actCondition(s: AbstractState, entDefs: set Obj, attDefs: set Obj -> FName) {
 	entDefs in s.objects
 
 	attDefs.FName in s.objects
 	all obj: attDefs.FName, field: obj.attDefs | s.fields[obj, field] = DefVal or s.fields[obj, field] in s.objects
 }
 
-pred sucCondition(s, s': State, entDefs: set Obj, attDefs: set Obj -> FName, muls: set  Obj -> FName -> Obj) {
+pred sucCondition(s, s': AbstractState, entDefs: set Obj, attDefs: set Obj -> FName, muls: set  Obj -> FName -> Obj) {
 	(entDefs != none) implies {
 		entDefs !in s.objects
 		all obj: attDefs.FName | obj in s.objects + entDefs

@@ -1,7 +1,10 @@
 // contains the construction of a doctor appointment model using basic operations based on data, it violates some invariants
-module filesystem/doctorappointment/patientepisode/data/DataModel
+module filesystem/doctorappointment/patientepisode/data/DataExec
 
+open filesystem/DataConditions
 open filesystem/doctorappointment/patientepisode/DoctorAppointment
+
+sig State extends AbstractState {}
 
 pred init (s: State) {
 	no s.objects

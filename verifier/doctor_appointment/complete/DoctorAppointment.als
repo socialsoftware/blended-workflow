@@ -1,7 +1,7 @@
 // Contains a doctor appointment model with with four entities
 module filesystem/doctorappointment/complete/DoctorAppointment
 
-open filesystem/DataModel
+open filesystem/BWSpec
 
 sig Patient extends Obj {}
 one sig patient_name extends FName {} 
@@ -78,7 +78,7 @@ fact dependencies {
 }
 
 pred complete {
- 	one s: State | 
+ 	one s: AbstractState | 
 		// cannot be the initial state to find one meaningful state
 		#Patient <: s.objects = 1 and
 		#Episode <: s.objects = 1 and
@@ -119,7 +119,7 @@ pred complete {
 		checkDependence [s, Report, report_description_data_blood_pressure_dependence]
 }
 
-pred Invariants(s: State) {
+pred Invariants(s: AbstractState) {
 	// only the correct fields are associated to the entities
 	noExtraFields [s, Patient, patient_name + patient_address + patient_episode] 
 	noExtraFields [s, Episode, episode_reserve_date + episode_checkin + episode_checkout + episode_patient + episode_data + episode_report]	 

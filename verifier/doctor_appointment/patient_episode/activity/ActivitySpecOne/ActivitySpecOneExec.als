@@ -1,8 +1,9 @@
 // an activity model where patients are registered first, it preserves all invariants
-module filesystem/doctorappointment/patientepisode/activity/ActivityModelOne
+module filesystem/doctorappointment/patientepisode/activity/ActivitySpecOne/ActivitySpecOneExec
 
-open filesystem/doctorappointment/patientepisode/DoctorAppointment
-open filesystem/ActivityModel
+open filesystem/doctorappointment/patientepisode/activity/ActivitySpecOne/ActivitySpecOne
+
+sig State extends AbstractState {}
 
 pred init (s: State) {
 	no s.objects
@@ -18,26 +19,6 @@ fact traces {
 		createEpisode[s, s', p, e] or		
 		bookAppointment[s, s', e] // or
 		// skip[s, s']
-}
-
-pred registerPatient(s, s': State, p: Patient) {
-	preCondition[s, none, none -> none]
-	postCondition[s, s', p, p -> patient_name, none -> none -> none]
-}
-
-pred registerPatientAddress(s, s': State, p: Patient) {
-	preCondition[s, p, none -> none]
-	postCondition[s, s', none, p -> patient_address, none -> none -> none]
-}
-
-pred createEpisode(s, s': State, p: Patient, e: Episode) {
-	preCondition[s, p, none -> none]
-	postCondition[s, s', e, none -> none, (p -> patient_episode -> e) + (e -> episode_patient -> p)]
-}
-
-pred bookAppointment(s, s': State, e: Episode) {
-	preCondition[s, e, none -> none]
-	postCondition[s, s', none , e -> episode_reserve_date, none -> none -> none]
 }
 
 // registerPatient preserves the invariant

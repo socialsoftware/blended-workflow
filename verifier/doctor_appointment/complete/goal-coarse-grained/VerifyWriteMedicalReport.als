@@ -1,7 +1,7 @@
 // verify that the operation is consistently defined
 module filesystem/doctorappointment/complete/goalcoarsegrained/VerifyWriteMedicalReport
 
-open filesystem/doctorappointment/complete/goalcoarsegrained/GoalModel
+open filesystem/doctorappointment/complete/goalcoarsegrained/GoalSpecExec
 
 
 assert WriteMedicalReportPreservesInv {

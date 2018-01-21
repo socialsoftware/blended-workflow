@@ -1,7 +1,7 @@
 // Contains a doctor appointment model with with four entities
 module filesystem/doctorappointment/patientepisode/DoctorAppointment
 
-open filesystem/DataModel
+open filesystem/BWSpec
 
 sig Patient extends Obj {}
 one sig patient_name extends FName {} 
@@ -35,7 +35,7 @@ fact dependencies {
 
 // achieve
 pred complete {
- 	one s: State | 
+ 	one s: AbstractState | 
 		// cannot be the initial state to find one meaningful state
 		#Patient <: s.objects = 2 and
 		#Episode <: s.objects = 2 and
@@ -58,7 +58,7 @@ pred complete {
 }
 
 // invariants
-pred Invariants(s: State) {
+pred Invariants(s: AbstractState) {
 	// no extra fields
 	noExtraFields [s, Patient, patient_name + patient_address + patient_episode] 	 	
 	noExtraFields [s, Episode, episode_reserve_date + episode_patient]	

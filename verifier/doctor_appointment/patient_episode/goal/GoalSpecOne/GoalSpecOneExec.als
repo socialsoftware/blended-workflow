@@ -1,8 +1,9 @@
 // A goal model that cannot achive the top goal because of a dependence
-module filesystem/doctorappointment/patientepisode/goal/GoalModelOne
+module filesystem/doctorappointment/patientepisode/goal/GoalSpecOne/GoalSpecOneExec
 
-open filesystem/doctorappointment/patientepisode/DoctorAppointment
-open filesystem/GoalModel
+open filesystem/doctorappointment/patientepisode/goal/GoalSpecOne/GoalSpecOne
+
+sig State extends AbstractState {}
 
 pred init (s: State) {
 	no s.objects
@@ -17,21 +18,6 @@ fact traces {
 		bookAppointment[s, s', e] or
 		associatePatientToEpisode[s, s', p, e] //or
 		//skip [s, s']
-}
-
-pred registerPatient(s, s': State, p: Patient) {
-	actCondition[s, none, none -> none]
-	sucCondition[s, s', p, p -> patient_name + p -> patient_address, none -> none -> none]
-}
-
-pred bookAppointment(s, s': State, e: Episode) {
-	actCondition[s, none, none -> none]
-	sucCondition[s, s', e, e -> episode_reserve_date, none -> none -> none]
-}
-
-pred associatePatientToEpisode(s, s': State, p: Patient, e: Episode) {
-	actCondition[s, none, none -> none]
-	sucCondition[s, s', none, none ->none, (p -> patient_episode -> e) + (e -> episode_patient -> p)]
 }
 
 // registerPatient preserves the invariant

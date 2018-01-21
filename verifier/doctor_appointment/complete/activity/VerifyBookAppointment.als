@@ -1,7 +1,7 @@
 // verify that models are consistent
 module filesystem/doctorappointment/complete/activity/VerifyBookAppointment
 
-open filesystem/doctorappointment/complete/activity/ActivityModel
+open filesystem/doctorappointment/complete/activity/ActivitySpecExec
 
 
 assert BookAppointmentPreservesInv {

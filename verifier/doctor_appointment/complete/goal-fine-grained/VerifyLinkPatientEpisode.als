@@ -1,7 +1,7 @@
 // verify that operations are consistent
 module filesystem/doctorappointment/complete/goalfinegrained/VerifyLinkPatientEpisode
 
-open filesystem/doctorappointment/complete/goalfinegrained/GoalModel
+open filesystem/doctorappointment/complete/goalfinegrained/GoalSpecExec
 
 
 assert LinkPatientEpisodePreservesInv {

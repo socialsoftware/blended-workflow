@@ -1,7 +1,7 @@
 // verify that the operation is consistently defined
 module filesystem/doctorappointment/complete/goalfinegrained/VerifyDefEpisodeCheckin
 
-open filesystem/doctorappointment/complete/goalfinegrained/GoalModel
+open filesystem/doctorappointment/complete/goalfinegrained/GoalSpecExec
 
 
 assert DefEpisodeCheckinPreservesInv {

@@ -1,8 +1,9 @@
 // an activity model where appointments are created first, it violates dependence invariant
-module filesystem/doctorappointment/patientepisode/activity/ActivityModelOne
+module filesystem/doctorappointment/patientepisode/activity/ActivitySpecTwo/ActivitySpecTwoExec
 
-open filesystem/doctorappointment/patientepisode/DoctorAppointment
-open filesystem/ActivityModel
+open filesystem/doctorappointment/patientepisode/activity/ActivitySpecTwo/ActivitySpecTwo
+
+sig State extends AbstractState {}
 
 pred init (s: State) {
 	no s.objects
@@ -17,21 +18,6 @@ fact traces {
 		createEpisode[s, s', e] or
 		bookAppointment[s, s', e] //or
 	//	skip [s, s']
-}
-
-pred registerPatient(s, s': State, p: Patient, e: Episode) {
-	preCondition[s, e, none -> none]
-	postCondition[s, s', p, p -> patient_name + p -> patient_address,  (p -> patient_episode -> e) + (e -> episode_patient -> p)]
-}
-
-pred createEpisode(s, s': State, e: Episode) {
-	preCondition[s, none, none -> none]
-	postCondition[s, s', e, none -> none, none -> none -> none]
-}
-
-pred bookAppointment(s, s': State, e: Episode) {
-	preCondition[s, e, none -> none]
-	postCondition[s, s', none, e -> episode_reserve_date, none -> none -> none]
 }
 
 // registerPatient preserves the operation

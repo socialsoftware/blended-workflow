@@ -1,7 +1,7 @@
 // verify that the operation is consistently defined
 module filesystem/doctorappointment/complete/goalfinegrained/VerifyDefDataHeight
 
-open filesystem/doctorappointment/complete/goalfinegrained/GoalModel
+open filesystem/doctorappointment/complete/goalfinegrained/GoalSpecExec
 
 
 assert DefDataHeightPreservesInv {
