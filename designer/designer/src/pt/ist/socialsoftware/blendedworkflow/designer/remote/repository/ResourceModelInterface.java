@@ -16,4 +16,10 @@ public class ResourceModelInterface {
 		}
 		return instance;
 	}
+	
+	public static void cleanResourceModel(String specId) {
+		
+	}
+	
+	
 }

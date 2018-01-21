@@ -1,7 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.designer.remote;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
 import org.slf4j.Logger;
@@ -12,6 +15,8 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Constraint;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Entity;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ResourceSpecification;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Resource;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.EntityDTO;
@@ -20,11 +25,13 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.ProductDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.BWError;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.RepositoryException;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.ResourceModelInterface;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.DataModelInterface;
 
-public class WriteBlendedWorkflowService {
+public class WriteBlendedWorkflowService<R> {
 	private static Logger logger = LoggerFactory.getLogger(WriteBlendedWorkflowService.class);
 
 	private static WriteBlendedWorkflowService instance = null;
@@ -44,9 +51,11 @@ public class WriteBlendedWorkflowService {
 	}
 
 	private DataModelInterface repository = null;
+	private ResourceModelInterface rmRepository = null;
 
 	private WriteBlendedWorkflowService() {
 		this.repository = DataModelInterface.getInstance();
+		this.rmRepository = ResourceModelInterface.getInstance();
 	}
 
 	public BWNotification write(BWSpecification eBWSpecification) {
@@ -162,6 +171,13 @@ public class WriteBlendedWorkflowService {
 				this.repository.deleteDependence(specId, dep.getExtId());
 			}
 		}
+		
+		// write resource model
+		writeResourceModel(eBWSpecification.getResourceSpecification(), notification);
+
+		for (BWError error : notification.getError()) {
+			System.out.println(error.getMessage());
+		}
 
 		try {
 			this.repository.checkBlendedWorkflowModel(specId);
@@ -180,5 +196,29 @@ public class WriteBlendedWorkflowService {
 		}
 
 		return notification;
+	}
+	
+	private void writeResourceModel(ResourceSpecification spec, BWNotification notification) {
+		System.out.println("[WriteRM] Begin writing resource model");
+		
+		List<Resource> resources = spec.getResources();
+		
+		
+		
+		for (Resource resource : resources) {
+			String resourceType = resource.eClass().getName();
+			
+			switch (resourceType) {
+				case "Person":
+					System.out.println("[WriteRM] Writing a person");
+					notification.addError(new BWError("Invalid resource type", resourceType + " is not a valid resource type"));
+					break;
+				default:
+					System.out.println("[WriteRM] Invalid resource type");
+					
+			}
+		}
+		
+		System.out.println("[WriteRM] Finish writing resource model");
 	}
 }

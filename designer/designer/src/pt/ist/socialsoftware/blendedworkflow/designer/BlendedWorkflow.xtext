@@ -5,13 +5,13 @@ generate blendedWorkflow "http://www.ist.pt/socialsoftware/blendedworkflow/desig
 BWSpecification:
 	specification = Specification
 	dataSpecification = DataSpecification
-	resourceSpecification = (ResourceSpecification)?
+	resourceSpecification = ResourceSpecification
 ;
 	
 DataSpecification:
+	{DataSpecification}
 	entities += Entity*
 	associations += Association*
-	
 ;
 
 Specification:
@@ -100,5 +100,18 @@ Atomic returns Expression:
 ;
 
 ResourceSpecification:
-	"bnvmn"
+	{ResourceSpecification}
+	resources += Resource*
+;
+
+Resource:
+	Person
+;
+
+Person:
+	'Person' name = ID (body = PersonBody)?
+;
+
+PersonBody:
+	'{' name = ID '}'
 ;
