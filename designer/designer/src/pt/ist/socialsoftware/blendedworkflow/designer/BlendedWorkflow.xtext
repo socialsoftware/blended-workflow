@@ -113,5 +113,5 @@ Person:
 ;
 
 PersonBody:
-	'{' name = ID '}'
+	'{' text = STRING '}'
 ;

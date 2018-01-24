@@ -15,12 +15,14 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Constraint;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Entity;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Person;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ResourceSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Resource;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.PersonDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.ProductDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RuleDTO;
@@ -173,7 +175,7 @@ public class WriteBlendedWorkflowService<R> {
 		}
 		
 		// write resource model
-		writeResourceModel(eBWSpecification.getResourceSpecification(), notification);
+		writeResourceModel(specId, eBWSpecification.getResourceSpecification(), notification);
 
 		for (BWError error : notification.getError()) {
 			System.out.println(error.getMessage());
@@ -198,7 +200,7 @@ public class WriteBlendedWorkflowService<R> {
 		return notification;
 	}
 	
-	private void writeResourceModel(ResourceSpecification spec, BWNotification notification) {
+	private void writeResourceModel(String specId, ResourceSpecification spec, BWNotification notification) {
 		System.out.println("[WriteRM] Begin writing resource model");
 		
 		List<Resource> resources = spec.getResources();
@@ -211,10 +213,17 @@ public class WriteBlendedWorkflowService<R> {
 			switch (resourceType) {
 				case "Person":
 					System.out.println("[WriteRM] Writing a person");
-					notification.addError(new BWError("Invalid resource type", resourceType + " is not a valid resource type"));
+					Person p = (Person) resource;
+					PersonDTO person;
+					if (p.getBody() != null) {
+						person = new PersonDTO(specId, p.getName(), p.getBody().getText());
+					} else {
+						person = new PersonDTO(specId, p.getName());
+					}
+					rmRepository.createPerson(person, notification);
 					break;
 				default:
-					System.out.println("[WriteRM] Invalid resource type");
+					notification.addError(new BWError("Invalid resource type", resourceType + " is not a valid resource type"));
 					
 			}
 		}
