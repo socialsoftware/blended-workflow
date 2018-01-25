@@ -1,6 +1,8 @@
-package pt.ist.socialsoftware.blendedworkflow.designer.remote.dto;
+package pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.ProductDTO;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PersonDTO extends ProductDTO {

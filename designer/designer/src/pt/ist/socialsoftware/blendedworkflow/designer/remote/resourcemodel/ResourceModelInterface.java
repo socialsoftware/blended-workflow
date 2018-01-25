@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.designer.remote.repository;
+package pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.PersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.RestUtil;
 
 public class ResourceModelInterface {
 	private static Logger logger = LoggerFactory.getLogger(ResourceModelInterface.class);

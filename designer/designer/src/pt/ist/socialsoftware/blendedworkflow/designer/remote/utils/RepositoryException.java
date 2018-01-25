@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.designer.remote.repository;
+package pt.ist.socialsoftware.blendedworkflow.designer.remote.utils;
 
 public class RepositoryException extends RuntimeException {
 	private static final long serialVersionUID = 1L;

@@ -18,22 +18,22 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Entity;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Person;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ResourceSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Resource;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.ExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.PersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.ProductDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.SpecDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.BWError;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.BWNotification;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.RepositoryException;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.ResourceModelInterface;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.DataModelInterface;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.DataModelInterface;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.ProductDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.ResourceModelInterface;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.RepositoryException;
 
-public class WriteBlendedWorkflowService<R> {
+public class WriteBlendedWorkflowService {
 	private static Logger logger = LoggerFactory.getLogger(WriteBlendedWorkflowService.class);
 
 	private static WriteBlendedWorkflowService instance = null;
@@ -80,99 +80,7 @@ public class WriteBlendedWorkflowService<R> {
 			}
 		}
 
-		Set<RuleDTO> rulesToCreate = new HashSet<>();
-
-		for (Entity eEnt : eBWSpecification.getDataSpecification().getEntities()) {
-			String entityExtId = null;
-			try {
-				EntityDTO entityDTO = this.repository
-						.createEntity(new EntityDTO(specId, eEnt.getName(), eEnt.isExists()));
-				entityExtId = entityDTO.getExtId();
-				// logger.debug("createdEntity: {}, {}, {}",
-				// entityDTO.getExtId(), entityDTO.getName(),
-				// entityDTO.getExists());
-			} catch (RepositoryException re) {
-				notification.addError(re.getError());
-				// logger.debug("createEntity: {}", re.getMessage());
-				continue;
-			}
-			// create entity dependences
-			for (String eDep : eEnt.getDependsOn()) {
-				try {
-					this.repository.createDependence(new DependenceDTO(specId, eEnt.getName(), eDep));
-				} catch (RepositoryException re) {
-					notification.addError(re.getError());
-					// logger.debug("Error: {}", re.getMessage());
-				}
-			}
-
-			for (EObject eObj : eEnt.getAttributes()) {
-				if (eObj instanceof Attribute) {
-					AttributeDTO attributeDTO;
-					Attribute eAtt = (Attribute) eObj;
-					try {
-						attributeDTO = this.repository.createAttribute(
-								new AttributeDTO(specId, ProductDTO.ProductType.ATTRIBUTE.name(), entityExtId,
-										eEnt.getName(), eAtt.getName(), eAtt.getType(), eAtt.isMandatory()));
-					} catch (RepositoryException re) {
-						notification.addError(re.getError());
-						// logger.debug("Error: {}", re.getMessage());
-						continue;
-					}
-
-					// create attribute dependences
-					for (String eDep : eAtt.getDependsOn()) {
-						try {
-							this.repository.createDependence(new DependenceDTO(specId,
-									attributeDTO.getEntityName() + "." + attributeDTO.getName(), eDep));
-						} catch (RepositoryException re) {
-							notification.addError(re.getError());
-							// logger.debug("Error: {}", re.getMessage());
-						}
-					}
-				}
-			}
-
-			for (Constraint constraint : eEnt.getConstraint()) {
-				ExpressionDTO expression = ExpressionDTO.buildExpressionDTO(specId, constraint.getConstraint());
-				rulesToCreate.add(new RuleDTO(specId, eEnt.getName(), constraint.getName(), expression));
-			}
-
-		}
-
-		for (Association assoc : eBWSpecification.getDataSpecification().getAssociations()) {
-			try {
-				this.repository.createRelation(new RelationDTO(specId, assoc.getName(), assoc.getEntity1().getName(),
-						assoc.getName1(), assoc.getCardinality1(), assoc.getEntity2().getName(), assoc.getName2(),
-						assoc.getCardinality2()));
-			} catch (RepositoryException re) {
-				notification.addError(re.getError());
-				// logger.debug("Error: {}", re.getMessage());
-			}
-		}
-
-		for (RuleDTO ruleDTO : rulesToCreate) {
-			try {
-				this.repository.createRule(ruleDTO);
-			} catch (RepositoryException re) {
-				notification.addError(re.getError());
-				// logger.debug("Error: {}", re.getMessage());
-			}
-		}
-
-		Set<DependenceDTO> deps = this.repository.getDependencies(specId);
-		for (DependenceDTO dep : deps) {
-			// logger.debug("dependence extId:{}, path:{}, product:{}",
-			// dep.getExtId(), dep.getPath(), dep.getProduct());
-			try {
-				this.repository.checkDependence(specId, dep.getExtId());
-			} catch (RepositoryException re) {
-				notification.addError(re.getError());
-				// logger.debug("Error: {}", re.getMessage());
-
-				this.repository.deleteDependence(specId, dep.getExtId());
-			}
-		}
+		writeDataModel(eBWSpecification, specId, notification);
 		
 		// write resource model
 		writeResourceModel(specId, eBWSpecification.getResourceSpecification(), notification);
@@ -199,13 +107,141 @@ public class WriteBlendedWorkflowService<R> {
 
 		return notification;
 	}
+
+	private void writeDataModel(BWSpecification eBWSpecification, String specId, BWNotification notification) {
+		
+		Set<RuleDTO> rulesToCreate = new HashSet<>();
+
+		createEntities(eBWSpecification, specId, notification, rulesToCreate);
+
+		createAssociations(eBWSpecification, specId, notification);
+
+		createRules(notification, rulesToCreate);
+
+		checkDependencies(specId, notification);
+	}
+
+	private void checkDependencies(String specId, BWNotification notification) {
+		Set<DependenceDTO> deps = this.repository.getDependencies(specId);
+		for (DependenceDTO dep : deps) {
+			// logger.debug("dependence extId:{}, path:{}, product:{}",
+			// dep.getExtId(), dep.getPath(), dep.getProduct());
+			try {
+				this.repository.checkDependence(specId, dep.getExtId());
+			} catch (RepositoryException re) {
+				notification.addError(re.getError());
+				// logger.debug("Error: {}", re.getMessage());
+
+				this.repository.deleteDependence(specId, dep.getExtId());
+			}
+		}
+	}
+
+	private void createEntities(BWSpecification eBWSpecification, String specId, BWNotification notification,
+			Set<RuleDTO> rulesToCreate) {
+		for (Entity eEnt : eBWSpecification.getDataSpecification().getEntities()) {
+			String entityExtId = null;
+			try {
+				EntityDTO entityDTO = this.repository
+						.createEntity(new EntityDTO(specId, eEnt.getName(), eEnt.isExists()));
+				entityExtId = entityDTO.getExtId();
+				// logger.debug("createdEntity: {}, {}, {}",
+				// entityDTO.getExtId(), entityDTO.getName(),
+				// entityDTO.getExists());
+			} catch (RepositoryException re) {
+				notification.addError(re.getError());
+				// logger.debug("createEntity: {}", re.getMessage());
+				continue;
+			}
+			
+			createEntityDependencies(specId, notification, eEnt);
+
+			createAttributes(specId, notification, eEnt, entityExtId);
+
+			createConstraints(specId, rulesToCreate, eEnt);
+
+		}
+	}
+
+	private void createConstraints(String specId, Set<RuleDTO> rulesToCreate, Entity eEnt) {
+		for (Constraint constraint : eEnt.getConstraint()) {
+			ExpressionDTO expression = ExpressionDTO.buildExpressionDTO(specId, constraint.getConstraint());
+			rulesToCreate.add(new RuleDTO(specId, eEnt.getName(), constraint.getName(), expression));
+		}
+	}
+
+	private void createAttributes(String specId, BWNotification notification, Entity eEnt, String entityExtId) {
+		for (EObject eObj : eEnt.getAttributes()) {
+			if (eObj instanceof Attribute) {
+				AttributeDTO attributeDTO;
+				Attribute eAtt = (Attribute) eObj;
+				try {
+					attributeDTO = this.repository.createAttribute(
+							new AttributeDTO(specId, ProductDTO.ProductType.ATTRIBUTE.name(), entityExtId,
+									eEnt.getName(), eAtt.getName(), eAtt.getType(), eAtt.isMandatory()));
+				} catch (RepositoryException re) {
+					notification.addError(re.getError());
+					// logger.debug("Error: {}", re.getMessage());
+					continue;
+				}
+
+				createAttributeDependencies(specId, notification, attributeDTO, eAtt);
+			}
+		}
+	}
+
+	private void createRules(BWNotification notification, Set<RuleDTO> rulesToCreate) {
+		for (RuleDTO ruleDTO : rulesToCreate) {
+			try {
+				this.repository.createRule(ruleDTO);
+			} catch (RepositoryException re) {
+				notification.addError(re.getError());
+				// logger.debug("Error: {}", re.getMessage());
+			}
+		}
+	}
+
+	private void createAssociations(BWSpecification eBWSpecification, String specId, BWNotification notification) {
+		for (Association assoc : eBWSpecification.getDataSpecification().getAssociations()) {
+			try {
+				this.repository.createRelation(new RelationDTO(specId, assoc.getName(), assoc.getEntity1().getName(),
+						assoc.getName1(), assoc.getCardinality1(), assoc.getEntity2().getName(), assoc.getName2(),
+						assoc.getCardinality2()));
+			} catch (RepositoryException re) {
+				notification.addError(re.getError());
+				// logger.debug("Error: {}", re.getMessage());
+			}
+		}
+	}
+
+	private void createAttributeDependencies(String specId, BWNotification notification, AttributeDTO attributeDTO,
+			Attribute eAtt) {
+		for (String eDep : eAtt.getDependsOn()) {
+			try {
+				this.repository.createDependence(new DependenceDTO(specId,
+						attributeDTO.getEntityName() + "." + attributeDTO.getName(), eDep));
+			} catch (RepositoryException re) {
+				notification.addError(re.getError());
+				// logger.debug("Error: {}", re.getMessage());
+			}
+		}
+	}
+
+	private void createEntityDependencies(String specId, BWNotification notification, Entity eEnt) {
+		for (String eDep : eEnt.getDependsOn()) {
+			try {
+				this.repository.createDependence(new DependenceDTO(specId, eEnt.getName(), eDep));
+			} catch (RepositoryException re) {
+				notification.addError(re.getError());
+				// logger.debug("Error: {}", re.getMessage());
+			}
+		}
+	}
 	
 	private void writeResourceModel(String specId, ResourceSpecification spec, BWNotification notification) {
 		System.out.println("[WriteRM] Begin writing resource model");
 		
 		List<Resource> resources = spec.getResources();
-		
-		
 		
 		for (Resource resource : resources) {
 			String resourceType = resource.eClass().getName();

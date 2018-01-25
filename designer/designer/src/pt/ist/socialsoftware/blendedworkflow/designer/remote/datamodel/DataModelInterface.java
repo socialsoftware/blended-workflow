@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.designer.remote.repository;
+package pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -18,12 +18,15 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.RepositoryException;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.RestUtil;
 
 public class DataModelInterface {
 	private static Logger logger = LoggerFactory.getLogger(DataModelInterface.class);

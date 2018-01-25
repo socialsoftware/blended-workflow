@@ -9,8 +9,8 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.BWSpecific
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Attribute
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.BlendedWorkflowPackage
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.WriteBlendedWorkflowService
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.BWError
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.repository.BWNotification
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification
 
 /**
  * This class contains custom validation rules. 

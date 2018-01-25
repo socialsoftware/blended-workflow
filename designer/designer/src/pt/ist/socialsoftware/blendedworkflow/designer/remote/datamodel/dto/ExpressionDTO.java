@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.designer.remote.dto;
+package pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

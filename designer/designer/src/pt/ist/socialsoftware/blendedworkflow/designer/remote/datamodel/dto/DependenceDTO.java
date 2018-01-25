@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.designer.remote.dto;
+package pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

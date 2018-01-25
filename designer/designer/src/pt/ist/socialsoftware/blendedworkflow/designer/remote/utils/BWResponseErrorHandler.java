@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.designer.remote.repository;
+package pt.ist.socialsoftware.blendedworkflow.designer.remote.utils;
 
 import java.io.IOException;
 
