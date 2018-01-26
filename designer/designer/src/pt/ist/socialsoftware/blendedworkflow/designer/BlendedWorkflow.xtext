@@ -101,7 +101,12 @@ Atomic returns Expression:
 
 ResourceSpecification:
 	{ResourceSpecification}
+	capabilities += Capability*
 	persons += Person*
+;
+
+Capability:
+	'Capability' name = ID ('{' 'description:' description = STRING '}')?
 ;
 
 Person:

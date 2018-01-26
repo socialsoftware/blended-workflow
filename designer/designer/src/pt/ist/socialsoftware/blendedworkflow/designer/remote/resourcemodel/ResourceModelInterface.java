@@ -9,6 +9,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification;
@@ -44,6 +45,27 @@ public class ResourceModelInterface {
 		PersonDTO result = null;
 		try {
 			result = restTemplate.postForObject(uri, person, PersonDTO.class, params);
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+		}
+		
+		return result;
+	}
+
+	public CapabilityDTO createCapability(CapabilityDTO capability, BWNotification notification) {
+		logger.debug("createCapability: {}, {}", capability.getName(), capability.getDescription());
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/capabilities";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", capability.getSpecId());
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		CapabilityDTO result = null;
+		try {
+			result = restTemplate.postForObject(uri, capability, CapabilityDTO.class, params);
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {
