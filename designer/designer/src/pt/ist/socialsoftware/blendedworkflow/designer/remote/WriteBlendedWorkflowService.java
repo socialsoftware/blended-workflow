@@ -1,36 +1,14 @@
 package pt.ist.socialsoftware.blendedworkflow.designer.remote;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.eclipse.emf.ecore.EObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Association;
-import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.BWSpecification;
-import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Constraint;
-import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Entity;
-import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Person;
-import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ResourceSpecification;
-import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Resource;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.DataModelInterface;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.WriteDataModelService;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.ExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.ProductDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.ResourceModelInterface;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.WriteResourceModelService;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.RepositoryException;

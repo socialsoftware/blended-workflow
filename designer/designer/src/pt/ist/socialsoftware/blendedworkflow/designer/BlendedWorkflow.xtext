@@ -101,11 +101,7 @@ Atomic returns Expression:
 
 ResourceSpecification:
 	{ResourceSpecification}
-	resources += Resource*
-;
-
-Resource:
-	Person 
+	persons += Person*
 ;
 
 Person:
