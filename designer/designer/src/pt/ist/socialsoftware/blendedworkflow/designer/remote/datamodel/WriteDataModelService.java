@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
@@ -11,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Associatio
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Constraint;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DataSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Entity;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.DependenceDTO;
@@ -32,13 +34,13 @@ public class WriteDataModelService {
 		this.repository = repository;
 	}
 
-	public void writeDataModel(BWSpecification eBWSpecification, String specId, BWNotification notification) {
+	public void writeDataModel(DataSpecification dataSpecification, String specId, BWNotification notification) {
 		
 		Set<RuleDTO> rulesToCreate = new HashSet<>();
 
-		createEntities(eBWSpecification, specId, notification, rulesToCreate);
+		createEntities(dataSpecification.getEntities(), specId, notification, rulesToCreate);
 
-		createAssociations(eBWSpecification, specId, notification);
+		createAssociations(dataSpecification.getAssociations(), specId, notification);
 
 		createRules(notification, rulesToCreate);
 
@@ -61,9 +63,9 @@ public class WriteDataModelService {
 		}
 	}
 
-	private void createEntities(BWSpecification eBWSpecification, String specId, BWNotification notification,
+	private void createEntities(List<Entity> entities, String specId, BWNotification notification,
 			Set<RuleDTO> rulesToCreate) {
-		for (Entity eEnt : eBWSpecification.getDataSpecification().getEntities()) {
+		for (Entity eEnt : entities) {
 			String entityExtId = null;
 			try {
 				EntityDTO entityDTO = this.repository
@@ -125,8 +127,8 @@ public class WriteDataModelService {
 		}
 	}
 
-	private void createAssociations(BWSpecification eBWSpecification, String specId, BWNotification notification) {
-		for (Association assoc : eBWSpecification.getDataSpecification().getAssociations()) {
+	private void createAssociations(List<Association> associations, String specId, BWNotification notification) {
+		for (Association assoc : associations) {
 			try {
 				this.repository.createRelation(new RelationDTO(specId, assoc.getName(), assoc.getEntity1().getName(),
 						assoc.getName1(), assoc.getCardinality1(), assoc.getEntity2().getName(), assoc.getName2(),

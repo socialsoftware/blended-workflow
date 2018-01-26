@@ -86,9 +86,9 @@ public class WriteBlendedWorkflowService {
 			}
 		}
 
-		this.dmService.writeDataModel(eBWSpecification, specId, notification);
+		this.dmService.writeDataModel(eBWSpecification.getDataSpecification(), specId, notification);
 		
-		this.rmService.writeResourceModel(specId, eBWSpecification.getResourceSpecification(), notification);
+		this.rmService.writeResourceModel(eBWSpecification.getResourceSpecification(), specId,  notification);
 
 		for (BWError error : notification.getError()) {
 			System.out.println(error.getMessage());

@@ -22,7 +22,7 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		this.repository = repository;
 	}
 	
-	public void writeResourceModel(String specId, ResourceSpecification spec, BWNotification notification) {
+	public void writeResourceModel(ResourceSpecification spec, String specId, BWNotification notification) {
 		System.out.println("[WriteRM] Begin writing resource model");
 		
 		List<Resource> resources = spec.getResources();
