@@ -121,7 +121,12 @@ Unit:
 ;
 
 Position:
-	'Position' name = ID
+	'Position' name = ID '{'
+		'isMemberOf:' unit = [Unit]
+		('participatesIn:' '{' roles += [Role] (',' roles += [Role])* '}')?
+		('canDelegateWorkTo:' '{' delegateTo += [Position] (',' delegateTo += [Position])* '}')?
+		('reportsTo:' '{' reportsTo += [Position] (',' reportsTo += [Position])* '}')?
+	'}'
 ;
 
 Person:

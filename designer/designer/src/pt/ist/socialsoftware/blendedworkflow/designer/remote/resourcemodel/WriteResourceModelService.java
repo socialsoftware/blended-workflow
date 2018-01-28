@@ -1,6 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -8,12 +10,14 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Capability;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Person;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Position;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ResourceSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Role;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Unit;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.WriteDataModelService;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PositionDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RoleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.UnitDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification;
@@ -37,6 +41,8 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		createUnits(spec, specId, notification);
 		
 		createPersons(spec, specId, notification);
+		
+		createPositions(spec, specId, notification);
 		
 		System.out.println("[WriteRM] Finish writing resource model");
 	}
@@ -75,6 +81,26 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 			}
 			
 			repository.createPerson(personDTO, notification);		
+		}
+	}
+	
+	private void createPositions(ResourceSpecification spec, String specId, BWNotification notification) {
+		for (Position p : spec.getPositions()) {
+			PositionDTO position = new PositionDTO(specId, p.getName(), p.getUnit().getName());
+			
+			if (p.getRoles() != null) {
+				position.setRoles(p.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList()));
+			}
+			
+			if (p.getDelegateTo() != null) {
+				position.setDelegateToRelations(p.getDelegateTo().stream().map(r -> r.getName()).collect(Collectors.toList()));
+			}
+			
+			if (p.getReportsTo() != null) {
+				position.setReportsToRelations(p.getReportsTo().stream().map(r -> r.getName()).collect(Collectors.toList()));
+			}
+			
+			repository.createPosition(position, notification);		
 		}
 	}
 }

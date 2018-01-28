@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PositionDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RoleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.UnitDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
@@ -35,27 +36,6 @@ public class ResourceModelInterface {
 		
 	}
 	
-	public PersonDTO createPerson(PersonDTO person, BWNotification notification) {
-		logger.debug("createPerson: {}, {}, {}, {}", person.getName(), person.getCapabilities(), person.getPositions());
-
-		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/persons";
-
-		Map<String, String> params = new HashMap<>();
-		params.put("specId", person.getSpecId());
-
-		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		PersonDTO result = null;
-		try {
-			result = restTemplate.postForObject(uri, person, PersonDTO.class, params);
-		} catch (RestClientException rce) {
-			notification.addError(new BWError("REST connection", rce.getMessage()));
-		} catch (Exception e) {
-			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
-		}
-		
-		return result;
-	}
-
 	public CapabilityDTO createCapability(CapabilityDTO capability, BWNotification notification) {
 		logger.debug("createCapability: {}, {}", capability.getName(), capability.getDescription());
 
@@ -110,6 +90,48 @@ public class ResourceModelInterface {
 		UnitDTO result = null;
 		try {
 			result = restTemplate.postForObject(uri, unit, UnitDTO.class, params);
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+		}
+		
+		return result;
+	}
+	
+	public PersonDTO createPerson(PersonDTO person, BWNotification notification) {
+		logger.debug("createPerson: {}, {}, {}, {}", person.getName(), person.getCapabilities(), person.getPositions());
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/persons";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", person.getSpecId());
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		PersonDTO result = null;
+		try {
+			result = restTemplate.postForObject(uri, person, PersonDTO.class, params);
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+		}
+		
+		return result;
+	}
+	
+	public PositionDTO createPosition(PositionDTO position, BWNotification notification) {
+		logger.debug("createPerson: {}, {}, {}, {}, {}, {}", position.getName(), position.getUnit(), position.getRoles(), position.getDelegateToRelations(), position.getReportsToRelations());
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/positions";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", position.getSpecId());
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		PositionDTO result = null;
+		try {
+			result = restTemplate.postForObject(uri, position, PositionDTO.class, params);
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {
