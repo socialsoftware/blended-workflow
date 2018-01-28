@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.Relat
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RoleDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.UnitDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.RestUtil;
@@ -88,6 +89,27 @@ public class ResourceModelInterface {
 		RoleDTO result = null;
 		try {
 			result = restTemplate.postForObject(uri, role, RoleDTO.class, params);
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+		}
+		
+		return result;
+	}
+	
+	public UnitDTO createUnit(UnitDTO unit, BWNotification notification) {
+		logger.debug("createUnit: {}, {}", unit.getName(), unit.getDescription());
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/units";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", unit.getSpecId());
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		UnitDTO result = null;
+		try {
+			result = restTemplate.postForObject(uri, unit, UnitDTO.class, params);
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {

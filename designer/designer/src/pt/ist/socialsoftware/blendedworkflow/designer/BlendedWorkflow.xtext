@@ -103,6 +103,7 @@ ResourceSpecification:
 	{ResourceSpecification}
 	capabilities += Capability*
 	roles += Role*
+	units += Unit*
 	persons += Person*
 ;
 
@@ -112,6 +113,10 @@ Capability:
 
 Role: 
 	'Role' name = ID ('{' 'description:' description = STRING '}')?
+;
+
+Unit:
+	'Unit' name = ID ('{' 'description:' description = STRING '}')?
 ;
 
 Person:

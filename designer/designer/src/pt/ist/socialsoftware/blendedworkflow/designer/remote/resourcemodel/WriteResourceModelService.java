@@ -9,10 +9,12 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Capability
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Person;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ResourceSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Role;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Unit;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.WriteDataModelService;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RoleDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.UnitDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification;
 
 public class WriteResourceModelService {
@@ -33,7 +35,16 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		
 		createPersons(spec, specId, notification);
 		
+		createUnits(spec, specId, notification);
+		
 		System.out.println("[WriteRM] Finish writing resource model");
+	}
+
+	private void createUnits(ResourceSpecification spec, String specId, BWNotification notification) {
+		for (Unit u : spec.getUnits()) {
+			System.out.printf("[WriteUnit] Name: %s; Description: %s\n", u.getName(), u.getDescription());
+			//FIXME: repository.createUnit(new UnitDTO(specId, u.getName(), u.getDescription()), notification);
+		}
 	}
 
 	private void createRoles(ResourceSpecification spec, String specId, BWNotification notification) {
