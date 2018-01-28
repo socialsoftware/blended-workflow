@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.ProductDTO;
@@ -7,7 +9,8 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.Produ
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PersonDTO extends ProductDTO {
 	private String name;
-	private String body;
+	private List<String> capabilities;
+	private List<String> positions;
 
 	public PersonDTO() {
 	}
@@ -16,11 +19,12 @@ public class PersonDTO extends ProductDTO {
 		setSpecId(specId);
 		this.name = name;
 	}
-	
-	public PersonDTO(String specId, String name, String body) {
+
+	public PersonDTO(String specId, String name, List<String> capabilities, List<String> positions) {
 		setSpecId(specId);
 		this.name = name;
-		this.body = body;
+		this.capabilities = capabilities;
+		this.positions = positions;
 	}
 
 	public String getName() {
@@ -31,11 +35,21 @@ public class PersonDTO extends ProductDTO {
 		this.name = name;
 	}
 
-	public String getBody() {
-		return body;
+	public List<String> getCapabilities() {
+		return capabilities;
 	}
 
-	public void setBody(String body) {
-		this.body = body;
+	public void setCapabilities(List<String> capabilities) {
+		this.capabilities = capabilities;
 	}
+
+	public List<String> getPositions() {
+		return positions;
+	}
+
+	public void setPositions(List<String> positions) {
+		this.positions = positions;
+	}
+	
+	
 }

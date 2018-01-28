@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +34,9 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		
 		createRoles(spec, specId, notification);
 		
-		createPersons(spec, specId, notification);
-		
 		createUnits(spec, specId, notification);
+		
+		createPersons(spec, specId, notification);
 		
 		System.out.println("[WriteRM] Finish writing resource model");
 	}
@@ -63,11 +64,14 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 
 	private void createPersons(ResourceSpecification spec, String specId, BWNotification notification) {
 		for (Person p : spec.getPersons()) {
-			PersonDTO personDTO;
-			if (p.getBody() != null) {
-				personDTO = new PersonDTO(specId, p.getName(), p.getBody().getText());
-			} else {
-				personDTO = new PersonDTO(specId, p.getName());
+			PersonDTO personDTO = new PersonDTO(specId, p.getName());
+			
+			if (p.getCapabilities() != null) {
+				personDTO.setCapabilities(p.getCapabilities().stream().map(c -> c.getName()).collect(Collectors.toList()));
+			}
+			
+			if (p.getOccupies() != null) {
+				personDTO.setPositions(p.getOccupies().stream().map(position -> position.getName()).collect(Collectors.toList()));
 			}
 			
 			repository.createPerson(personDTO, notification);		

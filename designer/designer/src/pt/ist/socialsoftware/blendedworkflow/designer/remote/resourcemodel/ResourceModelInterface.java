@@ -35,8 +35,8 @@ public class ResourceModelInterface {
 		
 	}
 	
-	public PersonDTO createPerson (PersonDTO person, BWNotification notification) {
-		logger.debug("createPerson: {}, {}", person.getName(), person.getBody());
+	public PersonDTO createPerson(PersonDTO person, BWNotification notification) {
+		logger.debug("createPerson: {}, {}, {}, {}", person.getName(), person.getCapabilities(), person.getPositions());
 
 		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/persons";
 

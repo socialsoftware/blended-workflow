@@ -35,7 +35,6 @@ public class WriteDataModelService {
 	}
 
 	public void writeDataModel(DataSpecification dataSpecification, String specId, BWNotification notification) {
-		
 		Set<RuleDTO> rulesToCreate = new HashSet<>();
 
 		createEntities(dataSpecification.getEntities(), specId, notification, rulesToCreate);
