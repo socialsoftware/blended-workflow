@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RoleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.RestUtil;
@@ -75,5 +76,24 @@ public class ResourceModelInterface {
 		return result;
 	}
 	
+	public RoleDTO createRole(RoleDTO role, BWNotification notification) {
+		logger.debug("createRole: {}, {}", role.getName(), role.getDescription());
 
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/roles";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", role.getSpecId());
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		RoleDTO result = null;
+		try {
+			result = restTemplate.postForObject(uri, role, RoleDTO.class, params);
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+		}
+		
+		return result;
+	}
 }
