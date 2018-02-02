@@ -1,0 +1,10 @@
+.classpath
+.project
+.settings
+.idea
+test-db
+tmp-data
+dependency-reduced-pom.xml
+src/main/resources/build.properties
+src/main/resources/log4j.properties
+/target/

@@ -109,29 +109,29 @@ ResourceSpecification:
 ;
 
 Capability:
-	'Capability' name = ID ('{' 'description:' description = STRING '}')?
+	'Capability' name = ID ('{' 'description' ':' description = STRING '}')?
 ;
 
 Role: 
-	'Role' name = ID ('{' 'description:' description = STRING '}')?
+	'Role' name = ID ('{' 'description' ':' description = STRING '}')?
 ;
 
 Unit:
-	'Unit' name = ID ('{' 'description:' description = STRING '}')?
+	'Unit' name = ID ('{' 'description' ':' description = STRING '}')?
 ;
 
 Position:
 	'Position' name = ID '{'
-		'isMemberOf:' unit = [Unit]
-		('participatesIn:' '{' roles += [Role] (',' roles += [Role])* '}')?
-		('canDelegateWorkTo:' '{' delegateTo += [Position] (',' delegateTo += [Position])* '}')?
-		('reportsTo:' '{' reportsTo += [Position] (',' reportsTo += [Position])* '}')?
+		'isMemberOf' ':' unit = [Unit]
+		('participatesIn' ':' '{' roles += [Role] (',' roles += [Role])* '}')?
+		('canDelegateWorkTo' ':' '{' delegateTo += [Position] (',' delegateTo += [Position])* '}')?
+		('reportsTo' ':' '{' reportsTo += [Position] (',' reportsTo += [Position])* '}')?
 	'}'
 ;
 
 Person:
 	'Person' name = ID ('{'
-		('hasCapability:' '{' capabilities += [Capability] (',' capabilities += [Capability])* '}')?
-		('occupies:' '{'occupies += [Position] (',' occupies += [Position])* '}')?
+		('hasCapability' ':' '{' capabilities += [Capability] (',' capabilities += [Capability])* '}')?
+		('occupies' ':' '{'occupies += [Position] (',' occupies += [Position])* '}')?
 	'}')?
 ;
