@@ -4,29 +4,30 @@
 
 	<groupId>pt.ist.socialsoftware</groupId>
 	<artifactId>engine</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
 	<name>Blended Workflow Engine</name>
 
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.10.RELEASE</version>
+	</parent>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.org.mortbay.jetty.jetty.maven.plugin>8.1.8.v20121106</version.org.mortbay.jetty.jetty.maven.plugin>
-		<version.org.springframework.boot>1.5.9.RELEASE</version.org.springframework.boot>
-		<version.com.jayway.jsonpath>2.0.0</version.com.jayway.jsonpath>
-		<version.com.fasterxml.jackson.core>2.6.0</version.com.fasterxml.jackson.core>
 
-		<version.org.codehaus.jackson.jackson-mapper-asl>1.9.13</version.org.codehaus.jackson.jackson-mapper-asl>
-		<version.javax.servlet.jstl>1.2</version.javax.servlet.jstl>
-		<version.javax.servlet.servlet.api>2.5</version.javax.servlet.servlet.api>
-		<version.commons.lang.commons.lang>2.6</version.commons.lang.commons.lang>
+		<maven.compiler.plugin>3.6.0</maven.compiler.plugin>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
 		<version.junit.junit>4.12</version.junit.junit>
-		<version.jaxen.jaxen>1.1.6</version.jaxen.jaxen>
-		<version.com.ibm.icu.icu4j>50.1.1</version.com.ibm.icu.icu4j>
-		<version.commons-fileupload.commons-fileupload>1.3</version.commons-fileupload.commons-fileupload>
-		<version.commons-io.commons-io>2.4</version.commons-io.commons-io>
-		<version.org.slf4j>1.7.12</version.org.slf4j>
-		<version.ch.qos.logback>1.1.3</version.ch.qos.logback>
+
+		<version.org.slf4j>1.7.25</version.org.slf4j>
+		<version.ch.qos.logback>1.2.3</version.ch.qos.logback>
+
+		<version.joda.time>2.9.7</version.joda.time>
 
 		<version.fenixframework>2.6.2</version.fenixframework>
 		<fenix.framework.codeGeneratorClassName>pt.ist.fenixframework.backend.jvstmojb.codeGenerator.FenixCodeGeneratorOneBoxPerObject</fenix.framework.codeGeneratorClassName>
@@ -34,109 +35,71 @@
 	</properties>
 
 	<build>
-		<finalName>engine</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${version.org.springframework.boot}</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.0</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<path>/${project.build.finalName}</path>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${version.org.mortbay.jetty.jetty.maven.plugin}</version>
-				<configuration>
-					<httpConnector>
-						<port>9999</port>
-					</httpConnector>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>pt.ist</groupId>
-				<artifactId>ff-maven-plugin</artifactId>
-				<version>${version.fenixframework}</version>
-				<configuration>
-					<codeGeneratorClassName>${fenix.framework.codeGeneratorClassName}</codeGeneratorClassName>
-					<params>
-						<ptIstTxIntrospectorEnable>false</ptIstTxIntrospectorEnable>
-					</params>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>ff-generate-domain</goal>
-							<goal>ff-process-atomic-annotations</goal>
-							<goal>ff-test-process-atomic-annotations</goal>
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>pt.ist</groupId>
-						<artifactId>fenix-framework-backend-jvstm-ojb-code-generator</artifactId>
-						<version>${version.fenixframework}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-		</plugins>
+		<finalName>Blended Workflow Engine</finalName>
+
+		<pluginManagement>
+			<plugins>
+				<!-- Compile -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven.compiler.plugin}</version>
+					<configuration>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+					</configuration>
+				</plugin>
+
+				<!-- Fénix Framework -->
+				<plugin>
+					<groupId>pt.ist</groupId>
+					<artifactId>ff-maven-plugin</artifactId>
+					<version>${version.fenixframework}</version>
+					<configuration>
+						<codeGeneratorClassName>${fenix.framework.codeGeneratorClassName}</codeGeneratorClassName>
+						<params>
+							<ptIstTxIntrospectorEnable>false</ptIstTxIntrospectorEnable>
+						</params>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>ff-generate-domain</goal>
+								<goal>ff-process-atomic-annotations</goal>
+								<goal>ff-test-process-atomic-annotations</goal>
+							</goals>
+						</execution>
+					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>pt.ist</groupId>
+							<artifactId>fenix-framework-backend-jvstm-ojb-code-generator</artifactId>
+							<version>${version.fenixframework}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		
 	</build>
 
 	<dependencies>
+		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<version>${version.org.springframework.boot}</version>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-			<version>${version.org.springframework.boot}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${version.com.fasterxml.jackson.core}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.jayway.jsonpath</groupId>
-			<artifactId>json-path</artifactId>
-			<version>${version.com.jayway.jsonpath}</version>
-			<scope>test</scope>
-		</dependency>
-			
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>${version.org.codehaus.jackson.jackson-mapper-asl}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>${version.javax.servlet.jstl}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>${version.commons.lang.commons.lang}</version>
-		</dependency>
+
+		<!-- Fénix -->
 		<dependency>
 			<groupId>pt.ist</groupId>
 			<artifactId>fenix-framework-core-api</artifactId>
@@ -152,37 +115,15 @@
 			<artifactId>fenix-framework-backend-${fenix.framework.backend}-runtime</artifactId>
 			<version>${version.fenixframework}</version>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>${version.javax.servlet.servlet.api}</version>
-			<scope>provided</scope>
-		</dependency>
+
+		<!-- Tests -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${version.junit.junit}</version>
+			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>jaxen</groupId>
-			<artifactId>jaxen</artifactId>
-			<version>${version.jaxen.jaxen}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.ibm.icu</groupId>
-			<artifactId>icu4j</artifactId>
-			<version>${version.com.ibm.icu.icu4j}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-fileupload</groupId>
-			<artifactId>commons-fileupload</artifactId>
-			<version>${version.commons-fileupload.commons-fileupload}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>${version.commons-io.commons-io}</version>
-		</dependency>
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -195,53 +136,31 @@
 			<version>${version.ch.qos.logback}</version>
 		</dependency>
 
-
-		<!-- NEW FOR THIS MOVE TO MAVEN -->
+		<!-- Time library -->
 		<dependency>
-			<groupId>org.yawlfoundation.yawl</groupId>
-			<artifactId>yawlStandalone</artifactId>
-			<version>2.3</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/yawl-lib-2.3.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>org.jdom</groupId>
-			<artifactId>jdom</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>xerces</groupId>
-			<artifactId>xerces</artifactId>
-			<version>1.4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.4</version>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>${version.joda.time}</version>
 		</dependency>
 	</dependencies>
-	
+
 	<repositories>
-		<repository>
-			<id>spring-releases</id>
-			<name>Spring Releases</name>
-			<url>https://repo.spring.io/libs-release</url>
-		</repository>
 		<repository>
 			<id>fenixedu-maven-repository</id>
 			<url>https://repo.fenixedu.org/fenixedu-maven-repository</url>
 		</repository>
 	</repositories>
+
 	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-releases</id>
-			<name>Spring Releases</name>
-			<url>https://repo.spring.io/libs-release</url>
-		</pluginRepository>
 		<pluginRepository>
 			<id>fenixedu-maven-repository</id>
 			<url>https://repo.fenixedu.org/fenixedu-maven-repository</url>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<modules>
+		<module>core</module>
+		<module>resources</module>
+	</modules>
 
 </project>

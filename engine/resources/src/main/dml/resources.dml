@@ -1,0 +1,14 @@
+package pt.ist.socialsoftware.blendedworkflow.resources.domain;
+
+class ResourceModel {
+	String name;
+}
+
+relation SpecificationHasResourceModel {
+	.pt.ist.socialsoftware.blendedworkflow.core.domain.Specification playsRole spec {
+		multiplicity 1..1;
+	}
+	ResourceModel playsRole resourceModel {
+		multiplicity 0..1;
+	}
+}
