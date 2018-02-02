@@ -1,58 +1,58 @@
 app.factory('goalRepository', function($http) {
 	return {
 		getGoals : function(spec) {
-			var url = "specs/" + spec + "/goalmodel/goals";
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals";
 			return $http.get(url);
 		},
 		getSubGoals : function(spec, goalName) {
-			var url = "specs/" + spec + "/goalmodel/goals/" + goalName
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
 					+ "/sub";
 			return $http.get(url);
 		},
 		getActivationConditions : function(spec, goalName) {
-			var url = "specs/" + spec + "/goalmodel/goals/" + goalName
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
 					+ "/act";
 			return $http.get(url);
 		},
 		getEntitySuccessConditions : function(spec, goalName) {
-			var url = "specs/" + spec + "/goalmodel/goals/" + goalName
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
 					+ "/sucent";
 			return $http.get(url);
 		},
 		getAttributeSuccessConditions : function(spec, goalName) {
-			var url = "specs/" + spec + "/goalmodel/goals/" + goalName
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
 					+ "/sucatt";
 			return $http.get(url);
 		},
 		getMulConditions : function(spec, goalName) {
-			var url = "specs/" + spec + "/goalmodel/goals/" + goalName
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
 					+ "/invent";
 			return $http.get(url);
 		},
 		getRuleConditions : function(spec, goalName) {
-			var url = "specs/" + spec + "/goalmodel/goals/" + goalName
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
 					+ "/invatt";
 			return $http.get(url);
 		},
 		getGoalGraph : function(spec) {
-			var url = "specs/" + spec + "/goalmodel/goals/graph";
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/graph";
 			return $http.get(url);
 		},
 		renameGoal : function(spec, goal, goalName) {
-			var url = "specs/" + spec + "/goalmodel/goals/" + goal
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goal
 					+ "/" + goalName;
 			return $http.put(url);
 		},
 		mergeGoals : function(spec, goalOne, goalTwo,
 				newGoalName) {
-			var url = "specs/" + spec
+			var url = baseUrl + "specs/" + spec
 					+ "/goalmodel/goals/merge?goalNameOne="
 					+ goalOne + "&goalNameTwo=" + goalTwo
 					+ "&newGoalName=" + newGoalName;
 			return $http.post(url);
 		},
 		splitParentGoal : function(spec, goal, sucConditions, newGoalName) {
-			var url = "specs/" + spec
+			var url = baseUrl + "specs/" + spec
 			+ "/goalmodel/goals/extractparent";
 			return $http.post(url, {
 				"sourceGoalName" : goal,
@@ -61,7 +61,7 @@ app.factory('goalRepository', function($http) {
 			});
 		},
 		splitChildGoal : function(spec, goal, sucConditions, newGoalName) {
-			var url = "specs/" + spec
+			var url = baseUrl + "specs/" + spec
 			+ "/goalmodel/goals/extractchild";
 			return $http.post(url, {
 				"sourceGoalName" : goal,
@@ -70,7 +70,7 @@ app.factory('goalRepository', function($http) {
 			});
 		},
 		splitSiblingGoal : function(spec, goal, sucConditions, newGoalName) {
-			var url = "specs/" + spec
+			var url = baseUrl + "specs/" + spec
 			+ "/goalmodel/goals/extractsibling";
 			return $http.post(url, {
 				"sourceGoalName" : goal,

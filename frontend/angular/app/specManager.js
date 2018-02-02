@@ -1,5 +1,7 @@
 var app = angular.module('specManager', [ 'ngRoute', 'ngAnimate', 'ui.bootstrap']);
 
+var baseUrl = 'http://localhost:8081/';
+
 app.config(function($routeProvider) {
 	$routeProvider.when("/", {
 		templateUrl : "views/home.html"

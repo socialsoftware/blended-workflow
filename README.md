@@ -41,3 +41,12 @@ To run the frontend (AngularJS):
 	```
 	http://localhost:8080/
 	```
+
+
+Documentation:
+- Server ports:
+```
+frontend apps - 8080
+engine core api - 8081
+engine resources api - XXXX
+```

@@ -28,7 +28,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.dto.SpecDTO;
 public class RepositoryInterface {
 	private static Logger logger = LoggerFactory.getLogger(RepositoryInterface.class);
 
-	final static String BASE_URL = "http://localhost:8080";
+	final static String BASE_URL = "http://localhost:8081";
 
 	private static RepositoryInterface instance = null;
 

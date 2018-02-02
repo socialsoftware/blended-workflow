@@ -1,5 +1,4 @@
-app
-		.controller(
+app.controller(
 				'ActivityGraphController',
 				function($rootScope, $scope, $routeParams, specRepository,
 						activityRepository) {

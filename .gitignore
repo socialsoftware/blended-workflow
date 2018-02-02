@@ -115,3 +115,5 @@ engine/.idea/xtextAutoBuilderState.xml
 engine/core/.idea
 
 engine/resources/.idea
+
+frontend/angular/node_modules
