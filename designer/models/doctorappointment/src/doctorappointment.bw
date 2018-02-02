@@ -1,4 +1,4 @@
-Specification: "Doctor Appointments" 
+Specification: "Doctor Appointment"  
        
 Entity Patient {
 	name : String 

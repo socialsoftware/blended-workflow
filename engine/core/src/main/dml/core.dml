@@ -1,0 +1,603 @@
+package pt.ist.socialsoftware.blendedworkflow.core.domain;
+
+enum pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel.DataState as DataState;
+enum pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType as AttributeType;
+enum pt.ist.socialsoftware.blendedworkflow.core.domain.Comparison.ComparisonOperator as ComparisonOperator;
+enum pt.ist.socialsoftware.blendedworkflow.core.domain.BinaryExpression.BinaryOperator as BinaryOperator;
+
+class BlendedWorkflow {
+	Integer specificationCounter;
+}
+
+relation DomainRootHasBlendedWorkflowApplication {
+	.pt.ist.fenixframework.DomainRoot playsRole root {
+		multiplicity 1..1;
+	}
+	BlendedWorkflow playsRole blendedWorkflow {
+		multiplicity 0..1;
+	}
+}
+
+class Specification {
+  String specId;
+	String name;
+	String author;
+	String description;
+	String creationDate;
+	String yawlSpecficationID;
+	Integer instanceCounter;
+	String UID;
+	String version;
+}
+
+class DataModel {
+	Integer instanceCounter;
+}
+
+class Product {
+	String name;
+}
+
+class Entity extends Product {
+	boolean exists;
+}
+
+class Attribute extends Product {
+	boolean isMandatory;
+	AttributeType type;
+	boolean isKeyAttribute;
+	boolean isSystem;
+}
+
+class Path {
+	String value;
+}
+
+class Dependence;
+
+class RelationBW {
+	String name;
+	String rolenameOne;
+	String rolenameTwo;
+	boolean isOneKeyEntity;
+	boolean isTwoKeyEntity;
+}
+
+class Cardinality {
+	String exp;
+	int minValue;
+	int maxValue;
+}
+
+class Rule {
+	String name;
+}
+
+class Expression;
+
+class BinaryExpression extends Expression {
+	BinaryOperator operator;
+}
+
+class AttributeValueExpression extends Expression;
+
+class NumberLiteral extends Expression {
+	int value;
+}
+
+class StringLiteral extends Expression {
+	String valueString;
+}
+
+class ConditionModel;
+
+class GoalModel;
+
+class Goal {
+	String name;
+	String description;
+}
+
+class ActivityModel;
+
+class Activity {
+	String name;
+	String description;
+	String previous;
+	String joinCode;
+	String splitCode;
+}
+
+class Condition;
+
+class AndCondition extends Condition;
+
+class OrCondition extends Condition;
+
+class NotCondition extends Condition;
+
+class DefProductCondition extends Condition;
+
+class DefEntityCondition extends DefProductCondition;
+
+class DefAttributeCondition extends DefProductCondition;
+
+class DefPathCondition extends DefProductCondition;
+
+class MulCondition extends Condition {
+	int side;
+}
+
+class Comparison extends Condition {
+	ComparisonOperator comparator;
+	String operator;
+	String value;
+}
+
+class BoolComparison extends Condition {
+	ComparisonOperator comparator;
+}
+
+class AttributeBoolCondition extends Condition;
+
+class TrueCondition extends Condition;
+
+class FalseCondition extends Condition;
+
+class WorkflowInstance {
+	String name;
+	int logCounter;
+}
+
+class ProductInstance;
+
+class EntityInstance extends ProductInstance {
+	String id;
+}
+
+class AttributeInstance extends ProductInstance {
+	String value;
+}
+
+class RelationInstance;
+
+class WorkItem {
+	int counter;
+}
+
+class ActivityWorkItem extends WorkItem;
+
+class GoalWorkItem extends WorkItem;
+
+class WorkItemArgument;
+
+class PreWorkItemArgument extends WorkItemArgument;
+
+class PostWorkItemArgument extends WorkItemArgument;
+
+// BlendedWorkflow
+relation BlendedWorkflowHasSpecifications {
+	BlendedWorkflow playsRole blendedWorkflow {multiplicity 0..1;}
+	Specification playsRole specification {multiplicity 0..*;}
+}
+
+// Specification
+
+relation SpecificationHasWorkflowInstances {
+	Specification playsRole specification {multiplicity 0..1;}
+	WorkflowInstance playsRole workflowInstance {multiplicity 0..*;}
+}
+
+relation SpecificationHasConditionModel {
+	Specification playsRole specification {multiplicity 0..1;}
+	ConditionModel playsRole conditionModel { multiplicity 0..1;}
+}
+
+relation SpecificationHasGoalModel {
+	Specification playsRole specification {multiplicity 0..1;}
+	GoalModel playsRole goalModel { multiplicity 0..1; }
+}
+
+relation SpecificationHasActivityModel {
+	Specification playsRole specification {multiplicity 0..1;}
+	ActivityModel playsRole activityModel { multiplicity 0..1; }
+}
+
+relation SpecificationHasDataModel {
+	Specification playsRole specification {multiplicity 0..1;}
+	DataModel playsRole dataModel { multiplicity 0..1; }
+}
+
+// WorkflowInstance
+relation WorkflowInstanceHasEntityInstances {
+	WorkflowInstance playsRole workflowInstance {multiplicity 0..1;}
+	EntityInstance playsRole entityInstance {multiplicity 0..*;}
+}
+
+relation WorkflowInstanceHasWorkItems {
+	WorkflowInstance playsRole workflowInstance {multiplicity 0..1;}
+	WorkItem playsRole workItem {multiplicity 0..*;}
+}
+
+// ConditionModel
+relation ConditionModelHasEntityAchieveConditions {
+	ConditionModel playsRole conditionModel {multiplicity 0..1;}
+  	DefEntityCondition playsRole entityAchieveCondition {multiplicity 0..*;}
+}
+
+relation ConditionModelHasEntityDependenceConditions {
+	ConditionModel playsRole conditionModelForEntDep {multiplicity 0..1;}
+	Dependence playsRole entityDependenceCondition {multiplicity 0..*;}
+}
+
+relation ConditionModelHasEntityInvariantConditions {
+	ConditionModel playsRole conditionModel {multiplicity 0..1;}
+	MulCondition playsRole entityInvariantCondition {multiplicity 0..*;}
+}
+
+relation ConditionModelHasAttributeAchieveConditions {
+	ConditionModel playsRole conditionModel {multiplicity 0..1;}
+	DefAttributeCondition playsRole attributeAchieveCondition {multiplicity 0..*;}
+}
+
+relation ConditionModelHasAttributeDependenceConditions {
+	ConditionModel playsRole conditionModelForAttDep {multiplicity 0..1;}
+	Dependence playsRole attributeDependenceCondition {multiplicity 0..*;}
+}
+
+relation ConditionModelHasAttributeInvariantConditions {
+	ConditionModel playsRole conditionModel {multiplicity 0..1;}
+	Rule playsRole attributeInvariantCondition {multiplicity 0..*;}
+}
+
+// WorkItem
+relation WorkItemHasPreConditions {
+	WorkItem playsRole workItemOfPre {multiplicity 0..1;}
+	PreWorkItemArgument playsRole preCondition {multiplicity 0..*;}
+}
+
+relation WorkItemHasPostConditions {
+	WorkItem playsRole workItemOfPost {multiplicity 0..1;}
+	PostWorkItemArgument playsRole postCondition {multiplicity 0..*;}
+}
+
+// WorkItemArgument
+relation PreWorkItemArgumentHasDefPathCondition {
+	PreWorkItemArgument playsRole preWorkItemArgument {multiplicity 0..*;}
+	DefPathCondition playsRole defPathCondition {multiplicity 0..1;}
+}
+
+relation PostWorkItemArgumentHasDefProductCondition {
+	PostWorkItemArgument playsRole postWorkItemArgument {multiplicity 0..*;}
+	DefProductCondition playsRole defProductCondition {multiplicity 0..1;}
+}
+
+relation PreWorkItemArgumentHasProductInstance {
+	PreWorkItemArgument playsRole preWorkItemArgument {multiplicity 0..*;}
+	ProductInstance playsRole productInstance {multiplicity 0..*;}
+}
+
+relation PostWorkItemArgumentHasProductInstance {
+	PostWorkItemArgument playsRole postWorkItemArgument {multiplicity 0..1;}
+	ProductInstance playsRole productInstance {multiplicity 0..*;}
+}
+
+// Goal Model
+relation GoalModelHasGoals {
+	GoalModel playsRole goalModel { multiplicity 0..1; }
+	Goal playsRole goal { multiplicity 0..*; }
+}
+
+// Goal
+relation GoalHasGoals {
+	Goal playsRole parentGoal { multiplicity 0..1; }
+	Goal playsRole subGoal { multiplicity 0..*; }
+}
+
+relation GoalHasSucessConditions {
+	Goal playsRole successConditionGoal { multiplicity 0..1; }
+	DefProductCondition playsRole successCondition { multiplicity 0..*; }
+}
+
+relation GoalHasActivationConditions {
+	Goal playsRole activationConditionGoal {multiplicity 0..*;}
+	DefPathCondition playsRole activationCondition {multiplicity 0..*;}
+}
+
+relation GoalHasEntityInvariantCondition {
+	Goal playsRole invariantConditionGoal {multiplicity 0..1;}
+	MulCondition playsRole entityInvariantCondition {multiplicity 0..*;}
+}
+
+relation GoalHasAttributeInvariantCondition {
+	Goal playsRole invariantConditionGoal {multiplicity 0..1;}
+	Rule playsRole attributeInvariantCondition {multiplicity 0..*;}
+}
+
+relation GoalHasGoalWorkItem {
+	Goal playsRole goal { multiplicity 0..1; }
+	GoalWorkItem playsRole workItem { multiplicity 0..*; }
+}
+
+// Activity Model
+relation ActivityModelHasActivities {
+	ActivityModel playsRole activityModel { multiplicity 0..1; }
+	Activity playsRole activity { multiplicity 0..*; }
+}
+
+// Activity
+relation ActivityHasNextActivity {
+	Activity playsRole activity { multiplicity 0..*; }
+	Activity playsRole nextActivity { multiplicity 0..*; }
+}
+
+relation ActivityHasPreConditions {
+	Activity playsRole activityWithPreCondition { multiplicity 0..*; }
+	DefPathCondition playsRole preCondition { multiplicity 0..*; }
+}
+
+relation ActivityHasPostConditions {
+	Activity playsRole activityWithPostCondition { multiplicity 0..1; }
+	DefProductCondition playsRole postCondition { multiplicity 0..*; }
+}
+
+relation ActivityHasMultiplicityInvariants {
+	Activity playsRole activityWithMultiplicity { multiplicity 0..1; }
+	MulCondition playsRole multiplicityInvariant { multiplicity 0..*; }
+}
+
+relation ActivityHasRuleInvariants {
+	Activity playsRole activityWithRule { multiplicity 0..*; }
+	Rule playsRole ruleInvariant { multiplicity 0..*; }
+}
+
+relation ActivityHasSequenceConditions {
+	Activity playsRole activitySequenceCondition { multiplicity 0..1; }
+	DefPathCondition playsRole sequenceCondition { multiplicity 0..*; }
+}
+
+relation ActivityHasActivityWorkItem {
+	Activity playsRole activity { multiplicity 0..1; }
+	ActivityWorkItem playsRole WorkItem { multiplicity 0..*; }
+}
+
+// DataModel
+relation DataModelHasEntities {
+	DataModel playsRole dataModel { multiplicity 0..1; }
+	Entity playsRole entity { multiplicity 0..*; }
+}
+
+relation DataModelHasAttributes {
+	DataModel playsRole dataModel { multiplicity 0..1; }
+	Attribute playsRole attribute { multiplicity 0..*; }
+}
+
+relation DataModelHasDefPathConditions {
+	DataModel playsRole dataModel {multiplicity 0..1;}
+	DefPathCondition playsRole defPathCondition {multiplicity 0..*;}
+}
+
+relation DataModelHasRelationBW {
+	DataModel playsRole dataModel { multiplicity 0..1; }
+	RelationBW playsRole relationBW { multiplicity 0..*; }
+}
+
+relation DataModelHasDependence {
+	DataModel playsRole dataModel { multiplicity 1..1; }
+	Dependence playsRole dependence { multiplicity 0..*; }
+}
+
+relation DataModelHasPath {
+	DataModel playsRole dataModel { multiplicity 1..1; }
+	Path playsRole path { multiplicity 0..*; }
+}
+
+// Product
+relation ProductHasDependence {
+	Product playsRole product { multiplicity 0..1; }
+	Dependence playsRole dependence { multiplicity 0..*; }
+}
+
+// Entity
+relation EntityHasAttributes {
+	Entity playsRole entity { multiplicity 0..1; }
+	Attribute playsRole attribute { multiplicity 0..*; }
+}
+
+relation EntityHasRule {
+	Entity playsRole entity { multiplicity 1..1; }
+	Rule playsRole rule { multiplicity 0..*; }
+}
+
+relation EntityHasEntityInstances {
+	Entity playsRole entity { multiplicity 0..1; }
+	EntityInstance playsRole entityInstance { multiplicity 0..*; }
+}
+
+// RelationBW
+relation RelationBWHasCardinalityOne {
+	RelationBW playsRole relationOfOne { multiplicity 0..1; } 
+	Cardinality playsRole cardinalityOne { multiplicity 0..1; }
+}
+
+relation RelationBWHasCardinalityTwo {
+	RelationBW playsRole relationOfTwo { multiplicity 0..1; } 
+	Cardinality playsRole cardinalityTwo { multiplicity 0..1; }
+}
+
+relation RelationBWHasRelationInstances {
+	RelationBW playsRole relationType { multiplicity 0..1; } 
+	RelationInstance playsRole relationInstance { multiplicity 0..*; }
+}
+
+relation AttributeHasAttributeInstances {
+	Attribute playsRole attribute { multiplicity 0..1; }
+	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
+}
+
+// Path
+relation DependenceHasPath {
+	Dependence playsRole dependence { multiplicity 0..1; }
+	Path playsRole path { multiplicity 1..1; }
+}
+
+relation AttributeBoolConditionHasPath {
+	AttributeBoolCondition playsRole attributeBoolCondition { multiplicity 0..1; }
+	Path playsRole path { multiplicity 1..1; }
+}
+
+relation AttributeValueExpressionHasPath {
+	AttributeValueExpression playsRole attributeValueExpression { multiplicity 0..1; }
+	Path playsRole path { multiplicity 1..1; }
+}
+
+relation DefProductConditionHasPath {
+	DefProductCondition playsRole defProductCondition { multiplicity 0..1; }
+	Path playsRole path { multiplicity 1..1; }
+}
+
+// Rule
+relation RuleHasCondition {
+	Rule playsRole rule { multiplicity 0..1; }
+	Condition playsRole condition { multiplicity 1..1; }
+}
+
+// Relation
+relation RelationBWHasEntityOne {
+	RelationBW playsRole relationOne { multiplicity 0..*; }
+	Entity playsRole entityOne { multiplicity 1..1; }
+}
+
+relation RelationBWHasEntityTwo {
+	RelationBW playsRole relationTwo { multiplicity 0..*; }
+	Entity playsRole entityTwo { multiplicity 1..1; }
+}
+
+//NEW
+/*
+relation EntityMayBeRelationEntityOne {
+	Entity playsRole entityOne { multiplicity 0..1; }
+	RelationBW playsRole entityOneRelationInstances { multiplicity 0..*; }
+}
+
+relation EntityMayBeRelationEntityTwo {
+	Entity playsRole entityTwo { multiplicity 0..1; }
+	RelationBW playsRole entityTwoRelationInstances { multiplicity 0..*; }
+}*/
+
+relation EntityInstanceMayBeRelationEntityOne {
+	EntityInstance playsRole entityInstanceOne { multiplicity 0..1; }
+	RelationInstance playsRole relationInstanceOfOne { multiplicity 0..*; }
+}
+
+relation EntityInstanceMayBeRelationEntityTwo {
+	EntityInstance playsRole entityInstanceTwo { multiplicity 0..1; }
+	RelationInstance playsRole RelationInstanceOfTwo { multiplicity 0..*; }
+}
+
+// EntityInstance
+relation EntityInstanceHasAttributeInstances {
+	EntityInstance playsRole entityInstance { multiplicity 0..1; }
+	AttributeInstance playsRole attributeInstance { multiplicity 0..*; }
+}
+
+
+
+
+
+// Conditions
+// AndCondition
+relation AndConditionHasLeftConditions {
+	AndCondition playsRole andLeftCondition { multiplicity 0..1; }
+	Condition playsRole leftCondition { multiplicity 0..1; }
+}
+
+relation AndConditionHasRightConditions {
+	AndCondition playsRole andRightCondition { multiplicity 0..1; }
+	Condition playsRole rightCondition { multiplicity 0..1; }
+}
+
+// OrCondition
+relation OrConditionHasLeftConditions {
+	OrCondition playsRole orLeftCondition { multiplicity 0..1; }
+	Condition playsRole leftCondition { multiplicity 0..1; } 
+}
+
+relation OrConditionHasRightConditions {
+	OrCondition playsRole orRightCondition { multiplicity 0..1; }
+	Condition playsRole rightCondition { multiplicity 0..1; } 
+}
+
+// NotCondition
+relation NotConditionHasConditions {
+	NotCondition playsRole notCondition { multiplicity 0..1; }
+	Condition playsRole condition { multiplicity 0..1; }
+}
+
+//DefEntityCondition
+relation DefEntityConditionHasEntity {
+	DefEntityCondition playsRole defEntityCondition { multiplicity 0..1; }
+	Entity playsRole entity { multiplicity 0..1; }
+}
+
+// DefAttributeCondition
+relation DefAttributeConditionHasAttribute {
+	DefAttributeCondition playsRole defAttributeCondition { multiplicity 0..1; }
+	Attribute playsRole attributeOfDef { multiplicity 0..1; }
+}
+
+//MulCondition
+relation MulConditionHasRelationBW {
+	MulCondition playsRole mulCondition { multiplicity 0..2;}
+	RelationBW playsRole relationBW { multiplicity 0..1; }
+}
+
+// Comparison
+relation ComparisonHasAttribute {
+	Comparison playsRole comparison { multiplicity 0..*; }
+	Attribute playsRole attributeOfComparison { multiplicity 0..1; }
+}
+
+relation ComparisonHasExpressionLeft {
+	Comparison playsRole leftComparison { multiplicity 0..1; }
+	Expression playsRole leftExpression { multiplicity 0..1; }
+}
+
+relation ComparisonHasExpressionRight {
+	Comparison playsRole rightComparison { multiplicity 0..1; }
+	Expression playsRole rightExpression { multiplicity 0..1; }
+}
+
+// BoolComparison
+relation ComparisonHasConditionLeft {
+	BoolComparison playsRole leftBoolComparison { multiplicity 0..1; }
+	Condition playsRole leftCondition { multiplicity 0..1; }
+}
+
+relation ComparisonHasConditionRight {
+	BoolComparison playsRole rightBoolComparison { multiplicity 0..1; }
+	Condition playsRole rightCondition { multiplicity 0..1; }
+}
+
+// AttributeBoolCondition
+relation AttributeBoolConditionHasAttribute {
+	AttributeBoolCondition playsRole attBoolCondition { multiplicity 0..*; }
+	Attribute playsRole attributeOfBool { multiplicity 0..1; }
+}
+
+// BinaryExpression
+relation BinaryExpressionHasExpressionLeft {
+	BinaryExpression playsRole leftBinary { multiplicity 0..1; }
+	Expression playsRole leftExpression { multiplicity 0..1; }
+}
+
+relation BinaryExpressionHasExpressionRight {
+	BinaryExpression playsRole rightBinary { multiplicity 0..1; }
+	Expression playsRole rightExpression { multiplicity 0..1; }
+}
+
+// AttributeValueExpression
+relation AttributeValueExpressionHasAttribute {
+	AttributeValueExpression playsRole attValueExpression { multiplicity 0..*; }
+	Attribute playsRole attribute { multiplicity 0..1; }
+}
