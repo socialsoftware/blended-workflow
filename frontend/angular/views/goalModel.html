@@ -1,0 +1,32 @@
+<div class="container" ng-show="spec.name">
+	<div class="text-left">
+		<samp>
+			<strong>Goal Model Specification</strong> {{spec.name}} <br /> <br />
+			<div ng-repeat="g in goals | orderBy:'name'">
+				<strong>Goal</strong><span> {{g.name}}</span> <br /> { <br />
+				<div
+					ng-init="getSubGoals(g.name); getActivationConditions(g.name); getEntSuccessConditions(g.name); getAttSuccessConditions(g.name); getMulConditions(g.name); getRuleConditions(g.name)">
+				<span style="padding-left: 2em"></span><strong>SUB</strong>(<span
+					ng-repeat="sub in subgoals.get(g.name)">{{sub.name}}<span
+					ng-if="!$last">, </span></span>) <br /> 
+				<span style="padding-left: 2em"></span><strong>ACT</strong>(<span
+					ng-repeat="act in actconditions.get(g.name)">{{act.path}}<span
+					ng-if="!$last">, </span></span>) <br /> 
+				<span style="padding-left: 2em"></span><strong>SUC</strong>(<span
+					ng-repeat="suc in entsucconditions.get(g.name)">{{suc.path}}<span ng-if="!$last || attsucconditions.get(g.name).length != 0">, </span></span><span
+					ng-repeat="suc in attsucconditions.get(g.name)"><span
+					ng-if="suc.mandatory">MAN(</span>{{suc.path}}<span
+					ng-if="suc.mandatory">)</span><span ng-if="!$last">, </span></span>) <br />
+				<span style="padding-left: 2em"></span><strong>MUL</strong>(<span
+					ng-repeat="mul in mulconditions.get(g.name)">{{mul.rolePath}},
+					{{mul.cardinality}}<span ng-if="!$last">, </span></span>) <br /> 
+				<span style="padding-left: 2em"></span><strong>RULES</strong>(<span
+					ng-repeat="rule in ruleconditions.get(g.name)">{{rule.name}}:
+					{{rule.toStringExpression}})<span ng-if="!$last">, </span></span>)<br />
+			</div>
+			}<br /> <br />
+	</div>
+	</samp>
+</div>
+</div>
+

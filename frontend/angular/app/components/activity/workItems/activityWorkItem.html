@@ -1,0 +1,41 @@
+<div class="container" ng-show="instance.name">
+	<div>
+		<samp>
+			<strong>Activity Work Items</strong> {{spec.name}}:{{instance.name}}
+			<br /> <br />
+			<work-item
+				ng-repeat="workItem in nextWorkItems | orderBy:'name'"
+				name="workItem.name" work-item="workItem"
+				on-update="submitActivityWorkItem(workItem.name,workItem)"></work-item>
+
+			<div ng-if="error">
+				<div error-message error-data="{{error}}"></div>
+			</div>
+
+			</br> </br>
+
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Timestamp</th>
+							<th>Activity</th>
+							<th>Pre Arguments</th>
+							<th>Post Arguments</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="log in logWorkItems | orderBy:'-timestamp'">
+							<td>{{log.timestamp}}</td>
+							<td>{{log.name}}</td>
+							<td>{{log.preArguments}}</td>
+							<td>{{log.postArguments}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+		</samp>
+	</div>
+</div>
+
