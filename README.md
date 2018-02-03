@@ -34,7 +34,7 @@ To run the frontend (AngularJS):
 - Start server
 	- Change folder to frontend/angular
 	```
-	npm start
+	$ npm start
 	```
 
 - Open webpage
@@ -54,11 +54,14 @@ To run the frontend (ReactJS):
 	$ sudo apt-get install nodejs
 	$ sudo apt-get install npm
 	```
-
+- Install react-scripts
+	```
+	$ npm install react-scripts
+	```
 - Start server
 	- Change folder to frontend/react/{branch}
 	```
-	npm start
+	$ npm start
 	```
 
 - Open webpage
