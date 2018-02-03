@@ -42,10 +42,35 @@ To run the frontend (AngularJS):
 	http://localhost:8080/
 	```
 
+To run the frontend (ReactJS):
+- Install nodeJS
+	- MacOs
+	```
+	$ brew install node
+	```
+	- Unix
+	```
+	$ sudo apt-get update
+	$ sudo apt-get install nodejs
+	$ sudo apt-get install npm
+	```
+
+- Start server
+	- Change folder to frontend/react/{branch}
+	```
+	npm start
+	```
+
+- Open webpage
+	```
+	http://localhost:3000/
+	```
+
 
 Documentation:
 - Server ports:
 ```
-frontend apps - 8081
+frontend angular app - 8081
+frontend react app - 3000
 engine core api - 8080
 ```
