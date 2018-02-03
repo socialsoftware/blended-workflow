@@ -110,4 +110,10 @@ engine/.idea/xtextAutoBuilderState.xml
 
 */.DS_Store
 
-.recommenders
+.recommenders/
+
+engine/.idea
+
+engine/core/.idea
+
+engine/resources/.idea
