@@ -12,9 +12,9 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
 
 @RestController
-@RequestMapping(value = "/resources/")
-public class SpecificationController {
-	private static Logger log = LoggerFactory.getLogger(SpecificationController.class);
+@RequestMapping(value = "/specs/{specId}/resourcesmodel")
+public class ResourceSpecificationController {
+	private static Logger log = LoggerFactory.getLogger(ResourceSpecificationController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<SpecDTO[]> getSpecs() {
