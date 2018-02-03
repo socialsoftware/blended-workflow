@@ -6,7 +6,6 @@ public class ResourceModel extends ResourceModel_Base {
 		super();
 
 		getSpec().getResourceModel();
-
 	}
 
 }

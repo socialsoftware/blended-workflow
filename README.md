@@ -17,3 +17,60 @@ To run the designer:
 - in Eclipse import all projets in blended-workflow/designer as "Existing Projects in Workspace"
 - "Generate xText Artifacts" for designer/src/pt.ist.socialsoftware.blendedworkflow.designer/BlendedWorkflow.xtext
 - run the designer "As Eclipse Application"
+
+To run the frontend (AngularJS):
+- Install nodeJS
+	- MacOs
+	```
+	$ brew install node
+	```
+	- Unix
+	```
+	$ sudo apt-get update
+	$ sudo apt-get install nodejs
+	$ sudo apt-get install npm
+	```
+
+- Start server
+	- Change folder to frontend/angular
+	```
+	npm start
+	```
+
+- Open webpage
+	```
+	http://localhost:8080/
+	```
+
+To run the frontend (ReactJS):
+- Install nodeJS
+	- MacOs
+	```
+	$ brew install node
+	```
+	- Unix
+	```
+	$ sudo apt-get update
+	$ sudo apt-get install nodejs
+	$ sudo apt-get install npm
+	```
+
+- Start server
+	- Change folder to frontend/react/{branch}
+	```
+	npm start
+	```
+
+- Open webpage
+	```
+	http://localhost:3000/
+	```
+
+
+Documentation:
+- Server ports:
+```
+frontend angular app - 8081
+frontend react app - 3000
+engine core api - 8080
+```
