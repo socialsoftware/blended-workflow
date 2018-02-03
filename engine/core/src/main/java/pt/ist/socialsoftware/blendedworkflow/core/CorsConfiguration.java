@@ -6,8 +6,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import static pt.ist.socialsoftware.blendedworkflow.core.Application.frontendUrl;
-
 @Configuration
 public class CorsConfiguration {
 
