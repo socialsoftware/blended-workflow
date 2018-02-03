@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 	@Value("${frontend.url}")
-	public static final String baseUrl = "http://localhost:8080";
+	public static final String frontendUrl = "http://localhost:8080";
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

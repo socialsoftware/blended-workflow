@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import static pt.ist.socialsoftware.blendedworkflow.core.Application.baseUrl;
+import static pt.ist.socialsoftware.blendedworkflow.core.Application.frontendUrl;
 
 @Configuration
 public class CorsConfiguration {
@@ -17,7 +17,7 @@ public class CorsConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(baseUrl)
+                        .allowedOrigins(frontendUrl)
                         .allowCredentials(false).maxAge(3600);
             }
         };
