@@ -28,8 +28,16 @@
 		<dependency>
 			<groupId>pt.ist.socialsoftware</groupId>
 			<artifactId>core</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 			<scope>compile</scope>
+		</dependency>
+		<!-- Import core test classes -->
+		<dependency>
+			<groupId>pt.ist.socialsoftware</groupId>
+			<artifactId>core</artifactId>
+			<version>${project.parent.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
