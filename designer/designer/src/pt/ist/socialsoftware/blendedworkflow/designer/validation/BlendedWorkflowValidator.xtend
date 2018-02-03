@@ -35,7 +35,12 @@ class BlendedWorkflowValidator extends AbstractBlendedWorkflowValidator {
 			//	info('everything OK 2', BlendedWorkflowPackage.Literals.BW_SPECIFICATION__SPECIFICATION)
 //		var specId = model.eResource.URI.lastSegment.split("\\.").get(0)
 			//	info('everything OK 3', BlendedWorkflowPackage.Literals.BW_SPECIFICATION__SPECIFICATION)
-		var BWNotification notification = instance.write(model)
+		var BWNotification notification;
+		try {
+			notification = instance.write(model)
+		} catch (Exception e) {
+			System.err.println(e);
+		}
 			//	info('everything OK 4', BlendedWorkflowPackage.Literals.BW_SPECIFICATION__SPECIFICATION)
 		if (notification.hasErrors)
 			for (BWError error : notification.error)

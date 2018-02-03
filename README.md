@@ -46,7 +46,6 @@ To run the frontend (AngularJS):
 Documentation:
 - Server ports:
 ```
-frontend apps - 8080
-engine core api - 8081
-engine resources api - XXXX
+frontend apps - 8081
+engine core api - 8080
 ```

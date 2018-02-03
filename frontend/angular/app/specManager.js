@@ -1,6 +1,6 @@
 var app = angular.module('specManager', [ 'ngRoute', 'ngAnimate', 'ui.bootstrap']);
 
-var baseUrl = 'http://localhost:8081/';
+var baseUrl = 'http://localhost:8080/';
 
 app.config(function($routeProvider) {
 	$routeProvider.when("/", {
