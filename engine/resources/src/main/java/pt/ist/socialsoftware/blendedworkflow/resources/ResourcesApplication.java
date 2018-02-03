@@ -4,19 +4,23 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
-@PropertySource({ "classpath:application.properties" })
+import pt.ist.socialsoftware.blendedworkflow.core.CoreApplication;
+
+@PropertySource({ "classpath:resources.properties" })
+@Import(CoreApplication.class)
 @SpringBootApplication
-public class Application extends SpringBootServletInitializer {
+public class ResourcesApplication extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(Application.class);
+		return application.sources(ResourcesApplication.class);
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(ResourcesApplication.class, args);
 	}
 
 }

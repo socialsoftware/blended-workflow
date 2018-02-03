@@ -33,5 +33,5 @@ Association BandD {
 
 Association CandD {
 	C with c (0..*) 
-	D with d (0..*)
+	D with d (0..*) 
 }

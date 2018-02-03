@@ -9,17 +9,18 @@ import org.springframework.context.annotation.PropertySource;
 
 @PropertySource({ "classpath:application.properties" })
 @SpringBootApplication
-public class Application extends SpringBootServletInitializer {
+public class CoreApplication extends SpringBootServletInitializer {
+
 	@Value("${frontend.url}")
 	public static final String frontendUrl = "http://localhost:8080";
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(Application.class);
+		return application.sources(CoreApplication.class);
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(CoreApplication.class, args);
 	}
 
 }
