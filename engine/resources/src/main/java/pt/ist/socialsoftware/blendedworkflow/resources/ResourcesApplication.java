@@ -7,10 +7,10 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
-import pt.ist.socialsoftware.blendedworkflow.core.Application;
+import pt.ist.socialsoftware.blendedworkflow.core.CoreApplication;
 
 @PropertySource({ "classpath:resources.properties" })
-@Import(Application.class)
+@Import(CoreApplication.class)
 @SpringBootApplication
 public class ResourcesApplication extends SpringBootServletInitializer {
 
