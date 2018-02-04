@@ -22,7 +22,7 @@ public class ResourceSpecificationController {
 
 		DesignInterface adi = DesignInterface.getInstance();
 
-		return new ResponseEntity<>(null, HttpStatus.OK);
+		return null;
 	}
 
 }
