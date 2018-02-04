@@ -53,10 +53,12 @@ public class WriteBlendedWorkflowService {
 		try {
 			this.repository.getSpecBySpecId(specId);
 			this.repository.cleanBlendedWorkflowModel(specId);
+			this.rmRepository.cleanResourceModel(specId);
 		} catch (RepositoryException re) {
 			// logger.debug("getSpec: {}", re.getMessage());
 			try {
 				this.repository.createSpec(new SpecDTO(specId, eBWSpecification.getSpecification().getName()));
+				this.rmRepository.createResourceModel(specId, notification);
 			} catch (RepositoryException ree) {
 				notification.addError(ree.getError());
 				// logger.debug("createSpec: {}", re.getMessage());

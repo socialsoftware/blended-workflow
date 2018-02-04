@@ -10,6 +10,16 @@ public class ResourceModel extends ResourceModel_Base {
 		super();
 	}
 
+    public void clean() {
+		getCapabilitySet().stream().forEach(c -> c.delete());
+    }
+
+	public void delete() {
+		clean();
+		setSpec(null);
+		deleteDomainObject();
+	}
+
 	public Capability addCapability(String name, String description) {
 		Capability capability = new Capability(this, name, description);
 

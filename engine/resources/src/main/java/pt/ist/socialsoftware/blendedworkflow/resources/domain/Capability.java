@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
 
 public class Capability extends Capability_Base {
     private static Logger logger = LoggerFactory.getLogger(Capability.class);
@@ -24,6 +25,11 @@ public class Capability extends Capability_Base {
 
         setName(name);
         setDescription(description);
+    }
+
+    public void delete() {
+        setResourceModel(null);
+        deleteDomainObject();
     }
 
     private boolean checkUniqueName(String name) {

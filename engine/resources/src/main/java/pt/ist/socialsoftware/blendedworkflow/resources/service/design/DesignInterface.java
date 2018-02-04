@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
@@ -26,6 +27,7 @@ public class DesignInterface {
 		workflowDesigner = pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance();
 	}
 
+	@Atomic(mode = Atomic.TxMode.WRITE)
 	public ResourceModel createResourceModel(String specId) {
 		Specification spec = workflowDesigner.getSpecBySpecId(specId);
 		ResourceModel resourceModel = new ResourceModel();
@@ -34,6 +36,7 @@ public class DesignInterface {
 		return resourceModel;
 	}
 
+	@Atomic(mode = Atomic.TxMode.WRITE)
 	public Capability createCapability(CapabilityDTO capabilityDTO) {
 		Specification spec = workflowDesigner.getSpecBySpecId(capabilityDTO.getSpecId());
 
@@ -42,5 +45,12 @@ public class DesignInterface {
 		spec.getResourceModel().addCapability(capability);
 
 		return capability;
+	}
+
+	@Atomic(mode = Atomic.TxMode.WRITE)
+	public void cleanResourceModel(String specId) {
+		Specification spec = workflowDesigner.getSpecBySpecId(specId);
+
+		spec.getResourceModel().clean();
 	}
 }

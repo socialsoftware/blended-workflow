@@ -32,8 +32,39 @@ public class ResourceModelInterface {
 		return instance;
 	}
 	
-	public static void cleanResourceModel(String specId) {
+	public Boolean cleanResourceModel(String specId) {
+		logger.debug("cleanResourceModel: {}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/clean";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		Boolean response = restTemplate.getForObject(uri, Boolean.class, params);
+
+		return response;
+	}
+	
+	public boolean createResourceModel(String specId, BWNotification notification) {
+		logger.debug("createResourceModel");
 		
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		Boolean result = null;
+		try {
+			result = restTemplate.postForObject(uri, true, Boolean.class, params);
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+		}
+		
+		return result;
 	}
 	
 	public CapabilityDTO createCapability(CapabilityDTO capability, BWNotification notification) {
