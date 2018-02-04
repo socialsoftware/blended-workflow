@@ -27,6 +27,17 @@ public class ResourceSpecificationController {
 
 		return new ResponseEntity<>(new Boolean(true), HttpStatus.CREATED);
 	}
+
+	@RequestMapping(value = "/capabilities", method = RequestMethod.POST)
+	public ResponseEntity<CapabilityDTO> createCapability(@PathVariable("specId") String specId,
+													@RequestBody CapabilityDTO capabilityDTO) {
+		log.debug("CreateCapability: {}, {}, {}", specId, capabilityDTO.getName(), capabilityDTO.getDescription());
+
+		DesignInterface designer = DesignInterface.getInstance();
+
+		Capability capability = designer.createCapability(capabilityDTO);
+
+		return new ResponseEntity<>(capability.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/clean", method = RequestMethod.GET)

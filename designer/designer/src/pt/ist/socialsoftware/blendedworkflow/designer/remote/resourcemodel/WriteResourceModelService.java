@@ -33,7 +33,10 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 	
 	public void writeResourceModel(ResourceSpecification spec, String specId, BWNotification notification) {
 		System.out.println("[WriteRM] Begin writing resource model");
-				
+		
+		
+		System.out.println("[WriteRM] Begin writing capabilities");
+		
 		createCapabilities(spec, specId, notification);
 		
 		createRoles(spec, specId, notification);
@@ -51,6 +54,13 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		repository.createResourceModel(specId, notification);
 	}
 
+	private void createCapabilities(ResourceSpecification spec, String specId, BWNotification notification) {
+		for (Capability c : spec.getCapabilities()) {
+			System.out.printf("[WriteCapability] Name: %s; Description: %s\n", c.getName(), c.getDescription());
+			repository.createCapability(new CapabilityDTO(specId, c.getName(), c.getDescription()), notification);
+		}
+	}
+
 	private void createUnits(ResourceSpecification spec, String specId, BWNotification notification) {
 		for (Unit u : spec.getUnits()) {
 			System.out.printf("[WriteUnit] Name: %s; Description: %s\n", u.getName(), u.getDescription());
@@ -62,13 +72,6 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		for (Role r : spec.getRoles()) {
 			System.out.printf("[WriteRole] Name: %s; Description: %s\n", r.getName(), r.getDescription());
 			//FIXME: repository.createRole(new RoleDTO(specId, r.getName(), r.getDescription()), notification);
-		}
-	}
-
-	private void createCapabilities(ResourceSpecification spec, String specId, BWNotification notification) {
-		for (Capability c : spec.getCapabilities()) {
-			System.out.printf("[WriteCapability] Name: %s; Description: %s\n", c.getName(), c.getDescription());
-			//FIXME: repository.createCapability(new CapabilityDTO(specId, c.getName(), c.getDescription()), notification);
 		}
 	}
 

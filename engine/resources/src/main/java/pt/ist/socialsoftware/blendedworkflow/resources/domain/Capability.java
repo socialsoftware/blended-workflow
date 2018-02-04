@@ -38,4 +38,10 @@ public class Capability extends Capability_Base {
                 .stream()
                 .anyMatch(capability -> name.equals(capability.getName()));
     }
+
+    public CapabilityDTO getDTO() {
+        return new CapabilityDTO(getResourceModel().getSpec().getSpecId(),
+                getName(),
+                getDescription());
+    }
 }
