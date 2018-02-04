@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
 
 public class DesignInterface {
 	private static Logger log = LoggerFactory.getLogger(DesignInterface.class);
@@ -32,4 +34,13 @@ public class DesignInterface {
 		return resourceModel;
 	}
 
+	public Capability createCapability(CapabilityDTO capabilityDTO) {
+		Specification spec = workflowDesigner.getSpecBySpecId(capabilityDTO.getSpecId());
+
+		Capability capability = new Capability(spec.getResourceModel(), capabilityDTO.getName(), capabilityDTO.getDescription());
+
+		spec.getResourceModel().addCapability(capability);
+
+		return capability;
+	}
 }

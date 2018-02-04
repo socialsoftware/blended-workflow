@@ -1,19 +1,18 @@
-package pt.ist.socialsoftware.blendedworkflow.resources.domain.resourcemodel;
+package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.junit.Test;
-
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.core.service.BWError;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
 
 import static org.junit.Assert.*;
 
-public class ResourceModelTest extends TeardownRollbackTest {
+public class CapabilityTest extends TeardownRollbackTest {
     private static final String SPEC_ID = "Spec ID";
     private static final String SPEC_NAME = "Spec Name";
 
@@ -33,22 +32,32 @@ public class ResourceModelTest extends TeardownRollbackTest {
 
     @Test
     public void success() throws RMException {
-        designer.createResourceModel(spec.getSpecId());
-        assertNotNull(spec.getResourceModel());
-    }
-
-    @Test
-    public void testAddCapability() throws RMException {
-        _resourceModel.addCapability("Test", "Test description");
+        designer.createCapability(new CapabilityDTO(spec.getSpecId(), "Test", "Test123"));
 
         Capability capability = _resourceModel.getCapabilitySet()
-                        .stream()
-                        .filter(cap -> cap.getName().equals("Test"))
-                        .findFirst().get();
+                .stream()
+                .filter(cap -> cap.getName().equals("Test"))
+                .findFirst().get();
 
         assertNotNull(capability);
         assertEquals(capability.getName(), "Test");
-        assertEquals(capability.getDescription(), "Test description");
+        assertEquals(capability.getDescription(), "Test123");
     }
 
+    @Test(expected = RMException.class)
+    public void testTwoCapabilitiesWithSameName() throws RMException {
+        new Capability(_resourceModel, "Test", "Test123");
+        new Capability(_resourceModel, "Test", "Test123");
+    }
+
+    @Test(expected = RMException.class)
+    public void testCapabilityWithNoName() throws RMException {
+        new Capability(_resourceModel, null, null);
+    }
+
+    @Test
+    public void testCapabilityWithNoDescription() throws RMException {
+        Capability capability = new Capability(_resourceModel, "Test", null);
+        assertNull(capability.getDescription());
+    }
 }
