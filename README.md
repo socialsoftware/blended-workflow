@@ -8,10 +8,11 @@ The current version of the project is a maven project that uses Fénix Framework
 
 To run the verifier you have to install Alloy, http://alloy.mit.edu/alloy/download.html, and open the files in blended-workflow/verifier/.
 
-The engine has two parts, a core and a resources mananagement, where the latter includes the core You have to install mysql and define a two databases, respectively, "core" and "resources".
-To run the engine execute: 
-- configure the mysql username and password in resources/fenix-framework.properties
-- access the respective subfolder of blended-workflow/engine/, respectively, core or resources
+To run the engine, atart by deciding which to run. Therea are two engines, a core and a resources mananagement, where the latter includes the core. 
+To run the engine: 
+- install mysql, and define a database, either "core" or "resources", depending on the engine what want to run
+- configure the mysql username and password in blended-workflow/engine/{CHOSEN_ENGINE}/src/main/resources/fenix-framework.properties
+- access the respective subfolder blended-workflow/engine/{CHOSEN_ENGINE}
 - mvn clean spring-boot:run
 - access in a browser to localhost:8080
 
@@ -49,5 +50,5 @@ Documentation:
 ```
 frontend angular app - 8081
 frontend react app - 3000
-engine core api - 8080
+engine core or resources api - 8080
 ```
