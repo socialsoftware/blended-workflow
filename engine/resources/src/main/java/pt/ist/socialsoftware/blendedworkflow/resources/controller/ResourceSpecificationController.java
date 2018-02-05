@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.Position;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RoleDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
 
@@ -68,9 +70,21 @@ public class ResourceSpecificationController {
 		return new ResponseEntity<>(unit.getDTO(), HttpStatus.CREATED);
 	}
 
+	@RequestMapping(value = "/positions", method = RequestMethod.POST)
+	public ResponseEntity<PositionDTO> createPosition(@PathVariable("specId") String specId,
+											  @RequestBody PositionDTO positionDTO) {
+		log.debug("CreatePosition: {}, {}", specId, positionDTO.getName());
+
+		DesignInterface designer = DesignInterface.getInstance();
+
+		Position position= designer.createPosition(positionDTO);
+
+		return new ResponseEntity<>(position.getDTO(), HttpStatus.CREATED);
+	}
+
 	@RequestMapping(value = "/clean", method = RequestMethod.GET)
 	public ResponseEntity<Boolean> cleanResourceModel(@PathVariable("specId") String specId) {
-		log.debug("checkDataModel specId:{}", specId);
+		log.debug("cleanResourceModel specId:{}", specId);
 
 		DesignInterface designer = DesignInterface.getInstance();
 

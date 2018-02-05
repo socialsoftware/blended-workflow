@@ -32,7 +32,7 @@ public class CapabilityTest extends TeardownRollbackTest {
 
     @Test
     public void success() throws RMException {
-        designer.createCapability(new CapabilityDTO(spec.getSpecId(), "Test", "Test123"));
+        new Capability(_resourceModel, "Test", "Test123");
 
         Capability capability = _resourceModel.getCapabilitySet()
                 .stream()

@@ -12,7 +12,7 @@ public class PositionDTO extends ProductDTO {
 	private String unit;
 	private List<String> roles;
 	private List<String> delegateToRelations;
-	private List<String> reportsToRelations;
+	private String reportsTo;
 
 	public PositionDTO() {
 	}
@@ -24,12 +24,13 @@ public class PositionDTO extends ProductDTO {
 	}
 
 
-	public PositionDTO(String specId, String name, String unit, List<String> delegateToRelations, List<String> reportsToRelations) {
+	public PositionDTO(String specId, String name, String unit, List<String> roles, List<String> delegateToRelations, String reportsTo) {
 		setSpecId(specId);
 		this.name = name;
 		this.unit = unit;
+		this.roles = roles;
 		this.delegateToRelations = delegateToRelations;
-		this.reportsToRelations = reportsToRelations;
+		this.reportsTo = reportsTo;
 	}
 
 	public String getName() {
@@ -64,12 +65,14 @@ public class PositionDTO extends ProductDTO {
 		this.delegateToRelations = delegateToRelations;
 	}
 
-	public List<String> getReportsToRelations() {
-		return reportsToRelations;
+	public String getReportsTo() {
+		return reportsTo;
 	}
 
-	public void setReportsToRelations(List<String> reportsToRelations) {
-		this.reportsToRelations = reportsToRelations;
+	public void setReportsTo(String reportsTo) {
+		this.reportsTo = reportsTo;
 	}
+
+	
 	
 }

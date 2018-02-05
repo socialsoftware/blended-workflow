@@ -125,7 +125,7 @@ Position:
 		'isMemberOf' ':' unit = [Unit]
 		('participatesIn' ':' '{' roles += [Role] (',' roles += [Role])* '}')?
 		('canDelegateWorkTo' ':' '{' delegateTo += [Position] (',' delegateTo += [Position])* '}')?
-		('reportsTo' ':' '{' reportsTo += [Position] (',' reportsTo += [Position])* '}')?
+		('reportsTo' ':' reportsTo = [Position] )?
 	'}'
 ;
 

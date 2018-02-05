@@ -152,7 +152,7 @@ public class ResourceModelInterface {
 	}
 	
 	public PositionDTO createPosition(PositionDTO position, BWNotification notification) {
-		logger.debug("createPerson: {}, {}, {}, {}, {}, {}", position.getName(), position.getUnit(), position.getRoles(), position.getDelegateToRelations(), position.getReportsToRelations());
+		logger.debug("createPerson: {}, {}, {}, {}, {}, {}", position.getName(), position.getUnit(), position.getRoles(), position.getDelegateToRelations(), position.getReportsTo());
 
 		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/positions";
 

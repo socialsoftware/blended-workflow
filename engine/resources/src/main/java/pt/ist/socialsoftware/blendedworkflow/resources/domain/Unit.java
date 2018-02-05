@@ -27,6 +27,7 @@ public class Unit extends Unit_Base {
     }
 
     public void delete() {
+        getPositionSet().stream().forEach(p -> removePosition(p));
         setResourceModel(null);
         deleteDomainObject();
     }

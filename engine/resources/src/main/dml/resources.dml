@@ -25,6 +25,10 @@ class Unit {
     String name;
     String description;
 }
+
+class Position {
+    String name;
+}
 relation ResourceModelHasCapabilities {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     Capability playsRole capability { multiplicity 0..*; }
@@ -38,5 +42,35 @@ relation ResourceModelHasRoles {
 relation ResourceModelHasUnits {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     Unit playsRole unit { multiplicity 0..*; }
+}
+
+relation ResourceModelHasPositions {
+    ResourceModel playsRole resourceModel { multiplicity 1..1; }
+    Position playsRole position { multiplicity 0..*; }
+}
+
+relation ResourceModelHasPerson {
+    ResourceModel playsRole resourceModel { multiplicity 1..1; }
+    Person playsRole person { multiplicity 0..*; }
+}
+
+relation PositionBelongsToUnit {
+    Unit playsRole unit { multiplicity 1..1; }
+    Position playsRole position { multiplicity 0..*; }
+}
+
+relation PositionHasRoles {
+    Position playsRole position { multiplicity 0..*; }
+    Role playsRole role { multiplicity 0..*; }
+}
+
+relation PositionReportsToPosition {
+    Position playsRole isReportedBy { multiplicity 0..*; }
+    Position playsRole reportsTo { multiplicity 0..1; }
+}
+
+relation PositionDelegatesWorkToPosition {
+    Position playsRole workDelegatedBy { multiplicity 0..*; }
+    Position playsRole canDelegateWorkTo { multiplicity 0..*; }
 }
 

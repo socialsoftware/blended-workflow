@@ -104,7 +104,7 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 			}
 			
 			if (p.getReportsTo() != null) {
-				position.setReportsToRelations(p.getReportsTo().stream().map(r -> r.getName()).collect(Collectors.toList()));
+				position.setReportsTo(p.getReportsTo().getName());
 			}
 			
 			repository.createPosition(position, notification);		

@@ -5,11 +5,9 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RoleDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
 
@@ -65,6 +63,16 @@ public class DesignInterface {
 		Unit unit = new Unit(spec.getResourceModel(), unitDTO.getName(), unitDTO.getDescription());
 
 		return unit;
+	}
+
+	@Atomic(mode = Atomic.TxMode.WRITE)
+	public Position createPosition(PositionDTO positionDTO) {
+		Specification spec = workflowDesigner.getSpecBySpecId(positionDTO.getSpecId());
+
+		Position position = spec.getResourceModel().addPosition(positionDTO.getName(),positionDTO.getUnit(),
+				positionDTO.getRoles(), positionDTO.getDelegateToRelations(), positionDTO.getReportsTo());
+
+		return position;
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
