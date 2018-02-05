@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RoleDTO;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/resourcemodel")
@@ -30,7 +32,7 @@ public class ResourceSpecificationController {
 
 	@RequestMapping(value = "/capabilities", method = RequestMethod.POST)
 	public ResponseEntity<CapabilityDTO> createCapability(@PathVariable("specId") String specId,
-													@RequestBody CapabilityDTO capabilityDTO) {
+														  @RequestBody CapabilityDTO capabilityDTO) {
 		log.debug("CreateCapability: {}, {}, {}", specId, capabilityDTO.getName(), capabilityDTO.getDescription());
 
 		DesignInterface designer = DesignInterface.getInstance();
@@ -38,6 +40,18 @@ public class ResourceSpecificationController {
 		Capability capability = designer.createCapability(capabilityDTO);
 
 		return new ResponseEntity<>(capability.getDTO(), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/roles", method = RequestMethod.POST)
+	public ResponseEntity<RoleDTO> createRole(@PathVariable("specId") String specId,
+														  @RequestBody RoleDTO roleDTO) {
+		log.debug("CreateRole: {}, {}, {}", specId, roleDTO.getName(), roleDTO.getDescription());
+
+		DesignInterface designer = DesignInterface.getInstance();
+
+		Role role = designer.createRole(roleDTO);
+
+		return new ResponseEntity<>(role.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/clean", method = RequestMethod.GET)

@@ -2,7 +2,6 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;

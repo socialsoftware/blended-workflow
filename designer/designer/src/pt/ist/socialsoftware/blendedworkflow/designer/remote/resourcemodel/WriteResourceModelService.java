@@ -61,17 +61,17 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		}
 	}
 
+	private void createRoles(ResourceSpecification spec, String specId, BWNotification notification) {
+		for (Role r : spec.getRoles()) {
+			System.out.printf("[WriteRole] Name: %s; Description: %s\n", r.getName(), r.getDescription());
+			repository.createRole(new RoleDTO(specId, r.getName(), r.getDescription()), notification);
+		}
+	}
+	
 	private void createUnits(ResourceSpecification spec, String specId, BWNotification notification) {
 		for (Unit u : spec.getUnits()) {
 			System.out.printf("[WriteUnit] Name: %s; Description: %s\n", u.getName(), u.getDescription());
 			//FIXME: repository.createUnit(new UnitDTO(specId, u.getName(), u.getDescription()), notification);
-		}
-	}
-
-	private void createRoles(ResourceSpecification spec, String specId, BWNotification notification) {
-		for (Role r : spec.getRoles()) {
-			System.out.printf("[WriteRole] Name: %s; Description: %s\n", r.getName(), r.getDescription());
-			//FIXME: repository.createRole(new RoleDTO(specId, r.getName(), r.getDescription()), notification);
 		}
 	}
 

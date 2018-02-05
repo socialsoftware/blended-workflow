@@ -12,6 +12,7 @@ public class ResourceModel extends ResourceModel_Base {
 
     public void clean() {
 		getCapabilitySet().stream().forEach(c -> c.delete());
+		getRoleSet().stream().forEach(r -> r.delete());
     }
 
 	public void delete() {
@@ -23,8 +24,14 @@ public class ResourceModel extends ResourceModel_Base {
 	public Capability addCapability(String name, String description) {
 		Capability capability = new Capability(this, name, description);
 
-		addCapability(capability);
-
 		return capability;
 	}
+
+	public Role addRole(String name, String description) {
+		Role role = new Role(this,name,description);
+
+		return role;
+	}
+
+
 }

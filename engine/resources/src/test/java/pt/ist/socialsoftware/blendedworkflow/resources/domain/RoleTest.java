@@ -1,20 +1,17 @@
-package pt.ist.socialsoftware.blendedworkflow.resources.domain.resourcemodel;
+package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.junit.Test;
-
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
 
 import static org.junit.Assert.*;
 
-public class ResourceModelTest extends TeardownRollbackTest {
+public class RoleTest extends TeardownRollbackTest {
     private static final String SPEC_ID = "Spec ID";
     private static final String SPEC_NAME = "Spec Name";
 
@@ -34,28 +31,7 @@ public class ResourceModelTest extends TeardownRollbackTest {
 
     @Test
     public void success() throws RMException {
-        designer.createResourceModel(spec.getSpecId());
-        assertNotNull(spec.getResourceModel());
-    }
-
-    @Test
-    public void testAddCapability() throws RMException {
-        _resourceModel.addCapability("Test", "Test description");
-
-        Capability capability = _resourceModel.getCapabilitySet()
-                        .stream()
-                        .filter(cap -> cap.getName().equals("Test"))
-                        .findFirst().get();
-
-        assertNotNull(capability);
-        assertEquals(capability.getName(), "Test");
-        assertEquals(capability.getDescription(), "Test description");
-    }
-
-
-    @Test
-    public void testAddRole() throws RMException {
-        _resourceModel.addRole("Test", "Test description");
+        new Role(_resourceModel, "Test", "Test123");
 
         Role role = _resourceModel.getRoleSet()
                 .stream()
@@ -64,8 +40,23 @@ public class ResourceModelTest extends TeardownRollbackTest {
 
         assertNotNull(role);
         assertEquals(role.getName(), "Test");
-        assertEquals(role.getDescription(), "Test description");
+        assertEquals(role.getDescription(), "Test123");
     }
 
+    @Test(expected = RMException.class)
+    public void testTwoRolesWithSameName() throws RMException {
+        new Role(_resourceModel, "Test", "Test123");
+        new Role(_resourceModel, "Test", "Test123");
+    }
 
+    @Test(expected = RMException.class)
+    public void testRoleWithNoName() throws RMException {
+        new Role(_resourceModel, null, null);
+    }
+
+    @Test
+    public void testRoleWithNoDescription() throws RMException {
+        Role role = new Role(_resourceModel, "Test", null);
+        assertNull(role.getDescription());
+    }
 }
