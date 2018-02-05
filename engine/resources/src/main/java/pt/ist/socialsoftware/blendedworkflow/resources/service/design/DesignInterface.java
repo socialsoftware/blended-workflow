@@ -8,8 +8,10 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RoleDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
 
 public class DesignInterface {
 	private static Logger log = LoggerFactory.getLogger(DesignInterface.class);
@@ -54,6 +56,15 @@ public class DesignInterface {
 		Role role = new Role(spec.getResourceModel(), roleDTO.getName(), roleDTO.getDescription());
 
 		return role;
+	}
+
+	@Atomic(mode = Atomic.TxMode.WRITE)
+	public Unit createUnit(UnitDTO unitDTO) {
+		Specification spec = workflowDesigner.getSpecBySpecId(unitDTO.getSpecId());
+
+		Unit unit = new Unit(spec.getResourceModel(), unitDTO.getName(), unitDTO.getDescription());
+
+		return unit;
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)

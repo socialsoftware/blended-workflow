@@ -20,6 +20,11 @@ class Role {
     String name;
     String description;
 }
+
+class Unit {
+    String name;
+    String description;
+}
 relation ResourceModelHasCapabilities {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     Capability playsRole capability { multiplicity 0..*; }
@@ -28,5 +33,10 @@ relation ResourceModelHasCapabilities {
 relation ResourceModelHasRoles {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     Role playsRole role { multiplicity 0..*; }
+}
+
+relation ResourceModelHasUnits {
+    ResourceModel playsRole resourceModel { multiplicity 1..1; }
+    Unit playsRole unit { multiplicity 0..*; }
 }
 

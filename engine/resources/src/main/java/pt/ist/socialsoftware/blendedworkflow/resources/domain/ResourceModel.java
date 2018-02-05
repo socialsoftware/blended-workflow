@@ -13,6 +13,7 @@ public class ResourceModel extends ResourceModel_Base {
     public void clean() {
 		getCapabilitySet().stream().forEach(c -> c.delete());
 		getRoleSet().stream().forEach(r -> r.delete());
+		getUnitSet().stream().forEach(u -> u.delete());
     }
 
 	public void delete() {
@@ -31,6 +32,12 @@ public class ResourceModel extends ResourceModel_Base {
 		Role role = new Role(this,name,description);
 
 		return role;
+	}
+
+	public Unit addUnit(String name, String description) {
+		Unit unit = new Unit(this,name,description);
+
+		return unit;
 	}
 
 

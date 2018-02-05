@@ -9,6 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
 
@@ -67,5 +68,18 @@ public class ResourceModelTest extends TeardownRollbackTest {
         assertEquals(role.getDescription(), "Test description");
     }
 
+    @Test
+    public void testAddUnit() throws RMException {
+        _resourceModel.addUnit("Test", "Test description");
+
+        Unit unit = _resourceModel.getUnitSet()
+                .stream()
+                .filter(u -> u.getName().equals("Test"))
+                .findFirst().get();
+
+        assertNotNull(unit);
+        assertEquals(unit.getName(), "Test");
+        assertEquals(unit.getDescription(), "Test description");
+    }
 
 }

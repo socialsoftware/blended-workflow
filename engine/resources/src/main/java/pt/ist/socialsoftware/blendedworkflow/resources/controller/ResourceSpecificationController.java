@@ -10,9 +10,11 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RoleDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/resourcemodel")
@@ -52,6 +54,18 @@ public class ResourceSpecificationController {
 		Role role = designer.createRole(roleDTO);
 
 		return new ResponseEntity<>(role.getDTO(), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/units", method = RequestMethod.POST)
+	public ResponseEntity<UnitDTO> createUnit(@PathVariable("specId") String specId,
+											  @RequestBody UnitDTO unitDTO) {
+		log.debug("CreateUnit: {}, {}, {}", specId, unitDTO.getName(), unitDTO.getDescription());
+
+		DesignInterface designer = DesignInterface.getInstance();
+
+		Unit unit = designer.createUnit(unitDTO);
+
+		return new ResponseEntity<>(unit.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/clean", method = RequestMethod.GET)
