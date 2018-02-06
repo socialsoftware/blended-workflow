@@ -32,7 +32,7 @@ public class GetTargetOfPathMethodTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification(SPEC_ID, SPEC_NAME, "author", "description", "version", "UID");
+		this.spec = new Specification(SPEC_ID, SPEC_NAME);
 
 		this.entityOne = new Entity(this.spec.getDataModel(), ENTITY_NAME_ONE, false);
 		Entity entityTwo = new Entity(this.spec.getDataModel(), ENTITY_NAME_TWO, false);

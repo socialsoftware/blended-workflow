@@ -114,7 +114,7 @@ public class DesignInterface {
 
 		Specification spec = getSpecBySpecId(entDTO.getSpecId());
 
-		return spec.getDataModel().createEntity(entDTO.getName(), entDTO.getExists());
+		return spec.getDataModel().createEntity(entDTO.getName(), entDTO.getExists(), entDTO.isMandatory());
 	}
 
 	public Set<Attribute> getAttributes(String specId) {

@@ -35,7 +35,7 @@ public class GetEnabledGoalSetTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification("SpecId", "My spec", "author", DESCRIPTION, "version", "UID");
+		this.spec = new Specification("SpecId", "My spec");
 		DataModel dataModel = this.spec.getDataModel();
 		this.goalModel = this.spec.getGoalModel();
 

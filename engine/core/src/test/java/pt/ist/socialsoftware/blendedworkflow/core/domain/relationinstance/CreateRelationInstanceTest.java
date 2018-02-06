@@ -32,7 +32,7 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
+		this.spec = new Specification("SpecId", "My spec");
 		this.workflowInstance = new WorkflowInstance(this.spec, NAME);
 		this.entityOne = new Entity(this.spec.getDataModel(), "entityNameOne", false);
 		this.entityTwo = new Entity(this.spec.getDataModel(), "entityNameTwo", false);

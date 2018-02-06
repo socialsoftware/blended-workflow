@@ -1,9 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
@@ -24,23 +20,14 @@ public class Specification extends Specification_Base {
 		super.setName(name);
 	}
 
-	public Specification(String specId, String name, String author, String description, String version, String UID)
-			throws BWException {
+	public Specification(String specId, String name) throws BWException {
 		setSpecId(specId);
 		setName(name);
-		setAuthor(author);
-		setDescription(description);
-		setVersion(version);
-		setUID(UID);
-
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		setCreationDate(dateFormat.format(Calendar.getInstance().getTime()));
 
 		setDataModel(new DataModel());
 		setConditionModel(new ConditionModel());
 		setActivityModel(new ActivityModel());
 		setGoalModel(new GoalModel());
-		setInstanceCounter(0);
 		BlendedWorkflow blendedWorkflow = BlendedWorkflow.getInstance();
 		blendedWorkflow.addSpecification(this);
 	}
@@ -66,11 +53,6 @@ public class Specification extends Specification_Base {
 		if ((name == null) || name.equals("")) {
 			throw new BWException(BWErrorType.INVALID_SPECIFICATION_NAME, name);
 		}
-	}
-
-	public int generateInstanceId() {
-		setInstanceCounter(getInstanceCounter() + 1);
-		return getInstanceCounter();
 	}
 
 	@Atomic(mode = TxMode.WRITE)

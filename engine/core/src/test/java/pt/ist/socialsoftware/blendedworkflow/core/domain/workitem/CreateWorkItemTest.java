@@ -29,7 +29,7 @@ public class CreateWorkItemTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification("SpecId", MY_SPEC, "author", "description", "version", "UID");
+		this.spec = new Specification("SpecId", MY_SPEC);
 		this.goal = new Goal(this.spec.getGoalModel(), NAME);
 		this.activity = new Activity(this.spec.getActivityModel(), NAME, "description");
 
@@ -54,8 +54,7 @@ public class CreateWorkItemTest extends TeardownRollbackTest {
 
 	@Test
 	public void failGoal() {
-		Specification otherSpec = new Specification("SpecIdOther", YOUR_SPEC, "author", "description", "version",
-				"UID");
+		Specification otherSpec = new Specification("SpecIdOther", YOUR_SPEC);
 		Goal otherGoal = new Goal(otherSpec.getGoalModel(), NAME);
 
 		try {
@@ -69,8 +68,7 @@ public class CreateWorkItemTest extends TeardownRollbackTest {
 
 	@Test
 	public void failActivity() {
-		Specification otherSpec = new Specification("SpecIdOther", YOUR_SPEC, "author", "description", "version",
-				"UID");
+		Specification otherSpec = new Specification("SpecIdOther", YOUR_SPEC);
 		Activity otherActivity = new Activity(otherSpec.getActivityModel(), NAME, "description");
 
 		try {

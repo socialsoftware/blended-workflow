@@ -38,7 +38,7 @@ public class CheckPathMethodTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		Specification spec = new Specification(SPEC_ID, "name", "author", "description", "version", "UID");
+		Specification spec = new Specification(SPEC_ID, "name");
 		this.dataModel = spec.getDataModel();
 
 		this.entOne = new Entity(this.dataModel, ENT_ONE_NAME, false);

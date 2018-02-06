@@ -68,8 +68,8 @@ public class DataModel extends DataModel_Base {
 		deleteDomainObject();
 	}
 
-	public Entity createEntity(String entityName, Boolean exists) {
-		return new Entity(this, entityName, exists);
+	public Entity createEntity(String entityName, boolean exists, boolean mandatory) {
+		return new Entity(this, entityName, exists, mandatory);
 	}
 
 	public Product getSourceOfPath(String path) {

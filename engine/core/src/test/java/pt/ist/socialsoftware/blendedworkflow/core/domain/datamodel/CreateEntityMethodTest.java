@@ -24,14 +24,14 @@ public class CreateEntityMethodTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		Specification spec = new Specification(SPEC_ID, "name", "author", "description", "version", "UID");
+		Specification spec = new Specification(SPEC_ID, "name");
 		this.dataModel = spec.getDataModel();
 		new Entity(this.dataModel, DUP_NAME, false);
 	}
 
 	@Test
 	public void success() throws BWException {
-		this.dataModel.createEntity(ENTITY_NAME, true);
+		this.dataModel.createEntity(ENTITY_NAME, true, false);
 
 		Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
 		Entity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
@@ -43,7 +43,7 @@ public class CreateEntityMethodTest extends TeardownRollbackTest {
 	@Test
 	public void duplicateName() throws BWException {
 		try {
-			this.dataModel.createEntity(DUP_NAME, false);
+			this.dataModel.createEntity(DUP_NAME, false, false);
 			fail("duplicateName");
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INVALID_ENTITY_NAME, bwe.getError());
@@ -53,7 +53,7 @@ public class CreateEntityMethodTest extends TeardownRollbackTest {
 	@Test
 	public void emptyName() throws BWException {
 		try {
-			this.dataModel.createEntity(EMPTY_NAME, false);
+			this.dataModel.createEntity(EMPTY_NAME, false, false);
 			fail("emptyName");
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INVALID_ENTITY_NAME, bwe.getError());
@@ -63,7 +63,7 @@ public class CreateEntityMethodTest extends TeardownRollbackTest {
 	@Test
 	public void nullName() throws BWException {
 		try {
-			this.dataModel.createEntity(null, false);
+			this.dataModel.createEntity(null, false, false);
 			fail("nullName");
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INVALID_ENTITY_NAME, bwe.getError());

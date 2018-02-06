@@ -13,7 +13,7 @@ Specification:
 ;
 
 Entity:
-	'Entity' name = ID (exists ?= 'exists')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? '{' 
+	'Entity' name = ID (mandatory ?= 'mandatory')? (exists ?= 'exists')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? '{' 
 		attributes += Attribute*
 		constraint += Constraint*
 	'}'

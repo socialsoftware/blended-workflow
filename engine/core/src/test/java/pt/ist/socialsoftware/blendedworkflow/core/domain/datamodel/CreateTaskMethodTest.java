@@ -22,7 +22,7 @@ public class CreateTaskMethodTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		Specification spec = new Specification(SPEC_ID, "name", "author", "description", "version", "UID");
+		Specification spec = new Specification(SPEC_ID, "name");
 		this.taskModel = spec.getActivityModel();
 		new Activity(this.taskModel, TASK_ONE, "this is a description");
 	}

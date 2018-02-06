@@ -6,13 +6,13 @@ Entity Patient {
 	heartProblems : Boolean 
 }         
                       
-Entity Episode {
+Entity Episode mandatory {
 	reserveDate : Date
 	checkin : Boolean
 	checkout : Boolean               
 }
 
-Entity Prescription {
+Entity Prescription { 
 	description : String dependsOn Prescription.episode.report.description 
 }
 

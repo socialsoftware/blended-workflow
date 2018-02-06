@@ -29,7 +29,7 @@ public class CheckUniqueElementName extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
+		this.spec = new Specification("SpecId", "My spec");
 		this.entityOne = new Entity(this.spec.getDataModel(), ENTITY_NAME_ONE, false);
 		this.entityTwo = new Entity(this.spec.getDataModel(), ENTITY_NAME_TWO, false);
 

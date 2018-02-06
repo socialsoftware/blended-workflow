@@ -47,7 +47,7 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification("SpecId", MY_SPEC, "author", "description", "version", "UID");
+		this.spec = new Specification("SpecId", MY_SPEC);
 		Entity entity = new Entity(this.spec.getDataModel(), ENTITY_NAME, false);
 		Attribute attribute = new Attribute(this.spec.getDataModel(), entity, ATTRIBUTE_NAME, AttributeType.STRING,
 				false, false, false);

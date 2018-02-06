@@ -39,7 +39,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 	public void populate4Test() throws BWException {
 		this.designInterface = DesignInterface.getInstance();
 
-		new Specification(SPEC_ID, SPEC_NAME, "author", "description", "version", "UID");
+		new Specification(SPEC_ID, SPEC_NAME);
 		this.dataModel = getBlendedWorkflow().getSpecById(SPEC_ID).get().getDataModel();
 
 		this.entityOne = new Entity(this.dataModel, ENTITY_NAME_ONE, false);

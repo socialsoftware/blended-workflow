@@ -22,7 +22,7 @@ public class CreateEntityInstanceTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
+		this.spec = new Specification("SpecId", "My spec");
 		this.workflowInstance = new WorkflowInstance(this.spec, NAME);
 		this.entity = new Entity(this.spec.getDataModel(), "entityName", false);
 	}
@@ -37,8 +37,7 @@ public class CreateEntityInstanceTest extends TeardownRollbackTest {
 
 	@Test
 	public void entityDoesNotBelongToSpecification() {
-		Specification otherSpec = new Specification("OtherSpecId", "Other spec", "author", "description", "version",
-				"UID");
+		Specification otherSpec = new Specification("OtherSpecId", "Other spec");
 		Entity otherEntity = new Entity(otherSpec.getDataModel(), OTHER_ENTITY_NAME, false);
 
 		try {

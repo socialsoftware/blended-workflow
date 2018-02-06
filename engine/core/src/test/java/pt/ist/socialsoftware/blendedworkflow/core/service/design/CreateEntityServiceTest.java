@@ -24,7 +24,7 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification(SPEC_ID, "name", "author", "description", "version", "UID");
+		this.spec = new Specification(SPEC_ID, "name");
 		new Entity(this.spec.getDataModel(), DUP_NAME, false);
 	}
 
