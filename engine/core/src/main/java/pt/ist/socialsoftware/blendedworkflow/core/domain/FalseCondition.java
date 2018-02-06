@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,60 +24,6 @@ public class FalseCondition extends FalseCondition_Base {
 	@Override
 	public Set<Path> getPathSet() {
 		return new HashSet<>();
-	}
-
-	@Override
-	public HashMap<Attribute, String> getcompareConditionValues() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getRdrUndefinedCondition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getRdrSkippedCondition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getRdrTrueCondition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getRdrFalseCondition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean existExistEntity() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean existCompareAttributeToValue() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean existTrue() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

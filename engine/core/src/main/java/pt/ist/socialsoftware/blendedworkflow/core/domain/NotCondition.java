@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.HashMap;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
@@ -33,51 +32,6 @@ public class NotCondition extends NotCondition_Base {
 	@Override
 	public Set<Path> getPathSet() {
 		return getCondition().getPathSet();
-	}
-
-	@Override
-	public HashMap<Attribute, String> getcompareConditionValues() {
-		return new HashMap<>();
-	}
-
-	@Override
-	public String getRdrUndefinedCondition() {
-		return "True";
-	}
-
-	@Override
-	public String getRdrSkippedCondition() {
-		return "True";
-	}
-
-	@Override
-	public String getRdrTrueCondition() {
-		return "True";
-	}
-
-	@Override
-	public String getRdrFalseCondition() {
-		return "True";
-	}
-
-	@Override
-	public String toString() {
-		return "!(" + getCondition().toString() + ")";
-	}
-
-	@Override
-	public Boolean existExistEntity() {
-		return false;
-	}
-
-	@Override
-	public Boolean existCompareAttributeToValue() {
-		return false;
-	}
-
-	@Override
-	public Boolean existTrue() {
-		return false;
 	}
 
 	@Override

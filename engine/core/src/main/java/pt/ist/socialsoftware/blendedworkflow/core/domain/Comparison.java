@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -9,7 +8,6 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ExpressionDTO;
@@ -76,72 +74,6 @@ public class Comparison extends Comparison_Base {
 			return Stream.concat(getRightExpression().getPathSet().stream(), getLeftExpression().getPathSet().stream())
 					.collect(Collectors.toSet());
 		}
-	}
-
-	@Override
-	public HashMap<Attribute, String> getcompareConditionValues() {
-		HashMap<Attribute, String> result = new HashMap<>();
-		result.put(getAttributeOfComparison(), getValue());
-		return result;
-	}
-
-	@Override
-	public String getRdrUndefinedCondition() {
-		String condition = "(";
-		String attributeName = getAttributeOfComparison().getName().replaceAll(" ", "");
-		String entityName = getAttributeOfComparison().getEntity().getName().replaceAll(" ", "");
-
-		condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + ")";
-		return condition;
-	}
-
-	@Override
-	public String getRdrSkippedCondition() {
-		String condition = "(";
-		String attributeName = getAttributeOfComparison().getName().replaceAll(" ", "");
-		String entityName = getAttributeOfComparison().getEntity().getName().replaceAll(" ", "");
-
-		condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
-		return condition;
-	}
-
-	@Override
-	public String getRdrTrueCondition() {
-		String condition = "(";
-		String attributeName = getAttributeOfComparison().getName().replaceAll(" ", "");
-		String entityName = getAttributeOfComparison().getEntity().getName().replaceAll(" ", "");
-		String value = getValue();
-		if (getValue().equals("$TODAY$")) {
-			value = "" + "$TODAY$".hashCode();
-		}
-
-		condition += entityName + "_" + attributeName + " " + getOperator() + " " + value + ")";
-		return condition;
-	}
-
-	@Override
-	public String getRdrFalseCondition() {
-		return "(!" + getRdrTrueCondition() + ")";
-	}
-
-	@Override
-	public String toString() {
-		return getSubPath();
-	}
-
-	@Override
-	public Boolean existExistEntity() {
-		return false;
-	}
-
-	@Override
-	public Boolean existTrue() {
-		return false;
-	}
-
-	@Override
-	public Boolean existCompareAttributeToValue() {
-		return true;
 	}
 
 	@Override

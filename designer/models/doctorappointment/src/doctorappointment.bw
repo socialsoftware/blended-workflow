@@ -6,7 +6,7 @@ Entity Patient {
 	heartProblems : Boolean 
 }         
                       
-Entity Episode mandatory {
+Entity Episode mandatory { 
 	reserveDate : Date
 	checkin : Boolean
 	checkout : Boolean               

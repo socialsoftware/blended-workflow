@@ -47,6 +47,8 @@ public class GoalModel extends GoalModel_Base {
 	public void generateGoals() {
 		ConditionModel conditionModel = getSpecification().getConditionModel();
 
+		// it is necessary to have a single mandatory def entity condition
+
 		Goal top = new Goal(this, "top");
 		for (DefEntityCondition defEntityCondition : conditionModel.getEntityAchieveConditionSet()) {
 			if (!defEntityCondition.getEntity().getExists()) {
