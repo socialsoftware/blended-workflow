@@ -37,9 +37,9 @@ fact dependencies {
 pred complete {
  	one s: AbstractState | 
 		// cannot be the initial state to find one meaningful state
-		#Patient <: s.objects = 2 and
-		#Episode <: s.objects = 2 and
-		#s.objects = 4 and
+		#Patient <: s.objects = 1 and
+		#Episode <: s.objects = 1 and
+		#s.objects = 2 and
 		// model is well defined
 
 		// all attributes are defined
