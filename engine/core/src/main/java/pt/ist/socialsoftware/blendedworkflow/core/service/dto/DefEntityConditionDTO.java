@@ -8,13 +8,14 @@ public class DefEntityConditionDTO {
 	private String extId;
 	private String entityName;
 	private boolean exists;
+	private boolean mandatory;
 	private String path;
 
 	public DefEntityConditionDTO() {
 	}
 
 	public String getSpecId() {
-		return specId;
+		return this.specId;
 	}
 
 	public void setSpecId(String specId) {
@@ -22,7 +23,7 @@ public class DefEntityConditionDTO {
 	}
 
 	public String getExtId() {
-		return extId;
+		return this.extId;
 	}
 
 	public void setExtId(String extId) {
@@ -30,7 +31,7 @@ public class DefEntityConditionDTO {
 	}
 
 	public String getEntityName() {
-		return entityName;
+		return this.entityName;
 	}
 
 	public void setEntityName(String entityName) {
@@ -38,7 +39,7 @@ public class DefEntityConditionDTO {
 	}
 
 	public boolean isExists() {
-		return exists;
+		return this.exists;
 	}
 
 	public void setExists(boolean exists) {
@@ -46,11 +47,19 @@ public class DefEntityConditionDTO {
 	}
 
 	public String getPath() {
-		return path;
+		return this.path;
 	}
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public boolean isMandatory() {
+		return this.mandatory;
+	}
+
+	public void setMandatory(boolean mandatory) {
+		this.mandatory = mandatory;
 	}
 
 }

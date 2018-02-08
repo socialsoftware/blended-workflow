@@ -6,8 +6,9 @@
 
 			<div
 				ng-repeat="eac in entityachieveconditions | orderBy : 'entityName'">
-				<span style="padding-left: 2em" /><span ng-if="eac.exists"><strong>EXISTS</strong>(<strong>DEF</strong>({{eac.entityName}}))</span>
-				<span ng-if="!eac.exists"><strong>DEF</strong>({{eac.entityName}})</span>
+				<span style="padding-left: 2em" /><span ng-if="eac.mandatory"><strong>MAN</strong>(<strong>DEF</strong>({{eac.entityName}}))</span>
+				<span ng-if="eac.exists"><strong>EXISTS</strong>(<strong>DEF</strong>({{eac.entityName}}))</span>
+				<span ng-if="!eac.exists && !eac.mandatory"><strong>DEF</strong>({{eac.entityName}})</span>
 			</div>
 
 			<br /> <strong>Entity Dependence Conditions</strong>

@@ -61,6 +61,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		eacDTO.setExtId(getExternalId());
 		eacDTO.setEntityName(getEntity().getName());
 		eacDTO.setExists(getEntity().getExists());
+		eacDTO.setMandatory(getEntity().getMandatory());
 		eacDTO.setPath(getEntity().getName());
 
 		return eacDTO;

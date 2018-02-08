@@ -1,6 +1,6 @@
-Specification: "Four Entities" 
+Specification: "Two Entities" 
        
-Entity A { 
+Entity A mandatory { 
 	att1 : Number 
 } 
 

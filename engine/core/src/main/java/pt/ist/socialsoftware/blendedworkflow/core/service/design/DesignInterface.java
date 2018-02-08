@@ -109,8 +109,8 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public Entity createEntity(EntityDTO entDTO) {
-		log.debug("createEntity specId:{}, name:{}, exists:{}", entDTO.getSpecId(), entDTO.getName(),
-				entDTO.getExists());
+		log.debug("createEntity specId:{}, name:{}, exists:{}, mandatory:{}", entDTO.getSpecId(), entDTO.getName(),
+				entDTO.getExists(), entDTO.isMandatory());
 
 		Specification spec = getSpecBySpecId(entDTO.getSpecId());
 

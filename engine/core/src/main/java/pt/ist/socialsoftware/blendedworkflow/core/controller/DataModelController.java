@@ -94,7 +94,8 @@ public class DataModelController {
 	@RequestMapping(value = "/entities", method = RequestMethod.POST)
 	public ResponseEntity<EntityDTO> createEntity(@PathVariable("specId") String specId,
 			@RequestBody EntityDTO entDTO) {
-		log.debug("createEntity specId:{}, name:{}, exists:{}", specId, entDTO.getName(), entDTO.getExists());
+		log.debug("createEntity specId:{}, name:{}, exists:{}, mandatory:{}", specId, entDTO.getName(),
+				entDTO.getExists(), entDTO.isMandatory());
 
 		DesignInterface adi = DesignInterface.getInstance();
 

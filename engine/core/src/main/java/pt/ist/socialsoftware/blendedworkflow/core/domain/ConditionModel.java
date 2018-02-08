@@ -59,8 +59,8 @@ public class ConditionModel extends ConditionModel_Base {
 	}
 
 	public Set<DefProductCondition> getAllProductionConditions() {
-		Set<DefProductCondition> allDefConditions = new HashSet<>(getEntityAchieveConditionSet()
-				.stream().filter(d -> !d.getEntity().getExists()).collect(Collectors.toSet()));
+		Set<DefProductCondition> allDefConditions = new HashSet<>(getEntityAchieveConditionSet().stream()
+				.filter(d -> !d.getEntity().getExists()).collect(Collectors.toSet()));
 
 		allDefConditions.addAll(getAttributeAchieveConditionSet().stream()
 				.filter(d -> !d.getAttributeOfDef().getEntity().getExists()).collect(Collectors.toSet()));
@@ -76,6 +76,10 @@ public class ConditionModel extends ConditionModel_Base {
 	static public Set<DefAttributeCondition> getDefAttributeConditions(Set<? extends DefProductCondition> conditions) {
 		return conditions.stream().filter(DefAttributeCondition.class::isInstance)
 				.map(DefAttributeCondition.class::cast).collect(Collectors.toSet());
+	}
+
+	public DefEntityCondition getMandatoryEntityCondition() {
+		return getEntityAchieveConditionSet().stream().filter(c -> c.getEntity().getMandatory()).findFirst().get();
 	}
 
 }

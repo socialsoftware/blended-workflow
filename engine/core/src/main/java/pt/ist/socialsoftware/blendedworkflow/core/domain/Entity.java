@@ -187,6 +187,7 @@ public class Entity extends Entity_Base {
 		entityDTO.setProductType(getProductType().name());
 		entityDTO.setName(getName());
 		entityDTO.setExists(getExists());
+		entityDTO.setMandatory(getMandatory());
 
 		return entityDTO;
 	}
