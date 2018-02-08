@@ -5,8 +5,8 @@ open filesystem/BWSecureSpec
 
 one sig Alice, Bob, Carlos extends User{}
 
-one sig R_Doctor, R_Nurse, R_Receptionist extends Role{}
-
+one sig R_Doctor, R_Nurse, R_Receptionist extends RoleSubject{}
+/*
 fact acrules{
 	//users
 	AccessControlRules.users ={Alice  + Bob}
@@ -27,5 +27,5 @@ fact acrules{
 			}
 		}
 }
-
+*/
 run{}
