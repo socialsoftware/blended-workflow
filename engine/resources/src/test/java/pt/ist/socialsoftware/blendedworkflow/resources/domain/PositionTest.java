@@ -43,7 +43,7 @@ public class PositionTest extends TeardownRollbackTest {
 
     @Test
     public void success() throws RMException {
-        new Position(_resourceModel, "Test", _unit);
+        new Position(_resourceModel, "Test", "Test", _unit);
 
         Position position = _resourceModel.getPositionSet()
                 .stream()
@@ -52,6 +52,7 @@ public class PositionTest extends TeardownRollbackTest {
 
         assertNotNull(position);
         assertEquals(position.getName(), "Test");
+        assertEquals("Test", position.getDescription());
         assertEquals(position.getUnit().getName(), _unit.getName());
         assertTrue(position.getRoleSet().isEmpty());
         assertTrue(position.getCanDelegateWorkToSet().isEmpty());
@@ -60,7 +61,7 @@ public class PositionTest extends TeardownRollbackTest {
 
     @Test
     public void testPositionCreationWithRoles() throws RMException {
-        new Position(_resourceModel, "Test", _unit, _roles, new ArrayList<>(), null);
+        new Position(_resourceModel, "Test", "Test", _unit, _roles, new ArrayList<>(), null);
 
         Position position = _resourceModel.getPositionSet()
                 .stream()
@@ -86,9 +87,9 @@ public class PositionTest extends TeardownRollbackTest {
 
     @Test
     public void testPositionCreationWithReports() throws RMException {
-        Position reports = new Position(_resourceModel, "Pos1R", _unit);
+        Position reports = new Position(_resourceModel, "Pos1R", "Test", _unit);
 
-        new Position(_resourceModel, "Test", _unit, new ArrayList<>(), new ArrayList<>(), reports);
+        new Position(_resourceModel, "Test", "Test", _unit, new ArrayList<>(), new ArrayList<>(), reports);
 
         Position position = _resourceModel.getPositionSet()
                 .stream()
@@ -109,11 +110,11 @@ public class PositionTest extends TeardownRollbackTest {
     @Test
     public void testPositionCreationWithDelegates() throws RMException {
         List<Position> positions = Arrays.asList(
-                new Position(_resourceModel, "Pos1", _unit),
-                new Position(_resourceModel, "Pos2", _unit)
+                new Position(_resourceModel, "Pos1", "Test", _unit),
+                new Position(_resourceModel, "Pos2", "Test", _unit)
         );
 
-        new Position(_resourceModel, "Test", _unit, new ArrayList<>(), positions, null);
+        new Position(_resourceModel, "Test", "Test", _unit, new ArrayList<>(), positions, null);
 
         Position position = _resourceModel.getPositionSet()
                 .stream()
@@ -140,13 +141,13 @@ public class PositionTest extends TeardownRollbackTest {
     @Test
     public void testPositionCreationWithAll() throws RMException {
         List<Position> delegates = Arrays.asList(
-                new Position(_resourceModel, "Pos1D", _unit),
-                new Position(_resourceModel, "Pos2D", _unit)
+                new Position(_resourceModel, "Pos1D", "Test", _unit),
+                new Position(_resourceModel, "Pos2D", "Test", _unit)
         );
 
-        Position reports = new Position(_resourceModel, "Pos1R", _unit);
+        Position reports = new Position(_resourceModel, "Pos1R", "Test", _unit);
 
-        new Position(_resourceModel, "Test", _unit, _roles, delegates, reports);
+        new Position(_resourceModel, "Test", "Test", _unit, _roles, delegates, reports);
 
         Position position = _resourceModel.getPositionSet()
                 .stream()
@@ -180,17 +181,17 @@ public class PositionTest extends TeardownRollbackTest {
 
     @Test(expected = RMException.class)
     public void testTwoPositionsWithSameName() throws RMException {
-        new Position(_resourceModel, "Test", _unit);
-        new Position(_resourceModel, "Test", _unit);
+        new Position(_resourceModel, "Test", "Test", _unit);
+        new Position(_resourceModel, "Test", "Test", _unit);
     }
 
     @Test(expected = RMException.class)
     public void testPositionWithNoName() throws RMException {
-        new Position(_resourceModel, null, _unit);
+        new Position(_resourceModel, null, "Test", _unit);
     }
 
     @Test(expected = RMException.class)
     public void testPositionWithNoUnit() throws RMException {
-        new Position(_resourceModel, "Test", null);
+        new Position(_resourceModel, "Test", "Test", null);
     }
 }

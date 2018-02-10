@@ -11,9 +11,9 @@ public class Role extends Role_Base {
 
     public Role(ResourceModel resourceModel, String name, String description) throws RMException {
         logger.debug("Creating a new Role object");
+        setResourceModel(resourceModel);
         setName(name);
         setDescription(description);
-        setResourceModel(resourceModel);
     }
 
     @Override

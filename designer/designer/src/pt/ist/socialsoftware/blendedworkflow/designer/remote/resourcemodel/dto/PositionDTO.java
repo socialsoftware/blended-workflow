@@ -13,6 +13,10 @@ public class PositionDTO {
 	private List<String> roles;
 	private List<String> delegateToRelations;
 	private String reportsTo;
+	
+	public PositionDTO() {
+        
+    }
 
 	public PositionDTO(String specId, String name, String unit, String description) {
 		setSpecId(specId);

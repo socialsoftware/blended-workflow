@@ -6,8 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Position;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
@@ -78,6 +76,18 @@ public class ResourceSpecificationController {
 		DesignInterface designer = DesignInterface.getInstance();
 
 		Position position= designer.createPosition(positionDTO);
+
+		return new ResponseEntity<>(position.getDTO(), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/positions/init", method = RequestMethod.POST)
+	public ResponseEntity<PositionDTO> initPosition(@PathVariable("specId") String specId,
+													  @RequestBody PositionDTO positionDTO) {
+		log.debug("InitPosition: {}, {}", specId, positionDTO.getName());
+
+		DesignInterface designer = DesignInterface.getInstance();
+
+		Position position = designer.initPosition(positionDTO);
 
 		return new ResponseEntity<>(position.getDTO(), HttpStatus.CREATED);
 	}

@@ -61,7 +61,7 @@ public class ResourceModelInterface {
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {
-			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+			notification.addError(new BWError("Error", e.getMessage()));
 		}
 		
 		return result;
@@ -82,7 +82,7 @@ public class ResourceModelInterface {
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {
-			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+			notification.addError(new BWError("Error", e.getMessage()));
 		}
 		
 		return result;
@@ -103,7 +103,7 @@ public class ResourceModelInterface {
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {
-			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+			notification.addError(new BWError("Error", e.getMessage()));
 		}
 		
 		return result;
@@ -124,7 +124,7 @@ public class ResourceModelInterface {
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {
-			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+			notification.addError(new BWError("Error", e.getMessage()));
 		}
 		
 		return result;
@@ -145,7 +145,7 @@ public class ResourceModelInterface {
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {
-			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+			notification.addError(new BWError("Error", e.getMessage()));
 		}
 		
 		return result;
@@ -166,7 +166,28 @@ public class ResourceModelInterface {
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {
-			notification.addError(new BWError("HTTP Error", "There was an error in the HTTP connection."));
+			notification.addError(new BWError("Error", e.getMessage()));
+		}
+		
+		return result;
+	}
+	
+	public PositionDTO initPosition(PositionDTO position, BWNotification notification) {
+		logger.debug("createPerson: {}, {}, {}, {}, {}, {}", position.getName(), position.getUnit(), position.getRoles(), position.getDelegateToRelations(), position.getReportsTo());
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/positions/init";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", position.getSpecId());
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		PositionDTO result = null;
+		try {
+			result = restTemplate.postForObject(uri, position, PositionDTO.class, params);
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("Error", e.getMessage()));
 		}
 		
 		return result;

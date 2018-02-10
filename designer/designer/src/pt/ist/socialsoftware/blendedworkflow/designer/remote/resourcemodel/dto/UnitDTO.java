@@ -8,6 +8,10 @@ public class UnitDTO {
 	private String name;
 	private String description;
 	
+	public UnitDTO() {
+		
+	}
+	
 	public UnitDTO(String specId, String name, String description) {
 		setSpecId(specId);
 		this.name = name;

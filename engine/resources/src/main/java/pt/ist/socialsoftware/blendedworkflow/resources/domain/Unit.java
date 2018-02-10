@@ -11,9 +11,9 @@ public class Unit extends Unit_Base {
 
     public Unit(ResourceModel resourceModel, String name, String description) throws RMException {
         logger.debug("Creating a new Unit object");
+        setResourceModel(resourceModel);
         setName(name);
         setDescription(description);
-        setResourceModel(resourceModel);
     }
 
     @Override

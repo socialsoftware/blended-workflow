@@ -92,9 +92,17 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 	}
 	
 	private void createPositions(ResourceSpecification spec, String specId, BWNotification notification) {
-		for (Position p : spec.getPositions()) {
+		// First pass: Create simple positions with names
+		spec.getPositions().stream().forEach(p -> {
 			PositionDTO position = new PositionDTO(specId, p.getName(), p.getUnit().getName(), p.getDescription());
-			
+			System.out.printf("[WritePosition] Name: %s; Description: %s\n", position.getName(), position.getDescription());
+			repository.createPosition(position, notification);
+		});
+		
+		// Second pass: Create associations between positions
+		spec.getPositions().stream().forEach(p -> {
+			PositionDTO position = new PositionDTO(specId, p.getName(), p.getUnit().getName(), p.getDescription());
+			System.out.printf("[InitPosition] Name: %s; Description: %s\n", position.getName(), position.getDescription());
 			if (p.getRoles() != null) {
 				position.setRoles(p.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList()));
 			}
@@ -107,7 +115,7 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 				position.setReportsTo(p.getReportsTo().getName());
 			}
 			
-			repository.createPosition(position, notification);		
-		}
+			repository.initPosition(position, notification);		
+		});
 	}
 }

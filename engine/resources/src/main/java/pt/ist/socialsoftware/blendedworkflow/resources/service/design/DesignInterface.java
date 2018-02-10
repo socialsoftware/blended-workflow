@@ -69,8 +69,18 @@ public class DesignInterface {
 	public Position createPosition(PositionDTO positionDTO) {
 		Specification spec = workflowDesigner.getSpecBySpecId(positionDTO.getSpecId());
 
-		Position position = spec.getResourceModel().addPosition(positionDTO.getName(),positionDTO.getDescription(), positionDTO.getUnit(),
-				positionDTO.getRoles(), positionDTO.getDelegateToRelations(), positionDTO.getReportsTo());
+		Position position = spec.getResourceModel().addPosition(positionDTO.getName(),positionDTO.getDescription(), positionDTO.getUnit());
+
+		return position;
+	}
+
+	@Atomic(mode = Atomic.TxMode.WRITE)
+	public Position initPosition(PositionDTO positionDTO) {
+		Specification spec = workflowDesigner.getSpecBySpecId(positionDTO.getSpecId());
+
+		log.debug("Designer.initPosition: {}, {}, {}, {}, {}", positionDTO.getSpecId(), positionDTO.getName(),positionDTO.getRoles(), positionDTO.getDelegateToRelations(), positionDTO.getReportsTo());
+
+		Position position = spec.getResourceModel().initPosition(positionDTO.getName(),positionDTO.getRoles(), positionDTO.getDelegateToRelations(), positionDTO.getReportsTo());
 
 		return position;
 	}

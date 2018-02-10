@@ -11,14 +11,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Position extends Position_Base {
-    private static Logger logger = LoggerFactory.getLogger(Role.class);
+    private static Logger logger = LoggerFactory.getLogger(Position.class);
 
     public Position(ResourceModel resourceModel, String name, String description, Unit unit) throws RMException {
         logger.debug("Creating a new Position object");
+        setResourceModel(resourceModel);
         setName(name);
         setUnit(unit);
         setDescription(description);
-        setResourceModel(resourceModel);
     }
 
     public Position(ResourceModel resourceModel, String name, String description, Unit unit, List<Role> roles, List<Position> delegates, Position reports) {
@@ -51,11 +51,11 @@ public class Position extends Position_Base {
     }
 
     public void delete() {
-        setUnit(null);
-        getRoleSet().stream().forEach(r -> r.removePosition(this));
-        getIsReportedBySet().stream().forEach(p -> p.setReportsTo(null));
-        getCanDelegateWorkToSet().stream().forEach(p -> p.removeCanDelegateWorkTo(this));
-        getWorkDelegatedBySet().stream().forEach(p -> p.removeWorkDelegatedBy(this));
+        super.setUnit(null);
+        getRoleSet().stream().forEach(r -> removeRole(r));
+        getCanDelegateWorkToSet().stream().forEach(p -> removeCanDelegateWorkTo(p));
+        getWorkDelegatedBySet().stream().forEach(p -> removeWorkDelegatedBy(p));
+        getIsReportedBySet().stream().forEach(p -> removeIsReportedBy(p));
         setReportsTo(null);
         setResourceModel(null);
         deleteDomainObject();

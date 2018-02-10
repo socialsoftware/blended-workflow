@@ -38,6 +38,8 @@ public class ResourceModelTest extends TeardownRollbackTest {
     private Position _position2;
     private Position _position3;
     private Position _position4;
+    private Position _position5;
+    private Position _position6;
 
     @Override
     public void populate4Test() throws BWException {
@@ -54,10 +56,12 @@ public class ResourceModelTest extends TeardownRollbackTest {
 
         _unit1 = new Unit(_resourceModel, "Unit1_Pop", null);
 
-        _position1 = new Position(_resourceModel, "Pos1_Pop", _unit1);
-        _position2 = new Position(_resourceModel, "Pos2_Pop", _unit1);
-        _position3 = new Position(_resourceModel, "Pos3_Pop", _unit1);
-        _position4 = new Position(_resourceModel, "Pos4_Pop", _unit1);
+        _position1 = new Position(_resourceModel, "Pos1_Pop", "test", _unit1);
+        _position2 = new Position(_resourceModel, "Pos2_Pop", "test", _unit1);
+        _position3 = new Position(_resourceModel, "Pos3_Pop", "test", _unit1);
+        _position4 = new Position(_resourceModel, "Pos4_Pop", "test", _unit1);
+        _position5 = new Position(_resourceModel, "Pos5_Pop", "test", _unit1, Arrays.asList(_role1, _role2), Arrays.asList(_position2, _position3), _position6);
+        _position6 = new Position(_resourceModel, "Pos6_Pop", "test", _unit1, Arrays.asList(_role1, _role2), Arrays.asList(_position1, _position5), _position3);
     }
 
     @Test
@@ -124,10 +128,8 @@ public class ResourceModelTest extends TeardownRollbackTest {
     @Test
     public void testAddPosition() throws RMException {
         _resourceModel.addPosition("Test",
-                _unit1.getName(),
-                new ArrayList<>(),
-                new ArrayList<>(),
-                null);
+                "Test",
+                _unit1.getName());
 
         Position position = _resourceModel.getPositionSet()
                 .stream()
@@ -136,21 +138,21 @@ public class ResourceModelTest extends TeardownRollbackTest {
 
         assertNotNull(position);
         assertEquals("Test", position.getName());
+        assertEquals("Test", position.getDescription());
         assertEquals(_unit1.getName(), position.getUnit().getName());
     }
 
     @Test
-    public void testAddPositionWithRoles() throws RMException {
+    public void testInitPositionWithRoles() throws RMException {
         List<Role> roles = Arrays.asList(_role1, _role2);
-        _resourceModel.addPosition("Test",
-                _unit1.getName(),
+        _resourceModel.initPosition("Pos1_Pop",
                 roles.stream().map(r -> r.getName()).collect(Collectors.toList()),
                 new ArrayList<>(),
                 null);
 
         Position position = _resourceModel.getPositionSet()
                 .stream()
-                .filter(p -> p.getName().equals("Test"))
+                .filter(p -> p.getName().equals("Pos1_Pop"))
                 .findFirst().get();
 
         assertNotNull(position.getRoleSet());
@@ -164,43 +166,41 @@ public class ResourceModelTest extends TeardownRollbackTest {
     }
 
     @Test
-    public void testAddPositionWithDelegates() throws RMException {
+    public void testInitPositionWithDelegates() throws RMException {
         List<Role> roles = Arrays.asList(_role1, _role2);
         List<Position> delegates = Arrays.asList(_position1, _position2);
-        _resourceModel.addPosition("Test",
-                _unit1.getName(),
+        _resourceModel.initPosition("Pos1_Pop",
                 roles.stream().map(r -> r.getName()).collect(Collectors.toList()),
                 delegates.stream().map(p -> p.getName()).collect(Collectors.toList()),
                 null);
 
         Position position = _resourceModel.getPositionSet()
                 .stream()
-                .filter(p -> p.getName().equals("Test"))
+                .filter(p -> p.getName().equals("Pos1_Pop"))
                 .findFirst().get();
 
         assertNotNull(position.getCanDelegateWorkToSet());
         assertEquals(2, position.getCanDelegateWorkToSet().size());
 
         position.getCanDelegateWorkToSet().stream().forEach(r -> {
-            if (!delegates.stream().anyMatch(pos -> pos.getName().equals(r.getName()))) {
+            if (delegates.stream().noneMatch(pos -> pos.getName().equals(r.getName()))) {
                 fail();
             }
         });
     }
 
     @Test
-    public void testAddPositionReports() throws RMException {
+    public void testInitPositionReports() throws RMException {
         List<Role> roles = Arrays.asList(_role1, _role2);
         List<Position> delegates = Arrays.asList(_position1, _position2);
-        _resourceModel.addPosition("Test",
-                _unit1.getName(),
+        _resourceModel.initPosition("Pos1_Pop",
                 roles.stream().map(r -> r.getName()).collect(Collectors.toList()),
                 delegates.stream().map(p -> p.getName()).collect(Collectors.toList()),
                 _position3.getName());
 
         Position position = _resourceModel.getPositionSet()
                 .stream()
-                .filter(p -> p.getName().equals("Test"))
+                .filter(p -> p.getName().equals("Pos1_Pop"))
                 .findFirst().get();
 
 
@@ -209,21 +209,15 @@ public class ResourceModelTest extends TeardownRollbackTest {
 
     @Test(expected = RMException.class)
     public void testAddPositionWithInvalidUnit() throws RMException {
-        List<Role> roles = Arrays.asList(_role1, _role2);
-        List<Position> delegates = Arrays.asList(_position1, _position2);
-        _resourceModel.addPosition("Test",
-                "FakeName",
-                roles.stream().map(r -> r.getName()).collect(Collectors.toList()),
-                delegates.stream().map(p -> p.getName()).collect(Collectors.toList()),
-                _position3.getName());
+        _resourceModel.addPosition("Pos1_Pop",
+                "Test",
+                "FakeName");
     }
 
     @Test(expected = RMException.class)
-    public void testAddPositionWithInvalidRole() throws RMException {
-        List<Role> roles = Arrays.asList(_role1, _role2);
+    public void testInitPositionWithInvalidRole() throws RMException {
         List<Position> delegates = Arrays.asList(_position1, _position2);
-        _resourceModel.addPosition("Test",
-                _unit1.getName(),
+        _resourceModel.initPosition("Pos1_Pop",
                 Arrays.asList("FakeName"),
                 delegates.stream().map(p -> p.getName()).collect(Collectors.toList()),
                 _position3.getName());
@@ -232,9 +226,7 @@ public class ResourceModelTest extends TeardownRollbackTest {
     @Test(expected = RMException.class)
     public void testAddPositionWithInvalidDelegatesPosition() throws RMException {
         List<Role> roles = Arrays.asList(_role1, _role2);
-        List<Position> delegates = Arrays.asList(_position1, _position2);
-        _resourceModel.addPosition("Test",
-                _unit1.getName(),
+        _resourceModel.initPosition("Pos1_Pop",
                 roles.stream().map(r -> r.getName()).collect(Collectors.toList()),
                 Arrays.asList("FakeName"),
                 _position3.getName());
@@ -244,12 +236,19 @@ public class ResourceModelTest extends TeardownRollbackTest {
     public void testAddPositionWithInvalidReportsPosition() throws RMException {
         List<Role> roles = Arrays.asList(_role1, _role2);
         List<Position> delegates = Arrays.asList(_position1, _position2);
-        _resourceModel.addPosition("Test",
-                _unit1.getName(),
+        _resourceModel.initPosition("Pos1_Pop",
                 roles.stream().map(r -> r.getName()).collect(Collectors.toList()),
                 delegates.stream().map(p -> p.getName()).collect(Collectors.toList()),
                 "FakeName");
     }
 
-
+    @Test(expected = RMException.class)
+    public void testInitPositionWithInvalidName() throws RMException {
+        List<Role> roles = Arrays.asList(_role1, _role2);
+        List<Position> delegates = Arrays.asList(_position1, _position2);
+        _resourceModel.initPosition("TestName",
+                roles.stream().map(r -> r.getName()).collect(Collectors.toList()),
+                delegates.stream().map(p -> p.getName()).collect(Collectors.toList()),
+                "FakeName");
+    }
 }

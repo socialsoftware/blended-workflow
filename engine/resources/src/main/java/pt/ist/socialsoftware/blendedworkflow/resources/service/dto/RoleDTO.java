@@ -8,6 +8,10 @@ public class RoleDTO {
     private String name;
     private String description;
 
+    public RoleDTO() {
+
+    }
+
     public RoleDTO(String specId, String name, String description) {
         setSpecId(specId);
         this.name = name;

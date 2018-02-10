@@ -48,17 +48,31 @@ public class ResourceModel extends ResourceModel_Base {
 		return unit;
 	}
 
-	public Position addPosition(String name, String description, String unitName, List<String> roleNames,
-								List<String> delegatesNames, String reportsNames) {
+	public Position addPosition(String name, String description, String unitName) {
 		Unit unit = getUnit(unitName);
+		return new Position(this, name, description, unit);
+	}
+
+	public Position initPosition(String name, List<String> roleNames,
+								 List<String> delegatesNames, String reportsNames) throws RMException {
+		// Fetch position
+		Position position = getPosition(name);
+
+		// Fetch attributes from names
 		List<Role> roles = getRolesFromStringList(roleNames);
 		List<Position> delegates = getPositionsFromStringList(delegatesNames);
 		Position reports = null;
 		if (reportsNames != null) {
-			 reports = getPosition(reportsNames);
+			reports = getPosition(reportsNames);
 		}
 
-		return new Position(this, name, description, unit, roles, delegates, reports);
+		// Update position
+		roles.stream().forEach(r -> position.addRole(r));
+		delegates.stream().forEach(p -> position.addCanDelegateWorkTo(p));
+		position.setReportsTo(reports);
+
+
+		return position;
 	}
 
 
@@ -74,6 +88,7 @@ public class ResourceModel extends ResourceModel_Base {
 	}
 
 	private Position getPosition(String positionName) throws RMException {
+		logger.debug("GetPosition: " + positionName);
 		Optional<Position> position = getPositionSet().stream().filter(p -> p.getName().equals(positionName))
 				.findFirst();
 
