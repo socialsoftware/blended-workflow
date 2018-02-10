@@ -9,23 +9,26 @@ public class PositionDTO {
 	private String specId;
 	private String name;
 	private String unit;
+	private String description;
 	private List<String> roles;
 	private List<String> delegateToRelations;
 	private String reportsTo;
 
-	public PositionDTO(String specId, String name, String unit) {
+	public PositionDTO(String specId, String name, String unit, String description) {
 		setSpecId(specId);
 		this.name = name;
 		this.unit = unit;
+		this.description = description;
 	}
 
-	public PositionDTO(String specId, String name, String unit, List<String> roles, List<String> delegateToRelations, String reportsTo) {
+	public PositionDTO(String specId, String name, String unit, String description, List<String> roles, List<String> delegateToRelations, String reportsTo) {
 		setSpecId(specId);
 		this.name = name;
 		this.unit = unit;
 		this.roles = roles;
 		this.delegateToRelations = delegateToRelations;
 		this.reportsTo = reportsTo;
+		this.description = description;
 	}
 	
 	public String getSpecId() {
@@ -74,5 +77,13 @@ public class PositionDTO {
 
 	public void setReportsTo(String reportsTo) {
 		this.reportsTo = reportsTo;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}	
 }

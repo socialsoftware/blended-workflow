@@ -123,6 +123,7 @@ Unit:
 Position:
 	'Position' name = ID '{'
 		'isMemberOf' ':' unit = [Unit]
+		('description' ':' description = STRING)?
 		('participatesIn' ':' '{' roles += [Role] (',' roles += [Role])* '}')?
 		('canDelegateWorkTo' ':' '{' delegateTo += [Position] (',' delegateTo += [Position])* '}')?
 		('reportsTo' ':' reportsTo = [Position] )?
@@ -131,6 +132,7 @@ Position:
 
 Person:
 	'Person' name = ID ('{'
+		('description' ':' description = STRING)?
 		('hasCapability' ':' '{' capabilities += [Capability] (',' capabilities += [Capability])* '}')?
 		('occupies' ':' '{'occupies += [Position] (',' occupies += [Position])* '}')?
 	'}')?

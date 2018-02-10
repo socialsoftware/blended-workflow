@@ -13,15 +13,16 @@ import java.util.stream.Collectors;
 public class Position extends Position_Base {
     private static Logger logger = LoggerFactory.getLogger(Role.class);
 
-    public Position(ResourceModel resourceModel, String name, Unit unit) throws RMException {
+    public Position(ResourceModel resourceModel, String name, String description, Unit unit) throws RMException {
         logger.debug("Creating a new Position object");
         setName(name);
         setUnit(unit);
+        setDescription(description);
         setResourceModel(resourceModel);
     }
 
-    public Position(ResourceModel resourceModel, String name, Unit unit, List<Role> roles, List<Position> delegates, Position reports) {
-        this(resourceModel, name, unit);
+    public Position(ResourceModel resourceModel, String name, String description, Unit unit, List<Role> roles, List<Position> delegates, Position reports) {
+        this(resourceModel, name, description, unit);
         roles.stream().forEach(role -> addRole(role));
         delegates.stream().forEach(position -> addCanDelegateWorkTo(position));
         setReportsTo(reports);
@@ -71,7 +72,8 @@ public class Position extends Position_Base {
         PositionDTO positionDTO = new PositionDTO(
                 getResourceModel().getSpec().getSpecId(),
                 getName(),
-                getUnit().getName());
+                getUnit().getName(),
+                getDescription());
         if (!getRoleSet().isEmpty()) {
             positionDTO.setRoles(getRoleSet().stream().map(r -> r.getName()).collect(Collectors.toList()));
         }

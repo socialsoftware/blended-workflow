@@ -48,7 +48,7 @@ public class ResourceModel extends ResourceModel_Base {
 		return unit;
 	}
 
-	public Position addPosition(String name, String unitName, List<String> roleNames,
+	public Position addPosition(String name, String description, String unitName, List<String> roleNames,
 								List<String> delegatesNames, String reportsNames) {
 		Unit unit = getUnit(unitName);
 		List<Role> roles = getRolesFromStringList(roleNames);
@@ -58,7 +58,7 @@ public class ResourceModel extends ResourceModel_Base {
 			 reports = getPosition(reportsNames);
 		}
 
-		return new Position(this, name, unit, roles, delegates, reports);
+		return new Position(this, name, description, unit, roles, delegates, reports);
 	}
 
 

@@ -8,20 +8,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class PersonDTO {
 	private String specId; 
 	private String name;
+	private String description;
 	private List<String> capabilities;
 	private List<String> positions;
 
 	public PersonDTO() {
 	}
 
-	public PersonDTO(String specId, String name) {
-		setSpecId(specId);
+	public PersonDTO(String specId, String name, String description) {
+		this.specId = specId;
 		this.name = name;
+		this.description = description;
 	}
-
-	public PersonDTO(String specId, String name, List<String> capabilities, List<String> positions) {
-		setSpecId(specId);
+	
+	public PersonDTO(String specId, String name, String description, List<String> capabilities,
+			List<String> positions) {
+		this.specId = specId;
 		this.name = name;
+		this.description = description;
 		this.capabilities = capabilities;
 		this.positions = positions;
 	}
@@ -40,6 +44,14 @@ public class PersonDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public List<String> getCapabilities() {

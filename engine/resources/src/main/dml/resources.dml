@@ -28,6 +28,9 @@ class Unit {
 
 class Position {
     String name;
+    String description;
+}
+
 }
 relation ResourceModelHasCapabilities {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }

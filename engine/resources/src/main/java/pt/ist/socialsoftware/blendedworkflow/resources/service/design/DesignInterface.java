@@ -69,7 +69,7 @@ public class DesignInterface {
 	public Position createPosition(PositionDTO positionDTO) {
 		Specification spec = workflowDesigner.getSpecBySpecId(positionDTO.getSpecId());
 
-		Position position = spec.getResourceModel().addPosition(positionDTO.getName(),positionDTO.getUnit(),
+		Position position = spec.getResourceModel().addPosition(positionDTO.getName(),positionDTO.getDescription(), positionDTO.getUnit(),
 				positionDTO.getRoles(), positionDTO.getDelegateToRelations(), positionDTO.getReportsTo());
 
 		return position;

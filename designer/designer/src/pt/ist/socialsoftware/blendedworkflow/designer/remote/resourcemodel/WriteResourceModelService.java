@@ -77,7 +77,7 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 
 	private void createPersons(ResourceSpecification spec, String specId, BWNotification notification) {
 		for (Person p : spec.getPersons()) {
-			PersonDTO personDTO = new PersonDTO(specId, p.getName());
+			PersonDTO personDTO = new PersonDTO(specId, p.getName(), p.getDescription());
 			
 			if (p.getCapabilities() != null) {
 				personDTO.setCapabilities(p.getCapabilities().stream().map(c -> c.getName()).collect(Collectors.toList()));
@@ -93,7 +93,7 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 	
 	private void createPositions(ResourceSpecification spec, String specId, BWNotification notification) {
 		for (Position p : spec.getPositions()) {
-			PositionDTO position = new PositionDTO(specId, p.getName(), p.getUnit().getName());
+			PositionDTO position = new PositionDTO(specId, p.getName(), p.getUnit().getName(), p.getDescription());
 			
 			if (p.getRoles() != null) {
 				position.setRoles(p.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList()));
