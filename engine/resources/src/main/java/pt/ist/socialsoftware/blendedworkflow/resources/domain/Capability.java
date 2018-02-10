@@ -8,10 +8,16 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO
 
 public class Capability extends Capability_Base {
     private static Logger logger = LoggerFactory.getLogger(Capability.class);
-    
-    public Capability(ResourceModel resourceModel, String name, String description) throws RMException {
-        setResourceModel(resourceModel);
 
+    public Capability(ResourceModel resourceModel, String name, String description) throws RMException {
+        logger.debug("Creating a new Capability object");
+        setName(name);
+        setDescription(description);
+        setResourceModel(resourceModel);
+    }
+
+    @Override
+    public void setName(String name) throws RMException {
         if (name == null) {
             throw new RMException(RMErrorType.INVALID_RESOURCE_NAME, "Missing capability name");
         }
@@ -20,16 +26,14 @@ public class Capability extends Capability_Base {
             throw new RMException(RMErrorType.INVALID_RESOURCE_NAME, "Capability name is not unique");
         }
 
-        logger.debug("Creating a new Capability object");
-
-        setName(name);
-        setDescription(description);
+        super.setName(name);
     }
 
     public void delete() {
         setResourceModel(null);
         deleteDomainObject();
     }
+
 
     private boolean checkUniqueName(String name) {
         return getResourceModel()

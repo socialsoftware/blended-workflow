@@ -10,8 +10,14 @@ public class Unit extends Unit_Base {
     private static Logger logger = LoggerFactory.getLogger(Unit.class);
 
     public Unit(ResourceModel resourceModel, String name, String description) throws RMException {
+        logger.debug("Creating a new Unit object");
+        setName(name);
+        setDescription(description);
         setResourceModel(resourceModel);
+    }
 
+    @Override
+    public void setName(String name) throws RMException {
         if (name == null) {
             throw new RMException(RMErrorType.INVALID_RESOURCE_NAME, "Missing unit name");
         }
@@ -20,10 +26,7 @@ public class Unit extends Unit_Base {
             throw new RMException(RMErrorType.INVALID_RESOURCE_NAME, "Unit name is not unique");
         }
 
-        logger.debug("Creating a new Unit object");
-
-        setName(name);
-        setDescription(description);
+        super.setName(name);
     }
 
     public void delete() {

@@ -14,8 +14,21 @@ public class Position extends Position_Base {
     private static Logger logger = LoggerFactory.getLogger(Role.class);
 
     public Position(ResourceModel resourceModel, String name, Unit unit) throws RMException {
+        logger.debug("Creating a new Position object");
+        setName(name);
+        setUnit(unit);
         setResourceModel(resourceModel);
+    }
 
+    public Position(ResourceModel resourceModel, String name, Unit unit, List<Role> roles, List<Position> delegates, Position reports) {
+        this(resourceModel, name, unit);
+        roles.stream().forEach(role -> addRole(role));
+        delegates.stream().forEach(position -> addCanDelegateWorkTo(position));
+        setReportsTo(reports);
+    }
+
+    @Override
+    public void setName(String name) throws RMException {
         if (name == null) {
             throw new RMException(RMErrorType.INVALID_RESOURCE_NAME, "Missing position name");
         }
@@ -24,21 +37,16 @@ public class Position extends Position_Base {
             throw new RMException(RMErrorType.INVALID_RESOURCE_NAME, "Position name is not unique");
         }
 
+        super.setName(name);
+    }
+
+    @Override
+    public void setUnit(Unit unit) throws RMException {
         if (unit == null) {
             throw new RMException(RMErrorType.MISSING_POSITION_UNIT, "Position must belong to an unit");
         }
 
-        logger.debug("Creating a new Position object");
-
-        setName(name);
-        setUnit(unit);
-    }
-
-    public Position(ResourceModel resourceModel, String name, Unit unit, List<Role> roles, List<Position> delegates, Position reports) {
-        this(resourceModel, name, unit);
-        roles.stream().forEach(role -> addRole(role));
-        delegates.stream().forEach(position -> addCanDelegateWorkTo(position));
-        setReportsTo(reports);
+        super.setUnit(unit);
     }
 
     public void delete() {
