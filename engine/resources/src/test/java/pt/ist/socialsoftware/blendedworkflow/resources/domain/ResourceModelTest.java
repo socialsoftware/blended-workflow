@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.resources.domain.resourcemodel;
+package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import javafx.geometry.Pos;
 import org.junit.Test;

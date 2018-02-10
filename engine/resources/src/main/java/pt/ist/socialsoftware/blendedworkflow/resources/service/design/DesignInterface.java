@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
@@ -42,7 +41,7 @@ public class DesignInterface {
 	public Capability createCapability(CapabilityDTO capabilityDTO) {
 		Specification spec = workflowDesigner.getSpecBySpecId(capabilityDTO.getSpecId());
 
-		Capability capability = new Capability(spec.getResourceModel(), capabilityDTO.getName(), capabilityDTO.getDescription());
+		Capability capability = spec.getResourceModel().addCapability(capabilityDTO.getName(), capabilityDTO.getDescription());
 
 		return capability;
 	}
@@ -51,7 +50,7 @@ public class DesignInterface {
 	public Role createRole(RoleDTO roleDTO) {
 		Specification spec = workflowDesigner.getSpecBySpecId(roleDTO.getSpecId());
 
-		Role role = new Role(spec.getResourceModel(), roleDTO.getName(), roleDTO.getDescription());
+		Role role = spec.getResourceModel().addRole(roleDTO.getName(), roleDTO.getDescription());
 
 		return role;
 	}
@@ -60,7 +59,7 @@ public class DesignInterface {
 	public Unit createUnit(UnitDTO unitDTO) {
 		Specification spec = workflowDesigner.getSpecBySpecId(unitDTO.getSpecId());
 
-		Unit unit = new Unit(spec.getResourceModel(), unitDTO.getName(), unitDTO.getDescription());
+		Unit unit = spec.getResourceModel().addUnit(unitDTO.getName(), unitDTO.getDescription());
 
 		return unit;
 	}
