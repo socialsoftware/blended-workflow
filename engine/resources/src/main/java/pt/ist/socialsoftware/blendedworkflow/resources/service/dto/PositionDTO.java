@@ -3,18 +3,14 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.dto;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ProductDTO;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PositionDTO extends ProductDTO {
+public class PositionDTO {
+    private String specId;
     private String name;
     private String unit;
     private List<String> roles;
     private List<String> delegateToRelations;
     private String reportsTo;
-
-    public PositionDTO() {
-    }
 
     public PositionDTO(String specId, String name, String unit) {
         setSpecId(specId);
@@ -30,6 +26,14 @@ public class PositionDTO extends ProductDTO {
         this.roles = roles;
         this.delegateToRelations = delegateToRelations;
         this.reportsTo = reportsTo;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getName() {
@@ -71,4 +75,7 @@ public class PositionDTO extends ProductDTO {
     public void setReportsTo(String reportsTo) {
         this.reportsTo = reportsTo;
     }
+
+
+
 }

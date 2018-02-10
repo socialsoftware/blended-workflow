@@ -1,11 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ProductDTO;
-
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CapabilityDTO extends ProductDTO {
+public class CapabilityDTO {
+    private String specId;
     private String name;
     private String description;
 
@@ -16,6 +15,14 @@ public class CapabilityDTO extends ProductDTO {
         setSpecId(specId);
         this.name = name;
         this.description = description;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getName() {

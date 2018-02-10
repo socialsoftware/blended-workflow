@@ -1,21 +1,25 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ProductDTO;
-
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RoleDTO extends ProductDTO {
+public class RoleDTO {
+    private String specId;
     private String name;
     private String description;
-
-    public RoleDTO() {
-    }
 
     public RoleDTO(String specId, String name, String description) {
         setSpecId(specId);
         this.name = name;
         this.description = description;
+    }
+
+    public String getSpecId() {
+        return specId;
+    }
+
+    public void setSpecId(String specId) {
+        this.specId = specId;
     }
 
     public String getName() {

@@ -4,10 +4,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.ProductDTO;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PersonDTO extends ProductDTO {
+public class PersonDTO {
+	private String specId; 
 	private String name;
 	private List<String> capabilities;
 	private List<String> positions;
@@ -25,6 +24,14 @@ public class PersonDTO extends ProductDTO {
 		this.name = name;
 		this.capabilities = capabilities;
 		this.positions = positions;
+	}
+
+	public String getSpecId() {
+		return specId;
+	}
+
+	public void setSpecId(String specId) {
+		this.specId = specId;
 	}
 
 	public String getName() {
