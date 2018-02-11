@@ -52,6 +52,7 @@ public class Position extends Position_Base {
 
     public void delete() {
         super.setUnit(null);
+        getPersonSet().stream().forEach(p -> removePerson(p));
         getRoleSet().stream().forEach(r -> removeRole(r));
         getCanDelegateWorkToSet().stream().forEach(p -> removeCanDelegateWorkTo(p));
         getWorkDelegatedBySet().stream().forEach(p -> removeWorkDelegatedBy(p));

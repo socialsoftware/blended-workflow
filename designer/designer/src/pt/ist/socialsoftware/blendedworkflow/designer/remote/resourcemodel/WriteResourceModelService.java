@@ -43,9 +43,9 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		
 		createUnits(spec, specId, notification);
 		
-		createPersons(spec, specId, notification);
-		
 		createPositions(spec, specId, notification);
+		
+		createPersons(spec, specId, notification);
 		
 		System.out.println("[WriteRM] Finish writing resource model");
 	}
@@ -72,22 +72,6 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		for (Unit u : spec.getUnits()) {
 			System.out.printf("[WriteUnit] Name: %s; Description: %s\n", u.getName(), u.getDescription());
 			repository.createUnit(new UnitDTO(specId, u.getName(), u.getDescription()), notification);
-		}
-	}
-
-	private void createPersons(ResourceSpecification spec, String specId, BWNotification notification) {
-		for (Person p : spec.getPersons()) {
-			PersonDTO personDTO = new PersonDTO(specId, p.getName(), p.getDescription());
-			
-			if (p.getCapabilities() != null) {
-				personDTO.setCapabilities(p.getCapabilities().stream().map(c -> c.getName()).collect(Collectors.toList()));
-			}
-			
-			if (p.getOccupies() != null) {
-				personDTO.setPositions(p.getOccupies().stream().map(position -> position.getName()).collect(Collectors.toList()));
-			}
-			
-			repository.createPerson(personDTO, notification);		
 		}
 	}
 	
@@ -117,5 +101,21 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 			
 			repository.initPosition(position, notification);		
 		});
+	}
+	
+	private void createPersons(ResourceSpecification spec, String specId, BWNotification notification) {
+		for (Person p : spec.getPersons()) {
+			PersonDTO personDTO = new PersonDTO(specId, p.getName(), p.getDescription());
+			
+			if (p.getCapabilities() != null) {
+				personDTO.setCapabilities(p.getCapabilities().stream().map(c -> c.getName()).collect(Collectors.toList()));
+			}
+			
+			if (p.getOccupies() != null) {
+				personDTO.setPositions(p.getOccupies().stream().map(position -> position.getName()).collect(Collectors.toList()));
+			}
+			System.out.printf("[WritePerson] Name: %s; Description: %s\n", p.getName(), p.getDescription());
+			repository.createPerson(personDTO, notification);		
+		}
 	}
 }

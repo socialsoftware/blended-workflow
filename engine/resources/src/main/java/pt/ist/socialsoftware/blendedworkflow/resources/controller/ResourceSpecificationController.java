@@ -6,15 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Position;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RoleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/resourcemodel")
@@ -75,7 +69,7 @@ public class ResourceSpecificationController {
 
 		DesignInterface designer = DesignInterface.getInstance();
 
-		Position position= designer.createPosition(positionDTO);
+		Position position = designer.createPosition(positionDTO);
 
 		return new ResponseEntity<>(position.getDTO(), HttpStatus.CREATED);
 	}
@@ -91,6 +85,19 @@ public class ResourceSpecificationController {
 
 		return new ResponseEntity<>(position.getDTO(), HttpStatus.CREATED);
 	}
+
+	@RequestMapping(value = "/persons", method = RequestMethod.POST)
+	public ResponseEntity<PersonDTO> createPersons(@PathVariable("specId") String specId,
+												   @RequestBody PersonDTO personDTO) {
+		log.debug("CreatePerson: {}, {}", specId, personDTO.getName());
+
+		DesignInterface designer = DesignInterface.getInstance();
+
+		Person person = designer.createPerson(personDTO);
+
+		return new ResponseEntity<>(person.getDTO(), HttpStatus.CREATED);
+	}
+
 
 	@RequestMapping(value = "/clean", method = RequestMethod.GET)
 	public ResponseEntity<Boolean> cleanResourceModel(@PathVariable("specId") String specId) {

@@ -11,6 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +41,9 @@ public class ResourceModelTest extends TeardownRollbackTest {
     private Position _position4;
     private Position _position5;
     private Position _position6;
+    private Person _person1;
+    private Person _person2;
+    private Person _person3;
 
     @Override
     public void populate4Test() throws BWException {
@@ -62,6 +66,10 @@ public class ResourceModelTest extends TeardownRollbackTest {
         _position4 = new Position(_resourceModel, "Pos4_Pop", "test", _unit1);
         _position5 = new Position(_resourceModel, "Pos5_Pop", "test", _unit1, Arrays.asList(_role1, _role2), Arrays.asList(_position2, _position3), _position6);
         _position6 = new Position(_resourceModel, "Pos6_Pop", "test", _unit1, Arrays.asList(_role1, _role2), Arrays.asList(_position1, _position5), _position3);
+
+        _person1 = new Person(_resourceModel, "Person_1", "test", Arrays.asList(_position1, _position2), Arrays.asList(_capability1));
+        _person2 = new Person(_resourceModel, "Person_2", "test", Arrays.asList(_position1, _position2), Arrays.asList(_capability1));
+        _person3 = new Person(_resourceModel, "Person_3", "test", Arrays.asList(_position1, _position2), Arrays.asList(_capability1));
     }
 
     @Test
@@ -78,7 +86,7 @@ public class ResourceModelTest extends TeardownRollbackTest {
         assertTrue(_resourceModel.getPositionSet().size() == 0);
         assertTrue(_resourceModel.getUnitSet().size() == 0);
         assertTrue(_resourceModel.getRoleSet().size() == 0);
-        // assertTrue(_resourceModel.getPersonSet().size() == 0);
+        assertTrue(_resourceModel.getPersonSet().size() == 0);
 
     }
 
@@ -224,7 +232,7 @@ public class ResourceModelTest extends TeardownRollbackTest {
     }
 
     @Test(expected = RMException.class)
-    public void testAddPositionWithInvalidDelegatesPosition() throws RMException {
+    public void testInitPositionWithInvalidDelegatesPosition() throws RMException {
         List<Role> roles = Arrays.asList(_role1, _role2);
         _resourceModel.initPosition("Pos1_Pop",
                 roles.stream().map(r -> r.getName()).collect(Collectors.toList()),
@@ -233,7 +241,7 @@ public class ResourceModelTest extends TeardownRollbackTest {
     }
 
     @Test(expected = RMException.class)
-    public void testAddPositionWithInvalidReportsPosition() throws RMException {
+    public void testInitPositionWithInvalidReportsPosition() throws RMException {
         List<Role> roles = Arrays.asList(_role1, _role2);
         List<Position> delegates = Arrays.asList(_position1, _position2);
         _resourceModel.initPosition("Pos1_Pop",
@@ -250,5 +258,94 @@ public class ResourceModelTest extends TeardownRollbackTest {
                 roles.stream().map(r -> r.getName()).collect(Collectors.toList()),
                 delegates.stream().map(p -> p.getName()).collect(Collectors.toList()),
                 "FakeName");
+    }
+
+    @Test
+    public void testAddPerson() throws RMException {
+        _resourceModel.addPerson("Test",
+                "Test",
+                new ArrayList<>(),
+                new ArrayList<>());
+
+        Person person = _resourceModel.getPersonSet()
+                .stream()
+                .filter(p -> p.getName().equals("Test"))
+                .findFirst().get();
+
+        assertNotNull(person);
+        assertEquals("Test", person.getName());
+        assertEquals("Test", person.getDescription());
+    }
+
+    @Test
+    public void testAddPersonWithPositions() throws RMException {
+        List<Position> positions = Arrays.asList(_position1, _position2, _position3);
+        _resourceModel.addPerson("Test", "Test",
+                positions.stream().map(p -> p.getName()).collect(Collectors.toList()),
+                new ArrayList<>());
+
+        Person person = _resourceModel.getPersonSet()
+                .stream()
+                .filter(p -> p.getName().equals("Test"))
+                .findFirst().get();
+
+        assertNotNull(person);
+        assertEquals(person.getName(), "Test");
+        assertEquals("Test", person.getDescription());
+        assertTrue(person.getCapabilitySet().isEmpty());
+
+        assertNotNull(person.getPositionSet());
+        assertEquals(person.getPositionSet().size(), positions.size());
+        person.getPositionSet().stream().forEach(p -> {
+            if (!positions.stream().anyMatch(pos -> pos.getName().equals(p.getName()))) {
+                fail();
+            }
+        });
+    }
+
+    @Test
+    public void testAddPersonWithCapabilities() throws RMException {
+        List<Capability> capabilities = Arrays.asList(_capability1);
+        _resourceModel.addPerson("Test", "Test", new ArrayList<>(),
+                capabilities.stream().map(c -> c.getName()).collect(Collectors.toList()));
+
+        Person person = _resourceModel.getPersonSet()
+                .stream()
+                .filter(p -> p.getName().equals("Test"))
+                .findFirst().get();
+
+        assertNotNull(person);
+        assertEquals(person.getName(), "Test");
+        assertEquals("Test", person.getDescription());
+        assertTrue(person.getPositionSet().isEmpty());
+
+        assertNotNull(person.getCapabilitySet());
+        assertEquals(person.getCapabilitySet().size(), capabilities.size());
+        person.getCapabilitySet().stream().forEach(c -> {
+            if (!capabilities.stream().anyMatch(cap -> cap.getName().equals(c.getName()))) {
+                fail();
+            }
+        });
+    }
+
+    @Test(expected = RMException.class)
+    public void testAddPersonWithInvalidCapability() throws RMException {
+        _resourceModel.addPerson("Test", "Test",
+                new ArrayList<>(),
+                Arrays.asList("FakeName"));
+    }
+
+    @Test(expected = RMException.class)
+    public void testAddPersonWithInvalidPosition() throws RMException {
+        _resourceModel.addPerson("Test", "Test",
+                Arrays.asList("FakeName"),
+                new ArrayList<>());
+    }
+
+    @Test(expected = RMException.class)
+    public void testAddPersonWithInvalidName() throws RMException {
+        _resourceModel.addPerson(null, "Test",
+                Arrays.asList("FakeName"),
+                new ArrayList<>());
     }
 }

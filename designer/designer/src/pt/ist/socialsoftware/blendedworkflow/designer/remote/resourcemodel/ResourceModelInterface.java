@@ -130,27 +130,6 @@ public class ResourceModelInterface {
 		return result;
 	}
 	
-	public PersonDTO createPerson(PersonDTO person, BWNotification notification) {
-		logger.debug("createPerson: {}, {}, {}, {}", person.getName(), person.getCapabilities(), person.getPositions());
-
-		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/persons";
-
-		Map<String, String> params = new HashMap<>();
-		params.put("specId", person.getSpecId());
-
-		RestTemplate restTemplate = RestUtil.getRestTemplate();
-		PersonDTO result = null;
-		try {
-			result = restTemplate.postForObject(uri, person, PersonDTO.class, params);
-		} catch (RestClientException rce) {
-			notification.addError(new BWError("REST connection", rce.getMessage()));
-		} catch (Exception e) {
-			notification.addError(new BWError("Error", e.getMessage()));
-		}
-		
-		return result;
-	}
-	
 	public PositionDTO createPosition(PositionDTO position, BWNotification notification) {
 		logger.debug("createPerson: {}, {}, {}, {}, {}, {}", position.getName(), position.getUnit(), position.getRoles(), position.getDelegateToRelations(), position.getReportsTo());
 
@@ -184,6 +163,27 @@ public class ResourceModelInterface {
 		PositionDTO result = null;
 		try {
 			result = restTemplate.postForObject(uri, position, PositionDTO.class, params);
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("Error", e.getMessage()));
+		}
+		
+		return result;
+	}
+	
+	public PersonDTO createPerson(PersonDTO person, BWNotification notification) {
+		logger.debug("createPerson: {}, {}, {}, {}", person.getName(), person.getCapabilities(), person.getPositions());
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/persons";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", person.getSpecId());
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		PersonDTO result = null;
+		try {
+			result = restTemplate.postForObject(uri, person, PersonDTO.class, params);
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {

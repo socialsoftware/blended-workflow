@@ -18,6 +18,7 @@ public class ResourceModel extends ResourceModel_Base {
 	}
 
     public void clean() {
+		getPersonSet().stream().forEach(p -> p.delete());
 		getPositionSet().stream().forEach(p -> p.delete());
 		getCapabilitySet().stream().forEach(c -> c.delete());
 		getRoleSet().stream().forEach(r -> r.delete());
@@ -75,6 +76,12 @@ public class ResourceModel extends ResourceModel_Base {
 		return position;
 	}
 
+	public Person addPerson(String name, String description, List<String> positionsNames, List<String> capabilitiesNames) {
+		List<Position> positions = getPositionsFromStringList(positionsNames);
+		List<Capability> capabilities = getCapabilitiesFromStringList(capabilitiesNames);
+
+		return new Person(this, name, description, positions, capabilities);
+	}
 
 	private Unit getUnit(String unitName) throws RMException {
 		Optional<Unit> unit = getUnitSet().stream().filter(u -> u.getName().equals(unitName))
@@ -88,7 +95,6 @@ public class ResourceModel extends ResourceModel_Base {
 	}
 
 	private Position getPosition(String positionName) throws RMException {
-		logger.debug("GetPosition: " + positionName);
 		Optional<Position> position = getPositionSet().stream().filter(p -> p.getName().equals(positionName))
 				.findFirst();
 
@@ -101,6 +107,21 @@ public class ResourceModel extends ResourceModel_Base {
 
 	private List<Position> getPositionsFromStringList(List<String> delegatesNames) throws RMException {
 		return delegatesNames.stream().map(d -> getPosition(d)).collect(Collectors.toList());
+	}
+
+	private Capability getCapability(String capabilityName) throws RMException {
+		Optional<Capability> capability = getCapabilitySet().stream().filter(c -> c.getName().equals(capabilityName))
+				.findFirst();
+
+		if (!capability.isPresent()) {
+			throw new RMException(RMErrorType.INVALID_CAPABILITY_NAME, "Capability with name '" + capabilityName + "' does not exist");
+		}
+
+		return capability.get();
+	}
+
+	private List<Capability> getCapabilitiesFromStringList(List<String> capabilitiesNames) throws RMException {
+		return capabilitiesNames.stream().map(c -> getCapability(c)).collect(Collectors.toList());
 	}
 
 	private Role getRole(String roleName) {

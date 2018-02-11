@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RoleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
 
 public class DesignInterface {
 	private static Logger log = LoggerFactory.getLogger(DesignInterface.class);
@@ -77,11 +74,18 @@ public class DesignInterface {
 	public Position initPosition(PositionDTO positionDTO) {
 		Specification spec = workflowDesigner.getSpecBySpecId(positionDTO.getSpecId());
 
-		log.debug("Designer.initPosition: {}, {}, {}, {}, {}", positionDTO.getSpecId(), positionDTO.getName(),positionDTO.getRoles(), positionDTO.getDelegateToRelations(), positionDTO.getReportsTo());
-
 		Position position = spec.getResourceModel().initPosition(positionDTO.getName(),positionDTO.getRoles(), positionDTO.getDelegateToRelations(), positionDTO.getReportsTo());
 
 		return position;
+	}
+
+	@Atomic(mode = Atomic.TxMode.WRITE)
+	public Person createPerson(PersonDTO personDTO) {
+		Specification spec = workflowDesigner.getSpecBySpecId(personDTO.getSpecId());
+
+		Person person = spec.getResourceModel().addPerson(personDTO.getName(),personDTO.getDescription(), personDTO.getPositions(), personDTO.getCapabilities());
+
+		return person;
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)

@@ -31,7 +31,11 @@ class Position {
     String description;
 }
 
+class Person {
+    String name;
+    String description;
 }
+
 relation ResourceModelHasCapabilities {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     Capability playsRole capability { multiplicity 0..*; }
@@ -52,7 +56,7 @@ relation ResourceModelHasPositions {
     Position playsRole position { multiplicity 0..*; }
 }
 
-relation ResourceModelHasPerson {
+relation ResourceModelHasPersons {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     Person playsRole person { multiplicity 0..*; }
 }
@@ -77,3 +81,12 @@ relation PositionDelegatesWorkToPosition {
     Position playsRole canDelegateWorkTo { multiplicity 0..*; }
 }
 
+relation PersonHasPositions {
+    Person playsRole person { multiplicity 0..*; }
+    Position playsRole position { multiplicity 0..*; }
+}
+
+relation PersonHasCapability {
+    Person playsRole person { multiplicity 0..*; }
+    Capability playsRole capability { multiplicity 0..*; }
+}
