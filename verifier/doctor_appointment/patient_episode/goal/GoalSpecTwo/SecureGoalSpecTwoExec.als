@@ -18,13 +18,12 @@ fact traces {
 	all s: SecureState - last | let s' = s.next |
 	some p: Patient, e: Episode, u: User | 
 		secureRegisterPatient[s, s', p, u] or
-		secureCreateAppointment[s, s', e, u] or
-		secureReserveDate[s, s', e, u] or
-		secureAssociatePatientToEpisode[s, s', p, e, u]
+		secureCreateAppointment[s, s', p, e, u] or
+		secureReserveDate[s, s', e, u] 
 }
 
  //execution that leads to a complete state
- run complete for 4 but 5 SecureState, 5 Int
+ run complete for 4 but 4 SecureState, 5 Int
 
 
 

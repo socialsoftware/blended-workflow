@@ -6,14 +6,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class EntityDTO extends ProductDTO {
 	private String name;
 	private boolean exists;
+	private boolean mandatory;
 
 	public EntityDTO() {
 	}
 
-	public EntityDTO(String specId, String name, boolean exists) {
+	public EntityDTO(String specId, String name, boolean exists, boolean mandatory) {
 		setSpecId(specId);
 		this.name = name;
 		this.exists = exists;
+		this.mandatory = mandatory;
 	}
 
 	public String getName() {
@@ -30,5 +32,13 @@ public class EntityDTO extends ProductDTO {
 
 	public void setExists(boolean exists) {
 		this.exists = exists;
+	}
+
+	public boolean isMandatory() {
+		return this.mandatory;
+	}
+
+	public void setMandatory(boolean mandatory) {
+		this.mandatory = mandatory;
 	}
 }

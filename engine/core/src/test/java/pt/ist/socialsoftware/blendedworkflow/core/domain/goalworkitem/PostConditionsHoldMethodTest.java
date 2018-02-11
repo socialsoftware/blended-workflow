@@ -40,7 +40,7 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification("SpecId", MY_SPEC, "author", "description", "version", "UID");
+		this.spec = new Specification("SpecId", MY_SPEC);
 		this.entityOne = new Entity(this.spec.getDataModel(), ENTITY_ONE, false);
 		this.defEntityCondition = DefEntityCondition.getDefEntityCondition(this.entityOne);
 		this.entityTwo = new Entity(this.spec.getDataModel(), "EntityTwo", false);

@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,60 +48,6 @@ public class BoolComparison extends BoolComparison_Base {
 	public Set<Path> getPathSet() {
 		return Stream.concat(getRightCondition().getPathSet().stream(), getLeftCondition().getPathSet().stream())
 				.collect(Collectors.toSet());
-	}
-
-	@Override
-	public HashMap<Attribute, String> getcompareConditionValues() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getRdrUndefinedCondition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getRdrSkippedCondition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getRdrTrueCondition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getRdrFalseCondition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean existExistEntity() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean existCompareAttributeToValue() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean existTrue() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

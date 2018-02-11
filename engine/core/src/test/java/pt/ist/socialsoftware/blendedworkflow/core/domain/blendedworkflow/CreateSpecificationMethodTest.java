@@ -20,7 +20,7 @@ public class CreateSpecificationMethodTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		new Specification(DUP_ID, DUP_NAME, "author", "description", "version", "UID");
+		new Specification(DUP_ID, DUP_NAME);
 	}
 
 	@Test

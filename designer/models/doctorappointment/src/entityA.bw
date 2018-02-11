@@ -1,6 +1,6 @@
-Specification: "Four Entities" 
+Specification: "Two Entities" 
        
-Entity A { 
+Entity A mandatory { 
 	att1 : Number 
 } 
 
@@ -8,30 +8,7 @@ Entity B {
 	att1 : Boolean
 }   
 
-Entity C {
-	att1 : Boolean
-}   
-
-Entity D {
-	att1 : Boolean
-}   
-
 Association AHasBs {
 	A with a (1) 
 	B with b (3..3)
-}
-
-Association AHasCs {
-	A with a (1) 
-	C with c (0..*)
-}
-
-Association BandD {
-	B with b (0..*) 
-	D with d (0..*)
-}
-
-Association CandD {
-	C with c (0..*) 
-	D with d (0..*) 
 }

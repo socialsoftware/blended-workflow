@@ -29,7 +29,7 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		Specification spec = new Specification(SPEC_ID, "name", "author", "description", "version", "UID");
+		Specification spec = new Specification(SPEC_ID, "name");
 		this.dataModelExtId = spec.getDataModel().getExternalId();
 		this.entityOne = new Entity(spec.getDataModel(), ENTITY_ONE_NAME, false);
 		this.entityTwo = new Entity(spec.getDataModel(), ENTITY_TWO_NAME, false);

@@ -1,11 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel.DataState;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ExpressionDTO;
 
@@ -44,71 +42,6 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 		paths.add(getPath());
 
 		return paths;
-	}
-
-	@Override
-	public HashMap<Attribute, String> getcompareConditionValues() {
-		return new HashMap<>();
-	}
-
-	@Override
-	public String getRdrUndefinedCondition() {
-		String condition = "(";
-		String attributeName = getAttributeOfDef().getName().replaceAll(" ", "");
-		String entityName = getAttributeOfDef().getEntity().getName().replaceAll(" ", "");
-
-		condition += entityName + "_" + attributeName + "_State = " + DataState.UNDEFINED + ")";
-		return condition;
-	}
-
-	@Override
-	public String getRdrSkippedCondition() {
-		String condition = "(";
-		String attributeName = getAttributeOfDef().getName().replaceAll(" ", "");
-		String entityName = getAttributeOfDef().getEntity().getName().replaceAll(" ", "");
-
-		condition += entityName + "_" + attributeName + "_State = " + DataState.SKIPPED + ")";
-		return condition;
-	}
-
-	@Override
-	public String getRdrTrueCondition() {
-		String condition = "(";
-		String attributeName = getAttributeOfDef().getName().replaceAll(" ", "");
-		String entityName = getAttributeOfDef().getEntity().getName().replaceAll(" ", "");
-
-		condition += entityName + "_" + attributeName + "_State = " + DataState.DEFINED + ")";
-		return condition;
-	}
-
-	@Override
-	public String getRdrFalseCondition() {
-		return "(FALSE_NODE = FALSE)";
-	}
-
-	@Override
-	public String toString() {
-		if (getAttributeOfDef() != null && getAttributeOfDef().getEntity() != null
-				&& getAttributeOfDef().getEntity().getName() != null) {
-			return "existsAttribute(" + getAttributeOfDef().getEntity().getName() + "." + getAttributeOfDef().getName()
-					+ ")";
-		}
-		return "DEFAttributeCondition: attribute or entity with empty value";
-	}
-
-	@Override
-	public Boolean existExistEntity() {
-		return false;
-	}
-
-	@Override
-	public Boolean existTrue() {
-		return false;
-	}
-
-	@Override
-	public Boolean existCompareAttributeToValue() {
-		return false;
 	}
 
 	@Override

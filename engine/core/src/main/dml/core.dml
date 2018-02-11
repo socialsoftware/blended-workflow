@@ -19,15 +19,8 @@ relation DomainRootHasBlendedWorkflowApplication {
 }
 
 class Specification {
-  String specId;
+  	String specId;
 	String name;
-	String author;
-	String description;
-	String creationDate;
-	String yawlSpecficationID;
-	Integer instanceCounter;
-	String UID;
-	String version;
 }
 
 class DataModel {
@@ -39,6 +32,7 @@ class Product {
 }
 
 class Entity extends Product {
+	boolean mandatory;
 	boolean exists;
 }
 

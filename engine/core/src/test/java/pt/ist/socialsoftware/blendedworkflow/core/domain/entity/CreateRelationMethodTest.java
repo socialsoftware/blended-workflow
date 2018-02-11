@@ -26,7 +26,7 @@ public class CreateRelationMethodTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		Specification spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
+		Specification spec = new Specification("SpecId", "My spec");
 		this.entityOne = new Entity(spec.getDataModel(), "Entity one name", false);
 		this.entityTwo = new Entity(spec.getDataModel(), "Entity two name", false);
 		new RelationBW(spec.getDataModel(), "name", this.entityOne, EXISTS_ROLE_NAME, Cardinality.ONE, false,

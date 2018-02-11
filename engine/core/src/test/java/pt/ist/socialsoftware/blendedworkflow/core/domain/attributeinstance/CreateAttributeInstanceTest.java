@@ -25,7 +25,7 @@ public class CreateAttributeInstanceTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
+		this.spec = new Specification("SpecId", "My spec");
 		this.entity = new Entity(this.spec.getDataModel(), "entityName", false);
 		this.attribute = new Attribute(this.spec.getDataModel(), this.entity, "name", Attribute.AttributeType.STRING,
 				false, false, false);

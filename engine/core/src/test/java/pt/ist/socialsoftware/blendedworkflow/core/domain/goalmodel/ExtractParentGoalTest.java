@@ -59,7 +59,7 @@ public class ExtractParentGoalTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
+		this.spec = new Specification("SpecId", "My spec");
 		this.goalModel = this.spec.getGoalModel();
 
 		this.entityOne = new Entity(this.spec.getDataModel(), ENTITY_ONE_NAME, false);

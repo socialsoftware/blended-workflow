@@ -126,7 +126,8 @@ public class DataModelInterface {
 	}
 
 	public EntityDTO createEntity(EntityDTO entityVO) {
-		logger.debug("createEntity: {}, {}, {}", entityVO.getSpecId(), entityVO.getName(), entityVO.getExists());
+		logger.debug("createEntity: {}, {}, {}", entityVO.getSpecId(), entityVO.getName(), entityVO.getExists(),
+				entityVO.isMandatory());
 
 		final String uri = BASE_URL + "/specs/{specId}/datamodel/entities";
 

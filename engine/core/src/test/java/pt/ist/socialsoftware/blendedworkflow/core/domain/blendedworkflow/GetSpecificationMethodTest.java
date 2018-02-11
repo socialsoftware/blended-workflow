@@ -25,7 +25,7 @@ public class GetSpecificationMethodTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		new Specification(SPEC_ID, SPEC_NAME, "author", "description", "version", "UID");
+		new Specification(SPEC_ID, SPEC_NAME);
 	}
 
 	@Test

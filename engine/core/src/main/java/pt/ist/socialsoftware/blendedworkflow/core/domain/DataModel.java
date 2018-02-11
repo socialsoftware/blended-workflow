@@ -68,8 +68,8 @@ public class DataModel extends DataModel_Base {
 		deleteDomainObject();
 	}
 
-	public Entity createEntity(String entityName, Boolean exists) {
-		return new Entity(this, entityName, exists);
+	public Entity createEntity(String entityName, boolean exists, boolean mandatory) {
+		return new Entity(this, entityName, exists, mandatory);
 	}
 
 	public Product getSourceOfPath(String path) {
@@ -93,8 +93,15 @@ public class DataModel extends DataModel_Base {
 	}
 
 	public void check() {
+		checkUniqueMandatoryEntity();
 		checkPaths();
 		checkDependences();
+	}
+
+	private void checkUniqueMandatoryEntity() {
+		if (getEntitySet().stream().filter(e -> e.getMandatory()).count() != 1) {
+			throw new BWException(BWErrorType.NOT_UNIQUE_MANDATORY_ENTITY, getSpecification().getName());
+		}
 	}
 
 	public void checkDependences() {

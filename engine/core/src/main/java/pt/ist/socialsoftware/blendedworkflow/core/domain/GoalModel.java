@@ -47,29 +47,100 @@ public class GoalModel extends GoalModel_Base {
 	public void generateGoals() {
 		ConditionModel conditionModel = getSpecification().getConditionModel();
 
-		Goal top = new Goal(this, "top");
-		for (DefEntityCondition defEntityCondition : conditionModel.getEntityAchieveConditionSet()) {
-			if (!defEntityCondition.getEntity().getExists()) {
-				Goal entityGoal = new Goal(this, defEntityCondition.getPath().getValue());
-				top.addSubGoal(entityGoal);
-				entityGoal.addSuccessCondition(defEntityCondition);
+		List<Goal> goalsToProcess = new ArrayList<>();
 
-				entityGoal.applyConditions();
+		Goal topGoal = createGoalForEntity(conditionModel.getMandatoryEntityCondition(), null);
 
-				for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
-					if (defAttributeCondition.getAttributeOfDef().getEntity() == defEntityCondition.getEntity()) {
-						Goal attributeGoal = new Goal(this, defAttributeCondition.getPath().getValue());
-						entityGoal.addSubGoal(attributeGoal);
-						attributeGoal.addSuccessCondition(defAttributeCondition);
+		goalsToProcess.add(topGoal);
 
-						attributeGoal.applyConditions();
+		while (!goalsToProcess.isEmpty()) {
+			Goal goal = goalsToProcess.remove(0);
 
-					}
-				}
+			Entity entity = goal.getSuccessConditionSet().stream().filter(DefEntityCondition.class::isInstance)
+					.map(DefEntityCondition.class::cast).map(c -> c.getEntity()).findFirst().get();
+
+			Set<DefEntityCondition> subDefEntityConditions = entity.getEntitiesInRelation().stream()
+					.map(e -> e.getDefEntityCondition()).filter(c -> !getUsedDefConditionEntities().contains(c))
+					.collect(Collectors.toSet());
+
+			for (DefEntityCondition subDefEntityCondition : subDefEntityConditions) {
+				Goal subGoal = createGoalForEntity(subDefEntityCondition, goal);
+				goalsToProcess.add(subGoal);
 			}
+
 		}
+
 		checkModel();
 
+		// while (!defEntityConditionsToProcess.isEmpty()) {
+		// DefEntityCondition defEntityCondition =
+		// defEntityConditionsToProcess.remove(0);
+		// if (!defEntityCondition.getEntity().getExists()) {
+		// createGoalForEntity(defEntityCondition, null);
+		//
+		// Set<DefEntityCondition> subDefEntityConditions =
+		// defEntityCondition.getEntity().getEntitiesInRelation()
+		// .stream().map(e -> e.getDefEntityCondition())
+		// .filter(c -> !getUsedDefConditionEntities().contains(c))
+		// .filter(c -> !defEntityConditionsToProcess.contains(c))
+		// // .forEach(e -> logger.debug("XXXXXXXXXXXXXXXXXX {}",
+		// // e.getEntity().getName()));
+		// .collect(Collectors.toSet());
+		// defEntityConditionsToProcess.addAll(subDefEntityConditions);
+		// }
+		// }
+
+		// Goal top = new Goal(this, "top");
+		// for (DefEntityCondition defEntityCondition :
+		// conditionModel.getEntityAchieveConditionSet()) {
+		// if (!defEntityCondition.getEntity().getExists()) {
+		// Goal entityGoal = new Goal(this, defEntityCondition.getPath().getValue());
+		// top.addSubGoal(entityGoal);
+		// entityGoal.addSuccessCondition(defEntityCondition);
+		//
+		// entityGoal.applyConditions();
+		//
+		// for (DefAttributeCondition defAttributeCondition :
+		// conditionModel.getAttributeAchieveConditionSet()) {
+		// if (defAttributeCondition.getAttributeOfDef().getEntity() ==
+		// defEntityCondition.getEntity()) {
+		// Goal attributeGoal = new Goal(this,
+		// defAttributeCondition.getPath().getValue());
+		// entityGoal.addSubGoal(attributeGoal);
+		// attributeGoal.addSuccessCondition(defAttributeCondition);
+		//
+		// attributeGoal.applyConditions();
+		// }
+		// }
+		// }
+		// }
+
+	}
+
+	private Goal createGoalForEntity(DefEntityCondition defEntityCondition, Goal parentGoal) {
+		Goal entityGoal = new Goal(this, defEntityCondition.getPath().getValue());
+		entityGoal.addSuccessCondition(defEntityCondition);
+
+		entityGoal.applyConditions();
+
+		entityGoal.setParentGoal(parentGoal);
+
+		createGoalForAttributesOfEntity(defEntityCondition.getEntity(), entityGoal);
+
+		return entityGoal;
+	}
+
+	private void createGoalForAttributesOfEntity(Entity entity, Goal entityGoal) {
+		ConditionModel conditionModel = getSpecification().getConditionModel();
+		for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
+			if (defAttributeCondition.getAttributeOfDef().getEntity() == entity) {
+				Goal attributeGoal = new Goal(this, defAttributeCondition.getPath().getValue());
+				entityGoal.addSubGoal(attributeGoal);
+				attributeGoal.addSuccessCondition(defAttributeCondition);
+
+				attributeGoal.applyConditions();
+			}
+		}
 	}
 
 	public Goal mergeGoals(String newGoalName, Goal goalOne, Goal goalTwo) {
@@ -269,6 +340,12 @@ public class GoalModel extends GoalModel_Base {
 		graph.setEdges(edges.stream().toArray(EdgeDTO[]::new));
 
 		return graph;
+	}
+
+	private Set<DefEntityCondition> getUsedDefConditionEntities() {
+		return getGoalSet().stream().flatMap(g -> g.getSuccessConditionSet().stream())
+				.filter(DefEntityCondition.class::isInstance).map(DefEntityCondition.class::cast)
+				.collect(Collectors.toSet());
 	}
 
 }

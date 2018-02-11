@@ -52,8 +52,7 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 	public void populate4Test() {
 		this.designInterface = DesignInterface.getInstance();
 
-		Specification spec = new Specification(EXISTS_SPEC_ID, EXISTS_SPEC_NAME, "author", "description", "version",
-				"UID");
+		Specification spec = new Specification(EXISTS_SPEC_ID, EXISTS_SPEC_NAME);
 		this.existingDataModel = spec.getDataModel();
 
 		this.existsEntity = new Entity(this.existingDataModel, EXISTS_ENTITY_NAME, false);

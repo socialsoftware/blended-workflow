@@ -32,7 +32,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		Specification spec = new Specification(SPEC_ID, "name", "author", "description", "version", "UID");
+		Specification spec = new Specification(SPEC_ID, "name");
 		this.ent = new Entity(spec.getDataModel(), ENTITY_NAME, false);
 		new Attribute(spec.getDataModel(), this.ent, DUP_NAME, AttributeType.NUMBER, false, false, false);
 	}

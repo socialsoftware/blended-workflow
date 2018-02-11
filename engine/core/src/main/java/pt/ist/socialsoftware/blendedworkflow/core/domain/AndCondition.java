@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.HashMap;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
@@ -51,56 +50,6 @@ public class AndCondition extends AndCondition_Base {
 		Set<Path> pathsTwo = getConditionTwo().getPathSet();
 		pathsOne.addAll(pathsTwo);
 		return pathsOne;
-	}
-
-	@Override
-	public HashMap<Attribute, String> getcompareConditionValues() {
-		HashMap<Attribute, String> attributesOne = getConditionOne().getcompareConditionValues();
-		HashMap<Attribute, String> attributesTwo = getConditionTwo().getcompareConditionValues();
-		attributesOne.putAll(attributesTwo);
-		return attributesOne;
-	}
-
-	@Override
-	public String getRdrUndefinedCondition() {
-		return "(" + getConditionOne().getRdrUndefinedCondition() + " | " + getConditionTwo().getRdrUndefinedCondition()
-				+ ")";
-	}
-
-	@Override
-	public String getRdrSkippedCondition() {
-		return "(" + getConditionOne().getRdrSkippedCondition() + " | " + getConditionTwo().getRdrSkippedCondition()
-				+ ")";
-	}
-
-	@Override
-	public String getRdrTrueCondition() {
-		return "(" + getConditionOne().getRdrTrueCondition() + " & " + getConditionTwo().getRdrTrueCondition() + ")";
-	}
-
-	@Override
-	public String getRdrFalseCondition() {
-		return "(" + getConditionOne().getRdrFalseCondition() + " & " + getConditionTwo().getRdrFalseCondition() + ")";
-	}
-
-	@Override
-	public String toString() {
-		return getConditionOne().toString() + " and " + getConditionTwo().toString();
-	}
-
-	@Override
-	public Boolean existExistEntity() {
-		return getConditionOne().existExistEntity() || getConditionTwo().existExistEntity();
-	}
-
-	@Override
-	public Boolean existCompareAttributeToValue() {
-		return getConditionOne().existExistEntity() || getConditionTwo().existExistEntity();
-	}
-
-	@Override
-	public Boolean existTrue() {
-		return getConditionOne().existExistEntity() || getConditionTwo().existExistEntity();
 	}
 
 	@Override

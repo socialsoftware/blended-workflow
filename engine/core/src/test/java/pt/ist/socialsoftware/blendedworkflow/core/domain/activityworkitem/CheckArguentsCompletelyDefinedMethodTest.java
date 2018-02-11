@@ -39,7 +39,7 @@ public class CheckArguentsCompletelyDefinedMethodTest extends TeardownRollbackTe
 
 	@Override
 	public void populate4Test() throws BWException {
-		this.spec = new Specification("SpecId", MY_SPEC, "author", "description", "version", "UID");
+		this.spec = new Specification("SpecId", MY_SPEC);
 		this.entity = new Entity(this.spec.getDataModel(), ENTITY_ONE, false);
 		this.attribute = new Attribute(this.spec.getDataModel(), this.entity, ATTRIBUTE_ONE, AttributeType.STRING,
 				false, false, false);

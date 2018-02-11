@@ -23,10 +23,21 @@ public class Entity extends Entity_Base {
 		super.setName(name);
 	}
 
-	public Entity(DataModel dataModel, String name, boolean exists) {
+	@Override
+	public void setMandatory(boolean mandatory) {
+		checkUniqueMandatoryEntity(mandatory);
+		super.setMandatory(mandatory);
+	}
+
+	public Entity(DataModel dataModel, String name, boolean exists, boolean mandatory) {
 		setDataModel(dataModel);
 		setName(name);
 		setExists(exists);
+		setMandatory(mandatory);
+	}
+
+	public Entity(DataModel dataModel, String name, boolean exists) {
+		this(dataModel, name, exists, false);
 	}
 
 	private void checkEntityName(String name) {
@@ -35,6 +46,12 @@ public class Entity extends Entity_Base {
 		}
 
 		checkUniqueEntityName(name);
+	}
+
+	private void checkUniqueMandatoryEntity(boolean mandatory) {
+		if (mandatory && getDataModel().getEntitySet().stream().anyMatch(e -> e.getMandatory())) {
+			throw new BWException(BWErrorType.NOT_UNIQUE_MANDATORY_ENTITY, getName());
+		}
 	}
 
 	private void checkUniqueEntityName(String name) throws BWException {
@@ -170,6 +187,7 @@ public class Entity extends Entity_Base {
 		entityDTO.setProductType(getProductType().name());
 		entityDTO.setName(getName());
 		entityDTO.setExists(getExists());
+		entityDTO.setMandatory(getMandatory());
 
 		return entityDTO;
 	}

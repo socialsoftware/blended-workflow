@@ -21,7 +21,7 @@ public class GetMulConditionMethodTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() throws BWException {
-		Specification spec = new Specification("SpecId", "My spec", "author", "description", "version", "UID");
+		Specification spec = new Specification("SpecId", "My spec");
 
 		Entity entityOne = new Entity(spec.getDataModel(), "Entity one name", false);
 		Entity entityTwo = new Entity(spec.getDataModel(), "Entity two name", false);

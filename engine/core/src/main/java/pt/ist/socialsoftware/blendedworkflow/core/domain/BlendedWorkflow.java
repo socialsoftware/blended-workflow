@@ -41,11 +41,7 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 	}
 
 	public Specification createSpecification(String specId, String name) throws BWException {
-		String author = "Author";
-		String description = "Description";
-		String version = "Version";
-		String UID = "UID";
-		return new Specification(specId, name, author, description, version, UID);
+		return new Specification(specId, name);
 	}
 
 	public Set<Specification> getSpecByName(String name) {

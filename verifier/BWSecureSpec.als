@@ -10,7 +10,7 @@ abstract sig User{
 	usr_obj: set Obj
 }
 
-abstract sig Role{}
+abstract sig RoleSubject extends Subject{}
 
 abstract sig Rights{}
 
@@ -20,11 +20,14 @@ abstract sig Transition{}
 
 one sig AccessControlRules {
 	users: set User,
-	roles: set Role,
+	roles: set RoleSubject,
 	u_roles: users -> set roles,
 	resources: set {Obj + FName},
-	role_permissions: Rights ->  roles ->  resources,
+	permissions: Rights ->  Subject ->  resources,
 }
+
+abstract sig Subject{}
+
 
 abstract sig AbstractSecureState extends AbstractState {
 	//Log of the operations made in each transition
@@ -37,28 +40,29 @@ abstract sig AbstractSecureState extends AbstractState {
 
 //User has right to create an instance of an object
 pred UserHasObjDefRight(s: AbstractSecureState, o: Obj, usr: User){
-	!no Def.(AccessControlRules.role_permissions).o
-	Def.(AccessControlRules.role_permissions).o in usr.(AccessControlRules.u_roles)
+	!no (Def.(AccessControlRules.permissions).o <: RoleSubject)
+	(Def.(AccessControlRules.permissions).o <: RoleSubject) in usr.(AccessControlRules.u_roles)
 }
 
 //User has right to read an object
 pred UserHasObjReadRight(s: AbstractSecureState, o: Obj, usr: User){
-	!no Read.(AccessControlRules.role_permissions).o
-	Read.(AccessControlRules.role_permissions).o in usr.(AccessControlRules.u_roles)
+	!no (Read.(AccessControlRules.permissions).o <: RoleSubject)
+	(Read.(AccessControlRules.permissions).o <: RoleSubject) in usr.(AccessControlRules.u_roles)
 }
 
 
 //User has right to define on an attribute
 pred UserHasAttDefRight(s: AbstractSecureState, att: FName, usr: User){
-	!no Def.(AccessControlRules.role_permissions).att
-	Def.(AccessControlRules.role_permissions).att in usr.(AccessControlRules.u_roles)
+	!no (Def.(AccessControlRules.permissions).att <: RoleSubject)
+	(Def.(AccessControlRules.permissions).att <: RoleSubject) in usr.(AccessControlRules.u_roles)
 }
 
 //User has right to read on an attribute
 pred UserHasAttReadRight(s: AbstractSecureState, att: FName, usr: User){
-	!no Read.(AccessControlRules.role_permissions).att
-	Read.(AccessControlRules.role_permissions).att in usr.(AccessControlRules.u_roles)
+	!no (Read.(AccessControlRules.permissions).att <: RoleSubject)
+	(Read.(AccessControlRules.permissions).att <: RoleSubject) in usr.(AccessControlRules.u_roles)
 }
+
 
 /**
 *Predicates that verifies all rights needed to define each resource
@@ -83,6 +87,7 @@ pred hasLinkObjPermissions(s: AbstractSecureState, objSource: Obj, attSource: FN
 	UserHasObjReadRight[s, objTarget, usr]
 }
 
+run{}
 
 
 
