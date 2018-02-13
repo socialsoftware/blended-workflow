@@ -68,7 +68,7 @@ public class WriteDataModelService {
 			String entityExtId = null;
 			try {
 				EntityDTO entityDTO = this.repository
-						.createEntity(new EntityDTO(specId, eEnt.getName(), eEnt.isExists()));
+						.createEntity(new EntityDTO(specId, eEnt.getName(), eEnt.isExists(), eEnt.isMandatory()));
 				entityExtId = entityDTO.getExtId();
 				// logger.debug("createdEntity: {}, {}, {}",
 				// entityDTO.getExtId(), entityDTO.getName(),
