@@ -23,7 +23,7 @@ fact traces {
 }
 
 
-run complete for 4 but 4 SecureState, 5 Int
+//run complete for 4 but 4 SecureState, 5 Int
 
 assert CorrectRegisterPatient{
 	all s, s': SecureState, p: Patient, e: Episode, u: User |
@@ -36,7 +36,7 @@ assert CorrectRegisterPatient{
 assert CorrectSecureExecution{
 	all s, s': SecureState| 
 		ACActInv [s] and Invariants [s]
-			=> ACActInv [s'] and Invariants [s]
+			=> ACActInv [s'] and Invariants [s']
 }
 //Checks
-check CorrectSecureExecution for 4 but 3 SecureState, 5 Int
+check CorrectSecureExecution for 4 but 4 SecureState, 5 Int

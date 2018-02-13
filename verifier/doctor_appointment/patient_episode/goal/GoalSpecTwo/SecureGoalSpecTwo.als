@@ -14,7 +14,7 @@ pred secureCreateAppointment(s, s': AbstractSecureState, p: Patient, e: Episode,
 }
 
 
-pred securebookAppointment(s, s': AbstractSecureState, e: Episode, usr: User) {
+pred secureBookAppointment(s, s': AbstractSecureState, e: Episode, usr: User) {
 	secureGoal[s, s', none, none -> none,
 						none, e -> episode_reserve_date, none -> none -> none, usr]
 }

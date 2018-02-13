@@ -24,13 +24,13 @@ fact traces {
 		secureWriteDescription[s, s', p, e, u] 
 }
 
-run pattern1Complete for 5 but 4 SecureState, 5 Int
+//run pattern1Complete for 5 but 4 SecureState, 5 Int
 
 
 assert CorrectSecureExecution{
 	all s, s': SecureState| 
-		ACGoalP1Inv [s] and Invariants [s]
-			=> ACGoalP1Inv [s'] and Invariants [s]
+		ACGoalP1Inv [s] and InvariantsP1 [s]
+			=> ACGoalP1Inv [s'] and InvariantsP1 [s]
 }
 //Checks
 check CorrectSecureExecution for 5 but 4  SecureState, 5 Int

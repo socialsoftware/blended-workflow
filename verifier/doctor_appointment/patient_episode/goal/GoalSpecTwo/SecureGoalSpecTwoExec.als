@@ -19,7 +19,7 @@ fact traces {
 	some p: Patient, e: Episode, u: User | 
 		secureRegisterPatient[s, s', p, u] or
 		secureCreateAppointment[s, s', p, e, u] or
-		secureReserveDate[s, s', e, u] 
+		secureBookAppointment[s, s', e, u] 
 }
 
  //execution that leads to a complete state
@@ -27,9 +27,9 @@ fact traces {
 
 
 
-assert CorrectRegisterPatient{
-	all s, s': SecureState, p: Patient, u: User |
-			ACGoalInv[s] and Invariants[s] and secureRegisterPatient [s, s', p, u] 
+assert CorrectExecution{
+	all s, s': SecureState|
+			ACGoalInv[s] and Invariants[s]  
 				=> ACGoalInv [s'] and Invariants[s']
 }
 //Check

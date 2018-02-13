@@ -39,7 +39,7 @@ run complete for 4 but 8 SecureState, 5 Int
 assert CorrectSecureDefPatient{
 	all s, s': SecureState, u: User| 
 		secureDMInv [s] and Invariants [s] and secureDefObj[s, s', Patient, u]
-			=> secureDMInv [s'] and Invariants [s]
+			=> secureDMInv [s'] and Invariants [s']
 }
 //Checks
 //check CorrectSecureDefPatient for 4 but 2 SecureState, 5 Int
@@ -48,7 +48,7 @@ assert CorrectSecureDefPatient{
 assert CorrectSecureDefPatientName{
 	all s, s': SecureState, p: Patient, u: User| 
 		secureDMInv [s]  and Invariants [s] and  secureDefAtt [s, s', p, patient_name, u] 
-			=> secureDMInv [s']  and Invariants [s]
+			=> secureDMInv [s']  and Invariants [s']
 }
 //Checks
 //scheck CorrectSecureDefPatientName for 4 but 3 SecureState, 5 Int
@@ -66,7 +66,7 @@ assert CorrectSecureLinkPatientEpisode{
 assert CorrectSecureExecution{
 	all s, s': SecureState| 
 		secureDMInv [s] and Invariants [s]
-			=> secureDMInv [s'] and Invariants [s]
+			=> secureDMInv [s'] and Invariants [s']
 }
 //Checks
-check CorrectSecureExecution for 4 but 5 SecureState, 5 Int
+//check CorrectSecureExecution for 4 but 5 SecureState, 5 Int
