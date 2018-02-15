@@ -114,7 +114,7 @@ ResourceSpecification:
 	units += Unit*
 	positions += Position*
 	persons += Person*
-	expressions += RALExpression*
+	resourceRules = ResourceRules
 ;
 
 Capability:
@@ -145,6 +145,31 @@ Person:
 		('hasCapability' ':' '{' capabilities += [Capability] (',' capabilities += [Capability])* '}')? &
 		('occupies' ':' '{'occupies += [Position] (',' occupies += [Position])* '}')?)
 	'}')?
+;
+
+/**
+ * ResourceRules Block Grammar
+ */
+ResourceRules:
+	{ResourceRules}
+	'ResourceRules' '{' 
+		relations += EntityIsPerson*
+		rules += ResourceRule*
+	'}'
+;
+
+EntityIsPerson:
+	entity = [Entity] 'IS' 'PERSON'
+;
+
+ResourceRule:
+	resource = QualifiedName 
+	taskDuty = ResourceTaskDuty 
+	expression = RALExpression
+;
+
+ResourceTaskDuty:
+	('has' 'responsible') | 'informs'
 ;
 
 /**
