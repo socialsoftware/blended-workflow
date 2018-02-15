@@ -7,6 +7,10 @@ BWSpecification:
 	dataSpecification = DataSpecification
 	resourceSpecification = ResourceSpecification
 ;
+
+/**
+ * Data language grammar 
+ */
 	
 DataSpecification:
 	{DataSpecification}
@@ -99,6 +103,10 @@ Atomic returns Expression:
 	{BoolConstant} name=('true'|'false')
 ;
 
+/**
+ * Resource language grammar
+ */
+
 ResourceSpecification:
 	{ResourceSpecification}
 	capabilities += Capability*
@@ -106,6 +114,7 @@ ResourceSpecification:
 	units += Unit*
 	positions += Position*
 	persons += Person*
+	expressions += RALExpression*
 ;
 
 Capability:
@@ -122,18 +131,56 @@ Unit:
 
 Position:
 	'Position' name = ID '{'
-		'isMemberOf' ':' unit = [Unit]
-		('description' ':' description = STRING)?
-		('participatesIn' ':' '{' roles += [Role] (',' roles += [Role])* '}')?
-		('canDelegateWorkTo' ':' '{' delegateTo += [Position] (',' delegateTo += [Position])* '}')?
-		('reportsTo' ':' reportsTo = [Position] )?
+		('isMemberOf' ':' unit = [Unit] &
+		('description' ':' description = STRING)? &
+		('participatesIn' ':' '{' roles += [Role] (',' roles += [Role])* '}')? &
+		('canDelegateWorkTo' ':' '{' delegateTo += [Position] (',' delegateTo += [Position])* '}')? &
+		('reportsTo' ':' reportsTo = [Position] )?)
 	'}'
 ;
 
 Person:
 	'Person' name = ID ('{'
-		('description' ':' description = STRING)?
-		('hasCapability' ':' '{' capabilities += [Capability] (',' capabilities += [Capability])* '}')?
-		('occupies' ':' '{'occupies += [Position] (',' occupies += [Position])* '}')?
+		(('description' ':' description = STRING)? &
+		('hasCapability' ':' '{' capabilities += [Capability] (',' capabilities += [Capability])* '}')? &
+		('occupies' ':' '{'occupies += [Position] (',' occupies += [Position])* '}')?)
 	'}')?
 ;
+
+/**
+ * RAL Expressions Grammar
+ */
+ RALExpression: 
+ 	{RALExpression}
+ 	AnyoneExpr |
+ 	PersonExpr
+ ;
+ 
+ AnyoneExpr:
+ 	'ANYONE'
+ ;
+ 
+ PersonExpr:
+ 	IsPersonID | IsPersonDataObject | IsPersonInDuty
+ ;
+ 
+ IsPersonID:
+ 	'IS' person = ID
+ ;
+ 
+ IsPersonDataObject:
+ 	'IS' 'PERSON' dataExpr = DataObjIDExpr
+ ;
+ 
+ IsPersonInDuty:
+ 	'IS' 'ANY' 'PERSON' taskDuty = TaskDuty dataField = QualifiedName
+ ;
+ 
+ DataObjIDExpr:
+ 	'IN' 'DATA' 'FIELD' dataField = QualifiedName
+ ;
+ 
+ TaskDuty:
+ 	'RESPONSIBLE' 'FOR' |
+ 	'INFORMED' 'ABOUT'
+ ;
