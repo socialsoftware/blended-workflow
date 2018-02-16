@@ -12,8 +12,8 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/resourcemodel")
-public class ResourceSpecificationController {
-	private static Logger log = LoggerFactory.getLogger(ResourceSpecificationController.class);
+public class ResourceModelSpecificationController {
+	private static Logger log = LoggerFactory.getLogger(ResourceModelSpecificationController.class);
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Boolean> createResourceModel(@PathVariable("specId") String specId) {

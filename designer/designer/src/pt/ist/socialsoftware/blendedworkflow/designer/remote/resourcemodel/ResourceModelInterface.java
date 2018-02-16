@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.Relat
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PositionDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RoleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.UnitDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
@@ -184,6 +185,27 @@ public class ResourceModelInterface {
 		PersonDTO result = null;
 		try {
 			result = restTemplate.postForObject(uri, person, PersonDTO.class, params);
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("Error", e.getMessage()));
+		}
+		
+		return result;
+	}
+
+	public ResourceRelationDTO createEntityIsPersonRelation(ResourceRelationDTO resourceRelationDTO, BWNotification notification) {
+		logger.debug("createRules: {}", resourceRelationDTO.getEntityName());
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcerules/relations/";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", resourceRelationDTO.getSpecId());
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		ResourceRelationDTO result = null;
+		try {
+			result = restTemplate.postForObject(uri, resourceRelationDTO, ResourceRelationDTO.class, params);
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {

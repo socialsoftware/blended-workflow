@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
@@ -94,4 +95,9 @@ public class DesignInterface {
 
 		spec.getResourceModel().clean();
 	}
+
+	@Atomic(mode = Atomic.TxMode.WRITE)
+    public void relationEntityIsPerson(ResourceRelationDTO resourceRelationDTO) {
+		Entity entity = workflowDesigner.getEntityByName(resourceRelationDTO.getSpecId(), resourceRelationDTO.getEntityName());
+    }
 }

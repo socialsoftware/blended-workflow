@@ -29,15 +29,19 @@ public class Entity extends Entity_Base {
 		super.setMandatory(mandatory);
 	}
 
+	public Entity() {
+
+	}
+
+	public Entity(DataModel dataModel, String name, boolean exists) {
+		this(dataModel, name, exists, false);
+	}
+
 	public Entity(DataModel dataModel, String name, boolean exists, boolean mandatory) {
 		setDataModel(dataModel);
 		setName(name);
 		setExists(exists);
 		setMandatory(mandatory);
-	}
-
-	public Entity(DataModel dataModel, String name, boolean exists) {
-		this(dataModel, name, exists, false);
 	}
 
 	private void checkEntityName(String name) {

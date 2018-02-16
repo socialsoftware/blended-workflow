@@ -1,8 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -34,9 +31,6 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 	public void writeResourceModel(ResourceSpecification spec, String specId, BWNotification notification) {
 		System.out.println("[WriteRM] Begin writing resource model");
 		
-		
-		System.out.println("[WriteRM] Begin writing capabilities");
-		
 		createCapabilities(spec, specId, notification);
 		
 		createRoles(spec, specId, notification);
@@ -46,7 +40,7 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		createPositions(spec, specId, notification);
 		
 		createPersons(spec, specId, notification);
-		
+	
 		System.out.println("[WriteRM] Finish writing resource model");
 	}
 	
