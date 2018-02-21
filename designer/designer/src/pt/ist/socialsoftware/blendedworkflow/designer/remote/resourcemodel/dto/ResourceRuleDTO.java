@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResourceRuleDTO {
 	public enum ResourceRuleType {
-		RESPONSIBLE_FOR("RESPONSIBLE FOR"), 
-		INFORMS("INFORMS");
+		HAS_RESPONSIBLE("has responsible"), 
+		INFORMS("informs");
 		
 		private final String code;
 		
@@ -16,6 +16,17 @@ public class ResourceRuleDTO {
 		
 		public String toString() {
 			return code;
+		}
+
+		public static ResourceRuleType fromString(String code) throws IllegalArgumentException {
+			switch (code) {
+				case "has responsible":
+					return ResourceRuleType.HAS_RESPONSIBLE;
+				case "informs":
+					return ResourceRuleType.INFORMS;
+				default:
+					throw new IllegalArgumentException();
+			}
 		}
 	}
 	

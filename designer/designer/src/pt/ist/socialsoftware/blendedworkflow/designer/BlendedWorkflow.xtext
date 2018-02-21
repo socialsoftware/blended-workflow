@@ -9,9 +9,9 @@ BWSpecification:
 ;
 
 /**
- * Data language grammar 
+ * Data language grammar
  */
-	
+
 DataSpecification:
 	{DataSpecification}
 	entities += Entity*
@@ -23,7 +23,7 @@ Specification:
 ;
 
 Entity:
-	'Entity' name = ID (mandatory ?= 'mandatory')? (exists ?= 'exists')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? '{' 
+	'Entity' name = ID (mandatory ?= 'mandatory')? (exists ?= 'exists')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? '{'
 		attributes += Attribute*
 		constraint += Constraint*
 	'}'
@@ -35,7 +35,7 @@ Attribute:
 	('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)?
 ;
 
-QualifiedName: 
+QualifiedName:
 	ID ('.' ID)*
 ;
 
@@ -59,39 +59,39 @@ Expression: Or;
 Or returns Expression:
 	And (
 		{Or.left = current} 'OR' right = And
-	)*;	
-	
+	)*;
+
 And returns Expression:
 	Equality (
 		{And.left = current} 'AND' right = Equality
-	)*;	
-	
+	)*;
+
 Equality returns Expression:
 	Comparison (
-		({Equal.left=current} '==' | {NotEqual.left=current} '!=') 
+		({Equal.left=current} '==' | {NotEqual.left=current} '!=')
 		right=Comparison
-	)*;	
-	
+	)*;
+
 Comparison returns Expression:
 	PlusOrMinus (
-		({GreaterEqual.left=current} '>=' | {Greater.left=current} '>' | {SmallerEqual.left=current} '<=' | {Smaller.left=current} '<') 
+		({GreaterEqual.left=current} '>=' | {Greater.left=current} '>' | {SmallerEqual.left=current} '<=' | {Smaller.left=current} '<')
 		right=PlusOrMinus
-	)*;	
+	)*;
 
 PlusOrMinus returns Expression:
 	MulOrDiv (
-		({Plus.left=current} '+' | {Minus.left=current} '-') 
+		({Plus.left=current} '+' | {Minus.left=current} '-')
 		right=MulOrDiv
-	)*;	
+	)*;
 
 MulOrDiv returns Expression:
 	Primary (
-		({Mul.left=current} '*' | {Div.left=current} '/') 
+		({Mul.left=current} '*' | {Div.left=current} '/')
 		right=Primary
-	)*;	
+	)*;
 
 Primary returns Expression:
-	'(' Expression ')' | 
+	'(' Expression ')' |
 	{Not} 'NOT' expression = Primary |
 	Atomic
 ;
@@ -121,7 +121,7 @@ Capability:
 	'Capability' name = ID ('{' 'description' ':' description = STRING '}')?
 ;
 
-Role: 
+Role:
 	'Role' name = ID ('{' 'description' ':' description = STRING '}')?
 ;
 
@@ -152,7 +152,7 @@ Person:
  */
 ResourceRules:
 	{ResourceRules}
-	'ResourceRules' '{' 
+	'ResourceRules' '{'
 		relations += EntityIsPerson*
 		rules += ResourceRule*
 	'}'
@@ -163,8 +163,8 @@ EntityIsPerson:
 ;
 
 ResourceRule:
-	datafield = QualifiedName 
-	taskDuty = ResourceTaskDuty 
+	datafield = QualifiedName
+	taskDuty = ResourceTaskDuty
 	expression = RALExpression
 ;
 
@@ -175,34 +175,30 @@ ResourceTaskDuty:
 /**
  * RAL Expressions Grammar
  */
- RALExpression: 
- 	{RALExpression}
+ RALExpression:
  	AnyoneExpr |
  	PersonExpr
  ;
- 
+
  AnyoneExpr:
+ 	{AnyoneExpr}
  	'ANYONE'
  ;
- 
+
  PersonExpr:
  	IsPersonID | IsPersonDataObject | IsPersonInDuty
  ;
- 
+
  IsPersonID:
  	'IS' person = ID
  ;
- 
+
  IsPersonDataObject:
- 	'IS' 'PERSON' dataExpr = DataObjIDExpr
+ 	'IS' 'PERSON' 'IN' 'DATA' 'FIELD' dataField = QualifiedName
  ;
- 
+
  IsPersonInDuty:
  	'IS' 'ANY' 'PERSON' taskDuty = TaskDuty dataField = QualifiedName
- ;
- 
- DataObjIDExpr:
- 	'IN' 'DATA' 'FIELD' dataField = QualifiedName
  ;
  
  TaskDuty:

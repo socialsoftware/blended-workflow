@@ -24,8 +24,11 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 	
 	private ResourceModelInterface repository = null;
 	
+	private WriteResourceRulesService rulesService = null;
+	
 	public WriteResourceModelService(ResourceModelInterface repository) {
 		this.repository = repository;
+		this.rulesService = new WriteResourceRulesService(repository);
 	}
 	
 	public void writeResourceModel(ResourceSpecification spec, String specId, BWNotification notification) {
@@ -40,6 +43,8 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		createPositions(spec, specId, notification);
 		
 		createPersons(spec, specId, notification);
+		
+		rulesService.writeResourceRules(spec.getResourceRules(), specId, notification);
 	
 		System.out.println("[WriteRM] Finish writing resource model");
 	}

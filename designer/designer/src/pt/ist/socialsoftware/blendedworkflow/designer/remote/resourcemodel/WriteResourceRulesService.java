@@ -28,7 +28,7 @@ private Logger logger = LoggerFactory.getLogger(WriteResourceRulesService.class)
 	public void writeResourceRules(ResourceRules rules, String specId, BWNotification notification) {
 		System.out.println("[WriteRR] Begin writing resource rules");
 		
-		writeRelations(rules.getRelations(), specId, notification);
+		// writeRelations(rules.getRelations(), specId, notification);
 		
 		writeRules(rules.getRules(), specId, notification);
 		
@@ -38,19 +38,7 @@ private Logger logger = LoggerFactory.getLogger(WriteResourceRulesService.class)
 	private void writeRules(List<ResourceRule> rules, String specId, BWNotification notification) {
 		rules.stream().forEach(rule -> {
 			RALExpressionDTO expr = RALExpressionDTO.buildRALExpressionDTO(specId, rule.getExpression());
-			ResourceRuleType type;
-			switch (ResourceRuleType.valueOf(rule.getTaskDuty())) {
-				case RESPONSIBLE_FOR:
-					type = ResourceRuleType.RESPONSIBLE_FOR;
-					break;
-				case INFORMS:
-					type = ResourceRuleType.INFORMS;
-					break;
-				default:	
-					notification.addError(new BWError("InvalidResourceRuleType", "Invalid resource rule type"));
-					return;
-					
-			}
+			ResourceRuleType type = ResourceRuleType.fromString(rule.getTaskDuty());
 			ResourceRuleDTO ruleDTO = new ResourceRuleDTO(specId, rule.getDatafield(), type, expr);
 			repository.createResourceRule(ruleDTO, notification);
 		});

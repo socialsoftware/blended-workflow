@@ -90,12 +90,3 @@ relation PersonHasCapability {
     Person playsRole person { multiplicity 0..*; }
     Capability playsRole capability { multiplicity 0..*; }
 }
-
-class Entity extends .pt.ist.socialsoftware.blendedworkflow.core.domain.Entity {
-    boolean isPerson;
-}
-
-relation EntityInstanceToPerson {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance playsRole entityInstances { multiplicity 0..1; }
-    Person playsRole person { multiplicity 0..1; }
-}
