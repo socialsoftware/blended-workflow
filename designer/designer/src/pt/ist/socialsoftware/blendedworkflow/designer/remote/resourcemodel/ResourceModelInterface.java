@@ -9,10 +9,12 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PositionDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RoleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.UnitDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
@@ -195,7 +197,7 @@ public class ResourceModelInterface {
 	}
 
 	public ResourceRelationDTO createEntityIsPersonRelation(ResourceRelationDTO resourceRelationDTO, BWNotification notification) {
-		logger.debug("createRules: {}", resourceRelationDTO.getEntityName());
+		logger.debug("createRelations: {}", resourceRelationDTO.getEntityName());
 
 		final String uri = BASE_URL + "/specs/{specId}/resourcerules/relations/";
 
@@ -206,6 +208,27 @@ public class ResourceModelInterface {
 		ResourceRelationDTO result = null;
 		try {
 			result = restTemplate.postForObject(uri, resourceRelationDTO, ResourceRelationDTO.class, params);
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("Error", e.getMessage()));
+		}
+		
+		return result;
+	}
+
+	public ResourceRuleDTO createResourceRule(ResourceRuleDTO ruleDTO, BWNotification notification) {
+		logger.debug("createRules: {}, {}", ruleDTO.getDataField(), ruleDTO.getType());
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcerules/rules/";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", ruleDTO.getSpecId());
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		ResourceRuleDTO result = null;
+		try {
+			result = restTemplate.postForObject(uri, ruleDTO, ResourceRuleDTO.class, params);
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
 		} catch (Exception e) {

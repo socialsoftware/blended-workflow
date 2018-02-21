@@ -25,4 +25,16 @@ public class ResourceRulesSpecificationController {
 
 		return new ResponseEntity<>(resourceRelationDTO, HttpStatus.CREATED);
 	}
+
+	@RequestMapping(value = "/rules", method = RequestMethod.POST)
+	public ResponseEntity<ResourceRuleDTO> createEntityIsPerson(@PathVariable("specId") String specId,
+															@RequestBody ResourceRuleDTO resourceRuleDTO) {
+		log.debug("CreateResourceRule: {}, {}, {}", specId, resourceRuleDTO.getDataField(), resourceRuleDTO.getType());
+
+		DesignInterface designer = DesignInterface.getInstance();
+
+		designer.resourceRule(resourceRuleDTO);
+
+		return new ResponseEntity<>(resourceRuleDTO, HttpStatus.CREATED);
+	}
 }
