@@ -90,3 +90,29 @@ relation PersonHasCapability {
     Person playsRole person { multiplicity 0..*; }
     Capability playsRole capability { multiplicity 0..*; }
 }
+
+/*
+RAL Expressions
+*/
+
+class RALExpression;
+
+relation EntityHasResponsibleFor {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Entity playsRole entityResponsibleFor { multiplicity 1..1;}
+    RALExpression playsRole responsibleFor { multiplicity 0..1; }
+}
+
+relation EntityHasInforms {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Entity playsRole entityInforms { multiplicity 1..1;}
+    RALExpression playsRole informs { multiplicity 0..1; }
+}
+
+relation AttributeHasResponsibleFor {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute playsRole attributeResponsibleFor { multiplicity 1..1;}
+    RALExpression playsRole responsibleFor { multiplicity 0..1; }
+}
+
+relation AttributeHasInforms {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute playsRole attributeInforms { multiplicity 1..1;}
+    RALExpression playsRole informs { multiplicity 0..1; }
+}
