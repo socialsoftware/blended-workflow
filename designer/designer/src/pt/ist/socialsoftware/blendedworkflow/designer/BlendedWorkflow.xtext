@@ -163,7 +163,7 @@ EntityIsPerson:
 ;
 
 ResourceRule:
-	resource = QualifiedName 
+	datafield = QualifiedName 
 	taskDuty = ResourceTaskDuty 
 	expression = RALExpression
 ;
