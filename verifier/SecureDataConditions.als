@@ -6,40 +6,40 @@ open filesystem/DataConditions
 /**
 * OBJECT DEFINITION TRANSITION 
 **/
-sig def_Obj extends Transition{
+sig defObjTransition extends Transition{
 	dO_obj: Obj,
 	dO_usr: User
 }
 
 pred addObjToLog (s, s': AbstractSecureState, o: Obj, usr: User){
-	some d: def_Obj| d.dO_obj = o and d.dO_usr = usr and s'.log = s.log.add[d]
+	some d: defObjTransition| d.dO_obj = o and d.dO_usr = usr and s'.log = s.log.add[d]
 }
 
 pred ACObjDefInv(s: AbstractSecureState){
-	all do: Int.(s.log) <: def_Obj | hasDefObjPermissions[s, do.dO_obj, do.dO_usr]
+	all do: Int.(s.log) <: defObjTransition | hasDefObjPermission[s, do.dO_obj, do.dO_usr]
 }
 
 /**
 * ATTRIBUTE DEFINITION TRANSITION
 **/
-sig def_Att extends Transition{
+sig defAttTransition extends Transition{
 	dA_att: FName,
 	dA_obj: Obj,
 	dA_usr: User
 }
 
 pred addAttToLog(s, s': AbstractSecureState, o: Obj, att: FName, usr:User) {
-	some d: def_Att| d.dA_obj = o and d.dA_att = att and d.dA_usr = usr and s'.log = s.log.add[d]
+	some d: defAttTransition| d.dA_obj = o and d.dA_att = att and d.dA_usr = usr and s'.log = s.log.add[d]
 }
 
 pred ACAttDefInv(s: AbstractSecureState){
-	all da: Int.(s.log) <: def_Att | hasDefAttPermissions[s, da.dA_obj, da.dA_att, da.dA_usr]
+	all da: Int.(s.log) <: defAttTransition | hasDefAttPermission[s, da.dA_obj, da.dA_att, da.dA_usr]
 }
 
 /**
 * LINK OBJECTS TRANSITION
 **/
-sig link_Obj extends Transition{
+sig linkObjTransition extends Transition{
 	lO_objSource: Obj,
 	lO_attSource: FName,
 	lO_objTarget: Obj,
@@ -47,11 +47,11 @@ sig link_Obj extends Transition{
 }
 
 pred addLinkToLog(s, s': AbstractSecureState, objSource: Obj, attSource: FName, objTarget: Obj, usr:User){
-	some l: link_Obj| l.lO_objSource = objSource and l.lO_attSource = attSource and l.lO_objTarget = objTarget and l.lO_usr = usr and	s'.log = s.log.add[l] 
+	some l: linkObjTransition| l.lO_objSource = objSource and l.lO_attSource = attSource and l.lO_objTarget = objTarget and l.lO_usr = usr and	s'.log = s.log.add[l] 
 }
 
 pred ACLinkDefInv(s:AbstractSecureState){
-	all l: Int.(s.log) <: link_Obj| hasLinkObjPermissions[s, l.lO_objSource, l.lO_attSource, l.lO_objTarget, l.lO_usr]	
+	all l: Int.(s.log) <: linkObjTransition| hasLinkObjPermission[s, l.lO_objSource, l.lO_attSource, l.lO_objTarget, l.lO_usr]	
 }
 
 
@@ -59,8 +59,7 @@ pred ACLinkDefInv(s:AbstractSecureState){
 * Secure Object 
 **/
 pred secureDefObj(s, s' : AbstractSecureState, o: Obj, usr:User) {
-	usr in AccessControlRules.users
-	hasDefObjPermissions[s, o, usr]
+	hasDefObjPermission[s, o, usr]
 	defObj[s, s', o]
 //	addObjToLog[s, s', o, usr]
 }
@@ -69,8 +68,7 @@ pred secureDefObj(s, s' : AbstractSecureState, o: Obj, usr:User) {
 * Secure Attribute Predicates
 **/
 pred secureDefAtt(s, s': AbstractSecureState, o: Obj, att: FName, usr:User) {
-	usr in AccessControlRules.users
-	hasDefAttPermissions[s, o, att, usr]
+	hasDefAttPermission[s, o, att, usr]
 	defAtt[s, s', o, att]
 //	addAttToLog[s, s', o, att, usr]
 }
@@ -79,8 +77,7 @@ pred secureDefAtt(s, s': AbstractSecureState, o: Obj, att: FName, usr:User) {
 * Secure Link
 **/
 pred secureLinkObj(s, s': AbstractSecureState, objSource: Obj, attSource: FName, objTarget: Obj, attTarget: FName, usr:User) {
-	usr in AccessControlRules.users
-	hasLinkObjPermissions[s, objSource, attTarget, objTarget, usr]
+	hasLinkObjPermission[s, objSource, attTarget, objTarget, usr]
 	linkObj[s, s', objSource, attSource, objTarget, attTarget]
 //	addLinkToLog[s, s', objSource, attTarget, objTarget, usr]
 }

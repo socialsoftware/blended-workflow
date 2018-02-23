@@ -3,9 +3,9 @@ module filesystem/doctorappointment/patientepisode/SecureDoctorAppointment
 open filesystem/doctorappointment/patientepisode/DoctorAppointment
 open filesystem/BWSecureSpec
 
-one sig Alice, Bob, Carlos extends User{}
+one sig Alice, Bob extends User{}
 
-one sig R_Doctor, R_Nurse, R_Receptionist extends RoleSubject{}
+one sig R_Doctor extends RoleSubject{}
 /*
 fact acrules{
 	//users
@@ -17,7 +17,7 @@ fact acrules{
 	//resources
 	AccessControlRules.resources = {Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode}
 	//role permissions
-	AccessControlRules.role_permissions = 
+	AccessControlRules.permissions = 
 		{Def -> {
 			R_Doctor->{Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode}
 			}
@@ -28,4 +28,5 @@ fact acrules{
 		}
 }
 */
+
 run{}

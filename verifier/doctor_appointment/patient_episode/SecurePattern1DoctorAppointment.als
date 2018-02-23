@@ -10,8 +10,9 @@ one sig episode_report extends FName {}
 
 one sig DoctorAlice extends Doctor{}
 
-fact Alice_Doctor{
+fact user_objs{
 	Alice.usr_obj = DoctorAlice
+	no Bob.usr_obj
 }
 
 one sig DomainEpisodeDoctor extends DomainSubject {}
@@ -30,7 +31,7 @@ fact relations {
 	episode_doctor.maxMul = 10
 	episode_doctor.inverse = doctor_episode
 }
-
+/*
 fact acrules{
 	//users
 	AccessControlRules.users ={Alice  + Bob}
@@ -43,19 +44,17 @@ fact acrules{
 	//role permissions
 	AccessControlRules.permissions = 
 		{Def -> {
-				{R_Doctor->{Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode + Doctor + doctor_episode + episode_doctor + episode_report}}
+				{R_Doctor->{Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode + Doctor + doctor_episode + episode_doctor}}
 				+ 	{DomainEpisodeDoctor -> episode_report}
 			}	
 		+
 		Read -> {
-				{R_Doctor->{Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode + Doctor + doctor_episode + episode_doctor + episode_report}}
+				{R_Doctor->{Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode + Doctor + doctor_episode + episode_doctor}}
 				+ 	{DomainEpisodeDoctor -> episode_report}
 			}	
 		}
-
-	//domain dep resources
 }
-
+*/
 pred pattern1Complete {
  	one s: AbstractState | 
 		// cannot be the initial state to find one meaningful state
@@ -84,6 +83,29 @@ pred pattern1Complete {
 
 		// dependencies hold
 		checkDependence [s, Episode, reserve_date_dependence]
+}
+
+
+pred InvariantsP1(s: AbstractState) {
+	// no extra fields
+	noExtraFields [s, Patient, patient_name + patient_address + patient_episode] 	 	
+	noExtraFields [s, Episode, episode_reserve_date + episode_patient + episode_report + episode_doctor]	
+	noExtraFields [s, Doctor, doctor_episode]
+
+	// does not exceeds mutliplicity
+	noMultiplicityExceed [s, Episode, episode_patient] 
+	noMultiplicityExceed [s, Patient, patient_episode] 
+	
+	noMultiplicityExceed [s, Episode, episode_doctor] 
+	noMultiplicityExceed [s, Doctor, doctor_episode] 
+
+	// if there is a link between two objects, either is unidirectional or bidirectional
+	bidirectionalPreservation [s, Patient, episode_patient, Episode, patient_episode] 
+
+	bidirectionalPreservation [s, Doctor, episode_doctor, Episode, doctor_episode] 
+
+	// dependencies hold
+	checkDependence [s, Episode, reserve_date_dependence]
 }
 
 run{}

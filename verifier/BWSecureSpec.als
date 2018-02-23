@@ -6,7 +6,7 @@ open filesystem/BWSpec
 /**
 * ACCESS CONTROl SPECIFIC SIGNATURES
 **/
-abstract sig User{
+abstract sig User extends Subject{
 	usr_obj: set Obj
 }
 
@@ -22,12 +22,13 @@ one sig AccessControlRules {
 	users: set User,
 	roles: set RoleSubject,
 	u_roles: users -> set roles,
-	resources: set {Obj + FName},
+	resources: set {Obj + FName + Operation},
 	permissions: Rights ->  Subject ->  resources,
 }
 
 abstract sig Subject{}
 
+abstract sig Operation{}
 
 abstract sig AbstractSecureState extends AbstractState {
 	//Log of the operations made in each transition
@@ -35,57 +36,34 @@ abstract sig AbstractSecureState extends AbstractState {
 }
 
 /**
-*RIGHTS OVER RESOURCES
-**/
-
-//User has right to create an instance of an object
-pred UserHasObjDefRight(s: AbstractSecureState, o: Obj, usr: User){
-	!no (Def.(AccessControlRules.permissions).o <: RoleSubject)
-	(Def.(AccessControlRules.permissions).o <: RoleSubject) in usr.(AccessControlRules.u_roles)
-}
-
-//User has right to read an object
-pred UserHasObjReadRight(s: AbstractSecureState, o: Obj, usr: User){
-	!no (Read.(AccessControlRules.permissions).o <: RoleSubject)
-	(Read.(AccessControlRules.permissions).o <: RoleSubject) in usr.(AccessControlRules.u_roles)
-}
-
-
-//User has right to define on an attribute
-pred UserHasAttDefRight(s: AbstractSecureState, att: FName, usr: User){
-	!no (Def.(AccessControlRules.permissions).att <: RoleSubject)
-	(Def.(AccessControlRules.permissions).att <: RoleSubject) in usr.(AccessControlRules.u_roles)
-}
-
-//User has right to read on an attribute
-pred UserHasAttReadRight(s: AbstractSecureState, att: FName, usr: User){
-	!no (Read.(AccessControlRules.permissions).att <: RoleSubject)
-	(Read.(AccessControlRules.permissions).att <: RoleSubject) in usr.(AccessControlRules.u_roles)
-}
-
-
-/**
 *Predicates that verifies all rights needed to define each resource
 **/
 
 //Permissions to define an object
-pred hasDefObjPermissions(s: AbstractSecureState, o: Obj, usr: User){
-	UserHasObjDefRight[s, o, usr]
+pred hasDefObjPermission(s: AbstractSecureState, o: Obj, usr: User){
+	some role: (Def.(AccessControlRules.permissions).o <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
 }
 
 //Permissions to define an attribute
-pred hasDefAttPermissions(s: AbstractSecureState, o: Obj, att: FName, usr:User){
-	UserHasAttDefRight[s, att, usr]
-	UserHasObjReadRight[s, o, usr]
+pred hasDefAttPermission(s: AbstractSecureState, o: Obj, att: FName, usr:User){
+	some role: (Def.(AccessControlRules.permissions).att <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
 }
 
 //Permissions to link an object
-pred hasLinkObjPermissions(s: AbstractSecureState, objSource: Obj, attSource: FName, objTarget: Obj, usr:User){
-	UserHasObjReadRight[s, objSource, usr]
-	UserHasAttDefRight[s, attSource, usr]
-	UserHasAttDefRight[s, attSource.inverse, usr]
-	UserHasObjReadRight[s, objTarget, usr]
+pred hasLinkObjPermission(s: AbstractSecureState, objSource: Obj, attSource: FName, objTarget: Obj, usr:User){
+	some role: (Def.(AccessControlRules.permissions).attSource <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
+	some role: (Def.(AccessControlRules.permissions).(attSource.inverse) <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
 }
+
+pred hasReadObjPermission(s: AbstractSecureState, o: Obj, usr: User){
+	some role: (Read.(AccessControlRules.permissions).o <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
+}
+
+pred hasReadAttPermission(s: AbstractSecureState, att: FName, usr: User){
+	some role: (Read.(AccessControlRules.permissions).att <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
+}
+
+pred hasReadLinkPermission{}
 
 run{}
 
