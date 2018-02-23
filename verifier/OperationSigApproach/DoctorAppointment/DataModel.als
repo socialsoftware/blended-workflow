@@ -1,5 +1,5 @@
 // Contains a doctor appointment model with with four entities
-module filesystem/DoctorAppointmentData
+module filesystem/DoctorAppointment/DataModel
 
 open filesystem/DataModel
 

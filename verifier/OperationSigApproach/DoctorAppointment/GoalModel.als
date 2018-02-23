@@ -1,7 +1,7 @@
-module filesystem/DoctorAppointmentGoal
+module filesystem/DoctorAppointment/GoalModel
 
 open filesystem/GoalModel
-open filesystem/DoctorAppointmentState
+open filesystem/DoctorAppointment/StateModel
 
 pred defPatient(s, s': AbstractState, p: Patient) {
 	execEntityGoal[s, s', p]

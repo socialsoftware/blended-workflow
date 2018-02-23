@@ -1,7 +1,7 @@
-module filesystem/DoctorAppointmentState
+module filesystem/DoctorAppointment/StateModel
 
 open filesystem/StateModel
-open filesystem/DoctorAppointmentData
+open filesystem/DoctorAppointment/DataModel
 
 pred complete {
 	one s: AbstractState |

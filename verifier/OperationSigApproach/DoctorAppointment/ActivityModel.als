@@ -1,7 +1,7 @@
-module filesystem/DoctorAppointmentActivity
+module filesystem/DoctorAppointment/ActivityModel
 
 open filesystem/ActivityModel
-open filesystem/DoctorAppointmentState
+open filesystem/DoctorAppointment/StateModel
 
 sig RegisterPatient extends Activity {}
 	{

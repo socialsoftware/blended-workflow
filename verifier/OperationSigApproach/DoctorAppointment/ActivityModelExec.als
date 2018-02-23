@@ -1,7 +1,6 @@
-// an activity model where patients are registered first, it preserves all invariants
-module filesystem/DoctorAppointmentActivityExec
+module filesystem/DoctorAppointment/ActivityModelExec
 
-open filesystem/DoctorAppointmentActivity
+open filesystem/DoctorAppointment/ActivityModel
 
 sig State extends AbstractState {}
 
@@ -17,7 +16,7 @@ fact traces {
 		exec[s, s', a]
 }
 
-//run complete for 6 but 7 State, 5 Int
+run complete for 6 but 7 State, 5 Int
 
 assert PreservesInvariant {
 	all s, s': State, a: Activity |

@@ -1,6 +1,6 @@
-module filesystem/DoctorAppointmentGoalExec
+module filesystem/DoctorAppointment/GoalModelExec
 
-open filesystem/DoctorAppointmentGoal
+open filesystem/DoctorAppointment/GoalModel
 
 sig State extends AbstractState {}
 
