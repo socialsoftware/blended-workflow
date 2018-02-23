@@ -1,6 +1,6 @@
-module filesystem/doctorappointment/patientepisode/activity/SecureGoalModelPattern1SpecThreeExec
+module filesystem/doctorappointment/patientepisode/activity/GoalSpecThree/SecureGoalModelPattern1SpecThreeExec
 
-open filesystem/doctorappointment/patientepisode/activity/SecureGoalModelPattern1SpecThree
+open filesystem/doctorappointment/patientepisode/activity/GoalSpecThree/SecureGoalModelPattern1SpecThree
 
 sig SecureState extends AbstractSecureState{}
 

@@ -44,7 +44,6 @@ pred hasDefAttPermissionP1(s: AbstractSecureState, o: Obj, att: FName, usr: User
 	hasDefAttPermission[s, o, att, usr]
 }
 
-
 pred hasLinkObjPermissionP1(s: AbstractSecureState, objSource: Obj, attSource: FName, objTarget: Obj, usr:User){
 	hasP1LinkObjPermission[s, objSource, attSource, objTarget, usr] or
 	hasLinkObjPermission[s, objSource, attSource, objTarget, usr]

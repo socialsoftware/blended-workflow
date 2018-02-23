@@ -1,6 +1,6 @@
-module filesystem/doctorappointment/patientepisode/activity/SecureActivityModelPattern1SpecThreeExec
+module filesystem/doctorappointment/patientepisode/activity/GoalSpecThree/SecureGoalModelPattern2SpecThreeExec
 
-open filesystem/doctorappointment/patientepisode/activity/SecureActivityModelPattern1SpecThree
+open filesystem/doctorappointment/patientepisode/activity/GoalSpecThree/SecureGoalModelPattern2SpecThree
 
 sig SecureState extends AbstractSecureState{}
 
@@ -26,10 +26,11 @@ fact traces {
 
 run pattern1Complete for 5 but 4 SecureState, 5 Int
 
+
 assert CorrectSecureExecution{
 	all s, s': SecureState| 
-		ACActInvP1 [s] and InvariantsP1 [s]
-			=> ACActInvP1 [s'] and InvariantsP1 [s']
+		ACGoalP2Inv [s] and InvariantsP1 [s]
+			=> ACGoalP2Inv [s'] and InvariantsP1 [s]
 }
 //Checks
-//check CorrectSecureExecution for 5 but 4  SecureState, 5 Int
+check CorrectSecureExecution for 5 but 4  SecureState, 5 Int

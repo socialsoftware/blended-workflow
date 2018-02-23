@@ -28,7 +28,7 @@ fact traces {
 }
 
 //É preciso comentar o add to log
-run complete for 4 but 8 SecureState, 5 Int
+//run complete for 4 but 8 SecureState, 5 Int
 
 /**
 * Specific Assertions 
@@ -69,4 +69,4 @@ assert CorrectSecureExecution{
 			=> secureDMInv [s'] and Invariants [s']
 }
 //Checks
-//check CorrectSecureExecution for 4 but 5 SecureState, 5 Int
+check CorrectSecureExecution for 4 but 5 SecureState, 5 Int

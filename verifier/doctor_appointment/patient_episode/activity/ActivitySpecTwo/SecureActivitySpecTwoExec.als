@@ -23,7 +23,7 @@ fact traces {
 }
 
 
-//run complete for 4 but 4 SecureState, 5 Int
+run complete for 4 but 4 SecureState, 5 Int
 
 assert CorrectRegisterPatient{
 	all s, s': SecureState, p: Patient, e: Episode, u: User |

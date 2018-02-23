@@ -31,7 +31,7 @@ fact relations {
 	episode_doctor.maxMul = 10
 	episode_doctor.inverse = doctor_episode
 }
-
+/*
 fact acrules{
 	//users
 	AccessControlRules.users ={Alice  + Bob}
@@ -54,7 +54,7 @@ fact acrules{
 			}	
 		}
 }
-
+*/
 pred pattern1Complete {
  	one s: AbstractState | 
 		// cannot be the initial state to find one meaningful state

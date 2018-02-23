@@ -22,8 +22,8 @@ fact traces {
 		secureBookAppointment[s, s', e, u] 
 }
 
- //execution that leads to a complete state
- run complete for 4 but 4 SecureState, 5 Int
+//execution that leads to a complete state
+//run complete for 4 but 4 SecureState, 5 Int
 
 
 
@@ -33,5 +33,5 @@ assert CorrectExecution{
 				=> ACGoalInv [s'] and Invariants[s']
 }
 //Check
-check CorrectRegisterPatient for 4 but 2 SecureState, 5 Int
+check CorrectExecution for 4 but 3 SecureState, 5 Int
 
