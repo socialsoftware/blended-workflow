@@ -28,6 +28,17 @@ public class ResourceRuleDTO {
 					throw new IllegalArgumentException();
 			}
 		}
+		
+		public static ResourceRuleType fromAsgmtString(String code) throws IllegalArgumentException {
+			switch (code) {
+			case "RESPONSIBLE FOR":
+				return ResourceRuleType.HAS_RESPONSIBLE;
+			case "INFORMED ABOUT":
+				return ResourceRuleType.INFORMS;
+			default:
+				throw new IllegalArgumentException();
+		}
+		}
 	}
 	
 	private String specId;

@@ -7,6 +7,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonDa
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonID;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonInDuty;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.RALExpression;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO.ResourceRuleType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RALExpressionDTO {
@@ -14,14 +15,16 @@ public class RALExpressionDTO {
 		RALExpressionDTO ralExpressionDTO = null;
 		if (expression instanceof IsPersonID) {
 			IsPersonID isPersonExpr = (IsPersonID) expression;
-			ralExpressionDTO = new RALExprIsPerson(isPersonExpr.getPerson());
+			ralExpressionDTO = new RALExprIsPersonDTO(isPersonExpr.getPerson());
 		} else if (expression instanceof IsPersonDataObject) {
 			IsPersonDataObject isDataObjExpr = (IsPersonDataObject) expression;
-			System.out.println("IsPersonDataObject " + isDataObjExpr.getDataField());
+			ralExpressionDTO = new RALExprIsPersonDataObjectDTO(isDataObjExpr.getDataField());
 		} else if (expression instanceof IsPersonInDuty) {
 			IsPersonInDuty isPersonInDutyExpr = (IsPersonInDuty) expression;
+			ralExpressionDTO = new RALExprIsPersonInTaskDutyDTO(ResourceRuleType.fromAsgmtString(isPersonInDutyExpr.getTaskDuty()), isPersonInDutyExpr.getDataField());
 			System.out.println("IsPersonInDuty " + isPersonInDutyExpr.getDataField());
 		} else if (expression instanceof AnyoneExpr) {
+			ralExpressionDTO = new RALExprAnyoneDTO();
 			System.out.println("Anyone");
 		}
 		return ralExpressionDTO;
