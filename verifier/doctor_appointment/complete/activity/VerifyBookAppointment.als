@@ -8,4 +8,4 @@ assert BookAppointmentPreservesInv {
 	all s, s': State | all p: Patient | all e: Episode |
 		Invariants [s] and bookAppointment[s, s', p, e] => Invariants [s']
 }
-check BookAppointmentPreservesInv for 4 but 7 State, 5 Int
+check BookAppointmentPreservesInv for 6 but 7 State, 5 Int
