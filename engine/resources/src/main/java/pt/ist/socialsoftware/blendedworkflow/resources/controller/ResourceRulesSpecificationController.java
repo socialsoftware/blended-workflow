@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
 
@@ -33,7 +32,7 @@ public class ResourceRulesSpecificationController {
 
 		DesignInterface designer = DesignInterface.getInstance();
 
-		designer.resourceRule(resourceRuleDTO);
+		designer.addResourceRule(resourceRuleDTO);
 
 		return new ResponseEntity<>(resourceRuleDTO, HttpStatus.CREATED);
 	}

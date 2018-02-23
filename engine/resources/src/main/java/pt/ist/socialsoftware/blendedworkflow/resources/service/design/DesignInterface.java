@@ -1,11 +1,15 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 
+import com.sun.org.apache.regexp.internal.RE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
 
 public class DesignInterface {
@@ -24,6 +28,10 @@ public class DesignInterface {
 
 	private DesignInterface() {
 		workflowDesigner = pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance();
+	}
+
+	public ResourceModel getResourceModelFromSpecId(String specId) {
+		return workflowDesigner.getSpecBySpecId(specId).getResourceModel();
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
@@ -103,7 +111,43 @@ public class DesignInterface {
     }
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
-	public void resourceRule(ResourceRuleDTO resourceRuleDTO) {
+	public void addResourceRule(ResourceRuleDTO resourceRuleDTO) {
+		switch (resourceRuleDTO.getType()) {
+			case HAS_RESPONSIBLE:
+				addResponsibleForRule(resourceRuleDTO.getSpecId(), resourceRuleDTO.getDataField(), resourceRuleDTO.getExpression());
+				break;
+			case INFORMS:
+				addInformsForRule(resourceRuleDTO.getSpecId(), resourceRuleDTO.getDataField(), resourceRuleDTO.getExpression());
+				break;
+			default:
+		}
+	}
 
+	private void addInformsForRule(String specId, String path, RALExpressionDTO expression) {
+		RALExpression ralExpression = createRALExpression(specId, expression);
+		Product product = workflowDesigner.getProduct(specId, path);
+		product.setInforms(ralExpression);
+	}
+
+	private void addResponsibleForRule(String specId, String path, RALExpressionDTO expression) {
+		RALExpression ralExpression = createRALExpression(specId, expression);
+		Product product = workflowDesigner.getProduct(specId, path);
+		product.setResponsibleFor(ralExpression);
+	}
+
+	private RALExpression createRALExpression(String specId, RALExpressionDTO ralExpressionDTO) {
+		if (ralExpressionDTO instanceof RALExprAnyoneDTO) {
+			log.debug("RALExpression Type: ANYONE");
+			return new RALExprAnyone(getResourceModelFromSpecId(specId));
+		} else if (ralExpressionDTO instanceof RALExprIsPersonDTO) {
+			log.debug("RALExpression Type: IS PERSON");
+		} else if (ralExpressionDTO instanceof RALExprIsPersonDataObjectDTO) {
+			log.debug("RALExpression Type: IS PERSON IN DATA FIELD");
+		} else if (ralExpressionDTO instanceof RALExprIsPersonInTaskDutyDTO) {
+			log.debug("RALExpression Type: IS PERSON IN TASK DUTY");
+		} else {
+			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
+		}
+		return null;
 	}
 }

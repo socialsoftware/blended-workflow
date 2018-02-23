@@ -97,22 +97,19 @@ RAL Expressions
 
 class RALExpression;
 
-relation EntityHasResponsibleFor {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Entity playsRole entityResponsibleFor { multiplicity 1..1;}
+relation ResourceModelHasRALExpressions {
+    ResourceModel playsRole resourceModel { multiplicity 1..1; }
+    RALExpression playsRole ralExpression { multiplicity 0..*; }
+}
+
+relation ProductHasResponsibleFor {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole productResponsibleFor { multiplicity 0..1;}
     RALExpression playsRole responsibleFor { multiplicity 0..1; }
 }
 
-relation EntityHasInforms {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Entity playsRole entityInforms { multiplicity 1..1;}
+relation ProductHasInforms {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole productInforms { multiplicity 0..1;}
     RALExpression playsRole informs { multiplicity 0..1; }
 }
 
-relation AttributeHasResponsibleFor {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute playsRole attributeResponsibleFor { multiplicity 1..1;}
-    RALExpression playsRole responsibleFor { multiplicity 0..1; }
-}
-
-relation AttributeHasInforms {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute playsRole attributeInforms { multiplicity 1..1;}
-    RALExpression playsRole informs { multiplicity 0..1; }
-}
+class RALExprAnyone extends RALExpression;
