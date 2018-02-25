@@ -136,18 +136,36 @@ public class DesignInterface {
 	}
 
 	private RALExpression createRALExpression(String specId, RALExpressionDTO ralExpressionDTO) {
+		ResourceModel resourceModel = getResourceModelFromSpecId(specId);
 		if (ralExpressionDTO instanceof RALExprAnyoneDTO) {
+
 			log.debug("RALExpression Type: ANYONE");
-			return new RALExprAnyone(getResourceModelFromSpecId(specId));
+			return new RALExprAnyone(resourceModel);
+
 		} else if (ralExpressionDTO instanceof RALExprIsPersonDTO) {
 			log.debug("RALExpression Type: IS PERSON");
+
+			RALExprIsPersonDTO ralExprIsPersonDTO = (RALExprIsPersonDTO) ralExpressionDTO;
+
+			return new RALExprIsPerson(
+				resourceModel,
+				resourceModel.getPerson(ralExprIsPersonDTO.getPerson())
+			);
+
 		} else if (ralExpressionDTO instanceof RALExprIsPersonDataObjectDTO) {
+
 			log.debug("RALExpression Type: IS PERSON IN DATA FIELD");
+
 		} else if (ralExpressionDTO instanceof RALExprIsPersonInTaskDutyDTO) {
+
 			log.debug("RALExpression Type: IS PERSON IN TASK DUTY");
+
 		} else {
+
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
+
 		}
+
 		return null;
 	}
 }

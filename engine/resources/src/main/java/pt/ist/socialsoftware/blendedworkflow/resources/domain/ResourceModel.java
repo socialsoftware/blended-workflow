@@ -83,7 +83,7 @@ public class ResourceModel extends ResourceModel_Base {
 		return new Person(this, name, description, positions, capabilities);
 	}
 
-	private Unit getUnit(String unitName) throws RMException {
+	public Unit getUnit(String unitName) throws RMException {
 		Optional<Unit> unit = getUnitSet().stream().filter(u -> u.getName().equals(unitName))
 				.findFirst();
 
@@ -94,7 +94,18 @@ public class ResourceModel extends ResourceModel_Base {
 		return unit.get();
 	}
 
-	private Position getPosition(String positionName) throws RMException {
+	public Person getPerson(String personName) throws RMException {
+		Optional<Person> person = getPersonSet().stream().filter(p -> p.getName().equals(personName))
+				.findFirst();
+
+		if (!person.isPresent()) {
+			throw new RMException(RMErrorType.INVALID_PERSON_NAME, "Person with name '" + personName + "' does not exist");
+		}
+
+		return person.get();
+	}
+
+	public Position getPosition(String positionName) throws RMException {
 		Optional<Position> position = getPositionSet().stream().filter(p -> p.getName().equals(positionName))
 				.findFirst();
 
@@ -109,7 +120,7 @@ public class ResourceModel extends ResourceModel_Base {
 		return delegatesNames.stream().map(d -> getPosition(d)).collect(Collectors.toList());
 	}
 
-	private Capability getCapability(String capabilityName) throws RMException {
+	public Capability getCapability(String capabilityName) throws RMException {
 		Optional<Capability> capability = getCapabilitySet().stream().filter(c -> c.getName().equals(capabilityName))
 				.findFirst();
 
@@ -124,7 +135,7 @@ public class ResourceModel extends ResourceModel_Base {
 		return capabilitiesNames.stream().map(c -> getCapability(c)).collect(Collectors.toList());
 	}
 
-	private Role getRole(String roleName) {
+	public Role getRole(String roleName) {
 		Optional<Role> role = getRoleSet().stream().filter(r -> r.getName().equals(roleName))
 				.findFirst();
 

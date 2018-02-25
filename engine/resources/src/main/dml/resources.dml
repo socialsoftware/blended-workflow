@@ -97,6 +97,10 @@ RAL Expressions
 
 class RALExpression;
 
+class RALExprAnyone extends RALExpression;
+
+class RALExprIsPerson extends RALExpression;
+
 relation ResourceModelHasRALExpressions {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     RALExpression playsRole ralExpression { multiplicity 0..*; }
@@ -112,4 +116,7 @@ relation ProductHasInforms {
     RALExpression playsRole informs { multiplicity 0..1; }
 }
 
-class RALExprAnyone extends RALExpression;
+relation RALExprIsPersonHasPerson {
+    Person playsRole person { multiplicity 1..1; }
+    RALExprIsPerson playsRole ralExprIsPerson { multiplicity 0..*; }
+}
