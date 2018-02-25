@@ -52,8 +52,8 @@ public class WriteBlendedWorkflowService {
 
 		try {
 			this.repository.getSpecBySpecId(specId);
-			this.repository.cleanBlendedWorkflowModel(specId);
 			this.rmRepository.cleanResourceModel(specId);
+			this.repository.cleanBlendedWorkflowModel(specId);
 		} catch (RepositoryException re) {
 			// logger.debug("getSpec: {}", re.getMessage());
 			try {

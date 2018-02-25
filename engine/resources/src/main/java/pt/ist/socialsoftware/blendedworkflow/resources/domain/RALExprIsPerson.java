@@ -10,6 +10,12 @@ public class RALExprIsPerson extends RALExprIsPerson_Base {
     }
 
     @Override
+    public void delete() {
+        setPerson(null);
+        super.delete();
+    }
+
+    @Override
     public List<Person> getEligibleResources() {
         return null;
     }

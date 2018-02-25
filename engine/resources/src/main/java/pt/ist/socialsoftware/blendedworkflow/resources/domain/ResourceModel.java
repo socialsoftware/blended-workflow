@@ -18,6 +18,7 @@ public class ResourceModel extends ResourceModel_Base {
 	}
 
     public void clean() {
+		getRalExpressionSet().stream().forEach(e -> e.delete());
 		getPersonSet().stream().forEach(p -> p.delete());
 		getPositionSet().stream().forEach(p -> p.delete());
 		getCapabilitySet().stream().forEach(c -> c.delete());
