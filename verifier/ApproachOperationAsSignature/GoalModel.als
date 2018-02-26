@@ -2,55 +2,62 @@ module filesystem/GoalModel
 
 open filesystem/StateModel
 
-pred execAttributeGoal(s, s': AbstractState, attDefs: set Obj -> FName) {
-	// entities where attributes are going to be defined are defined
-	all obj: attDefs.FName | obj in s.objects
+abstract sig Goal {}
 
-	// attributes are not defined
-	all obj: attDefs.FName, role: obj.attDefs | no s.fields[obj, role]
-
-	// attributes are defined
-	s'.fields = s.fields + attDefs  -> DefVal 
-
-	// no further changes
-	s'.objects = s.objects
-	noFieldChangeExcept[s, s', attDefs]
-
-	// dependencies hold
-	all o: attDefs.FName, dep: Dependence | o in dep.sourceObj implies dependence[s', o, dep]
+abstract sig GoalProduce extends Goal {
+	defEnts: set Obj, 
+	defAtts: set Obj -> FName
 }
 
-pred execEntityGoal(s, s': AbstractState, entDefs: set Obj) {
-	// entities are not defined
-	(entDefs != none) implies {
-		entDefs !in s.objects
+abstract sig GoalAssociation extends Goal {
+	defMuls: set Obj -> FName -> Obj
+}
+
+pred execProduce(s, s': AbstractState, goal: GoalProduce) {
+	(goal.defEnts  != none) implies {
+		// entities are not defined
+		goal.defEnts !in s.objects
 	}
 
+	// entities where attributes are going to be defined are defined
+	all obj: goal.defAtts.FName | obj in s.objects + goal.defEnts
+
+	// attributes are not defined
+	all obj: goal.defAtts.FName, att: obj.(goal.defAtts) | DefVal !in s.fields[obj, att]
+
 	// entities are defined
-	s'.objects = s.objects + entDefs
+	s'.objects = s.objects + goal.defEnts
+			
+	// attributes are defined
+	s'.fields = s.fields + goal.defAtts  -> DefVal 
 
 	// no further changes
-	s'.fields = s.fields
+	noFieldChangeExcept[s, s', goal.defAtts]
 
 	// dependencies hold
-	all o: entDefs, dep: Dependence | o in dep.sourceObj implies dependence[s', o, dep]
+	all o: goal.defEnts, dep: Dependence | o in dep.sourceObj implies dependence[s', o, dep]	
+	all o: (goal.defAtts).FName, dep: Dependence | o in dep.sourceObj and dep.sourceAtt in o.(goal.defAtts) implies dependence[s', o, dep]
 }
 
-pred execMulGoal(s, s': AbstractState, muls: set Obj -> FName -> Obj) {
+
+pred execAssociation(s, s': AbstractState, goal: Goal) {
 	// entities in the link to be defined are defined
-	all entSource: (muls.Obj).FName | entSource in s.objects
-	all entTarget: FName.(Obj.muls) | entTarget in s.objects
+	all entSource: (goal.defMuls.Obj).FName | entSource in s.objects
+	all entTarget: FName.(Obj.(goal.defMuls)) | entTarget in s.objects
+
+	// the association does not exist
+	all objSource: (goal.defMuls.Obj).FName, objTarget: FName.(objSource.(goal.defMuls)), roleTarget: objSource.(goal.defMuls).objTarget | objTarget !in s.fields[objSource, roleTarget]
 
 	// objects can be linked
-	all objSource: (muls.Obj).FName, objTarget: FName.(objSource.muls), roleTarget: objSource.muls.objTarget |
+	all objSource: (goal.defMuls.Obj).FName, objTarget: FName.(objSource.(goal.defMuls)), roleTarget: objSource.(goal.defMuls).objTarget |
 		canLink[s, objSource, roleTarget.inverse, objTarget] 
 		//and canLink[s, objTarget, roleTarget, objSource] it is redundant because canLink verifies in both directions
 
 	// attributes are defined
-	s'.fields = s.fields + muls
+	s'.fields = s.fields + goal.defMuls
 
 	// no further changes
 	s'.objects = s.objects
-	noFieldChangeExcept[s, s', muls.Obj]
+	noFieldChangeExcept[s, s', goal.defMuls.Obj]
 }
 
