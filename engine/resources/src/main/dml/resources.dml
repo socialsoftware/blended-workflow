@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExpression.TaskDutyType as TaskDutyType;
+
 class ResourceModel;
 
 relation SpecificationHasResourceModel {
@@ -101,6 +103,10 @@ class RALExprAnyone extends RALExpression;
 
 class RALExprIsPerson extends RALExpression;
 
+class RALExprIsPersonInTaskDuty extends RALExpression {
+    TaskDutyType taskDuty;
+}
+
 relation ResourceModelHasRALExpressions {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     RALExpression playsRole ralExpression { multiplicity 0..*; }
@@ -119,6 +125,11 @@ relation ProductHasInforms {
 relation RALExprIsPersonHasPerson {
     Person playsRole person { multiplicity 1..1; }
     RALExprIsPerson playsRole ralExprIsPerson { multiplicity 0..*; }
+}
+
+relation RALExprIsPersonInTaskDutyHasProduct {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole product { multiplicity 1..1; }
+    RALExprIsPersonInTaskDuty playsRole ralExprIsPersonInTaskDuty { multiplicity 0..*; }
 }
 
 relation EntityIsPerson {

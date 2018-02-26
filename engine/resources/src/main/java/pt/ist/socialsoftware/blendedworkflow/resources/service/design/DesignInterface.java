@@ -160,6 +160,13 @@ public class DesignInterface {
 
 			log.debug("RALExpression Type: IS PERSON IN TASK DUTY");
 
+			RALExprIsPersonInTaskDutyDTO ralExprIsPersonInTaskDutyDTO = (RALExprIsPersonInTaskDutyDTO) ralExpressionDTO;
+
+			RALExpression.TaskDutyType taskDuty = RALExpression.TaskDutyType.fromResourceRuleString(ralExprIsPersonInTaskDutyDTO.getTaskDuty().toString());
+
+			Product product = workflowDesigner.getProduct(specId, ralExprIsPersonInTaskDutyDTO.getDataField());
+
+			return new RALExprIsPersonInTaskDuty(resourceModel, taskDuty, product);
 		} else {
 
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
