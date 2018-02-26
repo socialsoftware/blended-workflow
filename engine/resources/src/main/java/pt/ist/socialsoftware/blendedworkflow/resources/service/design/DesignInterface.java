@@ -3,7 +3,9 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 import com.sun.org.apache.regexp.internal.RE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Attr;
 import pt.ist.fenixframework.Atomic;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
@@ -156,6 +158,19 @@ public class DesignInterface {
 
 			log.debug("RALExpression Type: IS PERSON IN DATA FIELD");
 
+			RALExprIsPersonDataObjectDTO ralExprIsPersonDataObjectDTO = (RALExprIsPersonDataObjectDTO) ralExpressionDTO;
+
+			Product product = workflowDesigner.getProduct(specId, ralExprIsPersonDataObjectDTO.getDataField());
+
+			if (!(product instanceof Attribute)) {
+				throw new RMException(RMErrorType.INVALID_DATA_FIELD, "The data field in the IS PERSON IN DATA FIELD expression is not an attribute");
+			}
+
+			return new RALExprIsPersonDataObject(
+				resourceModel,
+				(Attribute) product
+			);
+
 		} else if (ralExpressionDTO instanceof RALExprIsPersonInTaskDutyDTO) {
 
 			log.debug("RALExpression Type: IS PERSON IN TASK DUTY");
@@ -172,7 +187,5 @@ public class DesignInterface {
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 
 		}
-
-		return null;
 	}
 }

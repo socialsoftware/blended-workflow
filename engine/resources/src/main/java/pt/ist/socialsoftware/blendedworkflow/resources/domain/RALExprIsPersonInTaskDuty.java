@@ -15,8 +15,7 @@ public class RALExprIsPersonInTaskDuty extends RALExprIsPersonInTaskDuty_Base {
     @Override
     public void delete() {
         setProduct(null);
-        setResourceModel(null);
-        deleteDomainObject();
+        super.delete();
     }
 
     @Override
