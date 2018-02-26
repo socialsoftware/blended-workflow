@@ -32,13 +32,13 @@ fact traces {
 }
 
 //É preciso comentar o add to log
-//run pattern1Complete for 4 but 11 SecureState, 5 Int
+//run pattern2Complete for 4 but 11 SecureState, 5 Int
 
 
 assert CorrectSecureExecution{
 	all s, s': SecureState| 
-		secureDMInvP2 [s]  and InvariantsP1 [s]
-			=> secureDMInvP2[s'] and InvariantsP1 [s']
+		secureP2DMInv [s]  and pattern2Invariants [s]
+			=> secureP2DMInv[s'] and pattern2Invariants [s']
 }
 //Checks
 check CorrectSecureExecution for 4 but 5 SecureState, 5 Int

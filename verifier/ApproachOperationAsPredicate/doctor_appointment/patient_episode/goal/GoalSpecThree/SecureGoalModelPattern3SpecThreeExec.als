@@ -1,0 +1,36 @@
+module filesystem/doctorappointment/patientepisode/activity/GoalSpecThree/SecureGoalModelPattern3SpecThreeExec
+
+open filesystem/doctorappointment/patientepisode/activity/GoalSpecThree/SecureGoalModelPattern3SpecThree
+
+sig SecureState extends AbstractSecureState{}
+
+pred init (s: SecureState) {
+	//objects
+	no s.objects
+	//fields
+	no s.fields
+	//log
+	no s.log
+}
+
+
+
+fact traces {
+	first.init
+	all s: SecureState - last | let s' = s.next |
+	some p: Patient, e: Episode, u: User| 
+		secureRegisterPatient[s, s', p, u] or
+		secureCreateEpisode[s, s', p, e, u] or
+		secureBookAppointment[s, s', e, u] 
+}
+
+run complete for 5 but 4 SecureState, 5 Int
+
+
+assert CorrectSecureExecution{
+	all s, s': SecureState| 
+		ACP3GoalInv [s] and Invariants [s]
+			=> ACP3GoalInv [s'] and Invariants [s]
+}
+//Checks
+check CorrectSecureExecution for 5 but 4  SecureState, 5 Int

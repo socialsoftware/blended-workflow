@@ -1,70 +1,65 @@
 module filesystem/Pattern1/SecurePattern1GoalConditions
 
-open filesystem/SecureGoalConditions
 open filesystem/Pattern1/SecurePattern1Spec
-
-/**
-*Activation Condition
-**/
-pred  secureActConditionP1(s: AbstractSecureState, entDefs: set Obj, attDefs: set Obj -> FName, usr: User) {
-	hasActConditionReadPermissionsP1[s, entDefs, attDefs, usr]
-	actCondition [s, entDefs, attDefs]
-}
-
-//user has read permission in all post conditions
-pred hasActConditionReadPermissionsP1(s: AbstractSecureState, entDefs: set Obj, attDefs: set Obj -> FName, usr: User){
-	(entDefs != none) implies{
-		all o: entDefs| hasReadObjPermissionP1[s, o, usr]
-	}
-	(attDefs != none -> none) implies{
-		all obj: attDefs.FName, att : obj.attDefs| hasReadAttPermissionP1[s, obj, att, usr]
-	}
-}
+open filesystem/SecureGoalConditions 
 
 
 /**
-*Success CONDITION
+*ACTIVATION CONDITION
 **/
-pred secureSucConditionP1(s, s': AbstractSecureState, entDefs: set Obj, attDefs: set Obj -> FName,  muls: set Obj -> FName -> Obj, usr: User) {
-	hasSucConditionDefPermissionsP1[s, s', entDefs, attDefs, muls, usr]
+pred  secureP1ActCondition(s: AbstractSecureState, entDefs: set Obj, attDefs: set Obj -> FName, usr: User) {
+	hasP1ActConditionReadPermissions[s, entDefs, attDefs, usr]
+	actCondition[s, entDefs, attDefs]
+}
+
+pred hasP1ActConditionReadPermissions(s: AbstractSecureState, entDefs: set Obj, attDefs: set Obj -> FName, usr: User){
+(entDefs != none) implies{
+		all o: entDefs| hasP1ReadObjPermission[s, o, usr]
+	}
+(attDefs != none -> none) implies{
+		all att: Obj.attDefs | hasP1ReadAttPermission[s, att, usr] 
+	}
+}
+
+/**
+*SUCCESS CONDITION
+**/
+
+pred secureP1SucCondition(s, s': AbstractSecureState, entDefs: set Obj, attDefs: set Obj -> FName,  muls: set Obj -> FName -> Obj, usr: User) {
+	hasP1SucConditionDefPermissions[s, entDefs, attDefs, muls, usr]
 	sucCondition[s, s', entDefs, attDefs , muls]
 }
 
-//user has definition permission in all success conditions
-pred hasSucConditionDefPermissionsP1(s, s': AbstractSecureState, entDefs: set Obj, attDefs: set Obj -> FName,  muls: set Obj -> FName -> Obj, usr: User){
-(entDefs != none) implies{
-		all o: entDefs| hasDefObjPermissionP1[s, o, usr]
+pred hasP1SucConditionDefPermissions(s: AbstractSecureState, entDefs: set Obj, attDefs: set Obj -> FName,  muls: set Obj -> FName -> Obj, usr: User){
+	(entDefs != none) implies{
+		all o: entDefs| hasP1DefObjPermission[s, o, usr]
 	}
 	(attDefs != none -> none) implies{
-		all obj: attDefs.FName, att : obj.attDefs| hasDefAttPermissionP1[s, obj, att, usr]
+		all obj: attDefs.FName, att : obj.attDefs| hasP1DefAttPermission[s, obj, att, usr]
 	}
 	(muls != none -> none -> none) implies{
 		all objSource: muls.Obj.FName| all attSource: objSource.muls.Obj| all objTarget: attSource.(objSource.muls) |
-			hasLinkObjPermissionP1[s, objSource, attSource, objTarget, usr] 
+			hasP1LinkObjPermission[s, objSource, attSource, objTarget, usr] 
 	}
 }
 
 /**
-*Goal
+*GOAL
 **/
-pred secureGoalP1(s, s': AbstractSecureState, pre_entDefs: set Obj, pre_attDefs: set Obj -> FName, 
-										post_entDefs: set Obj, post_attDefs: set Obj -> FName,  post_muls: set Obj -> FName -> Obj, usr: User){
-	usr in AccessControlRules.users
-	secureActConditionP1[s, pre_entDefs, pre_attDefs, usr]
-	secureSucConditionP1[s, s', post_entDefs, post_attDefs, post_muls, usr]
-	addGoalToLog[s, s', pre_entDefs, pre_attDefs, 
-									post_entDefs, post_attDefs, post_muls, usr]
+pred secureP1Goal(s, s': AbstractSecureState, act_entDefs: set Obj, act_attDefs: set Obj -> FName,
+							suc_entDefs: set Obj, suc_attDefs: set Obj -> FName,  suc_muls: set Obj -> FName -> Obj, usr: User){
+	secureP1ActCondition[s, act_entDefs, act_attDefs, usr]
+	secureP1SucCondition[s, s', suc_entDefs, suc_attDefs, suc_muls, usr]
+	addGoalToLog[s, s', act_entDefs, act_attDefs, 
+							suc_entDefs, suc_attDefs, suc_muls, usr]
 }
 
 
-pred ACGoalP1Inv(s: AbstractSecureState){
+
+pred ACP1GoalInv(s: AbstractSecureState){
 	all g: Int.(s.log) <: goalTransition | 
-		hasActConditionReadPermissionsP1[s, g.goal_actDefObj, g.goal_actDefAtt, g.goal_usr] and
-		hasSucConditionDefPermissionsP1[s, s.next, g.goal_sucDefObj, g.goal_sucDefAtt, g.goal_sucLinkObj, g.goal_usr]
+		hasP1ActConditionReadPermissions[s, g.goal_actDefObj, g.goal_actDefAtt, g.goal_usr] and
+		hasP1SucConditionDefPermissions[s, g.goal_sucDefObj, g.goal_sucDefAtt, g.goal_sucLinkObj, g.goal_usr]
 }
-
-
-
-
 
 run{}

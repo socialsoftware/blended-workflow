@@ -35,35 +35,10 @@ abstract sig AbstractSecureState extends AbstractState {
 	log: seq Transition
 }
 
-/**
-*Predicates that verifies all rights needed to define each resource
-**/
 
-//Permissions to define an object
-pred hasDefObjPermission(s: AbstractSecureState, o: Obj, usr: User){
-	some role: (Def.(AccessControlRules.permissions).o <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
+abstract sig DomainSubject extends Subject{
+	path: seq FName
 }
-
-//Permissions to define an attribute
-pred hasDefAttPermission(s: AbstractSecureState, o: Obj, att: FName, usr:User){
-	some role: (Def.(AccessControlRules.permissions).att <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
-}
-
-//Permissions to link an object
-pred hasLinkObjPermission(s: AbstractSecureState, objSource: Obj, attSource: FName, objTarget: Obj, usr:User){
-	some role: (Def.(AccessControlRules.permissions).attSource <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
-	some role: (Def.(AccessControlRules.permissions).(attSource.inverse) <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
-}
-
-pred hasReadObjPermission(s: AbstractSecureState, o: Obj, usr: User){
-	some role: (Read.(AccessControlRules.permissions).o <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
-}
-
-pred hasReadAttPermission(s: AbstractSecureState, att: FName, usr: User){
-	some role: (Read.(AccessControlRules.permissions).att <: RoleSubject)| role in usr.(AccessControlRules.u_roles)
-}
-
-pred hasReadLinkPermission{}
 
 run{}
 

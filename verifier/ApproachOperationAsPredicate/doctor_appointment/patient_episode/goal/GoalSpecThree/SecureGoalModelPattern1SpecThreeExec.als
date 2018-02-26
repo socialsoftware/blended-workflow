@@ -4,33 +4,34 @@ open filesystem/doctorappointment/patientepisode/activity/GoalSpecThree/SecureGo
 
 sig SecureState extends AbstractSecureState{}
 
-pred init (s: SecureState) {
+pred secureInit (s: SecureState) {
 	//objects
-	s.objects = {DoctorAlice}
+	no s.objects
 	//fields
 	no s.fields
 	//log
 	no s.log
 }
 
-
-
 fact traces {
-	first.init
+	first.secureInit
 	all s: SecureState - last | let s' = s.next |
-	some p: Patient, e: Episode, u: User, d: Doctor| 
+	some p: Patient, e: Episode, u: User | 
 		secureRegisterPatient[s, s', p, u] or
-		secureBookAppointmentAndAssignDoctor[s, s', p, e, d, u] or
-		secureWriteDescription[s, s', p, e, u] 
+		secureCreateAppointment[s, s', p, e, u] or
+		secureBookAppointment[s, s', e, u] 
 }
 
-//run pattern1Complete for 5 but 4 SecureState, 5 Int
+//execution that leads to a complete state
+run complete for 4 but 4 SecureState, 5 Int
 
 
-assert CorrectSecureExecution{
-	all s, s': SecureState| 
-		ACGoalP1Inv [s] and InvariantsP1 [s]
-			=> ACGoalP1Inv [s'] and InvariantsP1 [s]
+
+assert CorrectExecution{
+	all s, s': SecureState|
+			ACP1GoalInv[s] and Invariants[s]  
+				=> ACP1GoalInv [s'] and Invariants[s']
 }
-//Checks
-check CorrectSecureExecution for 5 but 4  SecureState, 5 Int
+//Check
+check CorrectExecution for 4 but 4 SecureState, 5 Int
+

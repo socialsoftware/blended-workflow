@@ -1,13 +1,13 @@
-module filesystem/doctorappointment/patientepisode/data/SecurePattern1DataExec
+module filesystem/doctorappointment/patientepisode/data/SecurePattern1DataModel
 
-open filesystem/doctorappointment/patient_episode/SecurePattern1DoctorAppointment
+open filesystem/doctorappointment/patientepisode/SecurePattern1DoctorAppointment
 open filesystem/Pattern1/SecurePattern1DataConditions
 
 sig SecureState extends AbstractSecureState{}
 
 pred secureInit (s: SecureState) {
 	//objects
-	s.objects = DoctorAlice
+	no s.objects
 	//fields
 	no s.fields
 	//log
@@ -17,28 +17,29 @@ pred secureInit (s: SecureState) {
 fact traces {
 	first.secureInit
 	all s: SecureState - last | let s' = s.next |
-	some p: Patient, e: Episode, d: Doctor, u: User|
-		SecurePattern1DefObj [s, s', p, u] or 
-		SecurePattern1DefAtt [s, s', p, patient_name, u]  or 
-		SecurePattern1DefAtt [s, s', p, patient_address, u] or 
-		SecurePattern1DefObj [s, s', e, u] or
-		SecurePattern1DefAtt [s, s', e, episode_reserve_date, u] or 
-		SecurePattern1LinkObj [s, s', p,  episode_patient, e, patient_episode, u] or
-		SecurePattern1LinkObj [s, s', e, patient_episode, p, episode_patient, u] or
-		SecurePattern1LinkObj [s, s', d,  episode_doctor, e, doctor_episode, u] or
-		SecurePattern1LinkObj [s, s', e, doctor_episode, d, episode_doctor, u] or
-		SecurePattern1DefAtt [s, s', e, episode_report, u]
-
+	some p: Patient, e: Episode, u: User|
+		secureP1DefObj [s, s', p, u] or 
+		secureP1DefAtt [s, s', p, patient_name, u]  or 
+		secureP1DefAtt [s, s', p, patient_address, u] or 
+		secureP1DefObj [s, s', e, u] or
+		secureP1DefAtt[s, s', e, episode_reserve_date, u] or 
+		secureP1LinkObj [s, s', p,  episode_patient, e, patient_episode, u] or
+		secureP1LinkObj [s, s', e, patient_episode, p, episode_patient, u]
 }
 
 //É preciso comentar o add to log
-//run pattern1Complete for 4 but 11 SecureState, 5 Int
+run complete for 4 but 8 SecureState, 5 Int
 
+/**
+* Specific Assertions 
+* This assertions only verify the permissions and do not verify the model consistensy
+**/
 
+//The max sequence lenght is 4, the log can only support a scope of a max 4 operations
 assert CorrectSecureExecution{
 	all s, s': SecureState| 
-		secureDMInvP1 [s]  and InvariantsP1 [s]
-			=> secureDMInvP1[s'] and InvariantsP1 [s']
+		secureP1DMInv [s] and Invariants [s]
+			=> secureP1DMInv [s'] and Invariants [s']
 }
 //Checks
 check CorrectSecureExecution for 4 but 5 SecureState, 5 Int
