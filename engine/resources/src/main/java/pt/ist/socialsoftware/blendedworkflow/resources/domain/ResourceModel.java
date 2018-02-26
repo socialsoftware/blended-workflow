@@ -3,6 +3,9 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 import javafx.geometry.Pos;
 import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.service.BWError;
+import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
@@ -18,6 +21,7 @@ public class ResourceModel extends ResourceModel_Base {
 	}
 
     public void clean() {
+		getEntityIsPersonSet().stream().forEach(e -> removeEntityIsPerson(e));
 		getRalExpressionSet().stream().forEach(e -> e.delete());
 		getPersonSet().stream().forEach(p -> p.delete());
 		getPositionSet().stream().forEach(p -> p.delete());
@@ -30,6 +34,14 @@ public class ResourceModel extends ResourceModel_Base {
 		clean();
 		setSpec(null);
 		deleteDomainObject();
+	}
+
+	public Entity addEntityIsPerson(String entityName) {
+		Entity entity = getSpec().getDataModel().getEntity(entityName)
+				.orElseThrow(() -> new RMException(RMErrorType.INVALID_ENTITY_NAME, "Entity " + entityName + " does not exist."));
+
+		addEntityIsPerson(entity);
+		return entity;
 	}
 
 	public Capability addCapability(String name, String description) {

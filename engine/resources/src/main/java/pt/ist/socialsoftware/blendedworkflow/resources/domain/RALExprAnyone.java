@@ -15,6 +15,6 @@ public class RALExprAnyone extends RALExprAnyone_Base {
 
     @Override
     public List<Person> getEligibleResources() {
-        return getResourceModel().getPersonSet().stream().collect(Collectors.toList());
+        return getResourceModel().getPersonSet().stream().sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).collect(Collectors.toList());
     }
 }

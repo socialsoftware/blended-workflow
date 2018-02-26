@@ -104,10 +104,10 @@ public class DesignInterface {
 		spec.getResourceModel().clean();
 	}
 
-	//FIXME: Fix return
 	@Atomic(mode = Atomic.TxMode.WRITE)
-    public void relationEntityIsPerson(ResourceRelationDTO resourceRelationDTO) {
-		Entity entity = workflowDesigner.getEntityByName(resourceRelationDTO.getSpecId(), resourceRelationDTO.getEntityName());
+    public Entity relationEntityIsPerson(ResourceRelationDTO resourceRelationDTO) {
+		Specification spec = workflowDesigner.getSpecBySpecId(resourceRelationDTO.getSpecId());
+		return spec.getResourceModel().addEntityIsPerson(resourceRelationDTO.getEntityName());
     }
 
 	@Atomic(mode = Atomic.TxMode.WRITE)

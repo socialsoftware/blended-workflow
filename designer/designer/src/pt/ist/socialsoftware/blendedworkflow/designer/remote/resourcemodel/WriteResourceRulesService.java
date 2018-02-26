@@ -28,7 +28,7 @@ private Logger logger = LoggerFactory.getLogger(WriteResourceRulesService.class)
 	public void writeResourceRules(ResourceRules rules, String specId, BWNotification notification) {
 		System.out.println("[WriteRR] Begin writing resource rules");
 		
-		// writeRelations(rules.getRelations(), specId, notification);
+		writeRelations(rules.getRelations(), specId, notification);
 		
 		writeRules(rules.getRules(), specId, notification);
 		

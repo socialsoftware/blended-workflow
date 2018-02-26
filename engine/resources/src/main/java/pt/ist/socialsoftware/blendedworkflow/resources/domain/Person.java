@@ -29,6 +29,7 @@ public class Person extends Person_Base {
     public void delete() {
         getPositionSet().stream().forEach(p -> removePosition(p));
         getCapabilitySet().stream().forEach(c -> removeCapability(c));
+        // FIXME: Clean EntityInstance -> person relations
         setResourceModel(null);
         deleteDomainObject();
     }
