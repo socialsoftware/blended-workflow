@@ -3,70 +3,60 @@ module filesystem/DoctorAppointment/GoalModel
 open filesystem/GoalModel
 open filesystem/DoctorAppointment/StateModel
 
-pred defPatient(s, s': AbstractState, p: Patient) {
-	execEntityGoal[s, s', p]
-}
+sig DefPatient extends GoalProduce {}
+	{
+		one p: Patient | defEnts = p
+		defAtts = defEnts -> { patient_name + patient_address }
+	}
 
-pred defPatientName(s, s': AbstractState, p: Patient) {
-	execAttributeGoal[s, s', p -> patient_name]
-}
+sig DefEpisode extends GoalProduce {}
+	{
+		one e: Episode | defEnts = e
+		 defAtts = defEnts -> episode_reserve_date
+	}
 
-pred defPatientAddress(s, s':AbstractState, p: Patient) {
-	execAttributeGoal[s, s', p -> patient_address]
-}
+sig DefEpisodeCheckin extends GoalProduce {}
+	{
+		defEnts = none
+		one e: Episode | defAtts = e -> episode_checkin
+	}
 
-pred defEpisode(s, s': AbstractState, e: Episode) {
-	execEntityGoal[s, s', e]
-}
+sig DefEpisodeCheckout extends GoalProduce {}
+	{
+		defEnts = none
+		one e: Episode | defAtts = e -> episode_checkout 
+	}
 
-pred defEpisodeReserveDate(s, s': AbstractState, e: Episode) {
-	execAttributeGoal[s, s', e -> episode_reserve_date]
-}
+sig LinkPatientEpisode extends GoalAssociation {}
+	{
+		one p: Patient, e: Episode | defMuls = p -> patient_episode -> e + e -> episode_patient -> p
+	}
 
-pred defEpisodeCheckin(s, s': AbstractState, e: Episode) {
-	execAttributeGoal[s, s', e -> episode_checkin]
-}
+sig DefData extends GoalProduce {}
+	{
+		one d: Data | defEnts = d
+			one d: Data | defAtts = d -> { data_height + data_weight + data_blood_pressure + data_physical_condition }
+	}
 
-pred defEpisodeCheckout(s, s': AbstractState, e: Episode) {
-	execAttributeGoal[s, s', e -> episode_checkout]
-}
+sig LinkEpisodeData extends GoalAssociation {}
+	{
+		one d: Data, e: Episode | defMuls = d -> data_episode -> e + e -> episode_data -> d
+	}
 
-pred linkPatientEpisode(s, s': AbstractState, p: Patient, e: Episode) {
-	execMulGoal[s, s', (p -> patient_episode -> e) + (e -> episode_patient -> p)]
-}
+sig DefReport extends GoalProduce {}
+	{
+		one r: Report | defEnts = r
+		defAtts = none -> none
+	}
 
-pred defData(s, s': AbstractState, d: Data) {
-	execEntityGoal[s, s', d]
-}
+sig DefReportDescription extends GoalProduce {}
+	{
+		defEnts = none
+		one r: Report | defAtts = r -> report_description
+	}
 
-pred defDataHeight(s, s': AbstractState, d: Data) {
-	execAttributeGoal[s, s', d -> data_height]
-}
+sig LinkEpisodeReport extends GoalAssociation {}
+	{
+		one r: Report, e: Episode | defMuls = r -> report_episode -> e + e -> episode_report -> r
+	}
 
-pred defDataWeight(s, s': AbstractState, d: Data) {
-	execAttributeGoal[s, s', d -> data_weight]
-}
-
-pred defDataBloodPressure(s, s': AbstractState, d: Data) {
-	execAttributeGoal[s, s', d -> data_blood_pressure]
-}
-
-pred defDataPhysicalCondition(s, s': AbstractState, d: Data) {
-	execAttributeGoal[s, s', d -> data_physical_condition]
-}
-
-pred linkEpisodeData(s, s': AbstractState, e: Episode, d: Data) {
-	execMulGoal[s, s', d -> data_episode -> e + e -> episode_data -> d]
-}
-
-pred defReport(s, s': AbstractState, r: Report) {
-	execEntityGoal[s, s', r]
-}
-
-pred defReportDescription(s, s': AbstractState, r: Report) {
-	execAttributeGoal[s, s', r -> report_description]
-}
-
-pred linkEpisodeReport(s, s': AbstractState, e: Episode, r: Report) {
-	execMulGoal[s, s', (r -> report_episode -> e) + (e -> episode_report -> r)]
-}

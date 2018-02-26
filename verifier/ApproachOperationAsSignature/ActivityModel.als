@@ -30,7 +30,7 @@ pred exec(s, s': AbstractState, act: Activity) {
 
 	// dependencies shoud hold in the resulting state
 	all o: act.defEnts, dep: Dependence | o in dep.sourceObj implies dependence[s', o, dep]
-	all o: (act.defAtts).FName, dep: Dependence | o in dep.sourceObj implies dependence[s', o, dep]
+	all o: (act.defAtts).FName, dep: Dependence | o in dep.sourceObj and dep.sourceAtt in o.(act.defAtts)  implies dependence[s', o, dep]
 
 	// change state
 	s'.objects = s.objects + act.defEnts

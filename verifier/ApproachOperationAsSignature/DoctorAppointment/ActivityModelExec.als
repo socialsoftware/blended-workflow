@@ -16,10 +16,10 @@ fact traces {
 		exec[s, s', a]
 }
 
-run complete for 6 but 7 State, 5 Int
+run complete for 4 but 7 State, 6 Activity, 5 Int
 
 assert PreservesInvariant {
 	all s, s': State, a: Activity |
 		Invariants[s] and exec[s, s', a] => Invariants[s']
 }
-check PreservesInvariant for 6 but 7 State, 5 Int
+check PreservesInvariant for 4 but 7 State, 6 Activity, 5 Int
