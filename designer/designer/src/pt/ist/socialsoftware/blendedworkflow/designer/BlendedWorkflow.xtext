@@ -220,4 +220,20 @@ HasUnitExpr:
 	'HAS' 'UNIT' unit = [Unit]
 ;
 
+HasRoleExpr:
+	'HAS' 'ROLE' role = [Role] ('IN' 'UNIT' unit = [Unit])?
+;
+
+/*
+HierarchyExpr:
+	ReportsToPersonExpr
+;
+
+ReportsToPersonExpr:
+	(directly ?= 'DIRECTLY')? 'REPORTS' 'TO' personExpr = PersonExpr
+;
+
  
+ReportsToPositionExpr:
+	(directly ?= 'DIRECTLY')? 'REPORTS' 'TO' POSITION EXPR  
+;*/
