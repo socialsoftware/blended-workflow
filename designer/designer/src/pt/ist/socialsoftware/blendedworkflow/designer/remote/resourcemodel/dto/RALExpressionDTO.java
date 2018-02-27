@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.AnyoneExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HasPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonDataObject;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonID;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonInDuty;
@@ -18,6 +19,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprIsPersonDTO.class, name = "RALExprIsPersonDTO"),
     @JsonSubTypes.Type(value = RALExprIsPersonDataObjectDTO.class, name = "RALExprIsPersonDataObjectDTO"),
     @JsonSubTypes.Type(value = RALExprIsPersonInTaskDutyDTO.class, name = "RALExprIsPersonInTaskDutyDTO"),
+    @JsonSubTypes.Type(value = RALExprIsPersonInTaskDutyDTO.class, name = "RALExprHasPositionDTO"),
 })
 public class RALExpressionDTO {
 	public static RALExpressionDTO buildRALExpressionDTO(String specId, RALExpression expression) {
@@ -33,6 +35,9 @@ public class RALExpressionDTO {
 			ralExpressionDTO = new RALExprIsPersonInTaskDutyDTO(ResourceRuleType.fromAsgmtString(isPersonInDutyExpr.getTaskDuty()), isPersonInDutyExpr.getDataField());
 		} else if (expression instanceof AnyoneExpr) {
 			ralExpressionDTO = new RALExprAnyoneDTO();
+		} else if (expression instanceof HasPositionExpr) {
+			HasPositionExpr hasPositionExpr = (HasPositionExpr) expression;
+			ralExpressionDTO = new RALExprHasPositionDTO(hasPositionExpr.getPosition().getName());
 		}
 		return ralExpressionDTO;
 	}

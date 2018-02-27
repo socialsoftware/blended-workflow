@@ -175,33 +175,45 @@ ResourceTaskDuty:
 /**
  * RAL Expressions Grammar
  */
- RALExpression:
- 	AnyoneExpr |
- 	PersonExpr
- ;
+RALExpression:
+	AnyoneExpr |
+	PersonExpr |
+	OrganizationalExpr
+	/*HierarchyExpr*/
+;
 
- AnyoneExpr:
- 	{AnyoneExpr}
- 	'ANYONE'
- ;
+AnyoneExpr:
+	{AnyoneExpr}
+	'ANYONE'
+;
 
- PersonExpr:
- 	IsPersonID | IsPersonDataObject | IsPersonInDuty
- ;
+PersonExpr:
+	IsPersonID | IsPersonDataObject | IsPersonInDuty
+;
 
- IsPersonID:
- 	'IS' person = ID
- ;
+IsPersonID:
+	'IS' person = ID
+;
 
- IsPersonDataObject:
- 	'IS' 'PERSON' 'IN' 'DATA' 'FIELD' dataField = QualifiedName
- ;
+IsPersonDataObject:
+	'IS' 'PERSON' 'IN' 'DATA' 'FIELD' dataField = QualifiedName
+;
 
- IsPersonInDuty:
- 	'IS' 'ANY' 'PERSON' taskDuty = TaskDuty dataField = QualifiedName
- ;
+IsPersonInDuty:
+	'IS' 'ANY' 'PERSON' taskDuty = TaskDuty dataField = QualifiedName
+;
  
- TaskDuty:
- 	'RESPONSIBLE' 'FOR' |
- 	'INFORMED' 'ABOUT'
- ;
+TaskDuty:
+	'RESPONSIBLE' 'FOR' |
+	'INFORMED' 'ABOUT'
+;
+
+OrganizationalExpr:
+	HasPositionExpr | HasUnitExpr | HasRoleExpr
+;
+
+HasPositionExpr:
+	'HAS' 'POSITION' position = [Position]
+;
+
+ 
