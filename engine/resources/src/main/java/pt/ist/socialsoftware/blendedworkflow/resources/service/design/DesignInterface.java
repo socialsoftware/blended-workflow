@@ -192,10 +192,36 @@ public class DesignInterface {
 					resourceModel,
 					resourceModel.getPosition(ralExprHasPositionDTO.getPosition())
 			);
-		} else {
 
-			//throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
-			return null;
+		} else if (ralExpressionDTO instanceof RALExprHasUnitDTO) {
+
+			log.debug("RALExpression Type: HAS UNIT");
+
+			RALExprHasUnitDTO ralExprHasUnitDTO = (RALExprHasUnitDTO) ralExpressionDTO;
+
+			return new RALExprHasUnit(
+					resourceModel,
+					resourceModel.getUnit(ralExprHasUnitDTO.getUnit())
+			);
+
+		} else if (ralExpressionDTO instanceof RALExprHasRoleDTO) {
+
+			log.debug("RALExpression Type: HAS ROLE");
+
+			RALExprHasRoleDTO ralExprHasRoleDTO = (RALExprHasRoleDTO) ralExpressionDTO;
+
+			RALExprHasRole ralExprHasRole = new RALExprHasRole(
+					resourceModel,
+					resourceModel.getRole(ralExprHasRoleDTO.getRole())
+			);
+
+			if (ralExprHasRoleDTO.getUnit() != null) {
+				ralExprHasRole.setUnit(resourceModel.getUnit(ralExprHasRoleDTO.getUnit()));
+			}
+
+			return ralExprHasRole;
+		} else {
+			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 		}
 	}
 }

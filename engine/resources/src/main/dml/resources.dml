@@ -111,6 +111,10 @@ class RALExprIsPersonInTaskDuty extends RALExpression {
 
 class RALExprHasPosition extends RALExpression;
 
+class RALExprHasUnit extends RALExpression;
+
+class RALExprHasRole extends RALExpression;
+
 relation ResourceModelHasRALExpressions {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     RALExpression playsRole ralExpression { multiplicity 0..*; }
@@ -144,6 +148,21 @@ relation RALExprIsPersonInTaskDutyHasProduct {
 relation RALExprHasPositionHasPosition {
     Position playsRole position { multiplicity 1..1; }
     RALExprHasPosition playsRole ralExprHasPosition { multiplicity 0..*; }
+}
+
+relation RALExprHasUnitHasUnit {
+    Unit playsRole Unit { multiplicity 1..1; }
+    RALExprHasUnit playsRole ralExprHasUnit { multiplicity 0..*; }
+}
+
+relation RALExprHasRoleHasRole {
+    Role playsRole role { multiplicity 1..1; }
+    RALExprHasRole playsRole ralExprHasRole { multiplicity 0..*; }
+}
+
+relation RALExprHasRoleHasUnit {
+    Unit playsRole Unit { multiplicity 0..1; }
+    RALExprHasRole playsRole ralExprHasRole { multiplicity 0..*; }
 }
 
 relation EntityIsPerson {
