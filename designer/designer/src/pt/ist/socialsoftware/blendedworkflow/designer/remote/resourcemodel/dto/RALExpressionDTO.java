@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.AnyoneExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HasPositionExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HasUnitExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonDataObject;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonID;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonInDuty;
@@ -38,6 +39,9 @@ public class RALExpressionDTO {
 		} else if (expression instanceof HasPositionExpr) {
 			HasPositionExpr hasPositionExpr = (HasPositionExpr) expression;
 			ralExpressionDTO = new RALExprHasPositionDTO(hasPositionExpr.getPosition().getName());
+		} else if (expression instanceof HasUnitExpr) {
+			HasUnitExpr hasUnitExpr = (HasUnitExpr) expression;
+			ralExpressionDTO = new RALExprHasUnitDTO(hasUnitExpr.getUnit().getName());
 		}
 		return ralExpressionDTO;
 	}

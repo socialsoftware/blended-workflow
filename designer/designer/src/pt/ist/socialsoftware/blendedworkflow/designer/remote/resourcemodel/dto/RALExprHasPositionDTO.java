@@ -11,7 +11,6 @@ public class RALExprHasPositionDTO extends RALExpressionDTO {
 	}
 
 	public RALExprHasPositionDTO(String position) {
-		super();
 		this.position = position;
 	}
 

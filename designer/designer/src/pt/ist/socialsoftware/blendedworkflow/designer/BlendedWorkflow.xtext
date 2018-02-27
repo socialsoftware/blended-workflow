@@ -216,4 +216,8 @@ HasPositionExpr:
 	'HAS' 'POSITION' position = [Position]
 ;
 
+HasUnitExpr:
+	'HAS' 'UNIT' unit = [Unit]
+;
+
  
