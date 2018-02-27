@@ -109,6 +109,8 @@ class RALExprIsPersonInTaskDuty extends RALExpression {
     TaskDutyType taskDuty;
 }
 
+class RALExprHasPosition extends RALExpression;
+
 relation ResourceModelHasRALExpressions {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     RALExpression playsRole ralExpression { multiplicity 0..*; }
@@ -137,6 +139,11 @@ relation RALExprIsPersonDataObjectHasDataField {
 relation RALExprIsPersonInTaskDutyHasProduct {
     .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole product { multiplicity 1..1; }
     RALExprIsPersonInTaskDuty playsRole ralExprIsPersonInTaskDuty { multiplicity 0..*; }
+}
+
+relation RALExprHasPositionHasPosition {
+    Position playsRole position { multiplicity 1..1; }
+    RALExprHasPosition playsRole ralExprHasPosition { multiplicity 0..*; }
 }
 
 relation EntityIsPerson {

@@ -182,10 +182,20 @@ public class DesignInterface {
 			Product product = workflowDesigner.getProduct(specId, ralExprIsPersonInTaskDutyDTO.getDataField());
 
 			return new RALExprIsPersonInTaskDuty(resourceModel, taskDuty, product);
+		} else if (ralExpressionDTO instanceof RALExprHasPositionDTO) {
+
+			log.debug("RALExpression Type: HAS POSITION");
+
+			RALExprHasPositionDTO ralExprHasPositionDTO = (RALExprHasPositionDTO) ralExpressionDTO;
+
+			return new RALExprHasPosition(
+					resourceModel,
+					resourceModel.getPosition(ralExprHasPositionDTO.getPosition())
+			);
 		} else {
 
-			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
-
+			//throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
+			return null;
 		}
 	}
 }
