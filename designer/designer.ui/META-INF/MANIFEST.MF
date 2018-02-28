@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: designer.ui
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: designer.ui; singleton:=true
+Bundle-SymbolicName: bw-designer.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: designer,
- designer.ide,
+ bw-designer.ide,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.ui.codetemplates.ui,

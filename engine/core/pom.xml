@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>pt.ist.socialsoftware</groupId>
-		<artifactId>engine</artifactId>
+		<groupId>pt.ist.socialsoftware.blended-workflow</groupId>
+		<artifactId>bw-engine</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>core</artifactId>
+	<artifactId>bw-core</artifactId>
 
 	<build>
 		<plugins>

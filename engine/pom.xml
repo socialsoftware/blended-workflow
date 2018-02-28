@@ -2,8 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>pt.ist.socialsoftware</groupId>
-	<artifactId>engine</artifactId>
+	<groupId>pt.ist.socialsoftware.blended-workflow</groupId>
+	<artifactId>bw-engine</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -159,8 +159,8 @@
 	</pluginRepositories>
 
 	<modules>
-		<module>core</module>
-		<module>resources</module>
+		<module>bw-core</module>
+		<module>bw-resources</module>
 	</modules>
 
 </project>
