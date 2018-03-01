@@ -1,7 +1,8 @@
-module filesystem/doctorappointment/patient_episode/SecurePattern3DoctorAppointment
+module filesystem/doctorappointment/patientepisode/SecurePattern3DoctorAppointment
 
-open filesystem/doctorappointment/patient_episode/SecureDoctorAppointment
+open filesystem/doctorappointment/patientepisode/SecureDoctorAppointment
 open filesystem/Pattern3/SecurePattern3Spec
+
 
 fact acrules{
 	//users
@@ -15,17 +16,14 @@ fact acrules{
 	//role permissions
 	AccessControlRules.permissions = 
 		{Def -> {
-				Alice->{Episode + episode_reserve_date + episode_patient + Patient + patient_address + patient_name + patient_episode}	
-			}	
+			R_Doctor->{Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode}
+			}
 		+
 		Read -> {
-				Alice->{Episode + episode_reserve_date + episode_patient + Patient + patient_address + patient_name + patient_episode}
-			}	
+			R_Doctor-> {Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode}
+			}
 		}
 }
-
-
-
 
 
 run{}

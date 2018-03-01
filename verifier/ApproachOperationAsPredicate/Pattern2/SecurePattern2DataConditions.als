@@ -11,19 +11,19 @@ open filesystem/Pattern1/SecurePattern1Spec
 pred SecurePattern2DefObj(s, s' : AbstractSecureState, o: Obj, usr:User){
 	hasP2DefObjPermission[s, o, usr] or hasP1DefObjPermission[s, o, usr]
 	defObj[s, s', o]
-	addObjToLog[s, s', o, usr]
+//	addObjToLog[s, s', o, usr]
 }
 
 pred SecurePattern2DefAtt(s, s': AbstractSecureState, o: Obj, att: FName, usr:User) {
 	hasP2DefAttPermission[s, o, att, usr] or hasP1DefAttPermission[s, o, att, usr]
 	defAtt[s, s', o, att]
-	addAttToLog[s, s', o, att, usr]
+//	addAttToLog[s, s', o, att, usr]
 }
 
 pred SecurePattern2LinkObj(s, s': AbstractSecureState, objSource: Obj, attSource: FName, objTarget: Obj, attTarget: FName, usr:User) {
 	hasP2LinkObjPermission[s, objSource, attSource, objTarget, usr] or hasP1LinkObjPermission[s, objSource, attSource, objTarget, usr]
 	linkObj[s, s', objSource, attSource, objTarget, attTarget]
-	addLinkToLog[s, s', objSource, attSource, objTarget, usr]
+//	addLinkToLog[s, s', objSource, attSource, objTarget, usr]
 }
 
 

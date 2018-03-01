@@ -54,7 +54,7 @@ pred secureP2Activity(s, s': AbstractSecureState, pre_entDefs: set Obj, pre_attD
 	secureP2PreCondition[s, pre_entDefs, pre_attDefs, usr]
 	secureP2PostCondition[s, s', post_entDefs, post_attDefs, post_muls, usr]
 	addActivityToLog[s, s', pre_entDefs, pre_attDefs, 
-									post_entDefs, post_attDefs, post_muls, usr]
+									post_entDefs, post_attDefs, post_muls, none, usr]
 }
 
 pred ACP2ActInv(s: AbstractSecureState){

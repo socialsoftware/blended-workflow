@@ -12,11 +12,12 @@ sig goalTransition extends Transition{
 	goal_actDefAtt: set Obj -> FName,
 	goal_sucDefObj: set Obj,
 	goal_sucDefAtt: set Obj -> FName,
-	goal_sucLinkObj: set Obj -> FName -> Obj
+	goal_sucLinkObj: set Obj -> FName -> Obj,
+	goal_op: set Operation
 }
 
 pred addGoalToLog (s, s': AbstractSecureState, act_entDefs: set Obj, act_attDefs: set Obj -> FName,
-									suc_entDefs: set Obj, suc_attDefs: set Obj -> FName,  suc_muls: set Obj -> FName -> Obj, usr: User){
+									suc_entDefs: set Obj, suc_attDefs: set Obj -> FName,  suc_muls: set Obj -> FName -> Obj, op: Operation, usr: User){
 	some g: goalTransition|
 		g.goal_actDefObj = act_entDefs and 
 		g.goal_actDefAtt = act_attDefs and	
@@ -24,5 +25,6 @@ pred addGoalToLog (s, s': AbstractSecureState, act_entDefs: set Obj, act_attDefs
 		g.goal_sucDefAtt = suc_attDefs and 
 		g.goal_sucLinkObj= suc_muls and
 		g.goal_usr = usr and
+		g.goal_op = op and
 		s'.log = s.log.add[g]
 }

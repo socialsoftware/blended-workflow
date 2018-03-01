@@ -32,7 +32,7 @@ fact traces {
 }
 
 //É preciso comentar o add to log
-//run pattern2Complete for 4 but 11 SecureState, 5 Int
+run pattern2Complete for 4 but 11 SecureState, 5 Int
 
 
 assert CorrectSecureExecution{

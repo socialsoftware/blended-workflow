@@ -1,11 +1,10 @@
-module filesystem/doctorappointment/patientepisode/activity/ActivitySpecOne/SecureActivityModelPattern1SpecOneExec
+module filesystem/doctorappointment/patientepisode/activity/SecureActivityModelPattern1SpecOneExec
 
-open filesystem/doctorappointment/patientepisode/activity/ActivitySpecOne/SecureActivityModelPattern1SpecOne
-
+open filesystem/doctorappointment/patientepisode/activity/SecureActivityModelPattern1SpecOne
 
 sig SecureState extends AbstractSecureState{}
 
-pred secureInit (s: SecureState) {
+pred init (s: SecureState) {
 	//objects
 	no s.objects
 	//fields
@@ -14,23 +13,23 @@ pred secureInit (s: SecureState) {
 	no s.log
 }
 
+
+
 fact traces {
-	first.secureInit
+	first.init
 	all s: SecureState - last | let s' = s.next |
-	some p: Patient, e: Episode, u: User | 
+	some p: Patient, e: Episode, u: User| 
 		secureRegisterPatient[s, s', p, u] or
-		secureRegisterPatientAddress[s, s', p, u] or
 		secureCreateEpisode[s, s', p, e, u] or
-		secureBookAppointment[s, s', e, u]
-		
+		secureBookAppointment[s, s', e, u] 
 }
 
-//run complete for 4 but 5 SecureState, 5 Int
+//run complete for 5 but 4 SecureState, 5 Int
 
 assert CorrectSecureExecution{
 	all s, s': SecureState| 
 		ACP1ActInv [s] and Invariants [s]
-			=> ACP1ActInv [s'] and Invariants [s]
+			=> ACP1ActInv [s'] and Invariants [s']
 }
 //Checks
-check CorrectSecureExecution for 4 but 4 SecureState, 5 Int
+check CorrectSecureExecution for 5 but 4  SecureState, 5 Int

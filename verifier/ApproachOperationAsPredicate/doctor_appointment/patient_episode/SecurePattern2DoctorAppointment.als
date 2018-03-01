@@ -8,20 +8,20 @@ fact acrules{
 	//users
 	AccessControlRules.users ={Alice  + Bob}
 	//roles
-	AccessControlRules.roles={R_Doctor}
+	no AccessControlRules.roles
 	//user roles	
-	AccessControlRules.u_roles = {Alice -> R_Doctor}
+	no AccessControlRules.u_roles 
 	//resources
 	AccessControlRules.resources = {Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode + Doctor + doctor_episode + episode_doctor + episode_report}
 	//role permissions
 	AccessControlRules.permissions = 
 		{Def -> {
-				{R_Doctor->{Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode + Doctor + doctor_episode + episode_doctor}}
+				{Alice->{Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode + Doctor + doctor_episode + episode_doctor}}
 				+ 	{DomainEpisodeDoctor -> episode_report}
 			}	
 		+
 		Read -> {
-				{R_Doctor->{Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode + Doctor + doctor_episode + episode_doctor}}
+				{Alice->{Episode + episode_reserve_date + episode_patient + Patient + patient_name + patient_address + patient_episode + Doctor + doctor_episode + episode_doctor}}
 				+ 	{DomainEpisodeDoctor -> episode_report}
 			}	
 		}

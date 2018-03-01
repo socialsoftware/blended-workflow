@@ -30,7 +30,7 @@ run pattern2Complete for 5 but 4 SecureState, 5 Int
 assert CorrectSecureExecution{
 	all s, s': SecureState| 
 		ACP2GoalInv [s] and pattern2Invariants [s]
-			=> ACP2GoalInv [s'] and pattern2Invariants [s]
+			=> ACP2GoalInv [s'] and pattern2Invariants [s']
 }
 //Checks
 check CorrectSecureExecution for 5 but 4  SecureState, 5 Int

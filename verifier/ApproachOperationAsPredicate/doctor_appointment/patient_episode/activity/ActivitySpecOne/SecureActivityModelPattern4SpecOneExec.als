@@ -23,12 +23,12 @@ fact traces {
 		secureWriteReport[s, s', e, u]
 }
 
-run pattern2Complete for 5 but 4 SecureState, 5 Int
+//run pattern2Complete for 5 but 4 SecureState, 5 Int
 
 assert CorrectSecureExecution{
 	all s, s': SecureState| 
 		ACP4ActInv [s] and pattern2Invariants [s]
-			=> ACP4ActInv [s'] and pattern2Invariants [s]
+			=> ACP4ActInv [s'] and pattern2Invariants [s']
 }
 //Checks
-check CorrectSecureExecution for 4 but 4 SecureState, 5 Int
+check CorrectSecureExecution for 5 but 4 SecureState, 5 Int

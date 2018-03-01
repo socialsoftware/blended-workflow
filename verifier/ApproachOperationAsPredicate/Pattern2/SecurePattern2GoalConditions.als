@@ -55,7 +55,7 @@ pred secureP2Goal(s, s': AbstractSecureState, pre_entDefs: set Obj, pre_attDefs:
 	secureP2ActCondition[s, pre_entDefs, pre_attDefs, usr]
 	secureP2SucCondition[s, s', post_entDefs, post_attDefs, post_muls, usr]
 	addGoalToLog[s, s', pre_entDefs, pre_attDefs, 
-									post_entDefs, post_attDefs, post_muls, usr]
+									post_entDefs, post_attDefs, post_muls, none, usr]
 }
 
 
