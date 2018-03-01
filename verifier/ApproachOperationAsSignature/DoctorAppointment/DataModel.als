@@ -78,4 +78,3 @@ one sig report_description_data_blood_pressure_dependence extends Dependence {}
 		sequence =  0 -> report_episode + 1 -> episode_data
 		targetAtt = data_blood_pressure
 	}
-
