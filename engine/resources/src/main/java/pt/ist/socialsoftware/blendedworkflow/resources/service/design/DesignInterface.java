@@ -220,7 +220,33 @@ public class DesignInterface {
 			}
 
 			return ralExprHasRole;
-			
+		} else if (ralExpressionDTO instanceof RALExprReportsToPersonPositionExprDTO) {
+
+			log.debug("RALExpression Type: REPORTS TO PERSON POSITION");
+
+			RALExprReportsToPersonPositionExprDTO ralExprReportsToPersonPositionExprDTO =
+					(RALExprReportsToPersonPositionExprDTO) ralExpressionDTO;
+
+			RALExpression personExpression = createRALExpression(
+					specId,
+					ralExprReportsToPersonPositionExprDTO.getPersonExpr());
+
+			return new RALExprReportsToPersonPositionExpr(
+					resourceModel,
+					personExpression,
+					ralExprReportsToPersonPositionExprDTO.isDirectly());
+
+		} else if (ralExpressionDTO instanceof RALExprReportsToPositionExprDTO) {
+
+			log.debug("RALExpression Type: REPORTS TO POSITION");
+
+			RALExprReportsToPositionExprDTO ralExprReportsToPositionExprDTO =
+					(RALExprReportsToPositionExprDTO) ralExpressionDTO;
+
+			return new RALExprReportsToPositionExpr(
+					resourceModel,
+					resourceModel.getPosition(ralExprReportsToPositionExprDTO.getPosition()),
+					ralExprReportsToPositionExprDTO.isDirectly());
 		} else {
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 		}

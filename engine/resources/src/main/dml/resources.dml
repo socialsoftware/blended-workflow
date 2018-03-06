@@ -174,3 +174,21 @@ relation EntityInstanceIsPerson {
     Person playsRole person { multiplicity 0..1; }
     .pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance playsRole entityInstance { multiplicity 0..*; }
 }
+
+class RALExprReportsToPersonPositionExpr extends RALExpression {
+    boolean directly;
+}
+
+relation RALExprReportsToPersonPositionExprHasRALExpr {
+    RALExpression playsRole personExpr { multiplicity 0..1; }
+    RALExprReportsToPersonPositionExpr playsRole ralExprReportsToPersonPositionExpr { multiplicity 0..*; }
+}
+
+class RALExprReportsToPositionExpr extends RALExpression {
+    boolean directly;
+}
+
+relation RALExprReportsToPositionExprHasPosition {
+    Position playsRole position { multiplicity 0..1; }
+    RALExprReportsToPositionExpr playsRole ralExprReportsToPositionExpr { multiplicity 0..*; }
+}
