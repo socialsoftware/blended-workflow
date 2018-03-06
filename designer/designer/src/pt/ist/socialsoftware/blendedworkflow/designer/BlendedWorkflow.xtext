@@ -231,7 +231,9 @@ HasRoleExpr:
 
 HierarchyExpr:
 	ReportsToPersonPositionExpr |
-	ReportsToPositionExpr
+	ReportsToPositionExpr | 
+	ReportedByPersonPositionExpr |
+	ReportedByPositionExpr
 ;
 
 ReportsToPersonPositionExpr:
@@ -241,4 +243,12 @@ ReportsToPersonPositionExpr:
 
 ReportsToPositionExpr:
 	(directly ?= 'DIRECTLY')? 'REPORTS' 'TO' 'POSITION' position = [Position]
+;
+
+ReportedByPersonPositionExpr:
+	'IS' (directly ?= 'DIRECTLY')? 'REPORTED' 'BY' 'POSITION' 'OF' personExpr = PersonConstraint
+;
+
+ReportedByPositionExpr:
+	'IS' (directly ?= 'DIRECTLY')? 'REPORTED' 'BY' 'POSITION' position = [Position]
 ;

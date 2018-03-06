@@ -12,6 +12,8 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonDa
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonID;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonInDuty;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.RALExpression;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportedByPersonPositionExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportedByPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportsToPersonPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportsToPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO.ResourceRuleType;
@@ -28,6 +30,8 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprHasRoleDTO.class, name = "RALExprHasRoleDTO"),
     @JsonSubTypes.Type(value = RALExprReportsToPersonPositionExprDTO.class, name = "RALExprReportsToPersonPositionExprDTO"),
     @JsonSubTypes.Type(value = RALExprReportsToPositionExprDTO.class, name = "RALExprReportsToPositionExprDTO"),
+    @JsonSubTypes.Type(value = RALExprReportedByPersonPositionExprDTO.class, name = "RALExprReportedByPersonPositionExprDTO"),
+    @JsonSubTypes.Type(value = RALExprReportedByPositionExprDTO.class, name = "RALExprReportedByPositionExprDTO"),
 })
 public class RALExpressionDTO {
 	public static RALExpressionDTO buildRALExpressionDTO(String specId, RALExpression expression) {
@@ -81,6 +85,17 @@ public class RALExpressionDTO {
 		
 			ReportsToPositionExpr reportsExpr = (ReportsToPositionExpr) expression;
 			ralExpressionDTO = new RALExprReportsToPositionExprDTO(reportsExpr.getPosition().getName(), reportsExpr.isDirectly());
+		
+		}else if (expression instanceof ReportedByPersonPositionExpr) {
+	
+			ReportedByPersonPositionExpr reportedExpr = (ReportedByPersonPositionExpr) expression;
+			RALExpressionDTO personDTO = RALExpressionDTO.buildRALExpressionDTO(specId, reportedExpr.getPersonExpr());
+			ralExpressionDTO = new RALExprReportedByPersonPositionExprDTO(personDTO, reportedExpr.isDirectly());
+	
+		} else if (expression instanceof ReportedByPositionExpr) {
+		
+			ReportedByPositionExpr reportedExpr = (ReportedByPositionExpr) expression;
+			ralExpressionDTO = new RALExprReportedByPositionExprDTO(reportedExpr.getPosition().getName(), reportedExpr.isDirectly());
 		
 		}
 		
