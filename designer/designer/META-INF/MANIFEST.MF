@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: designer
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: designer; singleton:=true
+Bundle-SymbolicName: designer;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase,

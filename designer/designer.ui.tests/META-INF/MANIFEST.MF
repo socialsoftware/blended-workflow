@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: designer.ui.tests
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: designer.ui.tests; singleton:=true
+Bundle-SymbolicName: designer.ui.tests;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: designer.ui,
  org.junit;bundle-version="4.12.0",
