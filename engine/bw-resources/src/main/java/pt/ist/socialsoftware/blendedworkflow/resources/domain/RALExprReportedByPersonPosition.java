@@ -2,9 +2,9 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import java.util.List;
 
-public class RALExprReportsToPersonPositionExpr extends RALExprReportsToPersonPositionExpr_Base {
-    
-    public RALExprReportsToPersonPositionExpr(ResourceModel resourceModel, RALPersonExpression personExpression, boolean isDirectly) {
+public class RALExprReportedByPersonPosition extends RALExprReportedByPersonPosition_Base {
+
+    public RALExprReportedByPersonPosition(ResourceModel resourceModel, RALPersonExpression personExpression, boolean isDirectly) {
         setPersonExpr(personExpression);
         setDirectly(isDirectly);
         setResourceModel(resourceModel);
@@ -20,4 +20,5 @@ public class RALExprReportsToPersonPositionExpr extends RALExprReportsToPersonPo
     public List<Person> getEligibleResources() {
         return null;
     }
+    
 }

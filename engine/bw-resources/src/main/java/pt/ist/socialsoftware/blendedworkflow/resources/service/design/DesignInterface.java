@@ -160,13 +160,13 @@ public class DesignInterface {
 
 			Product product = workflowDesigner.getProduct(specId, ralExprIsPersonDataObjectDTO.getDataField());
 
-			if (!(product instanceof Attribute)) {
+			if (!(product instanceof Entity)) {
 				throw new RMException(RMErrorType.INVALID_DATA_FIELD, "The data field in the IS PERSON IN DATA FIELD expression is not an attribute");
 			}
 
 			return new RALExprIsPersonDataObject(
 				resourceModel,
-				(Attribute) product
+				(Entity) product
 			);
 
 		} else if (ralExpressionDTO instanceof RALExprIsPersonInTaskDutyDTO) {
@@ -218,6 +218,7 @@ public class DesignInterface {
 			}
 
 			return ralExprHasRole;
+
 		} else if (ralExpressionDTO instanceof RALExprReportsToPersonPositionExprDTO) {
 
 			log.debug("RALExpression Type: REPORTS TO PERSON POSITION");
@@ -230,7 +231,7 @@ public class DesignInterface {
 					specId,
 					ralExprReportsToPersonPositionExprDTO.getPersonExpr());
 
-			return new RALExprReportsToPersonPositionExpr(
+			return new RALExprReportsToPersonPosition(
 					resourceModel,
 					personExpression,
 					ralExprReportsToPersonPositionExprDTO.isDirectly());
@@ -242,10 +243,40 @@ public class DesignInterface {
 			RALExprReportsToPositionExprDTO ralExprReportsToPositionExprDTO =
 					(RALExprReportsToPositionExprDTO) ralExpressionDTO;
 
-			return new RALExprReportsToPositionExpr(
+			return new RALExprReportsToPosition(
 					resourceModel,
 					resourceModel.getPosition(ralExprReportsToPositionExprDTO.getPosition()),
 					ralExprReportsToPositionExprDTO.isDirectly());
+
+		} else if (ralExpressionDTO instanceof RALExprReportedByPersonPositionExprDTO) {
+
+			log.debug("RALExpression Type: REPORTS TO PERSON POSITION");
+
+			RALExprReportedByPersonPositionExprDTO ralExprReportedByPersonPositionExprDTO =
+					(RALExprReportedByPersonPositionExprDTO) ralExpressionDTO;
+
+			// FIXME: Bad code
+			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+					specId,
+					ralExprReportedByPersonPositionExprDTO.getPersonExpr());
+
+			return new RALExprReportedByPersonPosition(
+					resourceModel,
+					personExpression,
+					ralExprReportedByPersonPositionExprDTO.isDirectly());
+
+		} else if (ralExpressionDTO instanceof RALExprReportedByPositionExprDTO) {
+
+			log.debug("RALExpression Type: REPORTS TO POSITION");
+
+			RALExprReportedByPositionExprDTO ralExprReportedByPositionExprDTO =
+					(RALExprReportedByPositionExprDTO) ralExpressionDTO;
+
+			return new RALExprReportedByPosition(
+					resourceModel,
+					resourceModel.getPosition(ralExprReportedByPositionExprDTO.getPosition()),
+					ralExprReportedByPositionExprDTO.isDirectly());
+
 		} else {
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 		}

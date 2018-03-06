@@ -117,11 +117,19 @@ class RALExprHasUnit extends RALExpression;
 
 class RALExprHasRole extends RALExpression;
 
-class RALExprReportsToPersonPositionExpr extends RALExpression {
+class RALExprReportsToPersonPosition extends RALExpression {
     boolean directly;
 }
 
-class RALExprReportsToPositionExpr extends RALExpression {
+class RALExprReportsToPosition extends RALExpression {
+    boolean directly;
+}
+
+class RALExprReportedByPersonPosition extends RALExpression {
+    boolean directly;
+}
+
+class RALExprReportedByPosition extends RALExpression {
     boolean directly;
 }
 
@@ -146,7 +154,7 @@ relation RALExprIsPersonHasPerson {
 }
 
 relation RALExprIsPersonDataObjectHasDataField {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute playsRole dataField { multiplicity 1..1; }
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Entity playsRole dataField { multiplicity 1..1; }
     RALExprIsPersonDataObject playsRole ralExprIsPersonDataObject { multiplicity 0..*; }
 }
 
@@ -187,10 +195,20 @@ relation EntityInstanceIsPerson {
 
 relation RALExprReportsToPersonPositionExprHasRALPersonExpression {
     RALPersonExpression playsRole personExpr { multiplicity 0..1; }
-    RALExprReportsToPersonPositionExpr playsRole ralExprReportsToPersonPositionExpr { multiplicity 0..*; }
+    RALExprReportsToPersonPosition playsRole ralExprReportsToPersonPositionExpr { multiplicity 0..*; }
 }
 
 relation RALExprReportsToPositionExprHasPosition {
     Position playsRole position { multiplicity 0..1; }
-    RALExprReportsToPositionExpr playsRole ralExprReportsToPositionExpr { multiplicity 0..*; }
+    RALExprReportsToPosition playsRole ralExprReportsToPositionExpr { multiplicity 0..*; }
+}
+
+relation RALExprReportedByPersonPositionExprHasRALPersonExpression {
+    RALPersonExpression playsRole personExpr { multiplicity 0..1; }
+    RALExprReportedByPersonPosition playsRole ralExprReportedByPersonPositionExpr { multiplicity 0..*; }
+}
+
+relation RALExprReportedByPositionExprHasPosition {
+    Position playsRole position { multiplicity 0..1; }
+    RALExprReportedByPosition playsRole ralExprReportedByPositionExpr { multiplicity 0..*; }
 }

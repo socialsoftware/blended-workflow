@@ -2,17 +2,17 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import java.util.List;
 
-public class RALExprReportsToPositionExpr extends RALExprReportsToPositionExpr_Base {
-
-    public RALExprReportsToPositionExpr(ResourceModel resourceModel, Position position, boolean isDirectly) {
-        setPosition(position);
+public class RALExprReportsToPersonPosition extends RALExprReportsToPersonPosition_Base {
+    
+    public RALExprReportsToPersonPosition(ResourceModel resourceModel, RALPersonExpression personExpression, boolean isDirectly) {
+        setPersonExpr(personExpression);
         setDirectly(isDirectly);
         setResourceModel(resourceModel);
     }
 
     @Override
     public void delete() {
-        setPosition(null);
+        setPersonExpr(null);
         super.delete();
     }
 
