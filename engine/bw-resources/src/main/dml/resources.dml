@@ -101,11 +101,13 @@ class RALExpression;
 
 class RALExprAnyone extends RALExpression;
 
-class RALExprIsPerson extends RALExpression;
+class RALPersonExpression extends RALExpression;
 
-class RALExprIsPersonDataObject extends RALExpression;
+class RALExprIsPerson extends RALPersonExpression;
 
-class RALExprIsPersonInTaskDuty extends RALExpression {
+class RALExprIsPersonDataObject extends RALPersonExpression;
+
+class RALExprIsPersonInTaskDuty extends RALPersonExpression {
     TaskDutyType taskDuty;
 }
 
@@ -114,6 +116,14 @@ class RALExprHasPosition extends RALExpression;
 class RALExprHasUnit extends RALExpression;
 
 class RALExprHasRole extends RALExpression;
+
+class RALExprReportsToPersonPositionExpr extends RALExpression {
+    boolean directly;
+}
+
+class RALExprReportsToPositionExpr extends RALExpression {
+    boolean directly;
+}
 
 relation ResourceModelHasRALExpressions {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
@@ -175,17 +185,9 @@ relation EntityInstanceIsPerson {
     .pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance playsRole entityInstance { multiplicity 0..*; }
 }
 
-class RALExprReportsToPersonPositionExpr extends RALExpression {
-    boolean directly;
-}
-
-relation RALExprReportsToPersonPositionExprHasRALExpr {
-    RALExpression playsRole personExpr { multiplicity 0..1; }
+relation RALExprReportsToPersonPositionExprHasRALPersonExpression {
+    RALPersonExpression playsRole personExpr { multiplicity 0..1; }
     RALExprReportsToPersonPositionExpr playsRole ralExprReportsToPersonPositionExpr { multiplicity 0..*; }
-}
-
-class RALExprReportsToPositionExpr extends RALExpression {
-    boolean directly;
 }
 
 relation RALExprReportsToPositionExprHasPosition {

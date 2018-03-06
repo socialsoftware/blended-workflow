@@ -1,9 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 
-import com.sun.org.apache.regexp.internal.RE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Attr;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
@@ -227,7 +225,8 @@ public class DesignInterface {
 			RALExprReportsToPersonPositionExprDTO ralExprReportsToPersonPositionExprDTO =
 					(RALExprReportsToPersonPositionExprDTO) ralExpressionDTO;
 
-			RALExpression personExpression = createRALExpression(
+			// FIXME: Bad code
+			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
 					specId,
 					ralExprReportsToPersonPositionExprDTO.getPersonExpr());
 
