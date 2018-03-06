@@ -178,8 +178,8 @@ ResourceTaskDuty:
 RALExpression:
 	AnyoneExpr |
 	PersonExpr |
-	OrganizationalExpr
-	/*HierarchyExpr*/
+	OrganizationalExpr |
+	HierarchyExpr
 ;
 
 AnyoneExpr:
@@ -188,19 +188,23 @@ AnyoneExpr:
 ;
 
 PersonExpr:
+	'IS' PersonConstraint 
+;
+
+PersonConstraint:
 	IsPersonID | IsPersonDataObject | IsPersonInDuty
 ;
 
 IsPersonID:
-	'IS' person = ID
+	person = ID
 ;
 
 IsPersonDataObject:
-	'IS' 'PERSON' 'IN' 'DATA' 'FIELD' dataField = QualifiedName
+	'PERSON' 'IN' 'DATA' 'FIELD' dataField = QualifiedName
 ;
 
 IsPersonInDuty:
-	'IS' 'ANY' 'PERSON' taskDuty = TaskDuty dataField = QualifiedName
+	'ANY' 'PERSON' taskDuty = TaskDuty dataField = QualifiedName
 ;
  
 TaskDuty:
@@ -224,16 +228,17 @@ HasRoleExpr:
 	'HAS' 'ROLE' role = [Role] ('IN' 'UNIT' unit = [Unit])?
 ;
 
-/*
+
 HierarchyExpr:
-	ReportsToPersonExpr
+	ReportsToPersonPositionExpr |
+	ReportsToPositionExpr
 ;
 
-ReportsToPersonExpr:
-	(directly ?= 'DIRECTLY')? 'REPORTS' 'TO' personExpr = PersonExpr
+ReportsToPersonPositionExpr:
+	(directly ?= 'DIRECTLY')? 'REPORTS' 'TO' 'POSITION' 'OF' personExpr = PersonConstraint
 ;
 
- 
+
 ReportsToPositionExpr:
-	(directly ?= 'DIRECTLY')? 'REPORTS' 'TO' POSITION EXPR  
-;*/
+	(directly ?= 'DIRECTLY')? 'REPORTS' 'TO' 'POSITION' position = [Position]
+;

@@ -220,6 +220,7 @@ public class DesignInterface {
 			}
 
 			return ralExprHasRole;
+			
 		} else {
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 		}

@@ -12,6 +12,8 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonDa
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonID;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonInDuty;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.RALExpression;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportsToPersonPositionExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportsToPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO.ResourceRuleType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -24,35 +26,64 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprHasPositionDTO.class, name = "RALExprHasPositionDTO"),
     @JsonSubTypes.Type(value = RALExprHasUnitDTO.class, name = "RALExprHasUnitDTO"),
     @JsonSubTypes.Type(value = RALExprHasRoleDTO.class, name = "RALExprHasRoleDTO"),
+    @JsonSubTypes.Type(value = RALExprReportsToPersonPositionExprDTO.class, name = "RALExprReportsToPersonPositionExprDTO"),
+    @JsonSubTypes.Type(value = RALExprReportsToPositionExprDTO.class, name = "RALExprReportsToPositionExprDTO"),
 })
 public class RALExpressionDTO {
 	public static RALExpressionDTO buildRALExpressionDTO(String specId, RALExpression expression) {
 		RALExpressionDTO ralExpressionDTO = null;
+		
 		if (expression instanceof IsPersonID) {
+			
 			IsPersonID isPersonExpr = (IsPersonID) expression;
 			ralExpressionDTO = new RALExprIsPersonDTO(isPersonExpr.getPerson());
+			
 		} else if (expression instanceof IsPersonDataObject) {
+			
 			IsPersonDataObject isDataObjExpr = (IsPersonDataObject) expression;
 			ralExpressionDTO = new RALExprIsPersonDataObjectDTO(isDataObjExpr.getDataField());
+			
 		} else if (expression instanceof IsPersonInDuty) {
+			
 			IsPersonInDuty isPersonInDutyExpr = (IsPersonInDuty) expression;
 			ralExpressionDTO = new RALExprIsPersonInTaskDutyDTO(ResourceRuleType.fromAsgmtString(isPersonInDutyExpr.getTaskDuty()), isPersonInDutyExpr.getDataField());
+		
 		} else if (expression instanceof AnyoneExpr) {
+		
 			ralExpressionDTO = new RALExprAnyoneDTO();
+		
 		} else if (expression instanceof HasPositionExpr) {
+		
 			HasPositionExpr hasPositionExpr = (HasPositionExpr) expression;
 			ralExpressionDTO = new RALExprHasPositionDTO(hasPositionExpr.getPosition().getName());
+		
 		} else if (expression instanceof HasUnitExpr) {
+		
 			HasUnitExpr hasUnitExpr = (HasUnitExpr) expression;
 			ralExpressionDTO = new RALExprHasUnitDTO(hasUnitExpr.getUnit().getName());
+		
 		} else if (expression instanceof HasRoleExpr) {
+		
 			HasRoleExpr hasRoleExpr = (HasRoleExpr) expression;
 			RALExprHasRoleDTO dto = new RALExprHasRoleDTO(hasRoleExpr.getRole().getName());
 			if (hasRoleExpr.getUnit() != null) {
 				dto.setUnit(hasRoleExpr.getUnit().getName());
 			}
 			ralExpressionDTO = dto;
+		
+		} else if (expression instanceof ReportsToPersonPositionExpr) {
+	
+			ReportsToPersonPositionExpr reportsExpr = (ReportsToPersonPositionExpr) expression;
+			RALExpressionDTO personDTO = RALExpressionDTO.buildRALExpressionDTO(specId, reportsExpr.getPersonExpr());
+			ralExpressionDTO = new RALExprReportsToPersonPositionExprDTO(personDTO, reportsExpr.isDirectly());
+	
+		} else if (expression instanceof ReportsToPositionExpr) {
+		
+			ReportsToPositionExpr reportsExpr = (ReportsToPositionExpr) expression;
+			ralExpressionDTO = new RALExprReportsToPositionExprDTO(reportsExpr.getPosition().getName(), reportsExpr.isDirectly());
+		
 		}
+		
 		return ralExpressionDTO;
 	}
 }
