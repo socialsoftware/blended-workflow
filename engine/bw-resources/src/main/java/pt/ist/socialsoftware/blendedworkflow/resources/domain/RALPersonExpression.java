@@ -8,8 +8,18 @@ public abstract class RALPersonExpression extends RALPersonExpression_Base {
 
     @Override
     public void delete() {
-        getRalExprReportedByPersonPositionExprSet().forEach(expr -> removeRalExprReportedByPersonPositionExpr(expr));
-        getRalExprReportsToPersonPositionExprSet().forEach(expr -> removeRalExprReportsToPersonPositionExpr(expr));
+        getRalExprReportedByPersonPositionSet().forEach(expr ->
+            removeRalExprReportedByPersonPosition(expr)
+        );
+        getRalExprReportsToPersonPositionSet().forEach(expr ->
+            removeRalExprReportsToPersonPosition(expr)
+        );
+        getRalExprDelegatedByPersonPositionSet().forEach(expr ->
+            removeRalExprDelegatedByPersonPosition(expr)
+        );
+        getRalExprDelegatesToPersonPositionSet().forEach(expr ->
+            removeRalExprDelegatesToPersonPosition(expr)
+        );
         super.delete();
     }
 }

@@ -50,17 +50,27 @@ public class Position extends Position_Base {
         super.setUnit(unit);
     }
 
-    public void delete() {
-        super.setUnit(null);
+    private void clean() {
         getPersonSet().stream().forEach(p -> removePerson(p));
         getRoleSet().stream().forEach(r -> removeRole(r));
         getCanDelegateWorkToSet().stream().forEach(p -> removeCanDelegateWorkTo(p));
         getWorkDelegatedBySet().stream().forEach(p -> removeWorkDelegatedBy(p));
         getIsReportedBySet().stream().forEach(p -> removeIsReportedBy(p));
+
+        getRalExprDelegatedByPositionSet().forEach(expr -> removeRalExprDelegatedByPosition(expr));
+        getRalExprDelegatesToPositionSet().forEach(expr -> removeRalExprDelegatesToPosition(expr));
+        getRalExprReportedByPositionSet().forEach(expr -> removeRalExprReportedByPosition(expr));
+        getRalExprReportsToPositionSet().forEach(expr -> removeRalExprReportsToPosition(expr));
+    }
+
+    public void delete() {
+        clean();
+        super.setUnit(null);
         setReportsTo(null);
         setResourceModel(null);
         deleteDomainObject();
     }
+
 
     private boolean checkUniqueName(String name) {
         return getResourceModel()

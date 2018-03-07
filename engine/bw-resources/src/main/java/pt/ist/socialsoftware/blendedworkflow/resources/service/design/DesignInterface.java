@@ -277,6 +277,60 @@ public class DesignInterface {
 					resourceModel.getPosition(ralExprReportedByPositionExprDTO.getPosition()),
 					ralExprReportedByPositionExprDTO.isDirectly());
 
+		} else if (ralExpressionDTO instanceof RALExprDelegatedByPersonPositionExprDTO) {
+
+			log.debug("RALExpression Type: DELEGATED BY PERSON POSITION");
+
+			RALExprDelegatedByPersonPositionExprDTO ralExprDelegatedByPersonPositionExprDTO =
+					(RALExprDelegatedByPersonPositionExprDTO) ralExpressionDTO;
+
+			// FIXME: Bad code
+			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+					specId,
+					ralExprDelegatedByPersonPositionExprDTO.getPersonExpr());
+
+			return new RALExprDelegatedByPersonPosition(
+					resourceModel,
+					personExpression);
+
+		} else if (ralExpressionDTO instanceof RALExprDelegatedByPositionExprDTO) {
+
+			log.debug("RALExpression Type: DELEGATED BY POSITION");
+
+			RALExprDelegatedByPositionExprDTO ralExprDelegatedByPositionExprDTO =
+					(RALExprDelegatedByPositionExprDTO) ralExpressionDTO;
+
+			return new RALExprDelegatedByPosition(
+					resourceModel,
+					resourceModel.getPosition(ralExprDelegatedByPositionExprDTO.getPosition()));
+
+		} else if (ralExpressionDTO instanceof RALExprDelegatesToPersonPositionExprDTO) {
+
+			log.debug("RALExpression Type: DELEGATES TO PERSON POSITION");
+
+			RALExprDelegatesToPersonPositionExprDTO ralExprDelegatesToPersonPositionExprDTO =
+					(RALExprDelegatesToPersonPositionExprDTO) ralExpressionDTO;
+
+			// FIXME: Bad code
+			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+					specId,
+					ralExprDelegatesToPersonPositionExprDTO.getPersonExpr());
+
+			return new RALExprDelegatesToPersonPosition(
+					resourceModel,
+					personExpression);
+
+		} else if (ralExpressionDTO instanceof RALExprDelegatesToPositionExprDTO) {
+
+			log.debug("RALExpression Type: DELEGATES TO POSITION");
+
+			RALExprDelegatesToPositionExprDTO ralExprDelegatesToPositionExprDTO =
+					(RALExprDelegatesToPositionExprDTO) ralExpressionDTO;
+
+			return new RALExprDelegatesToPosition(
+					resourceModel,
+					resourceModel.getPosition(ralExprDelegatesToPositionExprDTO.getPosition()));
+
 		} else {
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 		}

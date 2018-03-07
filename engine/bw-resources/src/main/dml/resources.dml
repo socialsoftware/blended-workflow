@@ -133,6 +133,14 @@ class RALExprReportedByPosition extends RALExpression {
     boolean directly;
 }
 
+class RALExprDelegatesToPersonPosition extends RALExpression;
+
+class RALExprDelegatesToPosition extends RALExpression;
+
+class RALExprDelegatedByPersonPosition extends RALExpression;
+
+class RALExprDelegatedByPosition extends RALExpression;
+
 relation ResourceModelHasRALExpressions {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     RALExpression playsRole ralExpression { multiplicity 0..*; }
@@ -195,20 +203,40 @@ relation EntityInstanceIsPerson {
 
 relation RALExprReportsToPersonPositionExprHasRALPersonExpression {
     RALPersonExpression playsRole personExpr { multiplicity 0..1; }
-    RALExprReportsToPersonPosition playsRole ralExprReportsToPersonPositionExpr { multiplicity 0..*; }
+    RALExprReportsToPersonPosition playsRole ralExprReportsToPersonPosition { multiplicity 0..*; }
 }
 
 relation RALExprReportsToPositionExprHasPosition {
     Position playsRole position { multiplicity 0..1; }
-    RALExprReportsToPosition playsRole ralExprReportsToPositionExpr { multiplicity 0..*; }
+    RALExprReportsToPosition playsRole ralExprReportsToPosition { multiplicity 0..*; }
 }
 
 relation RALExprReportedByPersonPositionExprHasRALPersonExpression {
     RALPersonExpression playsRole personExpr { multiplicity 0..1; }
-    RALExprReportedByPersonPosition playsRole ralExprReportedByPersonPositionExpr { multiplicity 0..*; }
+    RALExprReportedByPersonPosition playsRole ralExprReportedByPersonPosition { multiplicity 0..*; }
 }
 
 relation RALExprReportedByPositionExprHasPosition {
     Position playsRole position { multiplicity 0..1; }
-    RALExprReportedByPosition playsRole ralExprReportedByPositionExpr { multiplicity 0..*; }
+    RALExprReportedByPosition playsRole ralExprReportedByPosition { multiplicity 0..*; }
+}
+
+relation RALExprDelegatesToPersonPositionHasRALPersonExpression {
+    RALPersonExpression playsRole personExpr { multiplicity 0..1; }
+    RALExprDelegatesToPersonPosition playsRole ralExprDelegatesToPersonPosition { multiplicity 0..*; }
+}
+
+relation RALExprDelegatesToPositionHasPosition {
+    Position playsRole position { multiplicity 0..1; }
+    RALExprDelegatesToPosition playsRole ralExprDelegatesToPosition { multiplicity 0..*; }
+}
+
+relation RALExprDelegatedByPersonPositionHasRALPersonExpression {
+    RALPersonExpression playsRole personExpr { multiplicity 0..1; }
+    RALExprDelegatedByPersonPosition playsRole ralExprDelegatedByPersonPosition { multiplicity 0..*; }
+}
+
+relation RALExprDelegatedByPositionHasPosition {
+    Position playsRole position { multiplicity 0..1; }
+    RALExprDelegatedByPosition playsRole ralExprDelegatedByPosition { multiplicity 0..*; }
 }
