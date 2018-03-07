@@ -233,7 +233,11 @@ HierarchyExpr:
 	ReportsToPersonPositionExpr |
 	ReportsToPositionExpr | 
 	ReportedByPersonPositionExpr |
-	ReportedByPositionExpr
+	ReportedByPositionExpr |
+	DelegatesToPersonPositionExpr |
+	DelegatesToPositionExpr |
+	DelegatedByPersonPositionExpr |
+	DelegatedByPositionExpr
 ;
 
 ReportsToPersonPositionExpr:
@@ -251,4 +255,20 @@ ReportedByPersonPositionExpr:
 
 ReportedByPositionExpr:
 	'IS' (directly ?= 'DIRECTLY')? 'REPORTED' 'BY' 'POSITION' position = [Position]
+;
+
+DelegatesToPersonPositionExpr:
+	'CAN' 'DELEGATE' 'WORK' 'TO' 'POSITION' 'OF' personExpr = PersonConstraint
+;
+
+DelegatesToPositionExpr:
+	'CAN' 'DELEGATE' 'WORK' 'TO' 'POSITION' position = [Position]
+;
+
+DelegatedByPersonPositionExpr:
+	'CAN' 'HAVE' 'WORK' 'DELEGATED' 'BY' 'POSITION' 'OF' personExpr = PersonConstraint
+;
+
+DelegatedByPositionExpr:
+	'CAN' 'HAVE' 'WORK' 'DELEGATED' 'BY' 'POSITION' position = [Position]
 ;

@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.AnyoneExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatedByPersonPositionExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatedByPositionExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatesToPersonPositionExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatesToPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HasPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HasRoleExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HasUnitExpr;
@@ -32,6 +36,10 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprReportsToPositionExprDTO.class, name = "RALExprReportsToPositionExprDTO"),
     @JsonSubTypes.Type(value = RALExprReportedByPersonPositionExprDTO.class, name = "RALExprReportedByPersonPositionExprDTO"),
     @JsonSubTypes.Type(value = RALExprReportedByPositionExprDTO.class, name = "RALExprReportedByPositionExprDTO"),
+    @JsonSubTypes.Type(value = RALExprDelegatesToPersonPositionExprDTO.class, name = "RALExprDelegatesToPersonPositionExprDTO"),
+    @JsonSubTypes.Type(value = RALExprDelegatesToPositionExprDTO.class, name = "RALExprDelegatesToPositionExprDTO"),
+    @JsonSubTypes.Type(value = RALExprDelegatedByPersonPositionExprDTO.class, name = "RALExprDelegatedByPersonPositionExprDTO"),
+    @JsonSubTypes.Type(value = RALExprDelegatedByPositionExprDTO.class, name = "RALExprDelegatedByPositionExprDTO"),
 })
 public class RALExpressionDTO {
 	public static RALExpressionDTO buildRALExpressionDTO(String specId, RALExpression expression) {
@@ -86,7 +94,7 @@ public class RALExpressionDTO {
 			ReportsToPositionExpr reportsExpr = (ReportsToPositionExpr) expression;
 			ralExpressionDTO = new RALExprReportsToPositionExprDTO(reportsExpr.getPosition().getName(), reportsExpr.isDirectly());
 		
-		}else if (expression instanceof ReportedByPersonPositionExpr) {
+		} else if (expression instanceof ReportedByPersonPositionExpr) {
 	
 			ReportedByPersonPositionExpr reportedExpr = (ReportedByPersonPositionExpr) expression;
 			RALExpressionDTO personDTO = RALExpressionDTO.buildRALExpressionDTO(specId, reportedExpr.getPersonExpr());
@@ -96,6 +104,28 @@ public class RALExpressionDTO {
 		
 			ReportedByPositionExpr reportedExpr = (ReportedByPositionExpr) expression;
 			ralExpressionDTO = new RALExprReportedByPositionExprDTO(reportedExpr.getPosition().getName(), reportedExpr.isDirectly());
+		
+		} else if (expression instanceof DelegatesToPersonPositionExpr) {
+	
+			DelegatesToPersonPositionExpr delegatesExpr = (DelegatesToPersonPositionExpr) expression;
+			RALExpressionDTO personDTO = RALExpressionDTO.buildRALExpressionDTO(specId, delegatesExpr.getPersonExpr());
+			ralExpressionDTO = new RALExprDelegatesToPersonPositionExprDTO(personDTO);
+	
+		} else if (expression instanceof DelegatesToPositionExpr) {
+		
+			DelegatesToPositionExpr delegatesExpr = (DelegatesToPositionExpr) expression;
+			ralExpressionDTO = new RALExprDelegatesToPositionExprDTO(delegatesExpr.getPosition().getName());
+		
+		} else if (expression instanceof DelegatedByPersonPositionExpr) {
+	
+			DelegatedByPersonPositionExpr delegatedExpr = (DelegatedByPersonPositionExpr) expression;
+			RALExpressionDTO personDTO = RALExpressionDTO.buildRALExpressionDTO(specId, delegatedExpr.getPersonExpr());
+			ralExpressionDTO = new RALExprDelegatedByPersonPositionExprDTO(personDTO);
+	
+		} else if (expression instanceof DelegatedByPositionExpr) {
+		
+			DelegatedByPositionExpr delegatedExpr = (DelegatedByPositionExpr) expression;
+			ralExpressionDTO = new RALExprDelegatedByPositionExprDTO(delegatedExpr.getPosition().getName());
 		
 		}
 		
