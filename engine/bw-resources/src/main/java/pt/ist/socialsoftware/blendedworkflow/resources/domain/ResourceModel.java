@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ResourceModel extends ResourceModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(ResourceModel.class);
@@ -163,4 +164,8 @@ public class ResourceModel extends ResourceModel_Base {
 		return roleNames.stream().map(d -> getRole(d)).collect(Collectors.toList());
 	}
 
+    public boolean checkEntityIsPerson(Entity entity) {
+		return getEntityIsPersonSet().stream()
+				.anyMatch(e -> e.getName().equals(entity));
+    }
 }
