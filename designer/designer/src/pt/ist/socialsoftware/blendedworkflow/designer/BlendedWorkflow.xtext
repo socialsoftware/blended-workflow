@@ -181,7 +181,7 @@ RALExpression:
 	OrganizationalExpr |
 	HierarchyExpr |
 	NotExpr |
-	AndExpr
+	CompoundExpr
 ;
 
 AnyoneExpr:
@@ -283,6 +283,18 @@ DeniableExpr returns RALExpression:
 	PersonExpr | OrganizationalExpr /* | CommonalityExpr | CapabilityExpr */
 ;
 
+CompoundExpr: 
+	'(' leftExpr = RALExpression ')' rightExpr = CompoundType
+;
+
+CompoundType:
+	AndExpr | OrExpr
+;
+
 AndExpr:
-	'(' leftExpr = RALExpression ')' 'AND' '(' rightExpr = RALExpression ')'
+	'AND' '(' expr = RALExpression ')'
+;
+
+OrExpr:
+	'OR' '(' expr = RALExpression ')'
 ;

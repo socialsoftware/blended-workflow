@@ -54,6 +54,8 @@ public abstract class RALExpression extends RALExpression_Base {
         setRalExprNot(null);
         setRalExprAndLeft(null);
         setRalExprAndRight(null);
+        setRalExprOrLeft(null);
+        setRalExprOrRight(null);
         setProductResponsibleFor(null);
         setProductInforms(null);
         setResourceModel(null);

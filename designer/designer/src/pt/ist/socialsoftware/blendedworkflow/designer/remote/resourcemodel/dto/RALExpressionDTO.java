@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.AndExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.AnyoneExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.CompoundExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.CompoundType;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatedByPersonPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatedByPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatesToPersonPositionExpr;
@@ -17,6 +19,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonDa
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonID;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonInDuty;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.NotExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.OrExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.RALExpression;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportedByPersonPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportedByPositionExpr;
@@ -44,6 +47,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprDelegatedByPositionExprDTO.class, name = "RALExprDelegatedByPositionExprDTO"),
     @JsonSubTypes.Type(value = RALExprNotDTO.class, name = "RALExprNotDTO"),
     @JsonSubTypes.Type(value = RALExprAndDTO.class, name = "RALExprAndDTO"),
+    @JsonSubTypes.Type(value = RALExprOrDTO.class, name = "RALExprOrDTO"),
 })
 public class RALExpressionDTO {
 	public static RALExpressionDTO buildRALExpressionDTO(String specId, RALExpression expression) {
@@ -136,15 +140,25 @@ public class RALExpressionDTO {
 			NotExpr notExpr = (NotExpr) expression;
 			ralExpressionDTO = new RALExprNotDTO(RALExpressionDTO.buildRALExpressionDTO(specId, notExpr.getExpr()));
 			
-		} else if (expression instanceof AndExpr) {
-			
-			AndExpr andExpr = (AndExpr) expression;
-			ralExpressionDTO = new RALExprAndDTO(
-					RALExpressionDTO.buildRALExpressionDTO(specId, andExpr.getLeftExpr()),
-					RALExpressionDTO.buildRALExpressionDTO(specId, andExpr.getRightExpr())
-				);
+		} else if (expression instanceof CompoundExpr) {
+			CompoundExpr compoundExpr = (CompoundExpr) expression;
+			RALExpressionDTO leftExpr = RALExpressionDTO.buildRALExpressionDTO(specId, compoundExpr.getLeftExpr());
+			CompoundType rightExpr = compoundExpr.getRightExpr();
+			if (rightExpr instanceof AndExpr) {
+				AndExpr andExpr = (AndExpr) rightExpr;
+				ralExpressionDTO = new RALExprAndDTO(
+						leftExpr,
+						RALExpressionDTO.buildRALExpressionDTO(specId, andExpr.getExpr())
+					);
+			} else if (rightExpr instanceof OrExpr) {
+				
+				OrExpr orExpr = (OrExpr) rightExpr;
+				ralExpressionDTO = new RALExprOrDTO(
+						leftExpr,
+						RALExpressionDTO.buildRALExpressionDTO(specId, orExpr.getExpr())
+					);
+			}
 		}
-		
 		return ralExpressionDTO;
 	}
 }

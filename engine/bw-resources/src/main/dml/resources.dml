@@ -145,6 +145,8 @@ class RALExprNot extends RALExpression;
 
 class RALExprAnd extends RALExpression;
 
+class RALExprOr extends RALExpression;
+
 relation ResourceModelHasRALExpressions {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     RALExpression playsRole ralExpression { multiplicity 0..*; }
@@ -257,5 +259,15 @@ relation RALExprAndHasLeftExpression {
 
 relation RALExprAndHasRightExpression {
     RALExprAnd playsRole ralExprAndRight { multiplicity 0..1; }
+    RALExpression playsRole rightExpression { multiplicity 0..1; }
+}
+
+relation RALExprOrHasLeftExpression {
+    RALExprOr playsRole ralExprOrLeft { multiplicity 0..1; }
+    RALExpression playsRole leftExpression { multiplicity 0..1; }
+}
+
+relation RALExprOrHasRightExpression {
+    RALExprOr playsRole ralExprOrRight { multiplicity 0..1; }
     RALExpression playsRole rightExpression { multiplicity 0..1; }
 }
