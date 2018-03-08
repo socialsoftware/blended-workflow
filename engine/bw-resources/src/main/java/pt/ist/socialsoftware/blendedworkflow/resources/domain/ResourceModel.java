@@ -166,6 +166,6 @@ public class ResourceModel extends ResourceModel_Base {
 
     public boolean checkEntityIsPerson(Entity entity) {
 		return getEntityIsPersonSet().stream()
-				.anyMatch(e -> e.getName().equals(entity));
+				.anyMatch(e -> e.getName().equals(entity.getName()));
     }
 }
