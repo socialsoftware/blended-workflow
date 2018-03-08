@@ -15,6 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HasUnitExp
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonDataObject;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonID;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonInDuty;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.NotExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.RALExpression;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportedByPersonPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportedByPositionExpr;
@@ -40,6 +41,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprDelegatesToPositionExprDTO.class, name = "RALExprDelegatesToPositionExprDTO"),
     @JsonSubTypes.Type(value = RALExprDelegatedByPersonPositionExprDTO.class, name = "RALExprDelegatedByPersonPositionExprDTO"),
     @JsonSubTypes.Type(value = RALExprDelegatedByPositionExprDTO.class, name = "RALExprDelegatedByPositionExprDTO"),
+    @JsonSubTypes.Type(value = RALExprNotDTO.class, name = "RALExprNotDTO"),
 })
 public class RALExpressionDTO {
 	public static RALExpressionDTO buildRALExpressionDTO(String specId, RALExpression expression) {
@@ -127,6 +129,10 @@ public class RALExpressionDTO {
 			DelegatedByPositionExpr delegatedExpr = (DelegatedByPositionExpr) expression;
 			ralExpressionDTO = new RALExprDelegatedByPositionExprDTO(delegatedExpr.getPosition().getName());
 		
+		} else if (expression instanceof NotExpr) {
+			
+			NotExpr notExpr = (NotExpr) expression;
+			ralExpressionDTO = new RALExprNotDTO(RALExpressionDTO.buildRALExpressionDTO(specId, notExpr.getExpr()));
 		}
 		
 		return ralExpressionDTO;

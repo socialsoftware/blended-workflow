@@ -179,7 +179,8 @@ RALExpression:
 	AnyoneExpr |
 	PersonExpr |
 	OrganizationalExpr |
-	HierarchyExpr
+	HierarchyExpr |
+	NotExpr
 ;
 
 AnyoneExpr:
@@ -271,4 +272,12 @@ DelegatedByPersonPositionExpr:
 
 DelegatedByPositionExpr:
 	'CAN' 'HAVE' 'WORK' 'DELEGATED' 'BY' 'POSITION' position = [Position]
+;
+
+NotExpr:
+	'NOT' '(' expr = DeniableExpr ')'
+;
+
+DeniableExpr returns RALExpression:
+	PersonExpr | OrganizationalExpr /* | CommonalityExpr | CapabilityExpr */
 ;
