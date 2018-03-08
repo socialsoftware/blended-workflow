@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.AndExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.AnyoneExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatedByPersonPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatedByPositionExpr;
@@ -42,6 +43,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprDelegatedByPersonPositionExprDTO.class, name = "RALExprDelegatedByPersonPositionExprDTO"),
     @JsonSubTypes.Type(value = RALExprDelegatedByPositionExprDTO.class, name = "RALExprDelegatedByPositionExprDTO"),
     @JsonSubTypes.Type(value = RALExprNotDTO.class, name = "RALExprNotDTO"),
+    @JsonSubTypes.Type(value = RALExprAndDTO.class, name = "RALExprAndDTO"),
 })
 public class RALExpressionDTO {
 	public static RALExpressionDTO buildRALExpressionDTO(String specId, RALExpression expression) {
@@ -133,6 +135,14 @@ public class RALExpressionDTO {
 			
 			NotExpr notExpr = (NotExpr) expression;
 			ralExpressionDTO = new RALExprNotDTO(RALExpressionDTO.buildRALExpressionDTO(specId, notExpr.getExpr()));
+			
+		} else if (expression instanceof AndExpr) {
+			
+			AndExpr andExpr = (AndExpr) expression;
+			ralExpressionDTO = new RALExprAndDTO(
+					RALExpressionDTO.buildRALExpressionDTO(specId, andExpr.getLeftExpr()),
+					RALExpressionDTO.buildRALExpressionDTO(specId, andExpr.getRightExpr())
+				);
 		}
 		
 		return ralExpressionDTO;

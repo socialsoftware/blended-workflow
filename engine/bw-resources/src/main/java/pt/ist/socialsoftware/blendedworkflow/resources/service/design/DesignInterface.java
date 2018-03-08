@@ -341,6 +341,18 @@ public class DesignInterface {
 					resourceModel,
 					createRALExpression(specId, ralExprNotDTO.getExpr()));
 
+		} else if (ralExpressionDTO instanceof RALExprAndDTO) {
+
+			log.debug("RALExpression Type: AND");
+
+			RALExprAndDTO ralExprAndDTO = (RALExprAndDTO) ralExpressionDTO;
+
+			return new RALExprAnd(
+					resourceModel,
+					createRALExpression(specId, ralExprAndDTO.getLeftExpr()),
+					createRALExpression(specId, ralExprAndDTO.getRightExpr())
+			);
+
 		} else {
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 		}

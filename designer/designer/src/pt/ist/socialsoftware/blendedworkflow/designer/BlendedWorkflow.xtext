@@ -180,7 +180,8 @@ RALExpression:
 	PersonExpr |
 	OrganizationalExpr |
 	HierarchyExpr |
-	NotExpr
+	NotExpr |
+	AndExpr
 ;
 
 AnyoneExpr:
@@ -280,4 +281,8 @@ NotExpr:
 
 DeniableExpr returns RALExpression:
 	PersonExpr | OrganizationalExpr /* | CommonalityExpr | CapabilityExpr */
+;
+
+AndExpr:
+	'(' leftExpr = RALExpression ')' 'AND' '(' rightExpr = RALExpression ')'
 ;
