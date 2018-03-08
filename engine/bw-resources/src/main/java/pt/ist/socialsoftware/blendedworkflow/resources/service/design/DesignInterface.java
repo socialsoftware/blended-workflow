@@ -331,6 +331,16 @@ public class DesignInterface {
 					resourceModel,
 					resourceModel.getPosition(ralExprDelegatesToPositionExprDTO.getPosition()));
 
+		} else if (ralExpressionDTO instanceof RALExprNotDTO) {
+
+			log.debug("RALExpression Type: NOT");
+
+			RALExprNotDTO ralExprNotDTO = (RALExprNotDTO) ralExpressionDTO;
+
+			return new RALExprNot(
+					resourceModel,
+					createRALExpression(specId, ralExprNotDTO.getExpr()));
+
 		} else {
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 		}

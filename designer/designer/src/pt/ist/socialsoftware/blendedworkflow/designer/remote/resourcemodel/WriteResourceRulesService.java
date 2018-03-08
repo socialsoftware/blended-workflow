@@ -46,6 +46,7 @@ private Logger logger = LoggerFactory.getLogger(WriteResourceRulesService.class)
 
 	private void writeRelations(List<EntityIsPerson> relations, String specId, BWNotification notification) {
 		relations.stream().forEach(r -> {
+			System.out.println(r.getEntity().getName());
 			repository.createEntityIsPersonRelation(new ResourceRelationDTO(specId, r.getEntity().getName()), notification);
 		});
 	}

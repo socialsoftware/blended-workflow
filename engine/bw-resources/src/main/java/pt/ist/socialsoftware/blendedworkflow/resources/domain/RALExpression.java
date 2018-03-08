@@ -51,6 +51,7 @@ public abstract class RALExpression extends RALExpression_Base {
     }
 
     public void delete() {
+        setRalExprNot(null);
         setProductResponsibleFor(null);
         setProductInforms(null);
         setResourceModel(null);

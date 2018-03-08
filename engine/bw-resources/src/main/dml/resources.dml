@@ -141,6 +141,8 @@ class RALExprDelegatedByPersonPosition extends RALExpression;
 
 class RALExprDelegatedByPosition extends RALExpression;
 
+class RALExprNot extends RALExpression;
+
 relation ResourceModelHasRALExpressions {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     RALExpression playsRole ralExpression { multiplicity 0..*; }
@@ -239,4 +241,9 @@ relation RALExprDelegatedByPersonPositionHasRALPersonExpression {
 relation RALExprDelegatedByPositionHasPosition {
     Position playsRole position { multiplicity 0..1; }
     RALExprDelegatedByPosition playsRole ralExprDelegatedByPosition { multiplicity 0..*; }
+}
+
+relation RALExprNotHasDeniableExpression {
+    RALExprNot playsRole ralExprNot { multiplicity 0..1; }
+    RALExpression playsRole expression { multiplicity 0..1; }
 }
