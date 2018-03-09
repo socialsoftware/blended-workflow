@@ -181,7 +181,8 @@ RALExpression:
 	OrganizationalExpr |
 	HierarchyExpr |
 	NotExpr |
-	CompoundExpr
+	CompoundExpr |
+	CapabilityExpr
 ;
 
 AnyoneExpr:
@@ -297,4 +298,8 @@ AndExpr:
 
 OrExpr:
 	'OR' '(' expr = RALExpression ')'
+;
+
+CapabilityExpr:
+	'HAS' 'CAPABILITY' capability = [Capability]
 ;

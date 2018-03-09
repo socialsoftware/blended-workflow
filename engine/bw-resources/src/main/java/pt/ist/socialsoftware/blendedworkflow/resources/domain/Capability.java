@@ -30,6 +30,7 @@ public class Capability extends Capability_Base {
     }
 
     public void delete() {
+        getRalExprHasCapabilitySet().stream().forEach(expr -> removeRalExprHasCapability(expr));
         getPersonSet().stream().forEach(p -> removePerson(p));
         setResourceModel(null);
         deleteDomainObject();

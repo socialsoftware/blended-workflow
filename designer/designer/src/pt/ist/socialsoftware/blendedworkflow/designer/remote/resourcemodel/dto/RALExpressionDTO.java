@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.AndExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.AnyoneExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.CapabilityExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.CompoundExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.CompoundType;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatedByPersonPositionExpr;
@@ -48,6 +49,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprNotDTO.class, name = "RALExprNotDTO"),
     @JsonSubTypes.Type(value = RALExprAndDTO.class, name = "RALExprAndDTO"),
     @JsonSubTypes.Type(value = RALExprOrDTO.class, name = "RALExprOrDTO"),
+    @JsonSubTypes.Type(value = RALExprHasCapabilityDTO.class, name = "RALExprHasCapabilityDTO"),
 })
 public class RALExpressionDTO {
 	public static RALExpressionDTO buildRALExpressionDTO(String specId, RALExpression expression) {
@@ -141,6 +143,7 @@ public class RALExpressionDTO {
 			ralExpressionDTO = new RALExprNotDTO(RALExpressionDTO.buildRALExpressionDTO(specId, notExpr.getExpr()));
 			
 		} else if (expression instanceof CompoundExpr) {
+			
 			CompoundExpr compoundExpr = (CompoundExpr) expression;
 			RALExpressionDTO leftExpr = RALExpressionDTO.buildRALExpressionDTO(specId, compoundExpr.getLeftExpr());
 			CompoundType rightExpr = compoundExpr.getRightExpr();
@@ -150,15 +153,21 @@ public class RALExpressionDTO {
 						leftExpr,
 						RALExpressionDTO.buildRALExpressionDTO(specId, andExpr.getExpr())
 					);
-			} else if (rightExpr instanceof OrExpr) {
-				
+			} else if (rightExpr instanceof OrExpr) {		
 				OrExpr orExpr = (OrExpr) rightExpr;
 				ralExpressionDTO = new RALExprOrDTO(
 						leftExpr,
 						RALExpressionDTO.buildRALExpressionDTO(specId, orExpr.getExpr())
 					);
 			}
+			
+		} else if (expression instanceof CapabilityExpr) {
+			
+			CapabilityExpr capabilityExpr = (CapabilityExpr) expression;
+			ralExpressionDTO = new RALExprHasCapabilityDTO(capabilityExpr.getCapability().getName());
+		
 		}
+		
 		return ralExpressionDTO;
 	}
 }

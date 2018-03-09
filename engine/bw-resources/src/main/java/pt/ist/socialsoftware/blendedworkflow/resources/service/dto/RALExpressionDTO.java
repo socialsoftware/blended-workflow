@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = RALExprNotDTO.class, name = "RALExprNotDTO"),
         @JsonSubTypes.Type(value = RALExprAndDTO.class, name = "RALExprAndDTO"),
         @JsonSubTypes.Type(value = RALExprOrDTO.class, name = "RALExprOrDTO"),
+        @JsonSubTypes.Type(value = RALExprHasCapabilityDTO.class, name = "RALExprHasCapabilityDTO"),
 })
 public class RALExpressionDTO {
 

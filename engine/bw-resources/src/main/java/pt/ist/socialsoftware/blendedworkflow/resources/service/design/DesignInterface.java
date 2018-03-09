@@ -3,7 +3,6 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
@@ -363,6 +362,18 @@ public class DesignInterface {
 					resourceModel,
 					createRALExpression(specId, ralExprOrDTO.getLeftExpr()),
 					createRALExpression(specId, ralExprOrDTO.getRightExpr())
+			);
+
+		} else if (ralExpressionDTO instanceof RALExprHasCapabilityDTO) {
+
+			log.debug("RALExpression Type: HAS CAPABILITY");
+
+			RALExprHasCapabilityDTO ralExprHasCapabilityDTO =
+					(RALExprHasCapabilityDTO) ralExpressionDTO;
+
+			return new RALExprHasCapability(
+					resourceModel,
+					resourceModel.getCapability(ralExprHasCapabilityDTO.getCapability())
 			);
 
 		} else {
