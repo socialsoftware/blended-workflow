@@ -16,6 +16,8 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DelegatesT
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HasPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HasRoleExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HasUnitExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HistoryExecutingExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.HistoryInformedExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonDataObject;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonID;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.IsPersonInDuty;
@@ -50,6 +52,8 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprAndDTO.class, name = "RALExprAndDTO"),
     @JsonSubTypes.Type(value = RALExprOrDTO.class, name = "RALExprOrDTO"),
     @JsonSubTypes.Type(value = RALExprHasCapabilityDTO.class, name = "RALExprHasCapabilityDTO"),
+    @JsonSubTypes.Type(value = RALExprHistoryExecutingDTO.class, name = "RALExprHistoryExecutingDTO"),
+    @JsonSubTypes.Type(value = RALExprHistoryInformedDTO.class, name = "RALExprHistoryInformedDTO"),
 })
 public class RALExpressionDTO {
 	public static RALExpressionDTO buildRALExpressionDTO(String specId, RALExpression expression) {
@@ -166,7 +170,23 @@ public class RALExpressionDTO {
 			CapabilityExpr capabilityExpr = (CapabilityExpr) expression;
 			ralExpressionDTO = new RALExprHasCapabilityDTO(capabilityExpr.getCapability().getName());
 		
-		}
+		} else if (expression instanceof HistoryExecutingExpr) {
+			
+			HistoryExecutingExpr historyExecutingExpr = (HistoryExecutingExpr) expression;
+			ralExpressionDTO = new RALExprHistoryExecutingDTO(
+					RALExprHistoryExecutingDTO.Quantifier.fromString(historyExecutingExpr.getQuantifier()),
+					historyExecutingExpr.getDataField()
+				);
+		
+		} else if (expression instanceof HistoryInformedExpr) {
+			
+			HistoryInformedExpr historyInformedExpr = (HistoryInformedExpr) expression;
+			ralExpressionDTO = new RALExprHistoryInformedDTO(
+					RALExprHistoryExecutingDTO.Quantifier.fromString(historyInformedExpr.getQuantifier()),
+					historyInformedExpr.getDataField()
+				);
+		
+		} 
 		
 		return ralExpressionDTO;
 	}

@@ -182,7 +182,9 @@ RALExpression:
 	HierarchyExpr |
 	NotExpr |
 	CompoundExpr |
-	CapabilityExpr
+	CapabilityExpr |
+	HistoryExecutingExpr |
+	HistoryInformedExpr
 ;
 
 AnyoneExpr:
@@ -303,3 +305,16 @@ OrExpr:
 CapabilityExpr:
 	'HAS' 'CAPABILITY' capability = [Capability]
 ;
+
+HistoryExecutingExpr:
+	'WITH' quantifier = HistoryQuantifier 'HISTORY' 'ON' 'EXECUTION' 'IN' dataField = QualifiedName
+;
+
+HistoryInformedExpr:
+	'WITH' quantifier = HistoryQuantifier 'HISTORY' 'ON' 'BEING' 'INFORMED' 'IN' dataField = QualifiedName
+;
+
+HistoryQuantifier:
+	'LEAST' | 'MOST'
+;
+
