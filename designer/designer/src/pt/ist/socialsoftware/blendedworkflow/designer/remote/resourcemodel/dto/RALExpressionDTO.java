@@ -52,6 +52,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprAndDTO.class, name = "RALExprAndDTO"),
     @JsonSubTypes.Type(value = RALExprOrDTO.class, name = "RALExprOrDTO"),
     @JsonSubTypes.Type(value = RALExprHasCapabilityDTO.class, name = "RALExprHasCapabilityDTO"),
+    @JsonSubTypes.Type(value = RALExprHistoryDTO.class, name = "RALExprHistoryDTO"),
     @JsonSubTypes.Type(value = RALExprHistoryExecutingDTO.class, name = "RALExprHistoryExecutingDTO"),
     @JsonSubTypes.Type(value = RALExprHistoryInformedDTO.class, name = "RALExprHistoryInformedDTO"),
 })
@@ -174,7 +175,7 @@ public class RALExpressionDTO {
 			
 			HistoryExecutingExpr historyExecutingExpr = (HistoryExecutingExpr) expression;
 			ralExpressionDTO = new RALExprHistoryExecutingDTO(
-					RALExprHistoryExecutingDTO.Quantifier.fromString(historyExecutingExpr.getQuantifier()),
+					RALExprHistoryDTO.Quantifier.fromString(historyExecutingExpr.getQuantifier()),
 					historyExecutingExpr.getDataField()
 				);
 		
@@ -182,7 +183,7 @@ public class RALExpressionDTO {
 			
 			HistoryInformedExpr historyInformedExpr = (HistoryInformedExpr) expression;
 			ralExpressionDTO = new RALExprHistoryInformedDTO(
-					RALExprHistoryExecutingDTO.Quantifier.fromString(historyInformedExpr.getQuantifier()),
+					RALExprHistoryDTO.Quantifier.fromString(historyInformedExpr.getQuantifier()),
 					historyInformedExpr.getDataField()
 				);
 		
