@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExpression.TaskDutyType as TaskDutyType;
+enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistory.Quantifier as HistoryQuantifier;
 
 class ResourceModel;
 
@@ -149,6 +150,14 @@ class RALExprOr extends RALExpression;
 
 class RALExprHasCapability extends RALExpression;
 
+class RALExprHistory extends RALExpression {
+    HistoryQuantifier quantifier;
+}
+
+class RALExprHistoryExecuting extends RALExprHistory;
+
+class RALExprHistoryInformed extends RALExprHistory;
+
 relation ResourceModelHasRALExpressions {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     RALExpression playsRole ralExpression { multiplicity 0..*; }
@@ -277,4 +286,9 @@ relation RALExprOrHasRightExpression {
 relation RALExprHasCapabilityHasCapability {
     RALExprHasCapability playsRole ralExprHasCapability { multiplicity 0..*; }
     Capability playsRole capability { multiplicity 0..1; }
+}
+
+relation RALExprHistoryHasDataField {
+    RALExprHistory playsRole RALExprHistory { multiplicity 0..*; }
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole dataField { multiplicity 1..1; }
 }

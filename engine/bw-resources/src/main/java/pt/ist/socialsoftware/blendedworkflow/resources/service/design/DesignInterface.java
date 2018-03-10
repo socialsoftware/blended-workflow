@@ -376,6 +376,47 @@ public class DesignInterface {
 					resourceModel.getCapability(ralExprHasCapabilityDTO.getCapability())
 			);
 
+		} else if (ralExpressionDTO instanceof RALExprHistoryExecutingDTO) {
+
+			log.debug("RALExpression Type: HAS HISTORY EXECUTING");
+
+			RALExprHistoryExecutingDTO ralExprHistoryExecutingDTO =
+					(RALExprHistoryExecutingDTO) ralExpressionDTO;
+
+			Product product = workflowDesigner.getProduct(specId, ralExprHistoryExecutingDTO.getDataField());
+
+			if (!(product instanceof Entity)) {
+				throw new RMException(RMErrorType.INVALID_DATA_FIELD, "The data field in the HAS HISTORY EXECUTING expression is not an attribute");
+			}
+
+			RALExprHistory.Quantifier quantifier = RALExprHistory.Quantifier.fromString(ralExprHistoryExecutingDTO.getQuantifier().toString());
+			return new RALExprHistoryExecuting(
+					resourceModel,
+					quantifier,
+					product
+			);
+
+		} else if (ralExpressionDTO instanceof RALExprHistoryInformedDTO) {
+
+			log.debug("RALExpression Type: HAS HISTORY INFORMED");
+
+			RALExprHistoryInformedDTO ralExprHistoryInformedDTO =
+					(RALExprHistoryInformedDTO) ralExpressionDTO;
+
+			Product product = workflowDesigner.getProduct(specId, ralExprHistoryInformedDTO.getDataField());
+
+			if (!(product instanceof Entity)) {
+				throw new RMException(RMErrorType.INVALID_DATA_FIELD, "The data field in the HAS HISTORY INFORMED expression is not an attribute");
+			}
+
+			RALExprHistory.Quantifier quantifier = RALExprHistory.Quantifier.fromString(ralExprHistoryInformedDTO.getQuantifier().toString());
+
+			return new RALExprHistoryInformed(
+					resourceModel,
+					quantifier,
+					product
+			);
+
 		} else {
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 		}
