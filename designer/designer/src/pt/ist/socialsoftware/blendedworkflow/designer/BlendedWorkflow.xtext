@@ -183,8 +183,8 @@ RALExpression:
 	NotExpr |
 	CompoundExpr |
 	CapabilityExpr |
-	HistoryExecutingExpr |
-	HistoryInformedExpr
+	HistoryExpr |
+	CommonalityExpr
 ;
 
 AnyoneExpr:
@@ -306,6 +306,10 @@ CapabilityExpr:
 	'HAS' 'CAPABILITY' capability = [Capability]
 ;
 
+HistoryExpr:
+	HistoryExecutingExpr | HistoryInformedExpr
+;
+
 HistoryExecutingExpr:
 	'WITH' quantifier = HistoryQuantifier 'HISTORY' 'ON' 'EXECUTION' 'IN' dataField = QualifiedName
 ;
@@ -318,3 +322,22 @@ HistoryQuantifier:
 	'LEAST' | 'MOST'
 ;
 
+CommonalityExpr:
+	SharesPositionExpr | SharesUnitExpr | SharesRoleExpr
+;
+
+SharesPositionExpr:
+	'SHARES' amount = Amount 'POSITION' 'WITH' person = PersonConstraint
+;
+
+SharesUnitExpr:
+	'SHARES' amount = Amount 'UNIT' 'WITH' person = PersonConstraint
+;
+
+SharesRoleExpr:
+	'SHARES' amount = Amount 'ROLE' ('IN' 'UNIT' unit = [Unit])? 'WITH' person = PersonConstraint
+;
+
+Amount:
+	'SOME' | 'ALL'
+;

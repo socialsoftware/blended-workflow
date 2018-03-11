@@ -28,6 +28,9 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportedBy
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportedByPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportsToPersonPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportsToPositionExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.SharesPositionExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.SharesRoleExpr;
+import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.SharesUnitExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO.ResourceRuleType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -55,6 +58,11 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprHistoryDTO.class, name = "RALExprHistoryDTO"),
     @JsonSubTypes.Type(value = RALExprHistoryExecutingDTO.class, name = "RALExprHistoryExecutingDTO"),
     @JsonSubTypes.Type(value = RALExprHistoryInformedDTO.class, name = "RALExprHistoryInformedDTO"),
+    @JsonSubTypes.Type(value = RALExprCommonalityDTO.class, name = "RALExprCommonalityDTO"),
+    @JsonSubTypes.Type(value = RALExprSharesPositionDTO.class, name = "RALExprSharesPositionDTO"),
+    @JsonSubTypes.Type(value = RALExprSharesUnitDTO.class, name = "RALExprSharesUnitDTO"),
+    @JsonSubTypes.Type(value = RALExprSharesRoleDTO.class, name = "RALExprSharesRoleDTO"),
+    
 })
 public class RALExpressionDTO {
 	public static RALExpressionDTO buildRALExpressionDTO(String specId, RALExpression expression) {
@@ -186,6 +194,36 @@ public class RALExpressionDTO {
 					RALExprHistoryDTO.Quantifier.fromString(historyInformedExpr.getQuantifier()),
 					historyInformedExpr.getDataField()
 				);
+		
+		} else if (expression instanceof SharesPositionExpr) {
+			
+			SharesPositionExpr sharesPositionExpr = (SharesPositionExpr) expression;
+			ralExpressionDTO = new RALExprSharesPositionDTO(
+					RALExprCommonalityDTO.Amount.fromString(sharesPositionExpr.getAmount()),
+					RALExpressionDTO.buildRALExpressionDTO(specId, sharesPositionExpr.getPerson())
+				);
+		
+		} else if (expression instanceof SharesUnitExpr) {
+			
+			SharesUnitExpr sharesUnitExpr = (SharesUnitExpr) expression;
+			ralExpressionDTO = new RALExprSharesUnitDTO(
+					RALExprCommonalityDTO.Amount.fromString(sharesUnitExpr.getAmount()),
+					RALExpressionDTO.buildRALExpressionDTO(specId, sharesUnitExpr.getPerson())
+				);
+		
+		} else if (expression instanceof SharesRoleExpr) {
+			
+			SharesRoleExpr sharesRoleExpr = (SharesRoleExpr) expression;
+			RALExprSharesRoleDTO dto = new RALExprSharesRoleDTO(
+					RALExprCommonalityDTO.Amount.fromString(sharesRoleExpr.getAmount()),
+					RALExpressionDTO.buildRALExpressionDTO(specId, sharesRoleExpr.getPerson())
+				);
+			
+			if (sharesRoleExpr.getUnit() != null) {
+				dto.setUnit(sharesRoleExpr.getUnit().getName());
+			}
+			
+			ralExpressionDTO = dto;
 		
 		} 
 		

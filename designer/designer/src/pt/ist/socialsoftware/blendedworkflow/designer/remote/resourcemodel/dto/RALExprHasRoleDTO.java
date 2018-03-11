@@ -12,7 +12,6 @@ public class RALExprHasRoleDTO extends RALExpressionDTO {
 	}
 	
 	public RALExprHasRoleDTO(String role) {
-		super();
 		this.role = role;
 	}
 
