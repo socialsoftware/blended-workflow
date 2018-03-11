@@ -1,6 +1,6 @@
-module filesystem/doctorappointment/patientepisode/activity/ActivitySpecOne/SecureActivityModelPattern4SpecOneExec
+module filesystem/doctorappointment/patientepisode/activity/ActivitySpecOne/SecureActivityModelPattern5SpecOneExec
 
-open filesystem/doctorappointment/patientepisode/activity/ActivitySpecOne/SecureActivityModelPattern4SpecOne
+open filesystem/doctorappointment/patientepisode/activity/ActivitySpecOne/SecureActivityModelPattern5SpecOne
 
 
 sig SecureState extends AbstractSecureState{}
@@ -17,10 +17,10 @@ pred init (s: SecureState) {
 fact traces {
 	first.init
 	all s: SecureState - last | let s' = s.next |
-	some p: Patient, e: Episode, u: User, d: Doctor | 
-		secureRegisterPatient[s, s', p, u] or
-		secureCreateEpisode[s, s', p, e, d, u] or
-		secureWriteReport[s, s', e, u]
+	some p: Patient, e: Episode, d: Doctor| some disj us, ut: User |
+		secureRegisterPatient[s, s', p, us, ut] or
+		secureCreateEpisode[s, s', p, e, d, us, none] or
+		secureWriteReport[s, s', e, us, none]
 }
 
 run pattern2Complete for 4 but 4 SecureState, 5 Int

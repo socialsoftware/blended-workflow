@@ -1,7 +1,7 @@
-module filesystem/doctorappointment/patient_episode/SecurePattern4DoctorAppointment
+module filesystem/doctorappointment/patientepisode/SecurePattern4DoctorAppointment
 
-open filesystem/doctorappointment/patient_episode/SecureDoctorAppointment
-open filesystem/Pattern4/SecurePattern4Spec
+open filesystem/doctorappointment/patientepisode/SecureDoctorAppointment
+
 
 one sig RegisterPatientActivity extends Activity{}
 
@@ -23,23 +23,23 @@ fact acrules{
 	//user roles	
 	AccessControlRules.u_roles = {Alice -> R_Doctor}
 	//resources
-	AccessControlRules.resources = {Patient+ WriteReportActivity +CreateEpisodeActivity +RegisterPatientActivity + WriteReportGoal + CreateEpisodeGoal + RegisterPatientGoal}
+	AccessControlRules.resources = {Patient+ WriteReportActivity +CreateEpisodeActivity +RegisterPatientActivity}
 	//role permissions
 	 AccessControlRules.permissions = 
 		{Def -> 
-			{Alice->{RegisterPatientActivity + RegisterPatientGoal} +
-				{R_Doctor-> {CreateEpisodeActivity + CreateEpisodeGoal}} +
-				{DomainEpisodeDoctor -> {WriteReportActivity + WriteReportGoal}}
+			{Alice->{RegisterPatientActivity} +
+				{R_Doctor-> {CreateEpisodeActivity}} +
+				{DomainEpisodeDoctor -> {WriteReportActivity}}
 			}	
 		}
 }
 
 
-one sig RegisterPatientGoal extends Goal{}
+//one sig RegisterPatientGoal extends Goal{}
 
-one sig CreateEpisodeGoal extends Goal{}
+//one sig CreateEpisodeGoal extends Goal{}
 
-one sig WriteReportGoal extends Goal{}
+//one sig WriteReportGoal extends Goal{}
 
 
 

@@ -5,7 +5,7 @@ open filesystem/BWSecureSpec
 
 one sig Alice, Bob extends User{}
 
-one sig R_Doctor extends RoleSubject{}
+one sig R_Doctor, R_Bob extends RoleSubject{}
 
 ////////////////////////////PATTERN2////////////////////////
 
