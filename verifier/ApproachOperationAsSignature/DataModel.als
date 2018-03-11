@@ -1,20 +1,16 @@
 module filesystem/DataModel
 
-abstract sig Obj {}
+abstract sig Entity {}
 
-abstract sig FName {
+abstract sig Attribute {
 	minMul: Int,
 	maxMul: Int,
-	inverse: FName
+	inverse: Attribute
 }
 
-abstract sig Val {}
-
-one sig DefVal extends Val {}
-
 abstract sig Dependence {
-	sourceObj: Obj,
-	sourceAtt: FName, 
-	sequence: seq FName, 
-	targetAtt: FName
+	sourceEntity: Entity,
+	sourceAttribute: Attribute, 
+	path: seq Attribute, 
+	targetAttribute: Attribute
 }

@@ -9,28 +9,10 @@ sig DefEntityA extends GoalProduce {}
 		defAtts = none -> none
 	}
 
-sig DefEntityAAttOne extends GoalProduce {}
-	{
-		defEnts = none
-		one a: EntityA | defAtts = a -> entityA_attOne
-	}
-
-sig DefEntityAAttTwo extends GoalProduce {}
-	{
-		defEnts = none
-		one a: EntityA | defAtts = a -> entityA_attTwo
-	}
-
 sig DefEntityB extends GoalProduce {}
 	{
 		one b: EntityB | defEnts = b
 		defAtts = none -> none
-	}
-
-sig DefEntityBAttOne extends GoalProduce {}
-	{
-		defEnts = none
-		one b: EntityB | defAtts = b -> entityB_attOne
 	}
 
 sig AssociateEntityAEntityB extends GoalAssociate {}

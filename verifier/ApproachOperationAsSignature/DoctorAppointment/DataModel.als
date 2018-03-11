@@ -3,33 +3,33 @@ module filesystem/DoctorAppointment/DataModel
 
 open filesystem/DataModel
 
-sig Patient extends Obj {}
-one sig patient_name extends FName {} 
-one sig patient_address extends FName {} 
-one sig patient_episode extends FName {} 
+sig Patient extends Entity {}
+one sig patient_name extends Attribute {} 
+one sig patient_address extends Attribute {} 
+one sig patient_episode extends Attribute {} 
 	{
 		minMul = 0
 		maxMul = 10
 		inverse = episode_patient
 	}
 
-sig Episode extends Obj {}
-one sig episode_reserve_date extends FName {} 
-one sig episode_checkin extends FName {} 
-one sig episode_checkout extends FName {} 
-one sig episode_patient extends FName {} 
+sig Episode extends Entity {}
+one sig episode_reserve_date extends Attribute {} 
+one sig episode_checkin extends Attribute {} 
+one sig episode_checkout extends Attribute {} 
+one sig episode_patient extends Attribute {} 
 	{
 		minMul = 1
 		maxMul = 1
 		inverse = patient_episode
 	}
-one sig episode_data extends FName {} 
+one sig episode_data extends Attribute {} 
 	{
 		minMul = 1
 		maxMul = 1
 		inverse = data_episode
 	}
-one sig episode_report extends FName {} 
+one sig episode_report extends Attribute {} 
 	{
 		minMul =1
 		maxMul =1
@@ -37,35 +37,35 @@ one sig episode_report extends FName {}
 	}
 one sig episode_checkout_episode_checkin_dependence extends Dependence {}
 	{
-		sourceObj = Episode
-		sourceAtt = episode_checkout
-		sequence = none -> none
-		targetAtt = episode_checkin
+		sourceEntity = Episode
+		sourceAttribute = episode_checkout
+		path = none -> none
+		targetAttribute = episode_checkin
 	}
 one sig episode_checkout_report_descripton_dependence extends Dependence {}
 	{
-		sourceObj = Episode
-		sourceAtt = episode_checkout
-		sequence = 0 -> episode_report
-		targetAtt = report_description
+		sourceEntity = Episode
+		sourceAttribute = episode_checkout
+		path = 0 -> episode_report
+		targetAttribute = report_description
 	}
 
 
-sig Data extends Obj {}
-one sig data_height extends FName {}
-one sig data_weight extends FName {}
-one sig data_blood_pressure extends FName {}
-one sig data_physical_condition extends FName {}
-one sig data_episode extends FName {}
+sig Data extends Entity {}
+one sig data_height extends Attribute {}
+one sig data_weight extends Attribute {}
+one sig data_blood_pressure extends Attribute {}
+one sig data_physical_condition extends Attribute {}
+one sig data_episode extends Attribute {}
 	{
 		minMul = 1
 		maxMul = 1
 		inverse = episode_data
 	}
 
-sig Report extends Obj {}
-one sig report_description extends FName {}
-one sig report_episode extends FName {}
+sig Report extends Entity {}
+one sig report_description extends Attribute {}
+one sig report_episode extends Attribute {}
 	{
 		minMul = 1
 		maxMul = 1
@@ -73,8 +73,10 @@ one sig report_episode extends FName {}
 	}
 one sig report_description_data_blood_pressure_dependence extends Dependence {}
 	{
-		sourceObj = Report
-		sourceAtt = report_description
-		sequence =  0 -> report_episode + 1 -> episode_data
-		targetAtt = data_blood_pressure
+		sourceEntity = Report
+		sourceAttribute = report_description
+		path =  0 -> report_episode + 1 -> episode_data
+		targetAttribute = data_blood_pressure
 	}
+
+run {}

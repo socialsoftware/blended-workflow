@@ -3,8 +3,8 @@ module filesystem/DoctorAppointment/StateModel
 open filesystem/StateModel
 open filesystem/DoctorAppointment/DataModel
 
-pred complete {
-	one s: AbstractState |
+pred final {
+	one s: State |
 		defEntity[s, Episode] and
 
 		// Patient
@@ -19,7 +19,7 @@ pred complete {
 
 		multiplicity [s, Patient, patient_episode] and
 		multiplicity [s, Episode, episode_patient] and
-		bidirectionalRule [s, Patient, episode_patient, Episode, patient_episode] and
+		bidirectional [s, Patient, patient_episode, Episode] and
 
 		// Data
 		defAttribute [s, Data, data_height + data_weight + data_blood_pressure + data_physical_condition] and
@@ -27,7 +27,7 @@ pred complete {
 
 		multiplicity [s, Episode, episode_data] and
 		multiplicity [s, Data, data_episode] and
-		bidirectionalRule [s, Episode, data_episode, Data, episode_data] and
+		bidirectional [s, Episode, episode_data, Data] and
 
 		// Report
 		defAttribute [s, Report, report_description] and
@@ -35,14 +35,14 @@ pred complete {
 
 		multiplicity [s, Episode, episode_report] and
 		multiplicity [s, Report, report_episode] and
- 		bidirectionalRule [s, Episode, report_episode, Report, episode_report] and
+ 		bidirectional [s, Episode, episode_report, Report] and
 
 		dependence [s, Episode, episode_checkout_report_descripton_dependence] and
 		dependence [s, Report, report_description_data_blood_pressure_dependence]
 }
 
 
-pred Invariants(s: AbstractState) {
+pred Invariants(s: State) {
 	// only the correct fields are associated to the entities
 	noExtraFields [s, Patient, patient_name + patient_address + patient_episode] 
 	noExtraFields [s, Episode, episode_reserve_date + episode_checkin + episode_checkout + episode_patient + episode_data + episode_report]	 
@@ -50,17 +50,17 @@ pred Invariants(s: AbstractState) {
 	noExtraFields [s, Report, report_description + report_episode]	 
 
 	// does not exceeds mutliplicity
-	noMultiplicityExceed [s, Patient, patient_episode] 
-	noMultiplicityExceed [s, Episode, episode_patient] 
-	noMultiplicityExceed [s, Episode, episode_data] 
-	noMultiplicityExceed [s, Data, data_episode] 
-	noMultiplicityExceed [s, Episode, episode_report] 
-	noMultiplicityExceed [s, Report, report_episode] 
+	noMultiplicityExceeded [s, Patient, patient_episode] 
+	noMultiplicityExceeded [s, Episode, episode_patient] 
+	noMultiplicityExceeded [s, Episode, episode_data] 
+	noMultiplicityExceeded [s, Data, data_episode] 
+	noMultiplicityExceeded [s, Episode, episode_report] 
+	noMultiplicityExceeded [s, Report, report_episode] 
 
 	// bidirectional relation
-	bidirectionalPreservation [s, Patient, episode_patient, Episode, patient_episode]
- 	bidirectionalPreservation [s, Episode, data_episode, Data, episode_data]
- 	bidirectionalPreservation [s, Episode, report_episode, Report, episode_report]
+	bidirectional [s, Patient, patient_episode, Episode]
+ 	bidirectional [s, Episode, episode_data, Data]
+ 	bidirectional [s, Episode, episode_report, Report]
 
 	// dpendences should be verified
 	dependence [s, Episode, episode_checkout_report_descripton_dependence]
@@ -68,4 +68,5 @@ pred Invariants(s: AbstractState) {
 	dependence [s, Report, report_description_data_blood_pressure_dependence]
 }
 
+run {}
 

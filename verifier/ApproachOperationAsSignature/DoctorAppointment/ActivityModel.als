@@ -44,4 +44,5 @@ sig WriteReport extends Activity {}
 		defAtts = defEnts -> report_description
 		one e: Episode | defMuls = defEnts -> report_episode -> e + e -> episode_report -> defEnts
 	}
+
 run {}
