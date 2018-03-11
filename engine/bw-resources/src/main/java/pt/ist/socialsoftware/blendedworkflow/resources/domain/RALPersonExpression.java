@@ -20,6 +20,9 @@ public abstract class RALPersonExpression extends RALPersonExpression_Base {
         getRalExprDelegatesToPersonPositionSet().forEach(expr ->
             removeRalExprDelegatesToPersonPosition(expr)
         );
+        getRalExprCommonalitySet().stream().forEach(expr ->
+            removeRalExprCommonality(expr)
+        );
         super.delete();
     }
 }

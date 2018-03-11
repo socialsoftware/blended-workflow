@@ -417,6 +417,70 @@ public class DesignInterface {
 					product
 			);
 
+		} else if (ralExpressionDTO instanceof RALExprSharesPositionDTO) {
+
+			log.debug("RALExpression Type: SHARES POSITION");
+
+			RALExprSharesPositionDTO ralExprSharesPositionDTO = (RALExprSharesPositionDTO) ralExpressionDTO;
+
+			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesPositionDTO.getAmount().toString());
+
+			// FIXME: Bad code
+			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+					specId,
+					ralExprSharesPositionDTO.getPersonExpr());
+
+			return new RALExprSharesPosition(
+					resourceModel,
+					amount,
+					personExpression
+			);
+
+		} else if (ralExpressionDTO instanceof RALExprSharesUnitDTO) {
+
+			log.debug("RALExpression Type: SHARES UNIT");
+
+			RALExprSharesUnitDTO ralExprSharesUnitDTO = (RALExprSharesUnitDTO) ralExpressionDTO;
+
+			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesUnitDTO.getAmount().toString());
+
+			// FIXME: Bad code
+			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+					specId,
+					ralExprSharesUnitDTO.getPersonExpr());
+
+			return new RALExprSharesUnit(
+					resourceModel,
+					amount,
+					personExpression
+			);
+
+		} else if (ralExpressionDTO instanceof RALExprSharesRoleDTO) {
+
+			log.debug("RALExpression Type: SHARES ROLE");
+
+			RALExprSharesRoleDTO ralExprSharesRoleDTO = (RALExprSharesRoleDTO) ralExpressionDTO;
+
+			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesRoleDTO.getAmount().toString());
+
+			// FIXME: Bad code
+			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+					specId,
+					ralExprSharesRoleDTO.getPersonExpr());
+
+			RALExprSharesRole ralExprSharesRole = new RALExprSharesRole(
+					resourceModel,
+					amount,
+					personExpression
+			);
+
+			if (ralExprSharesRoleDTO.getUnit() != null) {
+				ralExprSharesRole.setUnit(resourceModel.getUnit(ralExprSharesRoleDTO.getUnit()));
+			}
+
+			return ralExprSharesRole;
+
+
 		} else {
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 		}

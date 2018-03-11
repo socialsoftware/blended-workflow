@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExpression.TaskDutyType as TaskDutyType;
 enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistory.Quantifier as HistoryQuantifier;
+enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprCommonality.Amount as CommonalityAmount;
 
 class ResourceModel;
 
@@ -158,6 +159,16 @@ class RALExprHistoryExecuting extends RALExprHistory;
 
 class RALExprHistoryInformed extends RALExprHistory;
 
+class RALExprCommonality extends RALExpression {
+    CommonalityAmount amount;
+}
+
+class RALExprSharesPosition extends RALExprCommonality;
+
+class RALExprSharesRole extends RALExprCommonality;
+
+class RALExprSharesUnit extends RALExprCommonality;
+
 relation ResourceModelHasRALExpressions {
     ResourceModel playsRole resourceModel { multiplicity 1..1; }
     RALExpression playsRole ralExpression { multiplicity 0..*; }
@@ -291,4 +302,14 @@ relation RALExprHasCapabilityHasCapability {
 relation RALExprHistoryHasDataField {
     RALExprHistory playsRole RALExprHistory { multiplicity 0..*; }
     .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole dataField { multiplicity 1..1; }
+}
+
+relation RALExprCommonalityHasRALPersonExpression {
+    RALPersonExpression playsRole personExpr { multiplicity 0..1; }
+    RALExprCommonality playsRole ralExprCommonality { multiplicity 0..*; }
+}
+
+relation RALExprSharesRoleHasUnit {
+    Unit playsRole Unit { multiplicity 0..1; }
+    RALExprSharesRole playsRole ralExprSharesRole { multiplicity 0..*; }
 }
