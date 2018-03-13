@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RALExprCommonalityDTO extends RALExpressionDTO {
-	public enum Amount {
+	public enum AmountDTO {
 		SOME("SOME"), 
 		ALL("ALL");
 		
 		private final String code;
 		
-		private Amount(String code) {
+		private AmountDTO(String code) {
 			this.code = code;
 		}
 		
@@ -18,36 +18,36 @@ public class RALExprCommonalityDTO extends RALExpressionDTO {
 			return code;
 		}
 	
-		public static Amount fromString(String code) throws IllegalArgumentException {
+		public static AmountDTO fromString(String code) throws IllegalArgumentException {
 			switch (code) {
 				case "SOME":
-					return Amount.SOME;
+					return AmountDTO.SOME;
 				case "ALL":
-					return Amount.ALL;
+					return AmountDTO.ALL;
 				default:
 					throw new IllegalArgumentException();
 			}
 		}
 	}
 	
-	private Amount amount;
+	private AmountDTO amountDTO;
 	private RALExpressionDTO personExpr;
 
 	public RALExprCommonalityDTO() {
 
 	}
 
-	public RALExprCommonalityDTO(Amount amount, RALExpressionDTO personExpr) {
-		this.amount = amount;
+	public RALExprCommonalityDTO(AmountDTO amount, RALExpressionDTO personExpr) {
+		this.amountDTO = amount;
 		this.personExpr = personExpr;
 	}
 
-	public Amount getAmount() {
-		return amount;
+	public AmountDTO getAmountDTO() {
+		return amountDTO;
 	}
 
-	public void setAmount(Amount amount) {
-		this.amount = amount;
+	public void setAmountDTO(AmountDTO amount) {
+		this.amountDTO = amount;
 	}
 
 	public RALExpressionDTO getPersonExpr() {

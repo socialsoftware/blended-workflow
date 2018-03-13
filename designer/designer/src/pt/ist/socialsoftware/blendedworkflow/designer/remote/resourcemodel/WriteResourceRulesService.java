@@ -12,7 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ResourceRu
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RALExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO.ResourceRuleType;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO.ResourceRuleTypeDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWError;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification;
 
@@ -38,7 +38,7 @@ private Logger logger = LoggerFactory.getLogger(WriteResourceRulesService.class)
 	private void writeRules(List<ResourceRule> rules, String specId, BWNotification notification) {
 		rules.stream().forEach(rule -> {
 			RALExpressionDTO expr = RALExpressionDTO.buildRALExpressionDTO(specId, rule.getExpression());
-			ResourceRuleType type = ResourceRuleType.fromString(rule.getTaskDuty());
+			ResourceRuleTypeDTO type = ResourceRuleTypeDTO.fromString(rule.getTaskDuty());
 			ResourceRuleDTO ruleDTO = new ResourceRuleDTO(specId, rule.getDatafield(), type, expr);
 			repository.createResourceRule(ruleDTO, notification);
 		});

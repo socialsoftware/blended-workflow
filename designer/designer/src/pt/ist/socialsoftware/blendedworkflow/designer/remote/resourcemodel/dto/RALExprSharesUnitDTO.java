@@ -10,7 +10,7 @@ public class RALExprSharesUnitDTO extends RALExprCommonalityDTO {
 		
 	}
 
-	public RALExprSharesUnitDTO(Amount amount, RALExpressionDTO personExpr) {
+	public RALExprSharesUnitDTO(AmountDTO amount, RALExpressionDTO personExpr) {
 		super(amount, personExpr);
 	}
 }

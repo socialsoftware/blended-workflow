@@ -11,12 +11,12 @@ public class RALExprSharesRoleDTO extends RALExprCommonalityDTO {
 		
 	}
 	
-	public RALExprSharesRoleDTO(Amount amount, RALExpressionDTO personExpr) {
-		super(amount, personExpr);
+	public RALExprSharesRoleDTO(AmountDTO amountDTO, RALExpressionDTO personExpr) {
+		super(amountDTO, personExpr);
 	}
 	
-	public RALExprSharesRoleDTO(Amount amount, RALExpressionDTO personExpr, String unit) {
-		super(amount, personExpr);
+	public RALExprSharesRoleDTO(AmountDTO amountDTO, RALExpressionDTO personExpr, String unit) {
+		super(amountDTO, personExpr);
 		this.unit = unit;
 	}
 

@@ -8,7 +8,7 @@ public class RALExprSharesPositionDTO extends RALExprCommonalityDTO {
 		
 	}
 	
-	public RALExprSharesPositionDTO(Amount amount, RALExpressionDTO personExpr) {
+	public RALExprSharesPositionDTO(AmountDTO amount, RALExpressionDTO personExpr) {
 		super(amount, personExpr);
 	}
 }

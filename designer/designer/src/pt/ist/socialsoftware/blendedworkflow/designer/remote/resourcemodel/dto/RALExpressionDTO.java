@@ -31,7 +31,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ReportsToP
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.SharesPositionExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.SharesRoleExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.SharesUnitExpr;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO.ResourceRuleType;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO.ResourceRuleTypeDTO;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "profileType", visible = true)
@@ -81,7 +81,7 @@ public class RALExpressionDTO {
 		} else if (expression instanceof IsPersonInDuty) {
 			
 			IsPersonInDuty isPersonInDutyExpr = (IsPersonInDuty) expression;
-			ralExpressionDTO = new RALExprIsPersonInTaskDutyDTO(ResourceRuleType.fromAsgmtString(isPersonInDutyExpr.getTaskDuty()), isPersonInDutyExpr.getDataField());
+			ralExpressionDTO = new RALExprIsPersonInTaskDutyDTO(ResourceRuleTypeDTO.fromAsgmtString(isPersonInDutyExpr.getTaskDuty()), isPersonInDutyExpr.getDataField());
 		
 		} else if (expression instanceof AnyoneExpr) {
 		
@@ -183,7 +183,7 @@ public class RALExpressionDTO {
 			
 			HistoryExecutingExpr historyExecutingExpr = (HistoryExecutingExpr) expression;
 			ralExpressionDTO = new RALExprHistoryExecutingDTO(
-					RALExprHistoryDTO.Quantifier.fromString(historyExecutingExpr.getQuantifier()),
+					RALExprHistoryDTO.QuantifierDTO.fromString(historyExecutingExpr.getQuantifier()),
 					historyExecutingExpr.getDataField()
 				);
 		
@@ -191,7 +191,7 @@ public class RALExpressionDTO {
 			
 			HistoryInformedExpr historyInformedExpr = (HistoryInformedExpr) expression;
 			ralExpressionDTO = new RALExprHistoryInformedDTO(
-					RALExprHistoryDTO.Quantifier.fromString(historyInformedExpr.getQuantifier()),
+					RALExprHistoryDTO.QuantifierDTO.fromString(historyInformedExpr.getQuantifier()),
 					historyInformedExpr.getDataField()
 				);
 		
@@ -199,7 +199,7 @@ public class RALExpressionDTO {
 			
 			SharesPositionExpr sharesPositionExpr = (SharesPositionExpr) expression;
 			ralExpressionDTO = new RALExprSharesPositionDTO(
-					RALExprCommonalityDTO.Amount.fromString(sharesPositionExpr.getAmount()),
+					RALExprCommonalityDTO.AmountDTO.fromString(sharesPositionExpr.getAmount()),
 					RALExpressionDTO.buildRALExpressionDTO(specId, sharesPositionExpr.getPerson())
 				);
 		
@@ -207,7 +207,7 @@ public class RALExpressionDTO {
 			
 			SharesUnitExpr sharesUnitExpr = (SharesUnitExpr) expression;
 			ralExpressionDTO = new RALExprSharesUnitDTO(
-					RALExprCommonalityDTO.Amount.fromString(sharesUnitExpr.getAmount()),
+					RALExprCommonalityDTO.AmountDTO.fromString(sharesUnitExpr.getAmount()),
 					RALExpressionDTO.buildRALExpressionDTO(specId, sharesUnitExpr.getPerson())
 				);
 		
@@ -215,7 +215,7 @@ public class RALExpressionDTO {
 			
 			SharesRoleExpr sharesRoleExpr = (SharesRoleExpr) expression;
 			RALExprSharesRoleDTO dto = new RALExprSharesRoleDTO(
-					RALExprCommonalityDTO.Amount.fromString(sharesRoleExpr.getAmount()),
+					RALExprCommonalityDTO.AmountDTO.fromString(sharesRoleExpr.getAmount()),
 					RALExpressionDTO.buildRALExpressionDTO(specId, sharesRoleExpr.getPerson())
 				);
 			

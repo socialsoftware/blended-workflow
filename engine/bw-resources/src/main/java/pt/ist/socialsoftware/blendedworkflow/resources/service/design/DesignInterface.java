@@ -389,7 +389,7 @@ public class DesignInterface {
 				throw new RMException(RMErrorType.INVALID_DATA_FIELD, "The data field in the HAS HISTORY EXECUTING expression is not an attribute");
 			}
 
-			RALExprHistory.Quantifier quantifier = RALExprHistory.Quantifier.fromString(ralExprHistoryExecutingDTO.getQuantifier().toString());
+			RALExprHistory.Quantifier quantifier = RALExprHistory.Quantifier.fromString(ralExprHistoryExecutingDTO.getQuantifierDTO().toString());
 			return new RALExprHistoryExecuting(
 					resourceModel,
 					quantifier,
@@ -409,7 +409,7 @@ public class DesignInterface {
 				throw new RMException(RMErrorType.INVALID_DATA_FIELD, "The data field in the HAS HISTORY INFORMED expression is not an attribute");
 			}
 
-			RALExprHistory.Quantifier quantifier = RALExprHistory.Quantifier.fromString(ralExprHistoryInformedDTO.getQuantifier().toString());
+			RALExprHistory.Quantifier quantifier = RALExprHistory.Quantifier.fromString(ralExprHistoryInformedDTO.getQuantifierDTO().toString());
 
 			return new RALExprHistoryInformed(
 					resourceModel,
@@ -423,7 +423,7 @@ public class DesignInterface {
 
 			RALExprSharesPositionDTO ralExprSharesPositionDTO = (RALExprSharesPositionDTO) ralExpressionDTO;
 
-			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesPositionDTO.getAmount().toString());
+			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesPositionDTO.getAmountDTO().toString());
 
 			// FIXME: Bad code
 			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
@@ -442,7 +442,7 @@ public class DesignInterface {
 
 			RALExprSharesUnitDTO ralExprSharesUnitDTO = (RALExprSharesUnitDTO) ralExpressionDTO;
 
-			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesUnitDTO.getAmount().toString());
+			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesUnitDTO.getAmountDTO().toString());
 
 			// FIXME: Bad code
 			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
@@ -461,7 +461,7 @@ public class DesignInterface {
 
 			RALExprSharesRoleDTO ralExprSharesRoleDTO = (RALExprSharesRoleDTO) ralExpressionDTO;
 
-			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesRoleDTO.getAmount().toString());
+			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesRoleDTO.getAmountDTO().toString());
 
 			// FIXME: Bad code
 			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(

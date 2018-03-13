@@ -4,25 +4,25 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RALExprHistoryInformedDTO extends RALExprHistoryDTO {
-	private RALExprHistoryDTO.Quantifier quantifier;
+	private QuantifierDTO quantifierDTO;
 	private String dataField;
 
 	public RALExprHistoryInformedDTO() {
 		
 	}
 
-	public RALExprHistoryInformedDTO(RALExprHistoryDTO.Quantifier quantifier, String dataField) {
+	public RALExprHistoryInformedDTO(QuantifierDTO quantifierDTO, String dataField) {
 		super();
-		this.quantifier = quantifier;
+		this.quantifierDTO = quantifierDTO;
 		this.dataField = dataField;
 	}
 
-	public RALExprHistoryDTO.Quantifier getQuantifier() {
-		return quantifier;
+	public QuantifierDTO getQuantifierDTO() {
+		return quantifierDTO;
 	}
 
-	public void setQuantifier(RALExprHistoryDTO.Quantifier quantifier) {
-		this.quantifier = quantifier;
+	public void setQuantifierDTO(QuantifierDTO quantifierDTO) {
+		this.quantifierDTO = quantifierDTO;
 	}
 
 	public String getDataField() {

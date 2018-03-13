@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResourceRuleDTO {
-	public enum ResourceRuleType {
+	public enum ResourceRuleTypeDTO {
 		HAS_RESPONSIBLE("has responsible"), 
 		INFORMS("informs");
 		
 		private final String code;
 		
-		private ResourceRuleType(String code) {
+		private ResourceRuleTypeDTO(String code) {
 			this.code = code;
 		}
 		
@@ -18,23 +18,23 @@ public class ResourceRuleDTO {
 			return code;
 		}
 
-		public static ResourceRuleType fromString(String code) throws IllegalArgumentException {
+		public static ResourceRuleTypeDTO fromString(String code) throws IllegalArgumentException {
 			switch (code) {
 				case "has responsible":
-					return ResourceRuleType.HAS_RESPONSIBLE;
+					return ResourceRuleTypeDTO.HAS_RESPONSIBLE;
 				case "informs":
-					return ResourceRuleType.INFORMS;
+					return ResourceRuleTypeDTO.INFORMS;
 				default:
 					throw new IllegalArgumentException();
 			}
 		}
 		
-		public static ResourceRuleType fromAsgmtString(String code) throws IllegalArgumentException {
+		public static ResourceRuleTypeDTO fromAsgmtString(String code) throws IllegalArgumentException {
 			switch (code) {
 			case "RESPONSIBLE FOR":
-				return ResourceRuleType.HAS_RESPONSIBLE;
+				return ResourceRuleTypeDTO.HAS_RESPONSIBLE;
 			case "INFORMED ABOUT":
-				return ResourceRuleType.INFORMS;
+				return ResourceRuleTypeDTO.INFORMS;
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -43,14 +43,14 @@ public class ResourceRuleDTO {
 	
 	private String specId;
 	private String dataField;
-	private ResourceRuleType type;
+	private ResourceRuleTypeDTO type;
 	private RALExpressionDTO expression;
 	
 	public ResourceRuleDTO() {
 		super();
 	}
 
-	public ResourceRuleDTO(String specId, String dataField, ResourceRuleType type, RALExpressionDTO expression) {
+	public ResourceRuleDTO(String specId, String dataField, ResourceRuleTypeDTO type, RALExpressionDTO expression) {
 		super();
 		this.specId = specId;
 		this.dataField = dataField;
@@ -74,11 +74,11 @@ public class ResourceRuleDTO {
 		this.dataField = dataField;
 	}
 	
-	public ResourceRuleType getType() {
+	public ResourceRuleTypeDTO getType() {
 		return type;
 	}
 	
-	public void setType(ResourceRuleType type) {
+	public void setType(ResourceRuleTypeDTO type) {
 		this.type = type;
 	}
 	
