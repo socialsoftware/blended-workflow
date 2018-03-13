@@ -62,6 +62,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.R
     @JsonSubTypes.Type(value = RALExprSharesPositionDTO.class, name = "RALExprSharesPositionDTO"),
     @JsonSubTypes.Type(value = RALExprSharesUnitDTO.class, name = "RALExprSharesUnitDTO"),
     @JsonSubTypes.Type(value = RALExprSharesRoleDTO.class, name = "RALExprSharesRoleDTO"),
+    @JsonSubTypes.Type(value = RALExprPersonDTO.class, name = "RALExprPersonDTO"),
     
 })
 public class RALExpressionDTO {
@@ -109,7 +110,8 @@ public class RALExpressionDTO {
 		} else if (expression instanceof ReportsToPersonPositionExpr) {
 	
 			ReportsToPersonPositionExpr reportsExpr = (ReportsToPersonPositionExpr) expression;
-			RALExpressionDTO personDTO = RALExpressionDTO.buildRALExpressionDTO(specId, reportsExpr.getPersonExpr());
+			// FIXME : BAD CODE
+			RALExprPersonDTO personDTO = (RALExprPersonDTO) RALExpressionDTO.buildRALExpressionDTO(specId, reportsExpr.getPersonExpr());
 			ralExpressionDTO = new RALExprReportsToPersonPositionExprDTO(personDTO, reportsExpr.isDirectly());
 	
 		} else if (expression instanceof ReportsToPositionExpr) {
@@ -120,7 +122,8 @@ public class RALExpressionDTO {
 		} else if (expression instanceof ReportedByPersonPositionExpr) {
 	
 			ReportedByPersonPositionExpr reportedExpr = (ReportedByPersonPositionExpr) expression;
-			RALExpressionDTO personDTO = RALExpressionDTO.buildRALExpressionDTO(specId, reportedExpr.getPersonExpr());
+			// FIXME : BAD CODE
+			RALExprPersonDTO personDTO = (RALExprPersonDTO) RALExpressionDTO.buildRALExpressionDTO(specId, reportedExpr.getPersonExpr());
 			ralExpressionDTO = new RALExprReportedByPersonPositionExprDTO(personDTO, reportedExpr.isDirectly());
 	
 		} else if (expression instanceof ReportedByPositionExpr) {
@@ -131,7 +134,8 @@ public class RALExpressionDTO {
 		} else if (expression instanceof DelegatesToPersonPositionExpr) {
 	
 			DelegatesToPersonPositionExpr delegatesExpr = (DelegatesToPersonPositionExpr) expression;
-			RALExpressionDTO personDTO = RALExpressionDTO.buildRALExpressionDTO(specId, delegatesExpr.getPersonExpr());
+			// FIXME : BAD CODE
+			RALExprPersonDTO personDTO = (RALExprPersonDTO) RALExpressionDTO.buildRALExpressionDTO(specId, delegatesExpr.getPersonExpr());
 			ralExpressionDTO = new RALExprDelegatesToPersonPositionExprDTO(personDTO);
 	
 		} else if (expression instanceof DelegatesToPositionExpr) {
@@ -142,7 +146,8 @@ public class RALExpressionDTO {
 		} else if (expression instanceof DelegatedByPersonPositionExpr) {
 	
 			DelegatedByPersonPositionExpr delegatedExpr = (DelegatedByPersonPositionExpr) expression;
-			RALExpressionDTO personDTO = RALExpressionDTO.buildRALExpressionDTO(specId, delegatedExpr.getPersonExpr());
+			// FIXME : BAD CODE
+			RALExprPersonDTO personDTO = (RALExprPersonDTO) RALExpressionDTO.buildRALExpressionDTO(specId, delegatedExpr.getPersonExpr());
 			ralExpressionDTO = new RALExprDelegatedByPersonPositionExprDTO(personDTO);
 	
 		} else if (expression instanceof DelegatedByPositionExpr) {

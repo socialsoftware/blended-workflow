@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RALExprReportsToPersonPositionExprDTO extends RALExpressionDTO {
 	private boolean directly;
-	private RALExpressionDTO personExpr;
+	private RALExprPersonDTO personExpr;
 
 	public RALExprReportsToPersonPositionExprDTO() {
 		
 	}
 
-	public RALExprReportsToPersonPositionExprDTO(RALExpressionDTO personExpr, boolean directly) {
+	public RALExprReportsToPersonPositionExprDTO(RALExprPersonDTO personExpr, boolean directly) {
 		this.personExpr = personExpr;
 		this.directly = directly;
 	}
@@ -24,11 +24,11 @@ public class RALExprReportsToPersonPositionExprDTO extends RALExpressionDTO {
 		this.directly = directly;
 	}
 
-	public RALExpressionDTO getPersonExpr() {
+	public RALExprPersonDTO getPersonExpr() {
 		return personExpr;
 	}
 
-	public void setPersonExpr(RALExpressionDTO personExpr) {
+	public void setPersonExpr(RALExprPersonDTO personExpr) {
 		this.personExpr = personExpr;
 	}
 }

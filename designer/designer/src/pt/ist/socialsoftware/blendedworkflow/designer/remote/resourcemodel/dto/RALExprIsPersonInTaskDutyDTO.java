@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO.ResourceRuleTypeDTO;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RALExprIsPersonInTaskDutyDTO extends RALExpressionDTO {
+public class RALExprIsPersonInTaskDutyDTO extends RALExprPersonDTO {
 	private ResourceRuleTypeDTO taskDuty;
 	private String dataField;
 

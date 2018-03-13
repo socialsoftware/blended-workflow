@@ -33,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = RALExprSharesPositionDTO.class, name = "RALExprSharesPositionDTO"),
     @JsonSubTypes.Type(value = RALExprSharesUnitDTO.class, name = "RALExprSharesUnitDTO"),
     @JsonSubTypes.Type(value = RALExprSharesRoleDTO.class, name = "RALExprSharesRoleDTO"),
+    @JsonSubTypes.Type(value = RALExprPersonDTO.class, name = "RALExprPersonDTO"),
 })
 public class RALExpressionDTO {
 

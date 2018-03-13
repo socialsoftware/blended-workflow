@@ -4,21 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RALExprDelegatedByPersonPositionExprDTO extends RALExpressionDTO {
-	private RALExpressionDTO personExpr;
+	private RALExprPersonDTO personExpr;
 
 	public RALExprDelegatedByPersonPositionExprDTO() {
 		
 	}
 
-	public RALExprDelegatedByPersonPositionExprDTO(RALExpressionDTO personExpr) {
+	public RALExprDelegatedByPersonPositionExprDTO(RALExprPersonDTO personExpr) {
 		this.personExpr = personExpr;
 	}
 
-	public RALExpressionDTO getPersonExpr() {
+	public RALExprPersonDTO getPersonExpr() {
 		return personExpr;
 	}
 
-	public void setPersonExpr(RALExpressionDTO personExpr) {
+	public void setPersonExpr(RALExprPersonDTO personExpr) {
 		this.personExpr = personExpr;
 	}
 }

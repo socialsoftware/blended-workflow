@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RALExprIsPersonDTO extends RALExpressionDTO {
+public class RALExprIsPersonDTO extends RALExprPersonDTO {
 	private String person;
 
 	public RALExprIsPersonDTO() {
