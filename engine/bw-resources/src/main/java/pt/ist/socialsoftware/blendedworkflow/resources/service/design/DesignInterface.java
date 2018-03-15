@@ -3,13 +3,13 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
+
+import java.util.Set;
 
 public class DesignInterface {
 	private static Logger log = LoggerFactory.getLogger(DesignInterface.class);
@@ -486,7 +486,50 @@ public class DesignInterface {
 		}
 	}
 
+	@Atomic(mode = Atomic.TxMode.WRITE)
     public boolean generateEnrichedModels(String specId) {
+		Specification spec = workflowDesigner.getSpecBySpecId(specId);
+
+		Set<Entity> entitySet = spec.getDataModel().getEntitySet();
+
+		generateEnrichedActivities(entitySet);
+
+		generateEnrichedGoals(entitySet);
+
 		return true;
     }
+
+	private void generateEnrichedActivities(Set<Entity> entitySet) {
+		for(Entity entity : entitySet) {
+			Activity activity = entity.getDefEntityCondition().getActivityWithPostCondition();
+			activity.setResponsibleFor(entity.getResponsibleFor());
+			activity.setInforms(entity.getInforms());
+
+			// Update entity's attributes
+			for(Attribute attribute : entity.getAttributeSet()) {
+				Activity attributeActivity = attribute.getDefAttributeCondition().getActivityWithPostCondition();
+				attributeActivity.setResponsibleFor(attribute.getResponsibleFor());
+				attributeActivity.setInforms(attribute.getInforms());
+			}
+		}
+	}
+
+	private void generateEnrichedGoals(Set<Entity> entitySet) {
+		for(Entity entity : entitySet) {
+			Goal goal = entity.getDefEntityCondition().getSuccessConditionGoal();
+			if (goal != null) {
+				goal.setResponsibleFor(entity.getResponsibleFor());
+				goal.setInforms(entity.getInforms());
+			}
+
+			// Update entity's attributes
+			for(Attribute attribute : entity.getAttributeSet()) {
+				Goal attributeGoal= attribute.getDefAttributeCondition().getSuccessConditionGoal();
+				if (attributeGoal != null) {
+					attributeGoal.setResponsibleFor(attribute.getResponsibleFor());
+					attributeGoal.setInforms(attribute.getInforms());
+				}
+			}
+		}
+	}
 }
