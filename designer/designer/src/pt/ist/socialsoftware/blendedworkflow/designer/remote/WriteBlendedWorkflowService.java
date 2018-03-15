@@ -94,6 +94,10 @@ public class WriteBlendedWorkflowService {
 			this.repository.generateGoalModel(specId);
 
 			this.repository.generateActivityModel(specId);
+			
+			if (eBWSpecification.getResourceSpecification() != null) {
+				this.rmRepository.generateEnrichedModels(specId);
+			}
 		}
 
 		return notification;

@@ -485,4 +485,8 @@ public class DesignInterface {
 			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
 		}
 	}
+
+    public boolean generateEnrichedModels(String specId) {
+		return true;
+    }
 }

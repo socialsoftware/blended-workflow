@@ -282,7 +282,7 @@ NotExpr:
 ;
 
 DeniableExpr returns RALExpression:
-	PersonExpr | OrganizationalExpr /* | CommonalityExpr | CapabilityExpr */
+	PersonExpr | OrganizationalExpr | CommonalityExpr | CapabilityExpr 
 ;
 
 CompoundExpr: 

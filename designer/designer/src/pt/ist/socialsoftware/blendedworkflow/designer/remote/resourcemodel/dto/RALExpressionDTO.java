@@ -32,6 +32,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.SharesPosi
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.SharesRoleExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.SharesUnitExpr;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.ResourceRuleDTO.ResourceRuleTypeDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.services.BlendedWorkflowGrammarAccess.DeniableExprElements;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "profileType", visible = true)

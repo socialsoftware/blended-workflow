@@ -49,7 +49,7 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 		System.out.println("[WriteRM] Finish writing resource model");
 	}
 	
-	private void createResourceModel(String specId, BWNotification notification) {
+	public void createResourceModel(String specId, BWNotification notification) {
 		repository.createResourceModel(specId, notification);
 	}
 

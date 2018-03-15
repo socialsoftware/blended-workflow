@@ -237,4 +237,16 @@ public class ResourceModelInterface {
 		
 		return result;
 	}
+
+	public boolean generateEnrichedModels(String specId) {
+		logger.debug("generateEnrichedModels: {}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/generate";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		return restTemplate.postForObject(uri, null, Boolean.class, params);
+	}
 }

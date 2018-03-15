@@ -109,4 +109,15 @@ public class ResourceModelSpecificationController {
 
 		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "/generate", method = RequestMethod.POST)
+	public ResponseEntity<Boolean> generateModels(@PathVariable("specId") String specId) {
+		log.debug("GenerateModels: {}", specId);
+
+		DesignInterface designer = DesignInterface.getInstance();
+
+		boolean result = designer.generateEnrichedModels(specId);
+
+		return new ResponseEntity<>(result, HttpStatus.CREATED);
+	}
 }
