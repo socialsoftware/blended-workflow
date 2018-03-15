@@ -52,13 +52,17 @@ public class WriteBlendedWorkflowService {
 
 		try {
 			this.repository.getSpecBySpecId(specId);
-			this.rmRepository.cleanResourceModel(specId);
+			if (eBWSpecification.getResourceSpecification() != null) {				
+				this.rmRepository.cleanResourceModel(specId);
+			}
 			this.repository.cleanBlendedWorkflowModel(specId);
 		} catch (RepositoryException re) {
 			// logger.debug("getSpec: {}", re.getMessage());
 			try {
 				this.repository.createSpec(new SpecDTO(specId, eBWSpecification.getSpecification().getName()));
-				this.rmRepository.createResourceModel(specId, notification);
+				if (eBWSpecification.getResourceSpecification() != null) {					
+					this.rmRepository.createResourceModel(specId, notification);
+				}
 			} catch (RepositoryException ree) {
 				notification.addError(ree.getError());
 				// logger.debug("createSpec: {}", re.getMessage());
@@ -68,7 +72,9 @@ public class WriteBlendedWorkflowService {
 
 		this.dmService.writeDataModel(eBWSpecification.getDataSpecification(), specId, notification);
 		
-		this.rmService.writeResourceModel(eBWSpecification.getResourceSpecification(), specId,  notification);
+		if (eBWSpecification.getResourceSpecification() != null) {			
+			this.rmService.writeResourceModel(eBWSpecification.getResourceSpecification(), specId,  notification);
+		}
 
 		for (BWError error : notification.getError()) {
 			System.out.println(error.getMessage());

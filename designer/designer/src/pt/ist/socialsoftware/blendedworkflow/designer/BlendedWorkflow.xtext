@@ -5,7 +5,7 @@ generate blendedWorkflow "http://www.ist.pt/socialsoftware/blendedworkflow/desig
 BWSpecification:
 	specification = Specification
 	dataSpecification = DataSpecification
-	resourceSpecification = ResourceSpecification
+	(resourceSpecification = ResourceSpecification)?
 ;
 
 /**
@@ -108,7 +108,6 @@ Atomic returns Expression:
  */
 
 ResourceSpecification:
-	{ResourceSpecification}
 	capabilities += Capability*
 	roles += Role*
 	units += Unit*
