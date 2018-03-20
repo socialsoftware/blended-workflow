@@ -55,13 +55,7 @@ pred bidirectional(s: State, sourceEnts: set Entity, sourceAtt: Attribute, targe
 
 // dependencies rules
 pred dependence(s: State, sourceEnt: Entity, dependence: Dependence) {
-	(dependence.sourceAttribute = none and dependence.targetAttribute = none) implies {
-		all e: sourceEnt <: s.entities | !no reach[s, e, dependence.path]
-	} else (dependence.sourceAttribute = none) implies {
-		all e: sourceEnt <: s.entities | DefVal in s.attributes[reach[s, e, dependence.path], dependence.targetAttribute] 
-	} else (dependence.targetAttribute = none) implies {
-		all e: sourceEnt <: s.entities | (s.attributes[e, dependence.sourceAttribute] = DefVal) implies !no reach[s, e, dependence.path]
-	} else (dependence.path = none -> none) implies {
+	(dependence.path = none -> none) implies {
 		all e: sourceEnt <: s.entities | (s.attributes[e, dependence.sourceAttribute] = DefVal) implies DefVal in s.attributes[e, dependence.targetAttribute]
 	} else {
 		all e: sourceEnt <: s.entities | (s.attributes[e, dependence.sourceAttribute] = DefVal) implies DefVal in s.attributes[reach[s, e, dependence.path], dependence.targetAttribute] 

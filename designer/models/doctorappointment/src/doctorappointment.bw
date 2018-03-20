@@ -2,7 +2,7 @@ Specification: "Doctor Appointment"
        
 Entity Patient {
 	name : String 
-	age : Number 
+	age : Number
 	heartProblems : Boolean 
 }         
                       

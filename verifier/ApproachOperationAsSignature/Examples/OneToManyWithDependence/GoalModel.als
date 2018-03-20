@@ -15,12 +15,6 @@ sig DefEntityAAttOne extends GoalProduce {}
 		one a: EntityA | defAtts = a -> entityA_attOne
 	}
 
-sig DefEntityAAttTwo extends GoalProduce {}
-	{
-		defEnts = none
-		one a: EntityA | defAtts = a -> entityA_attTwo
-	}
-
 sig DefEntityB extends GoalProduce {}
 	{
 		one b: EntityB | defEnts = b

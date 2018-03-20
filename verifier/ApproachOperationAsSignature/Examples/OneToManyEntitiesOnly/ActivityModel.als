@@ -7,13 +7,14 @@ sig DefEntityA extends Activity {}
 	{
 		one a: EntityA | defEnts = a
 		defAtts = none -> none
-		defMuls = none -> none -> none
+		Entity.defMuls.Entity in {entityA_entityB + entityB_entityA}
+	//	defMuls = none -> none -> none
 	}
 
 sig DefEntityB extends Activity {}
 	{
 		one b: EntityB | defEnts = b
 		defAtts = none -> none
-		Entity.defMuls.Entity in {entityA_entityB + entityB_entityA}
-	//	defMuls = none -> none -> none
+	//	Entity.defMuls.Entity in {entityA_entityB + entityB_entityA}
+		defMuls = none -> none -> none
 	}

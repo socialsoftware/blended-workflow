@@ -3,7 +3,7 @@ module filesystem/Examples/OneToMany/GoalModelExec
 open filesystem/GoalModelExec
 open filesystem/Examples/OneToMany/GoalModel
 
-run final for 2 but 7 State, 6 Goal, 5 Int
+run final for 2 but 6 State, 5 Goal, 5 Int
 
 assert PreservesInvariant {
 	all s, s': State, g: Goal |
@@ -13,4 +13,4 @@ assert PreservesInvariant {
 			Invariants[s] and execAssociate[s, s', g] => Invariants[s']
 		}
 }
-check PreservesInvariant for 2 but 7 State, 6 Goal, 5 Int
+check PreservesInvariant for 2 but 6 State, 5 Goal, 5 Int

@@ -4,7 +4,6 @@ open filesystem/DataModel
 
 sig EntityA extends Entity {}
 one sig entityA_attOne extends Attribute {} 
-one sig entityA_attTwo extends Attribute {} 
 one sig entityA_entityB extends Attribute {} 
 	{
 		minMul = 0
@@ -29,11 +28,5 @@ one sig entityA_attOne_entityB_attOne_dependence extends Dependence {}
 		targetAttribute = entityB_attOne
 	}
 
-one sig entityB_entityA_dependence extends Dependence {}
-	{
-		sourceEntity = EntityB
-		path = 0 -> entityB_entityA
-		targetAttribute = entityA_attTwo
-	}
 
 run {}

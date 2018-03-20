@@ -205,7 +205,7 @@ public class Activity extends Activity_Base {
 					getName() + ":" + oMul.get().getSourceEntity().getName() + "." + oMul.get().getRolename());
 		}
 
-		// at least one entity definition is done here
+		// at least a member entity of the association is defined here
 		oMul = getMultiplicityInvariantSet().stream()
 				.filter(m -> !(postEntities.contains(m.getRelationBW().getEntityOne())
 						|| postEntities.contains(m.getRelationBW().getEntityTwo())))
