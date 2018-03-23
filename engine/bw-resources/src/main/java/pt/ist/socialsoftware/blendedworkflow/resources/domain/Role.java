@@ -30,6 +30,7 @@ public class Role extends Role_Base {
     }
 
     public void delete() {
+        getRalExprHasRoleSet().stream().forEach(e -> removeRalExprHasRole(e));
         getPositionSet().stream().forEach(p -> removePosition(p));
         setResourceModel(null);
         deleteDomainObject();

@@ -30,6 +30,9 @@ public class Unit extends Unit_Base {
     }
 
     public void delete() {
+        getRalExprHasRoleSet().stream().forEach(e -> removeRalExprHasRole(e));
+        getRalExprHasUnitSet().stream().forEach(e -> removeRalExprHasUnit(e));
+        getRalExprSharesRoleSet().stream().forEach(e -> removeRalExprSharesRole(e));
         getPositionSet().stream().forEach(p -> removePosition(p));
         setResourceModel(null);
         deleteDomainObject();

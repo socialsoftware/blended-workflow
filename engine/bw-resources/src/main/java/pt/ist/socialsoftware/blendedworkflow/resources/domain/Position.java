@@ -57,10 +57,12 @@ public class Position extends Position_Base {
         getWorkDelegatedBySet().stream().forEach(p -> removeWorkDelegatedBy(p));
         getIsReportedBySet().stream().forEach(p -> removeIsReportedBy(p));
 
-        getRalExprDelegatedByPositionSet().forEach(expr -> removeRalExprDelegatedByPosition(expr));
-        getRalExprDelegatesToPositionSet().forEach(expr -> removeRalExprDelegatesToPosition(expr));
-        getRalExprReportedByPositionSet().forEach(expr -> removeRalExprReportedByPosition(expr));
-        getRalExprReportsToPositionSet().forEach(expr -> removeRalExprReportsToPosition(expr));
+        getRalExprDelegatedByPositionSet().stream().forEach(expr -> removeRalExprDelegatedByPosition(expr));
+        getRalExprDelegatesToPositionSet().stream().forEach(expr -> removeRalExprDelegatesToPosition(expr));
+        getRalExprReportedByPositionSet().stream().forEach(expr -> removeRalExprReportedByPosition(expr));
+        getRalExprReportsToPositionSet().stream().forEach(expr -> removeRalExprReportsToPosition(expr));
+        getRalExprHasPositionSet().stream().forEach(expr -> removeRalExprHasPosition(expr));
+        
     }
 
     public void delete() {

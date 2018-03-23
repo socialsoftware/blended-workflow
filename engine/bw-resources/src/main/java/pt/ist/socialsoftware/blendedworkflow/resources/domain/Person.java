@@ -27,6 +27,7 @@ public class Person extends Person_Base {
     }
 
     public void delete() {
+        getRalExprIsPersonSet().stream().forEach(e -> removeRalExprIsPerson(e));
         getEntityInstanceSet().stream().forEach(e -> removeEntityInstance(e));
         getPositionSet().stream().forEach(p -> removePosition(p));
         getCapabilitySet().stream().forEach(c -> removeCapability(c));
