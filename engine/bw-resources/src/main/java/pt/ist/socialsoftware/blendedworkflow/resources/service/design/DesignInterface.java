@@ -225,14 +225,17 @@ public class DesignInterface {
 			RALExprReportsToPersonPositionExprDTO ralExprReportsToPersonPositionExprDTO =
 					(RALExprReportsToPersonPositionExprDTO) ralExpressionDTO;
 
-			// FIXME: Bad code
-			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+			RALExpression expression = createRALExpression(
 					specId,
 					ralExprReportsToPersonPositionExprDTO.getPersonExpr());
 
+			if (!(expression instanceof RALPersonExpression)) {
+				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST, "Invalid RALExpression cast to " + RALPersonExpression.class.getName());
+			}
+
 			return new RALExprReportsToPersonPosition(
 					resourceModel,
-					personExpression,
+					(RALPersonExpression) expression,
 					ralExprReportsToPersonPositionExprDTO.isDirectly());
 
 		} else if (ralExpressionDTO instanceof RALExprReportsToPositionExprDTO) {
@@ -254,14 +257,17 @@ public class DesignInterface {
 			RALExprReportedByPersonPositionExprDTO ralExprReportedByPersonPositionExprDTO =
 					(RALExprReportedByPersonPositionExprDTO) ralExpressionDTO;
 
-			// FIXME: Bad code
-			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+			RALExpression expression = createRALExpression(
 					specId,
 					ralExprReportedByPersonPositionExprDTO.getPersonExpr());
 
+			if (!(expression instanceof RALPersonExpression)) {
+				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST, "Invalid RALExpression cast to " + RALPersonExpression.class.getName());
+			}
+
 			return new RALExprReportedByPersonPosition(
 					resourceModel,
-					personExpression,
+					(RALPersonExpression) expression,
 					ralExprReportedByPersonPositionExprDTO.isDirectly());
 
 		} else if (ralExpressionDTO instanceof RALExprReportedByPositionExprDTO) {
@@ -283,14 +289,17 @@ public class DesignInterface {
 			RALExprDelegatedByPersonPositionExprDTO ralExprDelegatedByPersonPositionExprDTO =
 					(RALExprDelegatedByPersonPositionExprDTO) ralExpressionDTO;
 
-			// FIXME: Bad code
-			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+			RALExpression expression = createRALExpression(
 					specId,
 					ralExprDelegatedByPersonPositionExprDTO.getPersonExpr());
 
+			if (!(expression instanceof RALPersonExpression)) {
+				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST, "Invalid RALExpression cast to " + RALPersonExpression.class.getName());
+			}
+
 			return new RALExprDelegatedByPersonPosition(
 					resourceModel,
-					personExpression);
+					(RALPersonExpression) expression);
 
 		} else if (ralExpressionDTO instanceof RALExprDelegatedByPositionExprDTO) {
 
@@ -310,14 +319,17 @@ public class DesignInterface {
 			RALExprDelegatesToPersonPositionExprDTO ralExprDelegatesToPersonPositionExprDTO =
 					(RALExprDelegatesToPersonPositionExprDTO) ralExpressionDTO;
 
-			// FIXME: Bad code
-			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+			RALExpression expression = createRALExpression(
 					specId,
 					ralExprDelegatesToPersonPositionExprDTO.getPersonExpr());
 
+			if (!(expression instanceof RALPersonExpression)) {
+				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST, "Invalid RALExpression cast to " + RALPersonExpression.class.getName());
+			}
+
 			return new RALExprDelegatesToPersonPosition(
 					resourceModel,
-					personExpression);
+					(RALPersonExpression) expression);
 
 		} else if (ralExpressionDTO instanceof RALExprDelegatesToPositionExprDTO) {
 
@@ -425,15 +437,18 @@ public class DesignInterface {
 
 			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesPositionDTO.getAmountDTO().toString());
 
-			// FIXME: Bad code
-			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+			RALExpression expression = createRALExpression(
 					specId,
 					ralExprSharesPositionDTO.getPersonExpr());
+
+			if (!(expression instanceof RALPersonExpression)) {
+				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST, "Invalid RALExpression cast to " + RALPersonExpression.class.getName());
+			}
 
 			return new RALExprSharesPosition(
 					resourceModel,
 					amount,
-					personExpression
+					(RALPersonExpression) expression
 			);
 
 		} else if (ralExpressionDTO instanceof RALExprSharesUnitDTO) {
@@ -444,15 +459,18 @@ public class DesignInterface {
 
 			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesUnitDTO.getAmountDTO().toString());
 
-			// FIXME: Bad code
-			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+			RALExpression expression = createRALExpression(
 					specId,
 					ralExprSharesUnitDTO.getPersonExpr());
+
+			if (!(expression instanceof RALPersonExpression)) {
+				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST, "Invalid RALExpression cast to " + RALPersonExpression.class.getName());
+			}
 
 			return new RALExprSharesUnit(
 					resourceModel,
 					amount,
-					personExpression
+					(RALPersonExpression) expression
 			);
 
 		} else if (ralExpressionDTO instanceof RALExprSharesRoleDTO) {
@@ -463,15 +481,18 @@ public class DesignInterface {
 
 			RALExprCommonality.Amount amount = RALExprCommonality.Amount.fromString(ralExprSharesRoleDTO.getAmountDTO().toString());
 
-			// FIXME: Bad code
-			RALPersonExpression personExpression = (RALPersonExpression) createRALExpression(
+			RALExpression expression = createRALExpression(
 					specId,
 					ralExprSharesRoleDTO.getPersonExpr());
+
+			if (!(expression instanceof RALPersonExpression)) {
+				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST, "Invalid RALExpression cast to " + RALPersonExpression.class.getName());
+			}
 
 			RALExprSharesRole ralExprSharesRole = new RALExprSharesRole(
 					resourceModel,
 					amount,
-					personExpression
+					(RALPersonExpression) expression
 			);
 
 			if (ralExprSharesRoleDTO.getUnit() != null) {
