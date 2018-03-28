@@ -134,7 +134,7 @@ public class DesignInterface {
 		product.setResponsibleFor(ralExpression);
 	}
 
-	private RALExpression createRALExpression(String specId, RALExpressionDTO ralExpressionDTO) {
+	public RALExpression createRALExpression(String specId, RALExpressionDTO ralExpressionDTO) {
 		ResourceModel resourceModel = getResourceModelFromSpecId(specId);
 		if (ralExpressionDTO instanceof RALExprAnyoneDTO) {
 
