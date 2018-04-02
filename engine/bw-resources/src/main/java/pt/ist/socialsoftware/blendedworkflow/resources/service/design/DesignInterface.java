@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
+import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
@@ -157,6 +158,10 @@ public class DesignInterface {
 
 			RALExprIsPersonDataObjectDTO ralExprIsPersonDataObjectDTO = (RALExprIsPersonDataObjectDTO) ralExpressionDTO;
 
+			if (ralExprIsPersonDataObjectDTO.getDataField() == null) {
+				throw new RMException(RMErrorType.INVALID_DATA_FIELD, "Invalid data field name used in IS PERSON IN DATA FIELD expression");
+			}
+
 			Product product = workflowDesigner.getProduct(specId, ralExprIsPersonDataObjectDTO.getDataField());
 
 			if (!(product instanceof Entity)) {
@@ -173,6 +178,10 @@ public class DesignInterface {
 			log.debug("RALExpression Type: IS PERSON IN TASK DUTY");
 
 			RALExprIsPersonInTaskDutyDTO ralExprIsPersonInTaskDutyDTO = (RALExprIsPersonInTaskDutyDTO) ralExpressionDTO;
+
+			if (ralExprIsPersonInTaskDutyDTO.getDataField() == null) {
+				throw new RMException(RMErrorType.INVALID_DATA_FIELD, "Invalid data field name used in IS PERSON IN TASK DUTY expression");
+			}
 
 			RALExpression.TaskDutyType taskDuty = RALExpression.TaskDutyType.fromResourceRuleString(ralExprIsPersonInTaskDutyDTO.getTaskDuty().toString());
 
@@ -395,6 +404,10 @@ public class DesignInterface {
 			RALExprHistoryExecutingDTO ralExprHistoryExecutingDTO =
 					(RALExprHistoryExecutingDTO) ralExpressionDTO;
 
+			if (ralExprHistoryExecutingDTO.getDataField() == null) {
+				throw new RMException(RMErrorType.INVALID_DATA_FIELD, "Invalid data field name used in HistoryExecuting expression");
+			}
+
 			Product product = workflowDesigner.getProduct(specId, ralExprHistoryExecutingDTO.getDataField());
 
 			if (!(product instanceof Entity)) {
@@ -407,13 +420,16 @@ public class DesignInterface {
 					quantifier,
 					product
 			);
-
 		} else if (ralExpressionDTO instanceof RALExprHistoryInformedDTO) {
 
 			log.debug("RALExpression Type: HAS HISTORY INFORMED");
 
 			RALExprHistoryInformedDTO ralExprHistoryInformedDTO =
 					(RALExprHistoryInformedDTO) ralExpressionDTO;
+
+			if (ralExprHistoryInformedDTO.getDataField() == null) {
+				throw new RMException(RMErrorType.INVALID_DATA_FIELD, "Invalid data field name used in HistoryInformed expression");
+			}
 
 			Product product = workflowDesigner.getProduct(specId, ralExprHistoryInformedDTO.getDataField());
 
@@ -428,7 +444,6 @@ public class DesignInterface {
 					quantifier,
 					product
 			);
-
 		} else if (ralExpressionDTO instanceof RALExprSharesPositionDTO) {
 
 			log.debug("RALExpression Type: SHARES POSITION");

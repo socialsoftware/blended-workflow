@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 
 import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
@@ -149,32 +151,178 @@ public class DesignInterfaceTest extends TeardownRollbackTest {
 
     @Test
     public void testCreateRALExpressionHistoryExecuting() {
-        fail();
+        Product product = spec.getDataModel().createEntity("test", true, true);
+
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprHistoryExecutingDTO(
+                        RALExprHistoryDTO.QuantifierDTO.MOST,
+                        "test"
+                ));
+        assertEquals(ralExpression.getClass(), RALExprHistoryExecuting.class);
+    }
+
+    @Test(expected = RMException.class)
+    public void testCreateRALExpressionHistoryExecutingWithNullProduct() {
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprHistoryExecutingDTO(
+                        RALExprHistoryDTO.QuantifierDTO.MOST,
+                        null
+                ));
+        assertEquals(ralExpression.getClass(), RALExprHistoryExecuting.class);
+    }
+
+    @Test(expected = BWException.class)
+    public void testCreateRALExpressionHistoryExecutingWithInvalidProduct() {
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprHistoryExecutingDTO(
+                        RALExprHistoryDTO.QuantifierDTO.MOST,
+                        "invalid"
+                ));
+        assertEquals(ralExpression.getClass(), RALExprHistoryExecuting.class);
     }
 
     @Test
     public void testCreateRALExpressionHistoryInformed() {
-        fail();
+        Product product = spec.getDataModel().createEntity("test", true, true);
+
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprHistoryInformedDTO(
+                        RALExprHistoryDTO.QuantifierDTO.MOST,
+                        "test"
+                ));
+
+        assertEquals(ralExpression.getClass(), RALExprHistoryInformed.class);
+    }
+
+    @Test(expected = RMException.class)
+    public void testCreateRALExpressionHistoryInformedWithNullProduct() {
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprHistoryInformedDTO(
+                        RALExprHistoryDTO.QuantifierDTO.MOST,
+                        null
+                ));
+    }
+
+    @Test(expected = BWException.class)
+    public void testCreateRALExpressionHistoryInformedWithInvalidProduct() {
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprHistoryInformedDTO(
+                        RALExprHistoryDTO.QuantifierDTO.MOST,
+                        "invalid"
+                ));
     }
 
     @Test
     public void testCreateRALExpressionIsPerson() {
-        fail();
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprIsPersonDTO(
+                    "Person_1"
+                ));
+
+        assertEquals(ralExpression.getClass(), RALExprIsPerson.class);
+    }
+
+    @Test(expected = RMException.class)
+    public void testCreateRALExpressionIsPersonWithInvalidPerson() {
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprIsPersonDTO(
+                        "invalid"
+                ));
+
     }
 
     @Test
     public void testCreateRALExpressionIsPersonDataObject() {
-        fail();
+        Product product = spec.getDataModel().createEntity("test", true, true);
+
+        designer.relationEntityIsPerson(new ResourceRelationDTO(
+            SPEC_ID,
+            "test"
+        ));
+
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprIsPersonDataObjectDTO(
+                        "test"
+                ));
+
+        assertEquals(ralExpression.getClass(), RALExprIsPersonDataObject.class);
+    }
+
+    @Test(expected = RMException.class)
+    public void testCreateRALExpressionIsPersonDataObjectWithNull() {
+        Product product = spec.getDataModel().createEntity("test", true, true);
+
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprIsPersonDataObjectDTO(
+                        null
+                ));
+    }
+
+    @Test(expected = RMException.class)
+    public void testCreateRALExpressionIsPersonDataObjectWithNonPersonEntity() {
+        Product product = spec.getDataModel().createEntity("test", true, true);
+
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprIsPersonDataObjectDTO(
+                        "test"
+                ));
+    }
+    @Test(expected = BWException.class)
+    public void testCreateRALExpressionIsPersonDataObjectWithInvalidDataField() {
+        Product product = spec.getDataModel().createEntity("test", true, true);
+
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprIsPersonDataObjectDTO(
+                        "dasda"
+                ));
     }
 
     @Test
     public void testCreateRALExpressionIsPersonInTaskDuty() {
-        fail();
+        Product product = spec.getDataModel().createEntity("test", true, true);
+
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprIsPersonInTaskDutyDTO(
+                        ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                        "test"
+                ));
+
+        assertEquals(ralExpression.getClass(), RALExprIsPersonInTaskDuty.class);
+    }
+
+    @Test(expected = RMException.class)
+    public void testCreateRALExpressionIsPersonInTaskDutyWithNull() {
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprIsPersonInTaskDutyDTO(
+                        ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                        null
+                ));
+    }
+
+    @Test(expected = BWException.class)
+    public void testCreateRALExpressionIsPersonInTaskDutyWithInvalidDataField() {
+        Product product = spec.getDataModel().createEntity("test", true, true);
+
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprIsPersonInTaskDutyDTO(
+                        ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                        "asdasdas"
+                ));
+
+        assertEquals(ralExpression.getClass(), RALExprIsPersonInTaskDuty.class);
     }
 
     @Test
     public void testCreateRALExpressionNot() {
-        fail();
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprNotDTO(new RALExprHasPositionDTO("Pos1_Pop")));
+        assertEquals(ralExpression.getClass(), RALExprNot.class);
+    }
+
+    @Test(expected = RMException.class)
+    public void testCreateRALExpressionNotWithNotDeniableExpr() {
+        RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
+                new RALExprNotDTO(new RALExprAnyoneDTO()));
     }
 
     @Test
