@@ -2,7 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import java.util.List;
 
-public class RALExprHasRole extends RALExprHasRole_Base {
+public class RALExprHasRole extends RALExprHasRole_Base implements RALExprDeniable {
     
     public RALExprHasRole(ResourceModel resourceModel, Role role) {
         setResourceModel(resourceModel);

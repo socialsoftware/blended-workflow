@@ -2,7 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import java.util.List;
 
-public class RALExprHasCapability extends RALExprHasCapability_Base {
+public class RALExprHasCapability extends RALExprHasCapability_Base implements RALExprDeniable {
 
     public RALExprHasCapability(ResourceModel resourceModel, Capability capability) {
         setResourceModel(resourceModel);
