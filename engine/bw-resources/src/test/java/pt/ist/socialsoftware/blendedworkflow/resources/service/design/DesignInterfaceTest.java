@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 
 import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
@@ -404,5 +405,67 @@ public class DesignInterfaceTest extends TeardownRollbackTest {
                         new RALExpressionDTO() {}
                 ));
         assertEquals(ralExpression.getClass(), RALExprSharesPosition.class);
+    }
+
+    @Test
+    public void testeCreateResponsibleResourceRuleToEntity() {
+        Product product = spec.getDataModel().createEntity("test", true, true);
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                "test",
+                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                new RALExprAnyoneDTO()
+        ));
+
+        assertNotNull(product.getResponsibleFor());
+        assertEquals(product.getResponsibleFor().getClass(), RALExprAnyone.class);
+    }
+
+    @Test
+    public void testeCreateInformsResourceRuleToEntity() {
+        Product product = spec.getDataModel().createEntity("test", true, true);
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                "test",
+                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
+                new RALExprAnyoneDTO()
+        ));
+
+        assertNotNull(product.getInforms());
+        assertEquals(product.getInforms().getClass(), RALExprAnyone.class);
+    }
+
+    @Test
+    public void testeCreateResponsibleResourceRuleToAttribute() {
+        Entity entity = spec.getDataModel().createEntity("test", true, true);
+        Attribute attribute = entity.createAttribute("test12", Attribute.AttributeType.STRING, true);
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                "test.test12",
+                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                new RALExprAnyoneDTO()
+        ));
+
+        assertNotNull(attribute.getResponsibleFor());
+        assertEquals(attribute.getResponsibleFor().getClass(), RALExprAnyone.class);
+    }
+
+    @Test
+    public void testeCreateInformsResourceRuleToAttribute() {
+        Entity entity = spec.getDataModel().createEntity("test", true, true);
+        Attribute attribute = entity.createAttribute("test12", Attribute.AttributeType.STRING, true);
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                "test.test12",
+                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
+                new RALExprAnyoneDTO()
+        ));
+
+        assertNotNull(attribute.getInforms());
+        assertEquals(attribute.getInforms().getClass(), RALExprAnyone.class);
     }
 }
