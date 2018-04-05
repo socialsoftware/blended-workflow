@@ -1,10 +1,9 @@
-module filesystem/DoctorAppointment/GoalModelExec
+module filesystem/Examples/OneToMany/GoalModelExec
 
 open filesystem/GoalModelExec
+open filesystem/Examples/OneToMany/GoalModel
 
-open filesystem/DoctorAppointment/GoalModel
-
-run final for 4 but 11 State, 10 Goal, 5 Int
+run final for 3 but 6 State, 5 Goal, 5 Int
 
 assert PreservesInvariant {
 	all s, s': State, g: Goal |
@@ -14,4 +13,4 @@ assert PreservesInvariant {
 			Invariants[s] and execAssociate[s, s', g] => Invariants[s']
 		}
 }
-check PreservesInvariant for 4 but 11 State, 10 Goal, 5 Int
+check PreservesInvariant for 3 but 6 State, 5 Goal, 5 Int

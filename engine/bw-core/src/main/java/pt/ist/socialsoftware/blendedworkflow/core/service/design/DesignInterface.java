@@ -45,9 +45,10 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.req.AddActivityReq;
+import pt.ist.socialsoftware.blendedworkflow.core.xml.SpecXmlExport;
 
 public class DesignInterface {
-	private static Logger log = LoggerFactory.getLogger(DesignInterface.class);
+	private static Logger logger = LoggerFactory.getLogger(DesignInterface.class);
 
 	private static DesignInterface instance;
 
@@ -100,7 +101,7 @@ public class DesignInterface {
 	}
 
 	public Set<Entity> getEntities(String specId) {
-		log.debug("getEntities specId:{}", specId);
+		logger.debug("getEntities specId:{}", specId);
 
 		Specification spec = getSpecBySpecId(specId);
 
@@ -109,7 +110,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public Entity createEntity(EntityDTO entDTO) {
-		log.debug("createEntity specId:{}, name:{}, exists:{}, mandatory:{}", entDTO.getSpecId(), entDTO.getName(),
+		logger.debug("createEntity specId:{}, name:{}, exists:{}, mandatory:{}", entDTO.getSpecId(), entDTO.getName(),
 				entDTO.getExists(), entDTO.isMandatory());
 
 		Specification spec = getSpecBySpecId(entDTO.getSpecId());
@@ -118,7 +119,7 @@ public class DesignInterface {
 	}
 
 	public Set<Attribute> getAttributes(String specId) {
-		log.debug("getAttributes specId:{}", specId);
+		logger.debug("getAttributes specId:{}", specId);
 		Specification spec = getSpecBySpecId(specId);
 
 		return spec.getDataModel().getAttributeSet();
@@ -126,7 +127,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public Attribute createAttribute(AttributeDTO attDTO) {
-		log.debug("createAttribute entityExtId:{}", attDTO.getEntityExtId());
+		logger.debug("createAttribute entityExtId:{}", attDTO.getEntityExtId());
 		Entity ent = getEntityByExtId(attDTO.getEntityExtId());
 
 		Attribute attribute = ent.createAttribute(attDTO.getName(), AttributeType.parseAttributeType(attDTO.getType()),
@@ -141,8 +142,8 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public RelationBW createRelation(RelationDTO relDTO) {
-		log.debug("createRelation {}, entityOneName:{}, entityTwoName:{}", relDTO.getSpecId(), relDTO.getEntOneName(),
-				relDTO.getEntTwoName());
+		logger.debug("createRelation {}, entityOneName:{}, entityTwoName:{}", relDTO.getSpecId(),
+				relDTO.getEntOneName(), relDTO.getEntTwoName());
 
 		Specification spec = getSpecBySpecId(relDTO.getSpecId());
 
@@ -219,7 +220,7 @@ public class DesignInterface {
 	}
 
 	public Set<Rule> getRules(String specId) {
-		log.debug("getRules specId:{}", specId);
+		logger.debug("getRules specId:{}", specId);
 
 		Specification spec = getSpecBySpecId(specId);
 
@@ -325,7 +326,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public DefEntityCondition createEntityAchieveCondition(DefEntityConditionDTO eacDTO) {
-		log.debug("createEntityAchieveCondition Entity:{}, Value:{}", eacDTO.getEntityName(), eacDTO.isExists());
+		logger.debug("createEntityAchieveCondition Entity:{}, Value:{}", eacDTO.getEntityName(), eacDTO.isExists());
 		Specification spec = getSpecBySpecId(eacDTO.getSpecId());
 
 		Entity entity = getEntityByName(spec.getDataModel(), eacDTO.getEntityName());
@@ -359,7 +360,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public Dependence createEntityDependenceCondition(DependenceDTO dependenceDTO) {
-		log.debug("createEntityDependenceCondition entity:{}, Path:{}", dependenceDTO.getProduct(),
+		logger.debug("createEntityDependenceCondition entity:{}, Path:{}", dependenceDTO.getProduct(),
 				dependenceDTO.getPath());
 
 		Entity entity = getEntityByName(dependenceDTO.getSpecId(), dependenceDTO.getProduct());
@@ -373,7 +374,7 @@ public class DesignInterface {
 	}
 
 	public Set<MulCondition> getEntityInvariantConditionSet(String specId) {
-		log.debug("getEntityInvariantConditionSet specId:{}", specId);
+		logger.debug("getEntityInvariantConditionSet specId:{}", specId);
 
 		Specification spec = getSpecBySpecId(specId);
 
@@ -382,7 +383,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public MulCondition createEntityInvariantCondition(String specId, MulConditionDTO miDTO) {
-		log.debug("createEntityInvariantCondition Entity:{}, Cardinality:{}", miDTO.getRolePath(),
+		logger.debug("createEntityInvariantCondition Entity:{}, Cardinality:{}", miDTO.getRolePath(),
 				miDTO.getCardinality());
 		Specification spec = getSpecBySpecId(specId);
 
@@ -398,7 +399,7 @@ public class DesignInterface {
 	}
 
 	public Set<DefAttributeCondition> getAttributeAchieveConditionSet(String specId) {
-		log.debug("getAttributeAchieveConditionSet specId:{}", specId);
+		logger.debug("getAttributeAchieveConditionSet specId:{}", specId);
 
 		Specification spec = getSpecBySpecId(specId);
 
@@ -407,7 +408,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public DefAttributeCondition createAttributeAchieveCondition(DefAttributeConditionDTO aacDTO) {
-		log.debug("createAttributeAchieveCondition path:{}, mandatory:{}", aacDTO.getPath(), aacDTO.isMandatory());
+		logger.debug("createAttributeAchieveCondition path:{}, mandatory:{}", aacDTO.getPath(), aacDTO.isMandatory());
 
 		Specification spec = getSpecBySpecId(aacDTO.getSpecId());
 
@@ -432,7 +433,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public Dependence createAttributeDependenceCondition(DependenceDTO dependenceDTO) {
-		log.debug("createAttributeDependenceCondition product:{}, path:{}", dependenceDTO.getProduct(),
+		logger.debug("createAttributeDependenceCondition product:{}, path:{}", dependenceDTO.getProduct(),
 				dependenceDTO.getPath());
 		Product product = getProductByName(dependenceDTO.getSpecId(), dependenceDTO.getProduct());
 
@@ -939,6 +940,15 @@ public class DesignInterface {
 
 	}
 
+	public String export(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		SpecXmlExport exporter = new SpecXmlExport();
+
+		return exporter.export(spec);
+		// logger.debug(exporter.export(spec));
+	}
+
 	private Product getProductByName(String specId, String productPath) {
 		Specification spec = getSpecBySpecId(specId);
 
@@ -991,9 +1001,9 @@ public class DesignInterface {
 		String entityName = path.split("\\.")[0];
 		String rolename = path.split("\\.")[1];
 
-		RelationBW relation = spec.getDataModel().getRelationBWSet().stream().filter(
-				rel -> (rel.getEntityOne().getName().equals(entityName) && rel.getRolenameTwo().equals(rolename))
-						|| (rel.getEntityTwo().getName().equals(entityName) && rel.getRolenameOne().equals(rolename)))
+		RelationBW relation = spec.getDataModel().getRelationBWSet().stream()
+				.filter(rel -> rel.getEntityOne().getName().equals(entityName) && rel.getRolenameTwo().equals(rolename)
+						|| rel.getEntityTwo().getName().equals(entityName) && rel.getRolenameOne().equals(rolename))
 				.findFirst().orElseThrow(() -> new BWException(BWErrorType.INVALID_PATH, path));
 
 		return MulCondition.getMulCondition(relation, rolename);

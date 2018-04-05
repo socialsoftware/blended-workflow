@@ -1,7 +1,7 @@
 module filesystem/doctorappointment/patientepisode/SecurePattern2DoctorAppointment
 
 open filesystem/doctorappointment/patientepisode/SecureDoctorAppointment
-open filesystem/Pattern2/SecurePattern2Spec
+
 
 
 fact acrules{

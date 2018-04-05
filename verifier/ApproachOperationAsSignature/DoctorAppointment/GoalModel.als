@@ -12,7 +12,7 @@ sig DefPatient extends GoalProduce {}
 sig DefEpisode extends GoalProduce {}
 	{
 		one e: Episode | defEnts = e
-		 defAtts = defEnts -> episode_reserve_date
+		defAtts = defEnts -> episode_reserve_date
 	}
 
 sig DefEpisodeCheckin extends GoalProduce {}
@@ -27,7 +27,7 @@ sig DefEpisodeCheckout extends GoalProduce {}
 		one e: Episode | defAtts = e -> episode_checkout 
 	}
 
-sig LinkPatientEpisode extends GoalAssociation {}
+sig AssociatePatientEpisode extends GoalAssociate {}
 	{
 		one p: Patient, e: Episode | defMuls = p -> patient_episode -> e + e -> episode_patient -> p
 	}
@@ -38,7 +38,7 @@ sig DefData extends GoalProduce {}
 			one d: Data | defAtts = d -> { data_height + data_weight + data_blood_pressure + data_physical_condition }
 	}
 
-sig LinkEpisodeData extends GoalAssociation {}
+sig AssociateEpisodeData extends GoalAssociate {}
 	{
 		one d: Data, e: Episode | defMuls = d -> data_episode -> e + e -> episode_data -> d
 	}
@@ -55,7 +55,7 @@ sig DefReportDescription extends GoalProduce {}
 		one r: Report | defAtts = r -> report_description
 	}
 
-sig LinkEpisodeReport extends GoalAssociation {}
+sig AssociateEpisodeReport extends GoalAssociate {}
 	{
 		one r: Report, e: Episode | defMuls = r -> report_episode -> e + e -> episode_report -> r
 	}
