@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.10.RELEASE</version>
+		<version>1.5.9.RELEASE</version>
 	</parent>
 
 	<properties>
@@ -22,16 +22,7 @@
 		<maven.compiler.plugin>3.6.0</maven.compiler.plugin>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-
-		<version.junit.junit>4.12</version.junit.junit>
-
-		<version.org.slf4j>1.7.25</version.org.slf4j>
-		<version.ch.qos.logback>1.2.3</version.ch.qos.logback>
-
-		<version.joda.time>2.9.7</version.joda.time>
 		
-		<version.jdom.jdom2>2.0.6</version.jdom.jdom2>
-
 		<version.fenixframework>2.6.2</version.fenixframework>
 		<fenix.framework.codeGeneratorClassName>pt.ist.fenixframework.backend.jvstmojb.codeGenerator.FenixCodeGeneratorOneBoxPerObject</fenix.framework.codeGeneratorClassName>
 		<fenix.framework.backend>jvstm-ojb</fenix.framework.backend>
@@ -95,7 +86,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -123,36 +113,32 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${version.junit.junit}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${version.org.slf4j}</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${version.ch.qos.logback}</version>
 		</dependency>
 
 		<!-- Time library -->
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>${version.joda.time}</version>
 		</dependency>
 
 		<!-- library to export -->
 		<dependency>
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom2</artifactId>
-			<version>${version.jdom.jdom2}</version>
 		</dependency>
 	</dependencies>
+	
+	
 
 	<repositories>
 		<repository>

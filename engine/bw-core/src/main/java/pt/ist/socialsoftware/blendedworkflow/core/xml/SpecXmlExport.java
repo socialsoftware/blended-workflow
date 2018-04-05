@@ -1,4 +1,4 @@
-package pt.ist.socialsoftware.blendedworkflow.core.export;
+package pt.ist.socialsoftware.blendedworkflow.core.xml;
 
 import java.util.Set;
 

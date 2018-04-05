@@ -29,7 +29,6 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Product.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.core.export.SpecXmlExport;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityDTO;
@@ -46,6 +45,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.req.AddActivityReq;
+import pt.ist.socialsoftware.blendedworkflow.core.xml.SpecXmlExport;
 
 public class DesignInterface {
 	private static Logger logger = LoggerFactory.getLogger(DesignInterface.class);
@@ -142,8 +142,8 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public RelationBW createRelation(RelationDTO relDTO) {
-		logger.debug("createRelation {}, entityOneName:{}, entityTwoName:{}", relDTO.getSpecId(), relDTO.getEntOneName(),
-				relDTO.getEntTwoName());
+		logger.debug("createRelation {}, entityOneName:{}, entityTwoName:{}", relDTO.getSpecId(),
+				relDTO.getEntOneName(), relDTO.getEntTwoName());
 
 		Specification spec = getSpecBySpecId(relDTO.getSpecId());
 
@@ -940,11 +940,13 @@ public class DesignInterface {
 
 	}
 
-	public void export(String specId) {
+	public String export(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
 		SpecXmlExport exporter = new SpecXmlExport();
-		logger.debug(exporter.export(spec));
+
+		return exporter.export(spec);
+		// logger.debug(exporter.export(spec));
 	}
 
 	private Product getProductByName(String specId, String productPath) {

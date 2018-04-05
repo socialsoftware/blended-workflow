@@ -9,6 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.controller.ExportController;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.core.xml.SpecXmlExport;
 
 public class SpecXmlExportTest extends TeardownRollbackTest {
 	private static Logger logger = LoggerFactory.getLogger(ExportController.class);

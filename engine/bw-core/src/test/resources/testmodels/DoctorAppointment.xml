@@ -1,0 +1,454 @@
+<specification name="Doctor Appointment" specId="DoctorAppointment">
+  <data-model>
+    <entities>
+      <entity name="Medication" exists="false" mandatory="false">
+        <attribute name="heartImpact" type="Boolean" mandatory="false" />
+        <attribute name="quantity" type="Number" mandatory="false" />
+        <attribute name="name" type="String" mandatory="false" />
+      </entity>
+      <entity name="Data" exists="false" mandatory="false">
+        <attribute name="physicalCondition" type="String" mandatory="false" />
+        <attribute name="bloodPressure" type="Number" mandatory="false" />
+        <attribute name="weight" type="Number" mandatory="false" />
+        <attribute name="height" type="Number" mandatory="false" />
+      </entity>
+      <entity name="Report" exists="false" mandatory="false">
+        <attribute name="description" type="String" mandatory="true" />
+      </entity>
+      <entity name="Prescription" exists="false" mandatory="false">
+        <attribute name="description" type="String" mandatory="false" />
+      </entity>
+      <entity name="Episode" exists="false" mandatory="true">
+        <attribute name="checkout" type="Boolean" mandatory="false" />
+        <attribute name="checkin" type="Boolean" mandatory="false" />
+        <attribute name="reserveDate" type="Date" mandatory="false" />
+      </entity>
+      <entity name="Patient" exists="false" mandatory="false">
+        <attribute name="heartProblems" type="Boolean" mandatory="false" />
+        <attribute name="age" type="Number" mandatory="false" />
+        <attribute name="name" type="String" mandatory="false" />
+      </entity>
+    </entities>
+    <associations>
+      <association name="PrescriptionHasMedication">
+        <Prescription role="prescription" cardinality="1" />
+        <Medication role="medication" cardinality="1..*" />
+      </association>
+      <association name="EpisodehasReport">
+        <Episode role="episode" cardinality="1" />
+        <Report role="report" cardinality="1" />
+      </association>
+      <association name="EpisodeHasData">
+        <Episode role="episode" cardinality="1" />
+        <Data role="data" cardinality="1" />
+      </association>
+      <association name="EpisodeHasPrescription">
+        <Episode role="episode" cardinality="1" />
+        <Prescription role="prescription" cardinality="0..1" />
+      </association>
+      <association name="PatientHasEpisode">
+        <Patient role="patient" cardinality="1" />
+        <Episode role="episode" cardinality="0..*" />
+      </association>
+    </associations>
+  </data-model>
+  <activity-model>
+    <activity name="Patient.name">
+      <preConditions>
+        <condition path="Patient" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Patient.name" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Patient.age">
+      <preConditions>
+        <condition path="Patient" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Patient.age" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Patient.heartProblems">
+      <preConditions>
+        <condition path="Patient" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Patient.heartProblems" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Episode.reserveDate">
+      <preConditions>
+        <condition path="Episode" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Episode.reserveDate" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Episode.checkin">
+      <preConditions>
+        <condition path="Episode" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Episode.checkin" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Episode.checkout">
+      <preConditions>
+        <condition path="Episode" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Episode.checkout" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Prescription.description">
+      <preConditions>
+        <condition path="Prescription" />
+        <condition path="Prescription.episode.report.description" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Prescription.description" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Report.description">
+      <preConditions>
+        <condition path="Report" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Report.description" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Data.height">
+      <preConditions>
+        <condition path="Data" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Data.height" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Data.weight">
+      <preConditions>
+        <condition path="Data" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Data.weight" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Data.bloodPressure">
+      <preConditions>
+        <condition path="Data" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Data.bloodPressure" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Data.physicalCondition">
+      <preConditions>
+        <condition path="Data" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Data.physicalCondition" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Medication.name">
+      <preConditions>
+        <condition path="Medication" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Medication.name" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Medication.quantity">
+      <preConditions>
+        <condition path="Medication" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Medication.quantity" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Medication.heartImpact">
+      <preConditions>
+        <condition path="Medication" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Medication.heartImpact" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Patient">
+      <preConditions />
+      <seqConditions />
+      <postConditions>
+        <condition path="Patient" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="Episode">
+      <preConditions>
+        <condition path="Episode.patient" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Episode" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Patient.episode" cardinality="0..*" />
+        <condition path="Episode.patient" cardinality="1" />
+      </mulConditions>
+    </activity>
+    <activity name="Prescription">
+      <preConditions>
+        <condition path="Prescription.episode" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Prescription" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Episode.prescription" cardinality="0..1" />
+        <condition path="Prescription.episode" cardinality="1" />
+      </mulConditions>
+    </activity>
+    <activity name="Report">
+      <preConditions>
+        <condition path="Report.episode.data.bloodPressure" />
+        <condition path="Report.episode" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Report" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Episode.report" cardinality="1" />
+        <condition path="Report.episode" cardinality="1" />
+      </mulConditions>
+    </activity>
+    <activity name="Data">
+      <preConditions>
+        <condition path="Data.episode" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Data" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Episode.data" cardinality="1" />
+        <condition path="Data.episode" cardinality="1" />
+      </mulConditions>
+    </activity>
+    <activity name="Medication">
+      <preConditions>
+        <condition path="Medication.prescription.description" />
+        <condition path="Medication.prescription" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="Medication" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Prescription.medication" cardinality="1..*" />
+        <condition path="Medication.prescription" cardinality="1" />
+      </mulConditions>
+    </activity>
+  </activity-model>
+  <goal-model>
+    <goal name="Medication.name" parent="Medication">
+      <preConditions />
+      <postConditions>
+        <condition path="Medication.name" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Medication.quantity" parent="Medication">
+      <preConditions />
+      <postConditions>
+        <condition path="Medication.quantity" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Medication.heartImpact" parent="Medication">
+      <preConditions />
+      <postConditions>
+        <condition path="Medication.heartImpact" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Medication" parent="Prescription">
+      <preConditions>
+        <condition path="Medication.prescription.description" />
+      </preConditions>
+      <postConditions>
+        <condition path="Medication" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Medication.prescription" cardinality="1" />
+      </mulConditions>
+    </goal>
+    <goal name="Report.description" parent="Report">
+      <preConditions />
+      <postConditions>
+        <condition path="Report.description" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Report" parent="Episode">
+      <preConditions>
+        <condition path="Report.episode.data.bloodPressure" />
+      </preConditions>
+      <postConditions>
+        <condition path="Report" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Report.episode" cardinality="1" />
+      </mulConditions>
+    </goal>
+    <goal name="Patient.name" parent="Patient">
+      <preConditions />
+      <postConditions>
+        <condition path="Patient.name" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Patient.age" parent="Patient">
+      <preConditions />
+      <postConditions>
+        <condition path="Patient.age" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Patient.heartProblems" parent="Patient">
+      <preConditions />
+      <postConditions>
+        <condition path="Patient.heartProblems" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Patient" parent="Episode">
+      <preConditions />
+      <postConditions>
+        <condition path="Patient" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Patient.episode" cardinality="0..*" />
+      </mulConditions>
+    </goal>
+    <goal name="Prescription.description" parent="Prescription">
+      <preConditions>
+        <condition path="Prescription.episode.report.description" />
+      </preConditions>
+      <postConditions>
+        <condition path="Prescription.description" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Prescription" parent="Episode">
+      <preConditions />
+      <postConditions>
+        <condition path="Prescription" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Prescription.episode" cardinality="1" />
+        <condition path="Prescription.medication" cardinality="1..*" />
+      </mulConditions>
+    </goal>
+    <goal name="Data.height" parent="Data">
+      <preConditions />
+      <postConditions>
+        <condition path="Data.height" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Data.weight" parent="Data">
+      <preConditions />
+      <postConditions>
+        <condition path="Data.weight" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Data.bloodPressure" parent="Data">
+      <preConditions />
+      <postConditions>
+        <condition path="Data.bloodPressure" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Data.physicalCondition" parent="Data">
+      <preConditions />
+      <postConditions>
+        <condition path="Data.physicalCondition" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Data" parent="Episode">
+      <preConditions />
+      <postConditions>
+        <condition path="Data" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Data.episode" cardinality="1" />
+      </mulConditions>
+    </goal>
+    <goal name="Episode.reserveDate" parent="Episode">
+      <preConditions />
+      <postConditions>
+        <condition path="Episode.reserveDate" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Episode.checkin" parent="Episode">
+      <preConditions />
+      <postConditions>
+        <condition path="Episode.checkin" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Episode.checkout" parent="Episode">
+      <preConditions />
+      <postConditions>
+        <condition path="Episode.checkout" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="Episode">
+      <preConditions />
+      <postConditions>
+        <condition path="Episode" />
+      </postConditions>
+      <mulConditions>
+        <condition path="Episode.patient" cardinality="1" />
+        <condition path="Episode.prescription" cardinality="0..1" />
+        <condition path="Episode.data" cardinality="1" />
+        <condition path="Episode.report" cardinality="1" />
+      </mulConditions>
+    </goal>
+  </goal-model>
+</specification>
