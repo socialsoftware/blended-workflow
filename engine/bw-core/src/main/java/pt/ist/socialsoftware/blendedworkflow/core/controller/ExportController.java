@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.controller;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
@@ -33,9 +34,11 @@ public class ExportController {
 
 		String testModelsDirectory = PropertiesManager.getProperties().getProperty("test.models.dir");
 
-		String filename = testModelsDirectory + specId + ".xml";
+		File directory = new File(testModelsDirectory);
+		String filename = specId + ".xml";
+		File file = new File(directory, filename);
 
-		try (PrintWriter out = new PrintWriter(filename)) {
+		try (PrintWriter out = new PrintWriter(file)) {
 			out.println(adi.export(specId));
 		} catch (FileNotFoundException e) {
 			throw new BWException(BWErrorType.FILE_ERROR, "export specification");
