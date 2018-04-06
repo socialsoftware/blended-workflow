@@ -33,7 +33,7 @@ public class SpecXmlImport {
 
 	private static final BWErrorType CONVERSION_ERROR = null;
 
-	public void importSpecification(InputStream inputStream) {
+	private void importSpecification(InputStream inputStream) {
 		SAXBuilder builder = new SAXBuilder();
 		builder.setIgnoringElementContentWhitespace(true);
 
@@ -43,20 +43,20 @@ public class SpecXmlImport {
 		} catch (FileNotFoundException e) {
 			throw new BWException(BWErrorType.FILE_ERROR, "Ficheiro não encontrado");
 		} catch (JDOMException e) {
-			throw new BWException(BWErrorType.FILE_ERROR, "Ficheiro com problemas de codificação TEI");
+			throw new BWException(BWErrorType.FILE_ERROR, "Ficheiro com problemas de codificação XML");
 		} catch (IOException e) {
 			throw new BWException(BWErrorType.FILE_ERROR, "Problemas com o ficheiro, tipo ou formato");
 		}
 
 		if (doc == null) {
-			BWException ex = new BWException(BWErrorType.FILE_ERROR, "Ficheiro inexistente ou sem formato TEI");
+			BWException ex = new BWException(BWErrorType.FILE_ERROR, "Ficheiro inexistente ou sem formato XML");
 			throw ex;
 		}
 
 		processImport(doc);
 	}
 
-	public void importSpecification(String specXml) {
+	public final void importSpecification(String specXml) {
 		SAXBuilder builder = new SAXBuilder();
 		builder.setIgnoringElementContentWhitespace(true);
 
@@ -66,7 +66,16 @@ public class SpecXmlImport {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public void processImport(Document doc) {
+	public final void processImport(Document doc) {
+		importCore(doc);
+		importModules(doc);
+	}
+
+	protected void importModules(Document doc) {
+		// to be overridden by other modules
+	}
+
+	private void importCore(Document doc) {
 		XPathFactory xpfac = XPathFactory.instance();
 		XPathExpression<Element> xp = xpfac.compile("//specification", Filters.element());
 		for (Element specification : xp.evaluate(doc)) {
