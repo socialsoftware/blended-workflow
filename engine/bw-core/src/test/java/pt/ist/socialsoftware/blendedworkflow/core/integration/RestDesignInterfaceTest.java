@@ -113,7 +113,7 @@ public class RestDesignInterfaceTest {
 						.content(mapper.writeValueAsBytes(attributeOneDTO)))
 				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.name").value("att1")).andExpect(jsonPath("$.type").value("Boolean"))
-				.andExpect(jsonPath("$.isMandatory").value(true)).andReturn();
+				.andExpect(jsonPath("$.mandatory").value(true)).andReturn();
 		attributeOneDTO = mapper.readValue(result.getResponse().getContentAsString(), AttributeDTO.class);
 
 		AttributeDTO attributeTwoDTO = new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(), entityOneDTO.getExtId(),

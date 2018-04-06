@@ -36,10 +36,8 @@ public class GetTargetOfPathMethodTest extends TeardownRollbackTest {
 
 		this.entityOne = new Entity(this.spec.getDataModel(), ENTITY_NAME_ONE, false);
 		Entity entityTwo = new Entity(this.spec.getDataModel(), ENTITY_NAME_TWO, false);
-		new Attribute(this.spec.getDataModel(), this.entityOne, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false,
-				false);
-		new Attribute(this.spec.getDataModel(), this.entityOne, ATTRIBUTE_NAME_TWO, AttributeType.STRING, false, false,
-				false);
+		new Attribute(this.spec.getDataModel(), this.entityOne, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true);
+		new Attribute(this.spec.getDataModel(), this.entityOne, ATTRIBUTE_NAME_TWO, AttributeType.STRING, false);
 
 		new RelationBW(this.spec.getDataModel(), "relation", this.entityOne, ROLE_ONE, Cardinality.ZERO_OR_ONE, false,
 				entityTwo, ROLE_TWO, Cardinality.ONE, false);

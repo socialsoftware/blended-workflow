@@ -16,7 +16,7 @@ public class Attribute extends Attribute_Base {
 	final static String ATTRIBUTE_TYPE = "(" + AttributeType.STRING + "|" + AttributeType.NUMBER + "|"
 			+ AttributeType.BOOLEAN + "|" + AttributeType.DATE + ")";
 
-	public static enum AttributeType {
+	public enum AttributeType {
 		BOOLEAN("Boolean"), NUMBER("Number"), STRING("String"), DATE("Date");
 		private String name;
 
@@ -52,7 +52,7 @@ public class Attribute extends Attribute_Base {
 				return AttributeType.DATE;
 			}
 
-			assert (false);
+			assert false;
 
 			return res;
 		}
@@ -66,22 +66,19 @@ public class Attribute extends Attribute_Base {
 	}
 
 	private void checkName(String name) {
-		if ((name == null) || name.equals("")) {
+		if (name == null || name.equals("")) {
 			throw new BWException(BWErrorType.INVALID_ATTRIBUTE_NAME, name);
 		}
 
 		getEntity().checkUniqueElementName(name);
 	}
 
-	public Attribute(DataModel dataModel, Entity entity, String name, AttributeType type, boolean isMandatory,
-			boolean isKeyAttribute, boolean isSystem) {
+	public Attribute(DataModel dataModel, Entity entity, String name, AttributeType type, boolean isMandatory) {
 		setDataModel(dataModel);
 		setEntity(entity);
 		setName(name);
 		setType(type);
 		setIsMandatory(isMandatory);
-		setIsKeyAttribute(isKeyAttribute);
-		setIsSystem(isSystem);
 	}
 
 	@Override

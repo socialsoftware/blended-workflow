@@ -31,13 +31,13 @@ public class SetValueTest extends TeardownRollbackTest {
 		this.spec = new Specification("SpecId", "My spec");
 		this.entity = new Entity(this.spec.getDataModel(), "entityName", false);
 		Attribute attributeString = new Attribute(this.spec.getDataModel(), this.entity, "name1",
-				Attribute.AttributeType.STRING, false, false, false);
+				Attribute.AttributeType.STRING, false);
 		Attribute attributeBoolean = new Attribute(this.spec.getDataModel(), this.entity, "name2",
-				Attribute.AttributeType.BOOLEAN, false, false, false);
+				Attribute.AttributeType.BOOLEAN, false);
 		Attribute attributeNumber = new Attribute(this.spec.getDataModel(), this.entity, "name3",
-				Attribute.AttributeType.NUMBER, false, false, false);
+				Attribute.AttributeType.NUMBER, false);
 		Attribute attributeDate = new Attribute(this.spec.getDataModel(), this.entity, "name4",
-				Attribute.AttributeType.DATE, false, false, false);
+				Attribute.AttributeType.DATE, false);
 
 		WorkflowInstance workflowInstance = new WorkflowInstance(this.spec, "name");
 		EntityInstance entityInstance = new EntityInstance(workflowInstance, this.entity);

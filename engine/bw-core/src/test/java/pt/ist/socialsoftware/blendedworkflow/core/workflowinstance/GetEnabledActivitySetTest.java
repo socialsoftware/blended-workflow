@@ -50,7 +50,7 @@ public class GetEnabledActivitySetTest extends TeardownRollbackTest {
 		this.activityModel = this.spec.getActivityModel();
 
 		this.entOne = new Entity(dataModel, ENT_ONE_NAME, false);
-		this.attOne = new Attribute(dataModel, this.entOne, "attOne", AttributeType.NUMBER, false, false, false);
+		this.attOne = new Attribute(dataModel, this.entOne, "attOne", AttributeType.NUMBER, false);
 		this.entTwo = new Entity(dataModel, ENT_TWO_NAME, false);
 		this.entThree = new Entity(dataModel, ENT_THREE_NAME, false);
 

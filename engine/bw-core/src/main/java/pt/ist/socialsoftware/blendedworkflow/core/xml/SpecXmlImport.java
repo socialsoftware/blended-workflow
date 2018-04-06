@@ -15,15 +15,19 @@ import org.jdom2.xpath.XPathFactory;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
 public class SpecXmlImport {
 
-	public void importUsers(InputStream inputStream) {
+	private static final BWErrorType CONVERSION_ERROR = null;
+
+	public void importSpecification(InputStream inputStream) {
 		SAXBuilder builder = new SAXBuilder();
 		builder.setIgnoringElementContentWhitespace(true);
 
@@ -52,7 +56,7 @@ public class SpecXmlImport {
 
 		InputStream stream = new ByteArrayInputStream(specXml.getBytes());
 
-		importUsers(stream);
+		importSpecification(stream);
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -74,18 +78,47 @@ public class SpecXmlImport {
 
 	private void importDataModel(Document doc, DataModel dataModel) {
 		importEntities(doc, dataModel);
-		// importAssociations(doc,blendedWorkflow);
+		importAssociations(doc, dataModel);
 	}
 
 	private void importEntities(Document doc, DataModel dataModel) {
 		XPathFactory xpfac = XPathFactory.instance();
-		XPathExpression<Element> xp = xpfac.compile("//specification/data-model/entities", Filters.element());
+		XPathExpression<Element> xp = xpfac.compile("//specification/data-model/entities/entity", Filters.element());
 		for (Element entityElement : xp.evaluate(doc)) {
-			String name = entityElement.getAttributeValue("name");
-			boolean mandatory = convertStringToBool(entityElement.getAttributeValue("mandatory"));
+			String entityName = entityElement.getAttributeValue("name");
+			boolean entityMandatory = convertStringToBool(entityElement.getAttributeValue("mandatory"));
 			boolean exists = convertStringToBool(entityElement.getAttributeValue("exists"));
 
-			Entity entity = new Entity(dataModel, name, exists, mandatory);
+			Entity entity = new Entity(dataModel, entityName, exists, entityMandatory);
+
+			for (Element attributeElement : entityElement.getChildren("attribute")) {
+				String attributeName = attributeElement.getAttributeValue("name");
+				Attribute.AttributeType type = convertStringToAttributeType(attributeElement.getAttributeValue("type"));
+				boolean attributeMandatory = convertStringToBool(entityElement.getAttributeValue("mandatory"));
+
+				new Attribute(dataModel, entity, attributeName, type, attributeMandatory);
+			}
+		}
+	}
+
+	private void importAssociations(Document doc, DataModel dataModel) {
+		XPathFactory xpfac = XPathFactory.instance();
+		XPathExpression<Element> xp = xpfac.compile("//specification/data-model/associations/association",
+				Filters.element());
+		for (Element associationElement : xp.evaluate(doc)) {
+			String name = associationElement.getAttributeValue("name");
+			String[] entity = new String[2];
+			String[] rolename = new String[2];
+			String[] cardinality = new String[2];
+			int i = 0;
+			for (Element memberElement : associationElement.getChildren("member")) {
+				entity[i] = memberElement.getAttributeValue("entity");
+				rolename[i] = memberElement.getAttributeValue("role");
+				cardinality[i] = memberElement.getAttributeValue("cardinality");
+				i++;
+			}
+			new RelationBW(dataModel, name, dataModel.getEntity(entity[0]).get(), rolename[0], cardinality[0],
+					dataModel.getEntity(entity[1]).get(), rolename[1], cardinality[1]);
 		}
 	}
 
@@ -93,4 +126,19 @@ public class SpecXmlImport {
 		return value.equals("true") ? true : false;
 	}
 
+	protected static Attribute.AttributeType convertStringToAttributeType(String value) {
+		switch (value) {
+		case "Boolean":
+			return Attribute.AttributeType.BOOLEAN;
+		case "Number":
+			return Attribute.AttributeType.NUMBER;
+		case "String":
+			return Attribute.AttributeType.STRING;
+		case "Date":
+			return Attribute.AttributeType.DATE;
+		default:
+			throw new BWException(CONVERSION_ERROR, value);
+		}
+
+	}
 }

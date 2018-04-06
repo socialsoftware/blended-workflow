@@ -72,22 +72,22 @@ public class CheckConsistencyMethodTest extends TeardownRollbackTest {
 
 		this.entityOne = new Entity(this.spec.getDataModel(), ENTITY_ONE_NAME, false);
 		this.attributeOne = new Attribute(this.spec.getDataModel(), this.entityOne, ATTRIBUTE_ONE_NAME,
-				AttributeType.NUMBER, true, false, false);
+				AttributeType.NUMBER, true);
 		this.attributeTwo = new Attribute(this.spec.getDataModel(), this.entityOne, ATTRIBUTE_TWO_NAME,
-				AttributeType.NUMBER, true, false, false);
+				AttributeType.NUMBER, true);
 
 		this.entityTwo = new Entity(this.spec.getDataModel(), ENTITY_TWO_NAME, false);
 		this.attributeThree = new Attribute(this.spec.getDataModel(), this.entityTwo, ATTRIBUTE_THREE_NAME,
-				AttributeType.BOOLEAN, true, false, false);
+				AttributeType.BOOLEAN, true);
 
 		this.existsRelationOne = new RelationBW(this.spec.getDataModel(), "nameOne", this.entityOne, ROLENAME_ONE,
 				Cardinality.ONE, false, this.entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
 
 		this.entityThree = new Entity(this.spec.getDataModel(), ENTITY_THREE_NAME, false);
 		this.attributeFourOne = new Attribute(this.spec.getDataModel(), this.entityThree, ATTRIBUTE_FOURONE_NAME,
-				AttributeType.NUMBER, false, false, false);
+				AttributeType.NUMBER, false);
 		this.attributeFourTwo = new Attribute(this.spec.getDataModel(), this.entityThree, ATTRIBUTE_FOURTWO_NAME,
-				AttributeType.NUMBER, false, false, false);
+				AttributeType.NUMBER, false);
 
 		this.existsRelationTwo = new RelationBW(this.spec.getDataModel(), "nameTwo", this.entityTwo, ROLENAME_TWO,
 				Cardinality.ONE, false, this.entityThree, ROLENAME_THREE, Cardinality.ZERO_MANY, false);

@@ -19,7 +19,7 @@ Entity Prescription {
 Entity Report dependsOn Report.episode.data.bloodPressure {
 	description : String mandatory
 }
-
+ 
 Entity Data {
 	height : Number
 	weight : Number

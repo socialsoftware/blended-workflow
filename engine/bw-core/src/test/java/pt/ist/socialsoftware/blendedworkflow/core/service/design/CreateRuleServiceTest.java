@@ -57,12 +57,11 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
 		this.existsEntity = new Entity(this.existingDataModel, EXISTS_ENTITY_NAME, false);
 		Entity entityTwo = new Entity(this.existingDataModel, ENTITY_NAME, false);
-		new Attribute(this.existingDataModel, this.existsEntity, EXISTS_ATTRIBUTE_NAME, AttributeType.NUMBER, true,
-				false, false);
+		new Attribute(this.existingDataModel, this.existsEntity, EXISTS_ATTRIBUTE_NAME, AttributeType.NUMBER, true);
 		new Attribute(this.existingDataModel, this.existsEntity, EXISTS_ATTRIBUTE_NAME_STRING, AttributeType.STRING,
-				false, false, false);
+				false);
 		new Attribute(this.existingDataModel, this.existsEntity, EXISTS_ATTRIBUTE_NAME_BOOLEAN, AttributeType.BOOLEAN,
-				false, false, false);
+				false);
 
 		new RelationBW(this.existingDataModel, "relation", this.existsEntity, "role1", Cardinality.ZERO_OR_ONE, false,
 				entityTwo, "role2", Cardinality.ONE, false);

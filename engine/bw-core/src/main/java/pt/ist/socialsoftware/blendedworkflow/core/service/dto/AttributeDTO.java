@@ -5,23 +5,23 @@ public class AttributeDTO extends ProductDTO {
 	private String entityName;
 	private String name;
 	private String type;
-	private boolean isMandatory;
+	private boolean mandatory;
 
 	public AttributeDTO() {
 	}
 
 	public AttributeDTO(String specId, String productType, String entityExtId, String entityName, String name,
-			String type, boolean isMandatory) {
+			String type, boolean mandatory) {
 		super(specId, productType, type);
 		this.entityExtId = entityExtId;
 		this.entityName = entityName;
 		this.name = name;
 		this.type = type;
-		this.isMandatory = isMandatory;
+		this.mandatory = mandatory;
 	}
 
 	public String getEntityExtId() {
-		return entityExtId;
+		return this.entityExtId;
 	}
 
 	public void setEntityExtId(String entityExtId) {
@@ -29,7 +29,7 @@ public class AttributeDTO extends ProductDTO {
 	}
 
 	public String getEntityName() {
-		return entityName;
+		return this.entityName;
 	}
 
 	public void setEntityName(String entityName) {
@@ -37,7 +37,7 @@ public class AttributeDTO extends ProductDTO {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -45,15 +45,15 @@ public class AttributeDTO extends ProductDTO {
 	}
 
 	public boolean isMandatory() {
-		return isMandatory;
+		return this.mandatory;
 	}
 
 	public void setMandatory(boolean isMandatory) {
-		this.isMandatory = isMandatory;
+		this.mandatory = isMandatory;
 	}
 
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type) {

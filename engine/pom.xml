@@ -131,7 +131,11 @@
 			<artifactId>joda-time</artifactId>
 		</dependency>
 
-		<!-- library to export -->
+		<!-- libraries to import/export -->
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom2</artifactId>

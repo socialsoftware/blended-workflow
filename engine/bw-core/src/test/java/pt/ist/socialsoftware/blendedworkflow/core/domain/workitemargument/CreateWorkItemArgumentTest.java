@@ -50,7 +50,7 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 		this.spec = new Specification("SpecId", MY_SPEC);
 		Entity entity = new Entity(this.spec.getDataModel(), ENTITY_NAME, false);
 		Attribute attribute = new Attribute(this.spec.getDataModel(), entity, ATTRIBUTE_NAME, AttributeType.STRING,
-				false, false, false);
+				false);
 		this.defAttributeCondition = DefAttributeCondition.getDefAttributeCondition(attribute);
 		this.goal = new Goal(this.spec.getGoalModel(), NAME);
 		this.defPathCondition = DefPathCondition.getDefPathCondition(this.spec, ENTITY_NAME + "." + ATTRIBUTE_NAME);

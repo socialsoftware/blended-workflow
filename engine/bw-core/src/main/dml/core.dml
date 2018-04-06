@@ -39,8 +39,6 @@ class Entity extends Product {
 class Attribute extends Product {
 	boolean isMandatory;
 	AttributeType type;
-	boolean isKeyAttribute;
-	boolean isSystem;
 }
 
 class Path {

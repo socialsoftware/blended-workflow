@@ -29,8 +29,7 @@ public class CreateDependenceMethodTest extends TeardownRollbackTest {
 	public void populate4Test() throws BWException {
 		Specification spec = new Specification("SpecId", "My spec");
 		this.entityOne = new Entity(spec.getDataModel(), ENTITY_NAME_ONE, false);
-		this.attributeBasic = new Attribute(spec.getDataModel(), this.entityOne, "att2", AttributeType.BOOLEAN, true,
-				false, false);
+		this.attributeBasic = new Attribute(spec.getDataModel(), this.entityOne, "att2", AttributeType.BOOLEAN, true);
 		this.entityTwo = new Entity(spec.getDataModel(), ENTITY_NAME_TWO, false);
 
 		new RelationBW(spec.getDataModel(), "name", this.entityOne, ROLENAME_ONE, Cardinality.ONE, false,

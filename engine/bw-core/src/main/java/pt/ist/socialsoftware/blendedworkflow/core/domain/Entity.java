@@ -41,7 +41,7 @@ public class Entity extends Entity_Base {
 	}
 
 	private void checkEntityName(String name) {
-		if ((name == null) || (name.equals(""))) {
+		if (name == null || name.equals("")) {
 			throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
 		}
 
@@ -56,7 +56,7 @@ public class Entity extends Entity_Base {
 
 	private void checkUniqueEntityName(String name) throws BWException {
 		boolean exists = getDataModel().getEntitySet().stream()
-				.anyMatch(ent -> (ent.getName() != null) && (ent.getName().equals(name)));
+				.anyMatch(ent -> ent.getName() != null && ent.getName().equals(name));
 		if (exists) {
 			throw new BWException(BWErrorType.INVALID_ENTITY_NAME, name);
 		}
@@ -87,7 +87,7 @@ public class Entity extends Entity_Base {
 	}
 
 	public Attribute createAttribute(String name, AttributeType type, boolean isMandatory) {
-		return new Attribute(getDataModel(), this, name, type, isMandatory, false, false);
+		return new Attribute(getDataModel(), this, name, type, isMandatory);
 	}
 
 	public Rule createRule(String name, Condition condition) {
@@ -168,8 +168,8 @@ public class Entity extends Entity_Base {
 		}
 
 		Optional<RelationBW> oBwRel = getRelationSet().stream()
-				.filter(rel -> (rel.getRolenameOne().equals(element) && rel.getEntityTwo() == this)
-						|| (rel.getRolenameTwo().equals(element) && rel.getEntityOne() == this))
+				.filter(rel -> rel.getRolenameOne().equals(element) && rel.getEntityTwo() == this
+						|| rel.getRolenameTwo().equals(element) && rel.getEntityOne() == this)
 				.findFirst();
 		if (oBwRel.isPresent()) {
 			pathLeft.remove(0);
@@ -209,8 +209,8 @@ public class Entity extends Entity_Base {
 
 	public Entity getEntityByRolename(String rolename) {
 		return getRelationSet().stream()
-				.filter(r -> (r.getEntityOne() == this && r.getRolenameTwo().equals(rolename))
-						|| (r.getEntityTwo() == this && r.getRolenameOne().equals(rolename)))
+				.filter(r -> r.getEntityOne() == this && r.getRolenameTwo().equals(rolename)
+						|| r.getEntityTwo() == this && r.getRolenameOne().equals(rolename))
 				.map(r -> r.getEntityOne() == this ? r.getEntityTwo() : r.getEntityOne()).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ROLE_NAME, getName() + "." + rolename));
 	}

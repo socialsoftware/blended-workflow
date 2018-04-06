@@ -57,7 +57,7 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 		this.entity = new Entity(this.spec.getDataModel(), ENTITY_ONE, false);
 		this.defEntityCondition = DefEntityCondition.getDefEntityCondition(this.entity);
 		this.attribute = new Attribute(this.spec.getDataModel(), this.entity, ATTRIBUTE_ONE, AttributeType.STRING,
-				false, false, false);
+				false);
 		this.defAttributeCondition = DefAttributeCondition.getDefAttributeCondition(this.attribute);
 		this.defPathCondition = DefPathCondition.getDefPathCondition(this.spec, ENTITY_ONE);
 		this.entityTwo = new Entity(this.spec.getDataModel(), "EntityTwo", false);

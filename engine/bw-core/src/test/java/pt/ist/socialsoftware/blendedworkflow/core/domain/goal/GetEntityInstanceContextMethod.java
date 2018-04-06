@@ -63,10 +63,10 @@ public class GetEntityInstanceContextMethod extends TeardownRollbackTest {
 		this.entTwo = new Entity(dataModel, ENT_TWO_NAME, false);
 		this.entThree = new Entity(dataModel, ENT_THREE_NAME, false);
 
-		this.attOne = new Attribute(dataModel, this.entOne, ATT_ONE_NAME, AttributeType.NUMBER, true, false, false);
-		this.attTwo = new Attribute(dataModel, this.entOne, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
+		this.attOne = new Attribute(dataModel, this.entOne, ATT_ONE_NAME, AttributeType.NUMBER, true);
+		this.attTwo = new Attribute(dataModel, this.entOne, ATT_TWO_NAME, AttributeType.NUMBER, false);
 
-		this.attThree = new Attribute(dataModel, this.entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true, false, false);
+		this.attThree = new Attribute(dataModel, this.entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true);
 
 		this.relationOneTwo = new RelationBW(dataModel, "relOneTwo", this.entOne, ROLENAME_ENT_ONE, Cardinality.ONE,
 				false, this.entTwo, ROLENAME_ENT_TWO, "0..2", false);

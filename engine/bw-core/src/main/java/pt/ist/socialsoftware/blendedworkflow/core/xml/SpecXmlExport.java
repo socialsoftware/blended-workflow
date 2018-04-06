@@ -105,12 +105,14 @@ public class SpecXmlExport {
 			Element associationElement = new Element("association");
 			associationElement.setAttribute("name", relation.getName());
 
-			Element entityOne = new Element(relation.getEntityOne().getName());
+			Element entityOne = new Element("member");
+			entityOne.setAttribute("entity", relation.getEntityOne().getName());
 			entityOne.setAttribute("role", relation.getRolenameOne());
 			entityOne.setAttribute("cardinality", relation.getCardinalityOne().getExp());
 			associationElement.addContent(entityOne);
 
-			Element entityTwo = new Element(relation.getEntityTwo().getName());
+			Element entityTwo = new Element("member");
+			entityTwo.setAttribute("entity", relation.getEntityTwo().getName());
 			entityTwo.setAttribute("role", relation.getRolenameTwo());
 			entityTwo.setAttribute("cardinality", relation.getCardinalityTwo().getExp());
 			associationElement.addContent(entityTwo);

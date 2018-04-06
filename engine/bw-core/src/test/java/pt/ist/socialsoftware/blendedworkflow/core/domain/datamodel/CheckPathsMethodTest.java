@@ -51,12 +51,10 @@ public class CheckPathsMethodTest extends TeardownRollbackTest {
 		this.entTwo = new Entity(this.dataModel, ENT_TWO_NAME, false);
 		this.entThree = new Entity(this.dataModel, ENT_THREE_NAME, false);
 
-		Attribute attOne = new Attribute(this.dataModel, this.entOne, ATT_ONE_NAME, AttributeType.NUMBER, true, false,
-				false);
-		new Attribute(this.dataModel, this.entOne, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
+		Attribute attOne = new Attribute(this.dataModel, this.entOne, ATT_ONE_NAME, AttributeType.NUMBER, true);
+		new Attribute(this.dataModel, this.entOne, ATT_TWO_NAME, AttributeType.NUMBER, false);
 
-		this.attThree = new Attribute(this.dataModel, this.entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true, false,
-				false);
+		this.attThree = new Attribute(this.dataModel, this.entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true);
 
 		new RelationBW(this.dataModel, "relOne", this.entOne, ROLENAME_ENT_ONE, Cardinality.ONE, false, this.entThree,
 				ROLENAME_ENT_THREE, Cardinality.ONE_MANY, false);

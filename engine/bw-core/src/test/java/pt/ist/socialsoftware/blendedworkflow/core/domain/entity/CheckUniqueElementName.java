@@ -33,8 +33,7 @@ public class CheckUniqueElementName extends TeardownRollbackTest {
 		this.entityOne = new Entity(this.spec.getDataModel(), ENTITY_NAME_ONE, false);
 		this.entityTwo = new Entity(this.spec.getDataModel(), ENTITY_NAME_TWO, false);
 
-		new Attribute(this.spec.getDataModel(), this.entityOne, ELEMENT_NAME_TWO, AttributeType.BOOLEAN, false, false,
-				false);
+		new Attribute(this.spec.getDataModel(), this.entityOne, ELEMENT_NAME_TWO, AttributeType.BOOLEAN, false);
 		new RelationBW(this.spec.getDataModel(), "relation", this.entityOne, "entity", Cardinality.ONE, false,
 				this.entityTwo, ELEMENT_NAME_THREE, Cardinality.ONE_MANY, false);
 		new Rule(this.entityOne, ELEMENT_NAME_FOUR, null);
@@ -43,8 +42,7 @@ public class CheckUniqueElementName extends TeardownRollbackTest {
 	@Test
 	public void attributeBasicRuleClash() {
 		try {
-			new Attribute(this.spec.getDataModel(), this.entityOne, ELEMENT_NAME_FOUR, AttributeType.BOOLEAN, false,
-					false, false);
+			new Attribute(this.spec.getDataModel(), this.entityOne, ELEMENT_NAME_FOUR, AttributeType.BOOLEAN, false);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DUPLICATE_NAME, bwe.getError());
@@ -65,8 +63,7 @@ public class CheckUniqueElementName extends TeardownRollbackTest {
 	@Test
 	public void attributeBasicRelationClash() {
 		try {
-			new Attribute(this.spec.getDataModel(), this.entityOne, ELEMENT_NAME_THREE, AttributeType.BOOLEAN, false,
-					false, false);
+			new Attribute(this.spec.getDataModel(), this.entityOne, ELEMENT_NAME_THREE, AttributeType.BOOLEAN, false);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.DUPLICATE_NAME, bwe.getError());

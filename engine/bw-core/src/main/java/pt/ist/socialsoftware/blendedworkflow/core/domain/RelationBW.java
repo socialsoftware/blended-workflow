@@ -29,6 +29,12 @@ public class RelationBW extends RelationBW_Base {
 	}
 
 	public RelationBW(DataModel dataModel, String name, Entity entityOne, String rolenameOne, String cardinalityOne,
+			Entity entityTwo, String rolenameTwo, String cardinalityTwo) throws BWException {
+		this(dataModel, name, entityOne, rolenameOne, cardinalityOne, false, entityTwo, rolenameTwo, cardinalityTwo,
+				false);
+	}
+
+	public RelationBW(DataModel dataModel, String name, Entity entityOne, String rolenameOne, String cardinalityOne,
 			boolean isOneKeyEntity, Entity entityTwo, String rolenameTwo, String cardinalityTwo, boolean isTwoKeyEntity)
 			throws BWException {
 		setDataModel(dataModel);
@@ -44,7 +50,7 @@ public class RelationBW extends RelationBW_Base {
 	}
 
 	private void checkRelationName(String name) {
-		if ((name == null) || name.equals("")) {
+		if (name == null || name.equals("")) {
 			throw new BWException(BWErrorType.INVALID_RELATION_NAME, name);
 		}
 
@@ -53,7 +59,7 @@ public class RelationBW extends RelationBW_Base {
 
 	private void checkUniqueRelationName(String name) throws BWException {
 		Boolean find = getDataModel().getRelationBWSet().stream()
-				.anyMatch(rel -> ((rel != this) && (rel.getName().equals(name))));
+				.anyMatch(rel -> (rel != this && rel.getName().equals(name)));
 
 		if (find) {
 			throw new BWException(BWErrorType.INVALID_RELATION_NAME, name);
@@ -61,7 +67,7 @@ public class RelationBW extends RelationBW_Base {
 	}
 
 	private void checkRolenameOne(String rolenameOne) {
-		if ((rolenameOne == null) || rolenameOne.equals("")) {
+		if (rolenameOne == null || rolenameOne.equals("")) {
 			throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolenameOne);
 		}
 
@@ -69,7 +75,7 @@ public class RelationBW extends RelationBW_Base {
 	}
 
 	private void checkRolenameTwo(String rolenameTwo) {
-		if ((rolenameTwo == null) || rolenameTwo.equals("")) {
+		if (rolenameTwo == null || rolenameTwo.equals("")) {
 			throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolenameTwo);
 		}
 
