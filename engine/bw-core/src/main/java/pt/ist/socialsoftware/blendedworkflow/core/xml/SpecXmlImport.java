@@ -21,6 +21,8 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
@@ -76,7 +78,7 @@ public class SpecXmlImport {
 			importDataModel(doc, spec.getDataModel());
 			spec.getConditionModel().generateConditions();
 			importActivityModel(doc, spec.getActivityModel());
-			// importGoalModel(doc, blendedWorkflow);
+			importGoalModel(doc, spec.getGoalModel());
 		}
 	}
 
@@ -173,6 +175,55 @@ public class SpecXmlImport {
 			String rolename = condition.getAttributeValue("rolename");
 			RelationBW relation = activity.getActivityModel().getSpecification().getDataModel().getRelation(name);
 			activity.addMultiplicityInvariant(MulCondition.getMulCondition(relation, rolename));
+		}
+	}
+
+	private void importGoalModel(Document doc, GoalModel goalModel) {
+		XPathFactory xpfac = XPathFactory.instance();
+		XPathExpression<Element> xp = xpfac.compile("//specification/goal-model/goal", Filters.element());
+		for (Element goalElement : xp.evaluate(doc)) {
+			String name = goalElement.getAttributeValue("name");
+			Goal goal = new Goal(goalModel, name);
+			importPreConditions(goalElement, goal);
+			importPostConditions(goalElement, goal);
+			importMulConditions(goalElement, goal);
+		}
+
+		for (Element goalElement : xp.evaluate(doc)) {
+			String name = goalElement.getAttributeValue("name");
+			String parent = goalElement.getAttributeValue("parent");
+			if (parent != null && !parent.isEmpty()) {
+				Goal goal = goalModel.getGoal(name);
+				goal.setParentGoal(goalModel.getGoal(parent));
+			}
+		}
+	}
+
+	private void importPreConditions(Element element, Goal goal) {
+		Element subElement = element.getChild("preConditions");
+		for (Element condition : subElement.getChildren("condition")) {
+			String path = condition.getAttributeValue("path");
+			goal.addActivationCondition(
+					DefPathCondition.getDefPathCondition(goal.getGoalModel().getSpecification(), path));
+		}
+	}
+
+	private void importPostConditions(Element element, Goal goal) {
+		Element subElement = element.getChild("postConditions");
+		for (Element condition : subElement.getChildren("condition")) {
+			String path = condition.getAttributeValue("path");
+			goal.addSuccessCondition(
+					DefPathCondition.getDefPathCondition(goal.getGoalModel().getSpecification(), path));
+		}
+	}
+
+	private void importMulConditions(Element element, Goal goal) {
+		Element subElement = element.getChild("mulConditions");
+		for (Element condition : subElement.getChildren("condition")) {
+			String name = condition.getAttributeValue("name");
+			String rolename = condition.getAttributeValue("rolename");
+			RelationBW relation = goal.getGoalModel().getSpecification().getDataModel().getRelation(name);
+			goal.addEntityInvariantCondition(MulCondition.getMulCondition(relation, rolename));
 		}
 	}
 
