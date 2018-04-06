@@ -183,7 +183,8 @@ public class SpecXmlExport {
 
 		for (MulCondition mulCondition : multiplicityInvariantSet) {
 			Element mulConditionElement = new Element("condition");
-			mulConditionElement.setAttribute("path", mulCondition.getPath());
+			mulConditionElement.setAttribute("name", mulCondition.getRelationBW().getName());
+			mulConditionElement.setAttribute("rolename", mulCondition.getRolename());
 			mulConditionElement.setAttribute("cardinality", mulCondition.getCardinality().getExp());
 			mulConditionsElement.addContent(mulConditionElement);
 		}

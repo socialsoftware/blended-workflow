@@ -15,9 +15,13 @@ import org.jdom2.xpath.XPathFactory;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ActivityModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
@@ -71,7 +75,7 @@ public class SpecXmlImport {
 
 			importDataModel(doc, spec.getDataModel());
 			spec.getConditionModel().generateConditions();
-			// importActivityModel(doc, blendedWorkflow);
+			importActivityModel(doc, spec.getActivityModel());
 			// importGoalModel(doc, blendedWorkflow);
 		}
 	}
@@ -119,6 +123,56 @@ public class SpecXmlImport {
 			}
 			new RelationBW(dataModel, name, dataModel.getEntity(entity[0]).get(), rolename[0], cardinality[0],
 					dataModel.getEntity(entity[1]).get(), rolename[1], cardinality[1]);
+		}
+	}
+
+	private void importActivityModel(Document doc, ActivityModel activityModel) {
+		XPathFactory xpfac = XPathFactory.instance();
+		XPathExpression<Element> xp = xpfac.compile("//specification/activity-model/activity", Filters.element());
+		for (Element activityElement : xp.evaluate(doc)) {
+			String name = activityElement.getAttributeValue("name");
+			Activity activity = new Activity(activityModel, name, "");
+			importPreConditions(activityElement, activity);
+			importSeqConditions(activityElement, activity);
+			importPostConditions(activityElement, activity);
+			importMulConditions(activityElement, activity);
+		}
+	}
+
+	private void importPreConditions(Element element, Activity activity) {
+		Element subElement = element.getChild("preConditions");
+		for (Element condition : subElement.getChildren("condition")) {
+			String path = condition.getAttributeValue("path");
+			activity.addPreCondition(
+					DefPathCondition.getDefPathCondition(activity.getActivityModel().getSpecification(), path));
+		}
+	}
+
+	private void importSeqConditions(Element element, Activity activity) {
+		Element subElement = element.getChild("seqConditions");
+		for (Element condition : subElement.getChildren("condition")) {
+			String path = condition.getAttributeValue("path");
+			activity.addSequenceCondition(
+					DefPathCondition.getDefPathCondition(activity.getActivityModel().getSpecification(), path));
+		}
+	}
+
+	private void importPostConditions(Element element, Activity activity) {
+		Element subElement = element.getChild("postConditions");
+		for (Element condition : subElement.getChildren("condition")) {
+			String path = condition.getAttributeValue("path");
+			activity.addPostCondition(
+					DefPathCondition.getDefPathCondition(activity.getActivityModel().getSpecification(), path));
+		}
+	}
+
+	private void importMulConditions(Element element, Activity activity) {
+		Element subElement = element.getChild("mulConditions");
+		for (Element condition : subElement.getChildren("condition")) {
+			String name = condition.getAttributeValue("name");
+			String rolename = condition.getAttributeValue("rolename");
+			RelationBW relation = activity.getActivityModel().getSpecification().getDataModel().getRelation(name);
+			activity.addMultiplicityInvariant(MulCondition.getMulCondition(relation, rolename));
 		}
 	}
 
