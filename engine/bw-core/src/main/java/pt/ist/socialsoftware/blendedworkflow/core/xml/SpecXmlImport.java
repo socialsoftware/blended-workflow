@@ -33,7 +33,7 @@ public class SpecXmlImport {
 
 	private static final BWErrorType CONVERSION_ERROR = null;
 
-	private void importSpecification(InputStream inputStream) {
+	public final void importSpecification(InputStream inputStream) {
 		SAXBuilder builder = new SAXBuilder();
 		builder.setIgnoringElementContentWhitespace(true);
 
