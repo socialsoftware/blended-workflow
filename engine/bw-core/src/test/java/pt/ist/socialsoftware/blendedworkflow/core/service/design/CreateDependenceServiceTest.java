@@ -43,8 +43,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 		this.dataModel = getBlendedWorkflow().getSpecById(SPEC_ID).get().getDataModel();
 
 		this.entityOne = new Entity(this.dataModel, ENTITY_NAME_ONE, false);
-		this.att = new Attribute(this.dataModel, this.entityOne, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true, false,
-				false);
+		this.att = new Attribute(this.dataModel, this.entityOne, ATTRIBUTE_NAME_ONE, AttributeType.NUMBER, true);
 
 		this.entityTwo = new Entity(this.dataModel, ENTITY_NAME_TWO, false);
 

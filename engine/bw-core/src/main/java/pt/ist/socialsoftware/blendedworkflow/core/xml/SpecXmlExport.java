@@ -105,12 +105,14 @@ public class SpecXmlExport {
 			Element associationElement = new Element("association");
 			associationElement.setAttribute("name", relation.getName());
 
-			Element entityOne = new Element(relation.getEntityOne().getName());
+			Element entityOne = new Element("member");
+			entityOne.setAttribute("entity", relation.getEntityOne().getName());
 			entityOne.setAttribute("role", relation.getRolenameOne());
 			entityOne.setAttribute("cardinality", relation.getCardinalityOne().getExp());
 			associationElement.addContent(entityOne);
 
-			Element entityTwo = new Element(relation.getEntityTwo().getName());
+			Element entityTwo = new Element("member");
+			entityTwo.setAttribute("entity", relation.getEntityTwo().getName());
 			entityTwo.setAttribute("role", relation.getRolenameTwo());
 			entityTwo.setAttribute("cardinality", relation.getCardinalityTwo().getExp());
 			associationElement.addContent(entityTwo);
@@ -181,7 +183,8 @@ public class SpecXmlExport {
 
 		for (MulCondition mulCondition : multiplicityInvariantSet) {
 			Element mulConditionElement = new Element("condition");
-			mulConditionElement.setAttribute("path", mulCondition.getPath());
+			mulConditionElement.setAttribute("name", mulCondition.getRelationBW().getName());
+			mulConditionElement.setAttribute("rolename", mulCondition.getRolename());
 			mulConditionElement.setAttribute("cardinality", mulCondition.getCardinality().getExp());
 			mulConditionsElement.addContent(mulConditionElement);
 		}

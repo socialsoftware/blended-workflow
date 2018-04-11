@@ -27,7 +27,7 @@ public class CreateAttributeMethodTest extends TeardownRollbackTest {
 	public void populate4Test() throws BWException {
 		Specification spec = new Specification("SpecId", "My spec");
 		this.entity = new Entity(spec.getDataModel(), "Entity name", false);
-		new Attribute(spec.getDataModel(), this.entity, EXISTS_NAME, AttributeType.BOOLEAN, true, false, false);
+		new Attribute(spec.getDataModel(), this.entity, EXISTS_NAME, AttributeType.BOOLEAN, true);
 	}
 
 	@Test

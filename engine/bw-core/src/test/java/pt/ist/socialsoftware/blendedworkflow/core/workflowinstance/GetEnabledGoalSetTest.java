@@ -41,8 +41,8 @@ public class GetEnabledGoalSetTest extends TeardownRollbackTest {
 
 		this.entOne = new Entity(dataModel, ENT_ONE_NAME, false);
 
-		this.attOne = new Attribute(dataModel, this.entOne, ATT_ONE_NAME, AttributeType.NUMBER, true, false, false);
-		this.attTwo = new Attribute(dataModel, this.entOne, ATT_TWO_NAME, AttributeType.NUMBER, false, false, false);
+		this.attOne = new Attribute(dataModel, this.entOne, ATT_ONE_NAME, AttributeType.NUMBER, true);
+		this.attTwo = new Attribute(dataModel, this.entOne, ATT_TWO_NAME, AttributeType.NUMBER, false);
 
 		this.workflowInstance = new WorkflowInstance(this.spec, NAME);
 	}

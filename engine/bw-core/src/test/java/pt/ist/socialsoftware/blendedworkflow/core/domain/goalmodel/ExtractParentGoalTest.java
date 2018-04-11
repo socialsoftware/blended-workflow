@@ -64,15 +64,15 @@ public class ExtractParentGoalTest extends TeardownRollbackTest {
 
 		this.entityOne = new Entity(this.spec.getDataModel(), ENTITY_ONE_NAME, false);
 		this.attributeOne = new Attribute(this.spec.getDataModel(), this.entityOne, ATTRIBUTE_ONE_NAME,
-				AttributeType.NUMBER, true, false, false);
+				AttributeType.NUMBER, true);
 		this.attributeTwo = new Attribute(this.spec.getDataModel(), this.entityOne, ATTRIBUTE_TWO_NAME,
-				AttributeType.NUMBER, true, false, false);
+				AttributeType.NUMBER, true);
 
 		this.entityTwo = new Entity(this.spec.getDataModel(), ENTITY_TWO_NAME, false);
 		this.attributeThree = new Attribute(this.spec.getDataModel(), this.entityTwo, "att3", AttributeType.BOOLEAN,
-				true, false, false);
-		this.attributeFour = new Attribute(this.spec.getDataModel(), this.entityTwo, "att4", AttributeType.STRING, true,
-				false, false);
+				true);
+		this.attributeFour = new Attribute(this.spec.getDataModel(), this.entityTwo, "att4", AttributeType.STRING,
+				true);
 
 		this.relation = new RelationBW(this.spec.getDataModel(), "name", this.entityOne, ROLENAME_ONE, Cardinality.ONE,
 				false, this.entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);

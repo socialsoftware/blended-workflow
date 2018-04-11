@@ -50,16 +50,12 @@ public class CheckCyclesMethodTest extends TeardownRollbackTest {
 		this.entTwo = new Entity(this.dataModel, ENT_TWO_NAME, false);
 		this.entThree = new Entity(this.dataModel, ENT_THREE_NAME, false);
 
-		this.attOne = new Attribute(this.dataModel, this.entOne, ATT_ONE_NAME, AttributeType.NUMBER, true, false,
-				false);
-		this.attTwo = new Attribute(this.dataModel, this.entOne, ATT_TWO_NAME, AttributeType.NUMBER, false, false,
-				false);
+		this.attOne = new Attribute(this.dataModel, this.entOne, ATT_ONE_NAME, AttributeType.NUMBER, true);
+		this.attTwo = new Attribute(this.dataModel, this.entOne, ATT_TWO_NAME, AttributeType.NUMBER, false);
 
-		this.attThree = new Attribute(this.dataModel, this.entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true, false,
-				false);
+		this.attThree = new Attribute(this.dataModel, this.entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true);
 
-		this.attFour = new Attribute(this.dataModel, this.entThree, ATT_FOUR_NAME, AttributeType.NUMBER, true, false,
-				false);
+		this.attFour = new Attribute(this.dataModel, this.entThree, ATT_FOUR_NAME, AttributeType.NUMBER, true);
 
 		new RelationBW(this.dataModel, "relOneTwo", this.entOne, ROLENAME_ENT_ONE, Cardinality.ONE_MANY, false,
 				this.entTwo, ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);

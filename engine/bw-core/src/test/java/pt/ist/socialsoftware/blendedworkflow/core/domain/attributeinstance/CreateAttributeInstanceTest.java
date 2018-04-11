@@ -28,7 +28,7 @@ public class CreateAttributeInstanceTest extends TeardownRollbackTest {
 		this.spec = new Specification("SpecId", "My spec");
 		this.entity = new Entity(this.spec.getDataModel(), "entityName", false);
 		this.attribute = new Attribute(this.spec.getDataModel(), this.entity, "name", Attribute.AttributeType.STRING,
-				false, false, false);
+				false);
 
 		WorkflowInstance workflowInstance = new WorkflowInstance(this.spec, "name");
 		this.entityInstance = new EntityInstance(workflowInstance, this.entity);
@@ -47,7 +47,7 @@ public class CreateAttributeInstanceTest extends TeardownRollbackTest {
 	public void attributeDoesNotBelongToEntity() {
 		Entity otherEntity = new Entity(this.spec.getDataModel(), "otherEntityName", false);
 		Attribute otherAttribute = new Attribute(this.spec.getDataModel(), otherEntity, "name",
-				Attribute.AttributeType.STRING, false, false, false);
+				Attribute.AttributeType.STRING, false);
 
 		try {
 			new AttributeInstance(this.entityInstance, otherAttribute, STRING_VALUE);
