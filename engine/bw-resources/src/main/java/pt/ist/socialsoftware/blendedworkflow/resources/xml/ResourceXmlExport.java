@@ -256,7 +256,7 @@ public class ResourceXmlExport extends SpecXmlExport {
         } else if (ralExpression instanceof RALExprHasUnit) {
             expression = new Element("HasUnitExpr");
 
-            expression.setAttribute("position", ((RALExprHasUnit) ralExpression).getUnit().getName());
+            expression.setAttribute("unit", ((RALExprHasUnit) ralExpression).getUnit().getName());
         } else if (ralExpression instanceof RALExprHistoryExecuting) {
             expression = new Element("HistoryExecutingExpr");
 
