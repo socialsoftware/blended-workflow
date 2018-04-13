@@ -13,7 +13,7 @@ public class Person extends Person_Base {
     private static Logger logger = LoggerFactory.getLogger(Person.class);
 
     public Person(ResourceModel resourceModel, String name, String description) throws RMException {
-        logger.debug("Creating a new Position object");
+        logger.debug("Creating a new Person object");
         setResourceModel(resourceModel);
         setName(name);
         setDescription(description);
