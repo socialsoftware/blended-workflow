@@ -357,7 +357,7 @@
       </AndExpr>
     </resource-rule>
     <resource-rule product="Hello.activity2" model="data-model" type="informs">
-      <HasUnitExpr position="u" />
+      <HasUnitExpr unit="u" />
     </resource-rule>
     <resource-rule product="Hello.activity1" model="data-model" type="responsible-for">
       <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="World" />
@@ -378,7 +378,7 @@
       </AndExpr>
     </resource-rule>
     <resource-rule product="Hello.activity2" model="activity-model" type="informs">
-      <HasUnitExpr position="u" />
+      <HasUnitExpr unit="u" />
     </resource-rule>
     <resource-rule product="Hello.asd" model="activity-model" type="responsible-for">
       <HasRoleExpr role="rol" unit="u" />
@@ -521,7 +521,7 @@
       </AndExpr>
     </resource-rule>
     <resource-rule product="Hello.activity2" model="goal-model" type="informs">
-      <HasUnitExpr position="u" />
+      <HasUnitExpr unit="u" />
     </resource-rule>
     <resource-rule product="Hello.asd" model="goal-model" type="responsible-for">
       <HasRoleExpr role="rol" unit="u" />
