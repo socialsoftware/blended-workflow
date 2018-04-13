@@ -1,4 +1,4 @@
-<specification name="Doctor Appointment" specId="DoctorAppointment">
+<specification name="Doctor Appointment" specId="DoctorAppointmentTest">
   <data-model>
     <entities>
       <entity name="Medication" exists="false" mandatory="false">

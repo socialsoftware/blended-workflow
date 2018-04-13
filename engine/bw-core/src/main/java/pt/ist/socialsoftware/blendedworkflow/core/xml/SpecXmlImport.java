@@ -28,6 +28,13 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 
 public class SpecXmlImport {
 
@@ -77,50 +84,48 @@ public class SpecXmlImport {
 			String name = specElement.getAttributeValue("name");
 			String specId = specElement.getAttributeValue("specId");
 
-			Specification spec = new Specification(specId, name);
+			Specification spec = DesignInterface.getInstance().createSpecification(new SpecDTO(specId, name));
 
-			importCore(doc, spec);
+			importCore(specElement, spec);
 			importModules(specElement, spec);
 		}
 	}
 
-	private void importCore(Document doc, Specification spec) {
-		importDataModel(doc, spec.getDataModel());
+	private void importCore(Element specElement, Specification spec) {
+		importDataModel(specElement, spec.getDataModel());
 		spec.getConditionModel().generateConditions();
-		importActivityModel(doc, spec.getActivityModel());
-		importGoalModel(doc, spec.getGoalModel());
+		importActivityModel(specElement, spec.getActivityModel());
+		importGoalModel(specElement, spec.getGoalModel());
 	}
 
-	private void importDataModel(Document doc, DataModel dataModel) {
-		importEntities(doc, dataModel);
-		importAssociations(doc, dataModel);
+	private void importDataModel(Element specElement, DataModel dataModel) {
+		importEntities(specElement, dataModel);
+		importAssociations(specElement, dataModel);
 	}
 
-	private void importEntities(Document doc, DataModel dataModel) {
-		XPathFactory xpfac = XPathFactory.instance();
-		XPathExpression<Element> xp = xpfac.compile("//specification/data-model/entities/entity", Filters.element());
-		for (Element entityElement : xp.evaluate(doc)) {
+	private void importEntities(Element specElement, DataModel dataModel) {
+		for (Element entityElement : specElement.getChild("data-model").getChild("entities").getChildren("entity")) {
 			String entityName = entityElement.getAttributeValue("name");
 			boolean entityMandatory = convertStringToBool(entityElement.getAttributeValue("mandatory"));
 			boolean exists = convertStringToBool(entityElement.getAttributeValue("exists"));
 
-			Entity entity = new Entity(dataModel, entityName, exists, entityMandatory);
+			Entity entity = DesignInterface.getInstance().createEntity(
+					new EntityDTO(dataModel.getSpecification().getSpecId(), entityName, exists, entityMandatory));
 
 			for (Element attributeElement : entityElement.getChildren("attribute")) {
 				String attributeName = attributeElement.getAttributeValue("name");
 				Attribute.AttributeType type = convertStringToAttributeType(attributeElement.getAttributeValue("type"));
 				boolean attributeMandatory = convertStringToBool(entityElement.getAttributeValue("mandatory"));
 
-				new Attribute(dataModel, entity, attributeName, type, attributeMandatory);
+				DesignInterface.getInstance().createAttribute(new AttributeDTO(dataModel.getSpecification().getSpecId(),
+						entity.getExternalId(), entityName, attributeName, type.toString(), attributeMandatory));
 			}
 		}
 	}
 
-	private void importAssociations(Document doc, DataModel dataModel) {
-		XPathFactory xpfac = XPathFactory.instance();
-		XPathExpression<Element> xp = xpfac.compile("//specification/data-model/associations/association",
-				Filters.element());
-		for (Element associationElement : xp.evaluate(doc)) {
+	private void importAssociations(Element specElement, DataModel dataModel) {
+		for (Element associationElement : specElement.getChild("data-model").getChild("associations")
+				.getChildren("association")) {
 			String name = associationElement.getAttributeValue("name");
 			String[] entity = new String[2];
 			String[] rolename = new String[2];
@@ -132,17 +137,18 @@ public class SpecXmlImport {
 				cardinality[i] = memberElement.getAttributeValue("cardinality");
 				i++;
 			}
-			new RelationBW(dataModel, name, dataModel.getEntity(entity[0]).get(), rolename[0], cardinality[0],
-					dataModel.getEntity(entity[1]).get(), rolename[1], cardinality[1]);
+			DesignInterface.getInstance()
+					.createRelation(new RelationDTO(dataModel.getSpecification().getSpecId(), name,
+							dataModel.getEntity(entity[0]).get().getExternalId(), rolename[0], cardinality[0],
+							dataModel.getEntity(entity[1]).get().getExternalId(), rolename[1], cardinality[1]));
 		}
 	}
 
-	private void importActivityModel(Document doc, ActivityModel activityModel) {
-		XPathFactory xpfac = XPathFactory.instance();
-		XPathExpression<Element> xp = xpfac.compile("//specification/activity-model/activity", Filters.element());
-		for (Element activityElement : xp.evaluate(doc)) {
+	private void importActivityModel(Element specElement, ActivityModel activityModel) {
+		for (Element activityElement : specElement.getChild("activity-model").getChildren("activity")) {
 			String name = activityElement.getAttributeValue("name");
-			Activity activity = new Activity(activityModel, name, "");
+			Activity activity = DesignInterface.getInstance()
+					.createActivity(new ActivityDTO(activityModel.getSpecification().getSpecId(), name));
 			importPreConditions(activityElement, activity);
 			importSeqConditions(activityElement, activity);
 			importPostConditions(activityElement, activity);
@@ -187,18 +193,17 @@ public class SpecXmlImport {
 		}
 	}
 
-	private void importGoalModel(Document doc, GoalModel goalModel) {
-		XPathFactory xpfac = XPathFactory.instance();
-		XPathExpression<Element> xp = xpfac.compile("//specification/goal-model/goal", Filters.element());
-		for (Element goalElement : xp.evaluate(doc)) {
+	private void importGoalModel(Element specElement, GoalModel goalModel) {
+		for (Element goalElement : specElement.getChild("goal-model").getChildren("goal")) {
 			String name = goalElement.getAttributeValue("name");
-			Goal goal = new Goal(goalModel, name);
+			Goal goal = DesignInterface.getInstance()
+					.createGoal(new GoalDTO(goalModel.getSpecification().getSpecId(), name));
 			importPreConditions(goalElement, goal);
 			importPostConditions(goalElement, goal);
 			importMulConditions(goalElement, goal);
 		}
 
-		for (Element goalElement : xp.evaluate(doc)) {
+		for (Element goalElement : specElement.getChild("goal-model").getChildren("goal")) {
 			String name = goalElement.getAttributeValue("name");
 			String parent = goalElement.getAttributeValue("parent");
 			if (parent != null && !parent.isEmpty()) {

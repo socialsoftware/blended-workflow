@@ -17,8 +17,12 @@ public class ActivityDTO {
 		this.description = description;
 	}
 
+	public ActivityDTO(String specId, String name) {
+		this(specId, name, "");
+	}
+
 	public String getSpecId() {
-		return specId;
+		return this.specId;
 	}
 
 	public void setSpecId(String specId) {
@@ -26,7 +30,7 @@ public class ActivityDTO {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -34,7 +38,7 @@ public class ActivityDTO {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {

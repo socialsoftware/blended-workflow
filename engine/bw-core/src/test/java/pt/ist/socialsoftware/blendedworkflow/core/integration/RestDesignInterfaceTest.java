@@ -30,7 +30,6 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Expression.ExpressionAtom;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Product.ProductType;
 import pt.ist.socialsoftware.blendedworkflow.core.filter.TransactionFilter;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
@@ -105,8 +104,8 @@ public class RestDesignInterfaceTest {
 				.andExpect(status().isCreated()).andReturn();
 		entityTwoDTO = mapper.readValue(result.getResponse().getContentAsString(), EntityDTO.class);
 
-		AttributeDTO attributeOneDTO = new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(), entityOneDTO.getExtId(),
-				null, "att1", "Boolean", true);
+		AttributeDTO attributeOneDTO = new AttributeDTO(SPEC_ID, entityOneDTO.getExtId(), null, "att1", "Boolean",
+				true);
 		result = this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
 						.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -116,14 +115,14 @@ public class RestDesignInterfaceTest {
 				.andExpect(jsonPath("$.mandatory").value(true)).andReturn();
 		attributeOneDTO = mapper.readValue(result.getResponse().getContentAsString(), AttributeDTO.class);
 
-		AttributeDTO attributeTwoDTO = new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(), entityOneDTO.getExtId(),
-				null, ATTRIBUTE_TWO_NAME_STRING, "String", false);
+		AttributeDTO attributeTwoDTO = new AttributeDTO(SPEC_ID, entityOneDTO.getExtId(), null,
+				ATTRIBUTE_TWO_NAME_STRING, "String", false);
 		this.mockMvc.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
 				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(attributeTwoDTO)))
 				.andExpect(status().isCreated());
 
-		AttributeDTO attributeThreeDTO = new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
-				entityOneDTO.getExtId(), null, "att3", "Number", true);
+		AttributeDTO attributeThreeDTO = new AttributeDTO(SPEC_ID, entityOneDTO.getExtId(), null, "att3", "Number",
+				true);
 		this.mockMvc.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
 				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(attributeThreeDTO)))
 				.andExpect(status().isCreated());

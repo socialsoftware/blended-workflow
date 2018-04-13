@@ -17,10 +17,12 @@ public class EntityDTO extends ProductDTO {
 		this.setMandatory(mandatory);
 	}
 
+	public EntityDTO(String specId, String name, boolean exists, boolean mandatory) {
+		this(specId, null, name, exists, mandatory);
+	}
+
 	public EntityDTO(String specId, String name, boolean exists) {
-		super(specId, null, ProductType.ENTITY.name());
-		this.name = name;
-		this.exists = exists;
+		this(specId, null, name, exists, false);
 	}
 
 	public boolean getExists() {
@@ -40,7 +42,7 @@ public class EntityDTO extends ProductDTO {
 	}
 
 	public boolean isMandatory() {
-		return mandatory;
+		return this.mandatory;
 	}
 
 	public void setMandatory(boolean mandatory) {

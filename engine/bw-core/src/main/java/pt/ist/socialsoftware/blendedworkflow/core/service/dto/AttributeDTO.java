@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product.ProductType;
+
 public class AttributeDTO extends ProductDTO {
 	private String entityExtId;
 	private String entityName;
@@ -10,9 +12,9 @@ public class AttributeDTO extends ProductDTO {
 	public AttributeDTO() {
 	}
 
-	public AttributeDTO(String specId, String productType, String entityExtId, String entityName, String name,
-			String type, boolean mandatory) {
-		super(specId, productType, type);
+	public AttributeDTO(String specId, String entityExtId, String entityName, String name, String type,
+			boolean mandatory) {
+		super(specId, ProductType.ATTRIBUTE.name(), type);
 		this.entityExtId = entityExtId;
 		this.entityName = entityName;
 		this.name = name;
