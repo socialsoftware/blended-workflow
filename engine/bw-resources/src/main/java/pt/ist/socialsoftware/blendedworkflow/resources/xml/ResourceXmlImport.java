@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static pt.ist.socialsoftware.blendedworkflow.resources.xml.ResourceXmlExport.ACTIVITY_MODEL;
+import static pt.ist.socialsoftware.blendedworkflow.resources.xml.ResourceXmlExport.DATA_MODEL;
+import static pt.ist.socialsoftware.blendedworkflow.resources.xml.ResourceXmlExport.GOAL_MODEL;
+
 public class ResourceXmlImport extends SpecXmlImport {
     private static Logger logger = LoggerFactory.getLogger(ResourceXmlImport.class);
 
@@ -33,7 +37,7 @@ public class ResourceXmlImport extends SpecXmlImport {
         resourceDesigner.createResourceModel(spec.getSpecId());
 
         importResourceModel(specElement.getChild("resource-model"), spec);
-        // importResourceRules(specElement, spec);
+        importResourceRules(specElement.getChild("resource-rules"), spec);
     }
 
     private void importResourceModel(Element specElement, Specification spec) {
@@ -136,5 +140,81 @@ public class ResourceXmlImport extends SpecXmlImport {
 
             resourceDesigner.createPerson(personDTO);
         });
+    }
+
+    private void importResourceRules(Element specElement, Specification spec) {
+        importDataModelRules(specElement, spec);
+
+        importGoalRules(specElement, spec);
+
+        importActivityRules(specElement, spec);
+
+
+    }
+
+    private void importDataModelRules(Element specElement, Specification spec) {
+        specElement.getChildren().stream()
+                .filter(rr -> rr.getAttribute("model").getValue().equals(DATA_MODEL))
+                .forEach(resourceRule -> {
+                    resourceDesigner.addResourceRule(new ResourceRuleDTO(
+                            spec.getSpecId(),
+                            resourceRule.getAttribute("product").getValue(),
+                            convertResourceRuleType(resourceRule.getAttribute("type").getValue()),
+                            importRALExpressionDTO(resourceRule, spec)
+                    ));
+                });
+    }
+
+    private void importGoalRules(Element specElement, Specification spec) {
+        specElement.getChildren().stream()
+                .filter(rr -> rr.getAttribute("model").getValue().equals(GOAL_MODEL))
+                .forEach(resourceRule -> {
+                    ResourceRuleDTO.ResourceRuleTypeDTO type = convertResourceRuleType(resourceRule.getAttribute("type").getValue());
+                    String goalName = resourceRule.getAttribute("product").getValue();
+                    Goal goal = spec.getGoalModel().getGoal(goalName);
+                    switch (type) {
+                        case HAS_RESPONSIBLE:
+                            goal.setResponsibleFor(resourceDesigner.createRALExpression(spec.getSpecId(), importRALExpressionDTO(resourceRule, spec)));
+                            break;
+                        case INFORMS:
+                            goal.setInforms(resourceDesigner.createRALExpression(spec.getSpecId(), importRALExpressionDTO(resourceRule, spec)));
+                            break;
+                        default:
+                    }
+                });
+    }
+
+    private void importActivityRules(Element specElement, Specification spec) {
+        specElement.getChildren().stream()
+                .filter(rr -> rr.getAttribute("model").getValue().equals(ACTIVITY_MODEL))
+                .forEach(resourceRule -> {
+                    ResourceRuleDTO.ResourceRuleTypeDTO type = convertResourceRuleType(resourceRule.getAttribute("type").getValue());
+                    String activityName = resourceRule.getAttribute("product").getValue();
+                    Activity activity = spec.getActivityModel().getActivity(activityName);
+                    switch (type) {
+                        case HAS_RESPONSIBLE:
+                            activity.setResponsibleFor(resourceDesigner.createRALExpression(spec.getSpecId(), importRALExpressionDTO(resourceRule, spec)));
+                            break;
+                        case INFORMS:
+                            activity.setInforms(resourceDesigner.createRALExpression(spec.getSpecId(), importRALExpressionDTO(resourceRule, spec)));
+                            break;
+                        default:
+                    }
+                });
+    }
+
+    private RALExpressionDTO importRALExpressionDTO(Element resourceRule, Specification spec) throws RMException {
+        return new RALExprAnyoneDTO();
+    }
+
+    private ResourceRuleDTO.ResourceRuleTypeDTO convertResourceRuleType(String type) {
+        switch (type) {
+            case "responsible-for":
+                return ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE;
+            case "informs":
+                return ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS;
+            default:
+                throw new RMException(RMErrorType.INVALID_RESOURCE_RULE_TYPE);
+        }
     }
 }
