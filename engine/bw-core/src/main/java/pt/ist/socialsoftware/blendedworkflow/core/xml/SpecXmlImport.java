@@ -53,7 +53,7 @@ public class SpecXmlImport {
 			throw ex;
 		}
 
-		processImport(doc);
+		importSpecification(doc);
 	}
 
 	public final void importSpecification(String specXml) {
@@ -65,30 +65,30 @@ public class SpecXmlImport {
 		importSpecification(stream);
 	}
 
-	@Atomic(mode = TxMode.WRITE)
-	public final void processImport(Document doc) {
-		importCore(doc);
-		importModules(doc);
-	}
-
-	protected void importModules(Document doc) {
+	protected void importModules(Element specElement, Specification spec) {
 		// to be overridden by other modules
 	}
 
-	private void importCore(Document doc) {
+	@Atomic(mode = TxMode.WRITE)
+	private void importSpecification(Document doc) {
 		XPathFactory xpfac = XPathFactory.instance();
 		XPathExpression<Element> xp = xpfac.compile("//specification", Filters.element());
-		for (Element specification : xp.evaluate(doc)) {
-			String name = specification.getAttributeValue("name");
-			String specId = specification.getAttributeValue("specId");
+		for (Element specElement : xp.evaluate(doc)) {
+			String name = specElement.getAttributeValue("name");
+			String specId = specElement.getAttributeValue("specId");
 
 			Specification spec = new Specification(specId, name);
 
-			importDataModel(doc, spec.getDataModel());
-			spec.getConditionModel().generateConditions();
-			importActivityModel(doc, spec.getActivityModel());
-			importGoalModel(doc, spec.getGoalModel());
+			importCore(doc, spec);
+			importModules(specElement, spec);
 		}
+	}
+
+	private void importCore(Document doc, Specification spec) {
+		importDataModel(doc, spec.getDataModel());
+		spec.getConditionModel().generateConditions();
+		importActivityModel(doc, spec.getActivityModel());
+		importGoalModel(doc, spec.getGoalModel());
 	}
 
 	private void importDataModel(Document doc, DataModel dataModel) {
