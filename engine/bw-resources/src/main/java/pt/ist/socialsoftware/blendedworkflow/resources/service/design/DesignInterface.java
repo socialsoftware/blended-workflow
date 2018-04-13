@@ -5,10 +5,12 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.core.xml.SpecXmlExport;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.xml.ResourceXmlExport;
 
 import java.util.Set;
 
@@ -567,5 +569,14 @@ public class DesignInterface {
 				}
 			}
 		}
+	}
+
+	public String export(String specId) {
+		Specification spec = workflowDesigner.getSpecBySpecId(specId);
+
+		ResourceXmlExport exporter = new ResourceXmlExport();
+
+		return exporter.export(spec);
+		// logger.debug(exporter.export(spec));
 	}
 }
