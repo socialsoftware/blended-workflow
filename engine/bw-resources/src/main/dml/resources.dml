@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+enum UserRole.RoleType as RoleType;
 enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExpression.TaskDutyType as TaskDutyType;
 enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistory.Quantifier as HistoryQuantifier;
 enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprCommonality.Amount as CommonalityAmount;
@@ -336,4 +337,42 @@ relation GoalHasResponsibleFor {
 relation GoalHasInforms {
     .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalInforms { multiplicity 0..1;}
     RALExpression playsRole informs { multiplicity 0..1; }
+}
+
+/**
+  * Authentication
+  */
+
+class User {
+	String username;
+	String password;
+	boolean enabled;
+	boolean active;
+	LocalDate lastLogin;
+}
+
+relation BlendedWorkflowHasUser {
+	.pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow playsRole blendedworkflow {multiplicity 1..1;}
+	User playsRole users {multiplicity 0..*;}
+}
+
+class RegistrationToken {
+	String token;
+	Long expireTime;
+	boolean authorized;
+}
+
+relation BlendedWorkflowHasRegistrationToken {
+	.pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow playsRole blendedworkflow {multiplicity 1..1;}
+	RegistrationToken playsRole token {multiplicity 0..*;}
+}
+
+relation UserHasRegistrationToken {
+	User playsRole user {multiplicity 1..1;}
+	RegistrationToken playsRole token {multiplicity 0..1;}
+}
+
+relation UserIsPerson {
+    User playsRole user {multiplicity 1..1;}
+    Person playsRole person {multiplicity 1..1;}
 }

@@ -50,7 +50,7 @@ public class ResourceXmlImportTest extends TeardownRollbackTest {
         importer.importSpecification(inputStream);
     }
 
-
+/*
     @Test
     public void importFromFile() throws FileNotFoundException {
         BlendedWorkflow.getInstance().getSpecificationSet().stream().forEach(s -> s.delete());
@@ -70,5 +70,5 @@ public class ResourceXmlImportTest extends TeardownRollbackTest {
 
         //logger.debug(this.exporter.export(specification));
     }
-
+*/
 }

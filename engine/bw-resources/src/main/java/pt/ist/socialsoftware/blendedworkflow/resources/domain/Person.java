@@ -17,6 +17,7 @@ public class Person extends Person_Base {
         setResourceModel(resourceModel);
         setName(name);
         setDescription(description);
+        setUser(new User(resourceModel.getSpec().getBlendedWorkflow(), name, name, this));
     }
     
     public Person(ResourceModel resourceModel, String name, String description,
