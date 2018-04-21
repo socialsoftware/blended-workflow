@@ -29,6 +29,7 @@ public class ResourceModel extends ResourceModel_Base {
 		getCapabilitySet().stream().forEach(c -> c.delete());
 		getRoleSet().stream().forEach(r -> r.delete());
 		getUnitSet().stream().forEach(u -> u.delete());
+		getSpec().getBlendedWorkflow().getUsersSet().stream().forEach(u -> u.delete());
     }
 
 	public void delete() {

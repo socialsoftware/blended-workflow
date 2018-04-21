@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.resources.ResourcesApplication;
 import pt.ist.socialsoftware.blendedworkflow.resources.security.BlendedUserDetails;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
@@ -16,14 +17,15 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 public class User extends User_Base {
     private static Logger logger = LoggerFactory.getLogger(User.class);
 
-    public static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(11);
+    private static PasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(11);
 
     public User(BlendedWorkflow blendedWorkflow, String username, String password, Person person) {
-        setEnabled(false);
+        setEnabled(true);
         setActive(true);
         setBlendedworkflow(blendedWorkflow);
         setUsername(username);
-        setPassword(passwordEncoder.encode(password));
+        setPerson(person);
+        setPassword(bCryptPasswordEncoder.encode(password));
     }
 
     public static User getAuthenticatedUser() {
@@ -39,7 +41,7 @@ public class User extends User_Base {
         return null;
     }
 
-    public void remove() {
+    public void delete() {
         setBlendedworkflow(null);
         deleteDomainObject();
     }

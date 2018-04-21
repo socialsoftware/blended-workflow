@@ -32,6 +32,7 @@ public class Person extends Person_Base {
         getEntityInstanceSet().stream().forEach(e -> removeEntityInstance(e));
         getPositionSet().stream().forEach(p -> removePosition(p));
         getCapabilitySet().stream().forEach(c -> removeCapability(c));
+        setUser(null);
         setResourceModel(null);
         deleteDomainObject();
     }

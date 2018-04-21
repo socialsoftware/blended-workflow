@@ -11,80 +11,54 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import pt.ist.socialsoftware.blendedworkflow.resources.security.BlendedAuthenticationEntryPoint;
-import pt.ist.socialsoftware.blendedworkflow.resources.security.BlendedAuthenticationSuccessHandler;
-import pt.ist.socialsoftware.blendedworkflow.resources.security.BlendedUserDetailsService;
+import pt.ist.socialsoftware.blendedworkflow.resources.security.*;
 
 
-@Configuration
 @EnableWebSecurity
-public class BlendedWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter{
+public class BlendedWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
     private static Logger logger = LoggerFactory.getLogger(BlendedWebSecurityConfigurerAdapter.class);
 
-    @Autowired
-    private BlendedAuthenticationEntryPoint blendedAuthenticationEntryPoint;
+    private UserDetailsService userDetailsService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private BlendedAuthenticationSuccessHandler authenticationSuccessHandler;
+    public BlendedWebSecurityConfigurerAdapter(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userDetailsService = userDetailsService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         logger.debug("configure123");
 
         http.csrf().disable()
-            .exceptionHandling()
-                .authenticationEntryPoint(blendedAuthenticationEntryPoint)
-                .and()
             .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/").authenticated()
 //                .anyRequest().authenticated()
                 .and()
-            .formLogin().
-                loginPage("/login")
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
+            .formLogin()
+                .loginPage("/login")
                 .permitAll()
                 .and()
             .logout()
-                .permitAll();
-
-        http.sessionManagement().maximumSessions(2).sessionRegistry(sessionRegistry());
+                .permitAll()
+                .and()
+            .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-    @Inject
-    public void registerAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-        logger.debug("registerAuthentication");
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        logger.debug("registerAuthenticationDEBUG");
 
-        auth.userDetailsService(blendedUserDetailsService()).passwordEncoder(passwordEncoder());
-    }
-
-    @Bean
-    public SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(11);
-    }
-
-    @Bean
-    public BlendedUserDetailsService blendedUserDetailsService() {
-        return new BlendedUserDetailsService();
-    }
-
-    @Bean
-    public BlendedAuthenticationSuccessHandler mySuccessHandler(){
-        return new BlendedAuthenticationSuccessHandler();
-    }
-    @Bean
-    public SimpleUrlAuthenticationFailureHandler myFailureHandler(){
-        return new SimpleUrlAuthenticationFailureHandler();
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 }

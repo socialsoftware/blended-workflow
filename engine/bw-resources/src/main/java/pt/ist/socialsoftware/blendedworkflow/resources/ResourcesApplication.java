@@ -4,9 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pt.ist.socialsoftware.blendedworkflow.core.CoreApplication;
 
 @PropertySource({ "classpath:resources.properties" })
@@ -23,4 +25,8 @@ public class ResourcesApplication extends SpringBootServletInitializer {
 		SpringApplication.run(ResourcesApplication.class, args);
 	}
 
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder(11);
+	}
 }
