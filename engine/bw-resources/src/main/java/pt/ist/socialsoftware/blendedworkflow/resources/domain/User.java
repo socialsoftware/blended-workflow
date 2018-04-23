@@ -42,6 +42,7 @@ public class User extends User_Base {
     }
 
     public void delete() {
+        setPerson(null);
         setBlendedworkflow(null);
         deleteDomainObject();
     }
