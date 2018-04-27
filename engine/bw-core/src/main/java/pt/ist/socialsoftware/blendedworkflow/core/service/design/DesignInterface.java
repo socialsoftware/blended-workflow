@@ -59,7 +59,7 @@ public class DesignInterface {
 		return instance;
 	}
 
-	private DesignInterface() {
+	protected DesignInterface() {
 	}
 
 	private BlendedWorkflow getBlendedWorkflow() {

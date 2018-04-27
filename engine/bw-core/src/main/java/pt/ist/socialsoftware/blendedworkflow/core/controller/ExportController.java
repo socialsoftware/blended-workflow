@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.PropertiesManager;
 
 @RestController
@@ -25,12 +27,15 @@ import pt.ist.socialsoftware.blendedworkflow.core.utils.PropertiesManager;
 public class ExportController {
 	private static Logger logger = LoggerFactory.getLogger(ExportController.class);
 
+	@Inject
+	private ModulesFactory factory;
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<String> exportSpecification(HttpServletResponse response,
 			@PathVariable("specId") String specId) {
 		logger.debug("exportSpecification specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		String testModelsDirectory = PropertiesManager.getProperties().getProperty("test.models.dir");
 

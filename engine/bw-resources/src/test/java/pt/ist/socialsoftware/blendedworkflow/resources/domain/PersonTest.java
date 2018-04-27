@@ -6,7 +6,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ public class PersonTest extends TeardownRollbackTest{
     private static final String SPEC_ID = "Spec ID";
     private static final String SPEC_NAME = "Spec Name";
 
-    private DesignInterface designer;
+    private DesignResourcesInterface designer;
 
     private Specification spec;
     private ResourceModel _resourceModel;
@@ -30,7 +30,7 @@ public class PersonTest extends TeardownRollbackTest{
     @Override
     public void populate4Test() throws BWException {
         pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance().createSpecification(new SpecDTO(SPEC_ID, SPEC_NAME));
-        designer = DesignInterface.getInstance();
+        designer = DesignResourcesInterface.getInstance();
 
         spec = getBlendedWorkflow().getSpecById(SPEC_ID).orElse(null);
         _resourceModel = designer.createResourceModel(spec.getSpecId());

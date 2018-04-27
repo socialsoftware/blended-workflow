@@ -12,7 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.xml.SpecXmlImport;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
 
 import java.util.List;
@@ -27,10 +27,10 @@ public class ResourceXmlImport extends SpecXmlImport {
     public static final String BOOLEAN_TRUE = "true";
     private static Logger logger = LoggerFactory.getLogger(ResourceXmlImport.class);
 
-    private DesignInterface resourceDesigner;
+    private DesignResourcesInterface resourceDesigner;
 
     public ResourceXmlImport() {
-        resourceDesigner = DesignInterface.getInstance();
+        resourceDesigner = DesignResourcesInterface.getInstance();
     }
 
     @Override

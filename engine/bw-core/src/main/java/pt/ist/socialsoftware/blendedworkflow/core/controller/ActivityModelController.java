@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.controller;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
 import javax.websocket.server.PathParam;
 
 import org.slf4j.Logger;
@@ -34,17 +35,21 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.req.AddActivityReq;
 import pt.ist.socialsoftware.blendedworkflow.core.service.req.ExtractActivityReq;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/activitymodel")
 public class ActivityModelController {
 	private static Logger logger = LoggerFactory.getLogger(ActivityModelController.class);
 
+	@Inject
+	private ModulesFactory factory;
+
 	@RequestMapping(method = RequestMethod.PUT)
 	public ResponseEntity<String> cleanActivityModel(@PathVariable("specId") String specId) {
 		logger.debug("cleanActivityModel specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.cleanActivityModel(specId);
 
@@ -55,7 +60,7 @@ public class ActivityModelController {
 	public ResponseEntity<Boolean> generateActivityModel(@PathVariable("specId") String specId) {
 		logger.debug("generateActivityModel specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		boolean result = adi.generateActivityModel(specId);
 
@@ -68,7 +73,7 @@ public class ActivityModelController {
 		logger.debug("createActivity specId:{}, name:{}, description:{}", specId, activityDTO.getName(),
 				activityDTO.getDescription());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Activity activity = adi.createActivity(activityDTO);
 
@@ -82,7 +87,7 @@ public class ActivityModelController {
 				request.getActivityName(), request.getDescription(),
 				request.getPostConditionSet().stream().map(d -> d.getPath()).collect(Collectors.joining(",")));
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Activity activity = adi.addActivity(specId, request);
 
@@ -94,7 +99,7 @@ public class ActivityModelController {
 			@PathVariable("activityName") String activityName, @PathVariable("newName") String newName) {
 		logger.debug("updateActivityName specId:{}, activityName:{}", specId, activityName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.updateActivityName(specId, activityName, newName);
 
@@ -105,7 +110,7 @@ public class ActivityModelController {
 	public ResponseEntity<ActivityDTO[]> getActivitySet(@PathVariable("specId") String specId) {
 		logger.debug("getActivitySet specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<Activity> goals = adi.getActivities(specId);
 
@@ -117,7 +122,7 @@ public class ActivityModelController {
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<DefPathCondition> preConditionSet = adi.getActivityPreCondition(specId, activityName);
 
@@ -130,7 +135,7 @@ public class ActivityModelController {
 			@PathVariable("activityName") String activityName, @PathVariable("path") String path) {
 		logger.debug("associateDefPathToActivityPre specId:{}, activityName:{}, path:{}", specId, activityName, path);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefPathCondition defPathCondition = adi.associateDefPathToActivityPre(specId, activityName, path);
 
@@ -142,7 +147,7 @@ public class ActivityModelController {
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityPostCondition specId:{}, activityName:{}", specId, activityName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<DefProductCondition> postConditionSet = adi.getActivityPostCondition(specId, activityName);
 
@@ -162,7 +167,7 @@ public class ActivityModelController {
 		logger.debug("associateEntityAchieveConditionToActivityPost specId:{}, activityName:{}, path:{}", specId,
 				activityName, path);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefEntityCondition defEntityCondition = adi.associateEntityToActivityPost(specId, activityName, path);
 
@@ -176,7 +181,7 @@ public class ActivityModelController {
 		logger.debug("associateAttributeAchieveConditionToActivityPost specId:{}, activityName:{}, path:{}", specId,
 				activityName, path);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefAttributeCondition defAttributeCondition = adi.associateAttributeToActivityPost(specId, activityName, path);
 
@@ -188,7 +193,7 @@ public class ActivityModelController {
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityMultConditions specId:{}, activityName:{}", specId, activityName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<MulCondition> mulConditions = adi.getActivityMulConditions(specId, activityName);
 
@@ -203,7 +208,7 @@ public class ActivityModelController {
 		logger.debug("associateActConditionToGoal specId:{}, activityName:{}, path:{}, cardinality:{}", specId,
 				activityName, mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		MulCondition mulCondition = adi.associateMulToActivityPost(specId, activityName, mulConditionDTO.getRolePath(),
 				mulConditionDTO.getCardinality());
@@ -216,7 +221,7 @@ public class ActivityModelController {
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityRuleConditions specId:{}, activityName:{}", specId, activityName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<Rule> rules = adi.getActivityRuleConditions(specId, activityName);
 
@@ -234,7 +239,7 @@ public class ActivityModelController {
 		logger.debug("associateAttributeInvariantConditionActivityPost specId:{}, activityName:{}, rule:{}", specId,
 				activityName, ruleDTO.getName());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Rule rule = adi.associateRuleToActivityPost(ruleDTO, activityName);
 
@@ -245,7 +250,7 @@ public class ActivityModelController {
 	public ResponseEntity<Boolean> checkActivityModel(@PathVariable("specId") String specId) {
 		logger.debug("checkActivityModel specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.checkActivityModel(specId);
 
@@ -259,7 +264,7 @@ public class ActivityModelController {
 		logger.debug("mergeActivities specId:{}, newActivityName:{}, activityNameOne:{}, activityNameTwo:{}", specId,
 				newActivityName, activityNameOne, activityNameTwo);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Activity activity = adi.mergeActivities(specId, newActivityName,
 				"merged: " + activityNameOne + " " + activityNameTwo, activityNameOne, activityNameTwo);
@@ -274,7 +279,7 @@ public class ActivityModelController {
 				specId, request.getNewActivityName(), request.getSourceActivityName(),
 				request.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Activity activity = adi.extractActivity(specId, request.getNewActivityName(),
 				"splitted from activity " + request.getSourceActivityName(), request.getSourceActivityName(),
@@ -288,7 +293,7 @@ public class ActivityModelController {
 			@PathVariable("activityName") String activityName, @RequestBody String path) {
 		logger.debug("addSequenceConditionToActivity specId:{}, activityName:{}, path:{}", specId, activityName, path);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.addSequenceConditionToActivity(specId, activityName, path);
 
@@ -301,7 +306,7 @@ public class ActivityModelController {
 		logger.debug("removeSequenceConditionToActivity specId:{}, activityName:{}, path:{}", specId, activityName,
 				path);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.removeSequenceConditionToActivity(specId, activityName, path);
 
@@ -313,7 +318,7 @@ public class ActivityModelController {
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<DefPathCondition> preConditionSet = adi.getActivitySeqCondition(specId, activityName);
 
@@ -325,7 +330,7 @@ public class ActivityModelController {
 	public ResponseEntity<GraphDTO> getActivityGraph(@PathVariable("specId") String specId) {
 		logger.debug("getActivityGraph specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		GraphDTO activityGraph = adi.getActivityGraph(specId);
 

@@ -17,9 +17,12 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 public class CreateAttributeServiceTest extends TeardownRollbackTest {
 	private static Logger log = LoggerFactory.getLogger(CreateAttributeServiceTest.class);
+
+	private final ModulesFactory factory = new ModulesFactory();
 
 	private static final String SPEC_ID = "Spec ID";
 	private static final String ENTITY_NAME = "Entity Name";
@@ -41,7 +44,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 	public void success() throws BWException {
 		log.debug("success ent.getExternalId():{}", this.ent.getExternalId());
 
-		DesignInterface.getInstance().createAttribute(new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
+		this.factory.createDesignInterface().createAttribute(new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
 				this.ent.getExternalId(), null, ATTRIBUTE_NAME, AttributeType.NUMBER.toString(), true));
 
 		Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
@@ -55,7 +58,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 	@Test
 	public void nonExistsEntityExtId() throws BWException {
 		try {
-			DesignInterface.getInstance().createAttribute(new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
+			this.factory.createDesignInterface().createAttribute(new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
 					NON_EXIST, null, ATTRIBUTE_NAME, AttributeType.BOOLEAN.toString(), false));
 			fail();
 		} catch (BWException bwe) {
@@ -68,7 +71,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 	@Test
 	public void emptyEntityExtId() throws BWException {
 		try {
-			DesignInterface.getInstance().createAttribute(new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
+			this.factory.createDesignInterface().createAttribute(new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
 					EMPTY_NAME, EMPTY_NAME, ATTRIBUTE_NAME, AttributeType.STRING.toString(), true));
 			fail();
 		} catch (BWException bwe) {
@@ -81,8 +84,8 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 	@Test
 	public void nullEntityExtId() throws BWException {
 		try {
-			DesignInterface.getInstance().createAttribute(new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(), null,
-					null, ATTRIBUTE_NAME, AttributeType.BOOLEAN.toString(), false));
+			this.factory.createDesignInterface().createAttribute(new AttributeDTO(SPEC_ID, ProductType.ATTRIBUTE.name(),
+					null, null, ATTRIBUTE_NAME, AttributeType.BOOLEAN.toString(), false));
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_FOUND, bwe.getError());

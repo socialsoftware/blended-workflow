@@ -17,11 +17,11 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 
-public class DesignInterfaceTest extends TeardownRollbackTest {
+public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
     private static final String SPEC_ID = "Spec ID";
     private static final String SPEC_NAME = "Spec Name";
 
-    private DesignInterface designer;
+    private DesignResourcesInterface designer;
 
     private Specification spec;
     private ResourceModel _resourceModel;
@@ -47,7 +47,7 @@ public class DesignInterfaceTest extends TeardownRollbackTest {
     @Override
     public void populate4Test() throws BWException {
         pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance().createSpecification(new SpecDTO(SPEC_ID, SPEC_NAME));
-        designer = DesignInterface.getInstance();
+        designer = DesignResourcesInterface.getInstance();
 
         spec = getBlendedWorkflow().getSpecById(SPEC_ID).orElse(null);
         _resourceModel = designer.createResourceModel(spec.getSpecId());

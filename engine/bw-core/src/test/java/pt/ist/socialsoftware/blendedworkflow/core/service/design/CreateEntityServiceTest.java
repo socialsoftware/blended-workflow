@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 public class CreateEntityServiceTest extends TeardownRollbackTest {
 	private static final String SPEC_ID = "Spec ID";
@@ -19,6 +20,8 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
 	private static final String NON_EXIST = "No Name";
 	private static final String DUP_NAME = "Exists Name";
 	private static final String EMPTY_NAME = "";
+
+	private final ModulesFactory factory = new ModulesFactory();
 
 	Specification spec;
 
@@ -30,7 +33,7 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void success() throws BWException {
-		DesignInterface.getInstance().createEntity(new EntityDTO(SPEC_ID, ENTITY_NAME, false));
+		this.factory.createDesignInterface().createEntity(new EntityDTO(SPEC_ID, ENTITY_NAME, false));
 
 		Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
 		Entity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
@@ -42,7 +45,7 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
 	@Test
 	public void nonExistSpecId() throws BWException {
 		try {
-			DesignInterface.getInstance().createEntity(new EntityDTO(NON_EXIST, ENTITY_NAME, false));
+			this.factory.createDesignInterface().createEntity(new EntityDTO(NON_EXIST, ENTITY_NAME, false));
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INVALID_SPECIFICATION_ID, bwe.getError());
 			assertEquals(NON_EXIST, bwe.getMessage());
@@ -52,7 +55,7 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
 	@Test
 	public void emptySpecId() throws BWException {
 		try {
-			DesignInterface.getInstance().createEntity(new EntityDTO(EMPTY_NAME, ENTITY_NAME, true));
+			this.factory.createDesignInterface().createEntity(new EntityDTO(EMPTY_NAME, ENTITY_NAME, true));
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INVALID_SPECIFICATION_ID, bwe.getError());
 			assertEquals(EMPTY_NAME, bwe.getMessage());
@@ -62,7 +65,7 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
 	@Test
 	public void nullSpecIdId() throws BWException {
 		try {
-			DesignInterface.getInstance().createEntity(new EntityDTO(null, ENTITY_NAME, false));
+			this.factory.createDesignInterface().createEntity(new EntityDTO(null, ENTITY_NAME, false));
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INVALID_SPECIFICATION_ID, bwe.getError());
 			assertEquals(null, bwe.getMessage());
@@ -72,7 +75,7 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
 	@Test
 	public void entityExists() throws BWException {
 		try {
-			DesignInterface.getInstance().createEntity(new EntityDTO(SPEC_ID, DUP_NAME, false));
+			this.factory.createDesignInterface().createEntity(new EntityDTO(SPEC_ID, DUP_NAME, false));
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INVALID_ENTITY_NAME, bwe.getError());
 			assertEquals(DUP_NAME, bwe.getMessage());

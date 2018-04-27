@@ -1,24 +1,36 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.controller;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.utils.ResourcesFactory;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/resourcerules")
 public class ResourceRulesSpecificationController {
 	private static Logger log = LoggerFactory.getLogger(ResourceRulesSpecificationController.class);
 
+	@Inject
+	private ResourcesFactory factory;
+
 	@RequestMapping(value = "/relations", method = RequestMethod.POST)
 	public ResponseEntity<ResourceRelationDTO> createEntityIsPerson(@PathVariable("specId") String specId,
-														  @RequestBody ResourceRelationDTO resourceRelationDTO) {
+			@RequestBody ResourceRelationDTO resourceRelationDTO) {
 		log.debug("CreateEntityIsPerson: {}, {}", specId, resourceRelationDTO.getEntityName());
 
-		DesignInterface designer = DesignInterface.getInstance();
+		DesignResourcesInterface designer = this.factory.createDesignInterface();
 
 		designer.relationEntityIsPerson(resourceRelationDTO);
 
@@ -27,10 +39,10 @@ public class ResourceRulesSpecificationController {
 
 	@RequestMapping(value = "/rules", method = RequestMethod.POST)
 	public ResponseEntity<ResourceRuleDTO> createEntityIsPerson(@PathVariable("specId") String specId,
-															@RequestBody ResourceRuleDTO resourceRuleDTO) {
+			@RequestBody ResourceRuleDTO resourceRuleDTO) {
 		log.debug("CreateResourceRule: {}, {}, {}", specId, resourceRuleDTO.getDataField(), resourceRuleDTO.getType());
 
-		DesignInterface designer = DesignInterface.getInstance();
+		DesignResourcesInterface designer = this.factory.createDesignInterface();
 
 		designer.addResourceRule(resourceRuleDTO);
 

@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.controller;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
 import javax.websocket.server.PathParam;
 
 import org.slf4j.Logger;
@@ -28,17 +29,21 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.req.ExtractGoalReq;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/goalmodel")
 public class GoalModelController {
 	private static Logger logger = LoggerFactory.getLogger(GoalModelController.class);
 
+	@Inject
+	private ModulesFactory factory;
+
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public ResponseEntity<String> cleanGoalModel(@PathVariable("specId") String specId) {
 		logger.debug("cleanGoalModel specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.cleanGoalModel(specId);
 
@@ -49,7 +54,7 @@ public class GoalModelController {
 	public ResponseEntity<Boolean> generateGoalModel(@PathVariable("specId") String specId) {
 		logger.debug("generateGoalModel specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		boolean result = adi.generateGoalModel(specId);
 
@@ -61,7 +66,7 @@ public class GoalModelController {
 			@PathVariable("goalName") String goalName, @PathVariable("newName") String newName) {
 		logger.debug("updateGoalName specId:{}, goalName:{}", specId, goalName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.updateGoalName(specId, goalName, newName);
 
@@ -72,7 +77,7 @@ public class GoalModelController {
 	public ResponseEntity<GoalDTO[]> getGoalSet(@PathVariable("specId") String specId) {
 		logger.debug("getGoalSet specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<Goal> goals = adi.getGoals(specId);
 
@@ -84,7 +89,7 @@ public class GoalModelController {
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalByName specId:{}, name:{}", specId, goalName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Goal goal = adi.getGoalByName(specId, goalName);
 
@@ -95,7 +100,7 @@ public class GoalModelController {
 	public ResponseEntity<GoalDTO> createGoal(@PathVariable("specId") String specId, @RequestBody GoalDTO goalDTO) {
 		logger.debug("createGoal specId:{}, name:{}, exists:{}", goalDTO.getSpecId(), goalDTO.getName());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Goal goal = adi.createGoal(goalDTO);
 
@@ -107,7 +112,7 @@ public class GoalModelController {
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getSubGoal specId:{}, goalName:{}", specId, goalName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		GoalDTO[] subGoals = adi.getSubGoals(specId, goalName).stream().map((goal) -> goal.getDTO())
 				.toArray(size -> new GoalDTO[size]);
@@ -120,7 +125,7 @@ public class GoalModelController {
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getParentGoal specId:{}, goalName:{}", specId, goalName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Goal parentGoal = adi.getParentGoal(specId, goalName);
 		GoalDTO parentGoalDTO;
@@ -138,7 +143,7 @@ public class GoalModelController {
 			@PathVariable("goalName") String goalName, @RequestBody GoalDTO goalDTO) {
 		logger.debug("createGoal specId:{}, parentName:{}, childName:{}", specId, goalName, goalDTO.getName());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Goal goal = adi.addSubGoal(specId, goalName, goalDTO.getName());
 
@@ -150,7 +155,7 @@ public class GoalModelController {
 			@PathVariable("specId") String specId, @PathVariable("goalName") String goalName) {
 		logger.debug("getGoalSucEntityAchieveConditions specId:{}, goalName:{}", specId, goalName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefEntityConditionDTO[] defs = adi.getGoalSuccessEntitySet(specId, goalName).stream().map((def) -> def.getDTO())
 				.toArray(size -> new DefEntityConditionDTO[size]);
@@ -164,7 +169,7 @@ public class GoalModelController {
 			@PathVariable("path") String path) {
 		logger.debug("associateSucConditionToGoal specId:{}, goalName:{}, path:{}", specId, goalName, path);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefEntityCondition defEntityCondition = adi.associateEntityToGoalSuccess(specId, goalName, path);
 
@@ -176,7 +181,7 @@ public class GoalModelController {
 			@PathVariable("specId") String specId, @PathVariable("goalName") String goalName) {
 		logger.debug("getGoalSucAttributeAchieveConditions specId:{}, goalName:{}", specId, goalName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefAttributeConditionDTO[] defs = adi.getGoalSuccessAttributeSet(specId, goalName).stream()
 				.map((def) -> def.getDTO()).toArray(size -> new DefAttributeConditionDTO[size]);
@@ -189,7 +194,7 @@ public class GoalModelController {
 			@PathVariable("goalExtId") String goalExtId, @PathVariable("path") String path) {
 		logger.debug("associateActConditionToGoal specId:{}, goalExtId:{}, path:{}", specId, goalExtId, path);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.associateAttributeToGoalSuccess(specId, goalExtId, path);
 
@@ -201,7 +206,7 @@ public class GoalModelController {
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalActDefPathConditionSet specId:{}, goalName:{}", specId, goalName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefPathConditionDTO[] paths = adi.getGoalActivationDefPathConditionSet(specId, goalName).stream()
 				.map((def) -> def.getDTO(specId)).toArray(size -> new DefPathConditionDTO[size]);
@@ -214,7 +219,7 @@ public class GoalModelController {
 			@PathVariable("goalName") String goalName, @PathVariable("path") String path) {
 		logger.debug("associateDefPathConditionToGoalAct specId:{}, goalName:{}, path:{}", specId, goalName, path);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefPathCondition defPathCondition = adi.associateDefPathConditionToGoalActivation(specId, goalName, path);
 
@@ -226,7 +231,7 @@ public class GoalModelController {
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalMulInvSet specId:{}, goalName:{}", specId, goalName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		MulConditionDTO[] defs = adi.getGoalMulInvSet(specId, goalName).stream().map((def) -> def.getDTO())
 				.toArray(size -> new MulConditionDTO[size]);
@@ -240,7 +245,7 @@ public class GoalModelController {
 		logger.debug("associateActConditionToGoal specId:{}, goalName:{}, path:{}, cardinality:{}", specId, goalName,
 				mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.associateMulToGoalInvariant(specId, goalName, mulConditionDTO.getRolePath(),
 				mulConditionDTO.getCardinality());
@@ -253,7 +258,7 @@ public class GoalModelController {
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalRuleInvSet specId:{}, goalName:{}", specId, goalName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		RuleDTO[] defs = adi.getGoalRuleInvSet(specId, goalName).stream().map((def) -> def.getDTO())
 				.toArray(size -> new RuleDTO[size]);
@@ -267,7 +272,7 @@ public class GoalModelController {
 		logger.debug("associateActConditionToGoal specId:{}, goalName:{}, rule:{}", specId, goalName,
 				ruleDTO.getName());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.associateRuleToGoalInvariant(ruleDTO, goalName);
 
@@ -281,7 +286,7 @@ public class GoalModelController {
 		logger.debug("mergeGoals specId:{}, newGoalName:{}, goalNameOne:{}, goalNameTwo:{}", specId, newGoalName,
 				goalNameOne, goalNameTwo);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Goal goal = adi.mergeGoals(specId, newGoalName, goalNameOne, goalNameTwo);
 
@@ -295,7 +300,7 @@ public class GoalModelController {
 				req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Goal goal = adi.extractChildGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions());
@@ -310,7 +315,7 @@ public class GoalModelController {
 				req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Goal goal = adi.extractParentGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions());
@@ -325,7 +330,7 @@ public class GoalModelController {
 				req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Goal goal = adi.extractSiblingGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions());
@@ -337,7 +342,7 @@ public class GoalModelController {
 	public ResponseEntity<GraphDTO> getGoalGraph(@PathVariable("specId") String specId) {
 		logger.debug("getGoalGraph specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		GraphDTO graph = adi.getGoalModelGraph(specId);
 
