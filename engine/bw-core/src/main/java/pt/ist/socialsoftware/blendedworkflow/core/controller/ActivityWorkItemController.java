@@ -13,17 +13,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityWorkItemDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
+
+import javax.inject.Inject;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/instances/{instanceName}/activityworkitem")
 public class ActivityWorkItemController {
 	private static Logger logger = LoggerFactory.getLogger(ActivityWorkItemController.class);
 
+	@Inject
+	private ModulesFactory factory;
+
 	@RequestMapping(value = "/next", method = RequestMethod.GET)
 	public ResponseEntity<ActivityWorkItemDTO[]> getNextActivityWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
 		logger.debug("getNextActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
-		ExecutionInterface edi = ExecutionInterface.getInstance();
+		ExecutionInterface edi = factory.createExecutionInterface();
 
 		ActivityWorkItemDTO[] instances = edi.getPendingActivityWorkItemSet(specId, instanceName).stream()
 				.toArray(size -> new ActivityWorkItemDTO[size]);
@@ -35,7 +41,7 @@ public class ActivityWorkItemController {
 	public ResponseEntity<ActivityWorkItemDTO[]> getLogActivityWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
 		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
-		ExecutionInterface edi = ExecutionInterface.getInstance();
+		ExecutionInterface edi = factory.createExecutionInterface();
 
 		ActivityWorkItemDTO[] instances = edi.getLogActivityWorkItemSet(specId, instanceName).stream()
 				.map(awi -> awi.getDTO()).toArray(size -> new ActivityWorkItemDTO[size]);
@@ -49,7 +55,7 @@ public class ActivityWorkItemController {
 		logger.debug("executeActivityActivityWorkItem specId:{}, instanceName:{}, activityName:{}", specId,
 				activityWorkItemDTO.getWorkflowInstanceName(), activityWorkItemDTO.getName());
 		logger.debug("executeActivityWorkItem activityWorkItemDTO:{}", activityWorkItemDTO.print());
-		ExecutionInterface edi = ExecutionInterface.getInstance();
+		ExecutionInterface edi = factory.createExecutionInterface();
 
 		edi.executeActivityWorkItem(activityWorkItemDTO);
 

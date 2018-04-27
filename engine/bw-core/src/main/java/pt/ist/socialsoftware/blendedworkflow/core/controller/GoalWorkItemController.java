@@ -13,17 +13,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalWorkItemDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
+
+import javax.inject.Inject;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/instances/{instanceName}/goalworkitem")
 public class GoalWorkItemController {
 	private static Logger logger = LoggerFactory.getLogger(GoalWorkItemController.class);
 
+	@Inject
+	private ModulesFactory factory;
+
 	@RequestMapping(value = "/next", method = RequestMethod.GET)
 	public ResponseEntity<GoalWorkItemDTO[]> getGoalWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
 		logger.debug("getGoalWorkItems specId:{}, instanceName:{}", specId, instanceName);
-		ExecutionInterface edi = ExecutionInterface.getInstance();
+		ExecutionInterface edi = factory.createExecutionInterface();
 
 		GoalWorkItemDTO[] instances = edi.getPendingGoalWorkItemSet(specId, instanceName).stream()
 				.toArray(size -> new GoalWorkItemDTO[size]);
@@ -35,7 +41,7 @@ public class GoalWorkItemController {
 	public ResponseEntity<GoalWorkItemDTO[]> getLogGoalWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
 		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
-		ExecutionInterface edi = ExecutionInterface.getInstance();
+		ExecutionInterface edi = factory.createExecutionInterface();
 
 		GoalWorkItemDTO[] instances = edi.getLogGoalWorkItemSet(specId, instanceName).stream().map(owi -> owi.getDTO())
 				.toArray(size -> new GoalWorkItemDTO[size]);
@@ -49,7 +55,7 @@ public class GoalWorkItemController {
 		logger.debug("executeGoalWorkItem specId:{}, instanceName:{}, goalName:{}", specId,
 				goalWorkItemDTO.getWorkflowInstanceName(), goalWorkItemDTO.getName());
 		logger.debug("executeGoalWorkItem activityWorkItemDTO:{}", goalWorkItemDTO.print());
-		ExecutionInterface edi = ExecutionInterface.getInstance();
+		ExecutionInterface edi = factory.createExecutionInterface();
 
 		edi.executeGoalWorkItem(goalWorkItemDTO);
 

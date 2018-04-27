@@ -1,7 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.utils;
 
+import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.execution.ExecutionResourcesInterface;
 
 public class ResourcesFactory extends ModulesFactory {
 
@@ -10,4 +12,8 @@ public class ResourcesFactory extends ModulesFactory {
 		return DesignResourcesInterface.getInstance();
 	}
 
+	@Override
+	public ExecutionResourcesInterface createExecutionInterface() {
+		return ExecutionResourcesInterface.getInstance();
+	}
 }
