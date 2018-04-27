@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.core.controller;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,17 +24,21 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefEntityCondition
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/conditionmodel")
 public class ConditionModelController {
 	private static Logger log = LoggerFactory.getLogger(ConditionModelController.class);
 
+	@Inject
+	private ModulesFactory factory;
+
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public ResponseEntity<String> cleanConditionModel(@PathVariable("specId") String specId) {
 		log.debug("cleanConditionModel specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.cleanConditionModel(specId);
 
@@ -43,7 +49,7 @@ public class ConditionModelController {
 	public ResponseEntity<Boolean> generateConditionModel(@PathVariable("specId") String specId) {
 		log.debug("generateConditionModel specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		boolean result = adi.generateConditionModel(specId);
 
@@ -54,7 +60,7 @@ public class ConditionModelController {
 	public ResponseEntity<DefEntityConditionDTO[]> getEntityAchieveConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getEntityAchieveConditionSet specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefEntityConditionDTO[] defConditions = adi.getEntityAchieveConditionSet(specId).stream()
 				.map(def -> def.getDTO()).toArray(size -> new DefEntityConditionDTO[size]);
@@ -67,7 +73,7 @@ public class ConditionModelController {
 			@RequestBody DefEntityConditionDTO eacDTO) {
 		log.debug("createEntityAchieveCondition entityName:{}, exists:{}", eacDTO.getEntityName(), eacDTO.isExists());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefEntityCondition defCondition = adi.createEntityAchieveCondition(eacDTO);
 
@@ -79,7 +85,7 @@ public class ConditionModelController {
 			@PathVariable("specId") String specId) {
 		log.debug("getAttributeAchieveConditionSet specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefAttributeConditionDTO[] defConditions = adi.getAttributeAchieveConditionSet(specId).stream()
 				.map(def -> def.getDTO()).toArray(size -> new DefAttributeConditionDTO[size]);
@@ -92,7 +98,7 @@ public class ConditionModelController {
 			@PathVariable("specId") String specId, @RequestBody DefAttributeConditionDTO aacDTO) {
 		log.debug("createAttributeAchieveCondition path:{}, mandatory:{}", aacDTO.getPath(), aacDTO.isMandatory());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefAttributeCondition defCondition = adi.createAttributeAchieveCondition(aacDTO);
 
@@ -103,7 +109,7 @@ public class ConditionModelController {
 	public ResponseEntity<DependenceDTO[]> getEntityDependenceConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getEntityDependenceConditionSet specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DependenceDTO[] dependences = adi.getEntityDependenceConditionSet(specId).stream().map(dep -> dep.getDTO())
 				.toArray(size -> new DependenceDTO[size]);
@@ -117,7 +123,7 @@ public class ConditionModelController {
 		log.debug("createEntityDependenceCondition product:{}, path:{}", dependenceDTO.getProduct(),
 				dependenceDTO.getPath());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Dependence dependence = adi.createEntityDependenceCondition(dependenceDTO);
 
@@ -128,7 +134,7 @@ public class ConditionModelController {
 	public ResponseEntity<DependenceDTO[]> getAttributeDependenceConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getAttributeDependenceConditionSet specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		DependenceDTO[] dependences = adi.getAttributeDependenceConditionSet(specId).stream().map(dep -> dep.getDTO())
 				.toArray(size -> new DependenceDTO[size]);
@@ -142,7 +148,7 @@ public class ConditionModelController {
 		log.debug("createAttributeDependenceCondition product:{}, path:{}", dependenceDTO.getProduct(),
 				dependenceDTO.getPath());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Dependence dependence = adi.createAttributeDependenceCondition(dependenceDTO);
 
@@ -153,7 +159,7 @@ public class ConditionModelController {
 	public ResponseEntity<MulConditionDTO[]> getEntityInvariantConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getEntityInvariantConditionSet specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		MulConditionDTO[] mulConditionsDTO = adi.getEntityInvariantConditionSet(specId).stream()
 				.map(mul -> mul.getDTO()).toArray(size -> new MulConditionDTO[size]);
@@ -167,7 +173,7 @@ public class ConditionModelController {
 		log.debug("createEntityInvariantCondition specId:{}, rolePath:{}, cardinality:{}", specId,
 				mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		MulCondition mulCondition = adi.createEntityInvariantCondition(specId, mulConditionDTO);
 
@@ -178,7 +184,7 @@ public class ConditionModelController {
 	public ResponseEntity<RuleDTO[]> getAttributeInvariantConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getAttributeInvariantConditionSet specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		RuleDTO[] rulesDTO = adi.getAttributeInvariantConditionSet(specId).stream().map(mul -> mul.getDTO())
 				.toArray(size -> new RuleDTO[size]);
@@ -191,7 +197,7 @@ public class ConditionModelController {
 			@RequestBody RuleDTO ruleDTO) {
 		log.debug("createAttributeInvariantCondition specId:{}, name:{}", ruleDTO.getSpecId(), ruleDTO.getName());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Rule rule = adi.createAttributeInvariant(ruleDTO);
 

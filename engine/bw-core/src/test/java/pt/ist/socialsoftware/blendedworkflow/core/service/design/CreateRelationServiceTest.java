@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 public class CreateRelationServiceTest extends TeardownRollbackTest {
 	private static final String SPEC_ID = "Spec ID";
@@ -22,6 +23,8 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
 	private static final String ROLENAME_TWO = "Rolename Name Two";
 	private static final String ONE = "1";
 	private static final String MANY = "*";
+
+	private final ModulesFactory factory = new ModulesFactory();
 
 	String dataModelExtId;
 	Entity entityOne;
@@ -37,7 +40,7 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void success() throws BWException {
-		DesignInterface.getInstance().createRelation(new RelationDTO(SPEC_ID, RELATION_NAME,
+		this.factory.createDesignInterface().createRelation(new RelationDTO(SPEC_ID, RELATION_NAME,
 				this.entityOne.getExternalId(), ROLENAME_ONE, ONE, this.entityTwo.getExternalId(), ROLENAME_TWO, MANY));
 
 		RelationBW relation = this.entityOne.getRelationOneSet().stream()

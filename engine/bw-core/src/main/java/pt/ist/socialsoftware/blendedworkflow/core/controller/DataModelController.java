@@ -3,6 +3,8 @@ package pt.ist.socialsoftware.blendedworkflow.core.controller;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,17 +29,21 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ProductDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/datamodel")
 public class DataModelController {
 	private static Logger log = LoggerFactory.getLogger(DataModelController.class);
 
+	@Inject
+	private ModulesFactory factory;
+
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public ResponseEntity<String> cleanDataModel(@PathVariable("specId") String specId) {
 		log.debug("cleanDataModel specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.cleanDataModel(specId);
 
@@ -48,7 +54,7 @@ public class DataModelController {
 	public ResponseEntity<Boolean> checkDataModel(@PathVariable("specId") String specId) {
 		log.debug("checkDataModel specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.checkDataModel(specId);
 
@@ -60,7 +66,7 @@ public class DataModelController {
 			@PathVariable("path") String path) {
 		log.debug("getProduct path:{}", path);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Product product = adi.getProduct(specId, path);
 
@@ -72,7 +78,7 @@ public class DataModelController {
 			@PathVariable("entityName") String entityName) {
 		log.debug("getProduct entityName:{}", entityName);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Entity entity = adi.getEntityByName(specId, entityName);
 
@@ -83,7 +89,7 @@ public class DataModelController {
 	public ResponseEntity<EntityDTO[]> getEntities(@PathVariable("specId") String specId) {
 		log.debug("getEntities specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		EntityDTO[] entities = adi.getEntities(specId).stream().map(e -> e.getDTO())
 				.toArray(size -> new EntityDTO[size]);
@@ -97,7 +103,7 @@ public class DataModelController {
 		log.debug("createEntity specId:{}, name:{}, exists:{}, mandatory:{}", specId, entDTO.getName(),
 				entDTO.getExists(), entDTO.isMandatory());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Entity entity = adi.createEntity(entDTO);
 
@@ -108,7 +114,7 @@ public class DataModelController {
 	public ResponseEntity<AttributeDTO[]> getAttributtes(@PathVariable("specId") String specId) {
 		log.debug("getAttributtes specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		AttributeDTO[] attributes = adi.getAttributes(specId).stream().map(a -> a.getDTO())
 				.toArray(size -> new AttributeDTO[size]);
@@ -120,7 +126,7 @@ public class DataModelController {
 	public ResponseEntity<AttributeDTO> getAttributeByExtId(@PathVariable("extId") String extId) {
 		log.debug("getAttributeByExtId specId:{} extId:{}", extId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Attribute attribute = adi.getAttributeByExtId(extId);
 
@@ -133,7 +139,7 @@ public class DataModelController {
 		log.debug("createAttribute entityExtId:{},  name:{}, type:{}", attDTO.getEntityExtId(), attDTO.getName(),
 				attDTO.getType());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Attribute attribute = adi.createAttribute(attDTO);
 
@@ -145,7 +151,7 @@ public class DataModelController {
 			@RequestBody RelationDTO relDTO) {
 		log.debug("createRelation {}, {}, {}", relDTO.getName(), relDTO.getEntOneName(), relDTO.getEntTwoName());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		RelationBW relation = adi.createRelation(relDTO);
 
@@ -156,7 +162,7 @@ public class DataModelController {
 	public ResponseEntity<RelationDTO[]> getRelations(@PathVariable("specId") String specId) {
 		log.debug("getRelations specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		RelationDTO[] attributes = adi.getRelations(specId).stream().map(a -> a.getDTO())
 				.toArray(size -> new RelationDTO[size]);
@@ -169,7 +175,7 @@ public class DataModelController {
 		log.debug("createRule specId:{}, entityName:{}, name:{}, expression:{}", ruleDTO.getSpecId(),
 				ruleDTO.getEntityName(), ruleDTO.getName(), ruleDTO.getExpression().toString());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Rule rule = adi.createRule(ruleDTO);
 
@@ -180,7 +186,7 @@ public class DataModelController {
 	public ResponseEntity<RuleDTO[]> getRules(@PathVariable("specId") String specId) {
 		log.debug("getRules specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		RuleDTO[] attributes = adi.getRules(specId).stream().map(a -> a.getDTO()).toArray(size -> new RuleDTO[size]);
 
@@ -192,7 +198,7 @@ public class DataModelController {
 			@RequestBody DependenceDTO dependenceDTO) {
 		log.debug("createDependence product:{}, path:{}", dependenceDTO.getProduct(), dependenceDTO.getPath());
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Dependence dependence = adi.createDependence(dependenceDTO);
 
@@ -203,7 +209,7 @@ public class DataModelController {
 	public ResponseEntity<DependenceDTO[]> getDependencies(@PathVariable("specId") String specId) {
 		log.debug("getDependencies specId:{}", specId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<Dependence> dependencies = adi.getDependencies(specId);
 
@@ -222,7 +228,7 @@ public class DataModelController {
 			@PathVariable("depExtId") String depExtId) {
 		log.debug("checkDependence productExtId:{}", depExtId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		boolean result = adi.checkDependence(depExtId);
 
@@ -234,7 +240,7 @@ public class DataModelController {
 			@PathVariable("depExtId") String depExtId) {
 		log.debug("deleteDependence productExtId:{}", depExtId);
 
-		DesignInterface adi = DesignInterface.getInstance();
+		DesignInterface adi = this.factory.createDesignInterface();
 
 		adi.deleteDependence(depExtId);
 

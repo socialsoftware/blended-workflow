@@ -32,6 +32,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ExpressionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 public class CreateRuleServiceTest extends TeardownRollbackTest {
 	private static final String EXISTS_SPEC_ID = "ID0";
@@ -43,6 +44,8 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 	private static final String EXISTS_ATTRIBUTE_NAME_STRING = "Exists Attribute Name String";
 	private static final String EXISTS_ATTRIBUTE_NAME_BOOLEAN = "Exists Attribute Name Boolean";
 
+	private final ModulesFactory factory = new ModulesFactory();
+
 	DesignInterface designInterface;
 	DataModel existingDataModel;
 
@@ -50,7 +53,7 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
 	@Override
 	public void populate4Test() {
-		this.designInterface = DesignInterface.getInstance();
+		this.designInterface = this.factory.createDesignInterface();
 
 		Specification spec = new Specification(EXISTS_SPEC_ID, EXISTS_SPEC_NAME);
 		this.existingDataModel = spec.getDataModel();

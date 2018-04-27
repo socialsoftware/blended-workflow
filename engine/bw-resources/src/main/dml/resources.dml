@@ -1,8 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
-class ResourceModel {
-	String name;
-}
+enum UserRole.RoleType as RoleType;
+enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExpression.TaskDutyType as TaskDutyType;
+enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistory.Quantifier as HistoryQuantifier;
+enum pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprCommonality.Amount as CommonalityAmount;
+
+class ResourceModel;
 
 relation SpecificationHasResourceModel {
 	.pt.ist.socialsoftware.blendedworkflow.core.domain.Specification playsRole spec {
@@ -11,4 +14,365 @@ relation SpecificationHasResourceModel {
 	ResourceModel playsRole resourceModel {
 		multiplicity 0..1;
 	}
+}
+
+class Capability {
+    String name;
+    String description;
+}
+
+class Role {
+    String name;
+    String description;
+}
+
+class Unit {
+    String name;
+    String description;
+}
+
+class Position {
+    String name;
+    String description;
+}
+
+class Person {
+    String name;
+    String description;
+}
+
+relation ResourceModelHasCapabilities {
+    ResourceModel playsRole resourceModel { multiplicity 1..1; }
+    Capability playsRole capability { multiplicity 0..*; }
+}
+
+relation ResourceModelHasRoles {
+    ResourceModel playsRole resourceModel { multiplicity 1..1; }
+    Role playsRole role { multiplicity 0..*; }
+}
+
+relation ResourceModelHasUnits {
+    ResourceModel playsRole resourceModel { multiplicity 1..1; }
+    Unit playsRole unit { multiplicity 0..*; }
+}
+
+relation ResourceModelHasPositions {
+    ResourceModel playsRole resourceModel { multiplicity 1..1; }
+    Position playsRole position { multiplicity 0..*; }
+}
+
+relation ResourceModelHasPersons {
+    ResourceModel playsRole resourceModel { multiplicity 1..1; }
+    Person playsRole person { multiplicity 0..*; }
+}
+
+relation PositionBelongsToUnit {
+    Unit playsRole unit { multiplicity 1..1; }
+    Position playsRole position { multiplicity 0..*; }
+}
+
+relation PositionHasRoles {
+    Position playsRole position { multiplicity 0..*; }
+    Role playsRole role { multiplicity 0..*; }
+}
+
+relation PositionReportsToPosition {
+    Position playsRole isReportedBy { multiplicity 0..*; }
+    Position playsRole reportsTo { multiplicity 0..1; }
+}
+
+relation PositionDelegatesWorkToPosition {
+    Position playsRole workDelegatedBy { multiplicity 0..*; }
+    Position playsRole canDelegateWorkTo { multiplicity 0..*; }
+}
+
+relation PersonHasPositions {
+    Person playsRole person { multiplicity 0..*; }
+    Position playsRole position { multiplicity 0..*; }
+}
+
+relation PersonHasCapability {
+    Person playsRole person { multiplicity 0..*; }
+    Capability playsRole capability { multiplicity 0..*; }
+}
+
+/*
+RAL Expressions
+*/
+
+class RALExpression;
+
+class RALExprAnyone extends RALExpression;
+
+class RALPersonExpression extends RALExpression;
+
+class RALExprIsPerson extends RALPersonExpression;
+
+class RALExprIsPersonDataObject extends RALPersonExpression;
+
+class RALExprIsPersonInTaskDuty extends RALPersonExpression {
+    TaskDutyType taskDuty;
+}
+
+class RALExprHasPosition extends RALExpression;
+
+class RALExprHasUnit extends RALExpression;
+
+class RALExprHasRole extends RALExpression;
+
+class RALExprReportsToPersonPosition extends RALExpression {
+    boolean directly;
+}
+
+class RALExprReportsToPosition extends RALExpression {
+    boolean directly;
+}
+
+class RALExprReportedByPersonPosition extends RALExpression {
+    boolean directly;
+}
+
+class RALExprReportedByPosition extends RALExpression {
+    boolean directly;
+}
+
+class RALExprDelegatesToPersonPosition extends RALExpression;
+
+class RALExprDelegatesToPosition extends RALExpression;
+
+class RALExprDelegatedByPersonPosition extends RALExpression;
+
+class RALExprDelegatedByPosition extends RALExpression;
+
+class RALExprNot extends RALExpression;
+
+class RALExprAnd extends RALExpression;
+
+class RALExprOr extends RALExpression;
+
+class RALExprHasCapability extends RALExpression;
+
+class RALExprHistory extends RALExpression {
+    HistoryQuantifier quantifier;
+}
+
+class RALExprHistoryExecuting extends RALExprHistory;
+
+class RALExprHistoryInformed extends RALExprHistory;
+
+class RALExprCommonality extends RALExpression {
+    CommonalityAmount amount;
+}
+
+class RALExprSharesPosition extends RALExprCommonality;
+
+class RALExprSharesRole extends RALExprCommonality;
+
+class RALExprSharesUnit extends RALExprCommonality;
+
+relation ResourceModelHasRALExpressions {
+    ResourceModel playsRole resourceModel { multiplicity 1..1; }
+    RALExpression playsRole ralExpression { multiplicity 0..*; }
+}
+
+relation ProductHasResponsibleFor {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole productResponsibleFor { multiplicity 0..1;}
+    RALExpression playsRole responsibleFor { multiplicity 0..1; }
+}
+
+relation ProductHasInforms {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole productInforms { multiplicity 0..1;}
+    RALExpression playsRole informs { multiplicity 0..1; }
+}
+
+relation RALExprIsPersonHasPerson {
+    Person playsRole person { multiplicity 1..1; }
+    RALExprIsPerson playsRole ralExprIsPerson { multiplicity 0..*; }
+}
+
+relation RALExprIsPersonDataObjectHasDataField {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Entity playsRole dataField { multiplicity 1..1; }
+    RALExprIsPersonDataObject playsRole ralExprIsPersonDataObject { multiplicity 0..*; }
+}
+
+relation RALExprIsPersonInTaskDutyHasProduct {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole product { multiplicity 1..1; }
+    RALExprIsPersonInTaskDuty playsRole ralExprIsPersonInTaskDuty { multiplicity 0..*; }
+}
+
+relation RALExprHasPositionHasPosition {
+    Position playsRole position { multiplicity 1..1; }
+    RALExprHasPosition playsRole ralExprHasPosition { multiplicity 0..*; }
+}
+
+relation RALExprHasUnitHasUnit {
+    Unit playsRole Unit { multiplicity 1..1; }
+    RALExprHasUnit playsRole ralExprHasUnit { multiplicity 0..*; }
+}
+
+relation RALExprHasRoleHasRole {
+    Role playsRole role { multiplicity 1..1; }
+    RALExprHasRole playsRole ralExprHasRole { multiplicity 0..*; }
+}
+
+relation RALExprHasRoleHasUnit {
+    Unit playsRole Unit { multiplicity 0..1; }
+    RALExprHasRole playsRole ralExprHasRole { multiplicity 0..*; }
+}
+
+relation EntityIsPerson {
+    ResourceModel playsRole resourceModel { multiplicity 0..1; }
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Entity playsRole entityIsPerson { multiplicity 0..*; }
+}
+
+relation EntityInstanceIsPerson {
+    Person playsRole person { multiplicity 0..1; }
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance playsRole entityInstance { multiplicity 0..*; }
+}
+
+relation RALExprReportsToPersonPositionExprHasRALPersonExpression {
+    RALPersonExpression playsRole personExpr { multiplicity 0..1; }
+    RALExprReportsToPersonPosition playsRole ralExprReportsToPersonPosition { multiplicity 0..*; }
+}
+
+relation RALExprReportsToPositionExprHasPosition {
+    Position playsRole position { multiplicity 0..1; }
+    RALExprReportsToPosition playsRole ralExprReportsToPosition { multiplicity 0..*; }
+}
+
+relation RALExprReportedByPersonPositionExprHasRALPersonExpression {
+    RALPersonExpression playsRole personExpr { multiplicity 0..1; }
+    RALExprReportedByPersonPosition playsRole ralExprReportedByPersonPosition { multiplicity 0..*; }
+}
+
+relation RALExprReportedByPositionExprHasPosition {
+    Position playsRole position { multiplicity 0..1; }
+    RALExprReportedByPosition playsRole ralExprReportedByPosition { multiplicity 0..*; }
+}
+
+relation RALExprDelegatesToPersonPositionHasRALPersonExpression {
+    RALPersonExpression playsRole personExpr { multiplicity 0..1; }
+    RALExprDelegatesToPersonPosition playsRole ralExprDelegatesToPersonPosition { multiplicity 0..*; }
+}
+
+relation RALExprDelegatesToPositionHasPosition {
+    Position playsRole position { multiplicity 0..1; }
+    RALExprDelegatesToPosition playsRole ralExprDelegatesToPosition { multiplicity 0..*; }
+}
+
+relation RALExprDelegatedByPersonPositionHasRALPersonExpression {
+    RALPersonExpression playsRole personExpr { multiplicity 0..1; }
+    RALExprDelegatedByPersonPosition playsRole ralExprDelegatedByPersonPosition { multiplicity 0..*; }
+}
+
+relation RALExprDelegatedByPositionHasPosition {
+    Position playsRole position { multiplicity 0..1; }
+    RALExprDelegatedByPosition playsRole ralExprDelegatedByPosition { multiplicity 0..*; }
+}
+
+relation RALExprNotHasDeniableExpression {
+    RALExprNot playsRole ralExprNot { multiplicity 0..1; }
+    RALExpression playsRole expression { multiplicity 0..1; }
+}
+
+relation RALExprAndHasLeftExpression {
+    RALExprAnd playsRole ralExprAndLeft { multiplicity 0..1; }
+    RALExpression playsRole leftExpression { multiplicity 0..1; }
+}
+
+relation RALExprAndHasRightExpression {
+    RALExprAnd playsRole ralExprAndRight { multiplicity 0..1; }
+    RALExpression playsRole rightExpression { multiplicity 0..1; }
+}
+
+relation RALExprOrHasLeftExpression {
+    RALExprOr playsRole ralExprOrLeft { multiplicity 0..1; }
+    RALExpression playsRole leftExpression { multiplicity 0..1; }
+}
+
+relation RALExprOrHasRightExpression {
+    RALExprOr playsRole ralExprOrRight { multiplicity 0..1; }
+    RALExpression playsRole rightExpression { multiplicity 0..1; }
+}
+
+relation RALExprHasCapabilityHasCapability {
+    RALExprHasCapability playsRole ralExprHasCapability { multiplicity 0..*; }
+    Capability playsRole capability { multiplicity 0..1; }
+}
+
+relation RALExprHistoryHasDataField {
+    RALExprHistory playsRole RALExprHistory { multiplicity 0..*; }
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole dataField { multiplicity 1..1; }
+}
+
+relation RALExprCommonalityHasRALPersonExpression {
+    RALPersonExpression playsRole personExpr { multiplicity 0..1; }
+    RALExprCommonality playsRole ralExprCommonality { multiplicity 0..*; }
+}
+
+relation RALExprSharesRoleHasUnit {
+    Unit playsRole Unit { multiplicity 0..1; }
+    RALExprSharesRole playsRole ralExprSharesRole { multiplicity 0..*; }
+}
+
+/**
+  * Generation of models
+  */
+
+relation ActivityHasResponsibleFor {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Activity playsRole activityResponsibleFor { multiplicity 0..1;}
+    RALExpression playsRole responsibleFor { multiplicity 0..1; }
+}
+
+relation ActivityHasInforms {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Activity playsRole activityInforms { multiplicity 0..1;}
+    RALExpression playsRole informs { multiplicity 0..1; }
+}
+
+relation GoalHasResponsibleFor {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalResponsibleFor { multiplicity 0..1;}
+    RALExpression playsRole responsibleFor { multiplicity 0..1; }
+}
+
+relation GoalHasInforms {
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalInforms { multiplicity 0..1;}
+    RALExpression playsRole informs { multiplicity 0..1; }
+}
+
+/**
+  * Authentication
+  */
+
+class User {
+	String username;
+	String password;
+	boolean enabled;
+	boolean active;
+	LocalDate lastLogin;
+}
+
+relation BlendedWorkflowHasUser {
+	.pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow playsRole blendedworkflow {multiplicity 1..1;}
+	User playsRole users {multiplicity 0..*;}
+}
+
+class RegistrationToken {
+	String token;
+	Long expireTime;
+	boolean authorized;
+}
+
+relation BlendedWorkflowHasRegistrationToken {
+	.pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow playsRole blendedworkflow {multiplicity 1..1;}
+	RegistrationToken playsRole token {multiplicity 0..*;}
+}
+
+relation UserHasRegistrationToken {
+	User playsRole user {multiplicity 1..1;}
+	RegistrationToken playsRole token {multiplicity 0..1;}
+}
+
+relation UserIsPerson {
+    User playsRole user {multiplicity 1..1;}
+    Person playsRole person {multiplicity 1..1;}
 }

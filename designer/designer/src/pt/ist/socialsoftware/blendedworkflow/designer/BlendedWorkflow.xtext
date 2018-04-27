@@ -4,6 +4,16 @@ generate blendedWorkflow "http://www.ist.pt/socialsoftware/blendedworkflow/desig
 
 BWSpecification:
 	specification = Specification
+	dataSpecification = DataSpecification
+	(resourceSpecification = ResourceSpecification)?
+;
+
+/**
+ * Data language grammar
+ */
+
+DataSpecification:
+	{DataSpecification}
 	entities += Entity*
 	associations += Association*
 ;
@@ -13,7 +23,7 @@ Specification:
 ;
 
 Entity:
-	'Entity' name = ID (mandatory ?= 'mandatory')? (exists ?= 'exists')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? '{' 
+	'Entity' name = ID (mandatory ?= 'mandatory')? (exists ?= 'exists')? ('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)? '{'
 		attributes += Attribute*
 		constraint += Constraint*
 	'}'
@@ -25,7 +35,7 @@ Attribute:
 	('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)?
 ;
 
-QualifiedName: 
+QualifiedName:
 	ID ('.' ID)*
 ;
 
@@ -49,39 +59,39 @@ Expression: Or;
 Or returns Expression:
 	And (
 		{Or.left = current} 'OR' right = And
-	)*;	
-	
+	)*;
+
 And returns Expression:
 	Equality (
 		{And.left = current} 'AND' right = Equality
-	)*;	
-	
+	)*;
+
 Equality returns Expression:
 	Comparison (
-		({Equal.left=current} '==' | {NotEqual.left=current} '!=') 
+		({Equal.left=current} '==' | {NotEqual.left=current} '!=')
 		right=Comparison
-	)*;	
-	
+	)*;
+
 Comparison returns Expression:
 	PlusOrMinus (
-		({GreaterEqual.left=current} '>=' | {Greater.left=current} '>' | {SmallerEqual.left=current} '<=' | {Smaller.left=current} '<') 
+		({GreaterEqual.left=current} '>=' | {Greater.left=current} '>' | {SmallerEqual.left=current} '<=' | {Smaller.left=current} '<')
 		right=PlusOrMinus
-	)*;	
+	)*;
 
 PlusOrMinus returns Expression:
 	MulOrDiv (
-		({Plus.left=current} '+' | {Minus.left=current} '-') 
+		({Plus.left=current} '+' | {Minus.left=current} '-')
 		right=MulOrDiv
-	)*;	
+	)*;
 
 MulOrDiv returns Expression:
 	Primary (
-		({Mul.left=current} '*' | {Div.left=current} '/') 
+		({Mul.left=current} '*' | {Div.left=current} '/')
 		right=Primary
-	)*;	
+	)*;
 
 Primary returns Expression:
-	'(' Expression ')' | 
+	'(' Expression ')' |
 	{Not} 'NOT' expression = Primary |
 	Atomic
 ;
@@ -91,4 +101,242 @@ Atomic returns Expression:
 	{IntConstant} name=INT |
 	{StringConstant} name=STRING |
 	{BoolConstant} name=('true'|'false')
+;
+
+/**
+ * Resource language grammar
+ */
+
+ResourceSpecification:
+	capabilities += Capability*
+	roles += Role*
+	units += Unit*
+	positions += Position*
+	persons += Person*
+	resourceRules = ResourceRules
+;
+
+Capability:
+	'Capability' name = ID ('{' 'description' ':' description = STRING '}')?
+;
+
+Role:
+	'Role' name = ID ('{' 'description' ':' description = STRING '}')?
+;
+
+Unit:
+	'Unit' name = ID ('{' 'description' ':' description = STRING '}')?
+;
+
+Position:
+	'Position' name = ID '{'
+		('isMemberOf' ':' unit = [Unit] &
+		('description' ':' description = STRING)? &
+		('participatesIn' ':' '{' roles += [Role] (',' roles += [Role])* '}')? &
+		('canDelegateWorkTo' ':' '{' delegateTo += [Position] (',' delegateTo += [Position])* '}')? &
+		('reportsTo' ':' reportsTo = [Position] )?)
+	'}'
+;
+
+Person:
+	'Person' name = ID ('{'
+		(('description' ':' description = STRING)? &
+		('hasCapability' ':' '{' capabilities += [Capability] (',' capabilities += [Capability])* '}')? &
+		('occupies' ':' '{'occupies += [Position] (',' occupies += [Position])* '}')?)
+	'}')?
+;
+
+/**
+ * ResourceRules Block Grammar
+ */
+ResourceRules:
+	{ResourceRules}
+	'ResourceRules' '{'
+		relations += EntityIsPerson*
+		rules += ResourceRule*
+	'}'
+;
+
+EntityIsPerson:
+	entity = [Entity] 'IS' 'PERSON'
+;
+
+ResourceRule:
+	datafield = QualifiedName
+	taskDuty = ResourceTaskDuty
+	expression = RALExpression
+;
+
+ResourceTaskDuty:
+	('has' 'responsible') | 'informs'
+;
+
+/**
+ * RAL Expressions Grammar
+ */
+RALExpression:
+	AnyoneExpr |
+	PersonExpr |
+	OrganizationalExpr |
+	HierarchyExpr |
+	NotExpr |
+	CompoundExpr |
+	CapabilityExpr |
+	HistoryExpr |
+	CommonalityExpr
+;
+
+AnyoneExpr:
+	{AnyoneExpr}
+	'ANYONE'
+;
+
+PersonExpr:
+	'IS' PersonConstraint 
+;
+
+PersonConstraint:
+	IsPersonID | IsPersonDataObject | IsPersonInDuty
+;
+
+IsPersonID:
+	person = ID
+;
+
+IsPersonDataObject:
+	'PERSON' 'IN' 'DATA' 'FIELD' dataField = QualifiedName
+;
+
+IsPersonInDuty:
+	'ANY' 'PERSON' taskDuty = TaskDuty dataField = QualifiedName
+;
+ 
+TaskDuty:
+	'RESPONSIBLE' 'FOR' |
+	'INFORMED' 'ABOUT'
+;
+
+OrganizationalExpr:
+	HasPositionExpr | HasUnitExpr | HasRoleExpr
+;
+
+HasPositionExpr:
+	'HAS' 'POSITION' position = [Position]
+;
+
+HasUnitExpr:
+	'HAS' 'UNIT' unit = [Unit]
+;
+
+HasRoleExpr:
+	'HAS' 'ROLE' role = [Role] ('IN' 'UNIT' unit = [Unit])?
+;
+
+
+HierarchyExpr:
+	ReportsToPersonPositionExpr |
+	ReportsToPositionExpr | 
+	ReportedByPersonPositionExpr |
+	ReportedByPositionExpr |
+	DelegatesToPersonPositionExpr |
+	DelegatesToPositionExpr |
+	DelegatedByPersonPositionExpr |
+	DelegatedByPositionExpr
+;
+
+ReportsToPersonPositionExpr:
+	(directly ?= 'DIRECTLY')? 'REPORTS' 'TO' 'POSITION' 'OF' personExpr = PersonConstraint
+;
+
+
+ReportsToPositionExpr:
+	(directly ?= 'DIRECTLY')? 'REPORTS' 'TO' 'POSITION' position = [Position]
+;
+
+ReportedByPersonPositionExpr:
+	'IS' (directly ?= 'DIRECTLY')? 'REPORTED' 'BY' 'POSITION' 'OF' personExpr = PersonConstraint
+;
+
+ReportedByPositionExpr:
+	'IS' (directly ?= 'DIRECTLY')? 'REPORTED' 'BY' 'POSITION' position = [Position]
+;
+
+DelegatesToPersonPositionExpr:
+	'CAN' 'DELEGATE' 'WORK' 'TO' 'POSITION' 'OF' personExpr = PersonConstraint
+;
+
+DelegatesToPositionExpr:
+	'CAN' 'DELEGATE' 'WORK' 'TO' 'POSITION' position = [Position]
+;
+
+DelegatedByPersonPositionExpr:
+	'CAN' 'HAVE' 'WORK' 'DELEGATED' 'BY' 'POSITION' 'OF' personExpr = PersonConstraint
+;
+
+DelegatedByPositionExpr:
+	'CAN' 'HAVE' 'WORK' 'DELEGATED' 'BY' 'POSITION' position = [Position]
+;
+
+NotExpr:
+	'NOT' '(' expr = DeniableExpr ')'
+;
+
+DeniableExpr returns RALExpression:
+	PersonExpr | OrganizationalExpr | CommonalityExpr | CapabilityExpr 
+;
+
+CompoundExpr: 
+	'(' leftExpr = RALExpression ')' rightExpr = CompoundType
+;
+
+CompoundType:
+	AndExpr | OrExpr
+;
+
+AndExpr:
+	'AND' '(' expr = RALExpression ')'
+;
+
+OrExpr:
+	'OR' '(' expr = RALExpression ')'
+;
+
+CapabilityExpr:
+	'HAS' 'CAPABILITY' capability = [Capability]
+;
+
+HistoryExpr:
+	HistoryExecutingExpr | HistoryInformedExpr
+;
+
+HistoryExecutingExpr:
+	'WITH' quantifier = HistoryQuantifier 'HISTORY' 'ON' 'EXECUTION' 'IN' dataField = QualifiedName
+;
+
+HistoryInformedExpr:
+	'WITH' quantifier = HistoryQuantifier 'HISTORY' 'ON' 'BEING' 'INFORMED' 'IN' dataField = QualifiedName
+;
+
+HistoryQuantifier:
+	'LEAST' | 'MOST'
+;
+
+CommonalityExpr:
+	SharesPositionExpr | SharesUnitExpr | SharesRoleExpr
+;
+
+SharesPositionExpr:
+	'SHARES' amount = Amount 'POSITION' 'WITH' person = PersonConstraint
+;
+
+SharesUnitExpr:
+	'SHARES' amount = Amount 'UNIT' 'WITH' person = PersonConstraint
+;
+
+SharesRoleExpr:
+	'SHARES' amount = Amount 'ROLE' ('IN' 'UNIT' unit = [Unit])? 'WITH' person = PersonConstraint
+;
+
+Amount:
+	'SOME' | 'ALL'
 ;

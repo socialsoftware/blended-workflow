@@ -33,7 +33,7 @@ public class ExecutionInterface {
 		return instance;
 	}
 
-	private ExecutionInterface() {
+	protected ExecutionInterface() {
 	}
 
 	private BlendedWorkflow getBlendedWorkflow() {

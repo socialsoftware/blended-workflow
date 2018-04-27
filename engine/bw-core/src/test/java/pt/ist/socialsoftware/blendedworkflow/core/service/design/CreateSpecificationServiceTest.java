@@ -9,10 +9,13 @@ import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 public class CreateSpecificationServiceTest extends TeardownRollbackTest {
 	private static final String SPEC_ID = "Spec ID";
 	private static final String SPEC_NAME = "Spec Name";
+
+	private final ModulesFactory factory = new ModulesFactory();
 
 	@Override
 	public void populate4Test() throws BWException {
@@ -20,7 +23,7 @@ public class CreateSpecificationServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void success() throws BWException {
-		DesignInterface.getInstance().createSpecification(new SpecDTO(SPEC_ID, SPEC_NAME));
+		this.factory.createDesignInterface().createSpecification(new SpecDTO(SPEC_ID, SPEC_NAME));
 
 		Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).orElse(null);
 		assertNotNull(spec);
