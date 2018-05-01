@@ -10,7 +10,6 @@ public class Capability extends Capability_Base {
     private static Logger logger = LoggerFactory.getLogger(Capability.class);
 
     public Capability(ResourceModel resourceModel, String name, String description) throws RMException {
-        logger.debug("Creating a new Capability object");
         setResourceModel(resourceModel);
         setName(name);
         setDescription(description);

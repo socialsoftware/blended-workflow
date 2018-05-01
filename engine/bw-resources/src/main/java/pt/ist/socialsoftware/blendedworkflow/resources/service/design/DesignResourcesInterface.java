@@ -213,11 +213,11 @@ public class DesignResourcesInterface extends DesignInterface {
 		ResourceModel resourceModel = getResourceModelFromSpecId(specId);
 		if (ralExpressionDTO instanceof RALExprAnyoneDTO) {
 
-			log.debug("RALExpression Type: ANYONE");
+			// log.debug("RALExpression Type: ANYONE");
 			return new RALExprAnyone(resourceModel);
 
 		} else if (ralExpressionDTO instanceof RALExprIsPersonDTO) {
-			log.debug("RALExpression Type: IS PERSON");
+			// log.debug("RALExpression Type: IS PERSON");
 
 			RALExprIsPersonDTO ralExprIsPersonDTO = (RALExprIsPersonDTO) ralExpressionDTO;
 
@@ -225,7 +225,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprIsPersonDataObjectDTO) {
 
-			log.debug("RALExpression Type: IS PERSON IN DATA FIELD");
+			// log.debug("RALExpression Type: IS PERSON IN DATA FIELD");
 
 			RALExprIsPersonDataObjectDTO ralExprIsPersonDataObjectDTO = (RALExprIsPersonDataObjectDTO) ralExpressionDTO;
 
@@ -245,7 +245,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprIsPersonInTaskDutyDTO) {
 
-			log.debug("RALExpression Type: IS PERSON IN TASK DUTY");
+			// log.debug("RALExpression Type: IS PERSON IN TASK DUTY");
 
 			RALExprIsPersonInTaskDutyDTO ralExprIsPersonInTaskDutyDTO = (RALExprIsPersonInTaskDutyDTO) ralExpressionDTO;
 
@@ -262,7 +262,7 @@ public class DesignResourcesInterface extends DesignInterface {
 			return new RALExprIsPersonInTaskDuty(resourceModel, taskDuty, product);
 		} else if (ralExpressionDTO instanceof RALExprHasPositionDTO) {
 
-			log.debug("RALExpression Type: HAS POSITION");
+			// log.debug("RALExpression Type: HAS POSITION");
 
 			RALExprHasPositionDTO ralExprHasPositionDTO = (RALExprHasPositionDTO) ralExpressionDTO;
 
@@ -271,7 +271,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprHasUnitDTO) {
 
-			log.debug("RALExpression Type: HAS UNIT");
+			// log.debug("RALExpression Type: HAS UNIT");
 
 			RALExprHasUnitDTO ralExprHasUnitDTO = (RALExprHasUnitDTO) ralExpressionDTO;
 
@@ -279,7 +279,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprHasRoleDTO) {
 
-			log.debug("RALExpression Type: HAS ROLE");
+			// log.debug("RALExpression Type: HAS ROLE");
 
 			RALExprHasRoleDTO ralExprHasRoleDTO = (RALExprHasRoleDTO) ralExpressionDTO;
 
@@ -294,7 +294,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprReportsToPersonPositionExprDTO) {
 
-			log.debug("RALExpression Type: REPORTS TO PERSON POSITION");
+			// log.debug("RALExpression Type: REPORTS TO PERSON POSITION");
 
 			RALExprReportsToPersonPositionExprDTO ralExprReportsToPersonPositionExprDTO = (RALExprReportsToPersonPositionExprDTO) ralExpressionDTO;
 
@@ -311,8 +311,6 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprReportsToPositionExprDTO) {
 
-			log.debug("RALExpression Type: REPORTS TO POSITION");
-
 			RALExprReportsToPositionExprDTO ralExprReportsToPositionExprDTO = (RALExprReportsToPositionExprDTO) ralExpressionDTO;
 
 			return new RALExprReportsToPosition(resourceModel,
@@ -321,7 +319,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprReportedByPersonPositionExprDTO) {
 
-			log.debug("RALExpression Type: REPORTS TO PERSON POSITION");
+			// log.debug("RALExpression Type: REPORTS TO PERSON POSITION");
 
 			RALExprReportedByPersonPositionExprDTO ralExprReportedByPersonPositionExprDTO = (RALExprReportedByPersonPositionExprDTO) ralExpressionDTO;
 
@@ -338,7 +336,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprReportedByPositionExprDTO) {
 
-			log.debug("RALExpression Type: REPORTS TO POSITION");
+			// log.debug("RALExpression Type: REPORTS TO POSITION");
 
 			RALExprReportedByPositionExprDTO ralExprReportedByPositionExprDTO = (RALExprReportedByPositionExprDTO) ralExpressionDTO;
 
@@ -348,7 +346,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprDelegatedByPersonPositionExprDTO) {
 
-			log.debug("RALExpression Type: DELEGATED BY PERSON POSITION");
+			// log.debug("RALExpression Type: DELEGATED BY PERSON POSITION");
 
 			RALExprDelegatedByPersonPositionExprDTO ralExprDelegatedByPersonPositionExprDTO = (RALExprDelegatedByPersonPositionExprDTO) ralExpressionDTO;
 
@@ -364,7 +362,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprDelegatedByPositionExprDTO) {
 
-			log.debug("RALExpression Type: DELEGATED BY POSITION");
+			// log.debug("RALExpression Type: DELEGATED BY POSITION");
 
 			RALExprDelegatedByPositionExprDTO ralExprDelegatedByPositionExprDTO = (RALExprDelegatedByPositionExprDTO) ralExpressionDTO;
 
@@ -373,7 +371,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprDelegatesToPersonPositionExprDTO) {
 
-			log.debug("RALExpression Type: DELEGATES TO PERSON POSITION");
+			// log.debug("RALExpression Type: DELEGATES TO PERSON POSITION");
 
 			RALExprDelegatesToPersonPositionExprDTO ralExprDelegatesToPersonPositionExprDTO = (RALExprDelegatesToPersonPositionExprDTO) ralExpressionDTO;
 
@@ -389,7 +387,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprDelegatesToPositionExprDTO) {
 
-			log.debug("RALExpression Type: DELEGATES TO POSITION");
+			// log.debug("RALExpression Type: DELEGATES TO POSITION");
 
 			RALExprDelegatesToPositionExprDTO ralExprDelegatesToPositionExprDTO = (RALExprDelegatesToPositionExprDTO) ralExpressionDTO;
 
@@ -398,7 +396,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprNotDTO) {
 
-			log.debug("RALExpression Type: NOT");
+			// log.debug("RALExpression Type: NOT");
 
 			RALExprNotDTO ralExprNotDTO = (RALExprNotDTO) ralExpressionDTO;
 
@@ -406,7 +404,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprAndDTO) {
 
-			log.debug("RALExpression Type: AND");
+			// log.debug("RALExpression Type: AND");
 
 			RALExprAndDTO ralExprAndDTO = (RALExprAndDTO) ralExpressionDTO;
 
@@ -415,7 +413,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprOrDTO) {
 
-			log.debug("RALExpression Type: OR");
+			// log.debug("RALExpression Type: OR");
 
 			RALExprOrDTO ralExprOrDTO = (RALExprOrDTO) ralExpressionDTO;
 
@@ -424,7 +422,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprHasCapabilityDTO) {
 
-			log.debug("RALExpression Type: HAS CAPABILITY");
+			// log.debug("RALExpression Type: HAS CAPABILITY");
 
 			RALExprHasCapabilityDTO ralExprHasCapabilityDTO = (RALExprHasCapabilityDTO) ralExpressionDTO;
 
@@ -433,7 +431,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprHistoryExecutingDTO) {
 
-			log.debug("RALExpression Type: HAS HISTORY EXECUTING");
+			// log.debug("RALExpression Type: HAS HISTORY EXECUTING");
 
 			RALExprHistoryExecutingDTO ralExprHistoryExecutingDTO = (RALExprHistoryExecutingDTO) ralExpressionDTO;
 
@@ -454,7 +452,7 @@ public class DesignResourcesInterface extends DesignInterface {
 			return new RALExprHistoryExecuting(resourceModel, quantifier, product);
 		} else if (ralExpressionDTO instanceof RALExprHistoryInformedDTO) {
 
-			log.debug("RALExpression Type: HAS HISTORY INFORMED");
+			// log.debug("RALExpression Type: HAS HISTORY INFORMED");
 
 			RALExprHistoryInformedDTO ralExprHistoryInformedDTO = (RALExprHistoryInformedDTO) ralExpressionDTO;
 
@@ -476,7 +474,7 @@ public class DesignResourcesInterface extends DesignInterface {
 			return new RALExprHistoryInformed(resourceModel, quantifier, product);
 		} else if (ralExpressionDTO instanceof RALExprSharesPositionDTO) {
 
-			log.debug("RALExpression Type: SHARES POSITION");
+			// log.debug("RALExpression Type: SHARES POSITION");
 
 			RALExprSharesPositionDTO ralExprSharesPositionDTO = (RALExprSharesPositionDTO) ralExpressionDTO;
 
@@ -494,7 +492,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprSharesUnitDTO) {
 
-			log.debug("RALExpression Type: SHARES UNIT");
+			// log.debug("RALExpression Type: SHARES UNIT");
 
 			RALExprSharesUnitDTO ralExprSharesUnitDTO = (RALExprSharesUnitDTO) ralExpressionDTO;
 
@@ -512,7 +510,7 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		} else if (ralExpressionDTO instanceof RALExprSharesRoleDTO) {
 
-			log.debug("RALExpression Type: SHARES ROLE");
+			// log.debug("RALExpression Type: SHARES ROLE");
 
 			RALExprSharesRoleDTO ralExprSharesRoleDTO = (RALExprSharesRoleDTO) ralExpressionDTO;
 

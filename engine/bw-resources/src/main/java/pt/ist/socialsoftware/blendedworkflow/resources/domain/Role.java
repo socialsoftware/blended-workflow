@@ -10,7 +10,6 @@ public class Role extends Role_Base {
     private static Logger logger = LoggerFactory.getLogger(Role.class);
 
     public Role(ResourceModel resourceModel, String name, String description) throws RMException {
-        logger.debug("Creating a new Role object");
         setResourceModel(resourceModel);
         setName(name);
         setDescription(description);

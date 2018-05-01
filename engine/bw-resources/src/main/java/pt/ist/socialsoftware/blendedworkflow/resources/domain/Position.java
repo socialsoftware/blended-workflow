@@ -14,7 +14,6 @@ public class Position extends Position_Base {
     private static Logger logger = LoggerFactory.getLogger(Position.class);
 
     public Position(ResourceModel resourceModel, String name, String description, Unit unit) throws RMException {
-        logger.debug("Creating a new Position object");
         setResourceModel(resourceModel);
         setName(name);
         setUnit(unit);
