@@ -46,6 +46,7 @@ public class BlendedWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
             .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/").authenticated()
+                .antMatchers("/specs/**/instances/**").authenticated()
 //                .anyRequest().authenticated()
                 .and()
             .exceptionHandling()
