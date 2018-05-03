@@ -62,8 +62,8 @@ public abstract class AbstractMvcTest extends TeardownRollbackTest {
         return result.getResponse().getHeader(HEADER_STRING).split("Bearer ")[1];
     }
 
-    protected String extractToken(String guilherme, String guilherme1) throws Exception {
-        return extractToken(login("Guilherme", "Guilherme").andReturn());
+    protected String extractToken(String username, String password) throws Exception {
+        return extractToken(login(username, password).andReturn());
     }
 
     protected String constructToken(String token) {
