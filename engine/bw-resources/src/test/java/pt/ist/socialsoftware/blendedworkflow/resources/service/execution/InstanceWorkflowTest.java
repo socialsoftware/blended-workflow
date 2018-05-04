@@ -94,11 +94,11 @@ public class InstanceWorkflowTest extends AbstractSpecTest1Test {
         String token = extractToken("Guilherme", "Guilherme");
 
         mockMvc.perform(
-                get("/specs/" + SPEC_ID + "/instances/" + WORKFLOW_ID_FOR_TESTS + "/")
+                get("/specs/" + SPEC_ID + "/instances/" + WORKFLOW_ID + "/")
                         .header(HEADER_STRING, constructToken(token))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(json(workflowInstanceDTO)));
+                .andExpect(content().json(json(instance.getDTO())));
     }
 
     @Test

@@ -57,6 +57,8 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
         _position1 = new Position(_resourceModel, "Pos1_Pop", "test", _unit1);
 
         _person1 = new Person(_resourceModel, "Person_1", "test", Arrays.asList(_position1), Arrays.asList(_capability1));
+
+        _ralExprDTO1 = new RALExprAnyoneDTO();
     }
 
     @Test(expected = RMException.class)
