@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
+
 import java.util.List;
 
 public class RALExprSharesUnit extends RALExprSharesUnit_Base implements RALExprDeniable {
@@ -11,7 +13,7 @@ public class RALExprSharesUnit extends RALExprSharesUnit_Base implements RALExpr
     }
 
     @Override
-    public List<Person> getEligibleResources() {
+    public List<Person> getEligibleResources(List<WorkItem> history) {
         return null;
     }
 

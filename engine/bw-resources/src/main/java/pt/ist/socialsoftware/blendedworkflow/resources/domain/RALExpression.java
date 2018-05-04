@@ -2,7 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 
 import java.util.List;
 
@@ -66,5 +66,5 @@ public abstract class RALExpression extends RALExpression_Base {
         deleteDomainObject();
     }
 
-    public abstract List<Person> getEligibleResources();
+    public abstract List<Person> getEligibleResources(List<WorkItem> history);
 }

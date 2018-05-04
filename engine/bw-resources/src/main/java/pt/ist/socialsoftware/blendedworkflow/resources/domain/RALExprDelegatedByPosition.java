@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
+
 import java.util.List;
 
 public class RALExprDelegatedByPosition extends RALExprDelegatedByPosition_Base {
@@ -16,7 +18,7 @@ public class RALExprDelegatedByPosition extends RALExprDelegatedByPosition_Base 
     }
 
     @Override
-    public List<Person> getEligibleResources() {
+    public List<Person> getEligibleResources(List<WorkItem> history) {
         return null;
     }
     
