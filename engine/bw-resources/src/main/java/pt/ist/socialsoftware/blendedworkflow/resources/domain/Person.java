@@ -2,11 +2,13 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PersonDTO;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Person extends Person_Base {
@@ -16,9 +18,19 @@ public class Person extends Person_Base {
         setResourceModel(resourceModel);
         setName(name);
         setDescription(description);
-        setUser(new User(resourceModel.getSpec().getBlendedWorkflow(), name, name, this));
+        createUser(resourceModel.getSpec().getBlendedWorkflow(), name);
     }
-    
+
+    public void createUser(BlendedWorkflow blendedWorkflow, String name) {
+        Optional<User> user = User.getUserByUsername(name);
+        if (user.isPresent()) {
+            setUser(user.get());
+        } else {
+            setUser(new User(blendedWorkflow, name, name, this));
+        }
+    }
+
+
     public Person(ResourceModel resourceModel, String name, String description,
                   List<Position> positions, List<Capability> capabilities) {
         this(resourceModel, name, description);
