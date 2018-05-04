@@ -3,6 +3,10 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExpression;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "profileType", visible = true)
@@ -36,5 +40,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = RALExprPersonDTO.class, name = "RALExprPersonDTO"),
 })
 public class RALExpressionDTO {
-
+    public RALExpression getRALExpresion(ResourceModel resourceModel, DesignInterface designer, String specId) throws RMException {
+        return null;
+    }
 }
