@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
@@ -26,7 +26,7 @@ public class RALExprIsPersonDataObject extends RALExprIsPersonDataObject_Base {
     }
 
     @Override
-    public List<Person> getEligibleResources() {
+    public List<Person> getEligibleResources(List<WorkItem> history) {
         return null;
     }
 
