@@ -45,7 +45,6 @@ public class BlendedWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
         http.csrf().disable()
             .authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/").authenticated()
                 .antMatchers("/specs/**/instances/**").authenticated()
 //                .anyRequest().authenticated()
                 .and()

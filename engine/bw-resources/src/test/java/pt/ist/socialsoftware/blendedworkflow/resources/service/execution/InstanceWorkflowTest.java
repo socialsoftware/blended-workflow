@@ -9,6 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MvcResult;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.WorkflowInstanceDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.AbstractSpecTest1Test;
 
@@ -28,13 +32,22 @@ public class InstanceWorkflowTest extends AbstractSpecTest1Test {
 
     private final String SPEC_ID = "spec-test-1";
     private final String WORKFLOW_ID = "workflow-1";
+    private final String WORKFLOW_ID_FOR_TESTS = "workflow-2";
     private WorkflowInstanceDTO workflowInstanceDTO;
+    private WorkflowInstance instance;
 
-    @Before
-    public void init() {
+    private Specification spec;
+
+    @Override
+    public void populate4Test() {
+        super.populate4Test();
+
         workflowInstanceDTO = new WorkflowInstanceDTO();
         workflowInstanceDTO.setSpecId(SPEC_ID);
-        workflowInstanceDTO.setName(WORKFLOW_ID);
+        workflowInstanceDTO.setName(WORKFLOW_ID_FOR_TESTS);
+
+        spec = BlendedWorkflow.getInstance().getSpecById(SPEC_ID).get();
+        instance = new WorkflowInstance(spec,WORKFLOW_ID);
     }
 
     @Test
@@ -46,7 +59,7 @@ public class InstanceWorkflowTest extends AbstractSpecTest1Test {
                             .header(HEADER_STRING, constructToken(token))
                             .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+                .andExpect(content().json("[" + json(instance.getDTO()) + "]"));
     }
 
     @Test
@@ -78,31 +91,24 @@ public class InstanceWorkflowTest extends AbstractSpecTest1Test {
 
     @Test
     public void testGetInstance() throws Exception {
-        testCreateInstance();
-
         String token = extractToken("Guilherme", "Guilherme");
 
-        MvcResult result = mockMvc.perform(
-                get("/specs/" + SPEC_ID + "/instances/" + WORKFLOW_ID + "/")
+        mockMvc.perform(
+                get("/specs/" + SPEC_ID + "/instances/" + WORKFLOW_ID_FOR_TESTS + "/")
                         .header(HEADER_STRING, constructToken(token))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(json(workflowInstanceDTO)))
-                .andReturn();
+                .andExpect(content().json(json(workflowInstanceDTO)));
     }
 
     @Test
     public void testGetInstanceWithoutLogin() throws Exception {
-        testCreateInstance();
-
         mockMvc.perform(get("/specs/" + SPEC_ID + "/instances/" + WORKFLOW_ID + "/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void testDeleteInstance() throws Exception {
-        testCreateInstance();
-
         String token = extractToken("Guilherme", "Guilherme");
 
         mockMvc.perform(
@@ -114,8 +120,6 @@ public class InstanceWorkflowTest extends AbstractSpecTest1Test {
 
     @Test
     public void testDeleteInstanceWithoutLogin() throws Exception {
-        testCreateInstance();
-
         mockMvc.perform(delete("/specs/" + SPEC_ID + "/instances/" + WORKFLOW_ID + "/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }

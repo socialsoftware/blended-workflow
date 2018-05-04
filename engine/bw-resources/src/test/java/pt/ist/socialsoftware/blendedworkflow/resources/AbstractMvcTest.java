@@ -39,8 +39,8 @@ public abstract class AbstractMvcTest extends TeardownRollbackTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    @Before
-    public void setup() {
+    @Override
+    public void populate4Test() {
         mockMvc = webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
     }
 
