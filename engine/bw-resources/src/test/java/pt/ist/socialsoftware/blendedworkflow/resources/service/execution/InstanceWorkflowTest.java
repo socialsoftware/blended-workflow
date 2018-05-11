@@ -14,6 +14,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.WorkflowInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.AbstractDocExampleTest;
 import pt.ist.socialsoftware.blendedworkflow.resources.AbstractSpecTest1Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,10 +28,12 @@ import static pt.ist.socialsoftware.blendedworkflow.resources.security.SecurityC
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class InstanceWorkflowTest extends AbstractSpecTest1Test {
+public class InstanceWorkflowTest extends AbstractDocExampleTest {
+    public static final String USERNAME = "John";
+    public static final String PASSWORD = "John";
     private Logger logger = LoggerFactory.getLogger(InstanceWorkflowTest.class);
 
-    private final String SPEC_ID = "spec-test-1";
+    private final String SPEC_ID = "DoctorAppointment";
     private final String WORKFLOW_ID = "workflow-1";
     private final String WORKFLOW_ID_FOR_TESTS = "workflow-2";
     private WorkflowInstanceDTO workflowInstanceDTO;
@@ -52,7 +55,7 @@ public class InstanceWorkflowTest extends AbstractSpecTest1Test {
 
     @Test
     public void testGetInstances() throws Exception {
-        String token = extractToken("Guilherme", "Guilherme");
+        String token = extractToken(USERNAME, PASSWORD);
 
         mockMvc.perform(
                     get("/specs/" + SPEC_ID + "/instances/")
@@ -69,7 +72,7 @@ public class InstanceWorkflowTest extends AbstractSpecTest1Test {
 
     @Test
     public void testCreateInstance() throws Exception {
-        String token = extractToken("Guilherme", "Guilherme");
+        String token = extractToken(USERNAME, PASSWORD);
 
         mockMvc.perform(
                 post("/specs/" + SPEC_ID + "/instances/")
@@ -91,7 +94,7 @@ public class InstanceWorkflowTest extends AbstractSpecTest1Test {
 
     @Test
     public void testGetInstance() throws Exception {
-        String token = extractToken("Guilherme", "Guilherme");
+        String token = extractToken(USERNAME, PASSWORD);
 
         mockMvc.perform(
                 get("/specs/" + SPEC_ID + "/instances/" + WORKFLOW_ID + "/")
@@ -109,7 +112,7 @@ public class InstanceWorkflowTest extends AbstractSpecTest1Test {
 
     @Test
     public void testDeleteInstance() throws Exception {
-        String token = extractToken("Guilherme", "Guilherme");
+        String token = extractToken(USERNAME, PASSWORD);
 
         mockMvc.perform(
                 delete("/specs/" + SPEC_ID + "/instances/" + WORKFLOW_ID + "/")

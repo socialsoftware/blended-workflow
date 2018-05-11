@@ -18,6 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.PropertiesManager;
+import pt.ist.socialsoftware.blendedworkflow.resources.AbstractDocExampleTest;
 import pt.ist.socialsoftware.blendedworkflow.resources.AbstractMvcTest;
 import pt.ist.socialsoftware.blendedworkflow.resources.AbstractSpecTest1Test;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
@@ -41,12 +42,12 @@ import static pt.ist.socialsoftware.blendedworkflow.resources.security.SecurityC
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class AuthenticationTest extends AbstractSpecTest1Test {
+public class AuthenticationTest extends AbstractDocExampleTest {
     private Logger logger = LoggerFactory.getLogger(AuthenticationTest.class);
 
     @Test
     public void testLogin() throws Exception {
-        MvcResult request = login("Guilherme", "Guilherme")
+        MvcResult request = login("John", "John")
                 .andExpect(status().isOk()).andReturn();
 
         assertNotNull(request.getResponse().getHeader(HEADER_STRING));
@@ -54,7 +55,7 @@ public class AuthenticationTest extends AbstractSpecTest1Test {
 
     @Test
     public void testLoginWrongPassword() throws Exception {
-        login("Guilherme", "fail")
+        login("John", "fail")
                 .andExpect(status().isUnauthorized());
 
     }
