@@ -30,7 +30,6 @@ public class Person extends Person_Base {
         }
     }
 
-
     public Person(ResourceModel resourceModel, String name, String description,
                   List<Position> positions, List<Capability> capabilities) {
         this(resourceModel, name, description);
@@ -43,7 +42,7 @@ public class Person extends Person_Base {
         getEntityInstanceSet().stream().forEach(e -> removeEntityInstance(e));
         getPositionSet().stream().forEach(p -> removePosition(p));
         getCapabilitySet().stream().forEach(c -> removeCapability(c));
-        setUser(null);
+        getUser().cleanPerson(this);
         setResourceModel(null);
         deleteDomainObject();
     }

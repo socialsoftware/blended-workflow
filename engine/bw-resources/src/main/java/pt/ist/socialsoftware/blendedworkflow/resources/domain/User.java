@@ -23,11 +23,12 @@ public class User extends User_Base {
     private static PasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(11);
 
     public User(BlendedWorkflow blendedWorkflow, String username, String password, Person person) {
+        getWorkItemSet().stream().forEach(workItem -> removeWorkItem(workItem));
         setEnabled(true);
         setActive(true);
         setBlendedworkflow(blendedWorkflow);
         setUsername(username);
-        setPerson(person);
+        addPerson(person);
         setPassword(bCryptPasswordEncoder.encode(password));
     }
 
@@ -46,9 +47,16 @@ public class User extends User_Base {
     }
 
     public void delete() {
-        setPerson(null);
+        getPersonSet().stream().forEach(person -> removePerson(person));
         setBlendedworkflow(null);
         deleteDomainObject();
+    }
+
+    public void cleanPerson(Person person) {
+        removePerson(person);
+        if (getPersonSet().size() == 0) {
+            this.delete();
+        }
     }
 
     @Override

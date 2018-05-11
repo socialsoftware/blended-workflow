@@ -358,7 +358,7 @@ relation BlendedWorkflowHasUser {
 
 relation UserIsPerson {
     User playsRole user {multiplicity 1..1;}
-    Person playsRole person {multiplicity 1..1;}
+    Person playsRole person {multiplicity 1..*;}
 }
 
 relation UserExecutedWorkItem {

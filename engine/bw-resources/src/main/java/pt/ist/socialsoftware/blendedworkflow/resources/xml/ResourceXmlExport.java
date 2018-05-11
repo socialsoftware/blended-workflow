@@ -169,27 +169,47 @@ public class ResourceXmlExport extends SpecXmlExport {
 
     private void exportDataModelResourceRules(Element parent, DataModel dataModel) {
         dataModel.getEntitySet().stream().forEach( entity -> {
-            exportResourceRule(parent, DATA_MODEL, RESPONSIBLE_FOR, entity.getFullPath(), exportRALExpression(entity.getResponsibleFor()));
-            exportResourceRule(parent, DATA_MODEL, INFORMS, entity.getName(), exportRALExpression(entity.getInforms()));
+            if (entity.getResponsibleFor() != null) {
+                exportResourceRule(parent, DATA_MODEL, RESPONSIBLE_FOR, entity.getFullPath(), exportRALExpression(entity.getResponsibleFor()));
+            }
+
+            if (entity.getInforms() != null) {
+                exportResourceRule(parent, DATA_MODEL, INFORMS, entity.getName(), exportRALExpression(entity.getInforms()));
+            }
         });
 
         dataModel.getAttributeSet().stream().forEach( attribute -> {
-            exportResourceRule(parent, DATA_MODEL, RESPONSIBLE_FOR, attribute.getFullPath(), exportRALExpression(attribute.getResponsibleFor()));
-            exportResourceRule(parent, DATA_MODEL, INFORMS, attribute.getFullPath(), exportRALExpression(attribute.getInforms()));
+            if (attribute.getResponsibleFor() != null) {
+                exportResourceRule(parent, DATA_MODEL, RESPONSIBLE_FOR, attribute.getFullPath(), exportRALExpression(attribute.getResponsibleFor()));
+            }
+
+            if (attribute.getInforms() != null) {
+                exportResourceRule(parent, DATA_MODEL, INFORMS, attribute.getFullPath(), exportRALExpression(attribute.getInforms()));
+            }
         });
     }
 
     private void exportActivityModelResourceRules(Element parent, ActivityModel activityModel) {
         activityModel.getActivitySet().stream().forEach(activity -> {
-            exportResourceRule(parent, ACTIVITY_MODEL, RESPONSIBLE_FOR, activity.getName(), exportRALExpression(activity.getResponsibleFor()));
-            exportResourceRule(parent, ACTIVITY_MODEL, INFORMS, activity.getName(), exportRALExpression(activity.getInforms()));
+            if (activity.getResponsibleFor() != null) {
+                exportResourceRule(parent, ACTIVITY_MODEL, RESPONSIBLE_FOR, activity.getName(), exportRALExpression(activity.getResponsibleFor()));
+            }
+
+            if (activity.getInforms() != null) {
+                exportResourceRule(parent, ACTIVITY_MODEL, INFORMS, activity.getName(), exportRALExpression(activity.getInforms()));
+            }
         });
     }
 
     private void exportGoalModelResourceRules(Element parent, GoalModel goalModel) {
         goalModel.getGoalSet().stream().forEach(goal -> {
-            exportResourceRule(parent, GOAL_MODEL, RESPONSIBLE_FOR, goal.getName(), exportRALExpression(goal.getResponsibleFor()));
-            exportResourceRule(parent, GOAL_MODEL, INFORMS, goal.getName(), exportRALExpression(goal.getInforms()));
+            if (goal.getResponsibleFor() != null) {
+                exportResourceRule(parent, GOAL_MODEL, RESPONSIBLE_FOR, goal.getName(), exportRALExpression(goal.getResponsibleFor()));
+            }
+
+            if (goal.getInforms() != null) {
+                exportResourceRule(parent, GOAL_MODEL, INFORMS, goal.getName(), exportRALExpression(goal.getInforms()));
+            }
         });
     }
 
@@ -339,7 +359,7 @@ public class ResourceXmlExport extends SpecXmlExport {
 
             expression.addContent(exportRALExpression(((RALExprSharesUnit) ralExpression).getPersonExpr()));
         } else {
-            throw new RMException(RMErrorType.EXPORT_INVALID);
+            throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_TYPE);
         }
 
         return expression;
