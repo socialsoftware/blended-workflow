@@ -6,6 +6,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,6 +73,14 @@ public class Position extends Position_Base {
         deleteDomainObject();
     }
 
+    public List<Position> getAllPositionsReportsTo() {
+        if (getReportsTo() == null) {
+            new ArrayList();
+        }
+        List<Position> list = getReportsTo().getAllPositionsReportsTo();
+        list.add(getReportsTo());
+        return list;
+    }
 
     private boolean checkUniqueName(String name) {
         return getResourceModel()
