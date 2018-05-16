@@ -5,6 +5,8 @@ import org.apache.ojb.broker.util.logging.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
 
 public abstract class RALExpression extends RALExpression_Base {
     private static Logger logger = LoggerFactory.getLogger(RALExpression.class);
