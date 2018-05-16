@@ -67,4 +67,12 @@ public abstract class RALExpression extends RALExpression_Base {
     }
 
     public abstract List<Person> getEligibleResources(List<WorkItem> history);
+
+    public boolean hasEligiblePerson(Person person, List<WorkItem> history) {
+        return getEligibleResources(history).contains(person);
+    }
+
+    public Set<Person> getPersonSet() {
+        return getResourceModel().getPersonSet();
+    }
 }

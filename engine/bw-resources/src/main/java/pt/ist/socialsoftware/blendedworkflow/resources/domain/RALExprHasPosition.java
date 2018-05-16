@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RALExprHasPosition extends RALExprHasPosition_Base implements RALExprDeniable {
     
@@ -19,7 +20,9 @@ public class RALExprHasPosition extends RALExprHasPosition_Base implements RALEx
 
     @Override
     public List<Person> getEligibleResources(List<WorkItem> history) {
-        return null;
+        return getPersonSet().stream()
+                .filter(person -> person.getPositionSet().contains(getPosition()))
+                .collect(Collectors.toList());
     }
 
 }

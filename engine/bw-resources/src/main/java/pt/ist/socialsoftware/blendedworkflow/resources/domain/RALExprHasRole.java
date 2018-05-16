@@ -2,7 +2,9 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RALExprHasRole extends RALExprHasRole_Base implements RALExprDeniable {
     
@@ -26,7 +28,16 @@ public class RALExprHasRole extends RALExprHasRole_Base implements RALExprDeniab
 
     @Override
     public List<Person> getEligibleResources(List<WorkItem> history) {
-        return null;
+        return getPersonSet().stream().filter(person -> {
+            List<Role> roles = new ArrayList();
+            person.getPositionSet().stream().forEach(position -> {
+                if ((getUnit() != null && position.getUnit().getName().equals(getUnit().getName())) || getUnit() == null) {
+                    roles.addAll(position.getRoleSet());
+                }
+            });
+
+            return roles.contains(getRole());
+        }).collect(Collectors.toList());
     }
 
 }

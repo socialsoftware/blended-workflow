@@ -2,7 +2,13 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class RALExprSharesRole extends RALExprSharesRole_Base implements RALExprDeniable {
 
@@ -26,7 +32,33 @@ public class RALExprSharesRole extends RALExprSharesRole_Base implements RALExpr
 
     @Override
     public List<Person> getEligibleResources(List<WorkItem> history) {
-        return null;
+        List<Role> roles = new ArrayList();
+        List<Person> persons = getPersonExpr().getEligibleResources(history);
+        persons.forEach(person -> roles.addAll(person.getPositionSet().stream()
+                .map(position -> position.getRoleSet())
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList())));
+
+        return getPersonSet().stream().filter(person -> {
+            if (persons.contains(person)) {
+                return false;
+            }
+
+            switch (getAmount()) {
+                case ALL:
+                    return person.getPositionSet().stream()
+                            .map(position -> position.getRoleSet())
+                            .flatMap(Collection::stream)
+                            .collect(toList())
+                            .containsAll(roles);
+                case SOME:
+                    return person.getPositionSet().stream()
+                            .map(position -> position.getRoleSet())
+                            .flatMap(Collection::stream)
+                            .anyMatch(role -> roles.contains(role));
+            }
+            return false;
+        }).collect(toList());
     }
 
 }

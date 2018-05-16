@@ -2,7 +2,11 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class RALExprSharesUnit extends RALExprSharesUnit_Base implements RALExprDeniable {
 
@@ -14,7 +18,30 @@ public class RALExprSharesUnit extends RALExprSharesUnit_Base implements RALExpr
 
     @Override
     public List<Person> getEligibleResources(List<WorkItem> history) {
-        return null;
+        List<Unit> units = new ArrayList();
+        List<Person> persons = getPersonExpr().getEligibleResources(history);
+        persons.forEach(person -> units.addAll(person.getPositionSet().stream()
+                .map(pos -> pos.getUnit())
+                .collect(Collectors.toList())));
+
+        return getPersonSet().stream().filter(person -> {
+            if (persons.contains(person)) {
+                return false;
+            }
+
+            switch (getAmount()) {
+                case ALL:
+                    return person.getPositionSet().stream()
+                            .map(pos -> pos.getUnit())
+                            .collect(toList())
+                            .containsAll(units);
+                case SOME:
+                    return person.getPositionSet().stream()
+                            .map(pos -> pos.getUnit())
+                            .anyMatch(position -> units.contains(position));
+            }
+            return false;
+        }).collect(toList());
     }
 
 }

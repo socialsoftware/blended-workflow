@@ -5,6 +5,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RALExprNot extends RALExprNot_Base {
 
@@ -24,7 +25,9 @@ public class RALExprNot extends RALExprNot_Base {
 
     @Override
     public List<Person> getEligibleResources(List<WorkItem> history) {
-        return null;
+        return getPersonSet().stream()
+                .filter(person -> !getExpression().getEligibleResources(history).contains(person))
+                .collect(Collectors.toList());
     }
 
 }

@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RALExprHasUnit extends RALExprHasUnit_Base {
     
@@ -19,7 +20,9 @@ public class RALExprHasUnit extends RALExprHasUnit_Base {
 
     @Override
     public List<Person> getEligibleResources(List<WorkItem> history) {
-        return null;
+        return getPersonSet().stream()
+                .filter(person -> person.getPositionSet().stream().anyMatch(position -> position.getUnit().getName().equals(getUnit().getName())))
+                .collect(Collectors.toList());
     }
 
 }

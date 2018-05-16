@@ -75,12 +75,40 @@ public class Position extends Position_Base {
 
     public List<Position> getAllPositionsReportsTo() {
         if (getReportsTo() == null) {
-            new ArrayList();
+            return new ArrayList();
         }
         List<Position> list = getReportsTo().getAllPositionsReportsTo();
         list.add(getReportsTo());
         return list;
     }
+
+    public List<Position> getAllPositionsReportedBy() {
+        List<Position> positions = new ArrayList();
+        getIsReportedBySet().stream().forEach(position -> {
+            positions.add(position);
+            positions.addAll(position.getAllPositionsReportedBy());
+        });
+        return positions;
+    }
+
+    public List<Position> getAllPositionsDelegatesTo() {
+        List<Position> positions = new ArrayList();
+        getCanDelegateWorkToSet().stream().forEach(position -> {
+            positions.add(position);
+            positions.addAll(position.getAllPositionsDelegatesTo());
+        });
+        return positions;
+    }
+
+    public List<Position> getAllPositionsDelegatedBy() {
+        List<Position> positions = new ArrayList();
+        getWorkDelegatedBySet().stream().forEach(position -> {
+            positions.add(position);
+            positions.addAll(position.getAllPositionsDelegatedBy());
+        });
+        return positions;
+    }
+
 
     private boolean checkUniqueName(String name) {
         return getResourceModel()
