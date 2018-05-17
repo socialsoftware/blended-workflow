@@ -1,10 +1,19 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class RALExprIsPersonInTaskDuty extends pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPersonInTaskDuty_Base {
+import static java.util.stream.Collectors.toList;
+
+public class RALExprIsPersonInTaskDuty extends RALExprIsPersonInTaskDuty_Base {
+    private static Logger logger = LoggerFactory.getLogger(RALExprIsPersonInTaskDuty.class);
     
     public RALExprIsPersonInTaskDuty(ResourceModel resourceModel, TaskDutyType taskDuty, String path) {
         setTaskDuty(taskDuty);
@@ -20,7 +29,19 @@ public class RALExprIsPersonInTaskDuty extends pt.ist.socialsoftware.blendedwork
 
     @Override
     public List<Person> getEligibleResources(WorkflowInstance history) {
-        return null;
+        return history.getEntityInstanceSet().stream()
+                .map(entityInstance -> entityInstance.getProductInstancesByPath(getPath()))
+                .flatMap(Collection::stream)
+                .map(productInstance -> {
+                    if (getTaskDuty() == TaskDutyType.RESPONSIBLE_FOR) {
+                        return Arrays.asList(productInstance.getPostWorkItemArgument().getWorkItemOfPost()
+                                .getExecutionUser().getPerson(getResourceModel().getSpec())); //FIXME
+                    } else {
+                        return productInstance.getProduct().getInforms().getEligibleResources(history);
+                    }
+                })
+                .flatMap(Collection::stream)
+                .collect(toList());
     }
 
 }

@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RALExprIsPersonDataObject extends pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPersonDataObject_Base {
+public class RALExprIsPersonDataObject extends RALExprIsPersonDataObject_Base {
     private static Logger logger = LoggerFactory.getLogger(RALExprIsPersonDataObject.class);
 
     public RALExprIsPersonDataObject(ResourceModel resourceModel, String path) throws RMException {

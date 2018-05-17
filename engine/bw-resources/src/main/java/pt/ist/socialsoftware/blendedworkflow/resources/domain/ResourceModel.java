@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ResourceModel extends pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel_Base {
+public class ResourceModel extends ResourceModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(ResourceModel.class);
 
 	public ResourceModel() {
