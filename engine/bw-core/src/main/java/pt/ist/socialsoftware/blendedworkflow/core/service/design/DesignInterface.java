@@ -389,8 +389,8 @@ public class DesignInterface {
 
 		MulCondition mulCondition = getMULCondition(spec, miDTO.getRolePath());
 
-		if (!mulCondition.getCardinality().equals(miDTO.getCardinality())) {
-			new BWException(BWErrorType.INVALID_CARDINALITY, miDTO.getCardinality());
+		if (!mulCondition.getCardinality().getExp().equals(miDTO.getCardinality())) {
+			throw new BWException(BWErrorType.INVALID_CARDINALITY, miDTO.getCardinality());
 		}
 
 		spec.getConditionModel().addEntityInvariantCondition(mulCondition);

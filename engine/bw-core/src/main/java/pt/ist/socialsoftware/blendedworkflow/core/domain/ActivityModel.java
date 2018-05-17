@@ -150,7 +150,7 @@ public class ActivityModel extends ActivityModel_Base {
 			Set<DefProductCondition> postConditionSet) {
 		if (postConditionSet.size() == 0 || fromActivity.getPostConditionSet().size() - postConditionSet.size() <= 0
 				|| fromActivity.getPostConditionSet().containsAll(postConditionSet)) {
-			new BWException(BWErrorType.CANNOT_EXTRACT_ACTIVITY, fromActivity.getName());
+			throw new BWException(BWErrorType.CANNOT_EXTRACT_ACTIVITY, fromActivity.getName());
 		}
 
 		String fromActivityName = fromActivity.getName();

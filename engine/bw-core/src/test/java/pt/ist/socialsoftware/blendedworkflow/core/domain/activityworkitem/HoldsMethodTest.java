@@ -62,8 +62,8 @@ public class HoldsMethodTest extends TeardownRollbackTest {
 		this.relationBW = new RelationBW(this.spec.getDataModel(), "name", this.entity, ENT_ONE_ROLE, Cardinality.ONE,
 				false, this.entityTwo, ENT_TWO_ROLE, "2..4", false);
 		Entity entityThree = new Entity(this.spec.getDataModel(), "EntityThree", false);
-		RelationBW relationBWTwo = new RelationBW(this.spec.getDataModel(), "otheName", this.entityTwo, ENT_TWO_ROLE,
-				Cardinality.ONE, false, entityThree, ENT_THREE_ROLE, "2..4", false);
+		new RelationBW(this.spec.getDataModel(), "otheName", this.entityTwo, ENT_TWO_ROLE, Cardinality.ONE, false,
+				entityThree, ENT_THREE_ROLE, "2..4", false);
 
 		this.activity = new Activity(this.spec.getActivityModel(), NAME, "description");
 
