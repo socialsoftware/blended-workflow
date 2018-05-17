@@ -5,17 +5,17 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 
 import java.util.List;
 
-public class RALExprIsPersonInTaskDuty extends RALExprIsPersonInTaskDuty_Base {
+public class RALExprIsPersonInTaskDuty extends pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPersonInTaskDuty_Base {
     
-    public RALExprIsPersonInTaskDuty(ResourceModel resourceModel, TaskDutyType taskDuty, Product product) {
+    public RALExprIsPersonInTaskDuty(ResourceModel resourceModel, TaskDutyType taskDuty, String path) {
         setTaskDuty(taskDuty);
-        setProduct(product);
+        setPath(path);
         setResourceModel(resourceModel);
     }
 
     @Override
     public void delete() {
-        setProduct(null);
+        setPath(null);
         super.delete();
     }
 

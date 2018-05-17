@@ -7,21 +7,21 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
 import java.util.List;
 
-public class RALExprIsPersonDataObject extends RALExprIsPersonDataObject_Base {
+public class RALExprIsPersonDataObject extends pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPersonDataObject_Base {
     
-    public RALExprIsPersonDataObject(ResourceModel resourceModel, Entity entity) throws RMException {
+    public RALExprIsPersonDataObject(ResourceModel resourceModel, String path) throws RMException {
         setResourceModel(resourceModel);
 
-        if (!resourceModel.checkEntityIsPerson(entity)) {
-            throw new RMException(RMErrorType.ENTITY_IN_EXPRESSION_IS_NOT_PERSON, "The entity " + entity.getName() + " is not a person");
+        if (!resourceModel.checkEntityIsPerson(path)) {
+            throw new RMException(RMErrorType.ENTITY_IN_EXPRESSION_IS_NOT_PERSON, "The entity in path" + path + " is not a person");
         }
 
-        setDataField(entity);
+        setPath(path);
     }
 
     @Override
     public void delete() {
-        setDataField(null);
+        setPath(null);
         super.delete();
     }
 

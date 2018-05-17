@@ -223,13 +223,13 @@ public class ResourceXmlImport extends SpecXmlImport {
 
         } else if (resourceRule.getName().equals("IsPersonDataObjectExpr")) {
 
-            ralExpressionDTO = new RALExprIsPersonDataObjectDTO(resourceRule.getAttribute("data-field").getValue());
+            ralExpressionDTO = new RALExprIsPersonDataObjectDTO(resourceRule.getAttribute("path").getValue());
 
         } else if (resourceRule.getName().equals("IsPersonInTaskDutyExpr")) {
 
             ralExpressionDTO = new RALExprIsPersonInTaskDutyDTO(
                     ResourceRuleDTO.ResourceRuleTypeDTO.fromAsgmtString(resourceRule.getAttribute("task-duty").getValue()),
-                    resourceRule.getAttribute("product").getValue()
+                    resourceRule.getAttribute("path").getValue()
             );
 
         } else if (resourceRule.getName().equals("AnyoneExpr")) {

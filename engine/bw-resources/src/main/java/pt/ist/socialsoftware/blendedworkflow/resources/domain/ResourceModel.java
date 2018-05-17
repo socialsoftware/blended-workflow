@@ -4,17 +4,19 @@ import javafx.geometry.Pos;
 import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWError;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ResourceModel extends ResourceModel_Base {
+public class ResourceModel extends pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(ResourceModel.class);
 
 	public ResourceModel() {
@@ -165,8 +167,9 @@ public class ResourceModel extends ResourceModel_Base {
 		return roleNames.stream().map(d -> getRole(d)).collect(Collectors.toList());
 	}
 
-    public boolean checkEntityIsPerson(Entity entity) {
-		return getEntityIsPersonSet().stream()
+    public boolean checkEntityIsPerson(String path) {
+		Product entity = getSpec().getDataModel().getTargetOfPath(path);
+		return (entity instanceof Entity) && getEntityIsPersonSet().stream()
 				.anyMatch(e -> e.getName().equals(entity.getName()));
     }
 }

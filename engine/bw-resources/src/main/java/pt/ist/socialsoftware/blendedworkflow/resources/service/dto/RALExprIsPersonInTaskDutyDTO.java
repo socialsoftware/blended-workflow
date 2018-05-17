@@ -56,6 +56,6 @@ public class RALExprIsPersonInTaskDutyDTO extends RALExprPersonDTO {
 
 		Product product = designer.getProduct(specId, getDataField());
 
-		return new RALExprIsPersonInTaskDuty(resourceModel, taskDuty, product);
+		return new RALExprIsPersonInTaskDuty(resourceModel, taskDuty, getDataField());
 	}
 }

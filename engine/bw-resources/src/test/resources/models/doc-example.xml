@@ -678,22 +678,22 @@
   </resource-model>
   <resource-rules>
     <resource-rule product="Medication" model="data-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
     </resource-rule>
     <resource-rule product="Data" model="data-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data" model="data-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Report" model="data-model" type="responsible-for">
       <AndExpr>
         <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr data-field="Doctor" />
+        <IsPersonDataObjectExpr path="Doctor" />
       </AndExpr>
     </resource-rule>
     <resource-rule product="Report" model="data-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Patient" />
+      <IsPersonDataObjectExpr path="Patient" />
     </resource-rule>
     <resource-rule product="Prescription" model="data-model" type="responsible-for">
       <AndExpr>
@@ -704,7 +704,7 @@
     <resource-rule product="Episode" model="data-model" type="responsible-for">
       <AndExpr>
         <NotExpr>
-          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Patient" />
+          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Patient" />
         </NotExpr>
         <HasRoleExpr role="Scheduler" unit="OrthopedicUnit" />
       </AndExpr>
@@ -719,43 +719,43 @@
       <HasPositionExpr position="AdministrativeManager" />
     </resource-rule>
     <resource-rule product="Medication.quantity" model="data-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
     </resource-rule>
     <resource-rule product="Medication.name" model="data-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
     </resource-rule>
     <resource-rule product="Data.physicalCondition" model="data-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.physicalCondition" model="data-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Data.bloodPressure" model="data-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.bloodPressure" model="data-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Data.weight" model="data-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.weight" model="data-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Data.height" model="data-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.height" model="data-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Report.desc" model="data-model" type="responsible-for">
       <AndExpr>
         <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr data-field="Doctor" />
+        <IsPersonDataObjectExpr path="Doctor" />
       </AndExpr>
     </resource-rule>
     <resource-rule product="Report.desc" model="data-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Patient" />
+      <IsPersonDataObjectExpr path="Patient" />
     </resource-rule>
     <resource-rule product="Prescription.desc" model="data-model" type="responsible-for">
       <AndExpr>
@@ -868,41 +868,41 @@
     <resource-rule product="Report.desc" model="activity-model" type="responsible-for">
       <AndExpr>
         <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr data-field="Doctor" />
+        <IsPersonDataObjectExpr path="Doctor" />
       </AndExpr>
     </resource-rule>
     <resource-rule product="Report.desc" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Patient" />
+      <IsPersonDataObjectExpr path="Patient" />
     </resource-rule>
     <resource-rule product="Data.height" model="activity-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.height" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Data.weight" model="activity-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.weight" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Data.bloodPressure" model="activity-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.bloodPressure" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Data.physicalCondition" model="activity-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.physicalCondition" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Medication.name" model="activity-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
     </resource-rule>
     <resource-rule product="Medication.quantity" model="activity-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
     </resource-rule>
     <resource-rule product="Patient" model="activity-model" type="responsible-for">
       <HasPositionExpr position="AdministrativeManager" />
@@ -916,7 +916,7 @@
     <resource-rule product="Episode" model="activity-model" type="responsible-for">
       <AndExpr>
         <NotExpr>
-          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Patient" />
+          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Patient" />
         </NotExpr>
         <HasRoleExpr role="Scheduler" unit="OrthopedicUnit" />
       </AndExpr>
@@ -930,77 +930,77 @@
     <resource-rule product="Report" model="activity-model" type="responsible-for">
       <AndExpr>
         <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr data-field="Doctor" />
+        <IsPersonDataObjectExpr path="Doctor" />
       </AndExpr>
     </resource-rule>
     <resource-rule product="Report" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Patient" />
+      <IsPersonDataObjectExpr path="Patient" />
     </resource-rule>
     <resource-rule product="Data" model="activity-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Medication" model="activity-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
     </resource-rule>
     <resource-rule product="Medication.name" model="goal-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
     </resource-rule>
     <resource-rule product="Medication.quantity" model="goal-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
     </resource-rule>
     <resource-rule product="Medication" model="goal-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
     </resource-rule>
     <resource-rule product="Data.height" model="goal-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.height" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Data.weight" model="goal-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.weight" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Data.bloodPressure" model="goal-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.bloodPressure" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Data.physicalCondition" model="goal-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.physicalCondition" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Data" model="goal-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Doctor" />
+      <IsPersonDataObjectExpr path="Doctor" />
     </resource-rule>
     <resource-rule product="Report.desc" model="goal-model" type="responsible-for">
       <AndExpr>
         <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr data-field="Doctor" />
+        <IsPersonDataObjectExpr path="Doctor" />
       </AndExpr>
     </resource-rule>
     <resource-rule product="Report.desc" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Patient" />
+      <IsPersonDataObjectExpr path="Patient" />
     </resource-rule>
     <resource-rule product="Report" model="goal-model" type="responsible-for">
       <AndExpr>
         <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr data-field="Doctor" />
+        <IsPersonDataObjectExpr path="Doctor" />
       </AndExpr>
     </resource-rule>
     <resource-rule product="Report" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr data-field="Patient" />
+      <IsPersonDataObjectExpr path="Patient" />
     </resource-rule>
     <resource-rule product="Patient.name" model="goal-model" type="responsible-for">
       <HasRoleExpr role="ManagePatientInformation" unit="OrthopedicUnit" />
@@ -1074,7 +1074,7 @@
     <resource-rule product="Episode" model="goal-model" type="responsible-for">
       <AndExpr>
         <NotExpr>
-          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Patient" />
+          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Patient" />
         </NotExpr>
         <HasRoleExpr role="Scheduler" unit="OrthopedicUnit" />
       </AndExpr>

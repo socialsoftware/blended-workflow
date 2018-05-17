@@ -294,12 +294,12 @@ public class ResourceXmlExport extends SpecXmlExport {
         } else if (ralExpression instanceof RALExprIsPersonDataObject) {
             expression = new Element("IsPersonDataObjectExpr");
 
-            expression.setAttribute("data-field", ((RALExprIsPersonDataObject) ralExpression).getDataField().getFullPath());
+            expression.setAttribute("path", ((RALExprIsPersonDataObject) ralExpression).getPath());
         } else if (ralExpression instanceof RALExprIsPersonInTaskDuty) {
             expression = new Element("IsPersonInTaskDutyExpr");
 
             expression.setAttribute("task-duty", ((RALExprIsPersonInTaskDuty) ralExpression).getTaskDuty().toString());
-            expression.setAttribute("product", ((RALExprIsPersonInTaskDuty) ralExpression).getProduct().getFullPath());
+            expression.setAttribute("path", ((RALExprIsPersonInTaskDuty) ralExpression).getPath());
         } else if (ralExpression instanceof RALExprNot) {
             expression = new Element("NotExpr");
 
