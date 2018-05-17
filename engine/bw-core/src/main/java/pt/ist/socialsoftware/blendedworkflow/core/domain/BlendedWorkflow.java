@@ -12,15 +12,12 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.shared.BWExecutorService;
 
 public class BlendedWorkflow extends BlendedWorkflow_Base {
 	private static Logger log = LoggerFactory.getLogger(BlendedWorkflow.class);
 
 	DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
 	private String today = this.dateFormatter.format(new java.util.Date());
-
-	private BWExecutorService bwExecutorService = null;
 
 	public static BlendedWorkflow getInstance() {
 		if (FenixFramework.getDomainRoot().getBlendedWorkflow() == null) {
@@ -50,17 +47,6 @@ public class BlendedWorkflow extends BlendedWorkflow_Base {
 
 	public Optional<Specification> getSpecById(String specId) {
 		return getSpecificationSet().stream().filter(spec -> spec.getSpecId().equals(specId)).findFirst();
-	}
-
-	public BWExecutorService getBWExecutorService() {
-		if (this.bwExecutorService == null) {
-			this.bwExecutorService = new BWExecutorService();
-		}
-		return this.bwExecutorService;
-	}
-
-	public void setBWExecutorService(BWExecutorService bwExecutorService) {
-		this.bwExecutorService = bwExecutorService;
 	}
 
 	public String getToday() {
