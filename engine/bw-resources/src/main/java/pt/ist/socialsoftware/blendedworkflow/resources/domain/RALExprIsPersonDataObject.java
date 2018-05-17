@@ -1,13 +1,19 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RALExprIsPersonDataObject extends pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPersonDataObject_Base {
-    
+    private static Logger logger = LoggerFactory.getLogger(RALExprIsPersonDataObject.class);
+
     public RALExprIsPersonDataObject(ResourceModel resourceModel, String path) throws RMException {
         setResourceModel(resourceModel);
 
@@ -26,6 +32,13 @@ public class RALExprIsPersonDataObject extends pt.ist.socialsoftware.blendedwork
 
     @Override
     public List<Person> getEligibleResources(WorkflowInstance history) {
+        history.getEntityInstanceSet().stream()
+                .map(entityInstance -> entityInstance.getProductInstancesByPath(getPath()))
+                .flatMap(Collection::stream)
+                .forEach(productInstance -> logger.debug("TESTProductInstance: Path: {} EntityName: {} Product: {}",
+                        productInstance.getProduct().getFullPath(),
+                        productInstance.getEntity().getName(),
+                        productInstance.getProduct().getName()));
         return null;
     }
 

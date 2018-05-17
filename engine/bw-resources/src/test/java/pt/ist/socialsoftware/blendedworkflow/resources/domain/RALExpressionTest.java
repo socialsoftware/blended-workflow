@@ -2,12 +2,17 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.execution.ExecutionResourcesInterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,11 +45,13 @@ public class RALExpressionTest extends TeardownRollbackTest {
     private Position _position5;
     private Role _role3;
     private WorkflowInstance _workflowInstance;
+    private ExecutionResourcesInterface edi;
 
     @Override
     public void populate4Test() throws BWException {
         pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance().createSpecification(new SpecDTO(SPEC_ID, SPEC_NAME));
         designer = DesignResourcesInterface.getInstance();
+        edi = ExecutionResourcesInterface.getInstance();
 
         spec = getBlendedWorkflow().getSpecById(SPEC_ID).orElse(null);
         _resourceModel = designer.createResourceModel(spec.getSpecId());
@@ -423,6 +430,34 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 RALExprCommonality.Amount.ALL,
                 new RALExprIsPerson(_resourceModel, person1));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person3)));
+    }
+
+    @Test
+    public void testIsPersonInDataFieldGetEligibleResources() throws RMException {
+        Person person1 = new Person(_resourceModel, "Test1", "", Arrays.asList(_position2,_position5), new ArrayList<>());
+        Person person2 = new Person(_resourceModel, "Test2", "", Arrays.asList(_position2), new ArrayList<>());
+        Person person3 = new Person(_resourceModel, "Test3", "", Arrays.asList(_position2, _position5), new ArrayList<>());
+        Person person4 = new Person(_resourceModel, "Test4", "", Arrays.asList(_position5), new ArrayList<>());
+
+        Entity ent1 = designer.createEntity(new EntityDTO(spec.getName(), "Teste1", false));
+        Entity ent2 = designer.createEntity(new EntityDTO(spec.getName(), "Teste2", false));
+        designer.createRelation(new RelationDTO(spec.getName(), "Teste1Teste2", ent1.getExternalId(), "teste1", "0..1",
+                ent2.getExternalId(), "teste2", "0..1"));
+
+        _resourceModel.addEntityIsPerson("Teste2");
+
+        designer.generateConditionModel(spec.getName());
+        designer.generateActivityModel(spec.getName());
+        designer.generateGoalModel(spec.getName());
+
+        edi.executeActivityWorkItem(new ActivityWorkItemDTO());
+
+        RALExpression expression = new RALExprIsPersonDataObject(
+                _resourceModel,
+                "Teste2"
+                );
         assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
         assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person3)));
     }
