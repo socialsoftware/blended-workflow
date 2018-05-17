@@ -1,9 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RALExprHasCapability extends RALExprHasCapability_Base implements RALExprDeniable {
@@ -20,7 +19,7 @@ public class RALExprHasCapability extends RALExprHasCapability_Base implements R
     }
 
     @Override
-    public List<Person> getEligibleResources(List<WorkItem> history) {
+    public List<Person> getEligibleResources(WorkflowInstance history) {
         return getPersonSet().stream()
                 .filter(person -> person.getCapabilitySet().contains(getCapability()))
                 .collect(Collectors.toList());

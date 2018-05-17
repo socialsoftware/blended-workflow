@@ -2,10 +2,9 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
 
 public abstract class RALExpression extends RALExpression_Base {
@@ -68,9 +67,9 @@ public abstract class RALExpression extends RALExpression_Base {
         deleteDomainObject();
     }
 
-    public abstract List<Person> getEligibleResources(List<WorkItem> history);
+    public abstract List<Person> getEligibleResources(WorkflowInstance history);
 
-    public boolean hasEligiblePerson(Person person, List<WorkItem> history) {
+    public boolean hasEligiblePerson(Person person, WorkflowInstance history) {
         return getEligibleResources(history).contains(person);
     }
 

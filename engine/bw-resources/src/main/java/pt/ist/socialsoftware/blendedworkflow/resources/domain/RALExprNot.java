@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
@@ -24,7 +24,7 @@ public class RALExprNot extends RALExprNot_Base {
     }
 
     @Override
-    public List<Person> getEligibleResources(List<WorkItem> history) {
+    public List<Person> getEligibleResources(WorkflowInstance history) {
         return getPersonSet().stream()
                 .filter(person -> !getExpression().getEligibleResources(history).contains(person))
                 .collect(Collectors.toList());

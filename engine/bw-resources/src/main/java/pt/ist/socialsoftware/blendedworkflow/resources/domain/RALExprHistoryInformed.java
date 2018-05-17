@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class RALExprHistoryInformed extends RALExprHistoryInformed_Base {
     }
 
     @Override
-    public List<Person> getEligibleResources(List<WorkItem> history) {
+    public List<Person> getEligibleResources(WorkflowInstance history) {
         return null;
     }
 

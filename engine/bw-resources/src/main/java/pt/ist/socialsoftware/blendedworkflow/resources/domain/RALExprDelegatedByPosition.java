@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class RALExprDelegatedByPosition extends RALExprDelegatedByPosition_Base 
     }
 
     @Override
-    public List<Person> getEligibleResources(List<WorkItem> history) {
+    public List<Person> getEligibleResources(WorkflowInstance history) {
         List<Position> positions = new ArrayList(getPosition().getWorkDelegatedBySet());
 
         return getPersonSet().stream()

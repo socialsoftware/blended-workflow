@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class RALExprSharesUnit extends RALExprSharesUnit_Base implements RALExpr
     }
 
     @Override
-    public List<Person> getEligibleResources(List<WorkItem> history) {
+    public List<Person> getEligibleResources(WorkflowInstance history) {
         List<Unit> units = new ArrayList();
         List<Person> persons = getPersonExpr().getEligibleResources(history);
         persons.forEach(person -> units.addAll(person.getPositionSet().stream()

@@ -53,7 +53,8 @@ public class ActivityWorkflowTest extends AbstractDocExampleTest {
                             .header(HEADER_STRING, constructToken(token))
                             .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(json(edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID))));
+                .andDo(print())
+                .andExpect(content().json("[]"));
     }
 
     @Test

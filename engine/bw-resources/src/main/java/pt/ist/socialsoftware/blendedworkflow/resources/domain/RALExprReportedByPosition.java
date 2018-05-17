@@ -1,9 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,7 @@ public class RALExprReportedByPosition extends RALExprReportedByPosition_Base {
     }
 
     @Override
-    public List<Person> getEligibleResources(List<WorkItem> history) {
+    public List<Person> getEligibleResources(WorkflowInstance history) {
         List<Position> positions = getDirectly() ? new ArrayList(getPosition().getIsReportedBySet()) : getPosition().getAllPositionsReportedBy();
 
         return getPersonSet().stream()

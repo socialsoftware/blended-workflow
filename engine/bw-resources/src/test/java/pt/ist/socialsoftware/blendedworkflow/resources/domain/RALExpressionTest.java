@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
@@ -38,6 +39,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
     private Position _position4;
     private Position _position5;
     private Role _role3;
+    private WorkflowInstance _workflowInstance;
 
     @Override
     public void populate4Test() throws BWException {
@@ -61,6 +63,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         _position3 = new Position(_resourceModel, "Pos3_Pop", "test", _unit1);
         _position4 = new Position(_resourceModel, "Pos5_Pop", "test", _unit1, Arrays.asList(_role1, _role2), Arrays.asList(_position2, _position3), _position2);
         _position5 = new Position(_resourceModel, "Pos6_Pop", "test", _unit2, Arrays.asList(_role1, _role3), Arrays.asList(_position1, _position4), _position4);
+
+        _workflowInstance = new WorkflowInstance(spec, "Instance1");
     }
 
     @Test
@@ -70,8 +74,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         Person person3 = new Person(_resourceModel, "Test3", "", new ArrayList<>(), Arrays.asList(_capability1));
 
         RALExpression expression = new RALExprHasCapability(_resourceModel, _capability1);
-        assertEquals(2, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1, person3)));
+        assertEquals(2, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1, person3)));
     }
 
     @Test
@@ -81,8 +85,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         Person person3 = new Person(_resourceModel, "Test3", "", Arrays.asList(_position1), new ArrayList<>());
 
         RALExpression expression = new RALExprHasPosition(_resourceModel, _position1);
-        assertEquals(2, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1, person3)));
+        assertEquals(2, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1, person3)));
     }
 
     @Test
@@ -92,8 +96,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         Person person3 = new Person(_resourceModel, "Test3", "", Arrays.asList(_position5), new ArrayList<>());
 
         RALExpression expression = new RALExprHasRole(_resourceModel, _role1, _unit1);
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1)));
     }
 
     @Test
@@ -103,8 +107,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         Person person3 = new Person(_resourceModel, "Test3", "", Arrays.asList(_position5), new ArrayList<>());
 
         RALExpression expression = new RALExprHasRole(_resourceModel, _role1);
-        assertEquals(2, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1, person3)));
+        assertEquals(2, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1, person3)));
     }
 
     @Test
@@ -113,8 +117,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         Person person2 = new Person(_resourceModel, "Test2", "");
 
         RALExpression expression = new RALExprHasUnit(_resourceModel, _unit1);
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1)));
     }
 
     @Test
@@ -127,8 +131,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         RALExpression expression2 = new RALExprHasPosition(_resourceModel, _position2);
         RALExpression expression = new RALExprOr(_resourceModel, expression1, expression2);
 
-        assertEquals(2, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1, person3)));
+        assertEquals(2, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1, person3)));
     }
 
     @Test
@@ -141,8 +145,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         RALExpression expression2 = new RALExprHasPosition(_resourceModel, _position2);
         RALExpression expression = new RALExprAnd(_resourceModel, expression1, expression2);
 
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person3)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person3)));
     }
 
     @Test
@@ -153,8 +157,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
 
         RALExpression expression1 = new RALExprHasPosition(_resourceModel, _position1);
         RALExpression expression = new RALExprNot(_resourceModel, expression1);
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person2)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person2)));
     }
 
     @Test
@@ -167,8 +171,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 new RALExprIsPerson(_resourceModel, person2),
                 true);
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person3)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person3)));
     }
 
     @Test
@@ -182,8 +186,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 new RALExprIsPerson(_resourceModel, person1),
                 false);
-        assertEquals(3, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person2,person3, person4)));
+        assertEquals(3, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person2,person3, person4)));
     }
 
     @Test
@@ -198,8 +202,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _position5,
                 true);
 
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person4)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person4)));
     }
 
     @Test
@@ -213,8 +217,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 _position5,
                 false);
-        assertEquals(3, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person2,person3, person4)));
+        assertEquals(3, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person2,person3, person4)));
     }
 
     @Test
@@ -228,8 +232,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 new RALExprIsPerson(_resourceModel, person3),
                 true);
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person4)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person4)));
     }
 
     @Test
@@ -243,8 +247,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 new RALExprIsPerson(_resourceModel, person2),
                 false);
-        assertEquals(3, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1,person3, person4)));
+        assertEquals(3, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1,person3, person4)));
     }
 
     @Test
@@ -258,8 +262,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 _position1,
                 true);
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person3)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person3)));
     }
 
     @Test
@@ -273,8 +277,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 _position1,
                 false);
-        assertEquals(3, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1,person3, person4)));
+        assertEquals(3, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1,person3, person4)));
     }
 
     @Test
@@ -287,8 +291,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         RALExpression expression = new RALExprDelegatedByPersonPosition(
                 _resourceModel,
                 new RALExprIsPerson(_resourceModel, person2));
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1)));
     }
 
     @Test
@@ -301,8 +305,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         RALExpression expression = new RALExprDelegatedByPosition(
                 _resourceModel,
                 _position2);
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1)));
     }
 
     @Test
@@ -315,8 +319,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         RALExpression expression = new RALExprDelegatesToPersonPosition(
                 _resourceModel,
                 new RALExprIsPerson(_resourceModel, person1));
-        assertEquals(3, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person2, person3, person4)));
+        assertEquals(3, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person2, person3, person4)));
     }
 
     @Test
@@ -329,8 +333,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         RALExpression expression = new RALExprDelegatesToPosition(
                 _resourceModel,
                 _position4);
-        assertEquals(3, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person2, person3, person4)));
+        assertEquals(3, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person2, person3, person4)));
     }
 
     @Test
@@ -344,8 +348,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 RALExprCommonality.Amount.SOME,
                 new RALExprIsPerson(_resourceModel, person1));
-        assertEquals(2, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person2, person3)));
+        assertEquals(2, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person2, person3)));
     }
 
     @Test
@@ -359,8 +363,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 RALExprCommonality.Amount.ALL,
                 new RALExprIsPerson(_resourceModel, person3));
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1)));
     }
 
     @Test
@@ -374,8 +378,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 RALExprCommonality.Amount.SOME,
                 new RALExprIsPerson(_resourceModel, person1));
-        assertEquals(3, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person2, person3)));
+        assertEquals(3, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person2, person3)));
     }
 
     @Test
@@ -389,8 +393,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 RALExprCommonality.Amount.ALL,
                 new RALExprIsPerson(_resourceModel, person3));
-        assertEquals(3, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person1, person2, person4)));
+        assertEquals(3, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1, person2, person4)));
     }
 
     @Test
@@ -404,8 +408,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 RALExprCommonality.Amount.SOME,
                 new RALExprIsPerson(_resourceModel, person1));
-        assertEquals(2, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person2, person3)));
+        assertEquals(2, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person2, person3)));
     }
 
     @Test
@@ -419,7 +423,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 _resourceModel,
                 RALExprCommonality.Amount.ALL,
                 new RALExprIsPerson(_resourceModel, person1));
-        assertEquals(1, expression.getEligibleResources(new ArrayList<>()).size());
-        assertTrue(expression.getEligibleResources(new ArrayList<>()).containsAll(Arrays.asList(person3)));
+        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
+        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person3)));
     }
 }

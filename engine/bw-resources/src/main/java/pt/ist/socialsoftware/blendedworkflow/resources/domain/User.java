@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.resources.ResourcesApplication;
 import pt.ist.socialsoftware.blendedworkflow.resources.security.BlendedUserDetails;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
@@ -44,6 +45,13 @@ public class User extends User_Base {
 
     public static Optional<User> getUserByUsername(String username) {
         return BlendedWorkflow.getInstance().getUsersSet().stream().filter(u -> u.getUsername().equals(username)).findFirst();
+    }
+
+    public Person getPerson(Specification spec) {
+        return getPersonSet().stream()
+                .filter(person -> person.getResourceModel().getSpec().equals(spec))
+                .findFirst()
+                .orElseThrow(() -> new RMException(RMErrorType.USER_DOES_NOT_HAVE_PERSON_IN_SPEC));
     }
 
     public void delete() {

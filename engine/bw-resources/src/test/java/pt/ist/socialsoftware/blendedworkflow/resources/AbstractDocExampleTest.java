@@ -40,6 +40,7 @@ public abstract class AbstractDocExampleTest extends AbstractMvcTest {
         }
 
         importer.importSpecification(inputStream);
+
     }
 
     @AfterClass
