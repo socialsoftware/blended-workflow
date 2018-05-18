@@ -77,11 +77,16 @@ public class ExecutionInterface {
 
 		Set<ActivityWorkItemDTO> activityWorkItemDTOs = new HashSet<>();
 
-		for (Activity activity : workflowInstance.getEnabledActivitySet()) {
+		for (Activity activity : getPendingActivitySet(workflowInstance)) {
 			activityWorkItemDTOs.add(ActivityWorkItemDTO.createActivityWorkItemDTO(workflowInstance, activity));
 		}
 
 		return activityWorkItemDTOs;
+	}
+
+	// Hook for extension in other modules
+	protected Set<Activity> getPendingActivitySet(WorkflowInstance workflowInstance) {
+		return workflowInstance.getEnabledActivitySet();
 	}
 
 	public List<ActivityWorkItem> getLogActivityWorkItemSet(String specId, String instanceName) {
@@ -106,11 +111,16 @@ public class ExecutionInterface {
 
 		Set<GoalWorkItemDTO> goalWorkItemDTOs = new HashSet<>();
 
-		for (Goal goal : workflowInstance.getEnabledGoalSet()) {
+		for (Goal goal : getPendingGoalSet(workflowInstance)) {
 			goalWorkItemDTOs.add(GoalWorkItemDTO.createGoalWorkItemDTO(workflowInstance, goal));
 		}
 
 		return goalWorkItemDTOs;
+	}
+
+	// Hook for extension in other modules
+	protected Set<Goal> getPendingGoalSet(WorkflowInstance workflowInstance) {
+		return workflowInstance.getEnabledGoalSet();
 	}
 
 	public List<GoalWorkItem> getLogGoalWorkItemSet(String specId, String instanceName) {
