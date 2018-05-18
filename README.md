@@ -1,4 +1,4 @@
-# Blended Workflow Designer and Engine
+# Blended Workflow Designer, Engine and Verifier
 
 This is the code for the Blended Workflow which is a research project, (https://socialsoftware.github.io/blended/) done in the context of INESC-ID's Software Engineering group.
 

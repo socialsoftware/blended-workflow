@@ -70,7 +70,7 @@ public class MergeGoalsMethodTest extends TeardownRollbackTest {
 
 		new Dependence(this.spec.getDataModel(), this.attributeThree, DEPENDENCE_PATH);
 
-		Rule rule = new Rule(this.entityOne, RULE_CONDITION,
+		new Rule(this.entityOne, RULE_CONDITION,
 				new Comparison(new AttributeValueExpression(this.spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_ONE_NAME),
 						new AttributeValueExpression(this.spec, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME),
 						ComparisonOperator.EQUAL));

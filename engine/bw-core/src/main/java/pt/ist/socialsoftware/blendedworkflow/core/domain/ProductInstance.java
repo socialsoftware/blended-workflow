@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ProductInstanceDTO;
 
@@ -31,4 +32,15 @@ public abstract class ProductInstance extends ProductInstance_Base {
 	public abstract boolean isDefined();
 
 	public abstract boolean holdsPre(DefPathCondition defPathCondition);
+
+	public WorkItem getCreatorWorkItem() {
+		return getPostWorkItemArgument() != null ? getPostWorkItemArgument().getWorkItemOfPost() : null;
+	}
+
+	public Set<WorkItem> getReadWorkItemSet() {
+		return getPreWorkItemArgumentSet() != null
+				? getPreWorkItemArgumentSet().stream().map(pwia -> pwia.getWorkItemOfPre()).collect(Collectors.toSet())
+				: null;
+	}
+
 }
