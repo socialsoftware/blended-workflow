@@ -493,16 +493,21 @@ public class RALExpressionTest extends TeardownRollbackTest {
 
         RALExpression expression = new RALExprIsPersonInTaskDuty(
                 _resourceModel,
-                RALExpression.TaskDutyType.INFORMED_ABOUT,
+                RALExpression.TaskDutyType.RESPONSIBLE_FOR,
                 "Entity.att"
         );
 
         WorkflowInstance workflow = edi.createWorkflowInstance(spec.getSpecId(), "Test");
 
-        EntityInstance entityInstance = new EntityInstance(workflow, ent1);
-        AttributeInstance attributeInstance = new AttributeInstance(entityInstance, att1, "213");
+        Activity activityAtt = spec.getActivityModel().getActivity(att1.getFullPath());
+        WorkItem workitem2 = new ActivityWorkItem(workflow, activityAtt);
+        PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(workitem2, DefAttributeCondition.getDefAttributeCondition(att1));
 
-        attributeInstance.getPostWorkItemArgument().getWorkItemOfPost().setExecutionUser(person1.getUser());
+        EntityInstance entityInstance = new EntityInstance(workflow, ent1);
+        ProductInstance productInstance = new AttributeInstance(entityInstance, att1, "123");
+
+        productInstance.setPostWorkItemArgument(postWorkItemArgument);
+        workitem2.setExecutionUser(person1.getUser());
 
         List<Person> personList = expression.getEligibleResources(workflow);
         assertEquals(1, personList.size());
