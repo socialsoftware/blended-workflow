@@ -12,13 +12,13 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprOrDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.execution.ExecutionResourcesInterface;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.util.Collections;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class RALExpressionTest extends TeardownRollbackTest {
     private static final String SPEC_ID = "Spec ID";
@@ -512,6 +512,52 @@ public class RALExpressionTest extends TeardownRollbackTest {
         List<Person> personList = expression.getEligibleResources(workflow);
         assertEquals(1, personList.size());
         assertTrue(expression.getEligibleResources(workflow).containsAll(Arrays.asList(person1)));
+    }
+
+    @Test
+    public void testIsPersonInTaskDutyResponsibleForGetEligibleResourcesWithMocks() throws RMException {
+        Person person1 = new Person(_resourceModel, "Test1", "", Arrays.asList(_position2,_position5), new ArrayList<>());
+        Person person2 = new Person(_resourceModel, "Test2", "", Arrays.asList(_position2), new ArrayList<>());
+
+        Entity ent1 = designer.createEntity(new EntityDTO(spec.getSpecId(), "Entity", false));
+        Attribute att1 = designer.createAttribute(new AttributeDTO(SPEC_ID, ent1.getExternalId(), null,
+                "att", Attribute.AttributeType.NUMBER.toString(), false));
+
+        spec.getConditionModel().generateConditions();
+        spec.getActivityModel().generateActivities();
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                spec.getSpecId(),
+                "Entity.att",
+                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                new RALExprOrDTO(new RALExprIsPersonDTO(person1.getName()),  new RALExprIsPersonDTO(person2.getName()))
+        ));
+
+        designer.generateEnrichedModels(spec.getSpecId());
+
+        RALExpression expression = new RALExprIsPersonInTaskDuty(
+                _resourceModel,
+                RALExpression.TaskDutyType.RESPONSIBLE_FOR,
+                "Entity.att"
+        );
+
+        WorkflowInstance workflowInstance = mock(WorkflowInstance.class);
+
+        WorkItem workItem = mock(WorkItem.class);
+        when(workItem.getExecutionUser()).thenReturn(person1.getUser());
+
+        ProductInstance productInstance = mock(ProductInstance.class);
+        when(productInstance.getCreatorWorkItem()).thenReturn(workItem);
+
+
+        EntityInstance entityInstance = mock(EntityInstance.class);
+        when(entityInstance.getProductInstancesByPath("Entity.att")).thenReturn(new HashSet<>(Arrays.asList(productInstance)));
+
+        when(workflowInstance.getEntityInstanceSet()).thenReturn(new HashSet<>(Arrays.asList(entityInstance)));
+
+        List<Person> personList = expression.getEligibleResources(workflowInstance);
+        assertEquals(1, personList.size());
+        assertTrue(expression.getEligibleResources(workflowInstance).containsAll(Arrays.asList(person1)));
     }
 
     //FIXME
