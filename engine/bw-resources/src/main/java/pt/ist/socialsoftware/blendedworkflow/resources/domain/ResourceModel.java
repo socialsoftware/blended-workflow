@@ -172,4 +172,9 @@ public class ResourceModel extends ResourceModel_Base {
 		return (entity instanceof Entity) && getEntityIsPersonSet().stream()
 				.anyMatch(e -> e.getName().equals(entity.getName()));
     }
+
+	public boolean checkEntityIsPerson(Product product) {
+		return (product instanceof Entity) && getEntityIsPersonSet().stream()
+				.anyMatch(e -> e.getName().equals(product.getName()));
+	}
 }

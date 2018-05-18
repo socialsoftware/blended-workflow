@@ -549,7 +549,6 @@ public class RALExpressionTest extends TeardownRollbackTest {
         ProductInstance productInstance = mock(ProductInstance.class);
         when(productInstance.getCreatorWorkItem()).thenReturn(workItem);
 
-
         EntityInstance entityInstance = mock(EntityInstance.class);
         when(entityInstance.getProductInstancesByPath("Entity.att")).thenReturn(new HashSet<>(Arrays.asList(productInstance)));
 
@@ -560,32 +559,30 @@ public class RALExpressionTest extends TeardownRollbackTest {
         assertTrue(expression.getEligibleResources(workflowInstance).containsAll(Arrays.asList(person1)));
     }
 
-    //FIXME
-    /*@Test
+    @Test
     public void testIsPersonInDataFieldGetEligibleResources() throws RMException {
         Person person1 = new Person(_resourceModel, "Test1", "", Arrays.asList(_position2,_position5), new ArrayList<>());
-        Person person2 = new Person(_resourceModel, "Test2", "", Arrays.asList(_position2), new ArrayList<>());
-        Person person3 = new Person(_resourceModel, "Test3", "", Arrays.asList(_position2, _position5), new ArrayList<>());
-        Person person4 = new Person(_resourceModel, "Test4", "", Arrays.asList(_position5), new ArrayList<>());
 
-        Entity ent1 = designer.createEntity(new EntityDTO(spec.getName(), "Teste1", false));
-        Entity ent2 = designer.createEntity(new EntityDTO(spec.getName(), "Teste2", false));
-        designer.createRelation(new RelationDTO(spec.getName(), "Teste1Teste2", ent1.getExternalId(), "teste1", "0..1",
+        Entity ent1 = designer.createEntity(new EntityDTO(spec.getSpecId(), "Teste1", false));
+        Entity ent2 = designer.createEntity(new EntityDTO(spec.getSpecId(), "Teste2", false));
+        designer.createRelation(new RelationDTO(spec.getSpecId(), "Teste1Teste2", ent1.getExternalId(), "teste1", "0..1",
                 ent2.getExternalId(), "teste2", "0..1"));
 
         _resourceModel.addEntityIsPerson("Teste2");
 
-        designer.generateConditionModel(spec.getName());
-        designer.generateActivityModel(spec.getName());
-        designer.generateGoalModel(spec.getName());
+        EntityInstance entityInstance = mock(EntityInstance.class);
+        when(entityInstance.getProduct()).thenReturn(ent2);
+        when(entityInstance.getPerson()).thenReturn(person1);
+        when(entityInstance.getProductInstancesByPath("Teste1.teste2")).thenReturn(new HashSet<>(Arrays.asList(entityInstance)));
 
-        edi.executeActivityWorkItem(new ActivityWorkItemDTO());
+        WorkflowInstance workflowInstance = mock(WorkflowInstance.class);
+        when(workflowInstance.getEntityInstanceSet()).thenReturn(new HashSet<>(Arrays.asList(entityInstance)));
 
         RALExpression expression = new RALExprIsPersonDataObject(
                 _resourceModel,
-                "Teste2"
+                "Teste1.teste2"
                 );
-        assertEquals(1, expression.getEligibleResources(_workflowInstance).size());
-        assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person3)));
-    }*/
+        assertEquals(1, expression.getEligibleResources(workflowInstance).size());
+        assertTrue(expression.getEligibleResources(workflowInstance).containsAll(Arrays.asList(person1)));
+    }
 }

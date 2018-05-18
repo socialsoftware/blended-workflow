@@ -35,7 +35,7 @@ public class RALExprIsPersonInTaskDuty extends RALExprIsPersonInTaskDuty_Base {
                 .map(productInstance -> {
                     if (getTaskDuty() == TaskDutyType.RESPONSIBLE_FOR) {
                         return Arrays.asList(productInstance.getCreatorWorkItem()
-                                .getExecutionUser().getPerson(getResourceModel().getSpec())); //FIXME
+                                .getExecutionUser().getPerson(getResourceModel().getSpec()));
                     } else {
                         return productInstance.getProduct().getInforms().getEligibleResources(history);
                     }

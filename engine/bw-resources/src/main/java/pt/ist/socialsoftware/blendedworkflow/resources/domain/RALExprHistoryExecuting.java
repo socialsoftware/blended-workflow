@@ -5,7 +5,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
 import java.util.List;
 
-public class RALExprHistoryExecuting extends pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistoryExecuting_Base {
+public class RALExprHistoryExecuting extends RALExprHistoryExecuting_Base {
 
     public RALExprHistoryExecuting(ResourceModel resourceModel, Quantifier quantifier, Product dataField) {
         setResourceModel(resourceModel);
