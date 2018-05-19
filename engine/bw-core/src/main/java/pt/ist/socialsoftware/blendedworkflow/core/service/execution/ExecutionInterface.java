@@ -96,7 +96,7 @@ public class ExecutionInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public void executeActivityWorkItem(ActivityWorkItemDTO activityWorkItemDTO) {
+	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDTO activityWorkItemDTO) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(activityWorkItemDTO.getSpecId(),
 				activityWorkItemDTO.getWorkflowInstanceName());
 		Activity activity = getActivity(activityWorkItemDTO.getSpecId(), activityWorkItemDTO.getName());
@@ -104,6 +104,8 @@ public class ExecutionInterface {
 		ActivityWorkItem activityWorkItem = activityWorkItemDTO.createActivityWorkItem(workflowInstance, activity);
 
 		activityWorkItem.holds(activity.getPreConditionSet(), activity.getPostConditionSet());
+
+		return activityWorkItem;
 	}
 
 	public Set<GoalWorkItemDTO> getPendingGoalWorkItemSet(String specId, String instanceName) {
@@ -130,7 +132,7 @@ public class ExecutionInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public void executeGoalWorkItem(GoalWorkItemDTO goalWorkItemDTO) {
+	public GoalWorkItem executeGoalWorkItem(GoalWorkItemDTO goalWorkItemDTO) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(goalWorkItemDTO.getSpecId(),
 				goalWorkItemDTO.getWorkflowInstanceName());
 		Goal goal = getGoal(goalWorkItemDTO.getSpecId(), goalWorkItemDTO.getName());
@@ -138,6 +140,8 @@ public class ExecutionInterface {
 		GoalWorkItem goalWorkItem = goalWorkItemDTO.createGoalWorkItem(workflowInstance, goal);
 
 		goalWorkItem.holds(goal.getActivationConditionSet(), goal.getSuccessConditionSet());
+
+		return goalWorkItem;
 	}
 
 }
