@@ -2,10 +2,11 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.execution;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
+import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
+import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalWorkItemDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.User;
@@ -51,5 +52,43 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		return super.getPendingGoalSet(workflowInstance).stream()
 				.filter(goal -> goal.getResponsibleFor().hasEligiblePerson(person, workflowInstance))
 				.collect(toSet());
+	}
+
+	@Override
+	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDTO activityWorkItemDTO) {
+		ActivityWorkItem activityWI = super.executeActivityWorkItem(activityWorkItemDTO);
+
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(activityWorkItemDTO.getSpecId())
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
+		if (!activityWI.getActivity().getResponsibleFor().hasEligiblePerson(person, activityWI.getWorkflowInstance())) {
+			throw new RMException(RMErrorType.PERSON_IS_NOT_ELIGIBLE);
+		}
+
+		activityWI.setExecutionUser(user);
+
+		return activityWI;
+	}
+
+	@Override
+	public GoalWorkItem executeGoalWorkItem(GoalWorkItemDTO goalWorkItemDTO) {
+		GoalWorkItem goalWI = super.executeGoalWorkItem(goalWorkItemDTO);
+
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(goalWorkItemDTO.getSpecId())
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
+		if (!goalWI.getGoal().getResponsibleFor().hasEligiblePerson(person, goalWI.getWorkflowInstance())) {
+			throw new RMException(RMErrorType.PERSON_IS_NOT_ELIGIBLE);
+		}
+
+		goalWI.setExecutionUser(user);
+
+		return goalWI;
 	}
 }
