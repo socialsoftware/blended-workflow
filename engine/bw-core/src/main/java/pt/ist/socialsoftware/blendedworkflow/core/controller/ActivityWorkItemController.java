@@ -1,5 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.core.controller;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,8 +20,6 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityWorkItemDT
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
-import javax.inject.Inject;
-
 @RestController
 @RequestMapping(value = "/specs/{specId}/instances/{instanceName}/activityworkitem")
 public class ActivityWorkItemController {
@@ -29,10 +32,13 @@ public class ActivityWorkItemController {
 	public ResponseEntity<ActivityWorkItemDTO[]> getNextActivityWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
 		logger.debug("getNextActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
-		ExecutionInterface edi = factory.createExecutionInterface();
+		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		ActivityWorkItemDTO[] instances = edi.getPendingActivityWorkItemSet(specId, instanceName).stream()
 				.toArray(size -> new ActivityWorkItemDTO[size]);
+
+		logger.debug("getNextActivityWorkItems activityDTOs: {}",
+				Stream.of(instances).map(aw -> aw.print()).collect(Collectors.joining("\n\n")));
 
 		return new ResponseEntity<>(instances, HttpStatus.OK);
 	}
@@ -41,7 +47,7 @@ public class ActivityWorkItemController {
 	public ResponseEntity<ActivityWorkItemDTO[]> getLogActivityWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
 		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
-		ExecutionInterface edi = factory.createExecutionInterface();
+		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		ActivityWorkItemDTO[] instances = edi.getLogActivityWorkItemSet(specId, instanceName).stream()
 				.map(awi -> awi.getDTO()).toArray(size -> new ActivityWorkItemDTO[size]);
@@ -55,7 +61,7 @@ public class ActivityWorkItemController {
 		logger.debug("executeActivityActivityWorkItem specId:{}, instanceName:{}, activityName:{}", specId,
 				activityWorkItemDTO.getWorkflowInstanceName(), activityWorkItemDTO.getName());
 		logger.debug("executeActivityWorkItem activityWorkItemDTO:{}", activityWorkItemDTO.print());
-		ExecutionInterface edi = factory.createExecutionInterface();
+		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		edi.executeActivityWorkItem(activityWorkItemDTO);
 
