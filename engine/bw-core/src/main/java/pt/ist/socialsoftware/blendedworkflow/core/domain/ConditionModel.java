@@ -82,4 +82,12 @@ public class ConditionModel extends ConditionModel_Base {
 		return getEntityAchieveConditionSet().stream().filter(c -> c.getEntity().getMandatory()).findFirst().get();
 	}
 
+	public DefProductCondition getDefProductByPath(String path) {
+		Product product = getSpecification().getDataModel().getTargetOfPath(path);
+		DefProductCondition defProductCondition = product instanceof Entity
+				? DefEntityCondition.getDefEntityCondition((Entity) product)
+				: DefAttributeCondition.getDefAttributeCondition((Attribute) product);
+		return defProductCondition;
+	}
+
 }

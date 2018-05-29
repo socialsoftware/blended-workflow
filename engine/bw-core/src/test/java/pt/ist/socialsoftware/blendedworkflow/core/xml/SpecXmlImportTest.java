@@ -40,6 +40,8 @@ public class SpecXmlImportTest extends TeardownRollbackTest {
 
 		this.xmlSpecs.stream().forEach(xml -> importer.importSpecification(xml));
 
+		BlendedWorkflow.getInstance().getSpecificationSet().stream().forEach(s -> s.getDataModel().check());
+
 		List<String> results = BlendedWorkflow.getInstance().getSpecificationSet().stream()
 				.sorted((s1, s2) -> s1.getSpecId().compareTo(s2.getSpecId())).map(spec -> this.exporter.export(spec))
 				.collect(Collectors.toList());
@@ -57,6 +59,26 @@ public class SpecXmlImportTest extends TeardownRollbackTest {
 
 		File directory = new File(testModelsDirectory);
 		String filename = "DoctorAppointmentTest.xml";
+		File file = new File(directory, filename);
+		FileInputStream inputStream = new FileInputStream(file);
+
+		importer.importSpecification(inputStream);
+
+		Specification specification = BlendedWorkflow.getInstance().getSpecificationSet().stream().findFirst().get();
+
+		logger.debug(this.exporter.export(specification));
+	}
+
+	@Test
+	public void importTwoEntitiesFromFile() throws FileNotFoundException {
+		BlendedWorkflow.getInstance().getSpecificationSet().stream().forEach(s -> s.delete());
+
+		SpecXmlImport importer = new SpecXmlImport();
+
+		String testModelsDirectory = PropertiesManager.getProperties().getProperty("test.models.dir");
+
+		File directory = new File(testModelsDirectory);
+		String filename = "TwoEntitiesTest.xml";
 		File file = new File(directory, filename);
 		FileInputStream inputStream = new FileInputStream(file);
 
