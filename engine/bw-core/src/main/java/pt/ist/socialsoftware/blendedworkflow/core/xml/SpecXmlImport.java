@@ -179,7 +179,7 @@ public class SpecXmlImport {
 		for (Element condition : subElement.getChildren("condition")) {
 			String path = condition.getAttributeValue("path");
 			activity.addPostCondition(
-					DefPathCondition.getDefPathCondition(activity.getActivityModel().getSpecification(), path));
+					activity.getActivityModel().getSpecification().getConditionModel().getDefProductByPath(path));
 		}
 	}
 
@@ -227,7 +227,7 @@ public class SpecXmlImport {
 		for (Element condition : subElement.getChildren("condition")) {
 			String path = condition.getAttributeValue("path");
 			goal.addSuccessCondition(
-					DefPathCondition.getDefPathCondition(goal.getGoalModel().getSpecification(), path));
+					goal.getGoalModel().getSpecification().getConditionModel().getDefProductByPath(path));
 		}
 	}
 

@@ -142,8 +142,9 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public RelationBW createRelation(RelationDTO relDTO) {
-		logger.debug("createRelation {}, entityOneName:{}, entityTwoName:{}", relDTO.getSpecId(),
-				relDTO.getEntOneName(), relDTO.getEntTwoName());
+		logger.debug("createRelation specId:{}, entityOneName:{}, entOneExtId:{}, entityTwoName:{}, entTwoExtId:{}",
+				relDTO.getSpecId(), relDTO.getEntOneName(), relDTO.getEntOneExtId(), relDTO.getEntTwoName(),
+				relDTO.getEntTwoExtId());
 
 		Specification spec = getSpecBySpecId(relDTO.getSpecId());
 

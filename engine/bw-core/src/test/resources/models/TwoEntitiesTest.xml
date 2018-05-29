@@ -1,0 +1,95 @@
+<specification name="Two Entities Test" specId="TwoEntitiesTest">
+  <data-model>
+    <entities>
+      <entity name="B" exists="false" mandatory="false">
+        <attribute name="att1" type="Boolean" mandatory="false" />
+      </entity>
+      <entity name="A" exists="false" mandatory="true">
+        <attribute name="att1" type="Number" mandatory="false" />
+      </entity>
+    </entities>
+    <associations>
+      <association name="AHasBs">
+        <member entity="A" role="a" cardinality="1" />
+        <member entity="B" role="b" cardinality="3..3" />
+      </association>
+    </associations>
+  </data-model>
+  <activity-model>
+    <activity name="A.att1">
+      <preConditions>
+        <condition path="A" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="A.att1" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="B.att1">
+      <preConditions>
+        <condition path="B" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="B.att1" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="A">
+      <preConditions />
+      <seqConditions />
+      <postConditions>
+        <condition path="A" />
+      </postConditions>
+      <mulConditions />
+    </activity>
+    <activity name="B">
+      <preConditions>
+        <condition path="B.a" />
+      </preConditions>
+      <seqConditions />
+      <postConditions>
+        <condition path="B" />
+      </postConditions>
+      <mulConditions>
+        <condition name="AHasBs" rolename="b" cardinality="3..3" />
+        <condition name="AHasBs" rolename="a" cardinality="1" />
+      </mulConditions>
+    </activity>
+  </activity-model>
+  <goal-model>
+    <goal name="B.att1" parent="B">
+      <preConditions />
+      <postConditions>
+        <condition path="B.att1" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="B" parent="A">
+      <preConditions />
+      <postConditions>
+        <condition path="B" />
+      </postConditions>
+      <mulConditions>
+        <condition name="AHasBs" rolename="a" cardinality="1" />
+      </mulConditions>
+    </goal>
+    <goal name="A.att1" parent="A">
+      <preConditions />
+      <postConditions>
+        <condition path="A.att1" />
+      </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="A">
+      <preConditions />
+      <postConditions>
+        <condition path="A" />
+      </postConditions>
+      <mulConditions>
+        <condition name="AHasBs" rolename="b" cardinality="3..3" />
+      </mulConditions>
+    </goal>
+  </goal-model>
+</specification>
