@@ -14,8 +14,10 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public class ExecutionResourcesInterface extends ExecutionInterface {
@@ -90,5 +92,35 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		goalWI.setExecutionUser(user);
 
 		return goalWI;
+	}
+
+	@Override
+	public List<ActivityWorkItem> getLogActivityWorkItemSet(String specId, String instanceName) {
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(specId)
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
+		return super.getLogActivityWorkItemSet(specId, instanceName).stream()
+				.filter(wi -> wi.getActivity().getInforms().hasEligiblePerson(person, workflowInstance))
+				.collect(toList());
+	}
+
+	@Override
+	public List<GoalWorkItem> getLogGoalWorkItemSet(String specId, String instanceName) {
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(specId)
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
+		return super.getLogGoalWorkItemSet(specId, instanceName).stream()
+				.filter(wi -> wi.getGoal().getInforms().hasEligiblePerson(person, workflowInstance))
+				.collect(toList());
 	}
 }
