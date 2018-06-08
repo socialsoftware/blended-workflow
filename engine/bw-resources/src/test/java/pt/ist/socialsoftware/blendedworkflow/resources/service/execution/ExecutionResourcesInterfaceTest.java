@@ -14,16 +14,9 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprIsPersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprOrDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -63,6 +56,10 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
         person2 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_2, "", new ArrayList<>(), new ArrayList<>()));
         person3 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_3, "", new ArrayList<>(), new ArrayList<>()));
 
+        designer.relationEntityIsPerson(new ResourceRelationDTO(
+                SPEC_ID,
+                ENT_1
+        ));
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1,
@@ -255,5 +252,36 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
         List<GoalWorkItem> workItems = edi.getLogGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
         assertEquals(0, workItems.size());
+    }
+
+    @Test
+    public void executeActivityWorkItemEntityIsPerson() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                USERNAME_1,
+                PASSWORD_1,
+                new ArrayList<>()));
+
+        Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
+
+        ActivityWorkItemDTO workItemDTO = workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        logger.debug("WORKITEM: {}", workItemDTO.print());
+
+        fillWorkItem(workItemDTO);
+
+        ActivityWorkItem activityWorkItem = edi.executeActivityWorkItem(workItemDTO);
+
+        assertTrue(person1.getUser().getWorkItemSet().size() > 0);
+        assertTrue(person1.getUser().getWorkItemSet().contains(activityWorkItem));
+        assertTrue(spec.getResourceModel().getPersonSet().size() > 3);
+        assertTrue(activityWorkItem.getPostConditionSet().stream()
+                .map(PostWorkItemArgument_Base::getProductInstanceSet)
+                .flatMap(Collection::stream)
+                .filter(productInstance -> productInstance instanceof EntityInstance)
+                .allMatch(productInstance -> ((EntityInstance) productInstance).getPerson() != null));
+        assertTrue(spec.getResourceModel().getPersonSet().stream()
+                .anyMatch(person -> !person.getName().equals(person1.getName()) &&
+                        !person.getName().equals(person2.getName()) &&
+                        !person.getName().equals(person3.getName())));
     }
 }

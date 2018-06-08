@@ -13,6 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,6 +73,8 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 		activityWI.setExecutionUser(user);
 
+		handleWorkItemEntityIsPerson(activityWI);
+
 		return activityWI;
 	}
 
@@ -91,7 +94,25 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 		goalWI.setExecutionUser(user);
 
+		handleWorkItemEntityIsPerson(goalWI);
+
 		return goalWI;
+	}
+
+	private void handleWorkItemEntityIsPerson(WorkItem workItem) {
+		workItem.getPostConditionSet().stream()
+				.map(PostWorkItemArgument::getProductInstanceSet)
+				.flatMap(Collection::stream)
+				.filter(productInstance -> productInstance instanceof EntityInstance)
+				.filter(productInstance -> productInstance.getEntity().getResourceModel().checkEntityIsPerson(productInstance.getProduct()))
+				.map(productInstance -> (EntityInstance) productInstance)
+				.forEach(entityInstance -> {
+					entityInstance.setPerson(new Person(
+							entityInstance.getEntity().getResourceModel(),
+							entityInstance.getExternalId(),
+							entityInstance.getExternalId()
+					));
+				});
 	}
 
 	@Override
