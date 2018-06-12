@@ -80,10 +80,10 @@ public class ActivityWorkItemDTO extends WorkItemDTO {
 		return activityWorkItemDTO;
 	}
 
-	public ActivityWorkItem createActivityWorkItem(WorkflowInstance workflowInstance, Activity activity) {
+	public ActivityWorkItem executeActivity(WorkflowInstance workflowInstance, Activity activity) {
 		ActivityWorkItem activityWorkItem = new ActivityWorkItem(workflowInstance, activity);
 
-		fillWorkItem(workflowInstance, activityWorkItem);
+		executeWorkItem(workflowInstance, activityWorkItem);
 
 		return activityWorkItem;
 	}

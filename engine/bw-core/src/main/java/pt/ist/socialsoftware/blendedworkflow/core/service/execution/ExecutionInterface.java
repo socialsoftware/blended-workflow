@@ -101,7 +101,7 @@ public class ExecutionInterface {
 				activityWorkItemDTO.getWorkflowInstanceName());
 		Activity activity = getActivity(activityWorkItemDTO.getSpecId(), activityWorkItemDTO.getName());
 
-		ActivityWorkItem activityWorkItem = activityWorkItemDTO.createActivityWorkItem(workflowInstance, activity);
+		ActivityWorkItem activityWorkItem = activityWorkItemDTO.executeActivity(workflowInstance, activity);
 
 		activityWorkItem.holds(activity.getPreConditionSet(), activity.getPostConditionSet());
 
@@ -137,7 +137,7 @@ public class ExecutionInterface {
 				goalWorkItemDTO.getWorkflowInstanceName());
 		Goal goal = getGoal(goalWorkItemDTO.getSpecId(), goalWorkItemDTO.getName());
 
-		GoalWorkItem goalWorkItem = goalWorkItemDTO.createGoalWorkItem(workflowInstance, goal);
+		GoalWorkItem goalWorkItem = goalWorkItemDTO.executeGoal(workflowInstance, goal);
 
 		goalWorkItem.holds(goal.getActivationConditionSet(), goal.getSuccessConditionSet());
 

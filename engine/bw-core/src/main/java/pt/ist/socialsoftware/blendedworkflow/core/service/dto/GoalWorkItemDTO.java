@@ -80,10 +80,10 @@ public class GoalWorkItemDTO extends WorkItemDTO {
 		return goalWorkItemDTO;
 	}
 
-	public GoalWorkItem createGoalWorkItem(WorkflowInstance workflowInstance, Goal goal) {
+	public GoalWorkItem executeGoal(WorkflowInstance workflowInstance, Goal goal) {
 		GoalWorkItem goalWorkItem = new GoalWorkItem(workflowInstance, goal);
 
-		fillWorkItem(workflowInstance, goalWorkItem);
+		executeWorkItem(workflowInstance, goalWorkItem);
 
 		return goalWorkItem;
 	}
