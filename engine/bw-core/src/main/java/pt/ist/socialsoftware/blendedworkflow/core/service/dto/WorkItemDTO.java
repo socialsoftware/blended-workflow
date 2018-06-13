@@ -107,7 +107,7 @@ public class WorkItemDTO {
 		this.definitionGroupSet = definitionGroupSet;
 	}
 
-	public void fillWorkItem(WorkflowInstance workflowInstance, WorkItem workItem) {
+	public void executeWorkItem(WorkflowInstance workflowInstance, WorkItem workItem) {
 		Map<String, EntityInstance> newEntityInstances = new HashMap<>();
 		for (DefinitionGroupInstanceDTO definitionGroupInstanceDTO : getDefinitionGroupSet().stream()
 				.flatMap(dgs -> dgs.getDefinitionGroupInstanceSet().stream()).collect(Collectors.toSet())) {
