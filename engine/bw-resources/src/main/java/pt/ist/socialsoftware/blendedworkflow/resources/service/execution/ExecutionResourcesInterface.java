@@ -73,8 +73,6 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 		activityWI.setExecutionUser(user);
 
-		handleWorkItemEntityIsPerson(activityWI);
-
 		return activityWI;
 	}
 
@@ -94,25 +92,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 		goalWI.setExecutionUser(user);
 
-		handleWorkItemEntityIsPerson(goalWI);
-
 		return goalWI;
-	}
-
-	private void handleWorkItemEntityIsPerson(WorkItem workItem) {
-		workItem.getPostConditionSet().stream()
-				.map(PostWorkItemArgument::getProductInstanceSet)
-				.flatMap(Collection::stream)
-				.filter(productInstance -> productInstance instanceof EntityInstance)
-				.filter(productInstance -> productInstance.getEntity().getResourceModel().checkEntityIsPerson(productInstance.getProduct()))
-				.map(productInstance -> (EntityInstance) productInstance)
-				.forEach(entityInstance -> {
-					entityInstance.setPerson(new Person(
-							entityInstance.getEntity().getResourceModel(),
-							entityInstance.getExternalId(),
-							entityInstance.getExternalId()
-					));
-				});
 	}
 
 	@Override
@@ -143,5 +123,15 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		return super.getLogGoalWorkItemSet(specId, instanceName).stream()
 				.filter(wi -> wi.getGoal().getInforms().hasEligiblePerson(person, workflowInstance))
 				.collect(toList());
+	}
+
+	@Override
+	public Set<ActivityWorkItemDTO> getPendingActivityWorkItemSet(String specId, String instanceName) {
+		return super.getPendingActivityWorkItemSet(specId, instanceName);
+	}
+
+	@Override
+	public Set<GoalWorkItemDTO> getPendingGoalWorkItemSet(String specId, String instanceName) {
+		return super.getPendingGoalWorkItemSet(specId, instanceName);
 	}
 }

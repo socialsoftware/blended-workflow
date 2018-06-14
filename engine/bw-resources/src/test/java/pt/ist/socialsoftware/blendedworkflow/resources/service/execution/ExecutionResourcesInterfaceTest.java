@@ -263,7 +263,9 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
-        ActivityWorkItemDTO workItemDTO = workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+        ResourceActivityWorkItemDTO workItemDTO = workItemDTOList.stream()
+                .map(ResourceActivityWorkItemDTO::new)
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
 
