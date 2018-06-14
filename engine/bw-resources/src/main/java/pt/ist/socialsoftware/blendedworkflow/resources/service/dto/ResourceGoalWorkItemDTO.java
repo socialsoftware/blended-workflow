@@ -1,13 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.dto;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityWorkItemDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalWorkItemDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

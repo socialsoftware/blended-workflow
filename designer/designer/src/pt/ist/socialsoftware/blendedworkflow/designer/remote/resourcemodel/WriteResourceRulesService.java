@@ -1,8 +1,12 @@
 package pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.mwe2.language.mwe2.Assignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ResourceRu
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ResourceRules;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.DataModelInterface;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.DataPersonDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RALExprDelegatedByPersonPositionExprDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RALExprDelegatesToPersonPositionExprDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.RALExprIsPersonDataObjectDTO;
@@ -98,7 +103,17 @@ private Logger logger = LoggerFactory.getLogger(WriteResourceRulesService.class)
 
 	private void writeRelations(List<EntityIsPerson> relations, String specId, BWNotification notification) {
 		relations.stream().forEach(r -> {
-			repository.createEntityIsPersonRelation(new ResourceRelationDTO(specId, r.getEntity().getName()), notification);
+			ResourceRelationDTO resourceRelationDTO = new ResourceRelationDTO(specId, r.getEntity().getName());
+			List<DataPersonDTO> persons = new ArrayList<>();
+			r.getPersons().stream().forEach(dataPerson -> {
+				Map<String, String> fields = new HashMap<>();
+				dataPerson.getAssignments().stream().forEach(asg -> fields.put(asg.getField(), asg.getValue()));
+				
+				DataPersonDTO dp = new DataPersonDTO(dataPerson.getName(), fields);
+				persons.add(dp);
+			});
+			resourceRelationDTO.setPersons(persons);
+			repository.createEntityIsPersonRelation(resourceRelationDTO, notification);
 		});
 	}
 }

@@ -7,10 +7,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
@@ -18,9 +16,8 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public static final String USERNAME_1 = "User1";
