@@ -60,19 +60,27 @@ public class ResourceActivityWorkItemDTO extends ActivityWorkItemDTO implements 
     public ActivityWorkItem executeActivity(WorkflowInstance workflowInstance, Activity activity) {
         ActivityWorkItem activityWorkItem = super.executeActivity(workflowInstance, activity);
 
-        activityWorkItem.getPostConditionSet().stream()
-                .map(PostWorkItemArgument::getProductInstanceSet)
-                .flatMap(Collection::stream)
-                .filter(productInstance -> productInstance instanceof EntityInstance)
-                .filter(productInstance -> productInstance.getEntity().getResourceModel().checkEntityIsPerson(productInstance.getProduct()))
-                .map(productInstance -> (EntityInstance) productInstance)
-                .forEach(entityInstance -> {
-                    entityInstance.setPerson(new Person(
-                            entityInstance.getEntity().getResourceModel(),
-                            entityInstance.getExternalId(),
-                            entityInstance.getExternalId()
-                    ));
-                });
+        for (EntityIsPersonDTO entityIsPersonDTO : getEntityIsPersonDTOSet()) {
+            activityWorkItem.getPostConditionSet().stream()
+                    .map(PostWorkItemArgument::getProductInstanceSet)
+                    .flatMap(Collection::stream)
+                    .filter(productInstance -> productInstance instanceof EntityInstance)
+                    .filter(productInstance -> entityIsPersonDTO.getEntity().getName().equals(productInstance.getEntity().getName()))
+                    .filter(productInstance -> productInstance.getEntity().getResourceModel().checkEntityIsPerson(productInstance.getProduct()))
+                    .map(productInstance -> (EntityInstance) productInstance)
+                    .forEach(entityInstance -> {
+                        if (entityIsPersonDTO.getPersonChosen() != null) {
+                            Person person = entityInstance.getEntity().getResourceModel().getPerson(entityIsPersonDTO.getPersonChosen().getName());
+                            entityInstance.setPerson(person);
+                        } else {
+                            entityInstance.setPerson(new Person(
+                                    entityInstance.getEntity().getResourceModel(),
+                                    entityInstance.getExternalId(),
+                                    entityInstance.getExternalId()
+                            ));
+                        }
+                    });
+        }
 
         return activityWorkItem;
     }
@@ -82,7 +90,6 @@ public class ResourceActivityWorkItemDTO extends ActivityWorkItemDTO implements 
         String result = super.print();
         for (EntityIsPersonDTO entityIsPersonDTO : getEntityIsPersonDTOSet()) {
             result = result + "EIP ENTITY: " + ((entityIsPersonDTO.getEntity() != null) ? entityIsPersonDTO.getEntity().getName() : "") + "\r\n";
-            result = result + "EIP ENTITYINSTANCE: " + entityIsPersonDTO.getEntityInstance() + "\r\n";
             result = result + "EIP PERSON CONTEXT: "
                     + entityIsPersonDTO.getPersonContext().stream()
                     .map(PersonDTO::getName)

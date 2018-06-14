@@ -65,19 +65,27 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDTO implements Resource
     public GoalWorkItem executeGoal(WorkflowInstance workflowInstance, Goal goal) {
         GoalWorkItem goalWorkItem = super.executeGoal(workflowInstance, goal);
 
-        goalWorkItem.getPostConditionSet().stream()
-                .map(PostWorkItemArgument::getProductInstanceSet)
-                .flatMap(Collection::stream)
-                .filter(productInstance -> productInstance instanceof EntityInstance)
-                .filter(productInstance -> productInstance.getEntity().getResourceModel().checkEntityIsPerson(productInstance.getProduct()))
-                .map(productInstance -> (EntityInstance) productInstance)
-                .forEach(entityInstance -> {
-                    entityInstance.setPerson(new Person(
-                            entityInstance.getEntity().getResourceModel(),
-                            entityInstance.getExternalId(),
-                            entityInstance.getExternalId()
-                    ));
-                });
+        for (EntityIsPersonDTO entityIsPersonDTO : getEntityIsPersonDTOSet()) {
+            goalWorkItem.getPostConditionSet().stream()
+                    .map(PostWorkItemArgument::getProductInstanceSet)
+                    .flatMap(Collection::stream)
+                    .filter(productInstance -> productInstance instanceof EntityInstance)
+                    .filter(productInstance -> entityIsPersonDTO.getEntity().getName().equals(productInstance.getEntity().getName()))
+                    .filter(productInstance -> productInstance.getEntity().getResourceModel().checkEntityIsPerson(productInstance.getProduct()))
+                    .map(productInstance -> (EntityInstance) productInstance)
+                    .forEach(entityInstance -> {
+                        if (entityIsPersonDTO.getPersonChosen() != null) {
+                            Person person = entityInstance.getEntity().getResourceModel().getPerson(entityIsPersonDTO.getPersonChosen().getName());
+                            entityInstance.setPerson(person);
+                        } else {
+                            entityInstance.setPerson(new Person(
+                                    entityInstance.getEntity().getResourceModel(),
+                                    entityInstance.getExternalId(),
+                                    entityInstance.getExternalId()
+                            ));
+                        }
+                    });
+        }
 
         return goalWorkItem;
     }
@@ -87,7 +95,6 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDTO implements Resource
         String result = super.print();
         for (EntityIsPersonDTO entityIsPersonDTO : getEntityIsPersonDTOSet()) {
             result = result + "EIP ENTITY: " + ((entityIsPersonDTO.getEntity() != null) ? entityIsPersonDTO.getEntity().getName() : "") + "\r\n";
-            result = result + "EIP ENTITYINSTANCE: " + entityIsPersonDTO.getEntityInstance() + "\r\n";
             result = result + "EIP PERSON CONTEXT: "
                     + entityIsPersonDTO.getPersonContext().stream()
                     .map(PersonDTO::getName)

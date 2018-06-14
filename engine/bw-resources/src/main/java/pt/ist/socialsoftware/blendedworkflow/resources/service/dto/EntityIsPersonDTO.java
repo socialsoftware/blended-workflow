@@ -8,7 +8,6 @@ import java.util.Set;
 
 public class EntityIsPersonDTO {
     private EntityDTO entity;
-    private String entityInstance;
     private Set<PersonDTO> personContext;
     private PersonDTO personChosen;
 
@@ -23,14 +22,6 @@ public class EntityIsPersonDTO {
 
     public void setEntity(EntityDTO entity) {
         this.entity = entity;
-    }
-
-    public String getEntityInstance() {
-        return entityInstance;
-    }
-
-    public void setEntityInstance(String entityInstance) {
-        this.entityInstance = entityInstance;
     }
 
     public Set<PersonDTO> getPersonContext() {
