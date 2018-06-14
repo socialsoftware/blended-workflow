@@ -4,6 +4,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityWorkItemDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefinitionGroupDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,6 +13,22 @@ import java.util.stream.Collectors;
 
 public class ResourceActivityWorkItemDTO extends ActivityWorkItemDTO implements ResourceWorkItemDTO {
     private Set<EntityIsPersonDTO> entityIsPersonDTOSet;
+
+    public static ResourceActivityWorkItemDTO createActivityWorkItemDTO(WorkflowInstance workflowInstance, Activity activity) {
+        ResourceActivityWorkItemDTO resourceActivityWorkItemDTO = new ResourceActivityWorkItemDTO(
+                ActivityWorkItemDTO.createActivityWorkItemDTO(workflowInstance, activity));
+        ResourceModel resourceModel = activity.getActivityModel().getSpecification().getResourceModel();
+
+        Set<EntityIsPersonDTO> entityIsPersonDTOSet = new HashSet<>();
+        Set<PersonDTO> personContext = resourceModel.getPersonSet().stream().map(Person::getDTO).collect(Collectors.toSet());
+
+        activity.getPostEntities().stream()
+                .filter(entity -> resourceModel.checkEntityIsPerson(entity))
+                .forEach(entity -> entityIsPersonDTOSet.add(new EntityIsPersonDTO(entity.getDTO(), personContext)));
+        resourceActivityWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDTOSet);
+
+        return resourceActivityWorkItemDTO;
+    }
 
     public ResourceActivityWorkItemDTO(ActivityWorkItemDTO activityWorkItemDTO) {
         super();
@@ -64,14 +81,14 @@ public class ResourceActivityWorkItemDTO extends ActivityWorkItemDTO implements 
     public String print() {
         String result = super.print();
         for (EntityIsPersonDTO entityIsPersonDTO : getEntityIsPersonDTOSet()) {
-            result = result + "EIP ENTITY: " + entityIsPersonDTO.getEntity().getName() + "\r\n";
-            result = result + "EIP ENTITYINSTANCE: " + entityIsPersonDTO.getEntityInstance().getId() + "\r\n";
+            result = result + "EIP ENTITY: " + ((entityIsPersonDTO.getEntity() != null) ? entityIsPersonDTO.getEntity().getName() : "") + "\r\n";
+            result = result + "EIP ENTITYINSTANCE: " + entityIsPersonDTO.getEntityInstance() + "\r\n";
             result = result + "EIP PERSON CONTEXT: "
                     + entityIsPersonDTO.getPersonContext().stream()
                     .map(PersonDTO::getName)
                     .collect(Collectors.joining(";"))
                     + "\r\n";
-            result = result + "EIP PERSON CHOSEN: " + entityIsPersonDTO.getPersonChosen().getName() + "\r\n";
+            result = result + "EIP PERSON CHOSEN: " + ((entityIsPersonDTO.getPersonChosen() != null) ? entityIsPersonDTO.getPersonChosen().getName() : "") + "\r\n";
         }
         return result;
     }

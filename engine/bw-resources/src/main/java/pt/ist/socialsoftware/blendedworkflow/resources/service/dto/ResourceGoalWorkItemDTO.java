@@ -4,14 +4,36 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityWorkItemDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalWorkItemDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ResourceGoalWorkItemDTO extends GoalWorkItemDTO implements ResourceWorkItemDTO {
     private Set<EntityIsPersonDTO> entityIsPersonDTOSet;
+
+    public static ResourceGoalWorkItemDTO createGoalWorkItemDTO(WorkflowInstance workflowInstance, Goal goal) {
+        ResourceGoalWorkItemDTO resourceGoalWorkItemDTO = new ResourceGoalWorkItemDTO(
+                GoalWorkItemDTO.createGoalWorkItemDTO(workflowInstance, goal));
+        ResourceModel resourceModel = goal.getGoalModel().getSpecification().getResourceModel();
+
+        Set<EntityIsPersonDTO> entityIsPersonDTOSet = new HashSet<>();
+        Set<PersonDTO> personContext = resourceModel.getPersonSet().stream().map(Person::getDTO).collect(Collectors.toSet());
+
+        goal.getSuccessConditionSet().stream()
+                .filter(DefEntityCondition.class::isInstance)
+                .map(DefEntityCondition.class::cast)
+                .map(DefEntityCondition::getEntities)
+                .flatMap(Collection::stream)
+                .filter(entity -> resourceModel.checkEntityIsPerson(entity))
+                .forEach(entity -> entityIsPersonDTOSet.add(new EntityIsPersonDTO(entity.getDTO(), personContext)));
+        resourceGoalWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDTOSet);
+
+        return resourceGoalWorkItemDTO;
+    }
 
     public ResourceGoalWorkItemDTO(GoalWorkItemDTO goalWorkItemDTO) {
         super();
@@ -64,14 +86,14 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDTO implements Resource
     public String print() {
         String result = super.print();
         for (EntityIsPersonDTO entityIsPersonDTO : getEntityIsPersonDTOSet()) {
-            result = result + "EIP ENTITY: " + entityIsPersonDTO.getEntity().getName() + "\r\n";
-            result = result + "EIP ENTITYINSTANCE: " + entityIsPersonDTO.getEntityInstance().getId() + "\r\n";
+            result = result + "EIP ENTITY: " + ((entityIsPersonDTO.getEntity() != null) ? entityIsPersonDTO.getEntity().getName() : "") + "\r\n";
+            result = result + "EIP ENTITYINSTANCE: " + entityIsPersonDTO.getEntityInstance() + "\r\n";
             result = result + "EIP PERSON CONTEXT: "
                     + entityIsPersonDTO.getPersonContext().stream()
                     .map(PersonDTO::getName)
                     .collect(Collectors.joining(";"))
                     + "\r\n";
-            result = result + "EIP PERSON CHOSEN: " + entityIsPersonDTO.getPersonChosen().getName() + "\r\n";
+            result = result + "EIP PERSON CHOSEN: " + ((entityIsPersonDTO.getPersonChosen() != null) ? entityIsPersonDTO.getPersonChosen().getName() : "") + "\r\n";
         }
         return result;
     }

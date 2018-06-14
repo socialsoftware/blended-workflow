@@ -2,33 +2,34 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.dto;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
 
 import java.util.Set;
 
 public class EntityIsPersonDTO {
-    private Entity entity;
-    private EntityInstance entityInstance;
+    private EntityDTO entity;
+    private String entityInstance;
     private Set<PersonDTO> personContext;
     private PersonDTO personChosen;
 
-    public EntityIsPersonDTO(Entity entity, Set<PersonDTO> personContext) {
+    public EntityIsPersonDTO(EntityDTO entity, Set<PersonDTO> personContext) {
         this.entity = entity;
         this.personContext = personContext;
     }
 
-    public Entity getEntity() {
+    public EntityDTO getEntity() {
         return entity;
     }
 
-    public void setEntity(Entity entity) {
+    public void setEntity(EntityDTO entity) {
         this.entity = entity;
     }
 
-    public EntityInstance getEntityInstance() {
+    public String getEntityInstance() {
         return entityInstance;
     }
 
-    public void setEntityInstance(EntityInstance entityInstance) {
+    public void setEntityInstance(String entityInstance) {
         this.entityInstance = entityInstance;
     }
 

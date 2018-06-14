@@ -55,7 +55,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		return "DEF(" + getEntity().getFullPath() + ")";
 	}
 
-	public DefEntityConditionDTO getDTO() {
+	public DefEntityConditionDTO    getDTO() {
 		DefEntityConditionDTO eacDTO = new DefEntityConditionDTO();
 		eacDTO.setSpecId(getEntity().getDataModel().getSpecification().getSpecId());
 		eacDTO.setExtId(getExternalId());

@@ -263,8 +263,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
-        ResourceActivityWorkItemDTO workItemDTO = workItemDTOList.stream()
-                .map(ResourceActivityWorkItemDTO::new)
+        ActivityWorkItemDTO workItemDTO = workItemDTOList.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
@@ -281,6 +280,40 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
                 .flatMap(Collection::stream)
                 .filter(productInstance -> productInstance instanceof EntityInstance)
                 .allMatch(productInstance -> ((EntityInstance) productInstance).getPerson() != null));
+        assertTrue(spec.getResourceModel().getPersonSet().stream()
+                .anyMatch(person -> !person.getName().equals(person1.getName()) &&
+                        !person.getName().equals(person2.getName()) &&
+                        !person.getName().equals(person3.getName())));
+    }
+
+    @Test
+    public void executeGoalWorkItemEntityIsPerson() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                USERNAME_1,
+                PASSWORD_1,
+                new ArrayList<>()));
+
+        Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
+
+        GoalWorkItemDTO workItemDTO = workItemDTOList.stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        logger.debug("WORKITEM: {}", workItemDTO.print());
+
+        fillWorkItem(workItemDTO);
+
+        GoalWorkItem goalWorkItem = edi.executeGoalWorkItem(workItemDTO);
+
+        assertTrue(person1.getUser().getWorkItemSet().size() > 0);
+        assertTrue(person1.getUser().getWorkItemSet().contains(goalWorkItem));
+
+        assertTrue(spec.getResourceModel().getPersonSet().size() > 3);
+        assertTrue(goalWorkItem.getPostConditionSet().stream()
+                .map(PostWorkItemArgument_Base::getProductInstanceSet)
+                .flatMap(Collection::stream)
+                .filter(productInstance -> productInstance instanceof EntityInstance)
+                .allMatch(productInstance -> ((EntityInstance) productInstance).getPerson() != null));
+
         assertTrue(spec.getResourceModel().getPersonSet().stream()
                 .anyMatch(person -> !person.getName().equals(person1.getName()) &&
                         !person.getName().equals(person2.getName()) &&

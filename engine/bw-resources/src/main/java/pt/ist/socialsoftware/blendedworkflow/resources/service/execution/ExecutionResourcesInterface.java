@@ -12,8 +12,9 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceActivityWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceGoalWorkItemDTO;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -127,11 +128,27 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 	@Override
 	public Set<ActivityWorkItemDTO> getPendingActivityWorkItemSet(String specId, String instanceName) {
-		return super.getPendingActivityWorkItemSet(specId, instanceName);
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		Set<ActivityWorkItemDTO> activityWorkItemDTOs = new HashSet<>();
+
+		for (Activity activity : getPendingActivitySet(workflowInstance)) {
+			activityWorkItemDTOs.add(ResourceActivityWorkItemDTO.createActivityWorkItemDTO(workflowInstance, activity));
+		}
+
+		return activityWorkItemDTOs;
 	}
 
 	@Override
 	public Set<GoalWorkItemDTO> getPendingGoalWorkItemSet(String specId, String instanceName) {
-		return super.getPendingGoalWorkItemSet(specId, instanceName);
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		Set<GoalWorkItemDTO> goalWorkItemDTOs = new HashSet<>();
+
+		for (Goal goal : getPendingGoalSet(workflowInstance)) {
+			goalWorkItemDTOs.add(ResourceGoalWorkItemDTO.createGoalWorkItemDTO(workflowInstance, goal));
+		}
+
+		return goalWorkItemDTOs;
 	}
 }
