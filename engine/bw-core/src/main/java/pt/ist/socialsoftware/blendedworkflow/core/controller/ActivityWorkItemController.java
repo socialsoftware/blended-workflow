@@ -49,8 +49,8 @@ public class ActivityWorkItemController {
 		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
-		ActivityWorkItemDTO[] instances = edi.getLogActivityWorkItemSet(specId, instanceName).stream()
-				.map(awi -> awi.getDTO()).toArray(size -> new ActivityWorkItemDTO[size]);
+		ActivityWorkItemDTO[] instances = edi.getLogActivityWorkItemDTOSet(specId, instanceName).stream()
+				.toArray(ActivityWorkItemDTO[]::new);
 
 		return new ResponseEntity<>(instances, HttpStatus.OK);
 	}

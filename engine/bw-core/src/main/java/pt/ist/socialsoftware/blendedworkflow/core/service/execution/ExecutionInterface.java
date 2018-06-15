@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.service.execution;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,6 +96,11 @@ public class ExecutionInterface {
 		return workflowInstance.getLogActivityWorkItemList();
 	}
 
+	public List<ActivityWorkItemDTO> getLogActivityWorkItemDTOSet(String specId, String instanceName) {
+		return getLogActivityWorkItemSet(specId, instanceName).stream()
+				.map(ActivityWorkItem::getDTO).collect(Collectors.toList());
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDTO activityWorkItemDTO) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(activityWorkItemDTO.getSpecId(),
@@ -129,6 +135,11 @@ public class ExecutionInterface {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
 		return workflowInstance.getLogGoalWorkItemList();
+	}
+
+	public List<GoalWorkItemDTO> getLogGoalWorkItemDTOSet(String specId, String instanceName) {
+		return getLogGoalWorkItemSet(specId, instanceName).stream()
+				.map(GoalWorkItem::getDTO).collect(Collectors.toList());
 	}
 
 	@Atomic(mode = TxMode.WRITE)
