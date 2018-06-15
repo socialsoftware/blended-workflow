@@ -33,6 +33,23 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDTO implements Resource
         return resourceGoalWorkItemDTO;
     }
 
+    public static ResourceGoalWorkItemDTO fillGoalWorkItemDTO(GoalWorkItemDTO goalWorkItemDTO, GoalWorkItem goalWorkItem) {
+        ResourceGoalWorkItemDTO resourceGoalWorkItemDTO = new ResourceGoalWorkItemDTO(goalWorkItemDTO);
+
+        Set<EntityIsPersonDTO> entityIsPersonDTOSet = new HashSet<>();
+
+        goalWorkItem.getPostConditionSet().stream()
+                .flatMap(postWorkItemArgument -> postWorkItemArgument.getProductInstanceSet().stream())
+                .filter(EntityInstance.class::isInstance)
+                .map(EntityInstance.class::cast)
+                .filter(entityInstance -> entityInstance.getPerson() != null)
+                .forEach(entityInstance -> entityIsPersonDTOSet.add(new EntityIsPersonDTO(entityInstance.getDTO(), entityInstance.getPerson().getDTO())));
+
+        resourceGoalWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDTOSet);
+
+        return resourceGoalWorkItemDTO;
+    }
+
     public ResourceGoalWorkItemDTO(GoalWorkItemDTO goalWorkItemDTO) {
         super();
         setSpecId(goalWorkItemDTO.getSpecId());

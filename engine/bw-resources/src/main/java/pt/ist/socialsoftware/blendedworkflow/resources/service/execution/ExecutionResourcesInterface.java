@@ -18,6 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceGoalW
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -150,5 +151,19 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		}
 
 		return goalWorkItemDTOs;
+	}
+
+	@Override
+	public List<ActivityWorkItemDTO> getLogActivityWorkItemDTOSet(String specId, String instanceName) {
+		return getLogActivityWorkItemSet(specId, instanceName).stream()
+				.map(activityWorkItem -> ResourceActivityWorkItemDTO.fillActivityWorkItemDTO(activityWorkItem.getDTO(), activityWorkItem))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<GoalWorkItemDTO> getLogGoalWorkItemDTOSet(String specId, String instanceName) {
+		return getLogGoalWorkItemSet(specId, instanceName).stream()
+				.map(goalWorkItem -> ResourceGoalWorkItemDTO.fillGoalWorkItemDTO(goalWorkItem.getDTO(), goalWorkItem))
+				.collect(Collectors.toList());
 	}
 }

@@ -30,6 +30,23 @@ public class ResourceActivityWorkItemDTO extends ActivityWorkItemDTO implements 
         return resourceActivityWorkItemDTO;
     }
 
+    public static ResourceActivityWorkItemDTO fillActivityWorkItemDTO(ActivityWorkItemDTO activityWorkItemDTO, ActivityWorkItem activityWorkItem) {
+        ResourceActivityWorkItemDTO resourceActivityWorkItemDTO = new ResourceActivityWorkItemDTO(activityWorkItemDTO);
+
+        Set<EntityIsPersonDTO> entityIsPersonDTOSet = new HashSet<>();
+
+        activityWorkItem.getPostConditionSet().stream()
+                .flatMap(postWorkItemArgument -> postWorkItemArgument.getProductInstanceSet().stream())
+                .filter(EntityInstance.class::isInstance)
+                .map(EntityInstance.class::cast)
+                .filter(entityInstance -> entityInstance.getPerson() != null)
+                .forEach(entityInstance -> entityIsPersonDTOSet.add(new EntityIsPersonDTO(entityInstance.getDTO(), entityInstance.getPerson().getDTO())));
+
+        resourceActivityWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDTOSet);
+
+        return resourceActivityWorkItemDTO;
+    }
+
     public ResourceActivityWorkItemDTO(ActivityWorkItemDTO activityWorkItemDTO) {
         super();
         setSpecId(activityWorkItemDTO.getSpecId());

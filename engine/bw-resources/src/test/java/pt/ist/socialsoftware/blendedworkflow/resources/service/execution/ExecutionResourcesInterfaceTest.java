@@ -99,12 +99,16 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
         definitionGroup.getDefinitionGroupInstanceSet().add(definitionGroupInstanceDTO);
     }
 
+    private void fakeLogin(String username, String password) {
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+            username,
+            password,
+            new ArrayList<>()));
+    }
+
     @Test
     public void executeActivityWorkItem() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -122,10 +126,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
     @Test
     public void executeGoalWorkItem() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -143,10 +144,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
     @Test
     public void getLogActivityWorkItem() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -171,10 +169,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
     @Test
     public void getLogActivityWorkItemWithInvalidUser() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -186,10 +181,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         ActivityWorkItem activityWorkItem = edi.executeActivityWorkItem(workItemDTO);
 
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         List<ActivityWorkItem> workItems = edi.getLogActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -198,10 +190,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
     @Test
     public void getLogGoalWorkItem() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -213,10 +202,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         GoalWorkItem goalWorkItem = edi.executeGoalWorkItem(workItemDTO);
 
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_2,
-                PASSWORD_2,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_2, USERNAME_2);
 
         List<GoalWorkItem> workItems = edi.getLogGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -226,10 +212,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
     @Test
     public void getLogGoalWorkItemWithInvalidUser() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -241,10 +224,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         GoalWorkItem goalWorkItem = edi.executeGoalWorkItem(workItemDTO);
 
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_3,
-                PASSWORD_3,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_3, USERNAME_3);
 
         List<GoalWorkItem> workItems = edi.getLogGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -253,10 +233,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
     @Test
     public void executeActivityWorkItemEntityIsPerson() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -285,10 +262,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
     @Test
     public void executeGoalWorkItemEntityIsPerson() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -319,16 +293,14 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
     @Test
     public void executeActivityWorkItemEntityIsPersonWithPersonChosen() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceActivityWorkItemDTO workItemDTO = (ResourceActivityWorkItemDTO) workItemDTOList.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
+        logger.debug("WORKITEM: {}", workItemDTO.print());
 
         fillWorkItem(workItemDTO);
 
@@ -356,10 +328,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
     @Test
     public void executeGoalWorkItemEntityIsPersonWithPersonChosen() throws Exception {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-                USERNAME_1,
-                PASSWORD_1,
-                new ArrayList<>()));
+        fakeLogin(USERNAME_1, USERNAME_1);
 
         Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
@@ -389,5 +358,65 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
                 .filter(productInstance -> productInstance instanceof EntityInstance)
                 .map(EntityInstance.class::cast)
                 .allMatch(entityInstance -> entityInstance.getPerson() != null && entityInstance.getPerson().getName().equals(personChosen.getName())));
+    }
+
+    @Test
+    public void getActivityWorkItemLogWithPersonChosen() throws Exception {
+        fakeLogin(USERNAME_1, USERNAME_1);
+
+        Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
+
+        ResourceActivityWorkItemDTO workItemDTO = (ResourceActivityWorkItemDTO) workItemDTOList.stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        fillWorkItem(workItemDTO);
+
+        EntityIsPersonDTO entityIsPersonDTO = workItemDTO.getEntityIsPersonDTOSet().stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        PersonDTO personChosen = entityIsPersonDTO.getPersonContext().stream().findFirst().get();
+
+        entityIsPersonDTO.setPersonChosen(personChosen);
+
+        ActivityWorkItem activityWorkItem = edi.executeActivityWorkItem(workItemDTO);
+
+        fakeLogin(USERNAME_2, USERNAME_2);
+
+        List<ActivityWorkItemDTO> logWorkItems = edi.getLogActivityWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
+
+        ResourceActivityWorkItemDTO workItemToTest = (ResourceActivityWorkItemDTO) logWorkItems.stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        assertEquals(personChosen.getName(), workItemToTest.getEntityIsPersonDTOSet().stream().findFirst().get().getPersonChosen().getName());
+    }
+
+    @Test
+    public void getGoalWorkItemLogWithPersonChosen() throws Exception {
+        fakeLogin(USERNAME_1, USERNAME_1);
+
+        Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
+
+        ResourceGoalWorkItemDTO workItemDTO = (ResourceGoalWorkItemDTO) workItemDTOList.stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        fillWorkItem(workItemDTO);
+
+        EntityIsPersonDTO entityIsPersonDTO = workItemDTO.getEntityIsPersonDTOSet().stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        PersonDTO personChosen = entityIsPersonDTO.getPersonContext().stream().findFirst().get();
+
+        entityIsPersonDTO.setPersonChosen(personChosen);
+
+        GoalWorkItem activityWorkItem = edi.executeGoalWorkItem(workItemDTO);
+
+        fakeLogin(USERNAME_2, USERNAME_2);
+
+        List<GoalWorkItemDTO> logWorkItems = edi.getLogGoalWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
+
+        ResourceGoalWorkItemDTO workItemToTest = (ResourceGoalWorkItemDTO) logWorkItems.stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        assertEquals(personChosen.getName(), workItemToTest.getEntityIsPersonDTOSet().stream().findFirst().get().getPersonChosen().getName());
     }
 }
