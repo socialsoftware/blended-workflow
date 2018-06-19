@@ -1,11 +1,20 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.dto;
 
 public class UserDTO {
-    private long id;
+    private String id;
     private String username;
     private String password;
 
-    public long getId() {
+    public UserDTO(String id, String username) {
+        this.id = id;
+        this.username = username;
+    }
+
+    public UserDTO() {
+
+    }
+
+    public String getId() {
         return id;
     }
 

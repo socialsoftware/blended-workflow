@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 public class ResourceActivityWorkItemDTO extends ActivityWorkItemDTO implements ResourceWorkItemDTO {
     private Set<EntityIsPersonDTO> entityIsPersonDTOSet;
+    private UserDTO executionUser;
 
     public static ResourceActivityWorkItemDTO createActivityWorkItemDTO(WorkflowInstance workflowInstance, Activity activity) {
         ResourceActivityWorkItemDTO resourceActivityWorkItemDTO = new ResourceActivityWorkItemDTO(
@@ -44,6 +45,8 @@ public class ResourceActivityWorkItemDTO extends ActivityWorkItemDTO implements 
 
         resourceActivityWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDTOSet);
 
+        resourceActivityWorkItemDTO.setExecutionUser(activityWorkItem.getExecutionUser().getDTO());
+
         return resourceActivityWorkItemDTO;
     }
 
@@ -71,6 +74,16 @@ public class ResourceActivityWorkItemDTO extends ActivityWorkItemDTO implements 
     @Override
     public void setEntityIsPersonDTOSet(Set<EntityIsPersonDTO> entityIsPersonDTOSet) {
         this.entityIsPersonDTOSet = entityIsPersonDTOSet;
+    }
+
+    @Override
+    public UserDTO getExecutionUser() {
+        return executionUser;
+    }
+
+    @Override
+    public void setExecutionUser(UserDTO executionUser) {
+        this.executionUser = executionUser;
     }
 
     @Override

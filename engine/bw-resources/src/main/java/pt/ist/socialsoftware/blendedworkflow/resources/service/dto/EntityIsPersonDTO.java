@@ -3,13 +3,20 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.dto;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ProductInstanceDTO;
 
 import java.util.Set;
 
 public class EntityIsPersonDTO {
     private EntityDTO entity;
+    private ProductInstanceDTO entityInstance;
     private Set<PersonDTO> personContext;
     private PersonDTO personChosen;
+
+    public EntityIsPersonDTO(ProductInstanceDTO entityInstance, PersonDTO personChosen) {
+        this.entityInstance = entityInstance;
+        this.personChosen = personChosen;
+    }
 
     public EntityIsPersonDTO(EntityDTO entity, Set<PersonDTO> personContext) {
         this.entity = entity;
@@ -38,5 +45,13 @@ public class EntityIsPersonDTO {
 
     public void setPersonChosen(PersonDTO personChosen) {
         this.personChosen = personChosen;
+    }
+
+    public ProductInstanceDTO getEntityInstance() {
+        return entityInstance;
+    }
+
+    public void setEntityInstance(ProductInstanceDTO entityInstance) {
+        this.entityInstance = entityInstance;
     }
 }

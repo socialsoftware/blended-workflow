@@ -419,4 +419,51 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         assertEquals(personChosen.getName(), workItemToTest.getEntityIsPersonDTOSet().stream().findFirst().get().getPersonChosen().getName());
     }
+
+    @Test
+    public void getActivityWorkItemLogContainsExecutionUser() throws Exception {
+        fakeLogin(USERNAME_1, USERNAME_1);
+
+        Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
+
+        ResourceActivityWorkItemDTO workItemDTO = (ResourceActivityWorkItemDTO) workItemDTOList.stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        fillWorkItem(workItemDTO);
+
+        ActivityWorkItem activityWorkItem = edi.executeActivityWorkItem(workItemDTO);
+
+        fakeLogin(USERNAME_2, USERNAME_2);
+
+        List<ActivityWorkItemDTO> logWorkItems = edi.getLogActivityWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
+
+        ResourceActivityWorkItemDTO workItemToTest = (ResourceActivityWorkItemDTO) logWorkItems.stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        assertEquals(USERNAME_1, workItemToTest.getExecutionUser().getUsername());
+    }
+
+    @Test
+    public void getGoalWorkItemLogContainsExecutionUser() throws Exception {
+        fakeLogin(USERNAME_1, USERNAME_1);
+
+        Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
+
+        ResourceGoalWorkItemDTO workItemDTO = (ResourceGoalWorkItemDTO) workItemDTOList.stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        fillWorkItem(workItemDTO);
+
+        GoalWorkItem goalWorkItem = edi.executeGoalWorkItem(workItemDTO);
+
+        fakeLogin(USERNAME_2, USERNAME_2);
+
+        List<GoalWorkItemDTO> logWorkItems = edi.getLogGoalWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
+
+        ResourceGoalWorkItemDTO workItemToTest = (ResourceGoalWorkItemDTO) logWorkItems.stream()
+                .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+
+        assertEquals(USERNAME_1, workItemToTest.getExecutionUser().getUsername());
+    }
+
 }
