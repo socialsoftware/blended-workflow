@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprCommonalityDTO;
 
 public abstract class RALExprCommonality extends RALExprCommonality_Base {
@@ -37,5 +39,10 @@ public abstract class RALExprCommonality extends RALExprCommonality_Base {
     public void delete() {
         setPersonExpr(null);
         super.delete();
+    }
+
+    @Override
+    public void isMergable(RALExpression expression) {
+        getPersonExpr().isMergable(expression);
     }
 }

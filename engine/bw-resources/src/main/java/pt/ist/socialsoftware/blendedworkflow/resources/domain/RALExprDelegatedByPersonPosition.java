@@ -31,5 +31,10 @@ public class RALExprDelegatedByPersonPosition extends RALExprDelegatedByPersonPo
                 .filter(person -> person.getPositionSet().stream().anyMatch(position -> positions.contains(position)))
                 .collect(Collectors.toList());
     }
-    
+
+    @Override
+    public void isMergable(RALExpression expression) {
+        getPersonExpr().isMergable(expression);
+    }
+
 }

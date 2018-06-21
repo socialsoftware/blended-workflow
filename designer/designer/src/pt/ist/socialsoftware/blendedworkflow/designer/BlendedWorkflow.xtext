@@ -159,17 +159,17 @@ ResourceRules:
 
 EntityIsPerson:
 	entity = [Entity] 'IS' 'PERSON' ('{' 
-			persons += [DataPerson] (',' persons += [DataPerson])*
+			persons += DataPerson (',' persons += DataPerson)*
 		'}'
 	)?
 ;
 
 DataPerson:
-	name = QualifiedName '[' assignments += [DataAssignment] (',' assignments += [DataAssignment])* ']'
+	name = ID '[' assignments += DataAssignment (',' assignments += DataAssignment)* ']'
 ;
 
 DataAssignment:
-	field = QualifiedName '=' value = STRING
+	field = ID '=' value = STRING
 ;
 
 ResourceRule:

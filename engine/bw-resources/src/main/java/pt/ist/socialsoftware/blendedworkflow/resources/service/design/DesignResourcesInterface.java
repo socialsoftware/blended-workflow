@@ -6,12 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
@@ -49,38 +44,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprAndDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprAnyoneDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprDelegatedByPersonPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprDelegatedByPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprDelegatesToPersonPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprDelegatesToPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHasCapabilityDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHasPositionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHasRoleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHasUnitDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHistoryExecutingDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHistoryInformedDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprIsPersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprIsPersonDataObjectDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprIsPersonInTaskDutyDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprNotDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprOrDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprReportedByPersonPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprReportedByPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprReportsToPersonPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprReportsToPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprSharesPositionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprSharesRoleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprSharesUnitDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RoleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.xml.ResourceXmlExport;
 
 public class DesignResourcesInterface extends DesignInterface {
@@ -276,5 +240,26 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		return exporter.export(spec);
 		// logger.debug(exporter.export(spec));
+	}
+
+	@Override
+	public Activity mergeActivities(String specId, String newActivityName, String description, String activityNameOne, String activityNameTwo) {
+		Specification spec = getSpecBySpecId(specId);
+		Activity activityOne = getActivityByName(spec, activityNameOne);
+		Activity activityTwo = getActivityByName(spec, activityNameTwo);
+
+		RALExpression responsibleExpr1 = activityOne.getResponsibleFor();
+		RALExpression responsibleExpr2 = activityTwo.getResponsibleFor();
+		RALExpression informsExpr1 = activityOne.getInforms();
+		RALExpression informsExpr2 = activityTwo.getInforms();
+
+		spec.getResourceModel().cleanActivity(activityOne);
+		spec.getResourceModel().cleanActivity(activityTwo);
+		Activity activityMerged = super.mergeActivities(specId, newActivityName, description, activityNameOne, activityNameTwo);
+
+		return spec.getResourceModel().mergeActivities(
+				responsibleExpr1, responsibleExpr2,
+				informsExpr1, informsExpr2,
+				activityMerged, MergeType.RELAXED);
 	}
 }

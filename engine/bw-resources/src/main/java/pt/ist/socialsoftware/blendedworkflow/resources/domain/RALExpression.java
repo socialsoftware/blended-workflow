@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
 import java.util.List;
@@ -72,6 +73,8 @@ public abstract class RALExpression extends RALExpression_Base {
     public boolean hasEligiblePerson(Person person, WorkflowInstance history) {
         return getEligibleResources(history).contains(person);
     }
+
+    public abstract void isMergable(RALExpression expression);
 
     public Set<Person> getPersonSet() {
         return getResourceModel().getPersonSet();

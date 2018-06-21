@@ -60,4 +60,9 @@ public class RALExprSharesRole extends RALExprSharesRole_Base implements RALExpr
         }).collect(toList());
     }
 
+    @Override
+    public void isMergable(RALExpression expression) {
+        getPersonExpr().isMergable(expression);
+    }
+
 }

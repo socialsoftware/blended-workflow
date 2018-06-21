@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 import javafx.geometry.Pos;
 import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWError;
@@ -10,6 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.MergeType;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +27,13 @@ public class ResourceModel extends ResourceModel_Base {
 
     public void clean() {
 		getEntityIsPersonSet().stream().forEach(e -> removeEntityIsPerson(e));
-		getRalExpressionSet().stream().forEach(e -> e.delete());
-		getPersonSet().stream().forEach(p -> p.delete());
-		getPositionSet().stream().forEach(p -> p.delete());
-		getCapabilitySet().stream().forEach(c -> c.delete());
-		getRoleSet().stream().forEach(r -> r.delete());
-		getUnitSet().stream().forEach(u -> u.delete());
-		getSpec().getBlendedWorkflow().getUsersSet().stream().forEach(u -> u.delete());
+		getRalExpressionSet().stream().forEach(RALExpression::delete);
+		getPersonSet().stream().forEach(Person::delete);
+		getPositionSet().stream().forEach(Position::delete);
+		getCapabilitySet().stream().forEach(Capability::delete);
+		getRoleSet().stream().forEach(Role::delete);
+		getUnitSet().stream().forEach(Unit::delete);
+		getSpec().getBlendedWorkflow().getUsersSet().stream().forEach(User::delete);
     }
 
 	public void delete() {
@@ -176,5 +178,70 @@ public class ResourceModel extends ResourceModel_Base {
 	public boolean checkEntityIsPerson(Product product) {
 		return (product instanceof Entity) && getEntityIsPersonSet().stream()
 				.anyMatch(e -> e.getName().equals(product.getName()));
+	}
+
+	public Activity mergeActivities(RALExpression responsibleExpr1, RALExpression responsibleExpr2,
+									RALExpression informsExpr1, RALExpression informsExpr2,
+									Activity activityMerged, MergeType mode) {
+		mergeActivitiesResponsibleForExpr(responsibleExpr1, responsibleExpr2, activityMerged, mode);
+
+		mergeActivitiesInformsExpr(informsExpr1, informsExpr2, activityMerged, mode);
+
+		return activityMerged;
+	}
+
+	private RALExpression getMergedExpr(MergeType mode, RALExpression expressionA1, RALExpression expressionA2) {
+		RALExpression expressionMerged;
+		switch (mode) {
+			case RESTRICTED:
+				expressionMerged = new RALExprAnd(this, expressionA1, expressionA2);
+				break;
+			case RELAXED:
+				expressionMerged = new RALExprOr(this, expressionA1, expressionA2);
+				break;
+			default:
+				throw new RMException(RMErrorType.INVALID_MERGE_TYPE);
+		}
+
+		return expressionMerged;
+	}
+
+	private void mergeActivitiesResponsibleForExpr(RALExpression expressionA1, RALExpression expressionA2, Activity activityMerged, MergeType mode) {
+		if (expressionA1 == null) {
+			activityMerged.setResponsibleFor(expressionA2);
+			return;
+		}
+		if (expressionA2 == null) {
+			activityMerged.setResponsibleFor(expressionA1);
+			return;
+		}
+
+		expressionA1.isMergable(expressionA2);
+
+		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		activityMerged.setResponsibleFor(expressionMerged);
+	}
+
+	private void mergeActivitiesInformsExpr(RALExpression expressionA1, RALExpression expressionA2, Activity activityMerged, MergeType mode) {
+		if (expressionA1 == null) {
+			activityMerged.setInforms(expressionA2);
+			return;
+		}
+		if (expressionA2 == null) {
+			activityMerged.setInforms(expressionA1);
+			return;
+		}
+
+		expressionA1.isMergable(expressionA2);
+
+		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		activityMerged.setInforms(expressionMerged);
+	}
+
+	public void cleanActivity(Activity activityOne) {
+		activityOne.setResponsibleFor(null);
+		activityOne.setInforms(null);
 	}
 }

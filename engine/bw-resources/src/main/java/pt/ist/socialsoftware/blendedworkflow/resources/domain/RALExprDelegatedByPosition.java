@@ -28,5 +28,10 @@ public class RALExprDelegatedByPosition extends RALExprDelegatedByPosition_Base 
                 .collect(Collectors.toList());
 
     }
-    
+
+    @Override
+    public void isMergable(RALExpression expression) {
+
+    }
+
 }

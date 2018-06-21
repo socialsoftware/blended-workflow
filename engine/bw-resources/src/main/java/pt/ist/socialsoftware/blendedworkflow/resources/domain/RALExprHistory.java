@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
+
 public abstract class RALExprHistory extends RALExprHistory_Base {
     public enum Quantifier {
         LEAST("LEAST"),
@@ -33,5 +36,9 @@ public abstract class RALExprHistory extends RALExprHistory_Base {
         setDataField(null);
         super.delete();
     }
-    
+
+    @Override
+    public void isMergable(RALExpression expression) {
+        throw new RMException(RMErrorType.INVALID_MERGE, "The RALExpression is not mergable.");
+    }
 }

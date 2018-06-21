@@ -18,4 +18,9 @@ public class RALExprAnyone extends RALExprAnyone_Base {
     public List<Person> getEligibleResources(WorkflowInstance history) {
         return getResourceModel().getPersonSet().stream().sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).collect(Collectors.toList());
     }
+
+    @Override
+    public void isMergable(RALExpression expression) {
+
+    }
 }

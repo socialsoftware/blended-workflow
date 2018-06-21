@@ -36,5 +36,9 @@ public class RALExprReportedByPersonPosition extends pt.ist.socialsoftware.blend
                 .filter(person -> person.getPositionSet().stream().anyMatch(position -> positions.contains(position)))
                 .collect(Collectors.toList());
     }
-    
+
+    @Override
+    public void isMergable(RALExpression expression) {
+        getPersonExpr().isMergable(expression);
+    }
 }

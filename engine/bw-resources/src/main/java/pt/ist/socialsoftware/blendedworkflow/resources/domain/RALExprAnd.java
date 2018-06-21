@@ -26,5 +26,11 @@ public class RALExprAnd extends RALExprAnd_Base {
                 .filter(person -> getRightExpression().getEligibleResources(history).contains(person))
                 .collect(Collectors.toList());
     }
-    
+
+    @Override
+    public void isMergable(RALExpression expression) {
+        getLeftExpression().isMergable(expression);
+        getRightExpression().isMergable(expression);
+    }
+
 }

@@ -25,4 +25,9 @@ public class RALExprHasPosition extends RALExprHasPosition_Base implements RALEx
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void isMergable(RALExpression expression) {
+
+    }
+
 }

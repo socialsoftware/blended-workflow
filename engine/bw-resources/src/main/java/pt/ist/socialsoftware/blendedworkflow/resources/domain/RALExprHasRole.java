@@ -40,4 +40,9 @@ public class RALExprHasRole extends RALExprHasRole_Base implements RALExprDeniab
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public void isMergable(RALExpression expression) {
+
+    }
+
 }

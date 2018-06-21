@@ -1028,7 +1028,7 @@ public class DesignInterface {
 		return conditions;
 	}
 
-	private Activity getActivityByName(Specification spec, String name) {
+	protected Activity getActivityByName(Specification spec, String name) {
 		return spec.getActivityModel().getActivitySet().stream().filter(t -> t.getName().equals(name)).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ACTIVITY_NAME, name));
 	}

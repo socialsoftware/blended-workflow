@@ -30,4 +30,8 @@ public class RALExprNot extends RALExprNot_Base {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void isMergable(RALExpression expression) {
+        getExpression().isMergable(expression);
+    }
 }

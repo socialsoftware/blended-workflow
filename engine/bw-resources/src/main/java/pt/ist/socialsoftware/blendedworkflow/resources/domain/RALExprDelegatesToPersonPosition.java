@@ -32,4 +32,9 @@ public class RALExprDelegatesToPersonPosition extends RALExprDelegatesToPersonPo
                 .collect(Collectors.toList());
 
     }
+
+    @Override
+    public void isMergable(RALExpression expression) {
+        getPersonExpr().isMergable(expression);
+    }
 }

@@ -23,4 +23,10 @@ public class RALExprIsPerson extends RALExprIsPerson_Base {
         return Arrays.asList(getPerson());
     }
 
+    @Override
+    public void isMergable(RALExpression expression) {
+
+    }
+
+
 }

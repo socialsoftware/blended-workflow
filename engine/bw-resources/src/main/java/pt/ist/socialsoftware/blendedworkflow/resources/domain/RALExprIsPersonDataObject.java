@@ -43,4 +43,9 @@ public class RALExprIsPersonDataObject extends RALExprIsPersonDataObject_Base {
                 .collect(toList());
     }
 
+    @Override
+    public void isMergable(RALExpression expression) {
+        throw new RMException(RMErrorType.INVALID_MERGE, "The RALExpression is not mergable.");
+    }
+
 }

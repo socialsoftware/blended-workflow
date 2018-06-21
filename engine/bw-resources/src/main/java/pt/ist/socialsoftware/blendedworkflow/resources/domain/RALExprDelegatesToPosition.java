@@ -1,6 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,5 +29,10 @@ public class RALExprDelegatesToPosition extends RALExprDelegatesToPosition_Base 
                 .filter(person -> person.getPositionSet().stream().anyMatch(position -> positions.contains(position)))
                 .collect(Collectors.toList());
     }
-    
+
+    @Override
+    public void isMergable(RALExpression expression) {
+        throw new RMException(RMErrorType.INVALID_MERGE, "The RALExpression is not mergable.");
+    }
+
 }

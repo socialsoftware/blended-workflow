@@ -25,4 +25,9 @@ public class RALExprHasCapability extends RALExprHasCapability_Base implements R
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void isMergable(RALExpression expression) {
+        
+    }
+
 }

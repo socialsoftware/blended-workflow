@@ -27,5 +27,12 @@ public class RALExprOr extends RALExprOr_Base {
         list.addAll(getRightExpression().getEligibleResources(history));
         return list;
     }
-    
+
+    @Override
+    public void isMergable(RALExpression expression) {
+        getLeftExpression().isMergable(expression);
+        getRightExpression().isMergable(expression);
+    }
+
+
 }

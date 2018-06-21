@@ -28,4 +28,9 @@ public class RALExprReportsToPosition extends RALExprReportsToPosition_Base {
                 .filter(person -> person.getPositionSet().stream().anyMatch(position -> positions.contains(position)))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void isMergable(RALExpression expression) {
+
+    }
 }

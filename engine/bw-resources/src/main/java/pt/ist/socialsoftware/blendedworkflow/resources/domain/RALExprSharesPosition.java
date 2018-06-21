@@ -36,4 +36,9 @@ public class RALExprSharesPosition extends RALExprSharesPosition_Base implements
         }).collect(toList());
     }
 
+    @Override
+    public void isMergable(RALExpression expression) {
+        getPersonExpr().isMergable(expression);
+    }
+
 }

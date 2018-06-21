@@ -25,4 +25,9 @@ public class RALExprHasUnit extends RALExprHasUnit_Base {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void isMergable(RALExpression expression) {
+
+    }
+
 }
