@@ -42,7 +42,7 @@ pred hasActivityPermissions(s, s': AbstractSecureState, pre_entDefs: set Obj, pr
 		hasExecOperationPermission[s, operationObjects[pre_entDefs, pre_attDefs, post_entDefs, post_attDefs, post_muls], op, usrSource]
 	}
 	else {
-	some role: op.(AccessControlRules.propagation) | role in usrTarget.(AccessControlRules.u_roles) and
+	some role: op.(AccessControlRules.delegation) | role in usrTarget.(AccessControlRules.u_roles) and
 		(hasActivityResourcesPermissions[s, s', pre_entDefs, pre_attDefs, post_entDefs, post_attDefs, post_muls, usrSource, usrTarget] or 
 		hasExecOperationPermission[s, operationObjects[pre_entDefs, pre_attDefs, post_entDefs, post_attDefs, post_muls], op, usrSource] or
 		hasExecOperationPermission[s, operationObjects[pre_entDefs, pre_attDefs, post_entDefs, post_attDefs, post_muls], op, usrTarget])
@@ -78,12 +78,12 @@ pred hasActivityResourcesPermissions(s, s': AbstractSecureState, pre_entDefs: se
 *ACTIVITY EXECUTION
 **/
 pred secureActivity(s, s': AbstractSecureState, pre_entDefs: set Obj, pre_attDefs: set Obj -> FName, 
-										post_entDefs: set Obj, post_attDefs: set Obj -> FName,  post_muls: set Obj -> FName -> Obj, op: Operation,  usrSource, usrTarget: User ){
+										post_entDefs: set Obj, post_attDefs: set Obj -> FName,  post_muls: set Obj -> FName -> Obj, op: Operation,  usrSource, usrTarget, register: User ){
 	hasActivityPermissions[s, s', pre_entDefs, pre_attDefs, post_entDefs, post_attDefs, post_muls, op, usrSource, usrTarget]
 	preCondition[s, pre_entDefs, pre_attDefs]
 	postCondition[s, s', post_entDefs, post_attDefs, post_muls]
-	addActivityToLog[s, s', pre_entDefs, pre_attDefs, 
-									post_entDefs, post_attDefs, post_muls, op, usrSource, usrTarget]
+//	addActivityToLog[s, s', pre_entDefs, pre_attDefs, 
+//									post_entDefs, post_attDefs, post_muls, op, usrSource, usrTarget]
 }
 
 pred ACActInv(s: AbstractSecureState){
