@@ -45,7 +45,7 @@ app.factory('activityRepository', function($http) {
 					+ "/activitymodel/activities/merge";
 
 			return $http.post(url, {
-				"spec" : spec,
+				"specId" : spec,
 				"nameOne" : activityOne,
 				"nameTwo" : activityTwo,
 				"newName" : newActivityName
