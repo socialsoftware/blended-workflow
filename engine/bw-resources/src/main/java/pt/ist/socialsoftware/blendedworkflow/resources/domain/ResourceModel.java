@@ -4,6 +4,7 @@ import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
@@ -235,8 +236,57 @@ public class ResourceModel extends ResourceModel_Base {
 		activityMerged.setInforms(expressionMerged);
 	}
 
-	public void cleanActivity(Activity activityOne) {
-		activityOne.setResponsibleFor(null);
-		activityOne.setInforms(null);
+	public void cleanActivity(Activity activity) {
+		activity.setResponsibleFor(null);
+		activity.setInforms(null);
+	}
+
+    public void cleanGoal(Goal goal) {
+		goal.setResponsibleFor(null);
+		goal.setInforms(null);
+    }
+
+	public Goal mergeGoals(RALExpression responsibleExpr1, RALExpression responsibleExpr2,
+									RALExpression informsExpr1, RALExpression informsExpr2,
+									Goal goalMerged, MergeResourcesPolicy mode) {
+		mergeGoalsResponsibleForExpr(responsibleExpr1, responsibleExpr2, goalMerged, mode);
+
+		mergeGoalsInformsExpr(informsExpr1, informsExpr2, goalMerged, mode);
+
+		return goalMerged;
+	}
+
+	private void mergeGoalsResponsibleForExpr(RALExpression expressionA1, RALExpression expressionA2, Goal goalMerged, MergeResourcesPolicy mode) {
+		if (expressionA1 == null) {
+			goalMerged.setResponsibleFor(expressionA2);
+			return;
+		}
+		if (expressionA2 == null) {
+			goalMerged.setResponsibleFor(expressionA1);
+			return;
+		}
+
+		expressionA1.isMergable(expressionA2);
+
+		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		goalMerged.setResponsibleFor(expressionMerged);
+	}
+
+	private void mergeGoalsInformsExpr(RALExpression expressionA1, RALExpression expressionA2, Goal goalMerged, MergeResourcesPolicy mode) {
+		if (expressionA1 == null) {
+			goalMerged.setInforms(expressionA2);
+			return;
+		}
+		if (expressionA2 == null) {
+			goalMerged.setInforms(expressionA1);
+			return;
+		}
+
+		expressionA1.isMergable(expressionA2);
+
+		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		goalMerged.setInforms(expressionMerged);
 	}
 }

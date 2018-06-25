@@ -187,4 +187,131 @@ public class MergeTest extends TeardownRollbackTest {
         assertNull(activity.getResponsibleFor());
         assertNull(activity.getInforms());
     }
+
+    @Test
+    public void mergeGoalsWithBothAssignments() throws Exception {
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                new RALExprIsPersonDTO(USERNAME_1)
+        ));
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
+                new RALExprIsPersonDTO(USERNAME_2)
+        ));
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1 + "." + ATTR_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                new RALExprHasPositionDTO(POSITION)
+        ));
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1 + "." + ATTR_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
+                new RALExprIsPersonDTO(USERNAME_1)
+        ));
+
+        designer.generateConditionModel(SPEC_ID);
+        designer.generateActivityModel(SPEC_ID);
+        designer.generateGoalModel(SPEC_ID);
+        designer.generateEnrichedModels(SPEC_ID);
+
+        designer.mergeGoals(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1, MergeResourcesPolicy.RELAXED));
+
+        Set<Goal> goals = spec.getGoalModel().getGoalSet();
+        assertEquals(1, goals.size());
+        Goal goal = goals.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_ACTIVITIES_AVAILABLE));
+        assertEquals(RALExprOr.class, goal.getResponsibleFor().getClass());
+        RALExprOr expr = (RALExprOr) goal.getResponsibleFor();
+        assertEquals(RALExprIsPerson.class, expr.getLeftExpression().getClass());
+        assertEquals(RALExprHasPosition.class, expr.getRightExpression().getClass());
+
+        assertEquals(RALExprOr.class, goal.getInforms().getClass());
+        expr = (RALExprOr) goal.getInforms();
+        assertEquals(RALExprIsPerson.class, expr.getLeftExpression().getClass());
+        assertEquals(RALExprIsPerson.class, expr.getRightExpression().getClass());
+    }
+
+    @Test
+    public void mergeGoalsWithPreviousAssignment() throws Exception {
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                new RALExprIsPersonDTO(USERNAME_1)
+        ));
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
+                new RALExprIsPersonDTO(USERNAME_2)
+        ));
+
+        designer.generateConditionModel(SPEC_ID);
+        designer.generateActivityModel(SPEC_ID);
+        designer.generateGoalModel(SPEC_ID);
+        designer.generateEnrichedModels(SPEC_ID);
+
+        designer.mergeGoals(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1, MergeResourcesPolicy.RELAXED));
+
+        Set<Goal> goals = spec.getGoalModel().getGoalSet();
+        assertEquals(1, goals.size());
+        Goal goal = goals.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_ACTIVITIES_AVAILABLE));
+        assertEquals(RALExprIsPerson.class, goal.getResponsibleFor().getClass());
+        assertEquals(RALExprIsPerson.class, goal.getInforms().getClass());
+    }
+
+    @Test
+    public void mergeGoalsWithForwardAssignment() throws Exception {
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1 + "." + ATTR_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                new RALExprIsPersonDTO(USERNAME_1)
+        ));
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1 + "." + ATTR_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
+                new RALExprIsPersonDTO(USERNAME_2)
+        ));
+
+        designer.generateConditionModel(SPEC_ID);
+        designer.generateActivityModel(SPEC_ID);
+        designer.generateGoalModel(SPEC_ID);
+        designer.generateEnrichedModels(SPEC_ID);
+
+        designer.mergeGoals(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1, MergeResourcesPolicy.RELAXED));
+
+        Set<Goal> goals = spec.getGoalModel().getGoalSet();
+        assertEquals(1, goals.size());
+        Goal goal = goals.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_ACTIVITIES_AVAILABLE));
+        assertEquals(RALExprIsPerson.class, goal.getResponsibleFor().getClass());
+        assertEquals(RALExprIsPerson.class, goal.getInforms().getClass());
+    }
+
+    @Test
+    public void mergeGoalsWithNoAssignments() throws Exception {
+        designer.generateConditionModel(SPEC_ID);
+        designer.generateActivityModel(SPEC_ID);
+        designer.generateGoalModel(SPEC_ID);
+        designer.generateEnrichedModels(SPEC_ID);
+
+        designer.mergeGoals(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1,MergeResourcesPolicy.RELAXED));
+
+        Set<Goal> goals = spec.getGoalModel().getGoalSet();
+        assertEquals(1, goals.size());
+        Goal goal = goals.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_ACTIVITIES_AVAILABLE));
+        assertNull(goal.getResponsibleFor());
+        assertNull(goal.getInforms());
+    }
 }

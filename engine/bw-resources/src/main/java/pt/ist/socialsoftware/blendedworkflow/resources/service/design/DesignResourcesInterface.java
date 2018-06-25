@@ -241,4 +241,29 @@ public class DesignResourcesInterface extends DesignInterface {
 			return activityMerged;
 		}
 	}
+
+	@Override
+	public Goal mergeGoals(MergeOperationDto mergeOperationDto) {
+		Specification spec = getSpecBySpecId(mergeOperationDto.getSpecId());
+		Goal goalOne = getGoalByName(spec.getSpecId(), mergeOperationDto.getNameOne());
+		Goal goalTwo = getGoalByName(spec.getSpecId(), mergeOperationDto.getNameTwo());
+
+		RALExpression responsibleExpr1 = goalOne.getResponsibleFor();
+		RALExpression responsibleExpr2 = goalTwo.getResponsibleFor();
+		RALExpression informsExpr1 = goalOne.getInforms();
+		RALExpression informsExpr2 = goalTwo.getInforms();
+
+		spec.getResourceModel().cleanGoal(goalOne);
+		spec.getResourceModel().cleanGoal(goalTwo);
+
+		Goal goalMerged = super.mergeGoals(mergeOperationDto);
+		if (mergeOperationDto instanceof ResourcesMergeOperationDto) {
+			return spec.getResourceModel().mergeGoals(
+					responsibleExpr1, responsibleExpr2,
+					informsExpr1, informsExpr2,
+					goalMerged, ((ResourcesMergeOperationDto) mergeOperationDto).getPolicy());
+		} else {
+			return goalMerged;
+		}
+	}
 }
