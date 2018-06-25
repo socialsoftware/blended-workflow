@@ -3,20 +3,16 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
-import pt.ist.socialsoftware.blendedworkflow.resources.ResourcesApplication;
-import pt.ist.socialsoftware.blendedworkflow.resources.security.BlendedUserDetails;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UserDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UserDTO;
 
-import java.security.Principal;
 import java.util.Optional;
 
 public class User extends User_Base {

@@ -18,7 +18,8 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.req.ResourcesMergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.xml.ResourceXmlExport;
 
 public class DesignResourcesInterface extends DesignInterface {
@@ -231,10 +232,13 @@ public class DesignResourcesInterface extends DesignInterface {
 		spec.getResourceModel().cleanActivity(activityTwo);
 
 		Activity activityMerged = super.mergeActivities(mergeOperationDto);
-
-		return spec.getResourceModel().mergeActivities(
-				responsibleExpr1, responsibleExpr2,
-				informsExpr1, informsExpr2,
-				activityMerged, MergeResourcesPolicy.RELAXED);
+		if (mergeOperationDto instanceof ResourcesMergeOperationDto) {
+			return spec.getResourceModel().mergeActivities(
+					responsibleExpr1, responsibleExpr2,
+					informsExpr1, informsExpr2,
+					activityMerged, ((ResourcesMergeOperationDto) mergeOperationDto).getPolicy());
+		} else {
+			return activityMerged;
+		}
 	}
 }

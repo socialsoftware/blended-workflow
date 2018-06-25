@@ -7,7 +7,6 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
 
 import static org.junit.Assert.*;
 

@@ -18,11 +18,11 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.Position;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RoleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.CapabilityDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PersonDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PositionDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RoleDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UnitDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.utils.ResourcesFactory;
 
 @RestController

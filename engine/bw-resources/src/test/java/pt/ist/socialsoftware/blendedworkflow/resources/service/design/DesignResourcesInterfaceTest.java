@@ -10,7 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.*;
 
 import java.util.Arrays;
 

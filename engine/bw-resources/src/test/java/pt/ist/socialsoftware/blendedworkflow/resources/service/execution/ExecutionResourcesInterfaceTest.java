@@ -12,7 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.*;
 
 import java.util.*;
 

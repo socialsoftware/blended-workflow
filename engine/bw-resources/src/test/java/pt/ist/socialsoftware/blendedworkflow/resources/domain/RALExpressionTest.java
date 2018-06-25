@@ -7,9 +7,9 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprIsPersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprOrDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RALExprIsPersonDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RALExprOrDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceRuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.execution.ExecutionResourcesInterface;
 
 import java.util.ArrayList;

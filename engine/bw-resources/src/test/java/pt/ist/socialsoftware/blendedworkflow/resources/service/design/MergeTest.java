@@ -3,9 +3,6 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.w3c.dom.Attr;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
@@ -13,7 +10,8 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperation
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.req.ResourcesMergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.execution.ExecutionResourcesInterface;
 
 import java.util.*;
@@ -98,7 +96,7 @@ public class MergeTest extends TeardownRollbackTest {
         designer.generateGoalModel(SPEC_ID);
         designer.generateEnrichedModels(SPEC_ID);
 
-        designer.mergeActivities(new MergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1));
+        designer.mergeActivities(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1, MergeResourcesPolicy.RELAXED));
 
         Set<Activity> activities = spec.getActivityModel().getActivitySet();
         assertEquals(1, activities.size());
@@ -135,7 +133,7 @@ public class MergeTest extends TeardownRollbackTest {
         designer.generateGoalModel(SPEC_ID);
         designer.generateEnrichedModels(SPEC_ID);
 
-        designer.mergeActivities(new MergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1));
+        designer.mergeActivities(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1, MergeResourcesPolicy.RELAXED));
 
         Set<Activity> activities = spec.getActivityModel().getActivitySet();
         assertEquals(1, activities.size());
@@ -165,7 +163,7 @@ public class MergeTest extends TeardownRollbackTest {
         designer.generateGoalModel(SPEC_ID);
         designer.generateEnrichedModels(SPEC_ID);
 
-        designer.mergeActivities(new MergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1));
+        designer.mergeActivities(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1, MergeResourcesPolicy.RELAXED));
 
         Set<Activity> activities = spec.getActivityModel().getActivitySet();
         assertEquals(1, activities.size());
@@ -181,7 +179,7 @@ public class MergeTest extends TeardownRollbackTest {
         designer.generateGoalModel(SPEC_ID);
         designer.generateEnrichedModels(SPEC_ID);
 
-        designer.mergeActivities(new MergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1));
+        designer.mergeActivities(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1,MergeResourcesPolicy.RELAXED));
 
         Set<Activity> activities = spec.getActivityModel().getActivitySet();
         assertEquals(1, activities.size());

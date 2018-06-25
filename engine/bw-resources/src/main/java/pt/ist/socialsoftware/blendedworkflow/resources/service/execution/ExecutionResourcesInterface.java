@@ -12,8 +12,8 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceActivityWorkItemDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceGoalWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceActivityWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceGoalWorkItemDTO;
 
 import java.util.HashSet;
 import java.util.List;

@@ -4,10 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PositionDTO;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

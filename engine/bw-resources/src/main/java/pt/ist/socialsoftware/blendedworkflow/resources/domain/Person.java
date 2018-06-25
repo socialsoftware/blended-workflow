@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PersonDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PersonDTO;
 
 import java.util.List;
 import java.util.Optional;

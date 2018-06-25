@@ -1,9 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprCommonalityDTO;
-
 public abstract class RALExprCommonality extends RALExprCommonality_Base {
     public enum Amount {
         SOME("SOME"),

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UnitDTO;
 
 public class Unit extends Unit_Base {
     private static Logger logger = LoggerFactory.getLogger(Unit.class);
