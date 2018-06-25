@@ -54,7 +54,7 @@ fact acrules{
 				{DomainEpisodeDoctor -> {WriteReportActivity + WriteReportGoal}}
 			}	
 		}
-	AccessControlRules.propagation ={RegisterPatientActivity -> R_Bob}
+	AccessControlRules.delegation ={RegisterPatientActivity -> R_Bob}
 }
 
 

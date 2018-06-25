@@ -24,7 +24,7 @@ one sig AccessControlRules {
 	u_roles: users -> set roles,
 	resources: set {Obj + FName + Operation},
 	permissions: Rights ->  Subject ->  resources,
-	propagation: Operation -> roles
+	delegation: Operation -> roles
 }
 
 abstract sig Subject{}
@@ -51,19 +51,19 @@ abstract sig DomainSubject extends Subject{
 
 pred hasDefObjPermission(s: AbstractSecureState, o: Obj, usr: User){
 	userBasedPermission[s, o, none, Def, usr] or
-	dynamicResourcePermission[s, o, none, none, Def, usr] or
+	dynamicResourcePermission[s.next, o, none, none, Def, usr] or
 	roleBasedPermission[s, o, none, Def, usr]
 }
 
 pred hasDefAttPermission(s: AbstractSecureState, o: Obj, att: FName, usr: User){
 	userBasedPermission[s, att, none, Def, usr] or
-	dynamicResourcePermission[s, o, none, att, Def, usr] or
+	dynamicResourcePermission[s.next, o, none, att, Def, usr] or
 	roleBasedPermission[s, att, none, Def, usr]
 }
 
 pred hasLinkObjPermission(s: AbstractSecureState, objSource, objTarget: Obj, attSource: FName, usr:User){
 	userBasedPermission[s, attSource, attSource.inverse, Def, usr] or
-	dynamicResourcePermission[s, objSource, objTarget, attSource, Def, usr] or
+	dynamicResourcePermission[s.next, objSource, objTarget, attSource, Def, usr] or
 	roleBasedPermission[s, attSource, attSource.inverse, Def, usr] 
 }
 
@@ -81,7 +81,7 @@ pred hasReadAttPermission (s: AbstractSecureState, o: Obj, att: FName, usr: User
 
 pred hasExecOperationPermission (s: AbstractSecureState, objs: set Obj, op: Operation, usr: User){
 	userBasedPermission[s, op, none, Def, usr] or
-	dynamicOperationPermission[s, op, objs, Def, usr] or
+	dynamicOperationPermission[s.next, op, objs, Def, usr] or
 	roleBasedPermission[s, op, none, Def, usr]
 }
 
@@ -93,11 +93,12 @@ pred userBasedPermission(s: AbstractSecureState, res1, res2: (Obj + FName + Oper
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-pred dynamicResourcePermission (s: AbstractSecureState, obj1, obj2: (Obj) , att1: FName, right: Rights, usr: User){
+pred dynamicResourcePermission (s: AbstractSecureState, obj1, obj2: Obj , att1: FName, right: Rights, usr: User){
 	(!no obj2) implies {
-		some dSub: (right.(AccessControlRules.permissions).(att1.inverse)) <: DomainSubject |  some obj: usr.usr_obj| obj in reach[s, obj2, dSub.path] 
+		(some dSub: (right.(AccessControlRules.permissions).(att1.inverse)) <: DomainSubject |  some obj: usr.usr_obj| obj in reach[s, obj2, dSub.path]) 
+		or (some dSub: (right.(AccessControlRules.permissions).att1) <: DomainSubject |  some obj: usr.usr_obj| obj in reach[s, obj1, dSub.path] )
 	}
-	(!no att1) implies {
+	else (!no att1) implies {
 		some dSub: (right.(AccessControlRules.permissions).att1) <: DomainSubject |  some obj: usr.usr_obj| obj in reach[s, obj1, dSub.path] 
 	}
 	else{
@@ -128,4 +129,4 @@ fun operationObjects(pre_entDefs: set Obj, pre_attDefs: set Obj -> FName,
 	{pre_entDefs + pre_attDefs.FName + post_entDefs + post_attDefs.FName + (post_muls.Obj).FName} 
 }
 
-
+run{}
