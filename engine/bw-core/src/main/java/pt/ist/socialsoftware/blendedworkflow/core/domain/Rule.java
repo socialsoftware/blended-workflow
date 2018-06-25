@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
 
 public class Rule extends Rule_Base {
 	private static Logger logger = LoggerFactory.getLogger(Rule.class);

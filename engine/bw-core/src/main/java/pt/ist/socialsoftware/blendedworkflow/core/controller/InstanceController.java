@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.WorkflowInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 

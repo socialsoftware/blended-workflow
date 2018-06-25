@@ -29,12 +29,12 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
 
 public class SpecXmlImport {
 

@@ -7,8 +7,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefPathConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
 
 public class DefPathCondition extends DefPathCondition_Base {
 	private static Logger logger = LoggerFactory.getLogger(DefPathCondition.class);

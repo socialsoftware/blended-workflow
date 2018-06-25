@@ -46,10 +46,14 @@ app.factory('goalRepository', function($http) {
 		mergeGoals : function(spec, goalOne, goalTwo,
 				newGoalName) {
 			var url = baseUrl + "specs/" + spec
-					+ "/goalmodel/goals/merge?goalNameOne="
-					+ goalOne + "&goalNameTwo=" + goalTwo
-					+ "&newGoalName=" + newGoalName;
-			return $http.post(url);
+					+ "/goalmodel/goals/merge;
+			return $http.post(url, {
+				"spec" : spec,
+				"nameOne" : goalOne,
+				"nameTwo" : goalTwo,
+				"newName" : newGoalName
+			});
+
 		},
 		splitParentGoal : function(spec, goal, sucConditions, newGoalName) {
 			var url = baseUrl + "specs/" + spec

@@ -1,23 +1,23 @@
 Specification: "Doctor Appointment"  
        
-Entity Patient { 
+Entity Patient exists { 
 	name : String 
 	age : Number
 	heartProblems : Boolean 
 }         
                       
-Entity Episode mandatory { 
+Entity Episode mandatory {
 	reserveDate : Date 
 	checkin : Boolean
 	checkout : Boolean               
 }
 
 Entity Prescription {
-	description : String dependsOn Prescription.episode.report.description 
+	details : String dependsOn Prescription.episode.report.details 
 }
 
 Entity Report dependsOn Report.episode.data.bloodPressure {
-	description : String mandatory
+	details : String mandatory
 }
  
 Entity Data { 
@@ -29,7 +29,7 @@ Entity Data {
 	Constraint Data : Data.bloodPressure == Data.episode.prescription.medication.quantity 
 }
  
-Entity Medication dependsOn Medication.prescription.description { 
+Entity Medication dependsOn Medication.prescription.details { 
 	name : String 
 	quantity : Number
 	heartImpact : Boolean

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDTO;
 
 public class Dependence extends Dependence_Base {
 	private static Logger logger = LoggerFactory.getLogger(Dependence.class);

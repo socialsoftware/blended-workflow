@@ -23,12 +23,12 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ProductDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController

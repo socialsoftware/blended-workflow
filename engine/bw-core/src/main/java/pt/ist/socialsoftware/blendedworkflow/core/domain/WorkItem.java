@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ProductInstanceDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.WorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkItemDTO;
 
 public abstract class WorkItem extends WorkItem_Base {
 

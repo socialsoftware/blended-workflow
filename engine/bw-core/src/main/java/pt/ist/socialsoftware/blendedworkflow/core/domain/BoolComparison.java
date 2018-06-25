@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
 
 public class BoolComparison extends BoolComparison_Base {
 

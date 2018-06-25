@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDTO;
 
 public class Goal extends Goal_Base {
 	private static Logger logger = LoggerFactory.getLogger(Goal.class);

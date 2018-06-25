@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 

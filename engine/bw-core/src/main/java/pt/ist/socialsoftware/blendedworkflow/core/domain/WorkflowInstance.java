@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.WorkflowInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDTO;
 
 public class WorkflowInstance extends WorkflowInstance_Base {
 

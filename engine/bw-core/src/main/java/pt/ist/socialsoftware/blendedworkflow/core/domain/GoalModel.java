@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal.GoalRelation;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EdgeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GraphDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.NodeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeDTO;
 
 public class GoalModel extends GoalModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(GoalModel.class);

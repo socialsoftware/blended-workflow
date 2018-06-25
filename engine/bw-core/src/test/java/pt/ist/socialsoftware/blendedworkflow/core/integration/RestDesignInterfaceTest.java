@@ -31,12 +31,12 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Expression.ExpressionAtom;
 import pt.ist.socialsoftware.blendedworkflow.core.filter.TransactionFilter;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
