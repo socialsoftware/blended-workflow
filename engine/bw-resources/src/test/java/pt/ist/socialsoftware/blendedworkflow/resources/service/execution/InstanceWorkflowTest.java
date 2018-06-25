@@ -8,17 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MvcResult;
-import pt.ist.fenixframework.Atomic;
+
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.WorkflowInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.AbstractDocExampleTest;
-import pt.ist.socialsoftware.blendedworkflow.resources.AbstractSpecTest1Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

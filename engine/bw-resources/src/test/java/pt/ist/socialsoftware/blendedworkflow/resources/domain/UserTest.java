@@ -5,7 +5,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
 
 import java.util.ArrayList;

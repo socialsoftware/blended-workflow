@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.dto;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 

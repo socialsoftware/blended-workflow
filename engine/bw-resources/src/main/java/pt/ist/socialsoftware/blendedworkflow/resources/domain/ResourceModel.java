@@ -1,22 +1,17 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
-import javafx.geometry.Pos;
 import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWError;
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.MergeType;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.design.MergeResourcesPolicy;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ResourceModel extends ResourceModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(ResourceModel.class);
@@ -182,7 +177,7 @@ public class ResourceModel extends ResourceModel_Base {
 
 	public Activity mergeActivities(RALExpression responsibleExpr1, RALExpression responsibleExpr2,
 									RALExpression informsExpr1, RALExpression informsExpr2,
-									Activity activityMerged, MergeType mode) {
+									Activity activityMerged, MergeResourcesPolicy mode) {
 		mergeActivitiesResponsibleForExpr(responsibleExpr1, responsibleExpr2, activityMerged, mode);
 
 		mergeActivitiesInformsExpr(informsExpr1, informsExpr2, activityMerged, mode);
@@ -190,7 +185,7 @@ public class ResourceModel extends ResourceModel_Base {
 		return activityMerged;
 	}
 
-	private RALExpression getMergedExpr(MergeType mode, RALExpression expressionA1, RALExpression expressionA2) {
+	private RALExpression getMergedExpr(MergeResourcesPolicy mode, RALExpression expressionA1, RALExpression expressionA2) {
 		RALExpression expressionMerged;
 		switch (mode) {
 			case RESTRICTED:
@@ -206,7 +201,7 @@ public class ResourceModel extends ResourceModel_Base {
 		return expressionMerged;
 	}
 
-	private void mergeActivitiesResponsibleForExpr(RALExpression expressionA1, RALExpression expressionA2, Activity activityMerged, MergeType mode) {
+	private void mergeActivitiesResponsibleForExpr(RALExpression expressionA1, RALExpression expressionA2, Activity activityMerged, MergeResourcesPolicy mode) {
 		if (expressionA1 == null) {
 			activityMerged.setResponsibleFor(expressionA2);
 			return;
@@ -223,7 +218,7 @@ public class ResourceModel extends ResourceModel_Base {
 		activityMerged.setResponsibleFor(expressionMerged);
 	}
 
-	private void mergeActivitiesInformsExpr(RALExpression expressionA1, RALExpression expressionA2, Activity activityMerged, MergeType mode) {
+	private void mergeActivitiesInformsExpr(RALExpression expressionA1, RALExpression expressionA2, Activity activityMerged, MergeResourcesPolicy mode) {
 		if (expressionA1 == null) {
 			activityMerged.setInforms(expressionA2);
 			return;

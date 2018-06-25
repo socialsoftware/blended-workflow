@@ -8,7 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Attr;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.*;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
@@ -18,6 +19,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.execution.Executi
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class MergeTest extends TeardownRollbackTest {
@@ -59,6 +61,10 @@ public class MergeTest extends TeardownRollbackTest {
         person2 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_2, "", new ArrayList<>(), new ArrayList<>()));
         person3 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_3, "", new ArrayList<>(), Arrays.asList(POSITION)));
 
+    }
+
+    @Test
+    public void mergeActivitiesWithBothAssignments() throws Exception {
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1,
@@ -80,15 +86,19 @@ public class MergeTest extends TeardownRollbackTest {
                 new RALExprHasPositionDTO(POSITION)
         ));
 
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1 + "." + ATTR_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
+                new RALExprIsPersonDTO(USERNAME_1)
+        ));
+
         designer.generateConditionModel(SPEC_ID);
         designer.generateActivityModel(SPEC_ID);
         designer.generateGoalModel(SPEC_ID);
         designer.generateEnrichedModels(SPEC_ID);
-    }
 
-    @Test
-    public void executeActivityWorkItem() throws Exception {
-        designer.mergeActivities(SPEC_ID, "Merged", "", ENT_1, ENT_1 + "." + ATTR_1);
+        designer.mergeActivities(new MergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1));
 
         Set<Activity> activities = spec.getActivityModel().getActivitySet();
         assertEquals(1, activities.size());
@@ -97,5 +107,86 @@ public class MergeTest extends TeardownRollbackTest {
         RALExprOr expr = (RALExprOr) activity.getResponsibleFor();
         assertEquals(RALExprIsPerson.class, expr.getLeftExpression().getClass());
         assertEquals(RALExprHasPosition.class, expr.getRightExpression().getClass());
+
+        assertEquals(RALExprOr.class, activity.getInforms().getClass());
+        expr = (RALExprOr) activity.getInforms();
+        assertEquals(RALExprIsPerson.class, expr.getLeftExpression().getClass());
+        assertEquals(RALExprIsPerson.class, expr.getRightExpression().getClass());
+    }
+
+    @Test
+    public void mergeActivitiesWithPreviousAssignment() throws Exception {
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                new RALExprIsPersonDTO(USERNAME_1)
+        ));
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
+                new RALExprIsPersonDTO(USERNAME_2)
+        ));
+
+        designer.generateConditionModel(SPEC_ID);
+        designer.generateActivityModel(SPEC_ID);
+        designer.generateGoalModel(SPEC_ID);
+        designer.generateEnrichedModels(SPEC_ID);
+
+        designer.mergeActivities(new MergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1));
+
+        Set<Activity> activities = spec.getActivityModel().getActivitySet();
+        assertEquals(1, activities.size());
+        Activity activity = activities.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_ACTIVITIES_AVAILABLE));
+        assertEquals(RALExprIsPerson.class, activity.getResponsibleFor().getClass());
+        assertEquals(RALExprIsPerson.class, activity.getInforms().getClass());
+    }
+
+    @Test
+    public void mergeActivitiesWithForwardAssignment() throws Exception {
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1 + "." + ATTR_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
+                new RALExprIsPersonDTO(USERNAME_1)
+        ));
+
+        designer.addResourceRule(new ResourceRuleDTO(
+                SPEC_ID,
+                ENT_1 + "." + ATTR_1,
+                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
+                new RALExprIsPersonDTO(USERNAME_2)
+        ));
+
+        designer.generateConditionModel(SPEC_ID);
+        designer.generateActivityModel(SPEC_ID);
+        designer.generateGoalModel(SPEC_ID);
+        designer.generateEnrichedModels(SPEC_ID);
+
+        designer.mergeActivities(new MergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1));
+
+        Set<Activity> activities = spec.getActivityModel().getActivitySet();
+        assertEquals(1, activities.size());
+        Activity activity = activities.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_ACTIVITIES_AVAILABLE));
+        assertEquals(RALExprIsPerson.class, activity.getResponsibleFor().getClass());
+        assertEquals(RALExprIsPerson.class, activity.getInforms().getClass());
+    }
+
+    @Test
+    public void mergeActivitiesWithNoAssignments() throws Exception {
+        designer.generateConditionModel(SPEC_ID);
+        designer.generateActivityModel(SPEC_ID);
+        designer.generateGoalModel(SPEC_ID);
+        designer.generateEnrichedModels(SPEC_ID);
+
+        designer.mergeActivities(new MergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1));
+
+        Set<Activity> activities = spec.getActivityModel().getActivitySet();
+        assertEquals(1, activities.size());
+        Activity activity = activities.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_ACTIVITIES_AVAILABLE));
+        assertNull(activity.getResponsibleFor());
+        assertNull(activity.getInforms());
     }
 }

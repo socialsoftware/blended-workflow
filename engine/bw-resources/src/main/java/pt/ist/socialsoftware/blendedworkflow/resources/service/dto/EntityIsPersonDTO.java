@@ -1,9 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.dto;
 
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ProductInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDTO;
 
 import java.util.Set;
 

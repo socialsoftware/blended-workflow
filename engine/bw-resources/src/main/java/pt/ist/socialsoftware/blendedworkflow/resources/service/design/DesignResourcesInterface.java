@@ -8,37 +8,11 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Position;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprAnd;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprAnyone;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprCommonality;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprDelegatedByPersonPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprDelegatedByPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprDelegatesToPersonPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprDelegatesToPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHasCapability;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHasPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHasRole;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHasUnit;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistory;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistoryExecuting;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistoryInformed;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPerson;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPersonDataObject;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPersonInTaskDuty;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprNot;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprOr;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprReportedByPersonPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprReportedByPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprReportsToPersonPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprReportsToPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprSharesPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprSharesRole;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprSharesUnit;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExpression;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALPersonExpression;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
@@ -243,10 +217,10 @@ public class DesignResourcesInterface extends DesignInterface {
 	}
 
 	@Override
-	public Activity mergeActivities(String specId, String newActivityName, String description, String activityNameOne, String activityNameTwo) {
-		Specification spec = getSpecBySpecId(specId);
-		Activity activityOne = getActivityByName(spec, activityNameOne);
-		Activity activityTwo = getActivityByName(spec, activityNameTwo);
+	public Activity mergeActivities(MergeOperationDto mergeOperationDto) {
+		Specification spec = getSpecBySpecId(mergeOperationDto.getSpecId());
+		Activity activityOne = getActivityByName(spec, mergeOperationDto.getNameOne());
+		Activity activityTwo = getActivityByName(spec, mergeOperationDto.getNameTwo());
 
 		RALExpression responsibleExpr1 = activityOne.getResponsibleFor();
 		RALExpression responsibleExpr2 = activityTwo.getResponsibleFor();
@@ -255,11 +229,12 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		spec.getResourceModel().cleanActivity(activityOne);
 		spec.getResourceModel().cleanActivity(activityTwo);
-		Activity activityMerged = super.mergeActivities(specId, newActivityName, description, activityNameOne, activityNameTwo);
+
+		Activity activityMerged = super.mergeActivities(mergeOperationDto);
 
 		return spec.getResourceModel().mergeActivities(
 				responsibleExpr1, responsibleExpr2,
 				informsExpr1, informsExpr2,
-				activityMerged, MergeType.RELAXED);
+				activityMerged, MergeResourcesPolicy.RELAXED);
 	}
 }

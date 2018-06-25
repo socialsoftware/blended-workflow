@@ -4,7 +4,7 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.*;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprIsPersonDTO;
@@ -12,11 +12,13 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprOrDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.execution.ExecutionResourcesInterface;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

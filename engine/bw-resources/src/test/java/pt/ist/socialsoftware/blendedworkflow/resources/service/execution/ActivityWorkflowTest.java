@@ -12,7 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.WorkflowInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.AbstractDocExampleTest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
