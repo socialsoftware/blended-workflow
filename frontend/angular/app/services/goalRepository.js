@@ -48,7 +48,7 @@ app.factory('goalRepository', function($http) {
 			var url = baseUrl + "specs/" + spec
 					+ "/goalmodel/goals/merge;
 			return $http.post(url, {
-				"spec" : spec,
+				"specId" : spec,
 				"nameOne" : goalOne,
 				"nameTwo" : goalTwo,
 				"newName" : newGoalName
