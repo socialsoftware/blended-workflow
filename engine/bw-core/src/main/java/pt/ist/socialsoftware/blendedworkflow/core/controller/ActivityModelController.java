@@ -4,7 +4,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-import javax.websocket.server.PathParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,16 +24,17 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefAttributeConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefPathConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefProductConditionSetDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GraphDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.MulConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.req.AddActivityReq;
-import pt.ist.socialsoftware.blendedworkflow.core.service.req.ExtractActivityReq;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefProductConditionSetDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.AddActivityDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractActivityDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController
@@ -82,7 +82,7 @@ public class ActivityModelController {
 
 	@RequestMapping(value = "/activities/add", method = RequestMethod.POST)
 	public ResponseEntity<ActivityDTO> addActivity(@PathVariable("specId") String specId,
-			@RequestBody AddActivityReq request) {
+			@RequestBody AddActivityDto request) {
 		logger.debug("addActivity specId:{}, name:{}, description:{}, postConditions:{}", specId,
 				request.getActivityName(), request.getDescription(),
 				request.getPostConditionSet().stream().map(d -> d.getPath()).collect(Collectors.joining(",")));
@@ -259,22 +259,21 @@ public class ActivityModelController {
 
 	@RequestMapping(value = "/activities/merge", method = RequestMethod.POST)
 	public ResponseEntity<ActivityDTO> mergeActivities(@PathVariable("specId") String specId,
-			@PathParam("newActivityName") String newActivityName, @PathParam("activityNameOne") String activityNameOne,
-			@PathParam("activityNameTwo") String activityNameTwo) {
+			@RequestBody MergeOperationDto activityMergeDto) {
 		logger.debug("mergeActivities specId:{}, newActivityName:{}, activityNameOne:{}, activityNameTwo:{}", specId,
-				newActivityName, activityNameOne, activityNameTwo);
+				activityMergeDto.getNewName(), activityMergeDto.getNameOne(),
+				activityMergeDto.getNameTwo());
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		Activity activity = adi.mergeActivities(specId, newActivityName,
-				"merged: " + activityNameOne + " " + activityNameTwo, activityNameOne, activityNameTwo);
+		Activity activity = adi.mergeActivities(activityMergeDto);
 
 		return new ResponseEntity<>(activity.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/extract", method = RequestMethod.POST)
 	public ResponseEntity<ActivityDTO> extractActivity(@PathVariable("specId") String specId,
-			@RequestBody ExtractActivityReq request) {
+			@RequestBody ExtractActivityDto request) {
 		logger.debug("extractActivity specId:{}, newActivityName:{}, sourceActivityName:{}, entDefs:{}, attDefs:{}",
 				specId, request.getNewActivityName(), request.getSourceActivityName(),
 				request.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));

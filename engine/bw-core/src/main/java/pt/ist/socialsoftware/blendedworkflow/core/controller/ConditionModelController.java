@@ -19,11 +19,11 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefAttributeConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.MulConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController

@@ -4,7 +4,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-import javax.websocket.server.PathParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +20,15 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefAttributeConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefPathConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GraphDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.MulConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.req.ExtractGoalReq;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController
@@ -281,21 +281,20 @@ public class GoalModelController {
 
 	@RequestMapping(value = "/goals/merge", method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> mergeGoals(@PathVariable("specId") String specId,
-			@PathParam("newGoalName") String newGoalName, @PathParam("goalNameOne") String goalNameOne,
-			@PathParam("goalNameTwo") String goalNameTwo) {
-		logger.debug("mergeGoals specId:{}, newGoalName:{}, goalNameOne:{}, goalNameTwo:{}", specId, newGoalName,
-				goalNameOne, goalNameTwo);
+			@RequestBody MergeOperationDto mergeOperationDto) {
+		logger.debug("mergeGoals specId:{}, newGoalName:{}, goalNameOne:{}, goalNameTwo:{}", specId,
+				mergeOperationDto.getNewName(), mergeOperationDto.getNameOne(), mergeOperationDto.getNameTwo());
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		Goal goal = adi.mergeGoals(specId, newGoalName, goalNameOne, goalNameTwo);
+		Goal goal = adi.mergeGoals(mergeOperationDto);
 
 		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/goals/extractchild", method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> extractChildGoal(@PathVariable("specId") String specId,
-			@RequestBody ExtractGoalReq req) {
+			@RequestBody ExtractGoalDto req) {
 		logger.debug("extractChildGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
 				req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
@@ -310,7 +309,7 @@ public class GoalModelController {
 
 	@RequestMapping(value = "/goals/extractparent", method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> extractParentGoal(@PathVariable("specId") String specId,
-			@RequestBody ExtractGoalReq req) {
+			@RequestBody ExtractGoalDto req) {
 		logger.debug("extractParentGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
 				req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
@@ -325,7 +324,7 @@ public class GoalModelController {
 
 	@RequestMapping(value = "/goals/extractsibling", method = RequestMethod.POST)
 	public ResponseEntity<GoalDTO> extractSiblingGoal(@PathVariable("specId") String specId,
-			@RequestBody ExtractGoalReq req) {
+			@RequestBody ExtractGoalDto req) {
 		logger.debug("extractSiblingGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
 				req.getNewGoalName(), req.getSourceGoalName(),
 				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));

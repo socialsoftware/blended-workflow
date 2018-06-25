@@ -5,8 +5,8 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.MulConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
 
 public class MulCondition extends MulCondition_Base {
 

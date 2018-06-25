@@ -31,20 +31,21 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.ActivityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefAttributeConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DefPathConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GoalDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.GraphDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.MulConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.req.AddActivityReq;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.AddActivityDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.xml.SpecXmlExport;
 
 public class DesignInterface {
@@ -618,12 +619,12 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Goal mergeGoals(String specId, String newGoalName, String goalNameOne, String goalNameTwo) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goalOne = getGoalByName(spec, goalNameOne);
-		Goal goalTwo = getGoalByName(spec, goalNameTwo);
+	public Goal mergeGoals(MergeOperationDto mergeOperationDto) {
+		Specification spec = getSpecBySpecId(mergeOperationDto.getSpecId());
+		Goal goalOne = getGoalByName(spec, mergeOperationDto.getNameOne());
+		Goal goalTwo = getGoalByName(spec, mergeOperationDto.getNameTwo());
 
-		return spec.getGoalModel().mergeGoals(newGoalName, goalOne, goalTwo);
+		return spec.getGoalModel().mergeGoals(mergeOperationDto.getNewName(), goalOne, goalTwo);
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -667,7 +668,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Activity addActivity(String specId, AddActivityReq request) {
+	public Activity addActivity(String specId, AddActivityDto request) {
 		Specification spec = getSpecBySpecId(specId);
 
 		return spec.getActivityModel().addActivity(request.getActivityName(), request.getDescription(),
@@ -792,13 +793,14 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Activity mergeActivities(String specId, String newActivityName, String description, String activityNameOne,
-			String activityNameTwo) {
-		Specification spec = getSpecBySpecId(specId);
-		Activity activityOne = getActivityByName(spec, activityNameOne);
-		Activity activityTwo = getActivityByName(spec, activityNameTwo);
+	public Activity mergeActivities(MergeOperationDto mergeOperationDto) {
+		Specification spec = getSpecBySpecId(mergeOperationDto.getSpecId());
+		Activity activityOne = getActivityByName(spec, mergeOperationDto.getNameOne());
+		Activity activityTwo = getActivityByName(spec, mergeOperationDto.getNameTwo());
 
-		return spec.getActivityModel().mergeActivities(newActivityName, description, activityOne, activityTwo);
+		return spec.getActivityModel().mergeActivities(mergeOperationDto.getNewName(),
+				"Merge of " + mergeOperationDto.getNameOne() + " and " + mergeOperationDto.getNameTwo(), activityOne,
+				activityTwo);
 	}
 
 	@Atomic(mode = TxMode.WRITE)
