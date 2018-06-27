@@ -486,4 +486,14 @@ public class ActivityModel extends ActivityModel_Base {
 		return getSpecification().getDataModel();
 	}
 
+	public Activity getActivityFromProduct(Product product) {
+		return getActivitySet().stream()
+				.filter(activity -> activity.getPostProducts().contains(product))
+				.findFirst()
+				.orElseThrow(() -> new BWException(BWErrorType.NON_EXISTENT_ACTIVITY_BY_PRODUCT));
+	}
+
+	public boolean checkActivityPrecedesActivity(Activity activity1, Activity activity2) {
+		return true;
+	}
 }

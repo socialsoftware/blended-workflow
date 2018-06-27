@@ -348,4 +348,16 @@ public class GoalModel extends GoalModel_Base {
 				.collect(Collectors.toSet());
 	}
 
+	public Goal getGoalFromProduct(Product product) {
+		return getGoalSet().stream()
+				.filter(goal -> goal.getSuccessProducts()
+						.contains(product))
+				.findFirst()
+				.orElseThrow(() -> new BWException(BWErrorType.NON_EXISTENT_GOAL_BY_PRODUCT));
+	}
+
+	public boolean checkGoalPrecedesGoal(Goal goal1, Goal goal2) {
+		goal1.getSubGoalSet();
+		return true;
+	}
 }

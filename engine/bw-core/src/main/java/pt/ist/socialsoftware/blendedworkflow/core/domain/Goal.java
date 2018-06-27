@@ -450,14 +450,18 @@ public class Goal extends Goal_Base {
 				.collect(Collectors.toSet());
 	}
 
-	private Set<Entity> getSuccessEntities() {
+	public Set<Entity> getSuccessEntities() {
 		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).filter(Entity.class::isInstance)
 				.map(Entity.class::cast).collect(Collectors.toSet());
 	}
 
-	private Set<Attribute> getSuccessAttributes() {
+	public Set<Attribute> getSuccessAttributes() {
 		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).filter(Attribute.class::isInstance)
 				.map(Attribute.class::cast).collect(Collectors.toSet());
+	}
+
+	public Set<Product> getSuccessProducts() {
+		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).collect(Collectors.toSet());
 	}
 
 	private Set<Entity> getParentsSuccessEntities() {
