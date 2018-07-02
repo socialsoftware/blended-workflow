@@ -1,12 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -494,6 +488,31 @@ public class ActivityModel extends ActivityModel_Base {
 	}
 
 	public boolean checkActivityPrecedesActivity(Activity activity1, Activity activity2) {
-		return true;
+		Queue<Activity> openSet = new LinkedList<>();
+		Set<Activity> visited = new HashSet<>();
+
+		openSet.add(activity1);
+
+		while (!openSet.isEmpty()) {
+			Activity node = openSet.poll();
+
+			if (node.equals(activity2)) {
+				return true;
+			}
+
+			for (Activity nextActivity : getActivitySequences().get(node)) {
+				if (visited.contains(nextActivity)) {
+					continue;
+				}
+
+				if (!openSet.contains(nextActivity)) {
+					openSet.add(nextActivity);
+				}
+			}
+
+			visited.add(node);
+		}
+
+		return false;
 	}
 }
