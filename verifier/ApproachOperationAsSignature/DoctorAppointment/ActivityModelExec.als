@@ -6,9 +6,9 @@ open filesystem/DoctorAppointment/ActivityModel
 
 run final for 4 but 7 State, 6 Activity, 5 Int
 
-assert PreservesInvariant {
+assert preserveInvariants {
 	all s, s': State, a: Activity |
-		Invariants[s] and exec[s, s', a] => Invariants[s']
+		invariants[s] and exec[s, s', a] => invariants[s']
 }
 
-check PreservesInvariant for 4 but 7 State, 6 Activity, 5 Int
+check preserveInvariants for 4 but 7 State, 6 Activity, 5 Int

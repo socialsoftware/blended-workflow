@@ -6,12 +6,12 @@ open filesystem/DoctorAppointment/GoalModel
 
 run final for 4 but 11 State, 10 Goal, 5 Int
 
-assert PreservesInvariant {
+assert preserveInvariants {
 	all s, s': State, g: Goal |
 		(g in GoalProduce) implies {
-			Invariants[s] and execProduce[s, s', g] => Invariants[s']
+			invariants[s] and execProduce[s, s', g] => invariants[s']
 		} else {
-			Invariants[s] and execAssociate[s, s', g] => Invariants[s']
+			invariants[s] and execAssociate[s, s', g] => invariants[s']
 		}
 }
-check PreservesInvariant for 4 but 11 State, 10 Goal, 5 Int
+check preserveInvariants for 4 but 11 State, 10 Goal, 5 Int
