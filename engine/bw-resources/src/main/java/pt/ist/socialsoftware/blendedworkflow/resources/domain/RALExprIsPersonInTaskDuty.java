@@ -5,12 +5,9 @@ import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -44,6 +41,11 @@ public class RALExprIsPersonInTaskDuty extends RALExprIsPersonInTaskDuty_Base {
                 })
                 .flatMap(Collection::stream)
                 .collect(toList());
+    }
+
+    @Override
+    public SetOfRequiredResources getSetOfRequiredResources() {
+        return new SetOfRequiredResources().addTaskDuty(new HashSet<>(Arrays.asList(getPath())));
     }
 
     @Override

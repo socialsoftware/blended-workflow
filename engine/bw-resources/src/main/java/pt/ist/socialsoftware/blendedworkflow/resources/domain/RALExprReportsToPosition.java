@@ -1,7 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +29,17 @@ public class RALExprReportsToPosition extends RALExprReportsToPosition_Base {
         return getPersonSet().stream()
                 .filter(person -> person.getPositionSet().stream().anyMatch(position -> positions.contains(position)))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SetOfRequiredResources getSetOfRequiredResources() {
+        List<Position> positions = getDirectly() ? Arrays.asList(getPosition().getReportsTo()) : getPosition().getAllPositionsReportsTo();
+
+        return new SetOfRequiredResources().addPositions(
+                positions
+                        .stream()
+                        .map(Position::getDTO)
+                        .collect(Collectors.toList()));
     }
 
     @Override

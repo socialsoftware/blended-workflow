@@ -1,7 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,11 @@ public class RALExprHasPosition extends RALExprHasPosition_Base implements RALEx
         return getPersonSet().stream()
                 .filter(person -> person.getPositionSet().contains(getPosition()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SetOfRequiredResources getSetOfRequiredResources() {
+        return new SetOfRequiredResources().addPositions(new HashSet<>(Arrays.asList(getPosition().getDTO())));
     }
 
     @Override

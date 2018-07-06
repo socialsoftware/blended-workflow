@@ -21,6 +21,7 @@ public class SetOfRequiredResources {
     private Set<String> notDataField;
     private Set<String> taskDuty;
     private Set<String> notTaskDuty;
+    private Set<String> history;
     private Set<ProductDTO> workItemProducts;
 
 
@@ -39,7 +40,28 @@ public class SetOfRequiredResources {
         this.notDataField = new HashSet<>();
         this.taskDuty = new HashSet<>();
         this.notTaskDuty = new HashSet<>();
+        this.history = new HashSet<>();
         this.workItemProducts = new HashSet<>();
+    }
+
+    public SetOfRequiredResources merge(SetOfRequiredResources set) {
+        addPositions(set.getPositions());
+        addNotPositions(set.getNotPositions());
+        addPersons(set.getPersons());
+        addNotPersons(set.getNotPersons());
+        addCapabilities(set.getCapabilities());
+        addNotCapabilities(set.getNotCapabilities());
+        addRoles(set.getRoles());
+        addNotRoles(set.getNotRoles());
+        addUnits(set.getUnits());
+        addNotUnits(set.getNotUnits());
+        addDataField(set.getDataField());
+        addNotDataField(set.getNotDataField());
+        addTaskDuty(set.getTaskDuty());
+        addNotTaskDuty(set.getNotTaskDuty());
+        addWorkItemProducts(set.getWorkItemProducts());
+
+        return this;
     }
 
     public Set<PositionDTO> getPositions() {
@@ -166,7 +188,7 @@ public class SetOfRequiredResources {
         return taskDuty;
     }
 
-    public SetOfRequiredResources addTaskDuty(Set<String> taskDuty) {
+    public SetOfRequiredResources addTaskDuty(Collection<String> taskDuty) {
         this.taskDuty.addAll(taskDuty);
 
         return this;
@@ -176,8 +198,18 @@ public class SetOfRequiredResources {
         return notTaskDuty;
     }
 
-    public SetOfRequiredResources addNotTaskDuty(Set<String> notTaskDuty) {
+    public SetOfRequiredResources addNotTaskDuty(Collection<String> notTaskDuty) {
         this.notTaskDuty.addAll(notTaskDuty);
+
+        return this;
+    }
+
+    public Set<String> getHistory() {
+        return history;
+    }
+
+    public SetOfRequiredResources addHistory(Collection<String> history) {
+        this.history.addAll(history);
 
         return this;
     }
@@ -250,5 +282,9 @@ public class SetOfRequiredResources {
 
     public void setNotTaskDuty(Set<String> notTaskDuty) {
         this.notTaskDuty = notTaskDuty;
+    }
+
+    public void setHistory(Set<String> history) {
+        this.history = history;
     }
 }

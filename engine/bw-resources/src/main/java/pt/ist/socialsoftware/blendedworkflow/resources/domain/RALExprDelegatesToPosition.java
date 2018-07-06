@@ -3,6 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,14 @@ public class RALExprDelegatesToPosition extends RALExprDelegatesToPosition_Base 
         return getPersonSet().stream()
                 .filter(person -> person.getPositionSet().stream().anyMatch(position -> positions.contains(position)))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SetOfRequiredResources getSetOfRequiredResources() {
+        return new SetOfRequiredResources().addPositions(
+                getPosition().getCanDelegateWorkToSet().stream()
+                        .map(Position::getDTO)
+                        .collect(Collectors.toList()));
     }
 
     @Override

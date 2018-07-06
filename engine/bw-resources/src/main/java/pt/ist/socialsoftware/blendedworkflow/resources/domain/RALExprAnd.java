@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,11 @@ public class RALExprAnd extends RALExprAnd_Base {
         return getLeftExpression().getEligibleResources(history).stream()
                 .filter(person -> getRightExpression().getEligibleResources(history).contains(person))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SetOfRequiredResources getSetOfRequiredResources() {
+        return getLeftExpression().getSetOfRequiredResources().merge(getRightExpression().getSetOfRequiredResources());
     }
 
     @Override

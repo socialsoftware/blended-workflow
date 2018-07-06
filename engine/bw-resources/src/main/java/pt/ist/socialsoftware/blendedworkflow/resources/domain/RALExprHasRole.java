@@ -1,9 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RALExprHasRole extends RALExprHasRole_Base implements RALExprDeniable {
@@ -38,6 +38,17 @@ public class RALExprHasRole extends RALExprHasRole_Base implements RALExprDeniab
 
             return roles.contains(getRole());
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public SetOfRequiredResources getSetOfRequiredResources() {
+        SetOfRequiredResources set =  new SetOfRequiredResources().addRoles(new HashSet<>(Arrays.asList(getRole().getDTO())));
+
+        if (getUnit() != null) {
+            set.addUnits(new HashSet<>(Arrays.asList(getUnit().getDTO())));
+        }
+
+        return set;
     }
 
     @Override

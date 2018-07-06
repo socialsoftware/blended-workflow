@@ -1,6 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UnitDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,21 @@ public class RALExprSharesUnit extends RALExprSharesUnit_Base implements RALExpr
             }
             return false;
         }).collect(toList());
+    }
+
+    @Override
+    public SetOfRequiredResources getSetOfRequiredResources() {
+        List<UnitDTO> units = null;
+        if (getPersonExpr() instanceof RALExprIsPerson) {
+            Person person = ((RALExprIsPerson) getPersonExpr()).getPerson();
+
+            units = person.getPositionSet().stream()
+                    .map(Position::getUnit)
+                    .map(Unit::getDTO)
+                    .collect(Collectors.toList());
+        }
+
+        return getPersonExpr().getSetOfRequiredResources().addUnits(units);
     }
 
     @Override

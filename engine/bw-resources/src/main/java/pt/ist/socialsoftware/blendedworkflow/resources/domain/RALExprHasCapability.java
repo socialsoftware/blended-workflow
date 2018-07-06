@@ -1,7 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +29,14 @@ public class RALExprHasCapability extends RALExprHasCapability_Base implements R
     }
 
     @Override
+    public SetOfRequiredResources getSetOfRequiredResources() {
+        return new SetOfRequiredResources().addCapabilities(new HashSet<>(Arrays.asList(getCapability().getDTO())));
+    }
+
+    @Override
     public void isMergable(RALExpression expression) {
         
     }
+
 
 }

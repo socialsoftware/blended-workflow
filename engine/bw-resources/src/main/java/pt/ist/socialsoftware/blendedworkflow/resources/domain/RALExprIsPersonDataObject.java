@@ -2,16 +2,15 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
-import java.util.Collection;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -41,6 +40,11 @@ public class RALExprIsPersonDataObject extends RALExprIsPersonDataObject_Base {
                 .filter(productInstance -> productInstance instanceof EntityInstance && getResourceModel().checkEntityIsPerson(productInstance.getProduct()))
                 .map(productInstance -> ((EntityInstance) productInstance).getPerson())
                 .collect(toList());
+    }
+
+    @Override
+    public SetOfRequiredResources getSetOfRequiredResources() {
+        return new SetOfRequiredResources().addDataField(new HashSet<>(Arrays.asList(getPath())));
     }
 
     @Override
