@@ -114,7 +114,7 @@ public class GoalModelController {
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		GoalDTO[] subGoals = adi.getSubGoals(specId, goalName).stream().map((goal) -> goal.getDTO())
+		GoalDTO[] subGoals = adi.getSubGoals(specId, goalName).stream().map((goal) -> productGoal.getDTO())
 				.toArray(size -> new GoalDTO[size]);
 
 		return new ResponseEntity<>(subGoals, HttpStatus.OK);

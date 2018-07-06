@@ -90,6 +90,10 @@ class Goal {
 	String description;
 }
 
+class ProductGoal extends Goal;
+
+class AssociationGoal extends Goal;
+
 class ActivityModel;
 
 class Activity {
@@ -281,11 +285,6 @@ relation GoalModelHasGoals {
 }
 
 // Goal
-relation GoalHasGoals {
-	Goal playsRole parentGoal { multiplicity 0..1; }
-	Goal playsRole subGoal { multiplicity 0..*; }
-}
-
 relation GoalHasSucessConditions {
 	Goal playsRole successConditionGoal { multiplicity 0..1; }
 	DefProductCondition playsRole successCondition { multiplicity 0..*; }

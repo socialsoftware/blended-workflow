@@ -594,30 +594,6 @@ public class DesignInterface {
 		goal.addAttributeInvariantCondition(rule);
 	}
 
-	public Set<Goal> getSubGoals(String specId, String goalName) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, goalName);
-
-		return goal.getSubGoalSet();
-	}
-
-	public Goal getParentGoal(String specId, String goalName) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, goalName);
-
-		return goal.getParentGoal();
-	}
-
-	@Atomic(mode = TxMode.WRITE)
-	public Goal addSubGoal(String specId, String goalName, String subGoalName) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, goalName);
-		Goal subGoal = getGoalByName(spec, subGoalName);
-		goal.addSubGoal(subGoal);
-
-		return subGoal;
-	}
-
 	@Atomic(mode = TxMode.WRITE)
 	public Goal mergeGoals(MergeOperationDto mergeOperationDto) {
 		Specification spec = getSpecBySpecId(mergeOperationDto.getSpecId());
@@ -904,9 +880,6 @@ public class DesignInterface {
 		for (Goal goal : spec.getGoalModel().getGoalSet()) {
 			System.out.println("Goal name:" + goal.getName());
 
-			for (Goal sub : goal.getSubGoalSet()) {
-				System.out.println("Sub goal name:" + sub.getName());
-			}
 			for (DefProductCondition act : goal.getActivationConditionSet()) {
 				System.out.println("ACT(" + act.getSubPath() + ")");
 			}

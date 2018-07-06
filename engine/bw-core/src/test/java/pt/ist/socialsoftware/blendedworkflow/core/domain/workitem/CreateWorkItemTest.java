@@ -19,7 +19,6 @@ public class CreateWorkItemTest extends TeardownRollbackTest {
 	private static final String MY_SPEC = "My spec";
 	private static final String YOUR_SPEC = "Your spec";
 	private static final String NAME = "name";
-	private static final String OTHER_ENTITY_NAME = "otherEntityName";
 
 	Specification spec = null;
 	Goal goal = null;

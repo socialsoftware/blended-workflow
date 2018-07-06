@@ -31,7 +31,7 @@ public class MulCondition extends MulCondition_Base {
 			return new MulCondition(relation, 1);
 		}
 
-		assert (false);
+		assert false;
 		return null;
 	}
 
@@ -115,8 +115,7 @@ public class MulCondition extends MulCondition_Base {
 
 	@Override
 	public Set<Entity> getEntities() {
-		// TODO Auto-generated method stub
-		return null;
+		return getRelationBW().getEntitySet();
 	}
 
 	@Override
