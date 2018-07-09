@@ -7,15 +7,14 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RALExprIsPersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RALExprOrDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceRuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.execution.ExecutionResourcesInterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -84,6 +83,10 @@ public class RALExpressionTest extends TeardownRollbackTest {
         RALExpression expression = new RALExprHasCapability(_resourceModel, _capability1);
         assertEquals(2, expression.getEligibleResources(_workflowInstance).size());
         assertTrue(expression.getEligibleResources(_workflowInstance).containsAll(Arrays.asList(person1, person3)));
+        SetOfRequiredResources set = expression.getSetOfRequiredResources();
+        assertTrue(set.getCapabilities().stream().map(CapabilityDTO::getName)
+                .collect(Collectors.toList()).contains(_capability1.getDTO().getName()));
+        assertTrue(expression.isConsistent());
     }
 
     @Test

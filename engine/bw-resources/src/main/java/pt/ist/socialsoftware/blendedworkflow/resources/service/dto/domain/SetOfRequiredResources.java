@@ -22,7 +22,7 @@ public class SetOfRequiredResources {
     private Set<String> taskDuty;
     private Set<String> notTaskDuty;
     private Set<String> history;
-    private Set<ProductDTO> workItemProducts;
+    private Set<String> workItemProducts;
 
 
     public SetOfRequiredResources() {
@@ -214,11 +214,11 @@ public class SetOfRequiredResources {
         return this;
     }
 
-    public Set<ProductDTO> getWorkItemProducts() {
+    public Set<String> getWorkItemProducts() {
         return workItemProducts;
     }
 
-    public SetOfRequiredResources addWorkItemProducts(Collection<ProductDTO> workItemProducts) {
+    public SetOfRequiredResources addWorkItemProducts(Collection<String> workItemProducts) {
         this.workItemProducts.addAll(workItemProducts);
 
         return this;
@@ -272,7 +272,7 @@ public class SetOfRequiredResources {
         this.notDataField = notDataField;
     }
 
-    public void setWorkItemProducts(Set<ProductDTO> workItemProducts) {
+    public void setWorkItemProducts(Set<String> workItemProducts) {
         this.workItemProducts = workItemProducts;
     }
 
