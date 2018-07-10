@@ -34,8 +34,14 @@ public class RALExprSharesRole extends RALExprSharesRole_Base implements RALExpr
         List<Role> roles = new ArrayList();
         List<Person> persons = getPersonExpr().getEligibleResources(history);
         persons.forEach(person -> roles.addAll(person.getPositionSet().stream()
-                .filter(position -> position.getUnit().equals(getUnit()))
-                .map(position -> position.getRoleSet())
+                .filter(position -> {
+                    if (getUnit() != null) {
+                        return position.getUnit().equals(getUnit());
+                    } else {
+                        return true;
+                    }
+                })
+                .map(Position_Base::getRoleSet)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList())));
 
@@ -69,7 +75,13 @@ public class RALExprSharesRole extends RALExprSharesRole_Base implements RALExpr
             Person person = ((RALExprIsPerson) getPersonExpr()).getPerson();
 
             roles = person.getPositionSet().stream()
-                    .filter(position -> position.getUnit().equals(getUnit()))
+                    .filter(position -> {
+                        if (getUnit() != null) {
+                            return position.getUnit().equals(getUnit());
+                        } else {
+                            return true;
+                        }
+                    })
                     .map(Position::getRoleSet)
                     .flatMap(Collection::stream)
                     .map(Role::getDTO)

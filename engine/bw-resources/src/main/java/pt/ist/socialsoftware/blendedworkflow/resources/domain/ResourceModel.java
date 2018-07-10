@@ -212,9 +212,11 @@ public class ResourceModel extends ResourceModel_Base {
 			return;
 		}
 
-		expressionA1.isMergable(expressionA2);
-
 		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		if (!expressionMerged.isConsistent()) {
+			throw new RMException(RMErrorType.INCONSISTENT_RAL_EXPRESSION);
+		}
 
 		activityMerged.setResponsibleFor(expressionMerged);
 	}
@@ -232,6 +234,10 @@ public class ResourceModel extends ResourceModel_Base {
 		expressionA1.isMergable(expressionA2);
 
 		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		if (!expressionMerged.isConsistent()) {
+			throw new RMException(RMErrorType.INCONSISTENT_RAL_EXPRESSION);
+		}
 
 		activityMerged.setInforms(expressionMerged);
 	}
@@ -270,6 +276,10 @@ public class ResourceModel extends ResourceModel_Base {
 
 		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
 
+		if (!expressionMerged.isConsistent()) {
+			throw new RMException(RMErrorType.INCONSISTENT_RAL_EXPRESSION);
+		}
+
 		goalMerged.setResponsibleFor(expressionMerged);
 	}
 
@@ -286,6 +296,10 @@ public class ResourceModel extends ResourceModel_Base {
 		expressionA1.isMergable(expressionA2);
 
 		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		if (!expressionMerged.isConsistent()) {
+			throw new RMException(RMErrorType.INCONSISTENT_RAL_EXPRESSION);
+		}
 
 		goalMerged.setInforms(expressionMerged);
 	}
