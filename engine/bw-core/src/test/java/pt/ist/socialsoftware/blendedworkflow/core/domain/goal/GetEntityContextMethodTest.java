@@ -42,7 +42,7 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 	Attribute attOne;
 	Attribute attTwo;
 	Attribute attThree;
-	RelationBW oneTwo;
+	RelationBW relation;
 	ProductGoal productGoal;
 	AssociationGoal associationGoal;
 
@@ -59,10 +59,12 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 		this.entTwo = new Entity(dataModel, ENT_TWO_NAME, false);
 		this.attThree = new Attribute(dataModel, this.entTwo, ATT_THREE_NAME, AttributeType.NUMBER, true);
 
-		this.oneTwo = new RelationBW(dataModel, "relOneTwo", this.entOne, ROLENAME_ENT_ONE, Cardinality.ONE_MANY, false,
-				this.entTwo, ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);
+		this.relation = new RelationBW(dataModel, "relOneTwo", this.entOne, ROLENAME_ENT_ONE, Cardinality.ONE_MANY,
+				false, this.entTwo, ROLENAME_ENT_TWO, Cardinality.ONE_MANY, false);
 
 		new Dependence(dataModel, this.attThree, ENT_TWO_NAME + "." + ROLENAME_ENT_ONE + "." + ATT_ONE_NAME);
+
+		this.spec.getConditionModel().generateConditions();
 	}
 
 	@Test
@@ -79,7 +81,7 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void successForAssociation() {
-		this.associationGoal = new AssociationGoal(this.goalModel, GOAL_ONE, this.oneTwo.getMulConditionSet());
+		this.associationGoal = new AssociationGoal(this.goalModel, GOAL_ONE, this.relation.getMulConditionSet());
 		this.associationGoal.initAssociationGoal();
 
 		Set<Entity> entityContext = this.associationGoal.getEntityContext();
@@ -125,7 +127,7 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 
 		Set<Entity> entityContext = this.productGoal.getEntityContext();
 
-		assertEquals(0, entityContext.size());
+		assertEquals(1, entityContext.size());
 		assertTrue(entityContext.contains(this.entOne));
 	}
 
@@ -138,7 +140,7 @@ public class GetEntityContextMethodTest extends TeardownRollbackTest {
 
 		Set<Entity> entityContext = this.productGoal.getEntityContext();
 
-		assertEquals(0, entityContext.size());
+		assertEquals(1, entityContext.size());
 		assertTrue(entityContext.contains(this.entTwo));
 	}
 

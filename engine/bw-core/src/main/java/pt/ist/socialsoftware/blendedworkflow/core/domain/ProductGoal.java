@@ -1,11 +1,17 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
 public class ProductGoal extends ProductGoal_Base {
+	@Override
+	public void addEntityInvariantCondition(MulCondition mulCondition) {
+		throw new BWException(BWErrorType.INCONSISTENT_PRODUCT_GOAL,
+				"A product goal cannot have multiplicity conditions");
+	}
 
 	public ProductGoal(GoalModel goalModel, String name, Set<DefProductCondition> defProductConditionSet) {
 		setGoalModel(goalModel);
@@ -17,6 +23,10 @@ public class ProductGoal extends ProductGoal_Base {
 	}
 
 	public Goal initProductGoal() {
+		if (getSuccessConditionSet().isEmpty()) {
+			throw new BWException(BWErrorType.INCONSISTENT_PRODUCT_GOAL,
+					"A product goal should have a success conditions");
+		}
 		applyActivationConditionsForProductGoal();
 		applyRuleConditions();
 
@@ -36,6 +46,20 @@ public class ProductGoal extends ProductGoal_Base {
 		getAttributeInvariantConditionSet().stream().forEach(rule -> removeAttributeInvariantCondition(rule));
 
 		super.delete();
+	}
+
+	@Override
+	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity) {
+		// instances where activation conditions hold
+		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(contextEntity).stream()
+				.filter(ei -> ei.holdsDefPathConditions(getActivationConditionSetForContextEntity(contextEntity)))
+				.collect(Collectors.toSet());
+
+		// none of activation conditions attributes are defined in the instance contexts
+		instanceContext = instanceContext.stream().filter(ei -> ei.attributesNotDefined(getSuccessAttributes()))
+				.collect(Collectors.toSet());
+
+		return instanceContext;
 	}
 
 }

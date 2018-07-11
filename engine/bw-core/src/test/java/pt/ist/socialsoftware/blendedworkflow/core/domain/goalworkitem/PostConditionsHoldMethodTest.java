@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.core.domain.goalworkitem;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
+
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
@@ -13,6 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.PostWorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
@@ -46,9 +49,9 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 		this.entityTwo = new Entity(this.spec.getDataModel(), "EntityTwo", false);
 		this.relationBW = new RelationBW(this.spec.getDataModel(), "name", this.entityOne, ENT_ONE_ROLE,
 				Cardinality.ONE, false, this.entityTwo, ENT_TWO_ROLE, "2..4", false);
-		MulCondition.createMUlConditions(this.relationBW);
+		MulCondition.createMulConditions(this.relationBW);
 
-		this.goal = new Goal(this.spec.getGoalModel(), NAME);
+		this.goal = new ProductGoal(this.spec.getGoalModel(), NAME, new HashSet<>());
 		this.goal.addSuccessCondition(this.defEntityCondition);
 		this.goal.addEntityInvariantCondition(MulCondition.getMulCondition(this.relationBW, ENT_TWO_ROLE));
 

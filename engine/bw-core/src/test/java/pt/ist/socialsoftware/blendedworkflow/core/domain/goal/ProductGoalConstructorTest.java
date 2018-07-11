@@ -39,7 +39,6 @@ public class ProductGoalConstructorTest extends TeardownRollbackTest {
 	public void populate4Test() throws BWException {
 		this.spec = new Specification("SpecId", "My spec");
 		DataModel dataModel = this.spec.getDataModel();
-		this.goalModel = this.spec.getGoalModel();
 
 		this.entOne = new Entity(dataModel, ENT_ONE_NAME, false);
 
@@ -47,6 +46,10 @@ public class ProductGoalConstructorTest extends TeardownRollbackTest {
 		this.attTwo = new Attribute(dataModel, this.entOne, ATT_TWO_NAME, AttributeType.NUMBER, false);
 
 		new Dependence(dataModel, this.attTwo, ENT_ONE_NAME + "." + ATT_ONE_NAME);
+
+		this.spec.getConditionModel().generateConditions();
+
+		this.goalModel = this.spec.getGoalModel();
 	}
 
 	@Test(expected = BWException.class)
@@ -99,6 +102,8 @@ public class ProductGoalConstructorTest extends TeardownRollbackTest {
 		Entity entTwo = new Entity(this.spec.getDataModel(), "EntTwo", false);
 		RelationBW relation = new RelationBW(this.spec.getDataModel(), "relation", this.entOne, "entOne",
 				Cardinality.ONE, entTwo, "entTwo", Cardinality.ONE_MANY);
+
+		this.spec.getConditionModel().generateConditions();
 
 		Set<DefProductCondition> defProductConditions = new HashSet<>();
 		defProductConditions.add(this.entOne.getDefCondition());

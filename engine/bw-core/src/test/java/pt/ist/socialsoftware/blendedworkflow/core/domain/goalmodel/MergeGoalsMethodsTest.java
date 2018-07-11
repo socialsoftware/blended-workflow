@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -24,6 +25,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
@@ -38,6 +40,7 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 	private static final String ATTRIBUTE_ONE_NAME = "att1";
 	private static final String ATTRIBUTE_TWO_NAME = "att2";
 	private static final String ATTRIBUTE_THREE_NAME = "att3";
+	private static final String ATTRIBUTE_FOUR_NAME = "att4";
 	private static final String RULE_CONDITION = "rule";
 	private static final String ROLENAME_ONE = "theOne";
 	private static final String ROLENAME_TWO = "theTwo";
@@ -45,8 +48,10 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 	private static final String PRODUCT_GOAL_ONE = "goalOne";
 	private static final String PRODUCT_GOAL_TWO = "goalTwo";
 	private static final String PRODUCT_GOAL_THREE = "goalThree";
+	private static final String PRODUCT_GOAL_OTHER = "goalOtherProduct";
 	private static final String ASSOCIATION_GOAL_ONE = "AssociationGoalOne";
 	private static final String ASSOCIATION_GOAL_TWO = "AssociationGoalTwo";
+	private static final String ASSOCIATION_GOAL_OTHER = "goalOtherAssociation";
 	private static final String DEPENDENCE_PATH_ONE = ENTITY_TWO_NAME + "." + ROLENAME_ONE + "." + ATTRIBUTE_ONE_NAME;
 	private static final String DEPENDENCE_PATH_TWO = ENTITY_ONE_NAME + "." + ROLENAME_TWO + "." + ATTRIBUTE_THREE_NAME;
 
@@ -63,6 +68,8 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 	ProductGoal productGoalOne;
 	ProductGoal productGoalTwo;
 	ProductGoal productGoalThree;
+	ProductGoal productGoalOther;
+	AssociationGoal associationGoalOther;
 	AssociationGoal associationGoalOne;
 	AssociationGoal associationGoalTwo;
 
@@ -79,12 +86,13 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 		this.entityTwo = new Entity(this.spec.getDataModel(), ENTITY_TWO_NAME, false);
 		this.attributeThree = new Attribute(this.spec.getDataModel(), this.entityTwo, ATTRIBUTE_THREE_NAME,
 				AttributeType.BOOLEAN, true);
+		this.attributeFour = new Attribute(this.spec.getDataModel(), this.entityTwo, ATTRIBUTE_FOUR_NAME,
+				AttributeType.BOOLEAN, true);
 
-		this.entityThree = new Entity(this.spec.getDataModel(), ENTITY_TWO_NAME, false);
+		this.entityThree = new Entity(this.spec.getDataModel(), ENTITY_THREE_NAME, false);
 
 		this.relationOne = new RelationBW(this.spec.getDataModel(), "nameOne", this.entityOne, ROLENAME_ONE,
 				Cardinality.ONE, false, this.entityTwo, ROLENAME_TWO, Cardinality.ZERO_MANY, false);
-
 		this.relationTwo = new RelationBW(this.spec.getDataModel(), "nameTwo", this.entityOne, ROLENAME_ONE,
 				Cardinality.ONE, false, this.entityThree, ROLENAME_THREE, Cardinality.ZERO_MANY, false);
 
@@ -104,6 +112,21 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 	@Test
 	public void mergeProductionGoals() {
 		Set<DefProductCondition> defProductConditions = new HashSet<>();
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityTwo));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeThree));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFour));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityThree));
+		this.productGoalOther = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_OTHER, defProductConditions);
+		this.productGoalOther.initProductGoal();
+
+		Set<MulCondition> mulConditions = new HashSet<>();
+		mulConditions.addAll(this.relationOne.getMulConditionSet());
+		mulConditions.addAll(this.relationTwo.getMulConditionSet());
+		this.associationGoalOther = new AssociationGoal(this.spec.getGoalModel(), ASSOCIATION_GOAL_OTHER,
+				mulConditions);
+
+		defProductConditions = new HashSet<>();
 		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
 		this.productGoalOne = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_ONE, defProductConditions);
 		this.productGoalOne.initProductGoal();
@@ -115,25 +138,35 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 
 		this.spec.getGoalModel().checkModel();
 
-		Goal merged = this.spec.getGoalModel().mergeGoals(PRODUCT_GOAL_TWO + PRODUCT_GOAL_THREE, this.productGoalTwo,
-				this.productGoalThree);
+		Goal merged = this.spec.getGoalModel().mergeGoals(PRODUCT_GOAL_THREE, this.productGoalOne, this.productGoalTwo);
 
+		assertFalse(this.spec.getGoalModel().existsGoal(PRODUCT_GOAL_ONE));
 		assertFalse(this.spec.getGoalModel().existsGoal(PRODUCT_GOAL_TWO));
-		assertFalse(this.spec.getGoalModel().existsGoal(PRODUCT_GOAL_THREE));
-		assertEquals(PRODUCT_GOAL_TWO + PRODUCT_GOAL_THREE, merged.getName());
+		assertEquals(PRODUCT_GOAL_THREE, merged.getName());
 		assertEquals(2, merged.getSuccessConditionSet().size());
 		assertTrue(merged.getSuccessConditionSet()
 				.contains(DefAttributeCondition.getDefAttributeCondition(this.attributeOne)));
 		assertTrue(merged.getSuccessConditionSet().contains(DefEntityCondition.getDefEntityCondition(this.entityOne)));
 		assertEquals(0, merged.getActivationConditionSet().size());
 		assertEquals(0, merged.getEntityInvariantConditionSet().size());
-		assertEquals(0, merged.getAttributeInvariantConditionSet().size());
+		assertEquals(1, merged.getAttributeInvariantConditionSet().size());
 
 		this.spec.getGoalModel().checkModel();
 	}
 
 	@Test
 	public void mergeAssociationGoals() {
+		Set<DefProductCondition> defProductConditions = new HashSet<>();
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityTwo));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeThree));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFour));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityThree));
+		this.productGoalOther = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_OTHER, defProductConditions);
+		this.productGoalOther.initProductGoal();
+
 		this.associationGoalOne = new AssociationGoal(this.spec.getGoalModel(), ASSOCIATION_GOAL_ONE,
 				this.relationOne.getMulConditionSet());
 		this.associationGoalOne.initAssociationGoal();
@@ -145,7 +178,7 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 		this.spec.getGoalModel().checkModel();
 
 		Goal result = this.spec.getGoalModel().mergeGoals(ASSOCIATION_GOAL_ONE + ASSOCIATION_GOAL_TWO,
-				this.productGoalTwo, this.productGoalOne);
+				this.associationGoalOne, this.associationGoalTwo);
 
 		assertFalse(this.spec.getGoalModel().existsGoal(ASSOCIATION_GOAL_ONE));
 		assertFalse(this.spec.getGoalModel().existsGoal(ASSOCIATION_GOAL_TWO));
@@ -154,10 +187,13 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 		assertEquals(4, result.getEntityInvariantConditionSet().size());
 		assertTrue(result.getEntityInvariantConditionSet().containsAll(this.relationOne.getMulConditionSet()));
 		assertTrue(result.getEntityInvariantConditionSet().containsAll(this.relationTwo.getMulConditionSet()));
+		result.getActivationConditionSet().stream().forEach(def -> System.out.println(def.getPath().getValue()));
 		assertEquals(3, result.getActivationConditionSet().size());
-		assertTrue(result.getActivationConditionSet().contains(this.entityOne.getDefCondition()));
-		assertTrue(result.getActivationConditionSet().contains(this.entityTwo.getDefCondition()));
-		assertTrue(result.getActivationConditionSet().contains(this.entityThree.getDefCondition()));
+		Set<String> paths = result.getActivationConditionSet().stream().map(def -> def.getPath().getValue())
+				.collect(Collectors.toSet());
+		assertTrue(paths.contains(ENTITY_ONE_NAME));
+		assertTrue(paths.contains(ENTITY_TWO_NAME));
+		assertTrue(paths.contains(ENTITY_THREE_NAME));
 
 		assertEquals(0, result.getSuccessConditionSet().size());
 		assertEquals(0, result.getAttributeInvariantConditionSet().size());
@@ -168,6 +204,19 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 	@Test
 	public void conflictDueToCircularityImplicitDependenceBetweenAttributes() {
 		Set<DefProductCondition> defProductConditions = new HashSet<>();
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFour));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityThree));
+		this.productGoalOther = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_OTHER, defProductConditions);
+		this.productGoalOther.initProductGoal();
+
+		Set<MulCondition> mulConditions = new HashSet<>();
+		mulConditions.addAll(this.relationOne.getMulConditionSet());
+		mulConditions.addAll(this.relationTwo.getMulConditionSet());
+		this.associationGoalOther = new AssociationGoal(this.spec.getGoalModel(), ASSOCIATION_GOAL_OTHER,
+				mulConditions);
+
+		defProductConditions = new HashSet<>();
 		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
 		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeThree));
 		this.productGoalOne = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_ONE, defProductConditions);
@@ -193,6 +242,20 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 	@Test
 	public void conflictDueToCircularityImplicitAndExplictDependenceBetweenAttributes() {
 		Set<DefProductCondition> defProductConditions = new HashSet<>();
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityTwo));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeThree));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityThree));
+		this.productGoalOther = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_OTHER, defProductConditions);
+		this.productGoalOther.initProductGoal();
+
+		Set<MulCondition> mulConditions = new HashSet<>();
+		mulConditions.addAll(this.relationOne.getMulConditionSet());
+		mulConditions.addAll(this.relationTwo.getMulConditionSet());
+		this.associationGoalOther = new AssociationGoal(this.spec.getGoalModel(), ASSOCIATION_GOAL_OTHER,
+				mulConditions);
+
+		defProductConditions = new HashSet<>();
 		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
 		this.productGoalOne = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_ONE, defProductConditions);
 		this.productGoalOne.initProductGoal();
@@ -221,6 +284,19 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 	@Test
 	public void conflictDueToCircularityExplictDependenceBetweenAttributes() {
 		Set<DefProductCondition> defProductConditions = new HashSet<>();
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityTwo));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityThree));
+		this.productGoalOther = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_OTHER, defProductConditions);
+		this.productGoalOther.initProductGoal();
+
+		Set<MulCondition> mulConditions = new HashSet<>();
+		mulConditions.addAll(this.relationOne.getMulConditionSet());
+		mulConditions.addAll(this.relationTwo.getMulConditionSet());
+		this.associationGoalOther = new AssociationGoal(this.spec.getGoalModel(), ASSOCIATION_GOAL_OTHER,
+				mulConditions);
+
+		defProductConditions = new HashSet<>();
 		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
 		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
 		this.productGoalOne = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_ONE, defProductConditions);
@@ -249,7 +325,24 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 
 	@Test(expected = BWException.class)
 	public void mergeProductAssociationGoalsFail() {
-		this.spec.getGoalModel().mergeGoals("Name", this.productGoalOne, this.associationGoalTwo);
+		Set<DefProductCondition> defProductConditions = new HashSet<>();
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityTwo));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeThree));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFour));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityThree));
+		this.productGoalOther = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_OTHER, defProductConditions);
+		this.productGoalOther.initProductGoal();
+
+		Set<MulCondition> mulConditions = new HashSet<>();
+		mulConditions.addAll(this.relationOne.getMulConditionSet());
+		mulConditions.addAll(this.relationTwo.getMulConditionSet());
+		this.associationGoalOther = new AssociationGoal(this.spec.getGoalModel(), ASSOCIATION_GOAL_OTHER,
+				mulConditions);
+
+		this.spec.getGoalModel().mergeGoals("Name", this.productGoalOther, this.associationGoalOther);
 	}
 
 }

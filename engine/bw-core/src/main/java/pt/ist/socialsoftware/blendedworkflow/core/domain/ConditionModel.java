@@ -43,7 +43,7 @@ public class ConditionModel extends ConditionModel_Base {
 				.filter(a -> !a.getEntity().getExists())
 				.forEach(a -> DefAttributeCondition.getDefAttributeCondition(a));
 
-		dataModel.getRelationBWSet().stream().forEach(r -> MulCondition.createMUlConditions(r));
+		dataModel.getRelationBWSet().stream().forEach(r -> MulCondition.createMulConditions(r));
 
 		dataModel.getEntitySet().stream().flatMap(e -> e.getRuleSet().stream())
 				.forEach(r -> this.addAttributeInvariantCondition(r));

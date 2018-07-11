@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
 
 public abstract class Goal extends Goal_Base {
 	private static Logger logger = LoggerFactory.getLogger(Goal.class);
@@ -23,6 +23,10 @@ public abstract class Goal extends Goal_Base {
 	public void setName(String name) {
 		checkUniqueGoalName(name);
 		super.setName(name);
+	}
+
+	public Goal() {
+
 	}
 
 	public Goal(GoalModel goalModel, String name, String description) throws BWException {
@@ -107,21 +111,22 @@ public abstract class Goal extends Goal_Base {
 
 		getActivationConditionSet().stream().forEach(act -> removeActivationCondition(act));
 
+		getSuccessConditionSet().stream().forEach(def -> removeSuccessCondition(def));
+
 		deleteDomainObject();
 	}
 
-	public GoalDTO getDTO() {
-		GoalDTO goalDTO = new GoalDTO();
-		goalDTO.setSpecId(getSpecification().getSpecId());
-		goalDTO.setExtId(getExternalId());
-		goalDTO.setName(getName());
-
-		return goalDTO;
+	public GoalDto getDTO() {
+		return new GoalDto(getSpecification().getSpecId(), getExternalId(), getClass().getName(), getName());
 	}
 
 	protected void applyActivationConditionsForProductGoal() {
 		Set<String> paths = getProducedProducts().stream().flatMap(p -> p.getDependenceSet().stream())
 				.map(d -> d.getPath().getValue()).collect(Collectors.toSet());
+
+		for (Attribute attribute : getProducedAttributes()) {
+			paths.add(attribute.getEntity().getFullPath());
+		}
 
 		for (String path : paths) {
 			if (!getProducedProducts().contains(getDataModel().getTargetOfPath(path))) {
@@ -131,9 +136,10 @@ public abstract class Goal extends Goal_Base {
 	}
 
 	protected void applyActivationConditionsForAssociationGoal() {
-		for (String path : getEntityInvariantConditionSet().stream().map(m -> m.getPath())
+		for (Entity sourceEntity : getEntityInvariantConditionSet().stream().map(m -> m.getTargetEntity())
 				.collect(Collectors.toSet())) {
-			addActivationCondition(DefPathCondition.getDefPathCondition(getSpecification(), path));
+			addActivationCondition(
+					DefPathCondition.getDefPathCondition(getSpecification(), sourceEntity.getFullPath()));
 		}
 	}
 
@@ -163,8 +169,11 @@ public abstract class Goal extends Goal_Base {
 	}
 
 	public boolean hasDependence(Dependence dependence) {
-		if (!getSuccessConditionSet().contains(dependence.getProduct().getDefCondition())) {
+		if (!getProducedProducts().contains(dependence.getProduct())) {
 			return false;
+		} else if (getProducedProducts().contains(dependence.getProduct())
+				&& getProducedProducts().contains(dependence.getTarget())) {
+			return true;
 		}
 		return activationConditionImplementsDependence(dependence);
 	}
@@ -193,7 +202,7 @@ public abstract class Goal extends Goal_Base {
 	private void checkDependencies() {
 		for (Product product : getSuccessProducts()) {
 			for (Dependence dependence : product.getDependenceSet()) {
-				if (!activationConditionImplementsDependence(dependence)) {
+				if (!hasDependence(dependence)) {
 					throw new BWException(BWErrorType.INCONSISTENT_GOALMODEL,
 							"not implemented dependence: " + dependence.getPath().getValue());
 				}
@@ -233,13 +242,18 @@ public abstract class Goal extends Goal_Base {
 		getActivationConditionSet().stream().forEach(def -> removeActivationCondition(def));
 	}
 
-	private Set<Product> getProducedProducts() {
+	protected Set<Product> getProducedProducts() {
 		return getSuccessConditionSet().stream().map(d -> d.getPath().getTarget()).collect(Collectors.toSet());
 	}
 
 	private Set<Entity> getProducedEntities() {
 		return getSuccessConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Entity.class::isInstance)
 				.map(Entity.class::cast).collect(Collectors.toSet());
+	}
+
+	private Set<Attribute> getProducedAttributes() {
+		return getSuccessConditionSet().stream().map(d -> d.getPath().getTarget()).filter(Attribute.class::isInstance)
+				.map(Attribute.class::cast).collect(Collectors.toSet());
 	}
 
 	public Boolean isEnabledForExecution(WorkflowInstance workflowInstance) {
@@ -263,17 +277,14 @@ public abstract class Goal extends Goal_Base {
 	public Set<Entity> getEntityContext() {
 		Set<Entity> entityContext = new HashSet<>();
 
-		// the entity is already defined
 		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
-			if (defPathCondition.isEntity()) {
-				entityContext.add(defPathCondition.getSourceOfPath());
-			}
-		}
-
-		// the entity is going to be defined
-		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
-			if (!entityContext.contains(defPathCondition.getSourceOfPath())) {
+			// entity is already defined
+			if (getProducedEntities().contains(defPathCondition.getSourceOfPath())) {
 				entityContext.add(defPathCondition.getPath().getAdjacent());
+			}
+			// entity is going to be defined
+			if (!getProducedEntities().contains(defPathCondition.getSourceOfPath())) {
+				entityContext.add(defPathCondition.getSourceOfPath());
 			}
 		}
 
@@ -334,46 +345,24 @@ public abstract class Goal extends Goal_Base {
 		return instanceContext;
 	}
 
-	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity) {
-		// activation conditions hold
-		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(contextEntity).stream()
-				.filter(ei -> ei.holdsDefPathConditions(getActivationConditionSet())).collect(Collectors.toSet());
-
-		// none of activation conditions attributes are defined
-		instanceContext = instanceContext.stream().filter(ei -> ei.attributesNotDefined(getSuccessAttributes()))
-				.collect(Collectors.toSet());
-
-		// entity instance can be associated due to invariant mulconditions
-		instanceContext = instanceContext.stream()
-				.filter(ei -> ei.canBeAssociatedWithNewEntityInstance(getEntityInvariantConditionSet()))
-				.collect(Collectors.toSet());
-
-		// there are enough instances in the context to enable the goal
-		int instanceContextSize = instanceContext.size();
-		if (!getEntityInvariantConditionSet().stream().filter(m -> m.getTargetEntity() == contextEntity)
-				.allMatch(m -> m.getCardinality().getMinValue() <= instanceContextSize)) {
-			instanceContext.clear();
-		}
-
-		return instanceContext;
-	}
+	public abstract Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity);
 
 	public Set<MulCondition> getMulConditionsThatShouldHold(Product product) {
 		return getEntityInvariantConditionSet().stream().filter(m -> m.getSourceEntity() == product)
 				.collect(Collectors.toSet());
 	}
 
-	private Set<Entity> getSuccessEntities() {
+	protected Set<Entity> getSuccessEntities() {
 		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).filter(Entity.class::isInstance)
 				.map(Entity.class::cast).collect(Collectors.toSet());
 	}
 
-	private Set<Attribute> getSuccessAttributes() {
+	protected Set<Attribute> getSuccessAttributes() {
 		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).filter(Attribute.class::isInstance)
 				.map(Attribute.class::cast).collect(Collectors.toSet());
 	}
 
-	private Set<Product> getSuccessProducts() {
+	protected Set<Product> getSuccessProducts() {
 		return getSuccessConditionSet().stream().map(d -> d.getTargetOfPath()).collect(Collectors.toSet());
 	}
 
@@ -397,6 +386,12 @@ public abstract class Goal extends Goal_Base {
 		return getEntityInvariantConditionSet()
 				.stream().filter(m -> postEntities.contains(m.getSourceEntity())
 						&& postEntities.contains(m.getTargetEntity()) && m.getSourceEntity() == entity)
+				.collect(Collectors.toSet());
+	}
+
+	public Set<DefPathCondition> getActivationConditionSetForContextEntity(Entity contextEntity) {
+		return getActivationConditionSet().stream().filter(
+				def -> def.getPath().getSource() == contextEntity || def.getPath().getAdjacent() == contextEntity)
 				.collect(Collectors.toSet());
 	}
 

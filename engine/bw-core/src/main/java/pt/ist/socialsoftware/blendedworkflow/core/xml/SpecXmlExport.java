@@ -17,6 +17,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 
@@ -199,14 +200,17 @@ public class SpecXmlExport {
 
 		for (Goal goal : goalModel.getGoalSet()) {
 			Element goalElement = new Element("goal");
+			goalElement.setAttribute("type", goal.getClass().getName());
 			goalElement.setAttribute("name", goal.getName());
-			if (goal.getParentGoal() != null) {
-				goalElement.setAttribute("parent", goal.getParentGoal().getName());
-			}
 
-			exportPreConditions(goalElement, goal.getActivationConditionSet());
-			exportPostConditions(goalElement, goal.getSuccessConditionSet());
-			exportMulConditions(goalElement, goal.getEntityInvariantConditionSet());
+			if (goal instanceof ProductGoal) {
+				goalElement.setAttribute("name", goal.getClass().getName());
+				exportPreConditions(goalElement, goal.getActivationConditionSet());
+				exportPostConditions(goalElement, goal.getSuccessConditionSet());
+			} else {
+				exportPreConditions(goalElement, goal.getActivationConditionSet());
+				exportMulConditions(goalElement, goal.getEntityInvariantConditionSet());
+			}
 
 			goalModelElement.addContent(goalElement);
 		}

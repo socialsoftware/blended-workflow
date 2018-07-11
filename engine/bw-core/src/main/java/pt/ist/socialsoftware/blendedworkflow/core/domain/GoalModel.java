@@ -117,9 +117,9 @@ public class GoalModel extends GoalModel_Base {
 		if (goalOne.getClass() != goalTwo.getClass()) {
 			throw new BWException(BWErrorType.UNMERGEABLE_GOALS, goalOne.getName() + " - " + goalTwo.getName());
 		} else if (goalOne instanceof ProductGoal) {
-			mergeProductGoals(newGoalName, goalOne, goalTwo);
+			result = mergeProductGoals(newGoalName, goalOne, goalTwo);
 		} else {
-			mergeAssociationGoals(newGoalName, goalOne, goalTwo);
+			result = mergeAssociationGoals(newGoalName, goalOne, goalTwo);
 		}
 
 		checkModel();
@@ -219,7 +219,8 @@ public class GoalModel extends GoalModel_Base {
 	private void checkAllDependenceConditionsAreApplied() {
 		for (Dependence dependence : getSpecification().getConditionModel().getAttributeDependenceConditionSet()) {
 			if (getGoalWithDependence(dependence) == null) {
-				throw new BWException(BWErrorType.INCONSISTENT_GOALMODEL, "not all Dependencies are applied");
+				throw new BWException(BWErrorType.INCONSISTENT_GOALMODEL,
+						"not all Dependencies are applied " + dependence.getPath().getValue());
 			}
 		}
 	}
@@ -249,7 +250,7 @@ public class GoalModel extends GoalModel_Base {
 		}
 	}
 
-	private Object getGoalWithDependence(Dependence dependence) {
+	private Goal getGoalWithDependence(Dependence dependence) {
 		for (Goal goal : getGoalSet()) {
 			if (goal.hasDependence(dependence)) {
 				return goal;

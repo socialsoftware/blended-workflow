@@ -16,6 +16,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
@@ -62,7 +63,12 @@ public class GetEnabledGoalSetTest extends TeardownRollbackTest {
 
 		new Dependence(dataModel, this.attTwo, ENT_ONE_NAME + "." + ATT_ONE_NAME);
 
+		this.spec.getConditionModel().generateConditions();
+
 		this.workflowInstance = new WorkflowInstance(this.spec, NAME);
+
+		new EntityInstance(this.workflowInstance, this.entOne);
+		new EntityInstance(this.workflowInstance, this.entTwo);
 	}
 
 	@Test

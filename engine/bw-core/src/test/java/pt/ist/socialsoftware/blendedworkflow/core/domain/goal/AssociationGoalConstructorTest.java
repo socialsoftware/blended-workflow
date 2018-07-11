@@ -45,6 +45,8 @@ public class AssociationGoalConstructorTest extends TeardownRollbackTest {
 
 		this.relation = new RelationBW(dataModel, "relation", this.entOne, ROLENAME_ONE, Cardinality.ONE, this.entTwo,
 				ROLENAME_TWO, Cardinality.ONE_MANY);
+
+		this.spec.getConditionModel().generateConditions();
 	}
 
 	@Test(expected = BWException.class)
@@ -59,10 +61,10 @@ public class AssociationGoalConstructorTest extends TeardownRollbackTest {
 		goal.initAssociationGoal();
 
 		assertEquals(2, goal.getActivationConditionSet().size());
-		assertTrue(goal.getActivationConditionSet().stream().map(p -> p.getTargetOfPath()).collect(Collectors.toSet())
-				.contains(this.entOne));
-		assertTrue(goal.getActivationConditionSet().stream().map(p -> p.getTargetOfPath()).collect(Collectors.toSet())
-				.contains(this.entTwo));
+		Set<String> paths = goal.getActivationConditionSet().stream().map(def -> def.getPath().getValue())
+				.collect(Collectors.toSet());
+		assertTrue(paths.contains(ENT_ONE_NAME));
+		assertTrue(paths.contains(ENT_TWO_NAME));
 	}
 
 	@Test(expected = BWException.class)

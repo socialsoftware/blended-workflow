@@ -35,7 +35,7 @@ public class MulCondition extends MulCondition_Base {
 		return null;
 	}
 
-	public static void createMUlConditions(RelationBW relation) {
+	public static void createMulConditions(RelationBW relation) {
 		getMulCondition(relation, relation.getRolenameOne());
 		getMulCondition(relation, relation.getRolenameTwo());
 	}

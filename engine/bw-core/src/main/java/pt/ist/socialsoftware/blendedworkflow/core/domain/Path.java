@@ -73,6 +73,10 @@ public class Path extends Path_Base {
 		Entity entity = getDataModel().getEntity(path.get(0))
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, path.get(0)));
 
+		if (path.size() == 1) {
+			return null;
+		}
+
 		return entity.getEntityByRolename(path.get(1));
 	}
 
