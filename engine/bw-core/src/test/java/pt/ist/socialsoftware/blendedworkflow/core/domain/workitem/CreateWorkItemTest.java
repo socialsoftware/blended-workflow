@@ -10,6 +10,7 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ActivityWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
@@ -24,7 +25,8 @@ public class CreateWorkItemTest extends TeardownRollbackTest {
 	private static final String NAME = "name";
 
 	Specification spec = null;
-	ProductGoal goal = null;
+	ProductGoal productGoal = null;
+	AssociationGoal associationGoal = null;
 	Activity activity = null;
 
 	WorkflowInstance workflowInstance = null;
@@ -32,18 +34,27 @@ public class CreateWorkItemTest extends TeardownRollbackTest {
 	@Override
 	public void populate4Test() throws BWException {
 		this.spec = new Specification("SpecId", MY_SPEC);
-		this.goal = new ProductGoal(this.spec.getGoalModel(), NAME, new HashSet<>());
+		this.productGoal = new ProductGoal(this.spec.getGoalModel(), NAME, new HashSet<>());
+		this.associationGoal = new AssociationGoal(this.spec.getGoalModel(), NAME + "assoc", new HashSet<>());
 		this.activity = new Activity(this.spec.getActivityModel(), NAME, "description");
 
 		this.workflowInstance = new WorkflowInstance(this.spec, NAME);
 	}
 
 	@Test
-	public void successGoal() {
-		GoalWorkItem goalWorkItem = new GoalWorkItem(this.workflowInstance, this.goal);
+	public void successProductGoal() {
+		GoalWorkItem goalWorkItem = new GoalWorkItem(this.workflowInstance, this.productGoal);
 
 		assertEquals(this.workflowInstance, goalWorkItem.getWorkflowInstance());
-		assertEquals(this.goal, goalWorkItem.getGoal());
+		assertEquals(this.productGoal, goalWorkItem.getGoal());
+	}
+
+	@Test
+	public void successAssociationGoal() {
+		GoalWorkItem goalWorkItem = new GoalWorkItem(this.workflowInstance, this.associationGoal);
+
+		assertEquals(this.workflowInstance, goalWorkItem.getWorkflowInstance());
+		assertEquals(this.associationGoal, goalWorkItem.getGoal());
 	}
 
 	@Test
@@ -57,7 +68,7 @@ public class CreateWorkItemTest extends TeardownRollbackTest {
 	@Test
 	public void failGoal() {
 		Specification otherSpec = new Specification("SpecIdOther", YOUR_SPEC);
-		Goal otherGoal = new ProductGoal(otherSpec.getGoalModel(), NAME, null);
+		Goal otherGoal = new ProductGoal(otherSpec.getGoalModel(), NAME, new HashSet<>());
 
 		try {
 			new GoalWorkItem(this.workflowInstance, otherGoal);

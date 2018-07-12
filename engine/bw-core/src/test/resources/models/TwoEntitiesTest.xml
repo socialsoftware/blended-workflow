@@ -59,35 +59,46 @@
     </activity>
   </activity-model>
   <goal-model>
-    <goal name="B.att1" parent="B">
-      <preConditions />
+    <goal name="B.att1" type="ProductGoal">
+        <preConditions>
+            <condition path="B" />		  
+  	  </preConditions>
       <postConditions>
         <condition path="B.att1" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="B" parent="A">
+    <goal name="B" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="B" />
       </postConditions>
-      <mulConditions>
-        <condition name="AHasBs" rolename="a" cardinality="1" />
-      </mulConditions>
+      <mulConditions />
     </goal>
-    <goal name="A.att1" parent="A">
-      <preConditions />
+    <goal name="A.att1" type="ProductGoal">
+      <preConditions>
+        <condition path="A" />		  
+  	  </preConditions>
       <postConditions>
         <condition path="A.att1" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="A">
+    <goal name="A" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="A" />
       </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="AB" type="AssociationGoal">
+      <preConditions>
+          <condition path="A" />		  
+          <condition path="B" />		  
+	  </preConditions>
+      <postConditions />
       <mulConditions>
+        <condition name="AHasBs" rolename="a" cardinality="1" />
         <condition name="AHasBs" rolename="b" cardinality="3..3" />
       </mulConditions>
     </goal>

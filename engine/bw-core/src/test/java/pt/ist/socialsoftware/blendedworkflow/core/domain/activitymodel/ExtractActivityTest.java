@@ -142,7 +142,7 @@ public class ExtractActivityTest extends TeardownRollbackTest {
 		try {
 			this.taskModel.extractActivity(this.taskOne, NEW_TASK_NAME, DESCRIPTION, postConditionSet);
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.CANNOT_ADD_TASK, bwe.getError());
+			assertEquals(BWErrorType.CANNOT_EXTRACT_ACTIVITY, bwe.getError());
 			assertEquals(3, this.taskModel.getActivitySet().size());
 		}
 	}

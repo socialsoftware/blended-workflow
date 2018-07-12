@@ -204,8 +204,9 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 	@Test
 	public void conflictDueToCircularityImplicitDependenceBetweenAttributes() {
 		Set<DefProductCondition> defProductConditions = new HashSet<>();
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
 		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
-		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFour));
 		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityThree));
 		this.productGoalOther = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_OTHER, defProductConditions);
 		this.productGoalOther.initProductGoal();
@@ -217,14 +218,13 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 				mulConditions);
 
 		defProductConditions = new HashSet<>();
-		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityTwo));
 		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeThree));
 		this.productGoalOne = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_ONE, defProductConditions);
 		this.productGoalOne.initProductGoal();
 
 		defProductConditions = new HashSet<>();
-		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityTwo));
-		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFour));
 		this.productGoalTwo = new ProductGoal(this.spec.getGoalModel(), PRODUCT_GOAL_TWO, defProductConditions);
 		this.productGoalTwo.initProductGoal();
 
@@ -234,7 +234,7 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 			this.spec.getGoalModel().mergeGoals("Name", this.productGoalOne, this.productGoalTwo);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
+			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
 		}
 
 	}
@@ -276,7 +276,7 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 			this.spec.getGoalModel().mergeGoals("Name", this.productGoalOne, this.productGoalThree);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
+			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
 		}
 
 	}
@@ -318,7 +318,7 @@ public class MergeGoalsMethodsTest extends TeardownRollbackTest {
 			this.spec.getGoalModel().mergeGoals("Name", this.productGoalTwo, this.productGoalThree);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
+			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
 		}
 
 	}

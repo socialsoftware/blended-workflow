@@ -224,7 +224,7 @@ public class ExtractProductGoalMethodTest extends TeardownRollbackTest {
 			this.spec.getGoalModel().extractProductGoal(this.goalOne, GOAL_TWO, successConditions);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
+			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
 		}
 	}
 
@@ -258,7 +258,7 @@ public class ExtractProductGoalMethodTest extends TeardownRollbackTest {
 			this.spec.getGoalModel().extractProductGoal(this.goalOne, GOAL_TWO, successConditions);
 			fail();
 		} catch (BWException bwe) {
-			assertEquals(BWErrorType.INCONSISTENT_GOALMODEL, bwe.getError());
+			assertEquals(BWErrorType.DEPENDENCE_CIRCULARITY, bwe.getError());
 		}
 	}
 
@@ -306,7 +306,7 @@ public class ExtractProductGoalMethodTest extends TeardownRollbackTest {
 	public void successOne() {
 		Set<DefProductCondition> defProductOtherConditions = new HashSet<DefProductCondition>();
 		defProductOtherConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
-		defProductOtherConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
+		defProductOtherConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
 		defProductOtherConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFive));
 		defProductOtherConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFour));
 		defProductOtherConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeSix));
@@ -319,20 +319,20 @@ public class ExtractProductGoalMethodTest extends TeardownRollbackTest {
 
 		Set<DefProductCondition> defProductConditions = new HashSet<DefProductCondition>();
 		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityTwo));
-		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
 		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeThree));
 		this.goalOne = new ProductGoal(this.spec.getGoalModel(), GOAL_ONE, defProductConditions);
 		this.goalOne.initProductGoal();
 
 		Set<DefProductCondition> successConditions = new HashSet<>();
-		successConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
+		successConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
 
 		ProductGoal result = this.spec.getGoalModel().extractProductGoal(this.goalOne, GOAL_TWO, successConditions);
 
 		assertEquals(GOAL_TWO, result.getName());
 		assertEquals(1, result.getSuccessConditionSet().size());
 		assertTrue(result.getSuccessConditionSet()
-				.contains(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo)));
+				.contains(DefAttributeCondition.getDefAttributeCondition(this.attributeOne)));
 		assertEquals(1, result.getActivationConditionSet().size());
 		assertTrue(result.getActivationConditionSet()
 				.contains(DefPathCondition.getDefPathCondition(this.spec, this.entityOne.getFullPath())));
@@ -353,8 +353,8 @@ public class ExtractProductGoalMethodTest extends TeardownRollbackTest {
 	@Test
 	public void successTwo() {
 		Set<DefProductCondition> defProductOtherConditions = new HashSet<DefProductCondition>();
-		defProductOtherConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
-		defProductOtherConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
+		defProductOtherConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
+		defProductOtherConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFour));
 		defProductOtherConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFive));
 		defProductOtherConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeSix));
 		ProductGoal otherGoal = new ProductGoal(this.spec.getGoalModel(), GOAL_OTHERS, defProductOtherConditions);
@@ -365,17 +365,17 @@ public class ExtractProductGoalMethodTest extends TeardownRollbackTest {
 		associationGoal.initAssociationGoal();
 
 		Set<DefProductCondition> defProductConditions = new HashSet<DefProductCondition>();
+		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityOne));
 		defProductConditions.add(DefEntityCondition.getDefEntityCondition(this.entityTwo));
-		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo));
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
 		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeThree));
-		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFour));
 		this.goalOne = new ProductGoal(this.spec.getGoalModel(), GOAL_ONE, defProductConditions);
 		this.goalOne.initProductGoal();
 
 		Set<DefProductCondition> successConditions = new HashSet<>();
 		successConditions.add(DefEntityCondition.getDefEntityCondition(this.entityTwo));
+		successConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
 		successConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeThree));
-		successConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attributeFour));
 
 		ProductGoal result = this.spec.getGoalModel().extractProductGoal(this.goalOne, GOAL_TWO, successConditions);
 
@@ -383,23 +383,19 @@ public class ExtractProductGoalMethodTest extends TeardownRollbackTest {
 		assertEquals(3, result.getSuccessConditionSet().size());
 		assertTrue(result.getSuccessConditionSet().contains(DefEntityCondition.getDefEntityCondition(this.entityTwo)));
 		assertTrue(result.getSuccessConditionSet()
-				.contains(DefAttributeCondition.getDefAttributeCondition(this.attributeThree)));
+				.contains(DefAttributeCondition.getDefAttributeCondition(this.attributeOne)));
 		assertTrue(result.getSuccessConditionSet()
-				.contains(DefAttributeCondition.getDefAttributeCondition(this.attributeFour)));
+				.contains(DefAttributeCondition.getDefAttributeCondition(this.attributeThree)));
 		assertEquals(1, result.getActivationConditionSet().size());
-		assertEquals(DEPENDENCE_PATH_ONE,
-				result.getActivationConditionSet().stream().findFirst().get().getPath().getValue());
 		assertEquals(0, result.getAttributeInvariantConditionSet().size());
 
 		assertEquals(GOAL_ONE, this.goalOne.getName());
 		assertEquals(1, this.goalOne.getSuccessConditionSet().size());
 		assertTrue(this.goalOne.getSuccessConditionSet()
-				.contains(DefAttributeCondition.getDefAttributeCondition(this.attributeTwo)));
-		assertEquals(1, this.goalOne.getActivationConditionSet().size());
-		assertTrue(this.goalOne.getActivationConditionSet().stream().map(def -> def.getTargetOfPath())
-				.filter(p -> p == this.entityOne).findFirst().isPresent());
+				.contains(DefEntityCondition.getDefEntityCondition(this.entityOne)));
+		assertEquals(0, this.goalOne.getActivationConditionSet().size());
 		assertEquals(0, this.goalOne.getEntityInvariantConditionSet().size());
-		assertEquals(0, this.goalOne.getAttributeInvariantConditionSet().size());
+		assertEquals(1, this.goalOne.getAttributeInvariantConditionSet().size());
 
 		this.spec.getGoalModel().checkModel();
 	}

@@ -231,6 +231,25 @@ public abstract class Goal extends Goal_Base {
 		}
 	}
 
+	public void checkCycles(Map<Goal, Set<Goal>> goalDependencies) {
+		goThroughAcyclicPath(this, goalDependencies, new HashSet<Goal>());
+	}
+
+	private void goThroughAcyclicPath(Goal goal, Map<Goal, Set<Goal>> goalDependencies, Set<Goal> visitedGoals) {
+		Set<Goal> nextGoals = goalDependencies.get(this);
+		visitedGoals.add(this);
+
+		if (nextGoals.contains(goal)) {
+			throw new BWException(BWErrorType.DEPENDENCE_CIRCULARITY, getName());
+		} else {
+			for (Goal nextGoal : nextGoals) {
+				if (!visitedGoals.contains(nextGoal)) {
+					nextGoal.goThroughAcyclicPath(goal, goalDependencies, visitedGoals);
+				}
+			}
+		}
+	}
+
 	public void shrinkProductGoal(Set<DefProductCondition> successConditions) {
 		successConditions.stream().forEach(def -> removeSuccessCondition(def));
 		getActivationConditionSet().stream().forEach(def -> removeActivationCondition(def));

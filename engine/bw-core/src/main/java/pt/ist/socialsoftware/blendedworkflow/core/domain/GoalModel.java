@@ -1,8 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -290,8 +292,41 @@ public class GoalModel extends GoalModel_Base {
 	public void checkModelConsistency() {
 		checkGoalsType();
 		checkGoalsActivationConditions();
+		checkGoalsCircularities();
+	}
 
-		// TODO: it is necessary to verify any circularity between goals
+	private void checkGoalsCircularities() {
+		checkCycles(getGoalsSequences());
+	}
+
+	private void checkCycles(Map<Goal, Set<Goal>> goalDependencies) {
+		for (Goal goal : goalDependencies.keySet()) {
+			goal.checkCycles(goalDependencies);
+		}
+	}
+
+	public Map<Goal, Set<Goal>> getGoalsSequences() {
+		Set<ProductGoal> goals = getGoalSet().stream().filter(ProductGoal.class::isInstance)
+				.map(ProductGoal.class::cast).collect(Collectors.toSet());
+
+		Map<Goal, Set<Goal>> goalSequencies = new HashMap<>();
+
+		goals.stream().forEach(t -> goalSequencies.put(t, new HashSet<Goal>()));
+
+		for (Goal goal : goals) {
+			goal.getActivationConditionSet().stream().flatMap(d -> d.getPath().getProductsInPath().stream())
+					.map(p -> p.getDefCondition()).filter(d -> d.getSuccessConditionGoal() != null)
+					.map(d -> d.getSuccessConditionGoal()).filter(g -> g != goal)
+					.forEach(g -> goalSequencies.get(g).add(goal));
+		}
+
+		logger.debug("getGoalDependencies {}",
+				goalSequencies.entrySet().stream()
+						.map(e -> e.getKey().getName() + ":"
+								+ e.getValue().stream().map(t -> t.getName()).collect(Collectors.joining(",")))
+						.collect(Collectors.joining(";")));
+
+		return goalSequencies;
 	}
 
 	private void checkGoalsType() {
