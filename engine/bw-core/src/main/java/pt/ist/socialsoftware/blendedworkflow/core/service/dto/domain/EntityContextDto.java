@@ -16,19 +16,19 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
-public class EntityContextDTO {
-	private static Logger logger = LoggerFactory.getLogger(EntityContextDTO.class);
+public class EntityContextDto {
+	private static Logger logger = LoggerFactory.getLogger(EntityContextDto.class);
 
 	private EntityDTO entity;
 	private MulConditionDTO mulCondition;
 	private Set<DefPathConditionDTO> defPathConditionSet;
 	private Set<EntityInstanceContextDTO> entityInstanceContextSet;
 
-	public static EntityContextDTO createEntityContextDTO(Activity activity, Entity entityContext,
+	public static EntityContextDto createEntityContextDTO(Activity activity, Entity entityContext,
 			MulCondition mulCondition, WorkflowInstance workflowInstance) {
 		Map<Entity, Set<EntityInstance>> instanceContext = activity.getInstanceContext(workflowInstance);
 
-		EntityContextDTO entityContextDTO = new EntityContextDTO();
+		EntityContextDto entityContextDTO = new EntityContextDto();
 		entityContextDTO.setEntity(entityContext.getDTO());
 
 		if (mulCondition == null) {
@@ -61,9 +61,9 @@ public class EntityContextDTO {
 		return entityContextDTO;
 	}
 
-	public static EntityContextDTO createEntityContextDTO(Goal goal, Entity entityContext, MulCondition mulCondition,
+	public static EntityContextDto createEntityContextDTO(Goal goal, Entity entityContext, MulCondition mulCondition,
 			WorkflowInstance workflowInstance) {
-		EntityContextDTO entityContextDTO = new EntityContextDTO();
+		EntityContextDto entityContextDTO = new EntityContextDto();
 		entityContextDTO.setEntity(entityContext.getDTO());
 
 		if (mulCondition == null) {
@@ -110,7 +110,7 @@ public class EntityContextDTO {
 		return entityContextDTO;
 	}
 
-	public EntityContextDTO() {
+	public EntityContextDto() {
 	}
 
 	public EntityDTO getEntity() {

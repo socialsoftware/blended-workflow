@@ -25,7 +25,7 @@ public class ActivityWorkItemDTO extends WorkItemDTO {
 		ActivityWorkItemDTO activityWorkItemDTO = new ActivityWorkItemDTO();
 		activityWorkItemDTO.setSpecId(workflowInstance.getSpecification().getSpecId());
 		activityWorkItemDTO.setWorkflowInstanceName(workflowInstance.getName());
-		activityWorkItemDTO.setDefinitionGroupSet(new HashSet<DefinitionGroupDTO>());
+		activityWorkItemDTO.setDefinitionGroupSet(new HashSet<DefinitionGroupDto>());
 		activityWorkItemDTO.setName(activity.getName());
 
 		// get activity definition groups
@@ -33,28 +33,28 @@ public class ActivityWorkItemDTO extends WorkItemDTO {
 				.collect(Collectors.groupingBy(d -> d.getSourceOfPath()));
 
 		for (Entity entityDefinitionGroup : definitionGroupMap.keySet()) {
-			DefinitionGroupDTO definitionGroup = new DefinitionGroupDTO();
+			DefinitionGroupDto definitionGroup = new DefinitionGroupDto();
 			activityWorkItemDTO.getDefinitionGroupSet().add(definitionGroup);
 
 			// create all def products conditions associated with the entity
-			DefProductConditionSetDTO defProductConditionSet = new DefProductConditionSetDTO();
+			DefProductConditionSetDto defProductConditionSet = new DefProductConditionSetDto();
 			definitionGroup.setDefProductConditionSet(defProductConditionSet);
 			defProductConditionSet.setDefEnts(
 					definitionGroupMap.get(entityDefinitionGroup).stream().filter(DefEntityCondition.class::isInstance)
 							.map(DefEntityCondition.class::cast).map(d -> d.getDTO()).collect(Collectors.toSet()));
 			defProductConditionSet.setDefAtts(definitionGroupMap.get(entityDefinitionGroup).stream()
 					.filter(DefAttributeCondition.class::isInstance).map(DefAttributeCondition.class::cast)
-					.map(d -> d.getDTO()).collect(Collectors.toSet()));
+					.map(d -> d.getDto()).collect(Collectors.toSet()));
 
 			// create entity contexts
-			Set<EntityContextDTO> entityContextDTOs = new HashSet<EntityContextDTO>();
+			Set<EntityContextDto> entityContextDTOs = new HashSet<EntityContextDto>();
 			definitionGroup.setEntityContextSet(entityContextDTOs);
 			Set<Entity> entityContexts = activity.getEntityContext(entityDefinitionGroup);
 			// for each entity context of the product groups to be created
 			for (Entity entityContext : entityContexts) {
 				for (MulCondition mulCondition : activity.getMulConditionFromEntityToEntity(entityDefinitionGroup,
 						entityContext)) {
-					entityContextDTOs.add(EntityContextDTO.createEntityContextDTO(activity, entityContext, mulCondition,
+					entityContextDTOs.add(EntityContextDto.createEntityContextDTO(activity, entityContext, mulCondition,
 							workflowInstance));
 				}
 
@@ -62,7 +62,7 @@ public class ActivityWorkItemDTO extends WorkItemDTO {
 				// defined)
 				if (entityDefinitionGroup == entityContext) {
 					entityContextDTOs.add(
-							EntityContextDTO.createEntityContextDTO(activity, entityContext, null, workflowInstance));
+							EntityContextDto.createEntityContextDTO(activity, entityContext, null, workflowInstance));
 				}
 			}
 

@@ -1,5 +1,10 @@
 package pt.ist.socialsoftware.blendedworkflow.core.controller;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,11 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
-
-import javax.inject.Inject;
 
 @RestController
 @RequestMapping(value = "/specs/{specId}/instances/{instanceName}/goalworkitem")
@@ -26,36 +29,39 @@ public class GoalWorkItemController {
 	private ModulesFactory factory;
 
 	@RequestMapping(value = "/next", method = RequestMethod.GET)
-	public ResponseEntity<GoalWorkItemDTO[]> getGoalWorkItems(@PathVariable String specId,
+	public ResponseEntity<GoalWorkItemDto[]> getGoalWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
 		logger.debug("getGoalWorkItems specId:{}, instanceName:{}", specId, instanceName);
-		ExecutionInterface edi = factory.createExecutionInterface();
+		ExecutionInterface edi = this.factory.createExecutionInterface();
 
-		GoalWorkItemDTO[] instances = edi.getPendingGoalWorkItemSet(specId, instanceName).stream()
-				.toArray(size -> new GoalWorkItemDTO[size]);
+		GoalWorkItemDto[] instances = edi.getPendingGoalWorkItemSet(specId, instanceName).stream()
+				.toArray(size -> new GoalWorkItemDto[size]);
+
+		logger.debug("getGoalWorkItems activityDTOs: {}",
+				Stream.of(instances).map(aw -> aw.print()).collect(Collectors.joining("\n\n")));
 
 		return new ResponseEntity<>(instances, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/log", method = RequestMethod.GET)
-	public ResponseEntity<GoalWorkItemDTO[]> getLogGoalWorkItems(@PathVariable String specId,
+	public ResponseEntity<GoalWorkItemDto[]> getLogGoalWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
 		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
-		ExecutionInterface edi = factory.createExecutionInterface();
+		ExecutionInterface edi = this.factory.createExecutionInterface();
 
-		GoalWorkItemDTO[] instances = edi.getLogGoalWorkItemSet(specId, instanceName).stream().map(owi -> owi.getDTO())
-				.toArray(size -> new GoalWorkItemDTO[size]);
+		GoalWorkItemDto[] instances = edi.getLogGoalWorkItemSet(specId, instanceName).stream().map(owi -> owi.getDTO())
+				.toArray(size -> new GoalWorkItemDto[size]);
 
 		return new ResponseEntity<>(instances, HttpStatus.OK);
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<Boolean> executeGoalWorkItem(@PathVariable String specId,
-			@RequestBody GoalWorkItemDTO goalWorkItemDTO) {
+			@RequestBody GoalWorkItemDto goalWorkItemDTO) {
 		logger.debug("executeGoalWorkItem specId:{}, instanceName:{}, goalName:{}", specId,
 				goalWorkItemDTO.getWorkflowInstanceName(), goalWorkItemDTO.getName());
-		logger.debug("executeGoalWorkItem activityWorkItemDTO:{}", goalWorkItemDTO.print());
-		ExecutionInterface edi = factory.createExecutionInterface();
+		logger.debug("executeGoalWorkItem goalWorkItemDTO:{}", goalWorkItemDTO.print());
+		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		edi.executeGoalWorkItem(goalWorkItemDTO);
 

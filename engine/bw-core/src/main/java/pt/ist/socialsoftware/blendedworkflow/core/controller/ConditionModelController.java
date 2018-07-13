@@ -88,7 +88,7 @@ public class ConditionModelController {
 		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefAttributeConditionDTO[] defConditions = adi.getAttributeAchieveConditionSet(specId).stream()
-				.map(def -> def.getDTO()).toArray(size -> new DefAttributeConditionDTO[size]);
+				.map(def -> def.getDto()).toArray(size -> new DefAttributeConditionDTO[size]);
 
 		return new ResponseEntity<>(defConditions, HttpStatus.OK);
 	}
@@ -102,7 +102,7 @@ public class ConditionModelController {
 
 		DefAttributeCondition defCondition = adi.createAttributeAchieveCondition(aacDTO);
 
-		return new ResponseEntity<>(defCondition.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(defCondition.getDto(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/entitydependenceconditions", method = RequestMethod.GET)

@@ -60,7 +60,7 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 		return "DEF(" + getAttributeOfDef().getFullPath() + ")";
 	}
 
-	public DefAttributeConditionDTO getDTO() {
+	public DefAttributeConditionDTO getDto() {
 		DefAttributeConditionDTO defConditionDTO = new DefAttributeConditionDTO();
 		defConditionDTO.setSpecId(getConditionModel().getSpecification().getSpecId());
 		defConditionDTO.setPath(getPath().getValue());

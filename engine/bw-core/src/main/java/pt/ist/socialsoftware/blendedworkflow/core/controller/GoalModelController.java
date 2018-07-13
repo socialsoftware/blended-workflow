@@ -154,7 +154,7 @@ public class GoalModelController {
 		DesignInterface adi = this.factory.createDesignInterface();
 
 		DefAttributeConditionDTO[] defs = adi.getGoalSuccessAttributeSet(specId, goalName).stream()
-				.map((def) -> def.getDTO()).toArray(size -> new DefAttributeConditionDTO[size]);
+				.map((def) -> def.getDto()).toArray(size -> new DefAttributeConditionDTO[size]);
 
 		return new ResponseEntity<>(defs, HttpStatus.OK);
 	}
