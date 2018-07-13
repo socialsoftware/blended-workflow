@@ -73,16 +73,17 @@ public class EntityContextDto {
 			mulConditionDTO.setMax(1);
 			mulConditionDTO.setRolePath(entityContext.getName());
 			entityContextDTO.setMulCondition(mulConditionDTO);
-			// parent defines the entity
-			DefPathConditionDTO defPathConditionDTO = DefPathCondition
-					.getDefPathCondition(entityContext.getDataModel().getSpecification(), entityContext.getName())
-					.getDTO(entityContext.getDataModel().getSpecification().getSpecId());
+			// // parent defines the entity
+			// DefPathConditionDTO defPathConditionDTO = DefPathCondition
+			// .getDefPathCondition(entityContext.getDataModel().getSpecification(),
+			// entityContext.getName())
+			// .getDTO(entityContext.getDataModel().getSpecification().getSpecId());
 			// others defpaths due to activation condition
 			Set<DefPathConditionDTO> defPathConditions = goal.getActivationConditionSet().stream()
 					.filter(d -> d.getSourceOfPath() == entityContext)
 					.map(d -> d.getDTO(entityContext.getDataModel().getSpecification().getSpecId()))
 					.collect(Collectors.toSet());
-			defPathConditions.add(defPathConditionDTO);
+			// defPathConditions.add(defPathConditionDTO);
 			entityContextDTO.setDefPathConditionSet(defPathConditions);
 		} else {
 			entityContextDTO.setMulCondition(mulCondition.getDTO());
@@ -114,7 +115,7 @@ public class EntityContextDto {
 	}
 
 	public EntityDTO getEntity() {
-		return entity;
+		return this.entity;
 	}
 
 	public void setEntity(EntityDTO entity) {
@@ -122,7 +123,7 @@ public class EntityContextDto {
 	}
 
 	public MulConditionDTO getMulCondition() {
-		return mulCondition;
+		return this.mulCondition;
 	}
 
 	public void setMulCondition(MulConditionDTO mulCondition) {
@@ -130,7 +131,7 @@ public class EntityContextDto {
 	}
 
 	public Set<DefPathConditionDTO> getDefPathConditionSet() {
-		return defPathConditionSet;
+		return this.defPathConditionSet;
 	}
 
 	public void setDefPathConditionSet(Set<DefPathConditionDTO> defPathConditionSet) {
@@ -138,7 +139,7 @@ public class EntityContextDto {
 	}
 
 	public Set<EntityInstanceContextDTO> getEntityInstanceContextSet() {
-		return entityInstanceContextSet;
+		return this.entityInstanceContextSet;
 	}
 
 	public void setEntityInstanceContextSet(Set<EntityInstanceContextDTO> entityInstanceContextSet) {
