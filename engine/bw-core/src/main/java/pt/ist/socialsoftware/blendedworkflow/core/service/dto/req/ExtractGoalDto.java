@@ -5,14 +5,14 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtractGoalDto {
 	private String newGoalName;
 	private String sourceGoalName;
 	private Set<DefPathConditionDTO> successConditions;
-	private Set<MulConditionDTO> mulconditions;
+	private Set<RelationDTO> relations;
 
 	public ExtractGoalDto() {
 	}
@@ -41,12 +41,12 @@ public class ExtractGoalDto {
 		this.successConditions = successConditions;
 	}
 
-	public Set<MulConditionDTO> getMulconditions() {
-		return this.mulconditions;
+	public Set<RelationDTO> getRelations() {
+		return this.relations;
 	}
 
-	public void setMulconditions(Set<MulConditionDTO> mulconditions) {
-		this.mulconditions = mulconditions;
+	public void setRelations(Set<RelationDTO> relations) {
+		this.relations = relations;
 	}
 
 }

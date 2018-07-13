@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.controller;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -16,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
@@ -26,6 +27,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathCond
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
@@ -61,7 +63,7 @@ public class GoalModelController {
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/{goalName}/{newName}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/goals/{goalName}/rename/{newName}", method = RequestMethod.POST)
 	public ResponseEntity<Void> updateGoalName(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @PathVariable("newName") String newName) {
 		logger.debug("updateGoalName specId:{}, goalName:{}", specId, goalName);
@@ -80,6 +82,28 @@ public class GoalModelController {
 		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<Goal> goals = adi.getGoals(specId);
+
+		return new ResponseEntity<>(goals.stream().map(g -> g.getDTO()).toArray(GoalDto[]::new), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/goals/product", method = RequestMethod.GET)
+	public ResponseEntity<GoalDto[]> getProductGoalSet(@PathVariable("specId") String specId) {
+		logger.debug("getProductGoalSet specId:{}", specId);
+
+		DesignInterface adi = this.factory.createDesignInterface();
+
+		Set<ProductGoal> goals = adi.getProductGoals(specId);
+
+		return new ResponseEntity<>(goals.stream().map(g -> g.getDTO()).toArray(GoalDto[]::new), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/goals/association", method = RequestMethod.GET)
+	public ResponseEntity<GoalDto[]> getAssociationGoalSet(@PathVariable("specId") String specId) {
+		logger.debug("getProductGoalSet specId:{}", specId);
+
+		DesignInterface adi = this.factory.createDesignInterface();
+
+		Set<AssociationGoal> goals = adi.getAssociationGoals(specId);
 
 		return new ResponseEntity<>(goals.stream().map(g -> g.getDTO()).toArray(GoalDto[]::new), HttpStatus.OK);
 	}
@@ -185,6 +209,21 @@ public class GoalModelController {
 		return new ResponseEntity<>(defs, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/goals/{goalName}/relations", method = RequestMethod.GET)
+	public ResponseEntity<RelationDTO[]> getGoalRelations(@PathVariable("specId") String specId,
+			@PathVariable("goalName") String goalName) {
+		logger.debug("getGoalRelations specId:{}, goalName:{}", specId, goalName);
+
+		DesignInterface adi = this.factory.createDesignInterface();
+
+		adi.getGoalRelations(specId, goalName);
+
+		RelationDTO[] rels = adi.getGoalRelations(specId, goalName).stream().map(r -> r.getDTO())
+				.toArray(size -> new RelationDTO[size]);
+
+		return new ResponseEntity<>(rels, HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/goals/{goalName}/invent", method = RequestMethod.POST)
 	public ResponseEntity<String> associateEntityInvariantConditionToGoal(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @RequestBody MulConditionDTO mulConditionDTO) {
@@ -238,32 +277,15 @@ public class GoalModelController {
 		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/goals/extractproduct", method = RequestMethod.POST)
+	@RequestMapping(value = "/goals/extract", method = RequestMethod.POST)
 	public ResponseEntity<GoalDto> extractProductGoal(@PathVariable("specId") String specId,
 			@RequestBody ExtractGoalDto req) {
-		logger.debug("extractProductGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
-				req.getNewGoalName(), req.getSourceGoalName(),
-				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
+		logger.debug("extractGoal specId:{}, newGoalName:{}, sourceGoalName:{}", specId, req.getNewGoalName(),
+				req.getSourceGoalName());
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		Goal goal = adi.extractProductGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
-				req.getSuccessConditions());
-
-		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
-	}
-
-	@RequestMapping(value = "/goals/extractassociation", method = RequestMethod.POST)
-	public ResponseEntity<GoalDto> extractAssociationGoal(@PathVariable("specId") String specId,
-			@RequestBody ExtractGoalDto req) {
-		logger.debug("extractAssociationGoal specId:{}, newGoalName:{}, sourceGoalName:{}, defs:{}", specId,
-				req.getNewGoalName(), req.getSourceGoalName(),
-				req.getSuccessConditions().stream().map((def) -> def.getPath()).collect(Collectors.joining("|")));
-
-		DesignInterface adi = this.factory.createDesignInterface();
-
-		Goal goal = adi.extractAssociationGoal(specId, req.getNewGoalName(), req.getSourceGoalName(),
-				req.getMulconditions());
+		Goal goal = adi.extractGoal(specId, req);
 
 		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
 	}

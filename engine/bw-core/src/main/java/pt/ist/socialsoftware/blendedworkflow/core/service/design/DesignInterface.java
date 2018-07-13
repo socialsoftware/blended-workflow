@@ -47,6 +47,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.AddActivityDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.xml.SpecXmlExport;
 
@@ -473,6 +474,18 @@ public class DesignInterface {
 		return spec.getGoalModel().getGoalSet();
 	}
 
+	public Set<ProductGoal> getProductGoals(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getGoalModel().getProductGoalSet();
+	}
+
+	public Set<AssociationGoal> getAssociationGoals(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getGoalModel().getAssociationGoalSet();
+	}
+
 	public GraphDTO getGoalModelGraph(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
@@ -577,6 +590,13 @@ public class DesignInterface {
 		return goal.getEntityInvariantConditionSet();
 	}
 
+	public Set<RelationBW> getGoalRelations(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
+
+		return goal.getEntityInvariantConditionSet().stream().map(m -> m.getRelationBW()).collect(Collectors.toSet());
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public void associateMulToGoalInvariant(String specId, String goalName, String path, String cardinality) {
 		Specification spec = getSpecBySpecId(specId);
@@ -615,25 +635,21 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Goal extractProductGoal(String specId, String newGoalName, String sourceGoalName,
-			Set<DefPathConditionDTO> successConditionDTO) {
+	public Goal extractGoal(String specId, ExtractGoalDto extractGoalDto) {
 		Specification spec = getSpecBySpecId(specId);
-		ProductGoal sourceGoal = (ProductGoal) getGoalByName(spec, sourceGoalName);
 
-		Set<DefProductCondition> successConditions = getConditionSet(spec, successConditionDTO);
+		Goal sourceGoal = getGoalByName(spec, extractGoalDto.getSourceGoalName());
 
-		return spec.getGoalModel().extractProductGoal(sourceGoal, newGoalName, successConditions);
-	}
-
-	@Atomic(mode = TxMode.WRITE)
-	public Goal extractAssociationGoal(String specId, String newGoalName, String sourceGoalName,
-			Set<MulConditionDTO> mulConditionsDTO) {
-		Specification spec = getSpecBySpecId(specId);
-		AssociationGoal sourceGoal = (AssociationGoal) getGoalByName(spec, sourceGoalName);
-
-		Set<MulCondition> mulConditions = getMulConditionSet(spec, mulConditionsDTO);
-
-		return spec.getGoalModel().extractAssociationGoal(sourceGoal, newGoalName, mulConditions);
+		if (extractGoalDto.getSuccessConditions() != null) {
+			Set<DefProductCondition> successConditions = getConditionSet(spec, extractGoalDto.getSuccessConditions());
+			return spec.getGoalModel().extractProductGoal((ProductGoal) sourceGoal, extractGoalDto.getNewGoalName(),
+					successConditions);
+		} else {
+			Set<MulCondition> mulCondition = getRelationSet(spec, extractGoalDto.getRelations()).stream()
+					.flatMap(r -> r.getMulConditionSet().stream()).collect(Collectors.toSet());
+			return spec.getGoalModel().extractAssociationGoal((AssociationGoal) sourceGoal,
+					extractGoalDto.getNewGoalName(), mulCondition);
+		}
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -1003,12 +1019,12 @@ public class DesignInterface {
 		return conditions;
 	}
 
-	private Set<MulCondition> getMulConditionSet(Specification spec, Set<MulConditionDTO> mulConditionSetDTO) {
-		Set<MulCondition> mulConditions = new HashSet<>();
-		for (MulConditionDTO mulCondition : mulConditionSetDTO) {
-			mulConditions.add(getMulCondition(spec, mulCondition.getRolePath()));
+	private Set<RelationBW> getRelationSet(Specification spec, Set<RelationDTO> relationDtoSet) {
+		Set<RelationBW> relations = new HashSet<>();
+		for (RelationDTO relation : relationDtoSet) {
+			relations.add(spec.getDataModel().getRelation(relation.getName()));
 		}
-		return mulConditions;
+		return relations;
 	}
 
 	private Activity getActivityByName(Specification spec, String name) {

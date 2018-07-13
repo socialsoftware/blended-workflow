@@ -8,10 +8,12 @@ public class RelationDTO {
 	private String entOneName;
 	private String rolenameOne;
 	private String cardinalityOne;
+	private String pathOne;
 	private String entTwoExtId;
 	private String entTwoName;
 	private String rolenameTwo;
 	private String cardinalityTwo;
+	private String pathTwo;
 
 	public RelationDTO() {
 	}
@@ -114,6 +116,22 @@ public class RelationDTO {
 
 	public void setCardinalityTwo(String cardinalityTwo) {
 		this.cardinalityTwo = cardinalityTwo;
+	}
+
+	public String getPathOne() {
+		return pathOne;
+	}
+
+	public void setPathOne(String pathOne) {
+		this.pathOne = pathOne;
+	}
+
+	public String getPathTwo() {
+		return pathTwo;
+	}
+
+	public void setPathTwo(String pathTwo) {
+		this.pathTwo = pathTwo;
 	}
 
 }

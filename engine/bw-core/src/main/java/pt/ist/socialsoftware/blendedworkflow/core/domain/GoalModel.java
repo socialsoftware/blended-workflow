@@ -48,68 +48,38 @@ public class GoalModel extends GoalModel_Base {
 	public void generateGoals() {
 		ConditionModel conditionModel = getSpecification().getConditionModel();
 
-		List<Goal> goalsToProcess = new ArrayList<>();
+		for (DefEntityCondition defEntityCondition : conditionModel.getEntityAchieveConditionSet()) {
+			createGoalForEntity(defEntityCondition);
+		}
 
-		Goal mandatoryGoal = createGoalForEntity(conditionModel.getMandatoryEntityCondition());
+		for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
+			createGoalsForAttribute(defAttributeCondition);
+		}
 
-		goalsToProcess.add(mandatoryGoal);
-
-		while (!goalsToProcess.isEmpty()) {
-			Goal goal = goalsToProcess.remove(0);
-
-			Entity entity = goal.getSuccessConditionSet().stream().filter(DefEntityCondition.class::isInstance)
-					.map(DefEntityCondition.class::cast).map(c -> c.getEntity()).findFirst().get();
-
-			for (RelationBW relation : entity.getRelationSet()) {
-				if (!getUsedMulConditions().containsAll(relation.getMulConditionSet())) {
-					createGoalForRelation(relation);
-				}
-
-				Set<DefEntityCondition> subDefEntityConditions = entity.getEntitiesInRelation().stream()
-						.map(e -> e.getDefEntityCondition()).filter(c -> !getUsedDefConditionEntities().contains(c))
-						.collect(Collectors.toSet());
-
-				for (DefEntityCondition subDefEntityCondition : subDefEntityConditions) {
-					Goal otherGoal = createGoalForEntity(subDefEntityCondition);
-					goalsToProcess.add(otherGoal);
-				}
-			}
+		for (RelationBW relation : getSpecification().getDataModel().getRelationBWSet()) {
+			createGoalForRelation(relation);
 		}
 
 		checkModel();
 	}
 
-	private Goal createGoalForEntity(DefEntityCondition defEntityCondition) {
+	private void createGoalForEntity(DefEntityCondition defEntityCondition) {
 		Set<DefProductCondition> defProductConditionSet = new HashSet<DefProductCondition>();
 		defProductConditionSet.add(defEntityCondition);
-
 		ProductGoal entityGoal = new ProductGoal(this, defEntityCondition.getPath().getValue(), defProductConditionSet);
-
 		entityGoal.initProductGoal();
-
-		createGoalsForAttributesOfEntity(defEntityCondition.getEntity(), entityGoal);
-
-		return entityGoal;
 	}
 
-	private void createGoalsForAttributesOfEntity(Entity entity, Goal entityGoal) {
-		ConditionModel conditionModel = getSpecification().getConditionModel();
-		for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
-			if (defAttributeCondition.getAttributeOfDef().getEntity() == entity) {
-				Set<DefProductCondition> defProductConditionSet = new HashSet<DefProductCondition>();
-				defProductConditionSet.add(defAttributeCondition);
-
-				ProductGoal attributeGoal = new ProductGoal(this, defAttributeCondition.getPath().getValue(),
-						defProductConditionSet);
-
-				attributeGoal.initProductGoal();
-			}
-		}
+	private void createGoalsForAttribute(DefAttributeCondition defAttributeCondition) {
+		Set<DefProductCondition> defProductConditions = new HashSet<>();
+		defProductConditions.add(defAttributeCondition);
+		ProductGoal attributeGoal = new ProductGoal(this, defAttributeCondition.getPath().getValue(),
+				defProductConditions);
+		attributeGoal.initProductGoal();
 	}
 
 	private void createGoalForRelation(RelationBW relation) {
 		AssociationGoal relationGoal = new AssociationGoal(this, relation.getName(), relation.getMulConditionSet());
-
 		relationGoal.initAssociationGoal();
 	}
 
@@ -413,15 +383,14 @@ public class GoalModel extends GoalModel_Base {
 		return graph;
 	}
 
-	private Set<DefEntityCondition> getUsedDefConditionEntities() {
-		return getGoalSet().stream().flatMap(g -> g.getSuccessConditionSet().stream())
-				.filter(DefEntityCondition.class::isInstance).map(DefEntityCondition.class::cast)
+	public Set<ProductGoal> getProductGoalSet() {
+		return getGoalSet().stream().filter(ProductGoal.class::isInstance).map(ProductGoal.class::cast)
 				.collect(Collectors.toSet());
 	}
 
-	private Set<MulCondition> getUsedMulConditions() {
-		return getGoalSet().stream().flatMap(g -> g.getSuccessConditionSet().stream())
-				.filter(MulCondition.class::isInstance).map(MulCondition.class::cast).collect(Collectors.toSet());
+	public Set<AssociationGoal> getAssociationGoalSet() {
+		return getGoalSet().stream().filter(AssociationGoal.class::isInstance).map(AssociationGoal.class::cast)
+				.collect(Collectors.toSet());
 	}
 
 }
