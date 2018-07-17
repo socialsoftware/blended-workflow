@@ -72,7 +72,7 @@ public class RestDesignInterfaceTest {
 	}
 
 	@Test
-	public void walktrough() throws Exception {
+	public void walktroughTest() throws Exception {
 		this.mockMvc.perform(get("/specs/{specId}", "notexists")).andExpect(status().is4xxClientError());
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -141,7 +141,6 @@ public class RestDesignInterfaceTest {
 		this.mockMvc.perform(post("/specs/{specId}/datamodel/rules", SPEC_ID)
 				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(ruleDTO)))
 				.andExpect(status().isCreated());
-
 	}
 
 }

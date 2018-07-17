@@ -56,6 +56,7 @@ function WorkItemController() {
 				},
 				path : definitionGroup.defProductConditionSet.defEnts[i].path,
 				externalId : ctrl.entityCounter,
+				id : ctrl.entityCounter,
 				value : ""
 			};
 			definitionGroupInstance.productInstanceSet.push(productInstance);
@@ -69,6 +70,7 @@ function WorkItemController() {
 				},
 				path : definitionGroup.defProductConditionSet.defAtts[i].path,
 				externalId : ctrl.entityCounter,
+				id : ctrl.entityCounter,
 				value : ""
 			})
 		}

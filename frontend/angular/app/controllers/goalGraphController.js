@@ -12,28 +12,54 @@ app
 							});
 
 					$scope.operations = {
-						availableOperations : [ {
-							id : 0,
-							name : '--- Operation ---'
-						}, {
-							id : 1,
-							name : 'Rename Goal'
-						}, {
-							id : 2,
-							name : 'Merge Goal'
-						}, {
-							id : 3,
-							name : 'Split Goal'
-						} ],
-						selectedOperation : {
-							id : '0',
-							name : '---Choose Operation---'
+							availableOperations : [ {
+								id : 0,
+								name : '--- Operation ---'
+							}, {
+								id : 1,
+								name : 'Rename Goal'
+							}, {
+								id : 2,
+								name : 'Merge Goal'
+							}, {
+								id : 3,
+								name : 'Split Goal'
+							} ],
+							selectedOperation : {
+								id : '0',
+								name : '---Choose Operation---'
+							}
+						};
+
+					$scope.types = {
+							availableTypes : [ {
+								id : 0,
+								name : '--- Type ---'
+							}, {
+								id : 1,
+								name : 'Product'
+							}, {
+								id : 2,
+								name : 'Association'
+							} ],
+							selectedType : {
+								id : '0',
+								name : '---Choose Type---'
+							}
+						};
+					
+					$scope.getGoalsFromRepository = function(specId) {
+						if ($scope.types.selectedType.id == 0) {
+							return goalRepository.getGoals(specId);
+						} else if ($scope.types.selectedType.id == 1) {
+							return goalRepository.getProductGoals(specId);
+						} else {
+							return goalRepository.getAssociationGoals(specId);
 						}
 					};
 
 					$scope.readGoals = function(specId) {
-						goalRepository
-								.getGoals(specId)
+						$scope.getGoalsFromRepository(specId)
 								.then(
 										function(response) {
 											$scope.goalsOne = {
@@ -88,6 +114,27 @@ app
 
 					};
 
+					$scope.goalRelations = {
+							availableRelations : [ {
+								name : '--- Relations ---'
+							} ],
+							selectedRelations : []
+						};
+
+					$scope.readGoalRelations = function(specId, goal) {
+							goalRepository
+									.getRelations(specId, goal)
+									.then(
+											function(response) {
+												$scope.goalRelations = {
+													availableRelations : []
+															.concat(response.data),
+													selectedRelations : []
+												};
+											});
+
+					};
+
 					$scope.readGraph = function(specId) {
 						goalRepository.getGoalGraph(specId).then(
 								function(response) {
@@ -105,14 +152,39 @@ app
 						return ($scope.operations.selectedOperation.id >= 1 && $scope.operations.selectedOperation.id <= 3);
 					};
 
-					$scope.goalsTwoSelect = function() {
+					$scope.goalRenameOperation = function() {
+						// merge operation
+						return ($scope.operations.selectedOperation.id == 1);
+					};
+
+					$scope.goalMergeOperation = function() {
 						// merge operation
 						return ($scope.operations.selectedOperation.id == 2);
 					};
 
-					$scope.goalSucConditionsSelect = function() {
+					$scope.goalSplitOperation = function() {
 						// split operation
-						return ($scope.operations.selectedOperation.id == 3 && $scope.goalSucConditions.availableSucConditions.length > 0);
+						return ($scope.operations.selectedOperation.id == 3);
+					};
+
+					$scope.goalTypeSelected = function() {
+						return ($scope.types.selectedType.id != 0);
+					};
+
+					$scope.productGoals = function() {
+						return ($scope.types.selectedType.id == 1);
+					};
+
+					$scope.associationGoals = function() {
+						return ($scope.types.selectedType.id == 2);
+					};
+
+					$scope.goalSucConditionsSelect = function() {
+						return ($scope.goalSplitOperation() && $scope.productGoals() && $scope.goalSucConditions.availableSucConditions.length > 0);
+					};
+
+					$scope.goalRelationsSelect = function() {
+						return ($scope.goalSplitOperation() && $scope.associationGoals() && $scope.goalRelations.availableRelations.length > 0);
 					};
 
 					$scope.validForm = function() {
@@ -120,11 +192,10 @@ app
 
 						// for all operations it is necessary to select a
 						// goal, but not the header
-						if ($scope.goalsOne.selectedGoal == $scope.goalsOne.availableGoals[0])
+						if ($scope.operations.selectedOperation.id != 0 && $scope.goalsOne.selectedGoal == $scope.goalsOne.availableGoals[0])
 							return false;
 
-						// rename and split operation require a new name for
-						// the new operation
+						// if it is not a merge the new goal should have a non existing name
 						if (($scope.operations.selectedOperation.id == 1 && $scope.operations.selectedOperation.id == 3)) {
 							// the new goal name should not exist
 							for (i = 0; i < $scope.goalsOne.availableGoals.length; i++)
@@ -134,6 +205,10 @@ app
 
 						// merge operation
 						if ($scope.operations.selectedOperation.id == 2) {
+							// the type of goal is defined
+							if (!$scope.goalTypeSelected())
+								return false;
+							
 							// have to select the second goal, but not the
 							// header
 							if ($scope.goalsTwo.selectedActivity == $scope.goalsTwo.availableGoals[0])
@@ -156,24 +231,13 @@ app
 
 						// split operation
 						if ($scope.operations.selectedOperation.id == 3) {
-							// a type need to be specified
-							if ($scope.splitType == '')
+							// the type of goal is defined
+							if (!$scope.goalTypeSelected())
 								return false;
-
-							// if the goal has empty success conditions
-							if (!$scope.goalSucConditions)
-								return false;
-
-							// if it is extract child or sibling at least one of
-							// success condition should be selected
-							if (($scope.splitType == 'child' || $scope.splitType == 'sibling')
-									&& $scope.goalSucConditions.selectedSucConditions.length < 1)
-								return false;
-
-							// if it is an extract parent or sibling it is not
-							// possible to
-							// select all conditions
-							if (($scope.splitType == 'parent' || $scope.splitType == 'sibling')
+							
+							// the product goal has empty success conditions or non selected conditions or are all selected
+							if ($scope.productGoals && !$scope.goalSucConditions 
+									&& $scope.goalSucConditions.selectedSucConditions.length < 1 
 									&& $scope.goalSucConditions.selectedSucConditions.length == $scope.goalSucConditions.availableSucConditions.length)
 								return false;
 						}
@@ -212,9 +276,9 @@ app
 									});
 							break;
 						case 3: // split
-							if ($scope.splitType == 'parent') {
+							if ($scope.productGoals()) {
 								goalRepository
-										.splitParentGoal(
+										.splitProductGoal(
 												specId,
 												$scope.goalsOne.selectedGoal.name,
 												$scope.goalSucConditions.selectedSucConditions,
@@ -229,12 +293,12 @@ app
 															+ response.data.value
 															+ ')';
 												});
-							} else if ($scope.splitType == 'child') {
+							} else if ($scope.associationGoals()) {
 								goalRepository
-										.splitChildGoal(
+										.splitAssociationGoal(
 												specId,
 												$scope.goalsOne.selectedGoal.name,
-												$scope.goalSucConditions.selectedSucConditions,
+												$scope.goalRelations.selectedRelations,
 												$scope.newGoalName)
 										.then(
 												function(response) {
@@ -246,24 +310,7 @@ app
 															+ response.data.value
 															+ ')';
 												});
-							} else if ($scope.splitType == 'sibling') {
-								goalRepository
-										.splitSiblingGoal(
-												specId,
-												$scope.goalsOne.selectedGoal.name,
-												$scope.goalSucConditions.selectedSucConditions,
-												$scope.newGoalName)
-										.then(
-												function(response) {
-													$scope.updateState();
-												},
-												function(response) {
-													$scope.error = response.data.type
-															+ '('
-															+ response.data.value
-															+ ')';
-												});
-							}
+							};
 							break;
 						}
 					};
@@ -276,19 +323,31 @@ app
 					$scope.updateState();
 
 					$scope.updateSelects = function(specId, goal) {
-						// split operation
-						if ($scope.operations.selectedOperation.id == 3)
+						// split operation and product goals
+						if ($scope.operations.selectedOperation.id == 3 && $scope.productGoals())
 							$scope.readGoalSucConditions(specId, goal);
+						
+						// split operation and association goals
+						if ($scope.operations.selectedOperation.id == 3 && $scope.associationGoals())
+							$scope.readGoalRelations(specId, goal);
 					};
 
-					$scope.cleanAll = function() {
+					$scope.cleanGoals = function() {
 						$scope.goalsOne.selectedGoal = $scope.goalsOne.availableGoals[0];
 						$scope.goalsTwo.selectedGoal = $scope.goalsTwo.availableGoals[0];
 						$scope.goalSucConditions.availableSucConditions = [ {
 							path : '--- Success Conditions ---'
 						} ]
-						$scope.splitType = '';
+						$scope.goalRelations.availableRelations = [ {
+							path : '--- Relations ---'
+						} ]
 						$scope.newGoalName = '';
+						$scope.readGoals(specId);
+					};
+
+					$scope.cleanAll = function() {
+						$scope.types.selectedType = $scope.types.availableTypes[0];
+						$scope.cleanGoals();
 					};
 
 				});

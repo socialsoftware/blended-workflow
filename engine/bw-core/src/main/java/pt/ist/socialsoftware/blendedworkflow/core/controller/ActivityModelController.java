@@ -28,7 +28,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDTO
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefProductConditionSetDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefProductConditionSetDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
@@ -143,7 +143,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/post", method = RequestMethod.GET)
-	public ResponseEntity<DefProductConditionSetDTO> getActivityPostCondition(@PathVariable("specId") String specId,
+	public ResponseEntity<DefProductConditionSetDto> getActivityPostCondition(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityPostCondition specId:{}, activityName:{}", specId, activityName);
 
@@ -151,11 +151,11 @@ public class ActivityModelController {
 
 		Set<DefProductCondition> postConditionSet = adi.getActivityPostCondition(specId, activityName);
 
-		DefProductConditionSetDTO defConditionSetDTO = new DefProductConditionSetDTO();
+		DefProductConditionSetDto defConditionSetDTO = new DefProductConditionSetDto();
 		defConditionSetDTO.setDefEnts(ConditionModel.getDefEntityConditions(postConditionSet).stream()
 				.map(d -> d.getDTO()).collect(Collectors.toSet()));
 		defConditionSetDTO.setDefAtts(ConditionModel.getDefAttributeConditions(postConditionSet).stream()
-				.map(d -> d.getDTO()).collect(Collectors.toSet()));
+				.map(d -> d.getDto()).collect(Collectors.toSet()));
 
 		return new ResponseEntity<>(defConditionSetDTO, HttpStatus.OK);
 	}
@@ -185,7 +185,7 @@ public class ActivityModelController {
 
 		DefAttributeCondition defAttributeCondition = adi.associateAttributeToActivityPost(specId, activityName, path);
 
-		return new ResponseEntity<>(defAttributeCondition.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(defAttributeCondition.getDto(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/postmul", method = RequestMethod.GET)

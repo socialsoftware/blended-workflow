@@ -1,21 +1,19 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
-public class GoalDTO {
+public class GoalDto {
 	private String specId;
 	private String extId;
+	private String type;
 	private String name;
 
-	public GoalDTO() {
+	public GoalDto() {
 	}
 
-	public GoalDTO(String specId, String name) {
+	public GoalDto(String specId, String extId, String type, String name) {
 		this.specId = specId;
-		this.extId = null;
+		this.extId = extId;
+		this.type = type;
 		this.name = name;
-	}
-
-	public GoalDTO(String specId) {
-		this(specId, null);
 	}
 
 	public String getSpecId() {
@@ -32,6 +30,14 @@ public class GoalDTO {
 
 	public void setExtId(String extId) {
 		this.extId = extId;
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getName() {

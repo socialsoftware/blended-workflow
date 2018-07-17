@@ -1,6 +1,6 @@
 Specification: "Doctor Appointment"  
        
-Entity Patient exists {
+Entity Patient {
 	name : String 
 	age : Number
 	heartProblems : Boolean 

@@ -70,7 +70,7 @@ public class WorkItemDTO {
 	private String specId;
 	private String specName;
 	private String workflowInstanceName;
-	private Set<DefinitionGroupDTO> definitionGroupSet;
+	private Set<DefinitionGroupDto> definitionGroupSet;
 
 	public WorkItemDTO() {
 	}
@@ -99,11 +99,11 @@ public class WorkItemDTO {
 		this.workflowInstanceName = workflowInstanceName;
 	}
 
-	public Set<DefinitionGroupDTO> getDefinitionGroupSet() {
+	public Set<DefinitionGroupDto> getDefinitionGroupSet() {
 		return this.definitionGroupSet;
 	}
 
-	public void setDefinitionGroupSet(Set<DefinitionGroupDTO> definitionGroupSet) {
+	public void setDefinitionGroupSet(Set<DefinitionGroupDto> definitionGroupSet) {
 		this.definitionGroupSet = definitionGroupSet;
 	}
 
@@ -189,10 +189,20 @@ public class WorkItemDTO {
 				MulCondition mulCondition = FenixFramework
 						.getDomainObject(innerRelationInstanceDTO.getMulConditionDTO().getExternalId());
 				for (ProductInstanceDTO productInstanceDTO : innerRelationInstanceDTO.getProductInstanceSet()) {
-					EntityInstance associatedEntity = newEntityInstances.get(productInstanceDTO.getExternalId());
-					if (associatedEntity != null) {
+					EntityInstance innerEntity = newEntityInstances.get(productInstanceDTO.getExternalId());
+					if (innerEntity != null) {
 						new RelationInstance(entityInstance, mulCondition.getSymmetricMulCondition().getRolename(),
-								associatedEntity, mulCondition.getRolename(), mulCondition.getRelationBW());
+								innerEntity, mulCondition.getRolename(), mulCondition.getRelationBW());
+					} else {
+						innerEntity = FenixFramework.getDomainObject(productInstanceDTO.getExternalId());
+						for (EntityInstanceContextDTO entityInstanceContextDTO : definitionGroupInstanceDTO
+								.getEntityInstanceContextSet()) {
+							EntityInstance entityInstanceContext = FenixFramework
+									.getDomainObject(entityInstanceContextDTO.getEntityInstance().getExternalId());
+							new RelationInstance(entityInstanceContext,
+									mulCondition.getSymmetricMulCondition().getRolename(), innerEntity,
+									mulCondition.getRolename(), mulCondition.getRelationBW());
+						}
 					}
 				}
 			}
@@ -220,7 +230,7 @@ public class WorkItemDTO {
 
 	public String print() {
 		String result = "\r\n";
-		for (DefinitionGroupDTO definitionGroupDTO : getDefinitionGroupSet()) {
+		for (DefinitionGroupDto definitionGroupDTO : getDefinitionGroupSet()) {
 			result = result + "DEF ENTITY: " + definitionGroupDTO.getDefProductConditionSet().getDefEnts().stream()
 					.map(d -> d.getPath()).collect(Collectors.joining(",")) + "\r\n";
 			result = result + "DEF ATTRIBUTE: " + definitionGroupDTO.getDefProductConditionSet().getDefAtts().stream()

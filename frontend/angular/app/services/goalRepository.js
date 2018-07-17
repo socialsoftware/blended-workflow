@@ -4,34 +4,42 @@ app.factory('goalRepository', function($http) {
 			var url = baseUrl + "specs/" + spec + "/goalmodel/goals";
 			return $http.get(url);
 		},
-		getSubGoals : function(spec, goalName) {
-			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
-					+ "/sub";
+		getProductGoals : function(spec) {
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/product";
+			return $http.get(url);
+		},
+		getAssociationGoals : function(spec) {
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/association";
 			return $http.get(url);
 		},
 		getActivationConditions : function(spec, goalName) {
-			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
-					+ "/act";
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/"
+					+ goalName + "/act";
 			return $http.get(url);
 		},
 		getEntitySuccessConditions : function(spec, goalName) {
-			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
-					+ "/sucent";
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/"
+					+ goalName + "/sucent";
 			return $http.get(url);
 		},
 		getAttributeSuccessConditions : function(spec, goalName) {
-			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
-					+ "/sucatt";
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/"
+					+ goalName + "/sucatt";
 			return $http.get(url);
 		},
 		getMulConditions : function(spec, goalName) {
-			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
-					+ "/invent";
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/"
+					+ goalName + "/invent";
+			return $http.get(url);
+		},
+		getRelations : function(spec, goalName) {
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/"
+					+ goalName + "/relations";
 			return $http.get(url);
 		},
 		getRuleConditions : function(spec, goalName) {
-			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goalName
-					+ "/invatt";
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/"
+					+ goalName + "/invatt";
 			return $http.get(url);
 		},
 		getGoalGraph : function(spec) {
@@ -40,13 +48,11 @@ app.factory('goalRepository', function($http) {
 		},
 		renameGoal : function(spec, goal, goalName) {
 			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/" + goal
-					+ "/" + goalName;
-			return $http.put(url);
+					+ "/rename/" + goalName;
+			return $http.post(url);
 		},
-		mergeGoals : function(spec, goalOne, goalTwo,
-				newGoalName) {
-			var url = baseUrl + "specs/" + spec
-					+ "/goalmodel/goals/merge;
+		mergeGoals : function(spec, goalOne, goalTwo, newGoalName) {
+			var url = baseUrl + "specs/" + spec + "/goalmodel/goals/merge";
 			return $http.post(url, {
 				"specId" : spec,
 				"nameOne" : goalOne,
@@ -55,31 +61,22 @@ app.factory('goalRepository', function($http) {
 			});
 
 		},
-		splitParentGoal : function(spec, goal, sucConditions, newGoalName) {
+		splitProductGoal : function(spec, goal, sucConditions, newGoalName) {
 			var url = baseUrl + "specs/" + spec
-			+ "/goalmodel/goals/extractparent";
+					+ "/goalmodel/goals/extract";
 			return $http.post(url, {
 				"sourceGoalName" : goal,
-				"newGoalName" :  newGoalName,
+				"newGoalName" : newGoalName,
 				"successConditions" : sucConditions
 			});
 		},
-		splitChildGoal : function(spec, goal, sucConditions, newGoalName) {
+		splitAssociationGoal : function(spec, goal, relations, newGoalName) {
 			var url = baseUrl + "specs/" + spec
-			+ "/goalmodel/goals/extractchild";
+					+ "/goalmodel/goals/extract";
 			return $http.post(url, {
 				"sourceGoalName" : goal,
-				"newGoalName" :  newGoalName,
-				"successConditions" : sucConditions
-			});
-		},
-		splitSiblingGoal : function(spec, goal, sucConditions, newGoalName) {
-			var url = baseUrl + "specs/" + spec
-			+ "/goalmodel/goals/extractsibling";
-			return $http.post(url, {
-				"sourceGoalName" : goal,
-				"newGoalName" :  newGoalName,
-				"successConditions" : sucConditions
+				"newGoalName" : newGoalName,
+				"relations" : relations
 			});
 		}
 	};

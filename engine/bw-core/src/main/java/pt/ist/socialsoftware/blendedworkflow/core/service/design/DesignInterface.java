@@ -11,6 +11,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
@@ -26,6 +27,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product.ProductType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
@@ -38,13 +40,14 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityCo
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.AddActivityDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.xml.SpecXmlExport;
 
@@ -389,7 +392,7 @@ public class DesignInterface {
 				miDTO.getCardinality());
 		Specification spec = getSpecBySpecId(specId);
 
-		MulCondition mulCondition = getMULCondition(spec, miDTO.getRolePath());
+		MulCondition mulCondition = getMulCondition(spec, miDTO.getRolePath());
 
 		if (!mulCondition.getCardinality().getExp().equals(miDTO.getCardinality())) {
 			throw new BWException(BWErrorType.INVALID_CARDINALITY, miDTO.getCardinality());
@@ -471,6 +474,18 @@ public class DesignInterface {
 		return spec.getGoalModel().getGoalSet();
 	}
 
+	public Set<ProductGoal> getProductGoals(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getGoalModel().getProductGoalSet();
+	}
+
+	public Set<AssociationGoal> getAssociationGoals(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getGoalModel().getAssociationGoalSet();
+	}
+
 	public GraphDTO getGoalModelGraph(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
@@ -478,10 +493,19 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Goal createGoal(GoalDTO goalDTO) {
+	public ProductGoal createProductGoal(GoalDto goalDTO) {
+
 		Specification spec = getSpecBySpecId(goalDTO.getSpecId());
 
-		return new Goal(spec.getGoalModel(), goalDTO.getName());
+		return new ProductGoal(spec.getGoalModel(), goalDTO.getName(), new HashSet<>());
+	}
+
+	@Atomic(mode = TxMode.WRITE)
+	public AssociationGoal createAssociationGoal(GoalDto goalDTO) {
+
+		Specification spec = getSpecBySpecId(goalDTO.getSpecId());
+
+		return new AssociationGoal(spec.getGoalModel(), goalDTO.getName(), new HashSet<>());
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -566,12 +590,19 @@ public class DesignInterface {
 		return goal.getEntityInvariantConditionSet();
 	}
 
+	public Set<RelationBW> getGoalRelations(String specId, String goalName) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, goalName);
+
+		return goal.getEntityInvariantConditionSet().stream().map(m -> m.getRelationBW()).collect(Collectors.toSet());
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public void associateMulToGoalInvariant(String specId, String goalName, String path, String cardinality) {
 		Specification spec = getSpecBySpecId(specId);
 		Goal goal = getGoalByName(spec, goalName);
 
-		MulCondition mulCondition = getMULCondition(spec, path);
+		MulCondition mulCondition = getMulCondition(spec, path);
 
 		goal.addEntityInvariantCondition(mulCondition);
 	}
@@ -594,30 +625,6 @@ public class DesignInterface {
 		goal.addAttributeInvariantCondition(rule);
 	}
 
-	public Set<Goal> getSubGoals(String specId, String goalName) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, goalName);
-
-		return goal.getSubGoalSet();
-	}
-
-	public Goal getParentGoal(String specId, String goalName) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, goalName);
-
-		return goal.getParentGoal();
-	}
-
-	@Atomic(mode = TxMode.WRITE)
-	public Goal addSubGoal(String specId, String goalName, String subGoalName) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, goalName);
-		Goal subGoal = getGoalByName(spec, subGoalName);
-		goal.addSubGoal(subGoal);
-
-		return subGoal;
-	}
-
 	@Atomic(mode = TxMode.WRITE)
 	public Goal mergeGoals(MergeOperationDto mergeOperationDto) {
 		Specification spec = getSpecBySpecId(mergeOperationDto.getSpecId());
@@ -628,36 +635,21 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Goal extractChildGoal(String specId, String newGoalName, String sourceGoalName,
-			Set<DefPathConditionDTO> successConditionDTO) {
+	public Goal extractGoal(String specId, ExtractGoalDto extractGoalDto) {
 		Specification spec = getSpecBySpecId(specId);
-		Goal parentGoal = getGoalByName(spec, sourceGoalName);
 
-		Set<DefProductCondition> successConditions = getConditionSet(spec, successConditionDTO);
+		Goal sourceGoal = getGoalByName(spec, extractGoalDto.getSourceGoalName());
 
-		return spec.getGoalModel().extractChild(parentGoal, newGoalName, successConditions);
-	}
-
-	@Atomic(mode = TxMode.WRITE)
-	public Goal extractParentGoal(String specId, String newGoalName, String sourceGoalName,
-			Set<DefPathConditionDTO> successConditionDTO) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal childGoal = getGoalByName(spec, sourceGoalName);
-
-		Set<DefProductCondition> successConditions = getConditionSet(spec, successConditionDTO);
-
-		return spec.getGoalModel().extractParent(childGoal, newGoalName, successConditions);
-	}
-
-	@Atomic(mode = TxMode.WRITE)
-	public Goal extractSiblingGoal(String specId, String newGoalName, String sourceGoalName,
-			Set<DefPathConditionDTO> successConditionDTO) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal sourceGoal = getGoalByName(spec, sourceGoalName);
-
-		Set<DefProductCondition> successConditions = getConditionSet(spec, successConditionDTO);
-
-		return spec.getGoalModel().extractSibling(sourceGoal, newGoalName, successConditions);
+		if (extractGoalDto.getSuccessConditions() != null) {
+			Set<DefProductCondition> successConditions = getConditionSet(spec, extractGoalDto.getSuccessConditions());
+			return spec.getGoalModel().extractProductGoal((ProductGoal) sourceGoal, extractGoalDto.getNewGoalName(),
+					successConditions);
+		} else {
+			Set<MulCondition> mulCondition = getRelationSet(spec, extractGoalDto.getRelations()).stream()
+					.flatMap(r -> r.getMulConditionSet().stream()).collect(Collectors.toSet());
+			return spec.getGoalModel().extractAssociationGoal((AssociationGoal) sourceGoal,
+					extractGoalDto.getNewGoalName(), mulCondition);
+		}
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -758,7 +750,7 @@ public class DesignInterface {
 		Specification spec = getSpecBySpecId(specId);
 		Activity activity = getActivityByName(spec, activityName);
 
-		MulCondition mulCondition = getMULCondition(spec, path);
+		MulCondition mulCondition = getMulCondition(spec, path);
 
 		activity.addMultiplicityInvariant(mulCondition);
 
@@ -904,9 +896,6 @@ public class DesignInterface {
 		for (Goal goal : spec.getGoalModel().getGoalSet()) {
 			System.out.println("Goal name:" + goal.getName());
 
-			for (Goal sub : goal.getSubGoalSet()) {
-				System.out.println("Sub goal name:" + sub.getName());
-			}
 			for (DefProductCondition act : goal.getActivationConditionSet()) {
 				System.out.println("ACT(" + act.getSubPath() + ")");
 			}
@@ -1000,7 +989,7 @@ public class DesignInterface {
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_RULE_NAME, ruleName));
 	}
 
-	private MulCondition getMULCondition(Specification spec, String path) {
+	private MulCondition getMulCondition(Specification spec, String path) {
 		String entityName = path.split("\\.")[0];
 		String rolename = path.split("\\.")[1];
 
@@ -1028,6 +1017,14 @@ public class DesignInterface {
 		}
 
 		return conditions;
+	}
+
+	private Set<RelationBW> getRelationSet(Specification spec, Set<RelationDTO> relationDtoSet) {
+		Set<RelationBW> relations = new HashSet<>();
+		for (RelationDTO relation : relationDtoSet) {
+			relations.add(spec.getDataModel().getRelation(relation.getName()));
+		}
+		return relations;
 	}
 
 	private Activity getActivityByName(Specification spec, String name) {

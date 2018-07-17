@@ -4,7 +4,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
 
 public class GoalWorkItem extends GoalWorkItem_Base {
 
@@ -64,8 +64,8 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		return true;
 	}
 
-	public GoalWorkItemDTO getDTO() {
-		GoalWorkItemDTO goalWorkItemDTO = new GoalWorkItemDTO();
+	public GoalWorkItemDto getDTO() {
+		GoalWorkItemDto goalWorkItemDTO = new GoalWorkItemDto();
 		goalWorkItemDTO.setName(getGoal().getName());
 
 		super.fillDTO(goalWorkItemDTO);

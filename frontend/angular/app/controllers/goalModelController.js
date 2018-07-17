@@ -10,13 +10,6 @@ app.controller('GoalModelController', function($rootScope, $scope,
 		$scope.goals = response.data;
 	});
 
-	$scope.subgoals = new Map();
-	$scope.getSubGoals = function(goalName) {
-		goalRepository.getSubGoals(specId, goalName).then(function(response) {
-			$scope.subgoals.set(goalName, response.data);
-		});
-	};
-
 	$scope.actconditions = new Map();
 	$scope.getActivationConditions = function(goalName) {
 		goalRepository.getActivationConditions(specId, goalName).then(function(response) {

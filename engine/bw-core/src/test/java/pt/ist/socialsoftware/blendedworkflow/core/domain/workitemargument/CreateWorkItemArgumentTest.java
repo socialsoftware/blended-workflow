@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.HashSet;
+
 import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
@@ -20,6 +22,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.PostWorkItemArgument;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.PreWorkItemArgument;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
@@ -52,7 +55,7 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 		Attribute attribute = new Attribute(this.spec.getDataModel(), entity, ATTRIBUTE_NAME, AttributeType.STRING,
 				false);
 		this.defAttributeCondition = DefAttributeCondition.getDefAttributeCondition(attribute);
-		this.goal = new Goal(this.spec.getGoalModel(), NAME);
+		this.goal = new ProductGoal(this.spec.getGoalModel(), NAME, new HashSet<>());
 		this.defPathCondition = DefPathCondition.getDefPathCondition(this.spec, ENTITY_NAME + "." + ATTRIBUTE_NAME);
 		this.goal.addActivationCondition(this.defPathCondition);
 		this.activity = new Activity(this.spec.getActivityModel(), NAME, "description");

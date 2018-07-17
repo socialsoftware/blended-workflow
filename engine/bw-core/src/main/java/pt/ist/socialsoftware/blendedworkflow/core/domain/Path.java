@@ -27,6 +27,10 @@ public class Path extends Path_Base {
 		deleteDomainObject();
 	}
 
+	public DefPathCondition getDefPathCondition() {
+		return DefPathCondition.getDefPathCondition(getDataModel().getSpecification(), getValue());
+	}
+
 	public boolean check() {
 		List<String> pathLeft = Arrays.stream(getValue().split("\\.")).collect(Collectors.toList());
 
@@ -46,7 +50,7 @@ public class Path extends Path_Base {
 
 		Product product = entity.get().getNext(pathLeft, getValue());
 
-		return (product != null);
+		return product != null;
 	}
 
 	public Product getTarget() {
@@ -68,6 +72,10 @@ public class Path extends Path_Base {
 		List<String> path = Arrays.stream(getValue().split("\\.")).collect(Collectors.toList());
 		Entity entity = getDataModel().getEntity(path.get(0))
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, path.get(0)));
+
+		if (path.size() == 1) {
+			return null;
+		}
 
 		return entity.getEntityByRolename(path.get(1));
 	}
