@@ -1,11 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -399,34 +394,5 @@ public class GoalModel extends GoalModel_Base {
 						.contains(product))
 				.findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.NON_EXISTENT_GOAL_BY_PRODUCT));
-	}
-
-	public boolean checkGoalIsParentOfGoal(Goal goal1, Goal goal2) {
-		Queue<Goal> openSet = new LinkedList<>();
-		Set<Goal> visited = new HashSet<>();
-
-		openSet.add(goal1);
-
-		while (!openSet.isEmpty()) {
-			Goal node = openSet.poll();
-
-			if (node.equals(goal2)) {
-				return true;
-			}
-
-			for (Goal nextGoal : node.getSubGoalSet()) {
-				if (visited.contains(nextGoal)) {
-					continue;
-				}
-
-				if (!openSet.contains(nextGoal)) {
-					openSet.add(nextGoal);
-				}
-			}
-
-			visited.add(node);
-		}
-
-		return false;
 	}
 }

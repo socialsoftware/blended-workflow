@@ -49,8 +49,8 @@ public class GoalWorkItemController {
 		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
-		GoalWorkItemDTO[] instances = edi.getLogGoalWorkItemDTOSet(specId, instanceName).stream()
-				.toArray(GoalWorkItemDTO[]::new);
+		GoalWorkItemDto[] instances = edi.getLogGoalWorkItemDTOSet(specId, instanceName).stream()
+				.toArray(GoalWorkItemDto[]::new);
 
 		return new ResponseEntity<>(instances, HttpStatus.OK);
 	}
