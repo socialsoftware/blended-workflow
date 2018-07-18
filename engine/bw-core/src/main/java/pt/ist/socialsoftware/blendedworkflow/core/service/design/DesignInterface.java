@@ -990,7 +990,7 @@ public class DesignInterface {
 
 	}
 
-	private Goal getGoalByName(Specification spec, String goalName) {
+	protected Goal getGoalByName(Specification spec, String goalName) {
 		return spec.getGoalModel().getGoalSet().stream().filter(g -> g.getName().equals(goalName)).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_GOAL_NAME, goalName));
 	}

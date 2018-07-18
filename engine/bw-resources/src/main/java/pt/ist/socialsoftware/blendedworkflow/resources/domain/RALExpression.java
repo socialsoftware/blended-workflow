@@ -58,10 +58,10 @@ public abstract class RALExpression extends RALExpression_Base {
     }
 
     public void delete() {
-        setActivityInforms(null);
-        setActivityResponsibleFor(null);
-        setGoalInforms(null);
-        setGoalResponsibleFor(null);
+        getActivityInformsSet().stream().forEach(p -> removeActivityInforms(p));
+        getActivityResponsibleForSet().stream().forEach(p -> removeActivityResponsibleFor(p));
+        getGoalInformsSet().stream().forEach(p -> removeGoalInforms(p));
+        getGoalResponsibleForSet().stream().forEach(p -> removeGoalResponsibleFor(p));
         setRalExprNot(null);
         setRalExprAndLeft(null);
         setRalExprAndRight(null);

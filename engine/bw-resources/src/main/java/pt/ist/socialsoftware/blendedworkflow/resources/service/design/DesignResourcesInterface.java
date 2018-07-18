@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
@@ -265,5 +266,71 @@ public class DesignResourcesInterface extends DesignInterface {
 		} else {
 			return goalMerged;
 		}
+	}
+
+	@Override
+	public Activity extractActivity(String specId, String newActivityName, String description, String sourceActivityName, Set<DefPathConditionDTO> successCondition) {
+		Specification spec = getSpecBySpecId(specId);
+		Activity activity = getActivityByName(spec, sourceActivityName);
+
+		RALExpression responsibleFor = activity.getResponsibleFor();
+		RALExpression informedAbout = activity.getInforms();
+
+		activity.setResponsibleFor(null);
+		activity.setInforms(null);
+
+		Activity newActivity = super.extractActivity(specId, newActivityName, description, sourceActivityName, successCondition);
+
+		Activity fromActivity = spec.getActivityModel().getActivitySet().stream()
+				.filter(activity1 -> activity1.getName().equals(sourceActivityName))
+				.findFirst()
+				.orElseThrow(() -> new RMException(RMErrorType.ACTIVITY_NOT_FOUND_IN_EXTRACT));
+
+		fromActivity.setResponsibleFor(responsibleFor);
+		fromActivity.setInforms(informedAbout);
+
+		newActivity.setResponsibleFor(responsibleFor);
+		newActivity.setInforms(informedAbout);
+
+		return newActivity;
+	}
+
+	@Override
+	public Goal extractChildGoal(String specId, String newGoalName, String sourceGoalName, Set<DefPathConditionDTO> successConditionDTO) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, sourceGoalName);
+
+		Goal newGoal = super.extractChildGoal(specId, newGoalName, sourceGoalName, successConditionDTO);
+
+		newGoal.setResponsibleFor(goal.getResponsibleFor());
+		newGoal.setInforms(goal.getInforms());
+
+		return newGoal;
+	}
+
+	@Override
+	public Goal extractParentGoal(String specId, String newGoalName, String sourceGoalName, Set<DefPathConditionDTO> successConditionDTO) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, sourceGoalName);
+
+		Goal newGoal = super.extractParentGoal(specId, newGoalName, sourceGoalName, successConditionDTO);
+
+		newGoal.setResponsibleFor(goal.getResponsibleFor());
+		newGoal.setInforms(goal.getInforms());
+
+		return newGoal;
+	}
+
+	@Override
+	public Goal extractSiblingGoal(String specId, String newGoalName, String sourceGoalName, Set<DefPathConditionDTO> successConditionDTO) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, sourceGoalName);
+
+		Goal newGoal = super.extractSiblingGoal(specId, newGoalName, sourceGoalName, successConditionDTO);
+
+		newGoal.setResponsibleFor(goal.getResponsibleFor());
+		newGoal.setInforms(goal.getInforms());
+
+		return newGoal;
 	}
 }

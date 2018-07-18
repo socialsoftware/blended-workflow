@@ -313,22 +313,22 @@ relation RALExprSharesRoleHasUnit {
   */
 
 relation ActivityHasResponsibleFor {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Activity playsRole activityResponsibleFor { multiplicity 0..1;}
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Activity playsRole activityResponsibleFor { multiplicity 0..*;}
     RALExpression playsRole responsibleFor { multiplicity 0..1; }
 }
 
 relation ActivityHasInforms {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Activity playsRole activityInforms { multiplicity 0..1;}
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Activity playsRole activityInforms { multiplicity 0..*;}
     RALExpression playsRole informs { multiplicity 0..1; }
 }
 
 relation GoalHasResponsibleFor {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalResponsibleFor { multiplicity 0..1;}
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalResponsibleFor { multiplicity 0..*;}
     RALExpression playsRole responsibleFor { multiplicity 0..1; }
 }
 
 relation GoalHasInforms {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalInforms { multiplicity 0..1;}
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalInforms { multiplicity 0..*;}
     RALExpression playsRole informs { multiplicity 0..1; }
 }
 
