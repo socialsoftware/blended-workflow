@@ -137,7 +137,7 @@ public class ExecutionInterface {
 		return workflowInstance.getLogGoalWorkItemList();
 	}
 
-	public List<GoalWorkItemDTO> getLogGoalWorkItemDTOSet(String specId, String instanceName) {
+	public List<GoalWorkItemDto> getLogGoalWorkItemDTOSet(String specId, String instanceName) {
 		return getLogGoalWorkItemSet(specId, instanceName).stream()
 				.map(GoalWorkItem::getDTO).collect(Collectors.toList());
 	}
