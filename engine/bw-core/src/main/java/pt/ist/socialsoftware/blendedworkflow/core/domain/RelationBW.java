@@ -145,10 +145,12 @@ public class RelationBW extends RelationBW_Base {
 		relDTO.setEntOneName(getEntityOne().getName());
 		relDTO.setRolenameOne(getRolenameOne());
 		relDTO.setCardinalityOne(getCardinalityOne().getExp());
+		relDTO.setPathOne(getPath(getEntityOne()));
 		relDTO.setEntTwoExtId(getEntityTwo().getExternalId());
 		relDTO.setEntTwoName(getEntityTwo().getName());
 		relDTO.setRolenameTwo(getRolenameTwo());
 		relDTO.setCardinalityTwo(getCardinalityTwo().getExp());
+		relDTO.setPathTwo(getPath(getEntityTwo()));
 
 		return relDTO;
 	}

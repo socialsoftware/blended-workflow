@@ -33,7 +33,6 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 	private static final String ATT_ONE_NAME = "AttOne";
 	private static final String ATT_TWO_NAME = "AttTwo";
 	private static final String ATT_THREE_NAME = "AttThree";
-	private static final String ATT_FOUR_NAME = "AttFour";
 	private static final String ROLENAME_ENT_ONE = "entOne";
 	private static final String ROLENAME_ENT_TWO = "entTwo";
 	private static final String ROLENAME_ENT_THREE = "entThree";

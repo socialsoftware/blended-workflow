@@ -279,174 +279,221 @@
     </activity>
   </activity-model>
   <goal-model>
-    <goal name="Medication.name" parent="Medication">
-      <preConditions />
+    <goal name="Medication.name" type="ProductGoal">
+        <preConditions>
+          <condition path="Medication" />
+        </preConditions>
       <postConditions>
         <condition path="Medication.name" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Medication.quantity" parent="Medication">
-      <preConditions />
+    <goal name="Medication.quantity" type="ProductGoal">
+      <preConditions>
+          <condition path="Medication" />
+       </preConditions>
       <postConditions>
         <condition path="Medication.quantity" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Medication.heartImpact" parent="Medication">
-      <preConditions />
+    <goal name="Medication.heartImpact" type="ProductGoal">
+      <preConditions>
+          <condition path="Medication" />
+      </preConditions>
       <postConditions>
         <condition path="Medication.heartImpact" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Medication" parent="Prescription">
+    <goal name="Medication" type="ProductGoal">
       <preConditions>
+        <condition path="Medication" />
         <condition path="Medication.prescription.description" />
       </preConditions>
       <postConditions>
         <condition path="Medication" />
       </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="PrescriptionHasMedication" type="AssociationGoal">
+      <preConditions>
+        <condition path="Medication" />
+        <condition path="Prescription" />
+      </preConditions>
+      <postConditions />
       <mulConditions>
         <condition name="PrescriptionHasMedication" rolename="prescription" cardinality="1" />
+        <condition name="PrescriptionHasMedication" rolename="medication" cardinality="1..*" />
       </mulConditions>
     </goal>
-    <goal name="Prescription.description" parent="Prescription">
+    <goal name="Prescription.description" type="ProductGoal">
       <preConditions>
-        <condition path="Prescription.episode.report.description" />
+          <condition path="Prescription" />
+          <condition path="Prescription.episode.report.description" />
       </preConditions>
       <postConditions>
         <condition path="Prescription.description" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Prescription" parent="Episode">
+    <goal name="Prescription" type="ProductGoal">
       <preConditions />
       <postConditions>
-        <condition path="Prescription" />
+          <condition path="Prescription" />
       </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="EpisodeHasPrescription" type="AssociationGoal">
+      <preConditions>
+        <condition path="Episode" />
+        <condition path="Prescription" />
+      </preConditions>
+      <postConditions />
       <mulConditions>
         <condition name="EpisodeHasPrescription" rolename="episode" cardinality="1" />
-        <condition name="PrescriptionHasMedication" rolename="medication" cardinality="1..*" />
+        <condition name="EpisodeHasPrescription" rolename="prescription" cardinality="0..1" />
       </mulConditions>
     </goal>
-    <goal name="Report.description" parent="Report">
+    <goal name="Report.description" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Report.description" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Report" parent="Episode">
+    <goal name="Report" type="ProductGoal">
       <preConditions>
         <condition path="Report.episode.data.bloodPressure" />
       </preConditions>
       <postConditions>
         <condition path="Report" />
       </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="EpisodehasReport" type="AssociationGoal">
+      <preConditions>
+         <condition path="Episode" />
+         <condition path="Report" />
+      </preConditions>
+      <postConditions />
       <mulConditions>
         <condition name="EpisodehasReport" rolename="episode" cardinality="1" />
+        <condition name="EpisodehasReport" rolename="report" cardinality="1" />
       </mulConditions>
     </goal>
-    <goal name="Data.height" parent="Data">
+    <goal name="Data.height" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Data.height" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Data.weight" parent="Data">
+    <goal name="Data.weight" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Data.weight" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Data.bloodPressure" parent="Data">
+    <goal name="Data.bloodPressure" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Data.bloodPressure" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Data.physicalCondition" parent="Data">
+    <goal name="Data.physicalCondition" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Data.physicalCondition" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Data" parent="Episode">
+    <goal name="Data" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Data" />
       </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="EpisodeHasData" type="AssociationGoal">
+      <preConditions>
+        <condition path="Episode" />
+        <condition path="Data" />
+      </preConditions>
+      <postConditions />
       <mulConditions>
         <condition name="EpisodeHasData" rolename="episode" cardinality="1" />
+        <condition name="EpisodeHasData" rolename="data" cardinality="1" />
       </mulConditions>
     </goal>
-    <goal name="Patient.name" parent="Patient">
+    <goal name="Patient.name" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Patient.name" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Patient.age" parent="Patient">
+    <goal name="Patient.age" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Patient.age" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Patient.heartProblems" parent="Patient">
+    <goal name="Patient.heartProblems" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Patient.heartProblems" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Patient" parent="Episode">
+    <goal name="Patient" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Patient" />
       </postConditions>
+      <mulConditions />
+    </goal>
+    <goal name="PatientHasEpisode" type="AssociationGoal">
+        <preConditions>
+          <condition path="Patient" />
+          <condition path="Episode" />
+        </preConditions>
+      <postConditions />
       <mulConditions>
+        <condition name="PatientHasEpisode" rolename="patient" cardinality="1" />
         <condition name="PatientHasEpisode" rolename="episode" cardinality="0..*" />
       </mulConditions>
     </goal>
-    <goal name="Episode.reserveDate" parent="Episode">
+    <goal name="Episode.reserveDate" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Episode.reserveDate" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Episode.checkin" parent="Episode">
+    <goal name="Episode.checkin" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Episode.checkin" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Episode.checkout" parent="Episode">
+    <goal name="Episode.checkout" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Episode.checkout" />
       </postConditions>
       <mulConditions />
     </goal>
-    <goal name="Episode">
+    <goal name="Episode" type="ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Episode" />
       </postConditions>
-      <mulConditions>
-        <condition name="PatientHasEpisode" rolename="patient" cardinality="1" />
-        <condition name="EpisodeHasPrescription" rolename="prescription" cardinality="0..1" />
-        <condition name="EpisodeHasData" rolename="data" cardinality="1" />
-        <condition name="EpisodehasReport" rolename="report" cardinality="1" />
-      </mulConditions>
+      <mulConditions />
     </goal>
   </goal-model>
 </specification>

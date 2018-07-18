@@ -11,7 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
-public class CheckUniqueMandatoryEntity extends TeardownRollbackTest {
+public class CheckUniqueMandatoryEntityTest extends TeardownRollbackTest {
 	private static final String ENTITY_NAME_ONE = "EntityOne";
 	private static final String ENTITY_NAME_TWO = "EntityTwo";
 

@@ -63,7 +63,7 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 		this.entityTwo = new Entity(this.spec.getDataModel(), "EntityTwo", false);
 		this.relationBW = new RelationBW(this.spec.getDataModel(), "name", this.entity, ENT_ONE_ROLE, Cardinality.ONE,
 				false, this.entityTwo, ENT_TWO_ROLE, "2..4", false);
-		MulCondition.createMUlConditions(this.relationBW);
+		MulCondition.createMulConditions(this.relationBW);
 
 		this.activity = new Activity(this.spec.getActivityModel(), NAME, "description");
 		this.activity.addPreCondition(this.defPathCondition);

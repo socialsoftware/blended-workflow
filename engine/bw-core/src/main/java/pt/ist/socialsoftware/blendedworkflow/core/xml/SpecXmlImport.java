@@ -17,6 +17,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ActivityModel;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
@@ -24,6 +25,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
@@ -32,7 +34,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
 
@@ -195,20 +197,19 @@ public class SpecXmlImport {
 
 	private void importGoalModel(Element specElement, GoalModel goalModel) {
 		for (Element goalElement : specElement.getChild("goal-model").getChildren("goal")) {
+			String type = goalElement.getAttributeValue("type");
 			String name = goalElement.getAttributeValue("name");
-			Goal goal = DesignInterface.getInstance()
-					.createGoal(new GoalDTO(goalModel.getSpecification().getSpecId(), name));
-			importPreConditions(goalElement, goal);
-			importPostConditions(goalElement, goal);
-			importMulConditions(goalElement, goal);
-		}
+			if (type.equals(ProductGoal.class.getName())) {
+				ProductGoal goal = DesignInterface.getInstance()
+						.createProductGoal(new GoalDto(goalModel.getSpecification().getSpecId(), null, type, name));
 
-		for (Element goalElement : specElement.getChild("goal-model").getChildren("goal")) {
-			String name = goalElement.getAttributeValue("name");
-			String parent = goalElement.getAttributeValue("parent");
-			if (parent != null && !parent.isEmpty()) {
-				Goal goal = goalModel.getGoal(name);
-				goal.setParentGoal(goalModel.getGoal(parent));
+				importPreConditions(goalElement, goal);
+				importPostConditions(goalElement, goal);
+			} else {
+				AssociationGoal goal = DesignInterface.getInstance()
+						.createAssociationGoal(new GoalDto(goalModel.getSpecification().getSpecId(), null, type, name));
+				importPreConditions(goalElement, goal);
+				importMulConditions(goalElement, goal);
 			}
 		}
 	}

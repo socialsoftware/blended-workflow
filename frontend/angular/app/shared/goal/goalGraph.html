@@ -1,4 +1,5 @@
-<link rel="stylesheet" type="text/css" href="../../../assets/css/graph.css"></link>
+<link rel="stylesheet" type="text/css"
+	href="../../../assets/css/graph.css"></link>
 <div class="container" ng-show="spec.name">
 	<div>
 		<h3>
@@ -12,35 +13,36 @@
 					ng-options="operation.name for operation in operations.availableOperations track by operation.id"
 					ng-model="operations.selectedOperation" ng-change='cleanAll()'>
 				</select>
+				<!-- product or association goals -->
+				<select name="goalType" class="btn btn-primary form-control"
+					ng-show="goalMergeOperation() || goalSplitOperation()"
+					ng-options="type.name for type in types.availableTypes track by type.id"
+					ng-model="types.selectedType" ng-change='cleanGoals()'>
+				</select>
 				<!-- first goal select -->
-				<select name="goalSourceOne"
-					class="btn btn-primary form-control"
-					ng-show="operations.selectedOperation.id!=0"
+				<select name="goalSourceOne" class="btn btn-primary form-control"
+					ng-show="goalRenameOperation() || (goalMergeOperation() && goalTypeSelected()) || (goalSplitOperation() && goalTypeSelected())"
 					ng-options="goal.name for goal in goalsOne.availableGoals | orderBy:'name'"
 					ng-model="goalsOne.selectedGoal"
 					ng-change="updateSelects(spec.specId, goalsOne.selectedGoal.name)">
 				</select>
-				<!-- second goal select -->
-				<select name="goalSourceTwo"
-					class="btn btn-primary form-control"
-					ng-show="goalsTwoSelect()"
+				<!-- second goal select when a merge -->
+				<select name="goalSourceTwo" class="btn btn-primary form-control"
+					ng-show="goalMergeOperation() && goalTypeSelected()"
 					ng-options="goal.name for goal in goalsTwo.availableGoals | orderBy:'name'"
 					ng-model="goalsTwo.selectedGoal">
 				</select>
-				<!-- success conditions of first goal select -->
-				<select name="splitType" class="btn btn-primary form-control"
-					ng-show="goalSucConditionsSelect()"
-					ng-model="splitType">
-      				<option value="">---Select Type---</option> 
-      				<option value="parent">Parent</option>
-      				<option value="child">Child</option>
-      				<option value="sibling">Sibling</option>
-				</select>
-				<!-- success conditions of first goal select -->
+				<!-- success conditions of first goal selected when a split of a product goal -->
 				<select name="goalSucConditions" class="btn form-control"
 					ng-show="goalSucConditionsSelect()"
 					ng-options="suc.path for suc in goalSucConditions.availableSucConditions | orderBy:'path'"
 					ng-model="goalSucConditions.selectedSucConditions" multiple>
+				</select>
+				<!-- multiplicity conditions of first goal selected when a split of an association goal -->
+				<select name="goalRelations" class="btn form-control"
+					ng-show="goalRelationsSelect()"
+					ng-options="rel.name for rel in goalRelations.availableRelations | orderBy:'path'"
+					ng-model="goalRelations.selectedRelations" multiple>
 				</select>
 				<!-- new goal name -->
 				<input name="newGoal" ng-show="goalNameInput()" type="text"

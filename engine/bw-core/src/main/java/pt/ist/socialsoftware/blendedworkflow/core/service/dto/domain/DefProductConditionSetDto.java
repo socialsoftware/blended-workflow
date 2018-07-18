@@ -1,19 +1,20 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DefProductConditionSetDTO {
-	private Set<DefEntityConditionDTO> defEnts;
-	private Set<DefAttributeConditionDTO> defAtts;
+public class DefProductConditionSetDto {
+	private Set<DefEntityConditionDTO> defEnts = new HashSet<>();
+	private Set<DefAttributeConditionDTO> defAtts = new HashSet<>();
 
-	public DefProductConditionSetDTO() {
+	public DefProductConditionSetDto() {
 	}
 
 	public Set<DefEntityConditionDTO> getDefEnts() {
-		return defEnts;
+		return this.defEnts;
 	}
 
 	public void setDefEnts(Set<DefEntityConditionDTO> defEnts) {
@@ -21,7 +22,7 @@ public class DefProductConditionSetDTO {
 	}
 
 	public Set<DefAttributeConditionDTO> getDefAtts() {
-		return defAtts;
+		return this.defAtts;
 	}
 
 	public void setDefAtts(Set<DefAttributeConditionDTO> defAtts) {

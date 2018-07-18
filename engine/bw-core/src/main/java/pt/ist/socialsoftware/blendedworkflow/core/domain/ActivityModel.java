@@ -143,7 +143,7 @@ public class ActivityModel extends ActivityModel_Base {
 	public Activity extractActivity(Activity fromActivity, String activityName, String activityDescription,
 			Set<DefProductCondition> postConditionSet) {
 		if (postConditionSet.size() == 0 || fromActivity.getPostConditionSet().size() - postConditionSet.size() <= 0
-				|| fromActivity.getPostConditionSet().containsAll(postConditionSet)) {
+				|| !fromActivity.getPostConditionSet().containsAll(postConditionSet)) {
 			throw new BWException(BWErrorType.CANNOT_EXTRACT_ACTIVITY, fromActivity.getName());
 		}
 
@@ -299,14 +299,14 @@ public class ActivityModel extends ActivityModel_Base {
 
 		checkModelConsistency();
 
-		checkCycles();
+		checkCircularities();
 	}
 
 	public void checkModelConsistency() {
 		getActivitySet().stream().forEach(t -> t.checkConsistency());
 	}
 
-	private void checkCycles() {
+	private void checkCircularities() {
 		checkCycles(getActivitySequences());
 	}
 

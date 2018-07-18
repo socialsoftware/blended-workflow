@@ -12,7 +12,7 @@ public class EntityInstanceContextDTO {
 	private Set<ProductInstanceDTO> pathValueSet;
 	private String pathValues;
 
-	public static EntityInstanceContextDTO createEntityInstanceContextDTO(EntityContextDTO entityContextDTO,
+	public static EntityInstanceContextDTO createEntityInstanceContextDTO(EntityContextDto entityContextDTO,
 			EntityInstance entityInstance) {
 		EntityInstanceContextDTO entityContextInstanceDTO = new EntityInstanceContextDTO();
 

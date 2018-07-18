@@ -20,7 +20,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
 
 public class ExecutionInterface {
 	private static Logger logger = LoggerFactory.getLogger(ExecutionInterface.class);
@@ -114,13 +114,13 @@ public class ExecutionInterface {
 		return activityWorkItem;
 	}
 
-	public Set<GoalWorkItemDTO> getPendingGoalWorkItemSet(String specId, String instanceName) {
+	public Set<GoalWorkItemDto> getPendingGoalWorkItemSet(String specId, String instanceName) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
-		Set<GoalWorkItemDTO> goalWorkItemDTOs = new HashSet<>();
+		Set<GoalWorkItemDto> goalWorkItemDTOs = new HashSet<>();
 
 		for (Goal goal : getPendingGoalSet(workflowInstance)) {
-			goalWorkItemDTOs.add(GoalWorkItemDTO.createGoalWorkItemDTO(workflowInstance, goal));
+			goalWorkItemDTOs.add(GoalWorkItemDto.createGoalWorkItemDTO(workflowInstance, goal));
 		}
 
 		return goalWorkItemDTOs;
@@ -143,7 +143,7 @@ public class ExecutionInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public GoalWorkItem executeGoalWorkItem(GoalWorkItemDTO goalWorkItemDTO) {
+	public GoalWorkItem executeGoalWorkItem(GoalWorkItemDto goalWorkItemDTO) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(goalWorkItemDTO.getSpecId(),
 				goalWorkItemDTO.getWorkflowInstanceName());
 		Goal goal = getGoal(goalWorkItemDTO.getSpecId(), goalWorkItemDTO.getName());

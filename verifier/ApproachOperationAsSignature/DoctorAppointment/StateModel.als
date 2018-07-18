@@ -42,7 +42,7 @@ pred final {
 }
 
 
-pred Invariants(s: State) {
+pred invariants(s: State) {
 	// only the correct fields are associated to the entities
 	noExtraFields [s, Patient, patient_name + patient_address + patient_episode] 
 	noExtraFields [s, Episode, episode_reserve_date + episode_checkin + episode_checkout + episode_patient + episode_data + episode_report]	 

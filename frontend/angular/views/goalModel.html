@@ -5,10 +5,7 @@
 			<div ng-repeat="g in goals | orderBy:'name'">
 				<strong>Goal</strong><span> {{g.name}}</span> <br /> { <br />
 				<div
-					ng-init="getSubGoals(g.name); getActivationConditions(g.name); getEntSuccessConditions(g.name); getAttSuccessConditions(g.name); getMulConditions(g.name); getRuleConditions(g.name)">
-				<span style="padding-left: 2em"></span><strong>SUB</strong>(<span
-					ng-repeat="sub in subgoals.get(g.name)">{{sub.name}}<span
-					ng-if="!$last">, </span></span>) <br /> 
+					ng-init="getActivationConditions(g.name); getEntSuccessConditions(g.name); getAttSuccessConditions(g.name); getMulConditions(g.name); getRuleConditions(g.name)">
 				<span style="padding-left: 2em"></span><strong>ACT</strong>(<span
 					ng-repeat="act in actconditions.get(g.name)">{{act.path}}<span
 					ng-if="!$last">, </span></span>) <br /> 
