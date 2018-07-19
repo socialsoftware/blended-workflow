@@ -159,6 +159,10 @@ public class DesignResourcesInterface extends DesignInterface {
 		    throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
         }
 
+		if (!ralExpression.isConsistent()) {
+			throw new RMException(RMErrorType.RAL_EXPRESSION_IS_NOT_CONSISTENT, "RALExpressionDTO is not consistent");
+		}
+
 		return ralExpression;
 	}
 
