@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
@@ -27,7 +28,7 @@ public class RALExprHasRole extends RALExprHasRole_Base implements RALExprDeniab
     }
 
     @Override
-    public List<Person> getEligibleResources(WorkflowInstance history) {
+    public List<Person> getEligibleResources(WorkflowInstance history, Set<Product> defProducts) {
         return getPersonSet().stream().filter(person -> {
             List<Role> roles = new ArrayList();
             person.getPositionSet().stream().forEach(position -> {

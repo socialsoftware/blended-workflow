@@ -165,6 +165,7 @@
     </activity>
     <activity name="Report.desc">
       <preConditions>
+        <condition path="Report.episode.patient" />
         <condition path="Report" />
       </preConditions>
       <seqConditions />
@@ -175,6 +176,7 @@
     </activity>
     <activity name="Data.height">
       <preConditions>
+        <condition path="Data.episode.doctor" />
         <condition path="Data" />
       </preConditions>
       <seqConditions />
@@ -185,6 +187,7 @@
     </activity>
     <activity name="Data.weight">
       <preConditions>
+        <condition path="Data.episode.doctor" />
         <condition path="Data" />
       </preConditions>
       <seqConditions />
@@ -195,6 +198,7 @@
     </activity>
     <activity name="Data.bloodPressure">
       <preConditions>
+        <condition path="Data.episode.doctor" />
         <condition path="Data" />
       </preConditions>
       <seqConditions />
@@ -205,6 +209,7 @@
     </activity>
     <activity name="Data.physicalCondition">
       <preConditions>
+        <condition path="Data.episode.doctor" />
         <condition path="Data" />
       </preConditions>
       <seqConditions />
@@ -215,6 +220,7 @@
     </activity>
     <activity name="Medication.name">
       <preConditions>
+        <condition path="Medication.prescription" />
         <condition path="Medication" />
       </preConditions>
       <seqConditions />
@@ -225,6 +231,7 @@
     </activity>
     <activity name="Medication.quantity">
       <preConditions>
+        <condition path="Medication.prescription" />
         <condition path="Medication" />
       </preConditions>
       <seqConditions />
@@ -244,12 +251,17 @@
       <mulConditions />
     </activity>
     <activity name="Patient">
-      <preConditions />
+      <preConditions>
+        <condition path="Patient.episode" />
+      </preConditions>
       <seqConditions />
       <postConditions>
         <condition path="Patient" />
       </postConditions>
-      <mulConditions />
+      <mulConditions>
+        <condition name="PatientHasEpisode" rolename="episode" cardinality="0..*" />
+        <condition name="PatientHasEpisode" rolename="patient" cardinality="1" />
+      </mulConditions>
     </activity>
     <activity name="Doctor">
       <preConditions>
@@ -266,34 +278,30 @@
     </activity>
     <activity name="Episode">
       <preConditions>
-        <condition path="Episode.patient" />
+        <condition path="Episode.prescription" />
       </preConditions>
       <seqConditions />
       <postConditions>
         <condition path="Episode" />
       </postConditions>
       <mulConditions>
-        <condition name="PatientHasEpisode" rolename="episode" cardinality="0..*" />
-        <condition name="PatientHasEpisode" rolename="patient" cardinality="1" />
+        <condition name="EpisodeHasPrescription" rolename="prescription" cardinality="0..1" />
+        <condition name="EpisodeHasPrescription" rolename="episode" cardinality="1" />
       </mulConditions>
     </activity>
     <activity name="Prescription">
-      <preConditions>
-        <condition path="Prescription.episode" />
-      </preConditions>
+      <preConditions />
       <seqConditions />
       <postConditions>
         <condition path="Prescription" />
       </postConditions>
-      <mulConditions>
-        <condition name="EpisodeHasPrescription" rolename="prescription" cardinality="0..1" />
-        <condition name="EpisodeHasPrescription" rolename="episode" cardinality="1" />
-      </mulConditions>
+      <mulConditions />
     </activity>
     <activity name="Report">
       <preConditions>
         <condition path="Report.episode" />
         <condition path="Report.episode.data.bloodPressure" />
+        <condition path="Report.episode.patient" />
       </preConditions>
       <seqConditions />
       <postConditions>
@@ -307,6 +315,7 @@
     <activity name="Data">
       <preConditions>
         <condition path="Data.episode" />
+        <condition path="Data.episode.doctor" />
       </preConditions>
       <seqConditions />
       <postConditions>
@@ -319,8 +328,8 @@
     </activity>
     <activity name="Medication">
       <preConditions>
-        <condition path="Medication.prescription" />
         <condition path="Medication.prescription.desc" />
+        <condition path="Medication.prescription" />
       </preConditions>
       <seqConditions />
       <postConditions>
@@ -333,205 +342,267 @@
     </activity>
   </activity-model>
   <goal-model>
-    <goal name="Medication.name" parent="Medication">
-      <preConditions />
-      <postConditions>
-        <condition path="Medication.name" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Medication.quantity" parent="Medication">
-      <preConditions />
-      <postConditions>
-        <condition path="Medication.quantity" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Medication.heartImpact" parent="Medication">
-      <preConditions />
-      <postConditions>
-        <condition path="Medication.heartImpact" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Medication" parent="Prescription">
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal" name="EpisodeHasDoctor">
       <preConditions>
-        <condition path="Medication.prescription.desc" />
-      </preConditions>
-      <postConditions>
-        <condition path="Medication" />
-      </postConditions>
-      <mulConditions>
-        <condition name="PrescriptionHasMedication" rolename="prescription" cardinality="1" />
-      </mulConditions>
-    </goal>
-    <goal name="Data.height" parent="Data">
-      <preConditions />
-      <postConditions>
-        <condition path="Data.height" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Data.weight" parent="Data">
-      <preConditions />
-      <postConditions>
-        <condition path="Data.weight" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Data.bloodPressure" parent="Data">
-      <preConditions />
-      <postConditions>
-        <condition path="Data.bloodPressure" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Data.physicalCondition" parent="Data">
-      <preConditions />
-      <postConditions>
-        <condition path="Data.physicalCondition" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Data" parent="Episode">
-      <preConditions />
-      <postConditions>
-        <condition path="Data" />
-      </postConditions>
-      <mulConditions>
-        <condition name="EpisodeHasData" rolename="episode" cardinality="1" />
-      </mulConditions>
-    </goal>
-    <goal name="Report.desc" parent="Report">
-      <preConditions />
-      <postConditions>
-        <condition path="Report.desc" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Report" parent="Episode">
-      <preConditions>
-        <condition path="Report.episode.data.bloodPressure" />
-      </preConditions>
-      <postConditions>
-        <condition path="Report" />
-      </postConditions>
-      <mulConditions>
-        <condition name="EpisodehasReport" rolename="episode" cardinality="1" />
-      </mulConditions>
-    </goal>
-    <goal name="Patient.name" parent="Patient">
-      <preConditions />
-      <postConditions>
-        <condition path="Patient.name" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Patient.age" parent="Patient">
-      <preConditions />
-      <postConditions>
-        <condition path="Patient.age" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Patient.heartProblems" parent="Patient">
-      <preConditions />
-      <postConditions>
-        <condition path="Patient.heartProblems" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Patient" parent="Episode">
-      <preConditions />
-      <postConditions>
-        <condition path="Patient" />
-      </postConditions>
-      <mulConditions>
-        <condition name="PatientHasEpisode" rolename="episode" cardinality="0..*" />
-      </mulConditions>
-    </goal>
-    <goal name="Doctor.name" parent="Doctor">
-      <preConditions />
-      <postConditions>
-        <condition path="Doctor.name" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Doctor.age" parent="Doctor">
-      <preConditions />
-      <postConditions>
-        <condition path="Doctor.age" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Doctor" parent="Episode">
-      <preConditions />
-      <postConditions>
+        <condition path="Episode" />
         <condition path="Doctor" />
-      </postConditions>
+      </preConditions>
       <mulConditions>
+        <condition name="EpisodeHasDoctor" rolename="doctor" cardinality="1" />
         <condition name="EpisodeHasDoctor" rolename="episode" cardinality="0..*" />
       </mulConditions>
     </goal>
-    <goal name="Prescription.desc" parent="Prescription">
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal" name="PatientHasEpisode">
       <preConditions>
+        <condition path="Episode" />
+        <condition path="Patient" />
+      </preConditions>
+      <mulConditions>
+        <condition name="PatientHasEpisode" rolename="episode" cardinality="0..*" />
+        <condition name="PatientHasEpisode" rolename="patient" cardinality="1" />
+      </mulConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal" name="EpisodeHasPrescription">
+      <preConditions>
+        <condition path="Prescription" />
+        <condition path="Episode" />
+      </preConditions>
+      <mulConditions>
+        <condition name="EpisodeHasPrescription" rolename="prescription" cardinality="0..1" />
+        <condition name="EpisodeHasPrescription" rolename="episode" cardinality="1" />
+      </mulConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal" name="EpisodeHasData">
+      <preConditions>
+        <condition path="Data" />
+        <condition path="Episode" />
+      </preConditions>
+      <mulConditions>
+        <condition name="EpisodeHasData" rolename="data" cardinality="1" />
+        <condition name="EpisodeHasData" rolename="episode" cardinality="1" />
+      </mulConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal" name="EpisodehasReport">
+      <preConditions>
+        <condition path="Episode" />
+        <condition path="Report" />
+      </preConditions>
+      <mulConditions>
+        <condition name="EpisodehasReport" rolename="report" cardinality="1" />
+        <condition name="EpisodehasReport" rolename="episode" cardinality="1" />
+      </mulConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal" name="PrescriptionHasMedication">
+      <preConditions>
+        <condition path="Prescription" />
+        <condition path="Medication" />
+      </preConditions>
+      <mulConditions>
+        <condition name="PrescriptionHasMedication" rolename="medication" cardinality="1..*" />
+        <condition name="PrescriptionHasMedication" rolename="prescription" cardinality="1" />
+      </mulConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Patient" />
+      </preConditions>
+      <postConditions>
+        <condition path="Patient.name" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Patient" />
+      </preConditions>
+      <postConditions>
+        <condition path="Patient.age" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Patient" />
+      </preConditions>
+      <postConditions>
+        <condition path="Patient.heartProblems" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Doctor" />
+      </preConditions>
+      <postConditions>
+        <condition path="Doctor.name" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Doctor" />
+      </preConditions>
+      <postConditions>
+        <condition path="Doctor.age" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Episode" />
+      </preConditions>
+      <postConditions>
+        <condition path="Episode.reserveDate" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Episode" />
+      </preConditions>
+      <postConditions>
+        <condition path="Episode.checkin" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Episode" />
+      </preConditions>
+      <postConditions>
+        <condition path="Episode.checkout" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Episode" />
+      </preConditions>
+      <postConditions>
+        <condition path="Episode.number" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Prescription" />
         <condition path="Prescription.episode.report.desc" />
       </preConditions>
       <postConditions>
         <condition path="Prescription.desc" />
       </postConditions>
-      <mulConditions />
     </goal>
-    <goal name="Prescription" parent="Episode">
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Report.episode.patient" />
+        <condition path="Report" />
+      </preConditions>
+      <postConditions>
+        <condition path="Report.desc" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Data" />
+        <condition path="Data.episode.doctor" />
+      </preConditions>
+      <postConditions>
+        <condition path="Data.height" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Data" />
+        <condition path="Data.episode.doctor" />
+      </preConditions>
+      <postConditions>
+        <condition path="Data.weight" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Data" />
+        <condition path="Data.episode.doctor" />
+      </preConditions>
+      <postConditions>
+        <condition path="Data.bloodPressure" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Data" />
+        <condition path="Data.episode.doctor" />
+      </preConditions>
+      <postConditions>
+        <condition path="Data.physicalCondition" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Medication" />
+        <condition path="Medication.prescription" />
+      </preConditions>
+      <postConditions>
+        <condition path="Medication.name" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Medication" />
+        <condition path="Medication.prescription" />
+      </preConditions>
+      <postConditions>
+        <condition path="Medication.quantity" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Medication" />
+      </preConditions>
+      <postConditions>
+        <condition path="Medication.heartImpact" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
       <preConditions />
       <postConditions>
-        <condition path="Prescription" />
+        <condition path="Patient" />
       </postConditions>
-      <mulConditions>
-        <condition name="PrescriptionHasMedication" rolename="medication" cardinality="1..*" />
-        <condition name="EpisodeHasPrescription" rolename="episode" cardinality="1" />
-      </mulConditions>
     </goal>
-    <goal name="Episode.reserveDate" parent="Episode">
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
       <preConditions />
       <postConditions>
-        <condition path="Episode.reserveDate" />
+        <condition path="Doctor" />
       </postConditions>
-      <mulConditions />
     </goal>
-    <goal name="Episode.checkin" parent="Episode">
-      <preConditions />
-      <postConditions>
-        <condition path="Episode.checkin" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Episode.checkout" parent="Episode">
-      <preConditions />
-      <postConditions>
-        <condition path="Episode.checkout" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Episode.number" parent="Episode">
-      <preConditions />
-      <postConditions>
-        <condition path="Episode.number" />
-      </postConditions>
-      <mulConditions />
-    </goal>
-    <goal name="Episode">
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
       <preConditions />
       <postConditions>
         <condition path="Episode" />
       </postConditions>
-      <mulConditions>
-        <condition name="EpisodeHasPrescription" rolename="prescription" cardinality="0..1" />
-        <condition name="PatientHasEpisode" rolename="patient" cardinality="1" />
-        <condition name="EpisodeHasDoctor" rolename="doctor" cardinality="1" />
-        <condition name="EpisodeHasData" rolename="data" cardinality="1" />
-        <condition name="EpisodehasReport" rolename="report" cardinality="1" />
-      </mulConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions />
+      <postConditions>
+        <condition path="Prescription" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Report.episode.patient" />
+        <condition path="Report.episode.data.bloodPressure" />
+      </preConditions>
+      <postConditions>
+        <condition path="Report" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Data.episode.doctor" />
+      </preConditions>
+      <postConditions>
+        <condition path="Data" />
+      </postConditions>
+    </goal>
+    <goal type="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal" name="pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal">
+      <preConditions>
+        <condition path="Medication.prescription.desc" />
+        <condition path="Medication.prescription" />
+      </preConditions>
+      <postConditions>
+        <condition path="Medication" />
+      </postConditions>
     </goal>
   </goal-model>
   <resource-model>
@@ -539,6 +610,17 @@
       <capability name="BelongsToDoctorsAssociation" description="Represents the enrolment of a resource in the country's doctor's association" />
     </capabilities>
     <persons>
+      <person name="Admin">
+        <positions>
+          <UnitDirector />
+          <AdministrativeManager />
+          <Doctor />
+          <Nurse />
+          <SchedulingAdministrative />
+          <Receptionist />
+        </positions>
+        <capabilities />
+      </person>
       <person name="Helen">
         <positions>
           <UnitDirector />
@@ -678,22 +760,22 @@
   </resource-model>
   <resource-rules>
     <resource-rule product="Medication" model="data-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Medication.prescription" />
     </resource-rule>
     <resource-rule product="Data" model="data-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data" model="data-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
     </resource-rule>
     <resource-rule product="Report" model="data-model" type="responsible-for">
       <AndExpr>
         <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr path="Doctor" />
+        <IsPersonDataObjectExpr path="Report.episode.doctor" />
       </AndExpr>
     </resource-rule>
     <resource-rule product="Report" model="data-model" type="informs">
-      <IsPersonDataObjectExpr path="Patient" />
+      <IsPersonDataObjectExpr path="Report.episode.patient" />
     </resource-rule>
     <resource-rule product="Prescription" model="data-model" type="responsible-for">
       <AndExpr>
@@ -704,7 +786,7 @@
     <resource-rule product="Episode" model="data-model" type="responsible-for">
       <AndExpr>
         <NotExpr>
-          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Patient" />
+          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Episode.patient" />
         </NotExpr>
         <HasRoleExpr role="Scheduler" unit="OrthopedicUnit" />
       </AndExpr>
@@ -719,43 +801,43 @@
       <HasPositionExpr position="AdministrativeManager" />
     </resource-rule>
     <resource-rule product="Medication.quantity" model="data-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Medication.prescription" />
     </resource-rule>
     <resource-rule product="Medication.name" model="data-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Medication.prescription" />
     </resource-rule>
     <resource-rule product="Data.physicalCondition" model="data-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.physicalCondition" model="data-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
     </resource-rule>
     <resource-rule product="Data.bloodPressure" model="data-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.bloodPressure" model="data-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
     </resource-rule>
     <resource-rule product="Data.weight" model="data-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.weight" model="data-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
     </resource-rule>
     <resource-rule product="Data.height" model="data-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.height" model="data-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
     </resource-rule>
     <resource-rule product="Report.desc" model="data-model" type="responsible-for">
       <AndExpr>
         <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr path="Doctor" />
+        <IsPersonDataObjectExpr path="Report.episode.doctor" />
       </AndExpr>
     </resource-rule>
     <resource-rule product="Report.desc" model="data-model" type="informs">
-      <IsPersonDataObjectExpr path="Patient" />
+      <IsPersonDataObjectExpr path="Report.episode.patient" />
     </resource-rule>
     <resource-rule product="Prescription.desc" model="data-model" type="responsible-for">
       <AndExpr>
@@ -868,41 +950,41 @@
     <resource-rule product="Report.desc" model="activity-model" type="responsible-for">
       <AndExpr>
         <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr path="Doctor" />
+        <IsPersonDataObjectExpr path="Report.episode.doctor" />
       </AndExpr>
     </resource-rule>
     <resource-rule product="Report.desc" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr path="Patient" />
+      <IsPersonDataObjectExpr path="Report.episode.patient" />
     </resource-rule>
     <resource-rule product="Data.height" model="activity-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.height" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
     </resource-rule>
     <resource-rule product="Data.weight" model="activity-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.weight" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
     </resource-rule>
     <resource-rule product="Data.bloodPressure" model="activity-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.bloodPressure" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
     </resource-rule>
     <resource-rule product="Data.physicalCondition" model="activity-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data.physicalCondition" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
     </resource-rule>
     <resource-rule product="Medication.name" model="activity-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Medication.prescription" />
     </resource-rule>
     <resource-rule product="Medication.quantity" model="activity-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Medication.prescription" />
     </resource-rule>
     <resource-rule product="Patient" model="activity-model" type="responsible-for">
       <HasPositionExpr position="AdministrativeManager" />
@@ -916,7 +998,7 @@
     <resource-rule product="Episode" model="activity-model" type="responsible-for">
       <AndExpr>
         <NotExpr>
-          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Patient" />
+          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Episode.patient" />
         </NotExpr>
         <HasRoleExpr role="Scheduler" unit="OrthopedicUnit" />
       </AndExpr>
@@ -930,77 +1012,20 @@
     <resource-rule product="Report" model="activity-model" type="responsible-for">
       <AndExpr>
         <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr path="Doctor" />
+        <IsPersonDataObjectExpr path="Report.episode.doctor" />
       </AndExpr>
     </resource-rule>
     <resource-rule product="Report" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr path="Patient" />
+      <IsPersonDataObjectExpr path="Report.episode.patient" />
     </resource-rule>
     <resource-rule product="Data" model="activity-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
     </resource-rule>
     <resource-rule product="Data" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
     </resource-rule>
     <resource-rule product="Medication" model="activity-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
-    </resource-rule>
-    <resource-rule product="Medication.name" model="goal-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
-    </resource-rule>
-    <resource-rule product="Medication.quantity" model="goal-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
-    </resource-rule>
-    <resource-rule product="Medication" model="goal-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Prescription" />
-    </resource-rule>
-    <resource-rule product="Data.height" model="goal-model" type="responsible-for">
-      <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
-    </resource-rule>
-    <resource-rule product="Data.height" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
-    </resource-rule>
-    <resource-rule product="Data.weight" model="goal-model" type="responsible-for">
-      <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
-    </resource-rule>
-    <resource-rule product="Data.weight" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
-    </resource-rule>
-    <resource-rule product="Data.bloodPressure" model="goal-model" type="responsible-for">
-      <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
-    </resource-rule>
-    <resource-rule product="Data.bloodPressure" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
-    </resource-rule>
-    <resource-rule product="Data.physicalCondition" model="goal-model" type="responsible-for">
-      <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
-    </resource-rule>
-    <resource-rule product="Data.physicalCondition" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
-    </resource-rule>
-    <resource-rule product="Data" model="goal-model" type="responsible-for">
-      <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
-    </resource-rule>
-    <resource-rule product="Data" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr path="Doctor" />
-    </resource-rule>
-    <resource-rule product="Report.desc" model="goal-model" type="responsible-for">
-      <AndExpr>
-        <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr path="Doctor" />
-      </AndExpr>
-    </resource-rule>
-    <resource-rule product="Report.desc" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr path="Patient" />
-    </resource-rule>
-    <resource-rule product="Report" model="goal-model" type="responsible-for">
-      <AndExpr>
-        <HasPositionExpr position="Doctor" />
-        <IsPersonDataObjectExpr path="Doctor" />
-      </AndExpr>
-    </resource-rule>
-    <resource-rule product="Report" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr path="Patient" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Medication.prescription" />
     </resource-rule>
     <resource-rule product="Patient.name" model="goal-model" type="responsible-for">
       <HasRoleExpr role="ManagePatientInformation" unit="OrthopedicUnit" />
@@ -1010,9 +1035,6 @@
     </resource-rule>
     <resource-rule product="Patient.heartProblems" model="goal-model" type="responsible-for">
       <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
-    </resource-rule>
-    <resource-rule product="Patient" model="goal-model" type="responsible-for">
-      <HasPositionExpr position="AdministrativeManager" />
     </resource-rule>
     <resource-rule product="Doctor.name" model="goal-model" type="responsible-for">
       <HasPositionExpr position="UnitDirector" />
@@ -1025,30 +1047,6 @@
     </resource-rule>
     <resource-rule product="Doctor.age" model="goal-model" type="informs">
       <HasPositionExpr position="AdministrativeManager" />
-    </resource-rule>
-    <resource-rule product="Doctor" model="goal-model" type="responsible-for">
-      <HasPositionExpr position="AdministrativeManager" />
-    </resource-rule>
-    <resource-rule product="Doctor" model="goal-model" type="informs">
-      <HasPositionExpr position="AdministrativeManager" />
-    </resource-rule>
-    <resource-rule product="Prescription.desc" model="goal-model" type="responsible-for">
-      <AndExpr>
-        <HasPositionExpr position="Doctor" />
-        <HasCapabilityExpr capability="BelongsToDoctorsAssociation" />
-      </AndExpr>
-    </resource-rule>
-    <resource-rule product="Prescription.desc" model="goal-model" type="informs">
-      <AndExpr>
-        <HasPositionExpr position="Doctor" />
-        <HistoryExecutingExpr quantifier="LEAST" data-field="Prescription" />
-      </AndExpr>
-    </resource-rule>
-    <resource-rule product="Prescription" model="goal-model" type="responsible-for">
-      <AndExpr>
-        <HasPositionExpr position="Doctor" />
-        <HasCapabilityExpr capability="BelongsToDoctorsAssociation" />
-      </AndExpr>
     </resource-rule>
     <resource-rule product="Episode.reserveDate" model="goal-model" type="responsible-for">
       <HasRoleExpr role="Scheduler" unit="OrthopedicUnit" />
@@ -1071,13 +1069,97 @@
     <resource-rule product="Episode.number" model="goal-model" type="responsible-for">
       <HasRoleExpr role="Scheduler" unit="OrthopedicUnit" />
     </resource-rule>
+    <resource-rule product="Prescription.desc" model="goal-model" type="responsible-for">
+      <AndExpr>
+        <HasPositionExpr position="Doctor" />
+        <HasCapabilityExpr capability="BelongsToDoctorsAssociation" />
+      </AndExpr>
+    </resource-rule>
+    <resource-rule product="Prescription.desc" model="goal-model" type="informs">
+      <AndExpr>
+        <HasPositionExpr position="Doctor" />
+        <HistoryExecutingExpr quantifier="LEAST" data-field="Prescription" />
+      </AndExpr>
+    </resource-rule>
+    <resource-rule product="Report.desc" model="goal-model" type="responsible-for">
+      <AndExpr>
+        <HasPositionExpr position="Doctor" />
+        <IsPersonDataObjectExpr path="Report.episode.doctor" />
+      </AndExpr>
+    </resource-rule>
+    <resource-rule product="Report.desc" model="goal-model" type="informs">
+      <IsPersonDataObjectExpr path="Report.episode.patient" />
+    </resource-rule>
+    <resource-rule product="Data.height" model="goal-model" type="responsible-for">
+      <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
+    </resource-rule>
+    <resource-rule product="Data.height" model="goal-model" type="informs">
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
+    </resource-rule>
+    <resource-rule product="Data.weight" model="goal-model" type="responsible-for">
+      <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
+    </resource-rule>
+    <resource-rule product="Data.weight" model="goal-model" type="informs">
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
+    </resource-rule>
+    <resource-rule product="Data.bloodPressure" model="goal-model" type="responsible-for">
+      <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
+    </resource-rule>
+    <resource-rule product="Data.bloodPressure" model="goal-model" type="informs">
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
+    </resource-rule>
+    <resource-rule product="Data.physicalCondition" model="goal-model" type="responsible-for">
+      <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
+    </resource-rule>
+    <resource-rule product="Data.physicalCondition" model="goal-model" type="informs">
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
+    </resource-rule>
+    <resource-rule product="Medication.name" model="goal-model" type="responsible-for">
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Medication.prescription" />
+    </resource-rule>
+    <resource-rule product="Medication.quantity" model="goal-model" type="responsible-for">
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Medication.prescription" />
+    </resource-rule>
+    <resource-rule product="Patient" model="goal-model" type="responsible-for">
+      <HasPositionExpr position="AdministrativeManager" />
+    </resource-rule>
+    <resource-rule product="Doctor" model="goal-model" type="responsible-for">
+      <HasPositionExpr position="AdministrativeManager" />
+    </resource-rule>
+    <resource-rule product="Doctor" model="goal-model" type="informs">
+      <HasPositionExpr position="AdministrativeManager" />
+    </resource-rule>
     <resource-rule product="Episode" model="goal-model" type="responsible-for">
       <AndExpr>
         <NotExpr>
-          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Patient" />
+          <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Episode.patient" />
         </NotExpr>
         <HasRoleExpr role="Scheduler" unit="OrthopedicUnit" />
       </AndExpr>
+    </resource-rule>
+    <resource-rule product="Prescription" model="goal-model" type="responsible-for">
+      <AndExpr>
+        <HasPositionExpr position="Doctor" />
+        <HasCapabilityExpr capability="BelongsToDoctorsAssociation" />
+      </AndExpr>
+    </resource-rule>
+    <resource-rule product="Report" model="goal-model" type="responsible-for">
+      <AndExpr>
+        <HasPositionExpr position="Doctor" />
+        <IsPersonDataObjectExpr path="Report.episode.doctor" />
+      </AndExpr>
+    </resource-rule>
+    <resource-rule product="Report" model="goal-model" type="informs">
+      <IsPersonDataObjectExpr path="Report.episode.patient" />
+    </resource-rule>
+    <resource-rule product="Data" model="goal-model" type="responsible-for">
+      <HasRoleExpr role="ScreeningOfPatients" unit="OrthopedicUnit" />
+    </resource-rule>
+    <resource-rule product="Data" model="goal-model" type="informs">
+      <IsPersonDataObjectExpr path="Data.episode.doctor" />
+    </resource-rule>
+    <resource-rule product="Medication" model="goal-model" type="responsible-for">
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Medication.prescription" />
     </resource-rule>
   </resource-rules>
 </specification>

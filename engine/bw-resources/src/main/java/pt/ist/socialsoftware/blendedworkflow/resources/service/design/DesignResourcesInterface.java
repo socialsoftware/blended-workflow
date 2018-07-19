@@ -9,6 +9,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
@@ -296,37 +297,11 @@ public class DesignResourcesInterface extends DesignInterface {
 	}
 
 	@Override
-	public Goal extractChildGoal(String specId, String newGoalName, String sourceGoalName, Set<DefPathConditionDTO> successConditionDTO) {
+	public Goal extractGoal(String specId, ExtractGoalDto extractGoalDto) {
 		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, sourceGoalName);
+		Goal goal = getGoalByName(spec, extractGoalDto.getSourceGoalName());
 
-		Goal newGoal = super.extractChildGoal(specId, newGoalName, sourceGoalName, successConditionDTO);
-
-		newGoal.setResponsibleFor(goal.getResponsibleFor());
-		newGoal.setInforms(goal.getInforms());
-
-		return newGoal;
-	}
-
-	@Override
-	public Goal extractParentGoal(String specId, String newGoalName, String sourceGoalName, Set<DefPathConditionDTO> successConditionDTO) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, sourceGoalName);
-
-		Goal newGoal = super.extractParentGoal(specId, newGoalName, sourceGoalName, successConditionDTO);
-
-		newGoal.setResponsibleFor(goal.getResponsibleFor());
-		newGoal.setInforms(goal.getInforms());
-
-		return newGoal;
-	}
-
-	@Override
-	public Goal extractSiblingGoal(String specId, String newGoalName, String sourceGoalName, Set<DefPathConditionDTO> successConditionDTO) {
-		Specification spec = getSpecBySpecId(specId);
-		Goal goal = getGoalByName(spec, sourceGoalName);
-
-		Goal newGoal = super.extractSiblingGoal(specId, newGoalName, sourceGoalName, successConditionDTO);
+		Goal newGoal = super.extractGoal(specId, extractGoalDto);
 
 		newGoal.setResponsibleFor(goal.getResponsibleFor());
 		newGoal.setInforms(goal.getInforms());

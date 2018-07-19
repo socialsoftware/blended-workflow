@@ -1,10 +1,12 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RALExprOr extends RALExprOr_Base {
 
@@ -22,10 +24,10 @@ public class RALExprOr extends RALExprOr_Base {
     }
 
     @Override
-    public List<Person> getEligibleResources(WorkflowInstance history) {
+    public List<Person> getEligibleResources(WorkflowInstance history, Set<Product> defProducts) {
         ArrayList list = new ArrayList();
-        list.addAll(getLeftExpression().getEligibleResources(history));
-        list.addAll(getRightExpression().getEligibleResources(history));
+        list.addAll(getLeftExpression().getEligibleResources(history, defProducts));
+        list.addAll(getRightExpression().getEligibleResources(history, defProducts));
         return list;
     }
 

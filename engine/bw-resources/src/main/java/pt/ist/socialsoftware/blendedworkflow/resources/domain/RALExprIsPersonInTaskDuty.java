@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
@@ -27,7 +28,7 @@ public class RALExprIsPersonInTaskDuty extends RALExprIsPersonInTaskDuty_Base {
     }
 
     @Override
-    public List<Person> getEligibleResources(WorkflowInstance history) {
+    public List<Person> getEligibleResources(WorkflowInstance history, Set<Product> defProducts) {
         return history.getEntityInstanceSet().stream()
                 .map(entityInstance -> entityInstance.getProductInstancesByPath(getPath()))
                 .flatMap(Collection::stream)
@@ -36,7 +37,7 @@ public class RALExprIsPersonInTaskDuty extends RALExprIsPersonInTaskDuty_Base {
                         return Arrays.asList(productInstance.getCreatorWorkItem()
                                 .getExecutionUser().getPerson(getResourceModel().getSpec()));
                     } else {
-                        return productInstance.getProduct().getInforms().getEligibleResources(history);
+                        return productInstance.getProduct().getInforms().getEligibleResources(history, defProducts);
                     }
                 })
                 .flatMap(Collection::stream)

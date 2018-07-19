@@ -80,7 +80,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     }
 
     private void fillWorkItem(WorkItemDTO workItemDTO) {
-        DefinitionGroupDTO definitionGroup = workItemDTO.getDefinitionGroupSet().stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.INVALID_WORKITEM));
+        DefinitionGroupDto definitionGroup = workItemDTO.getDefinitionGroupSet().stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.INVALID_WORKITEM));
 
         ProductInstanceDTO productInstanceDTO = new ProductInstanceDTO();
         ProductDTO product = new ProductDTO();
@@ -128,9 +128,9 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void executeGoalWorkItem() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<GoalWorkItemDto> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
-        GoalWorkItemDTO workItemDTO = workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+        GoalWorkItemDto workItemDTO = workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
 
@@ -192,9 +192,9 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void getLogGoalWorkItem() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<GoalWorkItemDto> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
-        GoalWorkItemDTO workItemDTO= workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+        GoalWorkItemDto workItemDTO= workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
 
@@ -214,9 +214,9 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void getLogGoalWorkItemWithInvalidUser() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<GoalWorkItemDto> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
-        GoalWorkItemDTO workItemDTO= workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+        GoalWorkItemDto workItemDTO= workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
 
@@ -264,9 +264,9 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void executeGoalWorkItemEntityIsPerson() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<GoalWorkItemDto> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
-        GoalWorkItemDTO workItemDTO = workItemDTOList.stream()
+        GoalWorkItemDto workItemDTO = workItemDTOList.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
@@ -330,7 +330,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void executeGoalWorkItemEntityIsPersonWithPersonChosen() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<GoalWorkItemDto> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceGoalWorkItemDTO workItemDTO = (ResourceGoalWorkItemDTO) workItemDTOList.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
@@ -394,7 +394,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void getGoalWorkItemLogWithPersonChosen() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<GoalWorkItemDto> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceGoalWorkItemDTO workItemDTO = (ResourceGoalWorkItemDTO) workItemDTOList.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
@@ -412,7 +412,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         fakeLogin(USERNAME_2, USERNAME_2);
 
-        List<GoalWorkItemDTO> logWorkItems = edi.getLogGoalWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
+        List<GoalWorkItemDto> logWorkItems = edi.getLogGoalWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceGoalWorkItemDTO workItemToTest = (ResourceGoalWorkItemDTO) logWorkItems.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
@@ -447,7 +447,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void getGoalWorkItemLogContainsExecutionUser() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<GoalWorkItemDTO> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<GoalWorkItemDto> workItemDTOList = edi.getPendingGoalWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceGoalWorkItemDTO workItemDTO = (ResourceGoalWorkItemDTO) workItemDTOList.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
@@ -458,7 +458,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         fakeLogin(USERNAME_2, USERNAME_2);
 
-        List<GoalWorkItemDTO> logWorkItems = edi.getLogGoalWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
+        List<GoalWorkItemDto> logWorkItems = edi.getLogGoalWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceGoalWorkItemDTO workItemToTest = (ResourceGoalWorkItemDTO) logWorkItems.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));

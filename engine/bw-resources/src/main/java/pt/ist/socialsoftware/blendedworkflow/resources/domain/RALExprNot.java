@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
@@ -7,6 +8,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfR
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RALExprNot extends RALExprNot_Base {
@@ -26,9 +28,9 @@ public class RALExprNot extends RALExprNot_Base {
     }
 
     @Override
-    public List<Person> getEligibleResources(WorkflowInstance history) {
+    public List<Person> getEligibleResources(WorkflowInstance history, Set<Product> defProducts) {
         return getPersonSet().stream()
-                .filter(person -> !getExpression().getEligibleResources(history).contains(person))
+                .filter(person -> !getExpression().getEligibleResources(history, defProducts).contains(person))
                 .collect(Collectors.toList());
     }
 

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
@@ -44,6 +45,7 @@ public class ExtractTest extends TeardownRollbackTest {
     private Person person3;
     private Unit unit;
     private Position position;
+    private ExtractGoalDto dto;
 
     @Override
     public void populate4Test() {
@@ -131,46 +133,23 @@ public class ExtractTest extends TeardownRollbackTest {
     }
 
 
-    /*@Test
-    public void mergeGoalsWithBothAssignments() throws Exception {
-        designer.addResourceRule(new ResourceRuleDTO(
-                SPEC_ID,
-                ENT_1,
-                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprIsPersonDTO(USERNAME_1)
-        ));
-
-        designer.addResourceRule(new ResourceRuleDTO(
-                SPEC_ID,
-                ENT_1,
-                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_2)
-        ));
-
-        designer.addResourceRule(new ResourceRuleDTO(
-                SPEC_ID,
-                ENT_1 + "." + ATTR_1,
-                ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprHasPositionDTO(POSITION)
-        ));
-
-        designer.addResourceRule(new ResourceRuleDTO(
-                SPEC_ID,
-                ENT_1 + "." + ATTR_1,
-                ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_1)
-        ));
-
-        designer.generateConditionModel(SPEC_ID);
-        designer.generateActivityModel(SPEC_ID);
-        designer.generateGoalModel(SPEC_ID);
-        designer.generateEnrichedModels(SPEC_ID);
+    @Test
+    public void extractGoals() throws Exception {
 
         designer.mergeGoals(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1, MergeResourcesPolicy.RELAXED));
 
-        Set<Goal> goals = spec.getGoalModel().getGoalSet();
-        assertEquals(1, goals.size());
-        Goal goal = goals.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_ACTIVITIES_AVAILABLE));
+        DefPathConditionDTO defPathConditionDTO = new DefPathConditionDTO();
+        defPathConditionDTO.setSpecId(SPEC_ID);
+        defPathConditionDTO.setPath(ENT_1 + "." + ATTR_1);
+        dto = new ExtractGoalDto();
+        dto.setNewGoalName("SPLIT");
+        dto.setSourceGoalName("Merged");
+        dto.setSuccessConditions(new HashSet<>(Arrays.asList(defPathConditionDTO)));
+        designer.extractGoal(SPEC_ID, dto);
+
+        Set<Goal> goalSet = spec.getGoalModel().getGoalSet();
+        assertEquals(2, goalSet.size());
+        Goal goal = goalSet.stream().filter(g -> g.getName().equals("SPLIT")).findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_GOALS_AVAILABLE));
         assertEquals(RALExprOr.class, goal.getResponsibleFor().getClass());
         RALExprOr expr = (RALExprOr) goal.getResponsibleFor();
         assertEquals(RALExprIsPerson.class, expr.getLeftExpression().getClass());
@@ -180,7 +159,19 @@ public class ExtractTest extends TeardownRollbackTest {
         expr = (RALExprOr) goal.getInforms();
         assertEquals(RALExprIsPerson.class, expr.getLeftExpression().getClass());
         assertEquals(RALExprIsPerson.class, expr.getRightExpression().getClass());
+
+        goal = goalSet.stream().filter(g -> g.getName().equals("Merged")).findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_GOALS_AVAILABLE));
+        assertEquals(RALExprOr.class, goal.getResponsibleFor().getClass());
+        expr = (RALExprOr) goal.getResponsibleFor();
+        assertEquals(RALExprIsPerson.class, expr.getLeftExpression().getClass());
+        assertEquals(RALExprHasPosition.class, expr.getRightExpression().getClass());
+
+        assertEquals(RALExprOr.class, goal.getInforms().getClass());
+        expr = (RALExprOr) goal.getInforms();
+        assertEquals(RALExprIsPerson.class, expr.getLeftExpression().getClass());
+        assertEquals(RALExprIsPerson.class, expr.getRightExpression().getClass());
     }
-*/
+
+
 
 }

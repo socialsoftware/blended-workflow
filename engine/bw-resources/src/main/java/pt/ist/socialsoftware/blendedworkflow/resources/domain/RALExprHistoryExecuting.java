@@ -7,6 +7,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfR
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RALExprHistoryExecuting extends RALExprHistoryExecuting_Base {
 
@@ -17,7 +18,7 @@ public class RALExprHistoryExecuting extends RALExprHistoryExecuting_Base {
     }
 
     @Override
-    public List<Person> getEligibleResources(WorkflowInstance history) {
+    public List<Person> getEligibleResources(WorkflowInstance history, Set<Product> defProducts) {
         return null;
     }
 

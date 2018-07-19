@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RoleDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
@@ -30,9 +31,9 @@ public class RALExprSharesRole extends RALExprSharesRole_Base implements RALExpr
     }
 
     @Override
-    public List<Person> getEligibleResources(WorkflowInstance history) {
+    public List<Person> getEligibleResources(WorkflowInstance history, Set<Product> defProducts) {
         List<Role> roles = new ArrayList();
-        List<Person> persons = getPersonExpr().getEligibleResources(history);
+        List<Person> persons = getPersonExpr().getEligibleResources(history, defProducts);
         persons.forEach(person -> roles.addAll(person.getPositionSet().stream()
                 .filter(position -> {
                     if (getUnit() != null) {

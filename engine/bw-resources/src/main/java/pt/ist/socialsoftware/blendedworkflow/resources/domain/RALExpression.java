@@ -2,16 +2,12 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PersonDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class RALExpression extends RALExpression_Base {
     private static Logger logger = LoggerFactory.getLogger(RALExpression.class);
@@ -73,10 +69,10 @@ public abstract class RALExpression extends RALExpression_Base {
         deleteDomainObject();
     }
 
-    public abstract List<Person> getEligibleResources(WorkflowInstance history);
+    public abstract List<Person> getEligibleResources(WorkflowInstance history, Set<Product> defProducts);
 
-    public boolean hasEligiblePerson(Person person, WorkflowInstance history) {
-        return getEligibleResources(history).contains(person);
+    public boolean hasEligiblePerson(Person person, WorkflowInstance history, Set<Product> defProducts) {
+        return getEligibleResources(history, defProducts).contains(person);
     }
 
     public abstract SetOfRequiredResources getSetOfRequiredResources();

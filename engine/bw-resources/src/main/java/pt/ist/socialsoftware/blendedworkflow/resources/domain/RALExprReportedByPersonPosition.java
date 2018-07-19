@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PositionDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
@@ -7,6 +8,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfR
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RALExprReportedByPersonPosition extends pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprReportedByPersonPosition_Base {
@@ -24,9 +26,9 @@ public class RALExprReportedByPersonPosition extends pt.ist.socialsoftware.blend
     }
 
     @Override
-    public List<Person> getEligibleResources(WorkflowInstance history) {
+    public List<Person> getEligibleResources(WorkflowInstance history, Set<Product> defProducts) {
         List<Position> positions = new ArrayList();
-        getPersonExpr().getEligibleResources(history).stream()
+        getPersonExpr().getEligibleResources(history, defProducts).stream()
                 .forEach(person -> person.getPositionSet().stream().forEach(position -> {
                     if (getDirectly()) {
                         positions.addAll(position.getIsReportedBySet());

@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 
@@ -10,13 +10,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ResourceGoalWorkItemDTO extends GoalWorkItemDTO implements ResourceWorkItemDTO {
+public class ResourceGoalWorkItemDTO extends GoalWorkItemDto implements ResourceWorkItemDTO {
     private Set<EntityIsPersonDTO> entityIsPersonDTOSet;
     private UserDTO executionUser;
 
     public static ResourceGoalWorkItemDTO createGoalWorkItemDTO(WorkflowInstance workflowInstance, Goal goal) {
         ResourceGoalWorkItemDTO resourceGoalWorkItemDTO = new ResourceGoalWorkItemDTO(
-                GoalWorkItemDTO.createGoalWorkItemDTO(workflowInstance, goal));
+                GoalWorkItemDto.createGoalWorkItemDTO(workflowInstance, goal));
         ResourceModel resourceModel = goal.getGoalModel().getSpecification().getResourceModel();
 
         Set<EntityIsPersonDTO> entityIsPersonDTOSet = new HashSet<>();
@@ -34,7 +34,7 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDTO implements Resource
         return resourceGoalWorkItemDTO;
     }
 
-    public static ResourceGoalWorkItemDTO fillGoalWorkItemDTO(GoalWorkItemDTO goalWorkItemDTO, GoalWorkItem goalWorkItem) {
+    public static ResourceGoalWorkItemDTO fillGoalWorkItemDTO(GoalWorkItemDto goalWorkItemDTO, GoalWorkItem goalWorkItem) {
         ResourceGoalWorkItemDTO resourceGoalWorkItemDTO = new ResourceGoalWorkItemDTO(goalWorkItemDTO);
 
         Set<EntityIsPersonDTO> entityIsPersonDTOSet = new HashSet<>();
@@ -53,7 +53,7 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDTO implements Resource
         return resourceGoalWorkItemDTO;
     }
 
-    public ResourceGoalWorkItemDTO(GoalWorkItemDTO goalWorkItemDTO) {
+    public ResourceGoalWorkItemDTO(GoalWorkItemDto goalWorkItemDTO) {
         super();
         setSpecId(goalWorkItemDTO.getSpecId());
         setSpecName(goalWorkItemDTO.getSpecName());
