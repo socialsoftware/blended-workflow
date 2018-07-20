@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export class Header extends React.Component {
     render() {
-        const specs = this.props.specifications.map(spec => <li key={spec.specId}><Link to={`/specifications/:${spec.specId}`}>{spec.name}</Link></li>);
+        const specs = this.props.specifications.map(spec => <li key={spec.specId}><Link to={`/specifications/${spec.specId}`}>{spec.name}</Link></li>);
 
         return (
             <header>

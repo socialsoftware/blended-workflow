@@ -6,21 +6,21 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance;
 
-public class EntityInstanceContextDTO {
+public class EntityInstanceContextDto {
 	private ProductInstanceDTO entityInstance;
-	private MulConditionDTO mulConditionDTO;
+	private MulConditionDto mulConditionDTO;
 	private Set<ProductInstanceDTO> pathValueSet;
 	private String pathValues;
 
-	public static EntityInstanceContextDTO createEntityInstanceContextDTO(EntityContextDto entityContextDTO,
+	public static EntityInstanceContextDto createEntityInstanceContextDTO(EntityContextDto entityContextDTO,
 			EntityInstance entityInstance) {
-		EntityInstanceContextDTO entityContextInstanceDTO = new EntityInstanceContextDTO();
+		EntityInstanceContextDto entityContextInstanceDTO = new EntityInstanceContextDto();
 
 		entityContextInstanceDTO.setEntityInstance(entityInstance.getDTO());
 		entityContextInstanceDTO.setPathValueSet(new HashSet<ProductInstanceDTO>());
 		entityContextInstanceDTO.setMulConditionDTO(entityContextDTO.getMulCondition());
 		entityContextInstanceDTO.setPathValues("");
-		for (DefPathConditionDTO defPathConditionDTO : entityContextDTO.getDefPathConditionSet()) {
+		for (DefPathConditionDto defPathConditionDTO : entityContextDTO.getDefPathConditionSet()) {
 			for (ProductInstance productInstance : entityInstance
 					.getProductInstancesByPath(defPathConditionDTO.getPath())) {
 				ProductInstanceDTO productInstanceDTO = productInstance.getDTO();
@@ -34,7 +34,7 @@ public class EntityInstanceContextDTO {
 		return entityContextInstanceDTO;
 	}
 
-	public EntityInstanceContextDTO() {
+	public EntityInstanceContextDto() {
 	}
 
 	public ProductInstanceDTO getEntityInstance() {
@@ -53,11 +53,11 @@ public class EntityInstanceContextDTO {
 		this.pathValueSet = pathValueSet;
 	}
 
-	public MulConditionDTO getMulConditionDTO() {
+	public MulConditionDto getMulConditionDTO() {
 		return mulConditionDTO;
 	}
 
-	public void setMulConditionDTO(MulConditionDTO mulConditionDTO) {
+	public void setMulConditionDTO(MulConditionDto mulConditionDTO) {
 		this.mulConditionDTO = mulConditionDTO;
 	}
 

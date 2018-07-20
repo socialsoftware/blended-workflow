@@ -6,14 +6,14 @@ import java.util.Set;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 
-public class InnerRelationDTO {
-	private EntityDTO sourceEntity;
-	private EntityDTO targetEntity;
-	private MulConditionDTO mulCondition;
+public class InnerRelationDto {
+	private EntityDto sourceEntity;
+	private EntityDto targetEntity;
+	private MulConditionDto mulCondition;
 	private Set<ProductInstanceDTO> productInstanceSet;
 
-	public static InnerRelationDTO createInnerRelationDTO(Entity entity, MulCondition mulCondition) {
-		InnerRelationDTO innerRelationDTO = new InnerRelationDTO();
+	public static InnerRelationDto createInnerRelationDTO(Entity entity, MulCondition mulCondition) {
+		InnerRelationDto innerRelationDTO = new InnerRelationDto();
 		innerRelationDTO.setSourceEntity(entity.getDTO());
 		innerRelationDTO.setTargetEntity(mulCondition.getTargetEntity().getDTO());
 		innerRelationDTO.setMulCondition(mulCondition.getDTO());
@@ -21,30 +21,30 @@ public class InnerRelationDTO {
 		return innerRelationDTO;
 	}
 
-	public InnerRelationDTO() {
+	public InnerRelationDto() {
 	}
 
-	public EntityDTO getSourceEntity() {
+	public EntityDto getSourceEntity() {
 		return sourceEntity;
 	}
 
-	public void setSourceEntity(EntityDTO sourceEntity) {
+	public void setSourceEntity(EntityDto sourceEntity) {
 		this.sourceEntity = sourceEntity;
 	}
 
-	public EntityDTO getTargetEntity() {
+	public EntityDto getTargetEntity() {
 		return targetEntity;
 	}
 
-	public void setTargetEntity(EntityDTO targetEntity) {
+	public void setTargetEntity(EntityDto targetEntity) {
 		this.targetEntity = targetEntity;
 	}
 
-	public MulConditionDTO getMulCondition() {
+	public MulConditionDto getMulCondition() {
 		return mulCondition;
 	}
 
-	public void setMulCondition(MulConditionDTO mulCondition) {
+	public void setMulCondition(MulConditionDto mulCondition) {
 		this.mulCondition = mulCondition;
 	}
 

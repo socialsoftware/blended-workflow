@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public class Comparison extends Comparison_Base {
 
@@ -97,8 +97,8 @@ public class Comparison extends Comparison_Base {
 	}
 
 	@Override
-	public ExpressionDTO getExpressionDTO(String specId) {
-		return new ExpressionDTO(specId, getComparator(), getLeftExpression().getDTO(specId),
+	public ExpressionDto getExpressionDTO(String specId) {
+		return new ExpressionDto(specId, getComparator(), getLeftExpression().getDTO(specId),
 				getRightExpression().getDTO(specId));
 	}
 

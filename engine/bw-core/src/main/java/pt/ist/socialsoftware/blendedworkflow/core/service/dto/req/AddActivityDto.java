@@ -4,13 +4,13 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AddActivityDto {
 	private String activityName;
 	private String description;
-	private Set<DefPathConditionDTO> postConditionSet;
+	private Set<DefPathConditionDto> postConditionSet;
 
 	public AddActivityDto() {
 	}
@@ -31,11 +31,11 @@ public class AddActivityDto {
 		this.description = description;
 	}
 
-	public Set<DefPathConditionDTO> getPostConditionSet() {
+	public Set<DefPathConditionDto> getPostConditionSet() {
 		return this.postConditionSet;
 	}
 
-	public void setPostConditionSet(Set<DefPathConditionDTO> postConditionSet) {
+	public void setPostConditionSet(Set<DefPathConditionDto> postConditionSet) {
 		this.postConditionSet = postConditionSet;
 	}
 

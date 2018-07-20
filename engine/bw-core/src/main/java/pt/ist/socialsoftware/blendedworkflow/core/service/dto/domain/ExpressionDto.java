@@ -30,8 +30,8 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Condition.BooleanOperat
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Expression.ExpressionAtom;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ExpressionDTO {
-	private static Logger logger = LoggerFactory.getLogger(ExpressionDTO.class);
+public class ExpressionDto {
+	private static Logger logger = LoggerFactory.getLogger(ExpressionDto.class);
 
 	private enum Type {
 		AND, OR, NOT, EQUAL, NOT_EQUAL, GREATER, GREATER_EQUAL, SMALLER, SMALLER_EQUAL, PLUS, MINUS, MUL, DIV, ATT_VALUE, STRING, INT, BOOL;
@@ -49,16 +49,16 @@ public class ExpressionDTO {
 	// when unary value
 	private String value;
 	// when unary not
-	private ExpressionDTO unaryExpression;
+	private ExpressionDto unaryExpression;
 	// when binary
-	private ExpressionDTO leftExpression;
-	private ExpressionDTO rightExpression;
+	private ExpressionDto leftExpression;
+	private ExpressionDto rightExpression;
 
-	public ExpressionDTO() {
+	public ExpressionDto() {
 	}
 
-	public ExpressionDTO(String specId, ComparisonOperator comparator, ExpressionDTO leftExpDTO,
-			ExpressionDTO righExpDTO) {
+	public ExpressionDto(String specId, ComparisonOperator comparator, ExpressionDto leftExpDTO,
+			ExpressionDto righExpDTO) {
 		this.specId = specId;
 		this.type = getTypeForComparisonOperator(comparator);
 		this.value = null;
@@ -67,7 +67,7 @@ public class ExpressionDTO {
 		this.rightExpression = righExpDTO;
 	}
 
-	public ExpressionDTO(String specId, BinaryOperator operator, ExpressionDTO leftExpDTO, ExpressionDTO righExpDTO) {
+	public ExpressionDto(String specId, BinaryOperator operator, ExpressionDto leftExpDTO, ExpressionDto righExpDTO) {
 		this.specId = specId;
 		this.type = getTypeForBinaryOperator(operator);
 		this.value = null;
@@ -76,7 +76,7 @@ public class ExpressionDTO {
 		this.rightExpression = righExpDTO;
 	}
 
-	public ExpressionDTO(String specId, BooleanOperator operator, ExpressionDTO leftExpDTO, ExpressionDTO righExpDTO) {
+	public ExpressionDto(String specId, BooleanOperator operator, ExpressionDto leftExpDTO, ExpressionDto righExpDTO) {
 		this.specId = specId;
 		this.type = getTypeForBooleanOperator(operator);
 		this.value = null;
@@ -85,7 +85,7 @@ public class ExpressionDTO {
 		this.rightExpression = righExpDTO;
 	}
 
-	public ExpressionDTO(String specId, BooleanOperator operator, String path) {
+	public ExpressionDto(String specId, BooleanOperator operator, String path) {
 		this.specId = specId;
 		this.type = getTypeForBooleanOperator(operator);
 		this.value = path;
@@ -94,7 +94,7 @@ public class ExpressionDTO {
 		this.rightExpression = null;
 	}
 
-	public ExpressionDTO(String specId, ExpressionAtom operator, String path) {
+	public ExpressionDto(String specId, ExpressionAtom operator, String path) {
 		this.specId = specId;
 		this.type = getTypeForExpressionAtom(operator);
 		this.value = path;
@@ -103,7 +103,7 @@ public class ExpressionDTO {
 		this.rightExpression = null;
 	}
 
-	public ExpressionDTO(String specId, BooleanOperator operator, ExpressionDTO expDTO) {
+	public ExpressionDto(String specId, BooleanOperator operator, ExpressionDto expDTO) {
 		this.specId = specId;
 		this.type = getTypeForBooleanOperator(operator);
 		this.value = null;
@@ -202,14 +202,14 @@ public class ExpressionDTO {
 		case ATT_VALUE:
 			return new AttributeBoolCondition(spec, getValue());
 		case EQUAL:
-			if (ExpressionDTO.isBoolExp(Type.valueOf(getLeftExpression().getType())))
+			if (ExpressionDto.isBoolExp(Type.valueOf(getLeftExpression().getType())))
 				return new BoolComparison(getLeftExpression().buildCondition(spec),
 						getRightExpression().buildCondition(spec), ComparisonOperator.EQUAL);
 			else
 				return new Comparison(getLeftExpression().buildExpression(spec),
 						getRightExpression().buildExpression(spec), ComparisonOperator.EQUAL);
 		case NOT_EQUAL:
-			if (ExpressionDTO.isBoolExp(Type.valueOf(getLeftExpression().getType())))
+			if (ExpressionDto.isBoolExp(Type.valueOf(getLeftExpression().getType())))
 				return new BoolComparison(getLeftExpression().buildCondition(spec),
 						getRightExpression().buildCondition(spec), ComparisonOperator.NOT_EQUAL);
 			else
@@ -290,27 +290,27 @@ public class ExpressionDTO {
 		this.value = value;
 	}
 
-	public ExpressionDTO getUnaryExpression() {
+	public ExpressionDto getUnaryExpression() {
 		return unaryExpression;
 	}
 
-	public void setUnaryExpression(ExpressionDTO unaryExpression) {
+	public void setUnaryExpression(ExpressionDto unaryExpression) {
 		this.unaryExpression = unaryExpression;
 	}
 
-	public ExpressionDTO getLeftExpression() {
+	public ExpressionDto getLeftExpression() {
 		return leftExpression;
 	}
 
-	public void setLeftExpresssion(ExpressionDTO leftExpresssion) {
+	public void setLeftExpresssion(ExpressionDto leftExpresssion) {
 		this.leftExpression = leftExpresssion;
 	}
 
-	public ExpressionDTO getRightExpression() {
+	public ExpressionDto getRightExpression() {
 		return rightExpression;
 	}
 
-	public void setRightExpression(ExpressionDTO rightExpression) {
+	public void setRightExpression(ExpressionDto rightExpression) {
 		this.rightExpression = rightExpression;
 	}
 

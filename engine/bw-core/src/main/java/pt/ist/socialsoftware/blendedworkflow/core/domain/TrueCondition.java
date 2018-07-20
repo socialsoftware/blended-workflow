@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public class TrueCondition extends TrueCondition_Base {
 
@@ -31,8 +31,8 @@ public class TrueCondition extends TrueCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getExpressionDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.BOOL, "true");
+	public ExpressionDto getExpressionDTO(String specId) {
+		return new ExpressionDto(specId, BooleanOperator.BOOL, "true");
 	}
 
 }

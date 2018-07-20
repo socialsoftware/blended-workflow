@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
-public class RelationDTO {
+public class RelationDto {
 	private String specId;
 	private String extId;
 	private String name;
@@ -15,10 +15,10 @@ public class RelationDTO {
 	private String cardinalityTwo;
 	private String pathTwo;
 
-	public RelationDTO() {
+	public RelationDto() {
 	}
 
-	public RelationDTO(String specId, String name, String entOneExtId, String rolenameOne, String cardinalityOne,
+	public RelationDto(String specId, String name, String entOneExtId, String rolenameOne, String cardinalityOne,
 			String entTwoExtId, String rolenameTwo, String cardinalityTwo) {
 		this.specId = specId;
 		this.name = name;

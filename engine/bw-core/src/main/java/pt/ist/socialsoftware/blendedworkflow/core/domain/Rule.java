@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
 
 public class Rule extends Rule_Base {
 	private static Logger logger = LoggerFactory.getLogger(Rule.class);
@@ -58,8 +58,8 @@ public class Rule extends Rule_Base {
 		deleteDomainObject();
 	}
 
-	public RuleDTO getDTO() {
-		RuleDTO ruleDTO = new RuleDTO();
+	public RuleDto getDTO() {
+		RuleDto ruleDTO = new RuleDto();
 		ruleDTO.setSpecId(getEntity().getDataModel().getSpecification().getSpecId());
 		ruleDTO.setEntityName(getEntity().getName());
 		ruleDTO.setExtId(getExternalId());

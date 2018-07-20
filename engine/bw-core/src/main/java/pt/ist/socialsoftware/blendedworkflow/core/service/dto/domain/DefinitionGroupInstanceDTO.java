@@ -3,18 +3,18 @@ package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 import java.util.Set;
 
 public class DefinitionGroupInstanceDTO {
-	private Set<EntityInstanceContextDTO> entityInstanceContextSet;
+	private Set<EntityInstanceContextDto> entityInstanceContextSet;
 	private Set<ProductInstanceDTO> productInstanceSet;
-	private Set<InnerRelationInstanceDTO> innerRelationInstanceSet;
+	private Set<InnerRelationInstanceDto> innerRelationInstanceSet;
 
 	public DefinitionGroupInstanceDTO() {
 	}
 
-	public Set<EntityInstanceContextDTO> getEntityInstanceContextSet() {
+	public Set<EntityInstanceContextDto> getEntityInstanceContextSet() {
 		return entityInstanceContextSet;
 	}
 
-	public void setEntityInstanceContextSet(Set<EntityInstanceContextDTO> entityInstanceContextSet) {
+	public void setEntityInstanceContextSet(Set<EntityInstanceContextDto> entityInstanceContextSet) {
 		this.entityInstanceContextSet = entityInstanceContextSet;
 	}
 
@@ -26,11 +26,11 @@ public class DefinitionGroupInstanceDTO {
 		this.productInstanceSet = productInstanceSet;
 	}
 
-	public Set<InnerRelationInstanceDTO> getInnerRelationInstanceSet() {
+	public Set<InnerRelationInstanceDto> getInnerRelationInstanceSet() {
 		return innerRelationInstanceSet;
 	}
 
-	public void setInnerRelationInstanceSet(Set<InnerRelationInstanceDTO> innerRelationInstanceSet) {
+	public void setInnerRelationInstanceSet(Set<InnerRelationInstanceDto> innerRelationInstanceSet) {
 		this.innerRelationInstanceSet = innerRelationInstanceSet;
 	}
 

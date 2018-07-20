@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
 public class ProductInstanceDTO {
-	private ProductDTO product;
+	private ProductDto product;
 	private String externalId;
 	private String id;
 	private String path;
@@ -10,11 +10,11 @@ public class ProductInstanceDTO {
 	public ProductInstanceDTO() {
 	}
 
-	public ProductDTO getProduct() {
+	public ProductDto getProduct() {
 		return this.product;
 	}
 
-	public void setProduct(ProductDTO product) {
+	public void setProduct(ProductDto product) {
 		this.product = product;
 	}
 

@@ -31,12 +31,12 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDto;
 
 public class SpecXmlImport {
 
@@ -86,7 +86,7 @@ public class SpecXmlImport {
 			String name = specElement.getAttributeValue("name");
 			String specId = specElement.getAttributeValue("specId");
 
-			Specification spec = DesignInterface.getInstance().createSpecification(new SpecDTO(specId, name));
+			Specification spec = DesignInterface.getInstance().createSpecification(new SpecDto(specId, name));
 
 			importCore(specElement, spec);
 			importModules(specElement, spec);
@@ -112,14 +112,14 @@ public class SpecXmlImport {
 			boolean exists = convertStringToBool(entityElement.getAttributeValue("exists"));
 
 			Entity entity = DesignInterface.getInstance().createEntity(
-					new EntityDTO(dataModel.getSpecification().getSpecId(), entityName, exists, entityMandatory));
+					new EntityDto(dataModel.getSpecification().getSpecId(), entityName, exists, entityMandatory));
 
 			for (Element attributeElement : entityElement.getChildren("attribute")) {
 				String attributeName = attributeElement.getAttributeValue("name");
 				Attribute.AttributeType type = convertStringToAttributeType(attributeElement.getAttributeValue("type"));
 				boolean attributeMandatory = convertStringToBool(entityElement.getAttributeValue("mandatory"));
 
-				DesignInterface.getInstance().createAttribute(new AttributeDTO(dataModel.getSpecification().getSpecId(),
+				DesignInterface.getInstance().createAttribute(new AttributeDto(dataModel.getSpecification().getSpecId(),
 						entity.getExternalId(), entityName, attributeName, type.toString(), attributeMandatory));
 			}
 		}
@@ -140,7 +140,7 @@ public class SpecXmlImport {
 				i++;
 			}
 			DesignInterface.getInstance()
-					.createRelation(new RelationDTO(dataModel.getSpecification().getSpecId(), name,
+					.createRelation(new RelationDto(dataModel.getSpecification().getSpecId(), name,
 							dataModel.getEntity(entity[0]).get().getExternalId(), rolename[0], cardinality[0],
 							dataModel.getEntity(entity[1]).get().getExternalId(), rolename[1], cardinality[1]));
 		}
@@ -150,7 +150,7 @@ public class SpecXmlImport {
 		for (Element activityElement : specElement.getChild("activity-model").getChildren("activity")) {
 			String name = activityElement.getAttributeValue("name");
 			Activity activity = DesignInterface.getInstance()
-					.createActivity(new ActivityDTO(activityModel.getSpecification().getSpecId(), name));
+					.createActivity(new ActivityDto(activityModel.getSpecification().getSpecId(), name));
 			importPreConditions(activityElement, activity);
 			importSeqConditions(activityElement, activity);
 			importPostConditions(activityElement, activity);

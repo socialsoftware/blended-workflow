@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.domain;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public abstract class Expression extends Expression_Base {
 	public enum ExpressionAtom {
@@ -43,6 +43,6 @@ public abstract class Expression extends Expression_Base {
 
 	public abstract Set<Path> getPathSet();
 
-	public abstract ExpressionDTO getDTO(String specId);
+	public abstract ExpressionDto getDTO(String specId);
 
 }

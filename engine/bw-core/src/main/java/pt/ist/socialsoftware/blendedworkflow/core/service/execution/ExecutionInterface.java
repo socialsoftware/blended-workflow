@@ -18,7 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
 
 public class ExecutionInterface {
@@ -72,13 +72,13 @@ public class ExecutionInterface {
 
 	}
 
-	public Set<ActivityWorkItemDTO> getPendingActivityWorkItemSet(String specId, String instanceName) {
+	public Set<ActivityWorkItemDto> getPendingActivityWorkItemSet(String specId, String instanceName) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
-		Set<ActivityWorkItemDTO> activityWorkItemDTOs = new HashSet<>();
+		Set<ActivityWorkItemDto> activityWorkItemDTOs = new HashSet<>();
 
 		for (Activity activity : getPendingActivitySet(workflowInstance)) {
-			activityWorkItemDTOs.add(ActivityWorkItemDTO.createActivityWorkItemDTO(workflowInstance, activity));
+			activityWorkItemDTOs.add(ActivityWorkItemDto.createActivityWorkItemDTO(workflowInstance, activity));
 		}
 
 		return activityWorkItemDTOs;
@@ -96,7 +96,7 @@ public class ExecutionInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDTO activityWorkItemDTO) {
+	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDto activityWorkItemDTO) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(activityWorkItemDTO.getSpecId(),
 				activityWorkItemDTO.getWorkflowInstanceName());
 		Activity activity = getActivity(activityWorkItemDTO.getSpecId(), activityWorkItemDTO.getName());

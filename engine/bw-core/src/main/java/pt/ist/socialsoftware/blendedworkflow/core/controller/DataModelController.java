@@ -23,12 +23,13 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DataModelDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController
@@ -61,8 +62,19 @@ public class DataModelController {
 		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 
+	@RequestMapping(method = RequestMethod.GET)
+	public ResponseEntity<DataModelDto> getDataModel(@PathVariable("specId") String specId) {
+		log.debug("getDataModel specId:{}", specId);
+
+		DesignInterface adi = this.factory.createDesignInterface();
+
+		DataModelDto dataModelDto = adi.getDataModel(specId);
+
+		return new ResponseEntity<>(dataModelDto, HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/products/{path}/", method = RequestMethod.GET)
-	public ResponseEntity<ProductDTO> getProduct(@PathVariable("specId") String specId,
+	public ResponseEntity<ProductDto> getProduct(@PathVariable("specId") String specId,
 			@PathVariable("path") String path) {
 		log.debug("getProduct path:{}", path);
 
@@ -74,7 +86,7 @@ public class DataModelController {
 	}
 
 	@RequestMapping(value = "/entities/{entityName}", method = RequestMethod.GET)
-	public ResponseEntity<EntityDTO> getEntityByName(@PathVariable("specId") String specId,
+	public ResponseEntity<EntityDto> getEntityByName(@PathVariable("specId") String specId,
 			@PathVariable("entityName") String entityName) {
 		log.debug("getProduct entityName:{}", entityName);
 
@@ -86,20 +98,20 @@ public class DataModelController {
 	}
 
 	@RequestMapping(value = "/entities", method = RequestMethod.GET)
-	public ResponseEntity<EntityDTO[]> getEntities(@PathVariable("specId") String specId) {
+	public ResponseEntity<EntityDto[]> getEntities(@PathVariable("specId") String specId) {
 		log.debug("getEntities specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		EntityDTO[] entities = adi.getEntities(specId).stream().map(e -> e.getDTO())
-				.toArray(size -> new EntityDTO[size]);
+		EntityDto[] entities = adi.getEntities(specId).stream().map(e -> e.getDTO())
+				.toArray(size -> new EntityDto[size]);
 
 		return new ResponseEntity<>(entities, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/entities", method = RequestMethod.POST)
-	public ResponseEntity<EntityDTO> createEntity(@PathVariable("specId") String specId,
-			@RequestBody EntityDTO entDTO) {
+	public ResponseEntity<EntityDto> createEntity(@PathVariable("specId") String specId,
+			@RequestBody EntityDto entDTO) {
 		log.debug("createEntity specId:{}, name:{}, exists:{}, mandatory:{}", specId, entDTO.getName(),
 				entDTO.getExists(), entDTO.isMandatory());
 
@@ -111,19 +123,19 @@ public class DataModelController {
 	}
 
 	@RequestMapping(value = "/attributes", method = RequestMethod.GET)
-	public ResponseEntity<AttributeDTO[]> getAttributtes(@PathVariable("specId") String specId) {
+	public ResponseEntity<AttributeDto[]> getAttributtes(@PathVariable("specId") String specId) {
 		log.debug("getAttributtes specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		AttributeDTO[] attributes = adi.getAttributes(specId).stream().map(a -> a.getDTO())
-				.toArray(size -> new AttributeDTO[size]);
+		AttributeDto[] attributes = adi.getAttributes(specId).stream().map(a -> a.getDTO())
+				.toArray(size -> new AttributeDto[size]);
 
 		return new ResponseEntity<>(attributes, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/attributes/{extId}", method = RequestMethod.GET)
-	public ResponseEntity<AttributeDTO> getAttributeByExtId(@PathVariable("extId") String extId) {
+	public ResponseEntity<AttributeDto> getAttributeByExtId(@PathVariable("extId") String extId) {
 		log.debug("getAttributeByExtId specId:{} extId:{}", extId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -134,8 +146,8 @@ public class DataModelController {
 	}
 
 	@RequestMapping(value = "/attributes", method = RequestMethod.POST)
-	public ResponseEntity<AttributeDTO> createAttribute(@PathVariable("specId") String specId,
-			@RequestBody AttributeDTO attDTO) {
+	public ResponseEntity<AttributeDto> createAttribute(@PathVariable("specId") String specId,
+			@RequestBody AttributeDto attDTO) {
 		log.debug("createAttribute entityExtId:{},  name:{}, type:{}", attDTO.getEntityExtId(), attDTO.getName(),
 				attDTO.getType());
 
@@ -147,8 +159,8 @@ public class DataModelController {
 	}
 
 	@RequestMapping(value = "/relations", method = RequestMethod.POST)
-	public ResponseEntity<RelationDTO> createRelation(@PathVariable("specId") String specId,
-			@RequestBody RelationDTO relDTO) {
+	public ResponseEntity<RelationDto> createRelation(@PathVariable("specId") String specId,
+			@RequestBody RelationDto relDTO) {
 		log.debug("createRelation {}, {}, {}", relDTO.getName(), relDTO.getEntOneName(), relDTO.getEntTwoName());
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -159,19 +171,19 @@ public class DataModelController {
 	}
 
 	@RequestMapping(value = "/relations", method = RequestMethod.GET)
-	public ResponseEntity<RelationDTO[]> getRelations(@PathVariable("specId") String specId) {
+	public ResponseEntity<RelationDto[]> getRelations(@PathVariable("specId") String specId) {
 		log.debug("getRelations specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		RelationDTO[] attributes = adi.getRelations(specId).stream().map(a -> a.getDTO())
-				.toArray(size -> new RelationDTO[size]);
+		RelationDto[] attributes = adi.getRelations(specId).stream().map(a -> a.getDTO())
+				.toArray(size -> new RelationDto[size]);
 
 		return new ResponseEntity<>(attributes, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/rules", method = RequestMethod.POST)
-	public ResponseEntity<RuleDTO> createRule(@PathVariable("specId") String specId, @RequestBody RuleDTO ruleDTO) {
+	public ResponseEntity<RuleDto> createRule(@PathVariable("specId") String specId, @RequestBody RuleDto ruleDTO) {
 		log.debug("createRule specId:{}, entityName:{}, name:{}, expression:{}", ruleDTO.getSpecId(),
 				ruleDTO.getEntityName(), ruleDTO.getName(), ruleDTO.getExpression().toString());
 
@@ -183,19 +195,19 @@ public class DataModelController {
 	}
 
 	@RequestMapping(value = "/rules", method = RequestMethod.GET)
-	public ResponseEntity<RuleDTO[]> getRules(@PathVariable("specId") String specId) {
+	public ResponseEntity<RuleDto[]> getRules(@PathVariable("specId") String specId) {
 		log.debug("getRules specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		RuleDTO[] attributes = adi.getRules(specId).stream().map(a -> a.getDTO()).toArray(size -> new RuleDTO[size]);
+		RuleDto[] attributes = adi.getRules(specId).stream().map(a -> a.getDTO()).toArray(size -> new RuleDto[size]);
 
 		return new ResponseEntity<>(attributes, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/dependencies", method = RequestMethod.POST)
-	public ResponseEntity<DependenceDTO> createDependence(@PathVariable("specId") String specId,
-			@RequestBody DependenceDTO dependenceDTO) {
+	public ResponseEntity<DependenceDto> createDependence(@PathVariable("specId") String specId,
+			@RequestBody DependenceDto dependenceDTO) {
 		log.debug("createDependence product:{}, path:{}", dependenceDTO.getProduct(), dependenceDTO.getPath());
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -206,19 +218,19 @@ public class DataModelController {
 	}
 
 	@RequestMapping(value = "/dependencies", method = RequestMethod.GET)
-	public ResponseEntity<DependenceDTO[]> getDependencies(@PathVariable("specId") String specId) {
+	public ResponseEntity<DependenceDto[]> getDependencies(@PathVariable("specId") String specId) {
 		log.debug("getDependencies specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<Dependence> dependencies = adi.getDependencies(specId);
 
-		Set<DependenceDTO> dependenciesDTO;
+		Set<DependenceDto> dependenciesDTO;
 		dependenciesDTO = dependencies.stream().map(dep -> dep.getDTO()).collect(Collectors.toSet());
 
 		log.debug("getDependencies dependenciesDTO.size:{}", dependenciesDTO.size());
 
-		DependenceDTO[] depsArray = dependenciesDTO.toArray(new DependenceDTO[dependenciesDTO.size()]);
+		DependenceDto[] depsArray = dependenciesDTO.toArray(new DependenceDto[dependenciesDTO.size()]);
 
 		return new ResponseEntity<>(depsArray, HttpStatus.OK);
 	}

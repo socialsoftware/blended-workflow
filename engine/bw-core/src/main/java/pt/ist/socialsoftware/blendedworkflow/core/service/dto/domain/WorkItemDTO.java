@@ -140,7 +140,7 @@ public class WorkItemDTO {
 
 			// create pre and post work item arguments for already created
 			// entity instances
-			for (EntityInstanceContextDTO entityInstanceContextDTO : definitionGroupInstanceDTO
+			for (EntityInstanceContextDto entityInstanceContextDTO : definitionGroupInstanceDTO
 					.getEntityInstanceContextSet()) {
 				EntityInstance entityInstanceContext = FenixFramework
 						.getDomainObject(entityInstanceContextDTO.getEntityInstance().getExternalId());
@@ -184,7 +184,7 @@ public class WorkItemDTO {
 			}
 
 			// inner relation instance
-			for (InnerRelationInstanceDTO innerRelationInstanceDTO : definitionGroupInstanceDTO
+			for (InnerRelationInstanceDto innerRelationInstanceDTO : definitionGroupInstanceDTO
 					.getInnerRelationInstanceSet()) {
 				MulCondition mulCondition = FenixFramework
 						.getDomainObject(innerRelationInstanceDTO.getMulConditionDTO().getExternalId());
@@ -195,7 +195,7 @@ public class WorkItemDTO {
 								innerEntity, mulCondition.getRolename(), mulCondition.getRelationBW());
 					} else {
 						innerEntity = FenixFramework.getDomainObject(productInstanceDTO.getExternalId());
-						for (EntityInstanceContextDTO entityInstanceContextDTO : definitionGroupInstanceDTO
+						for (EntityInstanceContextDto entityInstanceContextDTO : definitionGroupInstanceDTO
 								.getEntityInstanceContextSet()) {
 							EntityInstance entityInstanceContext = FenixFramework
 									.getDomainObject(entityInstanceContextDTO.getEntityInstance().getExternalId());
@@ -274,7 +274,7 @@ public class WorkItemDTO {
 				.collect(Collectors.joining(";"));
 	}
 
-	private String printEntityInstanceContext(Set<EntityInstanceContextDTO> eicSet) {
+	private String printEntityInstanceContext(Set<EntityInstanceContextDto> eicSet) {
 		return eicSet.stream().map(eic -> eic.getPathValues()).collect(Collectors.joining(";"));
 	}
 

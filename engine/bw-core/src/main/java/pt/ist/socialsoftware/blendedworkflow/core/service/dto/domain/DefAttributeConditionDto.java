@@ -3,13 +3,13 @@ package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DefAttributeConditionDTO {
+public class DefAttributeConditionDto {
     private String specId;
     private String path;
     private boolean mandatory;
     private String attributeExtId;
 
-    public DefAttributeConditionDTO() {
+    public DefAttributeConditionDto() {
     }
 
     public String getSpecId() {

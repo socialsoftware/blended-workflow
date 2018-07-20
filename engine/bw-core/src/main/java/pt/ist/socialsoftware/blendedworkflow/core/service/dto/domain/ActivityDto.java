@@ -3,21 +3,21 @@ package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ActivityDTO {
+public class ActivityDto {
 	private String specId;
 	private String name;
 	private String description;
 
-	public ActivityDTO() {
+	public ActivityDto() {
 	}
 
-	public ActivityDTO(String specId, String name, String description) {
+	public ActivityDto(String specId, String name, String description) {
 		this.specId = specId;
 		this.name = name;
 		this.description = description;
 	}
 
-	public ActivityDTO(String specId, String name) {
+	public ActivityDto(String specId, String name) {
 		this(specId, name, "");
 	}
 

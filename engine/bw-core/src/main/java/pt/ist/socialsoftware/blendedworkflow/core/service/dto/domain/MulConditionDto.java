@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
-public class MulConditionDTO {
+public class MulConditionDto {
 	private String externalId;
 	private String rolePath;
 	private String cardinality;
@@ -9,7 +9,7 @@ public class MulConditionDTO {
 	private int sourceMin;
 	private int sourceMax;
 
-	public MulConditionDTO() {
+	public MulConditionDto() {
 	}
 
 	public String getExternalId() {

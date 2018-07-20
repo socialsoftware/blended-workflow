@@ -19,6 +19,10 @@ export class RepositoryService {
     }
 
     // Data Model
+    getDataModel(specId) {
+        return this.axios.get("/specs/" + specId + "/datamodel");
+    }
+
     getEntities(specId) {
         return this.axios.get("/specs/" + specId + "/datamodel/entities");
     }

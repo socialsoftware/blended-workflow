@@ -24,14 +24,14 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefProductConditionSetDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.AddActivityDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractActivityDto;
@@ -68,8 +68,8 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities", method = RequestMethod.POST)
-	public ResponseEntity<ActivityDTO> createActivity(@PathVariable("specId") String specId,
-			@RequestBody ActivityDTO activityDTO) {
+	public ResponseEntity<ActivityDto> createActivity(@PathVariable("specId") String specId,
+			@RequestBody ActivityDto activityDTO) {
 		logger.debug("createActivity specId:{}, name:{}, description:{}", specId, activityDTO.getName(),
 				activityDTO.getDescription());
 
@@ -81,7 +81,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/add", method = RequestMethod.POST)
-	public ResponseEntity<ActivityDTO> addActivity(@PathVariable("specId") String specId,
+	public ResponseEntity<ActivityDto> addActivity(@PathVariable("specId") String specId,
 			@RequestBody AddActivityDto request) {
 		logger.debug("addActivity specId:{}, name:{}, description:{}, postConditions:{}", specId,
 				request.getActivityName(), request.getDescription(),
@@ -107,18 +107,18 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities", method = RequestMethod.GET)
-	public ResponseEntity<ActivityDTO[]> getActivitySet(@PathVariable("specId") String specId) {
+	public ResponseEntity<ActivityDto[]> getActivitySet(@PathVariable("specId") String specId) {
 		logger.debug("getActivitySet specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
 		Set<Activity> goals = adi.getActivities(specId);
 
-		return new ResponseEntity<>(goals.stream().map(g -> g.getDTO()).toArray(ActivityDTO[]::new), HttpStatus.OK);
+		return new ResponseEntity<>(goals.stream().map(g -> g.getDTO()).toArray(ActivityDto[]::new), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/pre", method = RequestMethod.GET)
-	public ResponseEntity<DefPathConditionDTO[]> getActivityPreConditionSet(@PathVariable("specId") String specId,
+	public ResponseEntity<DefPathConditionDto[]> getActivityPreConditionSet(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
 
@@ -127,11 +127,11 @@ public class ActivityModelController {
 		Set<DefPathCondition> preConditionSet = adi.getActivityPreCondition(specId, activityName);
 
 		return new ResponseEntity<>(
-				preConditionSet.stream().map(d -> d.getDTO(specId)).toArray(DefPathConditionDTO[]::new), HttpStatus.OK);
+				preConditionSet.stream().map(d -> d.getDTO(specId)).toArray(DefPathConditionDto[]::new), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/pre/{path}/", method = RequestMethod.POST)
-	public ResponseEntity<DefPathConditionDTO> associateDefPathToActivityPre(@PathVariable("specId") String specId,
+	public ResponseEntity<DefPathConditionDto> associateDefPathToActivityPre(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName, @PathVariable("path") String path) {
 		logger.debug("associateDefPathToActivityPre specId:{}, activityName:{}, path:{}", specId, activityName, path);
 
@@ -161,7 +161,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/postent/{path}/", method = RequestMethod.POST)
-	public ResponseEntity<DefEntityConditionDTO> associateEntityAchieveConditionToActivityPost(
+	public ResponseEntity<DefEntityConditionDto> associateEntityAchieveConditionToActivityPost(
 			@PathVariable("specId") String specId, @PathVariable("activityName") String activityName,
 			@PathVariable("path") String path) {
 		logger.debug("associateEntityAchieveConditionToActivityPost specId:{}, activityName:{}, path:{}", specId,
@@ -175,7 +175,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/postatt/{path}/", method = RequestMethod.POST)
-	public ResponseEntity<DefAttributeConditionDTO> associateAttributeAchieveConditionToActivityPost(
+	public ResponseEntity<DefAttributeConditionDto> associateAttributeAchieveConditionToActivityPost(
 			@PathVariable("specId") String specId, @PathVariable("activityName") String activityName,
 			@PathVariable("path") String path) {
 		logger.debug("associateAttributeAchieveConditionToActivityPost specId:{}, activityName:{}, path:{}", specId,
@@ -189,7 +189,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/postmul", method = RequestMethod.GET)
-	public ResponseEntity<MulConditionDTO[]> getActivityMultConditions(@PathVariable("specId") String specId,
+	public ResponseEntity<MulConditionDto[]> getActivityMultConditions(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityMultConditions specId:{}, activityName:{}", specId, activityName);
 
@@ -198,13 +198,13 @@ public class ActivityModelController {
 		Set<MulCondition> mulConditions = adi.getActivityMulConditions(specId, activityName);
 
 		return new ResponseEntity<>(
-				mulConditions.stream().map(mul -> mul.getDTO()).toArray(size -> new MulConditionDTO[size]),
+				mulConditions.stream().map(mul -> mul.getDTO()).toArray(size -> new MulConditionDto[size]),
 				HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/postmul", method = RequestMethod.POST)
-	public ResponseEntity<MulConditionDTO> associateMultiplicityToActivityPost(@PathVariable("specId") String specId,
-			@PathVariable("activityName") String activityName, @RequestBody MulConditionDTO mulConditionDTO) {
+	public ResponseEntity<MulConditionDto> associateMultiplicityToActivityPost(@PathVariable("specId") String specId,
+			@PathVariable("activityName") String activityName, @RequestBody MulConditionDto mulConditionDTO) {
 		logger.debug("associateActConditionToGoal specId:{}, activityName:{}, path:{}, cardinality:{}", specId,
 				activityName, mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
 
@@ -217,7 +217,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/postrule", method = RequestMethod.GET)
-	public ResponseEntity<RuleDTO[]> getActivityRuleConditions(@PathVariable("specId") String specId,
+	public ResponseEntity<RuleDto[]> getActivityRuleConditions(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityRuleConditions specId:{}, activityName:{}", specId, activityName);
 
@@ -228,14 +228,14 @@ public class ActivityModelController {
 		logger.debug("getActivityRuleConditions specId:{}, activityName:{}, size:{}", specId, activityName,
 				rules.size());
 
-		return new ResponseEntity<>(rules.stream().map(rule -> rule.getDTO()).toArray(size -> new RuleDTO[size]),
+		return new ResponseEntity<>(rules.stream().map(rule -> rule.getDTO()).toArray(size -> new RuleDto[size]),
 				HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/postrule", method = RequestMethod.POST)
-	public ResponseEntity<RuleDTO> associateAttributeInvariantConditionActivityPost(
+	public ResponseEntity<RuleDto> associateAttributeInvariantConditionActivityPost(
 			@PathVariable("specId") String specId, @PathVariable("activityName") String activityName,
-			@RequestBody RuleDTO ruleDTO) {
+			@RequestBody RuleDto ruleDTO) {
 		logger.debug("associateAttributeInvariantConditionActivityPost specId:{}, activityName:{}, rule:{}", specId,
 				activityName, ruleDTO.getName());
 
@@ -258,7 +258,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/merge", method = RequestMethod.POST)
-	public ResponseEntity<ActivityDTO> mergeActivities(@PathVariable("specId") String specId,
+	public ResponseEntity<ActivityDto> mergeActivities(@PathVariable("specId") String specId,
 			@RequestBody MergeOperationDto activityMergeDto) {
 		logger.debug("mergeActivities specId:{}, newActivityName:{}, activityNameOne:{}, activityNameTwo:{}", specId,
 				activityMergeDto.getNewName(), activityMergeDto.getNameOne(),
@@ -272,7 +272,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/extract", method = RequestMethod.POST)
-	public ResponseEntity<ActivityDTO> extractActivity(@PathVariable("specId") String specId,
+	public ResponseEntity<ActivityDto> extractActivity(@PathVariable("specId") String specId,
 			@RequestBody ExtractActivityDto request) {
 		logger.debug("extractActivity specId:{}, newActivityName:{}, sourceActivityName:{}, entDefs:{}, attDefs:{}",
 				specId, request.getNewActivityName(), request.getSourceActivityName(),
@@ -313,7 +313,7 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/seq", method = RequestMethod.GET)
-	public ResponseEntity<DefPathConditionDTO[]> getActivitySeqConditionSet(@PathVariable("specId") String specId,
+	public ResponseEntity<DefPathConditionDto[]> getActivitySeqConditionSet(@PathVariable("specId") String specId,
 			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
 
@@ -322,7 +322,7 @@ public class ActivityModelController {
 		Set<DefPathCondition> preConditionSet = adi.getActivitySeqCondition(specId, activityName);
 
 		return new ResponseEntity<>(
-				preConditionSet.stream().map(d -> d.getDTO(specId)).toArray(DefPathConditionDTO[]::new), HttpStatus.OK);
+				preConditionSet.stream().map(d -> d.getDTO(specId)).toArray(DefPathConditionDto[]::new), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/activities/graph", method = RequestMethod.GET)

@@ -8,23 +8,14 @@ export class Specification extends React.Component {
         super(props);
 
         this.state = {
-            specId: props.match.params.specId.substring(1),
-            specification: {}
+            specId: props.match.params.specId,
         };
-    }
-
-    componentDidMount() {
-        const service = new RepositoryService();
-        service.getSpecification(this.state.specId).then(response => {
-            this.setState({ specification: response.data }
-            )
-        });
     }
 
     render() {
         return (
             <div>
-                <Link to={`/specifications/:${this.state.specId}/designer`}>Designer</Link>
+                <Link to={`/specifications/${this.state.specId}/designer`}>Designer</Link>
 
                 <Switch>
                     <Route path='/specifications/:specId/designer' component={Designer} />

@@ -15,7 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 public class CreateAttributeServiceTest extends TeardownRollbackTest {
@@ -43,7 +43,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 	public void success() throws BWException {
 		log.debug("success ent.getExternalId():{}", this.ent.getExternalId());
 
-		DesignInterface.getInstance().createAttribute(new AttributeDTO(SPEC_ID, this.ent.getExternalId(), null,
+		DesignInterface.getInstance().createAttribute(new AttributeDto(SPEC_ID, this.ent.getExternalId(), null,
 				ATTRIBUTE_NAME, AttributeType.NUMBER.toString(), true));
 
 		Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
@@ -57,7 +57,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 	@Test
 	public void nonExistsEntityExtId() throws BWException {
 		try {
-			DesignInterface.getInstance().createAttribute(new AttributeDTO(SPEC_ID, NON_EXIST, null, ATTRIBUTE_NAME,
+			DesignInterface.getInstance().createAttribute(new AttributeDto(SPEC_ID, NON_EXIST, null, ATTRIBUTE_NAME,
 					AttributeType.BOOLEAN.toString(), false));
 
 			fail();
@@ -71,7 +71,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 	@Test
 	public void emptyEntityExtId() throws BWException {
 		try {
-			DesignInterface.getInstance().createAttribute(new AttributeDTO(SPEC_ID, EMPTY_NAME, EMPTY_NAME,
+			DesignInterface.getInstance().createAttribute(new AttributeDto(SPEC_ID, EMPTY_NAME, EMPTY_NAME,
 					ATTRIBUTE_NAME, AttributeType.STRING.toString(), true));
 			fail();
 		} catch (BWException bwe) {
@@ -85,7 +85,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 	public void nullEntityExtId() throws BWException {
 		try {
 			DesignInterface.getInstance().createAttribute(
-					new AttributeDTO(SPEC_ID, null, null, ATTRIBUTE_NAME, AttributeType.BOOLEAN.toString(), false));
+					new AttributeDto(SPEC_ID, null, null, ATTRIBUTE_NAME, AttributeType.BOOLEAN.toString(), false));
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.NOT_FOUND, bwe.getError());

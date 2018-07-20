@@ -3,18 +3,18 @@ package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RuleDTO {
+public class RuleDto {
 	private String specId;
 	private String entityName;
 	private String extId;
 	private String name;
-	private ExpressionDTO expression;
+	private ExpressionDto expression;
 	private String toStringExpression;
 
-	public RuleDTO() {
+	public RuleDto() {
 	}
 
-	public RuleDTO(String specId, String entityName, String name, ExpressionDTO expDTO) {
+	public RuleDto(String specId, String entityName, String name, ExpressionDto expDTO) {
 		this.specId = specId;
 		this.entityName = entityName;
 		this.extId = null;
@@ -46,11 +46,11 @@ public class RuleDTO {
 		this.name = name;
 	}
 
-	public ExpressionDTO getExpression() {
+	public ExpressionDto getExpression() {
 		return expression;
 	}
 
-	public void setExpression(ExpressionDTO expDTO) {
+	public void setExpression(ExpressionDto expDTO) {
 		this.expression = expDTO;
 	}
 

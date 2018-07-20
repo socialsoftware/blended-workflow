@@ -1,6 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
-public class SpecDTO {
+public class SpecDto {
     private String specId;
     private String name;
 
@@ -20,15 +20,15 @@ public class SpecDTO {
         this.name = name;
     }
 
-    public SpecDTO() {
+    public SpecDto() {
     }
 
-    public SpecDTO(String specId, String name) {
+    public SpecDto(String specId, String name) {
         this.specId = specId;
         this.name = name;
     }
 
-    public SpecDTO(String specId) {
+    public SpecDto(String specId) {
         this.specId = specId;
     }
 

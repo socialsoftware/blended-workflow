@@ -5,7 +5,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
 
 //TODO: Create two separate Relations in DML for EntityOne and EntityTwo.
 public class RelationBW extends RelationBW_Base {
@@ -136,8 +136,8 @@ public class RelationBW extends RelationBW_Base {
 		throw new BWException(BWErrorType.INVALID_ROLE_NAME, rolename);
 	}
 
-	public RelationDTO getDTO() {
-		RelationDTO relDTO = new RelationDTO();
+	public RelationDto getDTO() {
+		RelationDto relDTO = new RelationDto();
 		relDTO.setSpecId(getDataModel().getSpecification().getSpecId());
 		relDTO.setExtId(getExternalId());
 		relDTO.setName(getName());

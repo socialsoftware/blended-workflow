@@ -21,14 +21,14 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
@@ -121,20 +121,20 @@ public class GoalModelController {
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/sucent", method = RequestMethod.GET)
-	public ResponseEntity<DefEntityConditionDTO[]> getGoalSucEntityAchieveConditions(
+	public ResponseEntity<DefEntityConditionDto[]> getGoalSucEntityAchieveConditions(
 			@PathVariable("specId") String specId, @PathVariable("goalName") String goalName) {
 		logger.debug("getGoalSucEntityAchieveConditions specId:{}, goalName:{}", specId, goalName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		DefEntityConditionDTO[] defs = adi.getGoalSuccessEntitySet(specId, goalName).stream().map((def) -> def.getDTO())
-				.toArray(size -> new DefEntityConditionDTO[size]);
+		DefEntityConditionDto[] defs = adi.getGoalSuccessEntitySet(specId, goalName).stream().map((def) -> def.getDTO())
+				.toArray(size -> new DefEntityConditionDto[size]);
 
 		return new ResponseEntity<>(defs, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/sucent/{path}/", method = RequestMethod.POST)
-	public ResponseEntity<DefEntityConditionDTO> associateEntityAchieveConditionToGoalSuc(
+	public ResponseEntity<DefEntityConditionDto> associateEntityAchieveConditionToGoalSuc(
 			@PathVariable("specId") String specId, @PathVariable("goalName") String goalName,
 			@PathVariable("path") String path) {
 		logger.debug("associateSucConditionToGoal specId:{}, goalName:{}, path:{}", specId, goalName, path);
@@ -147,14 +147,14 @@ public class GoalModelController {
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/sucatt", method = RequestMethod.GET)
-	public ResponseEntity<DefAttributeConditionDTO[]> getGoalSucAttributeAchieveConditions(
+	public ResponseEntity<DefAttributeConditionDto[]> getGoalSucAttributeAchieveConditions(
 			@PathVariable("specId") String specId, @PathVariable("goalName") String goalName) {
 		logger.debug("getGoalSucAttributeAchieveConditions specId:{}, goalName:{}", specId, goalName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		DefAttributeConditionDTO[] defs = adi.getGoalSuccessAttributeSet(specId, goalName).stream()
-				.map((def) -> def.getDto()).toArray(size -> new DefAttributeConditionDTO[size]);
+		DefAttributeConditionDto[] defs = adi.getGoalSuccessAttributeSet(specId, goalName).stream()
+				.map((def) -> def.getDto()).toArray(size -> new DefAttributeConditionDto[size]);
 
 		return new ResponseEntity<>(defs, HttpStatus.OK);
 	}
@@ -172,20 +172,20 @@ public class GoalModelController {
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/act", method = RequestMethod.GET)
-	public ResponseEntity<DefPathConditionDTO[]> getGoalActDefPathConditionSet(@PathVariable("specId") String specId,
+	public ResponseEntity<DefPathConditionDto[]> getGoalActDefPathConditionSet(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalActDefPathConditionSet specId:{}, goalName:{}", specId, goalName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		DefPathConditionDTO[] paths = adi.getGoalActivationDefPathConditionSet(specId, goalName).stream()
-				.map((def) -> def.getDTO(specId)).toArray(size -> new DefPathConditionDTO[size]);
+		DefPathConditionDto[] paths = adi.getGoalActivationDefPathConditionSet(specId, goalName).stream()
+				.map((def) -> def.getDTO(specId)).toArray(size -> new DefPathConditionDto[size]);
 
 		return new ResponseEntity<>(paths, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/act/{path}/", method = RequestMethod.POST)
-	public ResponseEntity<DefPathConditionDTO> associateDefPathConditionToGoalAct(@PathVariable("specId") String specId,
+	public ResponseEntity<DefPathConditionDto> associateDefPathConditionToGoalAct(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @PathVariable("path") String path) {
 		logger.debug("associateDefPathConditionToGoalAct specId:{}, goalName:{}, path:{}", specId, goalName, path);
 
@@ -197,20 +197,20 @@ public class GoalModelController {
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/invent", method = RequestMethod.GET)
-	public ResponseEntity<MulConditionDTO[]> getGoalMulInvSet(@PathVariable("specId") String specId,
+	public ResponseEntity<MulConditionDto[]> getGoalMulInvSet(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalMulInvSet specId:{}, goalName:{}", specId, goalName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		MulConditionDTO[] defs = adi.getGoalMulInvSet(specId, goalName).stream().map((def) -> def.getDTO())
-				.toArray(size -> new MulConditionDTO[size]);
+		MulConditionDto[] defs = adi.getGoalMulInvSet(specId, goalName).stream().map((def) -> def.getDTO())
+				.toArray(size -> new MulConditionDto[size]);
 
 		return new ResponseEntity<>(defs, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/relations", method = RequestMethod.GET)
-	public ResponseEntity<RelationDTO[]> getGoalRelations(@PathVariable("specId") String specId,
+	public ResponseEntity<RelationDto[]> getGoalRelations(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalRelations specId:{}, goalName:{}", specId, goalName);
 
@@ -218,15 +218,15 @@ public class GoalModelController {
 
 		adi.getGoalRelations(specId, goalName);
 
-		RelationDTO[] rels = adi.getGoalRelations(specId, goalName).stream().map(r -> r.getDTO())
-				.toArray(size -> new RelationDTO[size]);
+		RelationDto[] rels = adi.getGoalRelations(specId, goalName).stream().map(r -> r.getDTO())
+				.toArray(size -> new RelationDto[size]);
 
 		return new ResponseEntity<>(rels, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/invent", method = RequestMethod.POST)
 	public ResponseEntity<String> associateEntityInvariantConditionToGoal(@PathVariable("specId") String specId,
-			@PathVariable("goalName") String goalName, @RequestBody MulConditionDTO mulConditionDTO) {
+			@PathVariable("goalName") String goalName, @RequestBody MulConditionDto mulConditionDTO) {
 		logger.debug("associateActConditionToGoal specId:{}, goalName:{}, path:{}, cardinality:{}", specId, goalName,
 				mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
 
@@ -239,21 +239,21 @@ public class GoalModelController {
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/invatt", method = RequestMethod.GET)
-	public ResponseEntity<RuleDTO[]> getGoalRuleInvSet(@PathVariable("specId") String specId,
+	public ResponseEntity<RuleDto[]> getGoalRuleInvSet(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalRuleInvSet specId:{}, goalName:{}", specId, goalName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		RuleDTO[] defs = adi.getGoalRuleInvSet(specId, goalName).stream().map((def) -> def.getDTO())
-				.toArray(size -> new RuleDTO[size]);
+		RuleDto[] defs = adi.getGoalRuleInvSet(specId, goalName).stream().map((def) -> def.getDTO())
+				.toArray(size -> new RuleDto[size]);
 
 		return new ResponseEntity<>(defs, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/invatt", method = RequestMethod.POST)
 	public ResponseEntity<String> associateAttributeInvariantConditionToGoal(@PathVariable("specId") String specId,
-			@PathVariable("goalName") String goalName, @RequestBody RuleDTO ruleDTO) {
+			@PathVariable("goalName") String goalName, @RequestBody RuleDto ruleDTO) {
 		logger.debug("associateActConditionToGoal specId:{}, goalName:{}, rule:{}", specId, goalName,
 				ruleDTO.getName());
 

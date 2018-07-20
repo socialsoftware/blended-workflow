@@ -1,16 +1,16 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
-public class DependenceDTO {
+public class DependenceDto {
 	private String specId;
 	private String extId;
 	private String product;
 	private String productExtId;
 	private String path;
 
-	public DependenceDTO() {
+	public DependenceDto() {
 	}
 
-	public DependenceDTO(String specId, String product, String path) {
+	public DependenceDto(String specId, String product, String path) {
 		this.specId = specId;
 		this.product = product;
 		this.path = path;

@@ -19,11 +19,11 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController
@@ -57,20 +57,20 @@ public class ConditionModelController {
 	}
 
 	@RequestMapping(value = "/entityachieveconditions", method = RequestMethod.GET)
-	public ResponseEntity<DefEntityConditionDTO[]> getEntityAchieveConditionSet(@PathVariable("specId") String specId) {
+	public ResponseEntity<DefEntityConditionDto[]> getEntityAchieveConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getEntityAchieveConditionSet specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		DefEntityConditionDTO[] defConditions = adi.getEntityAchieveConditionSet(specId).stream()
-				.map(def -> def.getDTO()).toArray(size -> new DefEntityConditionDTO[size]);
+		DefEntityConditionDto[] defConditions = adi.getEntityAchieveConditionSet(specId).stream()
+				.map(def -> def.getDTO()).toArray(size -> new DefEntityConditionDto[size]);
 
 		return new ResponseEntity<>(defConditions, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/entityachieveconditions", method = RequestMethod.POST)
-	public ResponseEntity<DefEntityConditionDTO> createEntityAchieveCondition(@PathVariable("specId") String specId,
-			@RequestBody DefEntityConditionDTO eacDTO) {
+	public ResponseEntity<DefEntityConditionDto> createEntityAchieveCondition(@PathVariable("specId") String specId,
+			@RequestBody DefEntityConditionDto eacDTO) {
 		log.debug("createEntityAchieveCondition entityName:{}, exists:{}", eacDTO.getEntityName(), eacDTO.isExists());
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -81,21 +81,21 @@ public class ConditionModelController {
 	}
 
 	@RequestMapping(value = "/attributeachieveconditions", method = RequestMethod.GET)
-	public ResponseEntity<DefAttributeConditionDTO[]> getAttributeAchieveConditionSet(
+	public ResponseEntity<DefAttributeConditionDto[]> getAttributeAchieveConditionSet(
 			@PathVariable("specId") String specId) {
 		log.debug("getAttributeAchieveConditionSet specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		DefAttributeConditionDTO[] defConditions = adi.getAttributeAchieveConditionSet(specId).stream()
-				.map(def -> def.getDto()).toArray(size -> new DefAttributeConditionDTO[size]);
+		DefAttributeConditionDto[] defConditions = adi.getAttributeAchieveConditionSet(specId).stream()
+				.map(def -> def.getDto()).toArray(size -> new DefAttributeConditionDto[size]);
 
 		return new ResponseEntity<>(defConditions, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/attributeachieveconditions", method = RequestMethod.POST)
-	public ResponseEntity<DefAttributeConditionDTO> createAttributeAchieveCondition(
-			@PathVariable("specId") String specId, @RequestBody DefAttributeConditionDTO aacDTO) {
+	public ResponseEntity<DefAttributeConditionDto> createAttributeAchieveCondition(
+			@PathVariable("specId") String specId, @RequestBody DefAttributeConditionDto aacDTO) {
 		log.debug("createAttributeAchieveCondition path:{}, mandatory:{}", aacDTO.getPath(), aacDTO.isMandatory());
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -106,20 +106,20 @@ public class ConditionModelController {
 	}
 
 	@RequestMapping(value = "/entitydependenceconditions", method = RequestMethod.GET)
-	public ResponseEntity<DependenceDTO[]> getEntityDependenceConditionSet(@PathVariable("specId") String specId) {
+	public ResponseEntity<DependenceDto[]> getEntityDependenceConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getEntityDependenceConditionSet specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		DependenceDTO[] dependences = adi.getEntityDependenceConditionSet(specId).stream().map(dep -> dep.getDTO())
-				.toArray(size -> new DependenceDTO[size]);
+		DependenceDto[] dependences = adi.getEntityDependenceConditionSet(specId).stream().map(dep -> dep.getDTO())
+				.toArray(size -> new DependenceDto[size]);
 
 		return new ResponseEntity<>(dependences, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/entitydependenceconditions", method = RequestMethod.POST)
-	public ResponseEntity<DependenceDTO> createEntityDependenceCondition(@PathVariable("specId") String specId,
-			@RequestBody DependenceDTO dependenceDTO) {
+	public ResponseEntity<DependenceDto> createEntityDependenceCondition(@PathVariable("specId") String specId,
+			@RequestBody DependenceDto dependenceDTO) {
 		log.debug("createEntityDependenceCondition product:{}, path:{}", dependenceDTO.getProduct(),
 				dependenceDTO.getPath());
 
@@ -131,20 +131,20 @@ public class ConditionModelController {
 	}
 
 	@RequestMapping(value = "/attributedependenceconditions", method = RequestMethod.GET)
-	public ResponseEntity<DependenceDTO[]> getAttributeDependenceConditionSet(@PathVariable("specId") String specId) {
+	public ResponseEntity<DependenceDto[]> getAttributeDependenceConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getAttributeDependenceConditionSet specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		DependenceDTO[] dependences = adi.getAttributeDependenceConditionSet(specId).stream().map(dep -> dep.getDTO())
-				.toArray(size -> new DependenceDTO[size]);
+		DependenceDto[] dependences = adi.getAttributeDependenceConditionSet(specId).stream().map(dep -> dep.getDTO())
+				.toArray(size -> new DependenceDto[size]);
 
 		return new ResponseEntity<>(dependences, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/attributedependenceconditions", method = RequestMethod.POST)
-	public ResponseEntity<DependenceDTO> createAttributeDependenceCondition(@PathVariable("specId") String specId,
-			@RequestBody DependenceDTO dependenceDTO) {
+	public ResponseEntity<DependenceDto> createAttributeDependenceCondition(@PathVariable("specId") String specId,
+			@RequestBody DependenceDto dependenceDTO) {
 		log.debug("createAttributeDependenceCondition product:{}, path:{}", dependenceDTO.getProduct(),
 				dependenceDTO.getPath());
 
@@ -156,20 +156,20 @@ public class ConditionModelController {
 	}
 
 	@RequestMapping(value = "/entityinvariantconditions", method = RequestMethod.GET)
-	public ResponseEntity<MulConditionDTO[]> getEntityInvariantConditionSet(@PathVariable("specId") String specId) {
+	public ResponseEntity<MulConditionDto[]> getEntityInvariantConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getEntityInvariantConditionSet specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		MulConditionDTO[] mulConditionsDTO = adi.getEntityInvariantConditionSet(specId).stream()
-				.map(mul -> mul.getDTO()).toArray(size -> new MulConditionDTO[size]);
+		MulConditionDto[] mulConditionsDTO = adi.getEntityInvariantConditionSet(specId).stream()
+				.map(mul -> mul.getDTO()).toArray(size -> new MulConditionDto[size]);
 
 		return new ResponseEntity<>(mulConditionsDTO, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/entityinvariantconditions", method = RequestMethod.POST)
-	public ResponseEntity<MulConditionDTO> createEntityInvariantCondition(@PathVariable("specId") String specId,
-			@RequestBody MulConditionDTO mulConditionDTO) {
+	public ResponseEntity<MulConditionDto> createEntityInvariantCondition(@PathVariable("specId") String specId,
+			@RequestBody MulConditionDto mulConditionDTO) {
 		log.debug("createEntityInvariantCondition specId:{}, rolePath:{}, cardinality:{}", specId,
 				mulConditionDTO.getRolePath(), mulConditionDTO.getCardinality());
 
@@ -181,20 +181,20 @@ public class ConditionModelController {
 	}
 
 	@RequestMapping(value = "/attributeinvariantconditions", method = RequestMethod.GET)
-	public ResponseEntity<RuleDTO[]> getAttributeInvariantConditionSet(@PathVariable("specId") String specId) {
+	public ResponseEntity<RuleDto[]> getAttributeInvariantConditionSet(@PathVariable("specId") String specId) {
 		log.debug("getAttributeInvariantConditionSet specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		RuleDTO[] rulesDTO = adi.getAttributeInvariantConditionSet(specId).stream().map(mul -> mul.getDTO())
-				.toArray(size -> new RuleDTO[size]);
+		RuleDto[] rulesDTO = adi.getAttributeInvariantConditionSet(specId).stream().map(mul -> mul.getDTO())
+				.toArray(size -> new RuleDto[size]);
 
 		return new ResponseEntity<>(rulesDTO, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/attributeinvariantconditions", method = RequestMethod.POST)
-	public ResponseEntity<RuleDTO> createAttributeInvariantCondition(@PathVariable("specId") String specId,
-			@RequestBody RuleDTO ruleDTO) {
+	public ResponseEntity<RuleDto> createAttributeInvariantCondition(@PathVariable("specId") String specId,
+			@RequestBody RuleDto ruleDTO) {
 		log.debug("createAttributeInvariantCondition specId:{}, name:{}", ruleDTO.getSpecId(), ruleDTO.getName());
 
 		DesignInterface adi = this.factory.createDesignInterface();

@@ -2,7 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public abstract class Condition extends Condition_Base {
 
@@ -65,7 +65,7 @@ public abstract class Condition extends Condition_Base {
 
 	public abstract String getSubPath();
 
-	public abstract ExpressionDTO getExpressionDTO(String specId);
+	public abstract ExpressionDto getExpressionDTO(String specId);
 
 	public abstract Set<Path> getPathSet();
 

@@ -18,11 +18,11 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
-public class ActivityWorkItemDTO extends WorkItemDTO {
-	private static Logger logger = LoggerFactory.getLogger(ActivityWorkItemDTO.class);
+public class ActivityWorkItemDto extends WorkItemDTO {
+	private static Logger logger = LoggerFactory.getLogger(ActivityWorkItemDto.class);
 
-	public static ActivityWorkItemDTO createActivityWorkItemDTO(WorkflowInstance workflowInstance, Activity activity) {
-		ActivityWorkItemDTO activityWorkItemDTO = new ActivityWorkItemDTO();
+	public static ActivityWorkItemDto createActivityWorkItemDTO(WorkflowInstance workflowInstance, Activity activity) {
+		ActivityWorkItemDto activityWorkItemDTO = new ActivityWorkItemDto();
 		activityWorkItemDTO.setSpecId(workflowInstance.getSpecification().getSpecId());
 		activityWorkItemDTO.setWorkflowInstanceName(workflowInstance.getName());
 		activityWorkItemDTO.setDefinitionGroupSet(new HashSet<DefinitionGroupDto>());
@@ -67,10 +67,10 @@ public class ActivityWorkItemDTO extends WorkItemDTO {
 			}
 
 			// create inner relations
-			Set<InnerRelationDTO> innerRelationDTOs = new HashSet<InnerRelationDTO>();
+			Set<InnerRelationDto> innerRelationDTOs = new HashSet<InnerRelationDto>();
 			definitionGroup.setInnerRelationSet(innerRelationDTOs);
 			for (MulCondition mulCondition : activity.getInnerMulConditions(entityDefinitionGroup)) {
-				innerRelationDTOs.add(InnerRelationDTO.createInnerRelationDTO(entityDefinitionGroup, mulCondition));
+				innerRelationDTOs.add(InnerRelationDto.createInnerRelationDTO(entityDefinitionGroup, mulCondition));
 			}
 
 			// create definition group instances

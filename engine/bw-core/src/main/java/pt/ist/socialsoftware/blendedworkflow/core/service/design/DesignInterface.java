@@ -33,19 +33,20 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DataModelDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.AddActivityDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
@@ -87,7 +88,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Specification createSpecification(SpecDTO specDTO) {
+	public Specification createSpecification(SpecDto specDTO) {
 		return getBlendedWorkflow().createSpecification(specDTO.getSpecId(), specDTO.getName());
 	}
 
@@ -104,6 +105,12 @@ public class DesignInterface {
 		spec.getDataModel().check();
 	}
 
+	public DataModelDto getDataModel(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return new DataModelDto(spec.getDataModel());
+	}
+
 	public Set<Entity> getEntities(String specId) {
 		logger.debug("getEntities specId:{}", specId);
 
@@ -113,7 +120,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Entity createEntity(EntityDTO entDTO) {
+	public Entity createEntity(EntityDto entDTO) {
 		logger.debug("createEntity specId:{}, name:{}, exists:{}, mandatory:{}", entDTO.getSpecId(), entDTO.getName(),
 				entDTO.getExists(), entDTO.isMandatory());
 
@@ -130,7 +137,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Attribute createAttribute(AttributeDTO attDTO) {
+	public Attribute createAttribute(AttributeDto attDTO) {
 		logger.debug("createAttribute entityExtId:{}", attDTO.getEntityExtId());
 		Entity ent = getEntityByExtId(attDTO.getEntityExtId());
 
@@ -145,7 +152,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public RelationBW createRelation(RelationDTO relDTO) {
+	public RelationBW createRelation(RelationDto relDTO) {
 		logger.debug("createRelation specId:{}, entityOneName:{}, entOneExtId:{}, entityTwoName:{}, entTwoExtId:{}",
 				relDTO.getSpecId(), relDTO.getEntOneName(), relDTO.getEntOneExtId(), relDTO.getEntTwoName(),
 				relDTO.getEntTwoExtId());
@@ -184,7 +191,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Dependence createDependence(DependenceDTO productDTO) {
+	public Dependence createDependence(DependenceDto productDTO) {
 		Product product = getProductByName(productDTO.getSpecId(), productDTO.getProduct());
 
 		return product.createDependence(productDTO.getPath());
@@ -214,7 +221,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Rule createRule(RuleDTO ruleDTO) {
+	public Rule createRule(RuleDto ruleDTO) {
 		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
 		Entity entity = spec.getDataModel().getEntity(ruleDTO.getEntityName())
 				.orElseThrow(() -> new BWException(BWErrorType.NON_EXISTENT_ENTITY, ruleDTO.getEntityName()));
@@ -330,7 +337,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public DefEntityCondition createEntityAchieveCondition(DefEntityConditionDTO eacDTO) {
+	public DefEntityCondition createEntityAchieveCondition(DefEntityConditionDto eacDTO) {
 		logger.debug("createEntityAchieveCondition Entity:{}, Value:{}", eacDTO.getEntityName(), eacDTO.isExists());
 		Specification spec = getSpecBySpecId(eacDTO.getSpecId());
 
@@ -364,7 +371,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Dependence createEntityDependenceCondition(DependenceDTO dependenceDTO) {
+	public Dependence createEntityDependenceCondition(DependenceDto dependenceDTO) {
 		logger.debug("createEntityDependenceCondition entity:{}, Path:{}", dependenceDTO.getProduct(),
 				dependenceDTO.getPath());
 
@@ -387,7 +394,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public MulCondition createEntityInvariantCondition(String specId, MulConditionDTO miDTO) {
+	public MulCondition createEntityInvariantCondition(String specId, MulConditionDto miDTO) {
 		logger.debug("createEntityInvariantCondition Entity:{}, Cardinality:{}", miDTO.getRolePath(),
 				miDTO.getCardinality());
 		Specification spec = getSpecBySpecId(specId);
@@ -412,7 +419,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public DefAttributeCondition createAttributeAchieveCondition(DefAttributeConditionDTO aacDTO) {
+	public DefAttributeCondition createAttributeAchieveCondition(DefAttributeConditionDto aacDTO) {
 		logger.debug("createAttributeAchieveCondition path:{}, mandatory:{}", aacDTO.getPath(), aacDTO.isMandatory());
 
 		Specification spec = getSpecBySpecId(aacDTO.getSpecId());
@@ -437,7 +444,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Dependence createAttributeDependenceCondition(DependenceDTO dependenceDTO) {
+	public Dependence createAttributeDependenceCondition(DependenceDto dependenceDTO) {
 		logger.debug("createAttributeDependenceCondition product:{}, path:{}", dependenceDTO.getProduct(),
 				dependenceDTO.getPath());
 		Product product = getProductByName(dependenceDTO.getSpecId(), dependenceDTO.getProduct());
@@ -457,7 +464,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Rule createAttributeInvariant(RuleDTO ruleDTO) {
+	public Rule createAttributeInvariant(RuleDto ruleDTO) {
 		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
 		Entity entity = getEntityByName(spec.getDataModel(), ruleDTO.getEntityName());
 
@@ -615,7 +622,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public void associateRuleToGoalInvariant(RuleDTO ruleDTO, String goalName) {
+	public void associateRuleToGoalInvariant(RuleDto ruleDTO, String goalName) {
 		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
 		Entity entity = getEntityByName(spec.getDataModel(), ruleDTO.getEntityName());
 
@@ -653,7 +660,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Activity createActivity(ActivityDTO activityDTO) {
+	public Activity createActivity(ActivityDto activityDTO) {
 		Specification spec = getSpecBySpecId(activityDTO.getSpecId());
 
 		return spec.getActivityModel().createActivity(activityDTO.getName(), activityDTO.getDescription());
@@ -765,7 +772,7 @@ public class DesignInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public Rule associateRuleToActivityPost(RuleDTO ruleDTO, String activityName) {
+	public Rule associateRuleToActivityPost(RuleDto ruleDTO, String activityName) {
 		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
 		Entity entity = getEntityByName(spec.getDataModel(), ruleDTO.getEntityName());
 
@@ -797,7 +804,7 @@ public class DesignInterface {
 
 	@Atomic(mode = TxMode.WRITE)
 	public Activity extractActivity(String specId, String newActivityName, String description,
-			String sourceActivityName, Set<DefPathConditionDTO> successCondition) {
+			String sourceActivityName, Set<DefPathConditionDto> successCondition) {
 		Specification spec = getSpecBySpecId(specId);
 		Activity activity = getActivityByName(spec, sourceActivityName);
 
@@ -1001,9 +1008,9 @@ public class DesignInterface {
 		return MulCondition.getMulCondition(relation, rolename);
 	}
 
-	private Set<DefProductCondition> getConditionSet(Specification spec, Set<DefPathConditionDTO> defConditionSetDTO) {
+	private Set<DefProductCondition> getConditionSet(Specification spec, Set<DefPathConditionDto> defConditionSetDTO) {
 		Set<DefProductCondition> conditions = new HashSet<>();
-		for (DefPathConditionDTO defPathCondition : defConditionSetDTO) {
+		for (DefPathConditionDto defPathCondition : defConditionSetDTO) {
 			if (spec.getDataModel().getTargetOfPath(defPathCondition.getPath()).getProductType()
 					.equals(ProductType.ENTITY)) {
 				conditions.add(DefEntityCondition
@@ -1019,9 +1026,9 @@ public class DesignInterface {
 		return conditions;
 	}
 
-	private Set<RelationBW> getRelationSet(Specification spec, Set<RelationDTO> relationDtoSet) {
+	private Set<RelationBW> getRelationSet(Specification spec, Set<RelationDto> relationDtoSet) {
 		Set<RelationBW> relations = new HashSet<>();
-		for (RelationDTO relation : relationDtoSet) {
+		for (RelationDto relation : relationDtoSet) {
 			relations.add(spec.getDataModel().getRelation(relation.getName()));
 		}
 		return relations;

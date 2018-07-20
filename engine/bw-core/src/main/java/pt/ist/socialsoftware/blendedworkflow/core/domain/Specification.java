@@ -4,7 +4,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDto;
 
 public class Specification extends Specification_Base {
 
@@ -68,8 +68,8 @@ public class Specification extends Specification_Base {
 		deleteDomainObject();
 	}
 
-	public SpecDTO getDTO() {
-		SpecDTO specDTO = new SpecDTO();
+	public SpecDto getDTO() {
+		SpecDto specDTO = new SpecDto();
 		specDTO.setSpecId(getSpecId());
 		specDTO.setName(getName());
 

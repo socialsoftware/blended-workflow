@@ -16,7 +16,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeDto;
 
 public class GoalModel extends GoalModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(GoalModel.class);
@@ -340,7 +340,7 @@ public class GoalModel extends GoalModel_Base {
 	public GraphDTO getGoalGraph() {
 		GraphDTO graph = new GraphDTO();
 
-		List<NodeDTO> nodes = new ArrayList<>();
+		List<NodeDto> nodes = new ArrayList<>();
 		List<EdgeDTO> edges = new ArrayList<>();
 
 		for (Goal goal : getGoalSet()) {
@@ -366,7 +366,7 @@ public class GoalModel extends GoalModel_Base {
 
 				}
 			}
-			nodes.add(new NodeDTO(goal.getExternalId(), goal.getName(), description));
+			nodes.add(new NodeDto(goal.getExternalId(), goal.getName(), description));
 
 			Set<Product> products = goal.getActivationConditionSet().stream().map(p -> p.getPath().getTarget())
 					.collect(Collectors.toSet());
@@ -377,7 +377,7 @@ public class GoalModel extends GoalModel_Base {
 
 		}
 
-		graph.setNodes(nodes.stream().toArray(NodeDTO[]::new));
+		graph.setNodes(nodes.stream().toArray(NodeDto[]::new));
 		graph.setEdges(edges.stream().toArray(EdgeDTO[]::new));
 
 		return graph;

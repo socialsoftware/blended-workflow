@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public class StringLiteral extends StringLiteral_Base {
 
@@ -33,8 +33,8 @@ public class StringLiteral extends StringLiteral_Base {
 	}
 
 	@Override
-	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, ExpressionAtom.STRING, getValueString());
+	public ExpressionDto getDTO(String specId) {
+		return new ExpressionDto(specId, ExpressionAtom.STRING, getValueString());
 	}
 
 }

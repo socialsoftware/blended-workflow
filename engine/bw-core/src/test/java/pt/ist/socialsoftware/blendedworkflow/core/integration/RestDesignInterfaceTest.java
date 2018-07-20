@@ -31,12 +31,12 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Expression.ExpressionAtom;
 import pt.ist.socialsoftware.blendedworkflow.core.filter.TransactionFilter;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
@@ -77,7 +77,7 @@ public class RestDesignInterfaceTest {
 
 		ObjectMapper mapper = new ObjectMapper();
 
-		SpecDTO specDTO = new SpecDTO(SPEC_ID, SPEC_NAME);
+		SpecDto specDTO = new SpecDto(SPEC_ID, SPEC_NAME);
 		this.mockMvc
 				.perform(post("/specs").contentType(MediaType.APPLICATION_JSON_UTF8)
 						.content(mapper.writeValueAsBytes(specDTO)))
@@ -88,23 +88,23 @@ public class RestDesignInterfaceTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.name").value(SPEC_NAME));
 
-		EntityDTO entityOneDTO = new EntityDTO(SPEC_ID, ENTITY_ONE_NAME, false);
+		EntityDto entityOneDTO = new EntityDto(SPEC_ID, ENTITY_ONE_NAME, false);
 		MvcResult result = this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/entities", SPEC_ID)
 						.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(entityOneDTO)))
 				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.name").value(ENTITY_ONE_NAME)).andExpect(jsonPath("$.exists").value(false))
 				.andReturn();
-		entityOneDTO = mapper.readValue(result.getResponse().getContentAsString(), EntityDTO.class);
+		entityOneDTO = mapper.readValue(result.getResponse().getContentAsString(), EntityDto.class);
 
-		EntityDTO entityTwoDTO = new EntityDTO(SPEC_ID, "entityTwo", false);
+		EntityDto entityTwoDTO = new EntityDto(SPEC_ID, "entityTwo", false);
 		result = this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/entities", SPEC_ID)
 						.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(entityTwoDTO)))
 				.andExpect(status().isCreated()).andReturn();
-		entityTwoDTO = mapper.readValue(result.getResponse().getContentAsString(), EntityDTO.class);
+		entityTwoDTO = mapper.readValue(result.getResponse().getContentAsString(), EntityDto.class);
 
-		AttributeDTO attributeOneDTO = new AttributeDTO(SPEC_ID, entityOneDTO.getExtId(), null, "att1", "Boolean",
+		AttributeDto attributeOneDTO = new AttributeDto(SPEC_ID, entityOneDTO.getExtId(), null, "att1", "Boolean",
 				true);
 		result = this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
@@ -113,31 +113,31 @@ public class RestDesignInterfaceTest {
 				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.name").value("att1")).andExpect(jsonPath("$.type").value("Boolean"))
 				.andExpect(jsonPath("$.mandatory").value(true)).andReturn();
-		attributeOneDTO = mapper.readValue(result.getResponse().getContentAsString(), AttributeDTO.class);
+		attributeOneDTO = mapper.readValue(result.getResponse().getContentAsString(), AttributeDto.class);
 
-		AttributeDTO attributeTwoDTO = new AttributeDTO(SPEC_ID, entityOneDTO.getExtId(), null,
+		AttributeDto attributeTwoDTO = new AttributeDto(SPEC_ID, entityOneDTO.getExtId(), null,
 				ATTRIBUTE_TWO_NAME_STRING, "String", false);
 		this.mockMvc.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
 				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(attributeTwoDTO)))
 				.andExpect(status().isCreated());
 
-		AttributeDTO attributeThreeDTO = new AttributeDTO(SPEC_ID, entityOneDTO.getExtId(), null, "att3", "Number",
+		AttributeDto attributeThreeDTO = new AttributeDto(SPEC_ID, entityOneDTO.getExtId(), null, "att3", "Number",
 				true);
 		this.mockMvc.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
 				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(attributeThreeDTO)))
 				.andExpect(status().isCreated());
 
-		RelationDTO relationDTO = new RelationDTO(SPEC_ID, "relation name", entityOneDTO.getExtId(), "first", "1",
+		RelationDto relationDTO = new RelationDto(SPEC_ID, "relation name", entityOneDTO.getExtId(), "first", "1",
 				entityTwoDTO.getExtId(), "second", "*");
 		this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/relations", SPEC_ID)
 						.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(relationDTO)))
 				.andExpect(status().isCreated());
 
-		ExpressionDTO expressionDTO = new ExpressionDTO(SPEC_ID, ComparisonOperator.GREATER,
-				new ExpressionDTO(SPEC_ID, ExpressionAtom.STRING, "today"), new ExpressionDTO(SPEC_ID,
+		ExpressionDto expressionDTO = new ExpressionDto(SPEC_ID, ComparisonOperator.GREATER,
+				new ExpressionDto(SPEC_ID, ExpressionAtom.STRING, "today"), new ExpressionDto(SPEC_ID,
 						ExpressionAtom.ATT_VALUE, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME_STRING));
-		RuleDTO ruleDTO = new RuleDTO(SPEC_ID, ENTITY_ONE_NAME, "myRule", expressionDTO);
+		RuleDto ruleDTO = new RuleDto(SPEC_ID, ENTITY_ONE_NAME, "myRule", expressionDTO);
 		this.mockMvc.perform(post("/specs/{specId}/datamodel/rules", SPEC_ID)
 				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(ruleDTO)))
 				.andExpect(status().isCreated());

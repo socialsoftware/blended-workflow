@@ -1,17 +1,17 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
-public class ProductDTO {
+public class ProductDto {
 	private String specId;
 	private String extId;
 	private String productType;
 
-	public ProductDTO(String specId, String extId, String productType) {
+	public ProductDto(String specId, String extId, String productType) {
 		this.specId = specId;
 		this.extId = extId;
 		this.productType = productType;
 	}
 
-	public ProductDTO() {
+	public ProductDto() {
 	}
 
 	public String getExtId() {

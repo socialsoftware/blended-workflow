@@ -1,18 +1,19 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product.ProductType;
 
-public class AttributeDTO extends ProductDTO {
+public class AttributeDto extends ProductDto {
 	private String entityExtId;
 	private String entityName;
 	private String name;
 	private String type;
 	private boolean mandatory;
 
-	public AttributeDTO() {
+	public AttributeDto() {
 	}
 
-	public AttributeDTO(String specId, String entityExtId, String entityName, String name, String type,
+	public AttributeDto(String specId, String entityExtId, String entityName, String name, String type,
 			boolean mandatory) {
 		super(specId, ProductType.ATTRIBUTE.name(), type);
 		this.entityExtId = entityExtId;
@@ -20,6 +21,12 @@ public class AttributeDTO extends ProductDTO {
 		this.name = name;
 		this.type = type;
 		this.mandatory = mandatory;
+	}
+
+	public AttributeDto(Attribute attribute) {
+		this(attribute.getEntity().getDataModel().getSpecification().getSpecId(), attribute.getExternalId(),
+				attribute.getEntity().getName(), attribute.getName(), attribute.getType().toString(),
+				attribute.getIsMandatory());
 	}
 
 	public String getEntityExtId() {

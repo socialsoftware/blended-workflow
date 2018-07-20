@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public class AttributeValueExpression extends AttributeValueExpression_Base {
 
@@ -49,8 +49,8 @@ public class AttributeValueExpression extends AttributeValueExpression_Base {
 	}
 
 	@Override
-	public ExpressionDTO getDTO(String specId) {
-		return new ExpressionDTO(specId, ExpressionAtom.ATT_VALUE, getPath().getValue());
+	public ExpressionDto getDTO(String specId) {
+		return new ExpressionDto(specId, ExpressionAtom.ATT_VALUE, getPath().getValue());
 	}
 
 }
