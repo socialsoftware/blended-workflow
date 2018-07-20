@@ -4,7 +4,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
 
 public class ActivityWorkItem extends ActivityWorkItem_Base {
 
@@ -62,8 +62,8 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 		return true;
 	}
 
-	public ActivityWorkItemDTO getDTO() {
-		ActivityWorkItemDTO activityWorkItemDTO = new ActivityWorkItemDTO();
+	public ActivityWorkItemDto getDTO() {
+		ActivityWorkItemDto activityWorkItemDTO = new ActivityWorkItemDto();
 		activityWorkItemDTO.setName(getActivity().getName());
 
 		super.fillDTO(activityWorkItemDTO);

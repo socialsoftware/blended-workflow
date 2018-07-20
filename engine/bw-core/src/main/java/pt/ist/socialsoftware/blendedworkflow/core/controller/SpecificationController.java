@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 @RestController
@@ -26,19 +26,19 @@ public class SpecificationController {
 	private ModulesFactory factory;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<SpecDTO[]> getSpecs() {
+	public ResponseEntity<SpecDto[]> getSpecs() {
 		log.debug("getSpecs");
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		SpecDTO[] specs = adi.getSpecs().stream().map(s -> s.getDTO())
-				.sorted((s1, s2) -> s1.getName().compareTo(s2.getName())).toArray(size -> new SpecDTO[size]);
+		SpecDto[] specs = adi.getSpecs().stream().map(s -> s.getDTO())
+				.sorted((s1, s2) -> s1.getName().compareTo(s2.getName())).toArray(size -> new SpecDto[size]);
 
 		return new ResponseEntity<>(specs, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{specId}", method = RequestMethod.GET)
-	public ResponseEntity<SpecDTO> getSpecBySpecId(@PathVariable("specId") String specId) {
+	public ResponseEntity<SpecDto> getSpecBySpecId(@PathVariable("specId") String specId) {
 		log.debug("getSpecBySpecId sepcId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -49,7 +49,7 @@ public class SpecificationController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<SpecDTO> createSpec(@RequestBody SpecDTO specDTO) {
+	public ResponseEntity<SpecDto> createSpec(@RequestBody SpecDto specDTO) {
 		log.debug("createSpec specId:{}, name:{}", specDTO.getSpecId(), specDTO.getName());
 		DesignInterface adi = this.factory.createDesignInterface();
 

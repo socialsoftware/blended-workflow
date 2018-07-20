@@ -30,8 +30,8 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.TrueCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 public class CreateRuleServiceTest extends TeardownRollbackTest {
@@ -72,11 +72,11 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void successNewCreateComparatorRule() {
-		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
-				new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"), new ExpressionDTO(EXISTS_SPEC_ID,
+		ExpressionDto expDTO = new ExpressionDto(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
+				new ExpressionDto(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"), new ExpressionDto(EXISTS_SPEC_ID,
 						ExpressionAtom.ATT_VALUE, EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME));
 
-		this.designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
+		this.designInterface.createRule(new RuleDto(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
 
 		Specification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID).get();
 		assertNotNull(spec);
@@ -99,14 +99,14 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void successNewCreateAndConstraint() {
-		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.AND,
-				new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
-						new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"),
-						new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.ATT_VALUE,
+		ExpressionDto expDTO = new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.AND,
+				new ExpressionDto(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
+						new ExpressionDto(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"),
+						new ExpressionDto(EXISTS_SPEC_ID, ExpressionAtom.ATT_VALUE,
 								EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME)),
-				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL, "true"));
+				new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.BOOL, "true"));
 
-		this.designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
+		this.designInterface.createRule(new RuleDto(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
 
 		Specification spec = getBlendedWorkflow().getSpecById(EXISTS_SPEC_ID).get();
 		assertNotNull(spec);
@@ -135,38 +135,38 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
 	@Test(expected = BWException.class)
 	public void failCauseofWrongAttributeName() {
-		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.AND,
-				new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
-						new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"),
-						new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.ATT_VALUE,
+		ExpressionDto expDTO = new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.AND,
+				new ExpressionDto(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
+						new ExpressionDto(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"),
+						new ExpressionDto(EXISTS_SPEC_ID, ExpressionAtom.ATT_VALUE,
 								EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME + "x")),
-				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL, "true"));
+				new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.BOOL, "true"));
 
-		this.designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
+		this.designInterface.createRule(new RuleDto(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
 	}
 
 	@Test(expected = BWException.class)
 	public void failCauseofWrongRoleName() {
-		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.AND,
-				new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
-						new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"),
-						new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.ATT_VALUE,
+		ExpressionDto expDTO = new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.AND,
+				new ExpressionDto(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
+						new ExpressionDto(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"),
+						new ExpressionDto(EXISTS_SPEC_ID, ExpressionAtom.ATT_VALUE,
 								ENTITY_NAME + "." + "rolex" + "." + EXISTS_ATTRIBUTE_NAME)),
-				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL, "true"));
+				new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.BOOL, "true"));
 
-		this.designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, ENTITY_NAME, RULE_NAME, expDTO));
+		this.designInterface.createRule(new RuleDto(EXISTS_SPEC_ID, ENTITY_NAME, RULE_NAME, expDTO));
 	}
 
 	public void failCauseofWrongInitialPath() {
-		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.AND,
-				new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
-						new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"),
-						new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.ATT_VALUE,
+		ExpressionDto expDTO = new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.AND,
+				new ExpressionDto(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
+						new ExpressionDto(EXISTS_SPEC_ID, ExpressionAtom.INT, "6"),
+						new ExpressionDto(EXISTS_SPEC_ID, ExpressionAtom.ATT_VALUE,
 								ENTITY_NAME + "." + "rolex" + "." + EXISTS_ATTRIBUTE_NAME)),
-				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL, "true"));
+				new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.BOOL, "true"));
 
 		try {
-			this.designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
+			this.designInterface.createRule(new RuleDto(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.INVALID_PATH, bwe.getError());
@@ -175,41 +175,41 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void expressionWithNot() {
-		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.NOT, new ExpressionDTO(EXISTS_SPEC_ID,
+		ExpressionDto expDTO = new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.NOT, new ExpressionDto(EXISTS_SPEC_ID,
 				BooleanOperator.ATT_VALUE, EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME_BOOLEAN));
 
-		this.designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
+		this.designInterface.createRule(new RuleDto(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
 	}
 
 	@Test
 	public void expressionWithNotAndAttAndDef() {
-		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.AND,
-				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.NOT,
-						new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.ATT_VALUE,
+		ExpressionDto expDTO = new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.AND,
+				new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.NOT,
+						new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.ATT_VALUE,
 								EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME_BOOLEAN)),
-				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL, "false"));
+				new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.BOOL, "false"));
 
-		this.designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
+		this.designInterface.createRule(new RuleDto(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
 	}
 
 	@Test
 	public void expressionWithNotAndAttAndNotEqual() {
-		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.NOT_EQUAL,
-				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.NOT,
-						new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.ATT_VALUE,
+		ExpressionDto expDTO = new ExpressionDto(EXISTS_SPEC_ID, ComparisonOperator.NOT_EQUAL,
+				new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.NOT,
+						new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.ATT_VALUE,
 								EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME_BOOLEAN)),
-				new ExpressionDTO(EXISTS_SPEC_ID, BooleanOperator.BOOL, "false"));
+				new ExpressionDto(EXISTS_SPEC_ID, BooleanOperator.BOOL, "false"));
 
-		this.designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
+		this.designInterface.createRule(new RuleDto(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
 	}
 
 	@Test
 	public void expressionWithGreaterAndAttributeAndStringLiteral() {
-		ExpressionDTO expDTO = new ExpressionDTO(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
-				new ExpressionDTO(EXISTS_SPEC_ID, ExpressionAtom.STRING, "today"), new ExpressionDTO(EXISTS_SPEC_ID,
+		ExpressionDto expDTO = new ExpressionDto(EXISTS_SPEC_ID, ComparisonOperator.GREATER,
+				new ExpressionDto(EXISTS_SPEC_ID, ExpressionAtom.STRING, "today"), new ExpressionDto(EXISTS_SPEC_ID,
 						ExpressionAtom.ATT_VALUE, EXISTS_ENTITY_NAME + "." + EXISTS_ATTRIBUTE_NAME_STRING));
 
-		this.designInterface.createRule(new RuleDTO(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
+		this.designInterface.createRule(new RuleDto(EXISTS_SPEC_ID, EXISTS_ENTITY_NAME, RULE_NAME, expDTO));
 	}
 
 }

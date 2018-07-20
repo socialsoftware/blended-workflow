@@ -2,12 +2,12 @@ package pt.ist.socialsoftware.blendedworkflow.core.service.dto.req;
 
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
 
 public class ExtractActivityDto {
 	private String newActivityName;
 	private String sourceActivityName;
-	private Set<DefPathConditionDTO> successConditions;
+	private Set<DefPathConditionDto> successConditions;
 
 	public ExtractActivityDto() {
 
@@ -29,11 +29,11 @@ public class ExtractActivityDto {
 		this.sourceActivityName = sourceActivityName;
 	}
 
-	public Set<DefPathConditionDTO> getSuccessConditions() {
+	public Set<DefPathConditionDto> getSuccessConditions() {
 		return this.successConditions;
 	}
 
-	public void setSuccessConditions(Set<DefPathConditionDTO> successConditions) {
+	public void setSuccessConditions(Set<DefPathConditionDto> successConditions) {
 		this.successConditions = successConditions;
 	}
 

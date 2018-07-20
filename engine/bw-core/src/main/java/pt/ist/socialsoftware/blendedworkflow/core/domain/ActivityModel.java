@@ -10,7 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeDTO;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeDto;
 
 public class ActivityModel extends ActivityModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(ActivityModel.class);
@@ -391,7 +391,7 @@ public class ActivityModel extends ActivityModel_Base {
 
 		removeRedundantTransitiveSequences(activitySequences);
 
-		List<NodeDTO> nodes = new ArrayList<>();
+		List<NodeDto> nodes = new ArrayList<>();
 		for (Activity activity : activitySequences.keySet()) {
 			String description = "PRE(" + activity.getPreConditionSet().stream().map(d -> d.getPath().getValue())
 					.collect(Collectors.joining(",")) + ")";
@@ -414,7 +414,7 @@ public class ActivityModel extends ActivityModel_Base {
 						+ ")";
 			}
 
-			nodes.add(new NodeDTO(activity.getExternalId(), activity.getName(), description));
+			nodes.add(new NodeDto(activity.getExternalId(), activity.getName(), description));
 		}
 
 		List<EdgeDTO> edges = new ArrayList<>();
@@ -423,7 +423,7 @@ public class ActivityModel extends ActivityModel_Base {
 					.forEach(t -> edges.add(new EdgeDTO(activity.getExternalId(), t.getExternalId())));
 		}
 
-		graph.setNodes(nodes.stream().toArray(NodeDTO[]::new));
+		graph.setNodes(nodes.stream().toArray(NodeDto[]::new));
 		graph.setEdges(edges.stream().toArray(EdgeDTO[]::new));
 
 		return graph;

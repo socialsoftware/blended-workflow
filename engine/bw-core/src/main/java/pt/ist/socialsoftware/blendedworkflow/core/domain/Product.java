@@ -5,7 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductDto;
 
 public abstract class Product extends Product_Base {
 	private static Logger logger = LoggerFactory.getLogger(Product.class);
@@ -28,7 +28,7 @@ public abstract class Product extends Product_Base {
 
 	public abstract Product getNext(List<String> pathLeft, String path);
 
-	public abstract ProductDTO getDTO();
+	public abstract ProductDto getDTO();
 
 	public void delete() {
 		getDependenceSet().stream().forEach(dep -> dep.delete());

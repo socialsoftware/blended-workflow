@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDto;
 
 public class Attribute extends Attribute_Base {
 	private static Logger logger = LoggerFactory.getLogger(Attribute.class);
@@ -129,8 +129,8 @@ public class Attribute extends Attribute_Base {
 	}
 
 	@Override
-	public AttributeDTO getDTO() {
-		AttributeDTO attDTO = new AttributeDTO();
+	public AttributeDto getDTO() {
+		AttributeDto attDTO = new AttributeDto();
 		attDTO.setSpecId(getDataModel().getSpecification().getSpecId());
 		attDTO.setExtId(getExternalId());
 		attDTO.setProductType(ProductType.ATTRIBUTE.name());

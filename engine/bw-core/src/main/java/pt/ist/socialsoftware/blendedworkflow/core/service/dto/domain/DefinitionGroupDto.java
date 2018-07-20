@@ -7,7 +7,7 @@ public class DefinitionGroupDto {
 	private DefProductConditionSetDto defProductConditionSet = new DefProductConditionSetDto();
 	private Set<EntityContextDto> entityContextSet = new HashSet<>();
 	private Set<DefinitionGroupInstanceDTO> definitionGroupInstanceSet = new HashSet<>();
-	private Set<InnerRelationDTO> innerRelationSet = new HashSet<>();
+	private Set<InnerRelationDto> innerRelationSet = new HashSet<>();
 
 	public DefinitionGroupDto() {
 	}
@@ -36,11 +36,11 @@ public class DefinitionGroupDto {
 		this.definitionGroupInstanceSet = definitionGroupInstanceSet;
 	}
 
-	public Set<InnerRelationDTO> getInnerRelationSet() {
+	public Set<InnerRelationDto> getInnerRelationSet() {
 		return this.innerRelationSet;
 	}
 
-	public void setInnerRelationSet(Set<InnerRelationDTO> innerRelationSet) {
+	public void setInnerRelationSet(Set<InnerRelationDto> innerRelationSet) {
 		this.innerRelationSet = innerRelationSet;
 	}
 

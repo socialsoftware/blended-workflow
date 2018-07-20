@@ -5,8 +5,8 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
 
 public class MulCondition extends MulCondition_Base {
 
@@ -129,8 +129,8 @@ public class MulCondition extends MulCondition_Base {
 
 	}
 
-	public MulConditionDTO getDTO() {
-		MulConditionDTO mulConditionDTO = new MulConditionDTO();
+	public MulConditionDto getDTO() {
+		MulConditionDto mulConditionDTO = new MulConditionDto();
 		mulConditionDTO.setExternalId(getExternalId());
 		mulConditionDTO.setRolePath(getSourceEntity().getName() + "." + getRolename());
 		mulConditionDTO.setCardinality(getCardinality().getExp());
@@ -143,7 +143,7 @@ public class MulCondition extends MulCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getExpressionDTO(String specId) {
+	public ExpressionDto getExpressionDTO(String specId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

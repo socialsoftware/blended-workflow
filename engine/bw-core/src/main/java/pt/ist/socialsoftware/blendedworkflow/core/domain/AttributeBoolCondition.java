@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 
@@ -48,8 +48,8 @@ public class AttributeBoolCondition extends AttributeBoolCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getExpressionDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.ATT_VALUE, getPath().getValue());
+	public ExpressionDto getExpressionDTO(String specId) {
+		return new ExpressionDto(specId, BooleanOperator.ATT_VALUE, getPath().getValue());
 	}
 
 }

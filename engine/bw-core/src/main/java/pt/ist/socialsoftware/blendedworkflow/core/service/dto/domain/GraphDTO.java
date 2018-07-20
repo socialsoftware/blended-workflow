@@ -4,18 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GraphDTO {
-	private NodeDTO[] nodes;
+	private NodeDto[] nodes;
 	private EdgeDTO[] edges;
 
 	public GraphDTO() {
 
 	}
 
-	public NodeDTO[] getNodes() {
+	public NodeDto[] getNodes() {
 		return nodes;
 	}
 
-	public void setNodes(NodeDTO[] nodes) {
+	public void setNodes(NodeDto[] nodes) {
 		this.nodes = nodes;
 	}
 

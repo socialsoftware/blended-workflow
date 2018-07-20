@@ -7,25 +7,25 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DefProductConditionSetDto {
-	private Set<DefEntityConditionDTO> defEnts = new HashSet<>();
-	private Set<DefAttributeConditionDTO> defAtts = new HashSet<>();
+	private Set<DefEntityConditionDto> defEnts = new HashSet<>();
+	private Set<DefAttributeConditionDto> defAtts = new HashSet<>();
 
 	public DefProductConditionSetDto() {
 	}
 
-	public Set<DefEntityConditionDTO> getDefEnts() {
+	public Set<DefEntityConditionDto> getDefEnts() {
 		return this.defEnts;
 	}
 
-	public void setDefEnts(Set<DefEntityConditionDTO> defEnts) {
+	public void setDefEnts(Set<DefEntityConditionDto> defEnts) {
 		this.defEnts = defEnts;
 	}
 
-	public Set<DefAttributeConditionDTO> getDefAtts() {
+	public Set<DefAttributeConditionDto> getDefAtts() {
 		return this.defAtts;
 	}
 
-	public void setDefAtts(Set<DefAttributeConditionDTO> defAtts) {
+	public void setDefAtts(Set<DefAttributeConditionDto> defAtts) {
 		this.defAtts = defAtts;
 	}
 

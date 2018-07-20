@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Comparison.ComparisonOperator;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public class BoolComparison extends BoolComparison_Base {
 
@@ -58,8 +58,8 @@ public class BoolComparison extends BoolComparison_Base {
 	}
 
 	@Override
-	public ExpressionDTO getExpressionDTO(String specId) {
-		return new ExpressionDTO(specId, getComparator(), getLeftCondition().getExpressionDTO(specId),
+	public ExpressionDto getExpressionDTO(String specId) {
+		return new ExpressionDto(specId, getComparator(), getLeftCondition().getExpressionDTO(specId),
 				getRightCondition().getExpressionDTO(specId));
 	}
 

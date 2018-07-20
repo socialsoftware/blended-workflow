@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
@@ -29,13 +29,13 @@ public class ActivityWorkItemController {
 	private ModulesFactory factory;
 
 	@RequestMapping(value = "/next", method = RequestMethod.GET)
-	public ResponseEntity<ActivityWorkItemDTO[]> getNextActivityWorkItems(@PathVariable String specId,
+	public ResponseEntity<ActivityWorkItemDto[]> getNextActivityWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
 		logger.debug("getNextActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
-		ActivityWorkItemDTO[] instances = edi.getPendingActivityWorkItemSet(specId, instanceName).stream()
-				.toArray(size -> new ActivityWorkItemDTO[size]);
+		ActivityWorkItemDto[] instances = edi.getPendingActivityWorkItemSet(specId, instanceName).stream()
+				.toArray(size -> new ActivityWorkItemDto[size]);
 
 		logger.debug("getNextActivityWorkItems activityDTOs: {}",
 				Stream.of(instances).map(aw -> aw.print()).collect(Collectors.joining("\n\n")));
@@ -44,7 +44,7 @@ public class ActivityWorkItemController {
 	}
 
 	@RequestMapping(value = "/log", method = RequestMethod.GET)
-	public ResponseEntity<ActivityWorkItemDTO[]> getLogActivityWorkItems(@PathVariable String specId,
+	public ResponseEntity<ActivityWorkItemDto[]> getLogActivityWorkItems(@PathVariable String specId,
 			@PathVariable String instanceName) {
 		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
@@ -57,7 +57,7 @@ public class ActivityWorkItemController {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<Boolean> executeActivityWorkItem(@PathVariable String specId,
-			@RequestBody ActivityWorkItemDTO activityWorkItemDTO) {
+			@RequestBody ActivityWorkItemDto activityWorkItemDTO) {
 		logger.debug("executeActivityActivityWorkItem specId:{}, instanceName:{}, activityName:{}", specId,
 				activityWorkItemDTO.getWorkflowInstanceName(), activityWorkItemDTO.getName());
 		logger.debug("executeActivityWorkItem activityWorkItemDTO:{}", activityWorkItemDTO.print());

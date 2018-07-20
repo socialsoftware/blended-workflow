@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDto;
 
 public class Activity extends Activity_Base {
 	private static Logger logger = LoggerFactory.getLogger(Activity.class);
@@ -146,8 +146,8 @@ public class Activity extends Activity_Base {
 		deleteDomainObject();
 	}
 
-	public ActivityDTO getDTO() {
-		return new ActivityDTO(getActivityModel().getSpecification().getSpecId(), getName(), getDescription());
+	public ActivityDto getDTO() {
+		return new ActivityDto(getActivityModel().getSpecification().getSpecId(), getName(), getDescription());
 	}
 
 	public void checkConsistency() {

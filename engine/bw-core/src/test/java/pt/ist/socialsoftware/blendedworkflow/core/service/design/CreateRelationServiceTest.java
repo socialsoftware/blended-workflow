@@ -11,7 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 public class CreateRelationServiceTest extends TeardownRollbackTest {
@@ -40,7 +40,7 @@ public class CreateRelationServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void success() throws BWException {
-		this.factory.createDesignInterface().createRelation(new RelationDTO(SPEC_ID, RELATION_NAME,
+		this.factory.createDesignInterface().createRelation(new RelationDto(SPEC_ID, RELATION_NAME,
 				this.entityOne.getExternalId(), ROLENAME_ONE, ONE, this.entityTwo.getExternalId(), ROLENAME_TWO, MANY));
 
 		RelationBW relation = this.entityOne.getRelationOneSet().stream()

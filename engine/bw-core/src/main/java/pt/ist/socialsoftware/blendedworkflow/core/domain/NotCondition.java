@@ -4,7 +4,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public class NotCondition extends NotCondition_Base {
 
@@ -50,8 +50,8 @@ public class NotCondition extends NotCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getExpressionDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.NOT, getCondition().getExpressionDTO(specId));
+	public ExpressionDto getExpressionDTO(String specId) {
+		return new ExpressionDto(specId, BooleanOperator.NOT, getCondition().getExpressionDTO(specId));
 	}
 
 }

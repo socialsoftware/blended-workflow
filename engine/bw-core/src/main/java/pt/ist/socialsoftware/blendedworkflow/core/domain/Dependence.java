@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDto;
 
 public class Dependence extends Dependence_Base {
 	private static Logger logger = LoggerFactory.getLogger(Dependence.class);
@@ -64,8 +64,8 @@ public class Dependence extends Dependence_Base {
 		deleteDomainObject();
 	}
 
-	public DependenceDTO getDTO() {
-		DependenceDTO depDTO = new DependenceDTO();
+	public DependenceDto getDTO() {
+		DependenceDto depDTO = new DependenceDto();
 		depDTO.setSpecId(getDataModel().getSpecification().getSpecId());
 		depDTO.setExtId(getExternalId());
 		depDTO.setProduct(getProduct().getFullPath());

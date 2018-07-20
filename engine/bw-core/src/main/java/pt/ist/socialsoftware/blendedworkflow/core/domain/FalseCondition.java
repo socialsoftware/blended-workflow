@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public class FalseCondition extends FalseCondition_Base {
 
@@ -32,8 +32,8 @@ public class FalseCondition extends FalseCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getExpressionDTO(String specId) {
-		return new ExpressionDTO(specId, BooleanOperator.BOOL, "false");
+	public ExpressionDto getExpressionDTO(String specId) {
+		return new ExpressionDto(specId, BooleanOperator.BOOL, "false");
 	}
 
 }

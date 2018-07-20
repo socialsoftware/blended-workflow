@@ -4,15 +4,15 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtractGoalDto {
 	private String newGoalName;
 	private String sourceGoalName;
-	private Set<DefPathConditionDTO> successConditions;
-	private Set<RelationDTO> relations;
+	private Set<DefPathConditionDto> successConditions;
+	private Set<RelationDto> relations;
 
 	public ExtractGoalDto() {
 	}
@@ -33,19 +33,19 @@ public class ExtractGoalDto {
 		this.sourceGoalName = sourceGoalName;
 	}
 
-	public Set<DefPathConditionDTO> getSuccessConditions() {
+	public Set<DefPathConditionDto> getSuccessConditions() {
 		return this.successConditions;
 	}
 
-	public void setSuccessConditions(Set<DefPathConditionDTO> successConditions) {
+	public void setSuccessConditions(Set<DefPathConditionDto> successConditions) {
 		this.successConditions = successConditions;
 	}
 
-	public Set<RelationDTO> getRelations() {
+	public Set<RelationDto> getRelations() {
 		return this.relations;
 	}
 
-	public void setRelations(Set<RelationDTO> relations) {
+	public void setRelations(Set<RelationDto> relations) {
 		this.relations = relations;
 	}
 

@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public class DefEntityCondition extends DefEntityCondition_Base {
 
@@ -55,8 +55,8 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 		return "DEF(" + getEntity().getFullPath() + ")";
 	}
 
-	public DefEntityConditionDTO    getDTO() {
-		DefEntityConditionDTO eacDTO = new DefEntityConditionDTO();
+	public DefEntityConditionDto getDTO() {
+		DefEntityConditionDto eacDTO = new DefEntityConditionDto();
 		eacDTO.setSpecId(getEntity().getDataModel().getSpecification().getSpecId());
 		eacDTO.setExtId(getExternalId());
 		eacDTO.setEntityName(getEntity().getName());
@@ -68,7 +68,7 @@ public class DefEntityCondition extends DefEntityCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getExpressionDTO(String specId) {
+	public ExpressionDto getExpressionDTO(String specId) {
 		assert false : "expressions cannot have a def condition";
 		return null;
 	}

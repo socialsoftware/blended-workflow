@@ -7,8 +7,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 
 public class DefPathCondition extends DefPathCondition_Base {
 	private static Logger logger = LoggerFactory.getLogger(DefPathCondition.class);
@@ -66,13 +66,13 @@ public class DefPathCondition extends DefPathCondition_Base {
 	}
 
 	@Override
-	public ExpressionDTO getExpressionDTO(String specId) {
+	public ExpressionDto getExpressionDTO(String specId) {
 		assert false : "expressions cannot have a def condition";
 		return null;
 	}
 
-	public DefPathConditionDTO getDTO(String specId) {
-		return new DefPathConditionDTO(specId, getPath().getValue());
+	public DefPathConditionDto getDTO(String specId) {
+		return new DefPathConditionDto(specId, getPath().getValue());
 	}
 
 	@Override

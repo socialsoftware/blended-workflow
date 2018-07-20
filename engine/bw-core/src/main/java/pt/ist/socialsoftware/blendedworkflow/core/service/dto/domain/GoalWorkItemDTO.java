@@ -99,11 +99,11 @@ public class GoalWorkItemDto extends WorkItemDTO {
 				}
 
 				// create inner relations
-				Set<InnerRelationDTO> innerRelationDTOs = new HashSet<InnerRelationDTO>();
+				Set<InnerRelationDto> innerRelationDTOs = new HashSet<InnerRelationDto>();
 				definitionGroup.setInnerRelationSet(innerRelationDTOs);
 				for (MulCondition mulCondition : goal.getEntityInvariantConditionSet().stream()
 						.filter(m -> m.getSourceEntity() == entityDefinitionGroup).collect(Collectors.toSet())) {
-					InnerRelationDTO innerRelationDTO = InnerRelationDTO.createInnerRelationDTO(entityDefinitionGroup,
+					InnerRelationDto innerRelationDTO = InnerRelationDto.createInnerRelationDTO(entityDefinitionGroup,
 							mulCondition);
 					innerRelationDTO.getProductInstanceSet()
 							.addAll(goal.getInstanceContext(workflowInstance).get(mulCondition.getTargetEntity())

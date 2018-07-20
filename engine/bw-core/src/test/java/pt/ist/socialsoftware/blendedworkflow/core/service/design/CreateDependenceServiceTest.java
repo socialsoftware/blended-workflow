@@ -15,7 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
 public class CreateDependenceServiceTest extends TeardownRollbackTest {
@@ -58,7 +58,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void successCreateEntityDependence() {
-		this.designInterface.createDependence(new DependenceDTO(SPEC_ID, this.entityOne.getFullPath(), DEPENDENCE_ONE));
+		this.designInterface.createDependence(new DependenceDto(SPEC_ID, this.entityOne.getFullPath(), DEPENDENCE_ONE));
 
 		assertEquals(1, this.dataModel.getEntity(ENTITY_NAME_ONE).get().getDependenceSet().size());
 		assertEquals(DEPENDENCE_ONE + "," + DEPENDENCE_TWO, this.dataModel.getDependenceSet().stream()
@@ -67,7 +67,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 
 	@Test
 	public void successCreateAttributeDependence() {
-		this.designInterface.createDependence(new DependenceDTO(SPEC_ID, this.att.getFullPath(), DEPENDENCE_ONE));
+		this.designInterface.createDependence(new DependenceDto(SPEC_ID, this.att.getFullPath(), DEPENDENCE_ONE));
 
 		assertEquals(0, this.dataModel.getEntity(ENTITY_NAME_ONE).get().getDependenceSet().size());
 		assertEquals(1, this.dataModel.getEntity(ENTITY_NAME_ONE).get().getAttribute(ATTRIBUTE_NAME_ONE).get()
