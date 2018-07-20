@@ -8,7 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UserDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UserDto;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,8 +31,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
         try {
-            UserDTO creds = new ObjectMapper()
-                    .readValue(req.getInputStream(), UserDTO.class);
+            UserDto creds = new ObjectMapper()
+                    .readValue(req.getInputStream(), UserDto.class);
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(

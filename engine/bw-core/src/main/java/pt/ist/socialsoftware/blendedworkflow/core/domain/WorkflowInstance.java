@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDto;
 
 public class WorkflowInstance extends WorkflowInstance_Base {
 
@@ -41,12 +41,12 @@ public class WorkflowInstance extends WorkflowInstance_Base {
 		deleteDomainObject();
 	}
 
-	public WorkflowInstanceDTO getDTO() {
-		WorkflowInstanceDTO workflowInstanceDTO = new WorkflowInstanceDTO();
-		workflowInstanceDTO.setSpecId(getSpecification().getSpecId());
-		workflowInstanceDTO.setName(getName());
+	public WorkflowInstanceDto getDTO() {
+		WorkflowInstanceDto workflowInstanceDto = new WorkflowInstanceDto();
+		workflowInstanceDto.setSpecId(getSpecification().getSpecId());
+		workflowInstanceDto.setName(getName());
 
-		return workflowInstanceDTO;
+		return workflowInstanceDto;
 	}
 
 	public int incLogCounter() {

@@ -6,7 +6,7 @@ import java.util.Set;
 public class DefinitionGroupDto {
 	private DefProductConditionSetDto defProductConditionSet = new DefProductConditionSetDto();
 	private Set<EntityContextDto> entityContextSet = new HashSet<>();
-	private Set<DefinitionGroupInstanceDTO> definitionGroupInstanceSet = new HashSet<>();
+	private Set<DefinitionGroupInstanceDto> definitionGroupInstanceSet = new HashSet<>();
 	private Set<InnerRelationDto> innerRelationSet = new HashSet<>();
 
 	public DefinitionGroupDto() {
@@ -28,11 +28,11 @@ public class DefinitionGroupDto {
 		this.entityContextSet = entityContextSet;
 	}
 
-	public Set<DefinitionGroupInstanceDTO> getDefinitionGroupInstanceSet() {
+	public Set<DefinitionGroupInstanceDto> getDefinitionGroupInstanceSet() {
 		return this.definitionGroupInstanceSet;
 	}
 
-	public void setDefinitionGroupInstanceSet(Set<DefinitionGroupInstanceDTO> definitionGroupInstanceSet) {
+	public void setDefinitionGroupInstanceSet(Set<DefinitionGroupInstanceDto> definitionGroupInstanceSet) {
 		this.definitionGroupInstanceSet = definitionGroupInstanceSet;
 	}
 

@@ -1,22 +1,20 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductDTO;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 public class SetOfRequiredResources {
-    private Set<PositionDTO> positions;
-    private Set<PositionDTO> notPositions;
-    private Set<PersonDTO> persons;
-    private Set<PersonDTO> notPersons;
-    private Set<CapabilityDTO> capabilities;
-    private Set<CapabilityDTO> notCapabilities;
-    private Set<RoleDTO> roles;
-    private Set<RoleDTO> notRoles;
-    private Set<UnitDTO> units;
-    private Set<UnitDTO> notUnits;
+    private Set<PositionDto> positions;
+    private Set<PositionDto> notPositions;
+    private Set<PersonDto> persons;
+    private Set<PersonDto> notPersons;
+    private Set<CapabilityDto> capabilities;
+    private Set<CapabilityDto> notCapabilities;
+    private Set<RoleDto> roles;
+    private Set<RoleDto> notRoles;
+    private Set<UnitDto> units;
+    private Set<UnitDto> notUnits;
     private Set<String> dataField;
     private Set<String> notDataField;
     private Set<String> taskDuty;
@@ -64,101 +62,101 @@ public class SetOfRequiredResources {
         return this;
     }
 
-    public Set<PositionDTO> getPositions() {
+    public Set<PositionDto> getPositions() {
         return positions;
     }
 
-    public SetOfRequiredResources addPositions(Collection<PositionDTO> positions) {
+    public SetOfRequiredResources addPositions(Collection<PositionDto> positions) {
         this.positions.addAll(positions);
 
         return this;
     }
 
-    public Set<PositionDTO> getNotPositions() {
+    public Set<PositionDto> getNotPositions() {
         return notPositions;
     }
 
-    public SetOfRequiredResources addNotPositions(Collection<PositionDTO> notPositions) {
+    public SetOfRequiredResources addNotPositions(Collection<PositionDto> notPositions) {
         this.notPositions.addAll(notPositions);
 
         return this;
     }
 
-    public Set<PersonDTO> getPersons() {
+    public Set<PersonDto> getPersons() {
         return persons;
     }
 
-    public SetOfRequiredResources addPersons(Collection<PersonDTO> persons) {
+    public SetOfRequiredResources addPersons(Collection<PersonDto> persons) {
         this.persons.addAll(persons);
 
         return this;
     }
 
-    public Set<PersonDTO> getNotPersons() {
+    public Set<PersonDto> getNotPersons() {
         return notPersons;
     }
 
-    public SetOfRequiredResources addNotPersons(Collection<PersonDTO> notPersons) {
+    public SetOfRequiredResources addNotPersons(Collection<PersonDto> notPersons) {
         this.notPersons.addAll(notPersons);
 
         return this;
     }
 
-    public Set<CapabilityDTO> getCapabilities() {
+    public Set<CapabilityDto> getCapabilities() {
         return capabilities;
     }
 
-    public SetOfRequiredResources addCapabilities(Collection<CapabilityDTO> capabilities) {
+    public SetOfRequiredResources addCapabilities(Collection<CapabilityDto> capabilities) {
         this.capabilities.addAll(capabilities);
 
         return this;
     }
 
-    public Set<CapabilityDTO> getNotCapabilities() {
+    public Set<CapabilityDto> getNotCapabilities() {
         return notCapabilities;
     }
 
-    public SetOfRequiredResources addNotCapabilities(Collection<CapabilityDTO> notCapabilities) {
+    public SetOfRequiredResources addNotCapabilities(Collection<CapabilityDto> notCapabilities) {
         this.notCapabilities.addAll(notCapabilities);
 
         return this;
     }
 
-    public Set<RoleDTO> getRoles() {
+    public Set<RoleDto> getRoles() {
         return roles;
     }
 
-    public SetOfRequiredResources addRoles(Collection<RoleDTO> roles) {
+    public SetOfRequiredResources addRoles(Collection<RoleDto> roles) {
         this.roles.addAll(roles);
 
         return this;
     }
 
-    public Set<RoleDTO> getNotRoles() {
+    public Set<RoleDto> getNotRoles() {
         return notRoles;
     }
 
-    public SetOfRequiredResources addNotRoles(Collection<RoleDTO> notRoles) {
+    public SetOfRequiredResources addNotRoles(Collection<RoleDto> notRoles) {
         this.notRoles.addAll(notRoles);
 
         return this;
     }
 
-    public Set<UnitDTO> getUnits() {
+    public Set<UnitDto> getUnits() {
         return units;
     }
 
-    public SetOfRequiredResources addUnits(Collection<UnitDTO> unit) {
+    public SetOfRequiredResources addUnits(Collection<UnitDto> unit) {
         this.units.addAll(unit);
 
         return this;
     }
 
-    public Set<UnitDTO> getNotUnits() {
+    public Set<UnitDto> getNotUnits() {
         return notUnits;
     }
 
-    public SetOfRequiredResources addNotUnits(Collection<UnitDTO> notUnit) {
+    public SetOfRequiredResources addNotUnits(Collection<UnitDto> notUnit) {
         this.notUnits.addAll(notUnit);
 
         return this;
@@ -224,43 +222,43 @@ public class SetOfRequiredResources {
         return this;
     }
 
-    public void setPositions(Set<PositionDTO> positions) {
+    public void setPositions(Set<PositionDto> positions) {
         this.positions = positions;
     }
 
-    public void setNotPositions(Set<PositionDTO> notPositions) {
+    public void setNotPositions(Set<PositionDto> notPositions) {
         this.notPositions = notPositions;
     }
 
-    public void setPersons(Set<PersonDTO> persons) {
+    public void setPersons(Set<PersonDto> persons) {
         this.persons = persons;
     }
 
-    public void setNotPersons(Set<PersonDTO> notPersons) {
+    public void setNotPersons(Set<PersonDto> notPersons) {
         this.notPersons = notPersons;
     }
 
-    public void setCapabilities(Set<CapabilityDTO> capabilities) {
+    public void setCapabilities(Set<CapabilityDto> capabilities) {
         this.capabilities = capabilities;
     }
 
-    public void setNotCapabilities(Set<CapabilityDTO> notCapabilities) {
+    public void setNotCapabilities(Set<CapabilityDto> notCapabilities) {
         this.notCapabilities = notCapabilities;
     }
 
-    public void setRoles(Set<RoleDTO> roles) {
+    public void setRoles(Set<RoleDto> roles) {
         this.roles = roles;
     }
 
-    public void setNotRoles(Set<RoleDTO> notRoles) {
+    public void setNotRoles(Set<RoleDto> notRoles) {
         this.notRoles = notRoles;
     }
 
-    public void setUnits(Set<UnitDTO> units) {
+    public void setUnits(Set<UnitDto> units) {
         this.units = units;
     }
 
-    public void setNotUnits(Set<UnitDTO> notUnits) {
+    public void setNotUnits(Set<UnitDto> notUnits) {
         this.notUnits = notUnits;
     }
 

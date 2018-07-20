@@ -10,14 +10,14 @@ public class InnerRelationDto {
 	private EntityDto sourceEntity;
 	private EntityDto targetEntity;
 	private MulConditionDto mulCondition;
-	private Set<ProductInstanceDTO> productInstanceSet;
+	private Set<ProductInstanceDto> productInstanceSet;
 
 	public static InnerRelationDto createInnerRelationDTO(Entity entity, MulCondition mulCondition) {
 		InnerRelationDto innerRelationDTO = new InnerRelationDto();
 		innerRelationDTO.setSourceEntity(entity.getDTO());
 		innerRelationDTO.setTargetEntity(mulCondition.getTargetEntity().getDTO());
 		innerRelationDTO.setMulCondition(mulCondition.getDTO());
-		innerRelationDTO.setProductInstanceSet(new HashSet<ProductInstanceDTO>());
+		innerRelationDTO.setProductInstanceSet(new HashSet<ProductInstanceDto>());
 		return innerRelationDTO;
 	}
 
@@ -48,11 +48,11 @@ public class InnerRelationDto {
 		this.mulCondition = mulCondition;
 	}
 
-	public Set<ProductInstanceDTO> getProductInstanceSet() {
+	public Set<ProductInstanceDto> getProductInstanceSet() {
 		return productInstanceSet;
 	}
 
-	public void setProductInstanceSet(Set<ProductInstanceDTO> productInstanceSet) {
+	public void setProductInstanceSet(Set<ProductInstanceDto> productInstanceSet) {
 		this.productInstanceSet = productInstanceSet;
 	}
 

@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeDto;
 
 public class ActivityModel extends ActivityModel_Base {
@@ -384,8 +384,8 @@ public class ActivityModel extends ActivityModel_Base {
 		}
 	}
 
-	public GraphDTO getActivityGraph() {
-		GraphDTO graph = new GraphDTO();
+	public GraphDto getActivityGraph() {
+		GraphDto graph = new GraphDto();
 
 		Map<Activity, Set<Activity>> activitySequences = getActivitySequences();
 
@@ -417,14 +417,14 @@ public class ActivityModel extends ActivityModel_Base {
 			nodes.add(new NodeDto(activity.getExternalId(), activity.getName(), description));
 		}
 
-		List<EdgeDTO> edges = new ArrayList<>();
+		List<EdgeDto> edges = new ArrayList<>();
 		for (Activity activity : activitySequences.keySet()) {
 			activitySequences.get(activity).stream()
-					.forEach(t -> edges.add(new EdgeDTO(activity.getExternalId(), t.getExternalId())));
+					.forEach(t -> edges.add(new EdgeDto(activity.getExternalId(), t.getExternalId())));
 		}
 
 		graph.setNodes(nodes.stream().toArray(NodeDto[]::new));
-		graph.setEdges(edges.stream().toArray(EdgeDTO[]::new));
+		graph.setEdges(edges.stream().toArray(EdgeDto[]::new));
 
 		return graph;
 	}

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceRelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceRelationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceRuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.utils.ResourcesFactory;
 
@@ -26,8 +26,8 @@ public class ResourceRulesSpecificationController {
 	private ResourcesFactory factory;
 
 	@RequestMapping(value = "/relations", method = RequestMethod.POST)
-	public ResponseEntity<ResourceRelationDTO> createEntityIsPerson(@PathVariable("specId") String specId,
-			@RequestBody ResourceRelationDTO resourceRelationDTO) {
+	public ResponseEntity<ResourceRelationDto> createEntityIsPerson(@PathVariable("specId") String specId,
+                                                                    @RequestBody ResourceRelationDto resourceRelationDTO) {
 		log.debug("CreateEntityIsPerson: {}, {}", specId, resourceRelationDTO.getEntityName());
 
 		DesignResourcesInterface designer = this.factory.createDesignInterface();

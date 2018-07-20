@@ -31,7 +31,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     private static final String ENT_1 = "Ent1";
     private Logger logger = LoggerFactory.getLogger(ExecutionResourcesInterfaceTest.class);
 
-    private WorkflowInstanceDTO workflowInstanceDTO;
+    private WorkflowInstanceDto _workflowInstanceDto;
     private WorkflowInstance instance;
 
     private Specification spec;
@@ -45,15 +45,15 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void populate4Test() {
         designer = DesignResourcesInterface.getInstance();
         edi = ExecutionResourcesInterface.getInstance();
-        spec = designer.createSpecification(new SpecDTO(SPEC_ID, SPEC_ID));
+        spec = designer.createSpecification(new SpecDto(SPEC_ID, SPEC_ID));
 
-        Entity entity = designer.createEntity(new EntityDTO(SPEC_ID, ENT_1, false, true));
+        Entity entity = designer.createEntity(new EntityDto(SPEC_ID, ENT_1, false, true));
         designer.createResourceModel(SPEC_ID);
-        person1 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_1, "", new ArrayList<>(), new ArrayList<>()));
-        person2 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_2, "", new ArrayList<>(), new ArrayList<>()));
-        person3 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_3, "", new ArrayList<>(), new ArrayList<>()));
+        person1 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_1, "", new ArrayList<>(), new ArrayList<>()));
+        person2 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_2, "", new ArrayList<>(), new ArrayList<>()));
+        person3 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_3, "", new ArrayList<>(), new ArrayList<>()));
 
-        designer.relationEntityIsPerson(new ResourceRelationDTO(
+        designer.relationEntityIsPerson(new ResourceRelationDto(
                 SPEC_ID,
                 ENT_1
         ));
@@ -61,14 +61,14 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_2)
+                new RALExprIsPersonDto(USERNAME_2)
         ));
 
         designer.generateConditionModel(SPEC_ID);
@@ -82,21 +82,21 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     private void fillWorkItem(WorkItemDTO workItemDTO) {
         DefinitionGroupDto definitionGroup = workItemDTO.getDefinitionGroupSet().stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.INVALID_WORKITEM));
 
-        ProductInstanceDTO productInstanceDTO = new ProductInstanceDTO();
-        ProductDTO product = new ProductDTO();
+        ProductInstanceDto productInstanceDto = new ProductInstanceDto();
+        ProductDto product = new ProductDto();
         product.setProductType("ENTITY");
-        productInstanceDTO.setProduct(product);
-        productInstanceDTO.setPath(definitionGroup.getDefProductConditionSet().getDefEnts().stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.INVALID_WORKITEM)).getPath());
-        productInstanceDTO.setExternalId("-1");
-        productInstanceDTO.setValue("");
+        productInstanceDto.setProduct(product);
+        productInstanceDto.setPath(definitionGroup.getDefProductConditionSet().getDefEnts().stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.INVALID_WORKITEM)).getPath());
+        productInstanceDto.setExternalId("-1");
+        productInstanceDto.setValue("");
 
-        DefinitionGroupInstanceDTO definitionGroupInstanceDTO = new DefinitionGroupInstanceDTO();
-        definitionGroupInstanceDTO.setProductInstanceSet(new HashSet<>());
-        definitionGroupInstanceDTO.setEntityInstanceContextSet(new HashSet<>());
-        definitionGroupInstanceDTO.setInnerRelationInstanceSet(new HashSet<>());
-        definitionGroupInstanceDTO.getProductInstanceSet().add(productInstanceDTO);
+        DefinitionGroupInstanceDto definitionGroupInstanceDto = new DefinitionGroupInstanceDto();
+        definitionGroupInstanceDto.setProductInstanceSet(new HashSet<>());
+        definitionGroupInstanceDto.setEntityInstanceContextSet(new HashSet<>());
+        definitionGroupInstanceDto.setInnerRelationInstanceSet(new HashSet<>());
+        definitionGroupInstanceDto.getProductInstanceSet().add(productInstanceDto);
 
-        definitionGroup.getDefinitionGroupInstanceSet().add(definitionGroupInstanceDTO);
+        definitionGroup.getDefinitionGroupInstanceSet().add(definitionGroupInstanceDto);
     }
 
     private void fakeLogin(String username, String password) {
@@ -110,9 +110,9 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void executeActivityWorkItem() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<ActivityWorkItemDto> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
-        ActivityWorkItemDTO workItemDTO = workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+        ActivityWorkItemDto workItemDTO = workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
 
@@ -146,9 +146,9 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void getLogActivityWorkItem() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<ActivityWorkItemDto> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
-        ActivityWorkItemDTO workItemDTO = workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+        ActivityWorkItemDto workItemDTO = workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
 
@@ -171,9 +171,9 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void getLogActivityWorkItemWithInvalidUser() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<ActivityWorkItemDto> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
-        ActivityWorkItemDTO workItemDTO = workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
+        ActivityWorkItemDto workItemDTO = workItemDTOList.stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
 
@@ -235,9 +235,9 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void executeActivityWorkItemEntityIsPerson() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<ActivityWorkItemDto> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
-        ActivityWorkItemDTO workItemDTO = workItemDTOList.stream()
+        ActivityWorkItemDto workItemDTO = workItemDTOList.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
@@ -295,7 +295,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void executeActivityWorkItemEntityIsPersonWithPersonChosen() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<ActivityWorkItemDto> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceActivityWorkItemDTO workItemDTO = (ResourceActivityWorkItemDTO) workItemDTOList.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
@@ -304,12 +304,12 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         fillWorkItem(workItemDTO);
 
-        EntityIsPersonDTO entityIsPersonDTO = workItemDTO.getEntityIsPersonDTOSet().stream()
+        EntityIsPersonDto entityIsPersonDto = workItemDTO.getEntityIsPersonDTOSet().stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
-        PersonDTO personChosen = entityIsPersonDTO.getPersonContext().stream().findFirst().get();
+        PersonDto personChosen = entityIsPersonDto.getPersonContext().stream().findFirst().get();
 
-        entityIsPersonDTO.setPersonChosen(personChosen);
+        entityIsPersonDto.setPersonChosen(personChosen);
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
 
@@ -338,12 +338,12 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         fillWorkItem(workItemDTO);
 
-        EntityIsPersonDTO entityIsPersonDTO = workItemDTO.getEntityIsPersonDTOSet().stream()
+        EntityIsPersonDto entityIsPersonDto = workItemDTO.getEntityIsPersonDTOSet().stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
-        PersonDTO personChosen = entityIsPersonDTO.getPersonContext().stream().findFirst().get();
+        PersonDto personChosen = entityIsPersonDto.getPersonContext().stream().findFirst().get();
 
-        entityIsPersonDTO.setPersonChosen(personChosen);
+        entityIsPersonDto.setPersonChosen(personChosen);
 
         logger.debug("WORKITEM: {}", workItemDTO.print());
 
@@ -364,25 +364,25 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void getActivityWorkItemLogWithPersonChosen() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<ActivityWorkItemDto> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceActivityWorkItemDTO workItemDTO = (ResourceActivityWorkItemDTO) workItemDTOList.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
         fillWorkItem(workItemDTO);
 
-        EntityIsPersonDTO entityIsPersonDTO = workItemDTO.getEntityIsPersonDTOSet().stream()
+        EntityIsPersonDto entityIsPersonDto = workItemDTO.getEntityIsPersonDTOSet().stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
-        PersonDTO personChosen = entityIsPersonDTO.getPersonContext().stream().findFirst().get();
+        PersonDto personChosen = entityIsPersonDto.getPersonContext().stream().findFirst().get();
 
-        entityIsPersonDTO.setPersonChosen(personChosen);
+        entityIsPersonDto.setPersonChosen(personChosen);
 
         ActivityWorkItem activityWorkItem = edi.executeActivityWorkItem(workItemDTO);
 
         fakeLogin(USERNAME_2, USERNAME_2);
 
-        List<ActivityWorkItemDTO> logWorkItems = edi.getLogActivityWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
+        List<ActivityWorkItemDto> logWorkItems = edi.getLogActivityWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceActivityWorkItemDTO workItemToTest = (ResourceActivityWorkItemDTO) logWorkItems.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
@@ -401,12 +401,12 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         fillWorkItem(workItemDTO);
 
-        EntityIsPersonDTO entityIsPersonDTO = workItemDTO.getEntityIsPersonDTOSet().stream()
+        EntityIsPersonDto entityIsPersonDto = workItemDTO.getEntityIsPersonDTOSet().stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
 
-        PersonDTO personChosen = entityIsPersonDTO.getPersonContext().stream().findFirst().get();
+        PersonDto personChosen = entityIsPersonDto.getPersonContext().stream().findFirst().get();
 
-        entityIsPersonDTO.setPersonChosen(personChosen);
+        entityIsPersonDto.setPersonChosen(personChosen);
 
         GoalWorkItem activityWorkItem = edi.executeGoalWorkItem(workItemDTO);
 
@@ -424,7 +424,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     public void getActivityWorkItemLogContainsExecutionUser() throws Exception {
         fakeLogin(USERNAME_1, USERNAME_1);
 
-        Set<ActivityWorkItemDTO> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
+        Set<ActivityWorkItemDto> workItemDTOList = edi.getPendingActivityWorkItemSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceActivityWorkItemDTO workItemDTO = (ResourceActivityWorkItemDTO) workItemDTOList.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));
@@ -435,7 +435,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
 
         fakeLogin(USERNAME_2, USERNAME_2);
 
-        List<ActivityWorkItemDTO> logWorkItems = edi.getLogActivityWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
+        List<ActivityWorkItemDto> logWorkItems = edi.getLogActivityWorkItemDTOSet(SPEC_ID, WORKFLOW_ID);
 
         ResourceActivityWorkItemDTO workItemToTest = (ResourceActivityWorkItemDTO) logWorkItems.stream()
                 .findFirst().orElseThrow(() -> new RMException(RMErrorType.NO_WORKITEMS_AVAILABLE));

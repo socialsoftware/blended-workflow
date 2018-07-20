@@ -30,7 +30,7 @@ public class ActivityWorkItemController {
 
 	@RequestMapping(value = "/next", method = RequestMethod.GET)
 	public ResponseEntity<ActivityWorkItemDto[]> getNextActivityWorkItems(@PathVariable String specId,
-			@PathVariable String instanceName) {
+																		  @PathVariable String instanceName) {
 		logger.debug("getNextActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
@@ -45,12 +45,12 @@ public class ActivityWorkItemController {
 
 	@RequestMapping(value = "/log", method = RequestMethod.GET)
 	public ResponseEntity<ActivityWorkItemDto[]> getLogActivityWorkItems(@PathVariable String specId,
-			@PathVariable String instanceName) {
+																		 @PathVariable String instanceName) {
 		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
-		ActivityWorkItemDTO[] instances = edi.getLogActivityWorkItemDTOSet(specId, instanceName).stream()
-				.toArray(ActivityWorkItemDTO[]::new);
+		ActivityWorkItemDto[] instances = edi.getLogActivityWorkItemDTOSet(specId, instanceName).stream()
+				.toArray(ActivityWorkItemDto[]::new);
 
 		return new ResponseEntity<>(instances, HttpStatus.OK);
 	}

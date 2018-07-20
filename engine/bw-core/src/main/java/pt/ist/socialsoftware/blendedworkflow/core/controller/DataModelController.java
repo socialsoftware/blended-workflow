@@ -75,7 +75,7 @@ public class DataModelController {
 
 	@RequestMapping(value = "/products/{path}/", method = RequestMethod.GET)
 	public ResponseEntity<ProductDto> getProduct(@PathVariable("specId") String specId,
-			@PathVariable("path") String path) {
+												 @PathVariable("path") String path) {
 		log.debug("getProduct path:{}", path);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -87,7 +87,7 @@ public class DataModelController {
 
 	@RequestMapping(value = "/entities/{entityName}", method = RequestMethod.GET)
 	public ResponseEntity<EntityDto> getEntityByName(@PathVariable("specId") String specId,
-			@PathVariable("entityName") String entityName) {
+													 @PathVariable("entityName") String entityName) {
 		log.debug("getProduct entityName:{}", entityName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -111,7 +111,7 @@ public class DataModelController {
 
 	@RequestMapping(value = "/entities", method = RequestMethod.POST)
 	public ResponseEntity<EntityDto> createEntity(@PathVariable("specId") String specId,
-			@RequestBody EntityDto entDTO) {
+												  @RequestBody EntityDto entDTO) {
 		log.debug("createEntity specId:{}, name:{}, exists:{}, mandatory:{}", specId, entDTO.getName(),
 				entDTO.getExists(), entDTO.isMandatory());
 
@@ -147,7 +147,7 @@ public class DataModelController {
 
 	@RequestMapping(value = "/attributes", method = RequestMethod.POST)
 	public ResponseEntity<AttributeDto> createAttribute(@PathVariable("specId") String specId,
-			@RequestBody AttributeDto attDTO) {
+														@RequestBody AttributeDto attDTO) {
 		log.debug("createAttribute entityExtId:{},  name:{}, type:{}", attDTO.getEntityExtId(), attDTO.getName(),
 				attDTO.getType());
 
@@ -160,7 +160,7 @@ public class DataModelController {
 
 	@RequestMapping(value = "/relations", method = RequestMethod.POST)
 	public ResponseEntity<RelationDto> createRelation(@PathVariable("specId") String specId,
-			@RequestBody RelationDto relDTO) {
+													  @RequestBody RelationDto relDTO) {
 		log.debug("createRelation {}, {}, {}", relDTO.getName(), relDTO.getEntOneName(), relDTO.getEntTwoName());
 
 		DesignInterface adi = this.factory.createDesignInterface();

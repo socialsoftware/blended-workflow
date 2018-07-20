@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDto;
 
 public class EntityInstance extends EntityInstance_Base {
 	private static Logger logger = LoggerFactory.getLogger(EntityInstance.class);
@@ -199,15 +199,15 @@ public class EntityInstance extends EntityInstance_Base {
 	}
 
 	@Override
-	public ProductInstanceDTO getDTO() {
-		ProductInstanceDTO productInstanceDTO = new ProductInstanceDTO();
-		productInstanceDTO.setProduct(getEntity().getDTO());
-		productInstanceDTO.setExternalId(getExternalId());
-		productInstanceDTO.setId(getId());
-		productInstanceDTO.setPath(getEntity().getName());
-		productInstanceDTO.setValue(getEntity().getName() + "[" + getId() + "]");
+	public ProductInstanceDto getDTO() {
+		ProductInstanceDto productInstanceDto = new ProductInstanceDto();
+		productInstanceDto.setProduct(getEntity().getDTO());
+		productInstanceDto.setExternalId(getExternalId());
+		productInstanceDto.setId(getId());
+		productInstanceDto.setPath(getEntity().getName());
+		productInstanceDto.setValue(getEntity().getName() + "[" + getId() + "]");
 
-		return productInstanceDTO;
+		return productInstanceDto;
 	}
 
 	public Set<EntityInstance> getEntityInstancesByRolename(String rolename) {

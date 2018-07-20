@@ -11,16 +11,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ResourceGoalWorkItemDTO extends GoalWorkItemDto implements ResourceWorkItemDTO {
-    private Set<EntityIsPersonDTO> entityIsPersonDTOSet;
-    private UserDTO executionUser;
+    private Set<EntityIsPersonDto> _entityIsPersonDtoSet;
+    private UserDto executionUser;
 
     public static ResourceGoalWorkItemDTO createGoalWorkItemDTO(WorkflowInstance workflowInstance, Goal goal) {
         ResourceGoalWorkItemDTO resourceGoalWorkItemDTO = new ResourceGoalWorkItemDTO(
                 GoalWorkItemDto.createGoalWorkItemDTO(workflowInstance, goal));
         ResourceModel resourceModel = goal.getGoalModel().getSpecification().getResourceModel();
 
-        Set<EntityIsPersonDTO> entityIsPersonDTOSet = new HashSet<>();
-        Set<PersonDTO> personContext = resourceModel.getPersonSet().stream().map(Person::getDTO).collect(Collectors.toSet());
+        Set<EntityIsPersonDto> entityIsPersonDtoSet = new HashSet<>();
+        Set<PersonDto> personContext = resourceModel.getPersonSet().stream().map(Person::getDTO).collect(Collectors.toSet());
 
         goal.getSuccessConditionSet().stream()
                 .filter(DefEntityCondition.class::isInstance)
@@ -28,8 +28,8 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDto implements Resource
                 .map(DefEntityCondition::getEntities)
                 .flatMap(Collection::stream)
                 .filter(entity -> resourceModel.checkEntityIsPerson(entity))
-                .forEach(entity -> entityIsPersonDTOSet.add(new EntityIsPersonDTO(entity.getDTO(), personContext)));
-        resourceGoalWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDTOSet);
+                .forEach(entity -> entityIsPersonDtoSet.add(new EntityIsPersonDto(entity.getDTO(), personContext)));
+        resourceGoalWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDtoSet);
 
         return resourceGoalWorkItemDTO;
     }
@@ -37,16 +37,16 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDto implements Resource
     public static ResourceGoalWorkItemDTO fillGoalWorkItemDTO(GoalWorkItemDto goalWorkItemDTO, GoalWorkItem goalWorkItem) {
         ResourceGoalWorkItemDTO resourceGoalWorkItemDTO = new ResourceGoalWorkItemDTO(goalWorkItemDTO);
 
-        Set<EntityIsPersonDTO> entityIsPersonDTOSet = new HashSet<>();
+        Set<EntityIsPersonDto> entityIsPersonDtoSet = new HashSet<>();
 
         goalWorkItem.getPostConditionSet().stream()
                 .flatMap(postWorkItemArgument -> postWorkItemArgument.getProductInstanceSet().stream())
                 .filter(EntityInstance.class::isInstance)
                 .map(EntityInstance.class::cast)
                 .filter(entityInstance -> entityInstance.getPerson() != null)
-                .forEach(entityInstance -> entityIsPersonDTOSet.add(new EntityIsPersonDTO(entityInstance.getDTO(), entityInstance.getPerson().getDTO())));
+                .forEach(entityInstance -> entityIsPersonDtoSet.add(new EntityIsPersonDto(entityInstance.getDTO(), entityInstance.getPerson().getDTO())));
 
-        resourceGoalWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDTOSet);
+        resourceGoalWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDtoSet);
 
         resourceGoalWorkItemDTO.setExecutionUser(goalWorkItem.getExecutionUser().getDTO());
 
@@ -64,28 +64,28 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDto implements Resource
         setPreArguments(goalWorkItemDTO.getPreArguments());
         setPostArguments(goalWorkItemDTO.getPostArguments());
 
-        entityIsPersonDTOSet = new HashSet<>();
+        _entityIsPersonDtoSet = new HashSet<>();
     }
 
     
 
     @Override
-    public Set<EntityIsPersonDTO> getEntityIsPersonDTOSet() {
-        return entityIsPersonDTOSet;
+    public Set<EntityIsPersonDto> getEntityIsPersonDTOSet() {
+        return _entityIsPersonDtoSet;
     }
 
     @Override
-    public void setEntityIsPersonDTOSet(Set<EntityIsPersonDTO> entityIsPersonDTOSet) {
-        this.entityIsPersonDTOSet = entityIsPersonDTOSet;
+    public void setEntityIsPersonDTOSet(Set<EntityIsPersonDto> entityIsPersonDtoSet) {
+        this._entityIsPersonDtoSet = entityIsPersonDtoSet;
     }
 
     @Override
-    public UserDTO getExecutionUser() {
+    public UserDto getExecutionUser() {
         return executionUser;
     }
 
     @Override
-    public void setExecutionUser(UserDTO executionUser) {
+    public void setExecutionUser(UserDto executionUser) {
         this.executionUser = executionUser;
     }
 
@@ -93,17 +93,17 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDto implements Resource
     public GoalWorkItem executeGoal(WorkflowInstance workflowInstance, Goal goal) {
         GoalWorkItem goalWorkItem = super.executeGoal(workflowInstance, goal);
 
-        for (EntityIsPersonDTO entityIsPersonDTO : getEntityIsPersonDTOSet()) {
+        for (EntityIsPersonDto entityIsPersonDto : getEntityIsPersonDTOSet()) {
             goalWorkItem.getPostConditionSet().stream()
                     .map(PostWorkItemArgument::getProductInstanceSet)
                     .flatMap(Collection::stream)
                     .filter(productInstance -> productInstance instanceof EntityInstance)
-                    .filter(productInstance -> entityIsPersonDTO.getEntity().getName().equals(productInstance.getEntity().getName()))
+                    .filter(productInstance -> entityIsPersonDto.getEntity().getName().equals(productInstance.getEntity().getName()))
                     .filter(productInstance -> productInstance.getEntity().getResourceModel().checkEntityIsPerson(productInstance.getProduct()))
                     .map(productInstance -> (EntityInstance) productInstance)
                     .forEach(entityInstance -> {
-                        if (entityIsPersonDTO.getPersonChosen() != null) {
-                            Person person = entityInstance.getEntity().getResourceModel().getPerson(entityIsPersonDTO.getPersonChosen().getName());
+                        if (entityIsPersonDto.getPersonChosen() != null) {
+                            Person person = entityInstance.getEntity().getResourceModel().getPerson(entityIsPersonDto.getPersonChosen().getName());
                             entityInstance.setPerson(person);
                         } else {
                             entityInstance.setPerson(new Person(
@@ -121,14 +121,14 @@ public class ResourceGoalWorkItemDTO extends GoalWorkItemDto implements Resource
     @Override
     public String print() {
         String result = super.print();
-        for (EntityIsPersonDTO entityIsPersonDTO : getEntityIsPersonDTOSet()) {
-            result = result + "EIP ENTITY: " + ((entityIsPersonDTO.getEntity() != null) ? entityIsPersonDTO.getEntity().getName() : "") + "\r\n";
+        for (EntityIsPersonDto entityIsPersonDto : getEntityIsPersonDTOSet()) {
+            result = result + "EIP ENTITY: " + ((entityIsPersonDto.getEntity() != null) ? entityIsPersonDto.getEntity().getName() : "") + "\r\n";
             result = result + "EIP PERSON CONTEXT: "
-                    + entityIsPersonDTO.getPersonContext().stream()
-                    .map(PersonDTO::getName)
+                    + entityIsPersonDto.getPersonContext().stream()
+                    .map(PersonDto::getName)
                     .collect(Collectors.joining(";"))
                     + "\r\n";
-            result = result + "EIP PERSON CHOSEN: " + ((entityIsPersonDTO.getPersonChosen() != null) ? entityIsPersonDTO.getPersonChosen().getName() : "") + "\r\n";
+            result = result + "EIP PERSON CHOSEN: " + ((entityIsPersonDto.getPersonChosen() != null) ? entityIsPersonDto.getPersonChosen().getName() : "") + "\r\n";
         }
         return result;
     }

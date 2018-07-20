@@ -185,15 +185,15 @@ public class Entity extends Entity_Base {
 
 	@Override
 	public EntityDto getDTO() {
-		EntityDto entityDTO = new EntityDto();
-		entityDTO.setSpecId(getDataModel().getSpecification().getSpecId());
-		entityDTO.setExtId(getExternalId());
-		entityDTO.setProductType(getProductType().name());
-		entityDTO.setName(getName());
-		entityDTO.setExists(getExists());
-		entityDTO.setMandatory(getMandatory());
+		EntityDto entityDto = new EntityDto();
+		entityDto.setSpecId(getDataModel().getSpecification().getSpecId());
+		entityDto.setExtId(getExternalId());
+		entityDto.setProductType(getProductType().name());
+		entityDto.setName(getName());
+		entityDto.setExists(getExists());
+		entityDto.setMandatory(getMandatory());
 
-		return entityDTO;
+		return entityDto;
 	}
 
 	public Set<MulCondition> getMultConditions() {

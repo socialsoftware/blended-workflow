@@ -64,7 +64,7 @@ public class GoalWorkItemDto extends WorkItemDTO {
 				}
 
 				// create definition group instances
-				Set<DefinitionGroupInstanceDTO> definitionGroupInstances = new HashSet<DefinitionGroupInstanceDTO>();
+				Set<DefinitionGroupInstanceDto> definitionGroupInstances = new HashSet<DefinitionGroupInstanceDto>();
 				definitionGroup.setDefinitionGroupInstanceSet(definitionGroupInstances);
 			}
 		}
@@ -112,7 +112,7 @@ public class GoalWorkItemDto extends WorkItemDTO {
 				}
 
 				// create definition group instances
-				Set<DefinitionGroupInstanceDTO> definitionGroupInstances = new HashSet<DefinitionGroupInstanceDTO>();
+				Set<DefinitionGroupInstanceDto> definitionGroupInstances = new HashSet<DefinitionGroupInstanceDto>();
 				definitionGroup.setDefinitionGroupInstanceSet(definitionGroupInstances);
 			}
 

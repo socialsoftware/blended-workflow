@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PersonDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PersonDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,8 +67,8 @@ public class Person extends Person_Base {
                 .anyMatch(position -> name.equals(position.getName()));
     }
 
-    public PersonDTO getDTO() {
-        PersonDTO personDTO = new PersonDTO(
+    public PersonDto getDTO() {
+        PersonDto personDTO = new PersonDto(
                 getResourceModel().getSpec().getSpecId(),
                 getName(),
                 getDescription()

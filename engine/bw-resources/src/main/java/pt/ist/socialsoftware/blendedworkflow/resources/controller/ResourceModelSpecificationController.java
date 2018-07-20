@@ -18,11 +18,11 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.Position;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.CapabilityDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PositionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RoleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UnitDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.CapabilityDto;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PersonDto;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PositionDto;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RoleDto;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UnitDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.utils.ResourcesFactory;
 
 @RestController
@@ -45,19 +45,19 @@ public class ResourceModelSpecificationController {
 	}
 
 	@RequestMapping(value = "/capabilities", method = RequestMethod.POST)
-	public ResponseEntity<CapabilityDTO> createCapability(@PathVariable("specId") String specId,
-			@RequestBody CapabilityDTO capabilityDTO) {
-		log.debug("CreateCapability: {}, {}, {}", specId, capabilityDTO.getName(), capabilityDTO.getDescription());
+	public ResponseEntity<CapabilityDto> createCapability(@PathVariable("specId") String specId,
+                                                          @RequestBody CapabilityDto capabilityDto) {
+		log.debug("CreateCapability: {}, {}, {}", specId, capabilityDto.getName(), capabilityDto.getDescription());
 
 		DesignResourcesInterface designer = this.factory.createDesignInterface();
 
-		Capability capability = designer.createCapability(capabilityDTO);
+		Capability capability = designer.createCapability(capabilityDto);
 
 		return new ResponseEntity<>(capability.getDTO(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/roles", method = RequestMethod.POST)
-	public ResponseEntity<RoleDTO> createRole(@PathVariable("specId") String specId, @RequestBody RoleDTO roleDTO) {
+	public ResponseEntity<RoleDto> createRole(@PathVariable("specId") String specId, @RequestBody RoleDto roleDTO) {
 		log.debug("CreateRole: {}, {}, {}", specId, roleDTO.getName(), roleDTO.getDescription());
 
 		DesignResourcesInterface designer = this.factory.createDesignInterface();
@@ -68,7 +68,7 @@ public class ResourceModelSpecificationController {
 	}
 
 	@RequestMapping(value = "/units", method = RequestMethod.POST)
-	public ResponseEntity<UnitDTO> createUnit(@PathVariable("specId") String specId, @RequestBody UnitDTO unitDTO) {
+	public ResponseEntity<UnitDto> createUnit(@PathVariable("specId") String specId, @RequestBody UnitDto unitDTO) {
 		log.debug("CreateUnit: {}, {}, {}", specId, unitDTO.getName(), unitDTO.getDescription());
 
 		DesignResourcesInterface designer = this.factory.createDesignInterface();
@@ -79,8 +79,8 @@ public class ResourceModelSpecificationController {
 	}
 
 	@RequestMapping(value = "/positions", method = RequestMethod.POST)
-	public ResponseEntity<PositionDTO> createPosition(@PathVariable("specId") String specId,
-			@RequestBody PositionDTO positionDTO) {
+	public ResponseEntity<PositionDto> createPosition(@PathVariable("specId") String specId,
+													  @RequestBody PositionDto positionDTO) {
 		log.debug("CreatePosition: {}, {}", specId, positionDTO.getName());
 
 		DesignResourcesInterface designer = this.factory.createDesignInterface();
@@ -91,8 +91,8 @@ public class ResourceModelSpecificationController {
 	}
 
 	@RequestMapping(value = "/positions/init", method = RequestMethod.POST)
-	public ResponseEntity<PositionDTO> initPosition(@PathVariable("specId") String specId,
-			@RequestBody PositionDTO positionDTO) {
+	public ResponseEntity<PositionDto> initPosition(@PathVariable("specId") String specId,
+													@RequestBody PositionDto positionDTO) {
 		log.debug("InitPosition: {}, {}", specId, positionDTO.getName());
 
 		DesignResourcesInterface designer = this.factory.createDesignInterface();
@@ -103,8 +103,8 @@ public class ResourceModelSpecificationController {
 	}
 
 	@RequestMapping(value = "/persons", method = RequestMethod.POST)
-	public ResponseEntity<PersonDTO> createPersons(@PathVariable("specId") String specId,
-			@RequestBody PersonDTO personDTO) {
+	public ResponseEntity<PersonDto> createPersons(@PathVariable("specId") String specId,
+												   @RequestBody PersonDto personDTO) {
 		log.debug("CreatePerson: {}, {}", specId, personDTO.getName());
 
 		DesignResourcesInterface designer = this.factory.createDesignInterface();

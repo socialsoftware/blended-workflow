@@ -5,7 +5,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
 
 import java.util.ArrayList;
@@ -31,10 +31,10 @@ public class UserTest extends TeardownRollbackTest {
         bw = BlendedWorkflow.getInstance();
         designer = DesignResourcesInterface.getInstance();
 
-        spec1 = pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance().createSpecification(new SpecDTO(SPEC_ID_1, SPEC_NAME));
+        spec1 = pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance().createSpecification(new SpecDto(SPEC_ID_1, SPEC_NAME));
         resourceModel1 = designer.createResourceModel(spec1.getSpecId());
 
-        spec2 = pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance().createSpecification(new SpecDTO(SPEC_ID_2, SPEC_NAME));
+        spec2 = pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance().createSpecification(new SpecDto(SPEC_ID_2, SPEC_NAME));
         resourceModel2 = designer.createResourceModel(spec2.getSpecId());
     }
 

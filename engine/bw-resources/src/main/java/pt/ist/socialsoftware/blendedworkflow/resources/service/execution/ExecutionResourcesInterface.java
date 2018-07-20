@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
@@ -62,7 +62,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	}
 
 	@Override
-	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDTO activityWorkItemDTO) {
+	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDto activityWorkItemDTO) {
 		ActivityWorkItem activityWI = super.executeActivityWorkItem(activityWorkItemDTO);
 
 		Specification spec = BlendedWorkflow.getInstance().getSpecById(activityWorkItemDTO.getSpecId())
@@ -138,10 +138,10 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	}
 
 	@Override
-	public Set<ActivityWorkItemDTO> getPendingActivityWorkItemSet(String specId, String instanceName) {
+	public Set<ActivityWorkItemDto> getPendingActivityWorkItemSet(String specId, String instanceName) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
-		Set<ActivityWorkItemDTO> activityWorkItemDTOs = new HashSet<>();
+		Set<ActivityWorkItemDto> activityWorkItemDTOs = new HashSet<>();
 
 		for (Activity activity : getPendingActivitySet(workflowInstance)) {
 			activityWorkItemDTOs.add(ResourceActivityWorkItemDTO.createActivityWorkItemDTO(workflowInstance, activity));
@@ -164,7 +164,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	}
 
 	@Override
-	public List<ActivityWorkItemDTO> getLogActivityWorkItemDTOSet(String specId, String instanceName) {
+	public List<ActivityWorkItemDto> getLogActivityWorkItemDTOSet(String specId, String instanceName) {
 		return getLogActivityWorkItemSet(specId, instanceName).stream()
 				.map(activityWorkItem -> ResourceActivityWorkItemDTO.fillActivityWorkItemDTO(activityWorkItem.getDTO(), activityWorkItem))
 				.collect(Collectors.toList());
