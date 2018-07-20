@@ -7,7 +7,7 @@ Entity Patient {
 }         
                       
 Entity Episode mandatory {
-	reserveDate : Date 
+	reserveDate : Date
 	checkin : Boolean
 	checkout : Boolean dependsOn Episode.report.details          
 }

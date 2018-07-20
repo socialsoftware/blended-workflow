@@ -7,7 +7,6 @@ export class DataModel extends React.Component {
         super(props);
 
         this.state = {
-            specId: props.match.params.specId,
             dataModel: {}
         };
     }
@@ -15,7 +14,7 @@ export class DataModel extends React.Component {
     componentDidMount() {
         const service = new RepositoryService();
 
-        service.getDataModel(this.state.specId).then(response => {
+        service.getDataModel(this.props.match.params.specId).then(response => {
             this.setState({ dataModel: response.data }
             )
         });

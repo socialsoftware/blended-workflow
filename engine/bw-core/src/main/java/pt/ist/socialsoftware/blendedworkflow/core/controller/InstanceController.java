@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.core.controller;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,8 +18,6 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowIns
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
-import javax.inject.Inject;
-
 @RestController
 @RequestMapping(value = "/specs/{specId}/instances")
 public class InstanceController {
@@ -29,7 +29,7 @@ public class InstanceController {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<WorkflowInstanceDto[]> getWorkflowInstances(@PathVariable("specId") String specId) {
 		log.debug("getWorkflowInstances specId:{}", specId);
-		ExecutionInterface edi = factory.createExecutionInterface();
+		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		WorkflowInstanceDto[] instances = edi.getWorkflowInstances(specId).stream().map(wi -> wi.getDTO())
 				.sorted((wi1, wi2) -> wi1.getName().compareTo(wi2.getName()))
@@ -40,9 +40,9 @@ public class InstanceController {
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET)
 	public ResponseEntity<WorkflowInstanceDto> getWorkflowInstance(@PathVariable("specId") String specId,
-                                                                   @PathVariable("name") String name) {
+			@PathVariable("name") String name) {
 		log.debug("getWorkflowInstance specId:{}, name:{}", specId, name);
-		ExecutionInterface edi = factory.createExecutionInterface();
+		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		WorkflowInstance workflowInstance = edi.getWorkflowInstance(specId, name);
 
@@ -51,9 +51,9 @@ public class InstanceController {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<WorkflowInstanceDto> createWorkflowInstance(@PathVariable("specId") String specId,
-                                                                      @RequestBody WorkflowInstanceDto workflowInstanceDto) {
+			@RequestBody WorkflowInstanceDto workflowInstanceDto) {
 		log.debug("createWorkflowInstance specId:{}, name:{}", specId, workflowInstanceDto.getName());
-		ExecutionInterface edi = factory.createExecutionInterface();
+		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		WorkflowInstance workflowInstance = edi.createWorkflowInstance(specId, workflowInstanceDto.getName());
 
@@ -64,7 +64,7 @@ public class InstanceController {
 	public ResponseEntity<String> deleteWorkflowInstance(@PathVariable("specId") String specId,
 			@PathVariable("name") String name) {
 		log.debug("deleteWorkflowInstance specId:{}, name:{}", specId, name);
-		ExecutionInterface edi = factory.createExecutionInterface();
+		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		edi.deleteWorkflowInstance(specId, name);
 

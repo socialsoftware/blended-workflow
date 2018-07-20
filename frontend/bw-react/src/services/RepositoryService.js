@@ -5,7 +5,9 @@ export class RepositoryService {
         this.axios = axios.create({
             baseURL: 'http://localhost:8080',
             timeout: 1000,
-            headers: { 'X-Custom-Header': 'BlendedWorkflow' }
+            headers: {
+                'X-Custom-Header': 'BlendedWorkflow'
+            }
         });
     }
 
@@ -52,16 +54,14 @@ export class RepositoryService {
     }
 
     createWorkflowInstance(specId, name) {
-        // var url = baseUrl + "specs/" + specId + "/instances";
-        // return $http.post(url, {
-        // 	"specId" : specId,
-        // 	"name" : name
-        // });
+        return this.axios.post("/specs/" + specId + "/instances", {
+            "specId": specId,
+            "name": name
+        });
     }
 
     deleteWorkflowInstance(specId, name) {
-        // var url = baseUrl + "specs/" + specId + "/instances/" + name;
-        // return $http.delete(url);
+        return this.axios.delete("/specs/" + specId + "/instances/" + name);
     }
 
 }
