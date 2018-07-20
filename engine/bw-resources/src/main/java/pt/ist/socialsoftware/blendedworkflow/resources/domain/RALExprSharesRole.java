@@ -2,7 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RoleDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RoleDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
 import java.util.*;
@@ -71,7 +71,7 @@ public class RALExprSharesRole extends RALExprSharesRole_Base implements RALExpr
     @Override
     public SetOfRequiredResources getSetOfRequiredResources() {
         SetOfRequiredResources set = getPersonExpr().getSetOfRequiredResources();
-        List<RoleDTO> roles = null;
+        List<RoleDto> roles = null;
         if (getPersonExpr() instanceof RALExprIsPerson) {
             Person person = ((RALExprIsPerson) getPersonExpr()).getPerson();
 

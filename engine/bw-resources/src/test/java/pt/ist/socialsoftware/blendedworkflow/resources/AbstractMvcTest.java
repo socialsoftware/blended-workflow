@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UserDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UserDto;
 
 import java.io.IOException;
 
@@ -42,7 +42,7 @@ public abstract class AbstractMvcTest extends TeardownRollbackTest {
     }
 
     protected ResultActions login(String username, String password) throws Exception {
-        final UserDTO auth = new UserDTO();
+        final UserDto auth = new UserDto();
         auth.setUsername(username);
         auth.setPassword(password);
         return mockMvc.perform(

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
@@ -27,20 +27,20 @@ public class InstanceController {
 	private ModulesFactory factory;
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public ResponseEntity<WorkflowInstanceDTO[]> getWorkflowInstances(@PathVariable("specId") String specId) {
+	public ResponseEntity<WorkflowInstanceDto[]> getWorkflowInstances(@PathVariable("specId") String specId) {
 		log.debug("getWorkflowInstances specId:{}", specId);
 		ExecutionInterface edi = factory.createExecutionInterface();
 
-		WorkflowInstanceDTO[] instances = edi.getWorkflowInstances(specId).stream().map(wi -> wi.getDTO())
+		WorkflowInstanceDto[] instances = edi.getWorkflowInstances(specId).stream().map(wi -> wi.getDTO())
 				.sorted((wi1, wi2) -> wi1.getName().compareTo(wi2.getName()))
-				.toArray(size -> new WorkflowInstanceDTO[size]);
+				.toArray(size -> new WorkflowInstanceDto[size]);
 
 		return new ResponseEntity<>(instances, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET)
-	public ResponseEntity<WorkflowInstanceDTO> getWorkflowInstance(@PathVariable("specId") String specId,
-			@PathVariable("name") String name) {
+	public ResponseEntity<WorkflowInstanceDto> getWorkflowInstance(@PathVariable("specId") String specId,
+                                                                   @PathVariable("name") String name) {
 		log.debug("getWorkflowInstance specId:{}, name:{}", specId, name);
 		ExecutionInterface edi = factory.createExecutionInterface();
 
@@ -50,12 +50,12 @@ public class InstanceController {
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public ResponseEntity<WorkflowInstanceDTO> createWorkflowInstance(@PathVariable("specId") String specId,
-			@RequestBody WorkflowInstanceDTO workflowInstanceDTO) {
-		log.debug("createWorkflowInstance specId:{}, name:{}", specId, workflowInstanceDTO.getName());
+	public ResponseEntity<WorkflowInstanceDto> createWorkflowInstance(@PathVariable("specId") String specId,
+                                                                      @RequestBody WorkflowInstanceDto workflowInstanceDto) {
+		log.debug("createWorkflowInstance specId:{}, name:{}", specId, workflowInstanceDto.getName());
 		ExecutionInterface edi = factory.createExecutionInterface();
 
-		WorkflowInstance workflowInstance = edi.createWorkflowInstance(specId, workflowInstanceDTO.getName());
+		WorkflowInstance workflowInstance = edi.createWorkflowInstance(specId, workflowInstanceDto.getName());
 
 		return new ResponseEntity<>(workflowInstance.getDTO(), HttpStatus.CREATED);
 	}

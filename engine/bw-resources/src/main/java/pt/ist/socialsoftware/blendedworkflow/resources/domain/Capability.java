@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.CapabilityDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.CapabilityDto;
 
 public class Capability extends Capability_Base {
     private static Logger logger = LoggerFactory.getLogger(Capability.class);
@@ -43,8 +43,8 @@ public class Capability extends Capability_Base {
                 .anyMatch(capability -> name.equals(capability.getName()));
     }
 
-    public CapabilityDTO getDTO() {
-        return new CapabilityDTO(getResourceModel().getSpec().getSpecId(),
+    public CapabilityDto getDTO() {
+        return new CapabilityDto(getResourceModel().getSpec().getSpecId(),
                 getName(),
                 getDescription());
     }

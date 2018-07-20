@@ -7,9 +7,9 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance;
 
 public class EntityInstanceContextDto {
-	private ProductInstanceDTO entityInstance;
+	private ProductInstanceDto entityInstance;
 	private MulConditionDto mulConditionDTO;
-	private Set<ProductInstanceDTO> pathValueSet;
+	private Set<ProductInstanceDto> pathValueSet;
 	private String pathValues;
 
 	public static EntityInstanceContextDto createEntityInstanceContextDTO(EntityContextDto entityContextDTO,
@@ -17,17 +17,17 @@ public class EntityInstanceContextDto {
 		EntityInstanceContextDto entityContextInstanceDTO = new EntityInstanceContextDto();
 
 		entityContextInstanceDTO.setEntityInstance(entityInstance.getDTO());
-		entityContextInstanceDTO.setPathValueSet(new HashSet<ProductInstanceDTO>());
+		entityContextInstanceDTO.setPathValueSet(new HashSet<ProductInstanceDto>());
 		entityContextInstanceDTO.setMulConditionDTO(entityContextDTO.getMulCondition());
 		entityContextInstanceDTO.setPathValues("");
 		for (DefPathConditionDto defPathConditionDTO : entityContextDTO.getDefPathConditionSet()) {
 			for (ProductInstance productInstance : entityInstance
 					.getProductInstancesByPath(defPathConditionDTO.getPath())) {
-				ProductInstanceDTO productInstanceDTO = productInstance.getDTO();
-				productInstanceDTO.setPath(defPathConditionDTO.getPath());
-				entityContextInstanceDTO.getPathValueSet().add(productInstanceDTO);
+				ProductInstanceDto productInstanceDto = productInstance.getDTO();
+				productInstanceDto.setPath(defPathConditionDTO.getPath());
+				entityContextInstanceDTO.getPathValueSet().add(productInstanceDto);
 				entityContextInstanceDTO
-						.setPathValues(productInstanceDTO.getValue() + ";" + entityContextInstanceDTO.getPathValues());
+						.setPathValues(productInstanceDto.getValue() + ";" + entityContextInstanceDTO.getPathValues());
 			}
 		}
 
@@ -37,19 +37,19 @@ public class EntityInstanceContextDto {
 	public EntityInstanceContextDto() {
 	}
 
-	public ProductInstanceDTO getEntityInstance() {
+	public ProductInstanceDto getEntityInstance() {
 		return entityInstance;
 	}
 
-	public void setEntityInstance(ProductInstanceDTO entityInstance) {
+	public void setEntityInstance(ProductInstanceDto entityInstance) {
 		this.entityInstance = entityInstance;
 	}
 
-	public Set<ProductInstanceDTO> getPathValueSet() {
+	public Set<ProductInstanceDto> getPathValueSet() {
 		return pathValueSet;
 	}
 
-	public void setPathValueSet(Set<ProductInstanceDTO> pathValueSet) {
+	public void setPathValueSet(Set<ProductInstanceDto> pathValueSet) {
 		this.pathValueSet = pathValueSet;
 	}
 

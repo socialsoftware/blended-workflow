@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PositionDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PositionDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,8 +116,8 @@ public class Position extends Position_Base {
                 .anyMatch(position -> name.equals(position.getName()));
     }
 
-    public PositionDTO getDTO() {
-        PositionDTO positionDTO = new PositionDTO(
+    public PositionDto getDTO() {
+        PositionDto positionDTO = new PositionDto(
                 getResourceModel().getSpec().getSpecId(),
                 getName(),
                 getUnit().getName(),

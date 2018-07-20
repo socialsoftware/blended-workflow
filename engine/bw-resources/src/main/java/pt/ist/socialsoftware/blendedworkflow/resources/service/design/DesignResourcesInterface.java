@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
@@ -53,17 +53,17 @@ public class DesignResourcesInterface extends DesignInterface {
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
-	public Capability createCapability(CapabilityDTO capabilityDTO) {
-		Specification spec = getSpecBySpecId(capabilityDTO.getSpecId());
+	public Capability createCapability(CapabilityDto capabilityDto) {
+		Specification spec = getSpecBySpecId(capabilityDto.getSpecId());
 
-		Capability capability = spec.getResourceModel().addCapability(capabilityDTO.getName(),
-				capabilityDTO.getDescription());
+		Capability capability = spec.getResourceModel().addCapability(capabilityDto.getName(),
+				capabilityDto.getDescription());
 
 		return capability;
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
-	public Role createRole(RoleDTO roleDTO) {
+	public Role createRole(RoleDto roleDTO) {
 		Specification spec = getSpecBySpecId(roleDTO.getSpecId());
 
 		Role role = spec.getResourceModel().addRole(roleDTO.getName(), roleDTO.getDescription());
@@ -72,7 +72,7 @@ public class DesignResourcesInterface extends DesignInterface {
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
-	public Unit createUnit(UnitDTO unitDTO) {
+	public Unit createUnit(UnitDto unitDTO) {
 		Specification spec = getSpecBySpecId(unitDTO.getSpecId());
 
 		Unit unit = spec.getResourceModel().addUnit(unitDTO.getName(), unitDTO.getDescription());
@@ -81,7 +81,7 @@ public class DesignResourcesInterface extends DesignInterface {
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
-	public Position createPosition(PositionDTO positionDTO) {
+	public Position createPosition(PositionDto positionDTO) {
 		Specification spec = getSpecBySpecId(positionDTO.getSpecId());
 
 		Position position = spec.getResourceModel().addPosition(positionDTO.getName(), positionDTO.getDescription(),
@@ -91,7 +91,7 @@ public class DesignResourcesInterface extends DesignInterface {
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
-	public Position initPosition(PositionDTO positionDTO) {
+	public Position initPosition(PositionDto positionDTO) {
 		Specification spec = getSpecBySpecId(positionDTO.getSpecId());
 
 		Position position = spec.getResourceModel().initPosition(positionDTO.getName(), positionDTO.getRoles(),
@@ -101,7 +101,7 @@ public class DesignResourcesInterface extends DesignInterface {
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
-	public Person createPerson(PersonDTO personDTO) {
+	public Person createPerson(PersonDto personDTO) {
 		Specification spec = getSpecBySpecId(personDTO.getSpecId());
 
 		Person person = spec.getResourceModel().addPerson(personDTO.getName(), personDTO.getDescription(),
@@ -118,7 +118,7 @@ public class DesignResourcesInterface extends DesignInterface {
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
-	public Entity relationEntityIsPerson(ResourceRelationDTO resourceRelationDTO) {
+	public Entity relationEntityIsPerson(ResourceRelationDto resourceRelationDTO) {
 		Specification spec = getSpecBySpecId(resourceRelationDTO.getSpecId());
 		return spec.getResourceModel().addEntityIsPerson(resourceRelationDTO.getEntityName());
 	}
@@ -138,19 +138,19 @@ public class DesignResourcesInterface extends DesignInterface {
 		}
 	}
 
-	private void addInformsForRule(String specId, String path, RALExpressionDTO expression) {
+	private void addInformsForRule(String specId, String path, RALExpressionDto expression) {
 		RALExpression ralExpression = createRALExpression(specId, expression);
 		Product product = getProduct(specId, path);
 		product.setInforms(ralExpression);
 	}
 
-	private void addResponsibleForRule(String specId, String path, RALExpressionDTO expression) {
+	private void addResponsibleForRule(String specId, String path, RALExpressionDto expression) {
 		RALExpression ralExpression = createRALExpression(specId, expression);
 		Product product = getProduct(specId, path);
 		product.setResponsibleFor(ralExpression);
 	}
 
-	public RALExpression createRALExpression(String specId, RALExpressionDTO ralExpressionDTO) {
+	public RALExpression createRALExpression(String specId, RALExpressionDto ralExpressionDTO) {
 		ResourceModel resourceModel = getResourceModelFromSpecId(specId);
 
 		RALExpression ralExpression = ralExpressionDTO.getRALExpresion(resourceModel, this, specId);
@@ -274,7 +274,7 @@ public class DesignResourcesInterface extends DesignInterface {
 	}
 
 	@Override
-	public Activity extractActivity(String specId, String newActivityName, String description, String sourceActivityName, Set<DefPathConditionDTO> successCondition) {
+	public Activity extractActivity(String specId, String newActivityName, String description, String sourceActivityName, Set<DefPathConditionDto> successCondition) {
 		Specification spec = getSpecBySpecId(specId);
 		Activity activity = getActivityByName(spec, sourceActivityName);
 

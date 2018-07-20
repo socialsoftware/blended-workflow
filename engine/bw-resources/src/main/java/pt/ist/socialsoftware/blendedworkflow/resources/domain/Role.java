@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RoleDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.RoleDto;
 
 public class Role extends Role_Base {
     private static Logger logger = LoggerFactory.getLogger(Role.class);
@@ -42,8 +42,8 @@ public class Role extends Role_Base {
                 .anyMatch(role -> name.equals(role.getName()));
     }
 
-    public RoleDTO getDTO() {
-        return new RoleDTO(getResourceModel().getSpec().getSpecId(),
+    public RoleDto getDTO() {
+        return new RoleDto(getResourceModel().getSpec().getSpecId(),
                 getName(),
                 getDescription());
     }

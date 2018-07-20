@@ -2,7 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PositionDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PositionDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
 
 import java.util.*;
@@ -41,7 +41,7 @@ public class RALExprReportsToPersonPosition extends RALExprReportsToPersonPositi
 
     @Override
     public SetOfRequiredResources getSetOfRequiredResources() {
-        List<PositionDTO> positions = null;
+        List<PositionDto> positions = null;
         if (getPersonExpr() instanceof RALExprIsPerson) {
             Person person = ((RALExprIsPerson) getPersonExpr()).getPerson();
 

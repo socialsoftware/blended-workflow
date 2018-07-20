@@ -127,11 +127,11 @@ public class RestDesignInterfaceTest {
 				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(attributeThreeDTO)))
 				.andExpect(status().isCreated());
 
-		RelationDto relationDTO = new RelationDto(SPEC_ID, "relation name", entityOneDTO.getExtId(), "first", "1",
+		RelationDto relationDto = new RelationDto(SPEC_ID, "relation name", entityOneDTO.getExtId(), "first", "1",
 				entityTwoDTO.getExtId(), "second", "*");
 		this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/relations", SPEC_ID)
-						.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(relationDTO)))
+						.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(relationDto)))
 				.andExpect(status().isCreated());
 
 		ExpressionDto expressionDTO = new ExpressionDto(SPEC_ID, ComparisonOperator.GREATER,

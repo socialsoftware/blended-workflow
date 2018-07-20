@@ -44,13 +44,13 @@ public class ResourceRuleDTO {
 	private String specId;
 	private String dataField;
 	private ResourceRuleTypeDTO type;
-	private RALExpressionDTO expression;
+	private RALExpressionDto expression;
 	
 	public ResourceRuleDTO() {
 		super();
 	}
 
-	public ResourceRuleDTO(String specId, String dataField, ResourceRuleTypeDTO type, RALExpressionDTO expression) {
+	public ResourceRuleDTO(String specId, String dataField, ResourceRuleTypeDTO type, RALExpressionDto expression) {
 		super();
 		this.specId = specId;
 		this.dataField = dataField;
@@ -82,11 +82,11 @@ public class ResourceRuleDTO {
 		this.type = type;
 	}
 	
-	public RALExpressionDTO getExpression() {
+	public RALExpressionDto getExpression() {
 		return expression;
 	}
 	
-	public void setExpression(RALExpressionDTO expression) {
+	public void setExpression(RALExpressionDto expression) {
 		this.expression = expression;
 	}
 }

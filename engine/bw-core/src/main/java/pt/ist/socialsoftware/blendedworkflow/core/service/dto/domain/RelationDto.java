@@ -19,7 +19,7 @@ public class RelationDto {
 	}
 
 	public RelationDto(String specId, String name, String entOneExtId, String rolenameOne, String cardinalityOne,
-			String entTwoExtId, String rolenameTwo, String cardinalityTwo) {
+					   String entTwoExtId, String rolenameTwo, String cardinalityTwo) {
 		this.specId = specId;
 		this.name = name;
 		this.entOneExtId = entOneExtId;

@@ -3,7 +3,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfRequiredResources;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UnitDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UnitDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class RALExprSharesUnit extends RALExprSharesUnit_Base implements RALExpr
 
     @Override
     public SetOfRequiredResources getSetOfRequiredResources() {
-        List<UnitDTO> units = null;
+        List<UnitDto> units = null;
         if (getPersonExpr() instanceof RALExprIsPerson) {
             Person person = ((RALExprIsPerson) getPersonExpr()).getPerson();
 

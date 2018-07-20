@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
@@ -32,7 +31,7 @@ public class MergeTest extends TeardownRollbackTest {
     private static final String POSITION = "Pos";
     private Logger logger = LoggerFactory.getLogger(MergeTest.class);
 
-    private WorkflowInstanceDTO workflowInstanceDTO;
+    private WorkflowInstanceDto _workflowInstanceDto;
     private WorkflowInstance instance;
 
     private Specification spec;
@@ -48,16 +47,16 @@ public class MergeTest extends TeardownRollbackTest {
     public void populate4Test() {
         designer = DesignResourcesInterface.getInstance();
         edi = ExecutionResourcesInterface.getInstance();
-        spec = designer.createSpecification(new SpecDTO(SPEC_ID, SPEC_ID));
+        spec = designer.createSpecification(new SpecDto(SPEC_ID, SPEC_ID));
 
-        Entity entity = designer.createEntity(new EntityDTO(SPEC_ID, ENT_1, false, true));
-        Attribute attribute = designer.createAttribute(new AttributeDTO(SPEC_ID, entity.getExternalId(), ENT_1, ATTR_1,"Number", false));
+        Entity entity = designer.createEntity(new EntityDto(SPEC_ID, ENT_1, false, true));
+        Attribute attribute = designer.createAttribute(new AttributeDto(SPEC_ID, entity.getExternalId(), ENT_1, ATTR_1,"Number", false));
         designer.createResourceModel(SPEC_ID);
-        unit = designer.createUnit(new UnitDTO(SPEC_ID, UNIT, ""));
-        position = designer.createPosition(new PositionDTO(SPEC_ID, POSITION, UNIT, ""));
-        person1 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_1, "", new ArrayList<>(), new ArrayList<>()));
-        person2 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_2, "", new ArrayList<>(), new ArrayList<>()));
-        person3 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_3, "", new ArrayList<>(), Arrays.asList(POSITION)));
+        unit = designer.createUnit(new UnitDto(SPEC_ID, UNIT, ""));
+        position = designer.createPosition(new PositionDto(SPEC_ID, POSITION, UNIT, ""));
+        person1 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_1, "", new ArrayList<>(), new ArrayList<>()));
+        person2 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_2, "", new ArrayList<>(), new ArrayList<>()));
+        person3 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_3, "", new ArrayList<>(), Arrays.asList(POSITION)));
 
     }
 
@@ -67,28 +66,28 @@ public class MergeTest extends TeardownRollbackTest {
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_2)
+                new RALExprIsPersonDto(USERNAME_2)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1 + "." + ATTR_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprHasPositionDTO(POSITION)
+                new RALExprHasPositionDto(POSITION)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1 + "." + ATTR_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.generateConditionModel(SPEC_ID);
@@ -118,14 +117,14 @@ public class MergeTest extends TeardownRollbackTest {
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_2)
+                new RALExprIsPersonDto(USERNAME_2)
         ));
 
         designer.generateConditionModel(SPEC_ID);
@@ -148,14 +147,14 @@ public class MergeTest extends TeardownRollbackTest {
                 SPEC_ID,
                 ENT_1 + "." + ATTR_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1 + "." + ATTR_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_2)
+                new RALExprIsPersonDto(USERNAME_2)
         ));
 
         designer.generateConditionModel(SPEC_ID);
@@ -194,28 +193,28 @@ public class MergeTest extends TeardownRollbackTest {
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_2)
+                new RALExprIsPersonDto(USERNAME_2)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1 + "." + ATTR_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprHasPositionDTO(POSITION)
+                new RALExprHasPositionDto(POSITION)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1 + "." + ATTR_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.generateConditionModel(SPEC_ID);
@@ -245,14 +244,14 @@ public class MergeTest extends TeardownRollbackTest {
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_2)
+                new RALExprIsPersonDto(USERNAME_2)
         ));
 
         designer.generateConditionModel(SPEC_ID);
@@ -275,14 +274,14 @@ public class MergeTest extends TeardownRollbackTest {
                 SPEC_ID,
                 ENT_1 + "." + ATTR_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1 + "." + ATTR_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_2)
+                new RALExprIsPersonDto(USERNAME_2)
         ));
 
         designer.generateConditionModel(SPEC_ID);

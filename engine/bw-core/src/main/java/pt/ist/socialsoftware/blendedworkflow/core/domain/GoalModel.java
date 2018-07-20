@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeDTO;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeDto;
 
 public class GoalModel extends GoalModel_Base {
@@ -332,11 +332,11 @@ public class GoalModel extends GoalModel_Base {
 		}
 	}
 
-	public GraphDTO getGoalGraph() {
-		GraphDTO graph = new GraphDTO();
+	public GraphDto getGoalGraph() {
+		GraphDto graph = new GraphDto();
 
 		List<NodeDto> nodes = new ArrayList<>();
-		List<EdgeDTO> edges = new ArrayList<>();
+		List<EdgeDto> edges = new ArrayList<>();
 
 		for (Goal goal : getGoalSet()) {
 			String description = "ACT(" + goal.getActivationConditionSet().stream().map(d -> d.getPath().getValue())
@@ -367,13 +367,13 @@ public class GoalModel extends GoalModel_Base {
 					.collect(Collectors.toSet());
 			for (Goal otherGoal : getGoalSet().stream().filter(g -> g.successProductsContainSomeOf(products))
 					.collect(Collectors.toSet())) {
-				edges.add(new EdgeDTO(goal.getExternalId(), otherGoal.getExternalId()));
+				edges.add(new EdgeDto(goal.getExternalId(), otherGoal.getExternalId()));
 			}
 
 		}
 
 		graph.setNodes(nodes.stream().toArray(NodeDto[]::new));
-		graph.setEdges(edges.stream().toArray(EdgeDTO[]::new));
+		graph.setEdges(edges.stream().toArray(EdgeDto[]::new));
 
 		return graph;
 	}

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDto;
 
 public abstract class ProductInstance extends ProductInstance_Base {
 
@@ -23,7 +23,7 @@ public abstract class ProductInstance extends ProductInstance_Base {
 
 	public abstract EntityInstance getEntityInstance();
 
-	public abstract ProductInstanceDTO getDTO();
+	public abstract ProductInstanceDto getDTO();
 
 	public Set<ProductInstance> getProductInstanceSetByName(String name) {
 		return new HashSet<>();

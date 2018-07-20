@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDto;
 
 public class AttributeInstance extends AttributeInstance_Base {
 
@@ -119,15 +119,15 @@ public class AttributeInstance extends AttributeInstance_Base {
 	}
 
 	@Override
-	public ProductInstanceDTO getDTO() {
-		ProductInstanceDTO productInstanceDTO = new ProductInstanceDTO();
-		productInstanceDTO.setProduct(getAttribute().getDTO());
-		productInstanceDTO.setExternalId(getExternalId());
-		productInstanceDTO.setPath(getAttribute().getFullPath());
-		productInstanceDTO.setValue(getAttribute().getEntity().getName() + "[" + getEntityInstance().getId() + ","
+	public ProductInstanceDto getDTO() {
+		ProductInstanceDto productInstanceDto = new ProductInstanceDto();
+		productInstanceDto.setProduct(getAttribute().getDTO());
+		productInstanceDto.setExternalId(getExternalId());
+		productInstanceDto.setPath(getAttribute().getFullPath());
+		productInstanceDto.setValue(getAttribute().getEntity().getName() + "[" + getEntityInstance().getId() + ","
 				+ getAttribute().getName() + "[" + getValue() + "]]");
 
-		return productInstanceDTO;
+		return productInstanceDto;
 	}
 
 }

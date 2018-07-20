@@ -42,7 +42,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathCond
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
@@ -493,7 +493,7 @@ public class DesignInterface {
 		return spec.getGoalModel().getAssociationGoalSet();
 	}
 
-	public GraphDTO getGoalModelGraph(String specId) {
+	public GraphDto getGoalModelGraph(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
 		return spec.getGoalModel().getGoalGraph();
@@ -843,7 +843,7 @@ public class DesignInterface {
 		return activity.getSequenceConditionSet();
 	}
 
-	public GraphDTO getActivityGraph(String specId) {
+	public GraphDto getActivityGraph(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
 		return spec.getActivityModel().getActivityGraph();
@@ -1026,7 +1026,7 @@ public class DesignInterface {
 		return conditions;
 	}
 
-	private Set<RelationBW> getRelationSet(Specification spec, Set<RelationDTO> relationDtoSet) {
+	private Set<RelationBW> getRelationSet(Specification spec, Set<RelationDto> relationDtoSet) {
 		Set<RelationBW> relations = new HashSet<>();
 		for (RelationDto relation : relationDtoSet) {
 			relations.add(spec.getDataModel().getRelation(relation.getName()));

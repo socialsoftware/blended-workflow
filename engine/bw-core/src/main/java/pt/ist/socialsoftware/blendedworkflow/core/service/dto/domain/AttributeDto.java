@@ -14,7 +14,7 @@ public class AttributeDto extends ProductDto {
 	}
 
 	public AttributeDto(String specId, String entityExtId, String entityName, String name, String type,
-			boolean mandatory) {
+						boolean mandatory) {
 		super(specId, ProductType.ATTRIBUTE.name(), type);
 		this.entityExtId = entityExtId;
 		this.entityName = entityName;

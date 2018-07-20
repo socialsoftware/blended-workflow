@@ -34,7 +34,7 @@ public class ExtractTest extends TeardownRollbackTest {
     private static final String POSITION = "Pos";
     private Logger logger = LoggerFactory.getLogger(ExtractTest.class);
 
-    private WorkflowInstanceDTO workflowInstanceDTO;
+    private WorkflowInstanceDto _workflowInstanceDto;
     private WorkflowInstance instance;
 
     private Specification spec;
@@ -51,43 +51,43 @@ public class ExtractTest extends TeardownRollbackTest {
     public void populate4Test() {
         designer = DesignResourcesInterface.getInstance();
         edi = ExecutionResourcesInterface.getInstance();
-        spec = designer.createSpecification(new SpecDTO(SPEC_ID, SPEC_ID));
+        spec = designer.createSpecification(new SpecDto(SPEC_ID, SPEC_ID));
 
-        Entity entity = designer.createEntity(new EntityDTO(SPEC_ID, ENT_1, false, true));
-        Attribute attribute = designer.createAttribute(new AttributeDTO(SPEC_ID, entity.getExternalId(), ENT_1, ATTR_1,"Number", false));
+        Entity entity = designer.createEntity(new EntityDto(SPEC_ID, ENT_1, false, true));
+        Attribute attribute = designer.createAttribute(new AttributeDto(SPEC_ID, entity.getExternalId(), ENT_1, ATTR_1,"Number", false));
         designer.createResourceModel(SPEC_ID);
-        unit = designer.createUnit(new UnitDTO(SPEC_ID, UNIT, ""));
-        position = designer.createPosition(new PositionDTO(SPEC_ID, POSITION, UNIT, ""));
-        person1 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_1, "", new ArrayList<>(), new ArrayList<>()));
-        person2 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_2, "", new ArrayList<>(), new ArrayList<>()));
-        person3 = designer.createPerson(new PersonDTO(SPEC_ID, USERNAME_3, "", new ArrayList<>(), Arrays.asList(POSITION)));
+        unit = designer.createUnit(new UnitDto(SPEC_ID, UNIT, ""));
+        position = designer.createPosition(new PositionDto(SPEC_ID, POSITION, UNIT, ""));
+        person1 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_1, "", new ArrayList<>(), new ArrayList<>()));
+        person2 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_2, "", new ArrayList<>(), new ArrayList<>()));
+        person3 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_3, "", new ArrayList<>(), Arrays.asList(POSITION)));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_2)
+                new RALExprIsPersonDto(USERNAME_2)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1 + "." + ATTR_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprHasPositionDTO(POSITION)
+                new RALExprHasPositionDto(POSITION)
         ));
 
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1 + "." + ATTR_1,
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprIsPersonDTO(USERNAME_1)
+                new RALExprIsPersonDto(USERNAME_1)
         ));
 
         designer.generateConditionModel(SPEC_ID);
@@ -102,7 +102,7 @@ public class ExtractTest extends TeardownRollbackTest {
 
         designer.mergeActivities(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1, MergeResourcesPolicy.RELAXED));
 
-        DefPathConditionDTO defPathConditionDTO = new DefPathConditionDTO();
+        DefPathConditionDto defPathConditionDTO = new DefPathConditionDto();
         defPathConditionDTO.setSpecId(SPEC_ID);
         defPathConditionDTO.setPath(ENT_1 + "." + ATTR_1);
         designer.extractActivity(SPEC_ID, "SPLIT", "", "Merged", new HashSet<>(Arrays.asList(defPathConditionDTO)));
@@ -138,7 +138,7 @@ public class ExtractTest extends TeardownRollbackTest {
 
         designer.mergeGoals(new ResourcesMergeOperationDto(SPEC_ID, "Merged", ENT_1, ENT_1 + "." + ATTR_1, MergeResourcesPolicy.RELAXED));
 
-        DefPathConditionDTO defPathConditionDTO = new DefPathConditionDTO();
+        DefPathConditionDto defPathConditionDTO = new DefPathConditionDto();
         defPathConditionDTO.setSpecId(SPEC_ID);
         defPathConditionDTO.setPath(ENT_1 + "." + ATTR_1);
         dto = new ExtractGoalDto();

@@ -96,7 +96,7 @@ public class ExecutionInterface {
 		return workflowInstance.getLogActivityWorkItemList();
 	}
 
-	public List<ActivityWorkItemDTO> getLogActivityWorkItemDTOSet(String specId, String instanceName) {
+	public List<ActivityWorkItemDto> getLogActivityWorkItemDTOSet(String specId, String instanceName) {
 		return getLogActivityWorkItemSet(specId, instanceName).stream()
 				.map(ActivityWorkItem::getDTO).collect(Collectors.toList());
 	}

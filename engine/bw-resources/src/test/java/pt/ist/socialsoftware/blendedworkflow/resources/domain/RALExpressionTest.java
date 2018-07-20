@@ -49,7 +49,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
 
     @Override
     public void populate4Test() throws BWException {
-        pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance().createSpecification(new SpecDTO(SPEC_ID, SPEC_NAME));
+        pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance().createSpecification(new SpecDto(SPEC_ID, SPEC_NAME));
         designer = DesignResourcesInterface.getInstance();
         edi = ExecutionResourcesInterface.getInstance();
 
@@ -85,7 +85,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
         assertTrue(expression.getEligibleResources(_workflowInstance, new HashSet<>()).containsAll(Arrays.asList(person1, person3)));
 
         SetOfRequiredResources set = expression.getSetOfRequiredResources();
-        assertTrue(set.getCapabilities().stream().map(CapabilityDTO::getName)
+        assertTrue(set.getCapabilities().stream().map(CapabilityDto::getName)
                 .collect(Collectors.toList()).contains(_capability1.getDTO().getName()));
         assertTrue(expression.isConsistent());
     }
@@ -101,7 +101,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
         assertTrue(expression.getEligibleResources(_workflowInstance, new HashSet<>()).containsAll(Arrays.asList(person1, person3)));
 
         SetOfRequiredResources set = expression.getSetOfRequiredResources();
-        assertTrue(set.getPositions().stream().map(PositionDTO::getName)
+        assertTrue(set.getPositions().stream().map(PositionDto::getName)
                 .collect(Collectors.toList()).contains(_position1.getDTO().getName()));
         assertTrue(expression.isConsistent());
     }
@@ -117,9 +117,9 @@ public class RALExpressionTest extends TeardownRollbackTest {
         assertTrue(expression.getEligibleResources(_workflowInstance, new HashSet<>()).containsAll(Arrays.asList(person1)));
 
         SetOfRequiredResources set = expression.getSetOfRequiredResources();
-        assertTrue(set.getRoles().stream().map(RoleDTO::getName)
+        assertTrue(set.getRoles().stream().map(RoleDto::getName)
                 .collect(Collectors.toList()).contains(_role1.getDTO().getName()));
-        assertTrue(set.getUnits().stream().map(UnitDTO::getName)
+        assertTrue(set.getUnits().stream().map(UnitDto::getName)
                 .collect(Collectors.toList()).contains(_unit1.getDTO().getName()));
         assertTrue(expression.isConsistent());
     }
@@ -135,7 +135,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
         assertTrue(expression.getEligibleResources(_workflowInstance, new HashSet<>()).containsAll(Arrays.asList(person1, person3)));
 
         SetOfRequiredResources set = expression.getSetOfRequiredResources();
-        assertTrue(set.getRoles().stream().map(RoleDTO::getName)
+        assertTrue(set.getRoles().stream().map(RoleDto::getName)
                 .collect(Collectors.toList()).contains(_role1.getDTO().getName()));
         assertTrue(expression.isConsistent());
     }
@@ -150,7 +150,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
         assertTrue(expression.getEligibleResources(_workflowInstance, new HashSet<>()).containsAll(Arrays.asList(person1)));
 
         SetOfRequiredResources set = expression.getSetOfRequiredResources();
-        assertTrue(set.getUnits().stream().map(UnitDTO::getName)
+        assertTrue(set.getUnits().stream().map(UnitDto::getName)
                 .collect(Collectors.toList()).contains(_unit1.getDTO().getName()));
         assertTrue(expression.isConsistent());
     }
@@ -169,7 +169,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
         assertTrue(expression.getEligibleResources(_workflowInstance, new HashSet<>()).containsAll(Arrays.asList(person1, person3)));
 
         SetOfRequiredResources set = expression.getSetOfRequiredResources();
-        assertTrue(set.getPositions().stream().map(PositionDTO::getName)
+        assertTrue(set.getPositions().stream().map(PositionDto::getName)
                 .collect(Collectors.toList()).containsAll(Arrays.asList(_position1.getDTO().getName(), _position2.getDTO().getName())));
         assertTrue(expression.isConsistent());
     }
@@ -188,7 +188,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
         assertTrue(expression.getEligibleResources(_workflowInstance, new HashSet<>()).containsAll(Arrays.asList(person3)));
 
         SetOfRequiredResources set = expression.getSetOfRequiredResources();
-        assertTrue(set.getPositions().stream().map(PositionDTO::getName)
+        assertTrue(set.getPositions().stream().map(PositionDto::getName)
                 .collect(Collectors.toList()).containsAll(Arrays.asList(_position1.getDTO().getName(), _position2.getDTO().getName())));
         assertTrue(expression.isConsistent());
     }
@@ -206,7 +206,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
 
         SetOfRequiredResources set = expression.getSetOfRequiredResources();
         assertEquals(0, set.getPositions().size());
-        assertTrue(set.getNotPositions().stream().map(PositionDTO::getName)
+        assertTrue(set.getNotPositions().stream().map(PositionDto::getName)
                 .collect(Collectors.toList()).contains(_position1.getDTO().getName()));
         assertTrue(expression.isConsistent());
     }
@@ -482,8 +482,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         Person person1 = new Person(_resourceModel, "Test1", "", Arrays.asList(_position2,_position5), new ArrayList<>());
         Person person2 = new Person(_resourceModel, "Test2", "", Arrays.asList(_position2), new ArrayList<>());
 
-        Entity ent1 = designer.createEntity(new EntityDTO(spec.getSpecId(), "Entity", false));
-        Attribute att1 = designer.createAttribute(new AttributeDTO(SPEC_ID, ent1.getExternalId(), null,
+        Entity ent1 = designer.createEntity(new EntityDto(spec.getSpecId(), "Entity", false));
+        Attribute att1 = designer.createAttribute(new AttributeDto(SPEC_ID, ent1.getExternalId(), null,
                 "att", Attribute.AttributeType.NUMBER.toString(), false));
 
         spec.getConditionModel().generateConditions();
@@ -493,7 +493,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 spec.getSpecId(),
                 "Entity.att",
                 ResourceRuleDTO.ResourceRuleTypeDTO.INFORMS,
-                new RALExprOrDTO(new RALExprIsPersonDTO(person1.getName()),  new RALExprIsPersonDTO(person2.getName()))
+                new RALExprOrDto(new RALExprIsPersonDto(person1.getName()),  new RALExprIsPersonDto(person2.getName()))
         ));
 
         designer.generateEnrichedModels(spec.getSpecId());
@@ -523,8 +523,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
         Person person1 = new Person(_resourceModel, "Test1", "", Arrays.asList(_position2,_position5), new ArrayList<>());
         Person person2 = new Person(_resourceModel, "Test2", "", Arrays.asList(_position2), new ArrayList<>());
 
-        Entity ent1 = designer.createEntity(new EntityDTO(spec.getSpecId(), "Entity", false));
-        Attribute att1 = designer.createAttribute(new AttributeDTO(SPEC_ID, ent1.getExternalId(), null,
+        Entity ent1 = designer.createEntity(new EntityDto(spec.getSpecId(), "Entity", false));
+        Attribute att1 = designer.createAttribute(new AttributeDto(SPEC_ID, ent1.getExternalId(), null,
                 "att", Attribute.AttributeType.NUMBER.toString(), false));
 
         spec.getConditionModel().generateConditions();
@@ -534,7 +534,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 spec.getSpecId(),
                 "Entity.att",
                 ResourceRuleDTO.ResourceRuleTypeDTO.HAS_RESPONSIBLE,
-                new RALExprOrDTO(new RALExprIsPersonDTO(person1.getName()),  new RALExprIsPersonDTO(person2.getName()))
+                new RALExprOrDto(new RALExprIsPersonDto(person1.getName()),  new RALExprIsPersonDto(person2.getName()))
         ));
 
         designer.generateEnrichedModels(spec.getSpecId());
@@ -571,9 +571,9 @@ public class RALExpressionTest extends TeardownRollbackTest {
     public void testIsPersonInDataFieldGetEligibleResources() throws RMException {
         Person person1 = new Person(_resourceModel, "Test1", "", Arrays.asList(_position2,_position5), new ArrayList<>());
 
-        Entity ent1 = designer.createEntity(new EntityDTO(spec.getSpecId(), "Teste1", false));
-        Entity ent2 = designer.createEntity(new EntityDTO(spec.getSpecId(), "Teste2", false));
-        designer.createRelation(new RelationDTO(spec.getSpecId(), "Teste1Teste2", ent1.getExternalId(), "teste1", "0..1",
+        Entity ent1 = designer.createEntity(new EntityDto(spec.getSpecId(), "Teste1", false));
+        Entity ent2 = designer.createEntity(new EntityDto(spec.getSpecId(), "Teste2", false));
+        designer.createRelation(new RelationDto(spec.getSpecId(), "Teste1Teste2", ent1.getExternalId(), "teste1", "0..1",
                 ent2.getExternalId(), "teste2", "0..1"));
 
         _resourceModel.addEntityIsPerson("Teste2");

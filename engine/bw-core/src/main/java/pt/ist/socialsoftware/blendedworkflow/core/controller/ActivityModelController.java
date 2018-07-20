@@ -29,7 +29,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttribut
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefProductConditionSetDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
@@ -119,7 +119,7 @@ public class ActivityModelController {
 
 	@RequestMapping(value = "/activities/{activityName}/pre", method = RequestMethod.GET)
 	public ResponseEntity<DefPathConditionDto[]> getActivityPreConditionSet(@PathVariable("specId") String specId,
-			@PathVariable("activityName") String activityName) {
+																			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -132,7 +132,7 @@ public class ActivityModelController {
 
 	@RequestMapping(value = "/activities/{activityName}/pre/{path}/", method = RequestMethod.POST)
 	public ResponseEntity<DefPathConditionDto> associateDefPathToActivityPre(@PathVariable("specId") String specId,
-			@PathVariable("activityName") String activityName, @PathVariable("path") String path) {
+																			 @PathVariable("activityName") String activityName, @PathVariable("path") String path) {
 		logger.debug("associateDefPathToActivityPre specId:{}, activityName:{}, path:{}", specId, activityName, path);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -314,7 +314,7 @@ public class ActivityModelController {
 
 	@RequestMapping(value = "/activities/{activityName}/seq", method = RequestMethod.GET)
 	public ResponseEntity<DefPathConditionDto[]> getActivitySeqConditionSet(@PathVariable("specId") String specId,
-			@PathVariable("activityName") String activityName) {
+																			@PathVariable("activityName") String activityName) {
 		logger.debug("getActivityPreCondition specId:{}, activityName:{}", specId, activityName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -326,12 +326,12 @@ public class ActivityModelController {
 	}
 
 	@RequestMapping(value = "/activities/graph", method = RequestMethod.GET)
-	public ResponseEntity<GraphDTO> getActivityGraph(@PathVariable("specId") String specId) {
+	public ResponseEntity<GraphDto> getActivityGraph(@PathVariable("specId") String specId) {
 		logger.debug("getActivityGraph specId:{}", specId);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		GraphDTO activityGraph = adi.getActivityGraph(specId);
+		GraphDto activityGraph = adi.getActivityGraph(specId);
 
 		return new ResponseEntity<>(activityGraph, HttpStatus.OK);
 	}

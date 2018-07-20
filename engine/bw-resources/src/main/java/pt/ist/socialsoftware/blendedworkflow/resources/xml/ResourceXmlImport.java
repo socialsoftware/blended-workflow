@@ -51,7 +51,7 @@ public class ResourceXmlImport extends SpecXmlImport {
 
     private void importIsPersons(Element specElement, Specification spec) {
         specElement.getChild("entity-is-person").getChildren().stream().forEach(entIsPer -> {
-            resourceDesigner.relationEntityIsPerson(new ResourceRelationDTO(
+            resourceDesigner.relationEntityIsPerson(new ResourceRelationDto(
                     spec.getSpecId(),
                     entIsPer.getName()
             ));
@@ -60,7 +60,7 @@ public class ResourceXmlImport extends SpecXmlImport {
 
     private void importCapabilities(Element specElement, Specification spec) {
         specElement.getChild("capabilities").getChildren().stream().forEach(capability -> {
-            resourceDesigner.createCapability(new CapabilityDTO(
+            resourceDesigner.createCapability(new CapabilityDto(
                     spec.getSpecId(),
                     capability.getAttribute("name").getValue(),
                     (capability.getAttribute("description") != null) ? capability.getAttribute("description").getValue() : null
@@ -70,7 +70,7 @@ public class ResourceXmlImport extends SpecXmlImport {
 
     private void importUnits(Element specElement, Specification spec) {
         specElement.getChild("units").getChildren().stream().forEach(unit -> {
-            resourceDesigner.createUnit(new UnitDTO(
+            resourceDesigner.createUnit(new UnitDto(
                     spec.getSpecId(),
                     unit.getAttribute("name").getValue(),
                     (unit.getAttribute("description") != null) ? unit.getAttribute("description").getValue() : null
@@ -80,7 +80,7 @@ public class ResourceXmlImport extends SpecXmlImport {
 
     private void importRoles(Element specElement, Specification spec) {
         specElement.getChild("roles").getChildren().stream().forEach(role -> {
-            resourceDesigner.createRole(new RoleDTO(
+            resourceDesigner.createRole(new RoleDto(
                     spec.getSpecId(),
                     role.getAttribute("name").getValue(),
                     (role.getAttribute("description") != null) ? role.getAttribute("description").getValue() : null
@@ -90,7 +90,7 @@ public class ResourceXmlImport extends SpecXmlImport {
 
     private void importPositions(Element specElement, Specification spec) {
         specElement.getChild("positions").getChildren().stream().forEach(position -> {
-            PositionDTO positionDTO = new PositionDTO(
+            PositionDto positionDTO = new PositionDto(
                     spec.getSpecId(),
                     position.getAttribute("name").getValue(),
                     position.getAttribute("unit").getValue(),
@@ -101,7 +101,7 @@ public class ResourceXmlImport extends SpecXmlImport {
         });
 
         specElement.getChild("positions").getChildren().stream().forEach(position -> {
-            PositionDTO positionDTO = new PositionDTO(
+            PositionDto positionDTO = new PositionDto(
                     spec.getSpecId(),
                     position.getAttribute("name").getValue(),
                     position.getAttribute("unit").getValue(),
@@ -127,7 +127,7 @@ public class ResourceXmlImport extends SpecXmlImport {
 
     private void importPersons(Element specElement, Specification spec) {
         specElement.getChild("persons").getChildren().stream().forEach(person -> {
-            PersonDTO personDTO = new PersonDTO(
+            PersonDto personDTO = new PersonDto(
                     spec.getSpecId(),
                     person.getAttribute("name").getValue(),
                     (person.getAttribute("description") != null) ? person.getAttribute("description").getValue() : null
@@ -209,38 +209,38 @@ public class ResourceXmlImport extends SpecXmlImport {
                 });
     }
 
-    private RALExpressionDTO importRALExpressionDTO(Element resourceRule, Specification spec) throws RMException {
-        RALExpressionDTO ralExpressionDTO = null;
+    private RALExpressionDto importRALExpressionDTO(Element resourceRule, Specification spec) throws RMException {
+        RALExpressionDto ralExpressionDTO = null;
 
         if (resourceRule.getName().equals("IsPersonExpr")) {
-            ralExpressionDTO = new RALExprIsPersonDTO(resourceRule.getAttribute("person").getValue());
+            ralExpressionDTO = new RALExprIsPersonDto(resourceRule.getAttribute("person").getValue());
 
         } else if (resourceRule.getName().equals("IsPersonDataObjectExpr")) {
 
-            ralExpressionDTO = new RALExprIsPersonDataObjectDTO(resourceRule.getAttribute("path").getValue());
+            ralExpressionDTO = new RALExprIsPersonDataObjectDto(resourceRule.getAttribute("path").getValue());
 
         } else if (resourceRule.getName().equals("IsPersonInTaskDutyExpr")) {
 
-            ralExpressionDTO = new RALExprIsPersonInTaskDutyDTO(
+            ralExpressionDTO = new RALExprIsPersonInTaskDutyDto(
                     ResourceRuleDTO.ResourceRuleTypeDTO.fromAsgmtString(resourceRule.getAttribute("task-duty").getValue()),
                     resourceRule.getAttribute("path").getValue()
             );
 
         } else if (resourceRule.getName().equals("AnyoneExpr")) {
 
-            ralExpressionDTO = new RALExprAnyoneDTO();
+            ralExpressionDTO = new RALExprAnyoneDto();
 
         } else if (resourceRule.getName().equals("HasPositionExpr")) {
 
-            ralExpressionDTO = new RALExprHasPositionDTO(resourceRule.getAttribute("position").getValue());
+            ralExpressionDTO = new RALExprHasPositionDto(resourceRule.getAttribute("position").getValue());
 
         } else if (resourceRule.getName().equals("HasUnitExpr")) {
 
-            ralExpressionDTO = new RALExprHasUnitDTO(resourceRule.getAttribute("unit").getValue());
+            ralExpressionDTO = new RALExprHasUnitDto(resourceRule.getAttribute("unit").getValue());
 
         } else if (resourceRule.getName().equals("HasRoleExpr") ) {
 
-            RALExprHasRoleDTO dto = new RALExprHasRoleDTO(resourceRule.getAttribute("role").getValue());
+            RALExprHasRoleDto dto = new RALExprHasRoleDto(resourceRule.getAttribute("role").getValue());
             if (resourceRule.getAttribute("unit") != null) {
                 dto.setUnit(resourceRule.getAttribute("unit").getValue());
             }
@@ -248,102 +248,102 @@ public class ResourceXmlImport extends SpecXmlImport {
 
         } else if (resourceRule.getName().equals("ReportsToPersonPositionExpr")) {
 
-            RALExprPersonDTO personDTO = (RALExprPersonDTO) importRALExpressionDTO(resourceRule.getChildren().get(0), spec);
-            ralExpressionDTO = new RALExprReportsToPersonPositionExprDTO(
+            RALExprPersonDto personDTO = (RALExprPersonDto) importRALExpressionDTO(resourceRule.getChildren().get(0), spec);
+            ralExpressionDTO = new RALExprReportsToPersonPositionExprDto(
                     personDTO,
                     resourceRule.getAttribute("directly").getValue().equals(BOOLEAN_TRUE)
             );
 
         } else if (resourceRule.getName().equals("ReportsToPositionExpr")) {
 
-            ralExpressionDTO = new RALExprReportsToPositionExprDTO(
+            ralExpressionDTO = new RALExprReportsToPositionExprDto(
                     resourceRule.getAttribute("position").getValue(),
                     resourceRule.getAttribute("directly").getValue().equals(BOOLEAN_TRUE)
             );
 
         } else if (resourceRule.getName().equals("ReportedByPersonPositionExpr")) {
 
-            RALExprPersonDTO personDTO = (RALExprPersonDTO) importRALExpressionDTO(resourceRule.getChildren().get(0), spec);
-            ralExpressionDTO = new RALExprReportedByPersonPositionExprDTO(
+            RALExprPersonDto personDTO = (RALExprPersonDto) importRALExpressionDTO(resourceRule.getChildren().get(0), spec);
+            ralExpressionDTO = new RALExprReportedByPersonPositionExprDto(
                     personDTO,
                     resourceRule.getAttribute("directly").getValue().equals(BOOLEAN_TRUE)
             );
 
         } else if (resourceRule.getName().equals("ReportedByPositionExpr")) {
 
-            ralExpressionDTO = new RALExprReportedByPositionExprDTO(
+            ralExpressionDTO = new RALExprReportedByPositionExprDto(
                     resourceRule.getAttribute("position").getValue(),
                     resourceRule.getAttribute("directly").getValue().equals(BOOLEAN_TRUE)
             );
 
         } else if (resourceRule.getName().equals("DelegatesToPersonPositionExpr")) {
 
-            RALExprPersonDTO personDTO = (RALExprPersonDTO) importRALExpressionDTO(resourceRule.getChildren().get(0), spec);
-            ralExpressionDTO = new RALExprDelegatesToPersonPositionExprDTO(personDTO);
+            RALExprPersonDto personDTO = (RALExprPersonDto) importRALExpressionDTO(resourceRule.getChildren().get(0), spec);
+            ralExpressionDTO = new RALExprDelegatesToPersonPositionExprDto(personDTO);
 
         } else if (resourceRule.getName().equals("DelegatesToPositionExpr")) {
 
-            ralExpressionDTO = new RALExprDelegatesToPositionExprDTO(resourceRule.getAttribute("position").getValue());
+            ralExpressionDTO = new RALExprDelegatesToPositionExprDto(resourceRule.getAttribute("position").getValue());
 
         } else if (resourceRule.getName().equals("DelegatedByPersonPositionExpr")) {
 
-            RALExprPersonDTO personDTO = (RALExprPersonDTO) importRALExpressionDTO(resourceRule.getChildren().get(0), spec);
-            ralExpressionDTO = new RALExprDelegatedByPersonPositionExprDTO(personDTO);
+            RALExprPersonDto personDTO = (RALExprPersonDto) importRALExpressionDTO(resourceRule.getChildren().get(0), spec);
+            ralExpressionDTO = new RALExprDelegatedByPersonPositionExprDto(personDTO);
 
         } else if (resourceRule.getName().equals("DelegatedByPositionExpr")) {
 
-            ralExpressionDTO = new RALExprDelegatedByPositionExprDTO(resourceRule.getAttribute("position").getValue());
+            ralExpressionDTO = new RALExprDelegatedByPositionExprDto(resourceRule.getAttribute("position").getValue());
 
         } else if (resourceRule.getName().equals("NotExpr") ) {
 
-            ralExpressionDTO = new RALExprNotDTO(importRALExpressionDTO(resourceRule.getChildren().get(0), spec));
+            ralExpressionDTO = new RALExprNotDto(importRALExpressionDTO(resourceRule.getChildren().get(0), spec));
 
         } else if (resourceRule.getName().equals("OrExpr")) {
-            ralExpressionDTO = new RALExprOrDTO(
+            ralExpressionDTO = new RALExprOrDto(
                     importRALExpressionDTO(resourceRule.getChildren().get(0), spec),
                     importRALExpressionDTO(resourceRule.getChildren().get(1), spec)
             );
         } else if (resourceRule.getName().equals("AndExpr")) {
-            ralExpressionDTO = new RALExprAndDTO(
+            ralExpressionDTO = new RALExprAndDto(
                     importRALExpressionDTO(resourceRule.getChildren().get(0), spec),
                     importRALExpressionDTO(resourceRule.getChildren().get(1), spec)
             );
         } else if (resourceRule.getName().equals("HasCapabilityExpr")) {
 
-            ralExpressionDTO = new RALExprHasCapabilityDTO(resourceRule.getAttribute("capability").getValue());
+            ralExpressionDTO = new RALExprHasCapabilityDto(resourceRule.getAttribute("capability").getValue());
 
         } else if (resourceRule.getName().equals("HistoryExecutingExpr")) {
 
-            ralExpressionDTO = new RALExprHistoryExecutingDTO(
-                    RALExprHistoryDTO.QuantifierDTO.fromString(resourceRule.getAttribute("quantifier").getValue()),
+            ralExpressionDTO = new RALExprHistoryExecutingDto(
+                    RALExprHistoryDto.QuantifierDTO.fromString(resourceRule.getAttribute("quantifier").getValue()),
                     resourceRule.getAttribute("data-field").getValue()
             );
 
         } else if (resourceRule.getName().equals("HistoryInformedExpr")) {
 
-            ralExpressionDTO = new RALExprHistoryInformedDTO(
-                    RALExprHistoryDTO.QuantifierDTO.fromString(resourceRule.getAttribute("quantifier").getValue()),
+            ralExpressionDTO = new RALExprHistoryInformedDto(
+                    RALExprHistoryDto.QuantifierDTO.fromString(resourceRule.getAttribute("quantifier").getValue()),
                     resourceRule.getAttribute("data-field").getValue()
             );
 
         } else if (resourceRule.getName().equals("SharesPositionExpr")) {
 
-            ralExpressionDTO = new RALExprSharesPositionDTO(
-                    RALExprCommonalityDTO.AmountDTO.fromString(resourceRule.getAttribute("amount").getValue()),
+            ralExpressionDTO = new RALExprSharesPositionDto(
+                    RALExprCommonalityDto.AmountDTO.fromString(resourceRule.getAttribute("amount").getValue()),
                     importRALExpressionDTO(resourceRule.getChildren().get(0), spec)
             );
 
         } else if (resourceRule.getName().equals("SharesUnitExpr")) {
 
-            ralExpressionDTO = new RALExprSharesUnitDTO(
-                    RALExprCommonalityDTO.AmountDTO.fromString(resourceRule.getAttribute("amount").getValue()),
+            ralExpressionDTO = new RALExprSharesUnitDto(
+                    RALExprCommonalityDto.AmountDTO.fromString(resourceRule.getAttribute("amount").getValue()),
                     importRALExpressionDTO(resourceRule.getChildren().get(0), spec)
             );
 
         } else if (resourceRule.getName().equals("SharesRoleExpr")) {
 
-            RALExprSharesRoleDTO dto = new RALExprSharesRoleDTO(
-                    RALExprCommonalityDTO.AmountDTO.fromString(resourceRule.getAttribute("amount").getValue()),
+            RALExprSharesRoleDto dto = new RALExprSharesRoleDto(
+                    RALExprCommonalityDto.AmountDTO.fromString(resourceRule.getAttribute("amount").getValue()),
                     importRALExpressionDTO(resourceRule.getChildren().get(0), spec)
             );
 

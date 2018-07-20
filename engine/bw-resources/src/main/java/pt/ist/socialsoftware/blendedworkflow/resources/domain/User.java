@@ -11,7 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UserDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UserDto;
 
 import java.util.Optional;
 
@@ -98,7 +98,7 @@ public class User extends User_Base {
         }
     }
 
-    public UserDTO getDTO() {
-        return new UserDTO(getExternalId(), getUsername());
+    public UserDto getDTO() {
+        return new UserDto(getExternalId(), getUsername());
     }
 }

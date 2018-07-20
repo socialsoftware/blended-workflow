@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.execution;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,7 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.AbstractDocExampleTest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -32,7 +31,7 @@ public class InstanceWorkflowTest extends AbstractDocExampleTest {
     private final String SPEC_ID = "DoctorAppointment";
     private final String WORKFLOW_ID = "workflow-1";
     private final String WORKFLOW_ID_FOR_TESTS = "workflow-2";
-    private WorkflowInstanceDTO workflowInstanceDTO;
+    private WorkflowInstanceDto _workflowInstanceDto;
     private WorkflowInstance instance;
 
     private Specification spec;
@@ -41,9 +40,9 @@ public class InstanceWorkflowTest extends AbstractDocExampleTest {
     public void populate4Test() {
         super.populate4Test();
 
-        workflowInstanceDTO = new WorkflowInstanceDTO();
-        workflowInstanceDTO.setSpecId(SPEC_ID);
-        workflowInstanceDTO.setName(WORKFLOW_ID_FOR_TESTS);
+        _workflowInstanceDto = new WorkflowInstanceDto();
+        _workflowInstanceDto.setSpecId(SPEC_ID);
+        _workflowInstanceDto.setName(WORKFLOW_ID_FOR_TESTS);
 
         spec = BlendedWorkflow.getInstance().getSpecById(SPEC_ID).get();
         instance = new WorkflowInstance(spec,WORKFLOW_ID);
@@ -74,9 +73,9 @@ public class InstanceWorkflowTest extends AbstractDocExampleTest {
                 post("/specs/" + SPEC_ID + "/instances/")
                         .header(HEADER_STRING, constructToken(token))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(json(workflowInstanceDTO)))
+                        .content(json(_workflowInstanceDto)))
                 .andExpect(status().isCreated())
-                .andExpect(content().json(json(workflowInstanceDTO)));
+                .andExpect(content().json(json(_workflowInstanceDto)));
     }
 
     @Test
@@ -84,7 +83,7 @@ public class InstanceWorkflowTest extends AbstractDocExampleTest {
         mockMvc.perform(
                 post("/specs/" + SPEC_ID + "/instances/")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(json(workflowInstanceDTO)))
+                        .content(json(_workflowInstanceDto)))
                 .andExpect(status().isUnauthorized());
     }
 

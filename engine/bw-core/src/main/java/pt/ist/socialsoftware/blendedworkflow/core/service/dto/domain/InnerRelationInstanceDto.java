@@ -4,16 +4,16 @@ import java.util.Set;
 
 public class InnerRelationInstanceDto {
 	private MulConditionDto mulConditionDTO;
-	private Set<ProductInstanceDTO> productInstanceSet;
+	private Set<ProductInstanceDto> productInstanceSet;
 
 	public InnerRelationInstanceDto() {
 	}
 
-	public Set<ProductInstanceDTO> getProductInstanceSet() {
+	public Set<ProductInstanceDto> getProductInstanceSet() {
 		return productInstanceSet;
 	}
 
-	public void setProductInstanceSet(Set<ProductInstanceDTO> productInstanceSet) {
+	public void setProductInstanceSet(Set<ProductInstanceDto> productInstanceSet) {
 		this.productInstanceSet = productInstanceSet;
 	}
 

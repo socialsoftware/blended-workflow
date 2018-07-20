@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.execution;
 
-import org.apache.naming.factory.ResourceFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -11,8 +10,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
-import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.AbstractDocExampleTest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
