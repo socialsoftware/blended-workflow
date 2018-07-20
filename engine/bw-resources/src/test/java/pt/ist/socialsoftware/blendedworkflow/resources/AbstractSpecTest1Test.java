@@ -1,5 +1,9 @@
 package pt.ist.socialsoftware.blendedworkflow.resources;
 
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.PropertiesManager;
@@ -12,8 +16,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public abstract class AbstractSpecTest1Test extends AbstractMvcTest {
-    @Override
-    public void populate4Test() throws BWException {
+    @BeforeClass
+    @Atomic(mode = Atomic.TxMode.WRITE)
+    public static void importSpec() throws BWException {
+
         BlendedWorkflow.getInstance().getSpecificationSet().stream()
                 .filter(s -> s.getSpecId().equals("spec-test-1"))
                 .forEach(s -> {
@@ -36,5 +42,16 @@ public abstract class AbstractSpecTest1Test extends AbstractMvcTest {
         }
 
         importer.importSpecification(inputStream);
+    }
+
+    @AfterClass
+    @Atomic(mode = Atomic.TxMode.WRITE)
+    public static void deleteSpec() {
+        BlendedWorkflow.getInstance().getSpecificationSet().stream()
+                .filter(s -> s.getSpecId().equals("spec-test-1"))
+                .forEach(s -> {
+                    if (s.getResourceModel() != null) { s.getResourceModel().delete(); }
+                    s.delete();
+                });
     }
 }

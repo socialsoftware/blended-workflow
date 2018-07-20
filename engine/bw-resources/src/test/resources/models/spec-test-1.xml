@@ -276,7 +276,7 @@
     </resource-rule>
     <resource-rule product="Patient" model="data-model" type="informs">
       <SharesUnitExpr amount="ALL">
-        <IsPersonDataObjectExpr data-field="World" />
+        <IsPersonDataObjectExpr path="World" />
       </SharesUnitExpr>
     </resource-rule>
     <resource-rule product="World" model="data-model" type="responsible-for">
@@ -286,7 +286,7 @@
     </resource-rule>
     <resource-rule product="World" model="data-model" type="informs">
       <ReportsToPersonPositionExpr directly="false">
-        <IsPersonDataObjectExpr data-field="World" />
+        <IsPersonDataObjectExpr path="World" />
       </ReportsToPersonPositionExpr>
     </resource-rule>
     <resource-rule product="Hello" model="data-model" type="responsible-for">
@@ -304,7 +304,7 @@
     </resource-rule>
     <resource-rule product="Patient.firstName" model="data-model" type="informs">
       <SharesRoleExpr amount="ALL">
-        <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Hello" />
+        <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Hello" />
       </SharesRoleExpr>
     </resource-rule>
     <resource-rule product="World.goal4" model="data-model" type="responsible-for">
@@ -324,7 +324,7 @@
     </resource-rule>
     <resource-rule product="World.goal2" model="data-model" type="responsible-for">
       <DelegatesToPersonPositionExpr>
-        <IsPersonDataObjectExpr data-field="World" />
+        <IsPersonDataObjectExpr path="World" />
       </DelegatesToPersonPositionExpr>
     </resource-rule>
     <resource-rule product="World.goal2" model="data-model" type="informs">
@@ -360,16 +360,16 @@
       <HasUnitExpr unit="u" />
     </resource-rule>
     <resource-rule product="Hello.activity1" model="data-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="World" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="World" />
     </resource-rule>
     <resource-rule product="Hello.activity1" model="data-model" type="informs">
-      <IsPersonDataObjectExpr data-field="World" />
+      <IsPersonDataObjectExpr path="World" />
     </resource-rule>
     <resource-rule product="Hello.activity1" model="activity-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="World" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="World" />
     </resource-rule>
     <resource-rule product="Hello.activity1" model="activity-model" type="informs">
-      <IsPersonDataObjectExpr data-field="World" />
+      <IsPersonDataObjectExpr path="World" />
     </resource-rule>
     <resource-rule product="Hello.activity2" model="activity-model" type="responsible-for">
       <AndExpr>
@@ -402,7 +402,7 @@
     </resource-rule>
     <resource-rule product="World.goal2" model="activity-model" type="responsible-for">
       <DelegatesToPersonPositionExpr>
-        <IsPersonDataObjectExpr data-field="World" />
+        <IsPersonDataObjectExpr path="World" />
       </DelegatesToPersonPositionExpr>
     </resource-rule>
     <resource-rule product="World.goal2" model="activity-model" type="informs">
@@ -430,7 +430,7 @@
     </resource-rule>
     <resource-rule product="Patient.firstName" model="activity-model" type="informs">
       <SharesRoleExpr amount="ALL">
-        <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="Hello" />
+        <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="Hello" />
       </SharesRoleExpr>
     </resource-rule>
     <resource-rule product="Hello" model="activity-model" type="responsible-for">
@@ -448,7 +448,7 @@
     </resource-rule>
     <resource-rule product="World" model="activity-model" type="informs">
       <ReportsToPersonPositionExpr directly="false">
-        <IsPersonDataObjectExpr data-field="World" />
+        <IsPersonDataObjectExpr path="World" />
       </ReportsToPersonPositionExpr>
     </resource-rule>
     <resource-rule product="Patient" model="activity-model" type="responsible-for">
@@ -458,7 +458,7 @@
     </resource-rule>
     <resource-rule product="Patient" model="activity-model" type="informs">
       <SharesUnitExpr amount="ALL">
-        <IsPersonDataObjectExpr data-field="World" />
+        <IsPersonDataObjectExpr path="World" />
       </SharesUnitExpr>
     </resource-rule>
     <resource-rule product="World.activity3" model="goal-model" type="responsible-for">
@@ -477,7 +477,7 @@
     </resource-rule>
     <resource-rule product="World.goal2" model="goal-model" type="responsible-for">
       <DelegatesToPersonPositionExpr>
-        <IsPersonDataObjectExpr data-field="World" />
+        <IsPersonDataObjectExpr path="World" />
       </DelegatesToPersonPositionExpr>
     </resource-rule>
     <resource-rule product="World.goal2" model="goal-model" type="informs">
@@ -505,14 +505,14 @@
     </resource-rule>
     <resource-rule product="World" model="goal-model" type="informs">
       <ReportsToPersonPositionExpr directly="false">
-        <IsPersonDataObjectExpr data-field="World" />
+        <IsPersonDataObjectExpr path="World" />
       </ReportsToPersonPositionExpr>
     </resource-rule>
     <resource-rule product="Hello.activity1" model="goal-model" type="responsible-for">
-      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" product="World" />
+      <IsPersonInTaskDutyExpr task-duty="RESPONSIBLE FOR" path="World" />
     </resource-rule>
     <resource-rule product="Hello.activity1" model="goal-model" type="informs">
-      <IsPersonDataObjectExpr data-field="World" />
+      <IsPersonDataObjectExpr path="World" />
     </resource-rule>
     <resource-rule product="Hello.activity2" model="goal-model" type="responsible-for">
       <AndExpr>

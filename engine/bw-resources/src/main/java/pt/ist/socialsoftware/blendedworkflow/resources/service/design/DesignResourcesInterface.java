@@ -6,81 +6,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.Atomic;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Position;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprAnd;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprAnyone;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprCommonality;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprDelegatedByPersonPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprDelegatedByPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprDelegatesToPersonPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprDelegatesToPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHasCapability;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHasPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHasRole;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHasUnit;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistory;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistoryExecuting;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprHistoryInformed;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPerson;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPersonDataObject;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprIsPersonInTaskDuty;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprNot;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprOr;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprReportedByPersonPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprReportedByPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprReportsToPersonPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprReportsToPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprSharesPosition;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprSharesRole;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExprSharesUnit;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExpression;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALPersonExpression;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.CapabilityDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprAndDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprAnyoneDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprDelegatedByPersonPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprDelegatedByPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprDelegatesToPersonPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprDelegatesToPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHasCapabilityDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHasPositionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHasRoleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHasUnitDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHistoryExecutingDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprHistoryInformedDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprIsPersonDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprIsPersonDataObjectDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprIsPersonInTaskDutyDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprNotDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprOrDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprReportedByPersonPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprReportedByPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprReportsToPersonPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprReportsToPositionExprDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprSharesPositionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprSharesRoleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExprSharesUnitDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RALExpressionDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRuleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.RoleDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.req.ResourcesMergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.xml.ResourceXmlExport;
 
 public class DesignResourcesInterface extends DesignInterface {
@@ -211,333 +152,18 @@ public class DesignResourcesInterface extends DesignInterface {
 
 	public RALExpression createRALExpression(String specId, RALExpressionDTO ralExpressionDTO) {
 		ResourceModel resourceModel = getResourceModelFromSpecId(specId);
-		if (ralExpressionDTO instanceof RALExprAnyoneDTO) {
 
-			log.debug("RALExpression Type: ANYONE");
-			return new RALExprAnyone(resourceModel);
+		RALExpression ralExpression = ralExpressionDTO.getRALExpresion(resourceModel, this, specId);
 
-		} else if (ralExpressionDTO instanceof RALExprIsPersonDTO) {
-			log.debug("RALExpression Type: IS PERSON");
+        if (ralExpression == null) {
+		    throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
+        }
 
-			RALExprIsPersonDTO ralExprIsPersonDTO = (RALExprIsPersonDTO) ralExpressionDTO;
-
-			return new RALExprIsPerson(resourceModel, resourceModel.getPerson(ralExprIsPersonDTO.getPerson()));
-
-		} else if (ralExpressionDTO instanceof RALExprIsPersonDataObjectDTO) {
-
-			log.debug("RALExpression Type: IS PERSON IN DATA FIELD");
-
-			RALExprIsPersonDataObjectDTO ralExprIsPersonDataObjectDTO = (RALExprIsPersonDataObjectDTO) ralExpressionDTO;
-
-			if (ralExprIsPersonDataObjectDTO.getDataField() == null) {
-				throw new RMException(RMErrorType.INVALID_DATA_FIELD,
-						"Invalid data field name used in IS PERSON IN DATA FIELD expression");
-			}
-
-			Product product = getProduct(specId, ralExprIsPersonDataObjectDTO.getDataField());
-
-			if (!(product instanceof Entity)) {
-				throw new RMException(RMErrorType.INVALID_DATA_FIELD,
-						"The data field in the IS PERSON IN DATA FIELD expression is not an attribute");
-			}
-
-			return new RALExprIsPersonDataObject(resourceModel, (Entity) product);
-
-		} else if (ralExpressionDTO instanceof RALExprIsPersonInTaskDutyDTO) {
-
-			log.debug("RALExpression Type: IS PERSON IN TASK DUTY");
-
-			RALExprIsPersonInTaskDutyDTO ralExprIsPersonInTaskDutyDTO = (RALExprIsPersonInTaskDutyDTO) ralExpressionDTO;
-
-			if (ralExprIsPersonInTaskDutyDTO.getDataField() == null) {
-				throw new RMException(RMErrorType.INVALID_DATA_FIELD,
-						"Invalid data field name used in IS PERSON IN TASK DUTY expression");
-			}
-
-			RALExpression.TaskDutyType taskDuty = RALExpression.TaskDutyType
-					.fromResourceRuleString(ralExprIsPersonInTaskDutyDTO.getTaskDuty().toString());
-
-			Product product = getProduct(specId, ralExprIsPersonInTaskDutyDTO.getDataField());
-
-			return new RALExprIsPersonInTaskDuty(resourceModel, taskDuty, product);
-		} else if (ralExpressionDTO instanceof RALExprHasPositionDTO) {
-
-			log.debug("RALExpression Type: HAS POSITION");
-
-			RALExprHasPositionDTO ralExprHasPositionDTO = (RALExprHasPositionDTO) ralExpressionDTO;
-
-			return new RALExprHasPosition(resourceModel,
-					resourceModel.getPosition(ralExprHasPositionDTO.getPosition()));
-
-		} else if (ralExpressionDTO instanceof RALExprHasUnitDTO) {
-
-			log.debug("RALExpression Type: HAS UNIT");
-
-			RALExprHasUnitDTO ralExprHasUnitDTO = (RALExprHasUnitDTO) ralExpressionDTO;
-
-			return new RALExprHasUnit(resourceModel, resourceModel.getUnit(ralExprHasUnitDTO.getUnit()));
-
-		} else if (ralExpressionDTO instanceof RALExprHasRoleDTO) {
-
-			log.debug("RALExpression Type: HAS ROLE");
-
-			RALExprHasRoleDTO ralExprHasRoleDTO = (RALExprHasRoleDTO) ralExpressionDTO;
-
-			RALExprHasRole ralExprHasRole = new RALExprHasRole(resourceModel,
-					resourceModel.getRole(ralExprHasRoleDTO.getRole()));
-
-			if (ralExprHasRoleDTO.getUnit() != null) {
-				ralExprHasRole.setUnit(resourceModel.getUnit(ralExprHasRoleDTO.getUnit()));
-			}
-
-			return ralExprHasRole;
-
-		} else if (ralExpressionDTO instanceof RALExprReportsToPersonPositionExprDTO) {
-
-			log.debug("RALExpression Type: REPORTS TO PERSON POSITION");
-
-			RALExprReportsToPersonPositionExprDTO ralExprReportsToPersonPositionExprDTO = (RALExprReportsToPersonPositionExprDTO) ralExpressionDTO;
-
-			RALExpression expression = createRALExpression(specId,
-					ralExprReportsToPersonPositionExprDTO.getPersonExpr());
-
-			if (!(expression instanceof RALPersonExpression)) {
-				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST,
-						"Invalid RALExpression cast to " + RALPersonExpression.class.getName());
-			}
-
-			return new RALExprReportsToPersonPosition(resourceModel, (RALPersonExpression) expression,
-					ralExprReportsToPersonPositionExprDTO.isDirectly());
-
-		} else if (ralExpressionDTO instanceof RALExprReportsToPositionExprDTO) {
-
-			log.debug("RALExpression Type: REPORTS TO POSITION");
-
-			RALExprReportsToPositionExprDTO ralExprReportsToPositionExprDTO = (RALExprReportsToPositionExprDTO) ralExpressionDTO;
-
-			return new RALExprReportsToPosition(resourceModel,
-					resourceModel.getPosition(ralExprReportsToPositionExprDTO.getPosition()),
-					ralExprReportsToPositionExprDTO.isDirectly());
-
-		} else if (ralExpressionDTO instanceof RALExprReportedByPersonPositionExprDTO) {
-
-			log.debug("RALExpression Type: REPORTS TO PERSON POSITION");
-
-			RALExprReportedByPersonPositionExprDTO ralExprReportedByPersonPositionExprDTO = (RALExprReportedByPersonPositionExprDTO) ralExpressionDTO;
-
-			RALExpression expression = createRALExpression(specId,
-					ralExprReportedByPersonPositionExprDTO.getPersonExpr());
-
-			if (!(expression instanceof RALPersonExpression)) {
-				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST,
-						"Invalid RALExpression cast to " + RALPersonExpression.class.getName());
-			}
-
-			return new RALExprReportedByPersonPosition(resourceModel, (RALPersonExpression) expression,
-					ralExprReportedByPersonPositionExprDTO.isDirectly());
-
-		} else if (ralExpressionDTO instanceof RALExprReportedByPositionExprDTO) {
-
-			log.debug("RALExpression Type: REPORTS TO POSITION");
-
-			RALExprReportedByPositionExprDTO ralExprReportedByPositionExprDTO = (RALExprReportedByPositionExprDTO) ralExpressionDTO;
-
-			return new RALExprReportedByPosition(resourceModel,
-					resourceModel.getPosition(ralExprReportedByPositionExprDTO.getPosition()),
-					ralExprReportedByPositionExprDTO.isDirectly());
-
-		} else if (ralExpressionDTO instanceof RALExprDelegatedByPersonPositionExprDTO) {
-
-			log.debug("RALExpression Type: DELEGATED BY PERSON POSITION");
-
-			RALExprDelegatedByPersonPositionExprDTO ralExprDelegatedByPersonPositionExprDTO = (RALExprDelegatedByPersonPositionExprDTO) ralExpressionDTO;
-
-			RALExpression expression = createRALExpression(specId,
-					ralExprDelegatedByPersonPositionExprDTO.getPersonExpr());
-
-			if (!(expression instanceof RALPersonExpression)) {
-				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST,
-						"Invalid RALExpression cast to " + RALPersonExpression.class.getName());
-			}
-
-			return new RALExprDelegatedByPersonPosition(resourceModel, (RALPersonExpression) expression);
-
-		} else if (ralExpressionDTO instanceof RALExprDelegatedByPositionExprDTO) {
-
-			log.debug("RALExpression Type: DELEGATED BY POSITION");
-
-			RALExprDelegatedByPositionExprDTO ralExprDelegatedByPositionExprDTO = (RALExprDelegatedByPositionExprDTO) ralExpressionDTO;
-
-			return new RALExprDelegatedByPosition(resourceModel,
-					resourceModel.getPosition(ralExprDelegatedByPositionExprDTO.getPosition()));
-
-		} else if (ralExpressionDTO instanceof RALExprDelegatesToPersonPositionExprDTO) {
-
-			log.debug("RALExpression Type: DELEGATES TO PERSON POSITION");
-
-			RALExprDelegatesToPersonPositionExprDTO ralExprDelegatesToPersonPositionExprDTO = (RALExprDelegatesToPersonPositionExprDTO) ralExpressionDTO;
-
-			RALExpression expression = createRALExpression(specId,
-					ralExprDelegatesToPersonPositionExprDTO.getPersonExpr());
-
-			if (!(expression instanceof RALPersonExpression)) {
-				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST,
-						"Invalid RALExpression cast to " + RALPersonExpression.class.getName());
-			}
-
-			return new RALExprDelegatesToPersonPosition(resourceModel, (RALPersonExpression) expression);
-
-		} else if (ralExpressionDTO instanceof RALExprDelegatesToPositionExprDTO) {
-
-			log.debug("RALExpression Type: DELEGATES TO POSITION");
-
-			RALExprDelegatesToPositionExprDTO ralExprDelegatesToPositionExprDTO = (RALExprDelegatesToPositionExprDTO) ralExpressionDTO;
-
-			return new RALExprDelegatesToPosition(resourceModel,
-					resourceModel.getPosition(ralExprDelegatesToPositionExprDTO.getPosition()));
-
-		} else if (ralExpressionDTO instanceof RALExprNotDTO) {
-
-			log.debug("RALExpression Type: NOT");
-
-			RALExprNotDTO ralExprNotDTO = (RALExprNotDTO) ralExpressionDTO;
-
-			return new RALExprNot(resourceModel, createRALExpression(specId, ralExprNotDTO.getExpr()));
-
-		} else if (ralExpressionDTO instanceof RALExprAndDTO) {
-
-			log.debug("RALExpression Type: AND");
-
-			RALExprAndDTO ralExprAndDTO = (RALExprAndDTO) ralExpressionDTO;
-
-			return new RALExprAnd(resourceModel, createRALExpression(specId, ralExprAndDTO.getLeftExpr()),
-					createRALExpression(specId, ralExprAndDTO.getRightExpr()));
-
-		} else if (ralExpressionDTO instanceof RALExprOrDTO) {
-
-			log.debug("RALExpression Type: OR");
-
-			RALExprOrDTO ralExprOrDTO = (RALExprOrDTO) ralExpressionDTO;
-
-			return new RALExprOr(resourceModel, createRALExpression(specId, ralExprOrDTO.getLeftExpr()),
-					createRALExpression(specId, ralExprOrDTO.getRightExpr()));
-
-		} else if (ralExpressionDTO instanceof RALExprHasCapabilityDTO) {
-
-			log.debug("RALExpression Type: HAS CAPABILITY");
-
-			RALExprHasCapabilityDTO ralExprHasCapabilityDTO = (RALExprHasCapabilityDTO) ralExpressionDTO;
-
-			return new RALExprHasCapability(resourceModel,
-					resourceModel.getCapability(ralExprHasCapabilityDTO.getCapability()));
-
-		} else if (ralExpressionDTO instanceof RALExprHistoryExecutingDTO) {
-
-			log.debug("RALExpression Type: HAS HISTORY EXECUTING");
-
-			RALExprHistoryExecutingDTO ralExprHistoryExecutingDTO = (RALExprHistoryExecutingDTO) ralExpressionDTO;
-
-			if (ralExprHistoryExecutingDTO.getDataField() == null) {
-				throw new RMException(RMErrorType.INVALID_DATA_FIELD,
-						"Invalid data field name used in HistoryExecuting expression");
-			}
-
-			Product product = getProduct(specId, ralExprHistoryExecutingDTO.getDataField());
-
-			if (!(product instanceof Entity)) {
-				throw new RMException(RMErrorType.INVALID_DATA_FIELD,
-						"The data field in the HAS HISTORY EXECUTING expression is not an attribute");
-			}
-
-			RALExprHistory.Quantifier quantifier = RALExprHistory.Quantifier
-					.fromString(ralExprHistoryExecutingDTO.getQuantifierDTO().toString());
-			return new RALExprHistoryExecuting(resourceModel, quantifier, product);
-		} else if (ralExpressionDTO instanceof RALExprHistoryInformedDTO) {
-
-			log.debug("RALExpression Type: HAS HISTORY INFORMED");
-
-			RALExprHistoryInformedDTO ralExprHistoryInformedDTO = (RALExprHistoryInformedDTO) ralExpressionDTO;
-
-			if (ralExprHistoryInformedDTO.getDataField() == null) {
-				throw new RMException(RMErrorType.INVALID_DATA_FIELD,
-						"Invalid data field name used in HistoryInformed expression");
-			}
-
-			Product product = getProduct(specId, ralExprHistoryInformedDTO.getDataField());
-
-			if (!(product instanceof Entity)) {
-				throw new RMException(RMErrorType.INVALID_DATA_FIELD,
-						"The data field in the HAS HISTORY INFORMED expression is not an attribute");
-			}
-
-			RALExprHistory.Quantifier quantifier = RALExprHistory.Quantifier
-					.fromString(ralExprHistoryInformedDTO.getQuantifierDTO().toString());
-
-			return new RALExprHistoryInformed(resourceModel, quantifier, product);
-		} else if (ralExpressionDTO instanceof RALExprSharesPositionDTO) {
-
-			log.debug("RALExpression Type: SHARES POSITION");
-
-			RALExprSharesPositionDTO ralExprSharesPositionDTO = (RALExprSharesPositionDTO) ralExpressionDTO;
-
-			RALExprCommonality.Amount amount = RALExprCommonality.Amount
-					.fromString(ralExprSharesPositionDTO.getAmountDTO().toString());
-
-			RALExpression expression = createRALExpression(specId, ralExprSharesPositionDTO.getPersonExpr());
-
-			if (!(expression instanceof RALPersonExpression)) {
-				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST,
-						"Invalid RALExpression cast to " + RALPersonExpression.class.getName());
-			}
-
-			return new RALExprSharesPosition(resourceModel, amount, (RALPersonExpression) expression);
-
-		} else if (ralExpressionDTO instanceof RALExprSharesUnitDTO) {
-
-			log.debug("RALExpression Type: SHARES UNIT");
-
-			RALExprSharesUnitDTO ralExprSharesUnitDTO = (RALExprSharesUnitDTO) ralExpressionDTO;
-
-			RALExprCommonality.Amount amount = RALExprCommonality.Amount
-					.fromString(ralExprSharesUnitDTO.getAmountDTO().toString());
-
-			RALExpression expression = createRALExpression(specId, ralExprSharesUnitDTO.getPersonExpr());
-
-			if (!(expression instanceof RALPersonExpression)) {
-				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST,
-						"Invalid RALExpression cast to " + RALPersonExpression.class.getName());
-			}
-
-			return new RALExprSharesUnit(resourceModel, amount, (RALPersonExpression) expression);
-
-		} else if (ralExpressionDTO instanceof RALExprSharesRoleDTO) {
-
-			log.debug("RALExpression Type: SHARES ROLE");
-
-			RALExprSharesRoleDTO ralExprSharesRoleDTO = (RALExprSharesRoleDTO) ralExpressionDTO;
-
-			RALExprCommonality.Amount amount = RALExprCommonality.Amount
-					.fromString(ralExprSharesRoleDTO.getAmountDTO().toString());
-
-			RALExpression expression = createRALExpression(specId, ralExprSharesRoleDTO.getPersonExpr());
-
-			if (!(expression instanceof RALPersonExpression)) {
-				throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_CAST,
-						"Invalid RALExpression cast to " + RALPersonExpression.class.getName());
-			}
-
-			RALExprSharesRole ralExprSharesRole = new RALExprSharesRole(resourceModel, amount,
-					(RALPersonExpression) expression);
-
-			if (ralExprSharesRoleDTO.getUnit() != null) {
-				ralExprSharesRole.setUnit(resourceModel.getUnit(ralExprSharesRoleDTO.getUnit()));
-			}
-
-			return ralExprSharesRole;
-
-		} else {
-			throw new RMException(RMErrorType.INVALID_RAL_EXPRESSION_DTO_TYPE, "Invalid RALExpressionDTO type");
+		if (!ralExpression.isConsistent()) {
+			throw new RMException(RMErrorType.RAL_EXPRESSION_IS_NOT_CONSISTENT, "RALExpressionDTO is not consistent");
 		}
+
+		return ralExpression;
 	}
 
 	@Atomic(mode = Atomic.TxMode.WRITE)
@@ -595,5 +221,95 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		return exporter.export(spec);
 		// logger.debug(exporter.export(spec));
+	}
+
+	@Override
+	public Activity mergeActivities(MergeOperationDto mergeOperationDto) {
+		Specification spec = getSpecBySpecId(mergeOperationDto.getSpecId());
+		Activity activityOne = getActivityByName(spec, mergeOperationDto.getNameOne());
+		Activity activityTwo = getActivityByName(spec, mergeOperationDto.getNameTwo());
+
+		RALExpression responsibleExpr1 = activityOne.getResponsibleFor();
+		RALExpression responsibleExpr2 = activityTwo.getResponsibleFor();
+		RALExpression informsExpr1 = activityOne.getInforms();
+		RALExpression informsExpr2 = activityTwo.getInforms();
+
+		spec.getResourceModel().cleanActivity(activityOne);
+		spec.getResourceModel().cleanActivity(activityTwo);
+
+		Activity activityMerged = super.mergeActivities(mergeOperationDto);
+		if (mergeOperationDto instanceof ResourcesMergeOperationDto) {
+			return spec.getResourceModel().mergeActivities(
+					responsibleExpr1, responsibleExpr2,
+					informsExpr1, informsExpr2,
+					activityMerged, ((ResourcesMergeOperationDto) mergeOperationDto).getPolicy());
+		} else {
+			return activityMerged;
+		}
+	}
+
+	@Override
+	public Goal mergeGoals(MergeOperationDto mergeOperationDto) {
+		Specification spec = getSpecBySpecId(mergeOperationDto.getSpecId());
+		Goal goalOne = getGoalByName(spec.getSpecId(), mergeOperationDto.getNameOne());
+		Goal goalTwo = getGoalByName(spec.getSpecId(), mergeOperationDto.getNameTwo());
+
+		RALExpression responsibleExpr1 = goalOne.getResponsibleFor();
+		RALExpression responsibleExpr2 = goalTwo.getResponsibleFor();
+		RALExpression informsExpr1 = goalOne.getInforms();
+		RALExpression informsExpr2 = goalTwo.getInforms();
+
+		spec.getResourceModel().cleanGoal(goalOne);
+		spec.getResourceModel().cleanGoal(goalTwo);
+
+		Goal goalMerged = super.mergeGoals(mergeOperationDto);
+		if (mergeOperationDto instanceof ResourcesMergeOperationDto) {
+			return spec.getResourceModel().mergeGoals(
+					responsibleExpr1, responsibleExpr2,
+					informsExpr1, informsExpr2,
+					goalMerged, ((ResourcesMergeOperationDto) mergeOperationDto).getPolicy());
+		} else {
+			return goalMerged;
+		}
+	}
+
+	@Override
+	public Activity extractActivity(String specId, String newActivityName, String description, String sourceActivityName, Set<DefPathConditionDTO> successCondition) {
+		Specification spec = getSpecBySpecId(specId);
+		Activity activity = getActivityByName(spec, sourceActivityName);
+
+		RALExpression responsibleFor = activity.getResponsibleFor();
+		RALExpression informedAbout = activity.getInforms();
+
+		activity.setResponsibleFor(null);
+		activity.setInforms(null);
+
+		Activity newActivity = super.extractActivity(specId, newActivityName, description, sourceActivityName, successCondition);
+
+		Activity fromActivity = spec.getActivityModel().getActivitySet().stream()
+				.filter(activity1 -> activity1.getName().equals(sourceActivityName))
+				.findFirst()
+				.orElseThrow(() -> new RMException(RMErrorType.ACTIVITY_NOT_FOUND_IN_EXTRACT));
+
+		fromActivity.setResponsibleFor(responsibleFor);
+		fromActivity.setInforms(informedAbout);
+
+		newActivity.setResponsibleFor(responsibleFor);
+		newActivity.setInforms(informedAbout);
+
+		return newActivity;
+	}
+
+	@Override
+	public Goal extractGoal(String specId, ExtractGoalDto extractGoalDto) {
+		Specification spec = getSpecBySpecId(specId);
+		Goal goal = getGoalByName(spec, extractGoalDto.getSourceGoalName());
+
+		Goal newGoal = super.extractGoal(specId, extractGoalDto);
+
+		newGoal.setResponsibleFor(goal.getResponsibleFor());
+		newGoal.setInforms(goal.getInforms());
+
+		return newGoal;
 	}
 }

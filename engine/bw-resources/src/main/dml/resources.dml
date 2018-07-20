@@ -108,9 +108,12 @@ class RALPersonExpression extends RALExpression;
 
 class RALExprIsPerson extends RALPersonExpression;
 
-class RALExprIsPersonDataObject extends RALPersonExpression;
+class RALExprIsPersonDataObject extends RALPersonExpression {
+    String path;
+}
 
 class RALExprIsPersonInTaskDuty extends RALPersonExpression {
+    String path;
     TaskDutyType taskDuty;
 }
 
@@ -188,16 +191,6 @@ relation ProductHasInforms {
 relation RALExprIsPersonHasPerson {
     Person playsRole person { multiplicity 1..1; }
     RALExprIsPerson playsRole ralExprIsPerson { multiplicity 0..*; }
-}
-
-relation RALExprIsPersonDataObjectHasDataField {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Entity playsRole dataField { multiplicity 1..1; }
-    RALExprIsPersonDataObject playsRole ralExprIsPersonDataObject { multiplicity 0..*; }
-}
-
-relation RALExprIsPersonInTaskDutyHasProduct {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Product playsRole product { multiplicity 1..1; }
-    RALExprIsPersonInTaskDuty playsRole ralExprIsPersonInTaskDuty { multiplicity 0..*; }
 }
 
 relation RALExprHasPositionHasPosition {
@@ -320,22 +313,22 @@ relation RALExprSharesRoleHasUnit {
   */
 
 relation ActivityHasResponsibleFor {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Activity playsRole activityResponsibleFor { multiplicity 0..1;}
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Activity playsRole activityResponsibleFor { multiplicity 0..*;}
     RALExpression playsRole responsibleFor { multiplicity 0..1; }
 }
 
 relation ActivityHasInforms {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Activity playsRole activityInforms { multiplicity 0..1;}
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Activity playsRole activityInforms { multiplicity 0..*;}
     RALExpression playsRole informs { multiplicity 0..1; }
 }
 
 relation GoalHasResponsibleFor {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalResponsibleFor { multiplicity 0..1;}
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalResponsibleFor { multiplicity 0..*;}
     RALExpression playsRole responsibleFor { multiplicity 0..1; }
 }
 
 relation GoalHasInforms {
-    .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalInforms { multiplicity 0..1;}
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.Goal playsRole goalInforms { multiplicity 0..*;}
     RALExpression playsRole informs { multiplicity 0..1; }
 }
 
@@ -356,23 +349,12 @@ relation BlendedWorkflowHasUser {
 	User playsRole users {multiplicity 0..*;}
 }
 
-class RegistrationToken {
-	String token;
-	Long expireTime;
-	boolean authorized;
-}
-
-relation BlendedWorkflowHasRegistrationToken {
-	.pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow playsRole blendedworkflow {multiplicity 1..1;}
-	RegistrationToken playsRole token {multiplicity 0..*;}
-}
-
-relation UserHasRegistrationToken {
-	User playsRole user {multiplicity 1..1;}
-	RegistrationToken playsRole token {multiplicity 0..1;}
-}
-
 relation UserIsPerson {
     User playsRole user {multiplicity 1..1;}
-    Person playsRole person {multiplicity 1..1;}
+    Person playsRole person {multiplicity 1..*;}
+}
+
+relation UserExecutedWorkItem {
+    User playsRole executionUser {multiplicity 0..1;}
+    .pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem playsRole workItem {multiplicity 0..*;}
 }

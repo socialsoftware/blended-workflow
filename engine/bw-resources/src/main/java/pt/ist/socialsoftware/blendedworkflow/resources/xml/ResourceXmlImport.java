@@ -1,22 +1,16 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.xml;
 
-import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.filter.Filters;
-import org.jdom2.xpath.XPathExpression;
-import org.jdom2.xpath.XPathFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.xml.SpecXmlImport;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static pt.ist.socialsoftware.blendedworkflow.resources.xml.ResourceXmlExport.ACTIVITY_MODEL;
@@ -223,13 +217,13 @@ public class ResourceXmlImport extends SpecXmlImport {
 
         } else if (resourceRule.getName().equals("IsPersonDataObjectExpr")) {
 
-            ralExpressionDTO = new RALExprIsPersonDataObjectDTO(resourceRule.getAttribute("data-field").getValue());
+            ralExpressionDTO = new RALExprIsPersonDataObjectDTO(resourceRule.getAttribute("path").getValue());
 
         } else if (resourceRule.getName().equals("IsPersonInTaskDutyExpr")) {
 
             ralExpressionDTO = new RALExprIsPersonInTaskDutyDTO(
                     ResourceRuleDTO.ResourceRuleTypeDTO.fromAsgmtString(resourceRule.getAttribute("task-duty").getValue()),
-                    resourceRule.getAttribute("product").getValue()
+                    resourceRule.getAttribute("path").getValue()
             );
 
         } else if (resourceRule.getName().equals("AnyoneExpr")) {

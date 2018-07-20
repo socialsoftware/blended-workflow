@@ -1,0 +1,45 @@
+2018-05-04 23:49:09,315 INFO o.a.j.u.JMeterUtils: Setting Locale to pt_PT
+2018-05-04 23:49:09,326 ERROR o.a.j.u.JMeterUtils: Could not find resources for 'pt_PT'
+2018-05-04 23:49:09,332 INFO o.a.j.JMeter: Loading user properties from: /usr/local/Cellar/jmeter/3.3/libexec/bin/user.properties
+2018-05-04 23:49:09,332 INFO o.a.j.JMeter: Loading system properties from: /usr/local/Cellar/jmeter/3.3/libexec/bin/system.properties
+2018-05-04 23:49:09,342 INFO o.a.j.JMeter: Copyright (c) 1998-2017 The Apache Software Foundation
+2018-05-04 23:49:09,342 INFO o.a.j.JMeter: Version 3.3 r1808647
+2018-05-04 23:49:09,342 INFO o.a.j.JMeter: java.version=1.8.0_74
+2018-05-04 23:49:09,343 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2018-05-04 23:49:09,343 INFO o.a.j.JMeter: os.name=Mac OS X
+2018-05-04 23:49:09,343 INFO o.a.j.JMeter: os.arch=x86_64
+2018-05-04 23:49:09,343 INFO o.a.j.JMeter: os.version=10.13.4
+2018-05-04 23:49:09,343 INFO o.a.j.JMeter: file.encoding=UTF-8
+2018-05-04 23:49:09,343 INFO o.a.j.JMeter: Max memory     =536870912
+2018-05-04 23:49:09,343 INFO o.a.j.JMeter: Available Processors =8
+2018-05-04 23:49:09,354 INFO o.a.j.JMeter: Default Locale=português (Portugal)
+2018-05-04 23:49:09,354 INFO o.a.j.JMeter: JMeter  Locale=português (Portugal)
+2018-05-04 23:49:09,355 INFO o.a.j.JMeter: JMeterHome=/usr/local/Cellar/jmeter/3.3/libexec
+2018-05-04 23:49:09,355 INFO o.a.j.JMeter: user.dir  =/Users/guilhermeramos/Dropbox/Escola/MEIC/2ºano/Tese/blended-workflow/engine/bw-resources
+2018-05-04 23:49:09,356 INFO o.a.j.JMeter: PWD       =/Users/guilhermeramos/Dropbox/Escola/MEIC/2ºano/Tese/blended-workflow/engine/bw-resources
+2018-05-04 23:49:09,393 INFO o.a.j.JMeter: IP: 192.168.1.70 Name: MacBook-Pro-de-Guilherme.local FullName: 192.168.1.70
+2018-05-04 23:49:12,406 INFO o.a.j.g.a.LookAndFeelCommand: Using look and feel: com.apple.laf.AquaLookAndFeel [Mac OS X, System]
+2018-05-04 23:49:12,411 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2018-05-04 23:49:12,894 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2018-05-04 23:49:12,894 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2018-05-04 23:49:13,638 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.assertions.BSFAssertion
+2018-05-04 23:49:14,192 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.extractor.BSFPostProcessor
+2018-05-04 23:49:14,220 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.modifiers.BSFPreProcessor
+2018-05-04 23:49:14,250 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-05-04 23:49:14,250 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-05-04 23:49:14,250 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-05-04 23:49:14,251 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-05-04 23:49:14,251 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2018-05-04 23:49:14,251 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2018-05-04 23:49:14,621 INFO o.a.j.e.KeyToolUtils: keytool found at 'keytool'
+2018-05-04 23:49:14,622 INFO o.a.j.p.h.p.ProxyControl: HTTP(S) Test Script Recorder SSL Proxy will use keys that support embedded 3rd party resources in file /usr/local/Cellar/jmeter/3.3/libexec/bin/proxyserver.jks
+2018-05-04 23:49:14,758 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.protocol.java.sampler.BSFSampler
+2018-05-04 23:49:14,791 INFO o.a.j.s.FileServer: Default base='/Users/guilhermeramos/Dropbox/Escola/MEIC/2ºano/Tese/blended-workflow/engine/bw-resources'
+2018-05-04 23:49:14,864 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.protocol.mongodb.config.MongoSourceElement
+2018-05-04 23:49:14,864 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.protocol.mongodb.sampler.MongoScriptSampler
+2018-05-04 23:49:14,980 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.timers.BSFTimer
+2018-05-04 23:49:14,999 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.visualizers.BSFListener
+2018-05-04 23:49:15,141 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2018-05-04 23:49:15,141 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to ISO-8859-1
+2018-05-04 23:49:15,141 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2018-05-04 23:49:15,142 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000

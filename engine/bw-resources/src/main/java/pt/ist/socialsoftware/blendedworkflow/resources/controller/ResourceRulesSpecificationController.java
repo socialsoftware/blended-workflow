@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.ResourceRuleDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceRelationDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceRuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.utils.ResourcesFactory;
 
 @RestController

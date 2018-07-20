@@ -1,18 +1,18 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
-import javafx.geometry.Pos;
 import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWError;
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.design.MergeResourcesPolicy;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ResourceModel extends ResourceModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(ResourceModel.class);
@@ -23,13 +23,13 @@ public class ResourceModel extends ResourceModel_Base {
 
     public void clean() {
 		getEntityIsPersonSet().stream().forEach(e -> removeEntityIsPerson(e));
-		getRalExpressionSet().stream().forEach(e -> e.delete());
-		getPersonSet().stream().forEach(p -> p.delete());
-		getPositionSet().stream().forEach(p -> p.delete());
-		getCapabilitySet().stream().forEach(c -> c.delete());
-		getRoleSet().stream().forEach(r -> r.delete());
-		getUnitSet().stream().forEach(u -> u.delete());
-		getSpec().getBlendedWorkflow().getUsersSet().stream().forEach(u -> u.delete());
+		getRalExpressionSet().stream().forEach(RALExpression::delete);
+		getPersonSet().stream().forEach(Person::delete);
+		getPositionSet().stream().forEach(Position::delete);
+		getCapabilitySet().stream().forEach(Capability::delete);
+		getRoleSet().stream().forEach(Role::delete);
+		getUnitSet().stream().forEach(Unit::delete);
+		getSpec().getBlendedWorkflow().getUsersSet().stream().forEach(User::delete);
     }
 
 	public void delete() {
@@ -165,8 +165,142 @@ public class ResourceModel extends ResourceModel_Base {
 		return roleNames.stream().map(d -> getRole(d)).collect(Collectors.toList());
 	}
 
-    public boolean checkEntityIsPerson(Entity entity) {
-		return getEntityIsPersonSet().stream()
+    public boolean checkEntityIsPerson(String path) {
+		Product entity = getSpec().getDataModel().getTargetOfPath(path);
+		return (entity instanceof Entity) && getEntityIsPersonSet().stream()
 				.anyMatch(e -> e.getName().equals(entity.getName()));
     }
+
+	public boolean checkEntityIsPerson(Product product) {
+		return (product instanceof Entity) && getEntityIsPersonSet().stream()
+				.anyMatch(e -> e.getName().equals(product.getName()));
+	}
+
+	public Activity mergeActivities(RALExpression responsibleExpr1, RALExpression responsibleExpr2,
+									RALExpression informsExpr1, RALExpression informsExpr2,
+									Activity activityMerged, MergeResourcesPolicy mode) {
+		mergeActivitiesResponsibleForExpr(responsibleExpr1, responsibleExpr2, activityMerged, mode);
+
+		mergeActivitiesInformsExpr(informsExpr1, informsExpr2, activityMerged, mode);
+
+		return activityMerged;
+	}
+
+	private RALExpression getMergedExpr(MergeResourcesPolicy mode, RALExpression expressionA1, RALExpression expressionA2) {
+		RALExpression expressionMerged;
+		switch (mode) {
+			case RESTRICTED:
+				expressionMerged = new RALExprAnd(this, expressionA1, expressionA2);
+				break;
+			case RELAXED:
+				expressionMerged = new RALExprOr(this, expressionA1, expressionA2);
+				break;
+			default:
+				throw new RMException(RMErrorType.INVALID_MERGE_TYPE);
+		}
+
+		return expressionMerged;
+	}
+
+	private void mergeActivitiesResponsibleForExpr(RALExpression expressionA1, RALExpression expressionA2, Activity activityMerged, MergeResourcesPolicy mode) {
+		if (expressionA1 == null) {
+			activityMerged.setResponsibleFor(expressionA2);
+			return;
+		}
+		if (expressionA2 == null) {
+			activityMerged.setResponsibleFor(expressionA1);
+			return;
+		}
+
+		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		if (!expressionMerged.isConsistent()) {
+			throw new RMException(RMErrorType.INCONSISTENT_RAL_EXPRESSION);
+		}
+
+		activityMerged.setResponsibleFor(expressionMerged);
+	}
+
+	private void mergeActivitiesInformsExpr(RALExpression expressionA1, RALExpression expressionA2, Activity activityMerged, MergeResourcesPolicy mode) {
+		if (expressionA1 == null) {
+			activityMerged.setInforms(expressionA2);
+			return;
+		}
+		if (expressionA2 == null) {
+			activityMerged.setInforms(expressionA1);
+			return;
+		}
+
+		expressionA1.isMergable(expressionA2);
+
+		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		if (!expressionMerged.isConsistent()) {
+			throw new RMException(RMErrorType.INCONSISTENT_RAL_EXPRESSION);
+		}
+
+		activityMerged.setInforms(expressionMerged);
+	}
+
+	public void cleanActivity(Activity activity) {
+		activity.setResponsibleFor(null);
+		activity.setInforms(null);
+	}
+
+    public void cleanGoal(Goal goal) {
+		goal.setResponsibleFor(null);
+		goal.setInforms(null);
+    }
+
+	public Goal mergeGoals(RALExpression responsibleExpr1, RALExpression responsibleExpr2,
+									RALExpression informsExpr1, RALExpression informsExpr2,
+									Goal goalMerged, MergeResourcesPolicy mode) {
+		mergeGoalsResponsibleForExpr(responsibleExpr1, responsibleExpr2, goalMerged, mode);
+
+		mergeGoalsInformsExpr(informsExpr1, informsExpr2, goalMerged, mode);
+
+		return goalMerged;
+	}
+
+	private void mergeGoalsResponsibleForExpr(RALExpression expressionA1, RALExpression expressionA2, Goal goalMerged, MergeResourcesPolicy mode) {
+		if (expressionA1 == null) {
+			goalMerged.setResponsibleFor(expressionA2);
+			return;
+		}
+		if (expressionA2 == null) {
+			goalMerged.setResponsibleFor(expressionA1);
+			return;
+		}
+
+		expressionA1.isMergable(expressionA2);
+
+		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		if (!expressionMerged.isConsistent()) {
+			throw new RMException(RMErrorType.INCONSISTENT_RAL_EXPRESSION);
+		}
+
+		goalMerged.setResponsibleFor(expressionMerged);
+	}
+
+	private void mergeGoalsInformsExpr(RALExpression expressionA1, RALExpression expressionA2, Goal goalMerged, MergeResourcesPolicy mode) {
+		if (expressionA1 == null) {
+			goalMerged.setInforms(expressionA2);
+			return;
+		}
+		if (expressionA2 == null) {
+			goalMerged.setInforms(expressionA1);
+			return;
+		}
+
+		expressionA1.isMergable(expressionA2);
+
+		RALExpression expressionMerged = getMergedExpr(mode, expressionA1, expressionA2);
+
+		if (!expressionMerged.isConsistent()) {
+			throw new RMException(RMErrorType.INCONSISTENT_RAL_EXPRESSION);
+		}
+
+		goalMerged.setInforms(expressionMerged);
+	}
 }
