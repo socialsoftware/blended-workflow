@@ -2,6 +2,6 @@ import React from 'react';
 
 export const Attribute = (props) => (
     <div>
-        {props.attribute.name}: {props.attribute.type}
+        &nbsp; &nbsp; {props.attribute.name}: {props.attribute.type}
     </div>
 )

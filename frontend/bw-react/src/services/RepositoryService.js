@@ -40,6 +40,28 @@ export class RepositoryService {
 
     getRelations(specId) {
         return this.axios.get("/specs/" + specId + "/datamodel/relations");
-	}
+    }
+
+    // Instances
+    getWorkflowInstances(specId) {
+        return this.axios.get("/specs/" + specId + "/instances")
+    }
+
+    getWorkflowInstance(specId, name) {
+        return this.axios.get("specs/" + specId + "/instances/" + name)
+    }
+
+    createWorkflowInstance(specId, name) {
+        // var url = baseUrl + "specs/" + specId + "/instances";
+        // return $http.post(url, {
+        // 	"specId" : specId,
+        // 	"name" : name
+        // });
+    }
+
+    deleteWorkflowInstance(specId, name) {
+        // var url = baseUrl + "specs/" + specId + "/instances/" + name;
+        // return $http.delete(url);
+    }
 
 }
