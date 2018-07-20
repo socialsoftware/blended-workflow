@@ -1,6 +1,6 @@
 Specification: "Doctor Appointment"  
        
-Entity Patient { 
+Entity Patient {
 	name : String
 	age : Number
 	heartProblems : Boolean 
@@ -9,15 +9,15 @@ Entity Patient {
 Entity Episode mandatory {
 	reserveDate : Date 
 	checkin : Boolean
-	checkout : Boolean               
+	checkout : Boolean dependsOn Episode.report.details          
 }
 
 Entity Prescription {
 	details : String dependsOn Prescription.episode.report.details 
 }
 
-Entity Report dependsOn Report.episode.data.bloodPressure {
-	details : String mandatory
+Entity Report {
+	details : String dependsOn Report.episode.data.bloodPressure 
 }
  
 Entity Data { 
@@ -29,12 +29,12 @@ Entity Data {
 	Constraint Data : Data.bloodPressure == Data.episode.prescription.medication.quantity 
 }
  
-Entity Medication dependsOn Medication.prescription.details { 
-	name : String 
+Entity Medication { 
+	name : String dependsOn Medication.prescription.details
 	quantity : Number
 	heartImpact : Boolean
 	
-	Constraint HeartAttackContraint:  NOT (Medication.heartImpact)
+	Constraint HeartAttackContraint: NOT (Medication.heartImpact)
 	OR NOT (Medication.prescription.episode.patient.heartProblems) 
 	OR (Medication.quantity <= Medication.prescription.episode.data.bloodPressure) 
 	
