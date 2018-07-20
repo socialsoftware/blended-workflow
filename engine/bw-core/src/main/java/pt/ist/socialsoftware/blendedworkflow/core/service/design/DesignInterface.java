@@ -986,7 +986,7 @@ public class DesignInterface {
 
 	}
 
-	private Goal getGoalByName(Specification spec, String goalName) {
+	protected Goal getGoalByName(Specification spec, String goalName) {
 		return spec.getGoalModel().getGoalSet().stream().filter(g -> g.getName().equals(goalName)).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_GOAL_NAME, goalName));
 	}
@@ -1026,7 +1026,7 @@ public class DesignInterface {
 		return conditions;
 	}
 
-	private Set<RelationBW> getRelationSet(Specification spec, Set<RelationDto> relationDtoSet) {
+	private Set<RelationBW> getRelationSet(Specification spec, Set<RelationDTO> relationDtoSet) {
 		Set<RelationBW> relations = new HashSet<>();
 		for (RelationDto relation : relationDtoSet) {
 			relations.add(spec.getDataModel().getRelation(relation.getName()));
@@ -1034,7 +1034,7 @@ public class DesignInterface {
 		return relations;
 	}
 
-	private Activity getActivityByName(Specification spec, String name) {
+	protected Activity getActivityByName(Specification spec, String name) {
 		return spec.getActivityModel().getActivitySet().stream().filter(t -> t.getName().equals(name)).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ACTIVITY_NAME, name));
 	}

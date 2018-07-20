@@ -249,15 +249,6 @@
 		<super type="org.eclipse.xtext.ui.check.expensive"/>
 		<persistent value="true"/>
 	</extension>
-	<extension point="org.eclipse.ui.preferencePages">
-		<page
-			category="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow"
-			class="pt.ist.socialsoftware.blendedworkflow.designer.ui.BlendedWorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
-			id="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.validator.preferencePage"
-			name="Errors/Warnings">
-			<keywordReference id="pt.ist.socialsoftware.blendedworkflow.designer.ui.keyword_BlendedWorkflow"/>
-		</page>
-	</extension>
 	<extension point="org.eclipse.xtext.builder.participant">
 		<participant
 			class="pt.ist.socialsoftware.blendedworkflow.designer.ui.BlendedWorkflowExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
@@ -406,18 +397,12 @@
 			class="pt.ist.socialsoftware.blendedworkflow.designer.ui.BlendedWorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
 			extensions="bw">
 		</viewer>
-		<contentTypeBinding
-			contentTypeId="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.contenttype"
-			contentViewerId="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.compare.contentViewers" />
 	</extension>
 	<extension point="org.eclipse.compare.contentMergeViewers">
 		<viewer id="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.compare.contentMergeViewers"
 			class="pt.ist.socialsoftware.blendedworkflow.designer.ui.BlendedWorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
 			extensions="bw" label="BlendedWorkflow Compare">
 		</viewer>
-		<contentTypeBinding
-			contentTypeId="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.contenttype"
-			contentMergeViewerId="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.compare.contentMergeViewers" />
 	</extension>
 	<extension point="org.eclipse.ui.editors.documentProviders">
 		<provider id="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.editors.documentProviders"

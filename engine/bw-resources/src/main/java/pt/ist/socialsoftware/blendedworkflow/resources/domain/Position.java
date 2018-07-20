@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.PositionDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.PositionDTO;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +14,6 @@ public class Position extends Position_Base {
     private static Logger logger = LoggerFactory.getLogger(Position.class);
 
     public Position(ResourceModel resourceModel, String name, String description, Unit unit) throws RMException {
-        logger.debug("Creating a new Position object");
         setResourceModel(resourceModel);
         setName(name);
         setUnit(unit);
@@ -71,6 +70,42 @@ public class Position extends Position_Base {
         setReportsTo(null);
         setResourceModel(null);
         deleteDomainObject();
+    }
+
+    public List<Position> getAllPositionsReportsTo() {
+        if (getReportsTo() == null) {
+            return new ArrayList();
+        }
+        List<Position> list = getReportsTo().getAllPositionsReportsTo();
+        list.add(getReportsTo());
+        return list;
+    }
+
+    public List<Position> getAllPositionsReportedBy() {
+        List<Position> positions = new ArrayList();
+        getIsReportedBySet().stream().forEach(position -> {
+            positions.add(position);
+            positions.addAll(position.getAllPositionsReportedBy());
+        });
+        return positions;
+    }
+
+    public List<Position> getAllPositionsDelegatesTo() {
+        List<Position> positions = new ArrayList();
+        getCanDelegateWorkToSet().stream().forEach(position -> {
+            positions.add(position);
+            positions.addAll(position.getAllPositionsDelegatesTo());
+        });
+        return positions;
+    }
+
+    public List<Position> getAllPositionsDelegatedBy() {
+        List<Position> positions = new ArrayList();
+        getWorkDelegatedBySet().stream().forEach(position -> {
+            positions.add(position);
+            positions.addAll(position.getAllPositionsDelegatedBy());
+        });
+        return positions;
     }
 
 

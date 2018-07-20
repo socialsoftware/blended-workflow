@@ -35,6 +35,8 @@ public class ResourceModelInterface {
 		return instance;
 	}
 	
+	
+	
 	public Boolean cleanResourceModel(String specId) {
 		logger.debug("cleanResourceModel: {}", specId);
 
@@ -45,6 +47,32 @@ public class ResourceModelInterface {
 
 		RestTemplate restTemplate = RestUtil.getRestTemplate();
 		Boolean response = restTemplate.getForObject(uri, Boolean.class, params);
+
+		return response;
+	}
+	
+	public Boolean checkEntityIsPerson(String specId, String path, BWNotification notification) {
+		logger.debug("cleanResourceModel: {}", specId);
+
+		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/check/entity-is-person";
+
+		Map<String, String> params = new HashMap<>();
+		params.put("specId", specId);
+
+		RestTemplate restTemplate = RestUtil.getRestTemplate();
+		Boolean response = false;
+		try {
+			response = restTemplate.postForObject(uri, path, Boolean.class, params);
+			
+			if (response) {
+				notification.addError(new BWError("Entity is not person", "Entity provided is not a person"));
+			}
+		} catch (RestClientException rce) {
+			notification.addError(new BWError("REST connection", rce.getMessage()));
+		} catch (Exception e) {
+			notification.addError(new BWError("Error", e.getMessage()));
+		}
+		
 
 		return response;
 	}
@@ -217,7 +245,7 @@ public class ResourceModelInterface {
 		return result;
 	}
 
-	public ResourceRuleDTO createResourceRule(ResourceRuleDTO ruleDTO, BWNotification notification) {
+	public boolean createResourceRule(ResourceRuleDTO ruleDTO, BWNotification notification) {
 		logger.debug("createRules: {}, {}", ruleDTO.getDataField(), ruleDTO.getType());
 
 		final String uri = BASE_URL + "/specs/{specId}/resourcerules/rules/";
@@ -229,13 +257,15 @@ public class ResourceModelInterface {
 		ResourceRuleDTO result = null;
 		try {
 			result = restTemplate.postForObject(uri, ruleDTO, ResourceRuleDTO.class, params);
+			
+			return true;
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));
+			return false;
 		} catch (Exception e) {
 			notification.addError(new BWError("Error", e.getMessage()));
+			return false;
 		}
-		
-		return result;
 	}
 
 	public boolean generateEnrichedModels(String specId) {

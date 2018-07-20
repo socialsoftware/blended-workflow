@@ -7,10 +7,10 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.*;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.*;
 
 import java.util.Arrays;
 
@@ -34,20 +34,15 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
     private Unit _unit1;
 
     private Position _position1;
-    private Position _position2;
-    private Position _position3;
-    private Position _position4;
-    private Position _position5;
-    private Position _position6;
+
     private Person _person1;
-    private Person _person2;
-    private Person _person3;
+
     private RALExpressionDTO _ralExprDTO1;
 
     @Override
     public void populate4Test() throws BWException {
-        pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface.getInstance().createSpecification(new SpecDTO(SPEC_ID, SPEC_NAME));
         designer = DesignResourcesInterface.getInstance();
+        designer.createSpecification(new SpecDTO(SPEC_ID, SPEC_NAME));
 
         spec = getBlendedWorkflow().getSpecById(SPEC_ID).orElse(null);
         _resourceModel = designer.createResourceModel(spec.getSpecId());
@@ -60,16 +55,9 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
         _unit1 = new Unit(_resourceModel, "Unit1_Pop", null);
 
         _position1 = new Position(_resourceModel, "Pos1_Pop", "test", _unit1);
-        _position2 = new Position(_resourceModel, "Pos2_Pop", "test", _unit1);
-        _position3 = new Position(_resourceModel, "Pos3_Pop", "test", _unit1);
-        _position4 = new Position(_resourceModel, "Pos4_Pop", "test", _unit1);
-        _position5 = new Position(_resourceModel, "Pos5_Pop", "test", _unit1, Arrays.asList(_role1, _role2), Arrays.asList(_position2, _position3), _position6);
-        _position6 = new Position(_resourceModel, "Pos6_Pop", "test", _unit1, Arrays.asList(_role1, _role2), Arrays.asList(_position1, _position5), _position3);
 
-        _person1 = new Person(_resourceModel, "Person_1", "test", Arrays.asList(_position1, _position2), Arrays.asList(_capability1));
-        _person2 = new Person(_resourceModel, "Person_2", "test", Arrays.asList(_position1, _position2), Arrays.asList(_capability1));
-        _person3 = new Person(_resourceModel, "Person_3", "test", Arrays.asList(_position1, _position2), Arrays.asList(_capability1));
-        
+        _person1 = new Person(_resourceModel, "Person_1", "test", Arrays.asList(_position1), Arrays.asList(_capability1));
+
         _ralExprDTO1 = new RALExprAnyoneDTO();
     }
 
@@ -81,73 +69,73 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
     @Test
     public void testCreateRALExpressionAnd() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID, new RALExprAndDTO(_ralExprDTO1, _ralExprDTO1));
-        assertEquals(ralExpression.getClass(), RALExprAnd.class);
+        assertTrue(ralExpression.getClass().equals(RALExprAnd.class));
     }
 
     @Test
     public void testCreateRALExpressionAnyone() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID, new RALExprAnyoneDTO());
-        assertEquals(ralExpression.getClass(), RALExprAnyone.class);
+        assertTrue(ralExpression.getClass().equals(RALExprAnyone.class));
     }
 
     @Test
     public void testCreateRALExpressionDelegatedByPersonPosition() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
             new RALExprDelegatedByPersonPositionExprDTO(
-                new RALExprIsPersonDTO("Person_1")
+                new RALExprIsPersonDTO(_person1.getName())
         ));
-        assertEquals(ralExpression.getClass(), RALExprDelegatedByPersonPosition.class);
+        assertTrue(ralExpression.getClass().equals(RALExprDelegatedByPersonPosition.class));
     }
 
     @Test
     public void testCreateRALExpressionDelegatedByPosition() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
-                new RALExprDelegatedByPositionExprDTO("Pos1_Pop"));
-        assertEquals(ralExpression.getClass(), RALExprDelegatedByPosition.class);
+                new RALExprDelegatedByPositionExprDTO(_position1.getName()));
+        assertTrue(ralExpression.getClass().equals(RALExprDelegatedByPosition.class));
     }
 
     @Test
     public void testCreateRALExpressionDelegatesToPersonPosition() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprDelegatesToPersonPositionExprDTO(
-                        new RALExprIsPersonDTO("Person_1")
+                        new RALExprIsPersonDTO(_person1.getName())
                 ));
-        assertEquals(ralExpression.getClass(), RALExprDelegatesToPersonPosition.class);
+        assertTrue(ralExpression.getClass().equals(RALExprDelegatesToPersonPosition.class));
     }
 
     @Test
     public void testCreateRALExpressionDelegatesToPosition() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
-                new RALExprDelegatesToPositionExprDTO("Pos1_Pop"));
-        assertEquals(ralExpression.getClass(), RALExprDelegatesToPosition.class);
+                new RALExprDelegatesToPositionExprDTO(_position1.getName()));
+        assertTrue(ralExpression.getClass().equals(RALExprDelegatesToPosition.class));
     }
 
     @Test
     public void testCreateRALExpressionHasCapability() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprHasCapabilityDTO("Cap1_Pop"));
-        assertEquals(ralExpression.getClass(), RALExprHasCapability.class);
+        assertTrue(ralExpression.getClass().equals(RALExprHasCapability.class));
     }
 
     @Test
     public void testCreateRALExpressionHasPosition() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
-                new RALExprHasPositionDTO("Pos1_Pop"));
-        assertEquals(ralExpression.getClass(), RALExprHasPosition.class);
+                new RALExprHasPositionDTO(_position1.getName()));
+        assertTrue(ralExpression.getClass().equals(RALExprHasPosition.class));
     }
 
     @Test
     public void testCreateRALExpressionHasRole() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprHasRoleDTO("Role1_Pop"));
-        assertEquals(ralExpression.getClass(), RALExprHasRole.class);
+        assertTrue(ralExpression.getClass().equals(RALExprHasRole.class));
     }
 
     @Test
     public void testCreateRALExpressionHasUnit() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprHasUnitDTO("Unit1_Pop"));
-        assertEquals(ralExpression.getClass(), RALExprHasUnit.class);
+        assertTrue(ralExpression.getClass().equals(RALExprHasUnit.class));
     }
 
     @Test
@@ -159,7 +147,7 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
                         RALExprHistoryDTO.QuantifierDTO.MOST,
                         "test"
                 ));
-        assertEquals(ralExpression.getClass(), RALExprHistoryExecuting.class);
+        assertTrue(ralExpression.getClass().equals(RALExprHistoryExecuting.class));
     }
 
     @Test(expected = RMException.class)
@@ -169,7 +157,7 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
                         RALExprHistoryDTO.QuantifierDTO.MOST,
                         null
                 ));
-        assertEquals(ralExpression.getClass(), RALExprHistoryExecuting.class);
+        assertTrue(ralExpression.getClass().equals(RALExprHistoryExecuting.class));
     }
 
     @Test(expected = BWException.class)
@@ -179,7 +167,7 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
                         RALExprHistoryDTO.QuantifierDTO.MOST,
                         "invalid"
                 ));
-        assertEquals(ralExpression.getClass(), RALExprHistoryExecuting.class);
+        assertTrue(ralExpression.getClass().equals(RALExprHistoryExecuting.class));
     }
 
     @Test
@@ -192,7 +180,7 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
                         "test"
                 ));
 
-        assertEquals(ralExpression.getClass(), RALExprHistoryInformed.class);
+        assertTrue(ralExpression.getClass().equals(RALExprHistoryInformed.class));
     }
 
     @Test(expected = RMException.class)
@@ -217,10 +205,10 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
     public void testCreateRALExpressionIsPerson() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprIsPersonDTO(
-                    "Person_1"
+                    _person1.getName()
                 ));
 
-        assertEquals(ralExpression.getClass(), RALExprIsPerson.class);
+        assertTrue(ralExpression.getClass().equals(RALExprIsPerson.class));
     }
 
     @Test(expected = RMException.class)
@@ -246,7 +234,7 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
                         "test"
                 ));
 
-        assertEquals(ralExpression.getClass(), RALExprIsPersonDataObject.class);
+        assertTrue(ralExpression.getClass().equals(RALExprIsPersonDataObject.class));
     }
 
     @Test(expected = RMException.class)
@@ -288,7 +276,7 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
                         "test"
                 ));
 
-        assertEquals(ralExpression.getClass(), RALExprIsPersonInTaskDuty.class);
+        assertTrue(ralExpression.getClass().equals(RALExprIsPersonInTaskDuty.class));
     }
 
     @Test(expected = RMException.class)
@@ -310,14 +298,14 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
                         "asdasdas"
                 ));
 
-        assertEquals(ralExpression.getClass(), RALExprIsPersonInTaskDuty.class);
+        assertTrue(ralExpression.getClass().equals(RALExprIsPersonInTaskDuty.class));
     }
 
     @Test
     public void testCreateRALExpressionNot() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
-                new RALExprNotDTO(new RALExprHasPositionDTO("Pos1_Pop")));
-        assertEquals(ralExpression.getClass(), RALExprNot.class);
+                new RALExprNotDTO(new RALExprHasPositionDTO(_position1.getName())));
+        assertTrue(ralExpression.getClass().equals(RALExprNot.class));
     }
 
     @Test(expected = RMException.class)
@@ -330,41 +318,41 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
     public void testCreateRALExpressionOr() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprOrDTO(_ralExprDTO1, _ralExprDTO1));
-        assertEquals(ralExpression.getClass(), RALExprOr.class);
+        assertTrue(ralExpression.getClass().equals(RALExprOr.class));
     }
 
     @Test
     public void testCreateRALExpressionReportedByPersonPosition() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprReportedByPersonPositionExprDTO(
-                    new RALExprIsPersonDTO("Person_1"),
+                    new RALExprIsPersonDTO(_person1.getName()),
                     true
                 ));
-        assertEquals(ralExpression.getClass(), RALExprReportedByPersonPosition.class);
+        assertTrue(ralExpression.getClass().equals(RALExprReportedByPersonPosition.class));
     }
 
     @Test
     public void testCreateRALExpressionReportedByPosition() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
-                new RALExprReportedByPositionExprDTO("Pos1_Pop",true));
-        assertEquals(ralExpression.getClass(), RALExprReportedByPosition.class);
+                new RALExprReportedByPositionExprDTO(_position1.getName(),true));
+        assertTrue(ralExpression.getClass().equals(RALExprReportedByPosition.class));
     }
 
     @Test
     public void testCreateRALExpressionReportsToPersonPosition() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprReportsToPersonPositionExprDTO(
-                        new RALExprIsPersonDTO("Person_1"),
+                        new RALExprIsPersonDTO(_person1.getName()),
                         true
                 ));
-        assertEquals(ralExpression.getClass(), RALExprReportsToPersonPosition.class);
+        assertTrue(ralExpression.getClass().equals(RALExprReportsToPersonPosition.class));
     }
 
     @Test
     public void testCreateRALExpressionReportsToPosition() {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
-                new RALExprReportsToPositionExprDTO("Pos1_Pop",true));
-        assertEquals(ralExpression.getClass(), RALExprReportsToPosition.class);
+                new RALExprReportsToPositionExprDTO(_position1.getName(),true));
+        assertTrue(ralExpression.getClass().equals(RALExprReportsToPosition.class));
     }
 
     @Test
@@ -372,9 +360,9 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprSharesPositionDTO(
                         RALExprCommonalityDTO.AmountDTO.SOME,
-                        new RALExprIsPersonDTO("Person_1")
+                        new RALExprIsPersonDTO(_person1.getName())
                 ));
-        assertEquals(ralExpression.getClass(), RALExprSharesPosition.class);
+        assertTrue(ralExpression.getClass().equals(RALExprSharesPosition.class));
     }
 
     @Test
@@ -382,9 +370,9 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprSharesRoleDTO(
                         RALExprCommonalityDTO.AmountDTO.SOME,
-                        new RALExprIsPersonDTO("Person_1")
+                        new RALExprIsPersonDTO(_person1.getName())
                 ));
-        assertEquals(ralExpression.getClass(), RALExprSharesRole.class);
+        assertTrue(ralExpression.getClass().equals(RALExprSharesRole.class));
     }
 
     @Test
@@ -392,9 +380,9 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
         RALExpression ralExpression = designer.createRALExpression(SPEC_ID,
                 new RALExprSharesUnitDTO(
                         RALExprCommonalityDTO.AmountDTO.SOME,
-                        new RALExprIsPersonDTO("Person_1")
+                        new RALExprIsPersonDTO(_person1.getName())
                 ));
-        assertEquals(ralExpression.getClass(), RALExprSharesUnit.class);
+        assertTrue(ralExpression.getClass().equals(RALExprSharesUnit.class));
     }
 
     @Test(expected = RMException.class)
@@ -404,7 +392,7 @@ public class DesignResourcesInterfaceTest extends TeardownRollbackTest {
                         RALExprCommonalityDTO.AmountDTO.SOME,
                         new RALExpressionDTO() {}
                 ));
-        assertEquals(ralExpression.getClass(), RALExprSharesPosition.class);
+        assertTrue(ralExpression.getClass().equals(RALExprSharesPosition.class));
     }
 
     @Test

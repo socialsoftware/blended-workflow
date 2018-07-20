@@ -41,7 +41,7 @@ public class WriteBlendedWorkflowService {
 		this.repository = DataModelInterface.getInstance();
 		this.rmRepository = ResourceModelInterface.getInstance();
 		this.dmService = new WriteDataModelService(this.repository);
-		this.rmService = new WriteResourceModelService(this.rmRepository);
+		this.rmService = new WriteResourceModelService(this.repository, this.rmRepository);
 	}
 
 	public BWNotification write(BWSpecification eBWSpecification) {

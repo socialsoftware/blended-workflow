@@ -6,7 +6,7 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.SpecDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDTO;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignResourcesInterface;
@@ -38,12 +38,8 @@ public class ResourceModelTest extends TeardownRollbackTest {
     private Position _position1;
     private Position _position2;
     private Position _position3;
-    private Position _position4;
     private Position _position5;
     private Position _position6;
-    private Person _person1;
-    private Person _person2;
-    private Person _person3;
 
     @Override
     public void populate4Test() throws BWException {
@@ -63,13 +59,8 @@ public class ResourceModelTest extends TeardownRollbackTest {
         _position1 = new Position(_resourceModel, "Pos1_Pop", "test", _unit1);
         _position2 = new Position(_resourceModel, "Pos2_Pop", "test", _unit1);
         _position3 = new Position(_resourceModel, "Pos3_Pop", "test", _unit1);
-        _position4 = new Position(_resourceModel, "Pos4_Pop", "test", _unit1);
         _position5 = new Position(_resourceModel, "Pos5_Pop", "test", _unit1, Arrays.asList(_role1, _role2), Arrays.asList(_position2, _position3), _position6);
         _position6 = new Position(_resourceModel, "Pos6_Pop", "test", _unit1, Arrays.asList(_role1, _role2), Arrays.asList(_position1, _position5), _position3);
-
-        _person1 = new Person(_resourceModel, "Person_1", "test", Arrays.asList(_position1, _position2), Arrays.asList(_capability1));
-        _person2 = new Person(_resourceModel, "Person_2", "test", Arrays.asList(_position1, _position2), Arrays.asList(_capability1));
-        _person3 = new Person(_resourceModel, "Person_3", "test", Arrays.asList(_position1, _position2), Arrays.asList(_capability1));
     }
 
     @Test

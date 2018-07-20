@@ -8,8 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.User;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UserDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UserDTO;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

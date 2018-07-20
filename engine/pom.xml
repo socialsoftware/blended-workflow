@@ -27,6 +27,7 @@
 		<version.fenixframework>2.6.2</version.fenixframework>
 		<fenix.framework.codeGeneratorClassName>pt.ist.fenixframework.backend.jvstmojb.codeGenerator.FenixCodeGeneratorOneBoxPerObject</fenix.framework.codeGeneratorClassName>
 		<fenix.framework.backend>jvstm-ojb</fenix.framework.backend>
+		<mockito-core.version>2.18.3</mockito-core.version>
 	</properties>
 
 	<build>
@@ -137,6 +138,12 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-core.version}</version>
 		</dependency>
 
 		<!-- Logging -->

@@ -11,6 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Position;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.ResourceSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Role;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Unit;
+import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.DataModelInterface;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.WriteDataModelService;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
@@ -26,9 +27,9 @@ private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
 	
 	private WriteResourceRulesService rulesService = null;
 	
-	public WriteResourceModelService(ResourceModelInterface repository) {
+	public WriteResourceModelService(DataModelInterface dmRepository, ResourceModelInterface repository) {
 		this.repository = repository;
-		this.rulesService = new WriteResourceRulesService(repository);
+		this.rulesService = new WriteResourceRulesService(dmRepository, repository);
 	}
 	
 	public void writeResourceModel(ResourceSpecification spec, String specId, BWNotification notification) {

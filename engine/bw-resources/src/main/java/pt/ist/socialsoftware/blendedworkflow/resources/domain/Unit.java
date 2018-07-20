@@ -4,13 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.UnitDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UnitDTO;
 
 public class Unit extends Unit_Base {
     private static Logger logger = LoggerFactory.getLogger(Unit.class);
 
     public Unit(ResourceModel resourceModel, String name, String description) throws RMException {
-        logger.debug("Creating a new Unit object");
         setResourceModel(resourceModel);
         setName(name);
         setDescription(description);
