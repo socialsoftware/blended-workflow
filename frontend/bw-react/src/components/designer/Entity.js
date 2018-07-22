@@ -6,7 +6,7 @@ export const Entity = (props) => (
         <br />
         Entity {props.entity.name} {props.entity.mandatory ? "mandatory" : ""} {props.entity.exists ? "exists" : ""} 
         <br /> {'{'}
-        {props.entity.attributes.map(a => <Attribute attribute={a} />)}
+        {props.entity.attributes.map(a => <Attribute key={a.extId} attribute={a} />)}
         {'}'}
     </div >
 )

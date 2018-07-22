@@ -22,7 +22,7 @@ export class DataModel extends React.Component {
 
     generateEntitiesDom() {
         if (this.state.dataModel.entities) {
-            return this.state.dataModel.entities.map(entity => <Entity entity={entity} />);
+            return this.state.dataModel.entities.map(entity => <Entity key={entity.extId} entity={entity} />);
         } else {
             return "";
         }

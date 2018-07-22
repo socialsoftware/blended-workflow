@@ -48,7 +48,7 @@ export class Instances extends React.Component {
 
     generateInstancesDom() {
         if (this.state.instances) {
-            return this.state.instances.map(i => <div> <ShowInstance name={i.name} /> <DeleteInstance name={i.name} onClick={this.deleteInstance} /> </div>);
+            return this.state.instances.map(i => <div key={i.name}> <ShowInstance name={i.name} /> <DeleteInstance name={i.name} onClick={this.deleteInstance} /> </div>);
         } else {
             return "";
         }

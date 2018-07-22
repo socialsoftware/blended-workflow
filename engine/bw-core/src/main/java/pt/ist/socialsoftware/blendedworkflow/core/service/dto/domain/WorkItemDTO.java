@@ -28,49 +28,14 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 public class WorkItemDTO {
 	private static Logger logger = LoggerFactory.getLogger(WorkItemDTO.class);
 
-	/* TODO: TO DEFINE A LOG */
-	private String name;
-	private int timestamp;
-	private String preArguments;
-	private String postArguments;
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getTimestamp() {
-		return this.timestamp;
-	}
-
-	public void setTimestamp(int timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public String getPreArguments() {
-		return this.preArguments;
-	}
-
-	public void setPreArguments(String preArguments) {
-		this.preArguments = preArguments;
-	}
-
-	public String getPostArguments() {
-		return this.postArguments;
-	}
-
-	public void setPostArguments(String postArguments) {
-		this.postArguments = postArguments;
-	}
-	/* TODO: TO DEFINE A LOG */
-
 	private String specId;
 	private String specName;
 	private String workflowInstanceName;
 	private Set<DefinitionGroupDto> definitionGroupSet;
+	private String name;
+	private int timestamp;
+	private String preArguments;
+	private String postArguments;
 
 	public WorkItemDTO() {
 	}
@@ -105,6 +70,38 @@ public class WorkItemDTO {
 
 	public void setDefinitionGroupSet(Set<DefinitionGroupDto> definitionGroupSet) {
 		this.definitionGroupSet = definitionGroupSet;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getTimestamp() {
+		return this.timestamp;
+	}
+
+	public void setTimestamp(int timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getPreArguments() {
+		return this.preArguments;
+	}
+
+	public void setPreArguments(String preArguments) {
+		this.preArguments = preArguments;
+	}
+
+	public String getPostArguments() {
+		return this.postArguments;
+	}
+
+	public void setPostArguments(String postArguments) {
+		this.postArguments = postArguments;
 	}
 
 	public void executeWorkItem(WorkflowInstance workflowInstance, WorkItem workItem) {

@@ -21,7 +21,7 @@ export class Executor extends React.Component {
 
     generateInstancesDom() {
         if (this.state.instances) {
-            return this.state.instances.map(i => <li><Link to={`/specifications/${this.props.match.params.specId}/executor/instances/${i.name}`}>{i.name}</Link></li>);
+            return this.state.instances.map(i => <li key={i.name}><Link to={`/specifications/${this.props.match.params.specId}/executor/instances/${i.name}`}>{i.name}</Link></li>);
         } else {
             return "";
         }

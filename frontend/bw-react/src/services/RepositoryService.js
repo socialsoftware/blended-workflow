@@ -64,4 +64,25 @@ export class RepositoryService {
         return this.axios.delete("/specs/" + specId + "/instances/" + name);
     }
 
+    // Goal workitems
+    getNextGoalWorkItems(specId, instance) {
+        return this.axios.get("/specs/" + specId + "/instances/" + instance + "/goalworkitem/next");
+    }
+
+    // getLogGoalWorkItems : function(spec,instance) {
+    // 	var url = baseUrl + "specs/" + spec + "/instances/"+ instance + "/goalworkitem/log";
+    // 	return $http.get(url);
+    // },
+    // executeWorkItem : function(spec, instance,
+    // 		workItemName, workItem) {
+    // 	var url = baseUrl + "specs/" + spec + "/instances/"+ instance + "/goalworkitem";
+    // 	return $http.post(url, {
+    // 		"specId" :  spec,
+    // 		"workflowInstanceName" : instance,
+    // 		"name" : workItemName,
+    // 		"definitionGroupSet" : workItem.definitionGroupSet
+    // 	});
+    // }
+
+
 }
