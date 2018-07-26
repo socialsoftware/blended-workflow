@@ -13,7 +13,7 @@
         <attribute name="height" type="Number" mandatory="false" />
       </entity>
       <entity name="Report" exists="false" mandatory="false">
-        <attribute name="description" type="String" mandatory="true" />
+        <attribute name="description" type="String" mandatory="false" />
       </entity>
       <entity name="Prescription" exists="false" mandatory="false">
         <attribute name="description" type="String" mandatory="false" />

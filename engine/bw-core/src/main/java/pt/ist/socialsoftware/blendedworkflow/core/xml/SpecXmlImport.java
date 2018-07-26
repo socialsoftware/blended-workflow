@@ -117,7 +117,7 @@ public class SpecXmlImport {
 			for (Element attributeElement : entityElement.getChildren("attribute")) {
 				String attributeName = attributeElement.getAttributeValue("name");
 				Attribute.AttributeType type = convertStringToAttributeType(attributeElement.getAttributeValue("type"));
-				boolean attributeMandatory = convertStringToBool(entityElement.getAttributeValue("mandatory"));
+				boolean attributeMandatory = convertStringToBool(attributeElement.getAttributeValue("mandatory"));
 
 				DesignInterface.getInstance().createAttribute(new AttributeDto(dataModel.getSpecification().getSpecId(),
 						null, entity.getExternalId(), entityName, attributeName, type.toString(), attributeMandatory));

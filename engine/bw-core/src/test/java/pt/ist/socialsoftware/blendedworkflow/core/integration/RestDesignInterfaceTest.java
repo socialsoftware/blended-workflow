@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -52,7 +53,7 @@ public class RestDesignInterfaceTest {
 
 	private MockMvc mockMvc;
 
-	private static final String SPEC_ID = "id1";
+	private static final String SPEC_ID = "$_id1_TEST_$";
 	private static final String SPEC_NAME = "name for integration tests";
 	private static final String ENTITY_ONE_NAME = "First Entity";
 	private static final String ATTRIBUTE_TWO_NAME_STRING = "att2";
@@ -77,6 +78,11 @@ public class RestDesignInterfaceTest {
 
 		ObjectMapper mapper = new ObjectMapper();
 
+		MvcResult result = this.mockMvc.perform(get("/specs/{specId}", SPEC_ID)).andReturn();
+		if (result.getResponse().getStatus() == 200) {
+			this.mockMvc.perform(MockMvcRequestBuilders.delete("/specs/{specId}", SPEC_ID));
+		}
+
 		SpecDto specDTO = new SpecDto(SPEC_ID, SPEC_NAME);
 		this.mockMvc
 				.perform(post("/specs").contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -89,7 +95,7 @@ public class RestDesignInterfaceTest {
 				.andExpect(jsonPath("$.name").value(SPEC_NAME));
 
 		EntityDto entityOneDTO = new EntityDto(SPEC_ID, ENTITY_ONE_NAME, false);
-		MvcResult result = this.mockMvc
+		result = this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/entities", SPEC_ID)
 						.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(entityOneDTO)))
 				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -97,7 +103,7 @@ public class RestDesignInterfaceTest {
 				.andReturn();
 		entityOneDTO = mapper.readValue(result.getResponse().getContentAsString(), EntityDto.class);
 
-		EntityDto entityTwoDTO = new EntityDto(SPEC_ID, "entityTwo", false);
+		EntityDto entityTwoDTO = new EntityDto(SPEC_ID, "entityTwo", false, true);
 		result = this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/entities", SPEC_ID)
 						.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(entityTwoDTO)))
@@ -105,14 +111,14 @@ public class RestDesignInterfaceTest {
 		entityTwoDTO = mapper.readValue(result.getResponse().getContentAsString(), EntityDto.class);
 
 		AttributeDto attributeOneDTO = new AttributeDto(SPEC_ID, entityOneDTO.getExtId(), null, "att1", "Boolean",
-				true);
+				false);
 		result = this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
 						.contentType(MediaType.APPLICATION_JSON_UTF8)
 						.content(mapper.writeValueAsBytes(attributeOneDTO)))
 				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.name").value("att1")).andExpect(jsonPath("$.type").value("Boolean"))
-				.andExpect(jsonPath("$.mandatory").value(true)).andReturn();
+				.andExpect(jsonPath("$.mandatory").value(false)).andReturn();
 		attributeOneDTO = mapper.readValue(result.getResponse().getContentAsString(), AttributeDto.class);
 
 		AttributeDto attributeTwoDTO = new AttributeDto(SPEC_ID, entityOneDTO.getExtId(), null,
@@ -122,7 +128,7 @@ public class RestDesignInterfaceTest {
 				.andExpect(status().isCreated());
 
 		AttributeDto attributeThreeDTO = new AttributeDto(SPEC_ID, entityOneDTO.getExtId(), null, "att3", "Number",
-				true);
+				false);
 		this.mockMvc.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
 				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(attributeThreeDTO)))
 				.andExpect(status().isCreated());

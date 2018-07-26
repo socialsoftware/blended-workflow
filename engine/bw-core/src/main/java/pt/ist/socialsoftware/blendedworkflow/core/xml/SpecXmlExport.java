@@ -204,7 +204,6 @@ public class SpecXmlExport {
 			goalElement.setAttribute("name", goal.getName());
 
 			if (goal instanceof ProductGoal) {
-				goalElement.setAttribute("name", goal.getClass().getName());
 				exportPreConditions(goalElement, goal.getActivationConditionSet());
 				exportPostConditions(goalElement, goal.getSuccessConditionSet());
 			} else {

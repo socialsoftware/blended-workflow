@@ -1,7 +1,7 @@
 Specification: "Two Entities" 
        
 Entity A mandatory { 
-	att1 : Number 
+	att1 : Number
 } 
 
 Entity B {
