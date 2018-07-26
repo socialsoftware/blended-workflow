@@ -76,7 +76,7 @@ public class InstanceController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{name}/entity/mandatory", method = RequestMethod.GET)
+	@RequestMapping(value = "/{name}/entities/mandatory", method = RequestMethod.GET)
 	public ResponseEntity<EntityInstanceDto> getMandatoryEntityInstance(@PathVariable("specId") String specId,
 			@PathVariable("name") String name) {
 		log.debug("getMandatoryEntityInstance specId:{}, name:{}", specId, name);

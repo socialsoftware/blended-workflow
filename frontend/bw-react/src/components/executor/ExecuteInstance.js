@@ -8,7 +8,6 @@ export const ExecuteInstance = (props) => (
     <div> 
         <h5>Executor of instance {props.match.params.name}</h5>
         <ul>
-            <li>Data View</li>
             <li><Link to={`/specifications/${props.match.params.specId}/executor/instances/${props.match.params.name}/data`}>Data View</Link></li>
             <li><Link to={`/specifications/${props.match.params.specId}/executor/instances/${props.match.params.name}/goals`}>Goal View</Link></li>
             <li><Link to={`/specifications/${props.match.params.specId}/executor/instances/${props.match.params.name}/activities`}>Activity View</Link></li>

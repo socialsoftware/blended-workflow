@@ -9,15 +9,17 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 
 public class EntityInstanceDto {
-	String externalId;
-	EntityDto entity;
-	List<AttributeInstanceDto> attributes;
+	private String externalId;
+	private String id;
+	private EntityDto entity;
+	private List<AttributeInstanceDto> attributes;
 
 	public EntityInstanceDto() {
 	}
 
 	public EntityInstanceDto(EntityInstance entityInstance) {
 		this.externalId = entityInstance.getExternalId();
+		this.setId(entityInstance.getId());
 		this.entity = entityInstance.getEntity().getDTO();
 		this.attributes = entityInstance.getEntity().getAttributeSet().stream()
 				.sorted((a1, a2) -> a1.getName().compareTo(a2.getName()))
@@ -30,6 +32,14 @@ public class EntityInstanceDto {
 
 	public void setExternalId(String externalId) {
 		this.externalId = externalId;
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public EntityDto getEntity() {

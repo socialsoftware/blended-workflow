@@ -3,9 +3,9 @@ package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 
 public class AttributeInstanceDto {
-	String externalId;
-	AttributeDto attribute;
-	String value;
+	private String externalId;
+	private AttributeDto attribute;
+	private String value;
 
 	public AttributeInstanceDto() {
 	}
