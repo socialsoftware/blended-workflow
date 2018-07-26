@@ -13,6 +13,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ActivityWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
@@ -73,6 +74,10 @@ public class ExecutionInterface {
 
 	}
 
+	public EntityInstance getMandatoryEntityInstance(String specId, String name) {
+		return getSpecification(specId).getWorkflowInstance(name).getMandatoryEntityInstance();
+	}
+
 	public Set<ActivityWorkItemDto> getPendingActivityWorkItemSet(String specId, String instanceName) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
@@ -97,8 +102,8 @@ public class ExecutionInterface {
 	}
 
 	public List<ActivityWorkItemDto> getLogActivityWorkItemDTOSet(String specId, String instanceName) {
-		return getLogActivityWorkItemSet(specId, instanceName).stream()
-				.map(ActivityWorkItem::getDTO).collect(Collectors.toList());
+		return getLogActivityWorkItemSet(specId, instanceName).stream().map(ActivityWorkItem::getDTO)
+				.collect(Collectors.toList());
 	}
 
 	@Atomic(mode = TxMode.WRITE)
@@ -138,8 +143,8 @@ public class ExecutionInterface {
 	}
 
 	public List<GoalWorkItemDto> getLogGoalWorkItemDTOSet(String specId, String instanceName) {
-		return getLogGoalWorkItemSet(specId, instanceName).stream()
-				.map(GoalWorkItem::getDTO).collect(Collectors.toList());
+		return getLogGoalWorkItemSet(specId, instanceName).stream().map(GoalWorkItem::getDTO)
+				.collect(Collectors.toList());
 	}
 
 	@Atomic(mode = TxMode.WRITE)

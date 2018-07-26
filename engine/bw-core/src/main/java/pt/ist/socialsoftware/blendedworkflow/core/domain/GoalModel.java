@@ -1,6 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -367,7 +372,7 @@ public class GoalModel extends GoalModel_Base {
 					.collect(Collectors.toSet());
 			for (Goal otherGoal : getGoalSet().stream().filter(g -> g.successProductsContainSomeOf(products))
 					.collect(Collectors.toSet())) {
-				edges.add(new EdgeDto(goal.getExternalId(), otherGoal.getExternalId()));
+				edges.add(new EdgeDto(otherGoal.getExternalId(), goal.getExternalId()));
 			}
 
 		}
@@ -389,10 +394,7 @@ public class GoalModel extends GoalModel_Base {
 	}
 
 	public Goal getGoalFromProduct(Product product) {
-		return getGoalSet().stream()
-				.filter(goal -> goal.getSuccessProducts()
-						.contains(product))
-				.findFirst()
+		return getGoalSet().stream().filter(goal -> goal.getSuccessProducts().contains(product)).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.NON_EXISTENT_GOAL_BY_PRODUCT));
 	}
 }

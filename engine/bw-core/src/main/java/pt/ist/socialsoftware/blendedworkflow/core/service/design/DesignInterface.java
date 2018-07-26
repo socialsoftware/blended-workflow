@@ -119,6 +119,11 @@ public class DesignInterface {
 		return spec.getDataModel().getEntitySet();
 	}
 
+	public Entity getMandatoryEntity(String specId) {
+		return getSpecBySpecId(specId).getDataModel().getEntitySet().stream().filter(e -> e.getMandatory()).findFirst()
+				.get();
+	}
+
 	@Atomic(mode = TxMode.WRITE)
 	public Entity createEntity(EntityDto entDTO) {
 		logger.debug("createEntity specId:{}, name:{}, exists:{}, mandatory:{}", entDTO.getSpecId(), entDTO.getName(),

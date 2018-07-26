@@ -13,7 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.UndefinedEntityInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
@@ -69,6 +74,26 @@ public class InstanceController {
 		edi.deleteWorkflowInstance(specId, name);
 
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{name}/entity/mandatory", method = RequestMethod.GET)
+	public ResponseEntity<EntityInstanceDto> getMandatoryEntityInstance(@PathVariable("specId") String specId,
+			@PathVariable("name") String name) {
+		log.debug("getMandatoryEntityInstance specId:{}, name:{}", specId, name);
+		ExecutionInterface ei = this.factory.createExecutionInterface();
+
+		EntityInstance entityInstance = ei.getMandatoryEntityInstance(specId, name);
+
+		EntityInstanceDto entityInstanceDto = null;
+		if (entityInstance == null) {
+			DesignInterface di = this.factory.createDesignInterface();
+			Entity entity = di.getMandatoryEntity(specId);
+			entityInstanceDto = new UndefinedEntityInstanceDto(entity);
+		} else {
+			entityInstanceDto = new EntityInstanceDto(entityInstance);
+		}
+
+		return new ResponseEntity<>(entityInstanceDto, HttpStatus.OK);
 	}
 
 }

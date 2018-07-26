@@ -1,22 +1,16 @@
 package pt.ist.socialsoftware.blendedworkflow.core;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-public class CorsConfiguration {
+public class CorsConfiguration implements WebMvcConfigurer {
 
-	@Bean
-	public WebMvcConfigurer addCorsMappings() {
-		return new WebMvcConfigurerAdapter() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT", "DELETE")
-						.allowCredentials(false).maxAge(3600);
-			}
-		};
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD")
+				.allowCredentials(false).maxAge(3600);
 	}
+
 }
