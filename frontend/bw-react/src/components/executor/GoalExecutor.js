@@ -1,7 +1,7 @@
 import React from 'react';
 import { RepositoryService } from '../../services/RepositoryService';
-import { OpenWorkItem } from './OpenWorkItem';
-import { ExecuteWorkItem } from './ExecuteWorkItem';
+import { OpenWorkItem } from './workitem/OpenWorkItem';
+import { ExecuteWorkItem } from './workitem/ExecuteWorkItem';
 
 export class GoalExecutor extends React.Component {
     constructor(props) {

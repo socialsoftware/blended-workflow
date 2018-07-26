@@ -19,17 +19,19 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 public class EntityContextDto {
 	private static Logger logger = LoggerFactory.getLogger(EntityContextDto.class);
 
-	private EntityDto entity;
+	private int index;
+	private DefEntityConditionDto defEntityCondition;
 	private MulConditionDto mulCondition;
 	private Set<DefPathConditionDto> defPathConditionSet;
 	private Set<EntityInstanceContextDto> entityInstanceContextSet;
 
-	public static EntityContextDto createEntityContextDTO(Activity activity, Entity entityContext,
+	public static EntityContextDto createEntityContextDTO(int counter, Activity activity, Entity entityContext,
 			MulCondition mulCondition, WorkflowInstance workflowInstance) {
 		Map<Entity, Set<EntityInstance>> instanceContext = activity.getInstanceContext(workflowInstance);
 
-		EntityContextDto entityContextDTO = new EntityContextDto();
-		entityContextDTO.setEntity(entityContext.getDTO());
+		EntityContextDto entityContextDto = new EntityContextDto();
+		entityContextDto.setIndex(counter);
+		entityContextDto.setDefEntityCondition(entityContext.getDefEntityCondition().getDTO());
 
 		if (mulCondition == null) {
 			MulConditionDto mulConditionDTO = new MulConditionDto();
@@ -37,14 +39,14 @@ public class EntityContextDto {
 			mulConditionDTO.setMin(1);
 			mulConditionDTO.setMax(1);
 			mulConditionDTO.setRolePath(entityContext.getName());
-			entityContextDTO.setMulCondition(mulConditionDTO);
-			entityContextDTO.setDefPathConditionSet(
+			entityContextDto.setMulCondition(mulConditionDTO);
+			entityContextDto.setDefPathConditionSet(
 					activity.getPreConditionSet().stream().filter(d -> d.getSourceOfPath() == entityContext)
 							.map(d -> d.getDTO(entityContext.getDataModel().getSpecification().getSpecId()))
 							.collect(Collectors.toSet()));
 		} else {
-			entityContextDTO.setMulCondition(mulCondition.getDTO());
-			entityContextDTO.setDefPathConditionSet(activity.getPreConditionSet().stream()
+			entityContextDto.setMulCondition(mulCondition.getDTO());
+			entityContextDto.setDefPathConditionSet(activity.getPreConditionSet().stream()
 					.filter(d -> d.getSourceOfPath() == mulCondition.getSourceEntity()
 							&& d.getSourceOfPath() != d.getTargetOfPath() && d.getPath().getAdjacent() == entityContext)
 					.map(d -> d.getDTO(entityContext.getDataModel().getSpecification().getSpecId()))
@@ -52,27 +54,29 @@ public class EntityContextDto {
 		}
 
 		Set<EntityInstanceContextDto> entityInstanceContextDTOs = new HashSet<EntityInstanceContextDto>();
-		entityContextDTO.setEntityInstanceContextSet(entityInstanceContextDTOs);
+		entityContextDto.setEntityInstanceContextSet(entityInstanceContextDTOs);
+		int index = 0;
 		for (EntityInstance entityInstance : instanceContext.get(entityContext)) {
-			entityInstanceContextDTOs
-					.add(EntityInstanceContextDto.createEntityInstanceContextDTO(entityContextDTO, entityInstance));
+			entityInstanceContextDTOs.add(
+					EntityInstanceContextDto.createEntityInstanceContextDTO(index++, entityContextDto, entityInstance));
 		}
 
-		return entityContextDTO;
+		return entityContextDto;
 	}
 
-	public static EntityContextDto createEntityContextDTO(Goal goal, Entity entityContext, MulCondition mulCondition,
-			WorkflowInstance workflowInstance) {
-		EntityContextDto entityContextDTO = new EntityContextDto();
-		entityContextDTO.setEntity(entityContext.getDTO());
+	public static EntityContextDto createEntityContextDTO(int counter, Goal goal, Entity entityContext,
+			MulCondition mulCondition, WorkflowInstance workflowInstance) {
+		EntityContextDto entityContextDto = new EntityContextDto();
+		entityContextDto.setIndex(counter);
+		entityContextDto.setDefEntityCondition(entityContext.getDefEntityCondition().getDTO());
 
 		if (mulCondition == null) {
-			MulConditionDto mulConditionDTO = new MulConditionDto();
-			mulConditionDTO.setCardinality("1");
-			mulConditionDTO.setMin(1);
-			mulConditionDTO.setMax(1);
-			mulConditionDTO.setRolePath(entityContext.getName());
-			entityContextDTO.setMulCondition(mulConditionDTO);
+			MulConditionDto mulConditionDto = new MulConditionDto();
+			mulConditionDto.setCardinality("1");
+			mulConditionDto.setMin(1);
+			mulConditionDto.setMax(1);
+			mulConditionDto.setRolePath(entityContext.getName());
+			entityContextDto.setMulCondition(mulConditionDto);
 			// // parent defines the entity
 			// DefPathConditionDTO defPathConditionDTO = DefPathCondition
 			// .getDefPathCondition(entityContext.getDataModel().getSpecification(),
@@ -84,9 +88,9 @@ public class EntityContextDto {
 					.map(d -> d.getDTO(entityContext.getDataModel().getSpecification().getSpecId()))
 					.collect(Collectors.toSet());
 			// defPathConditions.add(defPathConditionDTO);
-			entityContextDTO.setDefPathConditionSet(defPathConditions);
+			entityContextDto.setDefPathConditionSet(defPathConditions);
 		} else {
-			entityContextDTO.setMulCondition(mulCondition.getDTO());
+			entityContextDto.setMulCondition(mulCondition.getDTO());
 			// defpath due to the mulcondition
 			DefPathConditionDto defPathConditionDTO = DefPathCondition
 					.getDefPathCondition(entityContext.getDataModel().getSpecification(), mulCondition.getPath())
@@ -98,28 +102,29 @@ public class EntityContextDto {
 					.map(d -> d.getDTO(entityContext.getDataModel().getSpecification().getSpecId()))
 					.collect(Collectors.toSet());
 			defPathConditions.add(defPathConditionDTO);
-			entityContextDTO.setDefPathConditionSet(defPathConditions);
+			entityContextDto.setDefPathConditionSet(defPathConditions);
 		}
 
 		Set<EntityInstanceContextDto> entityInstanceContextDTOs = new HashSet<EntityInstanceContextDto>();
-		entityContextDTO.setEntityInstanceContextSet(entityInstanceContextDTOs);
+		entityContextDto.setEntityInstanceContextSet(entityInstanceContextDTOs);
+		int index = 0;
 		for (EntityInstance entityInstance : goal.getInstanceContext(workflowInstance, entityContext)) {
-			entityInstanceContextDTOs
-					.add(EntityInstanceContextDto.createEntityInstanceContextDTO(entityContextDTO, entityInstance));
+			entityInstanceContextDTOs.add(
+					EntityInstanceContextDto.createEntityInstanceContextDTO(index++, entityContextDto, entityInstance));
 		}
 
-		return entityContextDTO;
+		return entityContextDto;
 	}
 
 	public EntityContextDto() {
 	}
 
-	public EntityDto getEntity() {
-		return this.entity;
+	public DefEntityConditionDto getDefEntityCondition() {
+		return this.defEntityCondition;
 	}
 
-	public void setEntity(EntityDto entity) {
-		this.entity = entity;
+	public void setDefEntityCondition(DefEntityConditionDto entity) {
+		this.defEntityCondition = entity;
 	}
 
 	public MulConditionDto getMulCondition() {
@@ -144,6 +149,14 @@ public class EntityContextDto {
 
 	public void setEntityInstanceContextSet(Set<EntityInstanceContextDto> entityInstanceContextSet) {
 		this.entityInstanceContextSet = entityInstanceContextSet;
+	}
+
+	public int getIndex() {
+		return this.index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 }

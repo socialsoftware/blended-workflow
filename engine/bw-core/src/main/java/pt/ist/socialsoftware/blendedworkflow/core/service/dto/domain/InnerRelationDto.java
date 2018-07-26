@@ -21,11 +21,8 @@ public class InnerRelationDto {
 		return innerRelationDTO;
 	}
 
-	public InnerRelationDto() {
-	}
-
 	public EntityDto getSourceEntity() {
-		return sourceEntity;
+		return this.sourceEntity;
 	}
 
 	public void setSourceEntity(EntityDto sourceEntity) {
@@ -33,7 +30,7 @@ public class InnerRelationDto {
 	}
 
 	public EntityDto getTargetEntity() {
-		return targetEntity;
+		return this.targetEntity;
 	}
 
 	public void setTargetEntity(EntityDto targetEntity) {
@@ -41,7 +38,7 @@ public class InnerRelationDto {
 	}
 
 	public MulConditionDto getMulCondition() {
-		return mulCondition;
+		return this.mulCondition;
 	}
 
 	public void setMulCondition(MulConditionDto mulCondition) {
@@ -49,7 +46,7 @@ public class InnerRelationDto {
 	}
 
 	public Set<ProductInstanceDto> getProductInstanceSet() {
-		return productInstanceSet;
+		return this.productInstanceSet;
 	}
 
 	public void setProductInstanceSet(Set<ProductInstanceDto> productInstanceSet) {

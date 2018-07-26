@@ -53,13 +53,14 @@ public class GoalWorkItemDto extends WorkItemDTO {
 				Set<EntityContextDto> entityContextDtos = new HashSet<EntityContextDto>();
 				definitionGroup.setEntityContextSet(entityContextDtos);
 				Set<Entity> entityContexts = goal.getEntityContext(entityDefinitionGroup);
+				int counter = 0;
 				// for each entity context of the product groups to be created
 				for (Entity entityContext : entityContexts) {
 					// entity already exists, some of its attributes are being
 					// defined)
 					if (entityDefinitionGroup == entityContext) {
-						entityContextDtos.add(
-								EntityContextDto.createEntityContextDTO(goal, entityContext, null, workflowInstance));
+						entityContextDtos.add(EntityContextDto.createEntityContextDTO(counter++, goal, entityContext,
+								null, workflowInstance));
 					}
 				}
 
@@ -82,19 +83,20 @@ public class GoalWorkItemDto extends WorkItemDTO {
 				Set<EntityContextDto> entityContextDTOs = new HashSet<EntityContextDto>();
 				definitionGroup.setEntityContextSet(entityContextDTOs);
 				Set<Entity> entityContexts = goal.getEntityContext(entityDefinitionGroup);
+				int counter = 0;
 				// for each entity context of the product groups to be created
 				for (Entity entityContext : entityContexts) {
 					for (MulCondition mulCondition : goal.getMulConditionFromEntityToEntity(entityDefinitionGroup,
 							entityContext)) {
-						entityContextDTOs.add(EntityContextDto.createEntityContextDTO(goal, entityContext, mulCondition,
-								workflowInstance));
+						entityContextDTOs.add(EntityContextDto.createEntityContextDTO(counter++, goal, entityContext,
+								mulCondition, workflowInstance));
 					}
 
 					// entity already exists, some of its attributes are being
 					// defined)
 					if (entityDefinitionGroup == entityContext) {
-						entityContextDTOs.add(
-								EntityContextDto.createEntityContextDTO(goal, entityContext, null, workflowInstance));
+						entityContextDTOs.add(EntityContextDto.createEntityContextDTO(counter++, goal, entityContext,
+								null, workflowInstance));
 					}
 				}
 

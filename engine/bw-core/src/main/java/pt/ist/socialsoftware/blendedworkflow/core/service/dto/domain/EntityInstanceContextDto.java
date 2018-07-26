@@ -7,38 +7,45 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance;
 
 public class EntityInstanceContextDto {
+	private int index;
 	private ProductInstanceDto entityInstance;
 	private MulConditionDto mulConditionDTO;
 	private Set<ProductInstanceDto> pathValueSet;
 	private String pathValues;
 
-	public static EntityInstanceContextDto createEntityInstanceContextDTO(EntityContextDto entityContextDTO,
+	public static EntityInstanceContextDto createEntityInstanceContextDTO(int index, EntityContextDto entityContextDTO,
 			EntityInstance entityInstance) {
-		EntityInstanceContextDto entityContextInstanceDTO = new EntityInstanceContextDto();
+		EntityInstanceContextDto entityContextInstanceDto = new EntityInstanceContextDto();
 
-		entityContextInstanceDTO.setEntityInstance(entityInstance.getDTO());
-		entityContextInstanceDTO.setPathValueSet(new HashSet<ProductInstanceDto>());
-		entityContextInstanceDTO.setMulConditionDTO(entityContextDTO.getMulCondition());
-		entityContextInstanceDTO.setPathValues("");
+		entityContextInstanceDto.setIndex(index);
+		entityContextInstanceDto.setEntityInstance(entityInstance.getDTO());
+		entityContextInstanceDto.setPathValueSet(new HashSet<ProductInstanceDto>());
+		entityContextInstanceDto.setMulConditionDTO(entityContextDTO.getMulCondition());
+		entityContextInstanceDto.setPathValues("");
 		for (DefPathConditionDto defPathConditionDTO : entityContextDTO.getDefPathConditionSet()) {
 			for (ProductInstance productInstance : entityInstance
 					.getProductInstancesByPath(defPathConditionDTO.getPath())) {
 				ProductInstanceDto productInstanceDto = productInstance.getDTO();
 				productInstanceDto.setPath(defPathConditionDTO.getPath());
-				entityContextInstanceDTO.getPathValueSet().add(productInstanceDto);
-				entityContextInstanceDTO
-						.setPathValues(productInstanceDto.getValue() + ";" + entityContextInstanceDTO.getPathValues());
+				entityContextInstanceDto.getPathValueSet().add(productInstanceDto);
+				entityContextInstanceDto
+						.setPathValues(productInstanceDto.getValue() + ";" + entityContextInstanceDto.getPathValues());
 			}
 		}
 
-		return entityContextInstanceDTO;
+		return entityContextInstanceDto;
 	}
 
-	public EntityInstanceContextDto() {
+	public int getIndex() {
+		return this.index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public ProductInstanceDto getEntityInstance() {
-		return entityInstance;
+		return this.entityInstance;
 	}
 
 	public void setEntityInstance(ProductInstanceDto entityInstance) {
@@ -46,7 +53,7 @@ public class EntityInstanceContextDto {
 	}
 
 	public Set<ProductInstanceDto> getPathValueSet() {
-		return pathValueSet;
+		return this.pathValueSet;
 	}
 
 	public void setPathValueSet(Set<ProductInstanceDto> pathValueSet) {
@@ -54,7 +61,7 @@ public class EntityInstanceContextDto {
 	}
 
 	public MulConditionDto getMulConditionDTO() {
-		return mulConditionDTO;
+		return this.mulConditionDTO;
 	}
 
 	public void setMulConditionDTO(MulConditionDto mulConditionDTO) {
@@ -62,7 +69,7 @@ public class EntityInstanceContextDto {
 	}
 
 	public String getPathValues() {
-		return pathValues;
+		return this.pathValues;
 	}
 
 	public void setPathValues(String pathValues) {

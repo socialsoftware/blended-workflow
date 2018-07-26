@@ -50,19 +50,20 @@ public class ActivityWorkItemDto extends WorkItemDTO {
 			Set<EntityContextDto> entityContextDTOs = new HashSet<EntityContextDto>();
 			definitionGroup.setEntityContextSet(entityContextDTOs);
 			Set<Entity> entityContexts = activity.getEntityContext(entityDefinitionGroup);
+			int counter = 0;
 			// for each entity context of the product groups to be created
 			for (Entity entityContext : entityContexts) {
 				for (MulCondition mulCondition : activity.getMulConditionFromEntityToEntity(entityDefinitionGroup,
 						entityContext)) {
-					entityContextDTOs.add(EntityContextDto.createEntityContextDTO(activity, entityContext, mulCondition,
-							workflowInstance));
+					entityContextDTOs.add(EntityContextDto.createEntityContextDTO(counter++, activity, entityContext,
+							mulCondition, workflowInstance));
 				}
 
 				// entity already exists, some of its attributes are being
 				// defined)
 				if (entityDefinitionGroup == entityContext) {
-					entityContextDTOs.add(
-							EntityContextDto.createEntityContextDTO(activity, entityContext, null, workflowInstance));
+					entityContextDTOs.add(EntityContextDto.createEntityContextDTO(counter++, activity, entityContext,
+							null, workflowInstance));
 				}
 			}
 

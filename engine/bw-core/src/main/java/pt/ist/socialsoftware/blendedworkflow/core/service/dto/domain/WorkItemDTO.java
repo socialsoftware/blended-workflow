@@ -234,8 +234,8 @@ public class WorkItemDTO {
 					.map(d -> d.getPath()).collect(Collectors.joining(",")) + "\r\n";
 			result = result + "ENTITY CONTEXT: "
 					+ definitionGroupDTO.getEntityContextSet().stream()
-							.map(ec -> ec.getEntity().getName() + ", " + ec.getMulCondition().getRolePath()
-									+ " ENTITY INSTANCE CONTEXT: "
+							.map(ec -> ec.getDefEntityCondition().getEntityName() + ", "
+									+ ec.getMulCondition().getRolePath() + " ENTITY INSTANCE CONTEXT: "
 									+ printEntityInstanceContext(ec.getEntityInstanceContextSet()))
 							.collect(Collectors.joining(";"))
 					+ "\r\n";

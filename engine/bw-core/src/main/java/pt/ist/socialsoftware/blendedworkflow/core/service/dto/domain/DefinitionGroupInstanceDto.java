@@ -11,7 +11,7 @@ public class DefinitionGroupInstanceDto {
 	}
 
 	public Set<EntityInstanceContextDto> getEntityInstanceContextSet() {
-		return entityInstanceContextSet;
+		return this.entityInstanceContextSet;
 	}
 
 	public void setEntityInstanceContextSet(Set<EntityInstanceContextDto> entityInstanceContextSet) {
@@ -19,7 +19,7 @@ public class DefinitionGroupInstanceDto {
 	}
 
 	public Set<ProductInstanceDto> getProductInstanceSet() {
-		return productInstanceSet;
+		return this.productInstanceSet;
 	}
 
 	public void setProductInstanceSet(Set<ProductInstanceDto> productInstanceSet) {
@@ -27,7 +27,7 @@ public class DefinitionGroupInstanceDto {
 	}
 
 	public Set<InnerRelationInstanceDto> getInnerRelationInstanceSet() {
-		return innerRelationInstanceSet;
+		return this.innerRelationInstanceSet;
 	}
 
 	public void setInnerRelationInstanceSet(Set<InnerRelationInstanceDto> innerRelationInstanceSet) {

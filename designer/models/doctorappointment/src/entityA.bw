@@ -10,5 +10,5 @@ Entity B {
 
 Association AHasBs {
 	A with a (1) 
-	B with b (3..3)
+	B with b (2..3)
 }
