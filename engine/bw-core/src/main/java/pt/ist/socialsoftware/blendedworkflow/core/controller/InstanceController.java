@@ -18,6 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.UndefinedEntityInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
@@ -90,7 +91,7 @@ public class InstanceController {
 			Entity entity = di.getMandatoryEntity(specId);
 			entityInstanceDto = new UndefinedEntityInstanceDto(entity);
 		} else {
-			entityInstanceDto = new EntityInstanceDto(entityInstance);
+			entityInstanceDto = new EntityInstanceDto(entityInstance, Depth.DEEP);
 		}
 
 		return new ResponseEntity<>(entityInstanceDto, HttpStatus.OK);

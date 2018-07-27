@@ -5,6 +5,7 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ExpressionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
 
@@ -132,12 +133,15 @@ public class MulCondition extends MulCondition_Base {
 	public MulConditionDto getDTO() {
 		MulConditionDto mulConditionDTO = new MulConditionDto();
 		mulConditionDTO.setExternalId(getExternalId());
+		mulConditionDTO.setRolename(getRolename());
 		mulConditionDTO.setRolePath(getSourceEntity().getName() + "." + getRolename());
 		mulConditionDTO.setCardinality(getCardinality().getExp());
 		mulConditionDTO.setMin(getCardinality().getMinValue());
 		mulConditionDTO.setMax(getCardinality().getMaxValue());
 		mulConditionDTO.setSourceMin(getSymmetricMulCondition().getCardinality().getMinValue());
 		mulConditionDTO.setSourceMax(getSymmetricMulCondition().getCardinality().getMaxValue());
+		mulConditionDTO.setSourceEntity(new EntityDto(getSourceEntity()));
+		mulConditionDTO.setTargetEntity(new EntityDto(getTargetEntity()));
 
 		return mulConditionDTO;
 	}

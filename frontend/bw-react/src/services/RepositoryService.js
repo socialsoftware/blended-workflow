@@ -50,6 +50,10 @@ export class RepositoryService {
         return this.axios.get("/specs/" + specId + "/instances/" + name + "/entities/mandatory")
     }
 
+    getEntityInstanceByExternalId(externalId) {
+        return this.axios.get("/entityinstance/" + externalId)
+    }
+
     // Instances
     getWorkflowInstances(specId) {
         return this.axios.get("/specs/" + specId + "/instances")

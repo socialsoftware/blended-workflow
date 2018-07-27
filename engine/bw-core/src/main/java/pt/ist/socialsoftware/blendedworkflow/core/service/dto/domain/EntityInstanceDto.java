@@ -9,21 +9,32 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 
 public class EntityInstanceDto {
+	public enum Depth {
+		DEEP, SHALLOW
+	}
+
 	private String externalId;
 	private String id;
 	private EntityDto entity;
 	private List<AttributeInstanceDto> attributes;
+	private List<LinkDto> links;
 
 	public EntityInstanceDto() {
 	}
 
-	public EntityInstanceDto(EntityInstance entityInstance) {
+	public EntityInstanceDto(EntityInstance entityInstance, Depth depth) {
 		this.externalId = entityInstance.getExternalId();
-		this.setId(entityInstance.getId());
+		this.id = entityInstance.getId();
 		this.entity = entityInstance.getEntity().getDTO();
-		this.attributes = entityInstance.getEntity().getAttributeSet().stream()
-				.sorted((a1, a2) -> a1.getName().compareTo(a2.getName()))
-				.map(a -> getAttributeInstanceDto(entityInstance, a)).collect(Collectors.toList());
+
+		if (depth.equals(Depth.DEEP)) {
+			this.attributes = entityInstance.getEntity().getAttributeSet().stream()
+					.sorted((a1, a2) -> a1.getName().compareTo(a2.getName()))
+					.map(a -> getAttributeInstanceDto(entityInstance, a)).collect(Collectors.toList());
+			this.setLinks(entityInstance.getEntity().getMulConditions().stream()
+					.sorted((m1, m2) -> m1.getRolename().compareTo(m2.getRolename()))
+					.map(m -> new LinkDto(entityInstance, m)).collect(Collectors.toList()));
+		}
 	}
 
 	public String getExternalId() {
@@ -65,6 +76,14 @@ public class EntityInstanceDto {
 		} else {
 			return new UndefinedAttributeInstanceDto(attribute);
 		}
+	}
+
+	public List<LinkDto> getLinks() {
+		return this.links;
+	}
+
+	public void setLinks(List<LinkDto> links) {
+		this.links = links;
 	}
 
 }

@@ -168,7 +168,7 @@ public class EntityInstance extends EntityInstance_Base {
 
 	@Override
 	public boolean isDefined() {
-		return getEntity().getMultConditions().stream().allMatch(m -> isInCardinality(m));
+		return getEntity().getMulConditions().stream().allMatch(m -> isInCardinality(m));
 	}
 
 	public boolean isDefined(Set<MulCondition> mulConditionSet) {

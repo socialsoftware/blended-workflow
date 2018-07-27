@@ -196,7 +196,7 @@ public class Entity extends Entity_Base {
 		return entityDto;
 	}
 
-	public Set<MulCondition> getMultConditions() {
+	public Set<MulCondition> getMulConditions() {
 		return getRelationSet().stream().flatMap(r -> r.getMulConditionSet().stream())
 				.filter(m -> m.getSourceEntity() == this).collect(Collectors.toSet());
 	}
