@@ -54,6 +54,10 @@ export class RepositoryService {
         return this.axios.get("/entityinstance/" + externalId)
     }
 
+    getEntityInstancesForDependence(entityInstanceExtId, dependenceExtId) {
+        return this.axios.get("/entityinstance/" + entityInstanceExtId + "/dependence/"+ dependenceExtId)
+    }
+
     // Instances
     getWorkflowInstances(specId) {
         return this.axios.get("/specs/" + specId + "/instances")

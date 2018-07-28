@@ -1,7 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -73,7 +71,7 @@ public class EntityInstance extends EntityInstance_Base {
 
 	public boolean holdsDefPathCondition(DefPathCondition defPathCondition) {
 		try {
-			getProductInstancesByPath(defPathCondition);
+			getProductInstancesByListOfNames(getEntity().getListOfNamesInPath(defPathCondition));
 		} catch (BWException bwe) {
 			if (bwe.getError().equals(BWErrorType.NOT_ALL_PRODUCT_INSTANCES_DEFINED)) {
 				return false;
@@ -85,36 +83,11 @@ public class EntityInstance extends EntityInstance_Base {
 		return true;
 	}
 
-	public Set<ProductInstance> getProductInstancesByPath(DefPathCondition defPathCondition) {
-		List<String> namesInPath = new ArrayList<>(Arrays.asList(defPathCondition.getPath().getValue().split("\\.")));
-
-		if (defPathCondition.getPath().getSource() != getEntity()
-				&& defPathCondition.getPath().getAdjacent() != getEntity()) {
-			assert false : "neither the first nor the second element in the path, "
-					+ defPathCondition.getPath().getValue() + ", refer to the entity of this instance, "
-					+ getEntity().getName();
-		}
-
-		// the first element refers the entity
-		if (defPathCondition.getPath().getSource() == getEntity()) {
-			namesInPath.remove(0);
-		}
-
-		// the second element refers the entity
-		if (defPathCondition.getPath().getSource() != getEntity()
-				&& defPathCondition.getPath().getAdjacent() == getEntity()) {
-			namesInPath.remove(0);
-			namesInPath.remove(0);
-		}
-
-		return getProductInstancesByListOfNames(namesInPath);
-	}
-
 	public Set<ProductInstance> getProductInstancesByPath(String path) {
 		DefPathCondition defPathCondition = DefPathCondition
 				.getDefPathCondition(getEntity().getDataModel().getSpecification(), path);
 
-		return getProductInstancesByPath(defPathCondition);
+		return getProductInstancesByListOfNames(getEntity().getListOfNamesInPath(defPathCondition));
 	}
 
 	private Set<ProductInstance> getProductInstancesByListOfNames(List<String> namesInPath) {

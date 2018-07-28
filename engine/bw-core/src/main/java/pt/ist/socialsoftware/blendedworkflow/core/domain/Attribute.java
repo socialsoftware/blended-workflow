@@ -130,17 +130,7 @@ public class Attribute extends Attribute_Base {
 
 	@Override
 	public AttributeDto getDTO() {
-		AttributeDto attDTO = new AttributeDto();
-		attDTO.setSpecId(getDataModel().getSpecification().getSpecId());
-		attDTO.setExtId(getExternalId());
-		attDTO.setProductType(ProductType.ATTRIBUTE.name());
-		attDTO.setEntityExtId(getEntity().getExternalId());
-		attDTO.setEntityName(getEntity().getName());
-		attDTO.setName(getName());
-		attDTO.setType(getType().name);
-		attDTO.setMandatory(getIsMandatory());
-
-		return attDTO;
+		return new AttributeDto(this);
 	}
 
 	@Override

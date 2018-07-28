@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -217,6 +219,28 @@ public class Entity extends Entity_Base {
 						|| r.getEntityTwo() == this && r.getRolenameOne().equals(rolename))
 				.map(r -> r.getEntityOne() == this ? r.getEntityTwo() : r.getEntityOne()).findFirst()
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ROLE_NAME, getName() + "." + rolename));
+	}
+
+	public List<String> getListOfNamesInPath(DefPathCondition defPathCondition) {
+		List<String> namesInPath = new ArrayList<>(Arrays.asList(defPathCondition.getPath().getValue().split("\\.")));
+
+		if (defPathCondition.getPath().getSource() != this && defPathCondition.getPath().getAdjacent() != this) {
+			assert false : "neither the first nor the second element in the path, "
+					+ defPathCondition.getPath().getValue() + ", refer to the entity " + getName();
+		}
+
+		// the first element refers the entity
+		if (defPathCondition.getPath().getSource() == this) {
+			namesInPath.remove(0);
+		}
+
+		// the second element refers the entity
+		if (defPathCondition.getPath().getSource() != this && defPathCondition.getPath().getAdjacent() == this) {
+			namesInPath.remove(0);
+			namesInPath.remove(0);
+		}
+
+		return namesInPath;
 	}
 
 }

@@ -120,7 +120,7 @@ public class SpecXmlImport {
 				boolean attributeMandatory = convertStringToBool(attributeElement.getAttributeValue("mandatory"));
 
 				DesignInterface.getInstance().createAttribute(new AttributeDto(dataModel.getSpecification().getSpecId(),
-						null, entity.getExternalId(), entityName, attributeName, type.toString(), attributeMandatory));
+						entity.getExternalId(), entityName, attributeName, type.toString(), attributeMandatory));
 			}
 		}
 	}
