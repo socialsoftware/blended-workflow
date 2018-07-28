@@ -8,7 +8,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Product.ProductType;
 
 public class EntityDto extends ProductDto {
 	private String name;
-	
+
 	private boolean exists;
 	private boolean mandatory;
 	private List<AttributeDto> attributes;
