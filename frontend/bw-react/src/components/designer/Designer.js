@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
-import { DataModel } from './DataModel';
+import { DataModel } from './datamodel/DataModel';
 
 export class Designer extends React.Component {
     render() {

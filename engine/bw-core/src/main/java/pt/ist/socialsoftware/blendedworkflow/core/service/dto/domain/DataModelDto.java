@@ -1,9 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 
 public class DataModelDto {
 	private String specId;
@@ -16,7 +18,8 @@ public class DataModelDto {
 		this.specName = dataModel.getSpecification().getName();
 		this.entities = dataModel.getEntitySet().stream().sorted((e1, e2) -> e1.getName().compareTo(e2.getName()))
 				.map(e -> new EntityDto(e)).collect(Collectors.toList());
-		// TODO Auto-generated constructor stub
+		this.associations = dataModel.getRelationBWSet().stream().sorted(Comparator.comparing(RelationBW::getName))
+				.map(r -> new RelationDto(r)).collect(Collectors.toList());
 	}
 
 	public String getSpecId() {

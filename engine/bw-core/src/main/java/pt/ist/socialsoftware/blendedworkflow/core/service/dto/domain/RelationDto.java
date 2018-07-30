@@ -1,5 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
+
 public class RelationDto {
 	private String specId;
 	private String extId;
@@ -19,7 +21,7 @@ public class RelationDto {
 	}
 
 	public RelationDto(String specId, String name, String entOneExtId, String rolenameOne, String cardinalityOne,
-					   String entTwoExtId, String rolenameTwo, String cardinalityTwo) {
+			String entTwoExtId, String rolenameTwo, String cardinalityTwo) {
 		this.specId = specId;
 		this.name = name;
 		this.entOneExtId = entOneExtId;
@@ -28,6 +30,16 @@ public class RelationDto {
 		this.entTwoExtId = entTwoExtId;
 		this.rolenameTwo = rolenameTwo;
 		this.cardinalityTwo = cardinalityTwo;
+	}
+
+	public RelationDto(RelationBW relation) {
+		this(relation.getDataModel().getSpecification().getSpecId(), relation.getName(),
+				relation.getEntityOne().getExternalId(), relation.getRolenameOne(),
+				relation.getCardinalityOne().getExp(), relation.getEntityTwo().getExternalId(),
+				relation.getRolenameTwo(), relation.getCardinalityTwo().getExp());
+
+		this.entOneName = relation.getEntityOne().getName();
+		this.entTwoName = relation.getEntityTwo().getName();
 	}
 
 	public String getSpecId() {
@@ -119,7 +131,7 @@ public class RelationDto {
 	}
 
 	public String getPathOne() {
-		return pathOne;
+		return this.pathOne;
 	}
 
 	public void setPathOne(String pathOne) {
@@ -127,7 +139,7 @@ public class RelationDto {
 	}
 
 	public String getPathTwo() {
-		return pathTwo;
+		return this.pathTwo;
 	}
 
 	public void setPathTwo(String pathTwo) {

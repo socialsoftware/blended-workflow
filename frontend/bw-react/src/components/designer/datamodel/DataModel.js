@@ -1,6 +1,7 @@
-import React from 'react';
-import { RepositoryService } from '../../services/RepositoryService';
-import { Entity } from './Entity';
+import React from 'react'
+import { RepositoryService } from '../../../services/RepositoryService'
+import { Entity } from './Entity'
+import { Association } from './Association'
 
 export class DataModel extends React.Component {
     constructor(props) {
@@ -28,11 +29,20 @@ export class DataModel extends React.Component {
         }
     }
 
+    renderAssociations() {
+        if (this.state.dataModel.associations) {
+            return this.state.dataModel.associations.map(a => <Association key={a.name} association={a} />);
+        } else {
+            return "";
+        }
+    }
+
     render() {
         return (
             <div>
                 <b>Data Model Specification {this.state.dataModel.specName}</b>
                 {this.generateEntitiesDom()}
+                {this.renderAssociations()}
             </div>
         )
     }
