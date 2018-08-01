@@ -48,8 +48,13 @@ export class GoalExecutor extends React.Component {
     executeWorkItem(workItem) {
        const service = new RepositoryService();
 
-        service.executeWorkItem(this.props.match.params.specId, this.props.match.params.name, workItem.name, workItem).then(response => {
+        service.executeWorkItem(this.props.match.params.specId, 
+            this.props.match.params.name, 
+            workItem.name, workItem)
+        .then(() => {
             this.closeWorkItem();
+        }).catch((err) => {
+            alert(err.message)
         });
     }
 

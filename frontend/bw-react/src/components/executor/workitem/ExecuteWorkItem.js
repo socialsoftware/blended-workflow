@@ -29,7 +29,7 @@ export class ExecuteWorkItem extends React.Component {
         this.props.onExecute(workItem);
     }
 
-    updateInstance(key,definitionGroupInstance) {
+    updateInstance(key, definitionGroupInstance) {
         const definitionGroup = this.state.defGroupMap.get(key);
         definitionGroup.definitionGroupInstanceSet = definitionGroupInstance;
         this.setState({

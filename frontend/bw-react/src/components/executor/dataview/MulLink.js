@@ -39,7 +39,7 @@ export class MulLink extends React.Component {
     render() {
         return (
             <div>
-                <Tab />{this.props.link.mulCondition.rolename}: {this.props.link.mulCondition.targetEntity.name} [{this.props.link.entityInstance == null ? 'UNDEF' : this.props.link.entityInstance.id}]
+                <Tab />{this.props.link.mulCondition.rolename}: {this.props.link.mulCondition.targetEntity.name} [{this.props.link.entityInstance == null ? 'undef' : this.props.link.entityInstance.id}]
                 {this.props.link.entityInstance && <OpenCloseButton open={this.state.open} onClick={this.openCloseLink} />}
                 <span>{this.state.open && <EntityInstance entityInstance={this.state.entityInstance} />}</span>
             </div>

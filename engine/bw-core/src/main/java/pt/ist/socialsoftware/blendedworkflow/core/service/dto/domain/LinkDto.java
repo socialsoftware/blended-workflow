@@ -8,6 +8,9 @@ public class LinkDto {
 	MulConditionDto mulCondition;
 	EntityInstanceDto entityInstance;
 
+	public LinkDto() {
+	}
+
 	public LinkDto(EntityInstance sourceEntityInstance, MulCondition mulCondition) {
 		this.mulCondition = mulCondition.getDTO();
 		this.entityInstance = mulCondition.getRelationBW().getRelationInstanceSet().stream()

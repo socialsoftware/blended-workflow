@@ -54,6 +54,7 @@ public class Cardinality extends Cardinality_Base {
 		setExp(exp);
 		setMinValue(minValue);
 		setMaxValue(maxValue);
+		logger.debug("Cardinality min:{}, max:{}", getMinValue(), getMaxValue());
 	}
 
 	public void delete() {

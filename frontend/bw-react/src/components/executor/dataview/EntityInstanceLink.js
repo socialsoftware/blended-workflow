@@ -23,7 +23,7 @@ export class EntityInstanceLink extends React.Component {
         return (
             <span>
                 {this.props.entityInstance.entity.name} [{this.props.entityInstance.id}] <OpenCloseButton open={this.state.open} onClick={this.openCloseLink} />
-                {this.state.open && <EntityInstance entityInstance={this.props.entityInstance} />}
+                {this.state.open && <EntityInstance entityInstance={this.props.entityInstance} />} 
             </span>
         )
     }

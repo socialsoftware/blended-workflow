@@ -5,10 +5,11 @@ import java.util.Set;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
 
 public class EntityInstanceContextDto {
 	private int index;
-	private ProductInstanceDto entityInstance;
+	private EntityInstanceDto entityInstance;
 	private MulConditionDto mulConditionDTO;
 	private Set<ProductInstanceDto> pathValueSet;
 	private String pathValues;
@@ -18,7 +19,7 @@ public class EntityInstanceContextDto {
 		EntityInstanceContextDto entityContextInstanceDto = new EntityInstanceContextDto();
 
 		entityContextInstanceDto.setIndex(index);
-		entityContextInstanceDto.setEntityInstance(entityInstance.getDTO());
+		entityContextInstanceDto.setEntityInstance(new EntityInstanceDto(entityInstance, Depth.DEEP));
 		entityContextInstanceDto.setPathValueSet(new HashSet<ProductInstanceDto>());
 		entityContextInstanceDto.setMulConditionDTO(entityContextDTO.getMulCondition());
 		entityContextInstanceDto.setPathValues("");
@@ -44,11 +45,11 @@ public class EntityInstanceContextDto {
 		this.index = index;
 	}
 
-	public ProductInstanceDto getEntityInstance() {
+	public EntityInstanceDto getEntityInstance() {
 		return this.entityInstance;
 	}
 
-	public void setEntityInstance(ProductInstanceDto entityInstance) {
+	public void setEntityInstance(EntityInstanceDto entityInstance) {
 		this.entityInstance = entityInstance;
 	}
 
