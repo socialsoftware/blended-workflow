@@ -49,7 +49,7 @@ function WorkItemController() {
 
 		};
 		if (definitionGroup.defEnt != null) {
-			actrl.nextEntityCounter();
+			ctrl.nextEntityCounter();
 			productInstance = {
 				product: {
 					productType: 'ENTITY'

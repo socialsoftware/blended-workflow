@@ -77,17 +77,12 @@ public class EntityContextDto {
 			mulConditionDto.setMax(1);
 			mulConditionDto.setRolePath(entityContext.getName());
 			entityContextDto.setMulCondition(mulConditionDto);
-			// // parent defines the entity
-			// DefPathConditionDTO defPathConditionDTO = DefPathCondition
-			// .getDefPathCondition(entityContext.getDataModel().getSpecification(),
-			// entityContext.getName())
-			// .getDTO(entityContext.getDataModel().getSpecification().getSpecId());
-			// others defpaths due to activation condition
+
+			// defpaths due to activation condition
 			Set<DefPathConditionDto> defPathConditions = goal.getActivationConditionSet().stream()
 					.filter(d -> d.getSourceOfPath() == entityContext)
 					.map(d -> d.getDTO(entityContext.getDataModel().getSpecification().getSpecId()))
 					.collect(Collectors.toSet());
-			// defPathConditions.add(defPathConditionDTO);
 			entityContextDto.setDefPathConditionSet(defPathConditions);
 		} else {
 			entityContextDto.setMulCondition(mulCondition.getDTO());
