@@ -10,10 +10,9 @@
 		<div ng-repeat="definitionGroup in $ctrl.workItem.definitionGroupSet">
 			<table class="table table-bordered table-striped">
 				<caption>
-					<strong>Define Product</strong> : <span
-						ng-repeat="entity in definitionGroup.defProductConditionSet.defEnts">
-						{{entity.path}}</span> ( <span
-						ng-repeat="attribute in definitionGroup.defProductConditionSet.defAtts">{{attribute.path}}<span
+					<strong>Define Product</strong> : <span>
+						{{definitionGroup.defEnt.path}}</span> ( <span
+						ng-repeat="attribute in definitionGroup.defAtts">{{attribute.path}}<span
 						ng-if="!$last">, </span></span> )
 					<button
 						ng-if="$ctrl.canCreateDefinitionGroupInstance(definitionGroup)"

@@ -1,8 +1,7 @@
 import React from 'react'
-import { DefEntity } from './DefEntity'
-import { DefAttribute } from './DefAttribute'
 import { EntityContext } from './EntityContext'
-import { DefinitionGroupInstance } from './DefinitionGroupInstance'
+import { DefineEntity } from './DefineEntity'
+import { DefineAttribute } from './DefineAttribute'
 import { InnerRelation } from './InnerRelation'
 
 export class DefinitionGroup extends React.Component {
@@ -10,20 +9,44 @@ export class DefinitionGroup extends React.Component {
         super(props);
 
         this.state = {
-            definitionGroup: props.definitionGroup
+            definitionGroupInstanceMap: new Map()
         }
+
+        if (this.props.definitionGroup.defEnt != null) {
+            const definitionGroupInstanceMap = this.state.definitionGroupInstanceMap;
+            const definitionGroupInstance = {
+                        entityInstanceContextSet : [],
+                        productInstanceSet: [{
+                            product: { productType: 'ENTITY' },
+                            externalId: this.props.id,
+                            id: this.props.id,
+                            path: this.props.definitionGroup.defEnt.path,
+                            value: ''
+                        }],
+                        innerRelationInstanceSet: []
+                    };
+            definitionGroupInstanceMap.set(this.props.definitionGroup.defEnt.path, definitionGroupInstance);
+
+            this.state = {
+                definitionGroupInstanceMap: definitionGroupInstanceMap
+            }
+        };
+
+        this.props.updateInstance(this.props.id,Array.from(this.state.definitionGroupInstanceMap.values()));
     }
-    
+
+
+    defineAttribute() {
+
+    }
  
     render() {
         return ( 
             <div>
-                Definition Group: 
-                {this.state.definitionGroup.defProductConditionSet.defEnts.map(de => <DefEntity key={de.extId} defEntity={de} />)}
-                {this.state.definitionGroup.defProductConditionSet.defAtts.map(da => <DefAttribute key={da.attributeExtId} defAttribute={da} />)}
-                {this.state.definitionGroup.entityContextSet.map(ec => <EntityContext key={ec.index} entityContext={ec} />)}
-                {this.state.definitionGroup.definitionGroupInstanceSet.map(dgi => <DefinitionGroupInstance definitionGroupInstance={dgi} />)}
-                {this.state.definitionGroup.innerRelationSet.map(ir => <InnerRelation key={ir.mulCondition.externalId} innerRelation={ir} />)}
+                {this.props.definitionGroup.entityContextSet && this.props.definitionGroup.entityContextSet.map(ec => <EntityContext key={ec.index} entityContext={ec} />)}
+                {this.props.definitionGroup.defEnt && <DefineEntity key={this.props.definitionGroup.defEnt.index} id={this.props.id} defEntity={this.props.definitionGroup.defEnt} />}
+                {this.props.definitionGroup.defAtts && this.props.definitionGroup.defAtts.map(a => <DefineAttribute key={a.index} defAttribute={a} />)}
+                {this.props.definitionGroup.innerRelationSet && this.props.definitionGroup.innerRelationSet.map(ir => <InnerRelation key={ir.mulCondition.externalId} innerRelation={ir} />)}
             </div>
         )
     }

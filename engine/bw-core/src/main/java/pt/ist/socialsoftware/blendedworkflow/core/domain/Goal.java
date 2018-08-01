@@ -297,12 +297,11 @@ public abstract class Goal extends Goal_Base {
 		Set<Entity> entityContext = new HashSet<>();
 
 		for (DefPathCondition defPathCondition : getActivationConditionSet()) {
-			// entity is already defined
 			if (getProducedEntities().contains(defPathCondition.getSourceOfPath())) {
+				// entity in the source of path is going to be defined
 				entityContext.add(defPathCondition.getPath().getAdjacent());
-			}
-			// entity is going to be defined
-			if (!getProducedEntities().contains(defPathCondition.getSourceOfPath())) {
+			} else {
+				// entity in the source of path is already defined
 				entityContext.add(defPathCondition.getSourceOfPath());
 			}
 		}
@@ -310,44 +309,19 @@ public abstract class Goal extends Goal_Base {
 		return entityContext;
 	}
 
-	public Set<Entity> getEntityContext(Entity entity) {
+	public Set<Entity> getEntityContextForDefinitionGroup(Entity entity) {
 		Set<Entity> entityContext = new HashSet<>();
 
-		// some may not be defined in activation conditions because of parent
-		// goals
-		for (DefProductCondition defProductCondition : getSuccessConditionSet().stream()
-				.filter(d -> d.getSourceOfPath() == entity).collect(Collectors.toSet())) {
-			// attribute is defined but not its entity
-			if (defProductCondition.isAttribute()
-					&& !getSuccessEntities().contains(defProductCondition.getSourceOfPath())) {
-				entityContext.add(defProductCondition.getSourceOfPath());
-			}
-			// create contexts for entities which are not defined in the goal
-			// subtree
-			if (defProductCondition.isEntity()) {
-				for (MulCondition mulCondition : getEntityInvariantConditionSet()) {
-					if (mulCondition.getSourceEntity() == defProductCondition.getTargetOfPath()
-							&& !getEntityInvariantConditionSet().contains(mulCondition.getSymmetricMulCondition())) {
-						entityContext.add(mulCondition.getTargetEntity());
-					}
+		if (!getProducedEntities().contains(entity)) {
+			// entity is defined, some of its attributes are going to be defined
+			entityContext.add(entity);
+		} else {
+			// entity is going to be defined
+			for (DefPathCondition defPathCondition : getActivationConditionSet()) {
+				// it depends on a path
+				if (defPathCondition.getSourceOfPath() == entity) {
+					entityContext.add(defPathCondition.getPath().getAdjacent());
 				}
-			}
-		}
-
-		Set<DefPathCondition> activationDefPathConditions = getActivationConditionSet().stream()
-				.filter(d -> d.getSourceOfPath() == entity).collect(Collectors.toSet());
-
-		// the entity already exist
-		for (DefPathCondition defPathCondition : activationDefPathConditions) {
-			if (defPathCondition.isEntity()) {
-				entityContext.add(defPathCondition.getSourceOfPath());
-			}
-		}
-
-		// the entity is going to be defined
-		for (DefPathCondition defPathCondition : activationDefPathConditions) {
-			if (!entityContext.contains(defPathCondition.getSourceOfPath())) {
-				entityContext.add(defPathCondition.getPath().getAdjacent());
 			}
 		}
 

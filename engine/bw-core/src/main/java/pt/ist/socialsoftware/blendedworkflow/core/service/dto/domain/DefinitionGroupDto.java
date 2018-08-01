@@ -4,20 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class DefinitionGroupDto {
-	private DefProductConditionSetDto defProductConditionSet = new DefProductConditionSetDto();
 	private Set<EntityContextDto> entityContextSet = new HashSet<>();
+	private DefEntityConditionDto defEnt = null;
+	private Set<DefAttributeConditionDto> defAtts = new HashSet<>();
 	private Set<DefinitionGroupInstanceDto> definitionGroupInstanceSet = new HashSet<>();
 	private Set<InnerRelationDto> innerRelationSet = new HashSet<>();
 
 	public DefinitionGroupDto() {
-	}
-
-	public DefProductConditionSetDto getDefProductConditionSet() {
-		return this.defProductConditionSet;
-	}
-
-	public void setDefProductConditionSet(DefProductConditionSetDto defProductConditionSet) {
-		this.defProductConditionSet = defProductConditionSet;
 	}
 
 	public Set<EntityContextDto> getEntityContextSet() {
@@ -26,6 +19,22 @@ public class DefinitionGroupDto {
 
 	public void setEntityContextSet(Set<EntityContextDto> entityContextSet) {
 		this.entityContextSet = entityContextSet;
+	}
+
+	public DefEntityConditionDto getDefEnt() {
+		return this.defEnt;
+	}
+
+	public void setDefEnt(DefEntityConditionDto defEnt) {
+		this.defEnt = defEnt;
+	}
+
+	public Set<DefAttributeConditionDto> getDefAtts() {
+		return this.defAtts;
+	}
+
+	public void setDefAtts(Set<DefAttributeConditionDto> defAtts) {
+		this.defAtts = defAtts;
 	}
 
 	public Set<DefinitionGroupInstanceDto> getDefinitionGroupInstanceSet() {

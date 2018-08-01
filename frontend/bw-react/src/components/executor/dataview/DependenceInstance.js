@@ -22,7 +22,7 @@ export class DependenceInstance extends React.Component {
     }
 
     render() {
-    const dependenceEntityInstances = this.state.entityInstances == null ? 'NONE' : this.state.entityInstances.map(ei => <EntityInstanceLink key={ei.id} entityInstance={ei} />);
+    const dependenceEntityInstances = this.state.entityInstances.length === 0 ? 'NONE' : this.state.entityInstances.map(ei => <EntityInstanceLink key={ei.id} entityInstance={ei} />);
         return (
             <div>
                 <Tab /><Tab />{this.props.dependence.path}: {dependenceEntityInstances}

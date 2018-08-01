@@ -1,0 +1,10 @@
+Specification: "A associate to A" 
+       
+Entity A mandatory { 
+	att1 : Number
+} 
+
+Association AHasAs {
+	A with a1 (1) 
+	A with a2 (0..1)
+}

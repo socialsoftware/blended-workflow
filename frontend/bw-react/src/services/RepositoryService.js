@@ -87,16 +87,15 @@ export class RepositoryService {
     // 	var url = baseUrl + "specs/" + spec + "/instances/"+ instance + "/goalworkitem/log";
     // 	return $http.get(url);
     // },
-    // executeWorkItem : function(spec, instance,
-    // 		workItemName, workItem) {
-    // 	var url = baseUrl + "specs/" + spec + "/instances/"+ instance + "/goalworkitem";
-    // 	return $http.post(url, {
-    // 		"specId" :  spec,
-    // 		"workflowInstanceName" : instance,
-    // 		"name" : workItemName,
-    // 		"definitionGroupSet" : workItem.definitionGroupSet
-    // 	});
-    // }
+
+    executeWorkItem(spec, instance, workItemName, workItem) {
+        return this.axios.post("/specs/" + spec + "/instances/"+ instance + "/goalworkitem", {
+    		"specId" :  spec,
+    		"workflowInstanceName" : instance,
+    		"name" : workItemName,
+    		"definitionGroupSet" : workItem.definitionGroupSet
+        });
+    }
 
 
 }

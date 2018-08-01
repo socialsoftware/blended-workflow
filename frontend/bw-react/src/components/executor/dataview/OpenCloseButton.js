@@ -4,7 +4,7 @@ export class OpenCloseButton extends React.Component {
     constructor(props) {
         super(props);
 
-         this.handleOnClick = this.handleOnClick.bind(this);
+        this.handleOnClick = this.handleOnClick.bind(this);
     }
 
     handleOnClick() {

@@ -61,13 +61,14 @@ public class DefAttributeCondition extends DefAttributeCondition_Base {
 	}
 
 	public DefAttributeConditionDto getDto() {
-		DefAttributeConditionDto defConditionDTO = new DefAttributeConditionDto();
-		defConditionDTO.setSpecId(getConditionModel().getSpecification().getSpecId());
-		defConditionDTO.setPath(getPath().getValue());
-		defConditionDTO.setAttributeExtId(getAttributeOfDef().getExternalId());
-		defConditionDTO.setMandatory(getAttributeOfDef().getIsMandatory());
+		DefAttributeConditionDto defConditionDto = new DefAttributeConditionDto();
+		defConditionDto.setSpecId(getConditionModel().getSpecification().getSpecId());
+		defConditionDto.setName(getAttributeOfDef().getName());
+		defConditionDto.setPath(getPath().getValue());
+		defConditionDto.setAttributeExtId(getAttributeOfDef().getExternalId());
+		defConditionDto.setMandatory(getAttributeOfDef().getIsMandatory());
 
-		return defConditionDTO;
+		return defConditionDto;
 	}
 
 	@Override

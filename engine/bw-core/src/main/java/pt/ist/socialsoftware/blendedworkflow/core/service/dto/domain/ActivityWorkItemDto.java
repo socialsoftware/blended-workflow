@@ -37,19 +37,17 @@ public class ActivityWorkItemDto extends WorkItemDTO {
 			activityWorkItemDTO.getDefinitionGroupSet().add(definitionGroup);
 
 			// create all def products conditions associated with the entity
-			DefProductConditionSetDto defProductConditionSet = new DefProductConditionSetDto();
-			definitionGroup.setDefProductConditionSet(defProductConditionSet);
-			defProductConditionSet.setDefEnts(
+			definitionGroup.setDefEnt(
 					definitionGroupMap.get(entityDefinitionGroup).stream().filter(DefEntityCondition.class::isInstance)
-							.map(DefEntityCondition.class::cast).map(d -> d.getDTO()).collect(Collectors.toSet()));
-			defProductConditionSet.setDefAtts(definitionGroupMap.get(entityDefinitionGroup).stream()
+							.map(DefEntityCondition.class::cast).map(d -> d.getDTO()).findFirst().orElse(null));
+			definitionGroup.setDefAtts(definitionGroupMap.get(entityDefinitionGroup).stream()
 					.filter(DefAttributeCondition.class::isInstance).map(DefAttributeCondition.class::cast)
 					.map(d -> d.getDto()).collect(Collectors.toSet()));
 
 			// create entity contexts
 			Set<EntityContextDto> entityContextDTOs = new HashSet<EntityContextDto>();
 			definitionGroup.setEntityContextSet(entityContextDTOs);
-			Set<Entity> entityContexts = activity.getEntityContext(entityDefinitionGroup);
+			Set<Entity> entityContexts = activity.getEntityContextForDefinitionGroup(entityDefinitionGroup);
 			int counter = 0;
 			// for each entity context of the product groups to be created
 			for (Entity entityContext : entityContexts) {

@@ -228,10 +228,12 @@ public class WorkItemDTO {
 	public String print() {
 		String result = "\r\n";
 		for (DefinitionGroupDto definitionGroupDTO : getDefinitionGroupSet()) {
-			result = result + "DEF ENTITY: " + definitionGroupDTO.getDefProductConditionSet().getDefEnts().stream()
-					.map(d -> d.getPath()).collect(Collectors.joining(",")) + "\r\n";
-			result = result + "DEF ATTRIBUTE: " + definitionGroupDTO.getDefProductConditionSet().getDefAtts().stream()
-					.map(d -> d.getPath()).collect(Collectors.joining(",")) + "\r\n";
+			result = result + (definitionGroupDTO.getDefEnt() != null
+					? "DEF ENTITY: " + definitionGroupDTO.getDefEnt().getPath()
+					: "") + "\r\n";
+			result = result + "DEF ATTRIBUTE: "
+					+ definitionGroupDTO.getDefAtts().stream().map(d -> d.getPath()).collect(Collectors.joining(","))
+					+ "\r\n";
 			result = result + "ENTITY CONTEXT: "
 					+ definitionGroupDTO.getEntityContextSet().stream()
 							.map(ec -> ec.getDefEntityCondition().getEntityName() + ", "

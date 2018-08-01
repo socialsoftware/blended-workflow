@@ -22,7 +22,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 public class GoalWorkItemDto extends WorkItemDTO {
 	private static Logger logger = LoggerFactory.getLogger(GoalWorkItemDto.class);
 
-	public static GoalWorkItemDto createGoalWorkItemDTO(WorkflowInstance workflowInstance, Goal goal) {
+	public static GoalWorkItemDto createGoalWorkItemDto(WorkflowInstance workflowInstance, Goal goal) {
 		GoalWorkItemDto goalWorkItemDto = new GoalWorkItemDto();
 		goalWorkItemDto.setSpecId(workflowInstance.getSpecification().getSpecId());
 		goalWorkItemDto.setWorkflowInstanceName(workflowInstance.getName());
@@ -40,19 +40,17 @@ public class GoalWorkItemDto extends WorkItemDTO {
 				goalWorkItemDto.getDefinitionGroupSet().add(definitionGroup);
 
 				// create all def products conditions associated with the entity
-				DefProductConditionSetDto defProductConditionSet = new DefProductConditionSetDto();
-				definitionGroup.setDefProductConditionSet(defProductConditionSet);
-				defProductConditionSet.setDefEnts(definitionGroupMap.get(entityDefinitionGroup).stream()
+				definitionGroup.setDefEnt(definitionGroupMap.get(entityDefinitionGroup).stream()
 						.filter(DefEntityCondition.class::isInstance).map(DefEntityCondition.class::cast)
-						.map(d -> d.getDTO()).collect(Collectors.toSet()));
-				defProductConditionSet.setDefAtts(definitionGroupMap.get(entityDefinitionGroup).stream()
+						.map(d -> d.getDTO()).findFirst().orElse(null));
+				definitionGroup.setDefAtts(definitionGroupMap.get(entityDefinitionGroup).stream()
 						.filter(DefAttributeCondition.class::isInstance).map(DefAttributeCondition.class::cast)
 						.map(d -> d.getDto()).collect(Collectors.toSet()));
 
 				// create entity contexts
 				Set<EntityContextDto> entityContextDtos = new HashSet<EntityContextDto>();
 				definitionGroup.setEntityContextSet(entityContextDtos);
-				Set<Entity> entityContexts = goal.getEntityContext(entityDefinitionGroup);
+				Set<Entity> entityContexts = goal.getEntityContextForDefinitionGroup(entityDefinitionGroup);
 				int counter = 0;
 				// for each entity context of the product groups to be created
 				for (Entity entityContext : entityContexts) {
@@ -82,7 +80,7 @@ public class GoalWorkItemDto extends WorkItemDTO {
 				// // create entity contexts
 				Set<EntityContextDto> entityContextDTOs = new HashSet<EntityContextDto>();
 				definitionGroup.setEntityContextSet(entityContextDTOs);
-				Set<Entity> entityContexts = goal.getEntityContext(entityDefinitionGroup);
+				Set<Entity> entityContexts = goal.getEntityContextForDefinitionGroup(entityDefinitionGroup);
 				int counter = 0;
 				// for each entity context of the product groups to be created
 				for (Entity entityContext : entityContexts) {

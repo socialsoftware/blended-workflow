@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,8 +17,8 @@ public class EntityInstanceDto {
 	private String externalId;
 	private String id;
 	private EntityDto entity;
-	private List<AttributeInstanceDto> attributes;
-	private List<LinkDto> links;
+	private List<AttributeInstanceDto> attributes = new ArrayList<>();
+	private List<LinkDto> links = new ArrayList<>();
 
 	public EntityInstanceDto() {
 	}

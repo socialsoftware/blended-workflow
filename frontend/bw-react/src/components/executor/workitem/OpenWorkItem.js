@@ -13,7 +13,7 @@ export class OpenWorkItem extends React.Component {
 
     render() {
         return ( 
-            <div> Work Item: {this.props.workItem.name} <button onClick={this.handleClick}>Open</button> </div>
+            <div> {this.props.workItem.name} <button onClick={this.handleClick}>Open</button> </div>
         )
     }
 }

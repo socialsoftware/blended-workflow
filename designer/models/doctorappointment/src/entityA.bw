@@ -5,7 +5,7 @@ Entity A mandatory {
 } 
 
 Entity B {
-	att1 : Boolean
+	att1 : Boolean 
 }
 
 Association AHasBs {

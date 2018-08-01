@@ -310,39 +310,32 @@ public class Activity extends Activity_Base {
 	public Set<Entity> getEntityContext() {
 		Set<Entity> entityContext = new HashSet<>();
 
-		// the entity already exists
 		for (DefPathCondition defPathCondition : getPreConditionSet()) {
-			if (defPathCondition.getTargetOfPath() == defPathCondition.getSourceOfPath()) {
-				entityContext.add(defPathCondition.getSourceOfPath());
-			}
-		}
-
-		// the entity is going to be defined
-		for (DefPathCondition defPathCondition : getPreConditionSet()) {
-			if (!entityContext.contains(defPathCondition.getSourceOfPath())) {
+			if (getPostEntities().contains(defPathCondition.getSourceOfPath())) {
+				// entity in the source of path is going to be defined
 				entityContext.add(defPathCondition.getPath().getAdjacent());
+			} else {
+				// entity in the source of path is already defined
+				entityContext.add(defPathCondition.getSourceOfPath());
 			}
 		}
 
 		return entityContext;
 	}
 
-	public Set<Entity> getEntityContext(Entity entity) {
+	public Set<Entity> getEntityContextForDefinitionGroup(Entity entity) {
 		Set<Entity> entityContext = new HashSet<>();
 
-		// the entity already exist
-		for (DefPathCondition defPathCondition : getPreConditionSet()) {
-			if (defPathCondition.getSourceOfPath() == entity
-					&& defPathCondition.getTargetOfPath() == defPathCondition.getSourceOfPath()) {
-				entityContext.add(defPathCondition.getSourceOfPath());
-			}
-		}
-
-		// the entity is going to be defined
-		for (DefPathCondition defPathCondition : getPreConditionSet()) {
-			if (defPathCondition.getSourceOfPath() == entity
-					&& !entityContext.contains(defPathCondition.getSourceOfPath())) {
-				entityContext.add(defPathCondition.getPath().getAdjacent());
+		if (!getPostEntities().contains(entity)) {
+			// entity is defined, some of its attributes are going to be defined
+			entityContext.add(entity);
+		} else {
+			// entity is going to be defined
+			for (DefPathCondition defPathCondition : getPreConditionSet()) {
+				// it depends on a path
+				if (defPathCondition.getSourceOfPath() == entity) {
+					entityContext.add(defPathCondition.getPath().getAdjacent());
+				}
 			}
 		}
 

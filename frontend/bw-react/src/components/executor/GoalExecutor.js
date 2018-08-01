@@ -18,12 +18,17 @@ export class GoalExecutor extends React.Component {
     }
 
     componentDidMount() {
+        this.getNextGoalWorkItems();
+    }
+
+    getNextGoalWorkItems() {
         const service = new RepositoryService();
 
         service.getNextGoalWorkItems(this.props.match.params.specId, this.props.match.params.name).then(response => {
             this.setState({ workItems: response.data }
             )
         });
+    
     }
 
     openWorkItem(workItem) {
@@ -35,18 +40,24 @@ export class GoalExecutor extends React.Component {
     closeWorkItem() {
         this.setState({
             openWorkItem: {}
+        }, function() {
+            this.getNextGoalWorkItems();
         });
     }
 
     executeWorkItem(workItem) {
-        // remote invocation of....
+       const service = new RepositoryService();
+
+        service.executeWorkItem(this.props.match.params.specId, this.props.match.params.name, workItem.name, workItem).then(response => {
+            this.closeWorkItem();
+        });
     }
 
     getWorkItems() {
         if (this.state.openWorkItem.name) {
             return <ExecuteWorkItem workItem={this.state.openWorkItem} onClose={this.closeWorkItem} onExecute={this.executeWorkItem}/>;
         } else if (this.state.workItems) {
-            return this.state.workItems.sort((w1,w2) => w1.name > w2.name).map(wi => <OpenWorkItem key={wi.name} workItem={wi} onClick={this.openWorkItem} />);
+            return this.state.workItems.sort((w1,w2) => w1.name.localeCompare(w2.name)).map(wi => <OpenWorkItem key={wi.name} workItem={wi} onClick={this.openWorkItem} />);
         } else {
             return "";
         }

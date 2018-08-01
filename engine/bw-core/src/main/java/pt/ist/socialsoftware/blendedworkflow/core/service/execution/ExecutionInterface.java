@@ -125,7 +125,7 @@ public class ExecutionInterface {
 		Set<GoalWorkItemDto> goalWorkItemDTOs = new HashSet<>();
 
 		for (Goal goal : getPendingGoalSet(workflowInstance)) {
-			goalWorkItemDTOs.add(GoalWorkItemDto.createGoalWorkItemDTO(workflowInstance, goal));
+			goalWorkItemDTOs.add(GoalWorkItemDto.createGoalWorkItemDto(workflowInstance, goal));
 		}
 
 		return goalWorkItemDTOs;
