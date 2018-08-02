@@ -3,26 +3,26 @@ package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 import java.util.Set;
 
 public class InnerRelationInstanceDto {
-	private MulConditionDto mulConditionDTO;
-	private Set<ProductInstanceDto> productInstanceSet;
+	private MulConditionDto mulConditionDto;
+	private Set<EntityInstanceDto> entityInstanceSet;
 
 	public InnerRelationInstanceDto() {
 	}
 
-	public Set<ProductInstanceDto> getProductInstanceSet() {
-		return productInstanceSet;
+	public Set<EntityInstanceDto> getEntityInstanceSet() {
+		return this.entityInstanceSet;
 	}
 
-	public void setProductInstanceSet(Set<ProductInstanceDto> productInstanceSet) {
-		this.productInstanceSet = productInstanceSet;
+	public void setEntityInstanceSet(Set<EntityInstanceDto> entityInstanceSet) {
+		this.entityInstanceSet = entityInstanceSet;
 	}
 
-	public MulConditionDto getMulConditionDTO() {
-		return mulConditionDTO;
+	public MulConditionDto getMulConditionDto() {
+		return this.mulConditionDto;
 	}
 
-	public void setMulConditionDTO(MulConditionDto mulConditionDTO) {
-		this.mulConditionDTO = mulConditionDTO;
+	public void setMulConditionDto(MulConditionDto mulConditionDTO) {
+		this.mulConditionDto = mulConditionDTO;
 	}
 
 }

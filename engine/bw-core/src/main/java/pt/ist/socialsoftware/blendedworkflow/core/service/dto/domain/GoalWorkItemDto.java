@@ -18,6 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
 
 public class GoalWorkItemDto extends WorkItemDTO {
 	private static Logger logger = LoggerFactory.getLogger(GoalWorkItemDto.class);
@@ -103,12 +104,13 @@ public class GoalWorkItemDto extends WorkItemDTO {
 				definitionGroup.setInnerRelationSet(innerRelationDTOs);
 				for (MulCondition mulCondition : goal.getEntityInvariantConditionSet().stream()
 						.filter(m -> m.getSourceEntity() == entityDefinitionGroup).collect(Collectors.toSet())) {
-					InnerRelationDto innerRelationDTO = InnerRelationDto.createInnerRelationDTO(entityDefinitionGroup,
+					InnerRelationDto innerRelationDto = InnerRelationDto.createInnerRelationDTO(entityDefinitionGroup,
 							mulCondition);
-					innerRelationDTO.getProductInstanceSet()
+					innerRelationDto.getEntityInstanceSet()
 							.addAll(goal.getInstanceContext(workflowInstance).get(mulCondition.getTargetEntity())
-									.stream().map(ei -> ei.getDTO()).collect(Collectors.toSet()));
-					innerRelationDTOs.add(innerRelationDTO);
+									.stream().map(ei -> new EntityInstanceDto(ei, Depth.DEEP))
+									.collect(Collectors.toSet()));
+					innerRelationDTOs.add(innerRelationDto);
 				}
 
 				// create definition group instances

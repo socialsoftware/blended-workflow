@@ -64,8 +64,8 @@
 								{{innerRelationInstance.mulConditionDTO.rolePath}}
 								{{innerRelationInstance.mulConditionDTO.targetCardinality}} <select
 									class="btn btn-default"
-									ng-options="productInstance.id for productInstance in $ctrl.getInnerRelationProductInstances(definitionGroup,innerRelationInstance.mulConditionDTO.externalId)"
-									ng-model="innerRelationInstance.productInstanceSet" multiple>
+									ng-options="entityInstance.id for entityInstance in $ctrl.getInnerRelationEntityInstances(definitionGroup,innerRelationInstance.mulConditionDTO.externalId)"
+									ng-model="innerRelationInstance.entityInstanceSet" multiple>
 								</select>
 							</div>
 						</td>

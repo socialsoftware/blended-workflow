@@ -22,19 +22,22 @@ export class DefinitionGroup extends React.Component {
 
             this.state = {
                 entityInstancesContext: [],
-                productInstanceMap: productInstanceMap
-            }
+                productInstanceMap: productInstanceMap,
+                innerRelationInstancesMap: new Map()
+           }
 
             this.updateInstance();
         } else {
             this.state = {
                 entityInstancesContext: [],
-                productInstanceMap: new Map()
+                productInstanceMap: new Map(),
+                innerRelationInstancesMap: new Map()
             }
         }
 
         this.defineEntityContext = this.defineEntityContext.bind(this);
         this.defineAttribute = this.defineAttribute.bind(this);
+        this.defineInnerRelation = this.defineInnerRelation.bind(this);
         this.updateInstance = this.updateInstance.bind(this);
     }
 
@@ -59,9 +62,22 @@ export class DefinitionGroup extends React.Component {
     }
 
     defineEntityContext(entityInstancesContext) {
-        alert(entityInstancesContext);
         this.setState({
             entityInstancesContext: entityInstancesContext
+        }, function() {
+            this.updateInstance();
+        })
+    }
+
+    defineInnerRelation(mulCondition, selected) {
+        const innerRelation = {
+            mulConditionDto: mulCondition,
+            entityInstanceSet: selected
+        };
+        const innerRelationInstancesMap = this.state.innerRelationInstancesMap;
+        innerRelationInstancesMap.set(mulCondition.externalId, innerRelation);
+        this.setState({
+            innerRelationInstancesMap: innerRelationInstancesMap
         }, function() {
             this.updateInstance();
         })
@@ -71,7 +87,7 @@ export class DefinitionGroup extends React.Component {
         this.props.updateInstance(this.props.id, [{ 
             entityInstanceContextSet: this.state.entityInstancesContext, 
             productInstanceSet: Array.from(this.state.productInstanceMap.values()), 
-            innerRelationInstanceSet: [] }]);
+            innerRelationInstanceSet: Array.from(this.state.innerRelationInstancesMap.values()) }]);
     }
  
     render() {
@@ -79,8 +95,8 @@ export class DefinitionGroup extends React.Component {
             <div>
                 {this.props.definitionGroup.entityContextSet && this.props.definitionGroup.entityContextSet.map(ec => <EntityContext key={ec.index} entityContext={ec} onSelection={this.defineEntityContext} />)}
                 {this.props.definitionGroup.defEnt && <DefineEntity key={this.props.definitionGroup.defEnt.index} id={this.props.id} defEntity={this.props.definitionGroup.defEnt} />}
-                {this.props.definitionGroup.defAtts && this.props.definitionGroup.defAtts.map(a => <DefineAttribute key={a.index} onChange={this.defineAttribute} defAttribute={a} />)}
-                {this.props.definitionGroup.innerRelationSet && this.props.definitionGroup.innerRelationSet.map(ir => <InnerRelation key={ir.mulCondition.externalId} innerRelation={ir} />)}
+                {this.props.definitionGroup.defAtts && this.props.definitionGroup.defAtts.map(a => <DefineAttribute key={a.name} onChange={this.defineAttribute} defAttribute={a} />)}
+                {this.props.definitionGroup.innerRelationSet && this.props.definitionGroup.innerRelationSet.map(ir => <InnerRelation key={ir.mulCondition.externalId} innerRelation={ir} onSelection={this.defineInnerRelation} />)}
             </div>
         )
     }

@@ -1,13 +1,23 @@
 import React from 'react'
-import { ProductInstance } from './ProductInstance'
+import { SelectEntityInstances } from './SelectEntityInstances'
 
 export class InnerRelation extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit(selected) {
+        const result = this.props.innerRelation.entityInstanceSet.filter(ei => selected.includes(ei));
+        this.props.onSelection(this.props.innerRelation.mulCondition, result);
+    }
+
     render() {
         return (
             <div>
-                Inner Relation
-                SourceEntity: {this.props.innerRelation.sourceEntity.name}, TargetEntity: {this.props.innerRelation.targetEntity.name}, path: {this.props.innerRelation.mulCondition.rolePath}
-                {this.props.innerRelation.productInstanceSet.map(pi => <ProductInstance key={pi.id} productInstance={pi} />)}
+                <span>{this.props.innerRelation.targetEntity.name}({this.props.innerRelation.mulCondition.cardinality}): </span> 
+                <SelectEntityInstances entityInstances={this.props.innerRelation.entityInstanceSet} mulCondition={this.props.innerRelation.mulCondition} onSubmit={this.handleSubmit}/>
             </div>
         )
     }

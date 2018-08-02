@@ -184,14 +184,14 @@ public class WorkItemDTO {
 			for (InnerRelationInstanceDto innerRelationInstanceDTO : definitionGroupInstanceDto
 					.getInnerRelationInstanceSet()) {
 				MulCondition mulCondition = FenixFramework
-						.getDomainObject(innerRelationInstanceDTO.getMulConditionDTO().getExternalId());
-				for (ProductInstanceDto productInstanceDto : innerRelationInstanceDTO.getProductInstanceSet()) {
-					EntityInstance innerEntity = newEntityInstances.get(productInstanceDto.getExternalId());
+						.getDomainObject(innerRelationInstanceDTO.getMulConditionDto().getExternalId());
+				for (EntityInstanceDto entityInstanceDto : innerRelationInstanceDTO.getEntityInstanceSet()) {
+					EntityInstance innerEntity = newEntityInstances.get(entityInstanceDto.getExternalId());
 					if (innerEntity != null) {
 						new RelationInstance(entityInstance, mulCondition.getSymmetricMulCondition().getRolename(),
 								innerEntity, mulCondition.getRolename(), mulCondition.getRelationBW());
 					} else {
-						innerEntity = FenixFramework.getDomainObject(productInstanceDto.getExternalId());
+						innerEntity = FenixFramework.getDomainObject(entityInstanceDto.getExternalId());
 						for (EntityInstanceContextDto entityInstanceContextDTO : definitionGroupInstanceDto
 								.getEntityInstanceContextSet()) {
 							EntityInstance entityInstanceContext = FenixFramework
@@ -245,7 +245,7 @@ public class WorkItemDTO {
 			result = result + "INNER RELATION: " + definitionGroupDTO.getInnerRelationSet().stream()
 					.map(ir -> " Source " + ir.getSourceEntity().getName() + ", Target "
 							+ ir.getTargetEntity().getName() + ", Rolename " + ir.getMulCondition().getRolePath()
-							+ ", Product " + printProductInstance(ir.getProductInstanceSet()))
+							+ ", Product " + printEntityInstance(ir.getEntityInstanceSet()))
 					.collect(Collectors.joining(",")) + "\r\n";
 
 			result = result + "ENTITY INSTANCE CONTEXT: "
@@ -268,8 +268,8 @@ public class WorkItemDTO {
 
 	private String printInnerRelationInstance(DefinitionGroupInstanceDto dgi) {
 		return dgi
-				.getInnerRelationInstanceSet().stream().map(iri -> iri.getMulConditionDTO().getRolePath()
-						+ ", Products " + printProductInstance(iri.getProductInstanceSet()))
+				.getInnerRelationInstanceSet().stream().map(iri -> iri.getMulConditionDto().getRolePath()
+						+ ", Entities " + printEntityInstance(iri.getEntityInstanceSet()))
 				.collect(Collectors.joining(";"));
 	}
 
@@ -279,6 +279,11 @@ public class WorkItemDTO {
 
 	private String printProductInstance(Set<ProductInstanceDto> piSet) {
 		return piSet.stream().map(pi -> pi.getPath() + ":" + pi.getExternalId() + "," + pi.getValue())
+				.collect(Collectors.joining(";"));
+	}
+
+	private String printEntityInstance(Set<EntityInstanceDto> piSet) {
+		return piSet.stream().map(pi -> pi.getEntity().getName() + ":" + pi.getExternalId() + "," + pi.getId())
 				.collect(Collectors.joining(";"));
 	}
 

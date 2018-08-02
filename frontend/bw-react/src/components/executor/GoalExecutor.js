@@ -54,7 +54,7 @@ export class GoalExecutor extends React.Component {
         .then(() => {
             this.closeWorkItem();
         }).catch((err) => {
-            alert(err.message)
+            alert('ERROR: '+ err.response.data.type + ' - ' + err.response.data.value)
         });
     }
 

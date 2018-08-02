@@ -78,7 +78,7 @@ function WorkItemController() {
 			definitionGroupInstance.innerRelationInstanceSet
 				.push({
 					mulConditionDTO: definitionGroup.innerRelationSet[i].mulCondition,
-					productInstanceSet: []
+					entityInstanceSet: []
 				})
 		}
 		// ctrl.workItem.definitionGroup.definitionGroupInstanceSet.innerRelationInstanceSet
@@ -100,21 +100,21 @@ function WorkItemController() {
 		}
 	}
 
-	ctrl.getInnerRelationProductInstances = function (definitionGroup,
+	ctrl.getInnerRelationEntityInstances = function (definitionGroup,
 		externalId) {
 		for (i in definitionGroup.innerRelationSet) {
 			if (definitionGroup.innerRelationSet[i].mulCondition.externalId == externalId) {
-				return definitionGroup.innerRelationSet[i].productInstanceSet;
+				return definitionGroup.innerRelationSet[i].entityInstanceSet;
 			}
 		}
 	}
 
-	ctrl.addToInnerRelations = function (productInstance) {
+	ctrl.addToInnerRelations = function (entityInstance) {
 		for (j in ctrl.workItem.definitionGroupSet) {
 			for (i in ctrl.workItem.definitionGroupSet[j].innerRelationSet) {
-				if (ctrl.workItem.definitionGroupSet[j].innerRelationSet[i].targetEntity.name === productInstance.path) {
-					ctrl.workItem.definitionGroupSet[j].innerRelationSet[i].productInstanceSet
-						.push(productInstance);
+				if (ctrl.workItem.definitionGroupSet[j].innerRelationSet[i].targetEntity.name === entityInstance.path) {
+					ctrl.workItem.definitionGroupSet[j].innerRelationSet[i].entityInstanceSet
+						.push(entityInstance);
 				}
 			}
 		}
@@ -123,9 +123,9 @@ function WorkItemController() {
 	ctrl.deleteFromInnerRelations = function (externalId) {
 		for (j in ctrl.workItem.definitionGroupSet) {
 			for (i in ctrl.workItem.definitionGroupSet[j].innerRelationSet) {
-				for (k in ctrl.workItem.definitionGroupSet[j].innerRelationSet[i].productInstanceSet) {
-					if (ctrl.workItem.definitionGroupSet[j].innerRelationSet[i].productInstanceSet[k].externalId == externalId) {
-						ctrl.workItem.definitionGroupSet[j].innerRelationSet[i].productInstanceSet
+				for (k in ctrl.workItem.definitionGroupSet[j].innerRelationSet[i].entityInstanceSet) {
+					if (ctrl.workItem.definitionGroupSet[j].innerRelationSet[i].entityInstanceSet[k].externalId == externalId) {
+						ctrl.workItem.definitionGroupSet[j].innerRelationSet[i].entityInstanceSet
 							.splice(k, 1);
 					}
 				}
