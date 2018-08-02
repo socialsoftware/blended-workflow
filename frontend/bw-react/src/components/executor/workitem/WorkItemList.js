@@ -1,5 +1,4 @@
 import React from 'react';
-import { RepositoryService } from '../../../services/RepositoryService'
 import { OpenWorkItem } from './OpenWorkItem';
 import { ExecuteWorkItem } from './ExecuteWorkItem';
 
@@ -48,9 +47,7 @@ export class WorkItemList extends React.Component {
     }
 
     executeWorkItem(workItem) {
-       const service = new RepositoryService();
-
-        service.executeWorkItem(this.props.specId, this.props.name, workItem.name, workItem)
+        this.props.executeWorkItem(workItem)
         .then(() => {
             this.closeWorkItem();
         }).catch((err) => {

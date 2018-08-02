@@ -12,6 +12,7 @@ export class ActivityExecutor extends React.Component {
         };
 
         this.getNextActivityWorkItems = this.getNextActivityWorkItems.bind(this);
+        this.executeActivityWorkItem = this.executeActivityWorkItem.bind(this);
     }
 
     getNextActivityWorkItems() {
@@ -20,11 +21,17 @@ export class ActivityExecutor extends React.Component {
         return service.getNextActivityWorkItems(this.state.specId, this.state.name);
     }
 
+    executeActivityWorkItem(workItem) {
+       const service = new RepositoryService();
+
+       return service.executeActivityWorkItem(this.state.specId, this.state.name, workItem.name, workItem);
+    }
+
     render() {
         return (
             <div> 
                <h5>Activity executor of instance {this.state.name} of {this.state.specId} </h5>
-                <WorkItemList specId={this.state.specId} name={this.state.name} getNextWorkItems={this.getNextActivityWorkItems} />
+                <WorkItemList specId={this.state.specId} name={this.state.name} getNextWorkItems={this.getNextActivityWorkItems} executeWorkItem={this.executeActivityWorkItem}/>
             </div>
         )
     }
