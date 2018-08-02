@@ -1,79 +1,31 @@
-import React from 'react';
-import { RepositoryService } from '../../services/RepositoryService';
-import { OpenWorkItem } from './workitem/OpenWorkItem';
-import { ExecuteWorkItem } from './workitem/ExecuteWorkItem';
+import React from 'react'
+import { RepositoryService } from '../../services/RepositoryService'
+import { WorkItemList } from './workitem/WorkItemList'
 
 export class GoalExecutor extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            openWorkItem: {}
+            specId: this.props.match.params.specId,
+            name: this.props.match.params.name
         };
 
-        this.openWorkItem = this.openWorkItem.bind(this);
-        this.closeWorkItem = this.closeWorkItem.bind(this);
-        this.executeWorkItem = this.executeWorkItem.bind(this);
-        this.getWorkItems = this.getWorkItems.bind(this);
-    }
-
-    componentDidMount() {
-        this.getNextGoalWorkItems();
+        this.getNextGoalWorkItems = this.getNextGoalWorkItems.bind(this);
     }
 
     getNextGoalWorkItems() {
         const service = new RepositoryService();
 
-        service.getNextGoalWorkItems(this.props.match.params.specId, this.props.match.params.name).then(response => {
-            this.setState({ workItems: response.data }
-            )
-        });
-    
-    }
-
-    openWorkItem(workItem) {
-        this.setState({
-            openWorkItem: workItem
-        });
-    }
-
-    closeWorkItem() {
-        this.setState({
-            openWorkItem: {}
-        }, function() {
-            this.getNextGoalWorkItems();
-        });
-    }
-
-    executeWorkItem(workItem) {
-       const service = new RepositoryService();
-
-        service.executeWorkItem(this.props.match.params.specId, 
-            this.props.match.params.name, 
-            workItem.name, workItem)
-        .then(() => {
-            this.closeWorkItem();
-        }).catch((err) => {
-            alert('ERROR: '+ err.response.data.type + ' - ' + err.response.data.value)
-        });
-    }
-
-    getWorkItems() {
-        if (this.state.openWorkItem.name) {
-            return <ExecuteWorkItem workItem={this.state.openWorkItem} onClose={this.closeWorkItem} onExecute={this.executeWorkItem}/>;
-        } else if (this.state.workItems) {
-            return this.state.workItems.sort((w1,w2) => w1.name.localeCompare(w2.name)).map(wi => <OpenWorkItem key={wi.name} workItem={wi} onClick={this.openWorkItem} />);
-        } else {
-            return "";
-        }
+        return service.getNextGoalWorkItems(this.state.specId, this.state.name);
     }
 
     render() {
         return (
             <div> 
-               <h5>Goal executor of instance {this.props.match.params.name} of {this.props.match.params.specId} </h5>
-                {this.getWorkItems()}
+               <h5>Goal executor of instance {this.state.name} of {this.state.specId} </h5>
+                <WorkItemList specId={this.state.specId} name={this.state.name} getNextWorkItems={this.getNextGoalWorkItems} />
             </div>
         )
     }
-} 
+}

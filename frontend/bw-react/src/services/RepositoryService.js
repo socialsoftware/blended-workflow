@@ -78,6 +78,11 @@ export class RepositoryService {
         return this.axios.delete("/specs/" + specId + "/instances/" + name);
     }
 
+    // Activity workitems
+    getNextActivityWorkItems(specId, instance) {
+        return this.axios.get("/specs/" + specId + "/instances/" + instance + "/activityworkitem/next");
+    }
+
     // Goal workitems
     getNextGoalWorkItems(specId, instance) {
         return this.axios.get("/specs/" + specId + "/instances/" + instance + "/goalworkitem/next");
