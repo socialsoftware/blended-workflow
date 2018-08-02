@@ -33,10 +33,8 @@
 							<div
 								ng-repeat="entityContext in definitionGroup.entityContextSet">
 								MUL({{entityContext.mulCondition.rolePath}},{{entityContext.mulCondition.cardinality}})
-								PATHS(<span
-									ng-repeat="pathCondition in entityContext.defPathConditionSet">{{pathCondition.path}}<span
-									ng-if="!$last">, </span></span>)<select class="btn btn-default"
-									ng-options="entityInstanceContext.pathValues for entityInstanceContext in entityContext.entityInstanceContextSet"
+								<select class="btn btn-default"
+									ng-options="entityInstanceContext.entityInstance.id for entityInstanceContext in entityContext.entityInstanceContextSet"
 									ng-model="definitionGroupInstance.entityInstanceContextSet"
 									multiple>
 								</select>

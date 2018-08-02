@@ -172,12 +172,13 @@ public class WorkItemDTO {
 							entityInstanceContext, mulCondition.getRolename(), mulCondition.getRelationBW());
 				}
 
-				// create pre work item arguments
-				for (ProductInstanceDto productInstanceDto : entityInstanceContextDTO.getPathValueSet()) {
-					DefPathCondition defPathCondition = DefPathCondition
-							.getDefPathCondition(workflowInstance.getSpecification(), productInstanceDto.getPath());
-					workItem.addPreWorkItemArgument(productInstanceDto, defPathCondition);
-				}
+				// create pre work item argument
+				DefPathCondition defPathCondition = DefPathCondition.getDefPathCondition(
+						workflowInstance.getSpecification(),
+						entityInstanceContextDTO.getMulConditionDTO().getRolePath());
+				workItem.addPreWorkItemArgument(new ProductInstanceDto(entityInstanceContextDTO.getEntityInstance()),
+						defPathCondition);
+
 			}
 
 			// inner relation instance
@@ -274,7 +275,9 @@ public class WorkItemDTO {
 	}
 
 	private String printEntityInstanceContext(Set<EntityInstanceContextDto> eicSet) {
-		return eicSet.stream().map(eic -> eic.getPathValues()).collect(Collectors.joining(";"));
+		return eicSet.stream()
+				.map(eic -> eic.getEntityInstance().getEntity().getName() + "[" + eic.getEntityInstance().getId() + "]")
+				.collect(Collectors.joining(";"));
 	}
 
 	private String printProductInstance(Set<ProductInstanceDto> piSet) {

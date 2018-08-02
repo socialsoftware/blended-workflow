@@ -15,7 +15,7 @@ public class ProductDto {
 	}
 
 	public String getExtId() {
-		return extId;
+		return this.extId;
 	}
 
 	public void setExtId(String extId) {
@@ -23,7 +23,7 @@ public class ProductDto {
 	}
 
 	public String getProductType() {
-		return productType;
+		return this.productType;
 	}
 
 	public void setProductType(String type) {
@@ -31,7 +31,7 @@ public class ProductDto {
 	}
 
 	public String getSpecId() {
-		return specId;
+		return this.specId;
 	}
 
 	public void setSpecId(String specId) {

@@ -17,9 +17,9 @@ export class EntityContext extends React.Component {
         const entityInstances = this.props.entityContext.entityInstanceContextSet.map(eic => eic.entityInstance);
         return ( 
             <div>
-                <span>{this.props.entityContext.defEntityCondition.path}({this.props.entityContext.mulCondition.cardinality}) [{this.props.entityContext.mulCondition.min},{this.props.entityContext.mulCondition.max}] [{this.props.entityContext.mulCondition.sourceMin},{this.props.entityContext.mulCondition.sourceMax}]: </span>
+                <span>{this.props.entityContext.defEntityCondition.path} ({this.props.entityContext.mulCondition.cardinality}): </span>
                 <SelectEntityInstances entityInstances={entityInstances} mulCondition={this.props.entityContext.mulCondition} onSubmit={this.handleSubmit}/>    
-                {this.props.entityContext.defPathConditionSet.map(dp => <div key={dp.path}>{dp.path}</div>)}
+                {/* {this.props.entityContext.defPathConditionSet.map(dp => <div key={dp.path}>{dp.path}</div>)} */}
             </div>
         )
     }

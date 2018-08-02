@@ -4,7 +4,7 @@ export class DefineEntity extends React.Component {
     render() {
         return ( 
             <div>
-                {this.props.defEntity.entityName} [{this.props.id}]
+                {this.props.defEntity.entityName}[{this.props.id}]
             </div>
         )
     }

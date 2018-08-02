@@ -10,6 +10,14 @@ public class ProductInstanceDto {
 	public ProductInstanceDto() {
 	}
 
+	public ProductInstanceDto(EntityInstanceDto entityInstance) {
+		this.product = new ProductDto(entityInstance.getEntity().getSpecId(), entityInstance.getEntity().getExtId(),
+				entityInstance.getEntity().getProductType());
+		this.externalId = entityInstance.getExternalId();
+		this.id = entityInstance.getId();
+		this.path = entityInstance.getEntity().getName();
+	}
+
 	public ProductDto getProduct() {
 		return this.product;
 	}
