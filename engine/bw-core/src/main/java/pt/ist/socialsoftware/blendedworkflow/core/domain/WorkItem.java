@@ -7,7 +7,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkItemDto;
 
 public abstract class WorkItem extends WorkItem_Base {
 
@@ -56,7 +56,7 @@ public abstract class WorkItem extends WorkItem_Base {
 
 	protected abstract Set<DefPathCondition> definedPreConditions();
 
-	public void fillDTO(WorkItemDTO workItemDTO) {
+	public void fillDTO(WorkItemDto workItemDTO) {
 		workItemDTO.setTimestamp(getCounter());
 		workItemDTO
 				.setPreArguments(

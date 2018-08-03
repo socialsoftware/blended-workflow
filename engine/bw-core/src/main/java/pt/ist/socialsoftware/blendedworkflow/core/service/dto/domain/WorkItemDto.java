@@ -25,8 +25,8 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
-public class WorkItemDTO {
-	private static Logger logger = LoggerFactory.getLogger(WorkItemDTO.class);
+public class WorkItemDto {
+	private static Logger logger = LoggerFactory.getLogger(WorkItemDto.class);
 
 	private String specId;
 	private String specName;
@@ -37,7 +37,7 @@ public class WorkItemDTO {
 	private String preArguments;
 	private String postArguments;
 
-	public WorkItemDTO() {
+	public WorkItemDto() {
 	}
 
 	public String getSpecId() {

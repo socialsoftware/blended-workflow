@@ -18,7 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 
-public class ActivityWorkItemDto extends WorkItemDTO {
+public class ActivityWorkItemDto extends WorkItemDto {
 	private static Logger logger = LoggerFactory.getLogger(ActivityWorkItemDto.class);
 
 	public static ActivityWorkItemDto createActivityWorkItemDTO(WorkflowInstance workflowInstance, Activity activity) {
