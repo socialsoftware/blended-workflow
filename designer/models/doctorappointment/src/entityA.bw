@@ -1,6 +1,6 @@
 Specification: "Two Entities" 
        
-Entity A mandatory { 
+Entity A mandatory {
 	att1 : Number 
 } 
 
@@ -9,6 +9,6 @@ Entity B {
 }
 
 Association AHasBs {
-	A with a (1) 
+	A with a (2) 
 	B with b (2..3)
 }

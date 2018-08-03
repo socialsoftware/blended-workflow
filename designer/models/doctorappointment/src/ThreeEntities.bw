@@ -1,0 +1,23 @@
+Specification: "Three Entities" 
+
+Entity A mandatory { 
+	att1 : Number
+} 
+
+Entity B {
+	att1 : Number
+}   
+
+Entity C {
+	att1 : Number
+}   
+
+Association AHasBs {
+	A with a (1) 
+	B with b (0..*)
+}
+
+Association BandC {
+	B with b (1..2) 
+	C with c (2..2)
+}
