@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 import { Designer } from '../designer/Designer';
-import { Executor } from '../executor/Executor';
+import Executor from '../executor/Executor';
 
 class Specification extends React.Component {
     render() {

@@ -1,15 +1,17 @@
 import React from 'react'
+import { connect } from 'react-redux';
 import { RepositoryService } from '../../services/RepositoryService'
 import { WorkItemList } from './workitem/WorkItemList'
 
-export class ActivityExecutor extends React.Component {
+const mapStateToProps = state => {
+    return { 
+        specId: state.specId,
+        name: state.name };
+};  
+
+class ConnectedActivityExecutor extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            specId: this.props.match.params.specId,
-            name: this.props.match.params.name
-        };
 
         this.getNextActivityWorkItems = this.getNextActivityWorkItems.bind(this);
         this.executeActivityWorkItem = this.executeActivityWorkItem.bind(this);
@@ -18,21 +20,25 @@ export class ActivityExecutor extends React.Component {
     getNextActivityWorkItems() {
         const service = new RepositoryService();
 
-        return service.getNextActivityWorkItems(this.state.specId, this.state.name);
+        return service.getNextActivityWorkItems(this.props.specId, this.props.name);
     }
 
     executeActivityWorkItem(workItem) {
        const service = new RepositoryService();
 
-       return service.executeActivityWorkItem(this.state.specId, this.state.name, workItem.name, workItem);
+       return service.executeActivityWorkItem(this.props.specId, this.props.name, workItem.name, workItem);
     }
 
     render() {
         return (
             <div> 
-               <h5>Activity executor of instance {this.state.name} of {this.state.specId} </h5>
-                <WorkItemList specId={this.state.specId} name={this.state.name} getNextWorkItems={this.getNextActivityWorkItems} executeWorkItem={this.executeActivityWorkItem}/>
+               <h5>Activity executor of instance {this.props.name} of {this.props.specId} </h5>
+                <WorkItemList specId={this.props.specId} name={this.props.name} getNextWorkItems={this.getNextActivityWorkItems} executeWorkItem={this.executeActivityWorkItem}/>
             </div>
         )
     }
 } 
+
+const ActivityExecutor = connect(mapStateToProps)(ConnectedActivityExecutor);
+
+export default ActivityExecutor;

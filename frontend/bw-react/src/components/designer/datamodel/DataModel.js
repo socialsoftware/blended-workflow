@@ -12,10 +12,6 @@ class ConnectedDataModel extends React.Component {
     constructor(props) {
         super(props);
 
-        alert(this.props.specId);
-
-
-
         this.state = {
             dataModel: {}
         };
@@ -58,4 +54,5 @@ class ConnectedDataModel extends React.Component {
 }
 
 const DataModel = connect(mapStateToProps)(ConnectedDataModel);
+
 export default DataModel;

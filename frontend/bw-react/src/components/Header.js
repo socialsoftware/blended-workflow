@@ -9,10 +9,10 @@ const mapDispatchToProps = dispatch => {
     };
   };
 
-
 class ConnectedHeader extends React.Component {
     render() {
-        const specs = this.props.specifications.map(spec => <li key={spec.specId}><Link onClick={() => {this.props.selectSpecificationAction(spec.specId)}} to={`/specifications/${spec.specId}`}>{spec.name}</Link></li>);
+        const specs = this.props.specifications
+        .map(spec => <li key={spec.specId}><Link onClick={() => {this.props.selectSpecificationAction(spec.specId)}} to={`/specifications/${spec.specId}`}>{spec.name}</Link></li>);
 
         return (
             <header>

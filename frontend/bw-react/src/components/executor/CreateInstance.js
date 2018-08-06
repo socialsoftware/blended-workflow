@@ -16,17 +16,16 @@ export class CreateInstance extends React.Component {
 
     handleSubmit() {
         this.props.onSubmit(this.state.value);
+        this.setState({value: ''});
     }
 
     render() {
         return (
-        <form onSubmit={this.handleSubmit}>
-            <label>
-            Name:
-            <input type="text" value={this.state.value} onChange={this.handleChange} />
-            </label>
-            <input type="submit" value="Submit" />
-        </form>
+            <div>
+                <label> Name:
+                    <input type="text" value={this.state.value} onChange={this.handleChange} />
+                </label> <button onClick={this.handleSubmit}>Create</button>
+            </div>
        )
     }
 }
