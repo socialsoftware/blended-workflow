@@ -162,7 +162,7 @@ public class ConditionModelController {
 		DesignInterface adi = this.factory.createDesignInterface();
 
 		MulConditionDto[] mulConditionsDTO = adi.getEntityInvariantConditionSet(specId).stream()
-				.map(mul -> mul.getDTO()).toArray(size -> new MulConditionDto[size]);
+				.map(mul -> mul.getDto()).toArray(size -> new MulConditionDto[size]);
 
 		return new ResponseEntity<>(mulConditionsDTO, HttpStatus.OK);
 	}
@@ -177,7 +177,7 @@ public class ConditionModelController {
 
 		MulCondition mulCondition = adi.createEntityInvariantCondition(specId, mulConditionDTO);
 
-		return new ResponseEntity<>(mulCondition.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(mulCondition.getDto(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/attributeinvariantconditions", method = RequestMethod.GET)

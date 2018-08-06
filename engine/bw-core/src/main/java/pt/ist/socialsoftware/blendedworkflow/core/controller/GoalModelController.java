@@ -203,7 +203,7 @@ public class GoalModelController {
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		MulConditionDto[] defs = adi.getGoalMulInvSet(specId, goalName).stream().map((def) -> def.getDTO())
+		MulConditionDto[] defs = adi.getGoalMulInvSet(specId, goalName).stream().map((def) -> def.getDto())
 				.toArray(size -> new MulConditionDto[size]);
 
 		return new ResponseEntity<>(defs, HttpStatus.OK);

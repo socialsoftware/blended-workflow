@@ -1,22 +1,25 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
 
 public class LinkDto {
 	MulConditionDto mulCondition;
-	EntityInstanceDto entityInstance;
+	List<EntityInstanceDto> entityInstances;
 
 	public LinkDto() {
 	}
 
-	public LinkDto(EntityInstance sourceEntityInstance, MulCondition mulCondition) {
-		this.mulCondition = mulCondition.getDTO();
-		this.entityInstance = mulCondition.getRelationBW().getRelationInstanceSet().stream()
-				.filter(ri -> ri.getEntityInstanceByRolename(sourceEntityInstance, mulCondition.getRolename()) != null)
-				.map(ri -> ri.getEntityInstanceByRolename(sourceEntityInstance, mulCondition.getRolename()))
-				.map(ei -> new EntityInstanceDto(ei, Depth.SHALLOW)).findFirst().orElse(null);
+	public LinkDto(Set<EntityInstance> entityInstances, MulCondition mulCondition) {
+		this.mulCondition = mulCondition.getDto();
+		this.entityInstances = entityInstances.stream().sorted(Comparator.comparing(EntityInstance::getId))
+				.map(ei -> new EntityInstanceDto(ei, Depth.SHALLOW)).collect(Collectors.toList());
 
 	}
 
@@ -28,12 +31,12 @@ public class LinkDto {
 		this.mulCondition = mulCondition;
 	}
 
-	public EntityInstanceDto getEntityInstance() {
-		return this.entityInstance;
+	public List<EntityInstanceDto> getEntityInstances() {
+		return this.entityInstances;
 	}
 
-	public void setEntityInstance(EntityInstanceDto entityInstance) {
-		this.entityInstance = entityInstance;
+	public void setEntityInstances(List<EntityInstanceDto> entityInstances) {
+		this.entityInstances = entityInstances;
 	}
 
 }

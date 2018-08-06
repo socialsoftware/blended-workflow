@@ -82,7 +82,7 @@ public class DataModelController {
 
 		Product product = adi.getProduct(specId, path);
 
-		return new ResponseEntity<>(product.getDTO(), HttpStatus.OK);
+		return new ResponseEntity<>(product.getDto(), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/entities/{entityName}", method = RequestMethod.GET)
@@ -94,7 +94,7 @@ public class DataModelController {
 
 		Entity entity = adi.getEntityByName(specId, entityName);
 
-		return new ResponseEntity<>(entity.getDTO(), HttpStatus.OK);
+		return new ResponseEntity<>(entity.getDto(), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/entities", method = RequestMethod.GET)
@@ -103,7 +103,7 @@ public class DataModelController {
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		EntityDto[] entities = adi.getEntities(specId).stream().map(e -> e.getDTO())
+		EntityDto[] entities = adi.getEntities(specId).stream().map(e -> e.getDto())
 				.toArray(size -> new EntityDto[size]);
 
 		return new ResponseEntity<>(entities, HttpStatus.CREATED);
@@ -119,7 +119,7 @@ public class DataModelController {
 
 		Entity entity = adi.createEntity(entDTO);
 
-		return new ResponseEntity<>(entity.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(entity.getDto(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/attributes", method = RequestMethod.GET)
@@ -128,7 +128,7 @@ public class DataModelController {
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		AttributeDto[] attributes = adi.getAttributes(specId).stream().map(a -> a.getDTO())
+		AttributeDto[] attributes = adi.getAttributes(specId).stream().map(a -> a.getDto())
 				.toArray(size -> new AttributeDto[size]);
 
 		return new ResponseEntity<>(attributes, HttpStatus.OK);
@@ -142,7 +142,7 @@ public class DataModelController {
 
 		Attribute attribute = adi.getAttributeByExtId(extId);
 
-		return new ResponseEntity<>(attribute.getDTO(), HttpStatus.OK);
+		return new ResponseEntity<>(attribute.getDto(), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/attributes", method = RequestMethod.POST)
@@ -155,7 +155,7 @@ public class DataModelController {
 
 		Attribute attribute = adi.createAttribute(attDTO);
 
-		return new ResponseEntity<>(attribute.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(attribute.getDto(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/relations", method = RequestMethod.POST)

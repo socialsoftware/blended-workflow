@@ -1,9 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { selectSpecificationAction } from '../actions/select-specification-action';
 import { Link } from 'react-router-dom';
 
-export class Header extends React.Component {
+const mapDispatchToProps = dispatch => {
+    return {
+        selectSpecificationAction: specId => dispatch(selectSpecificationAction(specId))
+    };
+  };
+
+
+class ConnectedHeader extends React.Component {
     render() {
-        const specs = this.props.specifications.map(spec => <li key={spec.specId}><Link to={`/specifications/${spec.specId}`}>{spec.name}</Link></li>);
+        const specs = this.props.specifications.map(spec => <li key={spec.specId}><Link onClick={() => {this.props.selectSpecificationAction(spec.specId)}} to={`/specifications/${spec.specId}`}>{spec.name}</Link></li>);
 
         return (
             <header>
@@ -22,3 +31,7 @@ export class Header extends React.Component {
         )
     }
 }
+
+const Header =  connect(null, mapDispatchToProps)(ConnectedHeader);
+
+export default Header;

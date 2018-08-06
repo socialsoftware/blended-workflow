@@ -1,5 +1,6 @@
 import React from 'react'
 import { DefinitionGroup } from './DefinitionGroup'
+import { EntityInstance } from '../dataview/EntityInstance'
 
 export class ExecuteWorkItem extends React.Component {
     constructor(props) {
@@ -43,6 +44,7 @@ export class ExecuteWorkItem extends React.Component {
                 <h5>Execute Workitem {this.props.workItem.name}</h5>
                 {Array.from(this.state.defGroupMap).map(dg => <DefinitionGroup key={dg[0]} id={dg[0]} updateInstance={this.updateInstance} definitionGroup={dg[1]}/>)}
                 <div><button onClick={this.handleClose}>Close</button> <button onClick={this.handleExecute}>Execute</button></div>
+                {this.props.workItem.entityInstancesToDefine.map(ei => <EntityInstance entityInstance={ei} />)}
             </div>
         )
     }

@@ -118,6 +118,8 @@ public class GoalWorkItemDto extends WorkItemDto {
 				definitionGroup.setDefinitionGroupInstanceSet(definitionGroupInstances);
 			}
 
+			// USE THE DOMAIN MODEL APPROACH
+
 		}
 
 		return goalWorkItemDto;

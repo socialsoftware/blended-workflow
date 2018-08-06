@@ -38,7 +38,7 @@ public class EntityContextDto {
 			mulConditionDTO.setRolePath(entityContext.getName());
 			entityContextDto.setMulCondition(mulConditionDTO);
 		} else {
-			entityContextDto.setMulCondition(mulCondition.getDTO());
+			entityContextDto.setMulCondition(mulCondition.getDto());
 		}
 
 		Set<EntityInstanceContextDto> entityInstanceContextDTOs = new HashSet<EntityInstanceContextDto>();
@@ -66,7 +66,7 @@ public class EntityContextDto {
 			mulConditionDto.setRolePath(entityContext.getName());
 			entityContextDto.setMulCondition(mulConditionDto);
 		} else {
-			entityContextDto.setMulCondition(mulCondition.getDTO());
+			entityContextDto.setMulCondition(mulCondition.getDto());
 		}
 
 		Set<EntityInstanceContextDto> entityInstanceContextDTOs = new HashSet<EntityInstanceContextDto>();

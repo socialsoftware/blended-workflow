@@ -130,7 +130,7 @@ public class MulCondition extends MulCondition_Base {
 
 	}
 
-	public MulConditionDto getDTO() {
+	public MulConditionDto getDto() {
 		MulConditionDto mulConditionDTO = new MulConditionDto();
 		mulConditionDTO.setExternalId(getExternalId());
 		mulConditionDTO.setRolename(getRolename());

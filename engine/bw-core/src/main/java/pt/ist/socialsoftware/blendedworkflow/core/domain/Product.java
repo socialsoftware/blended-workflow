@@ -28,7 +28,7 @@ public abstract class Product extends Product_Base {
 
 	public abstract Product getNext(List<String> pathLeft, String path);
 
-	public abstract ProductDto getDTO();
+	public abstract ProductDto getDto();
 
 	public void delete() {
 		getDependenceSet().stream().forEach(dep -> dep.delete());

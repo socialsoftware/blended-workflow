@@ -3,11 +3,13 @@ package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 
 public class EntityInstanceDto {
 	public enum Depth {
@@ -17,7 +19,7 @@ public class EntityInstanceDto {
 	private String externalId;
 	private String id;
 	private EntityDto entity;
-	private List<AttributeInstanceDto> attributes = new ArrayList<>();
+	private List<AttributeInstanceDto> attributeInstances = new ArrayList<>();
 	private List<LinkDto> links = new ArrayList<>();
 
 	public EntityInstanceDto() {
@@ -26,15 +28,33 @@ public class EntityInstanceDto {
 	public EntityInstanceDto(EntityInstance entityInstance, Depth depth) {
 		this.externalId = entityInstance.getExternalId();
 		this.id = entityInstance.getId();
-		this.entity = entityInstance.getEntity().getDTO();
+		this.entity = entityInstance.getEntity().getDto();
 
 		if (depth.equals(Depth.DEEP)) {
-			this.attributes = entityInstance.getEntity().getAttributeSet().stream()
+			this.attributeInstances = entityInstance.getEntity().getAttributeSet().stream()
 					.sorted((a1, a2) -> a1.getName().compareTo(a2.getName()))
 					.map(a -> getAttributeInstanceDto(entityInstance, a)).collect(Collectors.toList());
 			this.setLinks(entityInstance.getEntity().getMulConditions().stream()
 					.sorted((m1, m2) -> m1.getRolename().compareTo(m2.getRolename()))
-					.map(m -> new LinkDto(entityInstance, m)).collect(Collectors.toList()));
+					.map(m -> getLinkDto(entityInstance, m)).collect(Collectors.toList()));
+		}
+	}
+
+	protected AttributeInstanceDto getAttributeInstanceDto(EntityInstance entityInstance, Attribute attribute) {
+		Optional<AttributeInstance> attributeInstance = entityInstance.getAttributeInstanceByName(attribute.getName());
+		if (attributeInstance.isPresent()) {
+			return new AttributeInstanceDto(attributeInstance.get());
+		} else {
+			return new AttributeInstanceUndefDto(attribute);
+		}
+	}
+
+	private LinkDto getLinkDto(EntityInstance entityInstance, MulCondition mulCondition) {
+		Set<EntityInstance> entityInstances = entityInstance.getEntityInstancesByRolename(mulCondition.getRolename());
+		if (entityInstances.isEmpty()) {
+			return new LinkUndefDto(mulCondition);
+		} else {
+			return new LinkDto(entityInstances, mulCondition);
 		}
 	}
 
@@ -62,21 +82,12 @@ public class EntityInstanceDto {
 		this.entity = entity;
 	}
 
-	public List<AttributeInstanceDto> getAttributes() {
-		return this.attributes;
+	public List<AttributeInstanceDto> getAttributeInstances() {
+		return this.attributeInstances;
 	}
 
-	public void setAttributes(List<AttributeInstanceDto> attributes) {
-		this.attributes = attributes;
-	}
-
-	private AttributeInstanceDto getAttributeInstanceDto(EntityInstance entityInstance, Attribute attribute) {
-		Optional<AttributeInstance> attributeInstance = entityInstance.getAttributeInstanceByName(attribute.getName());
-		if (attributeInstance.isPresent()) {
-			return new AttributeInstanceDto(attributeInstance.get());
-		} else {
-			return new UndefinedAttributeInstanceDto(attribute);
-		}
+	public void setAttributeInstances(List<AttributeInstanceDto> attributeInstances) {
+		this.attributeInstances = attributeInstances;
 	}
 
 	public List<LinkDto> getLinks() {

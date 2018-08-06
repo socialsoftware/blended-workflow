@@ -19,7 +19,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.UndefinedEntityInstanceDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceUndefDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
@@ -89,7 +89,7 @@ public class InstanceController {
 		if (entityInstance == null) {
 			DesignInterface di = this.factory.createDesignInterface();
 			Entity entity = di.getMandatoryEntity(specId);
-			entityInstanceDto = new UndefinedEntityInstanceDto(entity);
+			entityInstanceDto = new EntityInstanceUndefDto(entity);
 		} else {
 			entityInstanceDto = new EntityInstanceDto(entityInstance, Depth.DEEP);
 		}

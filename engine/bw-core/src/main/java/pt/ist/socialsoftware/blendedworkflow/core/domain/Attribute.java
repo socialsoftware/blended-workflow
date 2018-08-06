@@ -129,7 +129,7 @@ public class Attribute extends Attribute_Base {
 	}
 
 	@Override
-	public AttributeDto getDTO() {
+	public AttributeDto getDto() {
 		return new AttributeDto(this);
 	}
 

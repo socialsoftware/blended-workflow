@@ -1,6 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -36,72 +38,9 @@ public class WorkItemDto {
 	private int timestamp;
 	private String preArguments;
 	private String postArguments;
+	private List<EntityInstanceDto> entityInstancesToDefine = new ArrayList<>();
 
 	public WorkItemDto() {
-	}
-
-	public String getSpecId() {
-		return this.specId;
-	}
-
-	public void setSpecId(String specId) {
-		this.specId = specId;
-	}
-
-	public String getSpecName() {
-		return this.specName;
-	}
-
-	public void setSpecName(String specName) {
-		this.specName = specName;
-	}
-
-	public String getWorkflowInstanceName() {
-		return this.workflowInstanceName;
-	}
-
-	public void setWorkflowInstanceName(String workflowInstanceName) {
-		this.workflowInstanceName = workflowInstanceName;
-	}
-
-	public Set<DefinitionGroupDto> getDefinitionGroupSet() {
-		return this.definitionGroupSet;
-	}
-
-	public void setDefinitionGroupSet(Set<DefinitionGroupDto> definitionGroupSet) {
-		this.definitionGroupSet = definitionGroupSet;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getTimestamp() {
-		return this.timestamp;
-	}
-
-	public void setTimestamp(int timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public String getPreArguments() {
-		return this.preArguments;
-	}
-
-	public void setPreArguments(String preArguments) {
-		this.preArguments = preArguments;
-	}
-
-	public String getPostArguments() {
-		return this.postArguments;
-	}
-
-	public void setPostArguments(String postArguments) {
-		this.postArguments = postArguments;
 	}
 
 	public void executeWorkItem(WorkflowInstance workflowInstance, WorkItem workItem) {
@@ -288,6 +227,78 @@ public class WorkItemDto {
 	private String printEntityInstance(Set<EntityInstanceDto> piSet) {
 		return piSet.stream().map(pi -> pi.getEntity().getName() + ":" + pi.getExternalId() + "," + pi.getId())
 				.collect(Collectors.joining(";"));
+	}
+
+	public String getSpecId() {
+		return this.specId;
+	}
+
+	public void setSpecId(String specId) {
+		this.specId = specId;
+	}
+
+	public String getSpecName() {
+		return this.specName;
+	}
+
+	public void setSpecName(String specName) {
+		this.specName = specName;
+	}
+
+	public String getWorkflowInstanceName() {
+		return this.workflowInstanceName;
+	}
+
+	public void setWorkflowInstanceName(String workflowInstanceName) {
+		this.workflowInstanceName = workflowInstanceName;
+	}
+
+	public Set<DefinitionGroupDto> getDefinitionGroupSet() {
+		return this.definitionGroupSet;
+	}
+
+	public void setDefinitionGroupSet(Set<DefinitionGroupDto> definitionGroupSet) {
+		this.definitionGroupSet = definitionGroupSet;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getTimestamp() {
+		return this.timestamp;
+	}
+
+	public void setTimestamp(int timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getPreArguments() {
+		return this.preArguments;
+	}
+
+	public void setPreArguments(String preArguments) {
+		this.preArguments = preArguments;
+	}
+
+	public String getPostArguments() {
+		return this.postArguments;
+	}
+
+	public void setPostArguments(String postArguments) {
+		this.postArguments = postArguments;
+	}
+
+	public List<EntityInstanceDto> getEntityInstancesToDefine() {
+		return this.entityInstancesToDefine;
+	}
+
+	public void setEntityInstancesToDefine(List<EntityInstanceDto> entityInstancesToDefine) {
+		this.entityInstancesToDefine = entityInstancesToDefine;
 	}
 
 }

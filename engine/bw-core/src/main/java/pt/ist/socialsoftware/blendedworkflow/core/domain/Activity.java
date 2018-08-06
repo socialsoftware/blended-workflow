@@ -351,7 +351,7 @@ public class Activity extends Activity_Base {
 
 		// for each entity, in entity context, get instance context
 		for (Entity entity : entityContext) {
-			if (getInstanceContext(workflowInstance, entity).isEmpty()) {
+			if (getEntityInstanceContext(workflowInstance, entity).isEmpty()) {
 				return false;
 			}
 		}
@@ -363,13 +363,13 @@ public class Activity extends Activity_Base {
 		Map<Entity, Set<EntityInstance>> instanceContext = new HashMap<>();
 
 		for (Entity entity : getEntityContext()) {
-			instanceContext.put(entity, getInstanceContext(workflowInstance, entity));
+			instanceContext.put(entity, getEntityInstanceContext(workflowInstance, entity));
 		}
 
 		return instanceContext;
 	}
 
-	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity) {
+	public Set<EntityInstance> getEntityInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity) {
 		// pre-conditions hold
 		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(contextEntity).stream()
 				.filter(ei -> ei.holdsDefPathConditions(getPreConditionSetForContextEntity(contextEntity)))

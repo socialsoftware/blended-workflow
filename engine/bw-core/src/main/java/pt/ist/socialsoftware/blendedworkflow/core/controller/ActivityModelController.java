@@ -198,7 +198,7 @@ public class ActivityModelController {
 		Set<MulCondition> mulConditions = adi.getActivityMulConditions(specId, activityName);
 
 		return new ResponseEntity<>(
-				mulConditions.stream().map(mul -> mul.getDTO()).toArray(size -> new MulConditionDto[size]),
+				mulConditions.stream().map(mul -> mul.getDto()).toArray(size -> new MulConditionDto[size]),
 				HttpStatus.OK);
 	}
 
@@ -213,7 +213,7 @@ public class ActivityModelController {
 		MulCondition mulCondition = adi.associateMulToActivityPost(specId, activityName, mulConditionDTO.getRolePath(),
 				mulConditionDTO.getCardinality());
 
-		return new ResponseEntity<>(mulCondition.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(mulCondition.getDto(), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/postrule", method = RequestMethod.GET)

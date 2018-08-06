@@ -12,7 +12,7 @@ public class AttributeInstanceDto {
 
 	public AttributeInstanceDto(AttributeInstance attributeInstance) {
 		this.externalId = attributeInstance.getExternalId();
-		this.attribute = attributeInstance.getAttribute().getDTO();
+		this.attribute = attributeInstance.getAttribute().getDto();
 		this.value = attributeInstance.getValue();
 	}
 

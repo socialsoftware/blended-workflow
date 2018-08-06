@@ -186,7 +186,7 @@ public class Entity extends Entity_Base {
 	}
 
 	@Override
-	public EntityDto getDTO() {
+	public EntityDto getDto() {
 		EntityDto entityDto = new EntityDto();
 		entityDto.setSpecId(getDataModel().getSpecification().getSpecId());
 		entityDto.setExtId(getExternalId());

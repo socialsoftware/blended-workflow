@@ -121,7 +121,7 @@ public class AttributeInstance extends AttributeInstance_Base {
 	@Override
 	public ProductInstanceDto getDTO() {
 		ProductInstanceDto productInstanceDto = new ProductInstanceDto();
-		productInstanceDto.setProduct(getAttribute().getDTO());
+		productInstanceDto.setProduct(getAttribute().getDto());
 		productInstanceDto.setExternalId(getExternalId());
 		productInstanceDto.setPath(getAttribute().getFullPath());
 		productInstanceDto.setValue(getAttribute().getEntity().getName() + "[" + getEntityInstance().getId() + ","

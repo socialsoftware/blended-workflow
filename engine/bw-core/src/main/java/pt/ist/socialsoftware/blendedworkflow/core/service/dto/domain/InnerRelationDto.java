@@ -14,9 +14,9 @@ public class InnerRelationDto {
 
 	public static InnerRelationDto createInnerRelationDTO(Entity entity, MulCondition mulCondition) {
 		InnerRelationDto innerRelationDTO = new InnerRelationDto();
-		innerRelationDTO.setSourceEntity(entity.getDTO());
-		innerRelationDTO.setTargetEntity(mulCondition.getTargetEntity().getDTO());
-		innerRelationDTO.setMulCondition(mulCondition.getDTO());
+		innerRelationDTO.setSourceEntity(entity.getDto());
+		innerRelationDTO.setTargetEntity(mulCondition.getTargetEntity().getDto());
+		innerRelationDTO.setMulCondition(mulCondition.getDto());
 		innerRelationDTO.setEntitytInstanceSet(new HashSet<EntityInstanceDto>());
 		return innerRelationDTO;
 	}

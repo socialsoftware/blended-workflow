@@ -77,7 +77,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		Activity activity = new Activity(this.spec.getActivityModel(), "name", "description");
 		activity.addPostCondition(DefEntityCondition.getDefEntityCondition(this.entOne));
 
-		Set<EntityInstance> instanceContext = activity.getInstanceContext(this.workflowInstance, this.entOne);
+		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entOne);
 
 		assertEquals(0, instanceContext.size());
 	}
@@ -90,7 +90,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 
 		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
 
-		Set<EntityInstance> instanceContext = activity.getInstanceContext(this.workflowInstance, this.entOne);
+		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entOne);
 
 		assertEquals(1, instanceContext.size());
 		assertTrue(instanceContext.contains(entityInstance));
@@ -106,7 +106,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		new AttributeInstance(entityInstanceOne, this.attOne, "123");
 		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entOne);
 
-		Set<EntityInstance> instanceContext = activity.getInstanceContext(this.workflowInstance, this.entOne);
+		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entOne);
 
 		assertEquals(1, instanceContext.size());
 		assertTrue(instanceContext.contains(entityInstanceTwo));
@@ -122,7 +122,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 
 		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
 
-		Set<EntityInstance> instanceContext = activity.getInstanceContext(this.workflowInstance, this.entOne);
+		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entOne);
 
 		assertEquals(1, instanceContext.size());
 		assertTrue(instanceContext.contains(entityInstance));
@@ -146,7 +146,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		new RelationInstance(entityInstanceOneOne, ROLENAME_ENT_ONE, entityInstanceTwoTwo, ROLENAME_ENT_TWO,
 				this.relationOne);
 
-		Set<EntityInstance> instanceContext = activity.getInstanceContext(this.workflowInstance, this.entOne);
+		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entOne);
 
 		assertEquals(1, instanceContext.size());
 		assertTrue(instanceContext.contains(entityInstanceOneTwo));
@@ -163,7 +163,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		EntityInstance entityInstanceThreeOne = new EntityInstance(this.workflowInstance, this.entThree);
 		EntityInstance entityInstanceThreeTwo = new EntityInstance(this.workflowInstance, this.entThree);
 
-		Set<EntityInstance> instanceContext = activity.getInstanceContext(this.workflowInstance, this.entThree);
+		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entThree);
 
 		assertEquals(2, instanceContext.size());
 		assertTrue(instanceContext.contains(entityInstanceThreeOne));
@@ -180,7 +180,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 
 		new EntityInstance(this.workflowInstance, this.entThree);
 
-		Set<EntityInstance> instanceContext = activity.getInstanceContext(this.workflowInstance, this.entThree);
+		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entThree);
 
 		assertEquals(0, instanceContext.size());
 	}

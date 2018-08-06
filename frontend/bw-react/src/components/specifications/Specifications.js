@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { ManageSpecifications } from './ManageSpecifications';
-import { Specification } from './Specification';
+import Specification from './Specification';
 
 export const Specifications = () => (
   <div>

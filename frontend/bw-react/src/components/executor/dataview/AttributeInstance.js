@@ -7,7 +7,7 @@ export class AttributeInstance extends React.Component {
         const dependencies = this.props.attributeInstance.attribute.dependencies == null ? "" : this.props.attributeInstance.attribute.dependencies.map(d => <DependenceInstance key={d.extId} entityInstance={this.props.entityInstance} dependence={d}/>);
         return (
             <div>
-                <Tab />{this.props.attributeInstance.attribute.name}: {this.props.attributeInstance.attribute.type} [{this.props.attributeInstance.externalId == null ? 'undef' : this.props.attributeInstance.value}] 
+                <Tab />{this.props.attributeInstance.attribute.name}: {this.props.attributeInstance.attribute.type}[{this.props.attributeInstance.value}] 
                 {dependencies}
             </div>
         )
