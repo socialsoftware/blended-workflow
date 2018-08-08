@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 import { connect } from 'react-redux';
-import { RepositoryService } from '../../services/RepositoryService'
-import { WorkItemList } from './workitem/WorkItemList'
+import { RepositoryService } from '../../services/RepositoryService';
+import { WorkItemList } from './workitem/WorkItemList';
 
 const mapStateToProps = state => {
     return { 

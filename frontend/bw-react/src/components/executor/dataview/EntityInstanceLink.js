@@ -1,9 +1,16 @@
 import React from 'react'
-import { RepositoryService } from '../../../services/RepositoryService'
+import { connect } from 'react-redux';
 import { OpenCloseButton } from './OpenCloseButton'
 import { EntityInstance } from './EntityInstance';
 
-export class EntityInstanceLink extends React.Component {
+const mapStateToProps = state => {
+    return {
+        specId: state.specId,
+        name: state.name,
+        entityInstances: state.entityInstances };
+};
+
+class ConnectedEntityInstanceLink extends React.Component {
     constructor(props) {
         super(props);
 
@@ -12,16 +19,12 @@ export class EntityInstanceLink extends React.Component {
         };
 
         this.openCloseLink = this.openCloseLink.bind(this);
-        this.getEntityInstanceByExternalId = this.getEntityInstanceByExternalId.bind(this)
+        this.getEntityInstanceById = this.getEntityInstanceById.bind(this)
     }
 
-      getEntityInstanceByExternalId() {
-        const service = new RepositoryService();
-        service.getEntityInstanceByExternalId(this.props.entityInstance.externalId).then(response => {
-            this.setState({ 
-                open: true,
-                entityInstance: response.data 
-            });
+    getEntityInstanceById(id) {
+        return this.props.entityInstances.find(function(element) {
+           return element.id === id;
         });
     }
 
@@ -31,17 +34,22 @@ export class EntityInstanceLink extends React.Component {
                 open: false
             })
         } else {
-            this.getEntityInstanceByExternalId();
-        }
-    }
+            this.setState({
+                open: true
+        })}
+    };
 
     render() {
         return (
             <span>
                 {this.props.entityInstance.entity.name}[{this.props.entityInstance.id}]
                 {this.props.entityInstance.externalId !== null && <span> <OpenCloseButton open={this.state.open} onClick={this.openCloseLink} /></span>}
-                {this.state.open && <EntityInstance entityInstance={this.state.entityInstance} />} 
+                {this.state.open && <EntityInstance entityInstance={this.getEntityInstanceById(this.props.entityInstance.id)} />} 
             </span>
         )
     }
 }
+
+const EntityInstanceLink = connect(mapStateToProps)(ConnectedEntityInstanceLink);
+
+export default EntityInstanceLink;

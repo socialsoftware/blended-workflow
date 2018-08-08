@@ -45,7 +45,7 @@ public class EntityInstanceDto {
 		if (attributeInstance.isPresent()) {
 			return new AttributeInstanceDto(attributeInstance.get());
 		} else {
-			return new AttributeInstanceUndefDto(attribute);
+			return new AttributeInstanceUndefDto(attribute, entityInstance);
 		}
 	}
 

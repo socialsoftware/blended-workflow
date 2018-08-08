@@ -1,5 +1,8 @@
 package pt.ist.socialsoftware.blendedworkflow.core.controller;
 
+import java.util.Comparator;
+import java.util.Set;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -95,6 +98,20 @@ public class InstanceController {
 		}
 
 		return new ResponseEntity<>(entityInstanceDto, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{name}/entities", method = RequestMethod.GET)
+	public ResponseEntity<EntityInstanceDto[]> getEntityInstances(@PathVariable("specId") String specId,
+			@PathVariable("name") String name) {
+		log.debug("getEntityInstances specId:{}, name:{}", specId, name);
+		ExecutionInterface ei = this.factory.createExecutionInterface();
+
+		Set<EntityInstance> entityInstances = ei.getEntityInstances(specId, name);
+
+		EntityInstanceDto[] result = entityInstances.stream().map(i -> new EntityInstanceDto(i, Depth.DEEP))
+				.sorted(Comparator.comparing(EntityInstanceDto::getId)).toArray(size -> new EntityInstanceDto[size]);
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 }

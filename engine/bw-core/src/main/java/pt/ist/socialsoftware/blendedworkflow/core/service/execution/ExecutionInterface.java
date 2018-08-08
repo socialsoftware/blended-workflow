@@ -74,6 +74,10 @@ public class ExecutionInterface {
 
 	}
 
+	public Set<EntityInstance> getEntityInstances(String specId, String name) {
+		return getSpecification(specId).getWorkflowInstance(name).getEntityInstanceSet();
+	}
+
 	public EntityInstance getMandatoryEntityInstance(String specId, String name) {
 		return getSpecification(specId).getWorkflowInstance(name).getMandatoryEntityInstance();
 	}

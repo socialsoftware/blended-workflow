@@ -1,5 +1,5 @@
-import React from 'react'
-import { EntityInstanceLink } from '../dataview/EntityInstanceLink'
+import React from 'react';
+import EntityInstanceLink from '../dataview/EntityInstanceLink';
 
 export class SelectEntityInstances extends React.Component {
     constructor(props) {

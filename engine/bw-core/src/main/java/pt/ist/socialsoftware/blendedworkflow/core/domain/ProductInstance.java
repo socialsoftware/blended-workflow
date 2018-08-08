@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDto;
 
 public abstract class ProductInstance extends ProductInstance_Base {
@@ -41,6 +42,17 @@ public abstract class ProductInstance extends ProductInstance_Base {
 		return getPreWorkItemArgumentSet() != null
 				? getPreWorkItemArgumentSet().stream().map(pwia -> pwia.getWorkItemOfPre()).collect(Collectors.toSet())
 				: null;
+	}
+
+	public Set<ProductInstance> getDependentProductInstances(Dependence dependence) {
+		Set<ProductInstance> productInstances;
+		try {
+			productInstances = getEntityInstance().getProductInstancesByPath(dependence.getPath().getValue());
+		} catch (BWException bwe) {
+			productInstances = new HashSet<>();
+		}
+
+		return productInstances;
 	}
 
 }

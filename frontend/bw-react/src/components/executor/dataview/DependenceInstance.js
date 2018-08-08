@@ -1,31 +1,18 @@
-import React from 'react'
-import { Tab } from '../../util/Tab'
-import { RepositoryService } from '../../../services/RepositoryService'
-import { EntityInstanceLink } from './EntityInstanceLink'
+import React from 'react';
+import { Tab } from '../../util/Tab';
+import { RepositoryService } from '../../../services/RepositoryService';
+import EntityInstanceLink from './EntityInstanceLink';
 
 export class DependenceInstance extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            entityInstances: []
-        };
-    }
-
-    componentDidMount() {
-        const service = new RepositoryService();
-        service.getEntityInstancesForDependence(this.props.entityInstance.externalId,this.props.dependence.extId).then(response => {
-            this.setState({ 
-                entityInstances: response.data 
-            });
-        });
     }
 
     render() {
-    const dependenceEntityInstances = this.state.entityInstances.length === 0 ? '[none]' : this.state.entityInstances.map(ei => <EntityInstanceLink key={ei.id} entityInstance={ei} />);
+    const dependenceEntityInstances = this.props.dependence.entityInstances.length === 0 ? '[none]' : this.props.dependence.entityInstances.map(ei => <EntityInstanceLink key={ei.id} entityInstance={ei} />);
         return (
             <div>
-                <Tab /><Tab />{this.props.dependence.path}: {dependenceEntityInstances}
+                <Tab /><Tab />{this.props.dependence.dependence.path}: {dependenceEntityInstances}
             </div>
         )
     }

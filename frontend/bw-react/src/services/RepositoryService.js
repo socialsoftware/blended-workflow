@@ -47,7 +47,11 @@ export class RepositoryService {
     // Data model instance
 
     getMandatoryEntityInstance(specId, name) {
-        return this.axios.get("/specs/" + specId + "/instances/" + name + "/entities/mandatory")
+        return this.axios.get("/specs/" + specId + "/instances/" + name + "/entities/mandatory");
+    }
+
+    getEntityInstances(specId, name) {
+        return this.axios.get("/specs/" + specId + "/instances/" + name+ "/entities");
     }
 
     getEntityInstanceByExternalId(externalId) {
@@ -55,16 +59,16 @@ export class RepositoryService {
     }
 
     getEntityInstancesForDependence(entityInstanceExtId, dependenceExtId) {
-        return this.axios.get("/entityinstance/" + entityInstanceExtId + "/dependence/"+ dependenceExtId)
+        return this.axios.get("/entityinstance/" + entityInstanceExtId + "/dependence/"+ dependenceExtId);
     }
 
     // Instances
     getWorkflowInstances(specId) {
-        return this.axios.get("/specs/" + specId + "/instances")
+        return this.axios.get("/specs/" + specId + "/instances");
     }
 
     getWorkflowInstance(specId, name) {
-        return this.axios.get("specs/" + specId + "/instances/" + name)
+        return this.axios.get("specs/" + specId + "/instances/" + name);
     }
 
     createWorkflowInstance(specId, name) {

@@ -1,37 +1,40 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { getEntityInstancesAction } from '../../actions/get-entity-instances';
 import { RepositoryService } from '../../services/RepositoryService';
 import { EntityInstance } from './dataview/EntityInstance';
 
 const mapStateToProps = state => {
-    return { 
+    return {
         specId: state.specId,
-        name: state.name };
-};  
+        name: state.name,
+        entityInstances: state.entityInstances };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+      getEntityInstancesAction: entityInstances => dispatch(getEntityInstancesAction(entityInstances))
+    };
+  };
+  
 
 class ConnectedDataView extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            mandatoryEntityInstance: {}
-        };
-
-        this.renderMandatoryEntityInstance = this.renderMandatoryEntityInstance.bind(this);
+        this.renderMandatoryEntityInstances = this.renderMandatoryEntityInstances.bind(this);
      }
 
-    componentDidMount() {
+     componentDidMount() {
         const service = new RepositoryService();
-
-        service.getMandatoryEntityInstance(this.props.specId, this.props.name).then(response => {
-            this.setState({ mandatoryEntityInstance: response.data }
-            )
+        service.getEntityInstances(this.props.specId, this.props.name).then(response => {
+            this.props.getEntityInstancesAction(response.data);
         });
-    }
+     }
 
-    renderMandatoryEntityInstance() {
-        if (this.state.mandatoryEntityInstance.entity) {
-            return <EntityInstance entityInstance={this.state.mandatoryEntityInstance} /> ;
+    renderMandatoryEntityInstances() {
+        if (this.props.entityInstances) {
+            return  this.props.entityInstances.map(ei => <EntityInstance key={ei.id} entityInstance={ei} />);
         } else {
             return "";
         }
@@ -41,12 +44,12 @@ class ConnectedDataView extends React.Component {
         return (
             <div> 
                 <h5>Data Model of instance {this.props.name} of specification {this.props.specId} </h5>
-                {this.renderMandatoryEntityInstance()}
+                {this.renderMandatoryEntityInstances()}
             </div>
         )
     }
 } 
 
-const DataView = connect(mapStateToProps)(ConnectedDataView);
+const DataView = connect(mapStateToProps, mapDispatchToProps)(ConnectedDataView);
 
 export default DataView;
