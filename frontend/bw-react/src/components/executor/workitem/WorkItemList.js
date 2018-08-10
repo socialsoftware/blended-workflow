@@ -1,8 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { getEntityInstancesAction } from '../../../actions/get-entity-instances';
+import { setEntityInstancesToDefineAction } from '../../../actions/set-entity-instances-to-define';
+import { clearEntityInstancesToDefineAction } from '../../../actions/clear-entity-instances-to-define';
+import { RepositoryService } from '../../../services/RepositoryService';
 import { OpenWorkItem } from './OpenWorkItem';
-import { ExecuteWorkItem } from './ExecuteWorkItem';
+import ExecuteWorkItem from './ExecuteWorkItem';
 
-export class WorkItemList extends React.Component {
+const mapDispatchToProps = dispatch => {
+    return {
+      getEntityInstancesAction: entityInstances => dispatch(getEntityInstancesAction(entityInstances)),
+      setEntityInstancesToDefineAction: entityInstancesToDefine => dispatch(setEntityInstancesToDefineAction(entityInstancesToDefine)),
+      clearEntityInstancesToDefineAction: () => dispatch(clearEntityInstancesToDefineAction())
+    };
+};
+
+
+
+class ConnectedWorkItemList extends React.Component {
     constructor(props) {
         super(props);
 
@@ -19,7 +34,11 @@ export class WorkItemList extends React.Component {
     }
 
     componentDidMount() {
-        this.getNextWorkItems();
+        const service = new RepositoryService();
+        service.getEntityInstances(this.props.specId, this.props.name).then(response => {
+            this.props.getEntityInstancesAction(response.data);
+            this.getNextWorkItems();
+        });  
     }
 
     getNextWorkItems() {
@@ -31,6 +50,7 @@ export class WorkItemList extends React.Component {
     }
 
     openWorkItem(workItem) {
+        this.props.setEntityInstancesToDefineAction(workItem.entityInstancesToDefine);
         this.setState({
             open: true,
             openWorkItem: workItem
@@ -38,6 +58,7 @@ export class WorkItemList extends React.Component {
     }
 
     closeWorkItem() {
+        this.props.clearEntityInstancesToDefineAction();
         this.setState({
             open: false,
             openWorkItem: {}
@@ -73,3 +94,7 @@ export class WorkItemList extends React.Component {
         )
     }
 } 
+
+const WorkItemList = connect(null, mapDispatchToProps)(ConnectedWorkItemList);
+
+export default WorkItemList;

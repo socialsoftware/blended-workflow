@@ -15,8 +15,7 @@ const mapDispatchToProps = dispatch => {
     return {
       getEntityInstancesAction: entityInstances => dispatch(getEntityInstancesAction(entityInstances))
     };
-  };
-  
+};
 
 class ConnectedDataView extends React.Component {
     constructor(props) {

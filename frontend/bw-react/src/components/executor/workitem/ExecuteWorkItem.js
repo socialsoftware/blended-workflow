@@ -1,10 +1,27 @@
-import React from 'react'
-import { DefinitionGroup } from './DefinitionGroup'
-import { EntityInstance } from '../dataview/EntityInstance'
+import React from 'react';
+import { connect } from 'react-redux';
+import { setUnitOfWorkAction } from '../../../actions/set-unit-of-work';
+import { DefinitionGroup } from './DefinitionGroup';
+import { EntityInstance } from '../dataview/EntityInstance';
 
-export class ExecuteWorkItem extends React.Component {
+const mapStateToProps = state => {
+    return {
+        entityInstancesToDefine: state.entityInstancesToDefine,
+        unitOfWork: state.unitOfWork
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+      setUnitOfWorkAction: unitOfWork => dispatch(setUnitOfWorkAction(unitOfWork))
+    };
+};
+
+class ConnectedExecuteWorkItem extends React.Component {
     constructor(props) {
         super(props);
+
+        this.props.setUnitOfWorkAction(this.createUnitOfWork());
 
         const defGroups = this.props.workItem.definitionGroupSet.map((dg,index) => { return { key: -index, value: dg} });
         const defGroupMap = new Map(defGroups.map(dg => [dg.key, dg.value]));
@@ -14,10 +31,22 @@ export class ExecuteWorkItem extends React.Component {
             defGroupMap: defGroupMap,
         }
         
+        this.createUnitOfWork = this.createUnitOfWork.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleExecute = this.handleExecute.bind(this);
         this.updateInstance = this.updateInstance.bind(this);
-    }
+    };
+
+    createUnitOfWork() {
+        let counter = 0;
+        return this.props.entityInstancesToDefine.map(ei => JSON.parse(JSON.stringify(ei)))
+            .map(ei => {
+                if (ei.id === null && ei.entityInstancesContext.length === 0) {
+                    ei.id = --counter;
+                } 
+                return ei;
+            });
+    };
 
     handleClose() {
         this.props.onClose();
@@ -44,8 +73,12 @@ export class ExecuteWorkItem extends React.Component {
                 <h5>Execute Workitem {this.props.workItem.name}</h5>
                 {Array.from(this.state.defGroupMap).map(dg => <DefinitionGroup key={dg[0]} id={dg[0]} updateInstance={this.updateInstance} definitionGroup={dg[1]}/>)}
                 <div><button onClick={this.handleClose}>Close</button> <button onClick={this.handleExecute}>Execute</button></div>
-                {this.props.workItem.entityInstancesToDefine.map(ei => <EntityInstance entityInstance={ei} />)}
+                {this.props.unitOfWork.map(ei => <EntityInstance entityInstance={ei} />)}
             </div>
         )
     }
 }
+
+const ExecuteWorkItem = connect(mapStateToProps, mapDispatchToProps)(ConnectedExecuteWorkItem);
+
+export default ExecuteWorkItem;

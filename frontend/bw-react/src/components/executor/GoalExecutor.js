@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { RepositoryService } from '../../services/RepositoryService';
-import { WorkItemList } from './workitem/WorkItemList';
+import WorkItemList from './workitem/WorkItemList';
 
 const mapStateToProps = state => {
     return { 
         specId: state.specId,
-        name: state.name };
+        name: state.name
+    };
 };  
 
 class ConnectedGoalExecutor extends React.Component {
@@ -17,7 +18,7 @@ class ConnectedGoalExecutor extends React.Component {
         this.executeGoalWorkItem = this.executeGoalWorkItem.bind(this);
     }
 
-    getNextGoalWorkItems() {
+     getNextGoalWorkItems() {
         const service = new RepositoryService();
 
         return service.getNextGoalWorkItems(this.props.specId, this.props.name);
