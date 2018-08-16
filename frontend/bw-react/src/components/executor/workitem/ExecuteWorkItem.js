@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { setUnitOfWorkAction } from '../../../actions/set-unit-of-work';
 import { DefinitionGroup } from './DefinitionGroup';
-import { EntityInstance } from '../dataview/EntityInstance';
+import DefineEntityInstance from './DefineEntityInstance';
 
 const mapStateToProps = state => {
     return {
@@ -41,7 +41,7 @@ class ConnectedExecuteWorkItem extends React.Component {
         let counter = 0;
         return this.props.entityInstancesToDefine.map(ei => JSON.parse(JSON.stringify(ei)))
             .map(ei => {
-                if (ei.id === null && ei.entityInstancesContext.length === 0) {
+                if (ei.id === null) {
                     ei.id = --counter;
                 } 
                 return ei;
@@ -73,7 +73,7 @@ class ConnectedExecuteWorkItem extends React.Component {
                 <h5>Execute Workitem {this.props.workItem.name}</h5>
                 {Array.from(this.state.defGroupMap).map(dg => <DefinitionGroup key={dg[0]} id={dg[0]} updateInstance={this.updateInstance} definitionGroup={dg[1]}/>)}
                 <div><button onClick={this.handleClose}>Close</button> <button onClick={this.handleExecute}>Execute</button></div>
-                {this.props.unitOfWork.map(ei => <EntityInstance entityInstance={ei} />)}
+                {this.props.unitOfWork.map(ei => <DefineEntityInstance entityInstance={ei} />)}
             </div>
         )
     }

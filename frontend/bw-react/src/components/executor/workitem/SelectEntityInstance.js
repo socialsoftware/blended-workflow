@@ -1,5 +1,5 @@
 import React from 'react';
-import EntityInstanceLink from './EntityInstanceLink';
+import EntityInstanceLink from '../dataview/EntityInstanceLink';
 
 export class SelectEntityInstance extends React.Component {
     constructor(props) {
@@ -35,7 +35,6 @@ export class SelectEntityInstance extends React.Component {
         const notSelected = this.props.entityInstances.filter(ei => ei.id !== this.state.selected.id);
         return (
             <span>
-                <span>{this.state.selected.id && <EntityInstanceLink entityInstance={this.state.selected}/>} </span>
                 <span>{!this.state.select && notSelected.length > 0 && <button onClick={this.handleStartSelection}>Start Selection</button>}</span>
                 <span>{this.state.select && notSelected.map(ei => <span key={ei.id} ><EntityInstanceLink key={ei.id} entityInstance={ei} /> <button value={ei.id} onClick={this.handleSelect} >Select</button> </span>)}</span>
             </span>

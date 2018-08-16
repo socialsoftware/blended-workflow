@@ -15,6 +15,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 
 public class EntityInstanceToDefineDto extends EntityInstanceDto {
 	private List<EntityInstanceDto> entityInstancesContext = new ArrayList<>();
+	private boolean exists = false;
 
 	public EntityInstanceToDefineDto(Entity entity) {
 		setExternalId(null);
@@ -28,6 +29,7 @@ public class EntityInstanceToDefineDto extends EntityInstanceDto {
 		setEntity(entity.getDto());
 		setEntityInstancesContext(entityInstancesContext.stream().sorted(Comparator.comparing(EntityInstance::getId))
 				.map(ei -> new EntityInstanceDto(ei, Depth.SHALLOW)).collect(Collectors.toList()));
+		setExists(entityInstancesContext.size() > 0);
 	}
 
 	public void fillUndefAttributeInstances(Entity entity) {
@@ -70,6 +72,14 @@ public class EntityInstanceToDefineDto extends EntityInstanceDto {
 	protected void addAttributeInstance(AttributeInstanceToDefineDto attributeInstanceToDefineDto) {
 		getAttributeInstances().add(attributeInstanceToDefineDto);
 
+	}
+
+	public boolean isExists() {
+		return this.exists;
+	}
+
+	public void setExists(boolean exists) {
+		this.exists = exists;
 	}
 
 }

@@ -1,5 +1,5 @@
-import React from 'react'
-import { Tab } from '../../util/Tab'
+import React from 'react';
+import { Tab } from '../../util/Tab';
 
 export class DefineAttribute extends React.Component {
     constructor(props) {
