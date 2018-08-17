@@ -1,17 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getEntityInstancesAction } from '../../../actions/get-entity-instances';
-import { setEntityInstancesToDefineAction } from '../../../actions/set-entity-instances-to-define';
-import { clearEntityInstancesToDefineAction } from '../../../actions/clear-entity-instances-to-define';
+import { getEntityInstances } from '../../../actions/getEntityInstances';
+import { setEntityInstancesToDefine } from '../../../actions/setEntityInstancesToDefine';
+import { clearEntityInstancesToDefine } from '../../../actions/clearEntityInstancesToDefine';
 import { RepositoryService } from '../../../services/RepositoryService';
 import { OpenWorkItem } from './OpenWorkItem';
 import ExecuteWorkItem from './ExecuteWorkItem';
 
 const mapDispatchToProps = dispatch => {
     return {
-      getEntityInstancesAction: entityInstances => dispatch(getEntityInstancesAction(entityInstances)),
-      setEntityInstancesToDefineAction: entityInstancesToDefine => dispatch(setEntityInstancesToDefineAction(entityInstancesToDefine)),
-      clearEntityInstancesToDefineAction: () => dispatch(clearEntityInstancesToDefineAction())
+      getEntityInstances: entityInstances => dispatch(getEntityInstances(entityInstances)),
+      setEntityInstancesToDefine: entityInstancesToDefine => dispatch(setEntityInstancesToDefine(entityInstancesToDefine)),
+      clearEntityInstancesToDefine: () => dispatch(clearEntityInstancesToDefine())
     };
 };
 
@@ -36,7 +36,7 @@ class ConnectedWorkItemList extends React.Component {
     componentDidMount() {
         const service = new RepositoryService();
         service.getEntityInstances(this.props.specId, this.props.name).then(response => {
-            this.props.getEntityInstancesAction(response.data);
+            this.props.getEntityInstances(response.data);
             this.getNextWorkItems();
         });  
     }
@@ -50,7 +50,7 @@ class ConnectedWorkItemList extends React.Component {
     }
 
     openWorkItem(workItem) {
-        this.props.setEntityInstancesToDefineAction(workItem.entityInstancesToDefine);
+        this.props.setEntityInstancesToDefine(workItem.entityInstancesToDefine);
         this.setState({
             open: true,
             openWorkItem: workItem
@@ -58,7 +58,7 @@ class ConnectedWorkItemList extends React.Component {
     }
 
     closeWorkItem() {
-        this.props.clearEntityInstancesToDefineAction();
+        this.props.clearEntityInstancesToDefine();
         this.setState({
             open: false,
             openWorkItem: {}

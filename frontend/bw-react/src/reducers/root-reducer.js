@@ -1,5 +1,6 @@
 import { SELECT_SPECIFICATION, SELECT_INSTANCE, GET_ENTITY_INSTANCES, 
-  SET_ENTITY_INSTANCES_TO_DEFINE, CLEAR_ENTITY_INSTANCES_TO_DEFINE, SET_UNIT_OF_WORK, SET_SELECTED_ENTITY_INSTANCE_ACTION } from "../constants/action-types";
+  SET_ENTITY_INSTANCES_TO_DEFINE, CLEAR_ENTITY_INSTANCES_TO_DEFINE, SET_UNIT_OF_WORK, 
+  SET_SELECTED_ENTITY_INSTANCE, SET_ATTRIBUTE_INSTANCE_VALUE } from "../constants/action-types";
 
 const initialState = {
     specId: '',
@@ -23,14 +24,29 @@ const rootReducer = (state = initialState, action) => {
         return { ...state, entityInstancesToDefine: {}, unitOfWork: [] };
       case SET_UNIT_OF_WORK:
         return { ...state, unitOfWork: action.unitOfWork };
-      case SET_SELECTED_ENTITY_INSTANCE_ACTION:
+      case SET_SELECTED_ENTITY_INSTANCE:
         return { ...state, unitOfWork: state.unitOfWork.map(etd => {
           if (etd.id === action.oldId) {
-            return {...etd, id: action.newId};
+            return { ...etd, id: action.newId};
           } else {
             return etd;
           }
         }) };
+      case SET_ATTRIBUTE_INSTANCE_VALUE:
+        return { ...state, unitOfWork: state.unitOfWork.map(etd => {
+          if (etd.id === action.entityInstance.id) {
+            return { ...etd, 
+              attributeInstances: etd.attributeInstances.map(ai => {
+                if (ai.attribute.name === action.attributeInstance.attribute.name) {
+                  return { ...ai, value: action.value };
+                } else {
+                  return ai;
+                }
+            })}
+          } else {
+            return etd;
+          }
+        })}
       default:
         return state;
     }

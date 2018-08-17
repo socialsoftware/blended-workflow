@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import { Tab } from '../../util/Tab';
-import { DependenceInstance } from './DependenceInstance'
+import { DependenceInstance } from './DependenceInstance';
 
 export class AttributeInstance extends React.Component {
     render() {

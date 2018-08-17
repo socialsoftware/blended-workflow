@@ -1,26 +1,30 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { setAttributeInstanceValue } from '../../../actions/setAttributeInstanceValue';
 import { Tab } from '../../util/Tab';
 import { AttributeInstance } from '../dataview/AttributeInstance';
 
-export class DefineAttributeInstance extends React.Component {
+const mapDispatchToProps = dispatch => {
+    return {
+        setAttributeInstanceValue: (entityInstance, attributeInstance, value) => dispatch(setAttributeInstanceValue(entityInstance, attributeInstance, value))
+    };
+};
+
+class ConnectedDefineAttributeInstance extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {value: ''};
 
         this.handleChange = this.handleChange.bind(this);
         this.renderAttribute = this.renderAttribute.bind(this);
     }
 
     handleChange(event) {
-        this.setState({value: event.target.value}, function() {
-            // change unit of work associated with this entity instance to be defined
-        });
+        this.props.setAttributeInstanceValue(this.props.entityInstance, this.props.attributeInstance, event.target.value);
     }
 
     renderAttribute() {
         if (this.props.attributeInstance.toDefine === true) {
-            return <div> <Tab />{this.props.attributeInstance.attribute.name}: <input type="text" value={this.state.value} onChange={this.handleChange} /> </div>;
+            return <div> <Tab />{this.props.attributeInstance.attribute.name}: <input type="text" value={this.props.attributeInstance.value} onChange={this.handleChange} /> </div>;
         } else {
             return <AttributeInstance attributeInstance={this.props.attributeInstance}/>;
         }
@@ -34,3 +38,7 @@ export class DefineAttributeInstance extends React.Component {
         )
     }
 }
+
+const DefineAttributeInstance = connect(null, mapDispatchToProps)(ConnectedDefineAttributeInstance);
+
+export default DefineAttributeInstance;

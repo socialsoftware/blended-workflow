@@ -1,6 +1,6 @@
 import { SELECT_INSTANCE } from "../constants/action-types";
 
-export const selectInstanceAction = name => ({
+export const selectInstance = name => ({
         type: SELECT_INSTANCE,
         name: name
 });

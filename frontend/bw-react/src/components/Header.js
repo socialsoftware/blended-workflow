@@ -1,18 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectSpecificationAction } from '../actions/select-specification-action';
+import { selectSpecification } from '../actions/selectSpecification';
 import { Link } from 'react-router-dom';
 
 const mapDispatchToProps = dispatch => {
     return {
-        selectSpecificationAction: specId => dispatch(selectSpecificationAction(specId))
+        selectSpecification: specId => dispatch(selectSpecification(specId))
     };
   };
 
 class ConnectedHeader extends React.Component {
     render() {
         const specs = this.props.specifications
-        .map(spec => <li key={spec.specId}><Link onClick={() => {this.props.selectSpecificationAction(spec.specId)}} to={`/specifications/${spec.specId}`}>{spec.name}</Link></li>);
+        .map(spec => <li key={spec.specId}><Link onClick={() => {this.props.selectSpecification(spec.specId)}} to={`/specifications/${spec.specId}`}>{spec.name}</Link></li>);
 
         return (
             <header>

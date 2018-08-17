@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { setUnitOfWorkAction } from '../../../actions/set-unit-of-work';
+import { setUnitOfWork } from '../../../actions/setUnitOfWork';
 import { DefinitionGroup } from './DefinitionGroup';
 import DefineEntityInstance from './DefineEntityInstance';
 
@@ -13,7 +13,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-      setUnitOfWorkAction: unitOfWork => dispatch(setUnitOfWorkAction(unitOfWork))
+        setUnitOfWork: unitOfWork => dispatch(setUnitOfWork(unitOfWork))
     };
 };
 
@@ -21,7 +21,7 @@ class ConnectedExecuteWorkItem extends React.Component {
     constructor(props) {
         super(props);
 
-        this.props.setUnitOfWorkAction(this.createUnitOfWork());
+        this.props.setUnitOfWork(this.createUnitOfWork());
 
         const defGroups = this.props.workItem.definitionGroupSet.map((dg,index) => { return { key: -index, value: dg} });
         const defGroupMap = new Map(defGroups.map(dg => [dg.key, dg.value]));
@@ -73,7 +73,7 @@ class ConnectedExecuteWorkItem extends React.Component {
                 <h5>Execute Workitem {this.props.workItem.name}</h5>
                 {Array.from(this.state.defGroupMap).map(dg => <DefinitionGroup key={dg[0]} id={dg[0]} updateInstance={this.updateInstance} definitionGroup={dg[1]}/>)}
                 <div><button onClick={this.handleClose}>Close</button> <button onClick={this.handleExecute}>Execute</button></div>
-                {this.props.unitOfWork.map(ei => <DefineEntityInstance entityInstance={ei} />)}
+                {this.props.unitOfWork.map(ei => <DefineEntityInstance key={ei.id} entityInstance={ei} />)}
             </div>
         )
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getEntityInstancesAction } from '../../actions/get-entity-instances';
+import { getEntityInstances } from '../../actions/getEntityInstances';
 import { RepositoryService } from '../../services/RepositoryService';
 import { EntityInstance } from './dataview/EntityInstance';
 
@@ -13,7 +13,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-      getEntityInstancesAction: entityInstances => dispatch(getEntityInstancesAction(entityInstances))
+      getEntityInstances: entityInstances => dispatch(getEntityInstances(entityInstances))
     };
 };
 
@@ -27,7 +27,7 @@ class ConnectedDataView extends React.Component {
      componentDidMount() {
         const service = new RepositoryService();
         service.getEntityInstances(this.props.specId, this.props.name).then(response => {
-            this.props.getEntityInstancesAction(response.data);
+            this.props.getEntityInstances(response.data);
         });
      }
 

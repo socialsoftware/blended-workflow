@@ -3,10 +3,6 @@ import { Tab } from '../../util/Tab';
 import EntityInstanceLink from './EntityInstanceLink';
 
 export class MulLink extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div>

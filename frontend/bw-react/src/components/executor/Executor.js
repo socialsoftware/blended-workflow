@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 import { RepositoryService } from '../../services/RepositoryService';
 import { connect } from 'react-redux';
-import { selectInstanceAction } from '../../actions/select-instance-action';
+import { selectInstance } from '../../actions/selectInstance';
 import { CreateInstance } from './CreateInstance';
 import { DeleteInstance } from './DeleteInstance';
 import { ExecuteInstance } from './ExecuteInstance';
@@ -13,7 +13,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        selectInstanceAction: name => dispatch(selectInstanceAction(name))
+        selectInstance: name => dispatch(selectInstance(name))
     };
   };
 
@@ -59,7 +59,7 @@ class ConnectedExecutor extends React.Component {
 
     renderInstances() {
         if (this.state.instances) {
-            return this.state.instances.map(i => <li key={i.name}><Link onClick={() => {this.props.selectInstanceAction(i.name)}} to={`/specifications/executor/instances/${i.name}`}>{i.name}</Link> <DeleteInstance name={i.name} onClick={this.deleteInstance} /></li>);
+            return this.state.instances.map(i => <li key={i.name}><Link onClick={() => {this.props.selectInstance(i.name)}} to={`/specifications/executor/instances/${i.name}`}>{i.name}</Link> <DeleteInstance name={i.name} onClick={this.deleteInstance} /></li>);
         } else {
             return "";
         }

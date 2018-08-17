@@ -8,7 +8,7 @@ public class AttributeInstanceToDefineDto extends AttributeInstanceDto {
 	private boolean toDefine = true;
 
 	public AttributeInstanceToDefineDto(EntityInstanceToDefineDto entityInstance, Attribute attribute) {
-		super(null, new AttributeDto(attribute), null, new ArrayList<>());
+		super(null, new AttributeDto(attribute), "", new ArrayList<>());
 
 		entityInstance.addAttributeInstance(this);
 	}
