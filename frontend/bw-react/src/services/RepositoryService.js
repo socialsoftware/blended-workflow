@@ -92,7 +92,8 @@ export class RepositoryService {
     		"specId" :  spec,
     		"workflowInstanceName" : instance,
     		"name" : workItemName,
-    		"definitionGroupSet" : workItem.definitionGroupSet
+            "definitionGroupSet" : workItem.definitionGroupSet,
+            "unitOfWork": workItem.unitOfWork
         });
     }
 

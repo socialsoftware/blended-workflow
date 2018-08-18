@@ -172,7 +172,7 @@ public class EntityInstance extends EntityInstance_Base {
 	}
 
 	@Override
-	public ProductInstanceDto getDTO() {
+	public ProductInstanceDto getDto() {
 		ProductInstanceDto productInstanceDto = new ProductInstanceDto();
 		productInstanceDto.setProduct(getEntity().getDto());
 		productInstanceDto.setExternalId(getExternalId());

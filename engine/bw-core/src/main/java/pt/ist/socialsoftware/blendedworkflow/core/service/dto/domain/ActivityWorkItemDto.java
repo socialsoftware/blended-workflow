@@ -24,7 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 public class ActivityWorkItemDto extends WorkItemDto {
 	private static Logger logger = LoggerFactory.getLogger(ActivityWorkItemDto.class);
 
-	public static ActivityWorkItemDto createActivityWorkItemDTO(WorkflowInstance workflowInstance, Activity activity) {
+	public static ActivityWorkItemDto createActivityWorkItemDto(WorkflowInstance workflowInstance, Activity activity) {
 		ActivityWorkItemDto activityWorkItemDTO = new ActivityWorkItemDto();
 		activityWorkItemDTO.setSpecId(workflowInstance.getSpecification().getSpecId());
 		activityWorkItemDTO.setWorkflowInstanceName(workflowInstance.getName());

@@ -88,7 +88,7 @@ public class ExecutionInterface {
 		Set<ActivityWorkItemDto> activityWorkItemDTOs = new HashSet<>();
 
 		for (Activity activity : getPendingActivitySet(workflowInstance)) {
-			activityWorkItemDTOs.add(ActivityWorkItemDto.createActivityWorkItemDTO(workflowInstance, activity));
+			activityWorkItemDTOs.add(ActivityWorkItemDto.createActivityWorkItemDto(workflowInstance, activity));
 		}
 
 		return activityWorkItemDTOs;
@@ -105,8 +105,8 @@ public class ExecutionInterface {
 		return workflowInstance.getLogActivityWorkItemList();
 	}
 
-	public List<ActivityWorkItemDto> getLogActivityWorkItemDTOSet(String specId, String instanceName) {
-		return getLogActivityWorkItemSet(specId, instanceName).stream().map(ActivityWorkItem::getDTO)
+	public List<ActivityWorkItemDto> getLogActivityWorkItemDtoSet(String specId, String instanceName) {
+		return getLogActivityWorkItemSet(specId, instanceName).stream().map(ActivityWorkItem::getDto)
 				.collect(Collectors.toList());
 	}
 

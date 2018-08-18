@@ -68,7 +68,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		GoalWorkItemDto goalWorkItemDTO = new GoalWorkItemDto();
 		goalWorkItemDTO.setName(getGoal().getName());
 
-		super.fillDTO(goalWorkItemDTO);
+		super.fillDto(goalWorkItemDTO);
 
 		return goalWorkItemDTO;
 	}

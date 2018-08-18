@@ -13,6 +13,11 @@ public class AttributeInstanceDto {
 	private String value;
 	private List<DependenceInstanceDto> dependenceInstances;
 
+	private boolean toDefine = false;
+
+	public AttributeInstanceDto() {
+	}
+
 	public AttributeInstanceDto(String externalId, AttributeDto attribute, String value,
 			List<DependenceInstanceDto> dependenceInstances) {
 		this.externalId = externalId;
@@ -63,6 +68,18 @@ public class AttributeInstanceDto {
 
 	public void setDependenceInstances(List<DependenceInstanceDto> dependenceInstances) {
 		this.dependenceInstances = dependenceInstances;
+	}
+
+	public boolean isToDefine() {
+		return this.toDefine;
+	}
+
+	public void setToDefine(boolean toDefine) {
+		this.toDefine = toDefine;
+	}
+
+	public String print() {
+		return getAttribute().getName() + "[" + getValue() + "]";
 	}
 
 }

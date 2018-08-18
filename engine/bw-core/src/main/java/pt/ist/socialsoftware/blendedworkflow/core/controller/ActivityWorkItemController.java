@@ -30,7 +30,7 @@ public class ActivityWorkItemController {
 
 	@RequestMapping(value = "/next", method = RequestMethod.GET)
 	public ResponseEntity<ActivityWorkItemDto[]> getNextActivityWorkItems(@PathVariable String specId,
-																		  @PathVariable String instanceName) {
+			@PathVariable String instanceName) {
 		logger.debug("getNextActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
@@ -45,11 +45,11 @@ public class ActivityWorkItemController {
 
 	@RequestMapping(value = "/log", method = RequestMethod.GET)
 	public ResponseEntity<ActivityWorkItemDto[]> getLogActivityWorkItems(@PathVariable String specId,
-																		 @PathVariable String instanceName) {
+			@PathVariable String instanceName) {
 		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, instanceName);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
-		ActivityWorkItemDto[] instances = edi.getLogActivityWorkItemDTOSet(specId, instanceName).stream()
+		ActivityWorkItemDto[] instances = edi.getLogActivityWorkItemDtoSet(specId, instanceName).stream()
 				.toArray(ActivityWorkItemDto[]::new);
 
 		return new ResponseEntity<>(instances, HttpStatus.OK);
@@ -57,13 +57,13 @@ public class ActivityWorkItemController {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<Boolean> executeActivityWorkItem(@PathVariable String specId,
-			@RequestBody ActivityWorkItemDto activityWorkItemDTO) {
+			@RequestBody ActivityWorkItemDto activityWorkItemDto) {
 		logger.debug("executeActivityActivityWorkItem specId:{}, instanceName:{}, activityName:{}", specId,
-				activityWorkItemDTO.getWorkflowInstanceName(), activityWorkItemDTO.getName());
-		logger.debug("executeActivityWorkItem activityWorkItemDTO:{}", activityWorkItemDTO.print());
+				activityWorkItemDto.getWorkflowInstanceName(), activityWorkItemDto.getName());
+		logger.debug("executeActivityWorkItem activityWorkItemDto:{}", activityWorkItemDto.print());
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
-		edi.executeActivityWorkItem(activityWorkItemDTO);
+		edi.executeActivityWorkItem(activityWorkItemDto);
 
 		return new ResponseEntity<>(true, HttpStatus.CREATED);
 	}

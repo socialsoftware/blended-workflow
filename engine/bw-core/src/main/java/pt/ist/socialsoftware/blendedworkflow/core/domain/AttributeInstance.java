@@ -119,7 +119,7 @@ public class AttributeInstance extends AttributeInstance_Base {
 	}
 
 	@Override
-	public ProductInstanceDto getDTO() {
+	public ProductInstanceDto getDto() {
 		ProductInstanceDto productInstanceDto = new ProductInstanceDto();
 		productInstanceDto.setProduct(getAttribute().getDto());
 		productInstanceDto.setExternalId(getExternalId());

@@ -24,7 +24,7 @@ public abstract class ProductInstance extends ProductInstance_Base {
 
 	public abstract EntityInstance getEntityInstance();
 
-	public abstract ProductInstanceDto getDTO();
+	public abstract ProductInstanceDto getDto();
 
 	public Set<ProductInstance> getProductInstanceSetByName(String name) {
 		return new HashSet<>();

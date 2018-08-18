@@ -87,4 +87,16 @@ public class WorkflowInstance extends WorkflowInstance_Base {
 				.collect(Collectors.toSet());
 	}
 
+	public Entity getEntityByName(String name) {
+		return getSpecification().getDataModel().getEntity(name).orElse(null);
+	}
+
+	public Attribute getAttributeByPath(String path) {
+		return (Attribute) getSpecification().getDataModel().getTargetOfPath(path);
+	}
+
+	public EntityInstance getEntityInstanceById(String id) {
+		return getEntityInstanceSet().stream().filter(ei -> ei.getId().equals(id)).findFirst().orElse(null);
+	}
+
 }

@@ -98,4 +98,9 @@ public class EntityInstanceDto {
 		this.links = links;
 	}
 
+	public String print() {
+		return getEntity().getName() + "[" + getId() + "] {\r\n"
+				+ getAttributeInstances().stream().map(ai -> ai.print()).collect(Collectors.joining(",\r\n")) + "\r\n}";
+	}
+
 }

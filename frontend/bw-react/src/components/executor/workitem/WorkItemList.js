@@ -15,8 +15,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-
-
 class ConnectedWorkItemList extends React.Component {
     constructor(props) {
         super(props);

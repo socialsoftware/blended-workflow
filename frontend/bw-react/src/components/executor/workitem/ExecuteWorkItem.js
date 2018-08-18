@@ -55,6 +55,7 @@ class ConnectedExecuteWorkItem extends React.Component {
     handleExecute() {
         const workItem = this.state.workItem;
         workItem.definitionGroupSet = Array.from(this.state.defGroupMap.values());
+        workItem.unitOfWork = this.props.unitOfWork;
 
         this.props.onExecute(workItem);
     }

@@ -39,115 +39,155 @@ public class WorkItemDto {
 	private String preArguments;
 	private String postArguments;
 	private List<EntityInstanceDto> entityInstancesToDefine = new ArrayList<>();
+	private Set<EntityInstanceToDefineDto> unitOfWork;
 
 	public WorkItemDto() {
 	}
 
 	public void executeWorkItem(WorkflowInstance workflowInstance, WorkItem workItem) {
-		Map<String, EntityInstance> newEntityInstances = new HashMap<>();
-		for (DefinitionGroupInstanceDto definitionGroupInstanceDto : getDefinitionGroupSet().stream()
-				.flatMap(dgs -> dgs.getDefinitionGroupInstanceSet().stream()).collect(Collectors.toSet())) {
+		if (this.getUnitOfWork() != null) {
+			for (EntityInstanceToDefineDto entityInstanceToDefine : getUnitOfWork()) {
+				EntityInstance entityInstance = null;
+				if (entityInstanceToDefine.isExists()) {
+					entityInstance = workflowInstance.getEntityInstanceById(entityInstanceToDefine.getId());
 
-			// create post work item argument for created entity instance
-			EntityInstance entityInstance = null;
-			Optional<ProductInstanceDto> oProductInstanceDTO = definitionGroupInstanceDto.getProductInstanceSet()
-					.stream().filter(pi -> pi.getProduct().getProductType().equals(ProductType.ENTITY.name()))
-					.findFirst();
-			if (oProductInstanceDTO.isPresent()) {
-				entityInstance = createEntityInstance(workflowInstance, oProductInstanceDTO.get());
-				newEntityInstances.put(oProductInstanceDTO.get().getExternalId(), entityInstance);
+					if (entityInstance == null) {
+						throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT,
+								"Entity instance not defined: " + entityInstanceToDefine.getEntity().getName());
+					}
 
-				workItem.addPostWorkItemArgument(entityInstance,
-						DefEntityCondition.getDefEntityCondition(entityInstance.getEntity()));
+					workItem.addPreWorkItemArgument(entityInstance, DefPathCondition.getDefPathCondition(
+							workflowInstance.getSpecification(), entityInstance.getEntity().getFullPath()));
+				} else {
+					Entity entity = workflowInstance.getEntityByName(entityInstanceToDefine.getEntity().getName());
+					entityInstance = new EntityInstance(workflowInstance, entity);
 
-				// create post work item argument for attribute instances of
-				// created
-				// entity instance
-				for (ProductInstanceDto productInstanceDto : definitionGroupInstanceDto.getProductInstanceSet().stream()
-						.filter(pi -> pi.getProduct().getProductType().equals(ProductType.ATTRIBUTE.name()))
-						.collect(Collectors.toSet())) {
-					AttributeInstance attributeInstance = createAttributeInstance(workflowInstance, entityInstance,
-							productInstanceDto);
+					workItem.addPostWorkItemArgument(entityInstance,
+							DefEntityCondition.getDefEntityCondition(entityInstance.getEntity()));
+				}
 
-					workItem.addPostWorkItemArgument(attributeInstance,
-							DefAttributeCondition.getDefAttributeCondition(attributeInstance.getAttribute()));
+				for (AttributeInstanceDto attributeInstanceDto : entityInstanceToDefine.getAttributeInstances()) {
+					if (attributeInstanceDto.isToDefine()) {
+						Attribute attribute = workflowInstance
+								.getAttributeByPath(attributeInstanceDto.getAttribute().getEntityName() + "."
+										+ attributeInstanceDto.getAttribute().getName());
+						AttributeInstance attributeInstance = new AttributeInstance(entityInstance, attribute,
+								attributeInstanceDto.getValue());
+
+						workItem.addPostWorkItemArgument(attributeInstance,
+								DefAttributeCondition.getDefAttributeCondition(attributeInstance.getAttribute()));
+					}
 				}
 			}
 
-			// create pre and post work item arguments for already created
-			// entity instances
-			for (EntityInstanceContextDto entityInstanceContextDTO : definitionGroupInstanceDto
-					.getEntityInstanceContextSet()) {
-				EntityInstance entityInstanceContext = FenixFramework
-						.getDomainObject(entityInstanceContextDTO.getEntityInstance().getExternalId());
+		} else {
+			Map<String, EntityInstance> newEntityInstances = new HashMap<>();
+			for (DefinitionGroupInstanceDto definitionGroupInstanceDto : getDefinitionGroupSet().stream()
+					.flatMap(dgs -> dgs.getDefinitionGroupInstanceSet().stream()).collect(Collectors.toSet())) {
 
-				// create attribute instances in context
-				for (ProductInstanceDto productInstanceDto : definitionGroupInstanceDto.getProductInstanceSet().stream()
-						.filter(pi -> pi.getProduct().getProductType().equals(ProductType.ATTRIBUTE.name()))
-						.collect(Collectors.toSet())) {
+				// create post work item argument for created entity instance
+				EntityInstance entityInstance = null;
+				Optional<ProductInstanceDto> oProductInstanceDTO = definitionGroupInstanceDto.getProductInstanceSet()
+						.stream().filter(pi -> pi.getProduct().getProductType().equals(ProductType.ENTITY.name()))
+						.findFirst();
+				if (oProductInstanceDTO.isPresent()) {
+					entityInstance = createEntityInstance(workflowInstance, oProductInstanceDTO.get());
+					newEntityInstances.put(oProductInstanceDTO.get().getExternalId(), entityInstance);
 
-					Attribute attribute = (Attribute) workflowInstance.getSpecification().getDataModel()
-							.getTargetOfPath(productInstanceDto.getPath());
-					if (entityInstanceContext.getEntity() == attribute.getEntity()) {
-						if (definitionGroupInstanceDto.getEntityInstanceContextSet().size() > 1) {
-							throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT,
-									"Attribute instance defined for more than an entity instance "
-											+ attribute.getName());
-						}
+					workItem.addPostWorkItemArgument(entityInstance,
+							DefEntityCondition.getDefEntityCondition(entityInstance.getEntity()));
 
-						AttributeInstance attributeInstance = createAttributeInstance(workflowInstance,
-								entityInstanceContext, productInstanceDto);
+					// create post work item argument for attribute instances of
+					// created
+					// entity instance
+					for (ProductInstanceDto productInstanceDto : definitionGroupInstanceDto.getProductInstanceSet()
+							.stream()
+							.filter(pi -> pi.getProduct().getProductType().equals(ProductType.ATTRIBUTE.name()))
+							.collect(Collectors.toSet())) {
+						AttributeInstance attributeInstance = createAttributeInstance(workflowInstance, entityInstance,
+								productInstanceDto);
 
 						workItem.addPostWorkItemArgument(attributeInstance,
 								DefAttributeCondition.getDefAttributeCondition(attributeInstance.getAttribute()));
 					}
 				}
 
-				// associate new entity instance with context
-				if (entityInstance != null && entityInstance != entityInstanceContext) {
-					MulCondition mulCondition = FenixFramework
-							.getDomainObject(entityInstanceContextDTO.getMulConditionDTO().getExternalId());
-					new RelationInstance(entityInstance, mulCondition.getSymmetricMulCondition().getRolename(),
-							entityInstanceContext, mulCondition.getRolename(), mulCondition.getRelationBW());
+				// create pre and post work item arguments for already created
+				// entity instances
+				for (EntityInstanceContextDto entityInstanceContextDto : definitionGroupInstanceDto
+						.getEntityInstanceContextSet()) {
+					EntityInstance entityInstanceContext = FenixFramework
+							.getDomainObject(entityInstanceContextDto.getEntityInstance().getExternalId());
+
+					// create attribute instances in context
+					for (ProductInstanceDto productInstanceDto : definitionGroupInstanceDto.getProductInstanceSet()
+							.stream()
+							.filter(pi -> pi.getProduct().getProductType().equals(ProductType.ATTRIBUTE.name()))
+							.collect(Collectors.toSet())) {
+
+						Attribute attribute = (Attribute) workflowInstance.getSpecification().getDataModel()
+								.getTargetOfPath(productInstanceDto.getPath());
+						if (entityInstanceContext.getEntity() == attribute.getEntity()) {
+							if (definitionGroupInstanceDto.getEntityInstanceContextSet().size() > 1) {
+								throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT,
+										"Attribute instance defined for more than an entity instance "
+												+ attribute.getName());
+							}
+
+							AttributeInstance attributeInstance = createAttributeInstance(workflowInstance,
+									entityInstanceContext, productInstanceDto);
+
+							workItem.addPostWorkItemArgument(attributeInstance,
+									DefAttributeCondition.getDefAttributeCondition(attributeInstance.getAttribute()));
+						}
+					}
+
+					// associate new entity instance with context
+					if (entityInstance != null && entityInstance != entityInstanceContext) {
+						MulCondition mulCondition = FenixFramework
+								.getDomainObject(entityInstanceContextDto.getMulConditionDTO().getExternalId());
+						new RelationInstance(entityInstance, mulCondition.getSymmetricMulCondition().getRolename(),
+								entityInstanceContext, mulCondition.getRolename(), mulCondition.getRelationBW());
+					}
+
+					// create pre work item argument
+					DefPathCondition defPathCondition = DefPathCondition.getDefPathCondition(
+							workflowInstance.getSpecification(),
+							entityInstanceContextDto.getMulConditionDTO().getRolePath());
+					workItem.addPreWorkItemArgument(
+							new ProductInstanceDto(entityInstanceContextDto.getEntityInstance()), defPathCondition);
+
 				}
 
-				// create pre work item argument
-				DefPathCondition defPathCondition = DefPathCondition.getDefPathCondition(
-						workflowInstance.getSpecification(),
-						entityInstanceContextDTO.getMulConditionDTO().getRolePath());
-				workItem.addPreWorkItemArgument(new ProductInstanceDto(entityInstanceContextDTO.getEntityInstance()),
-						defPathCondition);
-
-			}
-
-			// inner relation instance
-			for (InnerRelationInstanceDto innerRelationInstanceDTO : definitionGroupInstanceDto
-					.getInnerRelationInstanceSet()) {
-				MulCondition mulCondition = FenixFramework
-						.getDomainObject(innerRelationInstanceDTO.getMulConditionDto().getExternalId());
-				for (EntityInstanceDto entityInstanceDto : innerRelationInstanceDTO.getEntityInstanceSet()) {
-					EntityInstance innerEntity = newEntityInstances.get(entityInstanceDto.getExternalId());
-					if (innerEntity != null) {
-						new RelationInstance(entityInstance, mulCondition.getSymmetricMulCondition().getRolename(),
-								innerEntity, mulCondition.getRolename(), mulCondition.getRelationBW());
-					} else {
-						innerEntity = FenixFramework.getDomainObject(entityInstanceDto.getExternalId());
-						for (EntityInstanceContextDto entityInstanceContextDTO : definitionGroupInstanceDto
-								.getEntityInstanceContextSet()) {
-							EntityInstance entityInstanceContext = FenixFramework
-									.getDomainObject(entityInstanceContextDTO.getEntityInstance().getExternalId());
-							new RelationInstance(entityInstanceContext,
-									mulCondition.getSymmetricMulCondition().getRolename(), innerEntity,
-									mulCondition.getRolename(), mulCondition.getRelationBW());
+				// inner relation instance
+				for (InnerRelationInstanceDto innerRelationInstanceDTO : definitionGroupInstanceDto
+						.getInnerRelationInstanceSet()) {
+					MulCondition mulCondition = FenixFramework
+							.getDomainObject(innerRelationInstanceDTO.getMulConditionDto().getExternalId());
+					for (EntityInstanceDto entityInstanceDto : innerRelationInstanceDTO.getEntityInstanceSet()) {
+						EntityInstance innerEntity = newEntityInstances.get(entityInstanceDto.getExternalId());
+						if (innerEntity != null) {
+							new RelationInstance(entityInstance, mulCondition.getSymmetricMulCondition().getRolename(),
+									innerEntity, mulCondition.getRolename(), mulCondition.getRelationBW());
+						} else {
+							innerEntity = FenixFramework.getDomainObject(entityInstanceDto.getExternalId());
+							for (EntityInstanceContextDto entityInstanceContextDTO : definitionGroupInstanceDto
+									.getEntityInstanceContextSet()) {
+								EntityInstance entityInstanceContext = FenixFramework
+										.getDomainObject(entityInstanceContextDTO.getEntityInstance().getExternalId());
+								new RelationInstance(entityInstanceContext,
+										mulCondition.getSymmetricMulCondition().getRolename(), innerEntity,
+										mulCondition.getRolename(), mulCondition.getRelationBW());
+							}
 						}
 					}
 				}
-			}
 
+			}
 		}
 	}
 
-	public EntityInstance createEntityInstance(WorkflowInstance workflowInstance,
+	private EntityInstance createEntityInstance(WorkflowInstance workflowInstance,
 			ProductInstanceDto productInstanceDto) {
 		Entity entity;
 		EntityInstance entityInstance;
@@ -156,7 +196,7 @@ public class WorkItemDto {
 		return entityInstance;
 	}
 
-	public AttributeInstance createAttributeInstance(WorkflowInstance workflowInstance, EntityInstance entityInstance,
+	private AttributeInstance createAttributeInstance(WorkflowInstance workflowInstance, EntityInstance entityInstance,
 			ProductInstanceDto productInstanceDto) {
 		Attribute attribute = (Attribute) workflowInstance.getSpecification().getDataModel()
 				.getTargetOfPath(productInstanceDto.getPath());
@@ -203,6 +243,13 @@ public class WorkItemDto {
 							.map(dgi -> printInnerRelationInstance(dgi)).collect(Collectors.joining(";"))
 					+ "\r\n" + "\r\n";
 		}
+
+		if (getUnitOfWork() != null) {
+			for (EntityInstanceToDefineDto entityInstanceToDefineDto : getUnitOfWork()) {
+				result = result + entityInstanceToDefineDto.print();
+			}
+		}
+
 		return result;
 	}
 
@@ -299,6 +346,14 @@ public class WorkItemDto {
 
 	public void setEntityInstancesToDefine(List<EntityInstanceDto> entityInstancesToDefine) {
 		this.entityInstancesToDefine = entityInstancesToDefine;
+	}
+
+	public Set<EntityInstanceToDefineDto> getUnitOfWork() {
+		return this.unitOfWork;
+	}
+
+	public void setUnitOfWork(Set<EntityInstanceToDefineDto> unitOfWork) {
+		this.unitOfWork = unitOfWork;
 	}
 
 }

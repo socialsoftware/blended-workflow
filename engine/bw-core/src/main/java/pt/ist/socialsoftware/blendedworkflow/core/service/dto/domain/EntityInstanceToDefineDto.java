@@ -17,6 +17,9 @@ public class EntityInstanceToDefineDto extends EntityInstanceDto {
 	private List<EntityInstanceDto> entityInstancesContext = new ArrayList<>();
 	private boolean exists = false;
 
+	public EntityInstanceToDefineDto() {
+	}
+
 	public EntityInstanceToDefineDto(Entity entity) {
 		setExternalId(null);
 		setId(null);

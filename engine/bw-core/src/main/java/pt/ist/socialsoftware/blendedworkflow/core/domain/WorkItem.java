@@ -17,6 +17,12 @@ public abstract class WorkItem extends WorkItem_Base {
 		addPreCondition(preWorkItemArgument);
 	}
 
+	public void addPreWorkItemArgument(ProductInstance productInstance, DefPathCondition defPathCondition) {
+		PreWorkItemArgument preWorkItemArgument = new PreWorkItemArgument(this, defPathCondition);
+		preWorkItemArgument.addProductInstance(productInstance);
+		addPreCondition(preWorkItemArgument);
+	}
+
 	public void addPostWorkItemArgument(ProductInstance productInstance, DefProductCondition defProductCondition) {
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(this, defProductCondition);
 		postWorkItemArgument.addProductInstance(productInstance);
@@ -56,19 +62,19 @@ public abstract class WorkItem extends WorkItem_Base {
 
 	protected abstract Set<DefPathCondition> definedPreConditions();
 
-	public void fillDTO(WorkItemDto workItemDTO) {
-		workItemDTO.setTimestamp(getCounter());
-		workItemDTO
+	public void fillDto(WorkItemDto workItemDto) {
+		workItemDto.setTimestamp(getCounter());
+		workItemDto
 				.setPreArguments(
 						getPreConditionSet()
 								.stream().map(pwia -> pwia.getProductInstanceSet().stream()
-										.map(pi -> pi.getDTO().getValue()).collect(Collectors.joining(",")))
+										.map(pi -> pi.getDto().getValue()).collect(Collectors.joining(",")))
 								.collect(Collectors.joining("\r\n")));
-		workItemDTO
+		workItemDto
 				.setPostArguments(
 						getPostConditionSet()
 								.stream().map(pwia -> pwia.getProductInstanceSet().stream()
-										.map(pi -> pi.getDTO().getValue()).collect(Collectors.joining(",")))
+										.map(pi -> pi.getDto().getValue()).collect(Collectors.joining(",")))
 								.collect(Collectors.joining("\r\n")));
 	}
 
