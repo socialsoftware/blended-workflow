@@ -99,8 +99,18 @@ public class EntityInstanceDto {
 	}
 
 	public String print() {
-		return getEntity().getName() + "[" + getId() + "] {\r\n"
-				+ getAttributeInstances().stream().map(ai -> ai.print()).collect(Collectors.joining(",\r\n")) + "\r\n}";
+		String id = getId() != null ? getId() : "undef";
+		return getEntity().getName() + "[" + id + "]" + printToDefine() + "{\r\n"
+				+ getAttributeInstances().stream().map(ai -> ai.print()).collect(Collectors.joining(",\r\n")) + "\r\n"
+				+ getLinks().stream().map(l -> l.print()).collect(Collectors.joining(",\r\n")) + "\r\n}";
+	}
+
+	protected String printToDefine() {
+		return "";
+	}
+
+	public String shortPrint() {
+		return getEntity().getName() + "[" + getId() + "]";
 	}
 
 }

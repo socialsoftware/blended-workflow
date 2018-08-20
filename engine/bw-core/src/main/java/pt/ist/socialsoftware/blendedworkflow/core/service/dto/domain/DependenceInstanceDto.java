@@ -13,6 +13,9 @@ public class DependenceInstanceDto {
 	private DependenceDto dependence;
 	private List<EntityInstanceDto> entityInstances = new ArrayList<>();
 
+	public DependenceInstanceDto() {
+	}
+
 	public DependenceInstanceDto(Dependence dependence, ProductInstance productInstance) {
 		this.dependence = new DependenceDto(dependence);
 		setEntityInstances(productInstance.getDependentProductInstances(dependence).stream()

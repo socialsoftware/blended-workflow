@@ -1,7 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +29,8 @@ public class EntityInstanceToDefineDto extends EntityInstanceDto {
 		setExternalId(null);
 		setId(null);
 		setEntity(entity.getDto());
-		setEntityInstancesContext(entityInstancesContext.stream().sorted(Comparator.comparing(EntityInstance::getId))
+		setEntityInstancesContext(entityInstancesContext.stream()
+				.sorted((ei1, ei2) -> Integer.parseInt(ei1.getId()) - Integer.parseInt(ei2.getId()))
 				.map(ei -> new EntityInstanceDto(ei, Depth.SHALLOW)).collect(Collectors.toList()));
 		setExists(entityInstancesContext.size() > 0);
 	}
@@ -83,6 +83,12 @@ public class EntityInstanceToDefineDto extends EntityInstanceDto {
 
 	public void setExists(boolean exists) {
 		this.exists = exists;
+	}
+
+	@Override
+	public String printToDefine() {
+		return "[" + getEntityInstancesContext().stream().map(ei -> ei.shortPrint()).collect(Collectors.joining(","))
+				+ "]";
 	}
 
 }

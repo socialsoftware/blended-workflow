@@ -20,7 +20,6 @@ public class LinkDto {
 		this.mulCondition = mulCondition.getDto();
 		this.entityInstances = entityInstances.stream().sorted(Comparator.comparing(EntityInstance::getId))
 				.map(ei -> new EntityInstanceDto(ei, Depth.SHALLOW)).collect(Collectors.toList());
-
 	}
 
 	public MulConditionDto getMulCondition() {
@@ -37,6 +36,11 @@ public class LinkDto {
 
 	public void setEntityInstances(List<EntityInstanceDto> entityInstances) {
 		this.entityInstances = entityInstances;
+	}
+
+	public String print() {
+		return getMulCondition().getRolename() + "["
+				+ getEntityInstances().stream().map(ei -> ei.shortPrint()).collect(Collectors.joining(",")) + "]";
 	}
 
 }

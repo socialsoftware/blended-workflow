@@ -18,8 +18,6 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
 public class ActivityWorkItemDto extends WorkItemDto {
 	private static Logger logger = LoggerFactory.getLogger(ActivityWorkItemDto.class);
@@ -96,25 +94,18 @@ public class ActivityWorkItemDto extends WorkItemDto {
 					.filter(DefAttributeCondition.class::isInstance).map(DefAttributeCondition.class::cast)
 					.map(d -> d.getAttributeOfDef()).collect(Collectors.toSet());
 
-			// get inner mulconditions to be defined
-			Set<MulCondition> mulConditionsToDefine = activity.getInnerMulConditions(entityDefinitionGroup);
-
 			// create entity instance dto to be defined
 			EntityInstanceToDefineDto entityInstanceToDefineDto = null;
 
 			if (entityToDefine != null) {
 				// a new entity instance is going to be created
 				entityInstanceToDefineDto = new EntityInstanceToDefineDto(entityToDefine);
-			} else if (entityContexts.size() == 1) {
-				// only attributes are going to be defined, it is necessary to define the
-				// contexts
-				Entity entity = entityContexts.stream().findFirst().get();
-				entityInstanceToDefineDto = new EntityInstanceToDefineDto(entity,
-						activity.getEntityInstanceContext(workflowInstance, entityDefinitionGroup));
-				entityContexts.remove(entity);
 			} else {
-				throw new BWException(BWErrorType.CANNOT_GENERATE_GROUP_DEFINITION,
-						"the group does not have a entity context neither an entity to define");
+				// only attributes and links are going to be defined, it is necessary to define
+				// their context
+				entityInstanceToDefineDto = new EntityInstanceToDefineDto(entityDefinitionGroup,
+						activity.getEntityInstanceContext(workflowInstance, entityDefinitionGroup));
+				entityContexts.remove(entityDefinitionGroup);
 			}
 
 			// add attributes to define
@@ -132,8 +123,10 @@ public class ActivityWorkItemDto extends WorkItemDto {
 			for (Entity entityContext : entityContexts) {
 				for (MulCondition mulCondition : activity.getMulConditionFromEntityToEntity(entityDefinitionGroup,
 						entityContext)) {
+					logger.debug("createActivityWorkItemDto getMulConditionFromEntityToEntity {}",
+							mulCondition.getPath());
 					new LinkToDefineDto(entityInstanceToDefineDto,
-							activity.getEntityInstanceContext(workflowInstance, entityDefinitionGroup), mulCondition);
+							activity.getEntityInstanceContext(workflowInstance, entityContext), mulCondition);
 				}
 			}
 
