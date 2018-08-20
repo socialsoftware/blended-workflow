@@ -10,8 +10,9 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
 
 public class LinkDto {
-	MulConditionDto mulCondition;
-	List<EntityInstanceDto> entityInstances;
+	private MulConditionDto mulCondition;
+	private List<EntityInstanceDto> entityInstances;
+	private boolean toDefine = false;
 
 	public LinkDto() {
 	}
@@ -20,6 +21,11 @@ public class LinkDto {
 		this.mulCondition = mulCondition.getDto();
 		this.entityInstances = entityInstances.stream().sorted(Comparator.comparing(EntityInstance::getId))
 				.map(ei -> new EntityInstanceDto(ei, Depth.SHALLOW)).collect(Collectors.toList());
+	}
+
+	public String print() {
+		return getMulCondition().getRolename() + "["
+				+ getEntityInstances().stream().map(ei -> ei.shortPrint()).collect(Collectors.joining(",")) + "]";
 	}
 
 	public MulConditionDto getMulCondition() {
@@ -38,9 +44,12 @@ public class LinkDto {
 		this.entityInstances = entityInstances;
 	}
 
-	public String print() {
-		return getMulCondition().getRolename() + "["
-				+ getEntityInstances().stream().map(ei -> ei.shortPrint()).collect(Collectors.joining(",")) + "]";
+	public boolean isToDefine() {
+		return this.toDefine;
+	}
+
+	public void setToDefine(boolean toDefine) {
+		this.toDefine = toDefine;
 	}
 
 }

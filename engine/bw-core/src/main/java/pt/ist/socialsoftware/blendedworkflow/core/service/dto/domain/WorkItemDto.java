@@ -80,7 +80,7 @@ public class WorkItemDto {
 				}
 
 				for (LinkDto linkDto : entityInstanceToDefine.getLinks()) {
-					if (linkDto.getEntityInstances() != null) {
+					if (linkDto.isToDefine()) {
 						MulCondition mulCondition = FenixFramework
 								.getDomainObject(linkDto.getMulCondition().getExternalId());
 						for (EntityInstanceDto targetEntityInstanceDto : linkDto.getEntityInstances()) {

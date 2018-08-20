@@ -16,6 +16,8 @@ public class LinkToDefineDto extends LinkDto {
 	public LinkToDefineDto(EntityInstanceDto entityInstance, MulCondition mulCondition) {
 		super(new HashSet<>(), mulCondition);
 
+		setToDefine(true);
+
 		entityInstance.getLinks().add(this);
 	}
 
