@@ -111,8 +111,7 @@ public abstract class RALExpression extends RALExpression_Base {
 
         // check for incoherence with assigned fields
         if (set.getWorkItemProducts().stream()
-                .anyMatch(dto -> set.getNotDataField().contains(dto) ||
-                                 set.getNotTaskDuty().contains(dto)))
+                .anyMatch(dto -> set.getNotDataField().contains(dto)))
         {
             return false;
         }
