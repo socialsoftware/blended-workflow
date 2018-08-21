@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { setSelectedEntityInstance } from '../../../actions/setSelectedEntityInstance';
 import DefineAttributeInstance from './DefineAttributeInstance';
-import { MulLink } from '../dataview/MulLink';
+import DefineLink from './DefineLink';
 import { SelectEntityInstance } from './SelectEntityInstance';
 
 const mapStateToProps = state => {
@@ -53,7 +53,7 @@ class ConnectedDefineEntityInstance extends React.Component {
             <div>
                 {this.props.entityInstance.entity.name}[{this.props.entityInstance.id < 0 && this.props.entityInstance.exists ?  'undef' : this.props.entityInstance.id}] {this.props.entityInstance.exists && <SelectEntityInstance entityInstances={this.props.entityInstance.entityInstancesContext} onSelection={this.handleSelection}/>} <br/>
                 {this.getAttributeInstances().map(att => <DefineAttributeInstance key={att.attribute.name} entityInstance={this.props.entityInstance} attributeInstance={att} />)}
-                {this.props.entityInstance.links.map(link => <MulLink key={link.mulCondition.externalId} link={link} />)}
+                {this.props.entityInstance.links.map(link => <DefineLink key={link.mulCondition.externalId} entityInstance={this.props.entityInstance} link={link} />)}
             </div>
         )
     }

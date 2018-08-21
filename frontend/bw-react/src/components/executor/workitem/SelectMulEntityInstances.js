@@ -1,7 +1,7 @@
 import React from 'react';
 import EntityInstanceLink from '../dataview/EntityInstanceLink';
 
-export class SelectEntityInstances extends React.Component {
+export class SelectMulEntityInstances extends React.Component {
     constructor(props) {
         super(props);
 

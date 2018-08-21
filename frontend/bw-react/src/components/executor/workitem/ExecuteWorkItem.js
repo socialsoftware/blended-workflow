@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { setUnitOfWork } from '../../../actions/setUnitOfWork';
-import { DefinitionGroup } from './DefinitionGroup';
 import DefineEntityInstance from './DefineEntityInstance';
 
 const mapStateToProps = state => {
@@ -72,9 +71,8 @@ class ConnectedExecuteWorkItem extends React.Component {
         return ( 
             <div>
                 <h5>Execute Workitem {this.props.workItem.name}</h5>
-                {Array.from(this.state.defGroupMap).map(dg => <DefinitionGroup key={dg[0]} id={dg[0]} updateInstance={this.updateInstance} definitionGroup={dg[1]}/>)}
-                <div><button onClick={this.handleClose}>Close</button> <button onClick={this.handleExecute}>Execute</button></div>
                 {this.props.unitOfWork.map(ei => <DefineEntityInstance key={ei.id} entityInstance={ei} />)}
+                <div><button onClick={this.handleClose}>Close</button> <button onClick={this.handleExecute}>Execute</button></div>
             </div>
         )
     }

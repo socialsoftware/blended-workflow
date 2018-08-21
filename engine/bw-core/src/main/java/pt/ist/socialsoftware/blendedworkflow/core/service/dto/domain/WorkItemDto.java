@@ -38,7 +38,7 @@ public class WorkItemDto {
 	private int timestamp;
 	private String preArguments;
 	private String postArguments;
-	private List<EntityInstanceDto> entityInstancesToDefine = new ArrayList<>();
+	private List<EntityInstanceToDefineDto> entityInstancesToDefine = new ArrayList<>();
 	private Set<EntityInstanceToDefineDto> unitOfWork;
 
 	public WorkItemDto() {
@@ -76,6 +76,22 @@ public class WorkItemDto {
 
 						workItem.addPostWorkItemArgument(attributeInstance,
 								DefAttributeCondition.getDefAttributeCondition(attributeInstance.getAttribute()));
+					}
+				}
+
+				for (LinkDto linkDto : entityInstanceToDefine.getLinks()) {
+					if (linkDto.isToDefine()) {
+						MulCondition mulCondition = FenixFramework
+								.getDomainObject(linkDto.getMulCondition().getExternalId());
+						for (EntityInstanceDto targetEntityInstanceDto : linkDto.getEntityInstances()) {
+							EntityInstance targetEntityInstance = FenixFramework
+									.getDomainObject(targetEntityInstanceDto.getExternalId());
+							new RelationInstance(entityInstance, mulCondition.getSymmetricMulCondition().getRolename(),
+									targetEntityInstance, mulCondition.getRolename(), mulCondition.getRelationBW());
+
+							workItem.addPreWorkItemArgument(targetEntityInstance, DefPathCondition.getDefPathCondition(
+									workflowInstance.getSpecification(), linkDto.getMulCondition().getRolePath()));
+						}
 					}
 				}
 			}
@@ -244,6 +260,10 @@ public class WorkItemDto {
 					+ "\r\n" + "\r\n";
 		}
 
+		for (EntityInstanceToDefineDto entityInstanceToDefineDto : this.entityInstancesToDefine) {
+			result = result + entityInstanceToDefineDto.print();
+		}
+
 		if (getUnitOfWork() != null) {
 			for (EntityInstanceToDefineDto entityInstanceToDefineDto : getUnitOfWork()) {
 				result = result + entityInstanceToDefineDto.print();
@@ -340,11 +360,11 @@ public class WorkItemDto {
 		this.postArguments = postArguments;
 	}
 
-	public List<EntityInstanceDto> getEntityInstancesToDefine() {
+	public List<EntityInstanceToDefineDto> getEntityInstancesToDefine() {
 		return this.entityInstancesToDefine;
 	}
 
-	public void setEntityInstancesToDefine(List<EntityInstanceDto> entityInstancesToDefine) {
+	public void setEntityInstancesToDefine(List<EntityInstanceToDefineDto> entityInstancesToDefine) {
 		this.entityInstancesToDefine = entityInstancesToDefine;
 	}
 

@@ -1,6 +1,6 @@
 import { SELECT_SPECIFICATION, SELECT_INSTANCE, GET_ENTITY_INSTANCES, 
   SET_ENTITY_INSTANCES_TO_DEFINE, CLEAR_ENTITY_INSTANCES_TO_DEFINE, SET_UNIT_OF_WORK, 
-  SET_SELECTED_ENTITY_INSTANCE, SET_ATTRIBUTE_INSTANCE_VALUE } from "../constants/action-types";
+  SET_SELECTED_ENTITY_INSTANCE, SET_ATTRIBUTE_INSTANCE_VALUE, SET_LINK_ENTITY_INSTANCES } from "../constants/action-types";
 
 const initialState = {
     specId: '',
@@ -46,8 +46,23 @@ const rootReducer = (state = initialState, action) => {
           } else {
             return etd;
           }
-        })}
-      default:
+        })};
+      case SET_LINK_ENTITY_INSTANCES:
+        return { ...state, unitOfWork: state.unitOfWork.map(etd => {
+          if (etd.id === action.entityInstance.id) {
+            return { ...etd,
+              links: etd.links.map(l => {
+                if (l.mulCondition.rolename === action.mulCondition.rolename) {
+                  return { ...l, entityInstances: action.entityInstances};
+                } else {
+                  return l;
+                }
+              }) } 
+          } else {
+            return etd;
+          }
+        }) };
+      default: 
         return state;
     }
 };
