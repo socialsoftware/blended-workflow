@@ -12,8 +12,8 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceActivityWorkItemDTO;
-import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceGoalWorkItemDTO;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceActivityWorkItemDto;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceGoalWorkItemDto;
 
 import java.util.HashSet;
 import java.util.List;
@@ -144,7 +144,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		Set<ActivityWorkItemDto> activityWorkItemDTOs = new HashSet<>();
 
 		for (Activity activity : getPendingActivitySet(workflowInstance)) {
-			activityWorkItemDTOs.add(ResourceActivityWorkItemDTO.createActivityWorkItemDTO(workflowInstance, activity));
+			activityWorkItemDTOs.add(ResourceActivityWorkItemDto.createActivityWorkItemDTO(workflowInstance, activity));
 		}
 
 		return activityWorkItemDTOs;
@@ -157,23 +157,23 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		Set<GoalWorkItemDto> goalWorkItemDTOs = new HashSet<>();
 
 		for (Goal goal : getPendingGoalSet(workflowInstance)) {
-			goalWorkItemDTOs.add(ResourceGoalWorkItemDTO.createGoalWorkItemDTO(workflowInstance, goal));
+			goalWorkItemDTOs.add(ResourceGoalWorkItemDto.createGoalWorkItemDTO(workflowInstance, goal));
 		}
 
 		return goalWorkItemDTOs;
 	}
 
 	@Override
-	public List<ActivityWorkItemDto> getLogActivityWorkItemDTOSet(String specId, String instanceName) {
+	public List<ActivityWorkItemDto> getLogActivityWorkItemDtoSet(String specId, String instanceName) {
 		return getLogActivityWorkItemSet(specId, instanceName).stream()
-				.map(activityWorkItem -> ResourceActivityWorkItemDTO.fillActivityWorkItemDTO(activityWorkItem.getDTO(), activityWorkItem))
+				.map(activityWorkItem -> ResourceActivityWorkItemDto.fillActivityWorkItemDTO(activityWorkItem.getDto(), activityWorkItem))
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<GoalWorkItemDto> getLogGoalWorkItemDTOSet(String specId, String instanceName) {
 		return getLogGoalWorkItemSet(specId, instanceName).stream()
-				.map(goalWorkItem -> ResourceGoalWorkItemDTO.fillGoalWorkItemDTO(goalWorkItem.getDTO(), goalWorkItem))
+				.map(goalWorkItem -> ResourceGoalWorkItemDto.fillGoalWorkItemDTO(goalWorkItem.getDTO(), goalWorkItem))
 				.collect(Collectors.toList());
 	}
 }

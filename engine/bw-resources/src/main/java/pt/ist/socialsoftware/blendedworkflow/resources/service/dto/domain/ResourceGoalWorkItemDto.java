@@ -1,7 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain;
 
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
 
@@ -10,60 +10,64 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ResourceActivityWorkItemDTO extends ActivityWorkItemDto implements ResourceWorkItemDTO {
+public class ResourceGoalWorkItemDto extends GoalWorkItemDto implements ResourceWorkItemDTO {
     private Set<EntityIsPersonDto> _entityIsPersonDtoSet;
     private UserDto executionUser;
 
-    public static ResourceActivityWorkItemDTO createActivityWorkItemDTO(WorkflowInstance workflowInstance, Activity activity) {
-        ResourceActivityWorkItemDTO resourceActivityWorkItemDTO = new ResourceActivityWorkItemDTO(
-                ActivityWorkItemDto.createActivityWorkItemDTO(workflowInstance, activity));
-        ResourceModel resourceModel = activity.getActivityModel().getSpecification().getResourceModel();
+    public static ResourceGoalWorkItemDto createGoalWorkItemDTO(WorkflowInstance workflowInstance, Goal goal) {
+        ResourceGoalWorkItemDto resourceGoalWorkItemDto = new ResourceGoalWorkItemDto(
+                GoalWorkItemDto.createGoalWorkItemDto(workflowInstance, goal));
+        ResourceModel resourceModel = goal.getGoalModel().getSpecification().getResourceModel();
 
         Set<EntityIsPersonDto> entityIsPersonDtoSet = new HashSet<>();
         Set<PersonDto> personContext = resourceModel.getPersonSet().stream().map(Person::getDTO).collect(Collectors.toSet());
 
-        activity.getPostEntities().stream()
+        goal.getSuccessConditionSet().stream()
+                .filter(DefEntityCondition.class::isInstance)
+                .map(DefEntityCondition.class::cast)
+                .map(DefEntityCondition::getEntities)
+                .flatMap(Collection::stream)
                 .filter(entity -> resourceModel.checkEntityIsPerson(entity))
-                .forEach(entity -> entityIsPersonDtoSet.add(new EntityIsPersonDto(entity.getDTO(), personContext)));
-        resourceActivityWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDtoSet);
+                .forEach(entity -> entityIsPersonDtoSet.add(new EntityIsPersonDto(entity.getDto(), personContext)));
+        resourceGoalWorkItemDto.setEntityIsPersonDTOSet(entityIsPersonDtoSet);
 
-        return resourceActivityWorkItemDTO;
+        return resourceGoalWorkItemDto;
     }
 
-    public static ResourceActivityWorkItemDTO fillActivityWorkItemDTO(ActivityWorkItemDto activityWorkItemDTO, ActivityWorkItem activityWorkItem) {
-        ResourceActivityWorkItemDTO resourceActivityWorkItemDTO = new ResourceActivityWorkItemDTO(activityWorkItemDTO);
+    public static ResourceGoalWorkItemDto fillGoalWorkItemDTO(GoalWorkItemDto goalWorkItemDTO, GoalWorkItem goalWorkItem) {
+        ResourceGoalWorkItemDto resourceGoalWorkItemDto = new ResourceGoalWorkItemDto(goalWorkItemDTO);
 
         Set<EntityIsPersonDto> entityIsPersonDtoSet = new HashSet<>();
 
-        activityWorkItem.getPostConditionSet().stream()
+        goalWorkItem.getPostConditionSet().stream()
                 .flatMap(postWorkItemArgument -> postWorkItemArgument.getProductInstanceSet().stream())
                 .filter(EntityInstance.class::isInstance)
                 .map(EntityInstance.class::cast)
                 .filter(entityInstance -> entityInstance.getPerson() != null)
-                .forEach(entityInstance -> entityIsPersonDtoSet.add(new EntityIsPersonDto(entityInstance.getDTO(), entityInstance.getPerson().getDTO())));
+                .forEach(entityInstance -> entityIsPersonDtoSet.add(new EntityIsPersonDto(entityInstance.getDto(), entityInstance.getPerson().getDTO())));
 
-        resourceActivityWorkItemDTO.setEntityIsPersonDTOSet(entityIsPersonDtoSet);
+        resourceGoalWorkItemDto.setEntityIsPersonDTOSet(entityIsPersonDtoSet);
 
-        resourceActivityWorkItemDTO.setExecutionUser(activityWorkItem.getExecutionUser().getDTO());
+        resourceGoalWorkItemDto.setExecutionUser(goalWorkItem.getExecutionUser().getDTO());
 
-        return resourceActivityWorkItemDTO;
+        return resourceGoalWorkItemDto;
     }
 
-    public ResourceActivityWorkItemDTO(ActivityWorkItemDto activityWorkItemDTO) {
+    public ResourceGoalWorkItemDto(GoalWorkItemDto goalWorkItemDTO) {
         super();
-        setSpecId(activityWorkItemDTO.getSpecId());
-        setSpecName(activityWorkItemDTO.getSpecName());
-        setWorkflowInstanceName(activityWorkItemDTO.getWorkflowInstanceName());
-        setDefinitionGroupSet(activityWorkItemDTO.getDefinitionGroupSet());
-        setName(activityWorkItemDTO.getName());
-        setTimestamp(activityWorkItemDTO.getTimestamp());
-        setPreArguments(activityWorkItemDTO.getPreArguments());
-        setPostArguments(activityWorkItemDTO.getPostArguments());
+        setSpecId(goalWorkItemDTO.getSpecId());
+        setSpecName(goalWorkItemDTO.getSpecName());
+        setWorkflowInstanceName(goalWorkItemDTO.getWorkflowInstanceName());
+        setDefinitionGroupSet(goalWorkItemDTO.getDefinitionGroupSet());
+        setName(goalWorkItemDTO.getName());
+        setTimestamp(goalWorkItemDTO.getTimestamp());
+        setPreArguments(goalWorkItemDTO.getPreArguments());
+        setPostArguments(goalWorkItemDTO.getPostArguments());
 
         _entityIsPersonDtoSet = new HashSet<>();
     }
 
-
+    
 
     @Override
     public Set<EntityIsPersonDto> getEntityIsPersonDTOSet() {
@@ -86,11 +90,11 @@ public class ResourceActivityWorkItemDTO extends ActivityWorkItemDto implements 
     }
 
     @Override
-    public ActivityWorkItem executeActivity(WorkflowInstance workflowInstance, Activity activity) {
-        ActivityWorkItem activityWorkItem = super.executeActivity(workflowInstance, activity);
+    public GoalWorkItem executeGoal(WorkflowInstance workflowInstance, Goal goal) {
+        GoalWorkItem goalWorkItem = super.executeGoal(workflowInstance, goal);
 
         for (EntityIsPersonDto entityIsPersonDto : getEntityIsPersonDTOSet()) {
-            activityWorkItem.getPostConditionSet().stream()
+            goalWorkItem.getPostConditionSet().stream()
                     .map(PostWorkItemArgument::getProductInstanceSet)
                     .flatMap(Collection::stream)
                     .filter(productInstance -> productInstance instanceof EntityInstance)
@@ -111,7 +115,7 @@ public class ResourceActivityWorkItemDTO extends ActivityWorkItemDto implements 
                     });
         }
 
-        return activityWorkItem;
+        return goalWorkItem;
     }
 
     @Override
