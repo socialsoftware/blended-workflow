@@ -6,6 +6,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.SetOfR
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,7 @@ public class RALExprReportsToPosition extends RALExprReportsToPosition_Base {
         return new SetOfRequiredResources().addPositions(
                 positions
                         .stream()
+                        .filter(Objects::nonNull)
                         .map(Position::getDTO)
                         .collect(Collectors.toList()));
     }
