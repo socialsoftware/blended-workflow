@@ -1,6 +1,5 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,57 +25,11 @@ public class ActivityWorkItemDto extends WorkItemDto {
 		ActivityWorkItemDto activityWorkItemDTO = new ActivityWorkItemDto();
 		activityWorkItemDTO.setSpecId(workflowInstance.getSpecification().getSpecId());
 		activityWorkItemDTO.setWorkflowInstanceName(workflowInstance.getName());
-		activityWorkItemDTO.setDefinitionGroupSet(new HashSet<DefinitionGroupDto>());
 		activityWorkItemDTO.setName(activity.getName());
 
 		// get activity definition groups
 		Map<Entity, List<DefProductCondition>> definitionGroupMap = activity.getPostConditionSet().stream()
 				.collect(Collectors.groupingBy(d -> d.getSourceOfPath()));
-
-		for (Entity entityDefinitionGroup : definitionGroupMap.keySet()) {
-			DefinitionGroupDto definitionGroup = new DefinitionGroupDto();
-			activityWorkItemDTO.getDefinitionGroupSet().add(definitionGroup);
-
-			// create all def products conditions associated with the entity
-			definitionGroup.setDefEnt(
-					definitionGroupMap.get(entityDefinitionGroup).stream().filter(DefEntityCondition.class::isInstance)
-							.map(DefEntityCondition.class::cast).map(d -> d.getDTO()).findFirst().orElse(null));
-			definitionGroup.setDefAtts(definitionGroupMap.get(entityDefinitionGroup).stream()
-					.filter(DefAttributeCondition.class::isInstance).map(DefAttributeCondition.class::cast)
-					.map(d -> d.getDto()).collect(Collectors.toSet()));
-
-			// create entity contexts
-			Set<EntityContextDto> entityContextDTOs = new HashSet<EntityContextDto>();
-			definitionGroup.setEntityContextSet(entityContextDTOs);
-			Set<Entity> entityContexts = activity.getEntityContextForDefinitionGroup(entityDefinitionGroup);
-			int counter = 0;
-			// for each entity context of the product groups to be created
-			for (Entity entityContext : entityContexts) {
-				for (MulCondition mulCondition : activity.getMulConditionFromEntityToEntity(entityDefinitionGroup,
-						entityContext)) {
-					entityContextDTOs.add(EntityContextDto.createEntityContextDTO(counter++, activity, entityContext,
-							mulCondition, workflowInstance));
-				}
-
-				// entity already exists, some of its attributes are being
-				// defined)
-				if (entityDefinitionGroup == entityContext) {
-					entityContextDTOs.add(EntityContextDto.createEntityContextDTO(counter++, activity, entityContext,
-							null, workflowInstance));
-				}
-			}
-
-			// create inner relations
-			Set<InnerRelationDto> innerRelationDTOs = new HashSet<InnerRelationDto>();
-			definitionGroup.setInnerRelationSet(innerRelationDTOs);
-			for (MulCondition mulCondition : activity.getInnerMulConditions(entityDefinitionGroup)) {
-				innerRelationDTOs.add(InnerRelationDto.createInnerRelationDTO(entityDefinitionGroup, mulCondition));
-			}
-
-			// create definition group instances
-			Set<DefinitionGroupInstanceDto> definitionGroupInstances = new HashSet<DefinitionGroupInstanceDto>();
-			definitionGroup.setDefinitionGroupInstanceSet(definitionGroupInstances);
-		}
 
 		// FOLLOW THE DOMAIN MODEL APPROACH
 		for (Entity entityDefinitionGroup : definitionGroupMap.keySet()) {
