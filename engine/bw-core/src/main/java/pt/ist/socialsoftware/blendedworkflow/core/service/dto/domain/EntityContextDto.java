@@ -72,7 +72,7 @@ public class EntityContextDto {
 		Set<EntityInstanceContextDto> entityInstanceContextDTOs = new HashSet<EntityInstanceContextDto>();
 		entityContextDto.setEntityInstanceContextSet(entityInstanceContextDTOs);
 		int index = 0;
-		for (EntityInstance entityInstance : goal.getInstanceContext(workflowInstance, entityContext)) {
+		for (EntityInstance entityInstance : goal.getEntityInstanceContext(workflowInstance, entityContext)) {
 			entityInstanceContextDTOs.add(
 					EntityInstanceContextDto.createEntityInstanceContextDto(index++, entityContextDto, entityInstance));
 		}

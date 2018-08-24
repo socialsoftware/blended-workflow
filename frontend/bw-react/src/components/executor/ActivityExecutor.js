@@ -6,7 +6,8 @@ import WorkItemList from './workitem/WorkItemList';
 const mapStateToProps = state => {
     return { 
         specId: state.specId,
-        name: state.name };
+        name: state.name 
+    };
 };  
 
 class ConnectedActivityExecutor extends React.Component {

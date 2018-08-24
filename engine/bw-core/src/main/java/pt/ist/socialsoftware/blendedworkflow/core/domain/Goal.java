@@ -285,7 +285,7 @@ public abstract class Goal extends Goal_Base {
 
 		// for each entity, in entity context, get instance context
 		for (Entity entity : entityContext) {
-			if (getInstanceContext(workflowInstance, entity).isEmpty()) {
+			if (getEntityInstanceContext(workflowInstance, entity).isEmpty()) {
 				return false;
 			}
 		}
@@ -332,13 +332,14 @@ public abstract class Goal extends Goal_Base {
 		Map<Entity, Set<EntityInstance>> instanceContext = new HashMap<>();
 
 		for (Entity entity : getEntityContext()) {
-			instanceContext.put(entity, getInstanceContext(workflowInstance, entity));
+			instanceContext.put(entity, getEntityInstanceContext(workflowInstance, entity));
 		}
 
 		return instanceContext;
 	}
 
-	public abstract Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity);
+	public abstract Set<EntityInstance> getEntityInstanceContext(WorkflowInstance workflowInstance,
+			Entity contextEntity);
 
 	public Set<MulCondition> getMulConditionsThatShouldHold(Product product) {
 		return getEntityInvariantConditionSet().stream().filter(m -> m.getSourceEntity() == product)
@@ -375,10 +376,7 @@ public abstract class Goal extends Goal_Base {
 	}
 
 	public Set<MulCondition> getInnerMulConditions(Entity entity) {
-		Set<Entity> postEntities = getSuccessEntities();
-		return getEntityInvariantConditionSet()
-				.stream().filter(m -> postEntities.contains(m.getSourceEntity())
-						&& postEntities.contains(m.getTargetEntity()) && m.getSourceEntity() == entity)
+		return getEntityInvariantConditionSet().stream().filter(m -> m.getSourceEntity() == entity)
 				.collect(Collectors.toSet());
 	}
 

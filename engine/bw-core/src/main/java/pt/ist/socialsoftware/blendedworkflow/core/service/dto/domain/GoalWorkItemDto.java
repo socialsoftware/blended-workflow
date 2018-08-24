@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
@@ -67,6 +68,50 @@ public class GoalWorkItemDto extends WorkItemDto {
 				Set<DefinitionGroupInstanceDto> definitionGroupInstances = new HashSet<DefinitionGroupInstanceDto>();
 				definitionGroup.setDefinitionGroupInstanceSet(definitionGroupInstances);
 			}
+
+			// FOLLOW THE DOMAIN MODEL APPROACH
+			for (Entity entityDefinitionGroup : definitionGroupMap.keySet()) {
+
+				// get entity contexts
+				Set<Entity> entityContexts = goal.getEntityContextForDefinitionGroup(entityDefinitionGroup);
+
+				// get entity to be defined
+				Entity entityToDefine = definitionGroupMap.get(entityDefinitionGroup).stream()
+						.filter(DefEntityCondition.class::isInstance).map(DefEntityCondition.class::cast)
+						.map(d -> d.getEntity()).findFirst().orElse(null);
+
+				// get attributes to be defined
+				Set<Attribute> attributesToDefine = definitionGroupMap.get(entityDefinitionGroup).stream()
+						.filter(DefAttributeCondition.class::isInstance).map(DefAttributeCondition.class::cast)
+						.map(d -> d.getAttributeOfDef()).collect(Collectors.toSet());
+
+				// create entity instance dto to be defined
+				EntityInstanceToDefineDto entityInstanceToDefineDto = null;
+
+				if (entityToDefine != null) {
+					// a new entity instance is going to be created
+					entityInstanceToDefineDto = new EntityInstanceToDefineDto(entityToDefine);
+				} else {
+					// only attributes and links are going to be defined, it is necessary to define
+					// their context
+					entityInstanceToDefineDto = new EntityInstanceToDefineDto(entityDefinitionGroup,
+							goal.getEntityInstanceContext(workflowInstance, entityDefinitionGroup));
+					entityContexts.remove(entityDefinitionGroup);
+				}
+
+				// add attributes to define
+				for (Attribute attribute : attributesToDefine) {
+					new AttributeInstanceToDefineDto(entityInstanceToDefineDto, attribute);
+				}
+
+				// fill entity instance dto with undef attributes
+				entityInstanceToDefineDto.fillUndefAttributeInstances(entityDefinitionGroup);
+
+				// fill entity instance dto undef links
+				entityInstanceToDefineDto.fillUndefLinks(entityDefinitionGroup);
+
+				goalWorkItemDto.getEntityInstancesToDefine().add(entityInstanceToDefineDto);
+			}
 		}
 		// get association goal definition groups
 
@@ -118,7 +163,26 @@ public class GoalWorkItemDto extends WorkItemDto {
 				definitionGroup.setDefinitionGroupInstanceSet(definitionGroupInstances);
 			}
 
-			// USE THE DOMAIN MODEL APPROACH
+			// FOLLOW THE DOMAIN MODEL APPROACH
+			for (Entity entityDefinitionGroup : definitionGroupMap.keySet()) {
+
+				// create entity instance dto to be defined
+				EntityInstanceToDefineDto entityInstanceToDefineDto = new EntityInstanceToDefineDto(
+						entityDefinitionGroup, goal.getEntityInstanceContext(workflowInstance, entityDefinitionGroup));
+
+				// fill entity instance dto with undef attributes
+				entityInstanceToDefineDto.fillUndefAttributeInstances(entityDefinitionGroup);
+
+				// for each inner relation
+				for (MulCondition mulCondition : goal.getInnerMulConditions(entityDefinitionGroup)) {
+					new LinkToDefineDto(entityInstanceToDefineDto, mulCondition);
+				}
+
+				// fill entity instance dto undef links
+				entityInstanceToDefineDto.fillUndefLinks(entityDefinitionGroup);
+
+				goalWorkItemDto.getEntityInstancesToDefine().add(entityInstanceToDefineDto);
+			}
 
 		}
 

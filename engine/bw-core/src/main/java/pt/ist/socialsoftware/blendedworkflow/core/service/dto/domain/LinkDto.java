@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ public class LinkDto {
 	private MulConditionDto mulCondition;
 	private List<EntityInstanceDto> entityInstances;
 	private boolean toDefine = false;
+	private List<EntityInstanceDto> candidateEntityInstances = new ArrayList<>();
 
 	public LinkDto() {
 	}
@@ -50,6 +52,14 @@ public class LinkDto {
 
 	public void setToDefine(boolean toDefine) {
 		this.toDefine = toDefine;
+	}
+
+	public List<EntityInstanceDto> getCandidateEntityInstances() {
+		return this.candidateEntityInstances;
+	}
+
+	public void setCandidateEntityInstances(List<EntityInstanceDto> candidateEntityInstances) {
+		this.candidateEntityInstances = candidateEntityInstances;
 	}
 
 }

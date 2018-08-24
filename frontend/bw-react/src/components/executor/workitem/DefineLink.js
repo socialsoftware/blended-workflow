@@ -20,14 +20,20 @@ class ConnectedDefineLink extends React.Component {
     }
 
     renderLink() {
-        if (this.props.link.candidateEntityInstances) {
+        if (!this.props.link.toDefine) {
+            return <MulLink key={this.props.link.mulCondition.externalId} link={this.props.link} />;
+        } else if (this.props.link.candidateEntityInstances.length === 0) {
+            return (
+                <div>
+                    <Tab /><span>{this.props.link.mulCondition.rolename}({this.props.link.mulCondition.cardinality}): [to associate...]</span>
+                </div>
+            );
+        } else {
             return (
                 <div>
                     <Tab /><span>{this.props.link.mulCondition.rolename}({this.props.link.mulCondition.cardinality}): </span>
                     <SelectMulEntityInstances entityInstances={this.props.link.candidateEntityInstances} mulCondition={this.props.link.mulCondition} onSubmit={this.handleSubmit}/>
             </div> );
-        } else {
-            return <MulLink key={this.props.link.mulCondition.externalId} link={this.props.link} />;
         }
     }
 

@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product.ProductType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
@@ -46,6 +48,8 @@ public class WorkItemDto {
 
 	public void executeWorkItem(WorkflowInstance workflowInstance, WorkItem workItem) {
 		if (this.getUnitOfWork() != null) {
+			Set<EntityInstance> definedEntityInstances = new HashSet<EntityInstance>();
+			Set<RelationBW> innerRelations = new HashSet<RelationBW>();
 			for (EntityInstanceToDefineDto entityInstanceToDefine : getUnitOfWork()) {
 				EntityInstance entityInstance = null;
 				if (entityInstanceToDefine.isExists()) {
@@ -56,11 +60,15 @@ public class WorkItemDto {
 								"Entity instance not defined: " + entityInstanceToDefine.getEntity().getName());
 					}
 
+					definedEntityInstances.add(entityInstance);
+
 					workItem.addPreWorkItemArgument(entityInstance, DefPathCondition.getDefPathCondition(
 							workflowInstance.getSpecification(), entityInstance.getEntity().getFullPath()));
 				} else {
 					Entity entity = workflowInstance.getEntityByName(entityInstanceToDefine.getEntity().getName());
 					entityInstance = new EntityInstance(workflowInstance, entity);
+
+					definedEntityInstances.add(entityInstance);
 
 					workItem.addPostWorkItemArgument(entityInstance,
 							DefEntityCondition.getDefEntityCondition(entityInstance.getEntity()));
@@ -83,14 +91,39 @@ public class WorkItemDto {
 					if (linkDto.isToDefine()) {
 						MulCondition mulCondition = FenixFramework
 								.getDomainObject(linkDto.getMulCondition().getExternalId());
-						for (EntityInstanceDto targetEntityInstanceDto : linkDto.getEntityInstances()) {
-							EntityInstance targetEntityInstance = FenixFramework
-									.getDomainObject(targetEntityInstanceDto.getExternalId());
-							new RelationInstance(entityInstance, mulCondition.getSymmetricMulCondition().getRolename(),
-									targetEntityInstance, mulCondition.getRolename(), mulCondition.getRelationBW());
+						if (!linkDto.getCandidateEntityInstances().isEmpty()) {
+							for (EntityInstanceDto targetEntityInstanceDto : linkDto.getEntityInstances()) {
+								EntityInstance targetEntityInstance = FenixFramework
+										.getDomainObject(targetEntityInstanceDto.getExternalId());
+								new RelationInstance(entityInstance,
+										mulCondition.getSymmetricMulCondition().getRolename(), targetEntityInstance,
+										mulCondition.getRolename(), mulCondition.getRelationBW());
 
-							workItem.addPreWorkItemArgument(targetEntityInstance, DefPathCondition.getDefPathCondition(
-									workflowInstance.getSpecification(), linkDto.getMulCondition().getRolePath()));
+								workItem.addPreWorkItemArgument(targetEntityInstance,
+										DefPathCondition.getDefPathCondition(workflowInstance.getSpecification(),
+												linkDto.getMulCondition().getRolePath()));
+							}
+						} else {
+							// the link is associated to a inner relation
+							innerRelations.add(mulCondition.getRelationBW());
+						}
+					}
+				}
+			}
+
+			// define the inner relations instances
+			for (RelationBW innerRelation : innerRelations) {
+				for (EntityInstance definedEntityInstanceOne : definedEntityInstances) {
+					if (definedEntityInstanceOne.getEntity() == innerRelation.getEntityOne()) {
+						for (EntityInstance definedEntityInstanceTwo : definedEntityInstances) {
+							if (definedEntityInstanceTwo.getEntity() == innerRelation.getEntityTwo()) {
+								new RelationInstance(definedEntityInstanceOne, innerRelation.getRolenameOne(),
+										definedEntityInstanceTwo, innerRelation.getRolenameTwo(), innerRelation);
+
+//								workItem.addPreWorkItemArgument(targetEntityInstance,
+//										DefPathCondition.getDefPathCondition(workflowInstance.getSpecification(),
+//												linkDto.getMulCondition().getRolePath()));
+							}
 						}
 					}
 				}

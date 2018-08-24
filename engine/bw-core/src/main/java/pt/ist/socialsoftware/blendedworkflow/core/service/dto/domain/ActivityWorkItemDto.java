@@ -123,8 +123,6 @@ public class ActivityWorkItemDto extends WorkItemDto {
 			for (Entity entityContext : entityContexts) {
 				for (MulCondition mulCondition : activity.getMulConditionFromEntityToEntity(entityDefinitionGroup,
 						entityContext)) {
-					logger.debug("createActivityWorkItemDto getMulConditionFromEntityToEntity {}",
-							mulCondition.getPath());
 					new LinkToDefineDto(entityInstanceToDefineDto,
 							activity.getEntityInstanceContext(workflowInstance, entityContext), mulCondition);
 				}

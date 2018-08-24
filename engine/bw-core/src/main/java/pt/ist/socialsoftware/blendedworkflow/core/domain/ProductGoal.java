@@ -49,7 +49,7 @@ public class ProductGoal extends ProductGoal_Base {
 	}
 
 	@Override
-	public Set<EntityInstance> getInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity) {
+	public Set<EntityInstance> getEntityInstanceContext(WorkflowInstance workflowInstance, Entity contextEntity) {
 		// instances where activation conditions hold
 		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(contextEntity).stream()
 				.filter(ei -> ei.holdsDefPathConditions(getActivationConditionSetForContextEntity(contextEntity)))
