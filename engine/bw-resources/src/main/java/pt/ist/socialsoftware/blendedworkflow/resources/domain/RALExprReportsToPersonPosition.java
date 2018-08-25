@@ -24,7 +24,7 @@ public class RALExprReportsToPersonPosition extends RALExprReportsToPersonPositi
 
     @Override
     public List<Person> getEligibleResources(WorkflowInstance history, Set<Product> defProducts) {
-        List<Position> positions = new ArrayList();
+        List<Position> positions = new ArrayList<>();
         getPersonExpr().getEligibleResources(history, defProducts).stream()
                 .forEach(person -> person.getPositionSet().stream().forEach(position -> {
                     if (getDirectly()) {
@@ -42,9 +42,24 @@ public class RALExprReportsToPersonPosition extends RALExprReportsToPersonPositi
     @Override
     public SetOfRequiredResources getSetOfRequiredResources() {
         List<PositionDto> positions = null;
+
         if (getPersonExpr() instanceof RALExprIsPerson) {
             Person person = ((RALExprIsPerson) getPersonExpr()).getPerson();
 
+
+            /*List<Position> mapped = new ArrayList<>();
+            for (Position pos : person.getPositionSet()) {
+                if (getDirectly()) {
+                    mapped.add(pos.getReportsTo());
+                } else {
+                    mapped.addAll(pos.getAllPositionsReportsTo());
+                }
+            }
+
+            List<PositionDto> positionDtos = new ArrayList<>();
+            for (Position pos : mapped) {
+                positionDtos.add(pos.getDTO());
+            }*/
             positions = person.getPositionSet().stream()
                     .map(position -> {
                         if (getDirectly()) {
@@ -54,8 +69,10 @@ public class RALExprReportsToPersonPosition extends RALExprReportsToPersonPositi
                         }
                     })
                     .flatMap(Collection::stream)
+                    .filter(Objects::nonNull)
                     .map(Position::getDTO)
                     .collect(Collectors.toList());
+
         }
 
         return getPersonExpr().getSetOfRequiredResources().addPositions(positions);

@@ -10,10 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.design.DesignReso
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.execution.ExecutionResourcesInterface;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -480,7 +477,8 @@ public class RALExpressionTest extends TeardownRollbackTest {
     @Test
     public void testIsPersonInTaskDutyInformedGetEligibleResources() throws RMException {
         Person person1 = new Person(_resourceModel, "Test1", "", Arrays.asList(_position2,_position5), new ArrayList<>());
-        Person person2 = new Person(_resourceModel, "Test2", "", Arrays.asList(_position2), new ArrayList<>());
+        Person person2 = new Person(_resourceModel, "Test2",  "", Arrays.asList(_position2), new ArrayList<>());
+        Person person3 = new Person(_resourceModel, "Test3",  "", Arrays.asList(_position2), new ArrayList<>());
 
         Entity ent1 = designer.createEntity(new EntityDto(spec.getSpecId(), "Entity", false));
         Attribute att1 = designer.createAttribute(new AttributeDto(SPEC_ID, ent1.getExternalId(), null,
@@ -557,7 +555,7 @@ public class RALExpressionTest extends TeardownRollbackTest {
         productInstance.setPostWorkItemArgument(postWorkItemArgument);
         workitem2.setExecutionUser(person1.getUser());
 
-        List<Person> personList = expression.getEligibleResources(workflow, workitem2.getPostConditionSet().stream().map(piArg -> piArg.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet()));
+        List<Person> personList = expression.getEligibleResources(workflow, new HashSet<Product> (Arrays.asList(ent1)));
         assertEquals(1, personList.size());
         assertTrue(expression.getEligibleResources(workflow, workitem2.getPostConditionSet().stream().map(piArg -> piArg.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet()) ).containsAll(Arrays.asList(person1)));
 
