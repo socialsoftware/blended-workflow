@@ -15,6 +15,7 @@ public class LinkDto {
 	private List<EntityInstanceDto> entityInstances;
 	private boolean toDefine = false;
 	private List<EntityInstanceDto> candidateEntityInstances = new ArrayList<>();
+	private boolean innerCreate = false;
 
 	public LinkDto() {
 	}
@@ -60,6 +61,14 @@ public class LinkDto {
 
 	public void setCandidateEntityInstances(List<EntityInstanceDto> candidateEntityInstances) {
 		this.candidateEntityInstances = candidateEntityInstances;
+	}
+
+	public boolean isInnerCreate() {
+		return this.innerCreate;
+	}
+
+	public void setInnerCreate(boolean innerCreate) {
+		this.innerCreate = innerCreate;
 	}
 
 }

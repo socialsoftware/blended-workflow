@@ -83,7 +83,7 @@ public class ActivityWorkItemDto extends WorkItemDto {
 
 			// for each inner relation
 			for (MulCondition mulCondition : activity.getInnerMulConditions(entityDefinitionGroup)) {
-				new LinkToDefineDto(entityInstanceToDefineDto, mulCondition);
+				new LinkToDefineDto(entityInstanceToDefineDto, mulCondition, true);
 			}
 
 			// fill entity instance dto undef links

@@ -54,6 +54,7 @@ class ConnectedDefineEntityInstance extends React.Component {
                 {this.props.entityInstance.entity.name}[{this.props.entityInstance.id < 0 && this.props.entityInstance.exists ?  'undef' : this.props.entityInstance.id}] {this.props.entityInstance.exists && <SelectEntityInstance entityInstances={this.props.entityInstance.entityInstancesContext} onSelection={this.handleSelection}/>} <br/>
                 {this.getAttributeInstances().map(att => <DefineAttributeInstance key={att.attribute.name} entityInstance={this.props.entityInstance} attributeInstance={att} />)}
                 {this.props.entityInstance.links.map(link => <DefineLink key={link.mulCondition.externalId} entityInstance={this.props.entityInstance} link={link} />)}
+                <br />
             </div>
         )
     }

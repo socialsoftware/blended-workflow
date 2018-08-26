@@ -17,6 +17,13 @@ public class LinkToDefineDto extends LinkDto {
 		entityInstance.getLinks().add(this);
 	}
 
+	public LinkToDefineDto(EntityInstanceToDefineDto entityInstanceToDefineDto, MulCondition mulCondition,
+			boolean innerCreate) {
+		this(entityInstanceToDefineDto, mulCondition);
+
+		setInnerCreate(true);
+	}
+
 	public LinkToDefineDto(EntityInstanceDto entityInstance, Set<EntityInstance> entityInstanceContext,
 			MulCondition mulCondition) {
 		this(entityInstance, mulCondition);
