@@ -130,7 +130,7 @@ Unit:
 
 Position:
 	'Position' name = ID '{'
-		('isMemberOf' ':' unit = [Unit] &
+		(('isMemberOf' ':' unit = [Unit]) &
 		('description' ':' description = STRING)? &
 		('participatesIn' ':' '{' roles += [Role] (',' roles += [Role])* '}')? &
 		('canDelegateWorkTo' ':' '{' delegateTo += [Position] (',' delegateTo += [Position])* '}')? &
