@@ -55,7 +55,9 @@ class ConnectedDefineLink extends React.Component {
             return (
                 <div>
                     <Tab /><span>{this.props.link.mulCondition.rolename}({this.props.link.mulCondition.cardinality}): </span>
-                    <SelectMulEntityInstances entityInstances={this.props.link.candidateEntityInstances} mulCondition={this.props.link.mulCondition} onSubmit={this.handleSubmit}/>
+                    <SelectMulEntityInstances entityInstances={this.props.link.candidateEntityInstances} 
+                        mulCondition={this.props.link.mulCondition} 
+                        onSubmit={this.handleSubmit}/>
             </div> );
         }
     }
