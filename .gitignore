@@ -16,6 +16,8 @@ bin/
 src-gen/
 xtend-gen/
 /.metadata/
+node_modules
+package-lock.json
 
 .idea/**/workspace.xml
 .idea/**/tasks.xml
