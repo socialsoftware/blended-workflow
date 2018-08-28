@@ -1,7 +1,7 @@
 import { SELECT_SPECIFICATION, SELECT_INSTANCE, GET_ENTITY_INSTANCES, 
   SET_ENTITY_INSTANCES_TO_DEFINE, CLEAR_ENTITY_INSTANCES_TO_DEFINE, 
   SET_UNIT_OF_WORK, SET_SELECTED_ENTITY_INSTANCE, SET_ATTRIBUTE_INSTANCE_VALUE, 
-  SET_LINK_ENTITY_INSTANCES, CREATE_ENTITY_INSTANCE } from "../constants/action-types";
+  SET_LINK_ENTITY_INSTANCES, CREATE_ENTITY_INSTANCE, DELETE_ENTITY_INSTANCE } from "../constants/action-types";
 
 const initialState = {
     specId: '',
@@ -65,6 +65,9 @@ const rootReducer = (state = initialState, action) => {
         }) };
       case CREATE_ENTITY_INSTANCE:
         return { ...state, unitOfWork: [ ...state.unitOfWork, action.entityInstance]};
+      case DELETE_ENTITY_INSTANCE:
+        return { ...state, unitOfWork: state.unitOfWork.filter(ei => ei.id !== action.id) 
+        };
       default: 
         return state;
     }
