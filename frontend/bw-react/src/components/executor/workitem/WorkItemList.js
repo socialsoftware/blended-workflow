@@ -32,11 +32,7 @@ class ConnectedWorkItemList extends React.Component {
     }
 
     componentDidMount() {
-        // const service = new RepositoryService();
-        // service.getEntityInstances(this.props.specId, this.props.name).then(response => {
-        //     this.props.getEntityInstances(response.data);
         this.getNextWorkItems();
-        //});  
     }
 
     getNextWorkItems() {

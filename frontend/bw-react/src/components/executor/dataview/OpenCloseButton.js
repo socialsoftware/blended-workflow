@@ -9,12 +9,12 @@ export class OpenCloseButton extends React.Component {
     }
 
     handleOnClick() {
-        this.props.onClick()
+        this.props.onClick();
     }
 
     render() {
         return (
             <Button variant="contained" color="primary" onClick={this.handleOnClick}>{!this.props.open ? 'Open' : 'Close'}</Button>
-        )
+        );
     }
 }

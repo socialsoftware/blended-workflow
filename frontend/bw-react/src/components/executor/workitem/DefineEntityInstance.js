@@ -22,6 +22,7 @@ class ConnectedDefineEntityInstance extends React.Component {
         super(props);
 
         this.getAttributeInstances = this.getAttributeInstances.bind(this);
+        this.getLinks = this.getLinks.bind(this);
         this.handleSelection = this.handleSelection.bind(this);
     }
 
@@ -44,6 +45,25 @@ class ConnectedDefineEntityInstance extends React.Component {
         }
     }
 
+    getLinks() {
+        if (this.props.entityInstance.id < 0) {
+            return this.props.entityInstance.links;
+        } else {
+            const entityInstance = this.props.entityInstances.find(ei => {
+                return ei.id === this.props.entityInstance.id;
+            });
+            return this.props.entityInstance.links.map(l => {
+                if (l.toDefine) {
+                    return l;
+                } else {
+                    return entityInstance.links.find(lx => {
+                        return lx.mulCondition.rolename === l.mulCondition.rolename;
+                    });
+                }
+            });
+        }
+    }
+
     handleSelection(entityInstance) {
         this.props.setSelectedEntityInstance(this.props.entityInstance.id, entityInstance.id);
     }
@@ -53,7 +73,7 @@ class ConnectedDefineEntityInstance extends React.Component {
             <div>
                 {this.props.entityInstance.entity.name}[{this.props.entityInstance.id < 0 && this.props.entityInstance.exists ?  'undef' : this.props.entityInstance.id}] {this.props.entityInstance.exists && <SelectEntityInstance entityInstances={this.props.entityInstance.entityInstancesContext} onSelection={this.handleSelection}/>} <br/>
                 {this.getAttributeInstances().map(att => <DefineAttributeInstance key={att.attribute.name} entityInstance={this.props.entityInstance} attributeInstance={att} />)}
-                {this.props.entityInstance.links.map(link => <DefineLink key={link.mulCondition.externalId} entityInstance={this.props.entityInstance} link={link} />)}
+                {this.getLinks().map(link => <DefineLink key={link.mulCondition.externalId} entityInstance={this.props.entityInstance} link={link} />)}
                 <br />
             </div>
         )
