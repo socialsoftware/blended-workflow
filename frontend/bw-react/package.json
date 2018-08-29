@@ -5,14 +5,12 @@
   "dependencies": {
     "@material-ui/core": "^1.4.3",
     "axios": "^0.18.0",
-    "css-loader": "^1.0.0",
     "jshint": "^2.9.6",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
-    "storm-react-diagrams": "^5.2.1",
-    "style-loader": "^0.23.0"
+    "storm-react-diagrams": "^5.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -21,9 +19,11 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "css-loader": "^1.0.0",
     "react-redux": "^5.0.7",
     "react-thunk": "^1.0.0",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "style-loader": "^0.23.0"
   }
 }

@@ -1,8 +1,9 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { RepositoryService } from '../../../services/RepositoryService'
-import { Entity } from './Entity'
-import { Association } from './Association'
+import React from 'react';
+import { connect } from 'react-redux';
+import { RepositoryService } from '../../../services/RepositoryService';
+import { Entity } from './Entity';
+import { Association } from './Association';
+import { DataModelDiagram } from './DataModelDiagram';
 
 const mapStateToProps = state => {
     return { specId: state.specId };
@@ -45,8 +46,11 @@ class ConnectedDataModel extends React.Component {
     render() {
         return (
             <div>
-                <b>Data Model Specification {this.state.dataModel.specName}</b>
-                {this.renderEntities()}
+                <b>{this.state.dataModel.specName}: Data Model Diagram</b><br /><br />
+                <DataModelDiagram dataModel={this.state.dataModel} />
+                <br /><br />
+                <b>{this.state.dataModel.specName}: Data Model Specification</b><br />
+               {this.renderEntities()}
                 {this.renderAssociations()}
             </div>
         )

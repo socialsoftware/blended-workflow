@@ -1,7 +1,6 @@
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 import DataModel from './datamodel/DataModel';
-import DataModelDiagram from './datamodel/DataModelDiagram';
 
 export class Designer extends React.Component {
     render() {
@@ -13,7 +12,6 @@ export class Designer extends React.Component {
                     <li>Goal Model</li>
                     <li>Activity Model</li>
                 </ul>
-                <DataModelDiagram />
                 <Switch>
                     <Route path='/specifications/designer/datamodel' component={DataModel} />
                 </Switch>

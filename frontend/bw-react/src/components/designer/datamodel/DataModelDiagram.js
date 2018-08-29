@@ -1,41 +1,81 @@
-import {
-	DiagramEngine,
-	DiagramModel,
-	DefaultNodeModel,
-	LinkModel,
-	DiagramWidget,
-	DefaultLinkModel
-} from "storm-react-diagrams";
+import * as SRD from "storm-react-diagrams";
 import * as React from "react";
+import '../../../../node_modules/storm-react-diagrams/dist/style.min.css';
+//import { distributeElements } from "dagre-utils";
 
-export default () => {
-	//1) setup the diagram engine
-	var engine = new DiagramEngine();
-	engine.installDefaultFactories();
+export class DataModelDiagram extends React.Component {
+	constructor(props) {
+		super(props);
 
-	//2) setup the diagram model
-	var model = new DiagramModel();
+		this.populateNodesAndLinks = this.populateNodesAndLinks.bind(this);
+	}
 
-	//3-A) create a default node
-	var node1 = new DefaultNodeModel("Node 1", "rgb(0,192,255)");
-	let port1 = node1.addOutPort("Out");
-	node1.setPosition(100, 100);
+	// getDistributedModel(engine, model) {
+	// 	const serialized = model.serializeDiagram();
+	// 	const distributedSerializedDiagram = distributeElements(serialized);
+	
+	// 	//deserialize the model
+	// 	let deSerializedModel = new SRD.DiagramModel();
+	// 	deSerializedModel.deSerializeDiagram(distributedSerializedDiagram, engine);
+	// 	return deSerializedModel;
+	// }
 
-	//3-B) create another default node
-	var node2 = new DefaultNodeModel("Node 2", "rgb(192,255,0)");
-	let port2 = node2.addInPort("In");
-	node2.setPosition(400, 100);
+	populateNodesAndLinks() {
+		var engine = new SRD.DiagramEngine();
+		engine.installDefaultFactories();
 
-	// link the ports
-	let link1 = port1.link(port2);
-	link1.addLabel("Hello World!");
+		var model = new SRD.DiagramModel();
 
-	//4) add the models to the root graph
-	model.addAll(node1, node2, link1);
+		if (this.props.dataModel.entities) {
+			var map = new Map();
 
-	//5) load model into engine
-	engine.setDiagramModel(model);
+			this.props.dataModel.entities.forEach((e, index) => {
+				let node = new SRD.DefaultNodeModel(e.name, "rgb(0,192,255)");
+				node.setPosition(index * 120 + 10, 100);
+				model.addNode(node);
 
-	//6) render the diagram!
-	return <DiagramWidget className="srd-demo-canvas" diagramEngine={engine} />;
-};
+				e.attributes.forEach(a => {
+					node.addInPort(a.name);
+				});
+
+				map.set(e.name, node);
+			});
+
+			this.props.dataModel.associations.forEach(a => {
+				const nodeOne = map.get(a.entOneName);
+				const portOne = nodeOne.addInPort(a.rolenameTwo + a.cardinalityTwo);
+
+				const nodeTwo = map.get(a.entTwoName);
+				const portTwo = nodeTwo.addOutPort(a.rolenameOne + a.cardinalityOne);
+
+				let link = portOne.link(portTwo);
+				model.addLink(link);
+			});
+		}
+
+		// let distributedModel = this.getDistributedModel(engine, model);
+		// engine.setDiagramModel(distributedModel);
+	//	this.forceUpdate();
+
+
+		engine.setDiagramModel(model);
+
+		return engine;
+	}
+
+	render() {
+		return ( 
+			<div style = {{
+					width: 800 + 'px',
+					height: 600 + 'px',
+					display: 'flex',
+					background: 'black'
+				}} >
+				<SRD.DiagramWidget className = "srd-demo-canvas"
+					diagramEngine = {
+					this.populateNodesAndLinks()
+				}/>  
+			</div>
+		);
+	};
+}
