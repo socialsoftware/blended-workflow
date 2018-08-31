@@ -1,10 +1,27 @@
 import React from 'react';
-import {
-    RepositoryService
-} from '../../../services/RepositoryService';
-import {
-    VisNetwork
-} from '../../util/VisNetwork';
+import { RepositoryService } from '../../../services/RepositoryService';
+import { VisNetwork } from '../../util/VisNetwork';
+
+const options = {
+    height: 700,
+    layout: {
+        hierarchical: false
+    },
+    edges: {
+        smooth: false,
+        color: '#000000',
+        width: 0.5,
+        arrows: {
+          from: {
+            enabled: true,
+            scaleFactor: 0.5
+          }
+        }
+    },
+    interaction: {
+        hover: true
+    }
+};
 
 export class GoalModelDiagram extends React.Component {
 
@@ -28,11 +45,10 @@ export class GoalModelDiagram extends React.Component {
     }
 
     render() {
-        if (this.state.graph.nodes) {
-        this.state.graph.nodes.forEach(n => alert(n.id));
-        }
         return ( 
-            <VisNetwork graph = {this.state.graph}/>
+            <div style={{width:'1000px' , height: '700px'}}>
+                <VisNetwork graph={this.state.graph} options={options}/>
+            </div>
         );
     }
 }

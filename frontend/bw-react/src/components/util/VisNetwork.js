@@ -1,11 +1,5 @@
-import {
-    DataSet,
-    Network
-} from 'vis';
-import React, {
-    Component,
-    createRef
-} from "react";
+import { Network } from 'vis';
+import React, { Component, createRef } from "react";
 
 export class VisNetwork extends Component {
     constructor(props) {
@@ -15,12 +9,12 @@ export class VisNetwork extends Component {
     }
 
     componentDidMount() {
-        this.network = new Network(this.appRef.current, this.props.graph, options);
+        this.network = new Network(this.appRef.current, this.props.graph, this.props.options);
     }
 
     render() {
         if (this.props.graph.nodes) {
-            this.network = new Network(this.appRef.current, this.props.graph, options);
+            this.network = new Network(this.appRef.current, this.props.graph, this.props.options);
         }
         return ( 
             <div ref = {this.appRef}/>

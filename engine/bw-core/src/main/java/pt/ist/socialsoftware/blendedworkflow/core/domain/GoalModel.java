@@ -393,25 +393,30 @@ public class GoalModel extends GoalModel_Base {
 		List<EdgeVisDto> edges = new ArrayList<>();
 
 		for (Goal goal : getGoalSet()) {
-			String title = "ACT(" + goal.getActivationConditionSet().stream().map(d -> d.getPath().getValue())
-					.collect(Collectors.joining(",")) + ")";
+			String title = "<pre><code>" + "ACT(" + goal.getActivationConditionSet().stream()
+					.map(d -> d.getPath().getValue()).collect(Collectors.joining(",")) + ")" + "</pre></code><br />";
 			if (goal instanceof ProductGoal) {
 
 				if (!goal.getSuccessConditionSet().isEmpty()) {
-					title = title + ", " + "SUC(" + goal.getSuccessConditionSet().stream()
-							.map(d -> d.getPath().getValue()).collect(Collectors.joining(",")) + ")";
+					title = title
+							+ "<pre><code>" + "SUC(" + goal.getSuccessConditionSet().stream()
+									.map(d -> d.getPath().getValue()).collect(Collectors.joining(","))
+							+ ")" + "</pre></code><br />";
 				}
 				if (!goal.getAttributeInvariantConditionSet().isEmpty()) {
-					title = title + ", " + "RULE(" + goal.getAttributeInvariantConditionSet().stream()
-							.map(r -> r.getName()).collect(Collectors.joining(",")) + ")";
+					title = title
+							+ "<pre><code>" + "RULE(" + goal.getAttributeInvariantConditionSet().stream()
+									.map(r -> r.getName()).collect(Collectors.joining(","))
+							+ ")" + "</pre></code><br />";
 				}
 			} else {
 				if (!goal.getEntityInvariantConditionSet().isEmpty()) {
-					title = title + ", " + "MUL("
-							+ goal.getEntityInvariantConditionSet().stream().map(m -> m.getSourceEntity().getName()
-									+ "." + m.getRolename() + "," + m.getCardinality().getExp())
+					title = title + "<pre><code>" + "MUL("
+							+ goal.getEntityInvariantConditionSet().stream()
+									.map(m -> m.getSourceEntity().getName() + "." + m.getRolename() + ","
+											+ m.getCardinality().getExp())
 									.collect(Collectors.joining(";"))
-							+ ")";
+							+ ")" + "</code></pre>";
 
 				}
 			}
