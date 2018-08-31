@@ -43,6 +43,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceD
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphVisDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
@@ -502,6 +503,12 @@ public class DesignInterface {
 		Specification spec = getSpecBySpecId(specId);
 
 		return spec.getGoalModel().getGoalGraph();
+	}
+
+	public GraphVisDto getGoalModelGraphVis(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getGoalModel().getGoalGraphVis();
 	}
 
 	@Atomic(mode = TxMode.WRITE)

@@ -15,8 +15,11 @@ import org.slf4j.LoggerFactory;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeVisDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphVisDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeVisDto;
 
 public class GoalModel extends GoalModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(GoalModel.class);
@@ -379,6 +382,52 @@ public class GoalModel extends GoalModel_Base {
 
 		graph.setNodes(nodes.stream().toArray(NodeDto[]::new));
 		graph.setEdges(edges.stream().toArray(EdgeDto[]::new));
+
+		return graph;
+	}
+
+	public GraphVisDto getGoalGraphVis() {
+		GraphVisDto graph = new GraphVisDto();
+
+		List<NodeVisDto> nodes = new ArrayList<>();
+		List<EdgeVisDto> edges = new ArrayList<>();
+
+		for (Goal goal : getGoalSet()) {
+			String title = "ACT(" + goal.getActivationConditionSet().stream().map(d -> d.getPath().getValue())
+					.collect(Collectors.joining(",")) + ")";
+			if (goal instanceof ProductGoal) {
+
+				if (!goal.getSuccessConditionSet().isEmpty()) {
+					title = title + ", " + "SUC(" + goal.getSuccessConditionSet().stream()
+							.map(d -> d.getPath().getValue()).collect(Collectors.joining(",")) + ")";
+				}
+				if (!goal.getAttributeInvariantConditionSet().isEmpty()) {
+					title = title + ", " + "RULE(" + goal.getAttributeInvariantConditionSet().stream()
+							.map(r -> r.getName()).collect(Collectors.joining(",")) + ")";
+				}
+			} else {
+				if (!goal.getEntityInvariantConditionSet().isEmpty()) {
+					title = title + ", " + "MUL("
+							+ goal.getEntityInvariantConditionSet().stream().map(m -> m.getSourceEntity().getName()
+									+ "." + m.getRolename() + "," + m.getCardinality().getExp())
+									.collect(Collectors.joining(";"))
+							+ ")";
+
+				}
+			}
+			nodes.add(new NodeVisDto(goal.getExternalId(), goal.getName(), title, "ellipse"));
+
+			Set<Product> products = goal.getActivationConditionSet().stream().map(p -> p.getPath().getTarget())
+					.collect(Collectors.toSet());
+			for (Goal otherGoal : getGoalSet().stream().filter(g -> g.successProductsContainSomeOf(products))
+					.collect(Collectors.toSet())) {
+				edges.add(new EdgeVisDto(otherGoal.getExternalId(), goal.getExternalId()));
+			}
+
+		}
+
+		graph.setNodes(nodes);
+		graph.setEdges(edges);
 
 		return graph;
 	}

@@ -62,6 +62,15 @@ export class RepositoryService {
         return this.axios.get("/entityinstance/" + entityInstanceExtId + "/dependence/"+ dependenceExtId);
     }
 
+    // Goal Model
+    getGoalModel(specId) {
+        return this.axios.get("/specs/" + specId + "/goalmodel/goals");
+    }
+
+    getGoalModelGraphVis(specId) {
+        return this.axios.get("/specs/" + specId + "/goalmodel/graph/vis");
+    }
+
     // Instances
     getWorkflowInstances(specId) {
         return this.axios.get("/specs/" + specId + "/instances");

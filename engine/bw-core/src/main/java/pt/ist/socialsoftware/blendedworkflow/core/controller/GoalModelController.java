@@ -26,6 +26,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityCo
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphVisDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
@@ -110,7 +111,7 @@ public class GoalModelController {
 
 	@RequestMapping(value = "/goals/{goalName}", method = RequestMethod.GET)
 	public ResponseEntity<GoalDto> getGoalByName(@PathVariable("specId") String specId,
-												 @PathVariable("goalName") String goalName) {
+			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalByName specId:{}, name:{}", specId, goalName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -173,7 +174,7 @@ public class GoalModelController {
 
 	@RequestMapping(value = "/goals/{goalName}/act", method = RequestMethod.GET)
 	public ResponseEntity<DefPathConditionDto[]> getGoalActDefPathConditionSet(@PathVariable("specId") String specId,
-																			   @PathVariable("goalName") String goalName) {
+			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalActDefPathConditionSet specId:{}, goalName:{}", specId, goalName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -186,7 +187,7 @@ public class GoalModelController {
 
 	@RequestMapping(value = "/goals/{goalName}/act/{path}/", method = RequestMethod.POST)
 	public ResponseEntity<DefPathConditionDto> associateDefPathConditionToGoalAct(@PathVariable("specId") String specId,
-																				  @PathVariable("goalName") String goalName, @PathVariable("path") String path) {
+			@PathVariable("goalName") String goalName, @PathVariable("path") String path) {
 		logger.debug("associateDefPathConditionToGoalAct specId:{}, goalName:{}, path:{}", specId, goalName, path);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -211,7 +212,7 @@ public class GoalModelController {
 
 	@RequestMapping(value = "/goals/{goalName}/relations", method = RequestMethod.GET)
 	public ResponseEntity<RelationDto[]> getGoalRelations(@PathVariable("specId") String specId,
-														  @PathVariable("goalName") String goalName) {
+			@PathVariable("goalName") String goalName) {
 		logger.debug("getGoalRelations specId:{}, goalName:{}", specId, goalName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
@@ -266,7 +267,7 @@ public class GoalModelController {
 
 	@RequestMapping(value = "/goals/merge", method = RequestMethod.POST)
 	public ResponseEntity<GoalDto> mergeGoals(@PathVariable("specId") String specId,
-											  @RequestBody MergeOperationDto mergeOperationDto) {
+			@RequestBody MergeOperationDto mergeOperationDto) {
 		logger.debug("mergeGoals specId:{}, newGoalName:{}, goalNameOne:{}, goalNameTwo:{}", specId,
 				mergeOperationDto.getNewName(), mergeOperationDto.getNameOne(), mergeOperationDto.getNameTwo());
 
@@ -279,7 +280,7 @@ public class GoalModelController {
 
 	@RequestMapping(value = "/goals/extract", method = RequestMethod.POST)
 	public ResponseEntity<GoalDto> extractProductGoal(@PathVariable("specId") String specId,
-													  @RequestBody ExtractGoalDto req) {
+			@RequestBody ExtractGoalDto req) {
 		logger.debug("extractGoal specId:{}, newGoalName:{}, sourceGoalName:{}", specId, req.getNewGoalName(),
 				req.getSourceGoalName());
 
@@ -297,6 +298,17 @@ public class GoalModelController {
 		DesignInterface adi = this.factory.createDesignInterface();
 
 		GraphDto graph = adi.getGoalModelGraph(specId);
+
+		return new ResponseEntity<>(graph, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/graph/vis", method = RequestMethod.GET)
+	public ResponseEntity<GraphVisDto> getGoalGraphVis(@PathVariable("specId") String specId) {
+		logger.debug("getGoalGraphVis specId:{}", specId);
+
+		DesignInterface adi = this.factory.createDesignInterface();
+
+		GraphVisDto graph = adi.getGoalModelGraphVis(specId);
 
 		return new ResponseEntity<>(graph, HttpStatus.OK);
 	}
