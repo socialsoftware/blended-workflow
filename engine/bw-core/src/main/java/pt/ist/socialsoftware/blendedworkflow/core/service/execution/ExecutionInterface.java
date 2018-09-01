@@ -83,11 +83,12 @@ public class ExecutionInterface {
 				.map(e -> new EntityInstanceToDefineDto(e)).collect(Collectors.toList());
 
 		for (EntityInstanceToDefineDto entityInstanceToDefineDto : entityInstanceToDefineDtos) {
-			Entity entity = specification.getDataModel().getEntityByName(entityInstanceToDefineDto.getEntity().getName())
-					.get();
+			Entity entity = specification.getDataModel()
+					.getEntityByName(entityInstanceToDefineDto.getEntity().getName()).get();
 			for (Attribute attribute : entity.getAttributeSet()) {
 				new AttributeInstanceToDefineDto(entityInstanceToDefineDto, attribute);
 			}
+			entityInstanceToDefineDto.fillUndefLinks(entity);
 		}
 
 		workItemDto.setEntityInstancesToDefine(entityInstanceToDefineDtos);
@@ -96,8 +97,13 @@ public class ExecutionInterface {
 	}
 
 	@Atomic(mode = TxMode.WRITE)
-	public WorkflowInstance createWorkflowInstance(String specId, String name) {
-		return new WorkflowInstance(getSpecification(specId), name);
+	public WorkflowInstance createWorkflowInstance(WorkItemDto workItemDto) {
+		WorkflowInstance workflowInstance = new WorkflowInstance(getSpecification(workItemDto.getSpecId()),
+				workItemDto.getWorkflowInstanceName());
+
+		workItemDto.executeWorkItem(workflowInstance, null);
+
+		return workflowInstance;
 	}
 
 	@Atomic(mode = TxMode.WRITE)

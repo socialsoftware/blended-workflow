@@ -71,11 +71,11 @@ public class InstanceController {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<WorkflowInstanceDto> createWorkflowInstance(@PathVariable("specId") String specId,
-			@RequestBody WorkflowInstanceDto workflowInstanceDto) {
-		log.debug("createWorkflowInstance specId:{}, name:{}", specId, workflowInstanceDto.getName());
+			@RequestBody WorkItemDto workItemDto) {
+		log.debug("createWorkflowInstance specId:{}, name:{}", specId, workItemDto.getWorkflowInstanceName());
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
-		WorkflowInstance workflowInstance = edi.createWorkflowInstance(specId, workflowInstanceDto.getName());
+		WorkflowInstance workflowInstance = edi.createWorkflowInstance(workItemDto);
 
 		return new ResponseEntity<>(workflowInstance.getDTO(), HttpStatus.CREATED);
 	}

@@ -63,8 +63,10 @@ public class WorkItemDto {
 
 				definedEntityInstances.add(entityInstance);
 
-				workItem.addPostWorkItemArgument(entityInstance,
-						DefEntityCondition.getDefEntityCondition(entityInstance.getEntity()));
+				if (workItem != null) {
+					workItem.addPostWorkItemArgument(entityInstance,
+							DefEntityCondition.getDefEntityCondition(entityInstance.getEntity()));
+				}
 			}
 
 			for (AttributeInstanceDto attributeInstanceDto : entityInstanceToDefine.getAttributeInstances()) {
@@ -75,8 +77,10 @@ public class WorkItemDto {
 					AttributeInstance attributeInstance = new AttributeInstance(entityInstance, attribute,
 							attributeInstanceDto.getValue());
 
-					workItem.addPostWorkItemArgument(attributeInstance,
-							DefAttributeCondition.getDefAttributeCondition(attributeInstance.getAttribute()));
+					if (workItem != null) {
+						workItem.addPostWorkItemArgument(attributeInstance,
+								DefAttributeCondition.getDefAttributeCondition(attributeInstance.getAttribute()));
+					}
 				}
 			}
 

@@ -9,7 +9,7 @@ Entity B {
 }   
 
 Entity C exists {
-	att1 : Number
+	att1 : Number 
 }   
 
 Association AHasBs {

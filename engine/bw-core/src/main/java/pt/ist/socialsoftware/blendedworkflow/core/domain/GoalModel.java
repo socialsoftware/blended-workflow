@@ -52,11 +52,15 @@ public class GoalModel extends GoalModel_Base {
 		ConditionModel conditionModel = getSpecification().getConditionModel();
 
 		for (DefEntityCondition defEntityCondition : conditionModel.getEntityAchieveConditionSet()) {
-			createGoalForEntity(defEntityCondition);
+			if (!defEntityCondition.getEntity().getExists()) {
+				createGoalForEntity(defEntityCondition);
+			}
 		}
 
 		for (DefAttributeCondition defAttributeCondition : conditionModel.getAttributeAchieveConditionSet()) {
-			createGoalsForAttribute(defAttributeCondition);
+			if (!defAttributeCondition.getAttributeOfDef().getEntity().getExists()) {
+				createGoalForAttribute(defAttributeCondition);
+			}
 		}
 
 		for (RelationBW relation : getSpecification().getDataModel().getRelationBWSet()) {
@@ -73,7 +77,7 @@ public class GoalModel extends GoalModel_Base {
 		entityGoal.initProductGoal();
 	}
 
-	private void createGoalsForAttribute(DefAttributeCondition defAttributeCondition) {
+	private void createGoalForAttribute(DefAttributeCondition defAttributeCondition) {
 		Set<DefProductCondition> defProductConditions = new HashSet<>();
 		defProductConditions.add(defAttributeCondition);
 		ProductGoal attributeGoal = new ProductGoal(this, defAttributeCondition.getPath().getValue(),

@@ -3,7 +3,7 @@ import { Switch, Route, Link } from 'react-router-dom';
 import { RepositoryService } from '../../services/RepositoryService';
 import { connect } from 'react-redux';
 import { selectInstance } from '../../actions/selectInstance';
-import { CreateInstance } from './CreateInstance';
+import CreateInstance from './CreateInstance';
 import { DeleteInstance } from './DeleteInstance';
 import { ExecuteInstance } from './ExecuteInstance';
 
@@ -35,14 +35,17 @@ class ConnectedExecutor extends React.Component {
         });
     }
 
-    createInstance(name) {
+    createInstance(name, unitOfWork) {
         const service = new RepositoryService();
 
-        service.createWorkflowInstance(this.props.specId, name).then(response => {
+        service.createWorkflowInstance(this.props.specId, name, unitOfWork)
+        .then(() => {
             service.getWorkflowInstances(this.props.specId).then(response => {
                 this.setState({ instances: response.data }
-                )
+                );
             });
+        }).catch((err) => {
+            alert('ERROR: '+ err.response.data.type + ' - ' + err.response.data.value)
         });
     }
 
