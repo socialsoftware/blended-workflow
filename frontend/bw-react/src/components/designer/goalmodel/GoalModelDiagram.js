@@ -18,6 +18,9 @@ const options = {
           }
         }
     },
+    nodes: {
+        shape: 'ellipse'
+    },
     interaction: {
         hover: true
     }

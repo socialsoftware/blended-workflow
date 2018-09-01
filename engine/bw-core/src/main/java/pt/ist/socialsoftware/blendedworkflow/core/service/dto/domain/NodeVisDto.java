@@ -7,16 +7,14 @@ public class NodeVisDto {
 	private String id;
 	private String label;
 	private String title;
-	private String shape;
 
 	public NodeVisDto() {
 	}
 
-	public NodeVisDto(String id, String label, String title, String shape) {
+	public NodeVisDto(String id, String label, String title) {
 		this.id = id;
 		this.label = label;
 		this.title = title;
-		this.shape = shape;
 	}
 
 	public String getId() {
@@ -41,14 +39,6 @@ public class NodeVisDto {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public String getShape() {
-		return this.shape;
-	}
-
-	public void setShape(String shape) {
-		this.shape = shape;
 	}
 
 }

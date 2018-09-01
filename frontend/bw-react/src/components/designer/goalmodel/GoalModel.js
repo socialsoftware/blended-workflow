@@ -25,18 +25,11 @@ class ConnectedGoalModel extends React.Component {
         });
     }
 
-    renderGoals() {
-        return "";
-    }
-
     render() {
         return (
             <div>
                 <b>{this.props.specId}: Goal Model Diagram</b><br /><br />
                 <GoalModelDiagram specId={this.props.specId} />
-                <br /><br />
-                <b>{this.props.specId}: Goal Model Specification</b><br />
-                {this.renderGoals()}
             </div>
         )
     }
