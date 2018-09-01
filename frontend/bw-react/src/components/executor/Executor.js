@@ -69,7 +69,7 @@ class ConnectedExecutor extends React.Component {
         return (
             <div> 
                 <ul>
-                    {this.props.specId && <li><CreateInstance onSubmit={this.createInstance} /></li>}
+                    {this.props.specId && <li><CreateInstance specId={this.props.specId} onSubmit={this.createInstance} /></li>}
                     {this.renderInstances()}
                 </ul>
                 <Switch>

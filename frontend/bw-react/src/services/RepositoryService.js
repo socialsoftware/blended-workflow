@@ -80,6 +80,10 @@ export class RepositoryService {
         return this.axios.get("specs/" + specId + "/instances/" + name);
     }
 
+    getInitWorkItem(specId) {
+        return this.axios.get("/specs/" + specId + "/instances/init");
+    }
+
     createWorkflowInstance(specId, name) {
         return this.axios.post("/specs/" + specId + "/instances", {
             "specId": specId,

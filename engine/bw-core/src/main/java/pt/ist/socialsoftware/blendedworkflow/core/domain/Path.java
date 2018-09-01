@@ -40,7 +40,7 @@ public class Path extends Path_Base {
 
 		String prefix = pathLeft.get(0);
 
-		Optional<Entity> entity = getDataModel().getEntity(prefix);
+		Optional<Entity> entity = getDataModel().getEntityByName(prefix);
 		if (!entity.isPresent()) {
 			throw new BWException(BWErrorType.INVALID_PATH,
 					getValue() + " requires to have the Entity name as prefix: " + prefix);
@@ -55,7 +55,7 @@ public class Path extends Path_Base {
 
 	public Product getTarget() {
 		List<String> pathLeft = Arrays.stream(getValue().split("\\.")).collect(Collectors.toList());
-		Entity entity = getDataModel().getEntity(pathLeft.get(0))
+		Entity entity = getDataModel().getEntityByName(pathLeft.get(0))
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, pathLeft.get(0)));
 		pathLeft.remove(0);
 		return entity.getNext(pathLeft, getValue());
@@ -63,14 +63,14 @@ public class Path extends Path_Base {
 
 	public Entity getSource() {
 		List<String> path = Arrays.stream(getValue().split("\\.")).collect(Collectors.toList());
-		Entity entity = getDataModel().getEntity(path.get(0))
+		Entity entity = getDataModel().getEntityByName(path.get(0))
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, path.get(0)));
 		return entity;
 	}
 
 	public Entity getAdjacent() {
 		List<String> path = Arrays.stream(getValue().split("\\.")).collect(Collectors.toList());
-		Entity entity = getDataModel().getEntity(path.get(0))
+		Entity entity = getDataModel().getEntityByName(path.get(0))
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, path.get(0)));
 
 		if (path.size() == 1) {

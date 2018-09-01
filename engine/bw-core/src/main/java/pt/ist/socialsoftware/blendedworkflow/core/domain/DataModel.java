@@ -32,7 +32,7 @@ public class DataModel extends DataModel_Base {
 		return getInstanceCounter().toString();
 	}
 
-	public Optional<Entity> getEntity(String name) {
+	public Optional<Entity> getEntityByName(String name) {
 		return getEntitySet().stream().filter(ent -> ent.getName().equals(name)).findFirst();
 	}
 
@@ -74,14 +74,14 @@ public class DataModel extends DataModel_Base {
 
 	public Product getSourceOfPath(String path) {
 		List<String> pathLeft = Arrays.stream(path.split("\\.")).collect(Collectors.toList());
-		Entity entity = getEntity(pathLeft.get(0))
+		Entity entity = getEntityByName(pathLeft.get(0))
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, pathLeft.get(0)));
 		return entity;
 	}
 
 	public Product getTargetOfPath(String path) {
 		List<String> pathLeft = Arrays.stream(path.split("\\.")).collect(Collectors.toList());
-		Entity entity = getEntity(pathLeft.get(0))
+		Entity entity = getEntityByName(pathLeft.get(0))
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, pathLeft.get(0)));
 		pathLeft.remove(0);
 		return entity.getNext(pathLeft, path);

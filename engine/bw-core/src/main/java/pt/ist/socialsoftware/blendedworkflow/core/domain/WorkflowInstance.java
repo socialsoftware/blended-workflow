@@ -88,7 +88,7 @@ public class WorkflowInstance extends WorkflowInstance_Base {
 	}
 
 	public Entity getEntityByName(String name) {
-		return getSpecification().getDataModel().getEntity(name).orElse(null);
+		return getSpecification().getDataModel().getEntityByName(name).orElse(null);
 	}
 
 	public Attribute getAttributeByPath(String path) {

@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.execution;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +13,9 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ActivityWorkItem;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalWorkItem;
@@ -21,7 +24,10 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceToDefineDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceToDefineDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkItemDto;
 
 public class ExecutionInterface {
 	private static Logger logger = LoggerFactory.getLogger(ExecutionInterface.class);
@@ -61,6 +67,32 @@ public class ExecutionInterface {
 
 	public Goal getGoal(String specId, String goalName) {
 		return getSpecification(specId).getGoalModel().getGoal(goalName);
+	}
+
+	public WorkItemDto getInitWorkItem(String specId) {
+		Specification specification = getSpecification(specId);
+
+		WorkItemDto workItemDto = new WorkItemDto();
+
+		workItemDto.setSpecId(specification.getSpecId());
+		workItemDto.setSpecName(specification.getName());
+		workItemDto.setName("Initialize workflow instance");
+
+		List<EntityInstanceToDefineDto> entityInstanceToDefineDtos = specification.getDataModel().getEntitySet()
+				.stream().filter(e -> e.getExists()).sorted(Comparator.comparing(Entity::getName))
+				.map(e -> new EntityInstanceToDefineDto(e)).collect(Collectors.toList());
+
+		for (EntityInstanceToDefineDto entityInstanceToDefineDto : entityInstanceToDefineDtos) {
+			Entity entity = specification.getDataModel().getEntityByName(entityInstanceToDefineDto.getEntity().getName())
+					.get();
+			for (Attribute attribute : entity.getAttributeSet()) {
+				new AttributeInstanceToDefineDto(entityInstanceToDefineDto, attribute);
+			}
+		}
+
+		workItemDto.setEntityInstancesToDefine(entityInstanceToDefineDtos);
+
+		return workItemDto;
 	}
 
 	@Atomic(mode = TxMode.WRITE)

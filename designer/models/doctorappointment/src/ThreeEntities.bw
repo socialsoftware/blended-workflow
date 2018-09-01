@@ -8,7 +8,7 @@ Entity B {
 	att1 : Number
 }   
 
-Entity C {
+Entity C exists {
 	att1 : Number
 }   
 

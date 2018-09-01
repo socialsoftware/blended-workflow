@@ -23,6 +23,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceUndefDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
@@ -56,6 +57,16 @@ public class InstanceController {
 		WorkflowInstance workflowInstance = edi.getWorkflowInstance(specId, name);
 
 		return new ResponseEntity<>(workflowInstance.getDTO(), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/init", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<WorkItemDto> getInitWorkItem(@PathVariable("specId") String specId) {
+		log.debug("getInitWorkItem specId:{}", specId);
+		ExecutionInterface edi = this.factory.createExecutionInterface();
+
+		WorkItemDto workItem = edi.getInitWorkItem(specId);
+
+		return new ResponseEntity<>(workItem, HttpStatus.OK);
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)

@@ -141,8 +141,8 @@ public class SpecXmlImport {
 			}
 			DesignInterface.getInstance()
 					.createRelation(new RelationDto(dataModel.getSpecification().getSpecId(), name,
-							dataModel.getEntity(entity[0]).get().getExternalId(), rolename[0], cardinality[0],
-							dataModel.getEntity(entity[1]).get().getExternalId(), rolename[1], cardinality[1]));
+							dataModel.getEntityByName(entity[0]).get().getExternalId(), rolename[0], cardinality[0],
+							dataModel.getEntityByName(entity[1]).get().getExternalId(), rolename[1], cardinality[1]));
 		}
 	}
 

@@ -60,7 +60,7 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 	public void successCreateEntityDependence() {
 		this.designInterface.createDependence(new DependenceDto(SPEC_ID, this.entityOne.getFullPath(), DEPENDENCE_ONE));
 
-		assertEquals(1, this.dataModel.getEntity(ENTITY_NAME_ONE).get().getDependenceSet().size());
+		assertEquals(1, this.dataModel.getEntityByName(ENTITY_NAME_ONE).get().getDependenceSet().size());
 		assertEquals(DEPENDENCE_ONE + "," + DEPENDENCE_TWO, this.dataModel.getDependenceSet().stream()
 				.map(dep -> dep.getPath().getValue()).sorted().collect(Collectors.joining(",")));
 	}
@@ -69,8 +69,8 @@ public class CreateDependenceServiceTest extends TeardownRollbackTest {
 	public void successCreateAttributeDependence() {
 		this.designInterface.createDependence(new DependenceDto(SPEC_ID, this.att.getFullPath(), DEPENDENCE_ONE));
 
-		assertEquals(0, this.dataModel.getEntity(ENTITY_NAME_ONE).get().getDependenceSet().size());
-		assertEquals(1, this.dataModel.getEntity(ENTITY_NAME_ONE).get().getAttribute(ATTRIBUTE_NAME_ONE).get()
+		assertEquals(0, this.dataModel.getEntityByName(ENTITY_NAME_ONE).get().getDependenceSet().size());
+		assertEquals(1, this.dataModel.getEntityByName(ENTITY_NAME_ONE).get().getAttribute(ATTRIBUTE_NAME_ONE).get()
 				.getDependenceSet().size());
 		assertEquals(DEPENDENCE_ONE + "," + DEPENDENCE_TWO, this.dataModel.getDependenceSet().stream()
 				.map(dep -> dep.getPath().getValue()).sorted().collect(Collectors.joining(",")));

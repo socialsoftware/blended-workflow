@@ -5,7 +5,6 @@ import DefineEntityInstance from './DefineEntityInstance';
 
 const mapStateToProps = state => {
     return {
-        entityInstancesToDefine: state.entityInstancesToDefine,
         unitOfWork: state.unitOfWork
     };
 };
@@ -20,12 +19,12 @@ class ConnectedExecuteWorkItem extends React.Component {
     constructor(props) {
         super(props);
 
-        this.props.setUnitOfWork(this.createUnitOfWork());
-
         this.state = {
             workItem: this.props.workItem
         };
         
+        this.props.setUnitOfWork(this.createUnitOfWork());
+
         this.createUnitOfWork = this.createUnitOfWork.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleExecute = this.handleExecute.bind(this);
@@ -33,7 +32,7 @@ class ConnectedExecuteWorkItem extends React.Component {
 
     createUnitOfWork() {
         let counter = 0;
-        return this.props.entityInstancesToDefine.map(ei => JSON.parse(JSON.stringify(ei)))
+        return this.state.workItem.entityInstancesToDefine.map(ei => JSON.parse(JSON.stringify(ei)))
             .map(ei => {
                 if (ei.id === null) {
                     ei.id = --counter;
@@ -56,7 +55,6 @@ class ConnectedExecuteWorkItem extends React.Component {
     render() {
         return ( 
             <div>
-                <h5>Execute Workitem {this.props.workItem.name}</h5>
                 {this.props.unitOfWork.map(ei => <DefineEntityInstance key={ei.id} entityInstance={ei} />)}
                 <div><button onClick={this.handleClose}>Close</button> <button onClick={this.handleExecute}>Execute</button></div>
             </div>

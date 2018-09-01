@@ -1,17 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getEntityInstances } from '../../../actions/getEntityInstances';
-import { setEntityInstancesToDefine } from '../../../actions/setEntityInstancesToDefine';
-import { clearEntityInstancesToDefine } from '../../../actions/clearEntityInstancesToDefine';
 import { RepositoryService } from '../../../services/RepositoryService';
 import { OpenWorkItem } from './OpenWorkItem';
 import ExecuteWorkItem from './ExecuteWorkItem';
 
 const mapDispatchToProps = dispatch => {
     return {
-      getEntityInstances: entityInstances => dispatch(getEntityInstances(entityInstances)),
-      setEntityInstancesToDefine: entityInstancesToDefine => dispatch(setEntityInstancesToDefine(entityInstancesToDefine)),
-      clearEntityInstancesToDefine: () => dispatch(clearEntityInstancesToDefine())
+      getEntityInstances: entityInstances => dispatch(getEntityInstances(entityInstances))
     };
 };
 
@@ -48,7 +44,6 @@ class ConnectedWorkItemList extends React.Component {
     }
 
     openWorkItem(workItem) {
-        this.props.setEntityInstancesToDefine(workItem.entityInstancesToDefine);
         this.setState({
             open: true,
             openWorkItem: workItem
@@ -56,7 +51,6 @@ class ConnectedWorkItemList extends React.Component {
     }
 
     closeWorkItem() {
-        this.props.clearEntityInstancesToDefine();
         this.setState({
             open: false,
             openWorkItem: {}

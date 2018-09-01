@@ -47,7 +47,7 @@ public class CreateAttributeServiceTest extends TeardownRollbackTest {
 				ATTRIBUTE_NAME, AttributeType.NUMBER.toString(), true));
 
 		Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
-		Entity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
+		Entity entity = spec.getDataModel().getEntityByName(ENTITY_NAME).get();
 		Attribute att = entity.getAttribute(ATTRIBUTE_NAME).orElse(null);
 		assertNotNull(att);
 		assertEquals(ATTRIBUTE_NAME, att.getName());

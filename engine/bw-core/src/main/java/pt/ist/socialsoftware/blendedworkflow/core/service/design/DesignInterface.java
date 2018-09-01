@@ -229,7 +229,7 @@ public class DesignInterface {
 	@Atomic(mode = TxMode.WRITE)
 	public Rule createRule(RuleDto ruleDTO) {
 		Specification spec = getSpecBySpecId(ruleDTO.getSpecId());
-		Entity entity = spec.getDataModel().getEntity(ruleDTO.getEntityName())
+		Entity entity = spec.getDataModel().getEntityByName(ruleDTO.getEntityName())
 				.orElseThrow(() -> new BWException(BWErrorType.NON_EXISTENT_ENTITY, ruleDTO.getEntityName()));
 
 		Rule rule = entity.createRule(ruleDTO.getName(), ruleDTO.getExpression().buildCondition(spec));
@@ -967,7 +967,7 @@ public class DesignInterface {
 	}
 
 	private Entity getEntityByName(DataModel dataModel, String name) {
-		return dataModel.getEntity(name).orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, name));
+		return dataModel.getEntityByName(name).orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, name));
 	}
 
 	private Entity getEntityByExtId(String externalId) {

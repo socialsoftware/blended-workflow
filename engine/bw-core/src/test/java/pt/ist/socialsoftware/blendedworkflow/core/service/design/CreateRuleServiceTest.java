@@ -92,7 +92,7 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 		assertEquals(6, literal.getValue());
 
 		AttributeValueExpression attValue = (AttributeValueExpression) righExpression;
-		Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME).get();
+		Entity entity = spec.getDataModel().getEntityByName(EXISTS_ENTITY_NAME).get();
 		Attribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
 		assertEquals(att, attValue.getAttribute());
 	}
@@ -128,7 +128,7 @@ public class CreateRuleServiceTest extends TeardownRollbackTest {
 		assertEquals(6, literal.getValue());
 
 		AttributeValueExpression attValue = (AttributeValueExpression) righExpression;
-		Entity entity = spec.getDataModel().getEntity(EXISTS_ENTITY_NAME).get();
+		Entity entity = spec.getDataModel().getEntityByName(EXISTS_ENTITY_NAME).get();
 		Attribute att = entity.getAttribute(EXISTS_ATTRIBUTE_NAME).get();
 		assertEquals(att, attValue.getAttribute());
 	}

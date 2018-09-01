@@ -9,7 +9,7 @@ public class WorkflowInstanceDto {
 	}
 
 	public String getSpecId() {
-		return specId;
+		return this.specId;
 	}
 
 	public void setSpecId(String specId) {
@@ -17,10 +17,11 @@ public class WorkflowInstanceDto {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

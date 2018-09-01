@@ -34,7 +34,7 @@ public class CreateEntityMethodTest extends TeardownRollbackTest {
 		this.dataModel.createEntity(ENTITY_NAME, true, false);
 
 		Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
-		Entity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
+		Entity entity = spec.getDataModel().getEntityByName(ENTITY_NAME).get();
 		assertNotNull(entity);
 		assertEquals(ENTITY_NAME, entity.getName());
 		assertTrue(entity.getExists());

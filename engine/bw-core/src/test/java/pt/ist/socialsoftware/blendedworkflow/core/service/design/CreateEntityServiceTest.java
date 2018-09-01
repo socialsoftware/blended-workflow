@@ -36,7 +36,7 @@ public class CreateEntityServiceTest extends TeardownRollbackTest {
 		this.factory.createDesignInterface().createEntity(new EntityDto(SPEC_ID, ENTITY_NAME, false));
 
 		Specification spec = getBlendedWorkflow().getSpecById(SPEC_ID).get();
-		Entity entity = spec.getDataModel().getEntity(ENTITY_NAME).get();
+		Entity entity = spec.getDataModel().getEntityByName(ENTITY_NAME).get();
 		assertNotNull(entity);
 		assertEquals(ENTITY_NAME, entity.getName());
 		assertFalse(entity.getExists());
