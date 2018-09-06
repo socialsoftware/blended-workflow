@@ -5,7 +5,7 @@ import WorkItemList from './workitem/WorkItemList';
 
 const mapStateToProps = state => {
     return { 
-        specId: state.specId,
+        spec: state.spec,
         name: state.name 
     };
 };  
@@ -21,20 +21,20 @@ class ConnectedActivityExecutor extends React.Component {
     getNextActivityWorkItems() {
         const service = new RepositoryService();
 
-        return service.getNextActivityWorkItems(this.props.specId, this.props.name);
+        return service.getNextActivityWorkItems(this.props.spec.specId, this.props.name);
     }
 
     executeActivityWorkItem(workItem) {
        const service = new RepositoryService();
 
-       return service.executeActivityWorkItem(this.props.specId, this.props.name, workItem.name, workItem);
+       return service.executeActivityWorkItem(this.props.spec.specId, this.props.name, workItem.name, workItem);
     }
 
     render() {
         return (
             <div> 
-               <h5>Activity executor of instance {this.props.name} of {this.props.specId} </h5>
-                <WorkItemList specId={this.props.specId} name={this.props.name} getNextWorkItems={this.getNextActivityWorkItems} executeWorkItem={this.executeActivityWorkItem}/>
+               <h5>Activity executor of instance {this.props.name} of {this.props.spec.specId} </h5>
+                <WorkItemList specId={this.props.spec.specId} name={this.props.name} getNextWorkItems={this.getNextActivityWorkItems} executeWorkItem={this.executeActivityWorkItem}/>
             </div>
         )
     }

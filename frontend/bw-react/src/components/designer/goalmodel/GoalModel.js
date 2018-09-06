@@ -4,7 +4,7 @@ import { RepositoryService } from '../../../services/RepositoryService';
 import { GoalModelDiagram } from './GoalModelDiagram';
 
 const mapStateToProps = state => {
-    return { specId: state.specId };
+    return { spec: state.spec };
 };  
 
 class ConnectedGoalModel extends React.Component {
@@ -19,7 +19,7 @@ class ConnectedGoalModel extends React.Component {
     componentDidMount() {
         const service = new RepositoryService();
 
-        service.getGoalModel(this.props.specId).then(response => {
+        service.getGoalModel(this.props.spec.specId).then(response => {
             this.setState({ dataModel: response.data }
             );
         });
@@ -28,8 +28,8 @@ class ConnectedGoalModel extends React.Component {
     render() {
         return (
             <div>
-                <b>{this.props.specId}: Goal Model Diagram</b><br /><br />
-                <GoalModelDiagram specId={this.props.specId} />
+                <b>{this.props.spec.name}: Goal Model Diagram</b><br /><br />
+                <GoalModelDiagram specId={this.props.spec.specId} />
             </div>
         )
     }

@@ -12,6 +12,10 @@ export class DeleteInstance extends React.Component {
     }
 
     render() {
-       return <button onClick={this.handleClick}>delete</button>;
+       return (
+           <div>
+                <span>{this.props.name} </span><button onClick={this.handleClick}>delete</button>
+            </div>
+       );
     }
 }

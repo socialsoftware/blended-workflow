@@ -1,6 +1,6 @@
 import { SELECT_SPECIFICATION } from "../constants/action-types";
 
-export const selectSpecification = specId => ({
+export const selectSpecification = spec => ({
         type: SELECT_SPECIFICATION,
-        specId: specId
+        spec: spec
 });

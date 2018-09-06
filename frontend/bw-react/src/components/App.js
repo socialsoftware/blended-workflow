@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './Header';
 import { Main } from './Main';
 import { RepositoryService } from '../services/RepositoryService';
+import { Jumbotron } from 'react-bootstrap';
 
 class App extends React.Component {
   constructor(props) {
@@ -16,15 +17,17 @@ class App extends React.Component {
     const service = new RepositoryService();
     service.getSpecifications().then(response => {
       this.setState({ specifications: response.data }
-      )
+      );
     });
   }
 
   render() {
     return (
-      <div>
+       <div>
         <Header specifications={this.state.specifications} />
-        <Main />
+        <Jumbotron>
+          <Main />
+        </Jumbotron>
       </div>
     )
   }

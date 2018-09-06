@@ -6,7 +6,7 @@ import { EntityInstance } from './dataview/EntityInstance';
 
 const mapStateToProps = state => {
     return {
-        specId: state.specId,
+        spec: state.spec,
         name: state.name,
         entityInstances: state.entityInstances };
 };
@@ -26,7 +26,7 @@ class ConnectedDataView extends React.Component {
 
      componentDidMount() {
         const service = new RepositoryService();
-        service.getEntityInstances(this.props.specId, this.props.name).then(response => {
+        service.getEntityInstances(this.props.spec.specId, this.props.name).then(response => {
             this.props.getEntityInstances(response.data);
         });
      }
@@ -42,7 +42,7 @@ class ConnectedDataView extends React.Component {
     render() {
         return (
             <div> 
-                <h5>Data Model of instance {this.props.name} of specification {this.props.specId} </h5>
+                <h5>Data Model of instance {this.props.name} of specification {this.props.spec.specId} </h5>
                 {this.renderMandatoryEntityInstances()}
             </div>
         )

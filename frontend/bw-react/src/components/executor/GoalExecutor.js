@@ -5,7 +5,7 @@ import WorkItemList from './workitem/WorkItemList';
 
 const mapStateToProps = state => {
     return { 
-        specId: state.specId,
+        spec: state.spec,
         name: state.name
     };
 };  
@@ -21,20 +21,20 @@ class ConnectedGoalExecutor extends React.Component {
      getNextGoalWorkItems() {
         const service = new RepositoryService();
 
-        return service.getNextGoalWorkItems(this.props.specId, this.props.name);
+        return service.getNextGoalWorkItems(this.props.spec.specId, this.props.name);
     }
 
     executeGoalWorkItem(workItem) {
        const service = new RepositoryService();
 
-       return service.executeGoalWorkItem(this.props.specId, this.props.name, workItem.name, workItem);
+       return service.executeGoalWorkItem(this.props.spec.specId, this.props.name, workItem.name, workItem);
     }
 
     render() {
         return (
             <div> 
-               <h5>Goal executor of instance {this.props.name} of {this.props.specId} </h5>
-                <WorkItemList specId={this.props.specId} name={this.props.name} getNextWorkItems={this.getNextGoalWorkItems} executeWorkItem={this.executeGoalWorkItem} />
+               <h5>Goal executor of instance {this.props.name} of {this.props.spec.specId} </h5>
+                <WorkItemList specId={this.props.spec.specId} name={this.props.name} getNextWorkItems={this.getNextGoalWorkItems} executeWorkItem={this.executeGoalWorkItem} />
             </div>
         )
     }

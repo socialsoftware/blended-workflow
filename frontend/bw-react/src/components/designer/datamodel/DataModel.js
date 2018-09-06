@@ -6,7 +6,7 @@ import { Association } from './Association';
 import { DataModelDiagram } from './DataModelDiagram';
 
 const mapStateToProps = state => {
-    return { specId: state.specId };
+    return { spec: state.spec };
 };  
 
 class ConnectedDataModel extends React.Component {
@@ -21,7 +21,7 @@ class ConnectedDataModel extends React.Component {
     componentDidMount() {
         const service = new RepositoryService();
 
-        service.getDataModel(this.props.specId).then(response => {
+        service.getDataModel(this.props.spec.specId).then(response => {
             this.setState({ dataModel: response.data }
             )
         });

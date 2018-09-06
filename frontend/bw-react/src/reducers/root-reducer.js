@@ -3,7 +3,7 @@ import { SELECT_SPECIFICATION, SELECT_INSTANCE, GET_ENTITY_INSTANCES,
   SET_LINK_ENTITY_INSTANCES, CREATE_ENTITY_INSTANCE, DELETE_ENTITY_INSTANCE } from "../constants/action-types";
 
 const initialState = {
-    specId: '',
+    spec: {},
     name: '',
     entityInstances: [],
     unitOfWork: []
@@ -12,7 +12,7 @@ const initialState = {
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
       case SELECT_SPECIFICATION:
-        return { ...state, specId: action.specId };
+        return { ...state, spec: action.spec, name: '' };
       case SELECT_INSTANCE:
         return { ...state, name: action.name };
       case GET_ENTITY_INSTANCES:
