@@ -4,6 +4,7 @@ import { getEntityInstances } from '../../../actions/getEntityInstances';
 import { RepositoryService } from '../../../services/RepositoryService';
 import { OpenWorkItem } from './OpenWorkItem';
 import ExecuteWorkItem from './ExecuteWorkItem';
+import { ErrorMessage } from '../../util/ErrorMessage';
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -16,12 +17,15 @@ class ConnectedWorkItemList extends React.Component {
         super(props);
 
         this.state = {
+            error: false,
+            errorMessage: '',
             open: false,
             openWorkItem: {}
         };
 
         this.openWorkItem = this.openWorkItem.bind(this);
         this.closeWorkItem = this.closeWorkItem.bind(this);
+        this.closeErrorMessageModal = this.closeErrorMessageModal.bind(this);
         this.executeWorkItem = this.executeWorkItem.bind(this);
         this.getNextWorkItems = this.getNextWorkItems.bind(this);
         this.renderWorkItems = this.renderWorkItems.bind(this);
@@ -59,12 +63,22 @@ class ConnectedWorkItemList extends React.Component {
         });
     }
 
+    closeErrorMessageModal() {
+        this.setState({
+            error: false,
+            errorMessage: ''
+        });
+    }
+
     executeWorkItem(workItem) {
         this.props.executeWorkItem(workItem)
         .then(() => {
             this.closeWorkItem();
         }).catch((err) => {
-            alert('ERROR: '+ err.response.data.type + ' - ' + err.response.data.value)
+            this.setState({
+                error: true,
+                errorMessage: 'ERROR: '+ err.response.data.type + ' - ' + err.response.data.value
+            });
         });
     }
 
@@ -81,6 +95,7 @@ class ConnectedWorkItemList extends React.Component {
     render() {
         return (
             <div> 
+                {this.state.error && <ErrorMessage message={this.state.errorMessage} onClose={this.closeErrorMessageModal} />}
                 {this.renderWorkItems()}
             </div>
         )
