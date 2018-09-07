@@ -398,16 +398,16 @@ public class GoalModel extends GoalModel_Base {
 
 		for (Goal goal : getGoalSet()) {
 			String title = "ACT(" + goal.getActivationConditionSet().stream().map(d -> d.getPath().getValue())
-					.collect(Collectors.joining(",")) + ")";
+					.collect(Collectors.joining(",")) + ")<br />";
 			if (goal instanceof ProductGoal) {
 
 				if (!goal.getSuccessConditionSet().isEmpty()) {
 					title = title + "SUC(" + goal.getSuccessConditionSet().stream().map(d -> d.getPath().getValue())
-							.collect(Collectors.joining(",")) + ")";
+							.collect(Collectors.joining(",")) + ")<br />";
 				}
 				if (!goal.getAttributeInvariantConditionSet().isEmpty()) {
 					title = title + "RULE(" + goal.getAttributeInvariantConditionSet().stream().map(r -> r.getName())
-							.collect(Collectors.joining(",")) + ")";
+							.collect(Collectors.joining(",")) + ")<br />";
 				}
 			} else {
 				if (!goal.getEntityInvariantConditionSet().isEmpty()) {
@@ -415,7 +415,7 @@ public class GoalModel extends GoalModel_Base {
 							+ goal.getEntityInvariantConditionSet().stream().map(m -> m.getSourceEntity().getName()
 									+ "." + m.getRolename() + "," + m.getCardinality().getExp())
 									.collect(Collectors.joining(";"))
-							+ ")";
+							+ ")<br />";
 
 				}
 			}

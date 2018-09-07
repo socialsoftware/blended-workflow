@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-export class ErrorMessage extends React.Component {
+export class ModalMessage extends React.Component {
     constructor(props, context) {
       super(props, context);
   
@@ -26,7 +26,7 @@ export class ErrorMessage extends React.Component {
       return (
           <Modal show={this.state.show} onHide={this.handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>Error Message</Modal.Title>
+              <Modal.Title>{this.props.title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <p>

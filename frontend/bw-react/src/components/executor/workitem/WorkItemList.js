@@ -4,7 +4,7 @@ import { getEntityInstances } from '../../../actions/getEntityInstances';
 import { RepositoryService } from '../../../services/RepositoryService';
 import { OpenWorkItem } from './OpenWorkItem';
 import ExecuteWorkItem from './ExecuteWorkItem';
-import { ErrorMessage } from '../../util/ErrorMessage';
+import { ModalMessage } from '../../util/ModalMessage';
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -95,7 +95,7 @@ class ConnectedWorkItemList extends React.Component {
     render() {
         return (
             <div> 
-                {this.state.error && <ErrorMessage message={this.state.errorMessage} onClose={this.closeErrorMessageModal} />}
+                {this.state.error && <ModalMessage title='Error Message' message={this.state.errorMessage} onClose={this.closeErrorMessageModal} />}
                 {this.renderWorkItems()}
             </div>
         )
