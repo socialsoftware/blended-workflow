@@ -1,13 +1,19 @@
 import React from 'react';
 import { RepositoryService } from '../../services/RepositoryService';
 import { connect } from 'react-redux';
+import { setInstances } from '../../actions/setInstances';
 import CreateInstance from './CreateInstance';
 import { DeleteInstance } from './DeleteInstance';
-import { MenuItem } from 'react-bootstrap';
 
 const mapStateToProps = state => {
     return { spec: state.spec };
 };  
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setInstances: (instances) => dispatch(setInstances(instances))
+    };
+  };
 
 class ConnectedManageInstances extends React.Component {
     constructor(props) {
@@ -25,7 +31,7 @@ class ConnectedManageInstances extends React.Component {
         const service = new RepositoryService();
         service.getWorkflowInstances(this.props.spec.specId).then(response => {
             this.setState({ instances: response.data }
-            )
+            );
         });
     }
 
@@ -35,8 +41,9 @@ class ConnectedManageInstances extends React.Component {
         service.createWorkflowInstance(this.props.spec.specId, name, unitOfWork)
         .then(() => {
             service.getWorkflowInstances(this.props.spec.specId).then(response => {
-                this.setState({ instances: response.data }
-                );
+                this.setState({ instances: response.data });
+                this.props.setInstances(response.data);
+
             });
         }).catch((err) => {
             alert('ERROR: '+ err.response.data.type + ' - ' + err.response.data.value)
@@ -48,8 +55,8 @@ class ConnectedManageInstances extends React.Component {
 
         service.deleteWorkflowInstance(this.props.spec.specId, name).then(response => {
             service.getWorkflowInstances(this.props.spec.specId).then(response => {
-                this.setState({ instances: response.data }
-                )
+                this.setState({ instances: response.data });
+                this.props.setInstances(response.data);
             });
         });
     }
@@ -65,13 +72,13 @@ class ConnectedManageInstances extends React.Component {
     render() {
         return (
             <div> 
-                {this.props.spec.specId && <MenuItem eventKey={4.1}><CreateInstance specId={this.props.spec.specId} onSubmit={this.createInstance} /></MenuItem>}
+                {this.props.spec.specId && <CreateInstance specId={this.props.spec.specId} onSubmit={this.createInstance} />}
                 {this.renderInstances()}
             </div>
         )
     }
 } 
 
-const ManageInstances = connect(mapStateToProps)(ConnectedManageInstances);
+const ManageInstances = connect(mapStateToProps, mapDispatchToProps)(ConnectedManageInstances);
 
 export default ManageInstances;

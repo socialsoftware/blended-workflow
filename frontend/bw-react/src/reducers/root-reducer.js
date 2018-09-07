@@ -1,9 +1,11 @@
-import { SELECT_SPECIFICATION, SELECT_INSTANCE, GET_ENTITY_INSTANCES, 
+import { SET_SPECIFICATIONS, SELECT_SPECIFICATION, SELECT_INSTANCE, SET_INSTANCES, GET_ENTITY_INSTANCES, 
   SET_UNIT_OF_WORK, SET_SELECTED_ENTITY_INSTANCE, SET_ATTRIBUTE_INSTANCE_VALUE, 
   SET_LINK_ENTITY_INSTANCES, CREATE_ENTITY_INSTANCE, DELETE_ENTITY_INSTANCE } from "../constants/action-types";
 
 const initialState = {
+    specifications: [],
     spec: {},
+    instances: [],
     name: '',
     entityInstances: [],
     unitOfWork: []
@@ -11,10 +13,14 @@ const initialState = {
 
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
+      case SET_SPECIFICATIONS:
+        return { ...state, specifications: action.specifications };
       case SELECT_SPECIFICATION:
         return { ...state, spec: action.spec, name: '' };
       case SELECT_INSTANCE:
         return { ...state, name: action.name };
+      case SET_INSTANCES:
+        return { ...state, instances: action.instances };
       case GET_ENTITY_INSTANCES:
         return { ...state, entityInstances: action.entityInstances };
       case SET_UNIT_OF_WORK:
