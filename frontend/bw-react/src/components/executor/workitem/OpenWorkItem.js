@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'react-bootstrap';
 
 export class OpenWorkItem extends React.Component {
     constructor(props) {
@@ -13,7 +14,7 @@ export class OpenWorkItem extends React.Component {
 
     render() {
         return ( 
-            <div> {this.props.workItem.name} <button onClick={this.handleClick}>Open</button> </div>
+            <div> {this.props.workItem.name} <Button bsStyle="primary" onClick={this.handleClick}>Open</Button> </div>
         )
     }
 }

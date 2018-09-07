@@ -1,17 +1,18 @@
 import React from 'react';
 import Header from './Header';
 import { Main } from './Main';
-import { RepositoryService } from '../services/RepositoryService';
-import { Jumbotron } from 'react-bootstrap';
+import { Grid, Jumbotron } from 'react-bootstrap';
 
 class App extends React.Component {
   render() {
     return (
-       <div>
+      <div>
           <Header />
-          <Jumbotron>
-            <Main />
-          </Jumbotron>
+            <Grid>
+              <Jumbotron>
+                <Main />
+              </Jumbotron>
+            </Grid>
       </div>
     )
   }

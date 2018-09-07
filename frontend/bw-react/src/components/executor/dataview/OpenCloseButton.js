@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
+import { Button } from 'react-bootstrap';
 
 export class OpenCloseButton extends React.Component {
     constructor(props) {
@@ -14,7 +14,7 @@ export class OpenCloseButton extends React.Component {
 
     render() {
         return (
-            <Button variant="contained" color="primary" onClick={this.handleOnClick}>{!this.props.open ? 'Open' : 'Close'}</Button>
+            <Button bsStyle="primary" onClick={this.handleOnClick}>{!this.props.open ? 'Open' : 'Close'}</Button>
         );
     }
 }
