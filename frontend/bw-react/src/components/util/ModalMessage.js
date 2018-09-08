@@ -1,4 +1,5 @@
 import React from 'react';
+import Parser from 'html-react-parser';
 import { Modal, Button } from 'react-bootstrap';
 
 export class ModalMessage extends React.Component {
@@ -30,7 +31,7 @@ export class ModalMessage extends React.Component {
             </Modal.Header>
             <Modal.Body>
               <p>
-                  {this.props.message}
+                  {Parser(this.props.message)}
               </p>
             </Modal.Body>
             <Modal.Footer>

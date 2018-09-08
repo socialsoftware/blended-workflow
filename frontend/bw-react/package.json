@@ -7,6 +7,7 @@
     "@material-ui/icons": "^3.0.1",
     "axios": "^0.18.0",
     "dagre-d3": "^0.6.1",
+    "html-react-parser": "^0.4.6",
     "jshint": "^2.9.6",
     "react": "^16.4.2",
     "react-bootstrap": "^0.32.3",
