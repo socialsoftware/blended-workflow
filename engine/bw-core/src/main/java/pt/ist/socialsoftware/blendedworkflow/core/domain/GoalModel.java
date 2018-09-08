@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -396,7 +397,8 @@ public class GoalModel extends GoalModel_Base {
 		List<NodeVisDto> nodes = new ArrayList<>();
 		List<EdgeVisDto> edges = new ArrayList<>();
 
-		for (Goal goal : getGoalSet()) {
+		for (Goal goal : getGoalSet().stream().sorted(Comparator.comparing(Goal::getName))
+				.collect(Collectors.toList())) {
 			String title = "<pre>ACT(" + goal.getActivationConditionSet().stream().map(d -> d.getPath().getValue())
 					.collect(Collectors.joining(", ")) + ")</pre>";
 			if (goal instanceof ProductGoal) {
@@ -413,7 +415,7 @@ public class GoalModel extends GoalModel_Base {
 				if (!goal.getEntityInvariantConditionSet().isEmpty()) {
 					title = title + "<pre>MUL("
 							+ goal.getEntityInvariantConditionSet().stream()
-									.map(m -> m.getSourceEntity().getName() + "." + m.getRolename() + ", "
+									.map(m -> m.getSourceEntity().getName() + "." + m.getRolename() + " "
 											+ m.getCardinality().getExp())
 									.collect(Collectors.joining("; "))
 							+ ")</pre>";

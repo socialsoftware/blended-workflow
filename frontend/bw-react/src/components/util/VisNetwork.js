@@ -11,7 +11,7 @@ export class VisNetwork extends Component {
         this.state = {
             showConditions: false,
             conditions: ''
-        }
+        };
 
         this.handleCloseConditionsModal = this.handleCloseConditionsModal.bind(this);
         this.handleHoverNode = this.handleHoverNode.bind(this);
@@ -25,19 +25,19 @@ export class VisNetwork extends Component {
     }
 
     handleHoverNode(event) {
+        const nodeId = event.nodes[0];
+        if (nodeId) {
         this.setState({
             showConditions: true,
-            conditions: this.props.graph.nodes.filter(n => n.id === event.node)[0].title
+            conditions: this.props.graph.nodes.filter(n => n.id === nodeId)[0].title
         });
+        };
     }
 
     render() {
-        const nodes = this.props.graph.nodes;
-        const network = this.network;
-        if (this.props.graph.nodes) {
+        if (this.props.graph.nodes && Object.keys(this.network).length === 0 && this.network.constructor === Object) {
             this.network = new Network(this.appRef.current, this.props.graph, this.props.options);
-            this.network.on("hoverNode", this.handleHoverNode);
-            this.network.on("blurNode", this.handleCloseConditionsModal);        
+            this.network.on("click", this.handleHoverNode);
         }
         return ( 
             <div>
