@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.resources.service.design;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,13 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Capability;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Position;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.RALExpression;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Role;
-import pt.ist.socialsoftware.blendedworkflow.resources.domain.Unit;
+import pt.ist.socialsoftware.blendedworkflow.resources.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.*;
@@ -312,4 +307,9 @@ public class DesignResourcesInterface extends DesignInterface {
 
 		return newGoal;
 	}
+
+    public Set<UserDto> getUsers() {
+		BlendedWorkflow bw = BlendedWorkflow.getInstance();
+        return bw.getUsersSet().stream().map(User::getDTO).collect(Collectors.toSet());
+    }
 }
