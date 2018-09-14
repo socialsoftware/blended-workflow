@@ -117,6 +117,7 @@ export class GoalModelDiagram extends React.Component {
                     handleSubmit={this.handleOperationSubmit}
                     handleCancel={this.handleOperationCancel}
                     goalModel={this.state.goalModel}/>}
+                    
                 <div style={{width:'1000px' , height: '700px'}}>
                     <VisNetwork 
                         graph={this.state.graph} 

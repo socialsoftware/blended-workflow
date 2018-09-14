@@ -10,7 +10,7 @@ export class VisNetwork extends Component {
 
         this.state = {
             showConditions: false,
-            conditions: ''
+            conditions: '',
         };
 
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
@@ -32,20 +32,22 @@ export class VisNetwork extends Component {
     handleSelectNode(event) {
         const nodeId = event.nodes[0];
         if (nodeId) {
-        this.setState({
-            showConditions: true,
-            conditions: this.props.graph.nodes.filter(n => n.id === nodeId)[0].title
-        });
+            this.setState({
+                showConditions: true,
+                conditions: this.props.graph.nodes.filter(n => n.id === nodeId)[0].title
+            });
         }
     }
 
-    render() {
-        if (this.props.graph.nodes && Object.keys(this.network).length === 0 && this.network.constructor === Object) {
+    componentDidUpdate(prevProps) {
+        if (this.props.graph !== prevProps.graph) {
             this.network = new Network(this.appRef.current, this.props.graph, this.props.options);
             this.network.on("selectNode", this.handleSelectNode);
             this.network.on("doubleClick", this.handleDoubleClick);
         }
+    }
 
+    render() {
         return ( 
             <div>
                 {this.state.showConditions && <ModalMessage title='Conditions' message={this.state.conditions} onClose={this.handleCloseConditionsModal} />}
