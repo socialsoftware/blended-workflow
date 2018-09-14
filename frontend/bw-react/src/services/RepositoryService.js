@@ -71,6 +71,10 @@ export class RepositoryService {
         return this.axios.get("/specs/" + specId + "/goalmodel/graph/vis");
     }
 
+    renameGoal(specId, goal, goalName) {
+        return this.axios.post("/specs/" + specId + "/goalmodel/goals/" + goal + "/rename/" + goalName);
+    }
+
     // Instances
     getWorkflowInstances(specId) {
         return this.axios.get("/specs/" + specId + "/instances");

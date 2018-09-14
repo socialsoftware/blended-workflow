@@ -8,11 +8,11 @@ class App extends React.Component {
     return (
       <div>
           <Header />
-            <Grid>
-              <Jumbotron>
-                <Main />
-              </Jumbotron>
-            </Grid>
+          <Grid>
+            <Jumbotron>
+              <Main />
+            </Jumbotron>
+          </Grid>
       </div>
     )
   }

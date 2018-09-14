@@ -67,7 +67,7 @@ public class GoalModelController {
 	@RequestMapping(value = "/goals/{goalName}/rename/{newName}", method = RequestMethod.POST)
 	public ResponseEntity<Void> updateGoalName(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @PathVariable("newName") String newName) {
-		logger.debug("updateGoalName specId:{}, goalName:{}", specId, goalName);
+		logger.debug("updateGoalName specId:{}, goalName:{}, newName{}", specId, goalName, newName);
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
