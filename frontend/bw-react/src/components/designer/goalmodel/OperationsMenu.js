@@ -1,8 +1,7 @@
 import React from 'react';
-import { RepositoryService } from '../../../services/RepositoryService';
 import { Button, DropdownButton, MenuItem, Form, FormControl } from 'react-bootstrap';
 
-const operations = {
+export const operations = {
     NONE: 'operation',
     RENAME: 'rename by',
     MERGE: 'merge with',
@@ -25,7 +24,11 @@ export class OperationsMenu extends React.Component {
     }
 
     setOperation(value) {
-        this.setState({ operation: value });
+        this.props.handleSelectOperation(value);
+        this.setState({ 
+            operation: value,
+            inputValue: ''
+        });
     }
 
     handleInputValueChange(event) {
@@ -33,17 +36,7 @@ export class OperationsMenu extends React.Component {
     }
 
     handleSubmit() {
-        this.props.handleSubmit(operations.RENAME, this.state.inputValue);
-        // const service = new RepositoryService();
-        // service.renameGoal(this.props.selectedGoal.specId, this.props.selectedGoal.name,)
-        // .then(() => {
-        //     this.handleClose();
-        // }).catch((err) => {
-        //     this.setState({
-        //         error: true,
-        //         errorMessage: 'ERROR: '+ err.response.data.type + ' - ' + err.response.data.value
-        //     });
-        // });
+        this.props.handleSubmit(this.state.operation, this.state.inputValue);
     }
 
     handleClose() {
@@ -69,17 +62,10 @@ export class OperationsMenu extends React.Component {
                     <MenuItem eventKey="3" onClick={() => this.setOperation(operations.SPLIT)}>{operations.SPLIT}</MenuItem>
                 </DropdownButton></span>}{' '}
 
-                {(this.state.operation === operations.MERGE || this.state.operation === operations.SPLIT) && 
-                <DropdownButton 
-                    bsStyle='primary'
-                    title='Goal'
-                    id='3'>
-                    <MenuItem eventKey="1">Rename</MenuItem>
-                    <MenuItem eventKey="2">Merge</MenuItem>
-                    <MenuItem eventKey="3" active>Split</MenuItem>
-                </DropdownButton>}
+                {this.props.mergeWithGoal.name && <span>
+                <Button id='1'>{this.props.mergeWithGoal.name}</Button></span>}               
                 
-                {this.state.operation === operations.RENAME && 
+                {(this.state.operation === operations.RENAME || this.props.mergeWithGoal.name) &&
                 <FormControl
                     id="4"
                     type="text"
@@ -90,7 +76,7 @@ export class OperationsMenu extends React.Component {
                 />}{' '}
                 
                 {this.state.inputValue.length > 0 && <span>
-                <Button id='5' onClick={this.handleSubmit}>Submit</Button> 
+                <Button id='5' bsStyle='primary' onClick={this.handleSubmit}>Submit</Button> 
                 <span> </span>
                 <Button id='6' onClick={this.handleClose}>Cancel</Button> </span>}
 

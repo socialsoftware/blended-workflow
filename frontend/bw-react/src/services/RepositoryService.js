@@ -75,6 +75,16 @@ export class RepositoryService {
         return this.axios.post("/specs/" + specId + "/goalmodel/goals/" + goal + "/rename/" + goalName);
     }
 
+    mergeGoals(specId, goalOne, goalTwo, newGoalName) {
+        return this.axios.post("/specs/" + specId + "/goalmodel/goals/merge", 
+            {
+                "specId" : specId,
+                "nameOne" : goalOne.name,
+                "nameTwo" : goalTwo.name,
+                "newName" : newGoalName
+            });
+    }
+
     // Instances
     getWorkflowInstances(specId) {
         return this.axios.get("/specs/" + specId + "/instances");
