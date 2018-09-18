@@ -71,6 +71,18 @@ export class RepositoryService {
         return this.axios.get("/specs/" + specId + "/goalmodel/graph/vis");
     }
 
+    getGoalEntitySuccessConditions(specId, goalName) {
+        return this.axios.get("/specs/" + specId + "/goalmodel/goals/" + goalName + "/sucent");
+    }
+
+    getGoalAttributeSuccessConditions(specId, goalName) {
+        return this.axios.get("/specs/" + specId + "/goalmodel/goals/" + goalName + "/sucatt");
+    }
+
+    getGoalRelations(specId, goalName) {
+        return this.axios.get("/specs/" + specId + "/goalmodel/goals/" + goalName + "/relations");
+    }
+
     renameGoal(specId, goal, goalName) {
         return this.axios.post("/specs/" + specId + "/goalmodel/goals/" + goal + "/rename/" + goalName);
     }
@@ -82,6 +94,17 @@ export class RepositoryService {
                 "nameOne" : goalOne.name,
                 "nameTwo" : goalTwo.name,
                 "newName" : newGoalName
+            });
+    }
+
+    splitGoal(specId, goal, sucConditions, relations, newGoalName) {
+        return this.axios.post("/specs/" + specId + "/goalmodel/goals/extract", 
+            {
+                "specId" : specId,
+                "sourceGoalName" : goal.name,
+                "successConditions" : sucConditions,
+                "relations" : relations,
+                "newGoalName" : newGoalName
             });
     }
 

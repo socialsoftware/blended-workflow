@@ -613,6 +613,9 @@ public class DesignInterface {
 		Specification spec = getSpecBySpecId(specId);
 		Goal goal = getGoalByName(spec, goalName);
 
+		logger.debug("getGoalRelations: {}", goal.getEntityInvariantConditionSet().stream()
+				.map(m -> m.getRelationBW().getName()).collect(Collectors.joining()));
+
 		return goal.getEntityInvariantConditionSet().stream().map(m -> m.getRelationBW()).collect(Collectors.toSet());
 	}
 
@@ -967,7 +970,8 @@ public class DesignInterface {
 	}
 
 	private Entity getEntityByName(DataModel dataModel, String name) {
-		return dataModel.getEntityByName(name).orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, name));
+		return dataModel.getEntityByName(name)
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_ENTITY_NAME, name));
 	}
 
 	private Entity getEntityByExtId(String externalId) {

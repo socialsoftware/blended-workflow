@@ -63,11 +63,30 @@ export class OperationsMenu extends React.Component {
                 </DropdownButton></span>}{' '}
 
                 {this.props.mergeWithGoal.name && <span>
-                <Button id='1'>{this.props.mergeWithGoal.name}</Button></span>}               
+                <Button id='3'>{this.props.mergeWithGoal.name}</Button></span>}
+
+                {this.state.operation === operations.SPLIT && this.props.goalConditions &&
+                <DropdownButton 
+                    bsStyle='default'
+                    title={'conditions'}
+                    id='4'>
+                    {this.props.selectedGoal.type === 'ProductGoal' &&
+                    this.props.goalConditions.map(c => <MenuItem 
+                        eventKey={c.path} 
+                        onSelect={() => this.props.handleSelectCondition(c.path)}
+                        active={c.active}>{c.path}</MenuItem>)}
+                    {this.props.selectedGoal.type === 'AssociationGoal' &&
+                    this.props.goalConditions.map(c => <MenuItem 
+                        eventKey={c.name} 
+                        onSelect={() => this.props.handleSelectCondition(c.name)}
+                        active={c.active}>{c.name}</MenuItem>)}
+                </DropdownButton>}            
                 
-                {(this.state.operation === operations.RENAME || this.props.mergeWithGoal.name) &&
+                {(this.state.operation === operations.RENAME || this.props.mergeWithGoal.name || 
+                (this.props.goalConditions.reduce((a, c) => c.active ? ++a : a, 0) > 0 && 
+                this.props.goalConditions.reduce((a, c) => c.active ? ++a : a, 0) < this.props.goalConditions.length)) &&
                 <FormControl
-                    id="4"
+                    id="5"
                     type="text"
                     label="Text"
                     placeholder="name"
@@ -76,9 +95,9 @@ export class OperationsMenu extends React.Component {
                 />}{' '}
                 
                 {this.state.inputValue.length > 0 && <span>
-                <Button id='5' bsStyle='primary' onClick={this.handleSubmit}>Submit</Button> 
+                <Button id='6' bsStyle='primary' onClick={this.handleSubmit}>Submit</Button> 
                 <span> </span>
-                <Button id='6' onClick={this.handleClose}>Cancel</Button> </span>}
+                <Button id='7' onClick={this.handleClose}>Cancel</Button> </span>}
 
             </Form>
        );

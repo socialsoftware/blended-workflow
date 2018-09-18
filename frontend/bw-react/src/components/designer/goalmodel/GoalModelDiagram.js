@@ -45,14 +45,17 @@ export class GoalModelDiagram extends React.Component {
             showMenu: false,
             selectedGoal: {},
             mergeWithGoal: {},
+            goalConditions: [],
             error: false,
             errorMessage: '',
             operation: operations.NONE
         };
 
         this.loadModel = this.loadModel.bind(this);
+        this.setGoalConditions = this.setGoalConditions.bind(this);
         this.handleSelectOperation = this.handleSelectOperation.bind(this);
         this.handleSelectGoal = this.handleSelectGoal.bind(this);
+        this.handleSelectCondition = this.handleSelectCondition.bind(this);
         this.handleOperationSubmit = this.handleOperationSubmit.bind(this);
         this.handleOperationCancel = this.handleOperationCancel.bind(this);
         this.closeErrorMessageModal = this.closeErrorMessageModal.bind(this);
@@ -69,10 +72,37 @@ export class GoalModelDiagram extends React.Component {
                     showMenu: false,
                     selectedGoal: {},
                     mergeWithGoal: {},
+                    goalCondtions: [],
                     operation: operations.NONE
                 });
             });
         });
+    }
+
+    setGoalConditions(selectedGoal) {
+        const service = new RepositoryService();
+        if (selectedGoal.type === 'ProductGoal') {
+            service.getGoalEntitySuccessConditions(this.props.spec.specId, selectedGoal.name).then(response => {
+                const entConditions = response.data.map(c => ({...c, active: false}));
+                service.getGoalAttributeSuccessConditions(this.props.spec.specId, selectedGoal.name).then(response => {
+                    this.setState({
+                        selectedGoal: selectedGoal,
+                        mergeWithGoal: {},
+                        goalConditions: entConditions.concat(response.data.map(c => ({...c, active: false}))),
+                        operation: operations.SPLIT
+                    });
+                });    
+            });    
+        } else if (selectedGoal.type === 'AssociationGoal') {
+            service.getGoalRelations(this.props.spec.specId, selectedGoal.name).then(response => {
+                this.setState({
+                    selectedGoal: selectedGoal,
+                    mergeWithGoal: {},
+                    goalConditions: response.data.map(c => ({...c, active: false})),
+                    operation: operations.SPLIT
+                });
+            });    
+        }
     }
 
     componentDidMount() {
@@ -80,16 +110,20 @@ export class GoalModelDiagram extends React.Component {
     }
 
     handleSelectOperation(operation) {
-        this.setState({ 
-            mergeWithGoal: {},
-            operation: operation 
-        });
+        if (operation === operations.SPLIT) {
+            this.setGoalConditions(this.state.selectedGoal);
+        } else {
+            this.setState({ 
+                mergeWithGoal: {},
+                goalConditions: [],
+                operation: operation 
+            });
+        }
     }
 
     handleSelectGoal(externalId) {
         if (this.state.operation === operations.NONE ||
-            this.state.operation === operations.RENAME ||
-            this.state.operation === operations.SPLIT) {
+            this.state.operation === operations.RENAME) {
             this.setState({
                 showMenu: true,
                 selectedGoal: this.state.goalModel.find(goal => goal.extId === externalId)
@@ -102,7 +136,7 @@ export class GoalModelDiagram extends React.Component {
                 this.state.selectedGoal === mergeWithGoal) {
                 this.setState({
                     error: true,
-                    errorMessage: 'The goals are not of the same type or are equal'
+                    errorMessage: 'The goals are not of the same type or are equal: ' + this.state.selectedGoal.type + " <> " + mergeWithGoal.type
                 });
             } else {
                 this.setState({
@@ -110,6 +144,23 @@ export class GoalModelDiagram extends React.Component {
                 });
             }
         }
+
+        if (this.state.operation === operations.SPLIT) {
+            this.setGoalConditions(this.state.goalModel.find(goal => goal.extId === externalId));
+        }
+    }
+
+    handleSelectCondition(conditionKey) {
+        const goalConditions = this.state.goalConditions.map(c => {
+            if (c.path === conditionKey || c.name === conditionKey) {
+                return {...c, active: !c.active};
+            } else {
+                return c;
+            }
+        });
+        this.setState({
+            goalConditions: goalConditions
+        });
     }
 
     handleOperationSubmit(operation, inputValue) {
@@ -127,10 +178,23 @@ export class GoalModelDiagram extends React.Component {
                 });
                 break;
             case operations.MERGE:
-                alert(this.state.selectedGoal.name + 
-                    this.state.mergeWithGoal.name + inputValue);
                 service.mergeGoals(this.props.spec.specId, this.state.selectedGoal, 
                     this.state.mergeWithGoal, inputValue)
+                .then(() => {
+                    this.loadModel();        
+                }).catch((err) => {
+                    this.setState({
+                        error: true,
+                        errorMessage: 'ERROR: '+ err.response.data.type + ' - ' + err.response.data.value
+                    });
+                });
+                break;
+            case operations.SPLIT:
+                const goalConditions = this.state.goalConditions.filter(c => c.active);
+                const sucConditions = this.state.selectedGoal.type === 'ProductGoal' ? goalConditions : null;
+                const relations = this.state.selectedGoal.type === 'AssociationGoal' ? goalConditions : null;
+                service.splitGoal(this.props.spec.specId, this.state.selectedGoal, 
+                    sucConditions, relations, inputValue)
                 .then(() => {
                     this.loadModel();        
                 }).catch((err) => {
@@ -149,6 +213,7 @@ export class GoalModelDiagram extends React.Component {
             showMenu: false,
             selectedGoal: {},
             mergeWithGoal: {},
+            goalConditions: [],
             operation: operations.NONE 
         });
     }
@@ -174,10 +239,13 @@ export class GoalModelDiagram extends React.Component {
                     onClose={this.closeErrorMessageModal} />}
 
                 {this.state.showMenu &&
-                <OperationsMenu 
-                    selectedGoal={this.state.selectedGoal} 
+                <OperationsMenu
+                    selectedGoal={this.state.selectedGoal}
                     mergeWithGoal={this.state.mergeWithGoal}
+                    goalConditions={this.state.goalConditions}
+                    goalConditionKeys={this.state.goalConditionKeys}
                     handleSelectOperation={this.handleSelectOperation}
+                    handleSelectCondition={this.handleSelectCondition}
                     handleSubmit={this.handleOperationSubmit}
                     handleCancel={this.handleOperationCancel}
                     goalModel={this.state.goalModel}/>}

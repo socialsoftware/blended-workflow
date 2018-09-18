@@ -217,8 +217,6 @@ public class GoalModelController {
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		adi.getGoalRelations(specId, goalName);
-
 		RelationDto[] rels = adi.getGoalRelations(specId, goalName).stream().map(r -> r.getDTO())
 				.toArray(size -> new RelationDto[size]);
 

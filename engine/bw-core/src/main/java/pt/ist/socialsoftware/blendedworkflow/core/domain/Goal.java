@@ -117,7 +117,7 @@ public abstract class Goal extends Goal_Base {
 	}
 
 	public GoalDto getDTO() {
-		return new GoalDto(getSpecification().getSpecId(), getExternalId(), getClass().getName(), getName());
+		return new GoalDto(getSpecification().getSpecId(), getExternalId(), getClass().getSimpleName(), getName());
 	}
 
 	protected void applyActivationConditionsForProductGoal() {
