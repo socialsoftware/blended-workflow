@@ -40,6 +40,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     private Person person1;
     private Person person2;
     private Person person3;
+    private Entity entity;
 
     @Override
     public void populate4Test() {
@@ -47,7 +48,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
         edi = ExecutionResourcesInterface.getInstance();
         spec = designer.createSpecification(new SpecDto(SPEC_ID, SPEC_ID));
 
-        Entity entity = designer.createEntity(new EntityDto(SPEC_ID, ENT_1, false, true));
+        entity = designer.createEntity(new EntityDto(SPEC_ID, ENT_1, false, true));
         designer.createResourceModel(SPEC_ID);
         person1 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_1, "", new ArrayList<>(), new ArrayList<>()));
         person2 = designer.createPerson(new PersonDto(SPEC_ID, USERNAME_2, "", new ArrayList<>(), new ArrayList<>()));
@@ -57,6 +58,7 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
                 SPEC_ID,
                 ENT_1
         ));
+
         designer.addResourceRule(new ResourceRuleDTO(
                 SPEC_ID,
                 ENT_1,
@@ -80,23 +82,12 @@ public class ExecutionResourcesInterfaceTest extends TeardownRollbackTest {
     }
 
     private void fillWorkItem(WorkItemDto workItemDTO) {
-        DefinitionGroupDto definitionGroup = workItemDTO.getDefinitionGroupSet().stream().findFirst().orElseThrow(() -> new RMException(RMErrorType.INVALID_WORKITEM));
-
-        ProductInstanceDto productInstanceDto = new ProductInstanceDto();
-        ProductDto product = new ProductDto();
-        product.setProductType("ENTITY");
-        productInstanceDto.setProduct(product);
-        productInstanceDto.setPath(definitionGroup.getDefEnt().getPath());
-        productInstanceDto.setExternalId("-1");
-        productInstanceDto.setValue("");
-
-        DefinitionGroupInstanceDto definitionGroupInstanceDto = new DefinitionGroupInstanceDto();
-        definitionGroupInstanceDto.setProductInstanceSet(new HashSet<>());
-        definitionGroupInstanceDto.setEntityInstanceContextSet(new HashSet<>());
-        definitionGroupInstanceDto.setInnerRelationInstanceSet(new HashSet<>());
-        definitionGroupInstanceDto.getProductInstanceSet().add(productInstanceDto);
-
-        definitionGroup.getDefinitionGroupInstanceSet().add(definitionGroupInstanceDto);
+        Set<EntityInstanceToDefineDto> set = new HashSet<>();
+        workItemDTO.getEntityInstancesToDefine().forEach(entityInstanceToDefineDto -> {
+            entityInstanceToDefineDto.setExternalId("-1");
+            set.add(entityInstanceToDefineDto);
+        });
+        workItemDTO.setUnitOfWork(set);
     }
 
     private void fakeLogin(String username, String password) {

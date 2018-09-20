@@ -39,7 +39,7 @@ public class ResourceModel extends ResourceModel_Base {
 	}
 
 	public Entity addEntityIsPerson(String entityName) {
-		Entity entity = getSpec().getDataModel().getEntity(entityName)
+		Entity entity = getSpec().getDataModel().getEntityByName(entityName)
 				.orElseThrow(() -> new RMException(RMErrorType.INVALID_ENTITY_NAME, "Entity " + entityName + " does not exist."));
 
 		addEntityIsPerson(entity);

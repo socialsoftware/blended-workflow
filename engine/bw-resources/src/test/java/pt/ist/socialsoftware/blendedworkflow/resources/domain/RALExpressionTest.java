@@ -502,7 +502,11 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 "Entity.att"
         );
 
-        WorkflowInstance workflow = edi.createWorkflowInstance(spec.getSpecId(), "Test");
+        WorkItemDto wiDto = new WorkItemDto();
+        wiDto.setSpecId(spec.getSpecId());
+        wiDto.setWorkflowInstanceName("Test");
+        wiDto.setUnitOfWork(new HashSet<>());
+        WorkflowInstance workflow = edi.createWorkflowInstance(wiDto);
 
         EntityInstance entityInstance = new EntityInstance(workflow, ent1);
         AttributeInstance attributeInstance = new AttributeInstance(entityInstance, att1, "213");
@@ -543,7 +547,11 @@ public class RALExpressionTest extends TeardownRollbackTest {
                 "Entity.att"
         );
 
-        WorkflowInstance workflow = edi.createWorkflowInstance(spec.getSpecId(), "Test");
+        WorkItemDto wiDto = new WorkItemDto();
+        wiDto.setSpecId(spec.getSpecId());
+        wiDto.setWorkflowInstanceName("Test");
+        wiDto.setUnitOfWork(new HashSet<>());
+        WorkflowInstance workflow = edi.createWorkflowInstance(wiDto);
 
         Activity activityAtt = spec.getActivityModel().getActivity(att1.getFullPath());
         WorkItem workitem2 = new ActivityWorkItem(workflow, activityAtt);

@@ -11,8 +11,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkflowInstanceDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.AbstractDocExampleTest;
+
+import java.util.HashSet;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,7 +33,7 @@ public class InstanceWorkflowTest extends AbstractDocExampleTest {
     private final String SPEC_ID = "DoctorAppointment";
     private final String WORKFLOW_ID = "workflow-1";
     private final String WORKFLOW_ID_FOR_TESTS = "workflow-2";
-    private WorkflowInstanceDto _workflowInstanceDto;
+    private WorkItemDto workItemDto;
     private WorkflowInstance instance;
 
     private Specification spec;
@@ -40,9 +42,10 @@ public class InstanceWorkflowTest extends AbstractDocExampleTest {
     public void populate4Test() {
         super.populate4Test();
 
-        _workflowInstanceDto = new WorkflowInstanceDto();
-        _workflowInstanceDto.setSpecId(SPEC_ID);
-        _workflowInstanceDto.setName(WORKFLOW_ID_FOR_TESTS);
+        workItemDto = new WorkItemDto();
+        workItemDto.setSpecId(SPEC_ID);
+        workItemDto.setWorkflowInstanceName(WORKFLOW_ID_FOR_TESTS);
+        workItemDto.setUnitOfWork(new HashSet<>());
 
         spec = BlendedWorkflow.getInstance().getSpecById(SPEC_ID).get();
         instance = new WorkflowInstance(spec,WORKFLOW_ID);
@@ -69,21 +72,22 @@ public class InstanceWorkflowTest extends AbstractDocExampleTest {
     public void testCreateInstance() throws Exception {
         String token = extractToken(USERNAME, PASSWORD);
 
+        System.out.println(json(workItemDto));
+
         mockMvc.perform(
                 post("/specs/" + SPEC_ID + "/instances/")
                         .header(HEADER_STRING, constructToken(token))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json(_workflowInstanceDto)))
-                .andExpect(status().isCreated())
-                .andExpect(content().json(json(_workflowInstanceDto)));
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json(workItemDto)))
+                .andExpect(status().isCreated());
     }
 
     @Test
     public void testCreateInstanceWithoutLogin() throws Exception {
         mockMvc.perform(
                 post("/specs/" + SPEC_ID + "/instances/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json(_workflowInstanceDto)))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json(workItemDto)))
                 .andExpect(status().isUnauthorized());
     }
 

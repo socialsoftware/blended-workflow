@@ -54,7 +54,8 @@ public class ResourceActivityWorkItemDto extends ActivityWorkItemDto implements 
         setSpecId(activityWorkItemDTO.getSpecId());
         setSpecName(activityWorkItemDTO.getSpecName());
         setWorkflowInstanceName(activityWorkItemDTO.getWorkflowInstanceName());
-        setDefinitionGroupSet(activityWorkItemDTO.getDefinitionGroupSet());
+        setEntityInstancesToDefine(activityWorkItemDTO.getEntityInstancesToDefine());
+        setUnitOfWork(activityWorkItemDTO.getUnitOfWork());
         setName(activityWorkItemDTO.getName());
         setTimestamp(activityWorkItemDTO.getTimestamp());
         setPreArguments(activityWorkItemDTO.getPreArguments());

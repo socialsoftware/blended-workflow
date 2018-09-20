@@ -58,7 +58,8 @@ public class ResourceGoalWorkItemDto extends GoalWorkItemDto implements Resource
         setSpecId(goalWorkItemDTO.getSpecId());
         setSpecName(goalWorkItemDTO.getSpecName());
         setWorkflowInstanceName(goalWorkItemDTO.getWorkflowInstanceName());
-        setDefinitionGroupSet(goalWorkItemDTO.getDefinitionGroupSet());
+        setEntityInstancesToDefine(goalWorkItemDTO.getEntityInstancesToDefine());
+        setUnitOfWork(goalWorkItemDTO.getUnitOfWork());
         setName(goalWorkItemDTO.getName());
         setTimestamp(goalWorkItemDTO.getTimestamp());
         setPreArguments(goalWorkItemDTO.getPreArguments());
