@@ -13,6 +13,9 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UserDt
 import pt.ist.socialsoftware.blendedworkflow.resources.utils.ResourcesFactory;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+
+import static java.util.stream.Collectors.joining;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -23,13 +26,14 @@ public class UsersController {
     private ResourcesFactory factory;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResponseEntity<UserDto[]> createResourceModel(@PathVariable("specId") String specId) {
-        log.debug("CreateResourceModel: {}", specId);
+    public ResponseEntity<UserDto[]> listUsers() {
 
         DesignResourcesInterface designer = this.factory.createDesignInterface();
 
         UserDto[] users = designer.getUsers().stream()
                 .toArray(size -> new UserDto[size]);
+
+        log.debug("listUsers:" + Arrays.stream(users).map(userDto -> userDto.print()).collect(joining("\n")));
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

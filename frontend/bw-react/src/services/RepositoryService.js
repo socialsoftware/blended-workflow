@@ -168,4 +168,8 @@ export class RepositoryService {
         });
     }
 
+    // Authentication
+    getUsers() {
+        return this.axios.get("/users/list");
+    }
 }

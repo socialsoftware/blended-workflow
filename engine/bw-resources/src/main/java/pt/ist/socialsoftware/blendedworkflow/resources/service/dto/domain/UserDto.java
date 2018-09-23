@@ -33,4 +33,8 @@ public class UserDto {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String print() {
+        return "UserDTO: ID = " + this.id + " Username =  " + this.username;
+    }
 }

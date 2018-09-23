@@ -4,6 +4,7 @@ import { setSpecifications } from '../actions/setSpecifications';
 import { selectSpecification } from '../actions/selectSpecification';
 import { setInstances } from '../actions/setInstances';
 import { selectInstance } from '../actions/selectInstance';
+import { setUsers } from '../actions/setUsers';
 import { RepositoryService } from '../services/RepositoryService';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
@@ -14,6 +15,7 @@ const mapStateToProps = state => {
         spec: state.spec,
         instances: state.instances,
         name: state.name,
+        users: state.users,
      };
 };
 
@@ -22,7 +24,8 @@ const mapDispatchToProps = dispatch => {
         setSpecifications: (specifications) => dispatch(setSpecifications(specifications)),
         selectSpecification: spec => dispatch(selectSpecification(spec)),
         setInstances: (instances) => dispatch(setInstances(instances)),
-        selectInstance: name => dispatch(selectInstance(name))
+        selectInstance: name => dispatch(selectInstance(name)),
+        setUsers: (users) => dispatch(setUsers(users)),
     };
   };
 
@@ -49,6 +52,11 @@ class ConnectedHeader extends React.Component {
         service.getSpecifications().then(response => {
             this.props.setSpecifications(response.data);
         });
+        service.getUsers().then(response => {
+            console.log(response);
+            this.props.setUsers(response.data);
+        });
+        
       }
 
     render() {
@@ -66,6 +74,15 @@ class ConnectedHeader extends React.Component {
                 <Link onClick={() => {this.props.selectInstance(i.name)}}
                     to={`/specifications/instances/instance/${i.name}`}>
                     {i.name}
+                </Link>
+            </MenuItem>
+        );
+
+        const users = this.props.users.map(user => 
+            <MenuItem eventKey={user.username}> 
+                <Link onClick={() => {this.selectSpecification(user)}}
+                    to={`/specifications/spec/${user.userId}`}>
+                    {user.username}
                 </Link>
             </MenuItem>
         );
@@ -110,6 +127,13 @@ class ConnectedHeader extends React.Component {
                             <MenuItem eventKey={6.1}><Link to={`/specifications/executor/data`}>Data View</Link></MenuItem>
                             <MenuItem eventKey={6.2}><Link to={`/specifications/executor/goals`}>Goal View</Link></MenuItem>
                             <MenuItem eventKey={6.3}><Link to={`/specifications/executor/activities`}>Activity View</Link></MenuItem>
+                        </NavDropdown>
+                    </Nav>}
+                    {this.props.users && <Nav pullRight>
+                        <NavDropdown eventKey={7} title="Users" id="basic-nav-dropdown">
+                            <MenuItem eventKey={1.1}><Link onClick={() => {this.props.selectSpecification({})}} to='/specifications'>Manage Specifications</Link></MenuItem>
+                            <MenuItem divider />
+                            {users}
                         </NavDropdown>
                     </Nav>}
                 </Navbar.Collapse>
