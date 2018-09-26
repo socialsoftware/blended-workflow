@@ -47,13 +47,20 @@ class ConnectedHeader extends React.Component {
         });
     }
 
+    selectUser(user) {
+        const service = new RepositoryService();
+        console.log(user.username);
+        service.loginUser(user.username).then(response => {
+            console.log(response);
+        });
+    }
+
     componentDidMount() {
         const service = new RepositoryService();
         service.getSpecifications().then(response => {
             this.props.setSpecifications(response.data);
         });
         service.getUsers().then(response => {
-            console.log(response);
             this.props.setUsers(response.data);
         });
         
@@ -80,8 +87,8 @@ class ConnectedHeader extends React.Component {
 
         const users = this.props.users.map(user => 
             <MenuItem eventKey={user.username}> 
-                <Link onClick={() => {this.selectSpecification(user)}}
-                    to={`/specifications/spec/${user.userId}`}>
+                <Link onClick={() => {this.selectUser(user)}}
+                    to={`/`}>
                     {user.username}
                 </Link>
             </MenuItem>
@@ -131,9 +138,7 @@ class ConnectedHeader extends React.Component {
                     </Nav>}
                     {this.props.users && <Nav pullRight>
                         <NavDropdown eventKey={7} title="Users" id="basic-nav-dropdown">
-                            <MenuItem eventKey={1.1}><Link onClick={() => {this.props.selectSpecification({})}} to='/specifications'>Manage Specifications</Link></MenuItem>
-                            <MenuItem divider />
-                            {users}
+                            {users || <MenuItem eventKey={7.1}>No users</MenuItem>}
                         </NavDropdown>
                     </Nav>}
                 </Navbar.Collapse>

@@ -172,4 +172,11 @@ export class RepositoryService {
     getUsers() {
         return this.axios.get("/users/list");
     }
+
+    loginUser(username) {
+        return this.axios.post("/login", {
+            "username" : username,
+            "password" : username
+        });
+    }
 }
