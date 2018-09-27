@@ -98,6 +98,10 @@ public class DataModel extends DataModel_Base {
 		checkDependences();
 	}
 
+	public Entity getMandatoryEntity() {
+		return getEntitySet().stream().filter(e -> e.getMandatory()).findFirst().get();
+	}
+
 	private void checkUniqueMandatoryEntity() {
 		if (getEntitySet().stream().filter(e -> e.getMandatory()).count() != 1) {
 			throw new BWException(BWErrorType.NOT_UNIQUE_MANDATORY_ENTITY, getSpecification().getName());

@@ -33,6 +33,7 @@ public class WorkItemDto {
 	private String specName;
 	private String workflowInstanceName;
 	private String name;
+	private String type;
 	private int timestamp;
 	private String preArguments;
 	private String postArguments;
@@ -216,6 +217,14 @@ public class WorkItemDto {
 
 	public void setUnitOfWork(Set<EntityInstanceToDefineDto> unitOfWork) {
 		this.unitOfWork = unitOfWork;
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

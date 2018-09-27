@@ -20,6 +20,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.GoalWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
@@ -120,6 +121,12 @@ public class ExecutionInterface {
 		return getSpecification(specId).getWorkflowInstance(name).getMandatoryEntityInstance();
 	}
 
+	public List<WorkItemDto> getLogWorkItemDtoList(String specId, String instanceName) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		return workflowInstance.getLogWorkItemList().stream().map(WorkItem::getDto).collect(Collectors.toList());
+	}
+
 	public Set<ActivityWorkItemDto> getPendingActivityWorkItemSet(String specId, String instanceName) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
@@ -185,7 +192,7 @@ public class ExecutionInterface {
 	}
 
 	public List<GoalWorkItemDto> getLogGoalWorkItemDTOSet(String specId, String instanceName) {
-		return getLogGoalWorkItemSet(specId, instanceName).stream().map(GoalWorkItem::getDTO)
+		return getLogGoalWorkItemSet(specId, instanceName).stream().map(GoalWorkItem::getDto)
 				.collect(Collectors.toList());
 	}
 

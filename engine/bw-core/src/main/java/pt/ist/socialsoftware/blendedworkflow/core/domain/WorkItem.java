@@ -62,7 +62,9 @@ public abstract class WorkItem extends WorkItem_Base {
 
 	protected abstract Set<DefPathCondition> definedPreConditions();
 
-	public void fillDto(WorkItemDto workItemDto) {
+	public abstract WorkItemDto getDto();
+
+	public final void fillDto(WorkItemDto workItemDto) {
 		workItemDto.setTimestamp(getCounter());
 		workItemDto
 				.setPreArguments(

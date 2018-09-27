@@ -132,6 +132,10 @@ export class RepositoryService {
         return this.axios.delete("/specs/" + specId + "/instances/" + name);
     }
 
+    getWorkflowInstanceLog(specId, name) {
+        return this.axios.get("/specs/" + specId + "/instances/" + name + "/log");
+    }
+
     // Activity workitems
     getNextActivityWorkItems(specId, instance) {
         return this.axios.get("/specs/" + specId + "/instances/" + instance + "/activityworkitem/next");

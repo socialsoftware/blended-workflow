@@ -62,11 +62,13 @@ public class ActivityWorkItem extends ActivityWorkItem_Base {
 		return true;
 	}
 
+	@Override
 	public ActivityWorkItemDto getDto() {
 		ActivityWorkItemDto activityWorkItemDTO = new ActivityWorkItemDto();
 		activityWorkItemDTO.setName(getActivity().getName());
+		activityWorkItemDTO.setType("Activity");
 
-		super.fillDto(activityWorkItemDTO);
+		fillDto(activityWorkItemDTO);
 
 		return activityWorkItemDTO;
 	}

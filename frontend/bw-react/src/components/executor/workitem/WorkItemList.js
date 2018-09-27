@@ -95,6 +95,7 @@ class ConnectedWorkItemList extends React.Component {
     render() {
         return (
             <div> 
+                <h4>Work items</h4>
                 {this.state.error && <ModalMessage title='Error Message' message={this.state.errorMessage} onClose={this.closeErrorMessageModal} />}
                 {this.renderWorkItems()}
             </div>

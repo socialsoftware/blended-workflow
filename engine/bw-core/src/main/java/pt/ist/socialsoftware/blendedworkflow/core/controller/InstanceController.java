@@ -31,14 +31,14 @@ import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 @RestController
 @RequestMapping(value = "/specs/{specId}/instances")
 public class InstanceController {
-	private static Logger log = LoggerFactory.getLogger(InstanceController.class);
+	private static Logger logger = LoggerFactory.getLogger(InstanceController.class);
 
 	@Inject
 	private ModulesFactory factory;
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<WorkflowInstanceDto[]> getWorkflowInstances(@PathVariable("specId") String specId) {
-		log.debug("getWorkflowInstances specId:{}", specId);
+		logger.debug("getWorkflowInstances specId:{}", specId);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		WorkflowInstanceDto[] instances = edi.getWorkflowInstances(specId).stream().map(wi -> wi.getDTO())
@@ -51,7 +51,7 @@ public class InstanceController {
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET)
 	public ResponseEntity<WorkflowInstanceDto> getWorkflowInstance(@PathVariable("specId") String specId,
 			@PathVariable("name") String name) {
-		log.debug("getWorkflowInstance specId:{}, name:{}", specId, name);
+		logger.debug("getWorkflowInstance specId:{}, name:{}", specId, name);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		WorkflowInstance workflowInstance = edi.getWorkflowInstance(specId, name);
@@ -61,7 +61,7 @@ public class InstanceController {
 
 	@RequestMapping(value = "/init", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public ResponseEntity<WorkItemDto> getInitWorkItem(@PathVariable("specId") String specId) {
-		log.debug("getInitWorkItem specId:{}", specId);
+		logger.debug("getInitWorkItem specId:{}", specId);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		WorkItemDto workItem = edi.getInitWorkItem(specId);
@@ -72,7 +72,7 @@ public class InstanceController {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<WorkflowInstanceDto> createWorkflowInstance(@PathVariable("specId") String specId,
 			@RequestBody WorkItemDto workItemDto) {
-		log.debug("createWorkflowInstance specId:{}, name:{}", specId, workItemDto.getWorkflowInstanceName());
+		logger.debug("createWorkflowInstance specId:{}, name:{}", specId, workItemDto.getWorkflowInstanceName());
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		WorkflowInstance workflowInstance = edi.createWorkflowInstance(workItemDto);
@@ -83,7 +83,7 @@ public class InstanceController {
 	@RequestMapping(value = "/{name}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteWorkflowInstance(@PathVariable("specId") String specId,
 			@PathVariable("name") String name) {
-		log.debug("deleteWorkflowInstance specId:{}, name:{}", specId, name);
+		logger.debug("deleteWorkflowInstance specId:{}, name:{}", specId, name);
 		ExecutionInterface edi = this.factory.createExecutionInterface();
 
 		edi.deleteWorkflowInstance(specId, name);
@@ -94,7 +94,7 @@ public class InstanceController {
 	@RequestMapping(value = "/{name}/entities/mandatory", method = RequestMethod.GET)
 	public ResponseEntity<EntityInstanceDto> getMandatoryEntityInstance(@PathVariable("specId") String specId,
 			@PathVariable("name") String name) {
-		log.debug("getMandatoryEntityInstance specId:{}, name:{}", specId, name);
+		logger.debug("getMandatoryEntityInstance specId:{}, name:{}", specId, name);
 		ExecutionInterface ei = this.factory.createExecutionInterface();
 
 		EntityInstance entityInstance = ei.getMandatoryEntityInstance(specId, name);
@@ -114,7 +114,7 @@ public class InstanceController {
 	@RequestMapping(value = "/{name}/entities", method = RequestMethod.GET)
 	public ResponseEntity<EntityInstanceDto[]> getEntityInstances(@PathVariable("specId") String specId,
 			@PathVariable("name") String name) {
-		log.debug("getEntityInstances specId:{}, name:{}", specId, name);
+		logger.debug("getEntityInstances specId:{}, name:{}", specId, name);
 		ExecutionInterface ei = this.factory.createExecutionInterface();
 
 		Set<EntityInstance> entityInstances = ei.getEntityInstances(specId, name);
@@ -123,6 +123,16 @@ public class InstanceController {
 				.sorted(Comparator.comparing(EntityInstanceDto::getId)).toArray(size -> new EntityInstanceDto[size]);
 
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{name}/log", method = RequestMethod.GET)
+	public ResponseEntity<WorkItemDto[]> getLogWorkItems(@PathVariable String specId, @PathVariable String name) {
+		logger.debug("getLogActivityWorkItems specId:{}, instanceName:{}", specId, name);
+		ExecutionInterface edi = this.factory.createExecutionInterface();
+
+		WorkItemDto[] instances = edi.getLogWorkItemDtoList(specId, name).stream().toArray(WorkItemDto[]::new);
+
+		return new ResponseEntity<>(instances, HttpStatus.OK);
 	}
 
 }

@@ -64,11 +64,13 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 		return true;
 	}
 
-	public GoalWorkItemDto getDTO() {
+	@Override
+	public GoalWorkItemDto getDto() {
 		GoalWorkItemDto goalWorkItemDTO = new GoalWorkItemDto();
 		goalWorkItemDTO.setName(getGoal().getName());
+		goalWorkItemDTO.setType("Goal");
 
-		super.fillDto(goalWorkItemDTO);
+		fillDto(goalWorkItemDTO);
 
 		return goalWorkItemDTO;
 	}

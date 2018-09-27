@@ -62,6 +62,11 @@ public class WorkflowInstance extends WorkflowInstance_Base {
 		return getEntityInstanceSet().stream().filter(ei -> ei.getEntity().getMandatory()).findFirst().orElse(null);
 	}
 
+	public List<WorkItem> getLogWorkItemList() {
+		return getWorkItemSet().stream().sorted((wi1, wi2) -> Integer.compare(wi2.getCounter(), wi1.getCounter()))
+				.collect(Collectors.toList());
+	}
+
 	public List<ActivityWorkItem> getLogActivityWorkItemList() {
 		return getWorkItemSet().stream().filter(ActivityWorkItem.class::isInstance).map(ActivityWorkItem.class::cast)
 				.sorted((wi1, wi2) -> Integer.compare(wi1.getCounter(), wi2.getCounter())).collect(Collectors.toList());
