@@ -31,7 +31,6 @@ public class ActivityWorkItemDto extends WorkItemDto {
 		Map<Entity, List<DefProductCondition>> definitionGroupMap = activity.getPostConditionSet().stream()
 				.collect(Collectors.groupingBy(d -> d.getSourceOfPath()));
 
-		// FOLLOW THE DOMAIN MODEL APPROACH
 		for (Entity entityDefinitionGroup : definitionGroupMap.keySet()) {
 
 			// get entity contexts

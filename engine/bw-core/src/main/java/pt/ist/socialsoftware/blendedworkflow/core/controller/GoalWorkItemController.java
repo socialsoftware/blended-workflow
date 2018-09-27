@@ -37,8 +37,8 @@ public class GoalWorkItemController {
 		GoalWorkItemDto[] instances = edi.getPendingGoalWorkItemSet(specId, instanceName).stream()
 				.toArray(size -> new GoalWorkItemDto[size]);
 
-		logger.debug("getGoalWorkItems activityDTOs: {}",
-				Stream.of(instances).map(aw -> aw.print()).collect(Collectors.joining("\n\n")));
+		logger.debug("getGoalWorkItems goalDTOs: {}",
+				"\n\n" + Stream.of(instances).map(aw -> aw.print()).collect(Collectors.joining("\n\n")));
 
 		return new ResponseEntity<>(instances, HttpStatus.OK);
 	}

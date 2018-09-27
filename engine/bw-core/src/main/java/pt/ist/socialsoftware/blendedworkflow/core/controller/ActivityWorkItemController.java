@@ -38,7 +38,7 @@ public class ActivityWorkItemController {
 				.toArray(size -> new ActivityWorkItemDto[size]);
 
 		logger.debug("getNextActivityWorkItems activityDTOs: {}",
-				Stream.of(instances).map(aw -> aw.print()).collect(Collectors.joining("\n\n")));
+				"\n\n" + Stream.of(instances).map(aw -> aw.print()).collect(Collectors.joining("\n\n")));
 
 		return new ResponseEntity<>(instances, HttpStatus.OK);
 	}

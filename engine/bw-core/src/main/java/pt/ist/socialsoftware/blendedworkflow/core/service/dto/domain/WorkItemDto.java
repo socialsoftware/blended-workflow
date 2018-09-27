@@ -14,9 +14,11 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefEntityCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Dependence;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
@@ -76,6 +78,14 @@ public class WorkItemDto {
 									+ attributeInstanceDto.getAttribute().getName());
 					AttributeInstance attributeInstance = new AttributeInstance(entityInstance, attribute,
 							attributeInstanceDto.getValue());
+
+					for (Dependence dependence : attribute.getDependenceSet()) {
+						for (ProductInstance productInstance : entityInstance
+								.getDependentProductInstances(dependence)) {
+							workItem.addPreWorkItemArgument(productInstance,
+									dependence.getPath().getDefPathCondition());
+						}
+					}
 
 					if (workItem != null) {
 						workItem.addPostWorkItemArgument(attributeInstance,

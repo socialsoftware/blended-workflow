@@ -34,7 +34,6 @@ public class GoalWorkItemDto extends WorkItemDto {
 			Map<Entity, List<DefProductCondition>> definitionGroupMap = goal.getSuccessConditionSet().stream()
 					.collect(Collectors.groupingBy(d -> d.getSourceOfPath()));
 
-			// FOLLOW THE DOMAIN MODEL APPROACH
 			for (Entity entityDefinitionGroup : definitionGroupMap.keySet()) {
 
 				// get entity contexts
@@ -84,7 +83,6 @@ public class GoalWorkItemDto extends WorkItemDto {
 			Map<Entity, List<DefPathCondition>> definitionGroupMap = goal.getActivationConditionSet().stream()
 					.collect(Collectors.groupingBy(d -> d.getSourceOfPath()));
 
-			// FOLLOW THE DOMAIN MODEL APPROACH
 			for (Entity entityDefinitionGroup : definitionGroupMap.keySet()) {
 
 				// create entity instance dto to be defined

@@ -34,7 +34,11 @@ class ConnectedGoalExecutor extends React.Component {
         return (
             <div> 
                <h5>Goal executor of instance {this.props.name} of {this.props.spec.specId} </h5>
-                <WorkItemList specId={this.props.spec.specId} name={this.props.name} getNextWorkItems={this.getNextGoalWorkItems} executeWorkItem={this.executeGoalWorkItem} />
+                <WorkItemList 
+                    specId={this.props.spec.specId} 
+                    name={this.props.name} 
+                    getNextWorkItems={this.getNextGoalWorkItems} 
+                    executeWorkItem={this.executeGoalWorkItem} />
             </div>
         )
     }

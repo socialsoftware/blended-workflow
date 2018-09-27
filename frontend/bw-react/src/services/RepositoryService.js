@@ -45,7 +45,6 @@ export class RepositoryService {
     }
 
     // Data model instance
-
     getMandatoryEntityInstance(specId, name) {
         return this.axios.get("/specs/" + specId + "/instances/" + name + "/entities/mandatory");
     }
