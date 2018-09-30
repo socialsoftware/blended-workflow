@@ -178,8 +178,8 @@ export class RepositoryService {
 
     loginUser(username) {
         return this.axios.post("/login", {
-            "username" : username,
-            "password" : username
+            username : username,
+            password : username
         });
     }
 }

@@ -62,6 +62,32 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	}
 
 	@Override
+	public Set<ActivityWorkItemDto> getPendingActivityWorkItemSet(String specId, String instanceName) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		Set<ActivityWorkItemDto> activityWorkItemDTOs = new HashSet<>();
+
+		for (Activity activity : getPendingActivitySet(workflowInstance)) {
+			activityWorkItemDTOs.add(ResourceActivityWorkItemDto.createActivityWorkItemDTO(workflowInstance, activity));
+		}
+
+		return activityWorkItemDTOs;
+	}
+
+	@Override
+	public Set<GoalWorkItemDto> getPendingGoalWorkItemSet(String specId, String instanceName) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		Set<GoalWorkItemDto> goalWorkItemDTOs = new HashSet<>();
+
+		for (Goal goal : getPendingGoalSet(workflowInstance)) {
+			goalWorkItemDTOs.add(ResourceGoalWorkItemDto.createGoalWorkItemDTO(workflowInstance, goal));
+		}
+
+		return goalWorkItemDTOs;
+	}
+
+	@Override
 	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDto activityWorkItemDTO) {
 		ActivityWorkItem activityWI = super.executeActivityWorkItem(activityWorkItemDTO);
 
@@ -138,32 +164,6 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	}
 
 	@Override
-	public Set<ActivityWorkItemDto> getPendingActivityWorkItemSet(String specId, String instanceName) {
-		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
-
-		Set<ActivityWorkItemDto> activityWorkItemDTOs = new HashSet<>();
-
-		for (Activity activity : getPendingActivitySet(workflowInstance)) {
-			activityWorkItemDTOs.add(ResourceActivityWorkItemDto.createActivityWorkItemDTO(workflowInstance, activity));
-		}
-
-		return activityWorkItemDTOs;
-	}
-
-	@Override
-	public Set<GoalWorkItemDto> getPendingGoalWorkItemSet(String specId, String instanceName) {
-		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
-
-		Set<GoalWorkItemDto> goalWorkItemDTOs = new HashSet<>();
-
-		for (Goal goal : getPendingGoalSet(workflowInstance)) {
-			goalWorkItemDTOs.add(ResourceGoalWorkItemDto.createGoalWorkItemDTO(workflowInstance, goal));
-		}
-
-		return goalWorkItemDTOs;
-	}
-
-	@Override
 	public List<ActivityWorkItemDto> getLogActivityWorkItemDtoSet(String specId, String instanceName) {
 		return getLogActivityWorkItemSet(specId, instanceName).stream()
 				.map(activityWorkItem -> ResourceActivityWorkItemDto.fillActivityWorkItemDTO(activityWorkItem.getDto(), activityWorkItem))
@@ -173,7 +173,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	@Override
 	public List<GoalWorkItemDto> getLogGoalWorkItemDTOSet(String specId, String instanceName) {
 		return getLogGoalWorkItemSet(specId, instanceName).stream()
-				.map(goalWorkItem -> ResourceGoalWorkItemDto.fillGoalWorkItemDTO(goalWorkItem.getDTO(), goalWorkItem))
+				.map(goalWorkItem -> ResourceGoalWorkItemDto.fillGoalWorkItemDTO(goalWorkItem.getDto(), goalWorkItem))
 				.collect(Collectors.toList());
 	}
 }
