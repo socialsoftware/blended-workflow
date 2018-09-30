@@ -45,7 +45,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		Person person = user.getPerson(workflowInstance.getSpecification());
 
 		return super.getPendingActivitySet(workflowInstance).stream()
-				.filter(activity -> activity.getResponsibleFor().hasEligiblePerson(person, workflowInstance, activity.getPostProducts()))
+				.filter(activity -> activity.getResponsibleFor() == null || activity.getResponsibleFor().hasEligiblePerson(person, workflowInstance, activity.getPostProducts()))
 				.collect(toSet());
 	}
 
@@ -55,7 +55,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		Person person = user.getPerson(workflowInstance.getSpecification());
 
 		return super.getPendingGoalSet(workflowInstance).stream()
-				.filter(goal -> goal.getResponsibleFor().hasEligiblePerson(person, workflowInstance,
+				.filter(goal -> goal.getResponsibleFor() == null || goal.getResponsibleFor().hasEligiblePerson(person, workflowInstance,
 						goal.getSuccessConditionSet().stream().map(DefProductCondition::getTargetOfPath).collect(Collectors.toSet())
 				))
 				.collect(toSet());
@@ -91,19 +91,21 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDto activityWorkItemDTO) {
 		ActivityWorkItem activityWI = super.executeActivityWorkItem(activityWorkItemDTO);
 
-		Specification spec = BlendedWorkflow.getInstance().getSpecById(activityWorkItemDTO.getSpecId())
-				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+		if (activityWI.getActivity().getResponsibleFor() != null) {
+			Specification spec = BlendedWorkflow.getInstance().getSpecById(activityWorkItemDTO.getSpecId())
+					.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
 
-		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
-		Person person = user.getPerson(spec);
+			User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+			Person person = user.getPerson(spec);
 
-		if (!activityWI.getActivity().getResponsibleFor().hasEligiblePerson(person, activityWI.getWorkflowInstance(),
-				activityWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
-		)) {
-			throw new RMException(RMErrorType.PERSON_IS_NOT_ELIGIBLE);
+			if (activityWI.getActivity().getResponsibleFor() != null && !activityWI.getActivity().getResponsibleFor().hasEligiblePerson(person, activityWI.getWorkflowInstance(),
+					activityWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
+			)) {
+				throw new RMException(RMErrorType.PERSON_IS_NOT_ELIGIBLE);
+			}
+
+			activityWI.setExecutionUser(user);
 		}
-
-		activityWI.setExecutionUser(user);
 
 		return activityWI;
 	}
@@ -112,19 +114,21 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	public GoalWorkItem executeGoalWorkItem(GoalWorkItemDto goalWorkItemDTO) {
 		GoalWorkItem goalWI = super.executeGoalWorkItem(goalWorkItemDTO);
 
-		Specification spec = BlendedWorkflow.getInstance().getSpecById(goalWorkItemDTO.getSpecId())
-				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+		if (goalWI.getGoal().getResponsibleFor() != null) {
+			Specification spec = BlendedWorkflow.getInstance().getSpecById(goalWorkItemDTO.getSpecId())
+					.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
 
-		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
-		Person person = user.getPerson(spec);
+			User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+			Person person = user.getPerson(spec);
 
-		if (!goalWI.getGoal().getResponsibleFor().hasEligiblePerson(person, goalWI.getWorkflowInstance(),
-				goalWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
-		)) {
-			throw new RMException(RMErrorType.PERSON_IS_NOT_ELIGIBLE);
+			if (!goalWI.getGoal().getResponsibleFor().hasEligiblePerson(person, goalWI.getWorkflowInstance(),
+					goalWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
+			)) {
+				throw new RMException(RMErrorType.PERSON_IS_NOT_ELIGIBLE);
+			}
+
+			goalWI.setExecutionUser(user);
 		}
-
-		goalWI.setExecutionUser(user);
 
 		return goalWI;
 	}
@@ -140,7 +144,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		Person person = user.getPerson(spec);
 
 		return super.getLogActivityWorkItemSet(specId, instanceName).stream()
-				.filter(wi -> wi.getActivity().getInforms().hasEligiblePerson(person, workflowInstance,
+				.filter(wi -> wi.getActivity().getInforms() == null || wi.getActivity().getInforms().hasEligiblePerson(person, workflowInstance,
 						wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
 				))
 				.collect(toList());
@@ -157,7 +161,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		Person person = user.getPerson(spec);
 
 		return super.getLogGoalWorkItemSet(specId, instanceName).stream()
-				.filter(wi -> wi.getGoal().getInforms().hasEligiblePerson(person, workflowInstance,
+				.filter(wi -> wi.getGoal().getInforms() == null || wi.getGoal().getInforms().hasEligiblePerson(person, workflowInstance,
 						wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
 				))
 				.collect(toList());

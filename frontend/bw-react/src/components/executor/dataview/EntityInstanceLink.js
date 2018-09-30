@@ -8,7 +8,8 @@ const mapStateToProps = state => {
     return {
         specId: state.specId,
         name: state.name,
-        entityInstances: state.entityInstances };
+        entityInstances: state.entityInstances,
+    };
 };
 
 class ConnectedEntityInstanceLink extends React.Component {

@@ -7,7 +7,8 @@ import { ExecutionLog } from './ExecutionLog';
 const mapStateToProps = state => {
     return { 
         spec: state.spec,
-        name: state.name
+        name: state.name,
+        user: state.user,
     };
 };  
 
@@ -29,7 +30,7 @@ class ConnectedGoalExecutor extends React.Component {
     }
 
     getLog() {
-        const service = new RepositoryService();
+        const service = new RepositoryService(this.props.user);
         service.getWorkflowInstanceLog(this.props.spec.specId, this.props.name).then(response => {
             this.setState({
                 log: response.data
@@ -40,12 +41,12 @@ class ConnectedGoalExecutor extends React.Component {
     getNextGoalWorkItems() {
         this.getLog();
 
-        const service = new RepositoryService();
+        const service = new RepositoryService(this.props.user);
         return service.getNextGoalWorkItems(this.props.spec.specId, this.props.name);
     }
 
     executeGoalWorkItem(workItem) {
-       const service = new RepositoryService();
+       const service = new RepositoryService(this.props.user);
 
        return service.executeGoalWorkItem(this.props.spec.specId, this.props.name, workItem.name, workItem);
     }

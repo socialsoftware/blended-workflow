@@ -8,7 +8,8 @@ import { CreateEntityInstance } from './CreateEntityInstance';
 
 const mapStateToProps = state => {
     return {
-        unitOfWork: state.unitOfWork
+        unitOfWork: state.unitOfWork,
+        user: state.user,
     };
 };
 
@@ -37,7 +38,7 @@ class ConnectedCreateInstance extends React.Component {
     }
 
     componentDidMount() {
-        const service = new RepositoryService();
+        const service = new RepositoryService(this.props.user);
         service.getInitWorkItem(this.props.specId).then(response => {
             this.props.setUnitOfWork(this.createUnitOfWork(response.data.entityInstancesToDefine));
             this.setState({

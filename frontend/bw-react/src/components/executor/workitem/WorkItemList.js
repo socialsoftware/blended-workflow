@@ -6,6 +6,12 @@ import { OpenWorkItem } from './OpenWorkItem';
 import ExecuteWorkItem from './ExecuteWorkItem';
 import { ModalMessage } from '../../util/ModalMessage';
 
+const mapStateToProps = state => {
+    return {
+        user: state.user,
+    };
+};
+
 const mapDispatchToProps = dispatch => {
     return {
       getEntityInstances: entityInstances => dispatch(getEntityInstances(entityInstances))
@@ -36,7 +42,7 @@ class ConnectedWorkItemList extends React.Component {
     }
 
     getNextWorkItems() {
-        const service = new RepositoryService();
+        const service = new RepositoryService(this.props.user);
         service.getEntityInstances(this.props.specId, this.props.name).then(response => {
             this.props.getEntityInstances(response.data);
             this.props.getNextWorkItems().then(result => {
@@ -103,6 +109,6 @@ class ConnectedWorkItemList extends React.Component {
     }
 } 
 
-const WorkItemList = connect(null, mapDispatchToProps)(ConnectedWorkItemList);
+const WorkItemList = connect(mapStateToProps, mapDispatchToProps)(ConnectedWorkItemList);
 
 export default WorkItemList;

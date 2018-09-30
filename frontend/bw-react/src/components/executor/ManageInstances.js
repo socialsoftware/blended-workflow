@@ -6,7 +6,10 @@ import CreateInstance from './CreateInstance';
 import { DeleteInstance } from './DeleteInstance';
 
 const mapStateToProps = state => {
-    return { spec: state.spec };
+    return {
+        spec: state.spec,
+        user: state.user
+     };
 };  
 
 const mapDispatchToProps = dispatch => {
@@ -28,7 +31,7 @@ class ConnectedManageInstances extends React.Component {
     }
 
    componentDidMount() {
-        const service = new RepositoryService();
+        const service = new RepositoryService(this.props.user);
         service.getWorkflowInstances(this.props.spec.specId).then(response => {
             this.setState({ instances: response.data }
             );
@@ -36,7 +39,7 @@ class ConnectedManageInstances extends React.Component {
     }
 
     createInstance(name, unitOfWork) {
-        const service = new RepositoryService();
+        const service = new RepositoryService(this.props.user);
 
         service.createWorkflowInstance(this.props.spec.specId, name, unitOfWork)
         .then(() => {
@@ -51,7 +54,7 @@ class ConnectedManageInstances extends React.Component {
     }
 
     deleteInstance(name) {
-        const service = new RepositoryService();
+        const service = new RepositoryService(this.props.user);
 
         service.deleteWorkflowInstance(this.props.spec.specId, name).then(response => {
             service.getWorkflowInstances(this.props.spec.specId).then(response => {
