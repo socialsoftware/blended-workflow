@@ -4,6 +4,10 @@ public class JwtAuthenticationResponseDto {
     private String accessToken;
     private String tokenType = "Bearer";
 
+    public JwtAuthenticationResponseDto() {
+
+    }
+
     public JwtAuthenticationResponseDto(String accessToken) {
         this.accessToken = accessToken;
     }

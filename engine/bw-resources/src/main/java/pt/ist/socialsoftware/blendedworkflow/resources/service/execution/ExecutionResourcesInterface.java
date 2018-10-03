@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.resources.service.execution;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.ist.fenixframework.Atomic;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
@@ -12,6 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.User;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.DashboardDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceActivityWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceGoalWorkItemDto;
 
@@ -88,6 +90,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	}
 
 	@Override
+	@Atomic(mode = Atomic.TxMode.WRITE)
 	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDto activityWorkItemDTO) {
 		ActivityWorkItem activityWI = super.executeActivityWorkItem(activityWorkItemDTO);
 
@@ -111,6 +114,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	}
 
 	@Override
+	@Atomic(mode = Atomic.TxMode.WRITE)
 	public GoalWorkItem executeGoalWorkItem(GoalWorkItemDto goalWorkItemDTO) {
 		GoalWorkItem goalWI = super.executeGoalWorkItem(goalWorkItemDTO);
 
@@ -179,5 +183,23 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		return getLogGoalWorkItemSet(specId, instanceName).stream()
 				.map(goalWorkItem -> ResourceGoalWorkItemDto.fillGoalWorkItemDTO(goalWorkItem.getDto(), goalWorkItem))
 				.collect(Collectors.toList());
+	}
+
+	public DashboardDto getDashboard() {
+		BlendedWorkflow blended = BlendedWorkflow.getInstance();
+
+		Set<ActivityWorkItemDto> activityWorkItemDtos = new HashSet<>();
+		Set<GoalWorkItemDto> goalWorkItemDtos = new HashSet<>();
+
+		blended.getSpecificationSet().stream()
+			.forEach(spec -> {
+				spec.getWorkflowInstanceSet().stream()
+					.forEach(wi -> {
+						activityWorkItemDtos.addAll(getPendingActivityWorkItemSet(spec.getSpecId(), wi.getName()));
+						goalWorkItemDtos.addAll(getPendingGoalWorkItemSet(spec.getSpecId(), wi.getName()));
+					});
+			});
+
+		return new DashboardDto(activityWorkItemDtos, goalWorkItemDtos);
 	}
 }

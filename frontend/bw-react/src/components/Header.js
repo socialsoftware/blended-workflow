@@ -69,7 +69,6 @@ class ConnectedHeader extends React.Component {
         service.getUsers().then(response => {
             this.props.setUsers(response.data);
         });
-        
       }
 
     render() {
@@ -144,7 +143,7 @@ class ConnectedHeader extends React.Component {
                     </Nav>}
                     {this.props.users && <Nav pullRight>
                         {this.props.user && <NavItem eventKey={8}>
-                            {this.props.user.username}
+                            <Link to={`/dashboard`}>{this.props.user.username}</Link>
                         </NavItem>}
                         <NavDropdown eventKey={7} title="Users" id="basic-nav-dropdown">
                             {users || <MenuItem eventKey={7.1}>No users</MenuItem>}

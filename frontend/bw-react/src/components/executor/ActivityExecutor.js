@@ -46,7 +46,7 @@ class ConnectedActivityExecutor extends React.Component {
     }
 
     executeActivityWorkItem(workItem) {
-       const service = new RepositoryService();
+       const service = new RepositoryService(this.props.user);
 
        return service.executeActivityWorkItem(this.props.spec.specId, this.props.name, workItem.name, workItem);
     }

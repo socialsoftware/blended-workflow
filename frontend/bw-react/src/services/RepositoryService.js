@@ -187,4 +187,8 @@ export class RepositoryService {
             password : username
         });
     }
+
+    getDashboard() {
+        return this.axios.get("/users/dashboard");
+    }
 }

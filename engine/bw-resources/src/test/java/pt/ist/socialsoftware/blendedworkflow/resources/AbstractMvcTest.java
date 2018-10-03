@@ -13,9 +13,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.UserDto;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.req.JwtAuthenticationResponseDto;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
+import static org.apache.commons.lang.StringUtils.split;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -46,13 +49,15 @@ public abstract class AbstractMvcTest extends TeardownRollbackTest {
         auth.setUsername(username);
         auth.setPassword(password);
         return mockMvc.perform(
-                post("/login")
+                post("/users/login")
                         .content(json(auth))
                         .contentType(MediaType.APPLICATION_JSON));
     }
 
-    protected String extractToken(MvcResult result) {
-        return result.getResponse().getHeader(HEADER_STRING).split("Bearer ")[1];
+    protected String extractToken(MvcResult result) throws IOException {
+        String response = result.getResponse().getContentAsString();
+        JwtAuthenticationResponseDto responseDto = mapper.readValue(response, JwtAuthenticationResponseDto.class);
+        return responseDto.getAccessToken();
     }
 
     protected String extractToken(String username, String password) throws Exception {

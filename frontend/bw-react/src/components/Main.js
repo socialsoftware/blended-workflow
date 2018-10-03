@@ -10,7 +10,7 @@ import { Instance } from './executor/Instance';
 import DataView from './executor/DataView';
 import GoalExecutor from './executor/GoalExecutor';
 import ActivityExecutor from './executor/ActivityExecutor';
-import { Dashboard } from './auth/Dashboard';
+import Dashboard from './auth/Dashboard';
 
 export const Main = () => (
   <main>

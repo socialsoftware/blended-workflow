@@ -48,7 +48,7 @@ public class BlendedWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
         http.cors().and()
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/users/login").permitAll()
                 .antMatchers("/specs/**/instances/**").authenticated()
 //                .anyRequest().authenticated()
                 .and()
@@ -56,7 +56,7 @@ public class BlendedWebSecurityConfigurerAdapter extends WebSecurityConfigurerAd
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
             /*.formLogin()
-                .loginPage("/login")
+                .loginPage("/users/login")
                 .permitAll()
                 .successHandler(authenticationSuccessHandler)
                 .and()*/
