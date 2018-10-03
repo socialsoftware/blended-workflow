@@ -155,6 +155,6 @@ class ConnectedHeader extends React.Component {
     }
 }
 
-const Header =  connect(mapStateToProps, mapDispatchToProps)(ConnectedHeader);
+const Header = connect(mapStateToProps, mapDispatchToProps)(ConnectedHeader);
 
 export default Header;

@@ -30,6 +30,7 @@ class ConnectedGoalExecutor extends React.Component {
     }
 
     getLog() {
+        console.log(this.props.name);
         const service = new RepositoryService(this.props.user);
         service.getWorkflowInstanceLog(this.props.spec.specId, this.props.name).then(response => {
             this.setState({
