@@ -1,6 +1,6 @@
 import { SET_SPECIFICATIONS, SELECT_SPECIFICATION, SELECT_INSTANCE, SET_INSTANCES, GET_ENTITY_INSTANCES, 
   SET_UNIT_OF_WORK, SET_SELECTED_ENTITY_INSTANCE, SET_ATTRIBUTE_INSTANCE_VALUE, 
-  SET_LINK_ENTITY_INSTANCES, CREATE_ENTITY_INSTANCE, DELETE_ENTITY_INSTANCE, SET_USERS } from "../constants/action-types";
+  SET_LINK_ENTITY_INSTANCES, CREATE_ENTITY_INSTANCE, DELETE_ENTITY_INSTANCE, SET_USERS, SELECT_USER } from "../constants/action-types";
 
 const initialState = {
     specifications: [],
@@ -72,6 +72,8 @@ const rootReducer = (state = initialState, action) => {
         };
       case SET_USERS:
         return { ...state, users: action.users };
+      case SELECT_USER:
+        return { ...state, user: action.user };
       default: 
         return state;
     }

@@ -5,6 +5,7 @@ import { selectSpecification } from '../actions/selectSpecification';
 import { setInstances } from '../actions/setInstances';
 import { selectInstance } from '../actions/selectInstance';
 import { setUsers } from '../actions/setUsers';
+import { selectUser } from '../actions/selectUser';
 import { RepositoryService } from '../services/RepositoryService';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
@@ -16,6 +17,7 @@ const mapStateToProps = state => {
         instances: state.instances,
         name: state.name,
         users: state.users,
+        user: state.user,
      };
 };
 
@@ -26,6 +28,7 @@ const mapDispatchToProps = dispatch => {
         setInstances: (instances) => dispatch(setInstances(instances)),
         selectInstance: name => dispatch(selectInstance(name)),
         setUsers: (users) => dispatch(setUsers(users)),
+        selectUser: (user) => dispatch(selectUser(user)),
     };
   };
 
@@ -37,7 +40,7 @@ class ConnectedHeader extends React.Component {
     }
 
     selectSpecification(spec) {
-        const service = new RepositoryService();
+        const service = new RepositoryService(this.props.user);
         service.getWorkflowInstances(spec.specId).then(response => {
             this.setState({
                 instances: response.data
@@ -48,22 +51,24 @@ class ConnectedHeader extends React.Component {
     }
 
     selectUser(user) {
-        const service = new RepositoryService();
-        console.log(user.username);
+        const service = new RepositoryService(this.props.user);
         service.loginUser(user.username).then(response => {
-            console.log(response);
+            const userDto = {
+                username: user.username,
+                token: response.data.tokenType + " " + response.data.accessToken,
+            };
+            this.props.selectUser(userDto);
         });
     }
 
     componentDidMount() {
-        const service = new RepositoryService();
+        const service = new RepositoryService(this.props.user);
         service.getSpecifications().then(response => {
             this.props.setSpecifications(response.data);
         });
         service.getUsers().then(response => {
             this.props.setUsers(response.data);
         });
-        
       }
 
     render() {
@@ -137,6 +142,9 @@ class ConnectedHeader extends React.Component {
                         </NavDropdown>
                     </Nav>}
                     {this.props.users && <Nav pullRight>
+                        {this.props.user && <NavItem eventKey={8}>
+                            <Link to={`/dashboard`}>{this.props.user.username}</Link>
+                        </NavItem>}
                         <NavDropdown eventKey={7} title="Users" id="basic-nav-dropdown">
                             {users || <MenuItem eventKey={7.1}>No users</MenuItem>}
                         </NavDropdown>
@@ -147,6 +155,6 @@ class ConnectedHeader extends React.Component {
     }
 }
 
-const Header =  connect(mapStateToProps, mapDispatchToProps)(ConnectedHeader);
+const Header = connect(mapStateToProps, mapDispatchToProps)(ConnectedHeader);
 
 export default Header;

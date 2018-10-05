@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,7 +30,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
@@ -50,7 +53,10 @@ public class AuthenticationTest extends AbstractDocExampleTest {
         MvcResult request = login("John", "John")
                 .andExpect(status().isOk()).andReturn();
 
-        assertNotNull(request.getResponse().getHeader(HEADER_STRING));
+        logger.debug("Auth is {}", SecurityContextHolder.getContext().getAuthentication());
+
+        assertNotNull(request.getResponse().getContentAsString());
+        assertEquals("John", ((BlendedUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails()).getUsername());
     }
 
     @Test

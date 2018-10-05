@@ -8,7 +8,9 @@ const mapStateToProps = state => {
     return {
         spec: state.spec,
         name: state.name,
-        entityInstances: state.entityInstances };
+        entityInstances: state.entityInstances,
+        user: state.user,
+    };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -25,7 +27,7 @@ class ConnectedDataView extends React.Component {
      }
 
      componentDidMount() {
-        const service = new RepositoryService();
+        const service = new RepositoryService(this.props.user);
         service.getEntityInstances(this.props.spec.specId, this.props.name).then(response => {
             this.props.getEntityInstances(response.data);
         });

@@ -1,13 +1,18 @@
 import axios from 'axios';
 
 export class RepositoryService {
-    constructor() {
+    constructor(loggedUser) {
+        var headers = {
+            'X-Custom-Header': 'BlendedWorkflow',
+        };
+        if (loggedUser) {
+            headers['Authorization'] = loggedUser.token;
+        } 
+
         this.axios = axios.create({
             baseURL: 'http://localhost:8080',
             timeout: 1000,
-            headers: {
-                'X-Custom-Header': 'BlendedWorkflow'
-            }
+            headers: headers,
         });
     }
 
@@ -177,9 +182,13 @@ export class RepositoryService {
     }
 
     loginUser(username) {
-        return this.axios.post("/login", {
-            "username" : username,
-            "password" : username
+        return this.axios.post("/users/login", {
+            username : username,
+            password : username
         });
+    }
+
+    getDashboard() {
+        return this.axios.get("/users/dashboard");
     }
 }
