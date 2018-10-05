@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
 import java.util.Set;
 
+import org.joda.time.DateTime;
+
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
@@ -23,6 +25,7 @@ public class GoalWorkItem extends GoalWorkItem_Base {
 	public GoalWorkItem(WorkflowInstance workflowInstance, Goal goal) {
 		setWorkflowInstance(workflowInstance);
 		setCounter(workflowInstance.incLogCounter());
+		setDate(DateTime.now());
 		setGoal(goal);
 	}
 

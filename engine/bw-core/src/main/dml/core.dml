@@ -159,6 +159,7 @@ class RelationInstance;
 
 class WorkItem {
 	int counter;
+	DateTime date;
 }
 
 class ActivityWorkItem extends WorkItem;
