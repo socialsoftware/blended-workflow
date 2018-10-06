@@ -8,6 +8,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.User;
@@ -185,6 +186,33 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	protected List<WorkItem> getLogWorkItemList(String specId, String instanceName) {
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(specId)
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
+		return super.getLogWorkItemList(specId, instanceName).stream()
+				.filter(wi -> {
+					if (wi instanceof GoalWorkItem) {
+						GoalWorkItem gwi = (GoalWorkItem) wi;
+						return gwi.getGoal().getInforms() == null || gwi.getGoal().getInforms().hasEligiblePerson(person, workflowInstance,
+								wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet()));
+					} else if (wi instanceof  ActivityWorkItem) {
+						ActivityWorkItem awi = (ActivityWorkItem) wi;
+						return awi.getActivity().getInforms() == null || awi.getActivity().getInforms().hasEligiblePerson(person, workflowInstance,
+								wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet()));
+					} else {
+						return true;
+					}
+				}
+				).collect(toList());
+	}
+
 	public DashboardDto getDashboard() {
 		BlendedWorkflow blended = BlendedWorkflow.getInstance();
 
@@ -202,4 +230,6 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 		return new DashboardDto(activityWorkItemDtos, goalWorkItemDtos);
 	}
+
+
 }
