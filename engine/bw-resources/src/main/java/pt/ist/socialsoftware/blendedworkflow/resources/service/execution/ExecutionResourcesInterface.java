@@ -95,21 +95,22 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDto activityWorkItemDTO) {
 		ActivityWorkItem activityWI = super.executeActivityWorkItem(activityWorkItemDTO);
 
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(activityWorkItemDTO.getSpecId())
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
 		if (activityWI.getActivity().getResponsibleFor() != null) {
-			Specification spec = BlendedWorkflow.getInstance().getSpecById(activityWorkItemDTO.getSpecId())
-					.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
-
-			User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
-			Person person = user.getPerson(spec);
-
-			if (activityWI.getActivity().getResponsibleFor() != null && !activityWI.getActivity().getResponsibleFor().hasEligiblePerson(person, activityWI.getWorkflowInstance(),
+			if (!activityWI.getActivity().getResponsibleFor().hasEligiblePerson(person, activityWI.getWorkflowInstance(),
 					activityWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
 			)) {
 				throw new RMException(RMErrorType.PERSON_IS_NOT_ELIGIBLE);
 			}
 
-			activityWI.setExecutionUser(user);
 		}
+
+		activityWI.setExecutionUser(user);
 
 		return activityWI;
 	}
@@ -119,21 +120,22 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	public GoalWorkItem executeGoalWorkItem(GoalWorkItemDto goalWorkItemDTO) {
 		GoalWorkItem goalWI = super.executeGoalWorkItem(goalWorkItemDTO);
 
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(goalWorkItemDTO.getSpecId())
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
+
 		if (goalWI.getGoal().getResponsibleFor() != null) {
-			Specification spec = BlendedWorkflow.getInstance().getSpecById(goalWorkItemDTO.getSpecId())
-					.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
-
-			User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
-			Person person = user.getPerson(spec);
-
 			if (!goalWI.getGoal().getResponsibleFor().hasEligiblePerson(person, goalWI.getWorkflowInstance(),
 					goalWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
 			)) {
 				throw new RMException(RMErrorType.PERSON_IS_NOT_ELIGIBLE);
 			}
-
-			goalWI.setExecutionUser(user);
 		}
+
+		goalWI.setExecutionUser(user);
 
 		return goalWI;
 	}

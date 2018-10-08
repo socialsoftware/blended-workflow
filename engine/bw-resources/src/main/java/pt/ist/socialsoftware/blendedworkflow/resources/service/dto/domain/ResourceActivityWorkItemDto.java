@@ -44,7 +44,9 @@ public class ResourceActivityWorkItemDto extends ActivityWorkItemDto implements 
 
         resourceActivityWorkItemDto.setEntityIsPersonDTOSet(entityIsPersonDtoSet);
 
-        resourceActivityWorkItemDto.setExecutionUser(activityWorkItem.getExecutionUser().getDTO());
+        if (activityWorkItem.getExecutionUser() != null) {
+            resourceActivityWorkItemDto.setExecutionUser(activityWorkItem.getExecutionUser().getDTO());
+        }
 
         return resourceActivityWorkItemDto;
     }
