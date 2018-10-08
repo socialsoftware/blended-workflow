@@ -187,6 +187,23 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	}
 
 	@Override
+	public List<WorkItemDto> getLogWorkItemDtoList(String specId, String instanceName) {
+		return super.getLogWorkItemList(specId, instanceName).stream()
+				.map(workitem -> {
+					if (workitem instanceof ActivityWorkItem) {
+                        ActivityWorkItem awi = (ActivityWorkItem) workitem;
+						return ResourceActivityWorkItemDto.fillActivityWorkItemDTO(awi.getDto(), awi);
+					} else if (workitem instanceof GoalWorkItem) {
+						GoalWorkItem gwi = (GoalWorkItem) workitem;
+						return ResourceGoalWorkItemDto.fillGoalWorkItemDTO(gwi.getDto(), gwi);
+					} else {
+					    return workitem.getDto();
+                    }
+				})
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	protected List<WorkItem> getLogWorkItemList(String specId, String instanceName) {
 		Specification spec = BlendedWorkflow.getInstance().getSpecById(specId)
 				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
