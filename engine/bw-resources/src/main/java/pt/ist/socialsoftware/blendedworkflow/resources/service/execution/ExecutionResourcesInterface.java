@@ -48,7 +48,8 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		Person person = user.getPerson(workflowInstance.getSpecification());
 
 		return super.getPendingActivitySet(workflowInstance).stream()
-				.filter(activity -> activity.getResponsibleFor() == null || activity.getResponsibleFor().hasEligiblePerson(person, workflowInstance, activity.getPostProducts()))
+				.filter(activity -> person.getName().equals("Admin") || activity.getResponsibleFor() == null ||
+						activity.getResponsibleFor().hasEligiblePerson(person, workflowInstance, activity.getPostProducts()))
 				.collect(toSet());
 	}
 
@@ -58,9 +59,10 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		Person person = user.getPerson(workflowInstance.getSpecification());
 
 		return super.getPendingGoalSet(workflowInstance).stream()
-				.filter(goal -> goal.getResponsibleFor() == null || goal.getResponsibleFor().hasEligiblePerson(person, workflowInstance,
-						goal.getSuccessConditionSet().stream().map(DefProductCondition::getTargetOfPath).collect(Collectors.toSet())
-				))
+				.filter(goal -> person.getName().equals("Admin") || goal.getResponsibleFor() == null ||
+						goal.getResponsibleFor().hasEligiblePerson(person, workflowInstance,
+							goal.getSuccessConditionSet().stream().map(DefProductCondition::getTargetOfPath).collect(Collectors.toSet())
+						))
 				.collect(toSet());
 	}
 
@@ -101,7 +103,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
 		Person person = user.getPerson(spec);
 
-		if (activityWI.getActivity().getResponsibleFor() != null) {
+		if (activityWI.getActivity().getResponsibleFor() != null && !person.getName().equals("Admin")) {
 			if (!activityWI.getActivity().getResponsibleFor().hasEligiblePerson(person, activityWI.getWorkflowInstance(),
 					activityWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
 			)) {
@@ -127,7 +129,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		Person person = user.getPerson(spec);
 
 
-		if (goalWI.getGoal().getResponsibleFor() != null) {
+		if (goalWI.getGoal().getResponsibleFor() != null && !person.getName().equals("Admin")) {
 			if (!goalWI.getGoal().getResponsibleFor().hasEligiblePerson(person, goalWI.getWorkflowInstance(),
 					goalWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
 			)) {
@@ -219,11 +221,11 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 				.filter(wi -> {
 					if (wi instanceof GoalWorkItem) {
 						GoalWorkItem gwi = (GoalWorkItem) wi;
-						return gwi.getGoal().getInforms() == null || gwi.getGoal().getInforms().hasEligiblePerson(person, workflowInstance,
+						return person.getName().equals("Admin") || gwi.getGoal().getInforms() == null || gwi.getGoal().getInforms().hasEligiblePerson(person, workflowInstance,
 								wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet()));
 					} else if (wi instanceof  ActivityWorkItem) {
 						ActivityWorkItem awi = (ActivityWorkItem) wi;
-						return awi.getActivity().getInforms() == null || awi.getActivity().getInforms().hasEligiblePerson(person, workflowInstance,
+						return person.getName().equals("Admin") || awi.getActivity().getInforms() == null || awi.getActivity().getInforms().hasEligiblePerson(person, workflowInstance,
 								wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet()));
 					} else {
 						return true;
