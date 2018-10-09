@@ -32,23 +32,21 @@ class ConnectedDashboardInstanceView extends React.Component {
         super(props);
     }
 
-    updateRedux(specName, instanceName) {
+    updateRedux(specId, instanceName) {
         const service = new RepositoryService(this.props.user);
-        service.getSpecification(specName).then(response => {
+        service.getSpecification(specId).then(response => {
             const spec = response.data;
             this.props.selectSpecification(response.data);
         }).then(response => {
             this.props.selectInstance(instanceName);
         }).then(response => {
-            service.getWorkflowInstances(specName).then(response => {
+            service.getWorkflowInstances(specId).then(response => {
                 this.setState({
                     instances: response.data
                 });
 
                 this.props.setInstances(response.data);
             });
-
-            
         });
     }
     
@@ -75,13 +73,12 @@ class ConnectedDashboardInstanceView extends React.Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-md-6" >
-                    <Link to={`/dashboard/executor/activities/${this.props.specName}/${this.props.instanceName}`} onClick={() => {this.updateRedux(this.props.specName, this.props.instanceName)}}><Button bsStyle="primary" block> Go to Activity View</Button></Link>
-                    </div>
-                    <div className="col-md-6">
-                        <Link to='/specifications/executor/goals' onClick={() => {this.updateRedux(this.props.specName, this.props.instanceName)}}><Button bsStyle="danger" block>Go to Goal View</Button></Link>
-                    </div>
-                    
+                    <div className="col-md-12" >
+                        <Link onClick={() => {this.updateRedux(this.props.specName, this.props.instanceName)}}
+                            to={`/specifications/instances/instance/${this.props.instanceName}`}>
+                            <Button bsStyle="success" block>Load Instance</Button>
+                        </Link>
+                    </div>    
                 </div>
             </div>
         )

@@ -11,7 +11,6 @@ import DataView from './executor/DataView';
 import GoalExecutor from './executor/GoalExecutor';
 import ActivityExecutor from './executor/ActivityExecutor';
 import Dashboard from './auth/Dashboard';
-import DashboardActivityExecutor from './auth/DashboardActivityExecutor';
 
 export const Main = () => (
   <main>
@@ -31,7 +30,6 @@ export const Main = () => (
       <Route exact path='/specifications/executor/activities' component={ActivityExecutor}/>
 
       <Route exact path='/dashboard' component={Dashboard} />
-      <Route exact path='/dashboard/executor/activities/:specId/:instanceName' component={DashboardActivityExecutor} />
     </Switch>
   </main>
 )

@@ -65,11 +65,13 @@ class ConnectedHeader extends React.Component {
         const service = new RepositoryService(this.props.user);
         service.getSpecifications().then(response => {
             this.props.setSpecifications(response.data);
+
+            service.getUsers().then(response => {
+                this.props.setUsers(response.data);
+            });
         });
-        service.getUsers().then(response => {
-            this.props.setUsers(response.data);
-        });
-      }
+        
+    }
 
     render() {
         const specs = this.props.specifications.map(spec => 
@@ -119,12 +121,12 @@ class ConnectedHeader extends React.Component {
                          <NavItem eventKey={2}>
                             {this.props.spec.name}
                         </NavItem>
-                        <NavDropdown eventKey={3} title="Designer" id="basic-nav-dropdown">
+                        {this.props.user.username == "Admin" && <NavDropdown eventKey={3} title="Designer" id="basic-nav-dropdown">
                             <MenuItem eventKey={3.1}><Link to={`/specifications/designer/datamodel`}>Data Model</Link></MenuItem>
                             <MenuItem eventKey={3.2}>State Model</MenuItem>
                             <MenuItem eventKey={3.3}><Link to={`/specifications/designer/goalmodel`}>Goal Model</Link></MenuItem>
                             <MenuItem eventKey={3.4}>Activity Model</MenuItem>
-                        </NavDropdown>
+                        </NavDropdown>}
                         <NavDropdown eventKey={4} title="Instance" id="basic-nav-dropdown">
                             <MenuItem eventKey={4.1}><Link onClick={() => {this.props.selectInstance('')}} to='/specifications/instances'>Manage Instances</Link></MenuItem>
                             <MenuItem divider />

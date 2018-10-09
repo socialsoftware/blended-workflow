@@ -111,7 +111,7 @@ public class DesignResourcesInterface extends DesignInterface {
 		spec.getResourceModel().delete();
 		createResourceModel(specId);
 	}
-	
+
 	@Atomic(mode = Atomic.TxMode.WRITE)
 	public Entity relationEntityIsPerson(ResourceRelationDto resourceRelationDTO) {
 		Specification spec = getSpecBySpecId(resourceRelationDTO.getSpecId());
