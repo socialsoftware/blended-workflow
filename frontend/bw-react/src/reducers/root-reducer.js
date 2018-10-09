@@ -1,6 +1,7 @@
 import { SET_SPECIFICATIONS, SELECT_SPECIFICATION, SELECT_INSTANCE, SET_INSTANCES, GET_ENTITY_INSTANCES, 
   SET_UNIT_OF_WORK, SET_SELECTED_ENTITY_INSTANCE, SET_ATTRIBUTE_INSTANCE_VALUE, 
-  SET_LINK_ENTITY_INSTANCES, CREATE_ENTITY_INSTANCE, DELETE_ENTITY_INSTANCE, SET_USERS, SELECT_USER } from "../constants/action-types";
+  SET_LINK_ENTITY_INSTANCES, CREATE_ENTITY_INSTANCE, DELETE_ENTITY_INSTANCE, SET_USERS, SELECT_USER, 
+  SET_SELECTED_PERSON, SET_ENTITY_IS_PERSON } from "../constants/action-types";
 
 const initialState = {
     specifications: [],
@@ -10,7 +11,8 @@ const initialState = {
     entityInstances: [],
     unitOfWork: [],
     users: [],
-    user: {}
+    user: {},
+    entityIsPersonDtos: [],
   };
 
 const rootReducer = (state = initialState, action) => {
@@ -74,6 +76,16 @@ const rootReducer = (state = initialState, action) => {
         return { ...state, users: action.users };
       case SELECT_USER:
         return { ...state, user: action.user };
+      case SET_SELECTED_PERSON:
+        return { ...state, entityIsPersonDtos: state.entityIsPersonDtos.map(eip => {
+            if (eip.entity.extId === action.entityExtId) {
+                return { ...eip, personChosen: action.person}
+            } else {
+                return eip;
+            }
+          })};
+      case SET_ENTITY_IS_PERSON:
+        return { ...state, entityIsPersonDtos: action.set}
       default: 
         return state;
     }

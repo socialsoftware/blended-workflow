@@ -16,7 +16,7 @@ export class ConnectedExecutionLog extends React.Component {
             open: false,
         };
 
-
+        console.log(this.props.log);
         this.handleClick = this.handleClick.bind(this);
     }
 

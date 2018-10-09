@@ -49,7 +49,7 @@ public class EntityInstanceDto {
 		}
 	}
 
-	private LinkDto getLinkDto(EntityInstance entityInstance, MulCondition mulCondition) {
+	protected LinkDto getLinkDto(EntityInstance entityInstance, MulCondition mulCondition) {
 		Set<EntityInstance> entityInstances = entityInstance.getEntityInstancesByRolename(mulCondition.getRolename());
 		if (entityInstances.isEmpty()) {
 			return new LinkUndefDto(mulCondition);

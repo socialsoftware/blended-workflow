@@ -30,7 +30,6 @@ class ConnectedGoalExecutor extends React.Component {
     }
 
     getLog() {
-        console.log(this.props.name);
         const service = new RepositoryService(this.props.user);
         service.getWorkflowInstanceLog(this.props.spec.specId, this.props.name).then(response => {
             this.setState({
@@ -47,9 +46,13 @@ class ConnectedGoalExecutor extends React.Component {
     }
 
     executeGoalWorkItem(workItem) {
-       const service = new RepositoryService(this.props.user);
+        const service = new RepositoryService(this.props.user);
 
-       return service.executeGoalWorkItem(this.props.spec.specId, this.props.name, workItem.name, workItem);
+        if (this.props.entityIsPersonDtos) {
+            return service.executeGoalWorkItemWithResources(this.props.spec.specId, this.props.name, workItem.name, workItem, this.props.entityIsPersonDtos);
+        } else {
+            return service.executeGoalWorkItem(this.props.spec.specId, this.props.name, workItem.name, workItem);
+        }
     }
 
     render() {

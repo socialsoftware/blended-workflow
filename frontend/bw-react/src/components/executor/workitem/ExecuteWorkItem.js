@@ -1,18 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { setUnitOfWork } from '../../../actions/setUnitOfWork';
+import { setEntityIsPersonDtos } from '../../../actions/setEntityIsPersonDtos'; 
 import DefineEntityInstance from './DefineEntityInstance';
 import DefineEntityIsPerson from './DefineEntityIsPerson';
 
 const mapStateToProps = state => {
     return {
-        unitOfWork: state.unitOfWork
+        unitOfWork: state.unitOfWork,
+        entityIsPersonDtos: state.entityIsPersonDtos,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        setUnitOfWork: unitOfWork => dispatch(setUnitOfWork(unitOfWork))
+        setUnitOfWork: unitOfWork => dispatch(setUnitOfWork(unitOfWork)),
+        setEntityIsPersonDtos: dtos => dispatch(setEntityIsPersonDtos(dtos))
     };
 };
 
@@ -23,9 +26,9 @@ class ConnectedExecuteWorkItem extends React.Component {
         this.state = {
             workItem: this.props.workItem,
         };        
-        
+        console.log(this.props.workItem);
         this.props.setUnitOfWork(this.createUnitOfWork());
-
+        this.props.setEntityIsPersonDtos(this.props.workItem.entityIsPersonDTOSet);
         this.createUnitOfWork = this.createUnitOfWork.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleExecute = this.handleExecute.bind(this);
@@ -54,6 +57,7 @@ class ConnectedExecuteWorkItem extends React.Component {
     }
 
     render() {
+        console.log(this.props.entityIsPersonDtos);
         return ( 
             <div>
                 {this.props.unitOfWork.map(ei => <DefineEntityInstance key={ei.id} entityInstance={ei} />)}

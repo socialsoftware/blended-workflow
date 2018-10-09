@@ -9,6 +9,7 @@ const mapStateToProps = state => {
         spec: state.spec,
         name: state.name,
         user: state.user,
+        entityIsPersonDtos: state.entityIsPersonDtos,
     };
 };  
 
@@ -46,9 +47,13 @@ class ConnectedActivityExecutor extends React.Component {
     }
 
     executeActivityWorkItem(workItem) {
-       const service = new RepositoryService(this.props.user);
+        const service = new RepositoryService(this.props.user);
 
-       return service.executeActivityWorkItem(this.props.spec.specId, this.props.name, workItem.name, workItem);
+        if (this.props.entityIsPersonDtos) {
+            return service.executeActivityWorkItemWithResources(this.props.spec.specId, this.props.name, workItem.name, workItem, this.props.entityIsPersonDtos);
+        } else {
+            return service.executeActivityWorkItem(this.props.spec.specId, this.props.name, workItem.name, workItem);
+        }
     }
 
     render() {

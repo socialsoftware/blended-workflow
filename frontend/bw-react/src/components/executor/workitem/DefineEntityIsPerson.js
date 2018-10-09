@@ -1,22 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { setSelectedEntityInstance } from '../../../actions/setSelectedEntityInstance';
-import { deleteEntityInstance } from '../../../actions/deleteEntityInstance';
-import DefineAttributeInstance from './DefineAttributeInstance';
-import DefineLink from './DefineLink';
-import { SelectEntityInstance } from './SelectEntityInstance';
+import { setSelectedPerson } from '../../../actions/setSelectedPerson';
+import { SelectEntityIsPerson } from './SelectEntityIsPerson';
 
 const mapStateToProps = state => {
     return {
-        entityInstances: state.entityInstances,
-        unitOfWork: state.unitOfWork
+        entityIsPersonDtos: state.entityIsPersonDtos,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        setSelectedEntityInstance: (oldId, newId) => dispatch(setSelectedEntityInstance(oldId, newId)),
-        deleteEntityInstance: id => dispatch(deleteEntityInstance(id))
+        setSelectedPerson: (entID, person) => dispatch(setSelectedPerson(entID, person))
     };
 };
 
@@ -24,13 +19,18 @@ class ConnectedDefineEntityIsPerson extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log(this.props.entityIsPersonDto);
+        this.handleSelection = this.handleSelection.bind(this);
+    }
+
+    handleSelection(person) {
+        this.props.setSelectedPerson(this.props.entityIsPersonDto.entity.extId, person);
     }
 
     render() {
         return (
             <div>
-                <span>Entity</span>
+                <span>{this.props.entityIsPersonDto.entity.name}: </span>
+                <SelectEntityIsPerson onSelection={this.handleSelection} personContext={this.props.entityIsPersonDto.personContext} />
             </div>
         )
     }

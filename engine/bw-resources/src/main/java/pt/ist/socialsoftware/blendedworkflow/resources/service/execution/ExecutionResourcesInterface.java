@@ -7,6 +7,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
@@ -16,12 +17,13 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.DashboardDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceActivityWorkItemDto;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceEntityInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceGoalWorkItemDto;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -42,6 +44,13 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 	}
 
+	/**
+	 *
+	 * Get next work items
+	 *
+	 */
+
+
 	@Override
 	protected Set<Activity> getPendingActivitySet(WorkflowInstance workflowInstance) {
 		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
@@ -61,7 +70,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		return super.getPendingGoalSet(workflowInstance).stream()
 				.filter(goal -> person.getName().equals("Admin") || goal.getResponsibleFor() == null ||
 						goal.getResponsibleFor().hasEligiblePerson(person, workflowInstance,
-							goal.getSuccessConditionSet().stream().map(DefProductCondition::getTargetOfPath).collect(Collectors.toSet())
+							goal.getSuccessConditionSet().stream().map(DefProductCondition::getTargetOfPath).collect(toSet())
 						))
 				.collect(toSet());
 	}
@@ -92,6 +101,12 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 		return goalWorkItemDTOs;
 	}
 
+	/**
+	 *
+	 * Execute work items
+	 *
+	 */
+
 	@Override
 	@Atomic(mode = Atomic.TxMode.WRITE)
 	public ActivityWorkItem executeActivityWorkItem(ActivityWorkItemDto activityWorkItemDTO) {
@@ -105,7 +120,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 		if (activityWI.getActivity().getResponsibleFor() != null && !person.getName().equals("Admin")) {
 			if (!activityWI.getActivity().getResponsibleFor().hasEligiblePerson(person, activityWI.getWorkflowInstance(),
-					activityWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
+					activityWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(toSet())
 			)) {
 				throw new RMException(RMErrorType.PERSON_IS_NOT_ELIGIBLE);
 			}
@@ -131,7 +146,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 		if (goalWI.getGoal().getResponsibleFor() != null && !person.getName().equals("Admin")) {
 			if (!goalWI.getGoal().getResponsibleFor().hasEligiblePerson(person, goalWI.getWorkflowInstance(),
-					goalWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
+					goalWI.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(toSet())
 			)) {
 				throw new RMException(RMErrorType.PERSON_IS_NOT_ELIGIBLE);
 			}
@@ -141,6 +156,12 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 		return goalWI;
 	}
+
+	/**
+	 *
+	 * Get work items history log
+	 *
+	 */
 
 	@Override
 	public List<ActivityWorkItem> getLogActivityWorkItemSet(String specId, String instanceName) {
@@ -154,7 +175,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 		return super.getLogActivityWorkItemSet(specId, instanceName).stream()
 				.filter(wi -> wi.getActivity().getInforms() == null || wi.getActivity().getInforms().hasEligiblePerson(person, workflowInstance,
-						wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
+						wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(toSet())
 				))
 				.collect(toList());
 	}
@@ -171,7 +192,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 		return super.getLogGoalWorkItemSet(specId, instanceName).stream()
 				.filter(wi -> wi.getGoal().getInforms() == null || wi.getGoal().getInforms().hasEligiblePerson(person, workflowInstance,
-						wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet())
+						wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(toSet())
 				))
 				.collect(toList());
 	}
@@ -180,14 +201,14 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 	public List<ActivityWorkItemDto> getLogActivityWorkItemDtoSet(String specId, String instanceName) {
 		return getLogActivityWorkItemSet(specId, instanceName).stream()
 				.map(activityWorkItem -> ResourceActivityWorkItemDto.fillActivityWorkItemDTO(activityWorkItem.getDto(), activityWorkItem))
-				.collect(Collectors.toList());
+				.collect(toList());
 	}
 
 	@Override
 	public List<GoalWorkItemDto> getLogGoalWorkItemDTOSet(String specId, String instanceName) {
 		return getLogGoalWorkItemSet(specId, instanceName).stream()
 				.map(goalWorkItem -> ResourceGoalWorkItemDto.fillGoalWorkItemDTO(goalWorkItem.getDto(), goalWorkItem))
-				.collect(Collectors.toList());
+				.collect(toList());
 	}
 
 	@Override
@@ -204,7 +225,7 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 					    return workitem.getDto();
                     }
 				})
-				.collect(Collectors.toList());
+				.collect(toList());
 	}
 
 	@Override
@@ -222,17 +243,60 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 					if (wi instanceof GoalWorkItem) {
 						GoalWorkItem gwi = (GoalWorkItem) wi;
 						return person.getName().equals("Admin") || gwi.getGoal().getInforms() == null || gwi.getGoal().getInforms().hasEligiblePerson(person, workflowInstance,
-								wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet()));
+								wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(toSet()));
 					} else if (wi instanceof  ActivityWorkItem) {
 						ActivityWorkItem awi = (ActivityWorkItem) wi;
 						return person.getName().equals("Admin") || awi.getActivity().getInforms() == null || awi.getActivity().getInforms().hasEligiblePerson(person, workflowInstance,
-								wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(Collectors.toSet()));
+								wi.getPostConditionSet().stream().map(postWorkItemArgument -> postWorkItemArgument.getDefProductCondition().getTargetOfPath()).collect(toSet()));
 					} else {
 						return true;
 					}
 				}
 				).collect(toList());
 	}
+
+	/**
+	 *
+	 * Get entity instances for Data view
+	 *
+	 */
+
+	@Override
+	public Set<EntityInstance> getEntityInstances(String specId, String name) {
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(specId)
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, name);
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
+		return super.getEntityInstances(specId, name).stream()
+				.filter(entityInstance -> entityInstance.getEntity().getInforms() == null ||
+						entityInstance.getEntity().getInforms().hasEligiblePerson(person, workflowInstance, new HashSet<>()))
+
+				.collect(toSet());
+	}
+
+	@Override
+	public Set<EntityInstanceDto> getEntityInstancesDto(String specId, String name) {
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(specId)
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, name);
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
+		return getEntityInstances(specId, name).stream().map(i -> new ResourceEntityInstanceDto(i, EntityInstanceDto.Depth.DEEP, person)).collect(toSet());
+		//return super.getEntityInstancesDto(specId, name);
+	}
+
+	/**
+	 *
+	 * Get User dashboard
+	 *
+	 */
 
 	public DashboardDto getDashboard() {
 		BlendedWorkflow blended = BlendedWorkflow.getInstance();

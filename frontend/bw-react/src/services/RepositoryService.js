@@ -156,6 +156,17 @@ export class RepositoryService {
         });
     }
 
+    executeActivityWorkItemWithResources(spec, instance, workItemName, workItem, entityIsPerson) {
+        return this.axios.post("/specs/" + spec + "/instances/"+ instance + "/activityworkitem", {
+    		"specId" :  spec,
+    		"workflowInstanceName" : instance,
+    		"name" : workItemName,
+            "definitionGroupSet" : workItem.definitionGroupSet,
+            "unitOfWork": workItem.unitOfWork,
+            "entityIsPersonDTOSet": entityIsPerson,
+        });
+    }
+
     // Goal workitems
     getNextGoalWorkItems(specId, instance) {
         return this.axios.get("/specs/" + specId + "/instances/" + instance + "/goalworkitem/next");
@@ -173,6 +184,17 @@ export class RepositoryService {
     		"name" : workItemName,
             "definitionGroupSet" : workItem.definitionGroupSet,
             "unitOfWork": workItem.unitOfWork
+        });
+    }
+
+    executeGoalWorkItemWithResources(spec, instance, workItemName, workItem, entityIsPerson) {
+        return this.axios.post("/specs/" + spec + "/instances/"+ instance + "/goalworkitem", {
+    		"specId" :  spec,
+    		"workflowInstanceName" : instance,
+    		"name" : workItemName,
+            "definitionGroupSet" : workItem.definitionGroupSet,
+            "unitOfWork": workItem.unitOfWork,
+            "entityIsPersonDTOSet": entityIsPerson,
         });
     }
 
