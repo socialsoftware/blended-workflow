@@ -2,14 +2,12 @@ package pt.ist.socialsoftware.blendedworkflow.resources.domain;
 
 import org.apache.ojb.broker.util.logging.Logger;
 import org.apache.ojb.broker.util.logging.LoggerFactory;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.design.MergeResourcesPolicy;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,8 +15,9 @@ import java.util.stream.Collectors;
 public class ResourceModel extends ResourceModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(ResourceModel.class);
 
-	public ResourceModel() {
-		super();
+	public ResourceModel(Specification spec) {
+		setSpec(spec);
+		addPerson("Admin", "Admin", new ArrayList<>(), new ArrayList<>());
 	}
 
     public void clean() {

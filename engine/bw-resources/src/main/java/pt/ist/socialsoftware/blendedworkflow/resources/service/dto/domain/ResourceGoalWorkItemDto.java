@@ -48,7 +48,9 @@ public class ResourceGoalWorkItemDto extends GoalWorkItemDto implements Resource
 
         resourceGoalWorkItemDto.setEntityIsPersonDTOSet(entityIsPersonDtoSet);
 
-        resourceGoalWorkItemDto.setExecutionUser(goalWorkItem.getExecutionUser().getDTO());
+        if (goalWorkItem.getExecutionUser() != null) {
+            resourceGoalWorkItemDto.setExecutionUser(goalWorkItem.getExecutionUser().getDTO());
+        }
 
         return resourceGoalWorkItemDto;
     }

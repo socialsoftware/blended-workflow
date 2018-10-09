@@ -129,9 +129,13 @@ public class ExecutionInterface {
 	}
 
 	public List<WorkItemDto> getLogWorkItemDtoList(String specId, String instanceName) {
+		return getLogWorkItemList(specId, instanceName).stream().map(WorkItem::getDto).collect(Collectors.toList());
+	}
+
+	protected List<WorkItem> getLogWorkItemList(String specId, String instanceName) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
-		return workflowInstance.getLogWorkItemList().stream().map(WorkItem::getDto).collect(Collectors.toList());
+		return workflowInstance.getLogWorkItemList();
 	}
 
 	public Set<ActivityWorkItemDto> getPendingActivityWorkItemSet(String specId, String instanceName) {

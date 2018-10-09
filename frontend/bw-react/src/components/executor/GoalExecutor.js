@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { RepositoryService } from '../../services/RepositoryService';
 import WorkItemList from './workitem/WorkItemList';
-import { ExecutionLog } from './ExecutionLog';
+import ExecutionLog from './ExecutionLog';
 
 const mapStateToProps = state => {
     return { 

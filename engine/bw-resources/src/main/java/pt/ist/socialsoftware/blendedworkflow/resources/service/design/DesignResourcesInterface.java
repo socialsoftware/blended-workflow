@@ -41,8 +41,7 @@ public class DesignResourcesInterface extends DesignInterface {
 	@Atomic(mode = Atomic.TxMode.WRITE)
 	public ResourceModel createResourceModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
-		ResourceModel resourceModel = new ResourceModel();
-		spec.setResourceModel(resourceModel);
+		ResourceModel resourceModel = new ResourceModel(spec);
 
 		return resourceModel;
 	}
@@ -109,9 +108,10 @@ public class DesignResourcesInterface extends DesignInterface {
 	public void cleanResourceModel(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 
-		spec.getResourceModel().clean();
+		spec.getResourceModel().delete();
+		createResourceModel(specId);
 	}
-
+	
 	@Atomic(mode = Atomic.TxMode.WRITE)
 	public Entity relationEntityIsPerson(ResourceRelationDto resourceRelationDTO) {
 		Specification spec = getSpecBySpecId(resourceRelationDTO.getSpecId());

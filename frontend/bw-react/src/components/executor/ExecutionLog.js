@@ -1,13 +1,21 @@
 import React from 'react';
 import { Table, Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
 
-export class ExecutionLog extends React.Component {
+const mapStateToProps = state => {
+    return { 
+        user: state.user,
+    };
+};  
+
+export class ConnectedExecutionLog extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             open: false,
         };
+
 
         this.handleClick = this.handleClick.bind(this);
     }
@@ -31,16 +39,18 @@ export class ExecutionLog extends React.Component {
                         <th>Operation Type</th>
                         <th>Preconditions</th>
                         <th>Products</th>
+                        {this.props.user && <th>Execution User</th>}
                     </tr>
                 </thead>
                 <tbody>
-                {this.props.log.map(wi => 
-                    <tr> 
+                {this.props.log.map(wi =>
+                    <tr> {console.log(wi)}
                         <td>{wi.timestamp}</td>
                         <td>{wi.name}</td>
                         <td>{wi.type}</td>
                         <td>{wi.preArguments}</td>
                         <td>{wi.postArguments}</td>
+                        {this.props.user && wi.executionUser && <td>{wi.executionUser.username}</td>}
                     </tr>
                 )}
                 </tbody>          
@@ -50,3 +60,7 @@ export class ExecutionLog extends React.Component {
         );
     }
 }
+
+const ExecutionLog = connect(mapStateToProps)(ConnectedExecutionLog);
+
+export default ExecutionLog;
