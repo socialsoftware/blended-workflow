@@ -117,10 +117,10 @@ public class InstanceController {
 		logger.debug("getEntityInstances specId:{}, name:{}", specId, name);
 		ExecutionInterface ei = this.factory.createExecutionInterface();
 
-		Set<EntityInstance> entityInstances = ei.getEntityInstances(specId, name);
+		Set<EntityInstanceDto> entityInstances = ei.getEntityInstancesDto(specId, name);
 
-		EntityInstanceDto[] result = entityInstances.stream().map(i -> new EntityInstanceDto(i, Depth.DEEP))
-				.sorted(Comparator.comparing(EntityInstanceDto::getId)).toArray(size -> new EntityInstanceDto[size]);
+		EntityInstanceDto[] result = entityInstances.stream().sorted(Comparator.comparing(EntityInstanceDto::getId))
+				.toArray(size -> new EntityInstanceDto[size]);
 
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}

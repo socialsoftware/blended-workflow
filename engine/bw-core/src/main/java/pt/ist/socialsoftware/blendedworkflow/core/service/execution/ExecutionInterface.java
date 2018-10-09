@@ -26,6 +26,8 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceToDefineDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceToDefineDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.WorkItemDto;
@@ -115,6 +117,11 @@ public class ExecutionInterface {
 
 	public Set<EntityInstance> getEntityInstances(String specId, String name) {
 		return getSpecification(specId).getWorkflowInstance(name).getEntityInstanceSet();
+	}
+
+	public Set<EntityInstanceDto> getEntityInstancesDto(String specId, String name) {
+		return getEntityInstances(specId, name).stream().map(i -> new EntityInstanceDto(i, Depth.DEEP))
+				.collect(Collectors.toSet());
 	}
 
 	public EntityInstance getMandatoryEntityInstance(String specId, String name) {
