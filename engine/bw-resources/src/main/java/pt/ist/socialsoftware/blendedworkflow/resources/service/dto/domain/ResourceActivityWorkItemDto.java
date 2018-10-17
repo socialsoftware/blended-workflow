@@ -4,6 +4,8 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,11 +16,12 @@ public class ResourceActivityWorkItemDto extends ActivityWorkItemDto implements 
     private Set<EntityIsPersonDto> _entityIsPersonDtoSet;
     private UserDto executionUser;
 
-    public static ResourceActivityWorkItemDto createActivityWorkItemDTO(WorkflowInstance workflowInstance, Activity activity) {
+    public static ResourceActivityWorkItemDto createActivityWorkItemDTO(WorkflowInstance workflowInstance, Activity activity, Person person) {
         ResourceActivityWorkItemDto resourceActivityWorkItemDto = new ResourceActivityWorkItemDto(
                 ActivityWorkItemDto.createActivityWorkItemDto(workflowInstance, activity));
         ResourceModel resourceModel = activity.getActivityModel().getSpecification().getResourceModel();
 
+        // Add Entity Is Person information
         Set<EntityIsPersonDto> entityIsPersonDtoSet = new HashSet<>();
         Set<PersonDto> personContext = resourceModel.getPersonSet().stream().map(Person::getDTO).collect(Collectors.toSet());
 
@@ -26,6 +29,16 @@ public class ResourceActivityWorkItemDto extends ActivityWorkItemDto implements 
                 .filter(entity -> resourceModel.checkEntityIsPerson(entity))
                 .forEach(entity -> entityIsPersonDtoSet.add(new EntityIsPersonDto(entity.getDto(), personContext)));
         resourceActivityWorkItemDto.setEntityIsPersonDTOSet(entityIsPersonDtoSet);
+
+        // Filter EntityContext
+        resourceActivityWorkItemDto.getEntityInstancesToDefine().stream().forEach(entityInstanceToDefineDto -> {
+            entityInstanceToDefineDto.getEntityInstancesContext().stream().filter(entityInstanceDto -> {
+                Entity entity = workflowInstance.getSpecification().getDataModel().getEntityByName(entityInstanceDto.getEntity().getName()).orElseThrow(() -> new RMException(RMErrorType.NO_ENTITY_BY_NAME));
+
+                return entity.getInforms().hasEligiblePerson(person, workflowInstance, new HashSet<>());
+            });
+        });
+
 
         return resourceActivityWorkItemDto;
     }

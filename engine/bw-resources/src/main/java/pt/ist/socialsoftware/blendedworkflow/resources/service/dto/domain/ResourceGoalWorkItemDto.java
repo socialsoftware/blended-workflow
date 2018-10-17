@@ -4,6 +4,8 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalWorkItemDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.Person;
 import pt.ist.socialsoftware.blendedworkflow.resources.domain.ResourceModel;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMErrorType;
+import pt.ist.socialsoftware.blendedworkflow.resources.service.RMException;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,7 +16,7 @@ public class ResourceGoalWorkItemDto extends GoalWorkItemDto implements Resource
     private Set<EntityIsPersonDto> _entityIsPersonDtoSet;
     private UserDto executionUser;
 
-    public static ResourceGoalWorkItemDto createGoalWorkItemDTO(WorkflowInstance workflowInstance, Goal goal) {
+    public static ResourceGoalWorkItemDto createGoalWorkItemDTO(WorkflowInstance workflowInstance, Goal goal, Person person) {
         ResourceGoalWorkItemDto resourceGoalWorkItemDto = new ResourceGoalWorkItemDto(
                 GoalWorkItemDto.createGoalWorkItemDto(workflowInstance, goal));
         ResourceModel resourceModel = goal.getGoalModel().getSpecification().getResourceModel();
@@ -30,6 +32,16 @@ public class ResourceGoalWorkItemDto extends GoalWorkItemDto implements Resource
                 .filter(entity -> resourceModel.checkEntityIsPerson(entity))
                 .forEach(entity -> entityIsPersonDtoSet.add(new EntityIsPersonDto(entity.getDto(), personContext)));
         resourceGoalWorkItemDto.setEntityIsPersonDTOSet(entityIsPersonDtoSet);
+
+        // Filter EntityContext
+        resourceGoalWorkItemDto.getEntityInstancesToDefine().stream().forEach(entityInstanceToDefineDto -> {
+            entityInstanceToDefineDto.getEntityInstancesContext().stream().filter(entityInstanceDto -> {
+                Entity entity = workflowInstance.getSpecification().getDataModel().getEntityByName(entityInstanceDto.getEntity().getName()).orElseThrow(() -> new RMException(RMErrorType.NO_ENTITY_BY_NAME));
+
+                return entity.getInforms().hasEligiblePerson(person, workflowInstance, new HashSet<>());
+            });
+        });
+
 
         return resourceGoalWorkItemDto;
     }

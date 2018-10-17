@@ -20,7 +20,6 @@ import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.Resour
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceEntityInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.resources.service.dto.domain.ResourceGoalWorkItemDto;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -77,12 +76,18 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 	@Override
 	public Set<ActivityWorkItemDto> getPendingActivityWorkItemSet(String specId, String instanceName) {
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(specId)
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
 		Set<ActivityWorkItemDto> activityWorkItemDTOs = new HashSet<>();
 
 		for (Activity activity : getPendingActivitySet(workflowInstance)) {
-			activityWorkItemDTOs.add(ResourceActivityWorkItemDto.createActivityWorkItemDTO(workflowInstance, activity));
+			activityWorkItemDTOs.add(ResourceActivityWorkItemDto.createActivityWorkItemDTO(workflowInstance, activity, person));
 		}
 
 		return activityWorkItemDTOs;
@@ -90,12 +95,18 @@ public class ExecutionResourcesInterface extends ExecutionInterface {
 
 	@Override
 	public Set<GoalWorkItemDto> getPendingGoalWorkItemSet(String specId, String instanceName) {
+		Specification spec = BlendedWorkflow.getInstance().getSpecById(specId)
+				.orElseThrow(() -> new BWException(BWErrorType.INVALID_SPECIFICATION_ID));
+
+		User user = User.getAuthenticatedUser().orElseThrow(() -> new RMException(RMErrorType.NO_LOGIN));
+		Person person = user.getPerson(spec);
+
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
 
 		Set<GoalWorkItemDto> goalWorkItemDTOs = new HashSet<>();
 
 		for (Goal goal : getPendingGoalSet(workflowInstance)) {
-			goalWorkItemDTOs.add(ResourceGoalWorkItemDto.createGoalWorkItemDTO(workflowInstance, goal));
+			goalWorkItemDTOs.add(ResourceGoalWorkItemDto.createGoalWorkItemDTO(workflowInstance, goal, person));
 		}
 
 		return goalWorkItemDTOs;
