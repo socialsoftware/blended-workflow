@@ -28,14 +28,9 @@ const mapDispatchToProps = dispatch => {
   };
 
 class ConnectedDashboardInstanceView extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     updateRedux(specId, instanceName) {
         const service = new RepositoryService(this.props.user);
         service.getSpecification(specId).then(response => {
-            const spec = response.data;
             this.props.selectSpecification(response.data);
         }).then(response => {
             this.props.selectInstance(instanceName);

@@ -2,10 +2,6 @@ import React from 'react';
 import DashboardInstanceView from './DashboardInstanceView';
 
 export class DashboardSpecView extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const instances = Object.keys(this.props.instances).map(instance => 
             <DashboardInstanceView 
