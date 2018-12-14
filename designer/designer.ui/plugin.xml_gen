@@ -397,12 +397,18 @@
 			class="pt.ist.socialsoftware.blendedworkflow.designer.ui.BlendedWorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
 			extensions="bw">
 		</viewer>
+		<contentTypeBinding
+			contentTypeId="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.contenttype"
+			contentViewerId="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.compare.contentViewers" />
 	</extension>
 	<extension point="org.eclipse.compare.contentMergeViewers">
 		<viewer id="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.compare.contentMergeViewers"
 			class="pt.ist.socialsoftware.blendedworkflow.designer.ui.BlendedWorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
 			extensions="bw" label="BlendedWorkflow Compare">
 		</viewer>
+		<contentTypeBinding
+			contentTypeId="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.contenttype"
+			contentMergeViewerId="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.compare.contentMergeViewers" />
 	</extension>
 	<extension point="org.eclipse.ui.editors.documentProviders">
 		<provider id="pt.ist.socialsoftware.blendedworkflow.designer.BlendedWorkflow.editors.documentProviders"
