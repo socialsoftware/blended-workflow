@@ -4,7 +4,7 @@ open filesystem/ActivityModelExec
 
 open filesystem/DoctorAppointment/ActivityModel
 
-run final for 4 but 7 State, 6 Activity, 5 Int
+//run final for 4 but 7 State, 6 Activity, 5 Int
 
 assert preserveInvariants {
 	all s, s': State, a: Activity |

@@ -4,7 +4,7 @@ open filesystem/GoalModelExec
 
 open filesystem/DoctorAppointment/GoalModel
 
-run final for 4 but 11 State, 10 Goal, 5 Int
+//run final for 4 but 11 State, 10 Goal, 5 Int
 
 assert preserveInvariants {
 	all s, s': State, g: Goal |

@@ -113,7 +113,7 @@ class ConnectedHeader extends React.Component {
                          <NavItem eventKey={2}>
                             {this.props.spec.name}
                         </NavItem>
-                        {this.props.user.username === "Admin" && <NavDropdown eventKey={3} title="Designer" id="basic-nav-dropdown">
+                        <NavDropdown eventKey={3} title="Designer" id="basic-nav-dropdown">
                             <LinkContainer to='/specifications/designer/datamodel'>
                                 <MenuItem eventKey={3.1}>Data Model</MenuItem>
                             </LinkContainer>
@@ -122,7 +122,7 @@ class ConnectedHeader extends React.Component {
                                 <MenuItem eventKey={3.3}>Goal Model</MenuItem>
                             </LinkContainer>
                             <MenuItem eventKey={3.4}>Activity Model</MenuItem>
-                        </NavDropdown>}
+                        </NavDropdown>
                         <NavDropdown eventKey={4} title="Instance" id="basic-nav-dropdown">
                             <LinkContainer to='/specifications/instances'>
                                 <MenuItem eventKey={4.1} onClick={() => {this.props.selectInstance('')}}>Manage Instances</MenuItem>

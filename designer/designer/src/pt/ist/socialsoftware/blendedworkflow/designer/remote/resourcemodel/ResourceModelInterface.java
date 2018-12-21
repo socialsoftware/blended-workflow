@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RelationDTO;
-import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RuleDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.CapabilityDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PersonDTO;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.resourcemodel.dto.PositionDTO;
@@ -34,9 +32,7 @@ public class ResourceModelInterface {
 		}
 		return instance;
 	}
-	
-	
-	
+
 	public Boolean cleanResourceModel(String specId) {
 		logger.debug("cleanResourceModel: {}", specId);
 
@@ -50,7 +46,7 @@ public class ResourceModelInterface {
 
 		return response;
 	}
-	
+
 	public Boolean checkEntityIsPerson(String specId, String path, BWNotification notification) {
 		logger.debug("cleanResourceModel: {}", specId);
 
@@ -63,7 +59,7 @@ public class ResourceModelInterface {
 		Boolean response = false;
 		try {
 			response = restTemplate.postForObject(uri, path, Boolean.class, params);
-			
+
 			if (response) {
 				notification.addError(new BWError("Entity is not person", "Entity provided is not a person"));
 			}
@@ -72,14 +68,13 @@ public class ResourceModelInterface {
 		} catch (Exception e) {
 			notification.addError(new BWError("Error", e.getMessage()));
 		}
-		
 
 		return response;
 	}
-	
+
 	public boolean createResourceModel(String specId, BWNotification notification) {
 		logger.debug("createResourceModel");
-		
+
 		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/";
 
 		Map<String, String> params = new HashMap<>();
@@ -94,10 +89,10 @@ public class ResourceModelInterface {
 		} catch (Exception e) {
 			notification.addError(new BWError("Error", e.getMessage()));
 		}
-		
+
 		return result;
 	}
-	
+
 	public CapabilityDTO createCapability(CapabilityDTO capability, BWNotification notification) {
 		logger.debug("createCapability: {}, {}", capability.getName(), capability.getDescription());
 
@@ -115,10 +110,10 @@ public class ResourceModelInterface {
 		} catch (Exception e) {
 			notification.addError(new BWError("Error", e.getMessage()));
 		}
-		
+
 		return result;
 	}
-	
+
 	public RoleDTO createRole(RoleDTO role, BWNotification notification) {
 		logger.debug("createRole: {}, {}", role.getName(), role.getDescription());
 
@@ -136,10 +131,10 @@ public class ResourceModelInterface {
 		} catch (Exception e) {
 			notification.addError(new BWError("Error", e.getMessage()));
 		}
-		
+
 		return result;
 	}
-	
+
 	public UnitDTO createUnit(UnitDTO unit, BWNotification notification) {
 		logger.debug("createUnit: {}, {}", unit.getName(), unit.getDescription());
 
@@ -157,12 +152,13 @@ public class ResourceModelInterface {
 		} catch (Exception e) {
 			notification.addError(new BWError("Error", e.getMessage()));
 		}
-		
+
 		return result;
 	}
-	
+
 	public PositionDTO createPosition(PositionDTO position, BWNotification notification) {
-		logger.debug("createPerson: {}, {}, {}, {}, {}, {}", position.getName(), position.getUnit(), position.getRoles(), position.getDelegateToRelations(), position.getReportsTo());
+		logger.debug("createPerson: {}, {}, {}, {}, {}, {}", position.getName(), position.getUnit(),
+				position.getRoles(), position.getDelegateToRelations(), position.getReportsTo());
 
 		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/positions";
 
@@ -178,12 +174,13 @@ public class ResourceModelInterface {
 		} catch (Exception e) {
 			notification.addError(new BWError("Error", e.getMessage()));
 		}
-		
+
 		return result;
 	}
-	
+
 	public PositionDTO initPosition(PositionDTO position, BWNotification notification) {
-		logger.debug("createPerson: {}, {}, {}, {}, {}, {}", position.getName(), position.getUnit(), position.getRoles(), position.getDelegateToRelations(), position.getReportsTo());
+		logger.debug("createPerson: {}, {}, {}, {}, {}, {}", position.getName(), position.getUnit(),
+				position.getRoles(), position.getDelegateToRelations(), position.getReportsTo());
 
 		final String uri = BASE_URL + "/specs/{specId}/resourcemodel/positions/init";
 
@@ -199,10 +196,10 @@ public class ResourceModelInterface {
 		} catch (Exception e) {
 			notification.addError(new BWError("Error", e.getMessage()));
 		}
-		
+
 		return result;
 	}
-	
+
 	public PersonDTO createPerson(PersonDTO person, BWNotification notification) {
 		logger.debug("createPerson: {}, {}, {}, {}", person.getName(), person.getCapabilities(), person.getPositions());
 
@@ -220,11 +217,12 @@ public class ResourceModelInterface {
 		} catch (Exception e) {
 			notification.addError(new BWError("Error", e.getMessage()));
 		}
-		
+
 		return result;
 	}
 
-	public ResourceRelationDTO createEntityIsPersonRelation(ResourceRelationDTO resourceRelationDTO, BWNotification notification) {
+	public ResourceRelationDTO createEntityIsPersonRelation(ResourceRelationDTO resourceRelationDTO,
+			BWNotification notification) {
 		logger.debug("createRelations: {}", resourceRelationDTO.getEntityName());
 
 		final String uri = BASE_URL + "/specs/{specId}/resourcerules/relations/";
@@ -241,7 +239,7 @@ public class ResourceModelInterface {
 		} catch (Exception e) {
 			notification.addError(new BWError("Error", e.getMessage()));
 		}
-		
+
 		return result;
 	}
 
@@ -257,7 +255,7 @@ public class ResourceModelInterface {
 		ResourceRuleDTO result = null;
 		try {
 			result = restTemplate.postForObject(uri, ruleDTO, ResourceRuleDTO.class, params);
-			
+
 			return true;
 		} catch (RestClientException rce) {
 			notification.addError(new BWError("REST connection", rce.getMessage()));

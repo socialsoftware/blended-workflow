@@ -1,7 +1,7 @@
 Specification: "Doctor Appointment"  
        
-Entity Patient {
-	name : String
+Entity Patient { 
+	name : String 
 	age : Number
 	heartProblems : Boolean
 }         
