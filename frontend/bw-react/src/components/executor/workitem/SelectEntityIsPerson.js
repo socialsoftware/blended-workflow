@@ -1,5 +1,5 @@
 import React from 'react';
-import EntityInstanceLink from '../dataview/EntityInstanceLink';
+//import EntityInstanceLink from '../dataview/EntityInstanceLink';
 import { Button } from 'react-bootstrap';
 
 export class SelectEntityIsPerson extends React.Component {

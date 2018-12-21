@@ -7,10 +7,6 @@ const mapStateToProps = state => {
 };  
 
 class ConnectedGoalModel extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <GoalModelDiagram spec={this.props.spec} />
