@@ -42,7 +42,7 @@ class ConnectedEntityInstanceLink extends React.Component {
         return (
             <span>
                 {this.props.entityInstance.entity.name}[{this.props.entityInstance.id}]
-                {this.props.entityInstance.externalId !== null && <span> <OpenCloseButton open={this.state.open} onClick={this.openCloseLink} /></span>}
+                {this.props.entityInstance.id > 0 && <span> <OpenCloseButton open={this.state.open} onClick={this.openCloseLink} /></span>}
                 {/* {this.state.open && <EntityInstance entityInstance={this.getEntityInstanceById(this.props.entityInstance.id)} />}  */}
 
                 <Modal show={this.state.open} onHide={this.openCloseLink}>
