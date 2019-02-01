@@ -8,7 +8,7 @@ export class SelectEntityInstance extends React.Component {
 
         this.state = {
             select: false,
-            selected: (this.state || {}).selected || this.props.entityInstances[ 0 ],
+            selected: props.currInstance || this.props.entityInstances[ 0 ],
         };
 
         this.handleStartSelection = this.handleStartSelection.bind(this);
@@ -52,9 +52,9 @@ export class SelectEntityInstance extends React.Component {
             selected: this.props.entityInstances.find(
                 ei => ei.id === e.nativeEvent.target[ index ].value
             ),
-        }/*, function() {
+        }, function() {
             this.props.onSelection( this.state.selected );
-        }*/ );
+        } );
     }
 
     render() {
