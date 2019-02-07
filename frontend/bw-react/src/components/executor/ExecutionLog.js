@@ -44,7 +44,7 @@ export class ConnectedExecutionLog extends React.Component {
                 </thead>
                 <tbody>
                 {this.props.log.map(wi =>
-                    <tr> {console.log(wi)}
+                    <tr key={`${wi.type}-${wi.timestamp}`}> {console.log(wi)}
                         <td>{wi.timestamp}</td>
                         <td>{wi.name}</td>
                         <td>{wi.type}</td>
