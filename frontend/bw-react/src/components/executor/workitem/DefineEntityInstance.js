@@ -43,7 +43,7 @@ class ConnectedDefineEntityInstance extends React.Component {
             const entityInstance = this.props.entityInstances.find(ei => {
                 return ei.id === this.props.entityInstance.id;
             });
-            return this.props.entityInstance.attributeInstances.map(ai => {
+            return entityInstance ? this.props.entityInstance.attributeInstances.map(ai => {
                 if (ai.toDefine) {
                     return ai;
                 } else {
@@ -51,7 +51,7 @@ class ConnectedDefineEntityInstance extends React.Component {
                         return aix.attribute.name === ai.attribute.name;
                     });
                 }
-            });
+            }) : [];
         }
     }
 
@@ -62,7 +62,7 @@ class ConnectedDefineEntityInstance extends React.Component {
             const entityInstance = this.props.entityInstances.find(ei => {
                 return ei.id === this.props.entityInstance.id;
             });
-            return this.props.entityInstance.links.map(l => {
+            return entityInstance ? this.props.entityInstance.links.map(l => {
                 if (l.toDefine) {
                     return l;
                 } else {
@@ -70,7 +70,7 @@ class ConnectedDefineEntityInstance extends React.Component {
                         return lx.mulCondition.rolename === l.mulCondition.rolename;
                     });
                 }
-            });
+            }) : [];
         }
     }
 
