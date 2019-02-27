@@ -8,50 +8,53 @@ export class SelectEntityInstance extends React.Component {
 
         this.state = {
             select: false,
-            selected: props.currInstance || this.props.entityInstances[ 0 ],
+            selected: {}
         };
 
-        this.handleSelectOption = this.handleSelectOption.bind(this);
+        this.handleStartSelection = this.handleStartSelection.bind(this);
+        this.handleCloseSelection = this.handleCloseSelection.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
     }
 
-    handleSelectOption( e ) {
-        const index = e.nativeEvent.target.selectedIndex;
-
-        if ( index === 0 ) {
-        	// Default
-        	return;
-        }
-
-        this.setState( {
+    handleStartSelection() {
+        this.setState({
             select: true,
-            selected: this.props.entityInstances.find(
-                ei => ei.id === e.nativeEvent.target[ index ].value
-            ),
+            selected: {}
+        });
+    }
+
+    handleCloseSelection() {
+        this.setState({
+            select: false,
+            selected: {}
+        });
+    }
+
+    handleSelect(event) {
+        const element = this.props.entityInstances.find(ei => ei.id === event.target.value);
+        this.setState({
+            select: false,
+            selected: element
         }, function() {
-            this.props.onSelection( this.state.selected );
-        } );
+            this.props.onSelection(this.state.selected);
+        });
     }
 
     render() {
-    	const options = [];
-
-    	if ( this.props.entityInstances.length ) {
-    		options.push( <option key={'--'} value={'--'}>{'--'}</option> );
-    	}
-
-    	[].push.apply( options, this.props.entityInstances
-			.map( (ei, i) => <option key={ei.id} value={ei.id}>{ei.id}</option> )
-        );
-
+        const notSelected = this.props.entityInstances.filter(ei => ei.id !== this.state.selected.id);
         return (
             <span>
-                <select value={( this.state.selected || {} ).id} onChange={this.handleSelectOption}>{
-                    options
-                }</select>
-                {
-                    this.state.selected && <EntityInstanceLink key={this.state.selected.id} entityInstance={this.state.selected} />
-                }
+                <span>{
+                    !this.state.select && notSelected.length > 0
+                        ? <button onClick={this.handleStartSelection}>Start Selection</button>
+                        : <button onClick={this.handleCloseSelection}>Close Selection</button>
+                }</span>
+                <ul>{this.state.select && notSelected.map(ei => <li key={ei.id}>
+                    <Button bsStyle="primary" value={ei.id} onClick={this.handleSelect}>{
+                        `${ei.entity.name}[${ei.id}]`
+                    }</Button> <EntityInstanceLink key={ei.id} entityInstance={ei} />
+                </li>)}</ul>
             </span>
-        );
+        )
     }
 } 

@@ -39,21 +39,25 @@ class ConnectedEntityInstanceLink extends React.Component {
     }
 
     render() {
+        const entityNameDisplay = `${this.props.entityInstance.entity.name}[${this.props.entityInstance.id}]`;
+
         return (
-            <span>
-                {this.props.entityInstance.entity.name}[{this.props.entityInstance.id}]
-                {this.props.entityInstance.id > 0 && <span> <OpenCloseButton open={this.state.open} onClick={this.openCloseLink} /></span>}
+            <div style={{display: "inline-block"}}>
+                {this.props.entityInstance.id > 0 && <span>{this.props.isOnModal ? `${entityNameDisplay} ` : ""}<OpenCloseButton
+                    open={this.state.open}
+                    onClick={this.openCloseLink}
+                /></span>}
                 {/* {this.state.open && <EntityInstance entityInstance={this.getEntityInstanceById(this.props.entityInstance.id)} />}  */}
 
                 <Modal show={this.state.open} onHide={this.openCloseLink}>
                     <Modal.Body>
-                        <EntityInstance entityInstance={this.getEntityInstanceById(this.props.entityInstance.id)} />
+                        <EntityInstance isOnModal={true} entityInstance={this.getEntityInstanceById(this.props.entityInstance.id)} />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.openCloseLink}>Close</Button>
                     </Modal.Footer>
                 </Modal>
-            </span>
+            </div>
         )
     }
 }
