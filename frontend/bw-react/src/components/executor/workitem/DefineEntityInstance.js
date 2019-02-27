@@ -88,7 +88,7 @@ class ConnectedDefineEntityInstance extends React.Component {
                 <span>{this.props.entityInstance.entity.name}</span>
                 <span>[{this.props.entityInstance.id < 0 && this.props.entityInstance.exists ?  'undef' : this.props.entityInstance.id}]</span>
                 <span> {this.props.entityInstance.exists && <SelectEntityInstance currInstance={this.props.entityInstance} entityInstances={this.props.entityInstance.entityInstancesContext} onSelection={this.handleSelection}/>}</span>
-                <span> {this.canDelete() &&  <button onClick={this.handleDelete}>Delete</button>}</span><br/>
+                <span> {this.canDelete() &&  <button onClick={this.handleDelete}>Delete</button>}</span>
                 {this.getAttributeInstances().map(att => <DefineAttributeInstance key={att.attribute.name} entityInstance={this.props.entityInstance} attributeInstance={att} />)}
                 {this.getLinks().map(link => <DefineLink key={link.mulCondition.externalId} entityInstance={this.props.entityInstance} link={link} />)}
                 <br />
