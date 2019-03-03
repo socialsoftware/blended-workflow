@@ -8,7 +8,7 @@ export class EntityInstance extends React.Component {
             <div>
                 {this.props.entityInstance.entity.name}[{this.props.entityInstance.id}] <br/>
                 {this.props.entityInstance.attributeInstances.map(att => <AttributeInstance key={att.attribute.name} attributeInstance={att} />)}
-                {this.props.entityInstance.links.map(link => <MulLink isOnModal={this.props.isOnModal} key={link.mulCondition.externalId} link={link} />)}
+                {this.props.entityInstance.links.map(link => <MulLink key={link.mulCondition.externalId} link={link} />)}
             </div>
         )
     }

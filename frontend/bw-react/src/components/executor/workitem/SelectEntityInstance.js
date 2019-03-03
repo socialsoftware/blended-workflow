@@ -52,7 +52,7 @@ export class SelectEntityInstance extends React.Component {
                 <ul>{this.state.select && notSelected.map(ei => <li key={ei.id}>
                     <Button bsStyle="primary" value={ei.id} onClick={this.handleSelect}>{
                         `${ei.entity.name}[${ei.id}]`
-                    }</Button> <EntityInstanceLink key={ei.id} entityInstance={ei} />
+                    }</Button> <EntityInstanceLink isOnSelection={this.state.select} key={ei.id} entityInstance={ei} />
                 </li>)}</ul>
             </span>
         )

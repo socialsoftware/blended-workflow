@@ -6,7 +6,7 @@ export class MulLink extends React.Component {
     render() {
         return (
             <div>
-                <Tab />{this.props.link.mulCondition.rolename}: {this.props.link.entityInstances.map(ei => <EntityInstanceLink isOnModal={this.props.isOnModal} key={ei.id} entityInstance={ei} />) }
+                <Tab />{this.props.link.mulCondition.rolename}: {this.props.link.entityInstances.map(ei => <EntityInstanceLink key={ei.id} entityInstance={ei} />) }
             </div>
         );
     }
