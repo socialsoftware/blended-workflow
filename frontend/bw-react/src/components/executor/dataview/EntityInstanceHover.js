@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { EntityInstance } from './EntityInstance';
 import { Modal } from 'react-bootstrap';
 
+import "./EntityInstanceHoverStyles.css";
+
 const mapStateToProps = state => {
     return {
         specId: state.specId,
@@ -30,17 +32,11 @@ class ConnectedEntityInstanceHover extends React.Component {
 
     render() {
         const styles = {
-            position: 'absolute',
             display: this.props.show ? 'inline-block' : 'none',
         };
         
         return (
-            <div style={styles}>
-                {/*<Modal show={this.props.show}>
-                    <Modal.Body>
-                        <EntityInstance entityInstance={this.getEntityInstanceById(this.props.entityInstance.id)} />
-                    </Modal.Body>
-                </Modal>*/}
+            <div className="entity-instance-tooltip" style={styles}>
                 <EntityInstance entityInstance={this.getEntityInstanceById(this.props.entityInstance.id)} />
             </div>
         )
