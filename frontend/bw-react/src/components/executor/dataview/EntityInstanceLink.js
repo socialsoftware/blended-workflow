@@ -31,18 +31,20 @@ class ConnectedEntityInstanceLink extends React.Component {
     }
 
     openCloseLink() {
-        if (this.state.open) {
-            this.setState({open: false});
-        } else {
-            this.setState({open: true});
-        }
+        this.setState( {
+            open: !this.state.open,
+        } );
     }
 
     render() {
+        const entityNameDisplay = `${this.props.entityInstance.entity.name}[${this.props.entityInstance.id}]`;
+
         return (
-            <span>
-                {this.props.entityInstance.entity.name}[{this.props.entityInstance.id}]
-                {this.props.entityInstance.externalId !== null && <span> <OpenCloseButton open={this.state.open} onClick={this.openCloseLink} /></span>}
+            <div style={{display: "inline-block"}}>
+                {this.props.entityInstance.id > 0 && <span>{this.props.isOnSelection ? "" : `${entityNameDisplay} `}<OpenCloseButton
+                    open={this.state.open}
+                    onClick={this.openCloseLink}
+                /></span>}
                 {/* {this.state.open && <EntityInstance entityInstance={this.getEntityInstanceById(this.props.entityInstance.id)} />}  */}
 
                 <Modal show={this.state.open} onHide={this.openCloseLink}>
@@ -53,7 +55,7 @@ class ConnectedEntityInstanceLink extends React.Component {
                         <Button onClick={this.openCloseLink}>Close</Button>
                     </Modal.Footer>
                 </Modal>
-            </span>
+            </div>
         )
     }
 }

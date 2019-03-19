@@ -43,8 +43,9 @@ export class ConnectedExecutionLog extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                {this.props.log.map(wi =>
-                    <tr> {console.log(wi)}
+                {this.props.log.map(wi => {
+                    console.log(wi);
+                    return <tr key={`${wi.type}-${wi.timestamp}`}>
                         <td>{wi.timestamp}</td>
                         <td>{wi.name}</td>
                         <td>{wi.type}</td>
@@ -52,7 +53,7 @@ export class ConnectedExecutionLog extends React.Component {
                         <td>{wi.postArguments}</td>
                         {this.props.user && wi.executionUser && <td>{wi.executionUser.username}</td>}
                     </tr>
-                )}
+                })}
                 </tbody>          
                 </Table>
                 }

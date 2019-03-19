@@ -14,7 +14,7 @@ export class OpenCloseButton extends React.Component {
 
     render() {
         return (
-            <Button bsStyle="primary" onClick={this.handleOnClick}>{!this.props.open ? 'Open' : 'Close'}</Button>
+            <Button bsStyle="primary" onClick={this.handleOnClick}>{!this.props.open ? 'View' : 'Close'}</Button>
         );
     }
 }
