@@ -24,6 +24,8 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.jar.plugin>2.6</maven.jar.plugin>
 
+		<springfox-swagger>2.9.2</springfox-swagger>
+
 		<version.fenixframework>2.7.0</version.fenixframework>
 		<fenix.framework.codeGeneratorClassName>pt.ist.fenixframework.backend.jvstmojb.codeGenerator.FenixCodeGeneratorOneBoxPerObject</fenix.framework.codeGeneratorClassName>
 		<fenix.framework.backend>jvstm-ojb</fenix.framework.backend>
@@ -117,6 +119,18 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- swagger -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox-swagger}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox-swagger}</version>
+		</dependency>
+
 		<!-- Fénix -->
 		<dependency>
 			<groupId>pt.ist</groupId>
@@ -182,6 +196,7 @@
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
+
 	</dependencies>
 
 
