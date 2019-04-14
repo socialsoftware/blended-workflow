@@ -1,5 +1,7 @@
 import React from 'react';
 import EntityInstanceLink from '../dataview/EntityInstanceLink';
+import EntityInstanceHover from '../dataview/EntityInstanceHover';
+import { Button } from 'react-bootstrap';
 
 export class SelectMulEntityInstances extends React.Component {
     constructor(props) {
@@ -14,6 +16,8 @@ export class SelectMulEntityInstances extends React.Component {
         this.handleFinishSelection = this.handleFinishSelection.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
         this.handleUnselect = this.handleUnselect.bind(this);
+        this.onMouseEnter = this.onMouseEnter.bind(this);
+        this.onMouseLeave = this.onMouseLeave.bind(this);
     }
 
     handleStartSelection() {
@@ -48,17 +52,51 @@ export class SelectMulEntityInstances extends React.Component {
         });
     }
 
+    onMouseEnter( e ) {
+        this.setState( {
+            showToolTip: true,
+            selectedToolTip: this.props.entityInstances.find(ei => ei.id === e.target.value),
+        } );
+    }
+
+    onMouseLeave( e ) {
+        this.setState( {
+            showToolTip: false,
+            selectedToolTip: null,
+        } );
+    }
+
     render() {
-        const notSelected = this.props.entityInstances.filter(ei => !this.state.selected.includes(ei));
         return (
             <span>
-                <span>{!this.state.select && this.state.selected.map(ei => <EntityInstanceLink key={ei.id} entityInstance={ei}/>)} </span>
-                <span>{!this.state.select && this.state.selected.length === 0 && '[undef]'} </span>
-                <span>{!this.state.select && <button onClick={this.handleStartSelection} >Start Selection</button>}</span>
+                <span>{!this.state.select && this.state.selected.map(ei => <EntityInstanceLink key={ei.id} entityInstance={ei}/>)}</span>
 
-                <span>{this.state.select && this.state.selected.map(ei => <span key={ei.id} ><EntityInstanceLink key={ei.id} entityInstance={ei} /> <button value={ei.id} onClick={this.handleUnselect} >Unselect</button> </span>)}</span>
-                <span>{this.state.select && notSelected.map(ei => <span key={ei.id} ><EntityInstanceLink key={ei.id} entityInstance={ei} /> <button value={ei.id} onClick={this.handleSelect} >Select</button> </span>)}</span>
-                <span>{this.state.select && <button onClick={this.handleFinishSelection}>Finish Selection</button>}</span>
+                <span>{!this.state.select && this.state.selected.length === 0 && '[undef]'} </span>
+
+                <span>{!this.state.select
+                    ? <button onClick={this.handleStartSelection}>Start Selection</button>
+                    : <button onClick={this.handleFinishSelection}>Finish Selection</button>
+                }</span>
+            
+                <ul>{this.state.select
+                    &&
+                    this.props.entityInstances.map(ei => {
+                        const eiIsSelected = this.state.selected.includes( ei );
+
+                        return <li key={ei.id}>
+                            <div onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} key={`${ei.id}--hover`} style={{display:'inline-block'}}>
+                                <label>
+                                    <input type="checkbox"
+                                        value={ei.id}
+                                        checked={eiIsSelected}
+                                        onChange={eiIsSelected ? this.handleUnselect : this.handleSelect}
+                                    />
+                                    <span style={{"font-weight":"normal","text-decoration":"underline dotted"}}>{`${ei.entity.name}[${ei.id}]`}</span>
+                                </label><EntityInstanceHover show={this.state.showToolTip && ei === this.state.selectedToolTip} entityInstance={ei} />
+                            </div> <EntityInstanceLink key={ei.id} isOnSelection={this.state.select} entityInstance={ei} />
+                        </li>
+                    })
+                }</ul>
             </span>
         )
     }
