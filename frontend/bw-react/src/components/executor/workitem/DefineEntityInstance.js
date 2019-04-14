@@ -5,6 +5,7 @@ import { deleteEntityInstance } from '../../../actions/deleteEntityInstance';
 import DefineAttributeInstance from './DefineAttributeInstance';
 import DefineLink from './DefineLink';
 import { SelectEntityInstance } from './SelectEntityInstance';
+import EntityInstanceLink from '../dataview/EntityInstanceLink';
 
 const mapStateToProps = state => {
     return {
@@ -85,8 +86,10 @@ class ConnectedDefineEntityInstance extends React.Component {
     render() {
         return (
             <div>
-                <span>{this.props.entityInstance.entity.name}</span>
-                <span>[{this.props.entityInstance.id < 0 && this.props.entityInstance.exists ?  'undef' : this.props.entityInstance.id}]</span>
+                <span>{this.props.entityInstance.id < 0 && this.props.entityInstance.exists
+                    ? `${this.props.entityInstance.entity.name}[undef]`
+                    : <EntityInstanceLink key={this.props.entityInstance.id} entityInstance={this.props.entityInstance} />
+                }</span>
                 <span> {this.props.entityInstance.exists && <SelectEntityInstance currInstance={this.props.entityInstance} entityInstances={this.props.entityInstance.entityInstancesContext} onSelection={this.handleSelection}/>}</span>
                 <span> {this.canDelete() &&  <button onClick={this.handleDelete}>Delete</button>}</span>
                 {this.getAttributeInstances().map(att => <DefineAttributeInstance key={att.attribute.name} entityInstance={this.props.entityInstance} attributeInstance={att} />)}
