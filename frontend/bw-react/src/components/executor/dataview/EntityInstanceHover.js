@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { EntityInstance } from './EntityInstance';
-import { Modal } from 'react-bootstrap';
 
 import "./EntityInstanceHoverStyles.css";
 

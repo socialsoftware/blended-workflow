@@ -1,7 +1,6 @@
 import React from 'react';
 import EntityInstanceLink from '../dataview/EntityInstanceLink';
 import EntityInstanceHover from '../dataview/EntityInstanceHover';
-import { Button } from 'react-bootstrap';
 
 export class SelectMulEntityInstances extends React.Component {
     constructor(props) {
