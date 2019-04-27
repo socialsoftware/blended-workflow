@@ -1,0 +1,51 @@
+Specification: "Seminar" 
+  
+Entity Seminar mandatory {
+	title : String 
+	level : String 
+	ECTSpoints : Number
+	concluded : Boolean dependsOn Seminar.enrollment.grade
+} 
+ 
+Entity StaffMember exists {
+	name : String 
+	email : String 
+	position : String
+}  
+
+Entity Enrollment {
+	name : String 
+	email : String 
+	matriculation : String
+	grade : Number
+} 
+
+Entity Topic {
+	title : String 
+	description_ : String 
+}  
+
+Association SeminarHasStaffMember {
+	Seminar with seminar (0..1) 
+	StaffMember with staffmember (1..2)
+}
+
+Association SeminarHasEnrollment {
+	Seminar with seminar (1) 
+	Enrollment with enrollment (3..15)
+}
+
+Association SeminarHasTopic {
+	Seminar with seminar (1) 
+	Topic with topic (5..*)
+}
+
+Association StaffMemberHasTopic {
+	StaffMember with staffmember (1..2) 
+	Topic with topic (1)
+}
+
+Association EnrollmentHasTopic {
+	Enrollment with enrollment (1..4) 
+	Topic with topic (1)
+}
