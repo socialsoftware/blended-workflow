@@ -14,7 +14,9 @@ const tooltip = (
 const options = {
     height: 700,
     layout: {
-        hierarchical: false
+        hierarchical: {
+            direction: 'LR',
+        },
     },
     edges: {
         smooth: false,
@@ -28,10 +30,13 @@ const options = {
         }
     },
     nodes: {
-        shape: 'ellipse'
+        shape: 'ellipse',
     },
     interaction: {
         hover: true
+    },
+    physics: {
+        enabled: false,
     }
 };
 
