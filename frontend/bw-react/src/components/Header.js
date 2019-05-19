@@ -147,14 +147,14 @@ class ConnectedHeader extends React.Component {
                             </LinkContainer>
                         </NavDropdown>
                     </Nav>}
-                    {(this.props.users || []).length && <Nav pullRight>
+                    {(this.props.users || []).length ? <Nav pullRight>
                         {(this.props.user || {}).username && <LinkContainer to='/dashboard'>
                             <NavItem eventKey={8}>{this.props.user.username}</NavItem>
                         </LinkContainer>}
                         <NavDropdown eventKey={7} title="Users" id="basic-nav-dropdown">
                             {users}
                         </NavDropdown>
-                    </Nav>}
+                    </Nav> : ''}
                 </Navbar.Collapse>
             </Navbar>
         );
