@@ -10,44 +10,12 @@ import org.slf4j.LoggerFactory;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.fenixframework.FenixFramework;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.ConditionModel;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.DefAttributeCondition;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.DefEntityCondition;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.DefProductCondition;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Dependence;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Product;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Product.ProductType;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DataModelDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependenceDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphVisDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.SpecDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.AddActivityDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
@@ -301,6 +269,24 @@ public class DesignInterface {
 		spec.getGoalModel().generateGoals();
 
 		return true;
+	}
+
+	@Atomic(mode = TxMode.WRITE)
+	public void updateView(String specId, GoalModelDto goalModelDto) {
+		GoalModel goalModel = getSpecBySpecId(specId).getGoalModel();
+
+		goalModelDto.getGoals().stream().forEach(goalDto -> {
+			Goal goal = goalModel.getGoal(goalDto.getName());
+			String x = goalDto.getPosition().getX();
+			String y = goalDto.getPosition().getY();
+			if (goal.getView() == null) {
+				Position position = new Position(x, y);
+				new GoalView(goal, position);
+			} else {
+				goal.getView().getPosition().setX(x);
+				goal.getView().getPosition().setY(y);
+			}
+		});
 	}
 
 	@Atomic(mode = TxMode.WRITE)

@@ -77,7 +77,7 @@ public class ActivityModelController {
 
 		Activity activity = adi.createActivity(activityDTO);
 
-		return new ResponseEntity<>(activity.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(new ActivityDto(activity), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/add", method = RequestMethod.POST)
@@ -91,7 +91,7 @@ public class ActivityModelController {
 
 		Activity activity = adi.addActivity(specId, request);
 
-		return new ResponseEntity<>(activity.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(new ActivityDto(activity), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/{newName}", method = RequestMethod.PUT)
@@ -112,9 +112,9 @@ public class ActivityModelController {
 
 		DesignInterface adi = this.factory.createDesignInterface();
 
-		Set<Activity> goals = adi.getActivities(specId);
+		Set<Activity> activities = adi.getActivities(specId);
 
-		return new ResponseEntity<>(goals.stream().map(g -> g.getDTO()).toArray(ActivityDto[]::new), HttpStatus.OK);
+		return new ResponseEntity<>(activities.stream().map(activity -> new ActivityDto(activity)).toArray(ActivityDto[]::new), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/pre", method = RequestMethod.GET)
@@ -268,7 +268,7 @@ public class ActivityModelController {
 
 		Activity activity = adi.mergeActivities(activityMergeDto);
 
-		return new ResponseEntity<>(activity.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(new ActivityDto(activity), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/extract", method = RequestMethod.POST)
@@ -284,7 +284,7 @@ public class ActivityModelController {
 				"splitted from activity " + request.getSourceActivityName(), request.getSourceActivityName(),
 				request.getSuccessConditions());
 
-		return new ResponseEntity<>(activity.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(new ActivityDto(activity), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/activities/{activityName}/seq/add", method = RequestMethod.POST)

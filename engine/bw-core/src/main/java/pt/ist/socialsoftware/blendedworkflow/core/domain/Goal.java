@@ -107,6 +107,8 @@ public abstract class Goal extends Goal_Base {
 	public void delete() {
 		setGoalModel(null);
 
+		if (getView() != null) getView().delete();
+
 		getWorkItemSet().stream().forEach(wi -> wi.delete());
 
 		getActivationConditionSet().stream().forEach(act -> removeActivationCondition(act));
@@ -114,10 +116,6 @@ public abstract class Goal extends Goal_Base {
 		getSuccessConditionSet().stream().forEach(def -> removeSuccessCondition(def));
 
 		deleteDomainObject();
-	}
-
-	public GoalDto getDTO() {
-		return new GoalDto(getSpecification().getSpecId(), getExternalId(), getClass().getSimpleName(), getName());
 	}
 
 	protected void applyActivationConditionsForProductGoal() {

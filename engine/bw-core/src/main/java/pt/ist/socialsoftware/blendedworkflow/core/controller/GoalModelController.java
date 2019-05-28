@@ -21,15 +21,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphVisDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RelationDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractGoalDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
@@ -64,6 +56,17 @@ public class GoalModelController {
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 
+	@RequestMapping(value = "/view", method = RequestMethod.PUT)
+	public ResponseEntity<Void> updateView(@PathVariable("specId") String specId, @RequestBody GoalModelDto goalModelDto) {
+		logger.debug("updateView specId:{}", specId);
+
+		DesignInterface adi = this.factory.createDesignInterface();
+
+		adi.updateView(specId, goalModelDto);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/goals/{goalName}/rename/{newName}", method = RequestMethod.POST)
 	public ResponseEntity<Void> updateGoalName(@PathVariable("specId") String specId,
 			@PathVariable("goalName") String goalName, @PathVariable("newName") String newName) {
@@ -84,7 +87,7 @@ public class GoalModelController {
 
 		Set<Goal> goals = adi.getGoals(specId);
 
-		return new ResponseEntity<>(goals.stream().map(g -> g.getDTO()).toArray(GoalDto[]::new), HttpStatus.OK);
+		return new ResponseEntity<>(goals.stream().map(g -> new GoalDto(g)).toArray(GoalDto[]::new), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/goals/product", method = RequestMethod.GET)
@@ -95,7 +98,7 @@ public class GoalModelController {
 
 		Set<ProductGoal> goals = adi.getProductGoals(specId);
 
-		return new ResponseEntity<>(goals.stream().map(g -> g.getDTO()).toArray(GoalDto[]::new), HttpStatus.OK);
+		return new ResponseEntity<>(goals.stream().map(g -> new GoalDto(g)).toArray(GoalDto[]::new), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/goals/association", method = RequestMethod.GET)
@@ -106,7 +109,7 @@ public class GoalModelController {
 
 		Set<AssociationGoal> goals = adi.getAssociationGoals(specId);
 
-		return new ResponseEntity<>(goals.stream().map(g -> g.getDTO()).toArray(GoalDto[]::new), HttpStatus.OK);
+		return new ResponseEntity<>(goals.stream().map(g -> new GoalDto(g)).toArray(GoalDto[]::new), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/goals/{goalName}", method = RequestMethod.GET)
@@ -118,7 +121,7 @@ public class GoalModelController {
 
 		Goal goal = adi.getGoalByName(specId, goalName);
 
-		return new ResponseEntity<>(goal.getDTO(), HttpStatus.OK);
+		return new ResponseEntity<>(new GoalDto(goal), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/goals/{goalName}/sucent", method = RequestMethod.GET)
@@ -273,7 +276,7 @@ public class GoalModelController {
 
 		Goal goal = adi.mergeGoals(mergeOperationDto);
 
-		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(new GoalDto(goal), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/goals/extract", method = RequestMethod.POST)
@@ -286,7 +289,7 @@ public class GoalModelController {
 
 		Goal goal = adi.extractGoal(specId, req);
 
-		return new ResponseEntity<>(goal.getDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<>(new GoalDto(goal), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/goals/graph", method = RequestMethod.GET)

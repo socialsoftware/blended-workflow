@@ -94,6 +94,15 @@ class ProductGoal extends Goal;
 
 class AssociationGoal extends Goal;
 
+class View;
+
+class GoalView extends View;
+
+relation GoalHasView {
+    Goal playsRole goal {multiplicity 1;}
+    GoalView playsRole view {multiplicity 0..1;}
+}
+
 class ActivityModel;
 
 class Activity {
@@ -102,6 +111,23 @@ class Activity {
 	String previous;
 	String joinCode;
 	String splitCode;
+}
+
+class ActivityView extends View;
+
+relation ActivityHasView {
+    Activity playsRole activity {multiplicity 1;}
+    ActivityView playsRole view {multiplicity 0..1;}
+}
+
+class Position {
+    String x;
+    String y;
+}
+
+relation ViewHasPosition {
+    View playsRole view {multiplicity 1;}
+    Position playsRole position {multiplicity 1;}
 }
 
 class Condition;
