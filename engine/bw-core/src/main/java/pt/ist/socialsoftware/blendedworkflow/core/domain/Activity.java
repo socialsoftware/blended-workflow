@@ -135,6 +135,8 @@ public class Activity extends Activity_Base {
 	public void delete() {
 		setActivityModel(null);
 
+		if (getView() != null) getView().delete();
+
 		getWorkItemSet().stream().forEach(wi -> wi.delete());
 
 		getPreConditionSet().forEach(c -> removePreCondition(c));
@@ -144,10 +146,6 @@ public class Activity extends Activity_Base {
 		getSequenceConditionSet().forEach(d -> d.delete());
 
 		deleteDomainObject();
-	}
-
-	public ActivityDto getDTO() {
-		return new ActivityDto(getActivityModel().getSpecification().getSpecId(), getName(), getDescription());
 	}
 
 	public void checkConsistency() {

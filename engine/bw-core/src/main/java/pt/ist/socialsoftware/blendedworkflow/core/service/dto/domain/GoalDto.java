@@ -1,19 +1,29 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.Goal;
+
 public class GoalDto {
 	private String specId;
 	private String extId;
 	private String type;
 	private String name;
-
-	public GoalDto() {
-	}
+	private PositionDto position;
 
 	public GoalDto(String specId, String extId, String type, String name) {
 		this.specId = specId;
 		this.extId = extId;
 		this.type = type;
 		this.name = name;
+	}
+
+	public GoalDto(Goal goal) {
+		setSpecId(goal.getGoalModel().getSpecification().getSpecId());
+		setExtId(goal.getExternalId());
+		setType(goal.getClass().getSimpleName());
+		setName(goal.getName());
+		if (goal.getView() != null) {
+			position = new PositionDto(goal.getView().getPosition());
+		}
 	}
 
 	public String getSpecId() {
@@ -48,4 +58,11 @@ public class GoalDto {
 		this.name = name;
 	}
 
+	public PositionDto getPosition() {
+		return position;
+	}
+
+	public void setPosition(PositionDto position) {
+		this.position = position;
+	}
 }

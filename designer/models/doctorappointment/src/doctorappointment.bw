@@ -1,9 +1,9 @@
 Specification: "Doctor Appointment"  
        
 Entity Patient { 
-	name : String 
+	name : String
 	age : Number
-	heartProblems : Boolean
+	heartProblems : Boolean 
 }         
                       
 Entity Episode mandatory {
