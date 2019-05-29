@@ -6,6 +6,9 @@ public class GoalModelDto {
     private String specId;
     private List<GoalDto> goals;
 
+    public GoalModelDto() {
+    }
+
     public String getSpecId() {
         return specId;
     }

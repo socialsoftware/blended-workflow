@@ -9,6 +9,8 @@ public class GoalDto {
 	private String name;
 	private PositionDto position;
 
+	public GoalDto() {}
+
 	public GoalDto(String specId, String extId, String type, String name) {
 		this.specId = specId;
 		this.extId = extId;
