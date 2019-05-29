@@ -12,6 +12,9 @@ public class ActivityDto {
 	private String description;
 	private PositionDto position;
 
+	public ActivityDto() {
+	}
+
 	public ActivityDto(String specId, String name, String description) {
 		this.specId = specId;
 		this.name = name;

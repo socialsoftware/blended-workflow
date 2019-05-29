@@ -6,6 +6,9 @@ public class PositionDto {
     String x;
     String y;
 
+    public PositionDto() {
+    }
+
     public PositionDto(Position position) {
         setX(position.getX());
         setY(position.getY());
