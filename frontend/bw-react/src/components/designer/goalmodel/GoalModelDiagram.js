@@ -79,8 +79,8 @@ export class GoalModelDiagram extends React.Component {
                     const goalPosition = goal.position;
 
                     if ( goalPosition ) {
-                        node.x = goal.position.x;
-                        node.y = goal.position.y;
+                        node.x = goalPosition.x;
+                        node.y = goalPosition.y;
                     }
                 } );
 
