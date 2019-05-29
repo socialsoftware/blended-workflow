@@ -76,9 +76,12 @@ export class GoalModelDiagram extends React.Component {
 
                 goalModel.forEach( goal => {
                     const node = graph.nodes.find( node => node.id === goal.extId );
+                    const goalPosition = goal.position;
 
-                    node.x = goal.position.x;
-                    node.y = goal.position.y;
+                    if ( goalPosition ) {
+                        node.x = goal.position.x;
+                        node.y = goal.position.y;
+                    }
                 } );
 
                 this.setState({
@@ -106,8 +109,8 @@ export class GoalModelDiagram extends React.Component {
                         goalConditions: entConditions.concat(response.data.map(c => ({...c, active: false}))),
                         operation: operations.SPLIT
                     });
-                });    
-            });    
+                });
+            });
         } else if (selectedGoal.type === 'AssociationGoal') {
             service.getGoalRelations(this.props.spec.specId, selectedGoal.name).then(response => {
                 this.setState({
@@ -116,7 +119,7 @@ export class GoalModelDiagram extends React.Component {
                     goalConditions: response.data.map(c => ({...c, active: false})),
                     operation: operations.SPLIT
                 });
-            });    
+            });
         }
     }
 
@@ -132,10 +135,10 @@ export class GoalModelDiagram extends React.Component {
         if (operation === operations.SPLIT) {
             this.setGoalConditions(this.state.selectedGoal);
         } else {
-            this.setState({ 
+            this.setState({
                 mergeWithGoal: {},
                 goalConditions: [],
-                operation: operation 
+                operation: operation
             });
         }
     }
@@ -188,7 +191,7 @@ export class GoalModelDiagram extends React.Component {
             case operations.RENAME:
                 service.renameGoal(this.props.spec.specId, this.state.selectedGoal.name, inputValue)
                 .then(() => {
-                    this.loadModel();        
+                    this.loadModel();
                 }).catch((err) => {
                     this.setState({
                         error: true,
@@ -197,10 +200,10 @@ export class GoalModelDiagram extends React.Component {
                 });
                 break;
             case operations.MERGE:
-                service.mergeGoals(this.props.spec.specId, this.state.selectedGoal, 
+                service.mergeGoals(this.props.spec.specId, this.state.selectedGoal,
                     this.state.mergeWithGoal, inputValue)
                 .then(() => {
-                    this.loadModel();        
+                    this.loadModel();
                 }).catch((err) => {
                     this.setState({
                         error: true,
@@ -212,10 +215,10 @@ export class GoalModelDiagram extends React.Component {
                 const goalConditions = this.state.goalConditions.filter(c => c.active);
                 const sucConditions = this.state.selectedGoal.type === 'ProductGoal' ? goalConditions : null;
                 const relations = this.state.selectedGoal.type === 'AssociationGoal' ? goalConditions : null;
-                service.splitGoal(this.props.spec.specId, this.state.selectedGoal, 
+                service.splitGoal(this.props.spec.specId, this.state.selectedGoal,
                     sucConditions, relations, inputValue)
                 .then(() => {
-                    this.loadModel();        
+                    this.loadModel();
                 }).catch((err) => {
                     this.setState({
                         error: true,
@@ -228,12 +231,12 @@ export class GoalModelDiagram extends React.Component {
     }
 
     handleOperationCancel() {
-        this.setState({ 
+        this.setState({
             showMenu: false,
             selectedGoal: {},
             mergeWithGoal: {},
             goalConditions: [],
-            operation: operations.NONE 
+            operation: operations.NONE
         });
     }
 
@@ -253,7 +256,7 @@ export class GoalModelDiagram extends React.Component {
             const position = network.getPositions( node.id );
 
             const goal = this.state.goalModel.find( goal => goal.extId === node.id );
-            
+
             goal.position = {
                 x: position[ node.id ].x,
                 y: position[ node.id ].y,
@@ -272,11 +275,11 @@ export class GoalModelDiagram extends React.Component {
                 <OverlayTrigger placement="bottom" overlay={tooltip}>
                     <h3>{this.props.spec.name}: Goal Model Diagram</h3>
                 </OverlayTrigger><br /><br /><Button onClick={this.storeGraph}>Store graph</Button>
-                
-                {this.state.error && 
-                <ModalMessage 
-                    title='Error Message' 
-                    message={this.state.errorMessage} 
+
+                {this.state.error &&
+                <ModalMessage
+                    title='Error Message'
+                    message={this.state.errorMessage}
                     onClose={this.closeErrorMessageModal} />}
 
                 {this.state.showMenu &&
@@ -294,8 +297,8 @@ export class GoalModelDiagram extends React.Component {
                 <div style={{width:'1000px' , height: '700px'}}>
                     <VisNetwork
                         ref={this.networkRef}
-                        graph={this.state.graph} 
-                        options={options} 
+                        graph={this.state.graph}
+                        options={options}
                         onSelection={this.handleSelectGoal}
                     />
                 </div>
