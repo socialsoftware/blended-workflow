@@ -112,6 +112,13 @@ export class RepositoryService {
             });
     }
 
+    storeView(specId, goals) {
+        return this.axios.put( "/specs/" + specId + "/goalmodel/view", {
+            "specId" : specId,
+            "goals" : goals,
+        } );
+    }
+
     // Instances
     getWorkflowInstances(specId) {
         return this.axios.get("/specs/" + specId + "/instances");
