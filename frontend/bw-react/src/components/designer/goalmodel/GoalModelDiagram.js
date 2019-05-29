@@ -3,7 +3,7 @@ import { RepositoryService } from '../../../services/RepositoryService';
 import { OperationsMenu, operations } from './OperationsMenu';
 import { VisNetwork } from '../../util/VisNetwork';
 import { ModalMessage } from '../../util/ModalMessage';
-import { Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Tooltip, OverlayTrigger, Button } from 'react-bootstrap';
 
 const tooltip = (
     <Tooltip id="tooltip">
@@ -12,11 +12,9 @@ const tooltip = (
 );
 
 const options = {
-    height: 700,
+    height: "700",
     layout: {
-        hierarchical: {
-            direction: 'LR',
-        },
+        hierarchical: false,
     },
     edges: {
         smooth: false,
@@ -56,6 +54,8 @@ export class GoalModelDiagram extends React.Component {
             operation: operations.NONE
         };
 
+        this.networkRef = React.createRef();
+
         this.loadModel = this.loadModel.bind(this);
         this.setGoalConditions = this.setGoalConditions.bind(this);
         this.handleSelectOperation = this.handleSelectOperation.bind(this);
@@ -64,6 +64,7 @@ export class GoalModelDiagram extends React.Component {
         this.handleOperationSubmit = this.handleOperationSubmit.bind(this);
         this.handleOperationCancel = this.handleOperationCancel.bind(this);
         this.closeErrorMessageModal = this.closeErrorMessageModal.bind(this);
+        this.storeGraph = this.storeGraph.bind( this );
     }
 
     loadModel() {
@@ -71,9 +72,18 @@ export class GoalModelDiagram extends React.Component {
         service.getGoalModelGraphVis(this.props.spec.specId).then(response => {
             const graph = response.data;
             service.getGoalModel(this.props.spec.specId).then(response => {
+                const goalModel = response.data;
+
+                goalModel.forEach( goal => {
+                    const node = graph.nodes.find( node => node.id === goal.extId );
+
+                    node.x = goal.position.x;
+                    node.y = goal.position.y;
+                } );
+
                 this.setState({
                     graph: graph,
-                    goalModel: response.data,
+                    goalModel: goalModel,
                     showMenu: false,
                     selectedGoal: {},
                     mergeWithGoal: {},
@@ -112,6 +122,10 @@ export class GoalModelDiagram extends React.Component {
 
     componentDidMount() {
         this.loadModel();
+    }
+
+    componentWillUnmount() {
+        this.storeGraph();
     }
 
     handleSelectOperation(operation) {
@@ -230,12 +244,34 @@ export class GoalModelDiagram extends React.Component {
         });
     }
 
+    storeGraph() {
+        const graph = this.state.graph;
+        const network = this.networkRef.current.network;
+
+
+        const goals = graph.nodes.map( node => {
+            const position = network.getPositions( node.id );
+
+            const goal = this.state.goalModel.find( goal => goal.extId === node.id );
+            
+            goal.position = {
+                x: position[ node.id ].x,
+                y: position[ node.id ].y,
+            };
+
+            return goal;
+        } );
+
+        const service = new RepositoryService();
+        service.storeView( this.props.spec.specId, goals );
+    }
+
     render() {
         return (
             <div>
                 <OverlayTrigger placement="bottom" overlay={tooltip}>
                     <h3>{this.props.spec.name}: Goal Model Diagram</h3>
-                </OverlayTrigger><br /><br />
+                </OverlayTrigger><br /><br /><Button onClick={this.storeGraph}>Store graph</Button>
                 
                 {this.state.error && 
                 <ModalMessage 
@@ -256,10 +292,12 @@ export class GoalModelDiagram extends React.Component {
                     goalModel={this.state.goalModel}/>}
 
                 <div style={{width:'1000px' , height: '700px'}}>
-                    <VisNetwork 
+                    <VisNetwork
+                        ref={this.networkRef}
                         graph={this.state.graph} 
                         options={options} 
-                        onSelection={this.handleSelectGoal} />
+                        onSelection={this.handleSelectGoal}
+                    />
                 </div>
             </div>
         );
