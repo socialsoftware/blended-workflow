@@ -274,7 +274,7 @@ export class GoalModelDiagram extends React.Component {
             <div>
                 <OverlayTrigger placement="bottom" overlay={tooltip}>
                     <h3>{this.props.spec.name}: Goal Model Diagram</h3>
-                </OverlayTrigger><br /><br /><Button onClick={this.storeGraph}>Store graph</Button>
+                </OverlayTrigger><br /><br />
 
                 {this.state.error &&
                 <ModalMessage
