@@ -1,29 +1,17 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
+import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
-import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeVisDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphVisDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeVisDto;
-
 public class GoalModel extends GoalModel_Base {
-	private static Logger logger = LoggerFactory.getLogger(GoalModel.class);
+	private static final Logger logger = LoggerFactory.getLogger(GoalModel.class);
 
 	public boolean existsGoal(String name) {
 		return getGoalSet().stream().anyMatch(goal -> goal.getName().equals(name));
@@ -117,12 +105,17 @@ public class GoalModel extends GoalModel_Base {
 				Stream.concat(goalOne.getSuccessConditionSet().stream(), goalTwo.getSuccessConditionSet().stream())
 						.collect(Collectors.toSet()));
 
+		GoalView view = goalTwo.getView();
+		goalTwo.setView(null);
+
 		goalOne.delete();
 		goalTwo.delete();
 
 		newGoal.setName(newGoalName);
 
 		newGoal.initProductGoal();
+
+		newGoal.setView(view);
 
 		return newGoal;
 	}
@@ -137,6 +130,9 @@ public class GoalModel extends GoalModel_Base {
 				Stream.concat(goalOne.getEntityInvariantConditionSet().stream(),
 						goalTwo.getEntityInvariantConditionSet().stream()).collect(Collectors.toSet()));
 
+		GoalView view = goalTwo.getView();
+		goalTwo.setView(null);
+
 		goalOne.delete();
 		goalTwo.delete();
 
@@ -144,11 +140,13 @@ public class GoalModel extends GoalModel_Base {
 
 		newGoal.initAssociationGoal();
 
+		newGoal.setView(view);
+
 		return newGoal;
 	}
 
 	public ProductGoal extractProductGoal(ProductGoal goal, String newGoalName,
-			Set<DefProductCondition> successConditions) {
+										  Set<DefProductCondition> successConditions) {
 		checkDefProductConditionsNotEmpty(successConditions);
 		checkNotAllDefProductConditionsAreSelected(goal.getSuccessConditionSet(), successConditions);
 		goal.checkDefProductConditionsExistSucc(successConditions);
@@ -161,11 +159,15 @@ public class GoalModel extends GoalModel_Base {
 
 		checkModel();
 
+		if (goal.getView() != null) {
+			new GoalView(newGoal, goal.getView().getPosition().getNearPosition());
+		}
+
 		return newGoal;
 	}
 
 	public AssociationGoal extractAssociationGoal(AssociationGoal goal, String newGoalName,
-			Set<MulCondition> mulConditionSet) {
+												  Set<MulCondition> mulConditionSet) {
 		checkMulConditionsNotEmpty(mulConditionSet);
 		checkNotAllMulConditionsAreSelected(goal.getEntityInvariantConditionSet(), mulConditionSet);
 		goal.checkMulConditionsExistInv(mulConditionSet);
@@ -175,6 +177,10 @@ public class GoalModel extends GoalModel_Base {
 
 		goal.initAssociationGoal();
 		newGoal.initAssociationGoal();
+
+		if (goal.getView() != null) {
+			new GoalView(newGoal, goal.getView().getPosition().getNearPosition());
+		}
 
 		checkModel();
 
@@ -332,14 +338,14 @@ public class GoalModel extends GoalModel_Base {
 	}
 
 	private void checkNotAllDefProductConditionsAreSelected(Set<DefProductCondition> successConditionOne,
-			Set<DefProductCondition> successConditionsTwo) {
+															Set<DefProductCondition> successConditionsTwo) {
 		if (successConditionOne.equals(successConditionsTwo)) {
 			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL, "checkAllConditionsAreNotSelected");
 		}
 	}
 
 	private void checkNotAllMulConditionsAreSelected(Set<MulCondition> mulConditionOne,
-			Set<MulCondition> mulConditionsTwo) {
+													 Set<MulCondition> mulConditionsTwo) {
 		if (mulConditionOne.equals(mulConditionsTwo)) {
 			throw new BWException(BWErrorType.CANNOT_EXTRACT_GOAL, "checkAllConditionsAreNotSelected");
 		}

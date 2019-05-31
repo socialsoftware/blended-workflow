@@ -11,4 +11,8 @@ public class Position extends Position_Base {
 
         deleteDomainObject();
     }
+
+    public Position getNearPosition() {
+        return new Position(Integer.toString(Integer.parseInt(getX()) + 20), Integer.toString(Integer.parseInt(getY()) + 20));
+    }
 }
