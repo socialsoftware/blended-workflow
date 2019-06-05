@@ -73,7 +73,6 @@ export class GoalModelDiagram extends React.Component {
             const graph = response.data;
             service.getGoalModel(this.props.spec.specId).then(response => {
                 const goalModel = response.data;
-                console.log( goalModel );
 
                 goalModel.forEach( goal => {
                     const node = graph.nodes.find( node => node.id === goal.extId );
