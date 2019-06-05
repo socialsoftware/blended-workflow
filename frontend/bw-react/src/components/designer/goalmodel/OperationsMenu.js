@@ -3,9 +3,9 @@ import { Button, DropdownButton, MenuItem, Form, FormControl } from 'react-boots
 
 export const operations = {
     NONE: 'operation',
-    RENAME: 'rename by',
+    RENAME: 'rename to',
     MERGE: 'merge with',
-    SPLIT: 'split by'
+    SPLIT: 'split by',
 };
 
 export class OperationsMenu extends React.Component {
