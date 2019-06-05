@@ -30,9 +30,9 @@ export class ModalMessage extends React.Component {
               <Modal.Title>{this.props.title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <p>
+              <div>
                   {Parser(this.props.message)}
-              </p>
+              </div>
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={this.handleClose}>Close</Button>
