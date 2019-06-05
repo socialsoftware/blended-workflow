@@ -3,7 +3,7 @@ import { RepositoryService } from '../../../services/RepositoryService';
 import { OperationsMenu, operations } from './OperationsMenu';
 import { VisNetwork } from '../../util/VisNetwork';
 import { ModalMessage } from '../../util/ModalMessage';
-import { Tooltip, OverlayTrigger, Button } from 'react-bootstrap';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 const tooltip = (
     <Tooltip id="tooltip">
@@ -73,6 +73,7 @@ export class GoalModelDiagram extends React.Component {
             const graph = response.data;
             service.getGoalModel(this.props.spec.specId).then(response => {
                 const goalModel = response.data;
+                console.log( goalModel );
 
                 goalModel.forEach( goal => {
                     const node = graph.nodes.find( node => node.id === goal.extId );
@@ -185,48 +186,54 @@ export class GoalModelDiagram extends React.Component {
         });
     }
 
-    handleOperationSubmit(operation, inputValue) {
+    async handleOperationSubmit(operation, inputValue) {
         const service = new RepositoryService();
-        switch (operation) {
-            case operations.RENAME:
-                service.renameGoal(this.props.spec.specId, this.state.selectedGoal.name, inputValue)
-                .then(() => {
-                    this.loadModel();
-                }).catch((err) => {
-                    this.setState({
-                        error: true,
-                        errorMessage: 'ERROR: '+ err.response.data.type + ' - ' + err.response.data.value
-                    });
-                });
-                break;
-            case operations.MERGE:
-                service.mergeGoals(this.props.spec.specId, this.state.selectedGoal,
-                    this.state.mergeWithGoal, inputValue)
-                .then(() => {
-                    this.loadModel();
-                }).catch((err) => {
-                    this.setState({
-                        error: true,
-                        errorMessage: 'ERROR: '+ err.response.data.type + ' - ' + err.response.data.value
-                    });
-                });
-                break;
-            case operations.SPLIT:
-                const goalConditions = this.state.goalConditions.filter(c => c.active);
-                const sucConditions = this.state.selectedGoal.type === 'ProductGoal' ? goalConditions : null;
-                const relations = this.state.selectedGoal.type === 'AssociationGoal' ? goalConditions : null;
-                service.splitGoal(this.props.spec.specId, this.state.selectedGoal,
-                    sucConditions, relations, inputValue)
-                .then(() => {
-                    this.loadModel();
-                }).catch((err) => {
-                    this.setState({
-                        error: true,
-                        errorMessage: 'ERROR: '+ err.response.data.type + ' - ' + err.response.data.value
-                    });
-                });
-                break;
-            default:
+        
+        await this.storeGraph();
+
+        try {
+            switch (operation) {
+                case operations.RENAME:
+                    await service.renameGoal(
+                        this.props.spec.specId,
+                        this.state.selectedGoal.name,
+                        inputValue,
+                    );
+
+                    break;
+                case operations.MERGE:
+                    await service.mergeGoals(
+                        this.props.spec.specId,
+                        this.state.selectedGoal,
+                        this.state.mergeWithGoal,
+                        inputValue,
+                    );
+
+                    break;
+                case operations.SPLIT:
+                    const goalConditions = this.state.goalConditions.filter( c => c.active );
+                    const sucConditions = this.state.selectedGoal.type === 'ProductGoal' ? goalConditions : null;
+                    const relations = this.state.selectedGoal.type === 'AssociationGoal' ? goalConditions : null;
+                    
+                    await service.splitGoal(
+                        this.props.spec.specId,
+                        this.state.selectedGoal,
+                        sucConditions,
+                        relations,
+                        inputValue,
+                    );
+
+                    break;
+                default:
+                    return;
+            }
+            
+            this.loadModel();
+        } catch ( err ) {
+            this.setState( {
+                error: true,
+                errorMessage: `ERROR: ${err.response.data.type} - ${err.response.data.value}`,
+            } );
         }
     }
 
@@ -266,7 +273,7 @@ export class GoalModelDiagram extends React.Component {
         } );
 
         const service = new RepositoryService();
-        service.storeView( this.props.spec.specId, goals );
+        return service.storeView( this.props.spec.specId, goals );
     }
 
     render() {
