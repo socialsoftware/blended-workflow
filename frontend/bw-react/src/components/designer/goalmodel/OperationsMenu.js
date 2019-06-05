@@ -71,12 +71,14 @@ export class OperationsMenu extends React.Component {
                     title={'conditions'}
                     id='4'>
                     {this.props.selectedGoal.type === 'ProductGoal' &&
-                    this.props.goalConditions.map(c => <MenuItem 
-                        eventKey={c.path} 
+                    this.props.goalConditions.map(c => <MenuItem
+                        key={c.attributeExtId} 
+                        eventKey={c.path}
                         onSelect={() => this.props.handleSelectCondition(c.path)}
                         active={c.active}>{c.path}</MenuItem>)}
                     {this.props.selectedGoal.type === 'AssociationGoal' &&
                     this.props.goalConditions.map(c => <MenuItem 
+                        key={c.attributeExtId} 
                         eventKey={c.name} 
                         onSelect={() => this.props.handleSelectCondition(c.name)}
                         active={c.active}>{c.name}</MenuItem>)}
