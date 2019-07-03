@@ -31,7 +31,7 @@ Entity:
 
 Attribute:
 	name = QualifiedName ':' type = ID
-	(mandatory ?= 'mandatory')?
+//	(mandatory ?= 'mandatory')?
 	('dependsOn' dependsOn += QualifiedName (',' dependsOn += QualifiedName)*)?
 ;
 
