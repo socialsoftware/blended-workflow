@@ -5,6 +5,7 @@ import { ManageSpecifications } from './specifications/ManageSpecifications';
 import { Specification } from './specifications/Specification';
 import DataModel from './designer/datamodel/DataModel';
 import GoalModel from './designer/goalmodel/GoalModel';
+import ActivityModel from './designer/activitymodel/ActivityModel';
 import ManageInstances from './executor/ManageInstances';
 import { Instance } from './executor/Instance';
 import DataView from './executor/DataView';
@@ -21,6 +22,7 @@ export const Main = () => (
     
       <Route exact path='/specifications/designer/datamodel' component={DataModel} />
       <Route exact path='/specifications/designer/goalmodel' component={GoalModel} />
+      <Route exact path='/specifications/designer/activitymodel' component={ActivityModel} />
                
       <Route exact path='/specifications/instances' component={ManageInstances} />
       <Route path='/specifications/instances/instance/:name' component={Instance} />

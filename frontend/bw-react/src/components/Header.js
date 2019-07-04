@@ -121,7 +121,9 @@ class ConnectedHeader extends React.Component {
                             <LinkContainer to='/specifications/designer/goalmodel'>
                                 <MenuItem eventKey={3.3}>Goal Model</MenuItem>
                             </LinkContainer>
-                            <MenuItem eventKey={3.4}>Activity Model</MenuItem>
+                            <LinkContainer to='/specifications/designer/activitymodel'>
+                                <MenuItem eventKey={3.4}>Activity Model</MenuItem>
+                            </LinkContainer>
                         </NavDropdown>
                         <NavDropdown eventKey={4} title="Instance" id="basic-nav-dropdown">
                             <LinkContainer to='/specifications/instances'>
