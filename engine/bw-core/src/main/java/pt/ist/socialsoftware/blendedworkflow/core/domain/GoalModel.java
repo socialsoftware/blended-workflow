@@ -405,21 +405,21 @@ public class GoalModel extends GoalModel_Base {
 
 		for (Goal goal : getGoalSet().stream().sorted(Comparator.comparing(Goal::getName))
 				.collect(Collectors.toList())) {
-			String title = "<pre>ACT(" + goal.getActivationConditionSet().stream().map(d -> d.getPath().getValue())
+			String description = "<pre>ACT(" + goal.getActivationConditionSet().stream().map(d -> d.getPath().getValue())
 					.collect(Collectors.joining(", ")) + ")</pre>";
 			if (goal instanceof ProductGoal) {
 
 				if (!goal.getSuccessConditionSet().isEmpty()) {
-					title = title + "<pre>SUC(" + goal.getSuccessConditionSet().stream()
+					description = description + "<pre>SUC(" + goal.getSuccessConditionSet().stream()
 							.map(d -> d.getPath().getValue()).collect(Collectors.joining(", ")) + ")</pre>";
 				}
 				if (!goal.getAttributeInvariantConditionSet().isEmpty()) {
-					title = title + "<pre>RULE(" + goal.getAttributeInvariantConditionSet().stream()
+					description = description + "<pre>RULE(" + goal.getAttributeInvariantConditionSet().stream()
 							.map(r -> r.getName()).collect(Collectors.joining(", ")) + ")</pre>";
 				}
 			} else {
 				if (!goal.getEntityInvariantConditionSet().isEmpty()) {
-					title = title + "<pre>MUL("
+					description = description + "<pre>MUL("
 							+ goal.getEntityInvariantConditionSet().stream()
 									.map(m -> m.getSourceEntity().getName() + "." + m.getRolename() + " "
 											+ m.getCardinality().getExp())
@@ -428,7 +428,7 @@ public class GoalModel extends GoalModel_Base {
 
 				}
 			}
-			nodes.add(new NodeVisDto(goal.getExternalId(), goal.getName(), title));
+			nodes.add(new NodeVisDto(goal.getExternalId(), goal.getName(), description));
 
 			Set<Product> products = goal.getActivationConditionSet().stream().map(p -> p.getPath().getTarget())
 					.collect(Collectors.toSet());
