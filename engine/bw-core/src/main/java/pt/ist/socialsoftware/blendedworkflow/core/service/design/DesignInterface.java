@@ -850,6 +850,13 @@ public class DesignInterface {
 		return spec.getActivityModel().getActivityGraph();
 	}
 
+	public GraphVisDto getActivityModelGraphVis(String specId) {
+		Specification spec = getSpecBySpecId(specId);
+
+		return spec.getActivityModel().getActivityGraphVis();
+	}
+
+
 	public void printSpecificationModels(String specId) {
 		Specification spec = getSpecBySpecId(specId);
 

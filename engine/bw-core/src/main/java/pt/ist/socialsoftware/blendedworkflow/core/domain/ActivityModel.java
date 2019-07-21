@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EdgeDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.NodeDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
 
 public class ActivityModel extends ActivityModel_Base {
 	private static Logger logger = LoggerFactory.getLogger(ActivityModel.class);
@@ -425,6 +423,51 @@ public class ActivityModel extends ActivityModel_Base {
 
 		graph.setNodes(nodes.stream().toArray(NodeDto[]::new));
 		graph.setEdges(edges.stream().toArray(EdgeDto[]::new));
+
+		return graph;
+	}
+
+	public GraphVisDto getActivityGraphVis() {
+		GraphVisDto graph = new GraphVisDto();
+
+		Map<Activity, Set<Activity>> activitySequences = getActivitySequences();
+
+		removeRedundantTransitiveSequences(activitySequences);
+
+		List<NodeVisDto> nodes = new ArrayList<>();
+		for (Activity activity : activitySequences.keySet()) {
+			String description = "<pre>PRE(" + activity.getPreConditionSet().stream().map(d -> d.getPath().getValue())
+					.collect(Collectors.joining(",")) + ")</pre>";
+			if (!activity.getSequenceConditionSet().isEmpty()) {
+				description = description + ", " + "<pre>SEQ(" + activity.getSequenceConditionSet().stream()
+						.map(d -> d.getPath().getValue()).collect(Collectors.joining(",")) + ")</pre>";
+			}
+			if (!activity.getPostConditionSet().isEmpty()) {
+				description = description + ", " + "<pre>POST(" + activity.getPostConditionSet().stream()
+						.map(d -> d.getPath().getValue()).collect(Collectors.joining(",")) + ")</pre>";
+			}
+			if (!activity.getMultiplicityInvariantSet().isEmpty()) {
+				description = description + ", " + "<pre>MUL(" + activity.getMultiplicityInvariantSet().stream().map(
+						m -> m.getSourceEntity().getName() + "." + m.getRolename() + "," + m.getCardinality().getExp())
+						.collect(Collectors.joining(";")) + ")</pre>";
+			}
+			if (!activity.getRuleInvariantSet().isEmpty()) {
+				description = description + ", " + "<pre>RULE("
+						+ activity.getRuleInvariantSet().stream().map(r -> r.getName()).collect(Collectors.joining(","))
+						+ ")</pre>";
+			}
+
+			nodes.add(new NodeVisDto(activity.getExternalId(), activity.getName(), description));
+		}
+
+		List<EdgeVisDto> edges = new ArrayList<>();
+		for (Activity activity : activitySequences.keySet()) {
+			activitySequences.get(activity).stream()
+					.forEach(t -> edges.add(new EdgeVisDto(activity.getExternalId(), t.getExternalId())));
+		}
+
+		graph.setNodes(nodes);
+		graph.setEdges(edges);
 
 		return graph;
 	}

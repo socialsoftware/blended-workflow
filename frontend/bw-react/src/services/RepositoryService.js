@@ -192,7 +192,6 @@ export class RepositoryService {
     		"specId" :  spec,
     		"workflowInstanceName" : instance,
     		"name" : workItemName,
-            "definitionGroupSet" : workItem.definitionGroupSet,
             "unitOfWork": workItem.unitOfWork
         });
     }
@@ -202,7 +201,6 @@ export class RepositoryService {
     		"specId" :  spec,
     		"workflowInstanceName" : instance,
     		"name" : workItemName,
-            "definitionGroupSet" : workItem.definitionGroupSet,
             "unitOfWork": workItem.unitOfWork,
             "entityIsPersonDTOSet": entityIsPerson,
         });
@@ -223,7 +221,6 @@ export class RepositoryService {
     		"specId" :  spec,
     		"workflowInstanceName" : instance,
     		"name" : workItemName,
-            "definitionGroupSet" : workItem.definitionGroupSet,
             "unitOfWork": workItem.unitOfWork
         });
     }
@@ -233,7 +230,6 @@ export class RepositoryService {
     		"specId" :  spec,
     		"workflowInstanceName" : instance,
     		"name" : workItemName,
-            "definitionGroupSet" : workItem.definitionGroupSet,
             "unitOfWork": workItem.unitOfWork,
             "entityIsPersonDTOSet": entityIsPerson,
         });

@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Association;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.BWSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Constraint;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.DataSpecification;
 import pt.ist.socialsoftware.blendedworkflow.designer.blendedWorkflow.Entity;
@@ -24,12 +23,11 @@ import pt.ist.socialsoftware.blendedworkflow.designer.remote.datamodel.dto.RuleD
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.BWNotification;
 import pt.ist.socialsoftware.blendedworkflow.designer.remote.utils.RepositoryException;
 
-
 public class WriteDataModelService {
-	private Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
-	
+	private final Logger logger = LoggerFactory.getLogger(WriteDataModelService.class);
+
 	private DataModelInterface repository = null;
-	
+
 	public WriteDataModelService(DataModelInterface repository) {
 		this.repository = repository;
 	}
@@ -78,7 +76,7 @@ public class WriteDataModelService {
 				// logger.debug("createEntity: {}", re.getMessage());
 				continue;
 			}
-			
+
 			createEntityDependencies(specId, notification, eEnt);
 
 			createAttributes(specId, notification, eEnt, entityExtId);
@@ -101,9 +99,9 @@ public class WriteDataModelService {
 				AttributeDTO attributeDTO;
 				Attribute eAtt = (Attribute) eObj;
 				try {
-					attributeDTO = this.repository.createAttribute(
-							new AttributeDTO(specId, ProductDTO.ProductType.ATTRIBUTE.name(), entityExtId,
-									eEnt.getName(), eAtt.getName(), eAtt.getType(), eAtt.isMandatory()));
+					attributeDTO = this.repository
+							.createAttribute(new AttributeDTO(specId, ProductDTO.ProductType.ATTRIBUTE.name(),
+									entityExtId, eEnt.getName(), eAtt.getName(), eAtt.getType(), false));
 				} catch (RepositoryException re) {
 					notification.addError(re.getError());
 					// logger.debug("Error: {}", re.getMessage());
@@ -143,8 +141,8 @@ public class WriteDataModelService {
 			Attribute eAtt) {
 		for (String eDep : eAtt.getDependsOn()) {
 			try {
-				this.repository.createDependence(new DependenceDTO(specId,
-						attributeDTO.getEntityName() + "." + attributeDTO.getName(), eDep));
+				this.repository.createDependence(
+						new DependenceDTO(specId, attributeDTO.getEntityName() + "." + attributeDTO.getName(), eDep));
 			} catch (RepositoryException re) {
 				notification.addError(re.getError());
 				// logger.debug("Error: {}", re.getMessage());

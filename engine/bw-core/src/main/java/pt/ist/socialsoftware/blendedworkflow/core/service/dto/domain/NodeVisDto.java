@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class NodeVisDto {
 	private String id;
 	private String label;
-	private String title;
+	private String description;
 
 	public NodeVisDto() {
 	}
@@ -14,7 +14,7 @@ public class NodeVisDto {
 	public NodeVisDto(String id, String label, String title) {
 		this.id = id;
 		this.label = label;
-		this.title = title;
+		this.description = title;
 	}
 
 	public String getId() {
@@ -33,12 +33,12 @@ public class NodeVisDto {
 		this.label = label;
 	}
 
-	public String getTitle() {
-		return this.title;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

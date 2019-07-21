@@ -24,14 +24,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Rule;
 import pt.ist.socialsoftware.blendedworkflow.core.service.design.DesignInterface;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefAttributeConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefEntityConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefPathConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DefProductConditionSetDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GraphDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.MulConditionDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.RuleDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.*;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.MergeOperationDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.AddActivityDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.req.ExtractActivityDto;
@@ -335,5 +328,17 @@ public class ActivityModelController {
 
 		return new ResponseEntity<>(activityGraph, HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "/graph/vis", method = RequestMethod.GET)
+	public ResponseEntity<GraphVisDto> getGoalGraphVis(@PathVariable("specId") String specId) {
+		logger.debug("getGoalGraphVis specId:{}", specId);
+
+		DesignInterface adi = this.factory.createDesignInterface();
+
+		GraphVisDto graph = adi.getActivityModelGraphVis(specId);
+
+		return new ResponseEntity<>(graph, HttpStatus.OK);
+	}
+
 
 }
