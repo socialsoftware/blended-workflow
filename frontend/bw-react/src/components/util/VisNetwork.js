@@ -34,7 +34,7 @@ export class VisNetwork extends Component {
         if (nodeId) {
             this.setState({
                 showConditions: true,
-                conditions: this.props.graph.nodes.filter(n => n.id === nodeId)[0].title
+                conditions: this.props.graph.nodes.filter(n => n.id === nodeId)[0].description,
             });
         }
     }
