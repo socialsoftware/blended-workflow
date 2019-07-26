@@ -7,7 +7,7 @@ import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 const tooltip = (
 	<Tooltip id="tooltip">
-	  Select node for conditions and<br /> double click them apply an operation
+		Select node for conditions and<br /> double click them apply an operation
 	</Tooltip>
 );
 
@@ -21,10 +21,10 @@ const options = {
 		color: '#000000',
 		width: 0.5,
 		arrows: {
-		  from: {
-			enabled: false,
-			scaleFactor: 0.5
-		  }
+			from: {
+				enabled: true,
+				scaleFactor: 0.5
+			}
 		}
 	},
 	nodes: {
@@ -76,7 +76,7 @@ export class ActivityModelDiagram extends React.Component {
 		//this.handleOperationSubmit = this.handleOperationSubmit.bind( this );
 		this.handleOperationCancel = this.handleOperationCancel.bind( this );
 		this.closeErrorMessageModal = this.closeErrorMessageModal.bind( this );
-		this.storeGraph = this.storeGraph.bind(  this  );
+		this.storeGraph = this.storeGraph.bind( this );
 	}
 
 
@@ -296,7 +296,7 @@ export class ActivityModelDiagram extends React.Component {
 	}
 
 	render() {
-		const service = new RepositoryService();
+		//const service = new RepositoryService();
 		console.log( 'PROPS', this.props );
 		console.log( 'STATE', this.state );
 		//console.log( 'service', this.state.activityModel[0] && service.getActivityPreConditions( this.props.spec.specId, this.state.activityModel[0].name ) );
@@ -312,7 +312,7 @@ export class ActivityModelDiagram extends React.Component {
 
 		console.log( 'ERROR?:', this.state.error && this.state.errorMessage );
 
-	   return (
+		return (
 			<div>
 				<OverlayTrigger placement="bottom" overlay={ tooltip }>
 					<h3>{ this.props.spec.name }: Activity Model Diagram</h3>
@@ -345,6 +345,6 @@ export class ActivityModelDiagram extends React.Component {
 					/>
 				</div>
 			</div>
-		)
+		);
 	}
 }
