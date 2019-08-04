@@ -148,9 +148,9 @@ export class ActivityModelDiagram extends React.Component {
 
 
 	handleSelectActivity( externalId ) {
-        if ( externalId === null || externalId === undefined ) {
-            return;
-        }
+		if ( externalId === null || externalId === undefined ) {
+			return;
+		}
 
 		if (
 			this.state.operation === OPERATION.NONE
