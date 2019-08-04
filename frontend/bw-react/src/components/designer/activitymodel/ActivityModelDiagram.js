@@ -197,7 +197,7 @@ export class ActivityModelDiagram extends React.Component {
 	}
 
 	async handleOperationSubmit( operation, inputValue ) {
-		const service = new RepositoryService();
+		//const service = new RepositoryService();
 		
 		//await this.storeGraph();
 
