@@ -148,6 +148,10 @@ export class ActivityModelDiagram extends React.Component {
 
 
 	handleSelectActivity( externalId ) {
+        if ( externalId === null || externalId === undefined ) {
+            return;
+        }
+
 		if (
 			this.state.operation === OPERATION.NONE
 			|| this.state.operation === OPERATION.RENAME
@@ -276,6 +280,11 @@ export class ActivityModelDiagram extends React.Component {
 	storeGraph() {
 		const graph = this.state.graph;
 		const network = this.networkRef.current.network;
+
+		if ( !graph.nodes ) {
+			// For when there's no graph available, for whatever reason.
+			return;
+		}
 
 		const activities = graph.nodes.map( node => {
 			const position = network.getPositions( node.id );
