@@ -23,6 +23,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
@@ -43,6 +44,10 @@ public class WorkItemDto {
 	public WorkItemDto() {
 	}
 
+	public boolean skippedEntityInstanceWasDefined(ProductInstanceState entityInstanceState, ProductInstanceState attributeInstanceState) {
+		return attributeInstanceState == ProductInstanceState.DEFINED && entityInstanceState == ProductInstanceState.SKIPPED;
+	}
+	
 	public void executeWorkItem(WorkflowInstance workflowInstance, WorkItem workItem) {
 		Set<EntityInstance> definedEntityInstances = new HashSet<EntityInstance>();
 		Set<RelationBW> innerRelations = new HashSet<RelationBW>();
@@ -62,8 +67,8 @@ public class WorkItemDto {
 						workflowInstance.getSpecification(), entityInstance.getEntity().getFullPath()));
 			} else {
 				Entity entity = workflowInstance.getEntityByName(entityInstanceToDefine.getEntity().getName());
-				entityInstance = new EntityInstance(workflowInstance, entity);
-
+				entityInstance = new EntityInstance(workflowInstance, entity, entityInstanceToDefine.getState());
+				
 				definedEntityInstances.add(entityInstance);
 
 				if (workItem != null) {
@@ -74,11 +79,15 @@ public class WorkItemDto {
 
 			for (AttributeInstanceDto attributeInstanceDto : entityInstanceToDefine.getAttributeInstances()) {
 				if (attributeInstanceDto.isToDefine()) {
+					
+					if (skippedEntityInstanceWasDefined(entityInstance.getState(), attributeInstanceDto.getState()))
+						entityInstance.setState(ProductInstanceState.DEFINED);
+					
 					Attribute attribute = workflowInstance
 							.getAttributeByPath(attributeInstanceDto.getAttribute().getEntityName() + "."
 									+ attributeInstanceDto.getAttribute().getName());
 					AttributeInstance attributeInstance = new AttributeInstance(entityInstance, attribute,
-							attributeInstanceDto.getValue());
+							attributeInstanceDto.getValue(), attributeInstanceDto.getState());
 
 					for (Dependence dependence : attribute.getDependenceSet()) {
 						for (ProductInstance productInstance : entityInstance
@@ -87,7 +96,7 @@ public class WorkItemDto {
 									dependence.getPath().getDefPathCondition());
 						}
 					}
-
+					 
 					if (workItem != null) {
 						workItem.addPostWorkItemArgument(attributeInstance,
 								DefAttributeCondition.getDefAttributeCondition(attributeInstance.getAttribute()));

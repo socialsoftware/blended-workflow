@@ -9,6 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ActivityWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefAttributeCondition;
@@ -69,8 +70,8 @@ public class HoldsMethodTest extends TeardownRollbackTest {
 
 		this.workflowInstance = new WorkflowInstance(this.spec, NAME);
 		this.activityWorkItem = new ActivityWorkItem(this.workflowInstance, this.activity);
-		this.entityInstance = new EntityInstance(this.workflowInstance, this.entity);
-		this.attributeInstance = new AttributeInstance(this.entityInstance, this.attribute, "value");
+		this.entityInstance = new EntityInstance(this.workflowInstance, this.entity, ProductInstanceState.DEFINED);
+		this.attributeInstance = new AttributeInstance(this.entityInstance, this.attribute, "value", ProductInstanceState.DEFINED);
 	}
 
 	@Test
@@ -81,7 +82,7 @@ public class HoldsMethodTest extends TeardownRollbackTest {
 		ActivityWorkItem activityWorkItem = new ActivityWorkItem(this.workflowInstance, this.activity);
 
 		PreWorkItemArgument preWorkItemArgument = new PreWorkItemArgument(activityWorkItem, this.defPathCondition);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(this.entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, this.relationBW);
 		preWorkItemArgument.addProductInstance(entityInstanceTwo);
 		activityWorkItem.addPreCondition(preWorkItemArgument);
@@ -104,7 +105,7 @@ public class HoldsMethodTest extends TeardownRollbackTest {
 		ActivityWorkItem activityWorkItem = new ActivityWorkItem(this.workflowInstance, this.activity);
 
 		PreWorkItemArgument preWorkItemArgument = new PreWorkItemArgument(activityWorkItem, this.defPathCondition);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(this.entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, this.relationBW);
 		preWorkItemArgument.addProductInstance(entityInstanceTwo);
 		activityWorkItem.addPreCondition(preWorkItemArgument);

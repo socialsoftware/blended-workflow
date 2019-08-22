@@ -39,5 +39,4 @@ public class DependenceInstanceDto {
 	public void setEntityInstances(List<EntityInstanceDto> entityInstances) {
 		this.entityInstances = entityInstances;
 	}
-
 }

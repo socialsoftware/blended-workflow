@@ -11,6 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefAttributeCondition;
@@ -71,7 +72,7 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 		GoalWorkItem goalWorkItem = new GoalWorkItem(this.workflowInstance, productGoal);
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(goalWorkItem,
 				DefEntityCondition.getDefEntityCondition(this.entityOne));
-		postWorkItemArgument.addProductInstance(new EntityInstance(this.workflowInstance, this.entityOne));
+		postWorkItemArgument.addProductInstance(new EntityInstance(this.workflowInstance, this.entityOne, ProductInstanceState.DEFINED));
 		goalWorkItem.addPostCondition(postWorkItemArgument);
 
 		assertTrue(goalWorkItem.postConditionsHold());
@@ -87,11 +88,11 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 		GoalWorkItem goalWorkItem = new GoalWorkItem(this.workflowInstance, productGoal);
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(goalWorkItem,
 				DefEntityCondition.getDefEntityCondition(this.entityOne));
-		postWorkItemArgument.addProductInstance(new EntityInstance(this.workflowInstance, this.entityOne));
+		postWorkItemArgument.addProductInstance(new EntityInstance(this.workflowInstance, this.entityOne, ProductInstanceState.DEFINED));
 		goalWorkItem.addPostCondition(postWorkItemArgument);
 		postWorkItemArgument = new PostWorkItemArgument(goalWorkItem,
 				DefEntityCondition.getDefEntityCondition(this.entityTwo));
-		postWorkItemArgument.addProductInstance(new EntityInstance(this.workflowInstance, this.entityTwo));
+		postWorkItemArgument.addProductInstance(new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED));
 		goalWorkItem.addPostCondition(postWorkItemArgument);
 
 		assertTrue(goalWorkItem.postConditionsHold());
@@ -107,8 +108,9 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 		GoalWorkItem goalWorkItem = new GoalWorkItem(this.workflowInstance, productGoal);
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(goalWorkItem,
 				DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entityOne);
-		postWorkItemArgument.addProductInstance(new AttributeInstance(entityInstance, this.attributeOne, "124"));
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entityOne, ProductInstanceState.DEFINED);
+		postWorkItemArgument.addProductInstance(new AttributeInstance(entityInstance, this.attributeOne, "124", 
+				ProductInstanceState.DEFINED));
 		goalWorkItem.addPostCondition(postWorkItemArgument);
 
 		assertTrue(goalWorkItem.postConditionsHold());
@@ -125,12 +127,13 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 		GoalWorkItem goalWorkItem = new GoalWorkItem(this.workflowInstance, productGoal);
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(goalWorkItem,
 				DefEntityCondition.getDefEntityCondition(this.entityOne));
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entityOne);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entityOne, ProductInstanceState.DEFINED);
 		postWorkItemArgument.addProductInstance(entityInstance);
 		goalWorkItem.addPostCondition(postWorkItemArgument);
 		postWorkItemArgument = new PostWorkItemArgument(goalWorkItem,
 				DefAttributeCondition.getDefAttributeCondition(this.attributeOne));
-		postWorkItemArgument.addProductInstance(new AttributeInstance(entityInstance, this.attributeOne, "124"));
+		postWorkItemArgument.addProductInstance(new AttributeInstance(entityInstance, this.attributeOne, "124", 
+				ProductInstanceState.DEFINED));
 		goalWorkItem.addPostCondition(postWorkItemArgument);
 
 		assertTrue(goalWorkItem.postConditionsHold());
@@ -142,12 +145,12 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 				this.relationBW.getMulConditionSet());
 		associationGoal.initAssociationGoal();
 
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entityOne);
-		new RelationInstance(entityInstanceOne, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo),
-				ENT_TWO_ROLE, this.relationBW);
-		new RelationInstance(entityInstanceOne, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo),
-				ENT_TWO_ROLE, this.relationBW);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entityOne, ProductInstanceState.DEFINED);
+		new RelationInstance(entityInstanceOne, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo, 
+				ProductInstanceState.DEFINED), ENT_TWO_ROLE, this.relationBW);
+		new RelationInstance(entityInstanceOne, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo, 
+				ProductInstanceState.DEFINED), ENT_TWO_ROLE, this.relationBW);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, this.relationBW);
 
 		GoalWorkItem goalWorkItem = new GoalWorkItem(this.workflowInstance, associationGoal);
@@ -171,16 +174,16 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 				this.relationBW.getMulConditionSet());
 		associationGoal.initAssociationGoal();
 
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entityOne);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entityOne, ProductInstanceState.DEFINED);
 
-		new RelationInstance(entityInstance, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo),
-				ENT_TWO_ROLE, this.relationBW);
-		new RelationInstance(entityInstance, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo),
-				ENT_TWO_ROLE, this.relationBW);
-		new RelationInstance(entityInstance, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo),
-				ENT_TWO_ROLE, this.relationBW);
-		new RelationInstance(entityInstance, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo),
-				ENT_TWO_ROLE, this.relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo, 
+				ProductInstanceState.DEFINED), ENT_TWO_ROLE, this.relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo, 
+				ProductInstanceState.DEFINED), ENT_TWO_ROLE, this.relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo, 
+				ProductInstanceState.DEFINED), ENT_TWO_ROLE, this.relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo, 
+				ProductInstanceState.DEFINED), ENT_TWO_ROLE, this.relationBW);
 
 		GoalWorkItem goalWorkItem = new GoalWorkItem(this.workflowInstance, associationGoal);
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(goalWorkItem,
@@ -199,10 +202,10 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 				this.relationBW.getMulConditionSet());
 		associationGoal.initAssociationGoal();
 
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entityOne);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entityOne, ProductInstanceState.DEFINED);
 
-		new RelationInstance(entityInstance, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo),
-				ENT_TWO_ROLE, this.relationBW);
+		new RelationInstance(entityInstance, ENT_ONE_ROLE, new EntityInstance(this.workflowInstance, this.entityTwo, 
+				ProductInstanceState.DEFINED), ENT_TWO_ROLE, this.relationBW);
 
 		GoalWorkItem goalWorkItem = new GoalWorkItem(this.workflowInstance, associationGoal);
 		PostWorkItemArgument postWorkItemArgument = new PostWorkItemArgument(goalWorkItem,

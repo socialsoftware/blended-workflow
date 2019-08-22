@@ -8,6 +8,7 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
@@ -25,6 +26,7 @@ public class SetValueTest extends TeardownRollbackTest {
 	AttributeInstance attributeInstanceBoolean = null;
 	AttributeInstance attributeInstanceNumber = null;
 	AttributeInstance attributeInstanceDate = null;
+	AttributeInstance attributeInstanceNumberSkipped = null;
 
 	@Override
 	public void populate4Test() throws BWException {
@@ -40,11 +42,12 @@ public class SetValueTest extends TeardownRollbackTest {
 				Attribute.AttributeType.DATE, false);
 
 		WorkflowInstance workflowInstance = new WorkflowInstance(this.spec, "name");
-		EntityInstance entityInstance = new EntityInstance(workflowInstance, this.entity);
-		this.attributeInstanceString = new AttributeInstance(entityInstance, attributeString, null);
-		this.attributeInstanceBoolean = new AttributeInstance(entityInstance, attributeBoolean, null);
-		this.attributeInstanceNumber = new AttributeInstance(entityInstance, attributeNumber, null);
-		this.attributeInstanceDate = new AttributeInstance(entityInstance, attributeDate, null);
+		EntityInstance entityInstance = new EntityInstance(workflowInstance, this.entity, ProductInstanceState.DEFINED);
+		this.attributeInstanceString = new AttributeInstance(entityInstance, attributeString, null, ProductInstanceState.DEFINED);
+		this.attributeInstanceBoolean = new AttributeInstance(entityInstance, attributeBoolean, null, ProductInstanceState.DEFINED);
+		this.attributeInstanceNumber = new AttributeInstance(entityInstance, attributeNumber, null, ProductInstanceState.DEFINED);
+		this.attributeInstanceDate = new AttributeInstance(entityInstance, attributeDate, null, ProductInstanceState.DEFINED);
+		this.attributeInstanceNumberSkipped = new AttributeInstance(entityInstance, attributeNumber, null, ProductInstanceState.SKIPPED);
 	}
 
 	@Test
@@ -73,6 +76,13 @@ public class SetValueTest extends TeardownRollbackTest {
 		this.attributeInstanceDate.setValue("12/12/2012");
 
 		assertEquals("12/12/2012", this.attributeInstanceDate.getValue());
+	}
+	
+	@Test
+	public void successSkipValue() {
+		this.attributeInstanceNumberSkipped.setValue("undef");
+		
+		assertEquals("undef", this.attributeInstanceNumberSkipped.getValue());
 	}
 
 	@Test

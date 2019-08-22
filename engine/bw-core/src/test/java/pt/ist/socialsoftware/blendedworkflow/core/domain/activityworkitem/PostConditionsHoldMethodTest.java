@@ -11,6 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ActivityWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefAttributeCondition;
@@ -73,8 +74,8 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 
 		this.workflowInstance = new WorkflowInstance(this.spec, NAME);
 		this.activityWorkItem = new ActivityWorkItem(this.workflowInstance, this.activity);
-		this.entityInstance = new EntityInstance(this.workflowInstance, this.entity);
-		this.attributeInstance = new AttributeInstance(this.entityInstance, this.attribute, "value");
+		this.entityInstance = new EntityInstance(this.workflowInstance, this.entity, ProductInstanceState.DEFINED);
+		this.attributeInstance = new AttributeInstance(this.entityInstance, this.attribute, "value", ProductInstanceState.DEFINED);
 	}
 
 	@Test
@@ -144,8 +145,8 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void entityInstanceHolds() {
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo);
-		EntityInstance entityInstanceThree = new EntityInstance(this.workflowInstance, this.entityTwo);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceThree = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(this.entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, this.relationBW);
 		new RelationInstance(this.entityInstance, ENT_ONE_ROLE, entityInstanceThree, ENT_TWO_ROLE, this.relationBW);
 
@@ -161,7 +162,7 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void entityInstanceHoldsFailBellowCardinality() {
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(this.entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, this.relationBW);
 
 		ActivityWorkItem activityWorkItem = new ActivityWorkItem(this.workflowInstance, this.activity);
@@ -179,10 +180,10 @@ public class PostConditionsHoldMethodTest extends TeardownRollbackTest {
 
 	@Test
 	public void entityInstanceHoldsPassEqualTopCardinality() {
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo);
-		EntityInstance entityInstanceThree = new EntityInstance(this.workflowInstance, this.entityTwo);
-		EntityInstance entityInstanceFour = new EntityInstance(this.workflowInstance, this.entityTwo);
-		EntityInstance entityInstanceFive = new EntityInstance(this.workflowInstance, this.entityTwo);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceThree = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceFour = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceFive = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(this.entityInstance, ENT_ONE_ROLE, entityInstanceTwo, ENT_TWO_ROLE, this.relationBW);
 		new RelationInstance(this.entityInstance, ENT_ONE_ROLE, entityInstanceThree, ENT_TWO_ROLE, this.relationBW);
 		new RelationInstance(this.entityInstance, ENT_ONE_ROLE, entityInstanceFour, ENT_TWO_ROLE, this.relationBW);

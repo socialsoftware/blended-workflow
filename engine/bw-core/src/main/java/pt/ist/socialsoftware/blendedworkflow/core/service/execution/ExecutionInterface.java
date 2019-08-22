@@ -1,5 +1,6 @@
 package pt.ist.socialsoftware.blendedworkflow.core.service.execution;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,7 @@ import pt.ist.fenixframework.Atomic.TxMode;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ActivityWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.BlendedWorkflow;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
@@ -25,7 +27,9 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWorkItemDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceToDefineDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceWithEntityInstanceIdDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceToDefineDto;
@@ -220,4 +224,67 @@ public class ExecutionInterface {
 		return goalWorkItem;
 	}
 
+	@Atomic(mode = TxMode.WRITE)
+	public void defineDependentAttributeInstances(String specId, String instanceName, List<List<AttributeInstanceDto>> dependencyTree) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		dependencyTree.stream()
+			.forEach(row -> row.stream()
+					.forEach(node -> 
+						node.getAttributeInstance(workflowInstance, node.getExternalId()).get().defineSkippedAttributeInstance(node)
+					)
+			);
+	}
+	
+	public List<List<AttributeInstanceDto>> getDependencyTreeDto(List<List<AttributeInstance>> dependencyTree) {
+		return dependencyTree.stream()
+				.map(row -> row.stream()
+						.map(ai -> new AttributeInstanceDto(ai)).collect(Collectors.toList())
+				).collect(Collectors.toList());
+	}
+	
+	@Atomic(mode = TxMode.WRITE)
+	public List<List<AttributeInstanceDto>> getDependencyTree(String specId, String instanceName, 
+			AttributeInstanceWithEntityInstanceIdDto attributeInstanceWithEntityInstanceIdDto) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+		
+		AttributeInstanceDto attributeInstanceDto = attributeInstanceWithEntityInstanceIdDto.getAttributeInstance();
+		EntityInstance entityInstance = workflowInstance.getEntityInstanceById(attributeInstanceWithEntityInstanceIdDto.getEntityInstanceId());
+		Attribute attribute = Attribute.getAttributeByName(attributeInstanceDto.getAttribute().getName(), 
+				attributeInstanceDto.getAttribute().getEntityName(), workflowInstance).get();
+		AttributeInstance attributeInstance = new AttributeInstance(entityInstance, attribute, attributeInstanceDto.getValue(), 
+				attributeInstanceDto.getState());
+		
+		List<AttributeInstance> dependentAttributeInstances = attributeInstance.getDependentAttributeInstances(workflowInstance);
+		List<List<AttributeInstance>> dependencyTree = new ArrayList<List<AttributeInstance>>();
+		
+		while (dependentAttributeInstances.size() != 0) {
+			dependencyTree.add(dependentAttributeInstances.stream().distinct().collect(Collectors.toList()));
+			dependentAttributeInstances = attributeInstance.getNextDependentAttributeInstances(workflowInstance, dependentAttributeInstances);
+		}
+		
+		attributeInstance.delete();
+
+		return getDependencyTreeDto(dependencyTree);
+	}
+	
+	@Atomic(mode = TxMode.WRITE)
+	public List<AttributeInstanceDto> getDependentAttributeInstances(String specId, String instanceName, 
+			AttributeInstanceWithEntityInstanceIdDto attributeInstanceWithEntityInstanceIdDto) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+		
+		AttributeInstanceDto attributeInstanceDto = attributeInstanceWithEntityInstanceIdDto.getAttributeInstance();
+		EntityInstance entityInstance = workflowInstance.getEntityInstanceById(attributeInstanceWithEntityInstanceIdDto.getEntityInstanceId());
+		Attribute attribute = Attribute.getAttributeByName(attributeInstanceDto.getAttribute().getName(), 
+				attributeInstanceDto.getAttribute().getEntityName(), workflowInstance).get();
+		AttributeInstance attributeInstance = new AttributeInstance(entityInstance, attribute, attributeInstanceDto.getValue(), 
+				attributeInstanceDto.getState());
+		
+		List<AttributeInstanceDto> dependentAttributeInstances = attributeInstance.getDependentAttributeInstances(workflowInstance)
+				.stream().map(ai -> new AttributeInstanceDto(ai)).collect(Collectors.toList());
+		
+		attributeInstance.delete();
+		
+		return dependentAttributeInstances;
+	}
 }

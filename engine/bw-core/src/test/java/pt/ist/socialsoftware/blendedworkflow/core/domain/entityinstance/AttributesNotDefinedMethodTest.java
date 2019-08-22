@@ -11,6 +11,7 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
@@ -48,7 +49,7 @@ public class AttributesNotDefinedMethodTest extends TeardownRollbackTest {
 		Set<Attribute> attributes = new HashSet<>();
 		attributes.add(this.attOne);
 
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
 		boolean result = entityInstance.attributesNotDefined(attributes);
 
@@ -61,8 +62,8 @@ public class AttributesNotDefinedMethodTest extends TeardownRollbackTest {
 		attributes.add(this.attOne);
 		attributes.add(this.attTwo);
 
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
-		new AttributeInstance(entityInstance, this.attOne, "123");
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		new AttributeInstance(entityInstance, this.attOne, "123", ProductInstanceState.DEFINED);
 
 		boolean result = entityInstance.attributesNotDefined(attributes);
 
@@ -75,7 +76,7 @@ public class AttributesNotDefinedMethodTest extends TeardownRollbackTest {
 		attributes.add(this.attOne);
 		attributes.add(this.attTwo);
 
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
 		boolean result = entityInstance.attributesNotDefined(attributes);
 

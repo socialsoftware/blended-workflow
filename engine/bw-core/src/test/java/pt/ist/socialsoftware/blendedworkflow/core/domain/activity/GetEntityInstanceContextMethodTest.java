@@ -25,6 +25,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 
 public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 	private static final String ENT_ONE_NAME = "EntOne";
@@ -88,7 +89,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		activity.addPreCondition(DefPathCondition.getDefPathCondition(this.spec, ENT_ONE_NAME));
 		activity.addPostCondition(DefAttributeCondition.getDefAttributeCondition(this.attOne));
 
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entOne);
 
@@ -102,9 +103,9 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		activity.addPreCondition(DefPathCondition.getDefPathCondition(this.spec, ENT_ONE_NAME));
 		activity.addPostCondition(DefAttributeCondition.getDefAttributeCondition(this.attOne));
 
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		new AttributeInstance(entityInstanceOne, this.attOne, "123");
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entOne);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		new AttributeInstance(entityInstanceOne, this.attOne, "123", ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entOne);
 
@@ -120,7 +121,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		activity.addMultiplicityInvariant(MulCondition.getMulCondition(this.relationOne, ROLENAME_ENT_ONE));
 		activity.addMultiplicityInvariant(MulCondition.getMulCondition(this.relationOne, ROLENAME_ENT_TWO));
 
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entOne);
 
@@ -136,10 +137,10 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		activity.addMultiplicityInvariant(MulCondition.getMulCondition(this.relationOne, ROLENAME_ENT_ONE));
 		activity.addMultiplicityInvariant(MulCondition.getMulCondition(this.relationOne, ROLENAME_ENT_TWO));
 
-		EntityInstance entityInstanceOneOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceOneTwo = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwoOne = new EntityInstance(this.workflowInstance, this.entTwo);
-		EntityInstance entityInstanceTwoTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOneOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceOneTwo = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwoOne = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwoTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 
 		new RelationInstance(entityInstanceOneOne, ROLENAME_ENT_ONE, entityInstanceTwoOne, ROLENAME_ENT_TWO,
 				this.relationOne);
@@ -160,8 +161,8 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		activity.addMultiplicityInvariant(MulCondition.getMulCondition(this.relationTwo, ROLENAME_ENT_ONE));
 		activity.addMultiplicityInvariant(MulCondition.getMulCondition(this.relationTwo, ROLENAME_ENT_THREE));
 
-		EntityInstance entityInstanceThreeOne = new EntityInstance(this.workflowInstance, this.entThree);
-		EntityInstance entityInstanceThreeTwo = new EntityInstance(this.workflowInstance, this.entThree);
+		EntityInstance entityInstanceThreeOne = new EntityInstance(this.workflowInstance, this.entThree, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceThreeTwo = new EntityInstance(this.workflowInstance, this.entThree, ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entThree);
 
@@ -178,7 +179,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		activity.addMultiplicityInvariant(MulCondition.getMulCondition(this.relationTwo, ROLENAME_ENT_ONE));
 		activity.addMultiplicityInvariant(MulCondition.getMulCondition(this.relationTwo, ROLENAME_ENT_THREE));
 
-		new EntityInstance(this.workflowInstance, this.entThree);
+		new EntityInstance(this.workflowInstance, this.entThree, ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContext = activity.getEntityInstanceContext(this.workflowInstance, this.entThree);
 

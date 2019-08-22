@@ -23,6 +23,7 @@ class ConnectedGoalExecutor extends React.Component {
         this.getLog = this.getLog.bind(this);
         this.getNextGoalWorkItems = this.getNextGoalWorkItems.bind(this);
         this.executeGoalWorkItem = this.executeGoalWorkItem.bind(this);
+        this.redoGoal = this.redoGoal.bind(this);
     }
 
     componentDidMount() {
@@ -55,6 +56,10 @@ class ConnectedGoalExecutor extends React.Component {
         }
     }
 
+    redoGoal(logWorkItem) {
+        console.log(logWorkItem);
+    }
+
     render() {
         return (
             <div> 
@@ -63,10 +68,12 @@ class ConnectedGoalExecutor extends React.Component {
                     specId={this.props.spec.specId} 
                     name={this.props.name} 
                     getNextWorkItems={this.getNextGoalWorkItems} 
-                    executeWorkItem={this.executeGoalWorkItem} />
+                    executeWorkItem={this.executeGoalWorkItem}
+                    updateLog={this.getLog}/>
                 <br /><br />
                 <ExecutionLog 
-                    log={this.state.log} />
+                    log={this.state.log} 
+                    onClickRedo={this.redoGoal}/>
             </div>
         )
     }

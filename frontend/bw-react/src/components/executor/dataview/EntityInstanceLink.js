@@ -21,7 +21,8 @@ class ConnectedEntityInstanceLink extends React.Component {
         };
 
         this.openCloseLink = this.openCloseLink.bind(this);
-        this.getEntityInstanceById = this.getEntityInstanceById.bind(this)
+        this.getEntityInstanceById = this.getEntityInstanceById.bind(this);
+        this.entityInstanceIsSkipped = this.entityInstanceIsSkipped.bind(this);
     }
 
     getEntityInstanceById(id) {
@@ -36,15 +37,29 @@ class ConnectedEntityInstanceLink extends React.Component {
         } );
     }
 
+    entityInstanceIsSkipped(entityInstance) {
+        return entityInstance.state === "SKIPPED";
+    }
+
     render() {
         const entityNameDisplay = `${this.props.entityInstance.entity.name}[${this.props.entityInstance.id}]`;
+        var textColor = "";
+        var titleText = "";
+
+        if (this.entityInstanceIsSkipped(this.props.entityInstance)) {
+            textColor = "#eb8318";
+            titleText = "Skipped Entity Instance";
+        }
 
         return (
             <div style={{display: "inline-block"}}>
-                {this.props.entityInstance.id > 0 && <span>{this.props.isOnSelection ? "" : `${entityNameDisplay} `}<OpenCloseButton
-                    open={this.state.open}
-                    onClick={this.openCloseLink}
-                /></span>}
+                {this.props.entityInstance.id > 0 && 
+                    <span style={{color: textColor}} title={titleText}>
+                        {this.props.isOnSelection ? "" : `${entityNameDisplay} `}
+                        <OpenCloseButton open={this.state.open} onClick={this.openCloseLink}/>
+                        &nbsp;
+                    </span>
+                }
                 {/* {this.state.open && <EntityInstance entityInstance={this.getEntityInstanceById(this.props.entityInstance.id)} />}  */}
 
                 <Modal show={this.state.open} onHide={this.openCloseLink}>

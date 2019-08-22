@@ -18,6 +18,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
 public class CanAssociateEntityInstanceMethodTest extends TeardownRollbackTest {
@@ -52,7 +53,7 @@ public class CanAssociateEntityInstanceMethodTest extends TeardownRollbackTest {
 		mulConditions.add(MulCondition.getMulCondition(this.relationOne, ROLENAME_ENT_ONE));
 		mulConditions.add(MulCondition.getMulCondition(this.relationOne, ROLENAME_ENT_TWO));
 
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
 		boolean result = entityInstance.canBeAssociatedWithNewEntityInstance(mulConditions);
 
@@ -65,9 +66,9 @@ public class CanAssociateEntityInstanceMethodTest extends TeardownRollbackTest {
 		mulConditions.add(MulCondition.getMulCondition(this.relationOne, ROLENAME_ENT_ONE));
 		mulConditions.add(MulCondition.getMulCondition(this.relationOne, ROLENAME_ENT_TWO));
 
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwoOne = new EntityInstance(this.workflowInstance, this.entTwo);
-		EntityInstance entityInstanceTwoTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwoOne = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwoTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwoOne, ROLENAME_ENT_TWO,
 				this.relationOne);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwoTwo, ROLENAME_ENT_TWO,
@@ -84,8 +85,8 @@ public class CanAssociateEntityInstanceMethodTest extends TeardownRollbackTest {
 		mulConditions.add(MulCondition.getMulCondition(this.relationOne, ROLENAME_ENT_ONE));
 		mulConditions.add(MulCondition.getMulCondition(this.relationOne, ROLENAME_ENT_TWO));
 
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationOne);
 

@@ -13,6 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationBW;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.RelationInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
@@ -39,8 +40,8 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 		this.relation = new RelationBW(this.spec.getDataModel(), NAME, this.entityOne, ROLENAME_ENT_ONE,
 				Cardinality.ONE_MANY, false, this.entityTwo, "entTwo", Cardinality.ONE, false);
 
-		this.entityInstanceOne = new EntityInstance(this.workflowInstance, this.entityOne);
-		this.entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo);
+		this.entityInstanceOne = new EntityInstance(this.workflowInstance, this.entityOne, ProductInstanceState.DEFINED);
+		this.entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED);
 	}
 
 	@Test
@@ -56,7 +57,7 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 	@Test
 	public void failWorkflowInstance() {
 		EntityInstance entityInstanceOther = new EntityInstance(new WorkflowInstance(this.spec, "other"),
-				this.entityOne);
+				this.entityOne, ProductInstanceState.DEFINED);
 
 		try {
 			new RelationInstance(entityInstanceOther, ROLENAME_ENT_ONE, this.entityInstanceTwo, ROLENAME_ENT_TWO,
@@ -101,7 +102,8 @@ public class CreateRelationInstanceTest extends TeardownRollbackTest {
 				this.relation);
 		try {
 			new RelationInstance(this.entityInstanceOne, ROLENAME_ENT_ONE,
-					new EntityInstance(this.workflowInstance, this.entityTwo), ROLENAME_ENT_TWO, this.relation);
+					new EntityInstance(this.workflowInstance, this.entityTwo, ProductInstanceState.DEFINED), 
+					ROLENAME_ENT_TWO, this.relation);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.RELATIONINSTANCE_CONSISTENCY, bwe.getError());

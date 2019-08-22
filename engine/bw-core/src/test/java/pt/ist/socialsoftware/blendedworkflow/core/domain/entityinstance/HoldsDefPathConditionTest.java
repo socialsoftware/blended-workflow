@@ -8,6 +8,7 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
@@ -75,7 +76,7 @@ public class HoldsDefPathConditionTest extends TeardownRollbackTest {
 
 	@Test
 	public void defPathConditionRefersEntityOfInstance() {
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
 		boolean result = entityInstance.holdsDefPathCondition(DefPathCondition.getDefPathCondition(this.spec, ENT_ONE));
 
@@ -84,7 +85,7 @@ public class HoldsDefPathConditionTest extends TeardownRollbackTest {
 
 	@Test
 	public void defPathConditionStartsBeforeEntityOfInstanceSuccess() {
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 
 		boolean result = entityInstance.holdsDefPathCondition(
 				DefPathCondition.getDefPathCondition(this.spec, ENT_ONE + "." + ROLENAME_ENT_TWO));
@@ -94,14 +95,14 @@ public class HoldsDefPathConditionTest extends TeardownRollbackTest {
 
 	@Test
 	public void defPathConditionSeveralStepsLongSuccess() {
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationOne);
-		EntityInstance entityInstanceThree = new EntityInstance(this.workflowInstance, this.entThree);
+		EntityInstance entityInstanceThree = new EntityInstance(this.workflowInstance, this.entThree, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceThree, ROLENAME_ENT_THREE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationThree);
-		new AttributeInstance(entityInstanceThree, this.attFour, "123");
+		new AttributeInstance(entityInstanceThree, this.attFour, "123", ProductInstanceState.DEFINED);
 
 		boolean result = entityInstanceOne.holdsDefPathCondition(DefPathCondition.getDefPathCondition(this.spec,
 				ENT_ONE + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME));
@@ -111,14 +112,14 @@ public class HoldsDefPathConditionTest extends TeardownRollbackTest {
 
 	@Test
 	public void defPathConditionSeveralStepsLongSuccessStartsBefore() {
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationOne);
-		EntityInstance entityInstanceThree = new EntityInstance(this.workflowInstance, this.entThree);
+		EntityInstance entityInstanceThree = new EntityInstance(this.workflowInstance, this.entThree, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceThree, ROLENAME_ENT_THREE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationThree);
-		new AttributeInstance(entityInstanceThree, this.attFour, "123");
+		new AttributeInstance(entityInstanceThree, this.attFour, "123", ProductInstanceState.DEFINED);
 
 		boolean result = entityInstanceTwo.holdsDefPathCondition(DefPathCondition.getDefPathCondition(this.spec,
 				ENT_ONE + "." + ROLENAME_ENT_TWO + "." + ROLENAME_ENT_THREE + "." + ATT_FOUR_NAME));
@@ -128,11 +129,11 @@ public class HoldsDefPathConditionTest extends TeardownRollbackTest {
 
 	@Test
 	public void defPathConditionSeveralStepsLongFailAttribute() {
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationOne);
-		EntityInstance entityInstanceThree = new EntityInstance(this.workflowInstance, this.entThree);
+		EntityInstance entityInstanceThree = new EntityInstance(this.workflowInstance, this.entThree, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceThree, ROLENAME_ENT_THREE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationThree);
 
@@ -144,8 +145,8 @@ public class HoldsDefPathConditionTest extends TeardownRollbackTest {
 
 	@Test
 	public void defPathConditionSeveralStepsLongFailEntity() {
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationOne);
 
@@ -157,15 +158,15 @@ public class HoldsDefPathConditionTest extends TeardownRollbackTest {
 
 	@Test
 	public void pathHasSeveralInstancesSuccess() {
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwoOne = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwoOne = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwoOne, ROLENAME_ENT_TWO,
 				this.relationOne);
-		new AttributeInstance(entityInstanceTwoOne, this.attThree, "321");
-		EntityInstance entityInstanceTwoTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		new AttributeInstance(entityInstanceTwoOne, this.attThree, "321", ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwoTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwoTwo, ROLENAME_ENT_TWO,
 				this.relationOne);
-		new AttributeInstance(entityInstanceTwoTwo, this.attThree, "321");
+		new AttributeInstance(entityInstanceTwoTwo, this.attThree, "321", ProductInstanceState.DEFINED);
 
 		boolean result = entityInstanceOne.holdsDefPathCondition(DefPathCondition.getDefPathCondition(this.spec,
 				ENT_ONE + "." + ROLENAME_ENT_TWO + "." + ATT_THREE_NAME));
@@ -175,12 +176,12 @@ public class HoldsDefPathConditionTest extends TeardownRollbackTest {
 
 	@Test
 	public void pathHasSeveralInstancesFail() {
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwoOne = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwoOne = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwoOne, ROLENAME_ENT_TWO,
 				this.relationOne);
-		new AttributeInstance(entityInstanceTwoOne, this.attThree, "321");
-		EntityInstance entityInstanceTwoTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		new AttributeInstance(entityInstanceTwoOne, this.attThree, "321", ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwoTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwoTwo, ROLENAME_ENT_TWO,
 				this.relationOne);
 

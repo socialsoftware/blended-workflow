@@ -2,6 +2,7 @@ package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,10 +30,11 @@ public class EntityInstance extends EntityInstance_Base {
 		super.setEntity(entity);
 	}
 
-	public EntityInstance(WorkflowInstance workflowInstance, Entity entity) {
+	public EntityInstance(WorkflowInstance workflowInstance, Entity entity, ProductInstanceState state) {
 		setWorkflowInstance(workflowInstance);
 		setEntity(entity);
 		setId(entity.getDataModel().incInstanceCounter());
+		setState(state);
 	}
 
 	private void checkConsistency(WorkflowInstance workflowInstance, Entity entity) {
@@ -112,6 +114,20 @@ public class EntityInstance extends EntityInstance_Base {
 
 	public Optional<AttributeInstance> getAttributeInstanceByName(String name) {
 		return getAttributeInstanceSet().stream().filter(ai -> ai.getAttribute().getName().equals(name)).findFirst();
+	}
+	
+	public Optional<AttributeInstance> getAttributeInstanceByExternalId(String externalId) {	
+		return getAttributeInstanceSet().stream().filter(ai -> ai.getExternalId().equals(externalId)).findFirst();
+	}
+	
+	public boolean hasAttributeInstance(String externalId) {
+		try {
+			getAttributeInstanceByExternalId(externalId).get();
+		} catch (NoSuchElementException e) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	@Override

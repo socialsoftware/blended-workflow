@@ -67,5 +67,4 @@ public class ActivityWorkItemController {
 
 		return new ResponseEntity<>(true, HttpStatus.CREATED);
 	}
-
 }

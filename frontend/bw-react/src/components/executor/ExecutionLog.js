@@ -18,12 +18,17 @@ export class ConnectedExecutionLog extends React.Component {
 
         console.log(this.props.log);
         this.handleClick = this.handleClick.bind(this);
+        this.handleClickRedo = this.handleClickRedo.bind(this);
     }
 
     handleClick() {
         this.setState({
             open: !this.state.open
         });
+    }
+
+    handleClickRedo = (logWorkItem) => (e) => { 
+        this.props.onClickRedo(logWorkItem);
     }
 
     render() { 
@@ -40,6 +45,7 @@ export class ConnectedExecutionLog extends React.Component {
                         <th>Preconditions</th>
                         <th>Products</th>
                         {this.props.user && <th>Execution User</th>}
+                        <th></th>   {/*Redo column*/}
                     </tr>
                 </thead>
                 <tbody>
@@ -52,6 +58,8 @@ export class ConnectedExecutionLog extends React.Component {
                         <td>{wi.preArguments}</td>
                         <td>{wi.postArguments}</td>
                         {this.props.user && wi.executionUser && <td>{wi.executionUser.username}</td>}
+                        {!wi.executionUser && <td></td>}    {/*Fill 'Execution User' column with blank <td>*/}
+                        <td>{wi.type === 'Goal' && <Button bsStyle='warning' onClick={this.handleClickRedo(wi)}>Redo</Button>}</td>
                     </tr>
                 })}
                 </tbody>          

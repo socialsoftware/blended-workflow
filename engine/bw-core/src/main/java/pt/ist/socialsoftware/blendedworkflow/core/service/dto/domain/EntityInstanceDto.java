@@ -10,17 +10,20 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 
 public class EntityInstanceDto {
 	public enum Depth {
 		DEEP, SHALLOW
 	}
 
+
 	private String externalId;
 	private String id;
 	private EntityDto entity;
 	private List<AttributeInstanceDto> attributeInstances = new ArrayList<>();
 	private List<LinkDto> links = new ArrayList<>();
+	private ProductInstanceState state;
 
 	public EntityInstanceDto() {
 	}
@@ -29,6 +32,7 @@ public class EntityInstanceDto {
 		this.externalId = entityInstance.getExternalId();
 		this.id = entityInstance.getId();
 		this.entity = entityInstance.getEntity().getDto();
+		this.state = entityInstance.getState();
 
 		if (depth.equals(Depth.DEEP)) {
 			this.attributeInstances = entityInstance.getEntity().getAttributeSet().stream()
@@ -96,6 +100,14 @@ public class EntityInstanceDto {
 
 	public void setLinks(List<LinkDto> links) {
 		this.links = links;
+	}
+	
+	public ProductInstanceState getState() {
+		return this.state;
+	}
+
+	public void setState(ProductInstanceState state) {
+		this.state = state;
 	}
 
 	public String print() {

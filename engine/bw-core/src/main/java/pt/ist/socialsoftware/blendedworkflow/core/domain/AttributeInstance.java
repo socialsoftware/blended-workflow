@@ -1,9 +1,15 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDto;
 
 public class AttributeInstance extends AttributeInstance_Base {
@@ -22,13 +28,16 @@ public class AttributeInstance extends AttributeInstance_Base {
 
 	@Override
 	public void setValue(String value) {
-		checkValue(value);
+		if (super.getState() == ProductInstanceState.DEFINED)
+			checkValue(value);
+		
 		super.setValue(value);
 	}
 
-	public AttributeInstance(EntityInstance entityInstance, Attribute attribute, String value) {
+	public AttributeInstance(EntityInstance entityInstance, Attribute attribute, String value,  ProductInstanceState state) {
 		setEntityInstance(entityInstance);
 		setAttribute(attribute);
+		setState(state);
 		setValue(value);
 	}
 
@@ -129,5 +138,52 @@ public class AttributeInstance extends AttributeInstance_Base {
 
 		return productInstanceDto;
 	}
+	
+	public void defineAttributeInstance(AttributeInstanceDto attributeInstanceDto, EntityInstance entityInstance) {
+		if (attributeInstanceDto.getValue().equals("")) 
+			throw new BWException(BWErrorType.EMPTY_INPUT_VALUE,
+					"Empty input value on entity instance " + entityInstance.getEntity().getName() + "[" + entityInstance.getId() + "]");
+		
+		setState(ProductInstanceState.DEFINED);
+		
+		try {
+			setValue(attributeInstanceDto.getValue());
+		} catch (BWException attributeinstance_consistency) {
+			throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
+					entityInstance.getEntity().getName() + "[" + entityInstance.getId() + "] " + 
+					getAttribute().getType() + ":" + attributeInstanceDto.getValue());
+		}
+	}
+	
+	public void defineEntityInstance(EntityInstance entityInstance) {
+		if (entityInstance.getState().equals(ProductInstanceState.SKIPPED))
+			entityInstance.setState(ProductInstanceState.DEFINED);
+	}
 
+	public void defineSkippedAttributeInstance(AttributeInstanceDto attributeInstanceDto) {
+		if (getState().equals(ProductInstanceState.SKIPPED)) {
+			defineAttributeInstance(attributeInstanceDto, getEntityInstance());
+			defineEntityInstance(getEntityInstance());
+		}
+	}
+	
+	public Optional<Dependence> getDependence() {
+		return getAttribute().getDependenceSet().stream()
+				.filter(d -> d.getProduct().getFullPath().contains(getAttribute().getName())).findFirst();
+	}
+	
+	public List<AttributeInstance> getDependentAttributeInstances(WorkflowInstance workflowInstance) {
+		try {
+			Dependence dependence = getDependence().get();
+			return dependence.getTargetAttributeInstances(this.getDependentProductInstances(dependence), workflowInstance);
+		} catch (NoSuchElementException e) {
+			return Collections.emptyList();
+		}
+	}
+	
+	public List<AttributeInstance> getNextDependentAttributeInstances(WorkflowInstance workflowInstance, 
+			List<AttributeInstance> attributeInstances) {
+		return attributeInstances.stream()
+				.flatMap(ai -> ai.getDependentAttributeInstances(workflowInstance).stream()).collect(Collectors.toList());
+	}
 }

@@ -11,6 +11,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.MulCondition;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 
 public class EntityInstanceToDefineDto extends EntityInstanceDto {
 	private List<EntityInstanceDto> entityInstancesContext = new ArrayList<>();
@@ -23,12 +24,14 @@ public class EntityInstanceToDefineDto extends EntityInstanceDto {
 		setExternalId(null);
 		setId(null);
 		setEntity(entity.getDto());
+		setState(ProductInstanceState.UNDEFINED);
 	}
 
 	public EntityInstanceToDefineDto(Entity entity, Set<EntityInstance> entityInstancesContext) {
 		setExternalId(null);
 		setId(null);
 		setEntity(entity.getDto());
+		setState(ProductInstanceState.UNDEFINED);
 		setEntityInstancesContext(entityInstancesContext.stream()
 				.sorted((ei1, ei2) -> Integer.parseInt(ei1.getId()) - Integer.parseInt(ei2.getId()))
 				.map(ei -> new EntityInstanceDto(ei, Depth.SHALLOW)).collect(Collectors.toList()));

@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
@@ -31,12 +32,13 @@ public class CreateAttributeInstanceTest extends TeardownRollbackTest {
 				false);
 
 		WorkflowInstance workflowInstance = new WorkflowInstance(this.spec, "name");
-		this.entityInstance = new EntityInstance(workflowInstance, this.entity);
+		this.entityInstance = new EntityInstance(workflowInstance, this.entity, ProductInstanceState.DEFINED);
 	}
 
 	@Test
 	public void success() {
-		AttributeInstance attributeInstance = new AttributeInstance(this.entityInstance, this.attribute, STRING_VALUE);
+		AttributeInstance attributeInstance = new AttributeInstance(this.entityInstance, this.attribute, STRING_VALUE, 
+				ProductInstanceState.DEFINED);
 
 		assertEquals(this.entityInstance, attributeInstance.getEntityInstance());
 		assertEquals(this.attribute, attributeInstance.getAttribute());
@@ -50,7 +52,7 @@ public class CreateAttributeInstanceTest extends TeardownRollbackTest {
 				Attribute.AttributeType.STRING, false);
 
 		try {
-			new AttributeInstance(this.entityInstance, otherAttribute, STRING_VALUE);
+			new AttributeInstance(this.entityInstance, otherAttribute, STRING_VALUE, ProductInstanceState.DEFINED);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY, bwe.getError());

@@ -10,6 +10,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
@@ -29,7 +30,7 @@ public class CreateEntityInstanceTest extends TeardownRollbackTest {
 
 	@Test
 	public void success() {
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entity);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entity, ProductInstanceState.DEFINED);
 
 		assertEquals(this.workflowInstance, entityInstance.getWorkflowInstance());
 		assertEquals(this.entity, entityInstance.getEntity());
@@ -41,7 +42,7 @@ public class CreateEntityInstanceTest extends TeardownRollbackTest {
 		Entity otherEntity = new Entity(otherSpec.getDataModel(), OTHER_ENTITY_NAME, false);
 
 		try {
-			new EntityInstance(this.workflowInstance, otherEntity);
+			new EntityInstance(this.workflowInstance, otherEntity, ProductInstanceState.DEFINED);
 			fail();
 		} catch (BWException bwe) {
 			assertEquals(BWErrorType.ENTITYINSTANCE_CONSISTENCY, bwe.getError());

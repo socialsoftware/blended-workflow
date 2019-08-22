@@ -77,24 +77,33 @@ export class SelectMulEntityInstances extends React.Component {
                     : <button onClick={this.handleFinishSelection}>Finish Selection</button>
                 }</span>
             
-                <ul>{this.state.select
-                    &&
-                    this.props.entityInstances.map(ei => {
-                        const eiIsSelected = this.state.selected.includes( ei );
+                <ul>{this.state.select &&
+                        this.props.entityInstances.map(ei => {
+                            const eiIsSelected = this.state.selected.includes(ei);
+                            var titleText = "";
+                            var textStyle = {
+                                fontWeight: "normal",
+                                textDecoration: "underline dotted"
+                            };
 
-                        return <li key={ei.id}>
-                            <div onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} key={`${ei.id}--hover`} style={{display:'inline-block'}}>
-                                <label>
-                                    <input type="checkbox"
-                                        value={ei.id}
-                                        checked={eiIsSelected}
-                                        onChange={eiIsSelected ? this.handleUnselect : this.handleSelect}
-                                    />
-                                    <span style={{"font-weight":"normal","text-decoration":"underline dotted"}}>{`${ei.entity.name}[${ei.id}]`}</span>
-                                </label><EntityInstanceHover show={this.state.showToolTip && ei === this.state.selectedToolTip} entityInstance={ei} />
-                            </div> <EntityInstanceLink key={ei.id} isOnSelection={this.state.select} entityInstance={ei} />
-                        </li>
-                    })
+                            if (ei.state === "SKIPPED") {
+                                titleText = "Skipped Entity Instance";
+                                textStyle.color = "#eb8318";
+                            }
+
+                            return <li key={ei.id}>
+                                    <div onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} key={`${ei.id}--hover`} style={{display:'inline-block'}}>
+                                        <label>
+                                                <input type="checkbox"
+                                                    value={ei.id}
+                                                    checked={eiIsSelected}
+                                                    onChange={eiIsSelected ? this.handleUnselect : this.handleSelect}
+                                                    title={titleText}/>
+                                                <span style={textStyle} title={titleText}>{`${ei.entity.name}[${ei.id}]`}</span>
+                                        </label><EntityInstanceHover show={this.state.showToolTip && ei === this.state.selectedToolTip} entityInstance={ei} />
+                                    </div> <EntityInstanceLink key={ei.id} isOnSelection={this.state.select} entityInstance={ei} />
+                                </li>
+                        })
                 }</ul>
             </span>
         )

@@ -216,4 +216,23 @@ export class RepositoryService {
     getDashboard() {
         return this.axios.get("/users/dashboard");
     }
+
+    // Dependency Tree
+    defineDependentAttributeInstances(spec, instance, dependencyTree) {
+        return this.axios.post("/specs/" + spec + "/instances/"+ instance + "/dependencytree", dependencyTree);
+    }
+
+    getDependencyTree(spec, instance, attributeInstance, entityInstanceId) {
+        return this.axios.post("/specs/" + spec + "/instances/" + instance + "/dependencytree/get", {
+            "attributeInstance": attributeInstance,
+            "entityInstanceId": entityInstanceId
+        });
+    }
+
+    getDependentAttributeInstances(spec, instance, attributeInstance, entityInstanceId) {
+        return this.axios.post("/specs/" + spec + "/instances/" + instance + "/dependencytree/get/dependentattributeinstances", {
+            "attributeInstance": attributeInstance,
+            "entityInstanceId": entityInstanceId
+        });
+    }
 }

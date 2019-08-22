@@ -13,6 +13,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ActivityWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
@@ -62,8 +63,8 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 		this.activity.addPreCondition(this.defPathCondition);
 
 		this.workflowInstance = new WorkflowInstance(this.spec, NAME);
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, entity);
-		this.attributeInstance = new AttributeInstance(entityInstance, attribute, VALUE);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, entity, ProductInstanceState.DEFINED);
+		this.attributeInstance = new AttributeInstance(entityInstance, attribute, VALUE, ProductInstanceState.DEFINED);
 		this.goalWorkItem = new GoalWorkItem(this.workflowInstance, this.goal);
 		this.activityWorkItem = new ActivityWorkItem(this.workflowInstance, this.activity);
 	}
@@ -110,7 +111,7 @@ public class CreateWorkItemArgumentTest extends TeardownRollbackTest {
 	@Test
 	public void failPreProductConsistency() {
 		Entity otherEntity = new Entity(this.spec.getDataModel(), OTHER_ENTITY_NAME, false);
-		EntityInstance otherEntityInstance = new EntityInstance(this.workflowInstance, otherEntity);
+		EntityInstance otherEntityInstance = new EntityInstance(this.workflowInstance, otherEntity, ProductInstanceState.DEFINED);
 
 		try {
 			PreWorkItemArgument workItemArgument = new PreWorkItemArgument(this.goalWorkItem, this.defPathCondition);

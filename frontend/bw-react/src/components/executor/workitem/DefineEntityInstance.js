@@ -84,23 +84,32 @@ class ConnectedDefineEntityInstance extends React.Component {
     }
 
     render() {
+        const entityInstance = this.props.entityInstances.find(ei => {
+            return ei.id === this.props.entityInstance.id;
+        });
+        var textColor = "";
+        var titleText = "";
+
+        if (this.props.entityInstance.id > 0 && entityInstance != null) 
+            if (entityInstance.state === "SKIPPED") {
+                titleText = "Skipped Entity Instance";
+                textColor = "#eb8318";
+            }
+
         return (
             <div>
                 <span>{this.props.entityInstance.id < 0 && this.props.entityInstance.exists
                     ? `${this.props.entityInstance.entity.name}[undef]`
                     : <span>
-                        <span>{
-                            `${this.props.entityInstance.entity.name}[${this.props.entityInstance.id}]`
-                        }</span> <EntityInstanceLink
-                            key={this.props.entityInstance.id}
-                            entityInstance={this.props.entityInstance}
-                            isOnSelection={true}
-                        />
+                        <span style={{color: textColor}} title={titleText}>
+                            {`${this.props.entityInstance.entity.name}[${this.props.entityInstance.id}] `}
+                        </span>
+                        <EntityInstanceLink key={this.props.entityInstance.id} entityInstance={this.props.entityInstance} isOnSelection={true}/>
                     </span>
                 }</span>
                 <span> {this.props.entityInstance.exists && <SelectEntityInstance currInstance={this.props.entityInstance} entityInstances={this.props.entityInstance.entityInstancesContext} onSelection={this.handleSelection}/>}</span>
                 <span> {this.canDelete() &&  <button onClick={this.handleDelete}>Delete</button>}</span>
-                {this.getAttributeInstances().map(att => <DefineAttributeInstance key={att.attribute.name} entityInstance={this.props.entityInstance} attributeInstance={att} />)}
+                {this.getAttributeInstances().map(att => <DefineAttributeInstance key={att.attribute.name} entityInstance={this.props.entityInstance} attributeInstance={att} onDefineSkippedDependencies={this.props.onDefineSkippedDependencies}/>)}
                 {this.getLinks().map(link => <DefineLink key={link.mulCondition.externalId} entityInstance={this.props.entityInstance} link={link} />)}
                 <br />
             </div>

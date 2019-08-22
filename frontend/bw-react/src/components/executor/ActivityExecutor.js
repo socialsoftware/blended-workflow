@@ -64,7 +64,8 @@ class ConnectedActivityExecutor extends React.Component {
                     specId={this.props.spec.specId} 
                     name={this.props.name} 
                     getNextWorkItems={this.getNextActivityWorkItems} 
-                    executeWorkItem={this.executeActivityWorkItem}/>
+                    executeWorkItem={this.executeActivityWorkItem}
+                    updateLog={this.getLog}/>
                 <br /><br />
                 <ExecutionLog 
                     log={this.state.log} />

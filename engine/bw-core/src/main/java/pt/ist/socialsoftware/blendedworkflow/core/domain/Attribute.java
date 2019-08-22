@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -58,6 +59,10 @@ public class Attribute extends Attribute_Base {
 		}
 
 	};
+	
+	public static Optional<Attribute> getAttributeByName(String attributeName, String entityName, WorkflowInstance workflowInstance) {
+		return workflowInstance.getEntityByName(entityName).getAttribute(attributeName);
+	}
 
 	@Override
 	public void setName(String name) {
@@ -142,5 +147,4 @@ public class Attribute extends Attribute_Base {
 	public String getFullPath() {
 		return getEntity().getFullPath() + "." + getName();
 	}
-
 }

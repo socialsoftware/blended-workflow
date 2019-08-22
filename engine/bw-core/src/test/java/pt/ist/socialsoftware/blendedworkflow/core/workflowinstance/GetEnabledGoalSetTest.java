@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefProductCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Dependence;
@@ -67,8 +68,8 @@ public class GetEnabledGoalSetTest extends TeardownRollbackTest {
 
 		this.workflowInstance = new WorkflowInstance(this.spec, NAME);
 
-		new EntityInstance(this.workflowInstance, this.entOne);
-		new EntityInstance(this.workflowInstance, this.entTwo);
+		new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 	}
 
 	@Test

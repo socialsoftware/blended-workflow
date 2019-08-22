@@ -2,6 +2,8 @@ package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -78,5 +80,16 @@ public class Dependence extends Dependence_Base {
 	public Product getTarget() {
 		return getPath().getTarget();
 	}
-
+	
+	public Optional<AttributeInstance> getDependentAttributeInstance(EntityInstance entityInstance, String name) {
+		return entityInstance.getAttributeInstanceByName(name);
+	}
+	
+	public List<AttributeInstance> getTargetAttributeInstances(Set<ProductInstance> productInstances, WorkflowInstance workflowInstance) {
+		List<EntityInstance> dependenceEntityInstances = productInstances.stream()
+				.map(pi -> pi.getEntityInstance()).collect(Collectors.toList());
+		
+		return dependenceEntityInstances.stream()
+				.map(ei -> getDependentAttributeInstance(ei, getTarget().getName()).get()).collect(Collectors.toList());
+	}
 }

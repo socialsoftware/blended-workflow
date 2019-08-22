@@ -1,6 +1,7 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
 enum pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel.DataState as DataState;
+enum pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState as ProductInstanceState;
 enum pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType as AttributeType;
 enum pt.ist.socialsoftware.blendedworkflow.core.domain.Comparison.ComparisonOperator as ComparisonOperator;
 enum pt.ist.socialsoftware.blendedworkflow.core.domain.BinaryExpression.BinaryOperator as BinaryOperator;
@@ -171,7 +172,9 @@ class WorkflowInstance {
 	int logCounter;
 }
 
-class ProductInstance;
+class ProductInstance {
+	ProductInstanceState state;
+}
 
 class EntityInstance extends ProductInstance {
 	String id;

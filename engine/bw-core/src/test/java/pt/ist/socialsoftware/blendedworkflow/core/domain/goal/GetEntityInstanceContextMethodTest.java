@@ -12,6 +12,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AssociationGoal;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Cardinality;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
@@ -128,7 +129,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		goal.initProductGoal();
 
 		assertTrue(goal.getEntityContext().contains(this.entOne));
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContext = goal.getEntityInstanceContext(this.workflowInstance, this.entOne);
 
@@ -144,8 +145,8 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		goal.initProductGoal();
 
 		assertTrue(goal.getEntityContext().contains(this.entOne));
-		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne);
-		new AttributeInstance(entityInstance, this.attOne, "123");
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		new AttributeInstance(entityInstance, this.attOne, "123", ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContext = goal.getEntityInstanceContext(this.workflowInstance, this.entOne);
 
@@ -176,11 +177,11 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		goal.initProductGoal();
 
 		assertTrue(goal.getEntityContext().contains(this.entTwo));
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationOneTwo);
-		new AttributeInstance(entityInstanceOne, this.attOne, "123");
+		new AttributeInstance(entityInstanceOne, this.attOne, "123", ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContext = goal.getEntityInstanceContext(this.workflowInstance, this.entTwo);
 
@@ -197,8 +198,8 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		goal.initProductGoal();
 
 		assertTrue(goal.getEntityContext().contains(this.entTwo));
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationOneTwo);
 
@@ -219,8 +220,8 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		assertTrue(goal.getEntityContext().contains(this.entOne));
 		assertTrue(goal.getEntityContext().contains(this.entTwo));
 
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationOneTwo);
 
@@ -244,8 +245,8 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		assertTrue(goal.getEntityContext().contains(this.entOne));
 		assertTrue(goal.getEntityContext().contains(this.entTwo));
 
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContextOne = goal.getEntityInstanceContext(this.workflowInstance, this.entOne);
 		Set<EntityInstance> instanceContextTwo = goal.getEntityInstanceContext(this.workflowInstance, this.entTwo);
@@ -265,7 +266,7 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		assertTrue(goal.getEntityContext().contains(this.entOne));
 		assertTrue(goal.getEntityContext().contains(this.entTwo));
 
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContextOne = goal.getEntityInstanceContext(this.workflowInstance, this.entOne);
 		Set<EntityInstance> instanceContextTwo = goal.getEntityInstanceContext(this.workflowInstance, this.entTwo);
@@ -284,8 +285,8 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		assertTrue(goal.getEntityContext().contains(this.entOne));
 		assertTrue(goal.getEntityContext().contains(this.entThree));
 
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		new EntityInstance(this.workflowInstance, this.entThree);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		new EntityInstance(this.workflowInstance, this.entThree, ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContextOne = goal.getEntityInstanceContext(this.workflowInstance, this.entOne);
 		Set<EntityInstance> instanceContextThree = goal.getEntityInstanceContext(this.workflowInstance, this.entThree);
@@ -304,9 +305,9 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		assertTrue(goal.getEntityContext().contains(this.entOne));
 		assertTrue(goal.getEntityContext().contains(this.entThree));
 
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceThreeOne = new EntityInstance(this.workflowInstance, this.entThree);
-		EntityInstance entityInstanceThreeTwo = new EntityInstance(this.workflowInstance, this.entThree);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceThreeOne = new EntityInstance(this.workflowInstance, this.entThree, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceThreeTwo = new EntityInstance(this.workflowInstance, this.entThree, ProductInstanceState.DEFINED);
 
 		Set<EntityInstance> instanceContextOne = goal.getEntityInstanceContext(this.workflowInstance, this.entOne);
 		assertEquals(1, instanceContextOne.size());
@@ -328,8 +329,8 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		assertTrue(goal.getEntityContext().contains(this.entOne));
 		assertTrue(goal.getEntityContext().contains(this.entTwo));
 
-		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne);
-		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo);
+		EntityInstance entityInstanceOne = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
+		EntityInstance entityInstanceTwo = new EntityInstance(this.workflowInstance, this.entTwo, ProductInstanceState.DEFINED);
 		new RelationInstance(entityInstanceOne, ROLENAME_ENT_ONE, entityInstanceTwo, ROLENAME_ENT_TWO,
 				this.relationOneTwo);
 

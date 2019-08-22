@@ -9,6 +9,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Activity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.ActivityWorkItem;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute.AttributeType;
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefAttributeCondition;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.DefPathCondition;
@@ -51,8 +52,8 @@ public class CheckArguentsCompletelyDefinedMethodTest extends TeardownRollbackTe
 
 		this.workflowInstance = new WorkflowInstance(this.spec, NAME);
 		this.activityWorkItem = new ActivityWorkItem(this.workflowInstance, this.activity);
-		this.entityInstance = new EntityInstance(this.workflowInstance, this.entity);
-		this.attributeInstance = new AttributeInstance(this.entityInstance, this.attribute, "value");
+		this.entityInstance = new EntityInstance(this.workflowInstance, this.entity, ProductInstanceState.DEFINED);
+		this.attributeInstance = new AttributeInstance(this.entityInstance, this.attribute, "value", ProductInstanceState.DEFINED);
 	}
 
 	@Test

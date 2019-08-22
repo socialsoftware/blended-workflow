@@ -8,6 +8,9 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ProductInstanceDto;
 
 public abstract class ProductInstance extends ProductInstance_Base {
+	public enum ProductInstanceState {
+		DEFINED, UNDEFINED, SKIPPED
+	}
 
 	public void delete() {
 		getPreWorkItemArgumentSet().stream().forEach(wia -> wia.delete());
