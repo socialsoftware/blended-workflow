@@ -144,6 +144,10 @@ export class GoalModelDiagram extends React.Component {
     }
 
     handleSelectGoal(externalId) {
+        if ( externalId === null || externalId === undefined ) {
+            return;
+        }
+
         if (this.state.operation === operations.NONE ||
             this.state.operation === operations.RENAME) {
             this.setState({
@@ -257,6 +261,10 @@ export class GoalModelDiagram extends React.Component {
         const graph = this.state.graph;
         const network = this.networkRef.current.network;
 
+        if ( !graph.nodes ) {
+            // For when there's no graph available, for whatever reason.
+            return;
+        }
 
         const goals = graph.nodes.map( node => {
             const position = network.getPositions( node.id );

@@ -11,7 +11,7 @@ export class RepositoryService {
 
         this.axios = axios.create({
             baseURL: 'http://localhost:8080',
-            timeout: 1000,
+            timeout: 5000,
             headers: headers,
         });
     }
@@ -148,6 +148,40 @@ export class RepositoryService {
         return this.axios.get("/specs/" + specId + "/instances/" + name + "/log");
     }
 
+
+    // Activity model
+    getActivityModel( specId ) {
+        return this.axios.get( "specs/" + specId + "/activitymodel/activities" );
+    }
+
+    getActivityGraph( specId ) {
+        return this.axios.get( "specs/" + specId + "/activitymodel/activities/graph" );
+    }
+
+    getActivityModelGraphVis(specId) {
+        return this.axios.get("/specs/" + specId + "/activitymodel/graph/vis");
+    }
+
+    getActivityPreConditions( specId, activityName ) {
+        return this.axios.get( "specs/" + specId + "/activitymodel/activities/" + activityName + "/pre" );
+    }
+
+    getActivitySeqConditions( specId, activityName ) {
+        return this.axios.get( "specs/" + specId + "/activitymodel/activities/" + activityName + "/seq" );
+    }
+
+    getActivityPostConditions( specId, activityName ) {
+        return this.axios.get( "specs/" + specId + "/activitymodel/activities/" + activityName + "/post" );
+    }
+
+    getActivityMulConditions( specId, activityName ) {
+        return this.axios.get( "specs/" + specId + "/activitymodel/activities/" + activityName + "/postmul" );
+    }
+
+    getActivityRuleConditions( specId, activityName ) {
+        return this.axios.get( "specs/" + specId + "/activitymodel/activities/" + activityName + "/postrule" );
+    }
+
     // Activity workitems
     getNextActivityWorkItems(specId, instance) {
         return this.axios.get("/specs/" + specId + "/instances/" + instance + "/activityworkitem/next");
@@ -239,4 +273,5 @@ export class RepositoryService {
             "entityInstanceId": entityInstanceId
         });
     }
+
 }
