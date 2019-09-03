@@ -35,7 +35,6 @@ class ConnectedWorkItemList extends React.Component {
         this.executeWorkItem = this.executeWorkItem.bind(this);
         this.getNextWorkItems = this.getNextWorkItems.bind(this);
         this.renderWorkItems = this.renderWorkItems.bind(this);
-        this.updateSkippedInstancesAndLog = this.updateSkippedInstancesAndLog.bind(this);
     }
 
     componentDidMount() {
@@ -89,17 +88,9 @@ class ConnectedWorkItemList extends React.Component {
         });
     }
 
-    updateSkippedInstancesAndLog() {
-        const service = new RepositoryService(this.props.user);
-        service.getEntityInstances(this.props.specId, this.props.name).then(response => {
-            this.props.getEntityInstances(response.data);
-            this.props.updateLog();
-        });
-    }
-
     renderWorkItems() {
         if (this.state.open) {
-            return <ExecuteWorkItem workItem={this.state.openWorkItem} onClose={this.closeWorkItem} onExecute={this.executeWorkItem} onDefineSkippedDependencies={this.updateSkippedInstancesAndLog}/>;
+            return <ExecuteWorkItem workItem={this.state.openWorkItem} onClose={this.closeWorkItem} onExecute={this.executeWorkItem}/>;
         } else if (this.state.workItems) {
             return this.state.workItems.sort((w1,w2) => w1.name.localeCompare(w2.name)).map(wi => <OpenWorkItem key={wi.name} workItem={wi} onClick={this.openWorkItem} />);
         } else {

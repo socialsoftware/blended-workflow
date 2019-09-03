@@ -6,6 +6,8 @@ Entity A mandatory {
 
 Entity B {
 	att1 : Boolean
+	att2 : Number
+	att3 : Number
 }
 
 Association AHasBs {

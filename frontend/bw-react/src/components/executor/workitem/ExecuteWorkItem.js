@@ -4,9 +4,14 @@ import { setUnitOfWork } from '../../../actions/setUnitOfWork';
 import { setEntityIsPersonDtos } from '../../../actions/setEntityIsPersonDtos'; 
 import DefineEntityInstance from './DefineEntityInstance';
 import DefineEntityIsPerson from './DefineEntityIsPerson';
+import { RepositoryService } from '../../../services/RepositoryService';
 
 const mapStateToProps = state => {
     return {
+        spec: state.spec,
+        name: state.name,
+        user: state.user,
+        entityInstances: state.entityInstances,
         unitOfWork: state.unitOfWork,
         entityIsPersonDtos: state.entityIsPersonDtos,
     };
@@ -25,6 +30,7 @@ class ConnectedExecuteWorkItem extends React.Component {
 
         this.state = {
             workItem: this.props.workItem,
+            dependencyTree: []
         };        
         //console.log(this.props.workItem);
         this.props.setUnitOfWork(this.createUnitOfWork());
@@ -36,6 +42,8 @@ class ConnectedExecuteWorkItem extends React.Component {
         this.setEntityInstanceState = this.setEntityInstanceState.bind(this);
         this.setAttributeInstanceState = this.setAttributeInstanceState.bind(this);
         this.attributeDefHasNoEntityInstanceSelected = this.attributeDefHasNoEntityInstanceSelected.bind(this);
+        this.setDependencyTree = this.setDependencyTree.bind(this);
+        this.defineSkippedAttributeInstancesInDependencyTree = this.defineSkippedAttributeInstancesInDependencyTree.bind(this);
     };
 
     createUnitOfWork() {
@@ -58,7 +66,7 @@ class ConnectedExecuteWorkItem extends React.Component {
             attributeInstance.state = state;
 
             if (state === "SKIPPED")
-                attributeInstance.value = "undef";
+                attributeInstance.value = "SKIPPED";
         }
 
         return attributeInstance;
@@ -73,7 +81,21 @@ class ConnectedExecuteWorkItem extends React.Component {
         return entityInstance;
     }
 
+    defineSkippedAttributeInstancesInDependencyTree(dependencyTree) {
+        const service = new RepositoryService(this.props.user);
+        return service.defineDependentAttributeInstances(this.props.spec.specId, this.props.name, dependencyTree);
+    }
+
+    setDependencyTree(dependencyTree) {
+        this.setState({
+            dependencyTree: dependencyTree
+        });
+    }
+
     handleExecute(e) {
+        if (e.target.value === "DEFINED")
+            this.defineSkippedAttributeInstancesInDependencyTree(this.state.dependencyTree)
+
         const workItem = this.state.workItem;
         workItem.unitOfWork = this.props.unitOfWork;
 
@@ -98,7 +120,7 @@ class ConnectedExecuteWorkItem extends React.Component {
         console.log(this.props.unitOfWork);
         return ( 
             <div>
-                {this.props.unitOfWork.map(ei => <DefineEntityInstance key={ei.id} entityInstance={ei} onDefineSkippedDependencies={this.props.onDefineSkippedDependencies}/>)}
+                {this.props.unitOfWork.map(ei => <DefineEntityInstance key={ei.id} entityInstance={ei} onSetDependencyTree={this.setDependencyTree}/>)}
                 {this.props.workItem.entityIsPersonDTOSet && <div>
                     <strong>Entity is Person Relationships</strong>    
                     {this.props.workItem.entityIsPersonDTOSet.map(eip => <DefineEntityIsPerson entityIsPersonDto={eip} />)}

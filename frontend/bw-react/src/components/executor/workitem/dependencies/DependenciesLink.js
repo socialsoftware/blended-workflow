@@ -32,13 +32,14 @@ class ConnectedDependenciesLink extends React.Component {
         this.getInputId = this.getInputId.bind(this);
         this.getNodeId = this.getNodeId.bind(this);
         this.getEntityInstance = this.getEntityInstance.bind(this);
+        this.getAttributeInstance = this.getAttributeInstance.bind(this);
         this.getEntityInstanceId = this.getEntityInstanceId.bind(this);
         this.getAttributeInstanceName = this.getAttributeInstanceName.bind(this);
         this.attributeInstanceIsSkipped = this.attributeInstanceIsSkipped.bind(this);
-        this.getUpdateAttributeInstanceValue = this.getUpdateAttributeInstanceValue.bind(this);
+        this.getUpdatedAttributeInstanceValue = this.getUpdatedAttributeInstanceValue.bind(this);
         this.getUpdatedAttributeInstances = this.getUpdatedAttributeInstances.bind(this);
-        this.defineSkippedAttributeInstancesInDependencyTree = this.defineSkippedAttributeInstancesInDependencyTree.bind(this);
         this.displayDependencyTree = this.displayDependencyTree.bind(this);
+        this.checkSkippedAttributeInstancesInDependencyTree = this.checkSkippedAttributeInstancesInDependencyTree.bind(this);
     }
 
     openCloseLink() {
@@ -66,6 +67,12 @@ class ConnectedDependenciesLink extends React.Component {
         return this.getEntityInstance(attributeInstance).id;
     }
 
+    getAttributeInstance(attributeInstance) {
+        return this.getEntityInstance(attributeInstance).attributeInstances.find(ai => {
+            return ai.externalId === attributeInstance.externalId;
+        });
+    }
+
     getAttributeInstanceName(attributeInstance) {
         return attributeInstance.attribute.name;
     }
@@ -82,30 +89,36 @@ class ConnectedDependenciesLink extends React.Component {
         return attributeInstance.state === "SKIPPED";
     }
 
-    getUpdateAttributeInstanceValue(attributeInstance) {
+    getUpdatedAttributeInstanceValue(attributeInstance) {
         return document.getElementById(this.getInputId(attributeInstance)).value;
     }
 
     getUpdatedAttributeInstances(dependencyTree) {
         return dependencyTree.map(treeDepthLevel => {
             return treeDepthLevel.map(attributeInstance => {
-                if (this.attributeInstanceIsSkipped(attributeInstance))
-                    attributeInstance.value = this.getUpdateAttributeInstanceValue(attributeInstance);
-                return attributeInstance;
+                if (this.attributeInstanceIsSkipped(attributeInstance)) {
+                    this.getAttributeInstance(attributeInstance).state = "DEFINED";
+                    this.getAttributeInstance(attributeInstance).value = this.getUpdatedAttributeInstanceValue(attributeInstance);
+                    this.getEntityInstance(attributeInstance).state = "DEFINED";
+                }
+
+                return this.getAttributeInstance(attributeInstance);
             })
         });
     }
 
-    defineSkippedAttributeInstancesInDependencyTree(dependencyTree) {
+    checkSkippedAttributeInstancesInDependencyTree(dependencyTree) {
         const service = new RepositoryService(this.props.user);
-        return service.defineDependentAttributeInstances(this.props.spec.specId, this.props.name, dependencyTree);
+        return service.checkDependentAttributeInstances(this.props.spec.specId, this.props.name, dependencyTree);
     }
 
     handleDefine() {
-        this.defineSkippedAttributeInstancesInDependencyTree(this.getUpdatedAttributeInstances(this.props.dependencyTree))
+        var updatedDependencyTree = this.getUpdatedAttributeInstances(this.props.dependencyTree);
+
+        this.checkSkippedAttributeInstancesInDependencyTree(updatedDependencyTree)
         .then(() => {
             this.openCloseLink();
-            this.props.onDefineSkippedDependencies();
+            this.props.updateDependencyTree(updatedDependencyTree);
         }).catch((err) => {
             this.setState({
                 error: true,

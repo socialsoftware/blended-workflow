@@ -1,12 +1,12 @@
 Specification: "Doctor Appointment"  
-       
-Entity Patient { 
-	name : String 
+      
+Entity Patient {
+	name : String
 	age : Number
 	heartProblems : Boolean 
 }         
                       
-Entity Episode mandatory {
+Entity Episode {
 	reserveDate : Date
 	checkin : Boolean
 	checkout : Boolean dependsOn Episode.report.details          
@@ -16,11 +16,11 @@ Entity Prescription {
 	details : String dependsOn Prescription.episode.report.details 
 }
 
-Entity Report {
+Entity Report mandatory {
 	details : String dependsOn Report.episode.data.bloodPressure 
 }
  
-Entity Data { 
+Entity Data {
 	height : Number
 	weight : Number
 	bloodPressure : Number

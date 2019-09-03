@@ -47,6 +47,7 @@ class ConnectedDefineAttributeInstance extends React.Component {
         this.skippedAttributeInstanceIsPresent = this.skippedAttributeInstanceIsPresent.bind(this);
         this.getDependencyTree = this.getDependencyTree.bind(this);
         this.attributeInstanceIsSelected = this.attributeInstanceIsSelected.bind(this);
+        this.updateDependencyTree = this.updateDependencyTree.bind(this);
     }
 
     setInputToDisabled() {
@@ -115,6 +116,14 @@ class ConnectedDefineAttributeInstance extends React.Component {
         return this.props.entityInstance.id > 0 && this.props.attributeInstance.toDefine === true;
     }
 
+    updateDependencyTree(dependencyTree) {
+        this.setState({
+            dependencyTree: dependencyTree
+        });
+        this.setInputStatus();
+        this.props.setDependencyTree(dependencyTree);
+    }
+
     renderAttribute() {
         if (this.props.attributeInstance.toDefine === true) {
             if (this.props.entityInstance.id > 0) {
@@ -139,7 +148,7 @@ class ConnectedDefineAttributeInstance extends React.Component {
                                                         dependencyTreeRoot={attributeInstance}
                                                         dependencyTree={this.state.dependencyTree}
                                                         rootEntityInstance={entityInstance}
-                                                        onDefineSkippedDependencies={this.props.onDefineSkippedDependencies}/>
+                                                        updateDependencyTree={this.updateDependencyTree}/>
                     }
                    </div>
             );
@@ -160,25 +169,8 @@ class ConnectedDefineAttributeInstance extends React.Component {
                     this.setState({
                         dependencyTree: response.data
                     });
-                }
-            });
-        }
-    }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (this.attributeInstanceIsSelected()) {
-            var attributeInstance = this.getAttributeInstance(this.getEntityInstance(this.props.entityInstance.id), 
-                this.props.attributeInstance.attribute.name);
-
-            this.getDependencyTree(attributeInstance).then(response => {
-                if (this.componentIsMounted) {
-                    if (JSON.stringify(prevState.dependencyTree) !== JSON.stringify(response.data)) {
-                        this.setState({
-                            dependencyTree: response.data
-                        });
-                    
-                        this.setInputStatus();
-                    }
+                    this.setInputStatus();
                 }
             });
         }

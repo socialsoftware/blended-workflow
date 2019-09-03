@@ -30,6 +30,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWor
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceToDefineDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceWithEntityInstanceIdDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependencyTreeAndEntityInstancesDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceToDefineDto;
@@ -224,6 +225,17 @@ public class ExecutionInterface {
 		return goalWorkItem;
 	}
 
+	public void checkDependentAttributeInstances(String specId, String instanceName, List<List<AttributeInstanceDto>> dependencyTree) {
+		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
+
+		dependencyTree.stream()
+			.forEach(row -> row.stream()
+					.forEach(node -> 
+						node.getAttributeInstance(workflowInstance, node.getExternalId()).get().checkSkippedAttributeInstance(node)
+					)
+			);
+	}
+	
 	@Atomic(mode = TxMode.WRITE)
 	public void defineDependentAttributeInstances(String specId, String instanceName, List<List<AttributeInstanceDto>> dependencyTree) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
@@ -272,7 +284,7 @@ public class ExecutionInterface {
 	public List<AttributeInstanceDto> getDependentAttributeInstances(String specId, String instanceName, 
 			AttributeInstanceWithEntityInstanceIdDto attributeInstanceWithEntityInstanceIdDto) {
 		WorkflowInstance workflowInstance = getWorkflowInstance(specId, instanceName);
-		
+
 		AttributeInstanceDto attributeInstanceDto = attributeInstanceWithEntityInstanceIdDto.getAttributeInstance();
 		EntityInstance entityInstance = workflowInstance.getEntityInstanceById(attributeInstanceWithEntityInstanceIdDto.getEntityInstanceId());
 		Attribute attribute = Attribute.getAttributeByName(attributeInstanceDto.getAttribute().getName(), 

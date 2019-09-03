@@ -63,10 +63,9 @@ class ConnectedGoalExecutor extends React.Component {
                     specId={this.props.spec.specId} 
                     name={this.props.name} 
                     getNextWorkItems={this.getNextGoalWorkItems} 
-                    executeWorkItem={this.executeGoalWorkItem}
-                    updateLog={this.getLog}/>
+                    executeWorkItem={this.executeGoalWorkItem}/>
                 <br /><br />
-                <ExecutionLog
+                <ExecutionLog 
                     log={this.state.log}/>
             </div>
         )

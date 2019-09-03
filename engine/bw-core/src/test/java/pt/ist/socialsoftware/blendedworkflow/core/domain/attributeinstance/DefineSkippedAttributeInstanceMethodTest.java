@@ -8,7 +8,6 @@ import org.junit.Test;
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.AttributeInstance;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
@@ -34,13 +33,12 @@ public class DefineSkippedAttributeInstanceMethodTest extends TeardownRollbackTe
 	@Override
 	public void populate4Test() throws BWException {
 		spec = new Specification("SpecId", "My spec");
-		DataModel dataModel = spec.getDataModel();
 		workflowInstance = new WorkflowInstance(spec, "WorkflowInstanceName");
 		
-		entity = new Entity(dataModel, ENT_NAME, false);	
+		entity = new Entity(spec.getDataModel(), ENT_NAME, false);	
 		entityInstance = new EntityInstance(workflowInstance, entity, ProductInstanceState.SKIPPED);
 		
-		attribute = new Attribute(dataModel, entity, ATT_NAME, AttributeType.NUMBER, true);
+		attribute = new Attribute(spec.getDataModel(), entity, ATT_NAME, AttributeType.NUMBER, true);
 		attributeInstance = new AttributeInstance(entityInstance, attribute, "",  ProductInstanceState.SKIPPED);
 		attributeInstanceDto = new AttributeInstanceDto();
 		

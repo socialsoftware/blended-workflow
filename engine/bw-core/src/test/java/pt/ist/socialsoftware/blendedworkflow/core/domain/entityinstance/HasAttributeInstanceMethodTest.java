@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import pt.ist.socialsoftware.blendedworkflow.core.TeardownRollbackTest;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Attribute;
-import pt.ist.socialsoftware.blendedworkflow.core.domain.DataModel;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Entity;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.EntityInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
@@ -31,11 +30,10 @@ public class HasAttributeInstanceMethodTest extends TeardownRollbackTest {
 	@Override
 	public void populate4Test() throws BWException {
 		spec = new Specification("SpecId", "My spec");
-		DataModel dataModel = spec.getDataModel();
 		workflowInstance = new WorkflowInstance(spec, "WorkflowInstanceName");
 		
-		entity = new Entity(dataModel, ENT_ONE_NAME, false);	
-		attribute = new Attribute(dataModel, entity, ATT_ONE_NAME, AttributeType.NUMBER, true);
+		entity = new Entity(spec.getDataModel(), ENT_ONE_NAME, false);	
+		attribute = new Attribute(spec.getDataModel(), entity, ATT_ONE_NAME, AttributeType.NUMBER, true);
 		
 		entityInstanceOne = new EntityInstance(workflowInstance, entity, ProductInstanceState.DEFINED);
 		attributeInstanceOne = new AttributeInstance(entityInstanceOne, attribute, "1",  ProductInstanceState.DEFINED);

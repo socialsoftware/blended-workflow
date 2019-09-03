@@ -1,0 +1,32 @@
+Specification: "Dependencies" 
+
+Entity A { 
+	att1 : Number 
+} 
+ 
+Entity B {
+	att1 : Number dependsOn B.a.att1
+}  
+
+Entity C mandatory {
+	att1 : Number dependsOn C.b.att1
+}   
+ 
+Entity D {
+	att1 : Number dependsOn D.a.att1
+}   
+  
+Association AHasBs {
+	A with a (1) 
+	B with b (1)
+}
+
+Association BHasCs {
+	B with b (1) 
+	C with c (1)
+}
+
+Association AandD {
+	A with a (1) 
+	D with d (1)
+}

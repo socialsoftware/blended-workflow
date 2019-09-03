@@ -52,7 +52,7 @@ export class ConnectedExecutionLog extends React.Component {
                         <td>{wi.preArguments}</td>
                         <td>{wi.postArguments}</td>
                         {this.props.user && wi.executionUser && <td>{wi.executionUser.username}</td>}
-                        {!wi.executionUser && <td></td>}    {/*Fill 'Execution User' column with blank <td>*/}
+                        {!wi.executionUser && <td></td>}
                     </tr>
                 })}
                 </tbody>          

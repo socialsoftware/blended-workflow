@@ -1,9 +1,11 @@
 package pt.ist.socialsoftware.blendedworkflow.core.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -139,20 +141,9 @@ public class AttributeInstance extends AttributeInstance_Base {
 		return productInstanceDto;
 	}
 	
-	public void defineAttributeInstance(AttributeInstanceDto attributeInstanceDto, EntityInstance entityInstance) {
-		if (attributeInstanceDto.getValue().equals("")) 
-			throw new BWException(BWErrorType.EMPTY_INPUT_VALUE,
-					"Empty input value on entity instance " + entityInstance.getEntity().getName() + "[" + entityInstance.getId() + "]");
-		
+	public void defineAttributeInstance(AttributeInstanceDto attributeInstanceDto) {		
 		setState(ProductInstanceState.DEFINED);
-		
-		try {
-			setValue(attributeInstanceDto.getValue());
-		} catch (BWException attributeinstance_consistency) {
-			throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
-					entityInstance.getEntity().getName() + "[" + entityInstance.getId() + "] " + 
-					getAttribute().getType() + ":" + attributeInstanceDto.getValue());
-		}
+		setValue(attributeInstanceDto.getValue());
 	}
 	
 	public void defineEntityInstance(EntityInstance entityInstance) {
@@ -162,23 +153,41 @@ public class AttributeInstance extends AttributeInstance_Base {
 
 	public void defineSkippedAttributeInstance(AttributeInstanceDto attributeInstanceDto) {
 		if (getState().equals(ProductInstanceState.SKIPPED)) {
-			defineAttributeInstance(attributeInstanceDto, getEntityInstance());
+			defineAttributeInstance(attributeInstanceDto);
 			defineEntityInstance(getEntityInstance());
 		}
 	}
 	
-	public Optional<Dependence> getDependence() {
-		return getAttribute().getDependenceSet().stream()
-				.filter(d -> d.getProduct().getFullPath().contains(getAttribute().getName())).findFirst();
+	public void checkValueInDependencyTreeNode(AttributeInstanceDto attributeInstanceDto, EntityInstance entityInstance) {
+		if (attributeInstanceDto.getValue().equals("")) 
+			throw new BWException(BWErrorType.EMPTY_INPUT_VALUE,
+					"Empty input value on entity instance " + entityInstance.getEntity().getName() + "[" + entityInstance.getId() + "]");
+		
+		try {
+			checkValue(attributeInstanceDto.getValue());
+		} catch (BWException attributeinstance_consistency) {
+			throw new BWException(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY,
+					entityInstance.getEntity().getName() + "[" + entityInstance.getId() + "] " + 
+					getAttribute().getType() + ":" + attributeInstanceDto.getValue());
+		}
 	}
 	
+	public void checkSkippedAttributeInstance(AttributeInstanceDto attributeInstanceDto) {
+		if (getState().equals(ProductInstanceState.SKIPPED))
+			checkValueInDependencyTreeNode(attributeInstanceDto, getEntityInstance());
+	}
+	
+	// TODO: Test this method when attributeInstance has more than one dependence
 	public List<AttributeInstance> getDependentAttributeInstances(WorkflowInstance workflowInstance) {
-		try {
-			Dependence dependence = getDependence().get();
-			return dependence.getTargetAttributeInstances(this.getDependentProductInstances(dependence), workflowInstance);
-		} catch (NoSuchElementException e) {
-			return Collections.emptyList();
-		}
+		Set<Dependence> dependences = getAttribute().getDependenceSet();
+		List<List<AttributeInstance>> targetAttributeInstances = new ArrayList<List<AttributeInstance>>();
+			
+		dependences.stream()
+			.forEach(dependence -> 
+				targetAttributeInstances.add(dependence.getTargetAttributeInstances(this.getDependentProductInstances(dependence), workflowInstance))
+			);
+
+		return targetAttributeInstances.stream().flatMap(List::stream).collect(Collectors.toList());
 	}
 	
 	public List<AttributeInstance> getNextDependentAttributeInstances(WorkflowInstance workflowInstance, 

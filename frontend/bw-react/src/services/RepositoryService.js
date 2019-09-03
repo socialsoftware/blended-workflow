@@ -218,6 +218,10 @@ export class RepositoryService {
     }
 
     // Dependency Tree
+    checkDependentAttributeInstances(spec, instance, dependencyTree) {
+        return this.axios.post("/specs/" + spec + "/instances/"+ instance + "/dependencytree/check", dependencyTree);
+    }
+
     defineDependentAttributeInstances(spec, instance, dependencyTree) {
         return this.axios.post("/specs/" + spec + "/instances/"+ instance + "/dependencytree", dependencyTree);
     }

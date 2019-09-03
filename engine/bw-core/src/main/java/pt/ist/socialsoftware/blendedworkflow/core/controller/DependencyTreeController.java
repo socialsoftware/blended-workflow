@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceWithEntityInstanceIdDto;
+import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependencyTreeAndEntityInstancesDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 
@@ -28,6 +29,18 @@ public class DependencyTreeController {
 	@Inject
 	private ModulesFactory factory;
 	
+	@RequestMapping(value = "/check", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public ResponseEntity<Boolean> checkDependentAttributeInstances(@PathVariable String specId,
+			@PathVariable String instanceName, @RequestBody List<List<AttributeInstanceDto>> dependencyTree) {
+		logger.debug("checkDependentAttributeInstances specId:{}, instanceName:{}", specId, instanceName);
+		
+		ExecutionInterface edi = this.factory.createExecutionInterface();
+	
+		edi.checkDependentAttributeInstances(specId, instanceName, dependencyTree);
+
+		return new ResponseEntity<>(true, HttpStatus.OK);
+	}
+	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<Boolean> defineDependentAttributeInstances(@PathVariable String specId,
 			@PathVariable String instanceName, @RequestBody List<List<AttributeInstanceDto>> dependencyTree) {
@@ -37,7 +50,7 @@ public class DependencyTreeController {
 	
 		edi.defineDependentAttributeInstances(specId, instanceName, dependencyTree);
 
-		return new ResponseEntity<>(true, HttpStatus.CREATED);
+		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)

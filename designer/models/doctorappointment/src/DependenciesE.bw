@@ -1,0 +1,42 @@
+Specification: "DependenciesE" 
+
+Entity A { 
+	att1 : String
+} 
+  
+Entity B {
+	att1 : String dependsOn B.a.att1
+	att2 : Number
+}   
+ 
+Entity C {
+	att1 : String dependsOn C.b.att1
+}   
+ 
+Entity D {
+	att1 : Number dependsOn D.a.att1
+}   
+
+Entity E mandatory {
+	att1 : String dependsOn E.c.att1
+}   
+ 
+Association AHasBs {
+	A with a (3) 
+	B with b (1)
+}
+
+Association BHasCs {
+	B with b (1) 
+	C with c (1)
+}
+
+Association AHasD {
+	A with a (1) 
+	D with d (1)
+}
+
+Association EHasC {
+	E with e (1) 
+	C with c (1)
+}

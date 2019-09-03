@@ -6,7 +6,7 @@ Entity Seminar mandatory {
 	ECTSpoints : Number
 	concluded : Boolean dependsOn Seminar.enrollment.grade
 } 
- 
+
 Entity StaffMember exists {
 	name : String 
 	email : String 
