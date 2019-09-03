@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceWithEntityInstanceIdDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependencyTreeAndEntityInstancesDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.execution.ExecutionInterface;
 import pt.ist.socialsoftware.blendedworkflow.core.utils.ModulesFactory;
 

@@ -30,7 +30,6 @@ import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityWor
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceToDefineDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.AttributeInstanceWithEntityInstanceIdDto;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.DependencyTreeAndEntityInstancesDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceDto.Depth;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.EntityInstanceToDefineDto;
