@@ -254,6 +254,20 @@ public class ExecutionInterface {
 				).collect(Collectors.toList());
 	}
 	
+	public List<List<AttributeInstance>> removeDuplicates(List<List<AttributeInstance>> dependencyTree) {
+		for (int i = 0; i < dependencyTree.size(); i++) {
+			List<AttributeInstance> row = dependencyTree.get(i);
+			List<List<AttributeInstance>> restOfTree = dependencyTree.subList(i + 1, dependencyTree.size());
+			List<AttributeInstance> restOfTreeFlat = restOfTree.stream().flatMap(list -> list.stream()).collect(Collectors.toList());
+			List<AttributeInstance> rowWithUniqueElements = row.stream().filter(ai -> !restOfTreeFlat.contains(ai))
+					.collect(Collectors.toList());
+			
+			dependencyTree.set(i, rowWithUniqueElements);
+		}
+		
+		return dependencyTree;
+	}
+	
 	@Atomic(mode = TxMode.WRITE)
 	public List<List<AttributeInstanceDto>> getDependencyTree(String specId, String instanceName, 
 			AttributeInstanceWithEntityInstanceIdDto attributeInstanceWithEntityInstanceIdDto) {
@@ -276,7 +290,7 @@ public class ExecutionInterface {
 		
 		attributeInstance.delete();
 
-		return getDependencyTreeDto(dependencyTree);
+		return getDependencyTreeDto(removeDuplicates(dependencyTree));
 	}
 	
 	@Atomic(mode = TxMode.WRITE)

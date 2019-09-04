@@ -1,7 +1,8 @@
 Specification: "Dependencies" 
 
 Entity A { 
-	att1 : Number 
+	att1 : Number
+	att2 : Number
 } 
  
 Entity B {
@@ -9,7 +10,7 @@ Entity B {
 }  
 
 Entity C mandatory {
-	att1 : Number dependsOn C.b.att1
+	att1 : Number dependsOn C.b.att1, C.b.a.att2
 }   
  
 Entity D {
@@ -18,11 +19,11 @@ Entity D {
   
 Association AHasBs {
 	A with a (1) 
-	B with b (1)
+	B with b (2)
 }
 
 Association BHasCs {
-	B with b (1) 
+	B with b (2) 
 	C with c (1)
 }
 
