@@ -1,7 +1,8 @@
 import { SET_SPECIFICATIONS, SELECT_SPECIFICATION, SELECT_INSTANCE, SET_INSTANCES, GET_ENTITY_INSTANCES, 
   SET_UNIT_OF_WORK, SET_SELECTED_ENTITY_INSTANCE, SET_ATTRIBUTE_INSTANCE_VALUE, 
   SET_LINK_ENTITY_INSTANCES, CREATE_ENTITY_INSTANCE, DELETE_ENTITY_INSTANCE, SET_USERS, SELECT_USER, 
-  SET_SELECTED_PERSON, SET_ENTITY_IS_PERSON } from "../constants/action-types";
+  SET_SELECTED_PERSON, SET_ENTITY_IS_PERSON, SET_GLOBAL_ENTITY_INSTANCE_STATE,
+  SET_GLOBAL_ATTRIBUTE_INSTANCE_STATE, SET_GLOBAL_ATTRIBUTE_INSTANCE_VALUE } from "../constants/action-types";
 
 const initialState = {
     specifications: [],
@@ -86,6 +87,37 @@ const rootReducer = (state = initialState, action) => {
           })};
       case SET_ENTITY_IS_PERSON:
         return { ...state, entityIsPersonDtos: action.set}
+      case SET_GLOBAL_ENTITY_INSTANCE_STATE:
+        return { ...state, entityInstances: state.entityInstances.map(ei => {
+          if (ei.id === action.entityInstance.id)
+             return { ...ei, state: action.newState}
+          else 
+            return ei;
+        }) };
+      case SET_GLOBAL_ATTRIBUTE_INSTANCE_STATE:
+        return { ...state, entityInstances: state.entityInstances.map(ei => {
+          if (ei.id === action.entityInstanceId)
+            return { ...ei, attributeInstances: ei.attributeInstances.map(ai => {
+              if (ai.attribute.name === action.attributeInstance.attribute.name)
+                return { ...ai, state: action.newState}
+              else
+                return ai;
+            })}
+          else 
+            return ei;
+        }) };
+      case SET_GLOBAL_ATTRIBUTE_INSTANCE_VALUE:
+        return { ...state, entityInstances: state.entityInstances.map(ei => {
+          if (ei.id === action.entityInstanceId)
+            return { ...ei, attributeInstances: ei.attributeInstances.map(ai => {
+              if (ai.attribute.name === action.attributeInstance.attribute.name)
+                return { ...ai, value: action.newValue}
+              else
+                return ai;
+            })}
+          else 
+            return ei;
+        }) };
       default: 
         return state;
     }

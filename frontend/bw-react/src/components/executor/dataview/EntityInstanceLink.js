@@ -42,18 +42,22 @@ class ConnectedEntityInstanceLink extends React.Component {
     }
 
     render() {
-        const entityNameDisplay = `${this.props.entityInstance.entity.name}[${this.props.entityInstance.id}]`;
+        var entityInstance = this.props.entityInstance;
+        const entityNameDisplay = `${entityInstance.entity.name}[${entityInstance.id}]`;
         var textColor = "";
         var titleText = "";
 
-        if (this.entityInstanceIsSkipped(this.props.entityInstance)) {
+        if (this.getEntityInstanceById(entityInstance.id) !== undefined)
+            entityInstance = this.getEntityInstanceById(entityInstance.id);
+
+        if (this.entityInstanceIsSkipped(entityInstance)) {
             textColor = "#eb8318";
             titleText = "Skipped Entity Instance";
         }
 
         return (
             <div style={{display: "inline-block"}}>
-                {this.props.entityInstance.id > 0 && 
+                {entityInstance.id > 0 && 
                     <span style={{color: textColor}} title={titleText}>
                         {this.props.isOnSelection ? "" : `${entityNameDisplay} `}
                         <OpenCloseButton open={this.state.open} onClick={this.openCloseLink}/>
@@ -64,7 +68,7 @@ class ConnectedEntityInstanceLink extends React.Component {
 
                 <Modal show={this.state.open} onHide={this.openCloseLink}>
                     <Modal.Body>
-                        <EntityInstance entityInstance={this.getEntityInstanceById(this.props.entityInstance.id)} />
+                        <EntityInstance entityInstance={this.getEntityInstanceById(entityInstance.id)} />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.openCloseLink}>Close</Button>

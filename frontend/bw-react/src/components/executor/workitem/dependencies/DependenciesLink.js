@@ -1,5 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { setGlobalEntityInstanceState } from '../../../../actions/setGlobalEntityInstanceState';
+import { setGlobalAttributeInstanceState } from '../../../../actions/setGlobalAttributeInstanceState';
+import { setGlobalAttributeInstanceValue } from '../../../../actions/setGlobalAttributeInstanceValue';
 import { Modal, Button } from 'react-bootstrap';
 import { ModalMessage } from '../../../util/ModalMessage';
 import { DependencyTree } from './DependencyTree';
@@ -12,6 +15,14 @@ const mapStateToProps = state => {
         name: state.name,
         user: state.user,
         entityInstances: state.entityInstances
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setGlobalEntityInstanceState: (entityInstance, newState) => dispatch(setGlobalEntityInstanceState(entityInstance, newState)),
+        setGlobalAttributeInstanceState: (attributeInstance, entityInstanceId, newState) => dispatch(setGlobalAttributeInstanceState(attributeInstance, entityInstanceId, newState)),
+        setGlobalAttributeInstanceValue: (attributeInstance, entityInstanceId, newValue) => dispatch(setGlobalAttributeInstanceValue(attributeInstance, entityInstanceId, newValue))
     };
 };
 
@@ -40,6 +51,7 @@ class ConnectedDependenciesLink extends React.Component {
         this.getUpdatedAttributeInstances = this.getUpdatedAttributeInstances.bind(this);
         this.displayDependencyTree = this.displayDependencyTree.bind(this);
         this.checkSkippedAttributeInstancesInDependencyTree = this.checkSkippedAttributeInstancesInDependencyTree.bind(this);
+        this.updateGlobalStateInstances = this.updateGlobalStateInstances.bind(this);
     }
 
     openCloseLink() {
@@ -93,16 +105,24 @@ class ConnectedDependenciesLink extends React.Component {
         return document.getElementById(this.getInputId(attributeInstance)).value;
     }
 
+    updateGlobalStateInstances(attributeInstance) {
+        this.props.setGlobalAttributeInstanceState(attributeInstance, this.getEntityInstanceId(attributeInstance), "DEFINED");
+        this.props.setGlobalAttributeInstanceValue(attributeInstance, this.getEntityInstanceId(attributeInstance), 
+            this.getUpdatedAttributeInstanceValue(attributeInstance));
+        this.props.setGlobalEntityInstanceState(this.getEntityInstance(attributeInstance), "DEFINED");
+    }
+
     getUpdatedAttributeInstances(dependencyTree) {
         return dependencyTree.map(treeDepthLevel => {
             return treeDepthLevel.map(attributeInstance => {
                 if (this.attributeInstanceIsSkipped(attributeInstance)) {
-                    this.getAttributeInstance(attributeInstance).state = "DEFINED";
-                    this.getAttributeInstance(attributeInstance).value = this.getUpdatedAttributeInstanceValue(attributeInstance);
-                    this.getEntityInstance(attributeInstance).state = "DEFINED";
+                    attributeInstance.state = "DEFINED";
+                    attributeInstance.value = this.getUpdatedAttributeInstanceValue(attributeInstance);
+
+                    this.updateGlobalStateInstances(attributeInstance);
                 }
 
-                return this.getAttributeInstance(attributeInstance);
+                return attributeInstance;
             })
         });
     }
@@ -165,6 +185,6 @@ class ConnectedDependenciesLink extends React.Component {
     }
 }
 
-const DependenciesLink = connect(mapStateToProps)(ConnectedDependenciesLink);
+const DependenciesLink = connect(mapStateToProps, mapDispatchToProps)(ConnectedDependenciesLink);
 
 export default DependenciesLink;
