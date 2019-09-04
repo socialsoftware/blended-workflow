@@ -174,7 +174,6 @@ public class AttributeInstance extends AttributeInstance_Base {
 			checkValueInDependencyTreeNode(attributeInstanceDto, getEntityInstance());
 	}
 	
-	// TODO: Test this method when attributeInstance has more than one dependence
 	public List<AttributeInstance> getDependentAttributeInstances(WorkflowInstance workflowInstance) {
 		Set<Dependence> dependences = getAttribute().getDependenceSet();
 		List<List<AttributeInstance>> targetAttributeInstances = new ArrayList<List<AttributeInstance>>();

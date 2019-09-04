@@ -52,6 +52,7 @@ class ConnectedDependenciesLink extends React.Component {
         this.displayDependencyTree = this.displayDependencyTree.bind(this);
         this.checkSkippedAttributeInstancesInDependencyTree = this.checkSkippedAttributeInstancesInDependencyTree.bind(this);
         this.updateGlobalStateInstances = this.updateGlobalStateInstances.bind(this);
+        this.updateGlobalStateInstance = this.updateGlobalStateInstance.bind(this);
     }
 
     openCloseLink() {
@@ -105,22 +106,28 @@ class ConnectedDependenciesLink extends React.Component {
         return document.getElementById(this.getInputId(attributeInstance)).value;
     }
 
-    updateGlobalStateInstances(attributeInstance) {
+    updateGlobalStateInstance(attributeInstance) {
+        this.props.setGlobalAttributeInstanceValue(attributeInstance, this.getEntityInstanceId(attributeInstance), attributeInstance.value);
         this.props.setGlobalAttributeInstanceState(attributeInstance, this.getEntityInstanceId(attributeInstance), "DEFINED");
-        this.props.setGlobalAttributeInstanceValue(attributeInstance, this.getEntityInstanceId(attributeInstance), 
-            this.getUpdatedAttributeInstanceValue(attributeInstance));
         this.props.setGlobalEntityInstanceState(this.getEntityInstance(attributeInstance), "DEFINED");
+    }
+
+    updateGlobalStateInstances(dependencyTree) {
+        dependencyTree.map(treeDepthLevel => {
+            treeDepthLevel.map(attributeInstance => {
+                if (this.attributeInstanceIsSkipped(attributeInstance)) {
+                    attributeInstance.state = "DEFINED";
+                    this.updateGlobalStateInstance(attributeInstance);
+                }
+            })
+        });
     }
 
     getUpdatedAttributeInstances(dependencyTree) {
         return dependencyTree.map(treeDepthLevel => {
             return treeDepthLevel.map(attributeInstance => {
-                if (this.attributeInstanceIsSkipped(attributeInstance)) {
-                    attributeInstance.state = "DEFINED";
+                if (this.attributeInstanceIsSkipped(attributeInstance)) 
                     attributeInstance.value = this.getUpdatedAttributeInstanceValue(attributeInstance);
-
-                    this.updateGlobalStateInstances(attributeInstance);
-                }
 
                 return attributeInstance;
             })
@@ -137,6 +144,7 @@ class ConnectedDependenciesLink extends React.Component {
 
         this.checkSkippedAttributeInstancesInDependencyTree(updatedDependencyTree)
         .then(() => {
+            this.updateGlobalStateInstances(updatedDependencyTree);
             this.openCloseLink();
             this.props.updateDependencyTree(updatedDependencyTree);
         }).catch((err) => {
