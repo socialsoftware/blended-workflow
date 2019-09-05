@@ -56,34 +56,4 @@ public class DefineSkippedAttributeInstanceMethodTest extends TeardownRollbackTe
 		assertEquals(attributeInstance.getValue(), attributeInstanceDto.getValue());
 		assertEquals(entityInstance.getState(), ProductInstanceState.DEFINED);
 	}
-	
-	@Test
-	public void emptyValueAttributeDefinition() {
-		attributeInstanceDto.setValue("");
-		
-		try {
-			attributeInstanceDto.getAttributeInstance(workflowInstance, attributeInstanceDto.getExternalId()).get()
-				.defineSkippedAttributeInstance(attributeInstanceDto);
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.EMPTY_INPUT_VALUE, bwe.getError());
-			assertEquals("Empty input value on entity instance " + entityInstance.getEntity().getName() + 
-					"[" + entityInstance.getId() + "]", bwe.getMessage());
-		}
-	}
-	
-	@Test
-	public void incorrectValueTypeAttributeDefinition() {
-		attributeInstanceDto.setValue("abc");
-		
-		try {
-			attributeInstanceDto.getAttributeInstance(workflowInstance, attributeInstanceDto.getExternalId()).get()
-				.defineSkippedAttributeInstance(attributeInstanceDto);
-			fail();
-		} catch (BWException bwe) {
-			assertEquals(BWErrorType.ATTRIBUTEINSTANCE_CONSISTENCY, bwe.getError());
-			assertEquals(entityInstance.getEntity().getName() + "[" + entityInstance.getId() + "] " + 
-					attributeInstance.getAttribute().getType() + ":" + attributeInstanceDto.getValue(), bwe.getMessage());
-		}
-	}
 }
