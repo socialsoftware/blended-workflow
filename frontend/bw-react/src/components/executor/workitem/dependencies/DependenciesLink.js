@@ -113,12 +113,14 @@ class ConnectedDependenciesLink extends React.Component {
     }
 
     updateGlobalStateInstances(dependencyTree) {
-        dependencyTree.map(treeDepthLevel => {
-            treeDepthLevel.map(attributeInstance => {
+        return dependencyTree.map(treeDepthLevel => {
+            return treeDepthLevel.map(attributeInstance => {
                 if (this.attributeInstanceIsSkipped(attributeInstance)) {
                     attributeInstance.state = "DEFINED";
                     this.updateGlobalStateInstance(attributeInstance);
                 }
+
+                return attributeInstance;
             })
         });
     }
