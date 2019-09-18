@@ -14,7 +14,7 @@ public abstract class ProductInstance extends ProductInstance_Base {
 
 	public void delete() {
 		getPreWorkItemArgumentSet().stream().forEach(wia -> wia.delete());
-		setPostWorkItemArgument(null);
+		getPostWorkItemArgumentSet().stream().forEach(wia -> wia.delete());
 
 		deleteDomainObject();
 	}
@@ -36,10 +36,6 @@ public abstract class ProductInstance extends ProductInstance_Base {
 	public abstract boolean isDefined();
 
 	public abstract boolean holdsPre(DefPathCondition defPathCondition);
-
-	public WorkItem getCreatorWorkItem() {
-		return getPostWorkItemArgument() != null ? getPostWorkItemArgument().getWorkItemOfPost() : null;
-	}
 
 	public Set<WorkItem> getReadWorkItemSet() {
 		return getPreWorkItemArgumentSet() != null

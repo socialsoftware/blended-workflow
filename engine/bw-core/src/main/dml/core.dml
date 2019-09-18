@@ -304,7 +304,7 @@ relation PreWorkItemArgumentHasProductInstance {
 }
 
 relation PostWorkItemArgumentHasProductInstance {
-	PostWorkItemArgument playsRole postWorkItemArgument {multiplicity 0..1;}
+	PostWorkItemArgument playsRole postWorkItemArgument {multiplicity 0..*;}
 	ProductInstance playsRole productInstance {multiplicity 0..*;}
 }
 

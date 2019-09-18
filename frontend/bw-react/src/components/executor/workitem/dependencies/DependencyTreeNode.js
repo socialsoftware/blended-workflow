@@ -43,8 +43,9 @@ class ConnectedDependencyTreeNode extends React.Component {
     }
 
     getEntityInstance(attributeInstance) {
-        if (this.attributeInstanceIsDependencyRoot(attributeInstance))
-            return this.props.entityInstance;
+        if (attributeInstance === this.props.attributeInstance)
+            if (this.attributeInstanceIsDependencyRoot())
+                return this.props.entityInstance;
 
         return this.props.entityInstances.find(ei => {
             return ei.attributeInstances.find(ai => {
@@ -100,8 +101,8 @@ class ConnectedDependencyTreeNode extends React.Component {
         return attributeInstance.state === "SKIPPED";
     }
 
-    attributeInstanceIsDependencyRoot(attributeInstance) {
-        return attributeInstance.state === "UNDEFINED";
+    attributeInstanceIsDependencyRoot() {
+        return this.props.isRoot;
     }
 
     displayRootAttributeInstance(attributeInstance) {
@@ -133,7 +134,7 @@ class ConnectedDependencyTreeNode extends React.Component {
     }
 
     displayAttributeInstance(attributeInstance) { 
-        if (this.attributeInstanceIsDependencyRoot(attributeInstance)) 
+        if (this.attributeInstanceIsDependencyRoot()) 
             return this.displayRootAttributeInstance(attributeInstance);
 
         if (this.attributeInstanceIsSkipped(attributeInstance)) 

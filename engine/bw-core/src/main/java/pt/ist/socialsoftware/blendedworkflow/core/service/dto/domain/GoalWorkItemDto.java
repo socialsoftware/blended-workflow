@@ -27,7 +27,7 @@ public class GoalWorkItemDto extends WorkItemDto {
 		goalWorkItemDto.setSpecId(workflowInstance.getSpecification().getSpecId());
 		goalWorkItemDto.setWorkflowInstanceName(workflowInstance.getName());
 		goalWorkItemDto.setName(goal.getName());
-
+		
 		// get product goal definition groups
 		if (!goal.getSuccessConditionSet().isEmpty()) {
 
@@ -35,10 +35,10 @@ public class GoalWorkItemDto extends WorkItemDto {
 					.collect(Collectors.groupingBy(d -> d.getSourceOfPath()));
 
 			for (Entity entityDefinitionGroup : definitionGroupMap.keySet()) {
-
+				
 				// get entity contexts
-				Set<Entity> entityContexts = goal.getEntityContextForDefinitionGroup(entityDefinitionGroup);
-
+				Set<Entity> entityContexts = goal.getEntityContextForDefinitionGroup(entityDefinitionGroup, workflowInstance);
+				
 				// get entity to be defined
 				Entity entityToDefine = definitionGroupMap.get(entityDefinitionGroup).stream()
 						.filter(DefEntityCondition.class::isInstance).map(DefEntityCondition.class::cast)
@@ -54,7 +54,12 @@ public class GoalWorkItemDto extends WorkItemDto {
 
 				if (entityToDefine != null) {
 					// a new entity instance is going to be created
-					entityInstanceToDefineDto = new EntityInstanceToDefineDto(entityToDefine);
+					if (entityContexts.isEmpty())
+						entityInstanceToDefineDto = new EntityInstanceToDefineDto(entityToDefine);
+					// a skipped entity instance is going to be defined
+					else
+						entityInstanceToDefineDto = new EntityInstanceToDefineDto(
+								goal.getEntityInstanceContextForNewEntityGoal(workflowInstance, entityToDefine), entityToDefine);
 				} else {
 					// only attributes and links are going to be defined, it is necessary to define
 					// their context

@@ -341,5 +341,22 @@ public class GetEntityInstanceContextMethodTest extends TeardownRollbackTest {
 		assertTrue(instanceContextOne.contains(entityInstanceOne));
 		assertTrue(instanceContextTwo.isEmpty());
 	}
+	
+	@Test
+	public void entityInstanceWithSkippedAttribute() {
+		Set<DefProductCondition> defProductConditions = new HashSet<>();
+		defProductConditions.add(DefAttributeCondition.getDefAttributeCondition(this.attOne));
+		ProductGoal goal = new ProductGoal(this.spec.getGoalModel(), GOAL_NAME_ONE, defProductConditions);
+		goal.initProductGoal();
+
+		assertTrue(goal.getEntityContext().contains(this.entOne));
+		
+		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.SKIPPED);
+		new AttributeInstance(entityInstance, this.attOne, "1",  ProductInstanceState.SKIPPED);
+		
+		Set<EntityInstance> instanceContext = goal.getEntityInstanceContext(this.workflowInstance, this.entOne);
+		
+		assertEquals(1, instanceContext.size());
+	}
 
 }

@@ -12,6 +12,7 @@ export class DependencyTreeRow extends React.Component {
         return this.props.attributeInstances.map(ai => {
             return <DependencyTreeNode
                         key={ai.externalId}
+                        isRoot={false}
                         attributeInstance={ai}/>
         });
     }

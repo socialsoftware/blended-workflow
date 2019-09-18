@@ -36,6 +36,10 @@ public class EntityInstance extends EntityInstance_Base {
 		setId(entity.getDataModel().incInstanceCounter());
 		setState(state);
 	}
+	
+	public boolean isSkipped() {
+		return getState().equals(ProductInstanceState.SKIPPED);
+	}
 
 	private void checkConsistency(WorkflowInstance workflowInstance, Entity entity) {
 		if (workflowInstance != null && entity != null) {
@@ -143,7 +147,7 @@ public class EntityInstance extends EntityInstance_Base {
 		return getEntityInstancesByRolename(name).stream().map(ProductInstance.class::cast).collect(Collectors.toSet());
 	}
 
-	public boolean isDefined(Attribute attribute) {
+	public boolean isCreated(Attribute attribute) {
 		if (getEntity().getAttributeSet().contains(attribute)) {
 			return getAttributeInstanceByName(attribute.getName()).isPresent();
 		}
@@ -204,9 +208,26 @@ public class EntityInstance extends EntityInstance_Base {
 				.map(ri -> ri.getEntityInstanceByRolename(this, rolename)).collect(Collectors.toSet());
 	}
 
-	public boolean attributesNotDefined(Set<Attribute> attributes) {
-		// none of attributes are defined for this instance
-		return attributes.stream().filter(a -> a.getEntity() == getEntity()).noneMatch(a -> isDefined(a));
+	public boolean attributesNotCreated(Set<Attribute> attributes) {
+		// none of attributes are created for this instance
+		return attributes.stream().filter(a -> a.getEntity() == getEntity()).noneMatch(a -> isCreated(a));
+	}
+	
+	public boolean attributeInstanceIsCreatedAndDefined(Attribute attribute) {
+		if (getEntity().getAttributeSet().contains(attribute)) {
+			Optional<AttributeInstance> attributeInstance = getAttributeInstanceByName(attribute.getName());
+			if (attributeInstance.isPresent()) {
+				if (attributeInstance.get().getState().equals(ProductInstanceState.DEFINED))
+					return true;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean attributesSkippedOrNotCreated(Set<Attribute> attributes) {
+		// attributes are either skipped or not yet created for this instance
+		return attributes.stream().filter(a -> a.getEntity() == getEntity()).noneMatch(a -> attributeInstanceIsCreatedAndDefined(a));
 	}
 
 	public boolean canBeAssociatedWithNewEntityInstance(Set<MulCondition> mulConditions) {

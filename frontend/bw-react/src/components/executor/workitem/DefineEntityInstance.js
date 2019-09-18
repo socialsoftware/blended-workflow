@@ -30,6 +30,7 @@ class ConnectedDefineEntityInstance extends React.Component {
         this.getLinks = this.getLinks.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleSelection = this.handleSelection.bind(this);
+        this.isGoalToDefineSkippedEntityInstance = this.isGoalToDefineSkippedEntityInstance.bind(this);
     }
 
     canDelete() {
@@ -83,6 +84,10 @@ class ConnectedDefineEntityInstance extends React.Component {
         this.props.setSelectedEntityInstance(this.props.entityInstance.id, entityInstance.id);
     }
 
+    isGoalToDefineSkippedEntityInstance() {
+        return this.props.entityInstance.id < 0 && this.props.entityInstance.entityInstancesContext.length > 0 && !this.props.entityInstance.exists;
+    }
+
     render() {
         const entityInstance = this.props.entityInstances.find(ei => {
             return ei.id === this.props.entityInstance.id;
@@ -108,6 +113,7 @@ class ConnectedDefineEntityInstance extends React.Component {
                     </span>
                 }</span>
                 <span> {this.props.entityInstance.exists && <SelectEntityInstance currInstance={this.props.entityInstance} entityInstances={this.props.entityInstance.entityInstancesContext} onSelection={this.handleSelection}/>}</span>
+                <span> {this.isGoalToDefineSkippedEntityInstance() && <SelectEntityInstance currInstance={this.props.entityInstance} entityInstances={this.props.entityInstance.entityInstancesContext} onSelection={this.handleSelection}/>}</span>
                 <span> {this.canDelete() &&  <button onClick={this.handleDelete}>Delete</button>}</span>
                 {this.getAttributeInstances().map(att => <DefineAttributeInstance key={att.attribute.name} entityInstance={this.props.entityInstance} attributeInstance={att} setDependencyTree={this.props.onSetDependencyTree}/>)}
                 {this.getLinks().map(link => <DefineLink key={link.mulCondition.externalId} entityInstance={this.props.entityInstance} link={link} />)}

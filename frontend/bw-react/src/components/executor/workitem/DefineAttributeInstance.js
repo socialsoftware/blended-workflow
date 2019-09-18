@@ -134,11 +134,19 @@ class ConnectedDefineAttributeInstance extends React.Component {
                     var dependenceInstance = this.getDependenceInstance(attributeInstance);
             }
 
+            var inputValue = this.props.attributeInstance.value;
+
+            if (this.state.inputIsDisabled) {
+                if (inputValue.length !== 0)
+                    this.props.setAttributeInstanceValue(this.props.entityInstance, this.props.attributeInstance, "");
+                inputValue = "";
+            }
+
             return (
                 <div>
                     <Tab/>{this.props.attributeInstance.attribute.name}: <input 
                                                                             type="text" 
-                                                                            value={this.props.attributeInstance.value} 
+                                                                            value={inputValue} 
                                                                             onChange={this.handleChange} 
                                                                             disabled={this.state.inputIsDisabled}
                                                                             title={this.state.title}/> 

@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
-import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.ActivityDto;
 
 public class Activity extends Activity_Base {
 	private static Logger logger = LoggerFactory.getLogger(Activity.class);
@@ -374,7 +373,7 @@ public class Activity extends Activity_Base {
 				.collect(Collectors.toSet());
 
 		// none of post-conditions attributes are defined
-		instanceContext = instanceContext.stream().filter(ei -> ei.attributesNotDefined(getPostAttributes()))
+		instanceContext = instanceContext.stream().filter(ei -> ei.attributesNotCreated(getPostAttributes()))
 				.collect(Collectors.toSet());
 
 		// entity instance can be associated due to post-condition mulcondition

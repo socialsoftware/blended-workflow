@@ -20,7 +20,7 @@ import pt.ist.socialsoftware.blendedworkflow.core.domain.Specification;
 import pt.ist.socialsoftware.blendedworkflow.core.domain.WorkflowInstance;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 
-public class AttributesNotDefinedMethodTest extends TeardownRollbackTest {
+public class AttributesNotCreatedMethodTest extends TeardownRollbackTest {
 	private static final String ENT_ONE_NAME = "EntOne";
 	private static final String ATT_ONE_NAME = "AttOne";
 	private static final String ATT_TWO_NAME = "AttTwo";
@@ -45,19 +45,19 @@ public class AttributesNotDefinedMethodTest extends TeardownRollbackTest {
 	}
 
 	@Test
-	public void attributeIsNotDefined() {
+	public void attributeIsNotCreated() {
 		Set<Attribute> attributes = new HashSet<>();
 		attributes.add(this.attOne);
 
 		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
-		boolean result = entityInstance.attributesNotDefined(attributes);
+		boolean result = entityInstance.attributesNotCreated(attributes);
 
 		assertTrue(result);
 	}
 
 	@Test
-	public void twoAttributesOneIsNotDefined() {
+	public void twoAttributesOneIsNotCreated() {
 		Set<Attribute> attributes = new HashSet<>();
 		attributes.add(this.attOne);
 		attributes.add(this.attTwo);
@@ -65,20 +65,20 @@ public class AttributesNotDefinedMethodTest extends TeardownRollbackTest {
 		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 		new AttributeInstance(entityInstance, this.attOne, "123", ProductInstanceState.DEFINED);
 
-		boolean result = entityInstance.attributesNotDefined(attributes);
+		boolean result = entityInstance.attributesNotCreated(attributes);
 
 		assertFalse(result);
 	}
 
 	@Test
-	public void twoAttributesNoneIsDefined() {
+	public void twoAttributesNoneIsCreated() {
 		Set<Attribute> attributes = new HashSet<>();
 		attributes.add(this.attOne);
 		attributes.add(this.attTwo);
 
 		EntityInstance entityInstance = new EntityInstance(this.workflowInstance, this.entOne, ProductInstanceState.DEFINED);
 
-		boolean result = entityInstance.attributesNotDefined(attributes);
+		boolean result = entityInstance.attributesNotCreated(attributes);
 
 		assertTrue(result);
 	}

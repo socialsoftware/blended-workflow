@@ -55,10 +55,10 @@ public class ProductGoal extends ProductGoal_Base {
 				.filter(ei -> ei.holdsDefPathConditions(getActivationConditionSetForContextEntity(contextEntity)))
 				.collect(Collectors.toSet());
 
-		// none of activation conditions attributes are defined in the instance contexts
-		instanceContext = instanceContext.stream().filter(ei -> ei.attributesNotDefined(getSuccessAttributes()))
+		// activation conditions attributes are either skipped or not yet created in the instance contexts
+		instanceContext = instanceContext.stream().filter(ei -> ei.attributesSkippedOrNotCreated(getSuccessAttributes()))
 				.collect(Collectors.toSet());
-
+		
 		return instanceContext;
 	}
 

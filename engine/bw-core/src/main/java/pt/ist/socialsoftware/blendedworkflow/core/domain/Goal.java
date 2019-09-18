@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pt.ist.socialsoftware.blendedworkflow.core.domain.ProductInstance.ProductInstanceState;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWErrorType;
 import pt.ist.socialsoftware.blendedworkflow.core.service.BWException;
 import pt.ist.socialsoftware.blendedworkflow.core.service.dto.domain.GoalDto;
@@ -276,11 +277,11 @@ public abstract class Goal extends Goal_Base {
 	public Boolean isEnabledForExecution(WorkflowInstance workflowInstance) {
 		// get entity context
 		Set<Entity> entityContext = getEntityContext();
-
+		
 		if (entityContext.isEmpty()) {
 			return true;
 		}
-
+		
 		// for each entity, in entity context, get instance context
 		for (Entity entity : entityContext) {
 			if (getEntityInstanceContext(workflowInstance, entity).isEmpty()) {
@@ -303,11 +304,24 @@ public abstract class Goal extends Goal_Base {
 				entityContext.add(defPathCondition.getSourceOfPath());
 			}
 		}
+		
+		return entityContext;
+	}
+	
+	public Set<Entity> getInitialSkippedEntityInstancesContext(WorkflowInstance workflowInstance, Set<Entity> entityContext) {		
+		if (entityContext.isEmpty() && getActivationConditionSet().isEmpty()) {
+			for (Entity entity : getProducedEntities()) {
+				for (EntityInstance entityInstance : workflowInstance.getEntityInstanceSet(entity)) {
+					if (entityInstance.getState().equals(ProductInstanceState.SKIPPED)) 
+						entityContext.add(entity);
+				}
+			}
+		}
 
 		return entityContext;
 	}
 
-	public Set<Entity> getEntityContextForDefinitionGroup(Entity entity) {
+	public Set<Entity> getEntityContextForDefinitionGroup(Entity entity, WorkflowInstance workflowInstance) {
 		Set<Entity> entityContext = new HashSet<>();
 
 		if (!getProducedEntities().contains(entity)) {
@@ -321,6 +335,8 @@ public abstract class Goal extends Goal_Base {
 					entityContext.add(defPathCondition.getPath().getAdjacent());
 				}
 			}
+			
+			entityContext = getInitialSkippedEntityInstancesContext(workflowInstance, entityContext);		
 		}
 
 		return entityContext;
@@ -338,6 +354,18 @@ public abstract class Goal extends Goal_Base {
 
 	public abstract Set<EntityInstance> getEntityInstanceContext(WorkflowInstance workflowInstance,
 			Entity contextEntity);
+	
+	public Set<EntityInstance> getEntityInstanceContextForNewEntityGoal(WorkflowInstance workflowInstance, Entity contextEntity) {
+		// instances where activation conditions hold
+		Set<EntityInstance> instanceContext = workflowInstance.getEntityInstanceSet(contextEntity).stream()
+				.filter(ei -> ei.holdsDefPathConditions(getActivationConditionSetForContextEntity(contextEntity)))
+				.collect(Collectors.toSet());
+
+		instanceContext = instanceContext.stream().filter(ei -> ei.isSkipped())
+				.collect(Collectors.toSet());
+		
+		return instanceContext;
+	}
 
 	public Set<MulCondition> getMulConditionsThatShouldHold(Product product) {
 		return getEntityInvariantConditionSet().stream().filter(m -> m.getSourceEntity() == product)

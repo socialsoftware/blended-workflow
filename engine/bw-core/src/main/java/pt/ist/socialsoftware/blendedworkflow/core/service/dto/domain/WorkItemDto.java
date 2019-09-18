@@ -48,23 +48,49 @@ public class WorkItemDto {
 		return attributeInstanceState == ProductInstanceState.DEFINED && entityInstanceState == ProductInstanceState.SKIPPED;
 	}
 	
+	public boolean goalDefinedSkippedEntityInstance(EntityInstanceToDefineDto entityInstanceToDefine) {
+		for (EntityInstanceDto entityInstanceDto : entityInstanceToDefine.getEntityInstancesContext())
+			if (entityInstanceDto.getId().equals(entityInstanceToDefine.getId()))
+				return true;
+
+		return false;
+	}
+	
 	public void executeWorkItem(WorkflowInstance workflowInstance, WorkItem workItem) {
 		Set<EntityInstance> definedEntityInstances = new HashSet<EntityInstance>();
 		Set<RelationBW> innerRelations = new HashSet<RelationBW>();
 		for (EntityInstanceToDefineDto entityInstanceToDefine : getUnitOfWork()) {
 			EntityInstance entityInstance = null;
+			
 			if (entityInstanceToDefine.isExists()) {
 				entityInstance = workflowInstance.getEntityInstanceById(entityInstanceToDefine.getId());
 
 				if (entityInstance == null) {
 					throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT,
-							"Entity instance not defined: " + entityInstanceToDefine.getEntity().getName());
+							"Entity instance not created: " + entityInstanceToDefine.getEntity().getName());
 				}
 
 				definedEntityInstances.add(entityInstance);
 
 				workItem.addPreWorkItemArgument(entityInstance, DefPathCondition.getDefPathCondition(
 						workflowInstance.getSpecification(), entityInstance.getEntity().getFullPath()));
+			} else if (goalDefinedSkippedEntityInstance(entityInstanceToDefine)) {
+				entityInstance = workflowInstance.getEntityInstanceById(entityInstanceToDefine.getId());
+				
+				if (entityInstance == null) {
+					throw new BWException(BWErrorType.PRE_WORK_ITEM_ARGUMENT,
+							"Entity instance not created: " + entityInstanceToDefine.getEntity().getName());
+				}
+				
+				entityInstance.setState(ProductInstanceState.DEFINED);
+				definedEntityInstances.add(entityInstance);
+				
+				if (workItem != null) {
+					workItem.addPreWorkItemArgument(entityInstance, DefPathCondition.getDefPathCondition(
+							workflowInstance.getSpecification(), entityInstance.getEntity().getFullPath()));
+					workItem.addPostWorkItemArgument(entityInstance,
+							DefEntityCondition.getDefEntityCondition(entityInstance.getEntity()));
+				}	
 			} else {
 				Entity entity = workflowInstance.getEntityByName(entityInstanceToDefine.getEntity().getName());
 				entityInstance = new EntityInstance(workflowInstance, entity, entityInstanceToDefine.getState());

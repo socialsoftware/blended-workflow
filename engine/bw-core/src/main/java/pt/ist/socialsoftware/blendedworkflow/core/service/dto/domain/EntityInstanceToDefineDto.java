@@ -26,6 +26,16 @@ public class EntityInstanceToDefineDto extends EntityInstanceDto {
 		setEntity(entity.getDto());
 		setState(ProductInstanceState.UNDEFINED);
 	}
+	
+	public EntityInstanceToDefineDto(Set<EntityInstance> entityInstancesContext, Entity entity) {
+		setExternalId(null);
+		setId(null);
+		setEntity(entity.getDto());
+		setState(ProductInstanceState.UNDEFINED);
+		setEntityInstancesContext(entityInstancesContext.stream()
+				.sorted((ei1, ei2) -> Integer.parseInt(ei1.getId()) - Integer.parseInt(ei2.getId()))
+				.map(ei -> new EntityInstanceDto(ei, Depth.SHALLOW)).collect(Collectors.toList()));
+	}
 
 	public EntityInstanceToDefineDto(Entity entity, Set<EntityInstance> entityInstancesContext) {
 		setExternalId(null);

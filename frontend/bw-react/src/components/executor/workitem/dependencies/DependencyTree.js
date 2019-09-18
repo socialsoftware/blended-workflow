@@ -29,6 +29,7 @@ export class DependencyTree extends React.Component {
       return (
         <div style={rootNodeStyle}>
           <DependencyTreeNode
+            isRoot={true}
             attributeInstance={this.props.rootAttributeInstance} 
             entityInstance={this.props.rootEntityInstance}/>
         </div>
