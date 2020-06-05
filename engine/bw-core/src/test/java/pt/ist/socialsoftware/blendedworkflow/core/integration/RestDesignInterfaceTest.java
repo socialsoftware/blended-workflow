@@ -85,20 +85,20 @@ public class RestDesignInterfaceTest {
 
 		SpecDto specDTO = new SpecDto(SPEC_ID, SPEC_NAME);
 		this.mockMvc
-				.perform(post("/specs").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.perform(post("/specs").contentType(MediaType.APPLICATION_JSON)
 						.content(mapper.writeValueAsBytes(specDTO)))
-				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.specId", is(SPEC_ID))).andExpect(jsonPath("$.name", is(SPEC_NAME)));
 
 		this.mockMvc.perform(get("/specs/{specId}", SPEC_ID)).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.name").value(SPEC_NAME));
 
 		EntityDto entityOneDTO = new EntityDto(SPEC_ID, ENTITY_ONE_NAME, false);
 		result = this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/entities", SPEC_ID)
-						.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(entityOneDTO)))
-				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+						.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(entityOneDTO)))
+				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.name").value(ENTITY_ONE_NAME)).andExpect(jsonPath("$.exists").value(false))
 				.andReturn();
 		entityOneDTO = mapper.readValue(result.getResponse().getContentAsString(), EntityDto.class);
@@ -106,7 +106,7 @@ public class RestDesignInterfaceTest {
 		EntityDto entityTwoDTO = new EntityDto(SPEC_ID, "entityTwo", false, true);
 		result = this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/entities", SPEC_ID)
-						.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(entityTwoDTO)))
+						.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(entityTwoDTO)))
 				.andExpect(status().isCreated()).andReturn();
 		entityTwoDTO = mapper.readValue(result.getResponse().getContentAsString(), EntityDto.class);
 
@@ -114,9 +114,9 @@ public class RestDesignInterfaceTest {
 				false);
 		result = this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
-						.contentType(MediaType.APPLICATION_JSON_UTF8)
+						.contentType(MediaType.APPLICATION_JSON)
 						.content(mapper.writeValueAsBytes(attributeOneDTO)))
-				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.name").value("att1")).andExpect(jsonPath("$.type").value("Boolean"))
 				.andExpect(jsonPath("$.mandatory").value(false)).andReturn();
 		attributeOneDTO = mapper.readValue(result.getResponse().getContentAsString(), AttributeDto.class);
@@ -124,20 +124,20 @@ public class RestDesignInterfaceTest {
 		AttributeDto attributeTwoDTO = new AttributeDto(SPEC_ID, entityOneDTO.getExtId(), null,
 				ATTRIBUTE_TWO_NAME_STRING, "String", false);
 		this.mockMvc.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
-				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(attributeTwoDTO)))
+				.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(attributeTwoDTO)))
 				.andExpect(status().isCreated());
 
 		AttributeDto attributeThreeDTO = new AttributeDto(SPEC_ID, entityOneDTO.getExtId(), null, "att3", "Number",
 				false);
 		this.mockMvc.perform(post("/specs/{specId}/datamodel/attributes", SPEC_ID)
-				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(attributeThreeDTO)))
+				.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(attributeThreeDTO)))
 				.andExpect(status().isCreated());
 
 		RelationDto relationDto = new RelationDto(SPEC_ID, "relation name", entityOneDTO.getExtId(), "first", "1",
 				entityTwoDTO.getExtId(), "second", "*");
 		this.mockMvc
 				.perform(post("/specs/{specId}/datamodel/relations", SPEC_ID)
-						.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(relationDto)))
+						.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(relationDto)))
 				.andExpect(status().isCreated());
 
 		ExpressionDto expressionDTO = new ExpressionDto(SPEC_ID, ComparisonOperator.GREATER,
@@ -145,7 +145,7 @@ public class RestDesignInterfaceTest {
 						ExpressionAtom.ATT_VALUE, ENTITY_ONE_NAME + "." + ATTRIBUTE_TWO_NAME_STRING));
 		RuleDto ruleDTO = new RuleDto(SPEC_ID, ENTITY_ONE_NAME, "myRule", expressionDTO);
 		this.mockMvc.perform(post("/specs/{specId}/datamodel/rules", SPEC_ID)
-				.contentType(MediaType.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(ruleDTO)))
+				.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsBytes(ruleDTO)))
 				.andExpect(status().isCreated());
 	}
 
