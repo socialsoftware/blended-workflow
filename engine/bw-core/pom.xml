@@ -24,8 +24,24 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 			</plugin>
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- Uncomment this line if you also want to instrument the test phase -->
+                    <!-- <argLine>-javaagent:lib/kieker-1.14-aspectj.jar</argLine> -->  
+                </configuration>
+			</plugin>
 		</plugins>
 
 	</build>
-	
+
+    <dependencies>
+        <dependency>
+            <groupId>net.kieker-monitoring</groupId>
+            <artifactId>kieker</artifactId>
+            <version>1.14</version>
+            <classifier>aspectj</classifier>
+        </dependency>
+	</dependencies>
 </project>
