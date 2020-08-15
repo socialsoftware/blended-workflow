@@ -95,11 +95,11 @@ public class GettersAndSetters extends AbstractOperationExecutionAspect {
     @Pointcut("@annotation(org.springframework.web.bind.annotation.DeleteMapping) && execution(* *(..))")
     public void controllerDeleteMethods() {}
 
-    // Controller MESSAGE methods
+    // Controller MESSAGE methods - NOT BEING USED
     @Pointcut("@annotation(org.springframework.messaging.handler.annotation.MessageMapping) && execution(* *(..))")
     public void controllerMessageMethods() {}
 
-	@Pointcut("controllerGetMethods() || controllerPostMethods() || controllerPatchMethods() || controllerPutMethods() || controllerDeleteMethods() || controllerMessageMethods()")
+	@Pointcut("controllerGetMethods() || controllerPostMethods() || controllerPatchMethods() || controllerPutMethods() || controllerDeleteMethods()")
 	public void controllerMethods() {}
 
 	// ------------------------------------------------------------------------------ KIEKER METHOD ------------------------------------------------------------------------------

@@ -32,6 +32,20 @@
                     <!-- <argLine>-javaagent:lib/kieker-1.14-aspectj.jar</argLine> -->  
                 </configuration>
 			</plugin>
+            <plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<agents>
+						lib/kieker-1.14-aspectj.jar
+					</agents>
+					<jvmArguments>
+						-Dorg.aspectj.weaver.showWeaveInfo=true 
+						<!-- -Daj.weaving.verbose=true -->
+						-Dkieker.monitoring.skipDefaultAOPConfiguration=true
+					</jvmArguments>
+				</configuration>
+			</plugin>
 		</plugins>
 
 	</build>

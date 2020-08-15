@@ -14,7 +14,7 @@
 ## this default file.
 
 ## The name of the Kieker instance.
-kieker.monitoring.name=KIEKER
+kieker.monitoring.name=bw
 
 ## Whether a debug mode is activated.
 ## This changes a few internal id generation mechanisms to enable 
@@ -171,7 +171,7 @@ kieker.monitoring.core.controller.WriterController.RecordQueueSize=10000000
 ## 2: writer discards new records until space is available
 ## Be careful when using the value '1' since then, the asynchronous writer
 ## is no longer decoupled from the monitored application.
-kieker.monitoring.core.controller.WriterController.RecordQueueInsertBehavior=2
+kieker.monitoring.core.controller.WriterController.RecordQueueInsertBehavior=1
 #
 ## Selection of monitoring data writer (classname)
 ## The value must be a fully-qualified classname of a class implementing 
@@ -233,7 +233,7 @@ kieker.monitoring.writer.filesystem.FileWriter.customStoragePath=
 ## GZipCompressionFilter
 ## XZCompressionFilter
 ## ZipCompressionFilter
-# kieker.monitoring.writer.filesystem.FileWriter.compression=pt.ist.socialsoftware.edition.ldod.compressors.ZipCompressor
+kieker.monitoring.writer.filesystem.FileWriter.compression=pt.ist.socialsoftware.edition.ldod.compressors.ZipCompressor
 # CURRENTLY NOT WORKING: kieker.monitoring.writer.filesystem.FileWriter.compression=kieker.monitoring.writer.filesystem.compression.NoneCompressionFilter
 #
 ## When flushing is disabled, it could require a lot of records before
