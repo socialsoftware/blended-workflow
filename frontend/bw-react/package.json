@@ -18,7 +18,7 @@
     "react-dom": "^16.9.0",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^3.1.1",
+    "react-scripts": "^5.0.1",
     "storm-react-diagrams": "^5.2.1",
     "typescript": "^3.5.3",
     "vis": "^4.21.0"
@@ -30,12 +30,12 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "css-loader": "^2.1.1",
+    "css-loader": "^6.7.3",
     "react-redux": "^6.0.1",
     "react-thunk": "^1.0.0",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "style-loader": "^0.23.1"
+    "style-loader": "^3.3.1"
   },
   "browserslist": [
     ">0.2%",
